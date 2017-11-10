@@ -6,9 +6,11 @@
         <div class="col-md-12">
             <div class="card">
 
-                <div class="card-body">
-				
+				<div class="card-header">
 					<h4 class="card-title">Register</h4>
+				</div>
+
+                <div class="card-body">
 					
                     <form class="form-horizontal" method="POST" action="{{ route('register') }}">
                         {{ csrf_field() }}

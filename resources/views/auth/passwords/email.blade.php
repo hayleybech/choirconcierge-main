@@ -6,9 +6,11 @@
         <div class="col-md-12">
             <div class="card">
 
-                <div class="card-body">
-				
+				<div class="card-header">
 					<h4 class="card-title">Reset Password</h4>
+				</div>
+				
+                <div class="card-body">
 				
                     @if (session('status'))
                         <div class="alert alert-success">
