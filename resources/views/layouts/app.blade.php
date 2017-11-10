@@ -18,61 +18,66 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
-                <div class="navbar-header">
 
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Choir Concierge') }}
-                    </a>
-                </div>
+				<a class="navbar-brand" href="{{ url('/') }}">
+					<img src="img/logo.png" alt="Choir Concierge" class="logo">
+				</a>
 
-                <div class="" id="">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
+				<!-- Left Side Of Navbar -->
+				<ul class="navbar-nav">
+					&nbsp;
+				</ul>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
-                        @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+				<!-- Right Side Of Navbar -->
+				<ul class="navbar-nav">
+					<!-- Authentication Links -->
+					@guest
+						<li class="nav-item {{ ( \Request::is('login') ) ? 'active' : '' }}">
+							<a href="{{ route('login') }}" class="nav-link"><i class="fa fa-sign-in fa-fw"></i> Login</a>
+						</li>
+						<li class="nav-item {{ ( \Request::is('register') ) ? 'active' : '' }}">
+							<a href="{{ route('register') }}" class="nav-link"><i class="fa fa-user-plus fa-fw"></i> Register</a>
+						</li>
+					@else
+						<li class="nav-item dropdown">
+							<a href="#" id="navbarDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
+								<i class="fa fa-user-circle fa-fw"></i> {{ Auth::user()->name }} <span class="caret"></span>
+							</a>
 
-                                <ul class="dropdown-menu">
-									<li>
-										<a href="{{ route('dash') }}">Dashboard</a>
-
-									</li>
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+								
+								<a class="dropdown-item {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+								<div class="dropdown-divider"></div>
+								
+								<a href="{{ route('memberprofile.new') }}" class="dropdown-item" target="_blank"><i class="fa fa-plus fa-fw"></i> Member Profile</a>
+							
+								<a href="{{ route('voiceplacement.new') }}" class="dropdown-item" target="_blank"><i class="fa fa-plus fa-fw"></i> Voice Placement</a>	
+								
+								<a href="{{ route('singers.index') }}" class="dropdown-item {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-list-alt fa-fw"></i> Singers List</a>
+								
+								
+								<div class="dropdown-divider"></div>
+								
+								<a href="{{ route('logout') }}" 
+									class="dropdown-item {{ ( \Request::is('logout') ) ? 'active' : '' }}"
+									onclick="event.preventDefault();
+											 document.getElementById('logout-form').submit();">
+									<i class="fa fa-sign-out fa-fw"></i> Logout
+								</a>
+								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+									{{ csrf_field() }}
+								</form>
+								
+							</div>
+						</li>
+					@endguest
+				</ul>
+                
             </div>
         </nav>
 		
-		<div class="container">
-			<img src="img/logo.png" alt="Choir Concierge" class="logo">
-		</div>
 
 		<main>
 			<div class="container">

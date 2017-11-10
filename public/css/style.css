@@ -4,11 +4,16 @@ a.disabled:hover {
 }
 
 /* Header */
+nav {
+	margin-bottom: 10px;
+}
+
 .logo {
-	max-width:100%;
+	/*max-width:100%;
 	height:auto;
 	max-height: 100px;
-	margin-top: 20px;
+	margin-top: 20px;*/
+	height: 50px;
 }
 
 /* Singers List */
@@ -32,4 +37,8 @@ a.disabled:hover {
 
 i.fa.fa-external-link {
     font-size: 0.8em;
+}
+
+.navbar-nav i.fa.fa-fw {
+    margin-right: 5px;
 }
