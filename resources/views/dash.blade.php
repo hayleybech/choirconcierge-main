@@ -14,9 +14,13 @@
 		Blenders Audition Songs
 	  </a>
 	  <a href="#" class="list-group-item list-group-item-action">The Blenders Facebook Chat (New)</a>-->
-	  <a href="{{ route('memberprofile.new') }}" class="list-group-item list-group-item-action" target="_blank"><i class="fa fa-plus"></i> Member Profile</a>
-	  <a href="{{ route('memberprofile.new') }}" class="list-group-item list-group-item-action" target="_blank"><i class="fa fa-plus"></i> Voice Placement</a>
-	  <a href="{{ route('singers.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-list-alt"></i> Singers List</a>
+		@if( Auth::user()->hasRole('Membership Team') )
+		<a href="{{ route('memberprofile.new') }}" class="list-group-item list-group-item-action" target="_blank"><i class="fa fa-plus"></i> Member Profile</a>
+		@endif
+		@if( Auth::user()->hasRole('Music Team') )
+		<a href="{{ route('voiceplacement.new') }}" class="list-group-item list-group-item-action" target="_blank"><i class="fa fa-plus"></i> Voice Placement</a>
+		@endif
+		<a href="{{ route('singers.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-list-alt"></i> Singers List</a>
   </div>
 </div>
 @endsection

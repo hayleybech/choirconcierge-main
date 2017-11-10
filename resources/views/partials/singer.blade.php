@@ -6,76 +6,84 @@
 		$singer_email = $singer['email'];
 		
 		$actions = array();
-		// Prep profile action
-		$profile_action = array(
-			'text' => 'Member Profile',
-			'link' => route( 'singer.memberprofile', ['singer' => $singer['email'] ] ),
-			'link_target' => '_blank',
-			'disabled' => '',
-			'badge_class' => 'badge-secondary',
-			'badge_text' => 'Start <i class="fa fa-external-link"></i>',
-			'status_icon' => 'fa-square-o',
-		);
-
-		if( isset( $singer['custom_fields']['Name'] ) ){
-			$profile_action['disabled'] = 'disabled';
-			$profile_action['badge_class'] = 'badge-info';
-			$profile_action['badge_text'] = '';
-			$profile_action['status_icon'] = 'fa-check-square-o';
-		}
-		$actions['Member Profile'] = $profile_action;
 		
-		// Prep placement action
-		$placement_action = array(
-			'text' => 'Voice Placement',
-			'link' => route( 'singer.voiceplacement', ['singer' => $singer['email'] ] ),
-			'link_target' => '_blank',
-			'disabled' => '',
-			'badge_class' => 'badge-secondary',
-			'badge_text' => 'Start <i class="fa fa-external-link"></i>',
-			'status_icon' => 'fa-square-o',
-		);
+		if( Auth::user()->hasRole('Membership Team') ){
+			// Prep profile action
+			$profile_action = array(
+				'text' => 'Member Profile',
+				'link' => route( 'singer.memberprofile', ['singer' => $singer['email'] ] ),
+				'link_target' => '_blank',
+				'disabled' => '',
+				'badge_class' => 'badge-secondary',
+				'badge_text' => 'Start <i class="fa fa-external-link"></i>',
+				'status_icon' => 'fa-square-o',
+			);
 
-		if( isset( $singer['custom_fields']['Voice_Part'] ) ){
-			$placement_action['disabled'] = 'disabled';
-			$placement_action['badge_class'] = 'badge-info';
-			$placement_action['badge_text'] = '';
-			$placement_action['status_icon'] = 'fa-check-square-o';
+			if( isset( $singer['custom_fields']['Name'] ) ){
+				$profile_action['disabled'] = 'disabled';
+				$profile_action['badge_class'] = 'badge-info';
+				$profile_action['badge_text'] = '';
+				$profile_action['status_icon'] = 'fa-check-square-o';
+			}
+			$actions['Member Profile'] = $profile_action;
 		}
-		$actions['Voice Placement'] = $placement_action;
 		
-		// Prep audition action
-		$audition_action = array(
-			'text' => 'Audition Passed',
-			'link' => route( 'singer.audition.pass', ['singer' => $singer['email'] ] ),
-			'link_target' => '_self',
-			'disabled' => '',
-			'badge_class' => 'badge-secondary',
-			'badge_text' => 'Mark',
-			'status_icon' => 'fa-square-o',
-		);
-	
-		if( in_array( 'Passed Vocal Assessment', $singer['tags'] ) ){
-			$audition_action['disabled'] = 'disabled';
-			$audition_action['badge_class'] = 'badge-success';
-			$audition_action['badge_text'] = '';
-			$audition_action['status_icon'] = 'fa-check-square-o';
+		if( Auth::user()->hasRole('Music Team') ){
+			// Prep placement action
+			$placement_action = array(
+				'text' => 'Voice Placement',
+				'link' => route( 'singer.voiceplacement', ['singer' => $singer['email'] ] ),
+				'link_target' => '_blank',
+				'disabled' => '',
+				'badge_class' => 'badge-secondary',
+				'badge_text' => 'Start <i class="fa fa-external-link"></i>',
+				'status_icon' => 'fa-square-o',
+			);
+
+			if( isset( $singer['custom_fields']['Voice_Part'] ) ){
+				$placement_action['disabled'] = 'disabled';
+				$placement_action['badge_class'] = 'badge-info';
+				$placement_action['badge_text'] = '';
+				$placement_action['status_icon'] = 'fa-check-square-o';
+			}
+			$actions['Voice Placement'] = $placement_action;
+			
+			// Prep audition action
+			$audition_action = array(
+				'text' => 'Audition Passed',
+				'link' => route( 'singer.audition.pass', ['singer' => $singer['email'] ] ),
+				'link_target' => '_self',
+				'disabled' => '',
+				'badge_class' => 'badge-secondary',
+				'badge_text' => 'Mark',
+				'status_icon' => 'fa-square-o',
+			);
+		
+			if( in_array( 'Passed Vocal Assessment', $singer['tags'] ) ){
+				$audition_action['disabled'] = 'disabled';
+				$audition_action['badge_class'] = 'badge-success';
+				$audition_action['badge_text'] = '';
+				$audition_action['status_icon'] = 'fa-check-square-o';
+			}
+			$actions['Audition Passed'] = $audition_action;
+		
 		}
-		$actions['Audition Passed'] = $audition_action;
 	
-		// Prep fees action
-		$fees_action = array(
-			'text' => 'Fees Paid',
-			'link' => '#',
-			'link_target' => '_self',
-			'disabled' => 'disabled',
-			'badge_class' => 'badge-secondary',
-			'badge_text' => 'Coming Soon',
-			'status_icon' => 'fa-square',
-		);
-		$actions['Fees Paid'] = $fees_action;
+		if( Auth::user()->hasRole('Accounts Team') ) {
+			// Prep fees action
+			$fees_action = array(
+				'text' => 'Fees Paid',
+				'link' => '#',
+				'link_target' => '_self',
+				'disabled' => 'disabled',
+				'badge_class' => 'badge-secondary',
+				'badge_text' => 'Coming Soon',
+				'status_icon' => 'fa-square',
+			);
+			$actions['Fees Paid'] = $fees_action;
+		
+		}
 	
-		//include('templates/singer_card.tpl.php');
 	?> 
 	<div class="card">
 		<div class="card-body">
