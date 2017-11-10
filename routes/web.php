@@ -46,33 +46,33 @@ Route::get('/users', 'UsersController@index')->name('users.index');
 //Route::post('/users/{user}/roles', 'UsersController@addRoles')->name('users.addroles');
 
 Route::get('/migrate', function(){
-	Artisan::call('migrate');
+	echo Artisan::call('migrate');
 });
 
 Route::get('/migrate/refresh', function(){
-	Artisan::call('migrate:refresh');
+	echo Artisan::call('migrate:refresh');
 });
 
 Route::get('/migrate/refresh/seed', function(){
-	Artisan::call('migrate:refresh', [
+	echo Artisan::call('migrate:refresh', [
 		'--seed' => true,
 	]);
 });
 
 Route::get('/migrate/rollback', function(){
-	Artisan::call('migrate:rollback');
+	echo Artisan::call('migrate:rollback');
 });
 
 Route::get('/migrate/reset', function(){
-	Artisan::call('migrate:reset');
+	echo Artisan::call('migrate:reset');
 });
 
 Route::get('/migrate/fresh', function(){
-	Artisan::call('migrate:fresh');
+	echo Artisan::call('migrate:fresh');
 });
 
 Route::get('/migrate/fresh/seed', function(){
-	Artisan::call('migrate:fresh', [
+	echo Artisan::call('migrate:fresh', [
 		'--seed' => true,
 	]);
 });
