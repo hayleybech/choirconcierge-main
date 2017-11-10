@@ -1,0 +1,35 @@
+/* Base Styles */
+a.disabled:hover {
+    cursor: default;
+}
+
+/* Header */
+.logo {
+	max-width:100%;
+	height:auto;
+	max-height: 100px;
+	margin-top: 20px;
+}
+
+/* Singers List */
+.card {
+	margin-bottom: 10px;
+}
+
+.card .singer-name {
+	font-size: 1.2rem;
+}
+.card .singer-email {
+	font-size: 0.8rem;
+}
+.card .singer-part {
+	font-size: 0.8rem;
+}
+
+.card .list-group {
+	font-size: 0.9rem;
+}
+
+i.fa.fa-external-link {
+    font-size: 0.8em;
+}
