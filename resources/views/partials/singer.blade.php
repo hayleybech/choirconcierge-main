@@ -8,6 +8,7 @@
 		$actions = array();
 		// Prep profile action
 		$profile_action = array(
+			'text' => 'Member Profile',
 			'link' => route( 'singer.memberprofile', ['singer' => $singer['email'] ] ),
 			'link_target' => '_blank',
 			'disabled' => '',
@@ -26,6 +27,7 @@
 		
 		// Prep placement action
 		$placement_action = array(
+			'text' => 'Voice Placement',
 			'link' => route( 'singer.voiceplacement', ['singer' => $singer['email'] ] ),
 			'link_target' => '_blank',
 			'disabled' => '',
@@ -44,6 +46,7 @@
 		
 		// Prep audition action
 		$audition_action = array(
+			'text' => 'Audition Passed',
 			'link' => route( 'singer.audition.pass', ['singer' => $singer['email'] ] ),
 			'link_target' => '_self',
 			'disabled' => '',
@@ -62,6 +65,7 @@
 	
 		// Prep fees action
 		$fees_action = array(
+			'text' => 'Fees Paid',
 			'link' => '#',
 			'link_target' => '_self',
 			'disabled' => 'disabled',
@@ -75,21 +79,21 @@
 	?> 
 	<div class="card">
 		<div class="card-body">
-			<h4 class="card-title singer-name"><?php echo ( isset($singer_name) ) ? $singer_name : 'Name Unknown'; ?></h4>
-			<h6 class="card-subtitle mb-2 text-muted singer-email"><?php echo $singer_email; ?></h6>
-			<p class="card-text singer-part"><?php echo ( isset($singer_part) ) ? $singer_part : 'No Voice Part'; ?></p>
+			<h4 class="card-title singer-name">{{ ( isset($singer_name) ) ? $singer_name : 'Name Unknown' }}</h4>
+			<h6 class="card-subtitle mb-2 text-muted singer-email">{{ $singer_email }}</h6>
+			<p class="card-text singer-part">{{ ( isset($singer_part) ) ? $singer_part : 'No Voice Part' }}</p>
 		</div>
 
 		<div class="list-group list-group-flush">
 		
-			<?php foreach( $actions as $action_name => $action ): ?>
-			<a href="<?php echo $action['link'] ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <?php echo $action['disabled'] ?>" target="_blank">
+			@foreach( $actions as $action )
+			<a href="{{ $action['link'] }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ $action['disabled'] }}" target="_blank">
 				<div class="d-flex w-100 justify-content-between">
-					<span><i class="fa fa-fw <?php echo $action['status_icon']; ?>"></i> <?php echo $action_name; ?></span>
-					<small><?php echo $action['badge_text'] ?></small>
+					<span><i class="fa fa-fw {{ $action['status_icon'] }}"></i> {{ $action['text'] }}</span>
+					<small>{!! $action['badge_text'] !!}</small>
 				</div>
 			</a>
-			<?php endforeach ?>
+			@endforeach
 
 		</div>
 
