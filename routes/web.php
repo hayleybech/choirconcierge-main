@@ -42,3 +42,5 @@ Auth::routes();
 Route::get('/dash', 'DashController@index')->name('dash');
 
 Route::get('/users', 'UsersController@index')->name('users.index');
+
+//Route::post('/users/{user}/roles', 'UsersController@addRoles')->name('users.addroles');

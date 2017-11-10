@@ -14,6 +14,11 @@
 		Blenders Audition Songs
 	  </a>
 	  <a href="#" class="list-group-item list-group-item-action">The Blenders Facebook Chat (New)</a>-->
+	  
+		@if( Auth::user()->hasRole('Admin') )
+		<a href="{{ route('users.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-group"></i> Users List</a>
+		@endif
+	  
 		@if( Auth::user()->hasRole('Membership Team') )
 		<a href="{{ route('memberprofile.new') }}" class="list-group-item list-group-item-action" target="_blank"><i class="fa fa-plus"></i> Member Profile</a>
 		@endif

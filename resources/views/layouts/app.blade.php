@@ -51,6 +51,10 @@
 								<a class="dropdown-item {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
 								<div class="dropdown-divider"></div>
 								
+								@if( Auth::user()->hasRole('Admin') )
+								<a href="{{ route('users.index') }}" class="dropdown-item"><i class="fa fa-group fa-fw"></i> Users List</a>
+								@endif
+								
 								@if( Auth::user()->hasRole('Membership Team') )
 								<a href="{{ route('memberprofile.new') }}" class="dropdown-item" target="_blank"><i class="fa fa-plus fa-fw"></i> Member Profile</a>
 								@endif

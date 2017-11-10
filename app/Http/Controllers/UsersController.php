@@ -34,4 +34,8 @@ class UsersController extends Controller
 		));
 		$user->addRole('admin');
 	}
+	
+	public function addRoles( $roles ) {
+		
+	}
 }
