@@ -7,6 +7,18 @@ use App\Libraries\Drip\Drip;
 
 class SingersController extends Controller
 {
+	
+	/**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+	
     public function index(){
 		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956');
 	

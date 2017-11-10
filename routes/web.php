@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('menu');
+	return view('welcome');
 })->name('menu');
 
 Route::get('/singers', 'SingersController@index')->name('singers.index');
@@ -28,3 +28,7 @@ Route::get('/singers/{singer}/voiceplacement', function($email){
 })->name('singer.voiceplacement');
 
 Route::get('/singers/{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');
+
+Auth::routes();
+
+Route::get('/dash', 'DashController@index')->name('dash');
