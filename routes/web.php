@@ -17,26 +17,28 @@ Route::get('/', function () {
 
 Route::get('/singers', 'SingersController@index')->name('singers.index');
 
-Route::get('/singers/{singer}', 'SingersController@show')->name('singers.show');
+	Route::get('/singers/{singer}', 'SingersController@show')->name('singers.show');
 
-Route::get('/singers/{singer}/memberprofile', function($email){
-	return redirect()->away( config('app.member_profile_edit') . urlencode($email) );
-})->name('singer.memberprofile');
+	Route::get('/singers/{singer}/memberprofile', function($email){
+		return redirect()->away( config('app.member_profile_edit') . urlencode($email) );
+	})->name('singer.memberprofile');
 
-Route::get('/singers/{singer}/voiceplacement', function($email){
-	return redirect()->away( config('app.voice_placement_edit') . urlencode($email) );
-})->name('singer.voiceplacement');
+	Route::get('/singers/{singer}/voiceplacement', function($email){
+		return redirect()->away( config('app.voice_placement_edit') . urlencode($email) );
+	})->name('singer.voiceplacement');
 
-Route::get('/memberprofile', function(){
-	return redirect()->away( config('app.member_profile_new') );
-})->name('memberprofile.new');
+	Route::get('/memberprofile', function(){
+		return redirect()->away( config('app.member_profile_new') );
+	})->name('memberprofile.new');
 
-Route::get('/voiceplacement', function(){
-	return redirect()->away( config('app.voice_placement_new') );
-})->name('voiceplacement.new');
+	Route::get('/voiceplacement', function(){
+		return redirect()->away( config('app.voice_placement_new') );
+	})->name('voiceplacement.new');
 
-Route::get('/singers/{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');
+	Route::get('/singers/{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');
 
 Auth::routes();
 
 Route::get('/dash', 'DashController@index')->name('dash');
+
+Route::get('/users', 'UsersController@index')->name('users.index');

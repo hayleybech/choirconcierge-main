@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Role;
+
+// http://alexsears.com/article/adding-roles-to-laravel-users/
+// https://medium.com/@ezp127/laravel-5-4-native-user-authentication-role-authorization-3dbae4049c8a
 
 class User extends Authenticatable
 {
@@ -31,7 +35,7 @@ class User extends Authenticatable
       * Get the roles a user has
       */
 	public function roles() {
-		return $this->belongsToMany('Role', 'users_roles');
+		return $this->belongsToMany('App\Role', 'users_roles');
 	}
 	
 	 /**
@@ -71,10 +75,42 @@ class User extends Authenticatable
         throw new UnexpectedValueException;
     }
 	
+	public function addRoles($titles)
+    {
+        $assigned_roles = array();
+
+        $roles = array_fetch(App\Role::all()->toArray(), 'name');
+ 
+		foreach($titles as $title) {
+			switch ($title) {
+				case 'Admin':
+					$assigned_roles[] = $this->getIdInArray($roles, 'Admin');
+					break;
+				case 'Music Team':
+					$assigned_roles[] = $this->getIdInArray($roles, 'Music Team');
+					break;
+				case 'Membership Team':
+					$assigned_roles[] = $this->getIdInArray($roles, 'Membership Team');
+					break;
+				case 'Accounts Team':
+					$assigned_roles[] = $this->getIdInArray($roles, 'Accounts Team');
+					break;
+				case 'Uniforms Team':
+					$assigned_roles[] = $this->getIdInArray($roles, 'Uniforms Team');
+					break;
+				default:
+					throw new \Exception("The role entered does not exist");
+			}
+		}
+
+        $this->roles()->attach($assigned_roles);
+    }
+	
 	/**
-     * Add roles to user
+     * Add capabilities to user
      */
-    public function addRole($title)
+	 /*
+    public function addCap($title)
     {
         $assigned_roles = array();
 
@@ -98,5 +134,5 @@ class User extends Authenticatable
         }
 
         $this->roles()->attach($assigned_roles);
-    }
+    }*/
 }
