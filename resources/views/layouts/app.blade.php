@@ -61,8 +61,9 @@
 								@if( Auth::user()->hasRole('Music Team') )
 								<a href="{{ route('voiceplacement.new') }}" class="dropdown-item" target="_blank"><i class="fa fa-plus fa-fw"></i> Voice Placement</a>	
 								@endif
-								
+								@if( Auth::user()->isEmployee() )
 								<a href="{{ route('singers.index') }}" class="dropdown-item {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-list-alt fa-fw"></i> Singers List</a>
+								@endif
 								
 								
 								<div class="dropdown-divider"></div>
