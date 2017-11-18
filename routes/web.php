@@ -43,7 +43,9 @@ Route::get('/dash', 'DashController@index')->name('dash');
 
 Route::get('/users', 'UsersController@index')->name('users.index');
 
-//Route::post('/users/{user}/roles', 'UsersController@addRoles')->name('users.addroles');
+Route::get('/users/{user}/roles/{role}/detach', 'UsersController@detachRole')->name('users.detachrole');
+
+Route::post('/users/{user}/role', 'UsersController@addRoles')->name('users.addroles');
 
 Route::get('/migrate', function(){
 	echo Artisan::call('migrate');

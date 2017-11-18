@@ -24,20 +24,26 @@
 		<div class="card-header">{{$user->name}}</div>
 		<ul class="list-group list-group-flush">
 			@foreach($user->roles as $role)
-			<li class="list-group-item">{{ $role->name }}</li>
+			<li class="list-group-item d-flex justify-content-between align-items-center">
+				{{ $role->name }}
+				<form method="get" action="/users/{{$user->id}}/roles/{{$role->id}}/detach">
+					<button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>
+				</form>
+			</li>
 			@endforeach
 		  </ul>
 		<div class="card-body">
-		<form>
+		<form method="post" action="/users/{{$user->id}}/role">
+			{{ csrf_field() }}
 			<div class="row no-gutters">
 				<div class="col-10">
-					<select class="form-control" id="input_role" name="role">
+					<select class="form-control" id="input_role" name="roles[]">
 						<option value="" selected disabled hidden>Choose Role</option>
-						<option>Admin</option>
-						<option>Membership Team</option>
-						<option>Music Team</option>
-						<option>Accounts Team</option>
-						<option>Uniforms Team</option>
+						@foreach( $roles_all as $role )
+							@if( ! Auth::user()->hasRole( $role->name ) )
+							<option value="{{$role->id}}">{{$role->name}}</option>
+							@endif
+						@endforeach
 					</select>
 				</div>
 				<div class="col-2">
@@ -49,6 +55,7 @@
 	</div>
 	@endforeach
 	
+	<!--
 	<form>
 		<h3>Add User</h3>
 		Email <input type="email" name="email">
@@ -58,6 +65,6 @@
 			<option>Admin</option>
 			<option>Music Team</option>
 		</select>
-	</form>
+	</form>-->
 
 @endsection

@@ -75,36 +75,16 @@ class User extends Authenticatable
         throw new UnexpectedValueException;
     }
 	
-	public function addRoles($titles)
+	public function addRoles($ids)
     {
-        $assigned_roles = array();
-
-        $roles = array_fetch(App\Role::all()->toArray(), 'name');
- 
-		foreach($titles as $title) {
-			switch ($title) {
-				case 'Admin':
-					$assigned_roles[] = $this->getIdInArray($roles, 'Admin');
-					break;
-				case 'Music Team':
-					$assigned_roles[] = $this->getIdInArray($roles, 'Music Team');
-					break;
-				case 'Membership Team':
-					$assigned_roles[] = $this->getIdInArray($roles, 'Membership Team');
-					break;
-				case 'Accounts Team':
-					$assigned_roles[] = $this->getIdInArray($roles, 'Accounts Team');
-					break;
-				case 'Uniforms Team':
-					$assigned_roles[] = $this->getIdInArray($roles, 'Uniforms Team');
-					break;
-				default:
-					throw new \Exception("The role entered does not exist");
-			}
-		}
-
-        $this->roles()->attach($assigned_roles);
+		$this->roles()->attach($ids);
     }
+	
+	public function detachRole($id) {
+		
+		$this->roles()->detach($id);
+		
+	}
 	
 	/**
      * Add capabilities to user
