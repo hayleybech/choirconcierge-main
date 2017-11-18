@@ -40,7 +40,7 @@
 					<select class="form-control" id="input_role" name="roles[]">
 						<option value="" selected disabled hidden>Choose Role</option>
 						@foreach( $roles_all as $role )
-							@if( ! Auth::user()->hasRole( $role->name ) )
+							@if( ! $user->hasRole( $role->name ) )
 							<option value="{{$role->id}}">{{$role->name}}</option>
 							@endif
 						@endforeach
