@@ -73,13 +73,19 @@
 			// Prep fees action
 			$fees_action = array(
 				'text' => 'Fees Paid',
-				'link' => '#',
+				'link' => route( 'singer.fees.paid', ['singer' => $singer['email'] ] ),
 				'link_target' => '_self',
-				'disabled' => 'disabled',
+				'disabled' => '',
 				'badge_class' => 'badge-secondary',
-				'badge_text' => 'Coming Soon',
-				'status_icon' => 'fa-square',
+				'badge_text' => 'Mark',
+				'status_icon' => 'fa-square-o',
 			);
+			if( in_array( 'Membership Fees Paid', $singer['tags'] ) ){
+				$fees_action['disabled'] = 'disabled';
+				$fees_action['badge_class'] = 'badge-success';
+				$fees_action['badge_text'] = '';
+				$fees_action['status_icon'] = 'fa-check-square-o';
+			}
 			$actions['Fees Paid'] = $fees_action;
 		
 		}
@@ -95,7 +101,7 @@
 		<div class="list-group list-group-flush">
 		
 			@foreach( $actions as $action )
-			<a href="{{ $action['link'] }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ $action['disabled'] }}" target="_blank">
+			<a href="{{ $action['link'] }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ $action['disabled'] }}" target="{{$action['link_target']}}">
 				<div class="d-flex w-100 justify-content-between">
 					<span><i class="fa fa-fw {{ $action['status_icon'] }}"></i> {{ $action['text'] }}</span>
 					<small>{!! $action['badge_text'] !!}</small>

@@ -71,4 +71,26 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'The singer\'s audition result has been saved. ', 'Response' => $Response]);
 
 	}
+	
+	public function feespaid($email) {
+		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956');
+		
+		// Add 'Membership Fees Paid' Tag
+		$args = array(
+			'tags' => array(
+					array(
+					'email' => $email,
+					'tag' => 'Membership Fees Paid'
+				),
+			)
+		);
+		$Response = $Drip->post('tags', $args);
+		
+		if( isset($Reponse->error) ) {
+			return redirect('/singers')->with(['status' => 'Could not save fee status. ', 'Response' => $Response]);
+		}
+		
+		return redirect('/singers')->with(['status' => 'The singer\'s fee status has been saved. ', 'Response' => $Response]);
+
+	}
 }

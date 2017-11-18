@@ -36,6 +36,8 @@ Route::get('/singers', 'SingersController@index')->name('singers.index');
 	})->name('voiceplacement.new');
 
 	Route::get('/singers/{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');
+	
+	Route::get('/singers/{singer}/fees/paid', 'SingersController@feespaid')->name('singer.fees.paid');
 
 Auth::routes();
 
