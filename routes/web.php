@@ -11,25 +11,50 @@
 |
 */
 
+
+Auth::routes();
+
 Route::get('/', function () {
 	return view('welcome');
 })->name('menu');
+	
 
-Route::get('/singers', 'SingersController@index')->name('singers.index');
+// Basic dashboard auth
+Route::middleware('auth')->group(function() {
+
+	Route::get('/dash', 'DashController@index')->name('dash');
+	
+});
+
+
+// Basic employee auth
+Route::middleware(['auth', 'employee'])->group(function() {
+
+	Route::get('/singers', 'SingersController@index')->name('singers.index');
 
 	Route::get('/singers/{singer}', 'SingersController@show')->name('singers.show');
+	
+});
 
+// Membership Team auth
+Route::middleware(['auth', 'role:Membership Team'])->group(function() {
+	
 	Route::get('/singers/{singer}/memberprofile', function($email){
 		return redirect()->away( config('app.member_profile_edit') . urlencode($email) );
 	})->name('singer.memberprofile');
-
-	Route::get('/singers/{singer}/voiceplacement', function($email){
-		return redirect()->away( config('app.voice_placement_edit') . urlencode($email) );
-	})->name('singer.voiceplacement');
-
+	
 	Route::get('/memberprofile', function(){
 		return redirect()->away( config('app.member_profile_new') );
 	})->name('memberprofile.new');
+	
+});
+
+// Music Team auth
+Route::middleware(['auth', 'role:Music Team'])->group(function() {
+	
+	Route::get('/singers/{singer}/voiceplacement', function($email){
+		return redirect()->away( config('app.voice_placement_edit') . urlencode($email) );
+	})->name('singer.voiceplacement');
 
 	Route::get('/voiceplacement', function(){
 		return redirect()->away( config('app.voice_placement_new') );
@@ -37,46 +62,57 @@ Route::get('/singers', 'SingersController@index')->name('singers.index');
 
 	Route::get('/singers/{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');
 	
+});
+
+// Accounts Team auth
+Route::middleware(['auth', 'role:Accounts Team'])->group(function() {
+	
 	Route::get('/singers/{singer}/fees/paid', 'SingersController@feespaid')->name('singer.fees.paid');
-
-Auth::routes();
-
-Route::get('/dash', 'DashController@index')->name('dash');
-
-Route::get('/users', 'UsersController@index')->name('users.index');
-
-Route::get('/users/{user}/roles/{role}/detach', 'UsersController@detachRole')->name('users.detachrole');
-
-Route::post('/users/{user}/role', 'UsersController@addRoles')->name('users.addroles');
-
-Route::get('/migrate', function(){
-	echo Artisan::call('migrate');
+	
 });
 
-Route::get('/migrate/refresh', function(){
-	echo Artisan::call('migrate:refresh');
-});
 
-Route::get('/migrate/refresh/seed', function(){
-	echo Artisan::call('migrate:refresh', [
-		'--seed' => true,
-	]);
-});
+// Admin level auth
+Route::middleware(['auth', 'role:Admin'])->group(function() {
+	
+	Route::get('/users', 'UsersController@index')->name('users.index');
 
-Route::get('/migrate/rollback', function(){
-	echo Artisan::call('migrate:rollback');
-});
+	Route::get('/users/{user}/roles/{role}/detach', 'UsersController@detachRole')->name('users.detachrole');
 
-Route::get('/migrate/reset', function(){
-	echo Artisan::call('migrate:reset');
-});
+	Route::post('/users/{user}/role', 'UsersController@addRoles')->name('users.addroles');	
+	
+	// Super admin?
+	
+	Route::get('/migrate', function(){
+		echo Artisan::call('migrate');
+	});
 
-Route::get('/migrate/fresh', function(){
-	echo Artisan::call('migrate:fresh');
-});
+	Route::get('/migrate/refresh', function(){
+		echo Artisan::call('migrate:refresh');
+	});
 
-Route::get('/migrate/fresh/seed', function(){
-	echo Artisan::call('migrate:fresh', [
-		'--seed' => true,
-	]);
+	Route::get('/migrate/refresh/seed', function(){
+		echo Artisan::call('migrate:refresh', [
+			'--seed' => true,
+		]);
+	});
+
+	Route::get('/migrate/rollback', function(){
+		echo Artisan::call('migrate:rollback');
+	});
+
+	Route::get('/migrate/reset', function(){
+		echo Artisan::call('migrate:reset');
+	});
+
+	Route::get('/migrate/fresh', function(){
+		echo Artisan::call('migrate:fresh');
+	});
+
+	Route::get('/migrate/fresh/seed', function(){
+		echo Artisan::call('migrate:fresh', [
+			'--seed' => true,
+		]);
+	});
+	
 });
