@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Libraries\Drip\Drip;
+use Excel;
 
 class SingersController extends Controller
 {
@@ -92,5 +93,72 @@ class SingersController extends Controller
 		
 		return redirect('/singers')->with(['status' => 'The singer\'s fee status has been saved. ', 'Response' => $Response]);
 
+	}
+	
+	public function export() {
+		
+		// Get subscribers
+		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956'); // Todo: move to config file
+		$Response = $Drip->get('subscribers');
+		$singers = $Response->subscribers; // Todo: add error handling.
+		
+		$rows = array();
+		
+		foreach ($singers as $singer) { 
+				
+			// Process fields
+			$name = ( isset($singer['custom_fields']['Name']) ? $singer['custom_fields']['Name'] : 'Unknown Unknown'  );
+			$names = explode(' ', $name);
+			$first_name = $names[0];
+			$last_name = ( ! empty($names[1]) ) ? $names[1] : 'Unknown';
+			
+			$voice_part = ( isset($singer['custom_fields']['Voice_Part']) ? $singer['custom_fields']['Voice_Part'] : ''  );
+			
+			// Pack fields
+			$cell = array( 
+				'Login name'	=> $name,
+				'Email'			=> $singer['email'],
+				'Can Log In'	=> true,
+				'Roles'			=> 'Member',
+				'First name'	=> $first_name,
+				'Last name' 	=> $last_name,
+				'Nickname'  	=> '',
+				'Street'		=> '',
+				'Additional'	=> '',
+				'City'			=> '',
+				'Province'		=> '',
+				'Postal code'	=> '',
+				'Country'	 	=> '',
+				'Mobile phone'	=> '',
+				'Home phone'	=> '',
+				'Work phone'	=> '',
+				'Birthday'		=> '',
+				'Notes'			=> '',
+				'Voice part'	=> $voice_part,
+				'Member ID'		=> '',
+				'Skills'		=> '',
+				'Member since'	=> '',
+				'Dues paid until'	=> '',
+				'Voice type'	=> '',
+				'Height'		=> '',
+				'Parent'		=> '',
+				'Spouse name'	=> '',
+				'Spouse Birthday'	=> '',
+				'Anniversary'	=> '',
+			);
+			$rows[] = $cell;
+		}
+		
+		// Make file
+		Excel::create('Users', function($excel) use($rows) {
+			
+			$excel->sheet('Main', function($sheet) use($rows) {
+
+				 $sheet->fromArray( $rows );
+
+			});
+			
+		})->download('csv');
+		
 	}
 }

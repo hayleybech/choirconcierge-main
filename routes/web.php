@@ -31,8 +31,11 @@ Route::middleware('auth')->group(function() {
 Route::middleware(['auth', 'employee'])->group(function() {
 
 	Route::get('/singers', 'SingersController@index')->name('singers.index');
+	
+	Route::get('/singers/export', 'SingersController@export')->name('singers.export');
 
 	Route::get('/singers/{singer}', 'SingersController@show')->name('singers.show');
+	
 	
 });
 
