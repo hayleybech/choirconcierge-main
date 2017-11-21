@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Libraries\Drip\Drip;
+use Excel;
 
 class SingersController extends Controller
 {
@@ -94,72 +95,70 @@ class SingersController extends Controller
 
 	}
 	
-	
-	// https://stackoverflow.com/questions/26146719/use-laravel-to-download-table-as-csv/27596496#27596496
 	public function export() {
-		$headers = [
-				'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0'
-			,   'Content-type'        => 'text/csv'
-			,   'Content-Disposition' => 'attachment; filename=galleries.csv'
-			,   'Expires'             => '0'
-			,   'Pragma'              => 'public'
-		];
-
-		//$list = Singer::all()->toArray();
 		
 		// Get subscribers
-		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956');
+		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956'); // Todo: move to config file
 		$Response = $Drip->get('subscribers');
-		$singers = $Response->subscribers; 
+		$singers = $Response->subscribers; // Todo: add error handling.
 		
-
-		# add headers for each column in the CSV download
-		//array_unshift($list, array_keys($list[0]));
-
-	   //$callback = function() use ($list) 
-	   $callback = function() use ($singers) 
-		{
-			$FH = fopen('php://output', 'w');
-			foreach ($singers as $singer) { 
+		$rows = array();
+		
+		foreach ($singers as $singer) { 
 				
-				$names = explode(' ', $singer['custom_fields']['name']);
-				
-				//fputcsv($FH, $row);
-				fputcsv($FH, array( 
-					'Login name'	=> singer['custom_fields']['name'],
-					'Email'			=> singer['email'],
-					'Can Log In'	=> true,
-					'Roles'			=> 'Member',
-					'First Name'	=> $names[0],
-					//'Last Name' 	=> $names[1],
-					'Nickname'  	=> '',
-					'Street'		=> '',
-					'Additional'	=> '',
-					'City'			=> '',
-					'Province'		=> '',
-					'Postal code'	=> '',
-					'Country'	 	=> '',
-					'Mobile phone'	=> '',
-					'Home phone'	=> '',
-					'Work phone'	=> '',
-					'Birthday'		=> '',
-					'Notes'			=> '',
-					'Voice Part'	=> singer['custom_fields']['Voice Part'],
-					'Member ID'		=> '',
-					'Skills'		=> '',
-					'Member Since'	=> '',
-					'Dues paid until'	=> '',
-					'Voice type'	=> '',
-					'Height'		=> '',
-					'Parent'		=> '',
-					'Spouse name'	=> '',
-					'Spouse birthday'	=> '',
-					'Anniversary'	=> '',
-				) );
-			}
-			fclose($FH);
-		};
+			// Process fields
+			$name = ( isset($singer['custom_fields']['Name']) ? $singer['custom_fields']['Name'] : 'Unknown Unknown'  );
+			$names = explode(' ', $name);
+			$first_name = $names[0];
+			$last_name = ( ! empty($names[1]) ) ? $names[1] : 'Unknown';
+			
+			$voice_part = ( isset($singer['custom_fields']['Voice_Part']) ? $singer['custom_fields']['Voice_Part'] : ''  );
+			
+			// Pack fields
+			$cell = array( 
+				'Login name'	=> $name,
+				'Email'			=> $singer['email'],
+				'Can Log In'	=> true,
+				'Roles'			=> 'Member',
+				'First name'	=> $first_name,
+				'Last name' 	=> $last_name,
+				'Nickname'  	=> '',
+				'Street'		=> '',
+				'Additional'	=> '',
+				'City'			=> '',
+				'Province'		=> '',
+				'Postal code'	=> '',
+				'Country'	 	=> '',
+				'Mobile phone'	=> '',
+				'Home phone'	=> '',
+				'Work phone'	=> '',
+				'Birthday'		=> '',
+				'Notes'			=> '',
+				'Voice part'	=> $voice_part,
+				'Member ID'		=> '',
+				'Skills'		=> '',
+				'Member since'	=> '',
+				'Dues paid until'	=> '',
+				'Voice type'	=> '',
+				'Height'		=> '',
+				'Parent'		=> '',
+				'Spouse name'	=> '',
+				'Spouse Birthday'	=> '',
+				'Anniversary'	=> '',
+			);
+			$rows[] = $cell;
+		}
+		
+		// Make file
+		Excel::create('Users', function($excel) use($rows) {
+			
+			$excel->sheet('Main', function($sheet) use($rows) {
 
-		return response()->stream($callback, 200, $headers);
+				 $sheet->fromArray( $rows );
+
+			});
+			
+		})->download('csv');
+		
 	}
 }
