@@ -110,6 +110,11 @@
 			@endforeach
 
 		</div>
+		
+		 <div class="card-footer">
+		  <a href="#" class="btn btn-outline-danger btn-sm"><i class="fa fa-remove"></i> Archive</a>
+		  <!--<small class="text-muted"></small>-->
+		</div>
 
 	</div>
 	
