@@ -79,9 +79,13 @@ class SingersController extends Controller
 		// Add 'Membership Fees Paid' Tag
 		$args = array(
 			'tags' => array(
-					array(
+				array(
 					'email' => $email,
 					'tag' => 'Membership Fees Paid'
+				),
+				array(
+					'email' => $email,
+					'tag' => 'Member'
 				),
 			)
 		);
@@ -89,6 +93,16 @@ class SingersController extends Controller
 		
 		if( isset($Reponse->error) ) {
 			return redirect('/singers')->with(['status' => 'Could not save fee status. ', 'Response' => $Response]);
+		}
+		
+		$Response2 = $Drip->delete("subscribers/$email/tags/Prospective-Member");
+		if( isset($Reponse2->error) ) {
+			return redirect('/singers')->with(['status' => 'Could not save fee status. ', 'Response' => $Response2]);
+		}
+		
+		$Response3 = $Drip->delete("subscribers/$email/tags/Non-Member");
+		if( isset($Reponse3->error) ) {
+			return redirect('/singers')->with(['status' => 'Could not save fee status. ', 'Response' => $Response3]);
 		}
 		
 		return redirect('/singers')->with(['status' => 'The singer\'s fee status has been saved. ', 'Response' => $Response]);
@@ -101,7 +115,7 @@ class SingersController extends Controller
 		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956'); // Todo: move to config file
 		$args = array(
 			'tags' => array(
-				'Prospective Member',
+				'Prospective-Member',
 			),
 		);
 		$Response = $Drip->get('subscribers');
