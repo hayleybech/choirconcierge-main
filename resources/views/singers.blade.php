@@ -7,7 +7,7 @@
 	<h2>Singers List</h2>
 	<p>This page lists all of the prospective singers in the Choir Concierge database. The list shows all forms yet to be completed for each singer. </p>
 	
-	<p><a href="{{ route('singers.export') }}" class="btn btn-link btn-sm">Export all Singers.</a></p>
+	<p><a href="{{ route('singers.export') }}" class="btn btn-link btn-sm">Export paid Singers.</a></p>
 
 	@if (session('status'))
 	<div class="alert {{ isset($Response->error) ? 'alert-danger' : 'alert-success' }}" role="alert">

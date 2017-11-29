@@ -99,12 +99,20 @@ class SingersController extends Controller
 		
 		// Get subscribers
 		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956'); // Todo: move to config file
+		$args = array(
+			'tags' => array(
+				'Prospective Member',
+			),
+		);
 		$Response = $Drip->get('subscribers');
 		$singers = $Response->subscribers; // Todo: add error handling.
 		
 		$rows = array();
 		
 		foreach ($singers as $singer) { 
+		
+			if( ! in_array( 'Membership Fees Paid', $singer['tags'] ) ) 
+				continue;
 				
 			// Process fields
 			$name = ( isset($singer['custom_fields']['Name']) ? $singer['custom_fields']['Name'] : 'Unknown Unknown'  );
