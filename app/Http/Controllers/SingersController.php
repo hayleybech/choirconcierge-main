@@ -21,14 +21,46 @@ class SingersController extends Controller
 
 	
     public function index(){
-		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956');
-	
-		// Get subscribers
-		$Response = $Drip->get('subscribers');
-		$singers = $Response->subscribers; 
 		
-		return view('singers', compact('singers', 'Response'));
+		$Response = self::getProspects();
+		if( isset($Reponse->error) ) {
+			return view('singers', compact('Response'));
+		}
+		
+		$prospects = $Response->subscribers; 
+		
+		$Response = self::getMembers();
+		if( isset($Reponse->error) ) {
+			return view('singers', compact('Response'));
+		}
+		$members = $Response->subscribers; 
+		
+		return view('singers', compact('prospects', 'members', 'Response'));
 	}
+	
+		public function getProspects() {
+			$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
+		
+			// Get subscribers
+			$args = array(
+				'tags' => 'Prospective-Member',
+			);
+			$Response = $Drip->get('subscribers', $args);
+			
+			return $Response;	
+		}
+		
+		public function getMembers() {
+			$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
+		
+			// Get subscribers
+			$args = array(
+				'tags' => 'Member',
+			);
+			$Response = $Drip->get('subscribers', $args);
+			
+			return $Response;	
+		}
 	
 	public function show() {
 		// find
@@ -37,7 +69,7 @@ class SingersController extends Controller
 	}
 	
 	public function auditionpass($email) {
-		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956');
+		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		
 		// Add 'Passed Vocal Assessment' Tag
 		$args = array(
@@ -74,7 +106,7 @@ class SingersController extends Controller
 	}
 	
 	public function feespaid($email) {
-		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956');
+		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		
 		// Add 'Membership Fees Paid' Tag
 		$args = array(
@@ -112,14 +144,14 @@ class SingersController extends Controller
 	public function export() {
 		
 		// Get subscribers
-		$Drip = new Drip('nsef8o9sjpmfake3czoq', '9922956'); // Todo: move to config file
+		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		$args = array(
-			'tags' => array(
-				'Prospective-Member',
-			),
+			'tags' => 'Member',
 		);
-		$Response = $Drip->get('subscribers');
+		$Response = $Drip->get('subscribers', $args);
 		$singers = $Response->subscribers; // Todo: add error handling.
+		
+		if( empty($singers) ) return;
 		
 		$rows = array();
 		
