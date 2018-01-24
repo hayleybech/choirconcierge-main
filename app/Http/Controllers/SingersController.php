@@ -43,7 +43,7 @@ class SingersController extends Controller
 		
 			// Get subscribers
 			$args = array(
-				'tags' => 'Prospective-Member',
+				'tags' => 'Prospective Member',
 			);
 			$Response = $Drip->get('subscribers', $args);
 			
