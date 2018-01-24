@@ -90,7 +90,7 @@ class SingersController extends Controller
 		$args = array(
 			'events' => array(
 					array(
-					'email' => $_GET['action_email'],
+					'email' => $email,
 					'action' => 'Completed Vocal Assessment'
 				),
 			)
