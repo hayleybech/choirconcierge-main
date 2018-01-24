@@ -25,7 +25,7 @@
 		@each('partials.singer', $prospects, 'singer', 'partials.noresults')
 	</div>
 	
-	<h3>Members</h2>
+	<h3>Paid Members</h2>
 	<p><a href="{{ route('singers.export') }}" class="btn btn-link btn-sm">Export paid Singers.</a></p>
 	<div class="row">
 		@each('partials.singer', $members, 'singer', 'partials.noresults')
