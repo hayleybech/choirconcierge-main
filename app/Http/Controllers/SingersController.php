@@ -115,10 +115,6 @@ class SingersController extends Controller
 					'email' => $email,
 					'tag' => 'Membership Fees Paid'
 				),
-				array(
-					'email' => $email,
-					'tag' => 'Member'
-				),
 			)
 		);
 		$Response = $Drip->post('tags', $args);
@@ -138,6 +134,50 @@ class SingersController extends Controller
 		}
 		
 		return redirect('/singers')->with(['status' => 'The singer\'s fee status has been saved. ', 'Response' => $Response]);
+
+	}
+	
+	public function markUniformProvided($email) {
+		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
+		
+		// Add 'Uniform Provided' Tag
+		$args = array(
+			'tags' => array(
+				array(
+					'email' => $email,
+					'tag' => 'Uniform Provided'
+				),
+			)
+		);
+		$Response = $Drip->post('tags', $args);
+		
+		if( isset($Reponse->error) ) {
+			return redirect('/singers')->with(['status' => 'Could not save uniform status. ', 'Response' => $Response]);
+		}
+		
+		return redirect('/singers')->with(['status' => 'The singer\'s uniform status has been saved. ', 'Response' => $Response]);
+
+	}
+	
+	public function markAccountCreated($email) {
+		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
+		
+		// Add 'Account Created' Tag
+		$args = array(
+			'tags' => array(
+				array(
+					'email' => $email,
+					'tag' => 'Account Created'
+				),
+			)
+		);
+		$Response = $Drip->post('tags', $args);
+		
+		if( isset($Reponse->error) ) {
+			return redirect('/singers')->with(['status' => 'Could not save account status. ', 'Response' => $Response]);
+		}
+		
+		return redirect('/singers')->with(['status' => 'The singer\'s account status has been saved. ', 'Response' => $Response]);
 
 	}
 	
