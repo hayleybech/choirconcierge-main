@@ -55,7 +55,7 @@ class SingersController extends Controller
 		
 			// Get subscribers	
 			$args = array(
-				'tags' => 'Membership Fees Paid',
+				'tags' => 'Waiting for Account Creation',
 			);
 			$Response = $Drip->get('subscribers', $args);
 			
@@ -115,6 +115,10 @@ class SingersController extends Controller
 					'email' => $email,
 					'tag' => 'Membership Fees Paid'
 				),
+				array(
+					'email' => $email,
+					'tag' => 'Waiting for Account Creation'
+				),
 			)
 		);
 		$Response = $Drip->post('tags', $args);
@@ -164,14 +168,15 @@ class SingersController extends Controller
 		
 		// Add 'Account Created' Tag
 		$args = array(
+			'email' => $email,
 			'tags' => array(
-				array(
-					'email' => $email,
-					'tag' => 'Account Created'
-				),
-			)
+				'Account Created',
+			),
+			'remove_tags' => array(
+				'Waiting for Account Creation',
+			),
 		);
-		$Response = $Drip->post('tags', $args);
+		$Response = $Drip->post('subscribers', $args);
 		
 		if( isset($Reponse->error) ) {
 			return redirect('/singers')->with(['status' => 'Could not save account status. ', 'Response' => $Response]);
@@ -197,7 +202,7 @@ class SingersController extends Controller
 		
 		foreach ($singers as $singer) { 
 		
-			if( ! in_array( 'Membership Fees Paid', $singer['tags'] ) ) 
+			if( ! in_array( 'Waiting for Account Creation', $singer['tags'] ) ) 
 				continue;
 				
 			// Process fields
