@@ -236,5 +236,7 @@ return [
 	'voice_placement_new' => 'https://docs.google.com/forms/d/e/1FAIpQLSezSLKjE1FinoWdOXUp58zPj9N0cGJ3Qs7FzFIQpxNwtWHgQA/viewform',
 	'voice_placement_edit' => 'https://docs.google.com/forms/d/e/1FAIpQLSezSLKjE1FinoWdOXUp58zPj9N0cGJ3Qs7FzFIQpxNwtWHgQA/viewform?entry.758241671=',
 
-
+	'drip_token' 	=> 'nsef8o9sjpmfake3czoq',
+	'drip_account' 	=> '9922956',
+	
 ];

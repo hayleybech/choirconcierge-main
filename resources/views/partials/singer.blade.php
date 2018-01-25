@@ -89,6 +89,48 @@
 			$actions['Fees Paid'] = $fees_action;
 		
 		}
+		
+		if( Auth::user()->hasRole('Uniforms Team') ) {
+			// Prep uniform action
+			$uniform_action = array(
+				'text' => 'Uniform Provided',
+				'link' => route( 'singer.uniform.provided', ['singer' => $singer['email'] ] ),
+				'link_target' => '_self',
+				'disabled' => '',
+				'badge_class' => 'badge-secondary',
+				'badge_text' => 'Mark',
+				'status_icon' => 'fa-square-o',
+			);
+			if( in_array( 'Uniform Provided', $singer['tags'] ) ){
+				$uniform_action['disabled'] = 'disabled';
+				$uniform_action['badge_class'] = 'badge-success';
+				$uniform_action['badge_text'] = '';
+				$uniform_action['status_icon'] = 'fa-check-square-o';
+			}
+			$actions['Uniforms Provided'] = $uniform_action;
+		
+		}
+		
+		if( Auth::user()->hasRole('Membership Team') ){
+			// Prep account action
+			$account_action = array(
+				'text' => 'Account Created',
+				'link' => route( 'singer.account.created', ['singer' => $singer['email'] ] ),
+				'link_target' => '_self',
+				'disabled' => '',
+				'badge_class' => 'badge-secondary',
+				'badge_text' => 'Mark',
+				'status_icon' => 'fa-square-o',
+			);
+
+			if( in_array( 'Account Created', $singer['tags'] ) ){
+				$account_action['disabled'] = 'disabled';
+				$account_action['badge_class'] = 'badge-success';
+				$account_action['badge_text'] = '';
+				$account_action['status_icon'] = 'fa-check-square-o';
+			}
+			$actions['Account Created'] = $account_action;
+		}
 	
 	?> 
 	<div class="card">
