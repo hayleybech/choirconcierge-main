@@ -50,10 +50,10 @@ class SingersController extends Controller
 			return $Response;	
 		}
 		
-		public function getPaidMembers() {
+		public function getMembers() {
 			$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		
-			// Get subscribers
+			// Get subscribers	
 			$args = array(
 				'tags' => 'Membership Fees Paid',
 			);
