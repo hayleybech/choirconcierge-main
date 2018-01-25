@@ -29,7 +29,7 @@ class SingersController extends Controller
 		
 		$prospects = $Response->subscribers; 
 		
-		$Response = self::getMembers();
+		$Response = self::getMembersPaid();
 		if( isset($Reponse->error) ) {
 			return view('singers', compact('Response'));
 		}
@@ -50,7 +50,7 @@ class SingersController extends Controller
 			return $Response;	
 		}
 		
-		public function getMembers() {
+		public function getMembersPaid() {
 			$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		
 			// Get subscribers	

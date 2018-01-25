@@ -49,7 +49,7 @@ Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 		return redirect()->away( config('app.member_profile_new') );
 	})->name('memberprofile.new');
 	
-	Route::get('/singers/{singer}/account/created', 'SingersController@markaccountcreated')->name('singer.account.created');
+	Route::get('/singers/{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
 	
 });
 
@@ -78,7 +78,7 @@ Route::middleware(['auth', 'role:Accounts Team'])->group(function() {
 // Uniforms Team auth
 Route::middleware(['auth', 'role:Uniforms Team'])->group(function() {
 	
-	Route::get('/singers/{singer}/uniform/provided', 'SingersController@markuniformprovided')->name('singer.uniform.provided');
+	Route::get('/singers/{singer}/uniform/provided', 'SingersController@markUniformProvided')->name('singer.uniform.provided');
 	
 });
 
