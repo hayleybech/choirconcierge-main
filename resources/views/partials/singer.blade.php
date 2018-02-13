@@ -143,7 +143,7 @@
 		<div class="list-group list-group-flush">
 		
 			@foreach( $actions as $action )
-			<a href="{{ $action['link'] }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ $action['disabled'] }}" target="{{$action['link_target']}}">
+			<a href="{{ $action['link'] }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center link-confirm {{ $action['disabled'] }}" target="{{$action['link_target']}}">
 				<div class="d-flex w-100 justify-content-between">
 					<span><i class="fa fa-fw {{ $action['status_icon'] }}"></i> {{ $action['text'] }}</span>
 					<small>{!! $action['badge_text'] !!}</small>
