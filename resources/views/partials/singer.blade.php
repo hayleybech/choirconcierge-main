@@ -89,6 +89,59 @@
 			$actions['Fees Paid'] = $fees_action;
 		
 		}
+		
+		if( Auth::user()->hasRole('Uniforms Team') ) {
+			// Prep uniform action
+			$uniform_action = array(
+				'text' => 'Uniform Provided',
+				'link' => route( 'singer.uniform.provided', ['singer' => $singer['email'] ] ),
+				'link_target' => '_self',
+				'disabled' => '',
+				'badge_class' => 'badge-secondary',
+				'badge_text' => 'Mark',
+				'status_icon' => 'fa-square-o',
+			);
+			if( in_array( 'Uniform Provided', $singer['tags'] ) ){
+				$uniform_action['disabled'] = 'disabled';
+				$uniform_action['badge_class'] = 'badge-success';
+				$uniform_action['badge_text'] = '';
+				$uniform_action['status_icon'] = 'fa-check-square-o';
+			}
+			$actions['Uniforms Provided'] = $uniform_action;
+		
+		}
+		
+		if( Auth::user()->hasRole('Membership Team') ){
+			// Prep account action
+			$account_action = array(
+				'text' => 'Account Created',
+				'link' => route( 'singer.account.created', ['singer' => $singer['email'] ] ),
+				'link_target' => '_self',
+				'disabled' => '',
+				'badge_class' => 'badge-secondary',
+				'badge_text' => 'Mark',
+				'status_icon' => 'fa-square-o',
+			);
+
+			if( in_array( 'Account Created', $singer['tags'] ) ){
+				$account_action['disabled'] = 'disabled';
+				$account_action['badge_class'] = 'badge-success';
+				$account_action['badge_text'] = '';
+				$account_action['status_icon'] = 'fa-check-square-o';
+			}
+			$actions['Account Created'] = $account_action;
+		}
+		
+		// Prep administrative settings
+		$operations = [];
+		
+		if( in_array( 'Category - Prospective Member', $singer['tags'] ) ){
+			$operations[] = array(
+				'title' => 'Archive',
+				'link'  => route( 'singer.move.archive', ['singer' => $singer['email'] ] ),
+				'class' => 'btn-danger',
+			);
+		}
 	
 	?> 
 	<div class="card">
@@ -101,7 +154,7 @@
 		<div class="list-group list-group-flush">
 		
 			@foreach( $actions as $action )
-			<a href="{{ $action['link'] }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ $action['disabled'] }}" target="{{$action['link_target']}}">
+			<a href="{{ $action['link'] }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center link-confirm {{ $action['disabled'] }}" target="{{$action['link_target']}}">
 				<div class="d-flex w-100 justify-content-between">
 					<span><i class="fa fa-fw {{ $action['status_icon'] }}"></i> {{ $action['text'] }}</span>
 					<small>{!! $action['badge_text'] !!}</small>
@@ -110,7 +163,14 @@
 			@endforeach
 
 		</div>
-
+		
+		@if (count($operations) === 1)
+		<div class="card-footer">
+			@foreach( $operations as $op)
+			<a href="{{ $op['link'] }}" class="btn btn-sm {{ $op['class'] }}">{{ $op['title'] }}</a>
+			@endforeach
+		</div>
+		@endif
 	</div>
 	
 </div>

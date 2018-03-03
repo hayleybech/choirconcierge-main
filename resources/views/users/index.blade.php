@@ -18,42 +18,46 @@
 		@endisset
 	</div>
 	@endif
-		
-	@foreach($users as $user)
+	
+	<div id="accordion">
+	@foreach($users as $key => $user)
 	<div class="card">
-		<div class="card-header">{{$user->name}}</div>
-		<ul class="list-group list-group-flush">
-			@foreach($user->roles as $role)
-			<li class="list-group-item d-flex justify-content-between align-items-center">
-				{{ $role->name }}
-				<form method="get" action="/users/{{$user->id}}/roles/{{$role->id}}/detach">
-					<button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>
-				</form>
-			</li>
-			@endforeach
-		  </ul>
-		<div class="card-body">
-		<form method="post" action="/users/{{$user->id}}/role">
-			{{ csrf_field() }}
-			<div class="row no-gutters">
-				<div class="col-10">
-					<select class="form-control" id="input_role" name="roles[]">
-						<option value="" selected disabled hidden>Choose Role</option>
-						@foreach( $roles_all as $role )
-							@if( ! $user->hasRole( $role->name ) )
-							<option value="{{$role->id}}">{{$role->name}}</option>
-							@endif
-						@endforeach
-					</select>
+		<div class="card-header"><a class="btn btn-link collapsed" data-toggle="collapse" href="#collapse-{{$key}}" aria-expanded="false" aria-controls="collapse-{{$key}}">{{$user->name}}</a></div>
+		<div class="collapse" id="collapse-{{$key}}" data-parent="#accordion" >
+			<ul class="list-group list-group-flush">
+				@foreach($user->roles as $role)
+				<li class="list-group-item d-flex justify-content-between align-items-center">
+					{{ $role->name }}
+					<form method="get" action="/users/{{$user->id}}/roles/{{$role->id}}/detach">
+						<button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>
+					</form>
+				</li>
+				@endforeach
+			  </ul>
+			<div class="card-body">
+			<form method="post" action="/users/{{$user->id}}/role">
+				{{ csrf_field() }}
+				<div class="row no-gutters">
+					<div class="col-10">
+						<select class="form-control" id="input_role" name="roles[]">
+							<option value="" selected disabled hidden>Choose Role</option>
+							@foreach( $roles_all as $role )
+								@if( ! $user->hasRole( $role->name ) )
+								<option value="{{$role->id}}">{{$role->name}}</option>
+								@endif
+							@endforeach
+						</select>
+					</div>
+					<div class="col-2">
+						<input class="btn btn-default" type="submit" value="Add">
+					</div>
 				</div>
-				<div class="col-2">
-					<input class="btn btn-default" type="submit" value="Add">
-				</div>
+			</form>
 			</div>
-		</form>
 		</div>
 	</div>
 	@endforeach
+	</div>
 	
 	<!--
 	<form>

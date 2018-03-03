@@ -164,6 +164,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 		Maatwebsite\Excel\ExcelServiceProvider::class,
+		Collective\Html\HtmlServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -227,6 +228,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 		'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+		'Form' => 'Collective\Html\FormFacade',
+		'Html' => 'Collective\Html\HtmlFacade',
 
     ],
 	
@@ -236,5 +239,7 @@ return [
 	'voice_placement_new' => 'https://docs.google.com/forms/d/e/1FAIpQLSezSLKjE1FinoWdOXUp58zPj9N0cGJ3Qs7FzFIQpxNwtWHgQA/viewform',
 	'voice_placement_edit' => 'https://docs.google.com/forms/d/e/1FAIpQLSezSLKjE1FinoWdOXUp58zPj9N0cGJ3Qs7FzFIQpxNwtWHgQA/viewform?entry.758241671=',
 
-
+	'drip_token' 	=> 'nsef8o9sjpmfake3czoq',
+	'drip_account' 	=> '9922956',
+	
 ];
