@@ -42,3 +42,8 @@ i.fa.fa-external-link {
 .navbar-nav i.fa.fa-fw {
     margin-right: 5px;
 }
+
+/* Fix for bootstrap bug */
+.form-inline .custom-select {
+	width: auto !important;
+}

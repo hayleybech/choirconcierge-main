@@ -51,6 +51,8 @@ Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 	
 	Route::get('/singers/{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
 	
+	Route::get('/singers/{singer}/move/archive', 'SingersController@moveToArchive')->name('singer.move.archive');
+	
 });
 
 // Music Team auth

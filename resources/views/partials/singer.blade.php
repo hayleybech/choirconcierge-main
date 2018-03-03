@@ -131,6 +131,17 @@
 			}
 			$actions['Account Created'] = $account_action;
 		}
+		
+		// Prep administrative settings
+		$operations = [];
+		
+		if( in_array( 'Category - Prospective Member', $singer['tags'] ) ){
+			$operations[] = array(
+				'title' => 'Archive',
+				'link'  => route( 'singer.move.archive', ['singer' => $singer['email'] ] ),
+				'class' => 'btn-danger',
+			);
+		}
 	
 	?> 
 	<div class="card">
@@ -152,7 +163,14 @@
 			@endforeach
 
 		</div>
-
+		
+		@if (count($operations) === 1)
+		<div class="card-footer">
+			@foreach( $operations as $op)
+			<a href="{{ $op['link'] }}" class="btn btn-sm {{ $op['class'] }}">{{ $op['title'] }}</a>
+			@endforeach
+		</div>
+		@endif
 	</div>
 	
 </div>

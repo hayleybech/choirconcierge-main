@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use App\Libraries\Drip\Drip;
 use Excel;
 
@@ -22,44 +23,47 @@ class SingersController extends Controller
 	
     public function index(){
 		
-		$Response = self::getProspects();
+		$category = Input::get('filter_category', 'Prospective Member');
+		
+		$Response = self::getSingersByTag('Category - '. $category);
 		if( isset($Reponse->error) ) {
 			return view('singers', compact('Response'));
 		}
-		
-		$prospects = $Response->subscribers; 
-		
-		$Response = self::getMembersPaid();
-		if( isset($Reponse->error) ) {
+		$singers = $Response->subscribers;
+			
+		/*$membersResponse = self::getMembersPaid();
+		if( isset($membersReponse->error) ) {
 			return view('singers', compact('Response'));
 		}
-		$members = $Response->subscribers; 
+		$members = $membersResponse->Subscribers;*/
 		
-		return view('singers', compact('prospects', 'members', 'Response'));
+		return view('singers', compact('category', 'singers', 'members', 'Response'));
 	}
 	
-		public function getProspects() {
+		public function getSingersByTag($tag) {
 			$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		
 			// Get subscribers
 			$args = array(
-				'tags' => 'Prospective Member',
+				'tags' => $tag,
 			);
+			
 			$Response = $Drip->get('subscribers', $args);
+					
+			/*
+			if( isset($Reponse->error) ) {
+				return view('singers', compact('Response'));
+			}*/
 			
 			return $Response;	
 		}
+	
+		public function getProspects() {
+			return self::getSingersByTag('Prospective Member');
+		}
 		
 		public function getMembersPaid() {
-			$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
-		
-			// Get subscribers	
-			$args = array(
-				'tags' => 'Waiting for Account Creation',
-			);
-			$Response = $Drip->get('subscribers', $args);
-			
-			return $Response;	
+			return self::getSingersByTag('Waiting for Account Creation');
 		}
 	
 	public function show() {
@@ -184,6 +188,31 @@ class SingersController extends Controller
 		
 		return redirect('/singers')->with(['status' => 'The singer\'s account status has been saved. ', 'Response' => $Response]);
 
+	}
+	
+	public function moveToArchive($email) {
+		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
+		
+		// Add 'Account Created' Tag
+		$args = array(
+			'subscribers' => array(
+				[
+					'email' => $email,
+					'tags' => array(
+						'Category - Archived',
+					),
+					'remove_tags' => array(
+						'Category - Prospective Member',
+					),
+				]
+			)
+		);
+		$Response = $Drip->post('subscribers', $args);
+		
+		if( isset($Reponse->error) ) {
+			return redirect('/singers')->with(['status' => 'Could not move singer. ', 'Response' => $Response]);
+		}
+		return redirect('/singers')->with(['status' => 'The singer was moved. ', 'Response' => $Response]);
 	}
 	
 	public function export() {
