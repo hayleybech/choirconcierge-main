@@ -47,10 +47,5 @@
 	<div class="row">
 		@each('partials.singer', $singers, 'singer', 'partials.noresults')
 	</div>
-	
-	<h3>Paid Members</h2>
-	<div class="row">
-		@ each('partials.singer', $members, 'singer', 'partials.noresults')
-	</div>
 
 @endsection
