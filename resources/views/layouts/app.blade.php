@@ -32,6 +32,7 @@
 
 				<!-- Right Side Of Navbar -->
 				<ul class="navbar-nav">
+					<li><span class="headway-badge"></span></li>
 					<!-- Authentication Links -->
 					@guest
 						<li class="nav-item {{ ( \Request::is('login') ) ? 'active' : '' }}">
@@ -100,6 +101,14 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
     <script src="https://use.fontawesome.com/7679517f07.js"></script>
+	
+	<script>
+	  var HW_config = {
+		selector: ".headway-badge", // CSS selector where to inject the badge
+		account:  "7L6Rky"
+	  }
+	</script>
+	<script async src="//cdn.headwayapp.co/widget.js"></script>
     
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/script.js') }}"></script>
