@@ -4,6 +4,13 @@
 		$singer_name = ( isset($singer['custom_fields']['Name']) ) ? $singer['custom_fields']['Name'] : 'Name Unknown';
 		$singer_part = ( isset($singer['custom_fields']['Voice_Part']) ) ? $singer['custom_fields']['Voice_Part'] : 'No Voice Part';
 		$singer_email = $singer['email'];
+		$singer_phone = $singer['custom_fields']['Phone'];
+		
+		// Fix missing zero
+		if( substr($singer_phone, 0, 1) != '0' &&
+			substr($singer_phone, 0, 1) != '+') {
+			$singer_phone = '0' . $singer_phone;	
+		}
 		
 		$actions = array();
 		
@@ -148,7 +155,10 @@
 		<div class="card-body">
 			<h4 class="card-title singer-name">{{ ( isset($singer_name) ) ? $singer_name : 'Name Unknown' }}</h4>
 			<h6 class="card-subtitle mb-2 text-muted singer-email">{{ $singer_email }}</h6>
-			<p class="card-text singer-part">{{ ( isset($singer_part) ) ? $singer_part : 'No Voice Part' }}</p>
+			<p class="card-text">
+				<span class="singer-part"><i class="fas fa-user-friends"></i> {{ ( isset($singer_part) ) ? $singer_part : 'No Voice Part' }}</span><br>
+				<span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer_phone) ) ? $singer_phone : '' }}</span><br>
+			</p>
 		</div>
 
 		<div class="list-group list-group-flush">
