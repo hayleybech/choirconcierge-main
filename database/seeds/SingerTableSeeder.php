@@ -23,4 +23,6 @@ class SingerTableSeeder extends Seeder {
 			'name'	=> 'Mister Person', 
 			'email'	=> 'haydenbech+s3@gmail.com',
 		]);
+		
+	}
 }
