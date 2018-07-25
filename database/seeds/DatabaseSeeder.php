@@ -32,6 +32,10 @@ class DatabaseSeeder extends Seeder
 		$roles = Role::all()->pluck('id')->toArray();
 		
 		$user->roles()->attach($roles);
+		
+		
+		$this->call('SingerTableSeeder');
+		$this->command->info('User table seeded!');
 
     }
 }
