@@ -11,6 +11,6 @@ class Singer extends Model
 	 */
 	public function tasks()
 	{
-		return $this->belongsToMany('App\Task', 'singers_tasks')
+		return $this->belongsToMany('App\Task', 'singers_tasks');
 	}
 }
