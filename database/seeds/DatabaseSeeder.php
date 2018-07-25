@@ -1,8 +1,6 @@
 <?php
 
-use App\Role;
 use Illuminate\Database\Seeder;
-use App\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,25 +11,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-		
-		$user = User::create([
-			'name' => 'Hayden',
-            'email' => 'haydenbech@gmail.com',
-            'password' => bcrypt('*tokra1#'),
-		]);
-		
-		DB::table('roles')->insert([
-            ['name' => 'Admin'],
-            ['name' => 'Music Team'],
-            ['name' => 'Membership Team'],
-            ['name' => 'Accounts Team'],
-            ['name' => 'Uniforms Team'],
-        ]);
-		
-		$roles = Role::all()->pluck('id')->toArray();
-		
-		$user->roles()->attach($roles);
+        $this->call('UsersTableSeeder');
+		$this->command->info('User table seeded!');
 
     }
 }
