@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\Singer;
 use App\Libraries\Drip\Drip;
 use Excel;
 
@@ -25,11 +26,16 @@ class SingersController extends Controller
 		
 		$category = Input::get('filter_category', 'Prospective Member');
 		
+		/*
 		$Response = self::getSingersByTag('Category - '. $category);
 		if( isset($Reponse->error) ) {
 			return view('singers', compact('Response'));
 		}
 		$singers = $Response->subscribers;
+		*/
+		
+		// Replace Drip code with DB code
+		$singers = Singer::all();
 			
 		/*$membersResponse = self::getMembersPaid();
 		if( isset($membersReponse->error) ) {

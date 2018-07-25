@@ -1,9 +1,8 @@
 <div class="col-md-3">
 	<?php
+		/*
 		// Prep singer details
-		$singer_name = ( isset($singer['custom_fields']['Name']) ) ? $singer['custom_fields']['Name'] : 'Name Unknown';
 		$singer_part = ( isset($singer['custom_fields']['Voice_Part']) ) ? $singer['custom_fields']['Voice_Part'] : 'No Voice Part';
-		$singer_email = $singer['email'];
 		$singer_phone = $singer['custom_fields']['Phone'];
 		
 		// Fix missing zero
@@ -148,19 +147,21 @@
 				'link'  => route( 'singer.move.archive', ['singer' => $singer['email'] ] ),
 				'class' => 'btn-danger',
 			);
-		}
+		}*/
 	
 	?> 
 	<div class="card">
 		<div class="card-body">
-			<h4 class="card-title singer-name">{{ ( isset($singer_name) ) ? $singer_name : 'Name Unknown' }}</h4>
-			<h6 class="card-subtitle mb-2 text-muted singer-email">{{ $singer_email }}</h6>
+			<h4 class="card-title singer-name">{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}</h4>
+			<h6 class="card-subtitle mb-2 text-muted singer-email">{{ $singer->email }}</h6>
+			<?php /*
 			<p class="card-text">
 				<span class="singer-part"><i class="fas fa-user-friends"></i> {{ ( isset($singer_part) ) ? $singer_part : 'No Voice Part' }}</span><br>
 				<span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer_phone) ) ? $singer_phone : '' }}</span><br>
-			</p>
+			</p>*/?>
 		</div>
-
+		
+		<?php /*
 		<div class="list-group list-group-flush">
 		
 			@foreach( $actions as $action )
@@ -181,6 +182,7 @@
 			@endforeach
 		</div>
 		@endif
+		*/?>
 	</div>
 	
 </div>
