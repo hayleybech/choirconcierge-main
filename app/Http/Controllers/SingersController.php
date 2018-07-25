@@ -35,7 +35,8 @@ class SingersController extends Controller
 		*/
 		
 		// Replace Drip code with DB code
-		$singers = Singer::all();
+		//$singers = Singer::all();
+		$singers = Singer::with('tasks')->get();
 			
 		/*$membersResponse = self::getMembersPaid();
 		if( isset($membersReponse->error) ) {
