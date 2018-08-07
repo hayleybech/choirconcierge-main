@@ -32,6 +32,9 @@ Route::middleware(['auth', 'employee'])->group(function() {
 
 	Route::get('/singers', 'SingersController@index')->name('singers.index');
 	
+	Route::get('/singers/create', 'SingersController@create')->name('singer.create');
+	Route::post('/singers', 'SingersController@store');
+	
 	Route::get('/singers/export', 'SingersController@export')->name('singers.export');
 
 	Route::get('/singers/{singer}', 'SingersController@show')->name('singers.show');
@@ -52,6 +55,7 @@ Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 	Route::get('/singers/{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
 	
 	Route::get('/singers/{singer}/move/archive', 'SingersController@moveToArchive')->name('singer.move.archive');
+	
 	
 });
 

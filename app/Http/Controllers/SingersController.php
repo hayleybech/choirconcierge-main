@@ -73,6 +73,14 @@ class SingersController extends Controller
 			return self::getSingersByTag('Waiting for Account Creation');
 		}
 	
+	public function create() {
+		return view('singer.create');
+	}
+	
+	public function store() {
+		
+	}
+	
 	public function show() {
 		// find
 	
