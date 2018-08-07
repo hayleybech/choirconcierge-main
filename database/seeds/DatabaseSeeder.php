@@ -3,6 +3,7 @@
 use App\Role;
 use Illuminate\Database\Seeder;
 use App\User;
+use App\Task;
 
 class DatabaseSeeder extends Seeder
 {
@@ -36,6 +37,9 @@ class DatabaseSeeder extends Seeder
 		
 		$this->call('SingerTableSeeder');
 		$this->command->info('User table seeded!');
+		
+		$this->call('TaskTableSeeder');
+		$this->command->info('Task table seeded!');	
 
     }
 }
