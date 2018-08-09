@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Singer;
+use App\Task;
 use App\Libraries\Drip\Drip;
 use Excel;
 
@@ -77,8 +78,26 @@ class SingersController extends Controller
 		return view('singer.create');
 	}
 	
-	public function store() {
+	public function store(Request $request) {
+		$validated = $request->validate([
+			'name'	=> 'required',
+			'email'	=> 'required',
+		]);
 		
+		$singer = new Singer();
+		
+		$singer->name  = $request->name;
+		$singer->email = $request->email;
+		
+		$singer->save();
+		
+		// Attach all tasks
+
+		$tasks = Task::all();
+		$singer->tasks()->attach( $tasks );
+		
+		// Exit
+		return redirect('/singers')->with(['status' => 'Singer created. ', ]);
 	}
 	
 	public function show() {

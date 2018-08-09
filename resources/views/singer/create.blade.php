@@ -6,7 +6,17 @@
 
 <h2>Add Singer</h2>
 
-{{ Form::open() }}
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+		@foreach ($errors->all() as $error)
+			<li>{{ $error }}</li>
+		@endforeach
+        </ul>
+    </div>
+@endif
+
+{{ Form::open( array( 'route' => 'singers.index' ) ) }}
     
 	<p>
 	{{ Form::label('name', 'Name') }}
