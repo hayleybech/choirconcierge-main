@@ -16,6 +16,6 @@ class Task extends Model
 	
 	public function singers()
 	{
-		return $this->belongsToMany('App\Singer', 'singers_tasks');
+		return $this->belongsToMany('App\Singer', 'singers_tasks')->withPivot('completed')->withTimestamps();
 	}
 }
