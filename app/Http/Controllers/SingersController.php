@@ -100,6 +100,20 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'Singer created. ', ]);
 	}
 	
+	public function completeTask($singerId, $taskId) {
+		$singer = Singer::find($singerId);
+		$task = Task::find($taskId);
+		
+		if( $task->type == 'manual' ) {
+			// Simply mark as done. 
+			$singer->tasks()->updateExistingPivot($taskId, ['completed' => true]);
+			return redirect('/singers')->with(['status' => 'Task updated. ', ]);
+		} else {
+			// Redirect to form
+			
+		}
+	}
+	
 	public function show() {
 		// find
 	

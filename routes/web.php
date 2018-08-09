@@ -39,6 +39,8 @@ Route::middleware(['auth', 'employee'])->group(function() {
 
 	Route::get('/singers/{singer}', 'SingersController@show')->name('singers.show');
 	
+	Route::get('/singers/{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
+	
 });
 
 // Membership Team auth
