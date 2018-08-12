@@ -46,6 +46,7 @@ Route::middleware(['auth', 'employee'])->group(function() {
 // Membership Team auth
 Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 	
+	// Old version
 	Route::get('/singers/{singer}/memberprofile', function($email){
 		return redirect()->away( config('app.member_profile_edit') . urlencode($email) );
 	})->name('singer.memberprofile');
@@ -53,6 +54,11 @@ Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 	Route::get('/memberprofile', function(){
 		return redirect()->away( config('app.member_profile_new') );
 	})->name('memberprofile.new');
+	
+	
+	// New version
+	Route::get('singers/{singer}/profile/create', 'SingersController@createProfile')->name('profile.create');
+	Route::post('singers/{singer}/profile', 'SingersController@storeProfile')->name('profile');
 	
 	Route::get('/singers/{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
 	

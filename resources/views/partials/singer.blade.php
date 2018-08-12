@@ -164,7 +164,7 @@
 		<div class="list-group list-group-flush">
 		
 			@foreach( $singer->tasks as $task )
-			<a href="{{ route('task.complete', ['singer' => $singer, 'task' => $task]) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center link-confirm" >
+			<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center link-confirm" >
 				<div class="d-flex w-100 justify-content-between">
 					@if( $task->pivot->completed )
 					<span><i class="fa fa-fw fa-check-square-o"></i> {{ $task->name }}</span>	

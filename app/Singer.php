@@ -13,4 +13,9 @@ class Singer extends Model
 	{
 		return $this->belongsToMany('App\Task', 'singers_tasks')->withPivot('completed')->withTimestamps();
 	}
+	
+	public function profile()
+	{
+		return $this->hasOne('App\Profile');
+	}
 }

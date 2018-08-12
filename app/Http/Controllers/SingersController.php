@@ -114,6 +114,20 @@ class SingersController extends Controller
 		}
 	}
 	
+	public function createProfile($singerId) {
+		$singer = Singer::find($singerId);
+		
+		return view('singer.createprofile', compact('singer'));
+	}
+	
+	public function storeProfile(Request $request) {
+		
+		$singer = Singer::find($request->singer_id);
+		$singer->profile()->create($request->all()); // refer to whitelist in model
+		
+		return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
+	}
+	
 	public function show() {
 		// find
 	

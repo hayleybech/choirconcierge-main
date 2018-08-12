@@ -25,37 +25,37 @@ class TaskTableSeeder extends Seeder {
 			'name'		=> 'Member Profile', 
 			'role_id'	=> $member_role[0],
 			'type'		=> 'form',
-			'route'		=> 'singer.memberprofile',
+			'route'		=> 'profile.create',
 			],
 			[
 			'name'		=> 'Voice Placement', 
 			'role_id'	=> $music_role[0],
 			'type'		=> 'form',
-			'route'		=> 'singer.voiceplacement',
+			'route'		=> 'task.complete',
 			],
 			[
 			'name'		=> 'Pass Audition',
 			'role_id'	=> $music_role[0],
 			'type'		=> 'manual',
-			'route'		=> '',
+			'route'		=> 'task.complete',
 			],
 			[
 			'name'		=> 'Pay Fees', 
 			'role_id'	=> $accounts_role[0],
 			'type'		=> 'manual',
-			'route'		=> '',
+			'route'		=> 'task.complete',
 			],
 			[
 			'name'		=> 'Provide Uniform', 
 			'role_id'	=> $uniforms_role[0],
 			'type'		=> 'manual',
-			'route'		=> '',
+			'route'		=> 'task.complete',
 			],
 			[
 			'name'		=> 'Create Account', 
 			'role_id'	=> $member_role[0],
 			'type'		=> 'manual',
-			'route'		=> '',
+			'route'		=> 'task.complete',
 			],
 		]);
 		
