@@ -22,7 +22,7 @@
             <div class="container">
 
 				<a class="navbar-brand" href="{{ url('/') }}">
-					<img src="img/logo.png" alt="Choir Concierge" class="logo">
+					<img src="/img/logo.png" alt="Choir Concierge" class="logo">
 				</a>
 
 				<!-- Left Side Of Navbar -->
