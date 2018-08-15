@@ -128,10 +128,10 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
 	}
 	
-	public function show() {
-		// find
+	public function show($singerId) {
+		$singer = Singer::find($singerId);
 	
-		// return view('singers.show', compact('singer'));
+		return view('singer.show', compact('singer'));
 	}
 	
 	public function auditionpass($email) {

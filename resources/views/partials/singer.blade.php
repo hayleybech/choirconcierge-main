@@ -152,7 +152,11 @@
 	?> 
 	<div class="card">
 		<div class="card-body">
-			<h4 class="card-title singer-name">{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}</h4>
+			<h4 class="card-title singer-name">
+				<a href="{{route('singers.show', ['singer' => $singer])}}">
+					{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
+				</a>
+			</h4>
 			<h6 class="card-subtitle mb-2 text-muted singer-email">{{ $singer->email }}</h6>
 			<?php /*
 			<p class="card-text">
