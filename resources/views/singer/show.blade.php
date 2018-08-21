@@ -15,6 +15,7 @@
 		<div class="card-header">
 			<h3 class="h6">Member Profile</h3>
 		</div>
+		@if( $singer->profile )
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item">
 				<strong>DOB:</strong> {{$singer->profile->dob}}
@@ -41,6 +42,11 @@
 				<strong>Other Skills:</strong> {{$singer->profile->skills}}
 			</li>
 		</ul>
+		@else
+		<div class="card-body">
+			<p>No Member Profile yet. </p>
+		</div>
+		@endif
 	</div>
 	
 
