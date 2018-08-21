@@ -125,6 +125,10 @@ class SingersController extends Controller
 		$singer = Singer::find($request->singer_id);
 		$singer->profile()->create($request->all()); // refer to whitelist in model
 		
+		// Mark matching task completed
+		//$task = $singer->tasks()->where('name', 'Member Profile')->get();
+		$singer->tasks()->updateExistingPivot(1, array('completed' => true) );
+		
 		return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
 	}
 	
