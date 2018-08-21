@@ -18,4 +18,9 @@ class Singer extends Model
 	{
 		return $this->hasOne('App\Profile');
 	}
+	
+	public function placement()
+	{
+		return $this->hasOne('App\Placement');
+	}
 }

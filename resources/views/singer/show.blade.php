@@ -49,5 +49,43 @@
 		@endif
 	</div>
 	
+	<div class="card">
+		<div class="card-header">
+			<h3 class="h6">Voice Placement</h3>
+		</div>
+		@if( $singer->placement )
+		<ul class="list-group list-group-flush">
+			<li class="list-group-item">
+				<strong>Experience:</strong> {{$singer->placement->experience}}
+			</li>
+			<li class="list-group-item">
+				<strong>Instruments:</strong> {{$singer->placement->instruments}}
+			</li>
+			<li class="list-group-item">
+				<strong>Pitch Skill:</strong> {{$singer->placement->skill_pitch}}
+			</li>
+			<li class="list-group-item">
+				<strong>Harmony Skill:</strong> {{$singer->placement->skill_harmony}}
+			</li>
+			<li class="list-group-item">
+				<strong>Performance Skill:</strong> {{$singer->placement->skill_performance}}
+			</li>
+			<li class="list-group-item">
+				<strong>Sight Reading Skill:</strong> {{$singer->placement->skill_sightreading}}
+			</li>
+			<li class="list-group-item">
+				<strong>Voice Tone (1 = Fluty, 3 = Brassy):</strong> {{$singer->placement->voice_tone}}
+			</li>
+			<li class="list-group-item">
+				<strong>Voice Part:</strong> {{$singer->placement->voice_part}}
+			</li>
+		</ul>
+		@else
+		<div class="card-body">
+			<p>No Voice Placement yet. </p>
+		</div>
+		@endif
+	</div>
+	
 
 @endsection
