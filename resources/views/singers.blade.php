@@ -24,6 +24,7 @@
 	</div>
 	@endif
 	
+	<!--
 	<form method="get" class="form-inline mb-4">
 		<div class="input-group input-group-sm">
 			<div class="input-group-prepend">
@@ -42,7 +43,7 @@
 				<input type="submit" value="Filter" class="btn btn-primary btn-sm">
 			</div>
 		</div>
-	</form>
+	</form>-->
 		
 	<h3>{{ $category }}</h2>
 	@if ( $category == 'Active Member')
