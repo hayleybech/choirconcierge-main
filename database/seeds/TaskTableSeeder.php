@@ -31,7 +31,7 @@ class TaskTableSeeder extends Seeder {
 			'name'		=> 'Voice Placement', 
 			'role_id'	=> $music_role[0],
 			'type'		=> 'form',
-			'route'		=> 'task.complete',
+			'route'		=> 'placement.create',
 			],
 			[
 			'name'		=> 'Pass Audition',

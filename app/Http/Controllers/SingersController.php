@@ -132,6 +132,16 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
 	}
 	
+	public function createPlacement($singerId) {
+		$singer = Singer::find($singerId);
+		
+		return view('singer.createplacement', compact('singer'));
+	}
+	
+	public function storePlacement(Request $request) {
+		
+	}
+	
 	public function show($singerId) {
 		$singer = Singer::find($singerId);
 	
