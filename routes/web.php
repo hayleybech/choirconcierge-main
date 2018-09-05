@@ -109,6 +109,8 @@ Route::middleware(['auth', 'role:Admin'])->group(function() {
 
 	Route::post('/users/{user}/role', 'UsersController@addRoles')->name('users.addroles');	
 	
+	Route::view('/tasks', 'tasks.tasks', ['tasks' => App\Task::all() ])->name('tasks.index');
+	
 	// Super admin?
 	
 	Route::get('/migrate', function(){
