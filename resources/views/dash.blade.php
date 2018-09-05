@@ -17,6 +17,7 @@
 	  
 		@if( Auth::user()->hasRole('Admin') )
 		<a href="{{ route('users.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-group"></i> Users List</a>
+		<a href="{{ route('tasks.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-list-alt"></i> Tasks List</a>
 		@endif
 	  
 		@if( Auth::user()->hasRole('Membership Team') )
