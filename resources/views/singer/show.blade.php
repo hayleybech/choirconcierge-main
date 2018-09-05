@@ -44,7 +44,7 @@
 		</ul>
 		@else
 		<div class="card-body">
-			<p>No Member Profile yet. </p>
+			<p>No Member Profile yet. <a href="{{ route('profile.create', ['singer' => $singer, 'task' => 1]) }}">Create one now. </a></p>
 		</div>
 		@endif
 	</div>
@@ -82,7 +82,7 @@
 		</ul>
 		@else
 		<div class="card-body">
-			<p>No Voice Placement yet. </p>
+			<p>No Voice Placement yet. <a href="{{ route('placement.create', ['singer' => $singer, 'task' => 2]) }}">Create one now. </a></p>
 		</div>
 		@endif
 	</div>
