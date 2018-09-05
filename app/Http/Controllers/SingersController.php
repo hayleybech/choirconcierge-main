@@ -139,7 +139,14 @@ class SingersController extends Controller
 	}
 	
 	public function storePlacement(Request $request) {
+		$singer = Singer::find($request->singer_id);
+		$singer->placement()->create($request->all()); // refer to whitelist in model
 		
+		// Mark matching task completed
+		//$task = $singer->tasks()->where('name', 'Voice Placement')->get();
+		$singer->tasks()->updateExistingPivot(2, array('completed' => true) );
+		
+		return redirect('/singers')->with(['status' => 'Voice Placement created. ', ]);
 	}
 	
 	public function show($singerId) {
