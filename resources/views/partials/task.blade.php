@@ -1,5 +1,5 @@
 <tr>
-	<td>{{ $task->name }}</td>
-	<td>{{ $task->role_id }}</td>
-	<td>{{ $task->type }} ({{ $task->route }})</td>
+	<th scope="row">{{ $task->name }}</th>
+	<td>{{ $task->role->name }}</td>
+	<td>{{ $task->type }} <small>({{ $task->route }})</small></td>
 </tr>

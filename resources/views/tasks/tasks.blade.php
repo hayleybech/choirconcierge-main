@@ -24,12 +24,12 @@
 	</div>
 	@endif
 		
-	<table>
-		<thead>
+	<table class="table table-striped table-bordered">
+		<thead class="thead-dark">
 			<tr>
-				<th>Name</th>
-				<th>Role</th>
-				<th>Type</th>
+				<th scope="col">Name</th>
+				<th scope="col">Role</th>
+				<th scope="col">Type</th>
 			</tr>
 		</thead>
 		<tbody>
