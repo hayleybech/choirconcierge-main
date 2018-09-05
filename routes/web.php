@@ -111,6 +111,8 @@ Route::middleware(['auth', 'role:Admin'])->group(function() {
 	
 	Route::view('/tasks', 'tasks.tasks', ['tasks' => App\Task::all() ])->name('tasks.index');
 	
+	Route::resource('/notification-templates', 'NotificationTemplateController');
+	
 	// Super admin?
 	
 	Route::get('/migrate', function(){

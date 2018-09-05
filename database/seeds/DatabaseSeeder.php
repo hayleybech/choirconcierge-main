@@ -40,6 +40,9 @@ class DatabaseSeeder extends Seeder
 		
 		$this->call('TaskTableSeeder');
 		$this->command->info('Task table seeded!');	
+		
+		$this->call('NotificationTemplateSeeder');
+		$this->command->info('Notification Template table seeded!');	
 
     }
 }

@@ -18,4 +18,9 @@ class Task extends Model
 	{
 		return $this->belongsToMany('App\Singer', 'singers_tasks')->withPivot('completed')->withTimestamps();
 	}
+	
+	public function notification_templates()
+	{
+		return $this->hasMany('App\NotificationTemplate');
+	}
 }
