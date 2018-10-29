@@ -23,6 +23,8 @@ class NotificationTemplateSeeder extends Seeder
 				'Hi %%user.name%%,
 				A member profile has been completed for %%singer.name%%. ',
 			'delay'			=> 0,
+            'created_at'        => Carbon::now(),
+            'updated_at'        => Carbon::now(),
 			],
 			[
 			'task_id'		=> 1,
@@ -35,6 +37,8 @@ class NotificationTemplateSeeder extends Seeder
 				Regards,
 				The Blenders',
 			'delay'			=> 0,
+            'created_at'        => Carbon::now(),
+            'updated_at'        => Carbon::now(),
 			],
 		]);
     }
