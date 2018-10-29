@@ -18,7 +18,7 @@ class CreateNotificationTemplatesTable extends Migration
 			$table->integer('task_id');
             $table->string('recipients');
             $table->string('subject');
-            $table->string('body');
+            $table->string('body', 500);
             $table->string('delay');
             $table->timestamps();
         });
