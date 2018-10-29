@@ -10,4 +10,8 @@ class NotificationTemplate extends Model
 	{
 		return $this->belongsTo('App\Task');
 	}
+
+	public function notification(){
+        return $this->hasMany('App\Notification');
+    }
 }

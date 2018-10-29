@@ -115,4 +115,8 @@ class User extends Authenticatable
 
         $this->roles()->attach($assigned_roles);
     }*/
+
+	 public function notifications() {
+	     return $this->hasMany('App\Notification');
+     }
 }

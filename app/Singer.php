@@ -23,4 +23,8 @@ class Singer extends Model
 	{
 		return $this->hasOne('App\Placement');
 	}
+
+	public function notifications() {
+	    return $this->hasMany('App\Notification');
+    }
 }
