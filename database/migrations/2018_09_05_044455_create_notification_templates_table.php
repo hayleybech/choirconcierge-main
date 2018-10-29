@@ -16,10 +16,10 @@ class CreateNotificationTemplatesTable extends Migration
         Schema::create('notification_templates', function (Blueprint $table) {
             $table->increments('id');
 			$table->integer('task_id');
-			$table->string('subject');
-			$table->string('recipients');
-			$table->string('body');
-			$table->string('delay');
+            $table->string('recipients');
+            $table->string('subject');
+            $table->string('body');
+            $table->string('delay');
             $table->timestamps();
         });
     }
