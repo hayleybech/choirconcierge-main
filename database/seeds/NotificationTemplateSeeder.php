@@ -11,7 +11,7 @@ class NotificationTemplateSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tasks')->delete();
+        DB::table('notification_templates')->delete();
 		
 		// Create some dummy templates
 		DB::table('notification_templates')->insert([
