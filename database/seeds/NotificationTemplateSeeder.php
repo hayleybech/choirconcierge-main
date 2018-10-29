@@ -31,7 +31,7 @@ class NotificationTemplateSeeder extends Seeder
 			'body'			=> 
 				'Hi %%singer.name%%,
 				Welcome to The Blenders! You have 4 weeks to learn your audition songs. 
-				You can dcownload your songs [here].
+				You can download your songs [here].
 				Regards,
 				The Blenders',
 			'delay'			=> 0,
