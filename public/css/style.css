@@ -50,3 +50,14 @@ i.fa.fa-external-link {
 .form-inline .custom-select {
 	width: auto !important;
 }
+
+
+/* Headway widget styles */
+#changelog-link {
+	position: relative;
+	padding-right: 10px;
+}
+#changelog-link #HW_badge_cont {
+	position: absolute;
+	top: -5px;
+}

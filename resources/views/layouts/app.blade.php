@@ -27,12 +27,26 @@
 
 				<!-- Left Side Of Navbar -->
 				<ul class="navbar-nav">
-					&nbsp;
+
 				</ul>
 
 				<!-- Right Side Of Navbar -->
 				<ul class="navbar-nav">
-					<li><span class="headway-badge"></span></li>
+					<li class="nav-item dropdown">
+						<a href="#" id="notificationsDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+							<i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">0</span>
+						</a>
+
+						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
+							<h6 class="dropdown-header">Singer Completed Member Profile</h6>
+							<p class="dropdown-item text-muted">Hi Hayden, A member profile has been completed for John Citizen. </p>
+						</div>
+					</li>
+					<li class="nav-item">
+						<span id="changelog-link" class="navbar-text">
+							<i class="fa fa-code"></i> <span class="headway-badge"></span>
+						</span>
+					</li>
 					<!-- Authentication Links -->
 					@guest
 						<li class="nav-item {{ ( \Request::is('login') ) ? 'active' : '' }}">
