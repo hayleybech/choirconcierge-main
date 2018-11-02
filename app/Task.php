@@ -23,4 +23,15 @@ class Task extends Model
 	{
 		return $this->hasMany('App\NotificationTemplate');
 	}
+
+	public function generateNotifications(Singer $singer) {
+
+        // Loop through templates for this Task to create Notifications
+        $notification_templates = $this->notification_templates;
+        foreach( $notification_templates as $template ){
+
+            $template->generateNotifications($singer);
+
+        }
+    }
 }

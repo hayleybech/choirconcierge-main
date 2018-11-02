@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TaskCompleted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Singer;
 use App\Task;
 use App\Libraries\Drip\Drip;
+use App\Notification;
 use Excel;
 
 class SingersController extends Controller
@@ -103,7 +105,10 @@ class SingersController extends Controller
 	public function completeTask($singerId, $taskId) {
 		$singer = Singer::find($singerId);
 		$task = Task::find($taskId);
-		
+
+        event(new TaskCompleted($task, $singer));
+
+		// Complete type-specific action
 		if( $task->type == 'manual' ) {
 			// Simply mark as done. 
 			$singer->tasks()->updateExistingPivot($taskId, ['completed' => true]);

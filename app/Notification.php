@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['user_id', 'singer_id', 'template_id'];
+
     public function user(){
         return $this->belongsTo('App\User');
     }
@@ -29,4 +36,5 @@ class Notification extends Model
 		
 		return $body;
 	}
+
 }
