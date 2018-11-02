@@ -11,7 +11,7 @@ class Notification extends Model
     }
 
     public function notification_template(){
-        return $this->belongsTo('App\NotificationTemplate');
+        return $this->belongsTo('App\NotificationTemplate', 'template_id');
     }
 
     public function singer() {
