@@ -17,4 +17,16 @@ class Notification extends Model
     public function singer() {
         return $this->belongsTo('App\Singer');
     }
+	
+	public function getBody() {
+		$replacements = array(
+			'%%user.name%%' 	=> $this->user->name,
+			'%%singer.name%%'	=> $this->singer->name,
+		);
+		
+		$body_tpl = $this->notification_template->body;
+		$body = str_replace( array_keys($replacements), $replacements, $body_tpl );
+		
+		return $body;
+	}
 }

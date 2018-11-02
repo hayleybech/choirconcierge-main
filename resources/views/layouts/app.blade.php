@@ -38,8 +38,10 @@
 						</a>
 
 						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
-							<h6 class="dropdown-header">Singer Completed Member Profile</h6>
-							<p class="dropdown-item text-muted">Hi Hayden, A member profile has been completed for John Citizen. </p>
+							@foreach( Auth::user()->notifications()->where('unread', true)->get() as $notification )
+							<span class="dropdown-item text-muted"><strong>{{ $notification->notification_template->subject }}</strong><br> {{ $notification->getBody() }}</span>
+
+							@endforeach
 						</div>
 					</li>
 					<li class="nav-item">
