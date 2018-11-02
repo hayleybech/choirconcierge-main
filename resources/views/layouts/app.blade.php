@@ -48,7 +48,7 @@
 					@else
 						<li class="nav-item dropdown">
 							<a href="#" id="notificationsDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-								<i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">0</span>
+								<i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">{{Auth::user()->notifications()->where('unread', true)->count()}}</span>
 							</a>
 
 							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
