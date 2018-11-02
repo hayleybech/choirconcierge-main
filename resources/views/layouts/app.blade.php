@@ -32,18 +32,6 @@
 
 				<!-- Right Side Of Navbar -->
 				<ul class="navbar-nav">
-					<li class="nav-item dropdown">
-						<a href="#" id="notificationsDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-							<i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">0</span>
-						</a>
-
-						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
-							@foreach( Auth::user()->notifications()->where('unread', true)->get() as $notification )
-							<span class="dropdown-item text-muted"><strong>{{ $notification->notification_template->subject }}</strong><br> {{ $notification->getBody() }}</span>
-
-							@endforeach
-						</div>
-					</li>
 					<li class="nav-item">
 						<span id="changelog-link" class="navbar-text">
 							<i class="fa fa-code"></i> <span class="headway-badge"></span>
@@ -58,6 +46,18 @@
 							<a href="{{ route('register') }}" class="nav-link"><i class="fa fa-user-plus fa-fw"></i> Register</a>
 						</li>
 					@else
+						<li class="nav-item dropdown">
+							<a href="#" id="notificationsDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+								<i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">0</span>
+							</a>
+
+							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
+								@foreach( Auth::user()->notifications()->where('unread', true)->get() as $notification )
+									<span class="dropdown-item text-muted"><strong>{{ $notification->notification_template->subject }}</strong><br> {{ $notification->getBody() }}</span>
+
+								@endforeach
+							</div>
+						</li>
 						<li class="nav-item dropdown">
 							<a href="#" id="navbarDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
 								<i class="fa fa-user-circle fa-fw"></i> {{ Auth::user()->name }} <span class="caret"></span>
