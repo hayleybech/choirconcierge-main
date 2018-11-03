@@ -148,5 +148,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function() {
 			'--seed' => true,
 		]);
 	});
+
+	Route::get('/import', 'SingersController@import');
 	
 });

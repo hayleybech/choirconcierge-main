@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
+use App\Imports\DripSingersImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Singer;
 use App\Task;
 use App\Libraries\Drip\Drip;
-use App\Notification;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SingersController extends Controller
 {
@@ -302,6 +302,14 @@ class SingersController extends Controller
 		}
 		return redirect('/singers')->with(['status' => 'The singer was moved. ', 'Response' => $Response]);
 	}
+
+    public function import() {
+
+        Excel::import(new DripSingersImport(), 'subscribers.csv');
+
+        // Exit
+        return redirect('/singers')->with(['status' => 'Import done. ', ]);
+    }
 	
 	public function export() {
 		

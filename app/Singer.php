@@ -9,6 +9,10 @@ class Singer extends Model
 {
     use Notifiable;
 
+    protected $fillable = [
+        'name', 'email',
+    ];
+
     public $notify_channels = ['mail'];
 
     /*
