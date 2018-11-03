@@ -41,6 +41,31 @@ The Blenders",
             'created_at'        => Carbon::now(),
             'updated_at'        => Carbon::now(),
 			],
+            [
+                'task_id'		=> 3,
+                'subject'		=> 'Singer Completed Audition',
+                'recipients'	=> 'role:2',
+                'body'			=>
+                    "Hi %%user.name%%,
+Please congratulate %%singer.name%% for passing their audition!",
+                'delay'			=> 0,
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now(),
+            ],
+            [
+                'task_id'		=> 3,
+                'subject'		=> 'Congratulations! You passed your audition',
+                'recipients'	=> 'singer:1',
+                'body'			=>
+                    "Hi %%singer.name%%,
+Congratulations on passing your audition. You are now eligible to become a full member of The Blenders. 
+To complete your membership, please pay your fees ASAP. 
+Regards,
+The Blenders",
+                'delay'			=> 0,
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now(),
+            ],
 		]);
     }
 }
