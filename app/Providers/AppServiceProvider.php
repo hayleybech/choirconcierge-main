@@ -21,7 +21,9 @@ class AppServiceProvider extends ServiceProvider
 
 		// Get Notifications for current user, show on all pages
         view()->composer('*', function($view) use ($auth) {
-            $view->with('notifications', $auth->user()->unreadNotifications);
+            if($auth->check()) {
+                $view->with('notifications', $auth->user()->unreadNotifications);
+            }
         });
     }
 
