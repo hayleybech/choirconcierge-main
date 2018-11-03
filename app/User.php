@@ -30,6 +30,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public $notify_channels = ['database', 'mail'];
 	
 	/**
       * Get the roles a user has
@@ -116,7 +118,4 @@ class User extends Authenticatable
         $this->roles()->attach($assigned_roles);
     }*/
 
-	 public function notifications() {
-	     return $this->hasMany('App\Notification');
-     }
 }

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Notifications\TaskCompleted;
 
 class NotificationTemplate extends Model
 {
@@ -10,10 +11,6 @@ class NotificationTemplate extends Model
 	{
 		return $this->belongsTo('App\Task');
 	}
-
-	public function notifications(){
-        return $this->hasMany('App\Notification', 'template_id');
-    }
 
     public function getRecipientType(){
         $recipient_info = explode(':', $this->recipients);
@@ -40,6 +37,22 @@ class NotificationTemplate extends Model
         return $recipients;
     }
 
+    public function generateBody(Singer $singer, User $user = null){
+        $replacements = array(
+            '%%singer.name%%'	=> $singer->name,
+        );
+        if($user){
+            $user_replacements = array(
+                '%%user.name%%' 	=> $user->name,
+            );
+            $replacements = array_merge($replacements, $user_replacements);
+        }
+
+        $body = str_replace( array_keys($replacements), $replacements, $this->body );
+
+        return $body;
+    }
+
     /**
      * @param Singer $singer
      */
@@ -51,33 +64,25 @@ class NotificationTemplate extends Model
 
             $recipients = $this->getRecipients();
 
-            // Loop through recipients for this template to create Notifications
-            $notifications = array();
-            foreach($recipients as $recipient){
-                $notification = new Notification([
-                    'user_id'   => $recipient->id,
-                    'singer_id' => $singer->id,
-                ]);
-                $this->notifications()->save($notification);
-
-                /*
-                $recipient->notifications()->associate($notification);
-                $recipient->save();
-
-                $singer->notifications()->associate($notification);
-                $singer->save();*/
-
-                $notifications[] = $notification;
-            }
         } else {
             $recipients[] = $singer;
         }
 
-        // Generate email notifications for ALL types of recipients
-        /*foreach($recipients as $recipient) {
-            $email = new Email( $this->subject, $this->getBody(), $recipient->email );
-            $email->queue( $this->delay );
-        }*/
+        // Loop through recipients for this template to create Notifications
+        foreach($recipients as $recipient){
+
+            if($this->getRecipientType() == 'role' ||
+                $this->getRecipientType() == 'user') {
+
+                $body = $this->generateBody($singer, $recipient);
+            } else {
+                $body = $this->generateBody($singer);
+            }
+
+            // $when = now()->addMinutes($this->delay);
+            $recipient->notify( new TaskCompleted($this->subject, $body) );
+
+        }
 
     }
 }

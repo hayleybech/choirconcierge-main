@@ -48,13 +48,12 @@
 					@else
 						<li class="nav-item dropdown">
 							<a href="#" id="notificationsDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-								<i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">{{Auth::user()->notifications()->where('unread', true)->count()}}</span>
+								<i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">{{$notifications->count()}}</span>
 							</a>
 
 							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
-								@foreach( Auth::user()->notifications()->where('unread', true)->get() as $notification )
-									<span class="dropdown-item text-muted"><strong>{{ $notification->notification_template->subject }}</strong><br> {{ $notification->getBody() }}</span>
-
+								@foreach( $notifications as $notification )
+									<span class="dropdown-item text-muted"><strong>{{ $notification->data['subject'] }}</strong><br> {{ $notification->data['body'] }}</span>
 								@endforeach
 							</div>
 						</li>

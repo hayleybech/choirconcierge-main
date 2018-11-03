@@ -3,9 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Singer extends Model
 {
+    use Notifiable;
+
+    public $notify_channels = ['mail'];
+
     /*
 	 * Get tasks for this singer
 	 */
@@ -24,7 +29,4 @@ class Singer extends Model
 		return $this->hasOne('App\Placement');
 	}
 
-	public function notifications() {
-	    return $this->hasMany('App\Notification');
-    }
 }
