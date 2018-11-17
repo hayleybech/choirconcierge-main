@@ -9,12 +9,20 @@ use App\Singer;
 use App\Profile;
 use App\Placement;
 use App\Task;
+use App\SingerCategory;
 
 class DripSingersImport implements ToCollection, WithHeadingRow
 {
     public function collection(Collection $rows)
     {
-        foreach ($rows as $row) {
+        // Import Prep
+
+        // Fetch all possible Tasks to attach to singer
+        $tasks = Task::all();
+
+        // Loop through singer rows in CSV
+        foreach ($rows as $row)
+        {
 
             // Create the singer
             $singer = Singer::create([
@@ -48,12 +56,46 @@ class DripSingersImport implements ToCollection, WithHeadingRow
             ]);
             $singer->placement()->save($placement);
 
-            // Create the Singer's Tasks
-            $tasks = Task::all();
+            // Get all Drip tags to check for completed tasks and categories
+            $tags = explode( ',', $row['tags']);
 
-            foreach($tasks as $task){
-                $task->singers()->attach($singer);
+            // Attach all tasks to singer and mark completed
+            foreach($tasks as $task)
+            {
+                $completed = false;
+
+                // Mark task completed if row has relevant tag
+                if(
+                       ( $task->name == 'Member Profile' && in_array('Member Profile Completed', $tags) )
+                    || ( $task->name == 'Voice Placement' && in_array('Voice Placement Completed', $tags) )
+                    || ( $task->name == 'Pass Audition' && in_array('Passed Vocal Assessment', $tags) )
+                    || ( $task->name == 'Pay Fees' && in_array('Membership Fees Paid', $tags) )
+                    || ( $task->name == 'Provide Uniform' && in_array('Uniform Provided', $tags) )
+                    || ( $task->name == 'Create Account' && in_array('Account Created', $tags) )
+                )
+                {
+                    $completed = true;
+                }
+
+                $task->singers()->attach($singer, ['completed' => $completed]);
             }
+
+            // Attach ONE category to singer
+            if( in_array('Category - Active Member', $tags ) )
+            {
+                $cat = SingerCategory::where('name', 'Members')->first();
+            }
+            elseif ( in_array('Category - Archived', $tags) )
+            {
+                $cat = SingerCategory::where('name', 'Archived Prospects')->first();
+            }
+            else
+            {
+                $cat = SingerCategory::where('name', 'Prospects')->first();
+            }
+            $singer->category()->associate($cat);
+
+            $singer->save();
         }
     }
 }
