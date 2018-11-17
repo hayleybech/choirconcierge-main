@@ -59,7 +59,7 @@
 	
 	<p>
 	{{ Form::label('voice_part', 'Voice Part') }}
-	{{ Form::select('voice_part', array('Tenor', 'Lead', 'Baritone', 'Bass'), array('class' => 'form-control')) }}
+	{{ Form::select('voice_part', array('Tenor' => 'Tenor', 'Lead' => 'Lead', 'Baritone' => 'Baritone', 'Bass' => 'Bass'), array('class' => 'form-control')) }}
 	</p>
 	
 	{{ Form::submit('Create', array( 'class' => 'btn btn-primary' )) }}
