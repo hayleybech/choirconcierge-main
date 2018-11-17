@@ -305,6 +305,7 @@ class SingersController extends Controller
 
     public function import() {
 
+        // Default location: /storage/app
         Excel::import(new DripSingersImport(), 'subscribers.csv');
 
         // Exit
