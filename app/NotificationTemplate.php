@@ -39,7 +39,11 @@ class NotificationTemplate extends Model
 
     public function generateBody(Singer $singer, User $user = null){
         $replacements = array(
-            '%%singer.name%%'	=> $singer->name,
+            '%%singer.name%%'       => $singer->name,
+            '%%singer.section%%'    => $singer->placement->voice_part,
+            '%%singer.email%%'      => $singer->email,
+            '%%singer.dob%%'        => $singer->profile->dob,
+            '%%singer.age%%'        => $singer->getAge(),
         );
         if($user){
             $user_replacements = array(
