@@ -38,4 +38,9 @@ class Singer extends Model
         return $this->belongsTo('App\SingerCategory', 'singer_category_id');
     }
 
+    public function getAge()
+    {
+        if( isset($this->profile->dob) ) return date_diff( date_create($this->profile->dob), date_create('now') )->y;
+    }
+
 }

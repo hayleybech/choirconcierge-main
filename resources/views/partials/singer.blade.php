@@ -171,6 +171,7 @@
 				<span class="badge {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span><br>
 				<span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part != '' ) ? $singer->placement->voice_part : 'No Voice Part' }}</span><br>
 				<span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone != '' ) ? $singer->profile->phone : 'No phone number' }}</span><br>
+				<span class="singer-age"><i class="fa fa-calendar-o"></i> Age {{ ( $singer->getAge() ) ? $singer->getAge() : 'Unknown' }}</span>
 			</p>
 		</div>
 		
