@@ -169,7 +169,7 @@
 			<h6 class="card-subtitle mb-2 text-muted singer-email">{{ $singer->email }}</h6>
 			<p class="card-text">
 				<span class="badge {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span><br>
-				<span class="singer-part"><i class="fas fa-user-friends"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement_voice_part != '' ) ? $singer->placement->voice_part : 'No Voice Part' }}</span><br>
+				<span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part != '' ) ? $singer->placement->voice_part : 'No Voice Part' }}</span><br>
 				<span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone != '' ) ? $singer->profile->phone : 'No phone number' }}</span><br>
 			</p>
 		</div>
