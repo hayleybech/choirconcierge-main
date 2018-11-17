@@ -32,9 +32,9 @@ class SingersController extends Controller
 
 		// Filter singers by category
 		if($category == 0) {
-            $singers = Singer::with(['tasks', 'category', 'placement:voice_part', 'profile:phone'])->get();
+            $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])->get();
         } else {
-            $singers = Singer::with(['tasks', 'category', 'placement:voice_part', 'profile:phone'])->where('singer_category_id', $category)->get();
+            $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])->where('singer_category_id', $category)->get();
         }
 
 		// Get list of categories for filtering
