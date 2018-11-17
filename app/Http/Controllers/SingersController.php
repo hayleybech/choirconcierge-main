@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Singer;
 use App\Task;
+use App\SingerCategory;
 use App\Libraries\Drip\Drip;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -27,27 +28,24 @@ class SingersController extends Controller
 	
     public function index(){
 		
-		$category = Input::get('filter_category', 'Prospective Member');
-		
-		/*
-		$Response = self::getSingersByTag('Category - '. $category);
-		if( isset($Reponse->error) ) {
-			return view('singers', compact('Response'));
-		}
-		$singers = $Response->subscribers;
-		*/
-		
-		// Replace Drip code with DB code
-		//$singers = Singer::all();
-		$singers = Singer::with('tasks')->get();
-			
-		/*$membersResponse = self::getMembersPaid();
-		if( isset($membersReponse->error) ) {
-			return view('singers', compact('Response'));
-		}
-		$members = $membersResponse->Subscribers;*/
-		
-		return view('singers', compact('category', 'singers', 'members', 'Response'));
+		$category = Input::get('filter_category', 1);
+
+		// Filter singers by category
+		if($category == 0) {
+            $singers = Singer::with(['tasks', 'category', 'placement:voice_part', 'profile:phone'])->get();
+        } else {
+            $singers = Singer::with(['tasks', 'category', 'placement:voice_part', 'profile:phone'])->where('singer_category_id', $category)->get();
+        }
+
+		// Get list of categories for filtering
+        // Prep for Form::select
+        $categories = SingerCategory::all();
+        $categories_keyed = $categories->mapWithKeys(function($item){
+            return [ $item['id'] => $item['name'] ];
+        });
+        $categories_keyed->prepend('All Singers',0);
+
+        return view('singers', compact('category', 'singers', 'members', 'Response', 'categories_keyed' ));
 	}
 	
 		public function getSingersByTag($tag) {

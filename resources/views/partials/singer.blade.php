@@ -158,7 +158,6 @@
 				</a>
 			</h4>
 			<h6 class="card-subtitle mb-2 text-muted singer-email">{{ $singer->email }}</h6>
-			<?php /*
 			<p class="card-text">
 				<span class="singer-part"><i class="fas fa-user-friends"></i> {{ ( isset($singer_part) ) ? $singer_part : 'No Voice Part' }}</span><br>
 				<span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer_phone) ) ? $singer_phone : '' }}</span><br>

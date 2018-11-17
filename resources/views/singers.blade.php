@@ -23,19 +23,14 @@
 		@endisset
 	</div>
 	@endif
-	
-	<!--
+
 	<form method="get" class="form-inline mb-4">
 		<div class="input-group input-group-sm">
 			<div class="input-group-prepend">
 				<label for="filter_category" class="input-group-text">Category</label>
 			</div>
 			@php
-			echo Form::select('filter_category', array(
-				'Prospective Member' => 'Prospective Member', 
-				'Active Member' => 'Active Member', 
-				'Archived' => 'Archived'
-				), 
+			echo Form::select('filter_category', $categories_keyed,
 			$category, ['class' => 'custom-select form-control-sm']);
 			@endphp
 			
@@ -43,12 +38,12 @@
 				<input type="submit" value="Filter" class="btn btn-primary btn-sm">
 			</div>
 		</div>
-	</form>-->
-		
-	<h3>{{ $category }}</h2>
-	@if ( $category == 'Active Member')
+	</form>
+
+	<h3>{{ $categories_keyed[$category] }}</h3>
+	{{--@if ( $categories_keyed[$category] == 'Members')
 	<p><a href="{{ route('singers.export') }}" class="btn btn-link btn-sm">Export paid Singers.</a></p>
-	@endif
+	@endif--}}
 	<div class="row">
 		@each('partials.singer', $singers, 'singer', 'partials.noresults')
 	</div>
