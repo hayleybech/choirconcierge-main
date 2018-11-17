@@ -33,4 +33,9 @@ class Singer extends Model
 		return $this->hasOne('App\Placement');
 	}
 
+	public function category()
+    {
+        return $this->belongsTo('App\SingerCategory', 'singer_category_id');
+    }
+
 }
