@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TaskCompleted;
+use App\Imports\DripSingersImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\Singer;
+use App\Task;
+use App\SingerCategory;
 use App\Libraries\Drip\Drip;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SingersController extends Controller
 {
@@ -23,21 +28,24 @@ class SingersController extends Controller
 	
     public function index(){
 		
-		$category = Input::get('filter_category', 'Prospective Member');
-		
-		$Response = self::getSingersByTag('Category - '. $category);
-		if( isset($Reponse->error) ) {
-			return view('singers', compact('Response'));
-		}
-		$singers = $Response->subscribers;
-			
-		/*$membersResponse = self::getMembersPaid();
-		if( isset($membersReponse->error) ) {
-			return view('singers', compact('Response'));
-		}
-		$members = $membersResponse->Subscribers;*/
-		
-		return view('singers', compact('category', 'singers', 'members', 'Response'));
+		$category = Input::get('filter_category', 1);
+
+		// Filter singers by category
+		if($category == 0) {
+            $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])->get();
+        } else {
+            $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])->where('singer_category_id', $category)->get();
+        }
+
+		// Get list of categories for filtering
+        // Prep for Form::select
+        $categories = SingerCategory::all();
+        $categories_keyed = $categories->mapWithKeys(function($item){
+            return [ $item['id'] => $item['name'] ];
+        });
+        $categories_keyed->prepend('All Singers',0);
+
+        return view('singers', compact('category', 'singers', 'members', 'Response', 'categories_keyed' ));
 	}
 	
 		public function getSingersByTag($tag) {
@@ -66,10 +74,88 @@ class SingersController extends Controller
 			return self::getSingersByTag('Waiting for Account Creation');
 		}
 	
-	public function show() {
-		// find
+	public function create() {
+		return view('singer.create');
+	}
 	
-		// return view('singers.show', compact('singer'));
+	public function store(Request $request) {
+		$validated = $request->validate([
+			'name'	=> 'required',
+			'email'	=> 'required',
+		]);
+		
+		$singer = new Singer();
+		
+		$singer->name  = $request->name;
+		$singer->email = $request->email;
+		
+		$singer->save();
+		
+		// Attach all tasks
+
+		$tasks = Task::all();
+		$singer->tasks()->attach( $tasks );
+		
+		// Exit
+		return redirect('/singers')->with(['status' => 'Singer created. ', ]);
+	}
+	
+	public function completeTask($singerId, $taskId) {
+		$singer = Singer::find($singerId);
+		$task = Task::find($taskId);
+
+        event(new TaskCompleted($task, $singer));
+
+		// Complete type-specific action
+		if( $task->type == 'manual' ) {
+			// Simply mark as done. 
+			$singer->tasks()->updateExistingPivot($taskId, ['completed' => true]);
+			return redirect('/singers')->with(['status' => 'Task updated. ', ]);
+		} else {
+			// Redirect to form
+			
+		}
+	}
+	
+	public function createProfile($singerId) {
+		$singer = Singer::find($singerId);
+		
+		return view('singer.createprofile', compact('singer'));
+	}
+	
+	public function storeProfile(Request $request) {
+		
+		$singer = Singer::find($request->singer_id);
+		$singer->profile()->create($request->all()); // refer to whitelist in model
+		
+		// Mark matching task completed
+		//$task = $singer->tasks()->where('name', 'Member Profile')->get();
+		$singer->tasks()->updateExistingPivot(1, array('completed' => true) );
+		
+		return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
+	}
+	
+	public function createPlacement($singerId) {
+		$singer = Singer::find($singerId);
+		
+		return view('singer.createplacement', compact('singer'));
+	}
+	
+	public function storePlacement(Request $request) {
+		$singer = Singer::find($request->singer_id);
+		$singer->placement()->create($request->all()); // refer to whitelist in model
+		
+		// Mark matching task completed
+		//$task = $singer->tasks()->where('name', 'Voice Placement')->get();
+		$singer->tasks()->updateExistingPivot(2, array('completed' => true) );
+		
+		return redirect('/singers')->with(['status' => 'Voice Placement created. ', ]);
+	}
+	
+	public function show($singerId) {
+		$singer = Singer::find($singerId);
+	
+		return view('singer.show', compact('singer'));
 	}
 	
 	public function auditionpass($email) {
@@ -214,6 +300,15 @@ class SingersController extends Controller
 		}
 		return redirect('/singers')->with(['status' => 'The singer was moved. ', 'Response' => $Response]);
 	}
+
+    public function import() {
+
+        // Default location: /storage/app
+        Excel::import(new DripSingersImport(), 'subscribers.csv');
+
+        // Exit
+        return redirect('/singers')->with(['status' => 'Import done. ', ]);
+    }
 	
 	public function export() {
 		

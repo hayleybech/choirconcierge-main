@@ -1,9 +1,8 @@
 <div class="col-md-3">
 	<?php
+		/*
 		// Prep singer details
-		$singer_name = ( isset($singer['custom_fields']['Name']) ) ? $singer['custom_fields']['Name'] : 'Name Unknown';
 		$singer_part = ( isset($singer['custom_fields']['Voice_Part']) ) ? $singer['custom_fields']['Voice_Part'] : 'No Voice Part';
-		$singer_email = $singer['email'];
 		$singer_phone = $singer['custom_fields']['Phone'];
 		
 		// Fix missing zero
@@ -148,32 +147,55 @@
 				'link'  => route( 'singer.move.archive', ['singer' => $singer['email'] ] ),
 				'class' => 'btn-danger',
 			);
-		}
+		}*/
 	
-	?> 
+	?>
+	<?php
+	// Store CSS badge classes for categories
+	$category_class = array(
+		'Prospects'             => 'badge-primary',
+		'Archived Prospects'    => 'badge-danger',
+		'Members'               => 'badge-success',
+		'Archived Members'      => 'badge-warning',
+	);
+	?>
 	<div class="card">
 		<div class="card-body">
-			<h4 class="card-title singer-name">{{ ( isset($singer_name) ) ? $singer_name : 'Name Unknown' }}</h4>
-			<h6 class="card-subtitle mb-2 text-muted singer-email">{{ $singer_email }}</h6>
+			<h4 class="card-title singer-name">
+				<a href="{{route('singers.show', ['singer' => $singer])}}">
+					{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
+				</a>
+			</h4>
+			<h6 class="card-subtitle mb-2 text-muted singer-email">{{ $singer->email }}</h6>
 			<p class="card-text">
-				<span class="singer-part"><i class="fas fa-user-friends"></i> {{ ( isset($singer_part) ) ? $singer_part : 'No Voice Part' }}</span><br>
-				<span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer_phone) ) ? $singer_phone : '' }}</span><br>
+				<span class="badge {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span><br>
+				<span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part != '' ) ? $singer->placement->voice_part : 'No Voice Part' }}</span><br>
+				<span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone != '' ) ? $singer->profile->phone : 'No phone number' }}</span><br>
+				<span class="singer-age"><i class="fa fa-calendar-o"></i> Age {{ ( $singer->getAge() ) ? $singer->getAge() : 'Unknown' }}</span>
 			</p>
 		</div>
-
+		
 		<div class="list-group list-group-flush">
 		
-			@foreach( $actions as $action )
-			<a href="{{ $action['link'] }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center link-confirm {{ $action['disabled'] }}" target="{{$action['link_target']}}">
-				<div class="d-flex w-100 justify-content-between">
-					<span><i class="fa fa-fw {{ $action['status_icon'] }}"></i> {{ $action['text'] }}</span>
-					<small>{!! $action['badge_text'] !!}</small>
-				</div>
-			</a>
+			@foreach( $singer->tasks as $task )
+				@if( $task->pivot->completed )
+				<span class="list-group-item list-group-item-action d-flex justify-content-between align-items-center link-confirm disabled" >
+					<div class="d-flex w-100 justify-content-between">
+						<span><i class="fa fa-fw fa-check-square-o"></i> {{ $task->name }}</span>	
+					</div>
+				</span>
+				@else	
+				<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center link-confirm" >
+					<div class="d-flex w-100 justify-content-between">
+						<span><i class="fa fa-fw fa-square-o"></i> {{ $task->name }}</span>
+					</div>
+				</a>
+				@endif
 			@endforeach
 
 		</div>
 		
+		<?php /*
 		@if (count($operations) === 1)
 		<div class="card-footer">
 			@foreach( $operations as $op)
@@ -181,6 +203,7 @@
 			@endforeach
 		</div>
 		@endif
+		*/?>
 	</div>
 	
 </div>

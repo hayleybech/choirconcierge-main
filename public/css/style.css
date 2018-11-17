@@ -34,6 +34,10 @@ nav {
 	font-size: 0.8rem;
 }
 
+.card .singer-age {
+	font-size: 0.8rem;
+}
+
 .card .list-group {
 	font-size: 0.9rem;
 }
@@ -49,4 +53,15 @@ i.fa.fa-external-link {
 /* Fix for bootstrap bug */
 .form-inline .custom-select {
 	width: auto !important;
+}
+
+
+/* Headway widget styles */
+#changelog-link {
+	position: relative;
+	padding-right: 10px;
+}
+#changelog-link #HW_badge_cont {
+	position: absolute;
+	top: -5px;
 }

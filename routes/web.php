@@ -32,15 +32,23 @@ Route::middleware(['auth', 'employee'])->group(function() {
 
 	Route::get('/singers', 'SingersController@index')->name('singers.index');
 	
+	Route::get('/singers/create', 'SingersController@create')->name('singer.create');
+	Route::post('/singers', 'SingersController@store');
+	
 	Route::get('/singers/export', 'SingersController@export')->name('singers.export');
 
 	Route::get('/singers/{singer}', 'SingersController@show')->name('singers.show');
+	
+	Route::get('/singers/{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
+
+	Route::resource('/notifications', 'NotificationController');
 	
 });
 
 // Membership Team auth
 Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 	
+	// Old version
 	Route::get('/singers/{singer}/memberprofile', function($email){
 		return redirect()->away( config('app.member_profile_edit') . urlencode($email) );
 	})->name('singer.memberprofile');
@@ -49,9 +57,18 @@ Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 		return redirect()->away( config('app.member_profile_new') );
 	})->name('memberprofile.new');
 	
+	
+	// New version
+	Route::get('singers/{singer}/profile/create', 'SingersController@createProfile')->name('profile.create');
+	Route::post('singers/{singer}/profile', 'SingersController@storeProfile')->name('profile');
+	
+	Route::get('singers/{singer}/placement/create', 'SingersController@createPlacement')->name('placement.create');
+	Route::post('singers/{singer}/placement', 'SingersController@storePlacement')->name('placement');
+	
 	Route::get('/singers/{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
 	
 	Route::get('/singers/{singer}/move/archive', 'SingersController@moveToArchive')->name('singer.move.archive');
+	
 	
 });
 
@@ -94,6 +111,10 @@ Route::middleware(['auth', 'role:Admin'])->group(function() {
 
 	Route::post('/users/{user}/role', 'UsersController@addRoles')->name('users.addroles');	
 	
+	Route::view('/tasks', 'tasks.tasks', ['tasks' => App\Task::all() ])->name('tasks.index');
+	
+	Route::resource('/notification-templates', 'NotificationTemplateController');
+	
 	// Super admin?
 	
 	Route::get('/migrate', function(){
@@ -127,5 +148,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function() {
 			'--seed' => true,
 		]);
 	});
+
+	Route::get('/import', 'SingersController@import');
 	
 });
