@@ -47,7 +47,7 @@ class TaskCompleted extends Notification
     {
         return (new MailMessage)
                     ->subject($this->subject)
-                    ->view(
+                    ->markdown(
                         'emails.taskcompleted',
                         ['body' => $this->body]
                     );
