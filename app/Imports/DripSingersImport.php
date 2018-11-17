@@ -33,9 +33,9 @@ class DripSingersImport implements ToCollection, WithHeadingRow
             // Create the Member Profile
             $profile = new Profile([
                 'dob'                   => ($row['dob']) ? date_create($row['dob']) : null,
-                'phone'                 => $row['phone'],
+                'phone'                 => '0'.$row['phone'],
                 'ice_name'              => $row['ice_name'],
-                'ice_phone'             => $row['ice_phone'],
+                'ice_phone'             => '0'.$row['ice_phone'],
                 'reason_for_joining'    => $row['mp_looking_for'],
                 'referrer'              => $row['mp_hear_about'],
                 'profession'            => '',
