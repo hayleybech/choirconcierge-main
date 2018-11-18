@@ -6,10 +6,6 @@
 
 	<h2>Global Task List</h2>
 	<p>This page lists the onboarding tasks the choir must complete for every singer. </p>
-	
-	<p>
-		<a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-success"><i class="fa fa-fw fa-plus"></i>Add Singer</a>
-	</p>
 
 	@if (session('status'))
 	<div class="alert {{ isset($Response->error) ? 'alert-danger' : 'alert-success' }}" role="alert">
