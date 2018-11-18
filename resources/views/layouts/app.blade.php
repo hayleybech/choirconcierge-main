@@ -74,7 +74,7 @@
 								@if( Auth::user()->hasRole('Admin') )
 									<div class="dropdown-divider"></div>
 									<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-list-alt fa-fw"></i> Tasks</a>
-									<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-clone fa-fw"></i> Templates</a>
+									<a href="{{ route('notification-templates.index') }}" class="dropdown-item"><i class="fa fa-clone fa-fw"></i> Templates</a>
 									<a href="{{ route('users.index') }}" class="dropdown-item"><i class="fa fa-sitemap fa-fw"></i> Team</a>
 								@endif
 								
