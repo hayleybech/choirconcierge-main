@@ -68,8 +68,8 @@
 								<div class="dropdown-divider"></div>
 								
 								@if( Auth::user()->hasRole('Admin') )
-								<a href="{{ route('users.index') }}" class="dropdown-item"><i class="fa fa-group fa-fw"></i> Users List</a>
-								<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-list-alt fa-fw"></i> Tasks List</a>
+								<a href="{{ route('users.index') }}" class="dropdown-item"><i class="fa fa-sitemap fa-fw"></i> Team</a>
+								<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-list-alt fa-fw"></i> Tasks</a>
 								<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-clone fa-fw"></i> Templates</a>
 								@endif
 								
@@ -80,7 +80,7 @@
 								<a href="{{ route('voiceplacement.new') }}" class="dropdown-item" target="_blank"><i class="fa fa-plus fa-fw"></i> Voice Placement</a>	
 								@endif--}}
 								@if( Auth::user()->isEmployee() )
-								<a href="{{ route('singers.index') }}" class="dropdown-item {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-list-alt fa-fw"></i> Singers List</a>
+								<a href="{{ route('singers.index') }}" class="dropdown-item {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i> Singers</a>
 								@endif
 								
 								
