@@ -15,6 +15,11 @@ class NotificationTemplateController extends Controller
     public function index()
     {
         $templates = NotificationTemplate::all();
+
+        foreach($templates as $template) {
+            $Parsedown = new \Parsedown();
+            $template->body_rendered = $Parsedown->text($template->body);
+        }
 		
 		return view('notification-templates.index', compact('templates'));
     }
