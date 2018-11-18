@@ -65,3 +65,23 @@ i.fa.fa-external-link {
 	position: absolute;
 	top: -5px;
 }
+
+/* Accordion / Collapse */
+/* Add icons to accordion */
+.accordion a.btn {
+	display: block;
+	text-align: left;
+}
+.accordion a.btn:after {
+	width: 32px;
+	display: inline-block;
+	text-align: right;
+	margin-right: 10px;
+	font: normal normal normal 14px/1 FontAwesome;
+	content: "\f077";
+	float: right;
+}
+
+.accordion a.btn.collapsed:after {
+	content: "\f078";
+}
