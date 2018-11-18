@@ -70,6 +70,7 @@
 								@if( Auth::user()->hasRole('Admin') )
 								<a href="{{ route('users.index') }}" class="dropdown-item"><i class="fa fa-group fa-fw"></i> Users List</a>
 								<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-list-alt fa-fw"></i> Tasks List</a>
+								<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-clone fa-fw"></i> Templates</a>
 								@endif
 								
 								{{--@if( Auth::user()->hasRole('Membership Team') )
