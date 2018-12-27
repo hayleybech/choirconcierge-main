@@ -40,12 +40,28 @@ class NotificationTemplate extends Model
     public function generateBody(Singer $singer, User $user = null){
         $replacements = array(
             '%%singer.name%%'       => $singer->name,
-            '%%singer.section%%'    => $singer->placement->voice_part,
             '%%singer.email%%'      => $singer->email,
-            '%%singer.dob%%'        => $singer->profile->dob,
-            '%%singer.age%%'        => $singer->getAge(),
+            '%%profile.create%%'    => '', //route( 'profile.create', $singer, $this->task ),
+            '%%placement.create%%'  => '', //route( 'placement.create', $singer, $this->task ),
         );
-        if($user){
+        if($singer->profile)
+        {
+            $profile_replacements = array(
+                '%%singer.dob%%'        => $singer->profile->dob,
+                '%%singer.age%%'        => $singer->getAge(),
+                '%%singer.phone%%'      => $singer->profile->phone,
+            );
+            $replacements = array_merge($replacements, $profile_replacements);
+        }
+        if($singer->placement)
+        {
+            $placement_replacements = array(
+                '%%singer.section%%'    => $singer->placement->voice_part,
+            );
+            $replacements = array_merge($replacements, $placement_replacements);
+        }
+        if($user)
+        {
             $user_replacements = array(
                 '%%user.name%%' 	=> $user->name,
             );
