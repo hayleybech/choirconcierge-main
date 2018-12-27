@@ -48,7 +48,7 @@ Route::middleware(['auth', 'employee'])->group(function() {
 // Membership Team auth
 Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 	
-	// Old version
+	// Old (drip) version
 	Route::get('/singers/{singer}/memberprofile', function($email){
 		return redirect()->away( config('app.member_profile_edit') . urlencode($email) );
 	})->name('singer.memberprofile');
@@ -71,7 +71,8 @@ Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 
 // Music Team auth
 Route::middleware(['auth', 'role:Music Team'])->group(function() {
-	
+
+    // Old (drip) version
 	Route::get('/singers/{singer}/voiceplacement', function($email){
 		return redirect()->away( config('app.voice_placement_edit') . urlencode($email) );
 	})->name('singer.voiceplacement');
