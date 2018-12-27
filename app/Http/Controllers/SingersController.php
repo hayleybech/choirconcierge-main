@@ -14,8 +14,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class SingersController extends Controller
 {
-	
-	/**
+    const PROFILE_TASK_ID = 1;
+    const PLACEMENT_TASK_ID = 2;
+
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -25,7 +27,7 @@ class SingersController extends Controller
         $this->middleware('auth');
     }
 
-	
+
     public function index(){
 		
 		$category = Input::get('filter_category', 1);
@@ -113,7 +115,7 @@ class SingersController extends Controller
 			return redirect('/singers')->with(['status' => 'Task updated. ', ]);
 		} else {
 			// Redirect to form
-			
+			// Shouldn't get to this line. Forms tasks skip this entire function.
 		}
 	}
 	
@@ -124,13 +126,14 @@ class SingersController extends Controller
 	}
 	
 	public function storeProfile(Request $request) {
-		
 		$singer = Singer::find($request->singer_id);
 		$singer->profile()->create($request->all()); // refer to whitelist in model
 		
 		// Mark matching task completed
 		//$task = $singer->tasks()->where('name', 'Member Profile')->get();
-		$singer->tasks()->updateExistingPivot(1, array('completed' => true) );
+		$singer->tasks()->updateExistingPivot( self::PROFILE_TASK_ID, array('completed' => true) );
+
+        event( new TaskCompleted(Task::find(self::PROFILE_TASK_ID), $singer) );
 		
 		return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
 	}
@@ -147,7 +150,9 @@ class SingersController extends Controller
 		
 		// Mark matching task completed
 		//$task = $singer->tasks()->where('name', 'Voice Placement')->get();
-		$singer->tasks()->updateExistingPivot(2, array('completed' => true) );
+		$singer->tasks()->updateExistingPivot( self::PLACEMENT_TASK_ID, array('completed' => true) );
+
+        event( new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer) );
 		
 		return redirect('/singers')->with(['status' => 'Voice Placement created. ', ]);
 	}
