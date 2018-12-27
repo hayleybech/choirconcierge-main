@@ -62,9 +62,6 @@ Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 	Route::get('singers/{singer}/profile/create', 'SingersController@createProfile')->name('profile.create');
 	Route::post('singers/{singer}/profile', 'SingersController@storeProfile')->name('profile');
 	
-	Route::get('singers/{singer}/placement/create', 'SingersController@createPlacement')->name('placement.create');
-	Route::post('singers/{singer}/placement', 'SingersController@storePlacement')->name('placement');
-	
 	Route::get('/singers/{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
 	
 	Route::get('/singers/{singer}/move/archive', 'SingersController@moveToArchive')->name('singer.move.archive');
@@ -82,6 +79,10 @@ Route::middleware(['auth', 'role:Music Team'])->group(function() {
 	Route::get('/voiceplacement', function(){
 		return redirect()->away( config('app.voice_placement_new') );
 	})->name('voiceplacement.new');
+
+	// New version
+    Route::get('singers/{singer}/placement/create', 'SingersController@createPlacement')->name('placement.create');
+    Route::post('singers/{singer}/placement', 'SingersController@storePlacement')->name('placement');
 
 	Route::get('/singers/{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');
 	
