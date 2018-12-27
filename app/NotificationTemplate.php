@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\TaskCompleted;
+use Carbon\Carbon;
 
 class NotificationTemplate extends Model
 {
@@ -99,8 +100,8 @@ class NotificationTemplate extends Model
                 $body = $this->generateBody($singer);
             }
 
-            // $when = now()->addMinutes($this->delay);
-            $recipient->notify( new TaskCompleted($this->subject, $body) );
+            $when = Carbon::now()->add( \DateInterval::createFromDateString($this->delay) );
+            $recipient->notify( (new TaskCompleted($this->subject, $body))->delay($when) );
 
         }
 
