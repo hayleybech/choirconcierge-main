@@ -113,7 +113,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function() {
 
 	Route::post('/users/{user}/role', 'UsersController@addRoles')->name('users.addroles');	
 	
-	Route::view('/tasks', 'tasks.tasks', ['tasks' => App\Task::all() ])->name('tasks.index');
+	Route::view('/tasks', 'TasksController@index')->name('tasks.index');
 	
 	Route::resource('/notification-templates', 'NotificationTemplateController');
 	
