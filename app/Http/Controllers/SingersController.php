@@ -94,9 +94,12 @@ class SingersController extends Controller
 		$singer->save();
 		
 		// Attach all tasks
-
 		$tasks = Task::all();
 		$singer->tasks()->attach( $tasks );
+
+		// Attach to Prospects category
+        $cat_prospects = Task::find(1);
+        $singer->category()->attach($cat_prospects);
 		
 		// Exit
 		return redirect('/singers')->with(['status' => 'Singer created. ', ]);
