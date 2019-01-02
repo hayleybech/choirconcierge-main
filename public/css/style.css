@@ -34,6 +34,10 @@ nav {
 	font-size: 0.8rem;
 }
 
+.card .singer-age {
+	font-size: 0.8rem;
+}
+
 .card .list-group {
 	font-size: 0.9rem;
 }
@@ -49,4 +53,35 @@ i.fa.fa-external-link {
 /* Fix for bootstrap bug */
 .form-inline .custom-select {
 	width: auto !important;
+}
+
+
+/* Headway widget styles */
+#changelog-link {
+	position: relative;
+	padding-right: 10px;
+}
+#changelog-link #HW_badge_cont {
+	position: absolute;
+	top: -5px;
+}
+
+/* Accordion / Collapse */
+/* Add icons to accordion */
+.accordion a.btn {
+	display: block;
+	text-align: left;
+}
+.accordion a.btn:after {
+	width: 32px;
+	display: inline-block;
+	text-align: right;
+	margin-right: 10px;
+	font: normal normal normal 14px/1 FontAwesome;
+	content: "\f077";
+	float: right;
+}
+
+.accordion a.btn.collapsed:after {
+	content: "\f078";
 }

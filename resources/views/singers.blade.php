@@ -6,6 +6,10 @@
 
 	<h2>Singers List</h2>
 	<p>This page lists all of the singers in the Choir Concierge database. The list shows all forms yet to be completed for each singer. </p>
+	
+	<p>
+		<a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-user-plus"></i> Add Singer</a>
+	</p>
 
 	@if (session('status'))
 	<div class="alert {{ isset($Response->error) ? 'alert-danger' : 'alert-success' }}" role="alert">
@@ -19,31 +23,27 @@
 		@endisset
 	</div>
 	@endif
-	
+
 	<form method="get" class="form-inline mb-4">
 		<div class="input-group input-group-sm">
 			<div class="input-group-prepend">
 				<label for="filter_category" class="input-group-text">Category</label>
 			</div>
 			@php
-			echo Form::select('filter_category', array(
-				'Prospective Member' => 'Prospective Member', 
-				'Active Member' => 'Active Member', 
-				'Archived' => 'Archived'
-				), 
+			echo Form::select('filter_category', $categories_keyed,
 			$category, ['class' => 'custom-select form-control-sm']);
 			@endphp
 			
 			<div class="input-group-append">
-				<input type="submit" value="Filter" class="btn btn-primary btn-sm">
+				<input type="submit" value="Filter" class="btn btn-secondary btn-sm">
 			</div>
 		</div>
 	</form>
-		
-	<h3>{{ $category }}</h2>
-	@if ( $category == 'Active Member')
+
+	<h3>{{ $categories_keyed[$category] }}</h3>
+	{{--@if ( $categories_keyed[$category] == 'Members')
 	<p><a href="{{ route('singers.export') }}" class="btn btn-link btn-sm">Export paid Singers.</a></p>
-	@endif
+	@endif--}}
 	<div class="row">
 		@each('partials.singer', $singers, 'singer', 'partials.noresults')
 	</div>

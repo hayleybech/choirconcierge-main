@@ -19,7 +19,7 @@
 	</div>
 	@endif
 	
-	<div id="accordion">
+	<div id="accordion" class="accordion">
 	@foreach($users as $key => $user)
 	<div class="card">
 		<div class="card-header"><a class="btn btn-link collapsed" data-toggle="collapse" href="#collapse-{{$key}}" aria-expanded="false" aria-controls="collapse-{{$key}}">{{$user->name}}</a></div>

@@ -12,6 +12,14 @@ class Role extends Model
      */
     public function users()
     {
-        return $this->belongsToMany('User', 'users_roles');
+        return $this->belongsToMany('App\User', 'users_roles');
     }
+	
+	/** 
+	 * Get tasks matching a certain role
+	 */
+	public function tasks()
+	{
+		return $this->hasMany('App\Task');
+	}
 }

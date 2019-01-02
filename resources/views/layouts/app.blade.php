@@ -22,16 +22,21 @@
             <div class="container">
 
 				<a class="navbar-brand" href="{{ url('/') }}">
-					<img src="img/logo.png" alt="Choir Concierge" class="logo">
+					<img src="/img/logo.png" alt="Choir Concierge" class="logo">
 				</a>
 
 				<!-- Left Side Of Navbar -->
 				<ul class="navbar-nav">
-					&nbsp;
+
 				</ul>
 
 				<!-- Right Side Of Navbar -->
 				<ul class="navbar-nav">
+					<li class="nav-item">
+						<span id="changelog-link" class="navbar-text">
+							<i class="fa fa-code"></i> <span class="headway-badge"></span>
+						</span>
+					</li>
 					<!-- Authentication Links -->
 					@guest
 						<li class="nav-item {{ ( \Request::is('login') ) ? 'active' : '' }}">
@@ -42,6 +47,17 @@
 						</li>
 					@else
 						<li class="nav-item dropdown">
+							<a href="#" id="notificationsDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+								<i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">{{$notifications->count()}}</span>
+							</a>
+
+							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
+								@foreach( $notifications as $notification )
+									<span class="dropdown-item text-muted"><strong>{{ $notification->data['subject'] }}</strong><br> {{ $notification->data['body'] }}</span>
+								@endforeach
+							</div>
+						</li>
+						<li class="nav-item dropdown">
 							<a href="#" id="navbarDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
 								<i class="fa fa-user-circle fa-fw"></i> {{ Auth::user()->name }} <span class="caret"></span>
 							</a>
@@ -49,22 +65,25 @@
 							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 								
 								<a class="dropdown-item {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-								<div class="dropdown-divider"></div>
-								
-								@if( Auth::user()->hasRole('Admin') )
-								<a href="{{ route('users.index') }}" class="dropdown-item"><i class="fa fa-group fa-fw"></i> Users List</a>
+
+								@if( Auth::user()->isEmployee() )
+									<div class="dropdown-divider"></div>
+									<a href="{{ route('singers.index') }}" class="dropdown-item {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i> Singers</a>
 								@endif
 								
-								@if( Auth::user()->hasRole('Membership Team') )
+								@if( Auth::user()->hasRole('Admin') )
+									<div class="dropdown-divider"></div>
+									<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-list-alt fa-fw"></i> Tasks</a>
+									<a href="{{ route('notification-templates.index') }}" class="dropdown-item"><i class="fa fa-clone fa-fw"></i> Templates</a>
+									<a href="{{ route('users.index') }}" class="dropdown-item"><i class="fa fa-sitemap fa-fw"></i> Team</a>
+								@endif
+								
+								{{--@if( Auth::user()->hasRole('Membership Team') )
 								<a href="{{ route('memberprofile.new') }}" class="dropdown-item" target="_blank"><i class="fa fa-plus fa-fw"></i> Member Profile</a>
 								@endif
 								@if( Auth::user()->hasRole('Music Team') )
 								<a href="{{ route('voiceplacement.new') }}" class="dropdown-item" target="_blank"><i class="fa fa-plus fa-fw"></i> Voice Placement</a>	
-								@endif
-								@if( Auth::user()->isEmployee() )
-								<a href="{{ route('singers.index') }}" class="dropdown-item {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-list-alt fa-fw"></i> Singers List</a>
-								@endif
-								
+								@endif--}}
 								
 								<div class="dropdown-divider"></div>
 								
@@ -100,6 +119,14 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
     <script src="https://use.fontawesome.com/7679517f07.js"></script>
+	
+	<script>
+	  var HW_config = {
+		selector: ".headway-badge", // CSS selector where to inject the badge
+		account:  "7L6Rky"
+	  }
+	</script>
+	<script async src="//cdn.headwayapp.co/widget.js"></script>
     
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/script.js') }}"></script>

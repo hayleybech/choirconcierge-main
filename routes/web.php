@@ -32,15 +32,23 @@ Route::middleware(['auth', 'employee'])->group(function() {
 
 	Route::get('/singers', 'SingersController@index')->name('singers.index');
 	
+	Route::get('/singers/create', 'SingersController@create')->name('singer.create');
+	Route::post('/singers', 'SingersController@store');
+	
 	Route::get('/singers/export', 'SingersController@export')->name('singers.export');
 
 	Route::get('/singers/{singer}', 'SingersController@show')->name('singers.show');
+	
+	Route::get('/singers/{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
+
+	Route::resource('/notifications', 'NotificationController');
 	
 });
 
 // Membership Team auth
 Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 	
+	// Old (drip) version
 	Route::get('/singers/{singer}/memberprofile', function($email){
 		return redirect()->away( config('app.member_profile_edit') . urlencode($email) );
 	})->name('singer.memberprofile');
@@ -49,15 +57,22 @@ Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 		return redirect()->away( config('app.member_profile_new') );
 	})->name('memberprofile.new');
 	
+	
+	// New version
+	Route::get('singers/{singer}/profile/create', 'SingersController@createProfile')->name('profile.create');
+	Route::post('singers/{singer}/profile', 'SingersController@storeProfile')->name('profile');
+	
 	Route::get('/singers/{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
 	
 	Route::get('/singers/{singer}/move/archive', 'SingersController@moveToArchive')->name('singer.move.archive');
+	
 	
 });
 
 // Music Team auth
 Route::middleware(['auth', 'role:Music Team'])->group(function() {
-	
+
+    // Old (drip) version
 	Route::get('/singers/{singer}/voiceplacement', function($email){
 		return redirect()->away( config('app.voice_placement_edit') . urlencode($email) );
 	})->name('singer.voiceplacement');
@@ -65,6 +80,10 @@ Route::middleware(['auth', 'role:Music Team'])->group(function() {
 	Route::get('/voiceplacement', function(){
 		return redirect()->away( config('app.voice_placement_new') );
 	})->name('voiceplacement.new');
+
+	// New version
+    Route::get('singers/{singer}/placement/create', 'SingersController@createPlacement')->name('placement.create');
+    Route::post('singers/{singer}/placement', 'SingersController@storePlacement')->name('placement');
 
 	Route::get('/singers/{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');
 	
@@ -94,38 +113,98 @@ Route::middleware(['auth', 'role:Admin'])->group(function() {
 
 	Route::post('/users/{user}/role', 'UsersController@addRoles')->name('users.addroles');	
 	
+	Route::view('/tasks', 'TasksController@index')->name('tasks.index');
+	
+	Route::resource('/notification-templates', 'NotificationTemplateController');
+	
 	// Super admin?
 	
 	Route::get('/migrate', function(){
-		echo Artisan::call('migrate');
+		echo Artisan::call('migrate', [
+		    '--force' => true,
+        ]);
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
+    Route::get('/migrate/status', function(){
+        echo Artisan::call('migrate:status');
+        echo '<pre>'.Artisan::output().'</pre>';
+    });
 
-	Route::get('/migrate/refresh', function(){
+        // DO NOT RUN ON PRODUCTION
+        Route::get('/seed/users', function(){
+            echo Artisan::call('db:seed', ['--class' => 'UserTableSeeder']);
+            echo '<pre>'.Artisan::output().'</pre>';
+        });
+
+        Route::get('/seed/singers', function(){
+            echo Artisan::call('db:seed', [
+                '--class' => 'SingerTableSeeder',
+                '--force' => true,
+            ]);
+            echo '<pre>'.Artisan::output().'</pre>';
+        });
+
+        // ONLY RUN ONCE
+        Route::get('/seed/singer-categories', function(){
+            echo Artisan::call('db:seed', [
+                '--class' => 'SingerCategorySeeder',
+                '--force' => true,
+            ]);
+            echo '<pre>'.Artisan::output().'</pre>';
+        });
+
+        Route::get('/seed/tasks', function(){
+            echo Artisan::call('db:seed', [
+                '--class' => 'TaskTableSeeder',
+                '--force' => true,
+            ]);
+            echo '<pre>'.Artisan::output().'</pre>';
+        });
+
+
+        Route::get('/seed/templates', function(){
+            echo Artisan::call('db:seed', [
+                '--class' => 'NotificationTemplateSeeder',
+                '--force' => true,
+            ]);
+            echo '<pre>'.Artisan::output().'</pre>';
+        });
+
+
+    Route::get('/migrate/refresh', function(){
 		echo Artisan::call('migrate:refresh');
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/migrate/refresh/seed', function(){
 		echo Artisan::call('migrate:refresh', [
 			'--seed' => true,
 		]);
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/migrate/rollback', function(){
 		echo Artisan::call('migrate:rollback');
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/migrate/reset', function(){
 		echo Artisan::call('migrate:reset');
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/migrate/fresh', function(){
 		echo Artisan::call('migrate:fresh');
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/migrate/fresh/seed', function(){
 		echo Artisan::call('migrate:fresh', [
 			'--seed' => true,
 		]);
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
+
+	Route::get('/import', 'SingersController@import');
 	
 });

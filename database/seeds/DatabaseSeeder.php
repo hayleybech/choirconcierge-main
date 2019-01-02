@@ -1,8 +1,8 @@
 <?php
 
-use App\Role;
 use Illuminate\Database\Seeder;
 use App\User;
+use App\Task;
 
 class DatabaseSeeder extends Seeder
 {
@@ -32,6 +32,21 @@ class DatabaseSeeder extends Seeder
 		$roles = Role::all()->pluck('id')->toArray();
 		
 		$user->roles()->attach($roles);
+		
+		
+		$this->call('SingerTableSeeder');
+		$this->command->info('User table seeded!');
+		
+		$this->call('TaskTableSeeder');
+		$this->command->info('Task table seeded!');	
+		
+		$this->call('NotificationTemplateSeeder');
+		$this->command->info('Notification Template table seeded!');
+        $this->call('UsersTableSeeder');
+		$this->command->info('User table seeded!');
+
+        $this->call('SingerCategorySeeder');
+        $this->command->info('Notification Template table seeded!');
 
     }
 }
