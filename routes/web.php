@@ -120,35 +120,89 @@ Route::middleware(['auth', 'role:Admin'])->group(function() {
 	// Super admin?
 	
 	Route::get('/migrate', function(){
-		echo Artisan::call('migrate');
+		echo Artisan::call('migrate', [
+		    '--force' => true,
+        ]);
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
+    Route::get('/migrate/status', function(){
+        echo Artisan::call('migrate:status');
+        echo '<pre>'.Artisan::output().'</pre>';
+    });
 
-	Route::get('/migrate/refresh', function(){
+        // DO NOT RUN ON PRODUCTION
+        Route::get('/seed/users', function(){
+            echo Artisan::call('db:seed', ['--class' => 'UserTableSeeder']);
+            echo '<pre>'.Artisan::output().'</pre>';
+        });
+
+        Route::get('/seed/singers', function(){
+            echo Artisan::call('db:seed', [
+                '--class' => 'SingerTableSeeder',
+                '--force' => true,
+            ]);
+            echo '<pre>'.Artisan::output().'</pre>';
+        });
+
+        // ONLY RUN ONCE
+        Route::get('/seed/singer-categories', function(){
+            echo Artisan::call('db:seed', [
+                '--class' => 'SingerCategorySeeder',
+                '--force' => true,
+            ]);
+            echo '<pre>'.Artisan::output().'</pre>';
+        });
+
+        Route::get('/seed/tasks', function(){
+            echo Artisan::call('db:seed', [
+                '--class' => 'TaskTableSeeder',
+                '--force' => true,
+            ]);
+            echo '<pre>'.Artisan::output().'</pre>';
+        });
+
+
+        Route::get('/seed/templates', function(){
+            echo Artisan::call('db:seed', [
+                '--class' => 'NotificationTemplateSeeder',
+                '--force' => true,
+            ]);
+            echo '<pre>'.Artisan::output().'</pre>';
+        });
+
+
+    Route::get('/migrate/refresh', function(){
 		echo Artisan::call('migrate:refresh');
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/migrate/refresh/seed', function(){
 		echo Artisan::call('migrate:refresh', [
 			'--seed' => true,
 		]);
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/migrate/rollback', function(){
 		echo Artisan::call('migrate:rollback');
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/migrate/reset', function(){
 		echo Artisan::call('migrate:reset');
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/migrate/fresh', function(){
 		echo Artisan::call('migrate:fresh');
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/migrate/fresh/seed', function(){
 		echo Artisan::call('migrate:fresh', [
 			'--seed' => true,
 		]);
+        echo '<pre>'.Artisan::output().'</pre>';
 	});
 
 	Route::get('/import', 'SingersController@import');
