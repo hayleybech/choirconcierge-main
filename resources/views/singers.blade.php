@@ -12,7 +12,7 @@
 	</p>
 
 	@if (session('status'))
-	<div class="alert {{ isset($Response->error) ? 'alert-danger' : 'alert-success' }}" role="alert">
+	<div class="alert {{ isset($Response->error) || session('fail') ? 'alert-danger' : 'alert-success' }}" role="alert">
 		{{ session('status') }}
 		
 		@isset( $Response->error )

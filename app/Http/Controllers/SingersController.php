@@ -283,31 +283,20 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'The singer\'s account status has been saved. ', 'Response' => $Response]);
 
 	}
-	
-	public function moveToArchive($email) {
-		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
-		
-		// Add 'Account Created' Tag
-		$args = array(
-			'subscribers' => array(
-				[
-					'email' => $email,
-					'tags' => array(
-						'Category - Archived',
-					),
-					'remove_tags' => array(
-						'Category - Prospective Member',
-					),
-				]
-			)
-		);
-		$Response = $Drip->post('subscribers', $args);
-		
-		if( isset($Reponse->error) ) {
-			return redirect('/singers')->with(['status' => 'Could not move singer. ', 'Response' => $Response]);
-		}
-		return redirect('/singers')->with(['status' => 'The singer was moved. ', 'Response' => $Response]);
-	}
+
+	public function move($singerId){
+        $singer = Singer::find($singerId);
+
+        $category = Input::get('move_category', 0);
+
+        if( $category == 0 ) return redirect('/singers')->with([ 'status' => 'No category selected. ', 'fail' => true ]);
+
+        // Attach to Prospects category
+        $singer->category()->associate($category);
+        $singer->save();
+
+        return redirect('/singers')->with(['status' => 'The singer was moved. ']);
+    }
 
     public function import() {
 
