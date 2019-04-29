@@ -98,7 +98,7 @@ class SingersController extends Controller
 		$singer->tasks()->attach( $tasks );
 
 		// Attach to Prospects category
-        $cat_prospects = Task::find(1);
+        $cat_prospects = SingerCategory::find(1);
         $singer->category()->attach($cat_prospects);
 		
 		// Exit
