@@ -137,16 +137,20 @@
 			}
 			$actions['Account Created'] = $account_action;
 		}
-		
-		// Prep administrative settings
-		$operations = [];
-		
-		if( in_array( 'Category - Prospective Member', $singer['tags'] ) ){
-			$operations[] = array(
-				'title' => 'Archive',
-				'link'  => route( 'singer.move.archive', ['singer' => $singer['email'] ] ),
-				'class' => 'btn-danger',
-			);
+		*/
+
+		/*
+		if( Auth::user()->hasRole('Membership Team') ){
+			// Prep administrative settings
+			$operations = [];
+
+			if( $singer->category->name == 'Prospects' ){
+				$operations[] = array(
+					'title' => 'Archive',
+					'link'  => route( 'singer.move.archive', ['singer' => $singer ] ),
+					'class' => 'btn-danger',
+				);
+			}
 		}*/
 	
 	?>
@@ -194,16 +198,34 @@
 			@endforeach
 
 		</div>
-		
-		<?php /*
-		@if (count($operations) === 1)
+
+
+		{{--@if (count($operations) === 1)
 		<div class="card-footer">
 			@foreach( $operations as $op)
-			<a href="{{ $op['link'] }}" class="btn btn-sm {{ $op['class'] }}">{{ $op['title'] }}</a>
+				<a href="{{ $op['link'] }}" class="btn btn-sm {{ $op['class'] }}">{{ $op['title'] }}</a>
 			@endforeach
 		</div>
+		@endif--}}
+
+		@if ( Auth::user()->hasRole('Membership Team') )
+		<div class="card-footer">
+
+			<form method="get" action="{{route( 'singer.move', ['singer' => $singer])}}" class="form-inline">
+				<div class="input-group input-group-sm">
+					@php
+						echo Form::select('move_category', $categories_move,
+						0, ['class' => 'custom-select form-control-sm']);
+					@endphp
+
+					<div class="input-group-append">
+						<input type="submit" value="Move" class="btn btn-secondary btn-sm">
+					</div>
+				</div>
+			</form>
+
+		</div>
 		@endif
-		*/?>
 	</div>
 	
 </div>

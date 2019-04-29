@@ -63,9 +63,9 @@ Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 	Route::post('singers/{singer}/profile', 'SingersController@storeProfile')->name('profile');
 	
 	Route::get('/singers/{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
-	
-	Route::get('/singers/{singer}/move/archive', 'SingersController@moveToArchive')->name('singer.move.archive');
-	
+
+	Route::get('/singers/{singer}/move/', 'SingersController@move')->name('singer.move');
+
 	
 });
 

@@ -48,7 +48,7 @@ class Kernel extends ConsoleKernel
                 }
                 if($run) {
                     //$command = '/usr/bin/php -c ' . $path .'/php.ini ' . $path . '/artisan queue:work --tries=3 > /dev/null & echo $!';
-                    $command = PHP_BINARY . ' ' . $path . '/artisan queue:work --tries=3 > /dev/null & echo $!';
+                    $command = PHP_BINARY . ' ' . $path . '/artisan queue:work --tries=3 --stop-when-empty > /dev/null & echo $!';
                     $number = exec($command);
                     echo 'Running queue worker';
                     file_put_contents($path . '/queue.pid', $number);
