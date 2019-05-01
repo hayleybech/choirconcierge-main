@@ -100,6 +100,8 @@ class SingersController extends Controller
 		// Attach to Prospects category
         $cat_prospects = SingerCategory::find(1);
         $singer->category()->associate($cat_prospects);
+
+        $singer->save();
 		
 		// Exit
 		return redirect('/singers')->with(['status' => 'Singer created. ', ]);
