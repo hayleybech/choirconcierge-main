@@ -29,15 +29,48 @@ class SingersController extends Controller
 
 
     public function index(){
-		
-		$category = Input::get('filter_category', 1);
 
-		// Filter singers by category
-		if($category == 0) {
-            $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])->get();
+        // MAIN QUERY
+        $where = [];
+
+        // Filter singers by category
+        $category = Input::get('filter_category', 1);
+        if($category == 0) {
+
         } else {
-            $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])->where('singer_category_id', $category)->get();
+            $where[] = [ 'singer_category_id', '=', $category ];
         }
+
+        // Age
+        /*
+        $age_group = Input::get ('filter_age', 'any' );
+        if( $age_group === 'under_25' ) {
+            // ->join( 'profiles', 'singers.id', '=', 'profiles.singer_id' )
+            // hv
+        } elseif( $age_group === 'over_25' ) {
+
+        } else {
+
+        }*/
+
+        // Sort
+        $sort_by = Input::get( 'sort_by', 'name' );
+        switch( $sort_by ) {
+            case 'name':
+                $sort_dir = 'asc';
+                break;
+            case 'created_at':
+                $sort_dir = 'desc';
+                break;
+            default:
+                $sort_dir = 'asc';
+        }
+
+        $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])
+            ->where( $where )
+            ->orderBy( $sort_by, $sort_dir )
+            ->get();
+		// END MAIN QUERY
 
 		// Get list of categories for filtering
         // Prep for Form::select

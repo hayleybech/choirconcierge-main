@@ -25,7 +25,10 @@
 	@endif
 
 	<form method="get" class="form-inline mb-4">
-		<div class="input-group input-group-sm">
+		<div class="mr-sm-2">
+			Filter
+		</div>
+		<div class="input-group input-group-sm mr-sm-2 mb-2">
 			<div class="input-group-prepend">
 				<label for="filter_category" class="input-group-text">Category</label>
 			</div>
@@ -33,11 +36,40 @@
 			echo Form::select('filter_category', $categories_keyed,
 			$category, ['class' => 'custom-select form-control-sm']);
 			@endphp
-			
-			<div class="input-group-append">
-				<input type="submit" value="Filter" class="btn btn-secondary btn-sm">
-			</div>
 		</div>
+		<div class="input-group input-group-sm mr-sm-2 mb-2">
+			<div class="input-group-prepend">
+				<label for="filter_age" class="input-group-text">Age</label>
+			</div>
+			<select id="filter_age" name="filter_age" class="form-control-sm custom-select">
+				<option value="any">Any</option>
+				<option value="under_25">Under 25</option>
+				<option value="over_25">Over 25</option>
+			</select>
+		</div>
+		<div class="input-group input-group-sm mr-sm-2 mb-2">
+			<div class="input-group-prepend">
+				<label for="filter_task" class="input-group-text">Waiting on</label>
+			</div>
+			<select id="filter_task" name="filter_task" class="form-control-sm custom-select">
+				<option>Any</option>
+				<option>Member Profile</option>
+				<option>Voice Placement</option>
+			</select>
+		</div>
+		<div class="mr-sm-2">
+			Sort
+		</div>
+		<div class="input-group input-group-sm mr-sm-2 mb-2">
+			<div class="input-group-prepend">
+				<label for="sort_by" class="input-group-text">Sort by</label>
+			</div>
+			<select id="sort_by" name="sort_by" class="form-control-sm custom-select">
+				<option value="name">Name</option>
+				<option value="created_at">Date added</option>
+			</select>
+		</div>
+		<input type="submit" value="Apply" class="btn btn-secondary btn-sm">
 	</form>
 
 	<h3>{{ $categories_keyed[$category] }}</h3>
