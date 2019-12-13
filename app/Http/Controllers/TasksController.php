@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Task;
 
 class TasksController extends Controller
 {
     public function index()
     {
-        $tasks = App\Task::all();
+        $tasks = Task::all();
 
         return view('tasks.tasks', compact('tasks'));
     }
