@@ -32,15 +32,16 @@ class ModifyProfilesAllowNulls extends Migration
      */
     public function down()
     {
+        $prefix = Config::get('database.connections.mysql.prefix');
         // Need to replace null values before disallowing null
-        DB::statement('UPDATE `profiles` SET `dob` = CURRENT_TIMESTAMP WHERE `dob` IS NULL;');
-        DB::statement('UPDATE `profiles` SET `phone` = "" WHERE `phone` IS NULL;');
-        DB::statement('UPDATE `profiles` SET `ice_name` = "" WHERE `ice_name` IS NULL;');
-        DB::statement('UPDATE `profiles` SET `ice_phone` = "" WHERE `ice_phone` IS NULL;');
-        DB::statement('UPDATE `profiles` SET `reason_for_joining` = "" WHERE `reason_for_joining` IS NULL;');
-        DB::statement('UPDATE `profiles` SET `referrer` = "" WHERE `referrer` IS NULL;');
-        DB::statement('UPDATE `profiles` SET `profession` = "" WHERE `profession` IS NULL;');
-        DB::statement('UPDATE `profiles` SET `skills` = "" WHERE `skills` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'profiles` SET `dob` = CURRENT_TIMESTAMP WHERE `dob` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'profiles` SET `phone` = "" WHERE `phone` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'profiles` SET `ice_name` = "" WHERE `ice_name` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'profiles` SET `ice_phone` = "" WHERE `ice_phone` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'profiles` SET `reason_for_joining` = "" WHERE `reason_for_joining` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'profiles` SET `referrer` = "" WHERE `referrer` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'profiles` SET `profession` = "" WHERE `profession` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'profiles` SET `skills` = "" WHERE `skills` IS NULL;');
 
         Schema::table('profiles', function (Blueprint $table) {
             $table->date('dob')->useCurrent()->nullable(false)->change();

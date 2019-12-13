@@ -32,15 +32,16 @@ class ModifyPlacementsAllowNulls extends Migration
      */
     public function down()
     {
+        $prefix = Config::get('database.connections.mysql.prefix');
         // Need to replace null values before disallowing null
-        DB::statement('UPDATE `placements` SET `experience` = "" WHERE `experience` IS NULL;');
-        DB::statement('UPDATE `placements` SET `instruments` = "" WHERE `instruments` IS NULL;');
-        DB::statement('UPDATE `placements` SET `skill_pitch` = 0 WHERE `skill_pitch` IS NULL;');
-        DB::statement('UPDATE `placements` SET `skill_harmony` = 0 WHERE `skill_harmony` IS NULL;');
-        DB::statement('UPDATE `placements` SET `skill_performance` = 0 WHERE `skill_performance` IS NULL;');
-        DB::statement('UPDATE `placements` SET `skill_sightreading` = 0 WHERE `skill_sightreading` IS NULL;');
-        DB::statement('UPDATE `placements` SET `voice_tone` = 0 WHERE `voice_tone` IS NULL;');
-        DB::statement('UPDATE `placements` SET `voice_part` = "" WHERE `voice_part` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'placements` SET `experience` = "" WHERE `experience` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'placements` SET `instruments` = "" WHERE `instruments` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'placements` SET `skill_pitch` = 0 WHERE `skill_pitch` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'placements` SET `skill_harmony` = 0 WHERE `skill_harmony` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'placements` SET `skill_performance` = 0 WHERE `skill_performance` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'placements` SET `skill_sightreading` = 0 WHERE `skill_sightreading` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'placements` SET `voice_tone` = 0 WHERE `voice_tone` IS NULL;');
+        DB::statement('UPDATE `'.$prefix.'placements` SET `voice_part` = "" WHERE `voice_part` IS NULL;');
 
         Schema::table('placements', function (Blueprint $table) {
             $table->string('experience')->default('')->nullable(false)->change();
