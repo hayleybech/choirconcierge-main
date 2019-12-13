@@ -14,8 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-		
 		$user = User::create([
 			'name' => 'Hayden',
             'email' => 'haydenbech@gmail.com',
@@ -43,8 +41,6 @@ class DatabaseSeeder extends Seeder
 		
 		$this->call('NotificationTemplateSeeder');
 		$this->command->info('Notification Template table seeded!');
-        $this->call('UserTableSeeder');
-		$this->command->info('User table seeded!');
 
         $this->call('SingerCategorySeeder');
         $this->command->info('Notification Template table seeded!');
