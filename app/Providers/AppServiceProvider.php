@@ -21,11 +21,11 @@ class AppServiceProvider extends ServiceProvider
 		Schema::defaultStringLength(191);
 
 		// Get Notifications for current user, show on all pages
-        view()->composer('*', function($view) use ($auth) {
+        /*view()->composer('*', function($view) use ($auth) {
             if($auth->check()) {
                 $view->with('notifications', $auth->user()->unreadNotifications);
             }
-        });
+        });*/
 
         // Get list of singer categories
         view()->composer('*', function($view) use ($auth) {
