@@ -83,7 +83,7 @@ class SingersController extends Controller
 	public function store(Request $request) {
 		$validated = $request->validate([
 			'name'	=> 'required',
-			'email'	=> 'required',
+			'email'	=> 'required|unique:singers',
 		]);
 		
 		$singer = new Singer();
