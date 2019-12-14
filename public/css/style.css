@@ -21,26 +21,159 @@ nav {
 	margin-bottom: 10px;
 }
 
-.card .singer-name {
+.singer-name {
 	font-size: 1.2rem;
 }
-.card .singer-email {
+.singer-email {
 	font-size: 0.8rem;
 }
-.card .singer-part {
+.singer-part {
 	font-size: 0.8rem;
 }
-.card .singer-phone {
+.singer-phone {
 	font-size: 0.8rem;
 }
 
-.card .singer-age {
+.singer-age {
 	font-size: 0.8rem;
 }
 
 .card .list-group {
 	font-size: 0.9rem;
 }
+
+
+.r-table__row {
+	display: flex;
+	flex-flow: row wrap;
+	padding: 5px;
+}
+.r-table__tbody .r-table__row {
+	margin: 5px 0;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+.r-table__row:nth-child(even) {
+	background-color: #eee;
+}
+.r-table__cell,
+.r-table__heading {
+	flex: 1 0 auto;
+
+	display: flex;
+	align-items: center;
+}
+.r-table__heading {
+	font-weight: 600;
+}
+.column--mark {
+	width: 5%;
+	justify-content: center;
+}
+.column--singer {
+	width: 15%;
+
+	flex-flow: column wrap;
+	align-items: flex-start;
+}
+.column--progress {
+	width: 20%;
+
+	flex-flow: column nowrap;
+	justify-content: center;
+}
+.column--part {
+	width: 10%;
+}
+.column--category {
+	width: 10%;
+}
+.column--phone {
+	width: 10%;
+}
+.column--age {
+	width: 10%;
+}
+
+.progress {
+	height: 0.7rem;
+	width: 80px;
+	flex: 0 1 auto;
+	border: 1px solid #ddd;
+}
+
+.singer-name {
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+.progress--link {
+	font-size: 0.9rem;
+}
+.form-inline .input-group > .custom-select {
+	width: 90px !important;
+}
+
+
+@media screen and (max-width:980px) {
+	.r-table--hide-columns-mobile {
+
+	}
+	.r-table--hide-columns-mobile .column--singer {
+		width: 30%;
+	}
+
+	.r-table--hide-columns-mobile .column--category,
+	.r-table--hide-columns-mobile .column--age,
+	.r-table--hide-columns-mobile .column--phone,
+	.r-table--hide-columns-mobile .column--actions {
+		display: none;
+	}
+	.r-table--hide-columns-mobile .singer-name {
+		font-size: 0.9rem;
+	}
+
+
+
+	.r-table--card-view-mobile {
+
+	}
+	.r-table--card-view-mobile .r-table__heading {
+		display: none;
+	}
+	.r-table--card-view-mobile .r-table__row {
+		padding: 10px 20px;
+		margin: 10px 0;
+	}
+	.r-table--card-view-mobile .column--mark {
+		width: 10%;
+	}
+	.r-table--card-view-mobile .column--singer {
+		width: 90%;
+	}
+	.r-table--card-view-mobile .column--progress {
+		width: 100%;
+		flex-flow: row wrap;
+		justify-content: space-between;
+	}
+	.r-table--card-view-mobile .column--part {
+		width: 50%;
+	}
+	.r-table--card-view-mobile .column--category {
+		width: 50%;
+	}
+	.r-table--card-view-mobile .column--phone {
+		width: 50%;
+	}
+	.r-table--card-view-mobile .column--age {
+		width: 50%;
+	}
+	.r-table--card-view-mobile .column--actions {
+		width: 100%;
+	}
+
+}
+
+
 
 i.fa.fa-external-link {
     font-size: 0.8em;
