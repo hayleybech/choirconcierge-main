@@ -190,7 +190,7 @@
 			<span class="singer-category badge {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span>
 		</div>
         <div class="r-table__cell column--phone">
-            <span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone != '' ) ? $singer->profile->phone : 'No phone number' }}</span><br>
+            <span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone != '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
         </div>
         <div class="r-table__cell column--age">
             <span class="singer-age"><i class="fa fa-calendar-o"></i> Age {{ ( $singer->getAge() ) ? $singer->getAge() : 'Unknown' }}</span>
