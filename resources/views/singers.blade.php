@@ -4,12 +4,7 @@
 
 @section('content')
 
-	<h2>Singers List</h2>
-	<p>This page lists all of the singers in the Choir Concierge database. The list shows all forms yet to be completed for each singer. </p>
-	
-	<p>
-		<a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-user-plus"></i> Add Singer</a>
-	</p>
+	<h2 class="mb-4">Singers <a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-user-plus"></i> Add New</a></h2>
 
 	@if (session('status'))
 	<div class="alert {{ isset($Response->error) || session('fail') ? 'alert-danger' : 'alert-success' }}" role="alert">
@@ -24,12 +19,12 @@
 	</div>
 	@endif
 
-	<form method="get" class="form-inline mb-4">
+	<form method="get" class="form-inline mb-0">
 		@foreach( $filters as $filter )
 		<div class="input-group input-group-sm mb-2 mr-2">
 			<div class="input-group-prepend">
 				@php
-				$label_class = ( $filter['current'] != $filter['default'] ) ? 'border-primary bg-primary text-white' : '';
+				$label_class = ( $filter['current'] != $filter['default'] ) ? 'border-primary bg-primary text-white' : 'bg-light';
 				@endphp
 				<label for="{{ $filter['name']}} " class="input-group-text {{$label_class}}">{{ $filter['label'] }}</label>
 			</div>
@@ -52,7 +47,6 @@
 		</div>
 	</form>
 
-	<h3>{{ $filters['cat']['list'][$filters['cat']['current']] }}</h3>
 	{{--@if ( $categories_keyed[$category] == 'Members')
 	<p><a href="{{ route('singers.export') }}" class="btn btn-link btn-sm">Export paid Singers.</a></p>
 	@endif--}}
