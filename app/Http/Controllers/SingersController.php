@@ -29,15 +29,21 @@ class SingersController extends Controller
 
 
     public function index(){
-		
-		$category = Input::get('filter_category', 1);
 
-		// Filter singers by category
-		if($category == 0) {
-            $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])->get();
-        } else {
-            $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])->where('singer_category_id', $category)->get();
+
+        // Base query
+        $singers = Singer::with(['tasks', 'category', 'placement', 'profile']);
+
+        // Filter singers
+        $where = [];
+        $category = Input::get('filter_category', 1);
+        if($category !== 0) {
+            $where[] = ['singer_category_id', '=', $category];
         }
+        $singers = $singers->where($where);
+
+        // Finish and fetch
+		$singers = $singers->get();
 
 		// Get list of categories for filtering
         // Prep for Form::select
