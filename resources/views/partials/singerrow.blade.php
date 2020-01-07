@@ -195,10 +195,10 @@
         <div class="r-table__cell column--age">
             <span class="singer-age"><i class="fa fa-calendar-o"></i> {{ ( $singer->getAge() ) ? 'Age '.$singer->getAge() : 'No DOB' }}</span>
         </div>
-        @if ( Auth::user()->hasRole('Membership Team') )
         <div class="r-table__cell column--actions">
 
-            <form method="get" action="{{route( 'singer.move', ['singer' => $singer])}}" class="form-inline">
+			@if ( Auth::user()->hasRole('Membership Team') )
+			<form method="get" action="{{route( 'singer.move', ['singer' => $singer])}}" class="form-inline">
                 <div class="input-group input-group-sm">
                     @php
                 echo Form::select('move_category', $categories_move,
@@ -210,8 +210,8 @@
                     </div>
                 </div>
             </form>
-        </div>
-        @endif
+			@endif
+		</div>
 
         <!--
 		<div class="list-group list-group-flush">
