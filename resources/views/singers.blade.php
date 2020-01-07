@@ -25,22 +25,31 @@
 	@endif
 
 	<form method="get" class="form-inline mb-4">
-		<div class="input-group input-group-sm">
+		@foreach( $filters as $filter )
+		<div class="input-group input-group-sm mb-2 mr-2">
 			<div class="input-group-prepend">
-				<label for="filter_category" class="input-group-text">Category</label>
+				<label for="{{ $filter['name']}} " class="input-group-text">{{ $filter['label'] }}</label>
 			</div>
-			@php
-			echo Form::select('filter_category', $categories_keyed,
-			$category, ['class' => 'custom-select form-control-sm']);
-			@endphp
-			
-			<div class="input-group-append">
-				<input type="submit" value="Filter" class="btn btn-secondary btn-sm">
+				@php
+				$class = ( $filter['current'] != $filter['default'] ) ? 'border-primary' : '';
+				echo Form::select($filter['name'],
+					$filter['list'],
+					$filter['current'],
+					['class' => 'custom-select form-control-sm ' . $class]
+				);
+				@endphp
+		</div>
+		@endforeach
+
+		<div class="input-group input-group-sm mb-2 mr-2">
+			<div class="btn-group" role="group" aria-label="Basic example">
+				<button class="btn btn-outline-secondary btn-sm"><i class="fa fa-filter"></i> Filter</button>
+				<a href="{{ route('singers.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-times"></i> Clear</a>
 			</div>
 		</div>
 	</form>
 
-	<h3>{{ $categories_keyed[$category] }}</h3>
+	<h3>{{ $filters['cat']['list'][$filters['cat']['current']] }}</h3>
 	{{--@if ( $categories_keyed[$category] == 'Members')
 	<p><a href="{{ route('singers.export') }}" class="btn btn-link btn-sm">Export paid Singers.</a></p>
 	@endif--}}

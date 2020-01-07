@@ -29,26 +29,106 @@ class SingersController extends Controller
 
 
     public function index(){
-		
-		$category = Input::get('filter_category', 1);
+        // Base query
+        $singers = Singer::with(['tasks', 'category', 'placement', 'profile']);
 
-		// Filter singers by category
-		if($category == 0) {
-            $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])->get();
-        } else {
-            $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])->where('singer_category_id', $category)->get();
+        // Filter singers
+        $where = [];
+        $filters = [
+            'cat'   => $this->getFilterCategory(),
+            'part'  => $this->getFilterPart(),
+            'age'   => $this->getFilterAge(),
+        ];
+
+        if($filters['cat']['current'] != 0) {
+            $where[] = ['singer_category_id', '=', $filters['cat']['current']];
+        }
+        $singers = $singers->where($where);
+
+        if($filters['part']['current'] != 'all') {
+            $current = $filters['part']['current'];
+            $singers = $singers->whereHas('placement', function($query) use($current) {
+                $query->where('voice_part', '=', $current);
+            });
         }
 
-		// Get list of categories for filtering
-        // Prep for Form::select
+        $adult_age = 18;
+        if($filters['age']['current'] == 'adult') {
+            $singers = $singers->whereHas('profile', function($query) use($adult_age) {
+                $query->where('dob', '<=', date('Y-m-d', strtotime("-$adult_age years")));
+            });
+        }
+        elseif($filters['age']['current'] == 'child') {
+            $singers = $singers->whereHas('profile', function($query) use($adult_age) {
+                $query->where('dob', '>', date('Y-m-d', strtotime("-$adult_age years")));
+            });
+        }
+
+        // Finish and fetch
+		$singers = $singers->get();
+
+        return view('singers', compact('singers', 'members', 'Response', 'filters' ));
+	}
+
+    /**
+     * Get list of categories for filtering
+     */
+	public function getFilterCategory(){
+        $default = 1;
+
         $categories = SingerCategory::all();
         $categories_keyed = $categories->mapWithKeys(function($item){
             return [ $item['id'] => $item['name'] ];
         });
         $categories_keyed->prepend('All Singers',0);
 
-        return view('singers', compact('category', 'singers', 'members', 'Response', 'categories_keyed' ));
-	}
+        return [
+            'name'      => 'filter_category',
+            'label'     => 'Category',
+            'default'   => $default,
+            'current'   => Input::get('filter_category', $default),
+            'list'      => $categories_keyed,
+        ];
+    }
+
+    /**
+     * Get list of voice parts for filtering
+     */
+    public function getFilterPart(){
+        $default = 'all';
+
+        return [
+            'name'      => 'filter_part',
+            'label'     => 'Part',
+            'default'   => $default,
+            'current'   => Input::get('filter_part', $default),
+            'list'      => [
+                'all'   => 'All parts',
+                'tenor' => 'Tenor',
+                'lead'  => 'Lead',
+                'bari'  => 'Baritone',
+                'bass'  => 'Bass',
+            ],
+        ];
+    }
+
+    /**
+     * Get list of age ranges for filtering
+     */
+    public function getFilterAge(){
+        $default = 'all';
+        return [
+            'name'      => 'filter_age',
+            'label'     => 'Age',
+            'default'   => $default,
+            'current'   => Input::get('filter_age', $default),
+            'list'      => [
+                'all'    => 'All ages',
+                'adult'  => 'Over 18',
+                'child'  => 'Under 18',
+            ],
+        ];
+    }
 	
 		public function getSingersByTag($tag) {
 			$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 

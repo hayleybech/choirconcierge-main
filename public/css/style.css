@@ -131,9 +131,6 @@ nav {
 .progress--link {
 	font-size: 14px;
 }
-.form-inline .input-group > .custom-select {
-	width: 90px !important;
-}
 
 select.form-control-sm.force-xs {
 	height: 25px !important;
@@ -222,6 +219,7 @@ i.fa.fa-external-link {
 /* Fix for bootstrap bug */
 .form-inline .custom-select {
 	width: auto !important;
+    line-height: 1.3;
 }
 
 
