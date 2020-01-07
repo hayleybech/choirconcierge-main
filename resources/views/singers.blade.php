@@ -49,15 +49,17 @@
 	</div>
 
 	<div class="r-table r-table--card-view-mobile">
-		<div class="r-table__row">
-			<div class="r-table__heading column--mark"><input type="checkbox"></div>
-			<div class="r-table__heading column--singer">Singer</div>
-			<div class="r-table__heading column--progress">Progress</div>
-			<div class="r-table__heading column--part">Part</div>
-			<div class="r-table__heading column--category">Category</div>
-			<div class="r-table__heading column--phone">Phone</div>
-			<div class="r-table__heading column--age">Age</div>
-			<div class="r-table__heading column--actions">Actions</div>
+		<div class="r-table__thead">
+			<div class="r-table__row">
+				<div class="r-table__heading column--mark"><input type="checkbox"></div>
+				<div class="r-table__heading column--singer">Singer</div>
+				<div class="r-table__heading column--progress">Progress</div>
+				<div class="r-table__heading column--part">Part</div>
+				<div class="r-table__heading column--category">Category</div>
+				<div class="r-table__heading column--phone">Phone</div>
+				<div class="r-table__heading column--age">Age</div>
+				<div class="r-table__heading column--actions">Actions</div>
+			</div>
 		</div>
 		<div class="r-table__tbody">
 			@each('partials.singerrow', $singers, 'singer', 'partials.noresults')

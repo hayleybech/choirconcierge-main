@@ -43,11 +43,6 @@ nav {
 }
 
 
-.r-table__row {
-	display: flex;
-	flex-flow: row wrap;
-	padding: 5px;
-}
 .r-table__tbody .r-table__row {
 	margin: 5px 0;
 	border: 1px solid #ccc;
@@ -66,41 +61,54 @@ nav {
 .r-table__heading {
 	font-weight: 600;
 }
+
+
+.r-table__row {
+	padding: 5px;
+
+	display: grid;
+	grid-template-columns: 3% 17% 17% 7% 13% 11% 6% auto;
+	grid-template-rows: 1fr;
+	grid-template-areas:
+		"mark singer progress part category phone age actions"
+	;
+	gap: 5px 8px;
+	place-items: stretch;
+}
 .column--mark {
-	width: 5%;
-	max-width: 5%;
+	grid-area: mark;
+
 	justify-content: center;
+	visibility: hidden; /* I haven't coded bulk actions yet */
 }
 .column--singer {
-	width: 20%;
-	max-width: 20%;
+	grid-area: singer;
 
 	flex-flow: column wrap;
 	align-items: flex-start;
+	justify-content: center;
 }
 .column--progress {
-	width: 15%;
-	max-width: 15%;
+	grid-area: progress;
 
 	flex-flow: column nowrap;
 	justify-content: center;
 	align-items: flex-start;
 }
 .column--part {
-	width: 10%;
-	max-width: 10%;
+	grid-area: part;
 }
 .column--category {
-	width: 10%;
-	max-width: 10%;
+	grid-area: category;
 }
 .column--phone {
-	width: 10%;
-	max-width: 10%;
+	grid-area: phone;
 }
 .column--age {
-	width: 10%;
-	max-width: 10%;
+	grid-area: age;
+}
+.column--actions {
+	grid-area: actions;
 }
 
 .progress {
@@ -121,6 +129,16 @@ nav {
 	width: 90px !important;
 }
 
+select.form-control-sm.force-xs {
+	height: 25px !important;
+	line-height: 1em;
+	padding-top: 0.3rem;
+	padding-left: 0.6rem;
+}
+.btn-sm.force-xs {
+	line-height: 1em !important;
+	height: 25px;
+}
 
 @media screen and (max-width:980px) {
 	.r-table--hide-columns-mobile {
@@ -128,6 +146,7 @@ nav {
 	}
 	.r-table--hide-columns-mobile .column--singer {
 		width: 30%;
+		max-width: 30%;
 	}
 
 	.r-table--hide-columns-mobile .column--category,
@@ -145,38 +164,55 @@ nav {
 	.r-table--card-view-mobile {
 
 	}
-	.r-table--card-view-mobile .r-table__heading {
+	.r-table--card-view-mobile .r-table__thead .r-table__row {
+		grid-template-columns: 5% auto;
+		grid-template-rows: auto;
+		grid-template-areas: "mark singer";
+		padding: 0 20px 0 12px;
+	}
+	.r-table--card-view-mobile .r-table__thead .r-table__heading:not(.column--mark):not(.column--singer) {
 		display: none;
 	}
 	.r-table--card-view-mobile .r-table__row {
-		padding: 10px 20px;
+		padding: 12px 20px 12px 12px;
 		margin: 10px 0;
+
+		grid-template-columns: 5% 1fr 1fr;
+		grid-template-rows: auto 1fr 1fr 1fr auto;
+		grid-template-areas:
+			"mark singer singer"
+			"mark progress progress"
+			"mark part category"
+			"mark phone age"
+			"mark actions actions"
+		;
+		gap: 3px 10px;
 	}
 	.r-table--card-view-mobile .column--mark {
-		width: 10%;
+
 	}
 	.r-table--card-view-mobile .column--singer {
-		width: 90%;
+
 	}
 	.r-table--card-view-mobile .column--progress {
-		width: 100%;
 		flex-flow: row wrap;
+		align-items: center;
 		justify-content: space-between;
 	}
 	.r-table--card-view-mobile .column--part {
-		width: 50%;
+
 	}
 	.r-table--card-view-mobile .column--category {
-		width: 50%;
+
 	}
 	.r-table--card-view-mobile .column--phone {
-		width: 50%;
+
 	}
 	.r-table--card-view-mobile .column--age {
-		width: 50%;
+
 	}
 	.r-table--card-view-mobile .column--actions {
-		width: 100%;
+
 	}
 
 }

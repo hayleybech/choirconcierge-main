@@ -173,7 +173,7 @@
 					{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
 				</a>
 			</div>
-			<div class="card-subtitle mb-2 text-muted singer-email">{{ $singer->email }}</div>
+			<div class="card-subtitle text-muted singer-email">{{ $singer->email }}</div>
 		</div>
         <div class="r-table__cell column--progress">
             <div class="progress">
@@ -184,7 +184,7 @@
             </a>
         </div>
         <div class="r-table__cell column--part">
-            <span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part != '' ) ? $singer->placement->voice_part : 'No Voice Part' }}</span><br>
+            <span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part != '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
         </div>
 		<div class="r-table__cell column--category">
 			<span class="singer-category badge {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span>
@@ -193,7 +193,7 @@
             <span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone != '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
         </div>
         <div class="r-table__cell column--age">
-            <span class="singer-age"><i class="fa fa-calendar-o"></i> Age {{ ( $singer->getAge() ) ? $singer->getAge() : 'Unknown' }}</span>
+            <span class="singer-age"><i class="fa fa-calendar-o"></i> {{ ( $singer->getAge() ) ? 'Age '.$singer->getAge() : 'No DOB' }}</span>
         </div>
         @if ( Auth::user()->hasRole('Membership Team') )
         <div class="r-table__cell column--actions">
@@ -202,16 +202,14 @@
                 <div class="input-group input-group-sm">
                     @php
                 echo Form::select('move_category', $categories_move,
-                0, ['class' => 'custom-select form-control-sm']);
+                0, ['class' => 'custom-select form-control-sm force-xs']);
                     @endphp
 
                     <div class="input-group-append">
-                        <input type="submit" value="Move" class="btn btn-secondary btn-sm">
+                        <input type="submit" value="Move" class="btn btn-secondary btn-sm force-xs">
                     </div>
                 </div>
             </form>
-
-            <a href="#" class="btn btn-sm btn-default">Delete</a>
         </div>
         @endif
 
