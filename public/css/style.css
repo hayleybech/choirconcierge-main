@@ -133,6 +133,7 @@ nav {
 }
 
 select.form-control-sm.force-xs {
+	width: 90px !important;
 	height: 25px !important;
 	line-height: 1em;
 	padding-top: 0.3rem;
