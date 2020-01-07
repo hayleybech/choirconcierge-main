@@ -25,7 +25,7 @@
 	@endif
 
 	<form method="get" class="form-inline mb-4">
-		<div class="input-group input-group-sm">
+		<div class="input-group input-group-sm mr-2">
 			<div class="input-group-prepend">
 				<label for="filter_category" class="input-group-text">Category</label>
 			</div>
@@ -33,11 +33,9 @@
 			echo Form::select('filter_category', $categories_keyed,
 			$category, ['class' => 'custom-select form-control-sm']);
 			@endphp
-			
-			<div class="input-group-append">
-				<input type="submit" value="Filter" class="btn btn-secondary btn-sm">
-			</div>
 		</div>
+		
+		<button class="btn btn-outline-secondary btn-sm"><i class="fa fa-filter"></i> Filter</button>
 	</form>
 
 	<h3>{{ $categories_keyed[$category] }}</h3>
