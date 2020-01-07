@@ -17,7 +17,7 @@
 					{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
 				</a>
 			</div>
-			<div class="card-subtitle text-muted singer-email">{{ $singer->email }}</div>
+			<div class="text-muted singer-email">{{ $singer->email }}</div>
 		</div>
         <div class="r-table__cell column--progress">
             <!--<div class="progress">
