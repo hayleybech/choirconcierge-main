@@ -25,7 +25,7 @@
 	@endif
 
 	<form method="get" class="form-inline mb-4">
-		<div class="input-group input-group-sm mr-2">
+		<div class="input-group input-group-sm mb-2 mr-2">
 			<div class="input-group-prepend">
 				<label for="filter_category" class="input-group-text">Category</label>
 			</div>
@@ -34,8 +34,30 @@
 			$category, ['class' => 'custom-select form-control-sm']);
 			@endphp
 		</div>
-		
-		<button class="btn btn-outline-secondary btn-sm"><i class="fa fa-filter"></i> Filter</button>
+
+		<div class="input-group input-group-sm mb-2 mr-2">
+			<div class="input-group-prepend">
+				<label for="filter_part" class="input-group-text">Part</label>
+			</div>
+			@php
+				echo Form::select('filter_part', $parts_keyed,
+                $part, ['class' => 'custom-select form-control-sm']);
+			@endphp
+		</div>
+
+		<div class="input-group input-group-sm mb-2 mr-2">
+			<div class="input-group-prepend">
+				<label for="filter_age" class="input-group-text">Age</label>
+			</div>
+			@php
+				echo Form::select('filter_age', $ages_keyed,
+                $age, ['class' => 'custom-select form-control-sm']);
+			@endphp
+		</div>
+
+		<div class="input-group input-group-sm mb-2 mr-2">
+			<button class="btn btn-outline-secondary btn-sm"><i class="fa fa-filter"></i> Filter</button>
+		</div>
 	</form>
 
 	<h3>{{ $categories_keyed[$category] }}</h3>

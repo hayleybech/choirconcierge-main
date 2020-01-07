@@ -36,25 +36,81 @@ class SingersController extends Controller
 
         // Filter singers
         $where = [];
+
         $category = Input::get('filter_category', 1);
-        if($category !== 0) {
+        if($category != 0) {
             $where[] = ['singer_category_id', '=', $category];
         }
         $singers = $singers->where($where);
 
+        $part = Input::get('filter_part', 'all');
+        if($part != 'all') {
+            $singers = $singers->whereHas('placement', function($query) use($part) {
+                $query->where('voice_part', '=', $part);
+            });
+        }
+
+        $age = Input::get('filter_age', 'all');
+        $adult_age = 18;
+        if($age == 'adult') {
+            $singers = $singers->whereHas('profile', function($query) use($adult_age) {
+                $query->where('dob', '<=', date('Y-m-d', strtotime("-$adult_age years")));
+            });
+        }
+        elseif($age == 'child') {
+            $singers = $singers->whereHas('profile', function($query) use($adult_age) {
+                $query->where('dob', '>', date('Y-m-d', strtotime("-$adult_age years")));
+            });
+        }
+
         // Finish and fetch
 		$singers = $singers->get();
 
-		// Get list of categories for filtering
-        // Prep for Form::select
+
+        // Prep filter dropdowns
+		$categories_keyed = $this->getFilterCategory();
+		$parts_keyed = $this->getFilterPart();
+		$ages_keyed = $this->getFilterAge();
+
+        return view('singers', compact('category', 'singers', 'members', 'Response', 'categories_keyed', 'parts_keyed', 'part', 'ages_keyed', 'age' ));
+	}
+
+    /**
+     * Get list of categories for filtering
+     */
+	public function getFilterCategory(){
         $categories = SingerCategory::all();
         $categories_keyed = $categories->mapWithKeys(function($item){
             return [ $item['id'] => $item['name'] ];
         });
         $categories_keyed->prepend('All Singers',0);
 
-        return view('singers', compact('category', 'singers', 'members', 'Response', 'categories_keyed' ));
-	}
+        return $categories_keyed;
+    }
+
+    /**
+     * Get list of voice parts for filtering
+     */
+    public function getFilterPart(){
+        return [
+            'all'   => 'All parts',
+            'tenor' => 'Tenor',
+            'lead'  => 'Lead',
+            'bari'  => 'Baritone',
+            'bass'  => 'Bass',
+        ];
+    }
+
+    /**
+     * Get list of age ranges for filtering
+     */
+    public function getFilterAge(){
+        return [
+            'all'    => 'All ages',
+            'adult'  => 'Over 18',
+            'child'  => 'Under 18',
+        ];
+    }
 	
 		public function getSingersByTag($tag) {
 			$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
