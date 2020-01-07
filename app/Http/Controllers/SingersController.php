@@ -29,35 +29,36 @@ class SingersController extends Controller
 
 
     public function index(){
-
-
         // Base query
         $singers = Singer::with(['tasks', 'category', 'placement', 'profile']);
 
         // Filter singers
         $where = [];
+        $filters = [
+            'cat'   => $this->getFilterCategory(),
+            'part'  => $this->getFilterPart(),
+            'age'   => $this->getFilterAge(),
+        ];
 
-        $category = Input::get('filter_category', 1);
-        if($category != 0) {
-            $where[] = ['singer_category_id', '=', $category];
+        if($filters['cat']['current'] != 0) {
+            $where[] = ['singer_category_id', '=', $filters['cat']['current']];
         }
         $singers = $singers->where($where);
 
-        $part = Input::get('filter_part', 'all');
-        if($part != 'all') {
-            $singers = $singers->whereHas('placement', function($query) use($part) {
-                $query->where('voice_part', '=', $part);
+        if($filters['part']['current'] != 'all') {
+            $current = $filters['part']['current'];
+            $singers = $singers->whereHas('placement', function($query) use($current) {
+                $query->where('voice_part', '=', $current);
             });
         }
 
-        $age = Input::get('filter_age', 'all');
         $adult_age = 18;
-        if($age == 'adult') {
+        if($filters['age']['current'] == 'adult') {
             $singers = $singers->whereHas('profile', function($query) use($adult_age) {
                 $query->where('dob', '<=', date('Y-m-d', strtotime("-$adult_age years")));
             });
         }
-        elseif($age == 'child') {
+        elseif($filters['age']['current'] == 'child') {
             $singers = $singers->whereHas('profile', function($query) use($adult_age) {
                 $query->where('dob', '>', date('Y-m-d', strtotime("-$adult_age years")));
             });
@@ -66,38 +67,48 @@ class SingersController extends Controller
         // Finish and fetch
 		$singers = $singers->get();
 
-
-        // Prep filter dropdowns
-		$categories_keyed = $this->getFilterCategory();
-		$parts_keyed = $this->getFilterPart();
-		$ages_keyed = $this->getFilterAge();
-
-        return view('singers', compact('category', 'singers', 'members', 'Response', 'categories_keyed', 'parts_keyed', 'part', 'ages_keyed', 'age' ));
+        return view('singers', compact('singers', 'members', 'Response', 'filters' ));
 	}
 
     /**
      * Get list of categories for filtering
      */
 	public function getFilterCategory(){
+        $default = 1;
+
         $categories = SingerCategory::all();
         $categories_keyed = $categories->mapWithKeys(function($item){
             return [ $item['id'] => $item['name'] ];
         });
         $categories_keyed->prepend('All Singers',0);
 
-        return $categories_keyed;
+        return [
+            'name'      => 'filter_category',
+            'label'     => 'Category',
+            'default'   => $default,
+            'current'   => Input::get('filter_category', $default),
+            'list'      => $categories_keyed,
+        ];
     }
 
     /**
      * Get list of voice parts for filtering
      */
     public function getFilterPart(){
+        $default = 'all';
+
         return [
-            'all'   => 'All parts',
-            'tenor' => 'Tenor',
-            'lead'  => 'Lead',
-            'bari'  => 'Baritone',
-            'bass'  => 'Bass',
+            'name'      => 'filter_part',
+            'label'     => 'Part',
+            'default'   => $default,
+            'current'   => Input::get('filter_part', $default),
+            'list'      => [
+                'all'   => 'All parts',
+                'tenor' => 'Tenor',
+                'lead'  => 'Lead',
+                'bari'  => 'Baritone',
+                'bass'  => 'Bass',
+            ],
         ];
     }
 
@@ -105,10 +116,17 @@ class SingersController extends Controller
      * Get list of age ranges for filtering
      */
     public function getFilterAge(){
+        $default = 'all';
         return [
-            'all'    => 'All ages',
-            'adult'  => 'Over 18',
-            'child'  => 'Under 18',
+            'name'      => 'filter_age',
+            'label'     => 'Age',
+            'default'   => $default,
+            'current'   => Input::get('filter_age', $default),
+            'list'      => [
+                'all'    => 'All ages',
+                'adult'  => 'Over 18',
+                'child'  => 'Under 18',
+            ],
         ];
     }
 	
