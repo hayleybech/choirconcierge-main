@@ -1,0 +1,68 @@
+	<?php
+	// Store CSS badge classes for categories
+	$category_class = array(
+		'Prospects'             => 'badge-primary',
+		'Archived Prospects'    => 'badge-danger',
+		'Members'               => 'badge-success',
+		'Archived Members'      => 'badge-warning',
+	);
+	?>
+	<div class="r-table__row">
+        <div class="r-table__cell column--mark">
+            <input type="checkbox" />
+        </div>
+		<div class="r-table__cell column--singer">
+			<div class="singer-name">
+				<a href="{{route('singers.show', ['singer' => $singer])}}">
+					{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
+				</a>
+			</div>
+			<div class="text-muted singer-email">{{ $singer->email }}</div>
+		</div>
+        <div class="r-table__cell column--progress">
+            <!--<div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>-->
+			@foreach( $singer->tasks as $task )
+				@if( $task->pivot->completed )
+					@continue
+				@else
+					<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link">
+						<span><i class="fa fa-fw fa-square-o"></i> {{ $task->name }}</span>
+					</a>
+					@break
+				@endif
+			@endforeach
+        </div>
+        <div class="r-table__cell column--part">
+            <span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part != '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
+        </div>
+		<div class="r-table__cell column--category">
+			<span class="singer-category badge {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span>
+		</div>
+        <div class="r-table__cell column--phone">
+            <span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone != '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
+        </div>
+        <div class="r-table__cell column--age">
+            <span class="singer-age"><i class="fa fa-calendar-o"></i> {{ ( $singer->getAge() ) ? 'Age '.$singer->getAge() : 'No DOB' }}</span>
+        </div>
+        <div class="r-table__cell column--actions">
+
+			@if ( Auth::user()->hasRole('Membership Team') )
+			<form method="get" action="{{route( 'singer.move', ['singer' => $singer])}}" class="form-inline">
+                <div class="input-group input-group-sm">
+                    @php
+                echo Form::select('move_category', $categories_move,
+                0, ['class' => 'custom-select form-control-sm force-xs']);
+                    @endphp
+
+                    <div class="input-group-append">
+                        <input type="submit" value="Move" class="btn btn-secondary btn-sm force-xs">
+                    </div>
+                </div>
+            </form>
+			@endif
+		</div>
+
+	</div>
+	
