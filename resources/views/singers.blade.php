@@ -28,14 +28,17 @@
 		@foreach( $filters as $filter )
 		<div class="input-group input-group-sm mb-2 mr-2">
 			<div class="input-group-prepend">
-				<label for="{{ $filter['name']}} " class="input-group-text">{{ $filter['label'] }}</label>
+				@php
+				$label_class = ( $filter['current'] != $filter['default'] ) ? 'border-primary bg-primary text-white' : '';
+				@endphp
+				<label for="{{ $filter['name']}} " class="input-group-text {{$label_class}}">{{ $filter['label'] }}</label>
 			</div>
 				@php
-				$class = ( $filter['current'] != $filter['default'] ) ? 'border-primary' : '';
+				$field_class = ( $filter['current'] != $filter['default'] ) ? 'border-primary' : '';
 				echo Form::select($filter['name'],
 					$filter['list'],
 					$filter['current'],
-					['class' => 'custom-select form-control-sm ' . $class]
+					['class' => 'custom-select form-control-sm ' . $field_class]
 				);
 				@endphp
 		</div>
