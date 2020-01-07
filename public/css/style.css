@@ -139,26 +139,6 @@ select.form-control-sm.force-xs {
 }
 
 @media screen and (max-width:980px) {
-	.r-table--hide-columns-mobile {
-
-	}
-	.r-table--hide-columns-mobile .column--singer {
-		width: 30%;
-		max-width: 30%;
-	}
-
-	.r-table--hide-columns-mobile .column--category,
-	.r-table--hide-columns-mobile .column--age,
-	.r-table--hide-columns-mobile .column--phone,
-	.r-table--hide-columns-mobile .column--actions {
-		display: none;
-	}
-	.r-table--hide-columns-mobile .singer-name {
-		font-size: 0.9rem;
-	}
-
-
-
 	.r-table--card-view-mobile {
 
 	}
