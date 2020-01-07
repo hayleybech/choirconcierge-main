@@ -22,27 +22,38 @@ nav {
 }
 
 .singer-name {
-	font-size: 0.8rem;
+	font-size: 16px;
 	font-weight: 600;
+    max-height: 1.5em;
+    max-width: 100%;
+}
+.singer-name a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    white-space: nowrap;
 }
 .singer-email {
-	font-size: 0.7rem;
+	font-size: 14px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .singer-part {
-	font-size: 0.7rem;
+	font-size: 14px;
 }
 .singer-category {
-	font-size: 0.7rem;
+	font-size: 14px;
 }
 .singer-phone {
-	font-size: 0.7rem;
+	font-size: 14px;
 }
 .singer-age {
-	font-size: 0.7rem;
+	font-size: 14px;
 }
 
 .card .list-group {
-	font-size: 0.9rem;
+	font-size: 16px;
 }
 
 
@@ -70,8 +81,8 @@ nav {
 	padding: 5px;
 
 	display: grid;
-	/*grid-template-columns: 3% 17% 19% 7% 13% 11% 6% auto;*/
-	grid-template-columns: 0 17% 19% 7% 13% 11% 6% auto;
+	/*grid-template-columns: 3% 20% 19% 7% 13% 11% 6% auto;*/
+	grid-template-columns: 1% 20% 15% 8% 14% 11% 7% auto;
 	grid-template-rows: 1fr;
 	grid-template-areas:
 		"mark singer progress part category phone age actions"
@@ -117,9 +128,8 @@ nav {
 	flex: 0 1 auto;
 	border: 1px solid #ddd;
 }
-
 .progress--link {
-	font-size: 0.75rem;
+	font-size: 14px;
 }
 .form-inline .input-group > .custom-select {
 	width: 90px !important;
@@ -130,12 +140,12 @@ select.form-control-sm.force-xs {
 	line-height: 1em;
 	padding-top: 0.3rem;
 	padding-left: 0.6rem;
-	font-size: 0.8rem;
+	font-size: 14px;
 }
 .btn-sm.force-xs {
 	line-height: 1em !important;
 	height: 25px;
-	font-size: 0.8rem !important;
+	font-size: 14px !important;
 }
 
 @media screen and (max-width:980px) {
@@ -164,38 +174,17 @@ select.form-control-sm.force-xs {
 			"mark part phone age ."
 			"mark category actions actions actions"
 		;
-		gap: 3px 10px;
+		gap: 8px 10px;
 	}
 	.r-table--card-view-mobile .column--progress {
 		flex-flow: row wrap;
 		align-items: center;
 	}
 
-
-
-    .singer-name {
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-    .singer-email {
-        font-size: 0.8rem;
-    }
-    .singer-part {
-        font-size: 0.8rem;
-    }
-    .singer-category {
-        font-size: 0.8rem;
-    }
-    .singer-phone {
-        font-size: 0.8rem;
-    }
-    .singer-age {
-        font-size: 0.8rem;
-    }
     .r-table--card-view-mobile .column--progress:before {
         content: 'Current Task: ';
         color: #6c757d;
-        font-size: 0.8rem;
+        font-size: 14px;
         margin-right: 10px;
     }
     .form-inline .input-group > .custom-select {
@@ -206,23 +195,7 @@ select.form-control-sm.force-xs {
 
 @media screen and (max-width:767px) {
 
-    .r-table--card-view-mobile {
-
-    }
-    .r-table--card-view-mobile .r-table__thead .r-table__row {
-        /*grid-template-columns: 5% auto;*/
-        grid-template-columns: 0 auto;
-        grid-template-rows: auto;
-        grid-template-areas: "mark singer";
-        padding: 0 20px 0 12px;
-    }
-    .r-table--card-view-mobile .r-table__thead .r-table__heading:not(.column--mark):not(.column--singer) {
-        display: none;
-    }
     .r-table--card-view-mobile .r-table__row {
-        padding: 12px 20px 12px 12px;
-        margin: 10px 0;
-
         /*grid-template-columns: 5% 1fr 1fr;*/
         grid-template-columns: 0 1fr 1fr;
         grid-template-rows: auto 1fr 1fr 1fr auto;
@@ -230,64 +203,10 @@ select.form-control-sm.force-xs {
                 "mark singer singer"
                 "mark progress progress"
                 "mark part category"
-                "mark phone age"
-                "mark actions actions"
-    ;
-        gap: 3px 10px;
+            "mark phone age"
+            "mark actions actions"
+        ;
     }
-    .r-table--card-view-mobile .column--mark {
-
-    }
-    .r-table--card-view-mobile .column--singer {
-
-    }
-    .r-table--card-view-mobile .column--progress {
-        flex-flow: row wrap;
-        align-items: center;
-    }
-    .r-table--card-view-mobile .column--part {
-
-    }
-    .r-table--card-view-mobile .column--category {
-
-    }
-    .r-table--card-view-mobile .column--phone {
-
-    }
-    .r-table--card-view-mobile .column--age {
-
-    }
-    .r-table--card-view-mobile .column--actions {
-
-    }
-
-
-    .singer-name {
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-    .singer-email {
-        font-size: 0.8rem;
-    }
-    .singer-part {
-        font-size: 0.8rem;
-    }
-    .singer-category {
-        font-size: 0.8rem;
-    }
-    .singer-phone {
-        font-size: 0.8rem;
-    }
-    .singer-age {
-        font-size: 0.8rem;
-    }
-    .r-table--card-view-mobile .column--progress:before {
-        content: 'Current Task: ';
-        color: #6c757d;
-        font-size: 0.8rem;
-        margin-right: 10px;
-    }
-
 }
 
 
