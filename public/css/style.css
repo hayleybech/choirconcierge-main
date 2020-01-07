@@ -177,42 +177,109 @@ select.form-control-sm.force-xs {
 		margin: 10px 0;
 
 		/*grid-template-columns: 5% 1fr 1fr;*/
-		grid-template-columns: 0 1fr 1fr;
-		grid-template-rows: auto 1fr 1fr 1fr auto;
+		grid-template-columns: 0 1fr 1fr 1fr 1fr;
+		grid-template-rows: auto 1fr auto;
 		grid-template-areas:
-			"mark singer singer"
-			"mark progress progress"
-			"mark part category"
-			"mark phone age"
-			"mark actions actions"
+			"mark singer singer progress progress"
+			"mark part phone age ."
+			"mark category actions actions actions"
 		;
 		gap: 3px 10px;
-	}
-	.r-table--card-view-mobile .column--mark {
-
-	}
-	.r-table--card-view-mobile .column--singer {
-
 	}
 	.r-table--card-view-mobile .column--progress {
 		flex-flow: row wrap;
 		align-items: center;
 	}
-	.r-table--card-view-mobile .column--part {
 
-	}
-	.r-table--card-view-mobile .column--category {
 
-	}
-	.r-table--card-view-mobile .column--phone {
 
-	}
-	.r-table--card-view-mobile .column--age {
+    .singer-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    .singer-email {
+        font-size: 0.8rem;
+    }
+    .singer-part {
+        font-size: 0.8rem;
+    }
+    .singer-category {
+        font-size: 0.8rem;
+    }
+    .singer-phone {
+        font-size: 0.8rem;
+    }
+    .singer-age {
+        font-size: 0.8rem;
+    }
+    .r-table--card-view-mobile .column--progress:before {
+        content: 'Current Task: ';
+        color: #6c757d;
+        font-size: 0.8rem;
+        margin-right: 10px;
+    }
+    .form-inline .input-group > .custom-select {
+        width: auto !important;
+    }
 
-	}
-	.r-table--card-view-mobile .column--actions {
+}
 
-	}
+@media screen and (max-width:767px) {
+
+    .r-table--card-view-mobile {
+
+    }
+    .r-table--card-view-mobile .r-table__thead .r-table__row {
+        /*grid-template-columns: 5% auto;*/
+        grid-template-columns: 0 auto;
+        grid-template-rows: auto;
+        grid-template-areas: "mark singer";
+        padding: 0 20px 0 12px;
+    }
+    .r-table--card-view-mobile .r-table__thead .r-table__heading:not(.column--mark):not(.column--singer) {
+        display: none;
+    }
+    .r-table--card-view-mobile .r-table__row {
+        padding: 12px 20px 12px 12px;
+        margin: 10px 0;
+
+        /*grid-template-columns: 5% 1fr 1fr;*/
+        grid-template-columns: 0 1fr 1fr;
+        grid-template-rows: auto 1fr 1fr 1fr auto;
+        grid-template-areas:
+                "mark singer singer"
+                "mark progress progress"
+                "mark part category"
+                "mark phone age"
+                "mark actions actions"
+    ;
+        gap: 3px 10px;
+    }
+    .r-table--card-view-mobile .column--mark {
+
+    }
+    .r-table--card-view-mobile .column--singer {
+
+    }
+    .r-table--card-view-mobile .column--progress {
+        flex-flow: row wrap;
+        align-items: center;
+    }
+    .r-table--card-view-mobile .column--part {
+
+    }
+    .r-table--card-view-mobile .column--category {
+
+    }
+    .r-table--card-view-mobile .column--phone {
+
+    }
+    .r-table--card-view-mobile .column--age {
+
+    }
+    .r-table--card-view-mobile .column--actions {
+
+    }
 
 
     .singer-name {
