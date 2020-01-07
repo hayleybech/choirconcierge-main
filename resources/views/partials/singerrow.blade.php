@@ -176,9 +176,9 @@
 			<div class="card-subtitle text-muted singer-email">{{ $singer->email }}</div>
 		</div>
         <div class="r-table__cell column--progress">
-            <div class="progress">
+            <!--<div class="progress">
                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
+            </div>-->
             <a href="#" class="link-confirm progress--link">
                 <span><i class="fa fa-fw fa-square-o"></i> Member Profile</span>
             </a>

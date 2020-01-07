@@ -67,7 +67,7 @@ nav {
 	padding: 5px;
 
 	display: grid;
-	grid-template-columns: 3% 17% 17% 7% 13% 11% 6% auto;
+	grid-template-columns: 3% 17% 19% 7% 13% 11% 6% auto;
 	grid-template-rows: 1fr;
 	grid-template-areas:
 		"mark singer progress part category phone age actions"
@@ -90,10 +90,6 @@ nav {
 }
 .column--progress {
 	grid-area: progress;
-
-	flex-flow: column nowrap;
-	justify-content: center;
-	align-items: flex-start;
 }
 .column--part {
 	grid-area: part;
@@ -123,7 +119,7 @@ nav {
 	font-weight: 600;
 }
 .progress--link {
-	font-size: 0.9rem;
+	font-size: 0.75rem;
 }
 .form-inline .input-group > .custom-select {
 	width: 90px !important;
