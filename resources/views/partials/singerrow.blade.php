@@ -44,7 +44,7 @@
             <span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone != '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
         </div>
         <div class="r-table__cell column--age">
-            <span class="singer-age"><i class="fa fa-calendar-o"></i> {{ ( $singer->getAge() ) ? 'Age '.$singer->getAge() : 'No DOB' }}</span>
+            <span class="singer-age"><i class="fa fa-calendar-o"></i> {{ ( $singer->getAge() ) ? $singer->getAge() .'yrs' : 'None' }}</span>
         </div>
         <div class="r-table__cell column--actions">
 
