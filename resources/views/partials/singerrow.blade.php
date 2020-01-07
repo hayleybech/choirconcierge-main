@@ -23,9 +23,16 @@
             <!--<div class="progress">
                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>-->
-            <a href="#" class="link-confirm progress--link">
-                <span><i class="fa fa-fw fa-square-o"></i> Member Profile</span>
-            </a>
+			@foreach( $singer->tasks as $task )
+				@if( $task->pivot->completed )
+					@continue
+				@else
+					<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link">
+						<span><i class="fa fa-fw fa-square-o"></i> {{ $task->name }}</span>
+					</a>
+					@break
+				@endif
+			@endforeach
         </div>
         <div class="r-table__cell column--part">
             <span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part != '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
