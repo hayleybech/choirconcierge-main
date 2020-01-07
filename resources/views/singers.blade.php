@@ -44,9 +44,6 @@
 	{{--@if ( $categories_keyed[$category] == 'Members')
 	<p><a href="{{ route('singers.export') }}" class="btn btn-link btn-sm">Export paid Singers.</a></p>
 	@endif--}}
-	<div class="row">
-		@each('partials.singer', $singers, 'singer', 'partials.noresults')
-	</div>
 
 	<div class="r-table r-table--card-view-mobile">
 		<div class="r-table__thead">
