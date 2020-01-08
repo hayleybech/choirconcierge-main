@@ -50,7 +50,7 @@
             <span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part != '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
         </div>
 		<div class="r-table__cell column--category">
-			<span class="singer-category badge {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span>
+			<span class="singer-category badge badge-pill {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span>
 		</div>
         <div class="r-table__cell column--phone">
             <span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone != '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
