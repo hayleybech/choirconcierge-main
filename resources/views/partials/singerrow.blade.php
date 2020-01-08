@@ -27,8 +27,20 @@
 				@if( $task->pivot->completed )
 					@continue
 				@else
-					<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link">
-						<span><i class="fa fa-fw fa-square-o"></i> {{ $task->name }}</span>
+					@php
+						if( $task->type == 'form' ){
+							$btn_style = 'btn-primary';
+							$icon_complete = 'fa-file-text-o';
+							$action = 'Start';
+						} else {
+							$btn_style = 'btn-success';
+							$icon_complete ='fa-check';
+							$action = 'Done';
+						}
+					@endphp
+					<span>{{ $task->name }}</span>
+					<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link btn btn-sm force-xs {{$btn_style}}">
+						<i class="fa fa-fw  {{$icon_complete}}"></i> {{$action}}
 					</a>
 					@break
 				@endif
