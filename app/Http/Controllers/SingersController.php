@@ -28,17 +28,13 @@ class SingersController extends Controller
     }
 
 
-    public function index(){
+    public function index(Request $request){
         // Base query
         $singers = Singer::with(['tasks', 'category', 'placement', 'profile']);
 
         // Filter singers
         $where = [];
-        $filters = [
-            'cat'   => $this->getFilterCategory(),
-            'part'  => $this->getFilterPart(),
-            'age'   => $this->getFilterAge(),
-        ];
+        $filters = $this->getFilters();
 
         if($filters['cat']['current'] != 0) {
             $where[] = ['singer_category_id', '=', $filters['cat']['current']];
@@ -67,8 +63,27 @@ class SingersController extends Controller
         // Finish and fetch
 		$singers = $singers->get();
 
-        return view('singers', compact('singers', 'members', 'Response', 'filters' ));
+        // Sort
+        $sort_by = Input::get('sort_by', 'name');
+        $sort_dir = Input::get('sort_dir', 'asc');
+        if( $sort_dir === 'asc') {
+            $singers = $singers->sortBy($sort_by);
+        } else {
+            $singers = $singers->sortByDesc($sort_by);
+        }
+
+        $sorts = $this->getSorts($request);
+
+        return view('singers', compact('singers', 'members', 'Response', 'filters', 'sorts' ));
 	}
+
+	public function getFilters() {
+        return [
+            'cat'   => $this->getFilterCategory(),
+            'part'  => $this->getFilterPart(),
+            'age'   => $this->getFilterAge(),
+        ];
+    }
 
     /**
      * Get list of categories for filtering
@@ -128,6 +143,46 @@ class SingersController extends Controller
                 'child'  => 'Under 18',
             ],
         ];
+    }
+
+    public function getSorts(Request $request) {
+        $sort_cols = [
+            'name',
+            'voice_placement.part',
+            'category.name',
+        ];
+
+        // get URL ready
+        $url = $request->url() . '?';
+        $filters = $this->getFilters();
+        foreach( $filters as $key => $filter ) {
+            $url .= $filter['name'] . '=' . $filter['current'];
+            if ( ! $key === array_key_last($filters) ) $url .= '&';
+        }
+        //print_r($filters);
+         //die();
+
+        $current_sort = Input::get('sort_by', 'name');
+        $current_dir =  Input::get('sort_dir', 'asc');
+
+        $sorts = [];
+        foreach($sort_cols as $col) {
+            // If current sort
+            if( $col === $current_sort ) {
+                // Create link for opposite sort direction
+                $current = true;
+                $dir = ( 'asc' === $current_dir ) ? 'desc' : 'asc';
+            } else {
+                $current = false;
+                $dir = 'asc';
+            };
+            $sorts[$col] = [
+                'url'       => $url . "&sort_by=$col&sort_dir=$dir",
+                'dir'       => $current_dir,
+                'current'   => $current,
+            ];
+        }
+        return $sorts;
     }
 	
 		public function getSingersByTag($tag) {

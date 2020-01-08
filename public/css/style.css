@@ -75,6 +75,17 @@ nav {
 .r-table__heading {
 	font-weight: 600;
 }
+.r-table__heading a {
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+.r-table__heading a:hover {
+	text-decoration: none;
+}
+.r-table__heading a i {
+	margin-left: 8px;
+}
 
 
 .r-table__row {
@@ -98,7 +109,8 @@ nav {
 }
 .column--singer {
 	grid-area: singer;
-
+}
+.r-table__cell.column--singer {
 	flex-flow: column wrap;
 	align-items: flex-start;
 	justify-content: center;
@@ -134,6 +146,24 @@ nav {
 }
 .progress--link {
 	font-size: 12px;
+}
+
+
+.sort-inactive {
+	opacity: 0.3;
+}
+.sort-active {
+	opacity: 0.8;
+}
+
+.sort-inactive:before {
+	content: "\f0dc"; /* Sort icon */
+}
+.sort-active.sort-asc:before {
+	content: "\f0de"; /* Sort Up icon */
+}
+.sort-active.sort-desc:before {
+	content: "\f0dd"; /* Sort Down icon */
 }
 
 select.form-control-sm.force-xs {

@@ -55,10 +55,10 @@
 		<div class="r-table__thead">
 			<div class="r-table__row">
 				<div class="r-table__heading column--mark"><input type="checkbox"></div>
-				<div class="r-table__heading column--singer">Singer</div>
+				<div class="r-table__heading column--singer"><a href="{{ $sorts['name']['url'] }}">Singer<i class="fa fas sort-{{ $sorts['name']['dir'] }} {{ ($sorts['name']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
 				<div class="r-table__heading column--progress">Progress</div>
-				<div class="r-table__heading column--part">Part</div>
-				<div class="r-table__heading column--category">Category</div>
+				<div class="r-table__heading column--part"><a href="{{ $sorts['voice_placement.part']['url'] }}">Part<i class="fa fas sort-{{ $sorts['voice_placement.part']['dir'] }} {{ ($sorts['voice_placement.part']['current'] ? 'sort-active' : 'sort-inactive' ) }} "></i></a></div>
+				<div class="r-table__heading column--category"><a href="{{ $sorts['category.name']['url'] }}">Category<i class="fa fas sort-{{ $sorts['category.name']['dir'] }} {{ ($sorts['category.name']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
 				<div class="r-table__heading column--phone">Phone</div>
 				<div class="r-table__heading column--age">Age</div>
 				<div class="r-table__heading column--actions">Actions</div>
