@@ -83,8 +83,29 @@ class SongsController extends Controller
         return view('songs.show', compact('song'));
     }
 
-    public function edit() {
-        return view('songs.edit');
+    public function edit($songId) {
+        $song = Song::find($songId);
+        $categories = SongCategory::all();
+        $statuses = SongStatus::all();
+        $pitches = Song::getAllPitchesByMode();
+
+        return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
+    }
+
+    public function update($songId, Request $request) {
+        $song = Song::find($songId);
+        $song->title = $request->title;
+        $song->pitch_blown = $request->pitch_blown;
+
+        // Associate status
+        $status = SongStatus::find($request->status);
+        $status->songs()->save($song);
+
+        // Attach categories
+        $song->categories()->sync($request->categories);
+        $song->save();
+
+        return redirect()->route('song.edit', [$songId]);
     }
 
     public function getFilters() {

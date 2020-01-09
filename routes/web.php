@@ -48,7 +48,7 @@ Route::middleware(['auth', 'employee'])->group(function() {
     Route::post('/songs', 'SongsController@store');
     Route::get('/songs/{song}', 'SongsController@show')->name('songs.show');
     Route::get('/songs/{song}/edit', 'SongsController@edit')->name('song.edit');
-
+    Route::put('/songs/{song}', 'SongsController@update');
 	
 });
 

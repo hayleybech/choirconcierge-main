@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <h2>Add Song</h2>
+    <h2>Edit Song</h2>
 
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -16,32 +16,44 @@
         </div>
     @endif
 
-    {{ Form::open( array( 'route' => 'singers.index' ) ) }}
+    {{ Form::open( array( 'route' => ['songs.show', $song->id], 'method' => 'put' ) ) }}
 
-    <p>
+    <div class="form-group">
         {{ Form::label('title', 'Song Title') }}
-        {{ Form::text('title', '', array('class' => 'form-control')) }}
-    </p>
+        {{ Form::text('title', $song->title, array('class' => 'form-control')) }}
+    </div>
 
-    <p>
-        {{ Form::label('category', 'Category') }}
-        {{ Form::select('attachment-category', array('General', 'Australiana', 'Christmas'), '', ['class' => 'custom-select form-control-sm']) }}
-    </p>
-    <p>
-        {{ Form::label('status', 'Status') }}
-        {{ Form::select('status', array('Pending', 'Learning', 'Active', 'Archived'), '', ['class' => 'custom-select form-control-sm']) }}
-    </p>
+    <fieldset class="form-group">
+        <legend class="col-form-label">Category</legend>
+        @foreach($categories as $cat)
+            <div class="custom-control custom-checkbox custom-control-inline">
+                <input id="categories_{{$cat->id}}" name="categories[]" value="{{$cat->id}}" class="custom-control-input" type="checkbox" {{ ( $song->categories->contains($cat->id) ) ? 'checked' : '' }}>
+                <label for="categories_{{$cat->id}}" class="custom-control-label">{{$cat->title}}</label>
+            </div>
+        @endforeach
+    </fieldset>
 
-    <p>
-        {{ Form::label('starting_key', 'Starting Key') }}
-        {{ Form::email('starting_key', '', array('class' => 'form-control')) }}
-    </p>
 
-    <p>
+    <fieldset class="form-group">
+        <legend class="col-form-label">Status</legend>
+        @foreach($statuses as $status)
+            <div class="custom-control custom-radio custom-control-inline">
+                <input id="status_{{$status->id}}" name="status" value="{{$status->id}}" class="custom-control-input" type="radio" {{ ($song->status->id === $status->id ) ? 'checked' : '' }}>
+                <label for="status_{{$status->id}}" class="custom-control-label">{{$status->title}}</label>
+            </div>
+        @endforeach
+    </fieldset>
+
+    <div class="form-group">
         {{ Form::label('pitch_blown', 'Pitch Blown') }}
-        {{ Form::email('pitch_blown', '', array('class' => 'form-control')) }}
-    </p>
+        {{ Form::select('pitch_blown',
+            $pitches,
+            $song->pitch_blown,
+            ['class' => 'custom-select']
+        ) }}
+    </div>
 
+    {{--
     <hr>
 
     <h3>Attachments</h3>
@@ -59,11 +71,11 @@
         {{ Form::label('attachment-upload', 'Upload Attachment') }}
         {{ Form::text('attachment-upload', '', array('class' => 'form-control')) }}
     </p>
+    --}}
 
 
 
-
-    {{ Form::submit('Create', array( 'class' => 'btn btn-primary' )) }}
+    {{ Form::submit('Save', array( 'class' => 'btn btn-primary' )) }}
 
     {{ Form::close() }}
 
