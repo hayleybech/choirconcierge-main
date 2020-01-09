@@ -17,8 +17,9 @@ class SongsController extends Controller
     public function create() {
         $categories = SongCategory::all();
         $statuses = SongStatus::all();
+        $pitches = Song::getAllPitchesByMode();
 
-        return view('songs.create', compact('categories', 'statuses') );
+        return view('songs.create', compact('categories', 'statuses', 'pitches') );
     }
 
     public function store(Request $request) {

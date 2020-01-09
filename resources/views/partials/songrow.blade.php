@@ -18,7 +18,7 @@
 
     </div>
     <div class="r-table__cell column--pitch">
-        {{ $song->pitch_blown }}
+        {{ $song->getPitchBlown() }}
     </div>
     <div class="r-table__cell column--created">
         {{ $song->created_at->diffForHumans() }}

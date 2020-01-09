@@ -47,10 +47,7 @@
     <div class="form-group">
         {{ Form::label('pitch_blown', 'Pitch Blown') }}
         {{ Form::select('pitch_blown',
-            [
-                'Major' => [ 'A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab'],
-                'Minor' => [ 'Am', 'A#m/Bbm', 'Bm', 'Cm', 'C#m/Dbm', 'Dm', 'D#m/Ebm', 'Em', 'Fm', 'F#m/Gbm', 'Gm', 'G#m/Abm'],
-            ],
+            $pitches,
             '',
             ['class' => 'custom-select']
         ) }}
