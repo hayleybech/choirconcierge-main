@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Input;
 
 class SongsController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
         // Base query
         $songs = Song::with([]);
 
@@ -35,8 +35,22 @@ class SongsController extends Controller
         // Finish and fetch
         $songs = $songs->get();
 
+        // Sort
+        $sort_by = Input::get('sort_by', 'name');
+        $sort_dir = Input::get('sort_dir', 'asc');
 
-        return view('songs', compact('songs', 'filters') );
+        // Flip direction for date (so we sort by smallest age not smallest timestamp)
+        if($sort_by == 'created_at') $sort_dir = ($sort_dir === 'asc') ? 'desc' : 'asc';
+
+        if( $sort_dir === 'asc') {
+            $songs = $songs->sortBy($sort_by);
+        } else {
+            $songs = $songs->sortByDesc($sort_by);
+        }
+
+        $sorts = $this->getSorts($request);
+
+        return view('songs', compact('songs', 'filters', 'sorts') );
     }
 
     public function create() {
@@ -107,5 +121,43 @@ class SongsController extends Controller
             'current'   => Input::get('filter_category', $default),
             'list'      => $categories_keyed,
         ];
+    }
+
+    public function getSorts(Request $request) {
+        $sort_cols = [
+            'title',
+            'status.title',
+            'created_at',
+        ];
+
+        // get URL ready
+        $url = $request->url() . '?';
+        $filters = $this->getFilters();
+        foreach( $filters as $key => $filter ) {
+            $url .= $filter['name'] . '=' . $filter['current'];
+            if ( ! $key === array_key_last($filters) ) $url .= '&';
+        }
+
+        $current_sort = Input::get('sort_by', 'title');
+        $current_dir =  Input::get('sort_dir', 'asc');
+
+        $sorts = [];
+        foreach($sort_cols as $col) {
+            // If current sort
+            if( $col === $current_sort ) {
+                // Create link for opposite sort direction
+                $current = true;
+                $dir = ( 'asc' === $current_dir ) ? 'desc' : 'asc';
+            } else {
+                $current = false;
+                $dir = 'asc';
+            };
+            $sorts[$col] = [
+                'url'       => $url . "&sort_by=$col&sort_dir=$dir",
+                'dir'       => $current_dir,
+                'current'   => $current,
+            ];
+        }
+        return $sorts;
     }
 }
