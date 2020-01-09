@@ -19,27 +19,34 @@
         </div>
     @endif
 
-    {{--
-    <form method="get" class="form-inline mb-4">
-        <div class="input-group input-group-sm">
-            <div class="input-group-prepend">
-                <label for="filter_category" class="input-group-text">Category</label>
+    <form method="get" class="form-inline mb-0">
+        @foreach( $filters as $filter )
+            <div class="input-group input-group-sm mb-2 mr-2">
+                <div class="input-group-prepend">
+                    @php
+                        $label_class = ( $filter['current'] != $filter['default'] ) ? 'border-primary bg-primary text-white' : 'bg-light';
+                    @endphp
+                    <label for="{{ $filter['name']}} " class="input-group-text {{$label_class}}">{{ $filter['label'] }}</label>
+                </div>
+                @php
+                    $field_class = ( $filter['current'] != $filter['default'] ) ? 'border-primary' : '';
+                    echo Form::select($filter['name'],
+                        $filter['list'],
+                        $filter['current'],
+                        ['class' => 'custom-select form-control-sm ' . $field_class]
+                    );
+                @endphp
             </div>
-            @php
-                //echo Form::select('filter_category', $categories_keyed,
-                //$category, ['class' => 'custom-select form-control-sm']);
-            @endphp
+        @endforeach
 
-            <div class="input-group-append">
-                <input type="submit" value="Filter" class="btn btn-secondary btn-sm">
+        <div class="input-group input-group-sm mb-2 mr-2">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button class="btn btn-outline-secondary btn-sm"><i class="fa fa-filter"></i> Filter</button>
+                <a href="{{ route('songs.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-times"></i> Clear</a>
             </div>
         </div>
-    </form>--}}
+    </form>
 
-    <h3>{{-- $categories_keyed[$category] --}}</h3>
-    {{--@if ( $categories_keyed[$category] == 'Members')
-    <p><a href="{{ route('singers.export') }}" class="btn btn-link btn-sm">Export paid Singers.</a></p>
-    @endif--}}
     <div class="r-table r-table--card-view-mobile">
         <div class="r-table__thead">
             <div class="r-table__row">

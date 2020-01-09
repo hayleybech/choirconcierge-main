@@ -6,12 +6,29 @@ use App\Song;
 use App\SongCategory;
 use App\SongStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class SongsController extends Controller
 {
     public function index(){
-        $songs = Song::all();
-        return view('songs', compact('songs') );
+        // Base query
+        $songs = Song::with([]);
+
+        // Filter songs
+        $where = [];
+        $filters = $this->getFilters();
+
+        // Filter by status
+        if($filters['status']['current'] != 0) {
+            $where[] = ['status_id', '=', $filters['status']['current']];
+        }
+        $songs = $songs->where($where);
+
+        // Finish and fetch
+        $songs = $songs->get();
+
+
+        return view('songs', compact('songs', 'filters') );
     }
 
     public function create() {
@@ -40,5 +57,28 @@ class SongsController extends Controller
 
     public function edit() {
         return view('songs.edit');
+    }
+
+    public function getFilters() {
+        return [
+            'status'    => $this->getFilterStatus(),
+        ];
+    }
+    public function getFilterStatus() {
+        $default = 0;
+
+        $statuses = SongStatus::all();
+        $statuses_keyed = $statuses->mapWithKeys(function($item){
+            return [ $item['id'] => $item['title'] ];
+        });
+        $statuses_keyed->prepend('All Songs',0);
+
+        return [
+            'name'      => 'filter_status',
+            'label'     => 'Status',
+            'default'   => $default,
+            'current'   => Input::get('filter_status', $default),
+            'list'      => $statuses_keyed,
+        ];
     }
 }
