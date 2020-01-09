@@ -46,7 +46,10 @@ Route::middleware(['auth', 'employee'])->group(function() {
     Route::get('/songs', 'SongsController@index')->name('songs.index');
     Route::get('/songs/create', 'SongsController@create')->name('song.create');
     Route::post('/songs', 'SongsController@store');
+    Route::get('/songs/{song}', 'SongsController@show')->name('songs.show');
+
     Route::get('/songs/edit', 'SongsController@edit')->name('song.edit');
+
 	
 });
 

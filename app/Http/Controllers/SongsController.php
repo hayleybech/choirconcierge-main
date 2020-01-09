@@ -77,6 +77,12 @@ class SongsController extends Controller
         return redirect('/songs')->with(['status' => 'Song created. ', ]);
     }
 
+    public function show($songId) {
+        $song = Song::find($songId);
+
+        return view('songs.show', compact('song'));
+    }
+
     public function edit() {
         return view('songs.edit');
     }

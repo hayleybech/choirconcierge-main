@@ -3,13 +3,9 @@
         <input type="checkbox" />
     </div>
     <div class="r-table__cell column--title">
+        <a href="{{route('songs.show', ['song' => $song])}}">
         {{ ( isset($song->title) ) ? $song->title : 'Title Unknown' }}
-        {{--
-        <div class="singer-name">
-            <a href="{{route('singers.show', ['singer' => $singer])}}">
-                {{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
-            </a>
-        </div>--}}
+        </a>
     </div>
     <div class="r-table__cell column--status">
         {{ $song->status->title }}
