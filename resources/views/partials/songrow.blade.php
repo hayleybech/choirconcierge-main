@@ -15,7 +15,11 @@
         {{ $song->status->title }}
     </div>
     <div class="r-table__cell column--category">
-
+    <ul class="list-inline">
+    @foreach( $song->categories as $cat )
+        <li class="list-inline-item">{{ $cat->title }}</li>
+    @endforeach
+    </ul>
     </div>
     <div class="r-table__cell column--pitch">
         {{ $song->getPitchBlown() }}
