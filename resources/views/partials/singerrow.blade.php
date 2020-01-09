@@ -12,11 +12,9 @@
             <input type="checkbox" />
         </div>
 		<div class="r-table__cell column--singer">
-			<div class="singer-name">
-				<a href="{{route('singers.show', ['singer' => $singer])}}">
-					{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
-				</a>
-			</div>
+			<a class="item-title" href="{{route('singers.show', ['singer' => $singer])}}">
+				{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
+			</a>
 			<div class="text-muted singer-email">{{ $singer->email }}</div>
 		</div>
         <div class="r-table__cell column--progress">

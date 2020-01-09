@@ -3,7 +3,7 @@
         <input type="checkbox" />
     </div>
     <div class="r-table__cell column--title">
-        <a href="{{route('songs.show', ['song' => $song])}}">
+        <a class="item-title" href="{{route('songs.show', ['song' => $song])}}">
         {{ ( isset($song->title) ) ? $song->title : 'Title Unknown' }}
         </a>
     </div>
