@@ -13,7 +13,7 @@ class Song extends Model
 
     public function categories()
     {
-        return $this->belongsToMany('App\SongCategory', 'songs_song_categories', 'category_id', 'song_id');
+        return $this->belongsToMany('App\SongCategory', 'songs_song_categories', 'song_id', 'category_id');
     }
 
     public function getPitchBlown()
