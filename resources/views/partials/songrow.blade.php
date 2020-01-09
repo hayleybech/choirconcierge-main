@@ -23,24 +23,6 @@
     <div class="r-table__cell column--created">
         {{ $song->created_at->diffForHumans() }}
     </div>
-    <div class="r-table__cell column--actions">
-
-        {{--
-        @if ( Auth::user()->hasRole('Membership Team') )
-            <form method="get" action="{{route( 'singer.move', ['singer' => $singer])}}" class="form-inline">
-                <div class="input-group input-group-sm">
-                    @php
-                        echo Form::select('move_category', $categories_move,
-                        0, ['class' => 'custom-select form-control-sm force-xs']);
-                    @endphp
-
-                    <div class="input-group-append">
-                        <input type="submit" value="Move" class="btn btn-secondary btn-sm force-xs">
-                    </div>
-                </div>
-            </form>
-        @endif--}}
-    </div>
 
 </div>
 
