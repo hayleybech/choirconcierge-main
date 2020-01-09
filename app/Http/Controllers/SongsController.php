@@ -24,6 +24,14 @@ class SongsController extends Controller
         }
         $songs = $songs->where($where);
 
+        // Filter by category
+        if($filters['category']['current'] != 0) {
+            $current = $filters['category']['current'];
+            $songs = $songs->whereHas('categories', function($query) use($current) {
+                $query->where('category_id', '=', $current);
+            });
+        }
+
         // Finish and fetch
         $songs = $songs->get();
 
@@ -62,6 +70,7 @@ class SongsController extends Controller
     public function getFilters() {
         return [
             'status'    => $this->getFilterStatus(),
+            'category'    => $this->getFilterCategory(),
         ];
     }
     public function getFilterStatus() {
@@ -79,6 +88,24 @@ class SongsController extends Controller
             'default'   => $default,
             'current'   => Input::get('filter_status', $default),
             'list'      => $statuses_keyed,
+        ];
+    }
+
+    public function getFilterCategory() {
+        $default = 0;
+
+        $categories = SongCategory::all();
+        $categories_keyed = $categories->mapWithKeys(function($item){
+            return [ $item['id'] => $item['title'] ];
+        });
+        $categories_keyed->prepend('All Categories',0);
+
+        return [
+            'name'      => 'filter_category',
+            'label'     => 'Category',
+            'default'   => $default,
+            'current'   => Input::get('filter_category', $default),
+            'list'      => $categories_keyed,
         ];
     }
 }
