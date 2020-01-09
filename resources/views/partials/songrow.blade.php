@@ -20,6 +20,9 @@
     <div class="r-table__cell column--pitch">
         {{ $song->pitch_blown }}
     </div>
+    <div class="r-table__cell column--created">
+        {{ $song->created_at->diffForHumans() }}
+    </div>
     <div class="r-table__cell column--actions">
 
         {{--

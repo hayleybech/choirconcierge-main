@@ -48,6 +48,7 @@
                 <div class="r-table__heading column--status">Status</div>
                 <div class="r-table__heading column--category">Category</div>
                 <div class="r-table__heading column--pitch">Pitch</div>
+                <div class="r-table__heading column--created">Created</div>
                 <div class="r-table__heading column--actions">Actions</div>
             </div>
         </div>
