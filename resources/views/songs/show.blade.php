@@ -38,8 +38,7 @@
         </div>
         <div class="r-table__tfoot">
 
-            {{ Form::open( [ 'route' => ['song.attachments.store', $song->id], 'method' => 'post', 'files' => 'true' ] ) }}
-            <div class="r-table__row row-add">
+            {{ Form::open( [ 'route' => ['song.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row-add' ] ) }}
                     <div class="r-table__cell column--mark">
 
                     </div>
@@ -67,7 +66,6 @@
                             <i class="fa fa-fw fa-times"></i> Cancel</a>
                         </button>
                     </div>
-            </div>
             {{ Form::close() }}
 
         </div>
