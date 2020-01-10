@@ -47,5 +47,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call('Songs Seeder');
         $this->command->info('Songs table seeded!');
+
+        $this->call('SongAttachmentCategorySeeder');
+        $this->command->info('Song Attachment Categories table seeded!');
     }
 }
