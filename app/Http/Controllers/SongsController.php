@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Song;
+use App\SongAttachmentCategory;
 use App\SongCategory;
 use App\SongStatus;
 use Illuminate\Http\Request;
@@ -79,8 +80,12 @@ class SongsController extends Controller
 
     public function show($songId) {
         $song = Song::find($songId);
+        $attachment_categories = SongAttachmentCategory::all();
+        $categories_keyed = $attachment_categories->mapWithKeys(function($item){
+            return [ $item['id'] => $item['title'] ];
+        });
 
-        return view('songs.show', compact('song'));
+        return view('songs.show', compact('song', 'categories_keyed'));
     }
 
     public function edit($songId) {

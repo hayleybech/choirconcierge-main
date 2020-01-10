@@ -12,8 +12,6 @@
         {{ $attachment->category->title }}
     </div>
     <div class="r-table__cell column--actions">
-
     </div>
-
 </div>
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SongAttachmentCategory extends Model
 {
-    public function attachment() {
-        return $this->hasMany('App\SongAttachment');
+    public function attachments() {
+        return $this->hasMany('App\SongAttachment', 'category_id');
     }
 }
