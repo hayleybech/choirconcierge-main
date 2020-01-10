@@ -15,21 +15,9 @@ class SongAttachmentController extends Controller
         $attachment->title = $request->title;
         $attachment->category_id = $request->category;
 
-        // Upload file
+        // Save file details
         $file_data = $request->file('attachment_upload');
         $file_name = $file_data->getClientOriginalName();
-        $path_songs = 'songs';
-        $path_song = $path_songs.'/'.$songId;
-        $path_file = $path_song.'/'.$file_name;
-
-        Storage::disk('public')->makeDirectory($path_songs);
-        Storage::disk('public')->makeDirectory($path_song);
-
-        if (Storage::disk('public')->exists($path_file)) {
-            Storage::disk('public')->delete($path_file);
-        }
-
-        Storage::disk('public')->putFileAs( $path_song, $file_data, $file_name );
         $attachment->filepath = $file_name;
 
         // Associate category
@@ -44,6 +32,28 @@ class SongAttachmentController extends Controller
 
         $attachment->save();
 
+        // Upload file
+        Storage::disk('public')->makeDirectory( SongAttachment::getPathSongs() );
+        Storage::disk('public')->makeDirectory( $attachment->getPathSong() );
+
+        if (Storage::disk('public')->exists( $attachment->getPath() )) {
+            Storage::disk('public')->delete( $attachment->getPath() );
+        }
+
+        Storage::disk('public')->putFileAs( $attachment->getPathSong(), $file_data, $file_name );
+
         return redirect()->route('songs.show', [$songId])->with(['category' => 'Attachment added. ', ]);
+    }
+
+    public function delete($songId, $attachmentId) {
+        $attachment = SongAttachment::find($attachmentId);
+
+        if (Storage::disk('public')->exists( $attachment->getPath() )) {
+            Storage::disk('public')->delete( $attachment->getPath() );
+        }
+
+        $attachment->delete();
+
+        return redirect()->route('songs.show', [$songId])->with(['category' => 'Attachment deleted. ', ]);
     }
 }

@@ -12,6 +12,7 @@
         {{ $attachment->category->title }}
     </div>
     <div class="r-table__cell column--actions">
+        <a href="{{route( 'song.attachments.delete', ['song' => $attachment->song, 'attachment' => $attachment] )}}" class="btn btn-outline-danger btn-sm"><i class="fa fa-fw fa-trash"></i>Delete</a>
     </div>
 </div>
 

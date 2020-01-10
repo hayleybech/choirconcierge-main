@@ -51,7 +51,8 @@ Route::middleware(['auth', 'employee'])->group(function() {
     Route::put('/songs/{song}', 'SongsController@update');
 
     Route::post('/songs/{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
-	
+    Route::get('/songs/{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('song.attachments.delete');
+
 });
 
 // Membership Team auth
