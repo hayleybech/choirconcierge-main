@@ -16,6 +16,10 @@ class Song extends Model
         return $this->belongsToMany('App\SongCategory', 'songs_song_categories', 'song_id', 'category_id');
     }
 
+    public function attachments() {
+        return $this->hasMany('App\SongAttachment');
+    }
+
     public function getPitchBlown()
     {
         return self::getAllPitches()[$this->pitch_blown];
