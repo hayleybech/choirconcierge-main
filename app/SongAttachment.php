@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class SongAttachment extends Model
 {
@@ -12,6 +13,10 @@ class SongAttachment extends Model
 
     public function category() {
         return $this->belongsTo('App\SongAttachmentCategory', 'category_id');
+    }
+
+    public function getDownloadUrl() {
+        return Storage::url($this->getPath());
     }
 
     public static function getPathSongs() {
