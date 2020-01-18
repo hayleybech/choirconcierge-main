@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Storage;
 class SongAttachmentController extends Controller
 {
     public function store($songId, Request $request) {
+        $request->validate([
+            'title'             => 'required|max:255',
+            'category_id'       => 'required|exists:song_attachment_category,id',
+            'attachment_upload' => 'required|file'
+        ]);
+
         $attachment = new SongAttachment();
         $attachment->title = $request->title;
         $attachment->category_id = $request->category;
