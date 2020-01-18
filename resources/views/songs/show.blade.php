@@ -21,7 +21,7 @@
         Pitch Blown: {{ $song->getPitchBlown() }}
     </p>
 
-    <h3>Attachments <a href="#" class="btn btn-add btn-sm force-xs btn-outline-primary"><i class="fa fa-fw fa-plus"></i> Add</a></h3>
+    <h3>Attachments</h3>
 
     <div class="r-table r-table--card-view-mobile">
         <div class="r-table__thead">
