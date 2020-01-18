@@ -13,7 +13,7 @@
     </div>
     <div class="r-table__cell column--actions">
         <a href="{{ $attachment->getDownloadUrl() }}" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-download"></i>Download</a>
-        <a href="{{route( 'song.attachments.delete', ['song' => $attachment->song, 'attachment' => $attachment] )}}" class="btn btn-outline-danger btn-sm ml-2"><i class="fa fa-fw fa-trash"></i>Delete</a>
+        <a href="{{route( 'song.attachments.delete', ['song' => $attachment->song, 'attachment' => $attachment] )}}" class="link-confirm btn btn-outline-danger btn-sm ml-2"><i class="fa fa-fw fa-trash"></i></a>
     </div>
 </div>
 
