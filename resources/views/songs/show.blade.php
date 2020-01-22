@@ -72,9 +72,6 @@
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fa fa-fw fa-plus"></i> Add</a>
                         </button>
-                        <button type="reset" class="btn btn-outline-danger btn-sm ml-2">
-                            <i class="fa fa-fw fa-times"></i> Cancel</a>
-                        </button>
                     </div>
             {{ Form::close() }}
 
