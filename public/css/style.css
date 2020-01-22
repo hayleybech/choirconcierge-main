@@ -273,6 +273,20 @@ i.fa.fa-external-link {
 }
 
 
+.custom-file.custom-file-sm,
+.custom-file.custom-file-sm .custom-file-input,
+.custom-file.custom-file-sm .custom-file-label.form-control-sm {
+	height: calc(1.875rem + 1px);
+}
+.custom-file-label.form-control-sm {
+	line-height: 1.2;
+}
+.custom-file-label.form-control-sm::after {
+	height: calc(calc(1.875rem + 1px) - 1px * 2);
+	line-height: 1.2;
+}
+
+
 /* Headway widget styles */
 #changelog-link {
 	position: relative;

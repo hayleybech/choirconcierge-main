@@ -58,7 +58,12 @@
                     </div>
                     <div class="r-table__cell column--filename">
                         {{ Form::label('attachment_upload', 'File Upload') }}
-                        {{ Form::file('attachment_upload', ['class' => 'form-control-file form-control-sm']) }}
+
+                        <div class="custom-file custom-file-sm">
+                            <input type="file" class="custom-file-input" id="attachment_upload" name="attachment_upload" required>
+                            <div class="custom-file-label form-control-sm">Choose file</div>
+                        </div>
+
                     </div>
                     <div class="r-table__cell column--category">
                         {{ Form::label('category', 'Category') }}

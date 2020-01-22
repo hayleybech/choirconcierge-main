@@ -7,4 +7,6 @@ $( document ).ready(function() {
 		console.log(e);
         return confirm( 'Are you sure? Action:' + e.target.innerText );
     });
+
+    bsCustomFileInput.init();
 });	
