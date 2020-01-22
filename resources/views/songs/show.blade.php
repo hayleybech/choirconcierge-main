@@ -54,7 +54,7 @@
                     </div>
                     <div class="r-table__cell column--title">
                         {{ Form::label('title', 'Title') }}
-                        {{ Form::text('title', '', array('required', 'class' => 'form-control form-control-sm')) }}
+                        <input id="title" name="title" type="text" required class="form-control form-control-sm @error('title') is-invalid @enderror">
                         <div class="valid-feedback">Looks good!</div>
                         <div class="invalid-feedback">Please type a file name.</div>
                     </div>
@@ -62,7 +62,7 @@
                         {{ Form::label('attachment_upload', 'File Upload') }}
 
                         <div class="custom-file custom-file-sm">
-                            <input type="file" class="custom-file-input" id="attachment_upload" name="attachment_upload" required>
+                            <input type="file" class="custom-file-input @error('attachment_upload') is-invalid @enderror" id="attachment_upload" name="attachment_upload" required>
                             <div class="custom-file-label form-control-sm">Choose file</div>
                             <div class="valid-feedback">Looks good!</div>
                             <div class="invalid-feedback">Please upload a file.</div>
