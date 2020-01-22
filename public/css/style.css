@@ -187,11 +187,6 @@ select.form-control-sm.force-xs {
 .r-table__tfoot .r-table__cell {
 	flex-flow: column;
 	align-items: flex-start;
-	justify-content: flex-end;
-}
-.r-table__tfoot .r-table__cell.column--actions {
-	flex-flow: row;
-	align-items: flex-end;
 	justify-content: flex-start;
 }
 
@@ -254,6 +249,23 @@ select.form-control-sm.force-xs {
             "mark actions actions"
         ;
     }
+}
+
+
+/*** ATTACHMENT TABLE ***/
+.r-table__row.row-attachment {
+	grid-template-areas: "mark title filename category actions";
+	grid-template-columns: 1% 30% 30% 20% 20%;
+}
+@media screen and (max-width:980px) {
+	.r-table__row.row-attachment {
+		grid-template-areas:
+			"mark title category"
+			"mark filename actions"
+		;
+		grid-template-columns: 1% 60% 39%;
+		grid-template-rows: 1fr 1fr;
+	}
 }
 
 

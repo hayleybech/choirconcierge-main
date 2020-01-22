@@ -35,7 +35,7 @@
 
     <div class="r-table r-table--card-view-mobile">
         <div class="r-table__thead">
-            <div class="r-table__row">
+            <div class="r-table__row row-attachment">
                 <div class="r-table__heading column--mark"><input type="checkbox"></div>
                 <div class="r-table__heading column--title">Title</div>
                 <div class="r-table__heading column--filename">File</div>
@@ -74,6 +74,8 @@
                         ) }}
                     </div>
                     <div class="r-table__cell column--actions">
+                        {{ Form::label('', '&nbsp;') }}
+
                         <button type="submit" class="btn btn-success btn-sm">
                             <i class="fa fa-fw fa-plus"></i> Add</a>
                         </button>

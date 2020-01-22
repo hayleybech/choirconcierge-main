@@ -1,4 +1,4 @@
-<div class="r-table__row">
+<div class="r-table__row row-attachment">
     <div class="r-table__cell column--mark">
         <input type="checkbox" />
     </div>
