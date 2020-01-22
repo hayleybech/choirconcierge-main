@@ -48,13 +48,15 @@
         </div>
         <div class="r-table__tfoot">
 
-            {{ Form::open( [ 'route' => ['song.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row-add' ] ) }}
+            {{ Form::open( [ 'route' => ['song.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row-attachment row-add needs-validation', 'novalidate' ] ) }}
                     <div class="r-table__cell column--mark">
 
                     </div>
                     <div class="r-table__cell column--title">
                         {{ Form::label('title', 'Title') }}
-                        {{ Form::text('title', '', array('class' => 'form-control form-control-sm')) }}
+                        {{ Form::text('title', '', array('required', 'class' => 'form-control form-control-sm')) }}
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please type a file name.</div>
                     </div>
                     <div class="r-table__cell column--filename">
                         {{ Form::label('attachment_upload', 'File Upload') }}
@@ -62,6 +64,8 @@
                         <div class="custom-file custom-file-sm">
                             <input type="file" class="custom-file-input" id="attachment_upload" name="attachment_upload" required>
                             <div class="custom-file-label form-control-sm">Choose file</div>
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Please upload a file.</div>
                         </div>
 
                     </div>
@@ -70,8 +74,10 @@
                         {{ Form::select('category',
                             $categories_keyed,
                             '',
-                            ['class' => 'custom-select custom-select-sm']
+                            ['required', 'class' => 'custom-select custom-select-sm']
                         ) }}
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please choose a category.</div>
                     </div>
                     <div class="r-table__cell column--actions">
                         {{ Form::label('', '&nbsp;') }}
