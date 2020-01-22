@@ -64,8 +64,8 @@ class SingersController extends Controller
 		$singers = $singers->get();
 
         // Sort
-        $sort_by = Input::get('sort_by', 'name');
-        $sort_dir = Input::get('sort_dir', 'asc');
+        $sort_by = Request::input('sort_by', 'name');
+        $sort_dir = Request::input('sort_dir', 'asc');
         if( $sort_dir === 'asc') {
             $singers = $singers->sortBy($sort_by);
         } else {
@@ -101,7 +101,7 @@ class SingersController extends Controller
             'name'      => 'filter_category',
             'label'     => 'Category',
             'default'   => $default,
-            'current'   => Input::get('filter_category', $default),
+            'current'   => Request::input('filter_category', $default),
             'list'      => $categories_keyed,
         ];
     }
@@ -116,7 +116,7 @@ class SingersController extends Controller
             'name'      => 'filter_part',
             'label'     => 'Part',
             'default'   => $default,
-            'current'   => Input::get('filter_part', $default),
+            'current'   => Request::input('filter_part', $default),
             'list'      => [
                 'all'   => 'All parts',
                 'tenor' => 'Tenor',
@@ -136,7 +136,7 @@ class SingersController extends Controller
             'name'      => 'filter_age',
             'label'     => 'Age',
             'default'   => $default,
-            'current'   => Input::get('filter_age', $default),
+            'current'   => Request::input('filter_age', $default),
             'list'      => [
                 'all'    => 'All ages',
                 'adult'  => 'Over 18',
@@ -162,8 +162,8 @@ class SingersController extends Controller
         //print_r($filters);
          //die();
 
-        $current_sort = Input::get('sort_by', 'name');
-        $current_dir =  Input::get('sort_dir', 'asc');
+        $current_sort = Request::input('sort_by', 'name');
+        $current_dir =  Request::input('sort_dir', 'asc');
 
         $sorts = [];
         foreach($sort_cols as $col) {
@@ -424,7 +424,7 @@ class SingersController extends Controller
 	public function move($singerId){
         $singer = Singer::find($singerId);
 
-        $category = Input::get('move_category', 0);
+        $category = Request::input('move_category', 0);
 
         if( $category == 0 ) return redirect('/singers')->with([ 'status' => 'No category selected. ', 'fail' => true ]);
 

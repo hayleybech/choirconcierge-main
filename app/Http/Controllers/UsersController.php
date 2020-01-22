@@ -39,7 +39,7 @@ class UsersController extends Controller
 	
 	public function addRoles( $userid ) {
 		$user = \App\User::find($userid);
-		$roles = Input::get('roles');
+		$roles = Request::input('roles');
 		
 		$user->addRoles($roles);
 		

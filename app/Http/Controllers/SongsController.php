@@ -37,8 +37,8 @@ class SongsController extends Controller
         $songs = $songs->get();
 
         // Sort
-        $sort_by = Input::get('sort_by', 'name');
-        $sort_dir = Input::get('sort_dir', 'asc');
+        $sort_by = Request::input('sort_by', 'name');
+        $sort_dir = Request::input('sort_dir', 'asc');
 
         // Flip direction for date (so we sort by smallest age not smallest timestamp)
         if($sort_by == 'created_at') $sort_dir = ($sort_dir === 'asc') ? 'desc' : 'asc';
@@ -132,7 +132,7 @@ class SongsController extends Controller
             'name'      => 'filter_status',
             'label'     => 'Status',
             'default'   => $default,
-            'current'   => Input::get('filter_status', $default),
+            'current'   => Request::input('filter_status', $default),
             'list'      => $statuses_keyed,
         ];
     }
@@ -150,7 +150,7 @@ class SongsController extends Controller
             'name'      => 'filter_category',
             'label'     => 'Category',
             'default'   => $default,
-            'current'   => Input::get('filter_category', $default),
+            'current'   => Request::input('filter_category', $default),
             'list'      => $categories_keyed,
         ];
     }
@@ -170,8 +170,8 @@ class SongsController extends Controller
             if ( ! $key === array_key_last($filters) ) $url .= '&';
         }
 
-        $current_sort = Input::get('sort_by', 'title');
-        $current_dir =  Input::get('sort_dir', 'asc');
+        $current_sort = Request::input('sort_by', 'title');
+        $current_dir =  Request::input('sort_dir', 'asc');
 
         $sorts = [];
         foreach($sort_cols as $col) {
