@@ -42,6 +42,13 @@ Route::middleware(['auth', 'employee'])->group(function() {
 	Route::get('/singers/{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
 
 	Route::resource('/notifications', 'NotificationController');
+
+    Route::get('/songs', 'SongsController@index')->name('songs.index');
+    Route::get('/songs/create', 'SongsController@create')->name('song.create');
+    Route::post('/songs', 'SongsController@store');
+    Route::get('/songs/{song}', 'SongsController@show')->name('songs.show');
+    Route::get('/songs/{song}/edit', 'SongsController@edit')->name('song.edit');
+    Route::put('/songs/{song}', 'SongsController@update');
 	
 });
 

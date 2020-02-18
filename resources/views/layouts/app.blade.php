@@ -69,6 +69,7 @@
 								@if( Auth::user()->isEmployee() )
 									<div class="dropdown-divider"></div>
 									<a href="{{ route('singers.index') }}" class="dropdown-item {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i> Singers</a>
+									<a href="{{ route('songs.index') }}" class="dropdown-item {{ ( \Request::is('songs.index') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i> Songs</a>
 								@endif
 								
 								@if( Auth::user()->hasRole('Admin') )
