@@ -69,7 +69,7 @@ class User extends Authenticatable
     private function getIdInArray($array, $term)
     {
         foreach ($array as $key => $value) {
-            if ($value == $term) {
+            if ($value === $term) {
                 return $key;
             }
         }

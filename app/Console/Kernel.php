@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel
                     $pid = file_get_contents($path . '/queue.pid');
                     $result = exec("ps -p $pid --no-heading | awk '{print $1}'");
                     echo 'Checking queue worker';
-                    $run = $result == '' ? true : false;
+                    $run = $result === '';
                 } else {
                     $run = true;
                 }

@@ -36,12 +36,12 @@ class SingersController extends Controller
         $where = [];
         $filters = $this->getFilters($request);
 
-        if($filters['cat']['current'] != 0) {
+        if($filters['cat']['current'] !== 0) {
             $where[] = ['singer_category_id', '=', $filters['cat']['current']];
         }
         $singers = $singers->where($where);
 
-        if($filters['part']['current'] != 'all') {
+        if($filters['part']['current'] !== 'all') {
             $current = $filters['part']['current'];
             $singers = $singers->whereHas('placement', function($query) use($current) {
                 $query->where('voice_part', '=', $current);
@@ -49,12 +49,12 @@ class SingersController extends Controller
         }
 
         $adult_age = 18;
-        if($filters['age']['current'] == 'adult') {
+        if($filters['age']['current'] === 'adult') {
             $singers = $singers->whereHas('profile', function($query) use($adult_age) {
                 $query->where('dob', '<=', date('Y-m-d', strtotime("-$adult_age years")));
             });
         }
-        elseif($filters['age']['current'] == 'child') {
+        elseif($filters['age']['current'] === 'child') {
             $singers = $singers->whereHas('profile', function($query) use($adult_age) {
                 $query->where('dob', '>', date('Y-m-d', strtotime("-$adult_age years")));
             });
@@ -261,7 +261,7 @@ class SingersController extends Controller
         event(new TaskCompleted($task, $singer));
 
 		// Complete type-specific action
-		if( $task->type == 'manual' ) {
+		if( $task->type === 'manual' ) {
 			// Simply mark as done. 
 			$singer->tasks()->updateExistingPivot($taskId, ['completed' => true]);
 			return redirect('/singers')->with(['status' => 'Task updated. ', ]);
@@ -438,7 +438,7 @@ class SingersController extends Controller
 
         $category = $request->input('move_category', 0);
 
-        if( $category == 0 ) return redirect('/singers')->with([ 'status' => 'No category selected. ', 'fail' => true ]);
+        if( $category === 0 ) return redirect('/singers')->with([ 'status' => 'No category selected. ', 'fail' => true ]);
 
         // Attach to Prospects category
         $singer->category()->associate($category);

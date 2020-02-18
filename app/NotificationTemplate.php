@@ -81,8 +81,8 @@ class NotificationTemplate extends Model
     public function generateNotifications(Singer $singer){
 
         // Only generate in-app notifications for actual users
-        if($this->getRecipientType() == 'role' ||
-            $this->getRecipientType() == 'user'){
+        if($this->getRecipientType() === 'role' ||
+            $this->getRecipientType() === 'user'){
 
             $recipients = $this->getRecipients();
 
@@ -93,8 +93,8 @@ class NotificationTemplate extends Model
         // Loop through recipients for this template to create Notifications
         foreach($recipients as $recipient){
 
-            if($this->getRecipientType() == 'role' ||
-                $this->getRecipientType() == 'user') {
+            if($this->getRecipientType() === 'role' ||
+                $this->getRecipientType() === 'user') {
 
                 $body = $this->generateBody($singer, $recipient);
             } else {

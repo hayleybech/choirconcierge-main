@@ -26,7 +26,7 @@
 					@continue
 				@else
 					@php
-						if( $task->type == 'form' ){
+						if( $task->type === 'form' ){
 							$btn_style = 'btn-primary';
 							$icon_complete = 'fa-file-text-o';
 							$action = 'Start';
@@ -45,13 +45,13 @@
 			@endforeach
         </div>
         <div class="r-table__cell column--part">
-            <span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part != '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
+            <span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part !== '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
         </div>
 		<div class="r-table__cell column--category">
 			<span class="singer-category badge badge-pill {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span>
 		</div>
         <div class="r-table__cell column--phone">
-            <span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone != '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
+            <span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
         </div>
         <div class="r-table__cell column--age">
             <span class="singer-age"><i class="fa fa-calendar-o"></i> {{ ( $singer->getAge() ) ? $singer->getAge() .'yrs' : 'None' }}</span>

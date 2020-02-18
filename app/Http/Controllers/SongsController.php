@@ -20,13 +20,13 @@ class SongsController extends Controller
         $filters = $this->getFilters($request);
 
         // Filter by status
-        if($filters['status']['current'] != 0) {
+        if($filters['status']['current'] !== 0) {
             $where[] = ['status_id', '=', $filters['status']['current']];
         }
         $songs = $songs->where($where);
 
         // Filter by category
-        if($filters['category']['current'] != 0) {
+        if($filters['category']['current'] !== 0) {
             $current = $filters['category']['current'];
             $songs = $songs->whereHas('categories', function($query) use($current) {
                 $query->where('category_id', '=', $current);
@@ -41,7 +41,7 @@ class SongsController extends Controller
         $sort_dir = $request->input('sort_dir', 'asc');
 
         // Flip direction for date (so we sort by smallest age not smallest timestamp)
-        if($sort_by == 'created_at') $sort_dir = ($sort_dir === 'asc') ? 'desc' : 'asc';
+        if($sort_by === 'created_at') $sort_dir = ($sort_dir === 'asc') ? 'desc' : 'asc';
 
         if( $sort_dir === 'asc') {
             $songs = $songs->sortBy($sort_by);
