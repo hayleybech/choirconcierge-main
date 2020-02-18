@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Placement extends Model
 {
@@ -17,8 +18,8 @@ class Placement extends Model
 		'voice_part',
 	];
 	
-	public function singer()
-	{
-		$this->belongsTo('App\Singer');
+	public function singer(): BelongsTo
+    {
+		return $this->belongsTo('App\Singer');
 	}
 }

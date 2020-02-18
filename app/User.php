@@ -2,9 +2,11 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Role;
+use UnexpectedValueException;
 
 // http://alexsears.com/article/adding-roles-to-laravel-users/
 // https://medium.com/@ezp127/laravel-5-4-native-user-authentication-role-authorization-3dbae4049c8a
@@ -36,7 +38,8 @@ class User extends Authenticatable
 	/**
       * Get the roles a user has
       */
-	public function roles() {
+	public function roles(): BelongsToMany
+    {
 		return $this->belongsToMany('App\Role', 'users_roles');
 	}
 	
@@ -45,18 +48,22 @@ class User extends Authenticatable
       *
       * @return boolean
       */
-    public function isEmployee()
+    public function isEmployee(): bool
     {
        $roles = $this->roles->toArray();
        return ! empty($roles);
     }
-	
-	 /**
-      * Find out if user has a specific role
-      *
-      * $return boolean
-      */
-    public function hasRole($check)
+
+    /**
+     * Find out if user has a specific role
+     *
+     * $return boolean
+     *
+     * @param $check
+     *
+     * @return bool
+     */
+    public function hasRole($check): bool
     {
         return in_array($check, array_pluck($this->roles->toArray(), 'name'));
     }
@@ -77,12 +84,13 @@ class User extends Authenticatable
         throw new UnexpectedValueException;
     }
 	
-	public function addRoles($ids)
+	public function addRoles($ids): void
     {
 		$this->roles()->attach($ids);
     }
 	
-	public function detachRole($id) {
+	public function detachRole($id): void
+    {
 		
 		$this->roles()->detach($id);
 		

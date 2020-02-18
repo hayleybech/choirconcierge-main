@@ -5,21 +5,24 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\TaskCompleted;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
 
 class NotificationTemplate extends Model
 {
-    public function task()
-	{
+    public function task(): BelongsTo
+    {
 		return $this->belongsTo('App\Task');
 	}
 
-    public function getRecipientType(){
+    public function getRecipientType(): string
+    {
         $recipient_info = explode(':', $this->recipients);
         return $recipient_info[0];
     }
 
-    public function getRecipients(){
+    public function getRecipients(): array
+    {
 
         $recipients = array();
         list($recipient_type, $recipient_id) = explode(':', $this->recipients);
@@ -39,7 +42,8 @@ class NotificationTemplate extends Model
         return $recipients;
     }
 
-    public function generateBody(Singer $singer, User $user = null){
+    public function generateBody(Singer $singer, User $user = null): string
+    {
         $replacements = array(
             '%%singer.name%%'       => $singer->name,
             '%%singer.email%%'      => $singer->email,
@@ -78,7 +82,8 @@ class NotificationTemplate extends Model
     /**
      * @param Singer $singer
      */
-    public function generateNotifications(Singer $singer){
+    public function generateNotifications(Singer $singer): void
+    {
 
         // Only generate in-app notifications for actual users
         if($this->getRecipientType() === 'role' ||

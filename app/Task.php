@@ -3,28 +3,32 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
 {
     /*
 	 * Get the Role authorised for this task
 	 */
-	public function role()
+	public function role(): BelongsTo
 	{
 		return $this->belongsTo('App\Role');
 	}
 	
-	public function singers()
+	public function singers(): BelongsToMany
 	{
 		return $this->belongsToMany('App\Singer', 'singers_tasks')->withPivot('completed')->withTimestamps();
 	}
 	
-	public function notification_templates()
+	public function notification_templates(): HasMany
 	{
 		return $this->hasMany('App\NotificationTemplate');
 	}
 
-	public function generateNotifications(Singer $singer) {
+	public function generateNotifications(Singer $singer): void
+    {
 
         // Loop through templates for this Task to create Notifications
         $notification_templates = $this->notification_templates;

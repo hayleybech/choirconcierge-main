@@ -6,12 +6,15 @@ use App\Song;
 use App\SongAttachmentCategory;
 use App\SongCategory;
 use App\SongStatus;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\View\View;
 
 class SongsController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request): View
+    {
         // Base query
         $songs = Song::with([]);
 
@@ -54,7 +57,8 @@ class SongsController extends Controller
         return view('songs', compact('songs', 'filters', 'sorts') );
     }
 
-    public function create() {
+    public function create(): View
+    {
         $categories = SongCategory::all();
         $statuses = SongStatus::all();
         $pitches = Song::getAllPitchesByMode();
@@ -62,7 +66,8 @@ class SongsController extends Controller
         return view('songs.create', compact('categories', 'statuses', 'pitches') );
     }
 
-    public function store(Request $request) {
+    public function store(Request $request): RedirectResponse
+    {
         $song = new Song();
         $song->title = $request->title;
         $song->pitch_blown = $request->pitch_blown;
@@ -78,7 +83,8 @@ class SongsController extends Controller
         return redirect('/songs')->with(['status' => 'Song created. ', ]);
     }
 
-    public function show($songId) {
+    public function show($songId): View
+    {
         $song = Song::find($songId);
         $attachment_categories = SongAttachmentCategory::all();
         $categories_keyed = $attachment_categories->mapWithKeys(function($item){
@@ -88,7 +94,8 @@ class SongsController extends Controller
         return view('songs.show', compact('song', 'categories_keyed'));
     }
 
-    public function edit($songId) {
+    public function edit($songId): View
+    {
         $song = Song::find($songId);
         $categories = SongCategory::all();
         $statuses = SongStatus::all();
@@ -97,7 +104,8 @@ class SongsController extends Controller
         return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
     }
 
-    public function update($songId, Request $request) {
+    public function update($songId, Request $request): RedirectResponse
+    {
         $song = Song::find($songId);
         $song->title = $request->title;
         $song->pitch_blown = $request->pitch_blown;
@@ -113,13 +121,15 @@ class SongsController extends Controller
         return redirect()->route('song.edit', [$songId]);
     }
 
-    public function getFilters(Request $request) {
+    public function getFilters(Request $request): array
+    {
         return [
             'status'    => $this->getFilterStatus($request),
             'category'    => $this->getFilterCategory($request),
         ];
     }
-    public function getFilterStatus(Request $request) {
+    public function getFilterStatus(Request $request): array
+    {
         $default = 0;
 
         $statuses = SongStatus::all();
@@ -137,7 +147,8 @@ class SongsController extends Controller
         ];
     }
 
-    public function getFilterCategory(Request $request) {
+    public function getFilterCategory(Request $request): array
+    {
         $default = 0;
 
         $categories = SongCategory::all();
@@ -155,7 +166,8 @@ class SongsController extends Controller
         ];
     }
 
-    public function getSorts(Request $request) {
+    public function getSorts(Request $request): array
+    {
         $sort_cols = [
             'title',
             'status.title',

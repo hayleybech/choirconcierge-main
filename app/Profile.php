@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Profile extends Model
 {
@@ -17,8 +18,8 @@ class Profile extends Model
 		'skills',
 	];
 	
-    public function singer()
+    public function singer(): BelongsTo
 	{
-		$this->belongsTo('App\Singer');
+		return $this->belongsTo('App\Singer');
 	}
 }

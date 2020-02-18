@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Song;
 use App\SongAttachment;
 use App\SongAttachmentCategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class SongAttachmentController extends Controller
 {
-    public function store($songId, Request $request) {
+    public function store($songId, Request $request): RedirectResponse
+    {
         $request->validate([
             'title'             => 'required|max:255',
             'category_id'       => 'required|exists:song_attachment_category,id',
@@ -51,7 +53,8 @@ class SongAttachmentController extends Controller
         return redirect()->route('songs.show', [$songId])->with(['category' => 'Attachment added. ', ]);
     }
 
-    public function delete($songId, $attachmentId) {
+    public function delete($songId, $attachmentId): RedirectResponse
+    {
         $attachment = SongAttachment::find($attachmentId);
 
         if (Storage::disk('public')->exists( $attachment->getPath() )) {

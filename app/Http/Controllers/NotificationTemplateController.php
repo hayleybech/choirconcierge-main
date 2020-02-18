@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\NotificationTemplate;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class NotificationTemplateController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         $templates = NotificationTemplate::all();
 
@@ -27,9 +29,9 @@ class NotificationTemplateController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function create()
+    public function create(): RedirectResponse
     {
         //
     }
@@ -37,10 +39,10 @@ class NotificationTemplateController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         //
     }
@@ -48,10 +50,10 @@ class NotificationTemplateController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\NotificationTemplate  $notificationTemplate
-     * @return \Illuminate\Http\Response
+     * @param NotificationTemplate $notificationTemplate
+     * @return View
      */
-    public function show(NotificationTemplate $notificationTemplate)
+    public function show(NotificationTemplate $notificationTemplate): View
     {
         //
     }
@@ -59,10 +61,10 @@ class NotificationTemplateController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\NotificationTemplate  $notificationTemplate
-     * @return \Illuminate\Http\Response
+     * @param NotificationTemplate $notificationTemplate
+     * @return View
      */
-    public function edit(NotificationTemplate $notificationTemplate)
+    public function edit(NotificationTemplate $notificationTemplate): View
     {
         //
     }
@@ -70,11 +72,11 @@ class NotificationTemplateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\NotificationTemplate  $notificationTemplate
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param NotificationTemplate $notificationTemplate
+     * @return RedirectResponse
      */
-    public function update(Request $request, NotificationTemplate $notificationTemplate)
+    public function update(Request $request, NotificationTemplate $notificationTemplate): RedirectResponse
     {
         //
     }
@@ -82,10 +84,10 @@ class NotificationTemplateController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\NotificationTemplate  $notificationTemplate
-     * @return \Illuminate\Http\Response
+     * @param NotificationTemplate $notificationTemplate
+     * @return RedirectResponse
      */
-    public function destroy(NotificationTemplate $notificationTemplate)
+    public function destroy(NotificationTemplate $notificationTemplate): RedirectResponse
     {
         //
     }

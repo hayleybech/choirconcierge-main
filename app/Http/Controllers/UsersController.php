@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\User;
 use App\Role;
+use Illuminate\View\View;
 
 class UsersController extends Controller
 {
@@ -19,7 +21,8 @@ class UsersController extends Controller
         $this->middleware('auth');
     }
 	
-	public function index(){
+	public function index(): View
+    {
 		
 		//$users = User::all();
 		$users = User::with('roles')->get();
@@ -28,16 +31,19 @@ class UsersController extends Controller
 		return view('users.index', compact('users', 'roles_all'));
 	}
 	
-	public function create(){
+	public function create(): void
+    {
 		$user = User::create(
 		array(
 			'name' => '',
 			'email' => '',
 		));
 		$user->addRole('admin');
+		// @todo add missing redirect??
 	}
 	
-	public function addRoles( Request $request, $userid ) {
+	public function addRoles( Request $request, $userid ): RedirectResponse
+    {
 		$user = \App\User::find($userid);
 		$roles = $request->input('roles');
 		
@@ -46,7 +52,8 @@ class UsersController extends Controller
 		return redirect('/users');
 	}
 	
-	public function detachRole($userid, $role) {
+	public function detachRole($userid, $role): RedirectResponse
+    {
 		$user = \App\User::find($userid);
 		$user->detachRole($role);
 		return redirect('/users');

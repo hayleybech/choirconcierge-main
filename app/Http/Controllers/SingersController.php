@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
 use App\Imports\DripSingersImport;
+use App\Libraries\Drip\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Singer;
 use App\Task;
 use App\SingerCategory;
 use App\Libraries\Drip\Drip;
+use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SingersController extends Controller
@@ -28,7 +31,8 @@ class SingersController extends Controller
     }
 
 
-    public function index(Request $request){
+    public function index(Request $request): View
+    {
         // Base query
         $singers = Singer::with(['tasks', 'category', 'placement', 'profile']);
 
@@ -77,7 +81,8 @@ class SingersController extends Controller
         return view('singers', compact('singers', 'filters', 'sorts' ));
 	}
 
-	public function getFilters(Request $request) {
+	public function getFilters(Request $request): array
+    {
         return [
             'cat'   => $this->getFilterCategory($request),
             'part'  => $this->getFilterPart($request),
@@ -92,7 +97,8 @@ class SingersController extends Controller
      *
      * @return array
      */
-	public function getFilterCategory(Request $request){
+	public function getFilterCategory(Request $request): array
+    {
         $default = 1;
 
         $categories = SingerCategory::all();
@@ -117,7 +123,8 @@ class SingersController extends Controller
      *
      * @return array
      */
-    public function getFilterPart(Request $request){
+    public function getFilterPart(Request $request): array
+    {
         $default = 'all';
 
         return [
@@ -142,7 +149,8 @@ class SingersController extends Controller
      *
      * @return array
      */
-    public function getFilterAge(Request $request){
+    public function getFilterAge(Request $request): array
+    {
         $default = 'all';
         return [
             'name'      => 'filter_age',
@@ -157,7 +165,8 @@ class SingersController extends Controller
         ];
     }
 
-    public function getSorts(Request $request) {
+    public function getSorts(Request $request): array
+    {
         $sort_cols = [
             'name',
             'voice_placement.part',
@@ -197,7 +206,8 @@ class SingersController extends Controller
         return $sorts;
     }
 	
-		public function getSingersByTag($tag) {
+		public function getSingersByTag($tag): Response
+        {
 			$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		
 			// Get subscribers
@@ -215,19 +225,23 @@ class SingersController extends Controller
 			return $Response;	
 		}
 	
-		public function getProspects() {
+		public function getProspects(): Response
+        {
 			return self::getSingersByTag('Prospective Member');
 		}
 		
-		public function getMembersPaid() {
+		public function getMembersPaid(): Response
+        {
 			return self::getSingersByTag('Waiting for Account Creation');
 		}
 	
-	public function create() {
+	public function create(): View
+    {
 		return view('singer.create');
 	}
 	
-	public function store(Request $request) {
+	public function store(Request $request): RedirectResponse
+    {
 		$validated = $request->validate([
 			'name'	=> 'required',
 			'email'	=> 'required|unique:singers',
@@ -254,7 +268,8 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'Singer created. ', ]);
 	}
 	
-	public function completeTask($singerId, $taskId) {
+	public function completeTask($singerId, $taskId): RedirectResponse
+    {
 		$singer = Singer::find($singerId);
 		$task = Task::find($taskId);
 
@@ -271,13 +286,15 @@ class SingersController extends Controller
 		}
 	}
 	
-	public function createProfile($singerId) {
+	public function createProfile($singerId): View
+    {
 		$singer = Singer::find($singerId);
 		
 		return view('singer.createprofile', compact('singer'));
 	}
 	
-	public function storeProfile(Request $request) {
+	public function storeProfile(Request $request): RedirectResponse
+    {
 		$singer = Singer::find($request->singer_id);
 		$singer->profile()->create($request->all()); // refer to whitelist in model
 		
@@ -290,13 +307,15 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
 	}
 	
-	public function createPlacement($singerId) {
+	public function createPlacement($singerId): View
+    {
 		$singer = Singer::find($singerId);
 		
 		return view('singer.createplacement', compact('singer'));
 	}
 	
-	public function storePlacement(Request $request) {
+	public function storePlacement(Request $request): RedirectResponse
+    {
 		$singer = Singer::find($request->singer_id);
 		$singer->placement()->create($request->all()); // refer to whitelist in model
 		
@@ -309,13 +328,15 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'Voice Placement created. ', ]);
 	}
 	
-	public function show($singerId) {
+	public function show($singerId): View
+    {
 		$singer = Singer::find($singerId);
 	
 		return view('singer.show', compact('singer'));
 	}
 	
-	public function auditionpass($email) {
+	public function auditionpass($email): RedirectResponse
+    {
 		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		
 		// Add 'Passed Vocal Assessment' Tag
@@ -352,7 +373,8 @@ class SingersController extends Controller
 
 	}
 	
-	public function feespaid($email) {
+	public function feespaid($email): RedirectResponse
+    {
 		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		
 		// Add 'Membership Fees Paid' Tag
@@ -388,7 +410,8 @@ class SingersController extends Controller
 
 	}
 	
-	public function markUniformProvided($email) {
+	public function markUniformProvided($email): RedirectResponse
+    {
 		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		
 		// Add 'Uniform Provided' Tag
@@ -410,7 +433,8 @@ class SingersController extends Controller
 
 	}
 	
-	public function markAccountCreated($email) {
+	public function markAccountCreated($email): RedirectResponse
+    {
 		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		
 		// Add 'Account Created' Tag
@@ -433,7 +457,8 @@ class SingersController extends Controller
 
 	}
 
-	public function move(Request $request, $singerId){
+	public function move(Request $request, $singerId): RedirectResponse
+    {
         $singer = Singer::find($singerId);
 
         $category = $request->input('move_category', 0);
@@ -447,7 +472,8 @@ class SingersController extends Controller
         return redirect('/singers')->with(['status' => 'The singer was moved. ']);
     }
 
-    public function import() {
+    public function import(): RedirectResponse
+    {
 
         // Default location: /storage/app
         Excel::import(new DripSingersImport(), 'subscribers.csv');
@@ -456,7 +482,8 @@ class SingersController extends Controller
         return redirect('/singers')->with(['status' => 'Import done. ', ]);
     }
 	
-	public function export() {
+	public function export(): void
+    {
 		
 		// Get subscribers
 		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 

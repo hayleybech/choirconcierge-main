@@ -3,29 +3,34 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Song extends Model
 {
-    public function status()
+    public function status(): BelongsTo
     {
         return $this->belongsTo('App\SongStatus', 'status_id');
     }
 
-    public function categories()
+    public function categories(): BelongsToMany
     {
         return $this->belongsToMany('App\SongCategory', 'songs_song_categories', 'song_id', 'category_id');
     }
 
-    public function attachments() {
+    public function attachments(): HasMany
+    {
         return $this->hasMany('App\SongAttachment');
     }
 
-    public function getPitchBlown()
+    public function getPitchBlown(): string
     {
         return self::getAllPitches()[$this->pitch_blown];
     }
 
-    public static function getAllPitchesByMode() {
+    public static function getAllPitchesByMode(): array
+    {
         return [
             'Major' => [
                 0   => 'A',
@@ -57,7 +62,8 @@ class Song extends Model
             ],
         ];
     }
-    public static function getAllPitches() {
+    public static function getAllPitches(): array
+    {
         $all_pitches = [];
         foreach( self::getAllPitchesByMode() as $mode => $pitches ) {
             $all_pitches = array_merge($all_pitches, $pitches);
