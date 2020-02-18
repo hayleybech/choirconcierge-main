@@ -83,7 +83,7 @@
                         {{ Form::label('', '&nbsp;') }}
 
                         <button type="submit" class="btn btn-success btn-sm">
-                            <i class="fa fa-fw fa-plus"></i> Add</a>
+                            <i class="fa fa-fw fa-plus"></i> Add
                         </button>
                     </div>
             {{ Form::close() }}
