@@ -183,6 +183,13 @@ select.form-control-sm.force-xs {
 	font-size: 12px !important;
 }
 
+
+.r-table__tfoot .r-table__cell {
+	flex-flow: column;
+	align-items: flex-start;
+	justify-content: flex-start;
+}
+
 @media screen and (max-width:980px) {
 	.r-table--card-view-mobile {
 
@@ -245,6 +252,23 @@ select.form-control-sm.force-xs {
 }
 
 
+/*** ATTACHMENT TABLE ***/
+.r-table__row.row-attachment {
+	grid-template-areas: "mark title filename category actions";
+	grid-template-columns: 1% 30% 30% 20% 20%;
+}
+@media screen and (max-width:980px) {
+	.r-table__row.row-attachment {
+		grid-template-areas:
+			"mark title category"
+			"mark filename actions"
+		;
+		grid-template-columns: 1% 60% 39%;
+		grid-template-rows: 1fr 1fr;
+	}
+}
+
+
 
 i.fa.fa-external-link {
     font-size: 0.8em;
@@ -258,6 +282,20 @@ i.fa.fa-external-link {
 .form-inline .custom-select {
 	width: auto !important;
     line-height: 1.3;
+}
+
+
+.custom-file.custom-file-sm,
+.custom-file.custom-file-sm .custom-file-input,
+.custom-file.custom-file-sm .custom-file-label.form-control-sm {
+	height: calc(1.875rem + 1px);
+}
+.custom-file-label.form-control-sm {
+	line-height: 1.2;
+}
+.custom-file-label.form-control-sm::after {
+	height: calc(calc(1.875rem + 1px) - 1px * 2);
+	line-height: 1.2;
 }
 
 

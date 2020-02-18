@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Song;
+use App\SongAttachmentCategory;
 use App\SongCategory;
 use App\SongStatus;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class SongsController extends Controller
 
         // Filter songs
         $where = [];
-        $filters = $this->getFilters();
+        $filters = $this->getFilters($request);
 
         // Filter by status
         if($filters['status']['current'] != 0) {
@@ -36,8 +37,8 @@ class SongsController extends Controller
         $songs = $songs->get();
 
         // Sort
-        $sort_by = Input::get('sort_by', 'name');
-        $sort_dir = Input::get('sort_dir', 'asc');
+        $sort_by = $request->input('sort_by', 'name');
+        $sort_dir = $request->input('sort_dir', 'asc');
 
         // Flip direction for date (so we sort by smallest age not smallest timestamp)
         if($sort_by == 'created_at') $sort_dir = ($sort_dir === 'asc') ? 'desc' : 'asc';
@@ -79,8 +80,12 @@ class SongsController extends Controller
 
     public function show($songId) {
         $song = Song::find($songId);
+        $attachment_categories = SongAttachmentCategory::all();
+        $categories_keyed = $attachment_categories->mapWithKeys(function($item){
+            return [ $item['id'] => $item['title'] ];
+        });
 
-        return view('songs.show', compact('song'));
+        return view('songs.show', compact('song', 'categories_keyed'));
     }
 
     public function edit($songId) {
@@ -108,13 +113,13 @@ class SongsController extends Controller
         return redirect()->route('song.edit', [$songId]);
     }
 
-    public function getFilters() {
+    public function getFilters(Request $request) {
         return [
-            'status'    => $this->getFilterStatus(),
-            'category'    => $this->getFilterCategory(),
+            'status'    => $this->getFilterStatus($request),
+            'category'    => $this->getFilterCategory($request),
         ];
     }
-    public function getFilterStatus() {
+    public function getFilterStatus(Request $request) {
         $default = 0;
 
         $statuses = SongStatus::all();
@@ -127,12 +132,12 @@ class SongsController extends Controller
             'name'      => 'filter_status',
             'label'     => 'Status',
             'default'   => $default,
-            'current'   => Input::get('filter_status', $default),
+            'current'   => $request->input('filter_status', $default),
             'list'      => $statuses_keyed,
         ];
     }
 
-    public function getFilterCategory() {
+    public function getFilterCategory(Request $request) {
         $default = 0;
 
         $categories = SongCategory::all();
@@ -145,7 +150,7 @@ class SongsController extends Controller
             'name'      => 'filter_category',
             'label'     => 'Category',
             'default'   => $default,
-            'current'   => Input::get('filter_category', $default),
+            'current'   => $request->input('filter_category', $default),
             'list'      => $categories_keyed,
         ];
     }
@@ -159,14 +164,14 @@ class SongsController extends Controller
 
         // get URL ready
         $url = $request->url() . '?';
-        $filters = $this->getFilters();
+        $filters = $this->getFilters($request);
         foreach( $filters as $key => $filter ) {
             $url .= $filter['name'] . '=' . $filter['current'];
             if ( ! $key === array_key_last($filters) ) $url .= '&';
         }
 
-        $current_sort = Input::get('sort_by', 'title');
-        $current_dir =  Input::get('sort_dir', 'asc');
+        $current_sort = $request->input('sort_by', 'title');
+        $current_dir =  $request->input('sort_dir', 'asc');
 
         $sorts = [];
         foreach($sort_cols as $col) {

@@ -37,9 +37,9 @@ class UsersController extends Controller
 		$user->addRole('admin');
 	}
 	
-	public function addRoles( $userid ) {
+	public function addRoles( Request $request, $userid ) {
 		$user = \App\User::find($userid);
-		$roles = Input::get('roles');
+		$roles = $request->input('roles');
 		
 		$user->addRoles($roles);
 		
