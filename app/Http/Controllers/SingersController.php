@@ -74,7 +74,7 @@ class SingersController extends Controller
 
         $sorts = $this->getSorts($request);
 
-        return view('singers', compact('singers', 'members', 'Response', 'filters', 'sorts' ));
+        return view('singers', compact('singers', 'filters', 'sorts' ));
 	}
 
 	public function getFilters(Request $request) {
