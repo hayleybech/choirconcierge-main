@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="r-table__tbody">
-            @each('partials.attachment', $song->attachments, 'attachment', 'partials.noresults')
+            @each('songs.show_attachment_row', $song->attachments, 'attachment', 'partials.noresults')
         </div>
         <div class="r-table__tfoot">
 

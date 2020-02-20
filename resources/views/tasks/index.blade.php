@@ -29,7 +29,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@each('partials.task', $tasks, 'task', 'partials.noresults')
+			@each('tasks.index_row', $tasks, 'task', 'partials.noresults')
 		</tbody>
 	</table>
 

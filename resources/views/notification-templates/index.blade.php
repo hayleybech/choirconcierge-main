@@ -31,7 +31,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@each('partials.notificationtemplate', $templates, 'template', 'partials.noresults')
+			@each('notification-templates.index_row', $templates, 'template', 'partials.noresults')
 		</tbody>
 	</table>
 

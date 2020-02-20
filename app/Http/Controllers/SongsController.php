@@ -54,7 +54,7 @@ class SongsController extends Controller
 
         $sorts = $this->getSorts($request);
 
-        return view('songs', compact('songs', 'filters', 'sorts') );
+        return view('songs.index', compact('songs', 'filters', 'sorts') );
     }
 
     public function create(): View

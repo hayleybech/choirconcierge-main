@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="r-table__tbody">
-            @each('partials.songrow', $songs, 'song', 'partials.noresults')
+            @each('songs.index_row', $songs, 'song', 'partials.noresults')
         </div>
     </div>
 

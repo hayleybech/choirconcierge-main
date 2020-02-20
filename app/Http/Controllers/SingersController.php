@@ -78,7 +78,7 @@ class SingersController extends Controller
 
         $sorts = $this->getSorts($request);
 
-        return view('singers', compact('singers', 'filters', 'sorts' ));
+        return view('singers.index', compact('singers', 'filters', 'sorts' ));
 	}
 
 	public function getFilters(Request $request): array
@@ -237,7 +237,7 @@ class SingersController extends Controller
 	
 	public function create(): View
     {
-		return view('singer.create');
+		return view('singers.create');
 	}
 	
 	public function store(Request $request): RedirectResponse
@@ -299,7 +299,7 @@ class SingersController extends Controller
     {
 		$singer = Singer::find($singerId);
 		
-		return view('singer.createprofile', compact('singer'));
+		return view('singers.createprofile', compact('singer'));
 	}
 	
 	public function storeProfile(Request $request): RedirectResponse
@@ -320,7 +320,7 @@ class SingersController extends Controller
     {
 		$singer = Singer::find($singerId);
 		
-		return view('singer.createplacement', compact('singer'));
+		return view('singers.createplacement', compact('singer'));
 	}
 	
 	public function storePlacement(Request $request): RedirectResponse
@@ -341,7 +341,7 @@ class SingersController extends Controller
     {
 		$singer = Singer::find($singerId);
 	
-		return view('singer.show', compact('singer'));
+		return view('singers.show', compact('singer'));
 	}
 	
 	public function auditionpass($email): RedirectResponse
