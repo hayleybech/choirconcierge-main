@@ -6,18 +6,7 @@
 
 	<h2>Users</h2>
 
-	@if (session('status'))
-	<div class="alert {{ isset($Response->error) ? 'alert-danger' : 'alert-success' }}" role="alert">
-		{{ session('status') }}
-		
-		@isset( $Response->error )
-		<pre>
-			{{ var_dump($Response) }} 
-			@json($args)
-		</pre>
-		@endisset
-	</div>
-	@endif
+	@include('partials.flash')
 	
 	<div id="accordion" class="accordion">
 	@foreach($users as $key => $user)

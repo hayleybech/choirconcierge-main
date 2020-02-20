@@ -6,18 +6,7 @@
 
 	<h2 class="mb-4">Singers <a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-user-plus"></i> Add New</a></h2>
 
-	@if (session('status'))
-	<div class="alert {{ isset($Response->error) || session('fail') ? 'alert-danger' : 'alert-success' }}" role="alert">
-		{{ session('status') }}
-		
-		@isset( $Response->error )
-		<pre>
-			{{ var_dump($Response) }} 
-			@ json($args)
-		</pre>
-		@endisset
-	</div>
-	@endif
+	@include('partials.flash')
 
 	<form method="get" class="form-inline mb-0">
 		@foreach( $filters as $filter )
