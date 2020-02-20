@@ -267,6 +267,15 @@ class SingersController extends Controller
 		// Exit
 		return redirect('/singers')->with(['status' => 'Singer created. ', ]);
 	}
+
+    public function delete($singerId): RedirectResponse
+    {
+        $singer = Singer::find($singerId);
+
+        $singer->delete();
+
+        return redirect()->route('singers.index')->with(['status' => 'Singer deleted. ', ]);
+    }
 	
 	public function completeTask($singerId, $taskId): RedirectResponse
     {

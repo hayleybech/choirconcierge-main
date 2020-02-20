@@ -41,6 +41,8 @@ Route::middleware(['auth', 'employee'])->group(function() {
 	
 	Route::get('/singers/{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
 
+    Route::get('/singers/{singer}/delete', 'SingersController@delete')->name('singer.delete');
+
 	Route::resource('/notifications', 'NotificationController');
 
     Route::get('/songs', 'SongsController@index')->name('songs.index');
