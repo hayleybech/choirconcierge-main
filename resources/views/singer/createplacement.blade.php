@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Main menu')
+@section('title', 'Add Voice Placement - ' . $singer->name)
 
 @section('content')
 

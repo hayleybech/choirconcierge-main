@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Main menu')
+@section('title', $singer->name . ' - Singers')
 
 @section('content')
 
