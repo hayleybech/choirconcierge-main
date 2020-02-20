@@ -12,6 +12,7 @@ use App\Singer;
 use App\Task;
 use App\SingerCategory;
 use App\Libraries\Drip\Drip;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -343,8 +344,36 @@ class SingersController extends Controller
 	
 		return view('singers.show', compact('singer'));
 	}
-	
-	public function auditionpass($email): RedirectResponse
+
+    public function edit($singerId): View
+    {
+        $singer = Singer::find($singerId);
+
+        return view('singers.edit', compact('singer' ));
+    }
+    public function update($singerId, Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name'	=> 'required',
+            'email' => [
+                'required',
+                Rule::unique('singers')->ignore($singerId),
+            ],
+        ]);
+
+        $singer = Singer::find($singerId);
+
+        $singer->name  = $request->name;
+        $singer->email = $request->email;
+
+        $singer->save();
+
+        // Exit
+        return redirect()->route('singers.show', [$singerId])->with(['status' => 'Singer saved. ']);
+    }
+
+
+    public function auditionpass($email): RedirectResponse
     {
 		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
 		

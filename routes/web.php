@@ -38,7 +38,9 @@ Route::middleware(['auth', 'employee'])->group(function() {
 	Route::get('/singers/export', 'SingersController@export')->name('singers.export');
 
 	Route::get('/singers/{singer}', 'SingersController@show')->name('singers.show');
-	
+	Route::get('/singers/{singer}/edit', 'SingersController@edit')->name('singers.edit');
+	Route::put('/singers/{singer}', 'SingersController@update')->name('singers.update');
+
 	Route::get('/singers/{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
 
     Route::get('/singers/{singer}/delete', 'SingersController@delete')->name('singer.delete');
