@@ -50,7 +50,7 @@ class SongAttachmentController extends Controller
 
         Storage::disk('public')->putFileAs( $attachment->getPathSong(), $file_data, $file_name );
 
-        return redirect()->route('songs.show', [$songId])->with(['category' => 'Attachment added. ', ]);
+        return redirect()->route('songs.show', [$songId])->with(['status' => 'Attachment added. ', ]);
     }
 
     public function delete($songId, $attachmentId): RedirectResponse
@@ -63,6 +63,6 @@ class SongAttachmentController extends Controller
 
         $attachment->delete();
 
-        return redirect()->route('songs.show', [$songId])->with(['category' => 'Attachment deleted. ', ]);
+        return redirect()->route('songs.show', [$songId])->with(['status' => 'Attachment deleted. ', ]);
     }
 }
