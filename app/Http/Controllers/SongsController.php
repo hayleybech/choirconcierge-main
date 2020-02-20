@@ -128,6 +128,15 @@ class SongsController extends Controller
         return redirect()->route('song.edit', [$songId]);
     }
 
+    public function delete($songId): RedirectResponse
+    {
+        $song = Song::find($songId);
+
+        $song->delete();
+
+        return redirect()->route('songs.index')->with(['status' => 'Song deleted. ', ]);
+    }
+
     public function getFilters(Request $request): array
     {
         return [

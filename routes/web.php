@@ -49,6 +49,7 @@ Route::middleware(['auth', 'employee'])->group(function() {
     Route::get('/songs/{song}', 'SongsController@show')->name('songs.show');
     Route::get('/songs/{song}/edit', 'SongsController@edit')->name('song.edit');
     Route::put('/songs/{song}', 'SongsController@update');
+    Route::get('/songs/{song}/delete', 'SongsController@delete')->name('song.delete');
 
     Route::post('/songs/{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
     Route::get('/songs/{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('song.attachments.delete');

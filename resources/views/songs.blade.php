@@ -56,6 +56,7 @@
                 <div class="r-table__heading column--category">Category</div>
                 <div class="r-table__heading column--pitch">Pitch</div>
                 <div class="r-table__heading column--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
+                <div class="r-table__heading column--actions">Actions</div>
             </div>
         </div>
         <div class="r-table__tbody">
