@@ -68,6 +68,13 @@ class SongsController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $request->validate([
+            'title'             => 'required|max:255',
+            'categories'        => 'required|exists:song_categories,id',
+            'status'            => 'required|exists:song_statuses,id',
+            'pitch_blown'       => 'required',
+        ]);
+
         $song = new Song();
         $song->title = $request->title;
         $song->pitch_blown = $request->pitch_blown;
