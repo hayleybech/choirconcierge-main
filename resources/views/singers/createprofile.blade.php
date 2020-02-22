@@ -4,11 +4,10 @@
 
 @section('content')
 
-<h2>Add Member Profile</h2>
+<h2 class="display-4 mb-4">{{$singer->name}}</h2>
 
+<h3>Add Member Profile</h3>
 @include('partials.flash')
-
-<h3>{{$singer->name}}</h3>
 
 {{ Form::open( array( 'route' => array('profile', $singer->id) ) ) }}
 

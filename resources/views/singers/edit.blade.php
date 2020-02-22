@@ -4,8 +4,9 @@
 
 @section('content')
 
-    <h2>Edit Singer</h2>
+    <h2 class="display-4 mb-4">{{$singer->name}}</h2>
 
+    <h3>Edit Singer</h3>
     @include('partials.flash')
 
     {{ Form::open( array( 'route' => ['singers.show', $singer->id], 'method' => 'put' ) ) }}

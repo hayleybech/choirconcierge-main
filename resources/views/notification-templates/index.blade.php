@@ -4,7 +4,7 @@
 
 @section('content')
 
-	<h2>Notification Templates</h2>
+	<h2 class="display-4 mb-4">Notification Templates</h2>
 	<p>This page lists notifications sent whenever a task is completed. </p>
 
 	@if (session('status'))

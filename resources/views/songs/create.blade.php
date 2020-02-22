@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <h2>Add Song</h2>
+    <h2 class="display-4 mb-4">Add Song</h2>
 
     @include('partials.flash')
 

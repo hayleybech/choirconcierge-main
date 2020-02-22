@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<h2>Dashboard</h2>
+<h2 class="display-4 mb-4">Dashboard</h2>
 
 <div class="card">
   <div class="card-header">

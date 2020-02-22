@@ -4,7 +4,8 @@
 
 @section('content')
 
-    <h2>Edit Song</h2>
+    <h2 class="display-4 mb-4">{{$song->title}}</h2>
+    <h3>Edit Song</h3>
 
     @include('partials.flash')
 

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <h2 class="mb-4">Songs <a href="{{route( 'song.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-user-plus"></i> Add New</a></h2>
+    <h2 class="display-4 mb-4">Songs <a href="{{route( 'song.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-user-plus"></i> Add New</a></h2>
 
     @include('partials.flash')
 

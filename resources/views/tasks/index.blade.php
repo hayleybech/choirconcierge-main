@@ -4,7 +4,7 @@
 
 @section('content')
 
-	<h2>Global Task List</h2>
+	<h2 class="display-4 mb-4">Global Task List</h2>
 	<p>This page lists the onboarding tasks the choir must complete for every singer. </p>
 
 	@if (session('status'))

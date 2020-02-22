@@ -4,7 +4,7 @@
 
 @section('content')
 
-	<h2 class="display-4">{{$singer->name}} <a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
+	<h2 class="display-4 mb-4">{{$singer->name}} <a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
 
 	@include('partials.flash')
 	
