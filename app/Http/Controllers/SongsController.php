@@ -152,7 +152,7 @@ class SongsController extends Controller
         $statuses_keyed = $statuses->mapWithKeys(function($item){
             return [ $item['id'] => $item['title'] ];
         });
-        $statuses_keyed->prepend('All Songs',0);
+        $statuses_keyed->prepend('Any status',0);
 
         return [
             'name'      => 'filter_status',
@@ -171,7 +171,7 @@ class SongsController extends Controller
         $categories_keyed = $categories->mapWithKeys(function($item){
             return [ $item['id'] => $item['title'] ];
         });
-        $categories_keyed->prepend('All Categories',0);
+        $categories_keyed->prepend('Any category',0);
 
         return [
             'name'      => 'filter_category',

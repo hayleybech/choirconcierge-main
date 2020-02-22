@@ -106,7 +106,7 @@ class SingersController extends Controller
         $categories_keyed = $categories->mapWithKeys(function($item){
             return [ $item['id'] => $item['name'] ];
         });
-        $categories_keyed->prepend('All Singers',0);
+        $categories_keyed->prepend('Any category',0);
 
         return [
             'name'      => 'filter_category',
@@ -134,7 +134,7 @@ class SingersController extends Controller
             'default'   => $default,
             'current'   => $request->input('filter_part', $default),
             'list'      => [
-                'all'   => 'All parts',
+                'all'   => 'Any part',
                 'tenor' => 'Tenor',
                 'lead'  => 'Lead',
                 'bari'  => 'Baritone',
@@ -159,7 +159,7 @@ class SingersController extends Controller
             'default'   => $default,
             'current'   => $request->input('filter_age', $default),
             'list'      => [
-                'all'    => 'All ages',
+                'all'    => 'Any age',
                 'adult'  => 'Over 18',
                 'child'  => 'Under 18',
             ],
