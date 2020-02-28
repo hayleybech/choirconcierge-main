@@ -70,9 +70,9 @@
             <canvas id="the-canvas"></canvas>
 
             <div class="page-controls">
-                <button id="prev" class="btn btn-secondary">Previous</button>
+                <button id="prev" class="btn btn-secondary"><i class="fa fa-fw fa-arrow-left"></i></button>
                 <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-                <button id="next" class="btn btn-secondary">Next</button>
+                <button id="next" class="btn btn-secondary"><i class="fa fa-fw fa-arrow-right"></i></button>
             </div>
         </div>
 

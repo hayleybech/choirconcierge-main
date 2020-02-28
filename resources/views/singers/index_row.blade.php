@@ -28,7 +28,7 @@
 					@php
 						if( $task->type === 'form' ){
 							$btn_style = 'btn-primary';
-							$icon_complete = 'fa-file-text-o';
+							$icon_complete = 'fa-file';
 							$action = 'Start';
 						} else {
 							$btn_style = 'btn-success';
@@ -51,10 +51,10 @@
 			<span class="singer-category badge badge-pill {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span>
 		</div>
         <div class="r-table__cell column--phone">
-            <span class="singer-phone"><i class="fa fa-phone"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
+            <span class="singer-phone"><i class="fa fa-phone-alt"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
         </div>
         <div class="r-table__cell column--age">
-            <span class="singer-age"><i class="fa fa-calendar-o"></i> {{ ( $singer->getAge() ) ? $singer->getAge() .'yrs' : 'None' }}</span>
+            <span class="singer-age"><i class="fa fa-calendar"></i> {{ ( $singer->getAge() ) ? $singer->getAge() .'yrs' : 'None' }}</span>
         </div>
         <div class="r-table__cell column--actions">
 

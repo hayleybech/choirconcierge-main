@@ -16,8 +16,8 @@
 	  <a href="#" class="list-group-item list-group-item-action">The Blenders Facebook Chat (New)</a>-->
 	  
 		@if( Auth::user()->hasRole('Admin') )
-		<a href="{{ route('users.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-group"></i> Users List</a>
-		<a href="{{ route('tasks.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-list-alt"></i> Tasks List</a>
+		<a href="{{ route('users.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-sitemap"></i> Users List</a>
+		<a href="{{ route('tasks.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-tasks"></i> Tasks List</a>
 		@endif
 
 	  	{{--
@@ -28,7 +28,7 @@
 		<a href="{{ route('voiceplacement.new') }}" class="list-group-item list-group-item-action" target="_blank"><i class="fa fa-plus"></i> Voice Placement</a>
 		@endif--}}
 		@if( Auth::user()->isEmployee() )
-		<a href="{{ route('singers.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-list-alt"></i> Singers List</a>
+		<a href="{{ route('singers.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-users"></i> Singers List</a>
         <a href="{{ route('songs.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-music"></i> Songs List</a>
 		@endif
   </div>

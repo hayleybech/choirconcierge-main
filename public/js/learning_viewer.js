@@ -142,18 +142,13 @@ class LearningViewer {
     getAttachmentIcon(track) {
         switch(track.category_id) {
             case TRACK_CAT_SHEET:
-                //return 'fa-file-pdf';
-                return 'fa-file';
+                return 'fa-file-pdf';
             case TRACK_CAT_DEMO:
-                //return 'fa-record-vinyl';
-                //return 'fa-compact-disc';
-                //return 'fa-music-alt';
-                return 'fa-headphones';
+                return 'fa-compact-disc';
             case TRACK_CAT_LEARN:
-                //return 'fa-file-audio';
-                return 'fa-music';
+                return 'fa-file-audio';
             default:
-                return 'fa-file';
+                return 'fa-file-alt';
         }
     }
 

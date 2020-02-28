@@ -64,7 +64,7 @@
 
 							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 								
-								<a class="dropdown-item {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+								<a class="dropdown-item {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-tachometer-alt fa-fw"></i> Dashboard</a>
 
 								@if( Auth::user()->isEmployee() )
 									<div class="dropdown-divider"></div>
@@ -74,7 +74,7 @@
 								
 								@if( Auth::user()->hasRole('Admin') )
 									<div class="dropdown-divider"></div>
-									<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-list-alt fa-fw"></i> Tasks</a>
+									<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-tasks fa-fw"></i> Tasks</a>
 									<a href="{{ route('notification-templates.index') }}" class="dropdown-item"><i class="fa fa-clone fa-fw"></i> Templates</a>
 									<a href="{{ route('users.index') }}" class="dropdown-item"><i class="fa fa-sitemap fa-fw"></i> Team</a>
 								@endif
@@ -92,7 +92,7 @@
 									class="dropdown-item {{ ( \Request::is('logout') ) ? 'active' : '' }}"
 									onclick="event.preventDefault();
 											 document.getElementById('logout-form').submit();">
-									<i class="fa fa-sign-out fa-fw"></i> Logout
+									<i class="fa fa-sign-out-alt fa-fw"></i> Logout
 								</a>
 								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 									{{ csrf_field() }}
@@ -120,7 +120,8 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 
-    <script src="https://use.fontawesome.com/7679517f07.js"></script>
+    <!--<script src="https://use.fontawesome.com/7679517f07.js"></script>-->
+	<script src="https://kit.fontawesome.com/baff915cc9.js" crossorigin="anonymous"></script>
 	
 	<script>
 	  var HW_config = {
