@@ -83,6 +83,7 @@ class LearningViewer {
                 sheets.push( song.attachments[i] );
             }
         }
+        pageNum = 1; // viewer won't auto reset page num
         openDocument( sheets[0].download_url );
     }
 
