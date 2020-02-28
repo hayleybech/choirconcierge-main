@@ -4,6 +4,7 @@
 
 @section('content')
     
+    <!--suppress VueDuplicateTag -->
     <h2 class="display-4 mb-4">{{$song->title}} <a href="{{route( 'song.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
 
     @include('partials.flash')
@@ -20,7 +21,7 @@
         </ul>
     </p>
     <p class="mb-2 text-muted">
-        Pitch Blown: {{ $song->getPitchBlown() }}
+        Pitch Blown: {{ $song->pitch }}
     </p>
 
     <h3>Attachments</h3>
@@ -82,5 +83,21 @@
 
         </div>
     </div>
+
+    @push('scripts-footer-bottom')
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
+        <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
+
+        <script>
+            var howl = new Howl({
+                src: [
+                @foreach($song->attachments as $attachment)
+                    '{{ $attachment->download_url }}',
+                @endforeach
+                ]
+            });
+            //howl.play();
+        </script>
+    @endpush
 
 @endsection

@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Storage;
 
 class SongAttachment extends Model
 {
+    protected $appends = [
+        'download_url',
+    ];
+
     public function song(): BelongsTo
     {
         return $this->belongsTo('App\Song');
@@ -18,7 +22,7 @@ class SongAttachment extends Model
         return $this->belongsTo('App\SongAttachmentCategory', 'category_id');
     }
 
-    public function getDownloadUrl(): string
+    public function getDownloadUrlAttribute(): string
     {
         return Storage::url($this->getPath());
     }
