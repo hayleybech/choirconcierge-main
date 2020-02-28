@@ -42,7 +42,7 @@
         <div class="audio-panel">
             <div class="audio-controls">
                 <div class="track-title">Full Mix - Touch of Paradise</div>
-                <input type="range" class="audio-seek" value="0" min="0" max="1" step="0.001">
+                <input type="range" class="audio-seek custom-range" value="0" min="0" max="1" step="0.001">
                 <div class="play-controls">
                     <!--<button class="prev btn btn-secondary"><i class="fa fa-fast-backward"></i></button>-->
                     <button class="play btn btn-primary"><i class="fa fa-play"></i></button>
