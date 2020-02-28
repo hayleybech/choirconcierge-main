@@ -57,11 +57,55 @@ class SongsController extends Controller
         return view('songs.index', compact('songs', 'filters', 'sorts') );
     }
 
+    public function learning(Request $request): View
+    {
+        // Base query
+        $songs = Song::with(['attachments']);
+
+        // Filter songs
+        $where = [];
+        $filters = $this->getFilters($request);
+
+        // Filter by status
+        if($filters['status']['current'] !== 0) {
+            $where[] = ['status_id', '=', $filters['status']['current']];
+        }
+        $songs = $songs->where($where);
+
+        // Filter by category
+        if($filters['category']['current'] !== 0) {
+            $current = $filters['category']['current'];
+            $songs = $songs->whereHas('categories', function($query) use($current) {
+                $query->where('category_id', '=', $current);
+            });
+        }
+
+        // Finish and fetch
+        $songs = $songs->get();
+
+        // Sort
+        $sort_by = $request->input('sort_by', 'name');
+        $sort_dir = $request->input('sort_dir', 'asc');
+
+        // Flip direction for date (so we sort by smallest age not smallest timestamp)
+        if($sort_by === 'created_at') $sort_dir = ($sort_dir === 'asc') ? 'desc' : 'asc';
+
+        if( $sort_dir === 'asc') {
+            $songs = $songs->sortBy($sort_by);
+        } else {
+            $songs = $songs->sortByDesc($sort_by);
+        }
+
+        $sorts = $this->getSorts($request);
+
+        return view('songs.learning', compact('songs', 'filters', 'sorts') );
+    }
+
     public function create(): View
     {
         $categories = SongCategory::all();
         $statuses = SongStatus::all();
-        $pitches = Song::getAllPitchesByMode();
+        $pitches = Song::KEYS;
 
         return view('songs.create', compact('categories', 'statuses', 'pitches') );
     }
@@ -106,7 +150,7 @@ class SongsController extends Controller
         $song = Song::find($songId);
         $categories = SongCategory::all();
         $statuses = SongStatus::all();
-        $pitches = Song::getAllPitchesByMode();
+        $pitches = Song::KEYS;
 
         return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
     }

@@ -132,6 +132,8 @@
     
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/script.js') }}"></script>
+
+	@stack('scripts-footer-bottom')
 	
 </body>
 </html>
