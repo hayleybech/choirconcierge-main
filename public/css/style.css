@@ -1,11 +1,34 @@
 /* Base Styles */
-a.disabled:hover {
-    cursor: default;
+html, body {
+	height: 100%;
+}
+#app {
+	display: flex;
+	height: 100%;
+}
+main {
+	flex: 1 0 auto;
+	padding-top: 20px;
 }
 
 /* Header */
-nav {
-	margin-bottom: 10px;
+#app-header {
+
+}
+#app-header nav {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: stretch;
+	height: 100%;
+}
+.navbar .nav-vertical {
+	flex-flow: column nowrap;
+}
+.nav-vertical .nav-separator {
+	height: 0;
+	margin: .5rem 0;
+	overflow: hidden;
+	border-top: 1px solid #e9ecef;
 }
 
 .logo {
@@ -14,6 +37,22 @@ nav {
 	max-height: 100px;
 	margin-top: 20px;*/
 	height: 50px;
+}
+.logo-collapse {
+	display: none;
+}
+@media screen and (max-width: 767px) {
+	/* Collapse menu by default on small screens */
+	.logo,
+	.link-text {
+		display: none;
+	}
+	.logo-collapse {
+		display: block;
+	}
+}
+a.disabled:hover {
+    cursor: default;
 }
 
 /* Singers List */
@@ -307,6 +346,7 @@ i.fa.fa-external-link {
 #changelog-link #HW_badge_cont {
 	position: absolute;
 	top: -5px;
+	right: 0;
 }
 
 /* Accordion / Collapse */

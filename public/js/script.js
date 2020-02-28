@@ -8,6 +8,25 @@ $( document ).ready(function() {
         return confirm( 'Are you sure? Action:' + e.target.innerText );
     });
 
+	// Setup menu collapse
+	$menu_collapsibles = $('.logo, .logo-collapse, .link-text');
+	$collapse_link = $('a.nav-collapse-link');
+	$collapse_icon = $collapse_link.find('i');
+	$collapse_link.on('click', function(e){
+	    // Swap logo and toggle text
+        $menu_collapsibles.toggle();
+
+        // Toggle expand/collapse icon
+        $collapse_icon.toggleClass('fa-caret-square-left fa-caret-square-right');
+
+	    e.preventDefault();
+    });
+
+	// Set initial menu state
+    if( $('.logo-collapse').is(':visible') ) {
+        $collapse_icon.toggleClass('fa-caret-square-left fa-caret-square-right');
+    }
+
     bsCustomFileInput.init();
 });
 
