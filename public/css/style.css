@@ -1,24 +1,58 @@
 /* Base Styles */
-html, body {
+a.disabled:hover {
+	cursor: default;
+}
+
+/****** APP LAYOUT ******/
+html, body, #app {
 	height: 100%;
+	width: 100%;
 }
 #app {
 	display: flex;
+	flex-flow: column nowrap;
+}
+#app-top {
+	display: flex;
+	flex-flow: row nowrap;
+	flex: 1 1 auto;
+	position: relative;
+	align-content: flex-start;
+	overflow: hidden;
+}
+#app-bottom {
+
+}
+
+/*** APP TOP ***/
+#app-header {
+	flex: 0;
+}
+#app-header.fullscreen {
+	position: absolute;
+	width: 100%;
 	height: 100%;
+	z-index: 1000;
 }
 main {
 	flex: 1 0 auto;
 	padding-top: 20px;
+	overflow-y: scroll;
+	max-height: 100%;
+	max-width: 100%;
+}
+@media screen and (max-width: 767px) {
+	#app-header {
+		display: none;
+	}
 }
 
 /* Header */
-#app-header {
-
-}
-#app-header nav {
+#app-header .navbar {
 	display: flex;
 	flex-flow: column nowrap;
 	align-items: stretch;
+	justify-content: flex-start;
 	height: 100%;
 }
 .navbar .nav-vertical {
@@ -43,16 +77,34 @@ main {
 }
 @media screen and (max-width: 767px) {
 	/* Collapse menu by default on small screens */
-	.logo,
-	.link-text {
+	/*header .logo,
+	header.link-text {
 		display: none;
 	}
 	.logo-collapse {
 		display: block;
-	}
+	}*/
 }
-a.disabled:hover {
-    cursor: default;
+
+/* MOBILE TAP BAR */
+.tap-bar {
+	display: none;
+
+	flex: 1 0 auto;
+	position: relative;
+	width: 100%;
+	background-color: white;
+	padding: 10px;
+	z-index: 10000;
+}
+.tap-bar .nav-item i {
+	display: block;
+	margin: 0 auto;
+}
+@media screen and (max-width: 767px) {
+	.tap-bar {
+		display: block;
+	}
 }
 
 /* Singers List */

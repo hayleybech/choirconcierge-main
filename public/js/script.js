@@ -9,7 +9,7 @@ $( document ).ready(function() {
     });
 
 	// Setup menu collapse
-	$menu_collapsibles = $('.logo, .logo-collapse, .link-text');
+	$menu_collapsibles = $('#app-header .navbar .logo, #app-header .navbar .logo-collapse, #app-header .navbar .link-text');
 	$collapse_link = $('a.nav-collapse-link');
 	$collapse_icon = $collapse_link.find('i');
 	$collapse_link.on('click', function(e){
@@ -26,6 +26,14 @@ $( document ).ready(function() {
     if( $('.logo-collapse').is(':visible') ) {
         $collapse_icon.toggleClass('fa-caret-square-left fa-caret-square-right');
     }
+
+    // Setup mobile menu collapse
+    $('.mobile-nav-collapse-link').on('click', function (e) {
+        //$menu_collapsibles.toggle();
+        $('#app-header').toggleClass('fullscreen').toggle();
+
+        e.preventDefault();
+    });
 
     bsCustomFileInput.init();
 });

@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -18,105 +19,133 @@
 </head>
 <body>
     <div id="app">
-		<header id="app-header">
 
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-				<a class="" href="{{ url('/') }}">
-					<img src="/img/logo.png" alt="Choir Concierge" class="logo">
-					<img src="/favicon.png" alt="Choir Concierge" class="logo-collapse">
-				</a>
+		<div id="app-top">
+
+			<header id="app-header">
+
+				<nav class="navbar navbar-expand-lg navbar-light bg-light">
+					<a class="" href="{{ url('/') }}">
+						<img src="/img/logo.png" alt="Choir Concierge" class="logo">
+						<img src="/favicon.png" alt="Choir Concierge" class="logo-collapse">
+					</a>
 
 
-				<ul class="navbar-nav nav-vertical">
-					<!-- Authentication Links -->
-					@guest
-					<li class="nav-item {{ ( \Request::is('login') ) ? 'active' : '' }}">
-						<a href="{{ route('login') }}" class="nav-link"><i class="fa fa-sign-in fa-fw"></i> Login</a>
-					</li>
-					<li class="nav-item {{ ( \Request::is('register') ) ? 'active' : '' }}">
-						<a href="{{ route('register') }}" class="nav-link"><i class="fa fa-user-plus fa-fw"></i> Register</a>
-					</li>
-					@else
+					<ul class="navbar-nav nav-vertical">
+						<!-- Authentication Links -->
+						@guest
+							<li class="nav-item {{ ( \Request::is('login') ) ? 'active' : '' }}">
+								<a href="{{ route('login') }}" class="nav-link"><i class="fa fa-sign-in fa-fw"></i> Login</a>
+							</li>
+							<li class="nav-item {{ ( \Request::is('register') ) ? 'active' : '' }}">
+								<a href="{{ route('register') }}" class="nav-link"><i class="fa fa-user-plus fa-fw"></i> Register</a>
+							</li>
+						@else
 
-					<li class="nav-item">
-						<a class="nav-link {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-tachometer-alt fa-fw"></i><span class="link-text"> Dashboard</span></a>
-					</li>
+							<li class="nav-item">
+								<a class="nav-link {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-tachometer-alt fa-fw"></i><span class="link-text"> Dashboard</span></a>
+							</li>
 
-					{{--<li class="nav-item dropdown">
-						<a href="#" id="notificationsDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-							<i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">{{$notifications->count()}}</span>
-						</a>
+							{{--<li class="nav-item dropdown">
+                                <a href="#" id="notificationsDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                                    <i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">{{$notifications->count()}}</span>
+                                </a>
 
-						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
-							@foreach( $notifications as $notification )
-								<span class="dropdown-item text-muted"><strong>{{ $notification->data['subject'] }}</strong><br> {{ $notification->data['body'] }}</span>
-							@endforeach
-						</div>
-					</li>--}}
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
+                                    @foreach( $notifications as $notification )
+                                        <span class="dropdown-item text-muted"><strong>{{ $notification->data['subject'] }}</strong><br> {{ $notification->data['body'] }}</span>
+                                    @endforeach
+                                </div>
+                            </li>--}}
 
-					@if( Auth::user()->isEmployee() )
-					<li class="nav-item nav-separator"></li>
-					<li class="nav-item">
-						<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
-					</li>
-					<li class="nav-item">
-						<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs.index') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
-					</li>
-					@endif
+							@if( Auth::user()->isEmployee() )
+								<li class="nav-item nav-separator"></li>
+								<li class="nav-item">
+									<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
+								</li>
+								<li class="nav-item">
+									<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs.index') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
+								</li>
+							@endif
 
-					@if( Auth::user()->hasRole('Admin') )
-					<li class="nav-item nav-separator"></li>
-					<li class="nav-item">
-						<a href="{{ route('tasks.index') }}" class="nav-link"><i class="fa fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
-					</li>
-					<li class="nav-item">
-						<a href="{{ route('notification-templates.index') }}" class="nav-link"><i class="fa fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
-					</li>
-					<li class="nav-item">
-						<a href="{{ route('users.index') }}" class="nav-link"><i class="fa fa-sitemap fa-fw"></i><span class="link-text"> Team</span></a>
-					</li>
-					@endif
+							@if( Auth::user()->hasRole('Admin') )
+								<li class="nav-item nav-separator"></li>
+								<li class="nav-item">
+									<a href="{{ route('tasks.index') }}" class="nav-link"><i class="fa fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
+								</li>
+								<li class="nav-item">
+									<a href="{{ route('notification-templates.index') }}" class="nav-link"><i class="fa fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
+								</li>
+								<li class="nav-item">
+									<a href="{{ route('users.index') }}" class="nav-link"><i class="fa fa-sitemap fa-fw"></i><span class="link-text"> Team</span></a>
+								</li>
+							@endif
 
-					<li class="nav-item nav-separator"></li>
+							<li class="nav-item nav-separator"></li>
 
-					<li class="nav-item">
-						<a href="#" class="nav-link">
-							<i class="fa fa-user-circle fa-fw"></i><span class="link-text"> {{ Auth::user()->name }}</span>
-						</a>
-					</li>
+							<li class="nav-item">
+								<a href="#" class="nav-link">
+									<i class="fa fa-user-circle fa-fw"></i><span class="link-text"> {{ Auth::user()->name }}</span>
+								</a>
+							</li>
 
-					<li class="nav-item">
-						<a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="nav-link"><i class="fa fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
-					</li>
+							<li class="nav-item">
+								<a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="nav-link"><i class="fa fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
+							</li>
 
-					<li class="nav-item">
-						<a href="{{ route('logout') }}"
-						   class="nav-link {{ ( \Request::is('logout') ) ? 'active' : '' }}"
-						   onclick="event.preventDefault();
+							<li class="nav-item">
+								<a href="{{ route('logout') }}"
+								   class="nav-link {{ ( \Request::is('logout') ) ? 'active' : '' }}"
+								   onclick="event.preventDefault();
 									 document.getElementById('logout-form').submit();">
-							<i class="fa fa-sign-out-alt fa-fw"></i> <span class="link-text">Logout</span>
-						</a>
-						<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-							{{ csrf_field() }}
-						</form>
-					</li>
+									<i class="fa fa-sign-out-alt fa-fw"></i> <span class="link-text">Logout</span>
+								</a>
+								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+									{{ csrf_field() }}
+								</form>
+							</li>
 
-					@endguest
+						@endguest
 
-					<li class="nav-item">
-						<a href="" class="nav-link nav-collapse-link"><i class="fa fa-fw fa-caret-square-left"></i><span class="link-text"> Collapse Menu</span></a>
-					</li>
-				</ul>
+						<li class="nav-item">
+							<a href="" class="nav-link nav-collapse-link"><i class="fa fa-fw fa-caret-square-left"></i><span class="link-text"> Collapse Menu</span></a>
+						</li>
+					</ul>
 
-			</nav>
-		</header>
+				</nav>
 
+			</header>
 
-		<main>
-			<div class="container">
-			@yield('content')
-			</div>
-		</main>
+			<main>
+				<div class="container">
+					@yield('content')
+				</div>
+			</main>
+		</div>
+
+		<div id="app-bottom">
+			@guest
+			@else
+				<nav class="tap-bar">
+					<ul class="nav nav-pills nav-fill">
+						<li class="nav-item">
+							<a class="nav-link {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-tachometer-alt fa-fw"></i><span class="link-text"> Dashboard</span></a>
+						</li>
+						@if( Auth::user()->isEmployee() )
+							<li class="nav-item">
+								<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers', 'singers/*') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
+							</li>
+							<li class="nav-item">
+								<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs', 'songs/*') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
+							</li>
+						@endif
+						<li class="nav-item">
+							<a href="" class="nav-link mobile-nav-collapse-link"><i class="fa fa-fw fa-ellipsis-v"></i><span class="link-text"> More</span></a>
+						</li>
+					</ul>
+				</nav>
+			@endguest
+		</div>
     </div>
 
     <!-- Scripts -->
