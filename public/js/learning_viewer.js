@@ -15,11 +15,11 @@ class LearningViewer {
         this.el_song_list = this.el.querySelector('.song-list');
         this.el_track_list = this.el.querySelector('.track-list');
         this.el_playing_title = this.el.querySelector('.track-title');
-        this.el_pitch = this.el.querySelector('.pitch .key');
 
         this.player = new Player(document.querySelector('.audio-panel'));
         //this.viewer = new PDFViewer;
         this.synth = new Tone.Synth().toMaster();
+        this.pitch_pipe = new Pitch_Pipe('.pitch');
 
         this.bindAll();
         this.openSong(0);
@@ -28,8 +28,8 @@ class LearningViewer {
     openSong(id) {
         this.current_song = parseInt(id);
 
-        // Display song key
-        this.el_pitch.textContent = this.songs[id].pitch;
+        // Set key
+        this.pitch_pipe.setKey(this.songs[id].pitch);
 
         // Update song list
         this.setActiveSongBtn();
@@ -167,13 +167,6 @@ class LearningViewer {
             self.openSongTrack(id);
 
             e.preventDefault();
-        });
-
-        document.querySelector('.pitch').addEventListener('click', function(){
-            const DEFAULT_OCTAVE = 4;
-            const DEFAULT_DURATION = '1m';
-            let pitch = self.songs[self.current_song].pitch + DEFAULT_OCTAVE.toString();
-            self.synth.triggerAttackRelease( pitch, DEFAULT_DURATION);
         });
     }
 

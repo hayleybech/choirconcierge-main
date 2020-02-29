@@ -21,7 +21,7 @@
         </ul>
     </p>
     <p class="mb-2 text-muted">
-        Pitch Blown: {{ $song->pitch }}
+        Pitch Blown: <button class="pitch btn btn-secondary btn-sm"><i class="fa fa-play"></i> <span class="key">{{ $song->pitch }}</span></button>
     </p>
 
     <h3>Attachments</h3>
@@ -85,18 +85,11 @@
     </div>
 
     @push('scripts-footer-bottom')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js" integrity="sha256-/Q4ZPy6sMbk627wHxuaWSIXS1y7D2KnMhsm/+od7ptE=" crossorigin="anonymous"></script>
-        <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
-
+        <script src="{{ asset('js/lib/Tone.js') }}"></script>
+        <script src="{{ asset('js/Pitch_Pipe.js') }}"></script>
         <script>
-            var howl = new Howl({
-                src: [
-                @foreach($song->attachments as $attachment)
-                    '{{ $attachment->download_url }}',
-                @endforeach
-                ]
-            });
-            //howl.play();
+            let synth = new Tone.Synth().toMaster();
+            let pipe = new Pitch_Pipe( '.pitch', @json($song->pitch) );
         </script>
     @endpush
 

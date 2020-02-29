@@ -88,6 +88,7 @@
 
     <script src="{{ asset('js/viewer.js') }}"></script>
     <script src="{{ asset('js/player.js') }}"></script>
+    <script src="{{ asset('js/Pitch_Pipe.js') }}"></script>
     <script src="{{ asset('js/learning_viewer.js') }}"></script>
 
     <script>
