@@ -93,7 +93,8 @@ class EventsController extends Controller
     {
         $event = Event::find($eventId);
         $event->title = $request->title;
-        $event->start_date = strtotime($request->start_date);
+        $datetime = date("Y-m-d H:i:s", strtotime($request->start_date));
+        $event->start_date = $datetime;
         $event->location = $request->location;
 
 
