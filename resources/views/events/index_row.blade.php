@@ -11,13 +11,23 @@
         {{ $event->type->title }}
     </div>
     <div class="r-table__cell column--start-date">
-        {{ $event->start_date }}
+        <div class="date__diff-for-humans">
+            {{ $event->start_date->diffForHumans() }}
+        </div>
+        <div class="date__regular">
+            {{ $event->start_date->format('M d, H:i') }}
+        </div>
     </div>
     <div class="r-table__cell column--location">
         {{ $event->location }}
     </div>
     <div class="r-table__cell column--created">
-        {{ $event->created_at->diffForHumans() }}
+        <div class="date__diff-for-humans">
+            {{ $event->created_at->diffForHumans() }}
+        </div>
+        <div class="date__regular">
+            {{ $event->created_at->format('M d, H:i') }}
+        </div>
     </div>
     <div class="r-table__cell column--actions">
         <a href="{{route( 'event.delete', ['event' => $event] )}}" class="link-confirm btn btn-outline-danger btn-sm ml-2"><i class="fa fa-fw fa-trash"></i></a>

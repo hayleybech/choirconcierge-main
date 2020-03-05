@@ -227,6 +227,20 @@ main {
 	grid-area: actions;
 }
 
+/* Event date */
+.column--start-date {
+	flex-flow: column nowrap;
+	align-items: flex-start;
+}
+.date__regular {
+	font-size: 0.8em;
+	color: #999;
+}
+.column--created {
+	flex-flow: column nowrap;
+	align-items: flex-start;
+}
+
 .progress {
 	height: 0.7rem;
 	width: 80px;

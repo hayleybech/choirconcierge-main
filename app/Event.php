@@ -17,6 +17,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Event extends Model
 {
+    public $dates = [
+        'updated_at',
+        'created_at',
+        'start_date',
+    ];
+
     public function type(): BelongsTo
     {
         return $this->belongsTo('App\EventType', 'type_id');
