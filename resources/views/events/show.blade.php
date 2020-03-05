@@ -9,16 +9,28 @@
 
     @include('partials.flash')
 
-    <p class="mb-2 text-muted">
-        Event Type: {{ $event->type->title }}
-    </p>
+    <div class="event-summary">
+        <p class="mb-2 text-muted">
+            Event Type: {{ $event->type->title }}
+        </p>
 
-    <p class="mb-2 text-muted">
-        Start Date: {{ $event->start_date }}
-    </p>
-    <p class="mb-2 text-muted">
-        Location: {{ $event->location }}
-    </p>
+        <p class="mb-2 text-muted">
+            Start Date: {{ $event->start_date }}
+        </p>
+        <p class="mb-2 text-muted">
+            Location: {{ $event->location }}
+        </p>
+    </div>
+
+    <div class="event-map google-maps">
+        <iframe
+                width="600"
+                height="450"
+                frameborder="0" style="border:0"
+                src="https://www.google.com/maps/embed/v1/place?key=<?= env('API_GOOGLE_KEY') ?>&q=<?= urlencode($event->location)?>"
+                allowfullscreen>
+        </iframe>
+    </div>
 
 
 @endsection
