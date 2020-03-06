@@ -37,7 +37,7 @@
 
     <div class="form-group">
         {{ Form::label('location', 'Location') }}
-        {{ Form::text('location', '', array('class' => 'form-control')) }}
+        {{ Form::textarea('location', '', array('class' => 'form-control', 'rows' => '3')) }}
     </div>
 
     {{ Form::submit('Create', array( 'class' => 'btn btn-primary' )) }}
