@@ -23,8 +23,11 @@ class CreateEventsTables extends Migration
             $table->increments('id');
             $table->string('title');
             $table->integer('type_id');
-            $table->timestamp('start_date');
-            $table->string('location');
+            $table->timestamp('call_time')->useCurrent();
+            $table->timestamp('start_date')->useCurrent();
+            $table->timestamp('end_date')->useCurrent();
+            $table->string('location')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
