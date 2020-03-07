@@ -53,22 +53,18 @@ class EventsController extends Controller
         return view('events.create', compact( 'types') );
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(): RedirectResponse
     {
-        $request->validate([
-            'title'             => 'required|max:255',
-            'type'              => 'required|exists:event_types,id',
-            'start_date'        => 'required',
-        ]);
+        $data = $this->validateRequest();
 
         $event = new Event();
-        $event->title = $request->title;
-        $datetime = date("Y-m-d H:i:s", strtotime($request->start_date));
+        $event->title = $data->title;
+        $datetime = date("Y-m-d H:i:s", strtotime($data->start_date));
         $event->start_date = $datetime;
-        $event->location = $request->location;
+        $event->location = $data->location;
 
         // Associate status
-        $type = EventType::find($request->type);
+        $type = EventType::find($data->type);
         $type->events()->save($event);
 
         return redirect('/events')->with(['status' => 'Event created. ', ]);
@@ -89,17 +85,19 @@ class EventsController extends Controller
         return view('events.edit', compact('event',  'types'));
     }
 
-    public function update($eventId, Request $request): RedirectResponse
+    public function update($eventId): RedirectResponse
     {
+        $data = $this->validateRequest();
+
         $event = Event::find($eventId);
-        $event->title = $request->title;
-        $datetime = date("Y-m-d H:i:s", strtotime($request->start_date));
+        $event->title = $data->title;
+        $datetime = date("Y-m-d H:i:s", strtotime($data->start_date));
         $event->start_date = $datetime;
-        $event->location = $request->location;
+        $event->location = $data->location;
 
 
         // Associate status
-        $type = EventType::find($request->type);
+        $type = EventType::find($data->type);
         $type->events()->save($event);
 
         return redirect()->route('event.edit', [$eventId]);
@@ -176,5 +174,17 @@ class EventsController extends Controller
             ];
         }
         return $sorts;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function validateRequest()
+    {
+        return request()->validate([
+            'title' => 'required|max:255',
+            'type' => 'required|exists:event_types,id',
+            'start_date' => 'required',
+        ]);
     }
 }
