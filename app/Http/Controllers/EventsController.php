@@ -182,9 +182,13 @@ class EventsController extends Controller
     public function validateRequest()
     {
         return request()->validate([
-            'title' => 'required|max:255',
-            'type' => 'required|exists:event_types,id',
-            'start_date' => 'required',
+            'title'         => 'required|max:255',
+            'type'          => 'required|exists:event_types,id',
+            'call_time'     => 'required|data_format:Y-m-d H:i:s|before:start_date',
+            'start_date'    => 'required|date_format:Y-m-d H:i:s',
+            'end_date'      => 'required|date_format:Y-m-d H:i:s|after:start_date',
+            'location'      => 'nullable',
+            'description'   => 'nullable',
         ]);
     }
 }
