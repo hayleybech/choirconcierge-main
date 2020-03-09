@@ -58,13 +58,15 @@ class EventsController extends Controller
         $data = $this->validateRequest();
 
         $event = new Event();
-        $event->title = $data->title;
-        $datetime = date("Y-m-d H:i:s", strtotime($data->start_date));
-        $event->start_date = $datetime;
-        $event->location = $data->location;
+        $event->title = $data['title'];
+        $event->start_date = $data['start_date'];
+        $event->end_date = $data['end_date'];
+        $event->call_time = $data['call_time'];
+        $event->location = $data['location'];
+        $event->description = $data['description'];
 
         // Associate status
-        $type = EventType::find($data->type);
+        $type = EventType::find($data['type']);
         $type->events()->save($event);
 
         return redirect('/events')->with(['status' => 'Event created. ', ]);
@@ -90,14 +92,16 @@ class EventsController extends Controller
         $data = $this->validateRequest();
 
         $event = Event::find($eventId);
-        $event->title = $data->title;
-        $datetime = date("Y-m-d H:i:s", strtotime($data->start_date));
-        $event->start_date = $datetime;
-        $event->location = $data->location;
+        $event->title = $data['title'];
+        $event->start_date = $data['start_date'];
+        $event->end_date = $data['end_date'];
+        $event->call_time = $data['call_time'];
+        $event->location = $data['location'];
+        $event->description = $data['description'];
 
 
         // Associate status
-        $type = EventType::find($data->type);
+        $type = EventType::find($data['type']);
         $type->events()->save($event);
 
         return redirect()->route('event.edit', [$eventId]);
@@ -184,7 +188,7 @@ class EventsController extends Controller
         return request()->validate([
             'title'         => 'required|max:255',
             'type'          => 'required|exists:event_types,id',
-            'call_time'     => 'required|data_format:Y-m-d H:i:s|before:start_date',
+            'call_time'     => 'required|date_format:Y-m-d H:i:s|before:start_date',
             'start_date'    => 'required|date_format:Y-m-d H:i:s',
             'end_date'      => 'required|date_format:Y-m-d H:i:s|after:start_date',
             'location'      => 'nullable',

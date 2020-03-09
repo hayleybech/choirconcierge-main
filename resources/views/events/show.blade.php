@@ -15,10 +15,16 @@
         </p>
 
         <p class="mb-2 text-muted">
-            Start Date: {{ $event->start_date }}
+            Event Date: {{ $event->start_date->format('M d, H:i') }} to {{ $event->end_date->format('M d, H:i') }}
+        </p>
+        <p class="mb-2 text-muted">
+            Call Time: {{ $event->call_time->format('M d, H:i') }}
         </p>
         <p class="mb-2 text-muted">
             Location: {{ $event->location }}
+        </p>
+        <p class="mb-2 text-muted">
+            Description: {{ $event->description }}
         </p>
     </div>
 
