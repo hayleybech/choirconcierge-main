@@ -32,8 +32,8 @@
                 <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
             </div>
             {{ Form::text('date_range', '', array('class' => 'form-control events-date-range-picker')) }}
-            {{ Form::text('start_date', '', array('class' => 'start-date-hidden')) }}
-            {{ Form::text('end_date', '', array('class' => 'end-date-hidden')) }}
+            {{ Form::hidden('start_date', '', array('class' => 'start-date-hidden')) }}
+            {{ Form::hidden('end_date', '', array('class' => 'end-date-hidden')) }}
 
         </div>
     </div>
@@ -45,7 +45,7 @@
                 <span class="input-group-text"><i class="fa fa-fw fa-clock"></i></span>
             </div>
             {{ Form::text('call_time_input', '', array('class' => 'form-control events-single-date-picker')) }}
-            {{ Form::text('call_time', '', array('class' => 'call-time-hidden')) }}
+            {{ Form::hidden('call_time', '', array('class' => 'call-time-hidden')) }}
         </div>
     </div>
 
