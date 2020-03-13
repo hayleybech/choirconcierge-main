@@ -496,6 +496,18 @@ i.fa.fa-external-link {
 
 
 
+/* Location input */
+.place-icon {
+	height: 1em;
+	width: 1em;
+	background-size: cover;
+	display: inline-block;
+}
+.place-name {
+	font-weight: 600;
+}
+
+
 /** RESPONSIVE GOOGLE MAPS EMBED **/
 .google-maps {
 	position: relative;

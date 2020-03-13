@@ -26,7 +26,10 @@ class CreateEventsTables extends Migration
             $table->timestamp('call_time')->useCurrent();
             $table->timestamp('start_date')->useCurrent();
             $table->timestamp('end_date')->useCurrent();
-            $table->string('location')->nullable();
+            $table->string('location_place_id')->nullable();
+            $table->string('location_icon')->nullable();
+            $table->string('location_name')->nullable();
+            $table->string('location_address')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
         });

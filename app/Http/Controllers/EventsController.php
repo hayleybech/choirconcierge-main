@@ -62,7 +62,10 @@ class EventsController extends Controller
         $event->start_date = $data['start_date'];
         $event->end_date = $data['end_date'];
         $event->call_time = $data['call_time'];
-        $event->location = $data['location'];
+        $event->location_place_id = $data['location_place_id'];
+        $event->location_icon = $data['location_icon'];
+        $event->location_name = $data['location_name'];
+        $event->location_address = $data['location_address'];
         $event->description = $data['description'];
 
         // Associate status
@@ -96,7 +99,10 @@ class EventsController extends Controller
         $event->start_date = $data['start_date'];
         $event->end_date = $data['end_date'];
         $event->call_time = $data['call_time'];
-        $event->location = $data['location'];
+        $event->location_place_id = $data['location_place_id'];
+        $event->location_icon = $data['location_icon'];
+        $event->location_name = $data['location_name'];
+        $event->location_address = $data['location_address'];
         $event->description = $data['description'];
 
 
@@ -186,13 +192,16 @@ class EventsController extends Controller
     public function validateRequest()
     {
         return request()->validate([
-            'title'         => 'required|max:255',
-            'type'          => 'required|exists:event_types,id',
-            'call_time'     => 'required|date_format:Y-m-d H:i:s|before:start_date',
-            'start_date'    => 'required|date_format:Y-m-d H:i:s',
-            'end_date'      => 'required|date_format:Y-m-d H:i:s|after:start_date',
-            'location'      => 'nullable',
-            'description'   => 'nullable',
+            'title'             => 'required|max:255',
+            'type'              => 'required|exists:event_types,id',
+            'call_time'         => 'required|date_format:Y-m-d H:i:s|before:start_date',
+            'start_date'        => 'required|date_format:Y-m-d H:i:s',
+            'end_date'          => 'required|date_format:Y-m-d H:i:s|after:start_date',
+            'location_place_id' => 'nullable',
+            'location_icon'     => 'nullable',
+            'location_name'     => 'nullable',
+            'location_address'  => 'nullable',
+            'description'       => 'nullable',
         ]);
     }
 }

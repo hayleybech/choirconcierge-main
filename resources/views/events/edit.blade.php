@@ -84,9 +84,23 @@
         </div>
     </div>-->
 
-    <div class="form-group">
+    <div class="form-group location-input-wrapper">
         {{ Form::label('location', 'Location') }}
-        {{ Form::textarea('location', $event->location, array('class' => 'form-control', 'rows' => '3')) }}
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-fw fa-map-marker-alt"></i></span>
+            </div>
+            {{ Form::text('location', $event->location_name . ', ' . $event->location_address, array('class' => 'form-control location-input', 'rows' => '3')) }}
+            {{ Form::hidden('location_place_id', $event->location_place_id, array('class' => 'form-control location-place-id')) }}
+            {{ Form::hidden('location_icon', $event->location_icon, array('class' => 'form-control location-icon')) }}
+            {{ Form::hidden('location_name', $event->location_name, array('class' => 'form-control location-name')) }}
+            {{ Form::hidden('location_address', $event->location_address, array('class' => 'form-control location-address')) }}
+        </div>
+        <small class="location-place form-text text-muted">
+            <span class="place-icon" style="background-image: url('{{ $event->location_icon }}');"></span>
+            <span class="place-name">{{ $event->location_name }}</span>
+            <span class="place-address">{{ $event->location_address }}</span>
+        </small>
     </div>
 
     <div class="form-group">
@@ -103,6 +117,7 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= env('API_GOOGLE_KEY') ?>&libraries=places&callback=initMap" async defer></script>
 
         <script src="{{ asset('js/events.js') }}"></script>
     @endpush

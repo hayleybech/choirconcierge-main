@@ -13,7 +13,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string start_date
  * @property string end_date
  * @property string call_time
- * @property string location
+ * @property string location_place_id
+ * @property string location_icon
+ * @property string location_name
+ * @property string location_address
  * @property string description
  *
  * @package App

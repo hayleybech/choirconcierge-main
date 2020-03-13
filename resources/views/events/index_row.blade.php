@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="r-table__cell column--location">
-        {{ $event->location }}
+        <span class="place-icon" style="background-image: url('{{ $event->location_icon }}');"></span> <span class="place-name">{{ $event->location_name }}</span>
     </div>
     <div class="r-table__cell column--created">
         <div class="date__diff-for-humans">
