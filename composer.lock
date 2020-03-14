@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d5dc6f4327f12f88dadb945be59b3b92",
+    "content-hash": "c6f2a28a38ff9e6093d8379df2aa9494",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -1978,6 +1978,66 @@
             ],
             "abandoned": "brick/math",
             "time": "2020-01-05T04:49:34+00:00"
+        },
+        {
+            "name": "mtolhuys/laravel-schematics",
+            "version": "0.10.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mtolhuys/laravel-schematics.git",
+                "reference": "c89f69601e3cec964d279e38d4562e11d73aaf04"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mtolhuys/laravel-schematics/zipball/c89f69601e3cec964d279e38d4562e11d73aaf04",
+                "reference": "c89f69601e3cec964d279e38d4562e11d73aaf04",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^2.0",
+                "orchestra/testbench": "^4.0",
+                "phpunit/phpunit": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mtolhuys\\LaravelSchematics\\LaravelSchematicsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mtolhuys\\LaravelSchematics\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Maarten Tolhuijs",
+                    "email": "mtolhuys@hotmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A interface to help you build your models",
+            "homepage": "https://github.com/mtolhuys/laravel-schematics",
+            "keywords": [
+                "diagram",
+                "eloquent",
+                "laravel",
+                "laravel-schematics",
+                "models",
+                "mtolhuys",
+                "schema",
+                "schematics"
+            ],
+            "time": "2020-03-12T19:35:37+00:00"
         },
         {
             "name": "nesbot/carbon",
