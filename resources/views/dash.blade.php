@@ -30,6 +30,7 @@
 		@if( Auth::user()->isEmployee() )
 		<a href="{{ route('singers.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-users"></i> Singers List</a>
         <a href="{{ route('songs.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-music"></i> Songs List</a>
+        <a href="{{ route('events.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-calendar"></i> Events List</a>
 		@endif
   </div>
 </div>
