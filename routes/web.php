@@ -59,6 +59,14 @@ Route::middleware(['auth', 'employee'])->group(function() {
     Route::post('/songs/{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
     Route::get('/songs/{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('song.attachments.delete');
 
+
+    Route::get('/events', 'EventsController@index')->name('events.index');
+    Route::get('/events/create', 'EventsController@create')->name('event.create');
+    Route::post('/events', 'EventsController@store');
+    Route::get('/events/{event}', 'EventsController@show')->name('events.show');
+    Route::get('/events/{event}/edit', 'EventsController@edit')->name('event.edit');
+    Route::put('/events/{event}', 'EventsController@update');
+    Route::get('/events/{event}/delete', 'EventsController@delete')->name('event.delete');
 });
 
 // Membership Team auth
@@ -224,3 +232,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function() {
 	Route::get('/import', 'SingersController@import');
 	
 });
+
+
+// Public calendar feed
+Route::get('/events-ical', 'ICalController@index');

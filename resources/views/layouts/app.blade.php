@@ -66,6 +66,9 @@
 								<li class="nav-item">
 									<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs.index') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
 								</li>
+								<li class="nav-item">
+									<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events.index') ) ? 'active' : '' }}"><i class="fa fa-calendar fa-fw"></i><span class="link-text"> Events</span></a>
+								</li>
 							@endif
 
 							@if( Auth::user()->hasRole('Admin') )
@@ -128,15 +131,15 @@
 			@else
 				<nav class="tap-bar">
 					<ul class="nav nav-pills nav-fill">
-						<li class="nav-item">
-							<a class="nav-link {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-tachometer-alt fa-fw"></i><span class="link-text"> Dashboard</span></a>
-						</li>
 						@if( Auth::user()->isEmployee() )
 							<li class="nav-item">
 								<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers', 'singers/*') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
 							</li>
 							<li class="nav-item">
 								<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs', 'songs/*') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
+							</li>
+							<li class="nav-item">
+								<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events', 'events/*') ) ? 'active' : '' }}"><i class="fa fa-calendar fa-fw"></i><span class="link-text"> Events</span></a>
 							</li>
 						@endif
 						<li class="nav-item">

@@ -50,5 +50,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call('SongAttachmentCategorySeeder');
         $this->command->info('Song Attachment Categories table seeded!');
+
+        $this->call('Events Seeder');
+        $this->command->info('Events table seeded!');
     }
 }

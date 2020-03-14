@@ -227,6 +227,20 @@ main {
 	grid-area: actions;
 }
 
+/* Event date */
+.column--start-date {
+	flex-flow: column nowrap;
+	align-items: flex-start;
+}
+.date__regular {
+	font-size: 0.8em;
+	color: #999;
+}
+.column--created {
+	flex-flow: column nowrap;
+	align-items: flex-start;
+}
+
 .progress {
 	height: 0.7rem;
 	width: 80px;
@@ -478,4 +492,33 @@ i.fa.fa-external-link {
 #the-canvas {
 	display: block;
 	margin: 0 auto;
+}
+
+
+
+/* Location input */
+.place-icon {
+	height: 1em;
+	width: 1em;
+	background-size: cover;
+	display: inline-block;
+}
+.place-name {
+	font-weight: 600;
+}
+
+
+/** RESPONSIVE GOOGLE MAPS EMBED **/
+.google-maps {
+	position: relative;
+	padding-bottom: 56.25%; /* This is the aspect ratio */
+	height: 0;
+	overflow: hidden;
+}
+.google-maps iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100% !important;
+	height: 100% !important;
 }
