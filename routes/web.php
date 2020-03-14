@@ -232,3 +232,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function() {
 	Route::get('/import', 'SingersController@import');
 	
 });
+
+
+// Public calendar feed
+Route::get('/events-ical', 'ICalController@index');
