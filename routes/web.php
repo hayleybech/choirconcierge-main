@@ -148,6 +148,11 @@ Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static functio
     Route::post('{user}/role', 'UsersController@addRoles')->name('users.addroles');
 });
 
+// User Groups module
+Route::prefix('groups')->name('groups.')->middleware(['auth', 'role:Admin'])->group(static function () {
+    Route::resource('/', 'UserGroupController');
+});
+
 // Tasks module
 Route::prefix('tasks')->middleware(['auth', 'role:Admin'])->group(static function () {
     // Index

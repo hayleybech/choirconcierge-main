@@ -74,6 +74,9 @@
 							@if( Auth::user()->hasRole('Admin') )
 								<li class="nav-item nav-separator"></li>
 								<li class="nav-item">
+									<a href="{{ route('groups.index') }}" class="nav-link"><i class="fa fa-users fa-fw"></i><span class="link-text"> Groups</span></a>
+								</li>
+								<li class="nav-item">
 									<a href="{{ route('tasks.index') }}" class="nav-link"><i class="fa fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
 								</li>
 								<li class="nav-item">
