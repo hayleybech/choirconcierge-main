@@ -14,7 +14,7 @@ class UserGroupController extends Controller
      */
     public function index(): View
     {
-        $groups = UserGroup::all();
+        $groups = UserGroup::all()->sortBy('title');
         $filters = [];
         return view('groups.index', compact('groups', 'filters') );
     }
