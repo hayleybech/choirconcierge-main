@@ -79,12 +79,18 @@ class UserGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserGroup  $userGroup
-     * @return \Illuminate\Http\Response
+     * @param UserGroup $group
+     * @return RedirectResponse
      */
-    public function destroy(UserGroup $userGroup)
+    public function destroy(UserGroup $group): RedirectResponse
     {
-        //
+        try{
+            $group->delete();
+        } catch(\Exception $e) {
+            return redirect()->route('groups.index')->with(['status' => 'Group could not be deleted. Check that the group ID exists. ', ]);
+        }
+
+        return redirect()->route('groups.index')->with(['status' => 'Group deleted. ', ]);
     }
 
     /**

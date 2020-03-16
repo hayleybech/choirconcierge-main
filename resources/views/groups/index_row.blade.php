@@ -22,7 +22,9 @@
         </div>
     </div>
     <div class="r-table__cell column--actions">
-        <a href="{{route( 'groups.destroy', ['group' => $group] )}}" class="link-confirm btn btn-outline-danger btn-sm ml-2"><i class="fa fa-fw fa-trash"></i></a>
+        {{ Form::open( array( 'route' => ['groups.destroy', $group], 'method' => 'delete' ) ) }}
+        <button class="link-confirm btn btn-outline-danger btn-sm ml-2"><i class="fa fa-fw fa-trash"></i></button>
+        {{ Form::close() }}
     </div>
 
 </div>
