@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UserGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class UserGroupController extends Controller
@@ -52,24 +53,27 @@ class UserGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UserGroup  $userGroup
-     * @return \Illuminate\Http\Response
+     * @param  UserGroup  $group
+     * @return View
      */
-    public function edit(UserGroup $userGroup)
+    public function edit(UserGroup $group): View
     {
-        //
+        return view('groups.edit', compact('group' ));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserGroup  $userGroup
-     * @return \Illuminate\Http\Response
+     * @param UserGroup $group
+     * @return RedirectResponse
      */
-    public function update(Request $request, UserGroup $userGroup)
+    public function update(UserGroup $group): RedirectResponse
     {
-        //
+        $data = $this->validateRequest($group);
+
+        $group->update($data);
+
+        return redirect()->route('groups.show', [$group])->with(['status' => 'Group updated. ', ]);
     }
 
     /**
@@ -84,13 +88,18 @@ class UserGroupController extends Controller
     }
 
     /**
+     * @param UserGroup $group
      * @return mixed
      */
-    public function validateRequest()
+    public function validateRequest(UserGroup $group)
     {
         return request()->validate([
             'title'             => 'required|max:255',
-            'slug'              => 'required|unique:user_groups|max:255',
+            'slug'              => [
+                'required',
+                Rule::unique('user_groups')->ignore($group->id),
+                'max:255'
+            ],
             'list_type'         => 'required',
         ]);
     }
