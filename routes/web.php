@@ -14,202 +14,268 @@
 
 Auth::routes();
 
-Route::get('/', function () {
-	return view('welcome');
-})->name('menu');
-	
+// Primary pages
+Route::prefix('')->middleware('auth')->group(static function (){
+    // Home page
+    Route::get('/', static function () {
+        return view('welcome');
+    })->name('menu');
 
-// Basic dashboard auth
-Route::middleware('auth')->group(function() {
+});
 
-	Route::get('/dash', 'DashController@index')->name('dash');
-	
+// Dashboard
+Route::prefix('dash')->middleware('auth')->group(static function (){
+    // Index
+    Route::get('/', 'DashController@index')->name('dash');
+});
+
+// Singers module
+Route::prefix('singers')->middleware('auth')->group(static function (){
+
+    // Singers - Any Employee
+    Route::middleware('employee')->group(static function() {
+        // Index
+        Route::get('/', 'SingersController@index')->name('singers.index');
+
+        // Create
+        Route::get('create', 'SingersController@create')->name('singer.create');
+        Route::post('/', 'SingersController@store');
+
+        // View/Update/Delete
+        Route::get('{singer}', 'SingersController@show')->name('singers.show');
+        Route::get('{singer}/edit', 'SingersController@edit')->name('singers.edit');
+        Route::put('{singer}', 'SingersController@update')->name('singers.update');
+        Route::get('{singer}/delete', 'SingersController@delete')->name('singer.delete');
+
+        // Complete Task
+        Route::get('{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
+
+        // Export
+        Route::get('export', 'SingersController@export')->name('singers.export');
+    });
+
+    // Singers - Membership Team
+    Route::middleware('role:Membership Team')->group(static function() {
+        // Create Profile
+        Route::get('{singer}/profile/create', 'SingersController@createProfile')->name('profile.create');
+        Route::post('{singer}/profile', 'SingersController@storeProfile')->name('profile');
+
+        // Mark "Account Created" task complete
+        Route::get('{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
+
+        // Move Singer
+        Route::get('{singer}/move/', 'SingersController@move')->name('singer.move');
+    });
+
+    // Singers - Music Team
+    Route::middleware('role:Music Team')->group(static function() {
+        // Create Voice Placement
+        Route::get('{singer}/placement/create', 'SingersController@createPlacement')->name('placement.create');
+        Route::post('{singer}/placement', 'SingersController@storePlacement')->name('placement');
+
+        // Mark audition passed
+        Route::get('{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');
+    });
+
+    // Singers - Accounts Team
+    Route::middleware('role:Accounts Team')->group(static function() {
+        // Mark fees paid
+        Route::get('{singer}/fees/paid', 'SingersController@feespaid')->name('singer.fees.paid');
+    });
+
+
+    // Singers - Uniforms Team
+    Route::middleware('role:Uniforms Team')->group(static function() {
+        // Mark uniform provided
+        Route::get('{singer}/uniform/provided', 'SingersController@markUniformProvided')->name('singer.uniform.provided');
+    });
 });
 
 
-// Basic employee auth
-Route::middleware(['auth', 'employee'])->group(function() {
+// Songs module
+Route::prefix('songs')->middleware('auth')->group(static function (){
+    // Index
+    Route::get('/', 'SongsController@index')->name('songs.index');
 
-	Route::get('/singers', 'SingersController@index')->name('singers.index');
-	
-	Route::get('/singers/create', 'SingersController@create')->name('singer.create');
-	Route::post('/singers', 'SingersController@store');
-	
-	Route::get('/singers/export', 'SingersController@export')->name('singers.export');
+    // Create
+    Route::get('create', 'SongsController@create')->name('song.create');
+    Route::post('/', 'SongsController@store');
 
-	Route::get('/singers/{singer}', 'SingersController@show')->name('singers.show');
-	Route::get('/singers/{singer}/edit', 'SingersController@edit')->name('singers.edit');
-	Route::put('/singers/{singer}', 'SingersController@update')->name('singers.update');
+    // View/Edit/Delete
+    Route::get('{song}', 'SongsController@show')->name('songs.show');
+    Route::get('{song}/edit', 'SongsController@edit')->name('song.edit');
+    Route::put('{song}', 'SongsController@update');
+    Route::get('{song}/delete', 'SongsController@delete')->name('song.delete');
 
-	Route::get('/singers/{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
+    // Create/Delete attachments
+    Route::post('{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
+    Route::get('{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('song.attachments.delete');
 
-    Route::get('/singers/{singer}/delete', 'SingersController@delete')->name('singer.delete');
-
-	Route::resource('/notifications', 'NotificationController');
-
-    Route::get('/songs', 'SongsController@index')->name('songs.index');
-    Route::get('/songs/create', 'SongsController@create')->name('song.create');
-    Route::get('/songs/learning', 'SongsController@learning')->name('songs.learning');
-    Route::post('/songs', 'SongsController@store');
-    Route::get('/songs/{song}', 'SongsController@show')->name('songs.show');
-    Route::get('/songs/{song}/edit', 'SongsController@edit')->name('song.edit');
-    Route::put('/songs/{song}', 'SongsController@update');
-    Route::get('/songs/{song}/delete', 'SongsController@delete')->name('song.delete');
-
-    Route::post('/songs/{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
-    Route::get('/songs/{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('song.attachments.delete');
-
-
-    Route::get('/events', 'EventsController@index')->name('events.index');
-    Route::get('/events/create', 'EventsController@create')->name('event.create');
-    Route::post('/events', 'EventsController@store');
-    Route::get('/events/{event}', 'EventsController@show')->name('events.show');
-    Route::get('/events/{event}/edit', 'EventsController@edit')->name('event.edit');
-    Route::put('/events/{event}', 'EventsController@update');
-    Route::get('/events/{event}/delete', 'EventsController@delete')->name('event.delete');
+    // Access Learning Mode
+    Route::get('learning', 'SongsController@learning')->name('songs.learning');
 });
 
-// Membership Team auth
-Route::middleware(['auth', 'role:Membership Team'])->group(function() {
-	
-	Route::get('singers/{singer}/profile/create', 'SingersController@createProfile')->name('profile.create');
-	Route::post('singers/{singer}/profile', 'SingersController@storeProfile')->name('profile');
-	
-	Route::get('/singers/{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
+// Events module
+Route::prefix('events')->middleware('auth')->group(static function (){
+    // Index
+    Route::get('/', 'EventsController@index')->name('events.index');
 
-	Route::get('/singers/{singer}/move/', 'SingersController@move')->name('singer.move');
+    // Create
+    Route::get('create', 'EventsController@create')->name('event.create');
+    Route::post('/', 'EventsController@store');
 
-	
+    // View/Edit/Delete
+    Route::get('{event}', 'EventsController@show')->name('events.show');
+    Route::get('{event}/edit', 'EventsController@edit')->name('event.edit');
+    Route::put('{event}', 'EventsController@update');
+    Route::get('{event}/delete', 'EventsController@delete')->name('event.delete');
 });
 
-// Music Team auth
-Route::middleware(['auth', 'role:Music Team'])->group(function() {
-
-    Route::get('singers/{singer}/placement/create', 'SingersController@createPlacement')->name('placement.create');
-    Route::post('singers/{singer}/placement', 'SingersController@storePlacement')->name('placement');
-
-	Route::get('/singers/{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');
-	
-});
-
-// Accounts Team auth
-Route::middleware(['auth', 'role:Accounts Team'])->group(function() {
-	
-	Route::get('/singers/{singer}/fees/paid', 'SingersController@feespaid')->name('singer.fees.paid');
-	
-});
-
-// Uniforms Team auth
-Route::middleware(['auth', 'role:Uniforms Team'])->group(function() {
-	
-	Route::get('/singers/{singer}/uniform/provided', 'SingersController@markUniformProvided')->name('singer.uniform.provided');
-	
+// Notifications module
+Route::prefix('notifications')->name('notifications')->middleware(['auth', 'employee'])->group(static function (){
+    // Index - BROKEN
+    Route::resource('/', 'NotificationController');
 });
 
 
-// Admin level auth
-Route::middleware(['auth', 'role:Admin'])->group(function() {
-	
-	Route::get('/users', 'UsersController@index')->name('users.index');
+// Users/Team module
+Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static function () {
+    // Index
+    Route::get('/', 'UsersController@index')->name('users.index');
 
-	Route::get('/users/{user}/roles/{role}/detach', 'UsersController@detachRole')->name('users.detachrole');
+    // Attach/Detach role from a user
+    Route::get('{user}/roles/{role}/detach', 'UsersController@detachRole')->name('users.detachrole');
+    Route::post('{user}/role', 'UsersController@addRoles')->name('users.addroles');
+});
 
-	Route::post('/users/{user}/role', 'UsersController@addRoles')->name('users.addroles');	
-	
-	Route::get('/tasks', 'TasksController@index')->name('tasks.index');
-	
-	Route::resource('/notification-templates', 'NotificationTemplateController');
-	
-	// Super admin?
-	
-	Route::get('/migrate', function(){
-		echo Artisan::call('migrate', [
-		    '--force' => true,
+// Tasks module
+Route::prefix('tasks')->middleware(['auth', 'role:Admin'])->group(static function () {
+    // Index
+    Route::get('/', 'TasksController@index')->name('tasks.index');
+});
+
+// Notification Templates module
+Route::prefix('notification-templates')->name('notification-templates.')->middleware(['auth', 'role:Admin'])->group(static function () {
+    // Index
+    Route::resource('/', 'NotificationTemplateController');
+
+});
+
+// Migrations
+// @todo Create a super admin role
+Route::prefix('migrate')->middleware(['auth', 'role:Admin'])->group(static function(){
+
+    // migrate
+    Route::get('/', function(){
+        echo Artisan::call('migrate', [
+            '--force' => true,
         ]);
         echo '<pre>'.Artisan::output().'</pre>';
-	});
-    Route::get('/migrate/status', function(){
+    });
+
+    // migrate:status
+    Route::get('/status', function(){
         echo Artisan::call('migrate:status');
         echo '<pre>'.Artisan::output().'</pre>';
     });
 
-        // DO NOT RUN ON PRODUCTION
-        Route::get('/seed/users', function(){
-            echo Artisan::call('db:seed', ['--class' => 'UserTableSeeder']);
-            echo '<pre>'.Artisan::output().'</pre>';
-        });
-
-        Route::get('/seed/singers', function(){
-            echo Artisan::call('db:seed', [
-                '--class' => 'SingerTableSeeder',
-                '--force' => true,
-            ]);
-            echo '<pre>'.Artisan::output().'</pre>';
-        });
-
-        // ONLY RUN ONCE
-        Route::get('/seed/singer-categories', function(){
-            echo Artisan::call('db:seed', [
-                '--class' => 'SingerCategorySeeder',
-                '--force' => true,
-            ]);
-            echo '<pre>'.Artisan::output().'</pre>';
-        });
-
-        Route::get('/seed/tasks', function(){
-            echo Artisan::call('db:seed', [
-                '--class' => 'TaskTableSeeder',
-                '--force' => true,
-            ]);
-            echo '<pre>'.Artisan::output().'</pre>';
-        });
-
-
-        Route::get('/seed/templates', function(){
-            echo Artisan::call('db:seed', [
-                '--class' => 'NotificationTemplateSeeder',
-                '--force' => true,
-            ]);
-            echo '<pre>'.Artisan::output().'</pre>';
-        });
-
-
-    Route::get('/migrate/refresh', function(){
-		echo Artisan::call('migrate:refresh');
+    // migrate:refresh
+    Route::get('refresh', static function(){
+        echo Artisan::call('migrate:refresh');
         echo '<pre>'.Artisan::output().'</pre>';
-	});
+    });
 
-	Route::get('/migrate/refresh/seed', function(){
-		echo Artisan::call('migrate:refresh', [
-			'--seed' => true,
-		]);
+    // migrate:refresh --seed
+    Route::get('refresh/seed', static function(){
+        echo Artisan::call('migrate:refresh', [
+            '--seed' => true,
+        ]);
         echo '<pre>'.Artisan::output().'</pre>';
-	});
+    });
 
-	Route::get('/migrate/rollback', function(){
-		echo Artisan::call('migrate:rollback');
+    // migrate:rollback
+    Route::get('rollback', static function(){
+        echo Artisan::call('migrate:rollback');
         echo '<pre>'.Artisan::output().'</pre>';
-	});
+    });
 
-	Route::get('/migrate/reset', function(){
-		echo Artisan::call('migrate:reset');
+    // migrate:reset
+    Route::get('reset', static function(){
+        echo Artisan::call('migrate:reset');
         echo '<pre>'.Artisan::output().'</pre>';
-	});
+    });
 
-	Route::get('/migrate/fresh', function(){
-		echo Artisan::call('migrate:fresh');
+    // migrate:fresh
+    Route::get('fresh', static function(){
+        echo Artisan::call('migrate:fresh');
         echo '<pre>'.Artisan::output().'</pre>';
-	});
+    });
 
-	Route::get('/migrate/fresh/seed', function(){
-		echo Artisan::call('migrate:fresh', [
-			'--seed' => true,
-		]);
+    // migrate:fresh --seed
+    Route::get('fresh/seed', static function(){
+        echo Artisan::call('migrate:fresh', [
+            '--seed' => true,
+        ]);
         echo '<pre>'.Artisan::output().'</pre>';
-	});
+    });
+});
 
-	Route::get('/import', 'SingersController@import');
-	
+// Database Seeds
+// @todo Create a super admin role
+// @todo Group seeds into production-safe and non-production safe
+Route::prefix('seed')->middleware(['auth', 'role:Admin'])->group(static function(){
+
+    // DO NOT RUN ON PRODUCTION
+    // Seed Users
+    // db:seed --class=UserTableSeeder
+    Route::get('users', function(){
+        echo Artisan::call('db:seed', ['--class' => 'UserTableSeeder']);
+        echo '<pre>'.Artisan::output().'</pre>';
+    });
+
+    // Seed Singers
+    // db:seed --class=SingerTableSeeder
+    Route::get('singers', function(){
+        echo Artisan::call('db:seed', [
+            '--class' => 'SingerTableSeeder',
+            '--force' => true,
+        ]);
+        echo '<pre>'.Artisan::output().'</pre>';
+    });
+
+    // ONLY RUN ONCE
+    // Seed Singer Categories
+    // db:seed --class=SingerCategorySeeder
+    Route::get('singer-categories', function(){
+        echo Artisan::call('db:seed', [
+            '--class' => 'SingerCategorySeeder',
+            '--force' => true,
+        ]);
+        echo '<pre>'.Artisan::output().'</pre>';
+    });
+
+    // Seed Tasks
+    // db:seed --class=TaskTableSeeder
+    Route::get('tasks', function(){
+        echo Artisan::call('db:seed', [
+            '--class' => 'TaskTableSeeder',
+            '--force' => true,
+        ]);
+        echo '<pre>'.Artisan::output().'</pre>';
+    });
+
+    // Seed Templates
+    // db:seed --class=NotificationTemplateSeeder
+    Route::get('templates', function(){
+        echo Artisan::call('db:seed', [
+            '--class' => 'NotificationTemplateSeeder',
+            '--force' => true,
+        ]);
+        echo '<pre>'.Artisan::output().'</pre>';
+    });
+
+    // Singer import
+    Route::get('import', 'SingersController@import');
 });
 
 
