@@ -31,7 +31,7 @@
         <div class="input-group input-group-sm mb-2 mr-2">
             <div class="btn-group" role="group" aria-label="Basic example">
                 <button class="btn btn-outline-secondary btn-sm"><i class="fa fa-filter"></i> Filter</button>
-                <a href="{{ route('events.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-times"></i> Clear</a>
+                <a href="{{ route('groups.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-times"></i> Clear</a>
             </div>
         </div>
     </form>

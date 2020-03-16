@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserGroup;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -20,23 +21,22 @@ class UserGroupController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create() : View
     {
-        //
+        return view('groups.create');
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(): RedirectResponse
     {
-        //
+        $data = $this->validateRequest();
+
+        UserGroup::create($data);
+
+        return redirect('/groups')->with(['status' => 'Group created. ', ]);
     }
 
     /**
@@ -82,5 +82,17 @@ class UserGroupController extends Controller
     public function destroy(UserGroup $userGroup)
     {
         //
+    }
+
+    /**
+     * @return mixed
+     */
+    public function validateRequest()
+    {
+        return request()->validate([
+            'title'             => 'required|max:255',
+            'slug'              => 'required|unique:user_groups|max:255',
+            'list_type'         => 'required',
+        ]);
     }
 }
