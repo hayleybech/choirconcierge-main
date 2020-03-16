@@ -91,13 +91,13 @@ class UserGroupController extends Controller
      * @param UserGroup $group
      * @return mixed
      */
-    public function validateRequest(UserGroup $group)
+    public function validateRequest(UserGroup $group = null)
     {
         return request()->validate([
             'title'             => 'required|max:255',
             'slug'              => [
                 'required',
-                Rule::unique('user_groups')->ignore($group->id),
+                Rule::unique('user_groups')->ignore($group->id ?? ''),
                 'max:255'
             ],
             'list_type'         => 'required',
