@@ -61,7 +61,7 @@
 							@if( Auth::user()->isEmployee() )
 								<li class="nav-item nav-separator"></li>
 								<li class="nav-item">
-									<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
+									<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-user fa-fw"></i><span class="link-text"> Singers</span></a>
 								</li>
 								<li class="nav-item">
 									<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs.index') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
@@ -133,7 +133,7 @@
 					<ul class="nav nav-pills nav-fill">
 						@if( Auth::user()->isEmployee() )
 							<li class="nav-item">
-								<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers', 'singers/*') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
+								<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers', 'singers/*') ) ? 'active' : '' }}"><i class="fa fa-user fa-fw"></i><span class="link-text"> Singers</span></a>
 							</li>
 							<li class="nav-item">
 								<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs', 'songs/*') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
