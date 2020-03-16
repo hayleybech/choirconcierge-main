@@ -5,11 +5,11 @@ namespace App\Imports;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use App\Singer;
-use App\Profile;
-use App\Placement;
-use App\Task;
-use App\SingerCategory;
+use App\Models\Singer;
+use App\Models\Profile;
+use App\Models\Placement;
+use App\Models\Task;
+use App\Models\SingerCategory;
 
 class DripSingersImport implements ToCollection, WithHeadingRow
 {

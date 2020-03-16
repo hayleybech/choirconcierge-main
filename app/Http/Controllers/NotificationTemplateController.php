@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\NotificationTemplate;
+use App\Models\NotificationTemplate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -73,7 +73,7 @@ class NotificationTemplateController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param NotificationTemplate $notificationTemplate
+     * @param \App\Models\NotificationTemplate $notificationTemplate
      * @return RedirectResponse
      */
     public function update(Request $request, NotificationTemplate $notificationTemplate): RedirectResponse

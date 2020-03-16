@@ -9,8 +9,8 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use App\Task;
-use App\Singer;
+use App\Models\Task;
+use App\Models\Singer;
 
 class TaskCompleted
 {
@@ -22,8 +22,8 @@ class TaskCompleted
     /**
      * Create a new event instance.
      *
-     * @param \App\Task $task
-     * @param \App\Singer $singer
+     * @param \App\Models\Task $task
+     * @param \App\Models\Singer $singer
      * @return void
      */
     public function __construct(Task $task, Singer $singer)

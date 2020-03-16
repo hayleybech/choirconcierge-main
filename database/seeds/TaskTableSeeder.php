@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Task;
-use App\Singer;
-use App\Role;
+use App\Models\Task;
+use App\Models\Singer;
+use App\Models\Role;
 
 class TaskTableSeeder extends Seeder {
 	

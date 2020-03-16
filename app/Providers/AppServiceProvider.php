@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Contracts\Auth\Guard;
-use App\SingerCategory;
+use App\Models\SingerCategory;
 
 class AppServiceProvider extends ServiceProvider
 {

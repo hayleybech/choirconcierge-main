@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Models\EventType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -33,6 +34,6 @@ class Event extends Model
 
     public function type(): BelongsTo
     {
-        return $this->belongsTo('App\EventType', 'type_id');
+        return $this->belongsTo('App\Models\EventType', 'type_id');
     }
 }

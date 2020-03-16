@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Event;
-use App\EventType;
+use App\Models\Event;
+use App\Models\EventType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;

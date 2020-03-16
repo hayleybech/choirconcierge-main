@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Role;
+use App\Models\Role;
 use UnexpectedValueException;
 
 // http://alexsears.com/article/adding-roles-to-laravel-users/
@@ -40,7 +40,7 @@ class User extends Authenticatable
       */
 	public function roles(): BelongsToMany
     {
-		return $this->belongsToMany('App\Role', 'users_roles');
+		return $this->belongsToMany('App\Models\Role', 'users_roles');
 	}
 	
 	 /**

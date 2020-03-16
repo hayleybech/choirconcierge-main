@@ -1,7 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Models;
+use App\Models\User;
+use App\Models\Role;
+use App\Models\Singer;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\TaskCompleted;
 use Carbon\Carbon;
@@ -12,7 +16,7 @@ class NotificationTemplate extends Model
 {
     public function task(): BelongsTo
     {
-		return $this->belongsTo('App\Task');
+		return $this->belongsTo('App\Models\Task');
 	}
 
     public function getRecipientType(): string
@@ -32,10 +36,10 @@ class NotificationTemplate extends Model
                 $recipients = $role->users;
                 break;
             case 'user':
-                $recipients[] = \App\User::find($recipient_id);
+                $recipients[] = Models\User::find($recipient_id);
                 break;
             case 'singer':
-                $recipients[] = \App\Singer::find($recipient_id);
+                $recipients[] = Models\Singer::find($recipient_id);
                 break;
         }
 

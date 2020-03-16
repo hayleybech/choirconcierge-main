@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Song;
-use App\SongAttachment;
-use App\SongAttachmentCategory;
+use App\Models\Song;
+use App\Models\SongAttachment;
+use App\Models\SongAttachmentCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;

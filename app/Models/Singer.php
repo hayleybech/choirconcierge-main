@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,22 +23,22 @@ class Singer extends Model
 	 */
 	public function tasks(): BelongsToMany
 	{
-		return $this->belongsToMany('App\Task', 'singers_tasks')->withPivot('completed')->withTimestamps();
+		return $this->belongsToMany('App\Models\Task', 'singers_tasks')->withPivot('completed')->withTimestamps();
 	}
 	
 	public function profile(): HasOne
 	{
-		return $this->hasOne('App\Profile');
+		return $this->hasOne('App\Models\Profile');
 	}
 	
 	public function placement(): HasOne
 	{
-		return $this->hasOne('App\Placement');
+		return $this->hasOne('App\Models\Placement');
 	}
 
 	public function category(): BelongsTo
     {
-        return $this->belongsTo('App\SingerCategory', 'singer_category_id');
+        return $this->belongsTo('App\Models\SingerCategory', 'singer_category_id');
     }
 
     public function getAge(): int

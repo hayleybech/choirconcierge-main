@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use App\User;
-use App\Role;
+use App\Models\User;
+use App\Models\Role;
 use Illuminate\View\View;
 
 class UsersController extends Controller
@@ -44,7 +44,7 @@ class UsersController extends Controller
 	
 	public function addRoles( Request $request, $userid ): RedirectResponse
     {
-		$user = \App\User::find($userid);
+		$user = \App\Models\User::find($userid);
 		$roles = $request->input('roles');
 		
 		$user->addRoles($roles);
@@ -54,7 +54,7 @@ class UsersController extends Controller
 	
 	public function detachRole($userid, $role): RedirectResponse
     {
-		$user = \App\User::find($userid);
+		$user = \App\Models\User::find($userid);
 		$user->detachRole($role);
 		return redirect('/users');
 	}

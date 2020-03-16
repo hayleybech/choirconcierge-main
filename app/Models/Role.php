@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,7 +14,7 @@ class Role extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany('App\User', 'users_roles');
+        return $this->belongsToMany('App\Models\User', 'users_roles');
     }
 	
 	/** 
@@ -22,6 +22,6 @@ class Role extends Model
 	 */
 	public function tasks(): HasMany
 	{
-		return $this->hasMany('App\Task');
+		return $this->hasMany('App\Models\Task');
 	}
 }

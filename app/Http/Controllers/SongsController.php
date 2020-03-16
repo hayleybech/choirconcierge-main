@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Song;
-use App\SongAttachmentCategory;
-use App\SongCategory;
-use App\SongStatus;
+use App\Models\Song;
+use App\Models\SongAttachmentCategory;
+use App\Models\SongCategory;
+use App\Models\SongStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;

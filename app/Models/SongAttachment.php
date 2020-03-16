@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,12 +14,12 @@ class SongAttachment extends Model
 
     public function song(): BelongsTo
     {
-        return $this->belongsTo('App\Song');
+        return $this->belongsTo('App\Models\Song');
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo('App\SongAttachmentCategory', 'category_id');
+        return $this->belongsTo('App\Models\SongAttachmentCategory', 'category_id');
     }
 
     public function getDownloadUrlAttribute(): string

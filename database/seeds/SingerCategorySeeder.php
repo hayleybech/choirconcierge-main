@@ -23,8 +23,8 @@ class SingerCategorySeeder extends Seeder
         ]);
 
         // Attach the Prospects category to all seed Singers
-        $prospects = App\SingerCategory::find(1);
-        $singers = App\Singer::all();
+        $prospects = \App\Models\SingerCategory::find(1);
+        $singers = \App\Models\Singer::all();
         $prospects->singers()->saveMany($singers);
     }
 }

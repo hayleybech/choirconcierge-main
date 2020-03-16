@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,17 +37,17 @@ class Song extends Model
 
     public function status(): BelongsTo
     {
-        return $this->belongsTo('App\SongStatus', 'status_id');
+        return $this->belongsTo('App\Models\SongStatus', 'status_id');
     }
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany('App\SongCategory', 'songs_song_categories', 'song_id', 'category_id');
+        return $this->belongsToMany('App\Models\SongCategory', 'songs_song_categories', 'song_id', 'category_id');
     }
 
     public function attachments(): HasMany
     {
-        return $this->hasMany('App\SongAttachment');
+        return $this->hasMany('App\Models\SongAttachment');
     }
 
     public function getPitchAttribute(): string
