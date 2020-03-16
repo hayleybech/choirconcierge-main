@@ -149,8 +149,8 @@ Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static functio
 });
 
 // User Groups module
-Route::prefix('groups')->name('groups.')->middleware(['auth', 'role:Admin'])->group(static function () {
-    Route::resource('/', 'UserGroupController');
+Route::middleware(['auth', 'role:Admin'])->group(static function () {
+    Route::resource('groups', 'UserGroupController');
 });
 
 // Tasks module
