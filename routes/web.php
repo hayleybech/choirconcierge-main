@@ -72,17 +72,6 @@ Route::middleware(['auth', 'employee'])->group(function() {
 // Membership Team auth
 Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 	
-	// Old (drip) version
-	Route::get('/singers/{singer}/memberprofile', function($email){
-		return redirect()->away( config('app.member_profile_edit') . urlencode($email) );
-	})->name('singer.memberprofile');
-	
-	Route::get('/memberprofile', function(){
-		return redirect()->away( config('app.member_profile_new') );
-	})->name('memberprofile.new');
-	
-	
-	// New version
 	Route::get('singers/{singer}/profile/create', 'SingersController@createProfile')->name('profile.create');
 	Route::post('singers/{singer}/profile', 'SingersController@storeProfile')->name('profile');
 	
@@ -96,16 +85,6 @@ Route::middleware(['auth', 'role:Membership Team'])->group(function() {
 // Music Team auth
 Route::middleware(['auth', 'role:Music Team'])->group(function() {
 
-    // Old (drip) version
-	Route::get('/singers/{singer}/voiceplacement', function($email){
-		return redirect()->away( config('app.voice_placement_edit') . urlencode($email) );
-	})->name('singer.voiceplacement');
-
-	Route::get('/voiceplacement', function(){
-		return redirect()->away( config('app.voice_placement_new') );
-	})->name('voiceplacement.new');
-
-	// New version
     Route::get('singers/{singer}/placement/create', 'SingersController@createPlacement')->name('placement.create');
     Route::post('singers/{singer}/placement', 'SingersController@storePlacement')->name('placement');
 
