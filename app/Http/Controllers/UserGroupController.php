@@ -41,13 +41,12 @@ class UserGroupController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\UserGroup  $userGroup
-     * @return \Illuminate\Http\Response
+     * @param UserGroup $group
+     * @return View
      */
-    public function show(UserGroup $userGroup)
+    public function show(UserGroup $group): View
     {
-        //
+        return view('groups.show', compact('group' ));
     }
 
     /**
