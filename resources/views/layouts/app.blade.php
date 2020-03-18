@@ -155,9 +155,6 @@
 
     <!-- Scripts -->
 	<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
-
-    <!--<script src="https://use.fontawesome.com/7679517f07.js"></script>-->
-	<script src="https://kit.fontawesome.com/baff915cc9.js" crossorigin="anonymous"></script>
 	
 	<script>
 	  var HW_config = {
