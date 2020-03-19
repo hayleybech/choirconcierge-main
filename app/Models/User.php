@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Role;
@@ -125,5 +126,13 @@ class User extends Authenticatable
 
         $this->roles()->attach($assigned_roles);
     }*/
+
+    /*
+    * Get all groups this is a member of.
+    */
+    public function memberships(): MorphMany
+    {
+        return $this->morphMany(GroupMember::class, 'memberable');
+    }
 
 }

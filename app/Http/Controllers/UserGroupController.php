@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
+use App\Models\User;
 use App\Models\UserGroup;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -34,8 +37,24 @@ class UserGroupController extends Controller
     public function store(): RedirectResponse
     {
         $data = $this->validateRequest();
+        $group = UserGroup::create($data);
 
-        UserGroup::create($data);
+        // Update recipients
+        // @todo refactor member attachment to separate method
+        $members = [];
+        foreach($data['recipient_roles'] as $role){
+            $members[] = [
+                'memberable_id'     => $role,
+                'memberable_type'   => 'App\Models\Role',
+            ];
+        }
+        foreach($data['recipient_users'] as $user){
+            $members[] = [
+                'memberable_id'     => $user,
+                'memberable_type'   => 'App\Models\User',
+            ];
+        }
+        $group->members()->createMany($members);
 
         return redirect('/groups')->with(['status' => 'Group created. ', ]);
     }
@@ -58,7 +77,10 @@ class UserGroupController extends Controller
      */
     public function edit(UserGroup $group): View
     {
-        return view('groups.edit', compact('group' ));
+        $roles = $group->members()->where('memberable_type', '=', Role::class)->get();
+        $users = $group->members()->where('memberable_type', '=', User::class)->get();
+
+        return view('groups.edit', compact('group', 'roles', 'users' ));
     }
 
     /**
@@ -69,9 +91,26 @@ class UserGroupController extends Controller
      */
     public function update(UserGroup $group): RedirectResponse
     {
+        // Update the group
         $data = $this->validateRequest($group);
-
         $group->update($data);
+
+        // Update recipients
+        // @todo refactor member attachment to separate method
+        $members = [];
+        foreach($data['recipient_roles'] as $role){
+            $members[] = [
+                'memberable_id'     => $role,
+                'memberable_type'   => 'App\Models\Role',
+            ];
+        }
+        foreach($data['recipient_users'] as $user){
+            $members[] = [
+                'memberable_id'     => $user,
+                'memberable_type'   => 'App\Models\User',
+            ];
+        }
+        $group->members()->createMany($members);
 
         return redirect()->route('groups.show', [$group])->with(['status' => 'Group updated. ', ]);
     }
@@ -93,6 +132,43 @@ class UserGroupController extends Controller
         return redirect()->route('groups.index')->with(['status' => 'Group deleted. ', ]);
     }
 
+    public function findRecipient(Request $request): JsonResponse
+    {
+        $term = trim($request->q);
+        $type = trim($request->type);
+
+        if( empty($term) ){
+            return \Response::json([]);
+        }
+
+        $formatted_recipients = [];
+        if( $type === 'users'){
+            $users = User::where('name', 'like', "%$term%")
+                ->limit(5)
+                ->get();
+
+            foreach( $users as $user ){
+                $formatted_recipients[] = [
+                    'id'    => $user->id,
+                    'text'  => $user->name
+                ];
+            }
+        } elseif( $type === 'roles' ){
+            $roles = Role::where('name', 'like', "%$term%")
+                ->limit(5)
+                ->get();
+
+            foreach( $roles as $role ){
+                $formatted_recipients[] = [
+                    'id'    => $role->id,
+                    'text'  => $role->name
+                ];
+            }
+        }
+
+        return \Response::json($formatted_recipients);
+    }
+
     /**
      * @param UserGroup $group
      * @return mixed
@@ -107,6 +183,8 @@ class UserGroupController extends Controller
                 'max:255'
             ],
             'list_type'         => 'required',
+            'recipient_roles'  => '',
+            'recipient_users'  => '',
         ]);
     }
 }

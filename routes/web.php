@@ -150,7 +150,9 @@ Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static functio
 
 // User Groups module
 Route::middleware(['auth', 'role:Admin'])->group(static function () {
+    Route::get('/groups/find-recipient', 'UserGroupController@findRecipient');
     Route::resource('groups', 'UserGroupController');
+
 });
 
 // Tasks module

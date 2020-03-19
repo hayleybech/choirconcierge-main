@@ -55,6 +55,26 @@
 
     </fieldset>
 
+    <h4>Recipients</h4>
+
+    <div class="form-group">
+        <label for="recipient_roles"><i class="fa fa-fw fa-users"></i> Roles</label>
+        <select id="recipient_roles" name="recipient_roles[]" class="select2 form-control" data-recipient-type="roles" multiple>
+        @foreach($roles as $role)
+            <option value="{{$role->memberable_id}}" selected>{{$role->memberable->name}}</option>
+        @endforeach
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="recipient_users"><i class="fa fa-fw fa-user"></i> Users</label>
+        <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-recipient-type="users" multiple>
+        @foreach($users as $user)
+            <option value="{{$user->memberable_id}}" selected>{{$user->memberable->name}}</option>
+        @endforeach
+        </select>
+    </div>
+
     {{ Form::submit('Save', array( 'class' => 'btn btn-primary' )) }}
 
     {{ Form::close() }}

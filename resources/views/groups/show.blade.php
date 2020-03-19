@@ -17,4 +17,24 @@
         List Type: {{ $group->list_type }}
     </p>
 
+    <p class="mb-2 text-muted">
+        Members:
+    </p>
+
+    @if( $group->members->count() > 0 )
+    <ul>
+    @foreach($group->members as $member)
+        <li>
+            <strong>
+            @if($member->memberable_type === \App\Models\Role::class)
+            Role:
+            @elseif($member->memberable_type === \App\Models\User::class)
+            User:
+            @endif
+            </strong> {{ $member->memberable->name }}
+        </li>
+    @endforeach
+    </ul>
+    @endif
+
 @endsection

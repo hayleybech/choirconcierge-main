@@ -43,6 +43,29 @@ $( document ).ready(function() {
     $title.change(function(){
         $slug.val( toSlug( $title.val() ) );
     });
+
+
+    // Run Select2
+    $('.select2').select2({
+        placeholder: "Choose recipients...",
+        minimumInputLength: 2,
+        ajax: {
+            url: '/groups/find-recipient',
+            dataType: 'json',
+            data: function (params) {
+                return {
+                    q: $.trim(params.term),
+                    type: $(this).data('recipient-type')
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        }
+    });
 });
 
 

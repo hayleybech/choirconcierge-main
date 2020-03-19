@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserGroup extends Model
 {
@@ -14,4 +15,9 @@ class UserGroup extends Model
     protected $fillable = [
         'title', 'slug', 'list_type',
     ];
+
+    public function members(): HasMany
+    {
+        return $this->hasMany(GroupMember::class, 'group_id');
+    }
 }
