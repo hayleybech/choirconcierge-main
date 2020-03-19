@@ -24,6 +24,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Event extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+        'start_date',
+        'end_date',
+        'call_time',
+        'location_place_id',
+        'location_name',
+        'location_address',
+        'description',
+    ];
+
     public $dates = [
         'updated_at',
         'created_at',

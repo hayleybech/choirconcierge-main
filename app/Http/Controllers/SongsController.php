@@ -112,16 +112,8 @@ class SongsController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'title'             => 'required|max:255',
-            'categories'        => 'required|exists:song_categories,id',
-            'status'            => 'required|exists:song_statuses,id',
-            'pitch_blown'       => 'required',
-        ]);
-
-        $song = new Song();
-        $song->title = $request->title;
-        $song->pitch_blown = $request->pitch_blown;
+        $data = $this->validateRequest();
+        $song = Song::create($data);
 
         // Associate status
         $status = SongStatus::find($request->status);
@@ -158,8 +150,8 @@ class SongsController extends Controller
     public function update($songId, Request $request): RedirectResponse
     {
         $song = Song::find($songId);
-        $song->title = $request->title;
-        $song->pitch_blown = $request->pitch_blown;
+        $data = $this->validateRequest($song);
+        $song->update($data);
 
         // Associate status
         $status = SongStatus::find($request->status);
@@ -169,7 +161,7 @@ class SongsController extends Controller
         $song->categories()->sync($request->categories);
         $song->save();
 
-        return redirect()->route('song.edit', [$songId]);
+        return redirect()->route('song.edit', [$songId])->with(['status' => 'Song updated. ', ]);
     }
 
     public function delete($songId): RedirectResponse
@@ -263,5 +255,19 @@ class SongsController extends Controller
             ];
         }
         return $sorts;
+    }
+
+    /**
+     * @param Song $song
+     * @return mixed
+     */
+    public function validateRequest(Song $song = null)
+    {
+        return request()->validate([
+            'title'             => 'required|max:255',
+            'categories'        => 'required|exists:song_categories,id',
+            'status'            => 'required|exists:song_statuses,id',
+            'pitch_blown'       => 'required',
+        ]);
     }
 }

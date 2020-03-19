@@ -9,6 +9,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Song extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+        'pitch_blown',
+    ];
+
     public const PITCHES = [
         0   => 'A',
         1   => 'A#/Bb',

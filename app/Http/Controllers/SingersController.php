@@ -241,19 +241,10 @@ class SingersController extends Controller
 		return view('singers.create');
 	}
 	
-	public function store(Request $request): RedirectResponse
+	public function store(): RedirectResponse
     {
-		$validated = $request->validate([
-			'name'	=> 'required',
-			'email'	=> 'required|unique:singers',
-		]);
-		
-		$singer = new Singer();
-		
-		$singer->name  = $request->name;
-		$singer->email = $request->email;
-		
-		$singer->save();
+        $data = $this->validateRequest();
+        $singer = Singer::create($data);
 		
 		// Attach all tasks
 		$tasks = Task::all();
@@ -353,20 +344,9 @@ class SingersController extends Controller
     }
     public function update($singerId, Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name'	=> 'required',
-            'email' => [
-                'required',
-                Rule::unique('singers')->ignore($singerId),
-            ],
-        ]);
-
         $singer = Singer::find($singerId);
-
-        $singer->name  = $request->name;
-        $singer->email = $request->email;
-
-        $singer->save();
+        $data = $this->validateRequest($singer);
+        $singer->update($data);
 
         // Exit
         return redirect()->route('singers.show', [$singerId])->with(['status' => 'Singer saved. ']);
@@ -595,4 +575,19 @@ class SingersController extends Controller
 		})->download('csv');
 		
 	}
+
+    /**
+     * @param Singer $singer
+     * @return mixed
+     */
+    public function validateRequest(Singer $singer = null)
+    {
+        return request()->validate([
+            'name'	=> 'required',
+            'email'	=> [
+                'required',
+                Rule::unique('singers')->ignore($singer->id ?? ''),
+            ]
+        ]);
+    }
 }

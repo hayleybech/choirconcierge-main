@@ -56,17 +56,7 @@ class EventsController extends Controller
     public function store(): RedirectResponse
     {
         $data = $this->validateRequest();
-
-        $event = new Event();
-        $event->title = $data['title'];
-        $event->start_date = $data['start_date'];
-        $event->end_date = $data['end_date'];
-        $event->call_time = $data['call_time'];
-        $event->location_place_id = $data['location_place_id'];
-        $event->location_icon = $data['location_icon'];
-        $event->location_name = $data['location_name'];
-        $event->location_address = $data['location_address'];
-        $event->description = $data['description'];
+        $event = Event()::create($data);
 
         // Associate status
         $type = EventType::find($data['type']);
@@ -95,22 +85,14 @@ class EventsController extends Controller
         $data = $this->validateRequest();
 
         $event = Event::find($eventId);
-        $event->title = $data['title'];
-        $event->start_date = $data['start_date'];
-        $event->end_date = $data['end_date'];
-        $event->call_time = $data['call_time'];
-        $event->location_place_id = $data['location_place_id'];
-        $event->location_icon = $data['location_icon'];
-        $event->location_name = $data['location_name'];
-        $event->location_address = $data['location_address'];
-        $event->description = $data['description'];
+        $event->update($data);
 
 
         // Associate status
         $type = EventType::find($data['type']);
         $type->events()->save($event);
 
-        return redirect()->route('event.edit', [$eventId]);
+        return redirect()->route('event.edit', [$eventId])->with(['status' => 'Event updated. ', ]);
     }
 
     public function delete($eventId): RedirectResponse
