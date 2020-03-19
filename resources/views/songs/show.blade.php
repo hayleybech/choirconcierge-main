@@ -6,13 +6,13 @@
     <a href="{{route( 'song.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
 @endsection
 @section('page-lead')
-    Status: {{ $song->status->title }}<br>
+    <span class="badge badge-light">{{ $song->status->title }}</span><br>
     Category:
     @foreach( $song->categories as $cat )
         <span class="song-category">{{ $cat->title }}</span>@if( ! $loop->last ), @endif
     @endforeach
     <br>
-    Pitch Blown: <button class="pitch btn btn-secondary btn-sm"><i class="fa fa-play"></i> <span class="key">{{ $song->pitch }}</span></button><br>
+    <button class="pitch btn btn-secondary btn-sm"><i class="fa fa-play"></i> <span class="key">{{ $song->pitch }}</span></button><br>
 @endsection
 
 @section('page-content')
