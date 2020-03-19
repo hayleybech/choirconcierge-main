@@ -42,25 +42,29 @@
                 </div>
             </form>
 
+        </div>
 
-            <div class="r-table r-table--card-view-mobile">
-                <div class="r-table__thead">
-                    <div class="r-table__row">
-                        <div class="r-table__heading column--mark"><input type="checkbox"></div>
-                        <div class="r-table__heading column--title">Title</div>
-                        <div class="r-table__heading column--slug">Slug</div>
-                        <div class="r-table__heading column--type">Type</div>
-                        <div class="r-table__heading column--created">Created</div>
-                        <div class="r-table__heading column--actions">Actions</div>
-                    </div>
-                </div>
-                <div class="r-table__tbody">
-                    @each('groups.index_row', $groups, 'group', 'partials.noresults')
+
+        <div class="r-table r-table--card-view-mobile">
+            <div class="r-table__thead">
+                <div class="r-table__row">
+                    <div class="r-table__heading column--mark"><input type="checkbox"></div>
+                    <div class="r-table__heading column--title">Title</div>
+                    <div class="r-table__heading column--slug">Slug</div>
+                    <div class="r-table__heading column--type">Type</div>
+                    <div class="r-table__heading column--created">Created</div>
+                    <div class="r-table__heading column--actions">Actions</div>
                 </div>
             </div>
-
-
+            <div class="r-table__tbody">
+                @each('groups.index_row', $groups, 'group', 'partials.noresults')
+            </div>
         </div>
+
+        <div class="card-footer">
+            {{ $groups->count() }} groups
+        </div>
+
     </div>
 
 @endsection

@@ -192,11 +192,6 @@ main {
 }
 
 
-.r-table__tbody .r-table__row {
-	margin: 5px 0;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-}
 .r-table__row:nth-child(even) {
 	background-color: #eee;
 }
