@@ -8,6 +8,9 @@ html, body, #app {
 	height: 100%;
 	width: 100%;
 }
+body {
+	font-family: Lato, Raleway, Arial, Helvetica, sans-serif;
+}
 #app {
 	display: flex;
 	flex-flow: column nowrap;
