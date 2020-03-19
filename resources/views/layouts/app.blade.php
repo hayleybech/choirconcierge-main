@@ -14,7 +14,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-
+	
 	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
 </head>
@@ -60,7 +60,7 @@
                             </li>--}}
 
 							@if( Auth::user()->isEmployee() )
-								<li class="nav-item nav-separator"></li>
+								<li class="nav-item nav-heading">Singers</li>
 								<li class="nav-item">
 									<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-user fa-fw"></i><span class="link-text"> Singers</span></a>
 								</li>
@@ -73,7 +73,7 @@
 							@endif
 
 							@if( Auth::user()->hasRole('Admin') )
-								<li class="nav-item nav-separator"></li>
+								<li class="nav-item nav-heading">Management</li>
 								<li class="nav-item">
 									<a href="{{ route('groups.index') }}" class="nav-link"><i class="fa fa-users fa-fw"></i><span class="link-text"> Groups</span></a>
 								</li>
@@ -88,7 +88,8 @@
 								</li>
 							@endif
 
-							<li class="nav-item nav-separator"></li>
+							<li class="nav-item nav-heading">Account</li>
+
 
 							<li class="nav-item">
 								<a href="#" class="nav-link">

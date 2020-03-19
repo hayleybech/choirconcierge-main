@@ -68,12 +68,31 @@ main {
 	border-top: 1px solid #e9ecef;
 }
 
+.nav-heading {
+	margin-top: 15px;
+	margin-bottom: 5px;
+	font-size: 0.85em;
+	font-weight: 900;
+	color: rgba(0,0,0,0.6);
+	text-transform: uppercase;
+	padding-left: 0.5rem;
+	letter-spacing: 0.03em;
+}
+
+.nav-item i {
+	color: rgba(0, 0, 0, 0.5);
+}
+.nav-item .link-text {
+	color: rgba(0, 0, 0, 0.8);
+}
+
 .logo {
 	/*max-width:100%;
 	height:auto;
 	max-height: 100px;
 	margin-top: 20px;*/
 	height: 50px;
+	margin-bottom: 10px;
 }
 .logo-collapse {
 	display: none;

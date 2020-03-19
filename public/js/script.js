@@ -9,7 +9,7 @@ $( document ).ready(function() {
     });
 
 	// Setup menu collapse
-	$menu_collapsibles = $('#app-header .navbar .logo, #app-header .navbar .logo-collapse, #app-header .navbar .link-text');
+	$menu_collapsibles = $('#app-header .navbar .logo, #app-header .navbar .logo-collapse, #app-header .navbar .link-text, .nav-heading');
 	$collapse_link = $('a.nav-collapse-link');
 	$collapse_icon = $collapse_link.find('i');
 	$collapse_link.on('click', function(e){
