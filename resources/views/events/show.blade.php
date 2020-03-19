@@ -8,10 +8,10 @@
 @endsection
 
 @section('page-lead')
-    Event Type: {{ $event->type->title }}<br>
-    Event Date: {{ $event->start_date->format('M d, H:i') }} to {{ $event->end_date->format('M d, H:i') }}<br>
+    <span class="badge badge-light">{{ $event->type->title }}</span><br>
+    {{ $event->start_date->format('M d, H:i') }} to {{ $event->end_date->format('M d, H:i') }}<br>
     Call Time: {{ $event->call_time->format('M d, H:i') }}<br>
-    Description: {{ $event->description }}
+    {{ $event->description }}
 @endsection
 
 @section('page-content')
