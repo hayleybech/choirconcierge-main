@@ -6,22 +6,25 @@
 
 @section('page-content')
 
-	<div class="table-responsive">
-		<table class="table table-striped table-bordered bg-light">
-			<thead>
-			<tr>
-				<th scope="col">Task</th>
-				<th scope="col">Subject</th>
-				<th scope="col">Recipients</th>
-				<th scope="col">Body</th>
-				<th scope="col">Delay</th>
-			</tr>
-			</thead>
-			<tbody>
-			@each('notification-templates.index_row', $templates, 'template', 'partials.noresults')
-			</tbody>
-		</table>
+	<div class="card bg-light">
+		<h3 class="card-header h4">Templates List</h3>
 
+		<div class="table-responsive">
+			<table class="table table-borderless table-striped bg-light">
+				<thead>
+				<tr>
+					<th scope="col">Task</th>
+					<th scope="col">Subject</th>
+					<th scope="col">Recipients</th>
+					<th scope="col">Body</th>
+					<th scope="col">Delay</th>
+				</tr>
+				</thead>
+				<tbody>
+				@each('notification-templates.index_row', $templates, 'template', 'partials.noresults')
+				</tbody>
+			</table>
+		</div>
 	</div>
 
 
