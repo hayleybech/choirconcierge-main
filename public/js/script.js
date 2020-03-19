@@ -36,6 +36,36 @@ $( document ).ready(function() {
     });
 
     bsCustomFileInput.init();
+
+    // Title-Slug generation
+    let $title = $('.form-group #title');
+    let $slug = $('.form-group #slug');
+    $title.change(function(){
+        $slug.val( toSlug( $title.val() ) );
+    });
+
+
+    // Run Select2
+    $('.select2').select2({
+        placeholder: "Choose recipients...",
+        minimumInputLength: 2,
+        ajax: {
+            url: '/groups/find-recipient',
+            dataType: 'json',
+            data: function (params) {
+                return {
+                    q: $.trim(params.term),
+                    type: $(this).data('recipient-type')
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        }
+    });
 });
 
 
@@ -57,3 +87,18 @@ $( document ).ready(function() {
         });
     }, false);
 })();
+
+/**
+ * Converts a title to its matching slug
+ * See https://stackoverflow.com/questions/1053902/how-to-convert-a-title-to-a-url-slug-in-jquery
+ *
+ * @param title
+ * @returns {string} slug
+ */
+function toSlug(title) {
+    return title
+        .toLowerCase()
+        .replace(/[^\w ]+/g,'')
+        .replace(/ +/g,'-')
+    ;
+}

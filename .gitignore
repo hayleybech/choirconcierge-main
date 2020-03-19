@@ -14,3 +14,10 @@ yarn-error.log
 .phpstorm.meta.php
 _ide_helper.php
 _ide_helper_models.php
+package-lock.json
+
+public/css/app.css
+public/js/app.js
+
+public/fonts/
+public/mix-manifest.json
