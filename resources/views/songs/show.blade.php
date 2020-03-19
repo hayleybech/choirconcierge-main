@@ -3,7 +3,7 @@
 @section('title', $song->title . ' - Songs')
 @section('page-title', $song->title)
 @section('page-action')
-    <a href="{{route( 'song.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
+    <a href="{{route( 'song.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
 @endsection
 @section('page-lead')
     Status: {{ $song->status->title }}<br>

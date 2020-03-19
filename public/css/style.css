@@ -39,10 +39,12 @@ body {
 }
 main {
 	flex: 1 1 0;
-	padding: 20px;
 	overflow-y: scroll;
 	max-height: 100%;
 	max-width: 100%;
+}
+.container {
+	padding: 0 50px;
 }
 @media screen and (max-width: 767px) {
 	#app-header {
@@ -57,6 +59,7 @@ main {
 	align-items: stretch;
 	justify-content: flex-start;
 	height: 100%;
+	box-shadow: 0 0.15rem 1.75rem 0 rgba(31, 45, 65, 0.15) !important;
 }
 .navbar .nav-vertical {
 	flex-flow: column nowrap;
@@ -73,17 +76,25 @@ main {
 	margin-bottom: 5px;
 	font-size: 0.85em;
 	font-weight: 900;
-	color: rgba(0,0,0,0.6);
+	color: rgba(0,0,0, 0.5);
 	text-transform: uppercase;
 	padding-left: 0.5rem;
 	letter-spacing: 0.03em;
 }
 
 .nav-item i {
-	color: rgba(0, 0, 0, 0.5);
+	color: #0061f2;
 }
 .nav-item .link-text {
 	color: rgba(0, 0, 0, 0.8);
+}
+
+.nav-link.active i {
+	color: #6900c7;
+}
+.nav-link.active .link-text {
+	color: #6900c7;
+	font-weight: 600;
 }
 
 .logo {
@@ -128,10 +139,23 @@ main {
 		display: block;
 	}
 }
+/**********************************/
+/* PAGE HEADER */
+.page-header {
+	margin-bottom: -80px;
+	padding-bottom: 100px;
+}
+.bg-gradient-blue-purple {
+	background-color: #0061f2;
+	background-image: linear-gradient(135deg, #0061f2 0%, rgba(105, 0, 199, 0.8) 100%);
+}
+
+/**********************************/
 
 /* Singers List */
 .card {
 	margin-bottom: 10px;
+	box-shadow: 0 0.15rem 1.75rem 0 rgba(31, 45, 65, 0.15);
 }
 
 .item-title {
@@ -401,7 +425,7 @@ i.fa.fa-external-link {
     font-size: 0.8em;
 }
 
-.navbar-nav i.fa.fa-fw {
+.navbar-nav i {
     margin-right: 5px;
 }
 

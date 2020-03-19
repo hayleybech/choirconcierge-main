@@ -2,15 +2,20 @@
 
 @section('content')
 
-    <div class="jumbotron bg-light">
-        <h2 class="display-4">@yield('page-title') @yield('page-action')</h2>
-        <p class="lead">
-            @yield('page-lead')
-        </p>
+    <div class="page-header jumbotron jumbotron-fluid bg-light bg-gradient-blue-purple text-white">
+        <div class="container">
+            <h2 class="display-4">@yield('page-title') @yield('page-action')</h2>
+            <p class="lead">
+                @yield('page-lead')
+            </p>
+        </div>
     </div>
 
-    @include('partials.flash')
+    <div class="container">
+        @include('partials.flash')
 
-    @yield('page-content')
+        @yield('page-content')
+
+    </div>
 
 @endsection

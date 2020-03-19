@@ -44,7 +44,7 @@
 						@else
 
 							<li class="nav-item">
-								<a class="nav-link {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-tachometer-alt fa-fw"></i><span class="link-text"> Dashboard</span></a>
+								<a class="nav-link {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-chart-line fa-fw"></i><span class="link-text"> Dashboard</span></a>
 							</li>
 
 							{{--<li class="nav-item dropdown">
@@ -68,7 +68,7 @@
 									<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs.index') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events.index') ) ? 'active' : '' }}"><i class="fa fa-calendar fa-fw"></i><span class="link-text"> Events</span></a>
+									<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events.index') ) ? 'active' : '' }}"><i class="far fa-calendar fa-fw"></i><span class="link-text"> Events</span></a>
 								</li>
 							@endif
 
@@ -81,7 +81,7 @@
 									<a href="{{ route('tasks.index') }}" class="nav-link"><i class="fa fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('notification-templates.index') }}" class="nav-link"><i class="fa fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
+									<a href="{{ route('notification-templates.index') }}" class="nav-link"><i class="far fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
 								</li>
 								<li class="nav-item">
 									<a href="{{ route('users.index') }}" class="nav-link"><i class="fa fa-sitemap fa-fw"></i><span class="link-text"> Team</span></a>
@@ -93,7 +93,7 @@
 
 							<li class="nav-item">
 								<a href="#" class="nav-link">
-									<i class="fa fa-user-circle fa-fw"></i><span class="link-text"> {{ Auth::user()->name }}</span>
+									<i class="far fa-user-circle fa-fw"></i><span class="link-text"> {{ Auth::user()->name }}</span>
 								</a>
 							</li>
 
@@ -116,7 +116,7 @@
 						@endguest
 
 						<li class="nav-item">
-							<a href="" class="nav-link nav-collapse-link"><i class="fa fa-fw fa-caret-square-left"></i><span class="link-text"> Collapse Menu</span></a>
+							<a href="" class="nav-link nav-collapse-link"><i class="fa fa-fw fa-caret-left"></i><span class="link-text"> Collapse Menu</span></a>
 						</li>
 					</ul>
 
@@ -125,9 +125,7 @@
 			</header>
 
 			<main>
-				<div class="container">
-					@yield('content')
-				</div>
+				@yield('content')
 			</main>
 		</div>
 

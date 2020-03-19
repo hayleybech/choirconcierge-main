@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', $group->title . ' - Groups')
 @section('page-title', $group->title)
 @section('page-action')
-<a href="{{route( 'groups.edit', ['group' => $group] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
+<a href="{{route( 'groups.edit', ['group' => $group] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
 @endsection
 @section('page-lead')
     Group Slug: {{ $group->slug }}<br>
