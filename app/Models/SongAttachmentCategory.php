@@ -9,6 +9,6 @@ class SongAttachmentCategory extends Model
 {
     public function attachments(): HasMany
     {
-        return $this->hasMany('App\Models\SongAttachment', 'category_id');
+        return $this->hasMany(SongAttachment::class, 'category_id');
     }
 }

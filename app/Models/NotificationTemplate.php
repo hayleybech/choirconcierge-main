@@ -2,10 +2,6 @@
 
 namespace App\Models;
 
-use App\Models;
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Singer;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\TaskCompleted;
 use Carbon\Carbon;
@@ -16,7 +12,7 @@ class NotificationTemplate extends Model
 {
     public function task(): BelongsTo
     {
-		return $this->belongsTo('App\Models\Task');
+		return $this->belongsTo(Task::class);
 	}
 
     public function getRecipientType(): string
@@ -36,10 +32,10 @@ class NotificationTemplate extends Model
                 $recipients = $role->users;
                 break;
             case 'user':
-                $recipients[] = Models\User::find($recipient_id);
+                $recipients[] = User::find($recipient_id);
                 break;
             case 'singer':
-                $recipients[] = Models\Singer::find($recipient_id);
+                $recipients[] = Singer::find($recipient_id);
                 break;
         }
 

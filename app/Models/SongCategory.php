@@ -9,6 +9,6 @@ class SongCategory extends Model
 {
     public function songs(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\Song', 'songs_song_categories', 'category_id', 'song_id');
+        return $this->belongsToMany(Song::class, 'songs_song_categories', 'category_id', 'song_id');
     }
 }

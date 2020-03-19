@@ -9,6 +9,6 @@ class SongStatus extends Model
 {
     public function songs(): HasMany
     {
-        return $this->hasMany('App\Models\Song', 'status_id');
+        return $this->hasMany(Song::class, 'status_id');
     }
 }

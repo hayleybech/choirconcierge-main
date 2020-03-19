@@ -9,6 +9,6 @@ class EventType extends Model
 {
     public function events(): HasMany
     {
-        return $this->hasMany('App\Models\Event', 'type_id');
+        return $this->hasMany(Event::class, 'type_id');
     }
 }

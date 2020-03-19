@@ -9,6 +9,6 @@ class SingerCategory extends Model
 {
     public function singers(): HasMany
     {
-        return $this->hasMany('App\Models\Singer');
+        return $this->hasMany(Singer::class);
     }
 }

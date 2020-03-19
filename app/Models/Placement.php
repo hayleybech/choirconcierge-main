@@ -20,6 +20,6 @@ class Placement extends Model
 	
 	public function singer(): BelongsTo
     {
-		return $this->belongsTo('App\Models\Singer');
+		return $this->belongsTo(Singer::class );
 	}
 }

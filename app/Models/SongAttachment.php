@@ -14,12 +14,12 @@ class SongAttachment extends Model
 
     public function song(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Song');
+        return $this->belongsTo(Song::class);
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo('App\Models\SongAttachmentCategory', 'category_id');
+        return $this->belongsTo(SongAttachmentCategory::class, 'category_id');
     }
 
     public function getDownloadUrlAttribute(): string

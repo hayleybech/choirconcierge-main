@@ -47,17 +47,17 @@ class Song extends Model
 
     public function status(): BelongsTo
     {
-        return $this->belongsTo('App\Models\SongStatus', 'status_id');
+        return $this->belongsTo(SongStatus::class, 'status_id');
     }
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\SongCategory', 'songs_song_categories', 'song_id', 'category_id');
+        return $this->belongsToMany(SongCategory::class, 'songs_song_categories', 'song_id', 'category_id');
     }
 
     public function attachments(): HasMany
     {
-        return $this->hasMany('App\Models\SongAttachment');
+        return $this->hasMany(SongAttachment::class);
     }
 
     public function getPitchAttribute(): string

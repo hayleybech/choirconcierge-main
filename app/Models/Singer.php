@@ -23,22 +23,22 @@ class Singer extends Model
 	 */
 	public function tasks(): BelongsToMany
 	{
-		return $this->belongsToMany('App\Models\Task', 'singers_tasks')->withPivot('completed')->withTimestamps();
+		return $this->belongsToMany(Task::class, 'singers_tasks')->withPivot('completed')->withTimestamps();
 	}
 	
 	public function profile(): HasOne
 	{
-		return $this->hasOne('App\Models\Profile');
+		return $this->hasOne(Profile::class );
 	}
 	
 	public function placement(): HasOne
 	{
-		return $this->hasOne('App\Models\Placement');
+		return $this->hasOne(Placement::class);
 	}
 
 	public function category(): BelongsTo
     {
-        return $this->belongsTo('App\Models\SingerCategory', 'singer_category_id');
+        return $this->belongsTo(SingerCategory::class, 'singer_category_id');
     }
 
     public function getAge(): int

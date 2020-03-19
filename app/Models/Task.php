@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Singer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -15,17 +14,17 @@ class Task extends Model
 	 */
 	public function role(): BelongsTo
 	{
-		return $this->belongsTo('App\Models\Role');
+		return $this->belongsTo(Role::class);
 	}
 	
 	public function singers(): BelongsToMany
 	{
-		return $this->belongsToMany('App\Models\Singer', 'singers_tasks')->withPivot('completed')->withTimestamps();
+		return $this->belongsToMany(Singer::class, 'singers_tasks')->withPivot('completed')->withTimestamps();
 	}
 	
 	public function notification_templates(): HasMany
 	{
-		return $this->hasMany('App\Models\NotificationTemplate');
+		return $this->hasMany(NotificationTemplate::class);
 	}
 
 	public function generateNotifications(Singer $singer): void

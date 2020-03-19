@@ -15,7 +15,7 @@ class Role extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\User', 'users_roles');
+        return $this->belongsToMany(User::class, 'users_roles');
     }
 	
 	/** 
@@ -23,7 +23,7 @@ class Role extends Model
 	 */
 	public function tasks(): HasMany
 	{
-		return $this->hasMany('App\Models\Task');
+		return $this->hasMany(Task::class);
 	}
 
 	/*
