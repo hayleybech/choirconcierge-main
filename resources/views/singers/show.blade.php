@@ -6,7 +6,9 @@
 	<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
 @endsection
 @section('page-lead')
-	Email: {{ $singer->email }}<br>
+	<span class="badge badge-light">{{ $singer->category->name }}</span><br>
+	<i class="fa fa-fw fa-users"></i> {{ $singer->placement->voice_part }} <br>
+	{{ $singer->email }}<br>
 	Added: {{$singer->created_at}}
 @endsection
 
