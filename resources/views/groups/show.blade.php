@@ -6,8 +6,8 @@
 <a href="{{route( 'groups.edit', ['group' => $group] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
 @endsection
 @section('page-lead')
-    Group Slug: {{ $group->slug }}<br>
-    List Type: {{ $group->list_type }}<br>
+    <span class="badge badge-light"><i class="{{ (( $group->list_type === 'chat' )) ? 'fa fa-fw fa-comments' : '' }}"></i> {{ ucwords($group->list_type) }}</span><br>
+    {{ $group->slug }}<br>
 @endsection
 
 @section('page-content')
