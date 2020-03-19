@@ -101,6 +101,9 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
     Route::get('create', 'SongsController@create')->name('song.create');
     Route::post('/', 'SongsController@store');
 
+    // Access Learning Mode
+    Route::get('learning', 'SongsController@learning')->name('songs.learning');
+
     // View/Edit/Delete
     Route::get('{song}', 'SongsController@show')->name('songs.show');
     Route::get('{song}/edit', 'SongsController@edit')->name('song.edit');
@@ -110,9 +113,6 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
     // Create/Delete attachments
     Route::post('{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
     Route::get('{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('song.attachments.delete');
-
-    // Access Learning Mode
-    Route::get('learning', 'SongsController@learning')->name('songs.learning');
 });
 
 // Events module
