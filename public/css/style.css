@@ -38,8 +38,8 @@ body {
 	z-index: 1000;
 }
 main {
-	flex: 1 0 auto;
-	padding-top: 20px;
+	flex: 1 1 0;
+	padding: 20px;
 	overflow-y: scroll;
 	max-height: 100%;
 	max-width: 100%;

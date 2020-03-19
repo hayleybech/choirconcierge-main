@@ -4,7 +4,10 @@
 
 @section('content')
 
-    <h2 class="display-4 mb-4">Events <a href="{{route( 'event.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-calendar-plus"></i> Add New</a></h2>
+    <div class="jumbotron bg-light">
+        <h2 class="display-4">Events <a href="{{route( 'event.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-calendar-plus"></i> Add New</a></h2>
+    </div>
+
 
     @include('partials.flash')
 

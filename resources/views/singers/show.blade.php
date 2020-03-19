@@ -4,19 +4,18 @@
 
 @section('content')
 
-	<h2 class="display-4 mb-4">{{$singer->name}} <a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
+	<div class="jumbotron bg-light">
+		<h2 class="display-4">{{$singer->name}} <a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
+		<p class="lead">
+			Email: {{ $singer->email }}<br>
+			Added: {{$singer->created_at}}
+		</p>
+	</div>
 
 	@include('partials.flash')
-	
-	<p class="mb-2 text-muted singer-email">
-		Email: {{ $singer->email }}<br>
-		Added: {{$singer->created_at}}
-	</p>
 
-	<div class="card">
-		<div class="card-header">
-			<h3 class="h6">Tasks</h3>
-		</div>
+	<div class="card bg-light">
+		<h3 class="card-header h5">Tasks</h3>
 		<div class="list-group list-group-flush">
 			@foreach( $singer->tasks as $task )
 				@if( $task->pivot->completed )
@@ -36,10 +35,8 @@
 		</div>
 	</div>
 	
-	<div class="card">
-		<div class="card-header">
-			<h3 class="h6">Member Profile</h3>
-		</div>
+	<div class="card bg-light">
+		<h3 class="card-header h5">Member Profile</h3>
 		@if( $singer->profile )
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item">
@@ -74,10 +71,8 @@
 		@endif
 	</div>
 	
-	<div class="card">
-		<div class="card-header">
-			<h3 class="h6">Voice Placement</h3>
-		</div>
+	<div class="card bg-light">
+		<h3 class="card-header h5">Voice Placement</h3>
 		@if( $singer->placement )
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item">

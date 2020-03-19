@@ -4,48 +4,59 @@
 
 @section('content')
 
-    <h2 class="display-4 mb-4">Add Song</h2>
+    <div class="jumbotron bg-light">
+        <h2 class="display-4">Add Song</h2>
+    </div>
 
     @include('partials.flash')
 
     {{ Form::open( array( 'route' => 'songs.index' ) ) }}
 
-    <div class="form-group">
-        {{ Form::label('title', 'Song Title') }}
-        {{ Form::text('title', '', array('class' => 'form-control')) }}
-    </div>
+    <div class="card bg-light">
+        <h3 class="card-header h4">Song Details</h3>
 
-    <fieldset class="form-group">
-        <legend class="col-form-label">Category</legend>
-        @foreach($categories as $cat)
-            <div class="custom-control custom-checkbox custom-control-inline">
-                <input id="categories_{{$cat->id}}" name="categories[]" value="{{$cat->id}}" class="custom-control-input" type="checkbox">
-                <label for="categories_{{$cat->id}}" class="custom-control-label">{{$cat->title}}</label>
+        <div class="card-body">
+            <div class="form-group">
+                {{ Form::label('title', 'Song Title') }}
+                {{ Form::text('title', '', array('class' => 'form-control')) }}
             </div>
-        @endforeach
-    </fieldset>
+
+            <fieldset class="form-group">
+                <legend class="col-form-label">Category</legend>
+                @foreach($categories as $cat)
+                    <div class="custom-control custom-checkbox custom-control-inline">
+                        <input id="categories_{{$cat->id}}" name="categories[]" value="{{$cat->id}}" class="custom-control-input" type="checkbox">
+                        <label for="categories_{{$cat->id}}" class="custom-control-label">{{$cat->title}}</label>
+                    </div>
+                @endforeach
+            </fieldset>
 
 
-    <fieldset class="form-group">
-        <legend class="col-form-label">Status</legend>
-        @foreach($statuses as $status)
-            <div class="custom-control custom-radio custom-control-inline">
-                <input id="status_{{$status->id}}" name="status" value="{{$status->id}}" class="custom-control-input" type="radio">
-                <label for="status_{{$status->id}}" class="custom-control-label">{{$status->title}}</label>
+            <fieldset class="form-group">
+                <legend class="col-form-label">Status</legend>
+                @foreach($statuses as $status)
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input id="status_{{$status->id}}" name="status" value="{{$status->id}}" class="custom-control-input" type="radio">
+                        <label for="status_{{$status->id}}" class="custom-control-label">{{$status->title}}</label>
+                    </div>
+                @endforeach
+            </fieldset>
+
+            <div class="form-group">
+                {{ Form::label('pitch_blown', 'Pitch Blown') }}
+                {{ Form::select('pitch_blown',
+                    $pitches,
+                    '',
+                    ['class' => 'custom-select']
+                ) }}
             </div>
-        @endforeach
-    </fieldset>
 
-    <div class="form-group">
-        {{ Form::label('pitch_blown', 'Pitch Blown') }}
-        {{ Form::select('pitch_blown',
-            $pitches,
-            '',
-            ['class' => 'custom-select']
-        ) }}
+        </div>
+
+        <div class="card-footer">
+            {{ Form::submit('Create', array( 'class' => 'btn btn-primary' )) }}
+        </div>
     </div>
-
-    {{ Form::submit('Create', array( 'class' => 'btn btn-primary' )) }}
 
     {{ Form::close() }}
 

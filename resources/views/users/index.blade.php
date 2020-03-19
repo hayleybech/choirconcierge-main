@@ -4,13 +4,15 @@
 
 @section('content')
 
-	<h2 class="display-4 mb-4">Users</h2>
+	<div class="jumbotron bg-light">
+		<h2 class="display-4">Users</h2>
+	</div>
 
 	@include('partials.flash')
 	
 	<div id="accordion" class="accordion">
 	@foreach($users as $key => $user)
-	<div class="card">
+	<div class="card bg-light">
 		<div class="card-header"><a class="btn btn-link collapsed" data-toggle="collapse" href="#collapse-{{$key}}" aria-expanded="false" aria-controls="collapse-{{$key}}">{{$user->name}}</a></div>
 		<div class="collapse" id="collapse-{{$key}}" data-parent="#accordion" >
 			<ul class="list-group list-group-flush">

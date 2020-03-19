@@ -3,7 +3,7 @@
 @section('title', 'Login')
 
 @section('content')
-	<div class="jumbotron">
+	<div class="jumbotron bg-light">
 	  <h1 class="display-3">Welcome</h1>
 	  <p class="lead">Welcome to Choir Concierge, your singer management assistant. </p>
 	  <hr class="my-4">

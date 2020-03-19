@@ -4,24 +4,34 @@
 
 @section('content')
 
-    <h2 class="display-4 mb-4">{{$singer->name}}</h2>
+    <div class="jumbotron bg-light">
+        <h2 class="display-4">{{$singer->name}}</h2>
+    </div>
 
-    <h3>Edit Singer</h3>
     @include('partials.flash')
 
     {{ Form::open( array( 'route' => ['singers.show', $singer->id], 'method' => 'put' ) ) }}
 
-    <p>
-        {{ Form::label('name', 'Name') }}
-        {{ Form::text('name', $singer->name, array('class' => 'form-control')) }}
-    </p>
+    <div class="card bg-light">
+        <div class="card-header">Edit Singer</div>
 
-    <p>
-        {{ Form::label('email', 'E-Mail Address') }}
-        {{ Form::email('email', $singer->email, array('class' => 'form-control')) }}
-    </p>
+        <div class="card-body">
+            <p>
+                {{ Form::label('name', 'Name') }}
+                {{ Form::text('name', $singer->name, array('class' => 'form-control')) }}
+            </p>
 
-    {{ Form::submit('Save', array( 'class' => 'btn btn-primary' )) }}
+            <p>
+                {{ Form::label('email', 'E-Mail Address') }}
+                {{ Form::email('email', $singer->email, array('class' => 'form-control')) }}
+            </p>
+        </div>
+
+        <div class="card-footer">
+            {{ Form::submit('Save', array( 'class' => 'btn btn-primary' )) }}
+        </div>
+
+    </div>
 
     {{ Form::close() }}
 

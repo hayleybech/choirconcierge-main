@@ -4,8 +4,10 @@
 
 @section('content')
 
-	<h2 class="display-4 mb-4">Global Task List</h2>
-	<p>This page lists the onboarding tasks the choir must complete for every singer. </p>
+	<div class="jumbotron bg-light">
+		<h2 class="display-4">Global Task List</h2>
+		<p class="lead">This page lists the onboarding tasks the choir must complete for every singer. </p>
+	</div>
 
 	@if (session('status'))
 	<div class="alert {{ isset($Response->error) ? 'alert-danger' : 'alert-success' }}" role="alert">
@@ -19,9 +21,9 @@
 		@endisset
 	</div>
 	@endif
-		
-	<table class="table table-striped table-bordered">
-		<thead class="thead-dark">
+
+	<table class="table table-striped table-bordered bg-light">
+		<thead class="">
 			<tr>
 				<th scope="col">Name</th>
 				<th scope="col">Role</th>

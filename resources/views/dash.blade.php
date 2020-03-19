@@ -3,9 +3,11 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<h2 class="display-4 mb-4">Dashboard</h2>
+    <div class="jumbotron bg-light">
+        <h2 class="display-4">Dashboard</h2>
+    </div>
 
-<div class="card">
+<div class="card bg-light">
   <div class="card-header">
     Main Menu
   </div>

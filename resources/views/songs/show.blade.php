@@ -3,45 +3,46 @@
 @section('title', $song->title . ' - Songs')
 
 @section('content')
-    
     <!--suppress VueDuplicateTag -->
-    <h2 class="display-4 mb-4">{{$song->title}} <a href="{{route( 'song.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
+
+
+    <div class="jumbotron bg-light">
+        <h2 class="display-4 mb-4">{{$song->title}} <a href="{{route( 'song.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
+
+        <p class="lead">
+            Status: {{ $song->status->title }}<br>
+            Category:
+            @foreach( $song->categories as $cat )
+                <span class="song-category">{{ $cat->title }}</span>@if( ! $loop->last ), @endif
+            @endforeach
+            <br>
+            Pitch Blown: <button class="pitch btn btn-secondary btn-sm"><i class="fa fa-play"></i> <span class="key">{{ $song->pitch }}</span></button><br>
+        </p>
+
+    </div>
 
     @include('partials.flash')
 
-    <p class="mb-2 text-muted">
-        Status: {{ $song->status->title }}
-    </p>
-    <p class="mb-2 text-muted">
-        Category:
-        <ul class="list-inline">
-        @foreach( $song->categories as $cat )
-        <li class="list-inline-item">{{ $cat->title }}</li>
-        @endforeach
-        </ul>
-    </p>
-    <p class="mb-2 text-muted">
-        Pitch Blown: <button class="pitch btn btn-secondary btn-sm"><i class="fa fa-play"></i> <span class="key">{{ $song->pitch }}</span></button>
-    </p>
+    <div class="card bg-light">
+        <h4 class="card-header">Attachments</h4>
+        <div class="card-body">
 
-    <h3>Attachments</h3>
+            <div class="r-table r-table--card-view-mobile">
+                <div class="r-table__thead">
+                    <div class="r-table__row row-attachment">
+                        <div class="r-table__heading column--mark"><input type="checkbox"></div>
+                        <div class="r-table__heading column--title">Title</div>
+                        <div class="r-table__heading column--filename">File</div>
+                        <div class="r-table__heading column--category">Category</div>
+                        <div class="r-table__heading column--actions">Actions</div>
+                    </div>
+                </div>
+                <div class="r-table__tbody">
+                    @each('songs.show_attachment_row', $song->attachments, 'attachment', 'partials.noresults')
+                </div>
+                <div class="r-table__tfoot">
 
-    <div class="r-table r-table--card-view-mobile">
-        <div class="r-table__thead">
-            <div class="r-table__row row-attachment">
-                <div class="r-table__heading column--mark"><input type="checkbox"></div>
-                <div class="r-table__heading column--title">Title</div>
-                <div class="r-table__heading column--filename">File</div>
-                <div class="r-table__heading column--category">Category</div>
-                <div class="r-table__heading column--actions">Actions</div>
-            </div>
-        </div>
-        <div class="r-table__tbody">
-            @each('songs.show_attachment_row', $song->attachments, 'attachment', 'partials.noresults')
-        </div>
-        <div class="r-table__tfoot">
-
-            {{ Form::open( [ 'route' => ['song.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row-attachment row-add needs-validation', 'novalidate' ] ) }}
+                    {{ Form::open( [ 'route' => ['song.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row-attachment row-add needs-validation', 'novalidate' ] ) }}
                     <div class="r-table__cell column--mark">
 
                     </div>
@@ -79,7 +80,10 @@
                             <i class="fa fa-fw fa-plus"></i> Add
                         </button>
                     </div>
-            {{ Form::close() }}
+                    {{ Form::close() }}
+
+                </div>
+            </div>
 
         </div>
     </div>
