@@ -65,40 +65,32 @@ class EventsController extends Controller
         return redirect('/events')->with(['status' => 'Event created. ', ]);
     }
 
-    public function show($eventId): View
+    public function show(Event $event): View
     {
-        $event = Event::find($eventId);
-
         return view('events.show', compact('event' ));
     }
 
-    public function edit($eventId): View
+    public function edit(Event $event): View
     {
-        $event = Event::find($eventId);
         $types = EventType::all();
 
         return view('events.edit', compact('event',  'types'));
     }
 
-    public function update($eventId): RedirectResponse
+    public function update(Event $event): RedirectResponse
     {
         $data = $this->validateRequest();
-
-        $event = Event::find($eventId);
         $event->update($data);
-
 
         // Associate status
         $type = EventType::find($data['type']);
         $type->events()->save($event);
 
-        return redirect()->route('event.edit', [$eventId])->with(['status' => 'Event updated. ', ]);
+        return redirect()->route('event.edit', [$event])->with(['status' => 'Event updated. ', ]);
     }
 
-    public function delete($eventId): RedirectResponse
+    public function delete(Event $event): RedirectResponse
     {
-        $event = Event::find($eventId);
-
         $event->delete();
 
         return redirect()->route('events.index')->with(['status' => 'Event deleted. ', ]);

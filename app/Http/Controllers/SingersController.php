@@ -260,26 +260,21 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'Singer created. ', ]);
 	}
 
-    public function delete($singerId): RedirectResponse
+    public function delete(Singer $singer): RedirectResponse
     {
-        $singer = Singer::find($singerId);
-
         $singer->delete();
 
         return redirect()->route('singers.index')->with(['status' => 'Singer deleted. ', ]);
     }
 	
-	public function completeTask($singerId, $taskId): RedirectResponse
+	public function completeTask(Singer $singer, Task $task): RedirectResponse
     {
-		$singer = Singer::find($singerId);
-		$task = Task::find($taskId);
-
         event(new TaskCompleted($task, $singer));
 
 		// Complete type-specific action
 		if( $task->type === 'manual' ) {
 			// Simply mark as done. 
-			$singer->tasks()->updateExistingPivot($taskId, ['completed' => true]);
+			$singer->tasks()->updateExistingPivot($task, ['completed' => true]);
 			return redirect('/singers')->with(['status' => 'Task updated. ', ]);
 		} else {
 			// Redirect to form
@@ -287,16 +282,13 @@ class SingersController extends Controller
 		}
 	}
 	
-	public function createProfile($singerId): View
+	public function createProfile(Singer $singer): View
     {
-		$singer = Singer::find($singerId);
-		
 		return view('singers.createprofile', compact('singer'));
 	}
 	
-	public function storeProfile(Request $request): RedirectResponse
+	public function storeProfile(Singer $singer, Request $request): RedirectResponse
     {
-		$singer = Singer::find($request->singer_id);
 		$singer->profile()->create($request->all()); // refer to whitelist in model
 		
 		// Mark matching task completed
@@ -308,16 +300,13 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
 	}
 	
-	public function createPlacement($singerId): View
+	public function createPlacement(Singer $singer): View
     {
-		$singer = Singer::find($singerId);
-		
 		return view('singers.createplacement', compact('singer'));
 	}
 	
-	public function storePlacement(Request $request): RedirectResponse
+	public function storePlacement(Singer $singer, Request $request): RedirectResponse
     {
-		$singer = Singer::find($request->singer_id);
 		$singer->placement()->create($request->all()); // refer to whitelist in model
 		
 		// Mark matching task completed
@@ -329,27 +318,22 @@ class SingersController extends Controller
 		return redirect('/singers')->with(['status' => 'Voice Placement created. ', ]);
 	}
 	
-	public function show($singerId): View
+	public function show(Singer $singer): View
     {
-		$singer = Singer::find($singerId);
-	
 		return view('singers.show', compact('singer'));
 	}
 
-    public function edit($singerId): View
+    public function edit(Singer $singer): View
     {
-        $singer = Singer::find($singerId);
-
         return view('singers.edit', compact('singer' ));
     }
-    public function update($singerId, Request $request): RedirectResponse
-    {
-        $singer = Singer::find($singerId);
+    public function update(Singer $singer, Request $request): RedirectResponse
+    {;
         $data = $this->validateRequest($singer);
         $singer->update($data);
 
         // Exit
-        return redirect()->route('singers.show', [$singerId])->with(['status' => 'Singer saved. ']);
+        return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer saved. ']);
     }
 
 
@@ -475,10 +459,8 @@ class SingersController extends Controller
 
 	}
 
-	public function move(Request $request, $singerId): RedirectResponse
+	public function move(Singer $singer, Request $request): RedirectResponse
     {
-        $singer = Singer::find($singerId);
-
         $category = $request->input('move_category', 0);
 
         if( $category === 0 ) return redirect('/singers')->with([ 'status' => 'No category selected. ', 'fail' => true ]);

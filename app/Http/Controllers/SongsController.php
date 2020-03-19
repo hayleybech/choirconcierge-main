@@ -126,9 +126,8 @@ class SongsController extends Controller
         return redirect('/songs')->with(['status' => 'Song created. ', ]);
     }
 
-    public function show($songId): View
+    public function show(Song $song): View
     {
-        $song = Song::find($songId);
         $attachment_categories = SongAttachmentCategory::all();
         $categories_keyed = $attachment_categories->mapWithKeys(function($item){
             return [ $item['id'] => $item['title'] ];
@@ -137,9 +136,8 @@ class SongsController extends Controller
         return view('songs.show', compact('song', 'categories_keyed'));
     }
 
-    public function edit($songId): View
+    public function edit(Song $song): View
     {
-        $song = Song::find($songId);
         $categories = SongCategory::all();
         $statuses = SongStatus::all();
         $pitches = Song::KEYS;
@@ -147,9 +145,8 @@ class SongsController extends Controller
         return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
     }
 
-    public function update($songId, Request $request): RedirectResponse
+    public function update(Song $song, Request $request): RedirectResponse
     {
-        $song = Song::find($songId);
         $data = $this->validateRequest($song);
         $song->update($data);
 
@@ -161,13 +158,11 @@ class SongsController extends Controller
         $song->categories()->sync($request->categories);
         $song->save();
 
-        return redirect()->route('song.edit', [$songId])->with(['status' => 'Song updated. ', ]);
+        return redirect()->route('song.edit', [$song])->with(['status' => 'Song updated. ', ]);
     }
 
-    public function delete($songId): RedirectResponse
+    public function delete(Song $song): RedirectResponse
     {
-        $song = Song::find($songId);
-
         $song->delete();
 
         return redirect()->route('songs.index')->with(['status' => 'Song deleted. ', ]);
