@@ -1,14 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Add Singer')
+@section('page-title', 'Add Singer')
 
-@section('content')
-
-	<div class="jumbotron bg-light">
-		<h2 class="display-4">Add Singer</h2>
-	</div>
-
-@include('partials.flash')
+@section('page-content')
 
 {{ Form::open( array( 'route' => 'singers.index' ) ) }}
 

@@ -1,18 +1,16 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', $singer->name . ' - Singers')
+@section('page-title', $singer->name)
+@section('page-action')
+	<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
+@endsection
+@section('page-lead')
+	Email: {{ $singer->email }}<br>
+	Added: {{$singer->created_at}}
+@endsection
 
-@section('content')
-
-	<div class="jumbotron bg-light">
-		<h2 class="display-4">{{$singer->name}} <a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
-		<p class="lead">
-			Email: {{ $singer->email }}<br>
-			Added: {{$singer->created_at}}
-		</p>
-	</div>
-
-	@include('partials.flash')
+@section('page-content')
 
 	<div class="card bg-light">
 		<h3 class="card-header h5">Tasks</h3>

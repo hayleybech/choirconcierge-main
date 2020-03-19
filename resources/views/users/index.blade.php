@@ -1,14 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Users')
+@section('page-title', 'Users')
 
-@section('content')
-
-	<div class="jumbotron bg-light">
-		<h2 class="display-4">Users</h2>
-	</div>
-
-	@include('partials.flash')
+@section('page-content')
 	
 	<div id="accordion" class="accordion">
 	@foreach($users as $key => $user)

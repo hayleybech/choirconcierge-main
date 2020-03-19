@@ -1,27 +1,21 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', $song->title . ' - Songs')
+@section('page-title', $song->title)
+@section('page-action')
+    <a href="{{route( 'song.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
+@endsection
+@section('page-lead')
+    Status: {{ $song->status->title }}<br>
+    Category:
+    @foreach( $song->categories as $cat )
+        <span class="song-category">{{ $cat->title }}</span>@if( ! $loop->last ), @endif
+    @endforeach
+    <br>
+    Pitch Blown: <button class="pitch btn btn-secondary btn-sm"><i class="fa fa-play"></i> <span class="key">{{ $song->pitch }}</span></button><br>
+@endsection
 
-@section('content')
-    <!--suppress VueDuplicateTag -->
-
-
-    <div class="jumbotron bg-light">
-        <h2 class="display-4 mb-4">{{$song->title}} <a href="{{route( 'song.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
-
-        <p class="lead">
-            Status: {{ $song->status->title }}<br>
-            Category:
-            @foreach( $song->categories as $cat )
-                <span class="song-category">{{ $cat->title }}</span>@if( ! $loop->last ), @endif
-            @endforeach
-            <br>
-            Pitch Blown: <button class="pitch btn btn-secondary btn-sm"><i class="fa fa-play"></i> <span class="key">{{ $song->pitch }}</span></button><br>
-        </p>
-
-    </div>
-
-    @include('partials.flash')
+@section('page-content')
 
     <div class="card bg-light">
         <h4 class="card-header">Attachments</h4>

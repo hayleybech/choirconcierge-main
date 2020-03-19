@@ -1,14 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Add Member Profile - ' . $singer->name)
+@section('page-title', $singer->name)
 
-@section('content')
-
-	<div class="jumbotron bg-light">
-		<h2 class="display-4">{{$singer->name}}</h2>
-	</div>
-
-@include('partials.flash')
+@section('page-content')
 
 	{{ Form::open( array( 'route' => array('profile', $singer->id) ) ) }}
 

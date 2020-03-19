@@ -1,26 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Global Task List')
+@section('page-title', 'Global Task List')
+@section('page-lead', 'This page lists the onboarding tasks the choir must complete for every singer. ')
 
-@section('content')
-
-	<div class="jumbotron bg-light">
-		<h2 class="display-4">Global Task List</h2>
-		<p class="lead">This page lists the onboarding tasks the choir must complete for every singer. </p>
-	</div>
-
-	@if (session('status'))
-	<div class="alert {{ isset($Response->error) ? 'alert-danger' : 'alert-success' }}" role="alert">
-		{{ session('status') }}
-		
-		@isset( $Response->error )
-		<pre>
-			{{ var_dump($Response) }} 
-			@ json($args)
-		</pre>
-		@endisset
-	</div>
-	@endif
+@section('page-content')
 
 	<table class="table table-striped table-bordered bg-light">
 		<thead class="">

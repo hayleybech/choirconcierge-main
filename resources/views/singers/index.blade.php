@@ -1,15 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Singers')
+@section('page-title', 'Singers')
+@section('page-action')
+<a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-user-plus"></i> Add New</a>
+@endsection
 
-@section('content')
-
-	<div class="jumbotron bg-light">
-		<h2 class="display-4">Singers <a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-user-plus"></i> Add New</a></h2>
-	</div>
-
-
-	@include('partials.flash')
+@section('page-content')
 
 	<form method="get" class="form-inline mb-0">
 		@foreach( $filters as $filter )

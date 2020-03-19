@@ -1,14 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Edit - ' . $song->title)
+@section('page-title', $song->title)
 
-@section('content')
-    <div class="jumbotron bg-light">
-        <h2 class="display-4">{{$song->title}}</h2>
-    </div>
-
-
-    @include('partials.flash')
+@section('page-content')
 
     {{ Form::open( array( 'route' => ['songs.show', $song->id], 'method' => 'put' ) ) }}
 

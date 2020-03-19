@@ -1,16 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Edit - ' . $group->title)
+@section('page-title', 'Edit')
 
 @section('content')
-
-    <div class="jumbotron bg-light">
-        <h2 class="display-4">{{ $group->title }}</h2>
-    </div>
-
-
-    @include('partials.flash')
-
     {{ Form::open( array( 'route' => ['groups.update', $group->id], 'method' => 'put' ) ) }}
 
     <div class="card bg-light">

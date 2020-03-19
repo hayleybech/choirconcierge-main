@@ -1,14 +1,13 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Groups')
+@section('page-title', 'Groups')
 
-@section('content')
+@section('page-action')
+<a href="{{route( 'groups.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-plus"></i> Add New</a>
+@endsection
 
-    <div class="jumbotron bg-light">
-        <h2 class="display-4">Groups <a href="{{route( 'groups.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-plus"></i> Add New</a></h2>
-    </div>
-
-    @include('partials.flash')
+@section('page-content')
 
     <form method="get" class="form-inline mb-0">
         @foreach( $filters as $filter )

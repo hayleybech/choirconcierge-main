@@ -1,22 +1,20 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', $event->title . ' - Events')
+@section('page-title', $event->title)
 
-@section('content')
-    
-    <!--suppress VueDuplicateTag -->
+@section('page-action')
+<a href="{{route( 'event.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
+@endsection
 
-    <div class="jumbotron bg-light">
-        <h2 class="display-4">{{$event->title}} <a href="{{route( 'event.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
-        <p class="lead">
-            Event Type: {{ $event->type->title }}<br>
-            Event Date: {{ $event->start_date->format('M d, H:i') }} to {{ $event->end_date->format('M d, H:i') }}<br>
-            Call Time: {{ $event->call_time->format('M d, H:i') }}<br>
-            Description: {{ $event->description }}
-        </p>
-    </div>
+@section('page-lead')
+    Event Type: {{ $event->type->title }}<br>
+    Event Date: {{ $event->start_date->format('M d, H:i') }} to {{ $event->end_date->format('M d, H:i') }}<br>
+    Call Time: {{ $event->call_time->format('M d, H:i') }}<br>
+    Description: {{ $event->description }}
+@endsection
 
-    @include('partials.flash')
+@section('page-content')
 
     <div class="card bg-light">
         <h3 class="card-header h4">Location</h3>

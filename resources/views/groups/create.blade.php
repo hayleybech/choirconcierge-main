@@ -1,14 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Add Group')
+@section('page-title', 'Add Group')
 
-@section('content')
-
-    <div class="jumbotron bg-light">
-        <h2 class="display-4">Add Group</h2>
-    </div>
-
-    @include('partials.flash')
+@section('page-content')
 
     {{ Form::open( array( 'route' => 'groups.index' ) ) }}
 

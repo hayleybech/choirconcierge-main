@@ -1,22 +1,16 @@
 @extends('layouts.app')
 
 @section('title', $group->title . ' - Groups')
+@section('page-title', $group->title)
+@section('page-action')
+<a href="{{route( 'groups.edit', ['group' => $group] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
+@endsection
+@section('page-lead')
+    Group Slug: {{ $group->slug }}<br>
+    List Type: {{ $group->list_type }}<br>
+@endsection
 
-@section('content')
-    
-    <!--suppress VueDuplicateTag -->
-
-    <div class="jumbotron bg-light">
-        <h2 class="display-4">{{$group->title}} <a href="{{route( 'groups.edit', ['group' => $group] )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-edit"></i> Edit</a></h2>
-
-        <p class="lead">
-            Group Slug: {{ $group->slug }}<br>
-            List Type: {{ $group->list_type }}<br>
-        </p>
-    </div>
-
-    @include('partials.flash')
-
+@section('page-content')
     <div class="card bg-light">
         <h3 class="card-header h4">Members</h3>
 

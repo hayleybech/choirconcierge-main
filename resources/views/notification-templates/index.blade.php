@@ -1,26 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Notification Templates')
+@section('page-title', 'Notification Templates')
+@section('page-lead', 'This page lists notifications sent whenever a task is completed. ')
 
-@section('content')
-
-	<div class="jumbotron bg-light">
-		<h2 class="display-4">Notification Templates</h2>
-		<p class="lead">This page lists notifications sent whenever a task is completed. </p>
-	</div>
-
-	@if (session('status'))
-	<div class="alert {{ isset($Response->error) ? 'alert-danger' : 'alert-success' }}" role="alert">
-		{{ session('status') }}
-		
-		@isset( $Response->error )
-		<pre>
-			{{ var_dump($Response) }} 
-			@ json($args)
-		</pre>
-		@endisset
-	</div>
-	@endif
+@section('page-content')
 
 	<div class="table-responsive">
 		<table class="table table-striped table-bordered bg-light">

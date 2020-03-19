@@ -1,15 +1,13 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Events')
+@section('page-title', 'Events')
 
-@section('content')
+@section('page-action')
+<a href="{{route( 'event.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-calendar-plus"></i> Add New</a>
+@endsection
 
-    <div class="jumbotron bg-light">
-        <h2 class="display-4">Events <a href="{{route( 'event.create' )}}" class="btn btn-add btn-sm btn-outline-primary"><i class="fa fa-fw fa-calendar-plus"></i> Add New</a></h2>
-    </div>
-
-
-    @include('partials.flash')
+@section('page-content')
 
     <form method="get" class="form-inline mb-0">
         @foreach( $filters as $filter )
