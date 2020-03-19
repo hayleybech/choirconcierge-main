@@ -35,16 +35,16 @@
 					<ul class="navbar-nav nav-vertical">
 						<!-- Authentication Links -->
 						@guest
-							<li class="nav-item {{ ( \Request::is('login') ) ? 'active' : '' }}">
+							<li class="nav-item {{ ( request()->routeIs('login') ) ? 'active' : '' }}">
 								<a href="{{ route('login') }}" class="nav-link"><i class="fa fa-sign-in fa-fw"></i> Login</a>
 							</li>
-							<li class="nav-item {{ ( \Request::is('register') ) ? 'active' : '' }}">
+							<li class="nav-item {{ ( request()->routeIs('register') ) ? 'active' : '' }}">
 								<a href="{{ route('register') }}" class="nav-link"><i class="fa fa-user-plus fa-fw"></i> Register</a>
 							</li>
 						@else
 
 							<li class="nav-item">
-								<a class="nav-link {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-chart-line fa-fw"></i><span class="link-text"> Dashboard</span></a>
+								<a class="nav-link {{ ( request()->routeIs('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-chart-line fa-fw"></i><span class="link-text"> Dashboard</span></a>
 							</li>
 
 							{{--<li class="nav-item dropdown">
@@ -62,29 +62,29 @@
 							@if( Auth::user()->isEmployee() )
 								<li class="nav-item nav-heading">Singers</li>
 								<li class="nav-item">
-									<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-user fa-fw"></i><span class="link-text"> Singers</span></a>
+									<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.*') ) ? 'active' : '' }}"><i class="fa fa-user fa-fw"></i><span class="link-text"> Singers</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs.index') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
+									<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.*') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events.index') ) ? 'active' : '' }}"><i class="far fa-calendar fa-fw"></i><span class="link-text"> Events</span></a>
+									<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : '' }}"><i class="far fa-calendar fa-fw"></i><span class="link-text"> Events</span></a>
 								</li>
 							@endif
 
 							@if( Auth::user()->hasRole('Admin') )
 								<li class="nav-item nav-heading">Management</li>
 								<li class="nav-item">
-									<a href="{{ route('groups.index') }}" class="nav-link"><i class="fa fa-users fa-fw"></i><span class="link-text"> Groups</span></a>
+									<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.*') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i><span class="link-text"> Groups</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('tasks.index') }}" class="nav-link"><i class="fa fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
+									<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : '' }}"><i class="fa fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('notification-templates.index') }}" class="nav-link"><i class="far fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
+									<a href="{{ route('notification-templates.index') }}" class="nav-link {{ ( request()->routeIs('notification-templates.*') ) ? 'active' : '' }}"><i class="far fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('users.index') }}" class="nav-link"><i class="fa fa-sitemap fa-fw"></i><span class="link-text"> Team</span></a>
+									<a href="{{ route('users.index') }}" class="nav-link {{ ( request()->routeIs('users.*') ) ? 'active' : '' }}"><i class="fa fa-sitemap fa-fw"></i><span class="link-text"> Team</span></a>
 								</li>
 							@endif
 
@@ -103,7 +103,7 @@
 
 							<li class="nav-item">
 								<a href="{{ route('logout') }}"
-								   class="nav-link {{ ( \Request::is('logout') ) ? 'active' : '' }}"
+								   class="nav-link {{ ( request()->routeIs('logout') ) ? 'active' : '' }}"
 								   onclick="event.preventDefault();
 									 document.getElementById('logout-form').submit();">
 									<i class="fa fa-sign-out-alt fa-fw"></i> <span class="link-text">Logout</span>
