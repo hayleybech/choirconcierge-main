@@ -7,7 +7,7 @@
 @endsection
 @section('page-lead')
 	<span class="badge badge-light">{{ $singer->category->name }}</span><br>
-	<i class="fa fa-fw fa-users"></i> {{ $singer->placement->voice_part }} <br>
+	@if( $singer->placement)<i class="fa fa-fw fa-users"></i> {{ $singer->placement->voice_part }} <br>@endif
 	{{ $singer->email }}<br>
 	Added: {{$singer->created_at}}
 @endsection
