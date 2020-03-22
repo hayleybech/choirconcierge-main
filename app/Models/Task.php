@@ -6,7 +6,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * Class Task
+ *
+ * Columns
+ * @property int $id
+ * @property string $title
+ * @property int $role_id
+ * @property string $type
+ * @property string $route
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
+ * Relationships
+ * @property Role $role
+ * @property Singer[] $singers
+ * @property NotificationTemplate[] $notification_templates
+ *
+ * @package App\Models
+ */
 class Task extends Model
 {
     /*

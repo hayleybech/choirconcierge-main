@@ -6,7 +6,29 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * Class Song
+ *
+ * Columns
+ * @property int $id
+ * @property string $title
+ * @property string $pitch_blown
+ * @property int $status_id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
+ * Relationships
+ * @property SongStatus $status
+ * @property SongCategory[] $categories
+ * @property SongAttachment[] $attachments
+ *
+ * Dynamic
+ * @property string $pitch
+ *
+ * @package App\Models
+ */
 class Song extends Model
 {
     /**

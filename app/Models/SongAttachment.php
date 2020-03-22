@@ -4,8 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Class SongAttachment
+ *
+ * Columns
+ * @property int $id
+ * @property string $title
+ * @property string $filepath
+ * @property int $song_id
+ * @property int $category_id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
+ * Relationships
+ * @property Song $song
+ * @property SongAttachmentCategory $category
+ *
+ * Dynamic
+ * @property string $download_url
+ *
+ * @package App\Models
+ */
 class SongAttachment extends Model
 {
     protected $appends = [

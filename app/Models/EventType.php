@@ -4,7 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * Class EventType
+ *
+ * Columns
+ * @property int $id
+ * @property string $title
+ * @property Carbon created_at
+ * @property Carbon updated_at
+ *
+ * Relationships
+ * @property Event[] $events
+ *
+ * @package App\Models
+ */
 class EventType extends Model
 {
     public function events(): HasMany

@@ -8,6 +8,24 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class NotificationTemplate
+ *
+ * Columns
+ * @property int $id
+ * @property int $task_id
+ * @property string $recipients
+ * @property string $subject
+ * @property string $body
+ * @property string $delay
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
+ * Relationships
+ * @property Task $task
+ *
+ * @package App\Models
+ */
 class NotificationTemplate extends Model
 {
     public function task(): BelongsTo
@@ -21,6 +39,7 @@ class NotificationTemplate extends Model
         return $recipient_info[0];
     }
 
+    // @todo replace with a polymorphic relationship
     public function getRecipients(): array
     {
 

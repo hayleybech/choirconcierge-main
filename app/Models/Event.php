@@ -4,20 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Event
  *
+ * Columns
+ * @property int id
  * @property string title
- * @property EventType type
- * @property string start_date
- * @property string end_date
- * @property string call_time
+ * @property int type_id
+ * @property Carbon call_time
+ * @property Carbon start_date
+ * @property Carbon end_date
  * @property string location_place_id
  * @property string location_icon
  * @property string location_name
  * @property string location_address
  * @property string description
+ * @property Carbon created_at
+ * @property Carbon updated_at
+ *
+ * Relationships
+ * @property EventType type
  *
  * @package App
  */

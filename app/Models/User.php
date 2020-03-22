@@ -6,11 +6,29 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Carbon;
 use UnexpectedValueException;
 
 // http://alexsears.com/article/adding-roles-to-laravel-users/
 // https://medium.com/@ezp127/laravel-5-4-native-user-authentication-role-authorization-3dbae4049c8a
 
+/**
+ * Class User
+ *
+ * Columns
+ * @property int $id
+ * @property string $name
+ * @property string $password
+ * @property string $remember_token
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
+ * Relationships
+ * @property Role[] $roles
+ * @property GroupMember[] $memberships
+ *
+ * @package App\Models
+ */
 class User extends Authenticatable
 {
     use Notifiable;

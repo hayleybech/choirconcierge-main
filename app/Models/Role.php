@@ -7,6 +7,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+/**
+ * Class Role
+ *
+ * Columns
+ * @property int $id
+ * @property string name
+ *
+ * Relationships
+ * @property User[] $users
+ * @property Task[] $tasks
+ *
+ * @package App\Models
+ */
 class Role extends Model
 {
 

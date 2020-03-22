@@ -7,7 +7,29 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
+/**
+ * Class Singer
+ *
+ * Columns
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
+ * Relationships
+ * @property Task[] $tasks
+ * @property Profile $profile
+ * @property Placement $placement
+ * @property SingerCategory $category
+ *
+ * Dynamic
+ * @property int $age
+ *
+ * @package App\Models
+ */
 class Singer extends Model
 {
     use Notifiable;
