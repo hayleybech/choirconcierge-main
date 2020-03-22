@@ -18,6 +18,12 @@ class Profile extends Model
 		'skills',
 	];
 	
+    public $dates = [
+        'updated_at',
+        'created_at',
+        'dob',
+    ];
+	
     public function singer(): BelongsTo
 	{
 		return $this->belongsTo(Singer::class);
