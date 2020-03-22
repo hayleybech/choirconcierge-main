@@ -72,7 +72,7 @@
                 </div>
             </form>
 
-			<a href="{{route( 'singer.delete', ['singer' => $singer] )}}" class="link-confirm btn btn-outline-danger btn-sm ml-2"><i class="fa fa-fw fa-trash"></i></a>
+			<a href="{{route( 'singer.delete', ['singer' => $singer] )}}" class="link-confirm btn btn-link text-danger btn-sm ml-2"><i class="fa fa-fw fa-times"></i></a>
 			@endif
 		</div>
 

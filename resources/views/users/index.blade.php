@@ -15,7 +15,7 @@
 				<li class="list-group-item d-flex justify-content-between align-items-center">
 					{{ $role->name }}
 					<form method="get" action="/users/{{$user->id}}/roles/{{$role->id}}/detach">
-						<button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button>
+						<button type="submit" class="btn btn-link text-danger btn-sm"><i class="fa fa-times"></i></button>
 					</form>
 				</li>
 				@endforeach

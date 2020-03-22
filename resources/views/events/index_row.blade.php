@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="r-table__cell column--actions">
-        <a href="{{route( 'event.delete', ['event' => $event] )}}" class="link-confirm btn btn-outline-danger btn-sm ml-2"><i class="fa fa-fw fa-trash"></i></a>
+        <a href="{{route( 'event.delete', ['event' => $event] )}}" class="link-confirm btn btn-link text-danger btn-sm ml-2"><i class="fa fa-fw fa-times"></i></a>
     </div>
 
 </div>
