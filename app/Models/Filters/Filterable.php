@@ -63,4 +63,18 @@ trait Filterable
         }
         return $query_string;
     }
+
+    /**
+     * Checks if any filter has been changed from the default
+     * @return bool
+     */
+    public static function hasActiveFilters(): bool {
+        foreach(self::$_filters as $filter) {
+            if( ! $filter->isDefault() ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

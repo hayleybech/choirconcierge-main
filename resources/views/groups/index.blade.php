@@ -14,33 +14,44 @@
 
         <div class="card-body">
 
-            <form method="get" class="form-inline mb-0">
-                @foreach( $filters as $filter )
-                    <div class="input-group input-group-sm mb-2 mr-2">
-                        <div class="input-group-prepend">
-                            @php
-                                $label_class = ( $filter['current'] !== $filter['default'] ) ? 'border-primary bg-primary text-white' : 'bg-light';
-                            @endphp
-                            <label for="{{ $filter['name']}} " class="input-group-text {{$label_class}}">{{ $filter['label'] }}</label>
-                        </div>
-                        @php
-                            $field_class = ( $filter['current'] !== $filter['default'] ) ? 'border-primary' : '';
-                            echo Form::select($filter['name'],
-                                $filter['list'],
-                                $filter['current'],
-                                ['class' => 'custom-select form-control-sm ' . $field_class]
-                            );
-                        @endphp
-                    </div>
-                @endforeach
+            <?php
+                /*
+            use App\Models\UserGroup;
+            $filters_class = UserGroup::hasActiveFilters() ? 'btn-primary' : 'btn-outline-secondary';
+            ?>
+            <a class="btn btn-sm {{ $filters_class }}" data-toggle="collapse" href="#filters" role="button" aria-expanded="false" aria-controls="filters"><i class="fa fa-filter"></i> Filter</a>
 
-                <div class="input-group input-group-sm mb-2 mr-2">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button class="btn btn-outline-secondary btn-sm"><i class="fa fa-filter"></i> Filter</button>
-                        <a href="{{ route('groups.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-times"></i> Clear</a>
+            <div class="collapse mt-2" id="filters">
+
+                <form method="get" class="form-inline mb-0">
+                    @foreach( $filters as $filter )
+                        <div class="input-group input-group-sm mb-2 mr-2">
+                            <div class="input-group-prepend">
+                                @php
+                                    $label_class = ( $filter['current'] !== $filter['default'] ) ? 'border-primary bg-primary text-white' : 'bg-light';
+                                @endphp
+                                <label for="{{ $filter['name']}} " class="input-group-text {{$label_class}}">{{ $filter['label'] }}</label>
+                            </div>
+                            @php
+                                $field_class = ( $filter['current'] !== $filter['default'] ) ? 'border-primary' : '';
+                                echo Form::select($filter['name'],
+                                    $filter['list'],
+                                    $filter['current'],
+                                    ['class' => 'custom-select form-control-sm ' . $field_class]
+                                );
+                            @endphp
+                        </div>
+                    @endforeach
+
+                    <div class="input-group input-group-sm mb-2 mr-2">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button class="btn btn-outline-secondary btn-sm"><i class="fa fa-filter"></i> Filter</button>
+                            <a href="{{ route('groups.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-times"></i> Clear</a>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+
+            </div>*/?>
 
         </div>
 

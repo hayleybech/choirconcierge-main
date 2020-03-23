@@ -21,7 +21,9 @@
 			</div>
 		</div>
         <div class="r-table__cell singer-col--part">
-			<span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part !== '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
+			<span class="singer-part">
+				<span class="badge badge-secondary"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part !== '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
+			</span>
 		</div>
 		<div class="r-table__cell singer-col--category">
 			<span class="singer-category badge badge-pill {{ $category_class[$singer->category->name] }}">{{ explode( ' ', $singer->category->name )[0] }}</span>
