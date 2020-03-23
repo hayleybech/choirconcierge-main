@@ -47,13 +47,13 @@
 
         <div class="r-table r-table--card-view-mobile">
             <div class="r-table__thead">
-                <div class="r-table__row">
-                    <div class="r-table__heading column--mark"><input type="checkbox"></div>
-                    <div class="r-table__heading column--title">Title</div>
-                    <div class="r-table__heading column--slug">Slug</div>
-                    <div class="r-table__heading column--type">Type</div>
-                    <div class="r-table__heading column--created">Created</div>
-                    <div class="r-table__heading column--actions">Actions</div>
+                <div class="r-table__row row--group">
+                    <div class="r-table__heading col--mark"><input type="checkbox"></div>
+                    <div class="r-table__heading col--title">Title</div>
+                    <div class="r-table__heading group-col--slug">Slug</div>
+                    <div class="r-table__heading group-col--type">Type</div>
+                    <div class="r-table__heading col--created">Created</div>
+                    <div class="r-table__heading col--delete"></div>
                 </div>
             </div>
             <div class="r-table__tbody">
