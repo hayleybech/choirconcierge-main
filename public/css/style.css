@@ -398,6 +398,60 @@ main {
 	font-size: 12px;
 }
 
+/*********************************/
+/** SONGS LIST **/
+.row--song {
+	grid-template-columns: 1% 30% 1fr 2fr 1fr 10% 1em;
+	grid-template-rows: 1fr;
+	grid-template-areas:
+		"mark title status category pitch created delete"
+	;
+}
+.song-col--title {
+	grid-area: title;
+}
+.song-col--status {
+	grid-area: status;
+}
+.song-col--category {
+	grid-area: category;
+}
+.song-col--pitch {
+	grid-area: pitch;
+}
+.song-col--created {
+	grid-area: created;
+}
+/* Song Table - Tablet */
+@media screen and (max-width:980px) {
+	.r-table--card-view-mobile .r-table__thead .row--song {
+		grid-template-columns: 0 auto;
+		grid-template-rows: auto;
+		grid-template-areas: "mark title";
+	}
+	.r-table--card-view-mobile .r-table__thead .row--song .r-table__heading:not(.col--mark):not(.song-col--title) {
+		display: none;
+	}
+}
+/* Song Table - Mobile */
+@media screen and (max-width:767px) {
+
+	.r-table--card-view-mobile .row--song {
+		grid-template-columns: 0 55% 1fr 1fr 1em;
+		grid-template-rows: auto auto;
+		grid-template-areas:
+			"mark title pitch status delete"
+			"mark category created created delete"
+		;
+	}
+
+	.song-col--status,
+	.song-col--pitch,
+	.song-col--created {
+		justify-content: flex-end;
+	}
+}
+
 
 /********************************/
 /** EVENTS LIST **/
