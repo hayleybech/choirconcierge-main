@@ -1,10 +1,8 @@
 <?php
 namespace App\Models\Filters;
 
-use App\Models\Singer;
 use App\Models\SingerCategory;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Singer_CategoryFilter
@@ -27,11 +25,10 @@ class Singer_CategoryFilter extends Filter
         }
 
         $categories = SingerCategory::all();
-        $categories_keyed = $categories->mapWithKeys(static function($item){
+        $this->options = $categories->mapWithKeys(static function($item){
             return [ $item['id'] => $item['name'] ];
         });
-        $categories_keyed->prepend('Any status','any');
-        $this->options = $categories_keyed;
+        $this->options->prepend('Any status','any');
     }
 
     /**

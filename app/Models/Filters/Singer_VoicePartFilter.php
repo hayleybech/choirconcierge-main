@@ -1,10 +1,7 @@
 <?php
 namespace App\Models\Filters;
 
-use App\Models\Singer;
-use App\Models\SingerCategory;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Singer_VoicePartFilter
