@@ -35,38 +35,9 @@ class SingersController extends Controller
     public function index(Request $request): View
     {
         // Base query
-        $singers = Singer::with(['tasks', 'category', 'placement', 'profile']);
-
-        // Filter singers
-        $where = [];
-        $filters = $this->getFilters($request);
-
-        if($filters['cat']['current'] !== 0) {
-            $where[] = ['singer_category_id', '=', $filters['cat']['current']];
-        }
-        $singers = $singers->where($where);
-
-        if($filters['part']['current'] !== 'all') {
-            $current = $filters['part']['current'];
-            $singers = $singers->whereHas('placement', function($query) use($current) {
-                $query->where('voice_part', '=', $current);
-            });
-        }
-
-        $adult_age = 18;
-        if($filters['age']['current'] === 'adult') {
-            $singers = $singers->whereHas('profile', function($query) use($adult_age) {
-                $query->where('dob', '<=', date('Y-m-d', strtotime("-$adult_age years")));
-            });
-        }
-        elseif($filters['age']['current'] === 'child') {
-            $singers = $singers->whereHas('profile', function($query) use($adult_age) {
-                $query->where('dob', '>', date('Y-m-d', strtotime("-$adult_age years")));
-            });
-        }
-
-        // Finish and fetch
-		$singers = $singers->get();
+        $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])
+            ->filter()
+            ->get();
 
         // Sort
         $sort_by = $request->input('sort_by', 'name');
@@ -79,92 +50,10 @@ class SingersController extends Controller
 
         $sorts = $this->getSorts($request);
 
+        $filters = Singer::getFilters();
+
         return view('singers.index', compact('singers', 'filters', 'sorts' ));
 	}
-
-	public function getFilters(Request $request): array
-    {
-        return [
-            'cat'   => $this->getFilterCategory($request),
-            'part'  => $this->getFilterPart($request),
-            'age'   => $this->getFilterAge($request),
-        ];
-    }
-
-    /**
-     * Get list of categories for filtering
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-	public function getFilterCategory(Request $request): array
-    {
-        $default = 1;
-
-        $categories = SingerCategory::all();
-        $categories_keyed = $categories->mapWithKeys(function($item){
-            return [ $item['id'] => $item['name'] ];
-        });
-        $categories_keyed->prepend('Any category',0);
-
-        return [
-            'name'      => 'filter_category',
-            'label'     => 'Category',
-            'default'   => $default,
-            'current'   => $request->input('filter_category', $default),
-            'list'      => $categories_keyed,
-        ];
-    }
-
-    /**
-     * Get list of voice parts for filtering
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    public function getFilterPart(Request $request): array
-    {
-        $default = 'all';
-
-        return [
-            'name'      => 'filter_part',
-            'label'     => 'Part',
-            'default'   => $default,
-            'current'   => $request->input('filter_part', $default),
-            'list'      => [
-                'all'   => 'Any part',
-                'tenor' => 'Tenor',
-                'lead'  => 'Lead',
-                'bari'  => 'Baritone',
-                'bass'  => 'Bass',
-            ],
-        ];
-    }
-
-    /**
-     * Get list of age ranges for filtering
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    public function getFilterAge(Request $request): array
-    {
-        $default = 'all';
-        return [
-            'name'      => 'filter_age',
-            'label'     => 'Age',
-            'default'   => $default,
-            'current'   => $request->input('filter_age', $default),
-            'list'      => [
-                'all'    => 'Any age',
-                'adult'  => 'Over 18',
-                'child'  => 'Under 18',
-            ],
-        ];
-    }
 
     public function getSorts(Request $request): array
     {
@@ -176,13 +65,14 @@ class SingersController extends Controller
 
         // get URL ready
         $url = $request->url() . '?';
-        $filters = $this->getFilters($request);
+        $filters = Singer::getFilters();
         foreach( $filters as $key => $filter ) {
-            $url .= $filter['name'] . '=' . $filter['current'];
-            if ( ! $key === array_key_last($filters) ) $url .= '&';
+            $url .= $filter->name . '=' . $filter->current_option;
+
+            if ( $key !== array_key_last($filters) ) {
+                $url .= '&';
+            }
         }
-        //print_r($filters);
-         //die();
 
         $current_sort = $request->input('sort_by', 'name');
         $current_dir =  $request->input('sort_dir', 'asc');

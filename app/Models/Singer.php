@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Filters\Filterable;
+use App\Models\Filters\Singer_AgeFilter;
+use App\Models\Filters\Singer_CategoryFilter;
+use App\Models\Filters\Singer_VoicePartFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -32,7 +36,7 @@ use Illuminate\Support\Carbon;
  */
 class Singer extends Model
 {
-    use Notifiable;
+    use Notifiable, Filterable;
 
     protected $fillable = [
         'name', 'email',
@@ -71,4 +75,9 @@ class Singer extends Model
         return 0;
     }
 
+    public static function initFilters(): void {
+        self::$filters['category']   = new Singer_CategoryFilter();
+        self::$filters['age']   = new Singer_AgeFilter();
+        self::$filters['part']   = new Singer_VoicePartFilter();
+    }
 }
