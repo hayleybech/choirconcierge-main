@@ -261,6 +261,12 @@ main {
 
 /* Tables - Tablet */
 @media screen and (max-width:980px) {
+	.form-inline .input-group > .custom-select {
+		width: auto !important;
+	}
+}
+/* Tables - Mobile */
+@media screen and (max-width:767px) {
 	.r-table--card-view-mobile .r-table__thead .r-table__row {
 		padding: 0 20px 0 12px;
 		grid-template-columns: 0 auto;
@@ -270,13 +276,6 @@ main {
 	.r-table--card-view-mobile .r-table__thead .r-table__row .r-table__heading:not(.col--mark):not(.col--title) {
 		display: none;
 	}
-	.form-inline .input-group > .custom-select {
-		width: auto !important;
-	}
-}
-/* Tables - Mobile */
-@media screen and (max-width:767px) {
-
 	.r-table--card-view-mobile .r-table__row {
 		padding: 15px 20px 20px 12px;
 		gap: 8px 10px;
