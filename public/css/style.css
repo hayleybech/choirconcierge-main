@@ -85,14 +85,14 @@ main {
 .nav-item i {
 	color: #0061f2;
 }
-.nav-item .link-text {
+.navbar-light .navbar-nav .nav-link {
 	color: rgba(0, 0, 0, 0.8);
 }
 
-.nav-link.active i {
+.navbar-nav .nav-link.active i {
 	color: #6900c7;
 }
-.nav-link.active .link-text {
+.navbar-nav .nav-link.active .link-text {
 	color: #6900c7;
 	font-weight: 600;
 }
@@ -130,9 +130,19 @@ main {
 	padding: 10px;
 	z-index: 10000;
 }
-.tap-bar .nav-item i {
+.nav-pills .nav-link {
+	color: rgba(0, 0, 0, 0.8);
+}
+.nav-pills .nav-link.active {
+	color: white;
+	font-weight: 600;
+}
+.tap-bar .nav-link i {
 	display: block;
 	margin: 0 auto;
+}
+.nav-pills .nav-link.active i {
+	color: white;
 }
 @media screen and (max-width: 767px) {
 	.tap-bar {
