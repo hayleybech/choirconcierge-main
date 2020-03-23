@@ -46,13 +46,18 @@ main {
 .container {
 	padding: 0 50px;
 }
+@media screen and (max-width:980px) {
+	.container {
+		padding: 0 25px;
+	}
+}
 @media screen and (max-width: 767px) {
 	#app-header {
 		display: none;
 	}
 
 	.container {
-		padding: 0 20px;
+		padding: 0 10px;
 	}
 }
 
@@ -188,39 +193,8 @@ main {
 	}
 }
 
-/**********************************/
-/* Singers List */
-
-.item-title {
-	font-size: 16px;
-	font-weight: 600;
-    max-height: 1.5em;
-    max-width: 100%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: block;
-	white-space: nowrap;
-}
-.singer-email {
-	font-size: 14px;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.singer-part {
-	font-size: 14px;
-}
-.singer-category {
-	font-size: 12px;
-}
-.singer-phone {
-	font-size: 14px;
-}
-.singer-age {
-	font-size: 14px;
-}
-
-
+/*********************************/
+/** INDEX TABLES **/
 .r-table__row:nth-child(even) {
 	background-color: #eee;
 }
@@ -245,20 +219,31 @@ main {
 .r-table__heading a i {
 	margin-left: 8px;
 }
-
-
 .r-table__row {
-	padding: 5px;
+	padding: 5px 20px 8px 10px;
 
 	display: grid;
-	/*grid-template-columns: 3% 20% 19% 7% 13% 11% 6% auto;*/
-	grid-template-columns: 1% 20% 18% 8% 10% 11% 7% auto;
-	grid-template-rows: 1fr;
-	grid-template-areas:
-		"mark singer progress part category phone age actions"
-	;
 	gap: 5px 8px;
 	place-items: stretch;
+}
+
+/* Temporary - replace with specific styles per module */
+.r-table__row {
+	grid-template-columns: 1% 30% 1fr 1fr 22% 10% 1em;
+	grid-template-rows: 1fr;
+	grid-template-areas:
+		"mark singer category part progress actions delete"
+	;
+}
+
+/**********************************/
+/* Singers List */
+.row--singer {
+	grid-template-columns: 1% 30% 1fr 1fr 22% 10% 1em;
+	grid-template-rows: 1fr;
+	grid-template-areas:
+		"mark singer category part progress actions delete"
+	;
 }
 .column--mark {
 	grid-area: mark;
@@ -287,16 +272,54 @@ main {
 .column--category {
 	grid-area: category;
 }
-.column--phone {
-	grid-area: phone;
-}
-.column--age {
-	grid-area: age;
-}
 .column--actions {
 	grid-area: actions;
 }
+.column--delete {
+	grid-area: delete;
+}
 
+/** Fields **/
+.item-title {
+	font-size: 16px;
+	font-weight: 600;
+	max-height: 1.5em;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+	white-space: nowrap;
+}
+.singer-email,
+.singer-phone {
+	font-size: 14px;
+	line-height: 1.2;
+}
+.singer-email {
+	max-width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.singer-part {
+	font-size: 14px;
+}
+.singer-category {
+	font-size: 12px;
+}
+.progress {
+	height: 0.7rem;
+	width: 80px;
+	flex: 0 1 auto;
+	border: 1px solid #ddd;
+}
+.progress--link {
+	font-size: 12px;
+}
+
+
+/********************************/
+/** EVENTS LIST **/
 /* Event date */
 .column--start-date {
 	flex-flow: column nowrap;
@@ -309,16 +332,6 @@ main {
 .column--created {
 	flex-flow: column nowrap;
 	align-items: flex-start;
-}
-
-.progress {
-	height: 0.7rem;
-	width: 80px;
-	flex: 0 1 auto;
-	border: 1px solid #ddd;
-}
-.progress--link {
-	font-size: 12px;
 }
 
 
@@ -370,7 +383,6 @@ select.form-control-sm.force-xs {
 
 	}
 	.r-table--card-view-mobile .r-table__thead .r-table__row {
-		/*grid-template-columns: 5% auto;*/
 		grid-template-columns: 0 auto;
 		grid-template-rows: auto;
 		grid-template-areas: "mark singer";
@@ -380,30 +392,23 @@ select.form-control-sm.force-xs {
 		display: none;
 	}
 	.r-table--card-view-mobile .r-table__row {
-		padding: 12px 20px 12px 12px;
+		/*padding: 12px 20px 12px 12px;
 		margin: 10px 0;
 
-		/*grid-template-columns: 5% 1fr 1fr;*/
-		grid-template-columns: 0 1fr 1fr 1fr 1fr;
+		grid-template-columns: 0 1fr 1fr 1fr 1fr 1em;
 		grid-template-rows: auto 1fr auto;
 		grid-template-areas:
-			"mark singer singer progress progress"
-			"mark part phone age ."
-			"mark category actions actions actions"
+			"mark singer singer progress progress delete"
+			"mark part . delete"
+			"mark progress progress actions actions delete"
 		;
-		gap: 8px 10px;
+		gap: 8px 10px;*/
 	}
 	.r-table--card-view-mobile .column--progress {
 		flex-flow: row wrap;
 		align-items: center;
 	}
 
-    .r-table--card-view-mobile .column--progress:before {
-        content: 'Current Task: ';
-        color: #6c757d;
-        font-size: 14px;
-        margin-right: 10px;
-    }
     .form-inline .input-group > .custom-select {
         width: auto !important;
     }
@@ -413,17 +418,22 @@ select.form-control-sm.force-xs {
 @media screen and (max-width:767px) {
 
     .r-table--card-view-mobile .r-table__row {
-        /*grid-template-columns: 5% 1fr 1fr;*/
-        grid-template-columns: 0 1fr 1fr;
-        grid-template-rows: auto 1fr 1fr 1fr auto;
+		padding: 15px 20px 20px 12px;
+        grid-template-columns: 0 60% 1fr 1em;
+        grid-template-rows: auto auto auto;
         grid-template-areas:
-                "mark singer singer"
-                "mark progress progress"
-                "mark part category"
-            "mark phone age"
-            "mark actions actions"
+			"mark singer category delete"
+			"mark singer part delete"
+			"mark progress actions delete"
         ;
+		gap: 8px 10px;
     }
+
+	.column--category,
+	.column--part,
+	.column--actions {
+		justify-content: flex-end;
+	}
 }
 
 

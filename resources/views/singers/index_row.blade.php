@@ -7,7 +7,7 @@
 		'Archived Members'      => 'badge-warning',
 	);
 	?>
-	<div class="r-table__row">
+	<div class="r-table__row row--singer">
         <div class="r-table__cell column--mark">
             <input type="checkbox" />
         </div>
@@ -16,9 +16,16 @@
 				{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
 			</a>
 			<div class="text-muted singer-email">{{ $singer->email }}</div>
+			<div class="singer-phone text-muted">{{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</div>
 		</div>
-        <div class="r-table__cell column--progress">
-            <!--<div class="progress">
+        <div class="r-table__cell column--part">
+			<span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part !== '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
+		</div>
+		<div class="r-table__cell column--category">
+			<span class="singer-category badge badge-pill {{ $category_class[$singer->category->name] }}">{{ explode( ' ', $singer->category->name )[0] }}</span>
+		</div>
+		<div class="r-table__cell column--progress">
+			<!--<div class="progress">
                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>-->
 			@foreach( $singer->tasks as $task )
@@ -27,14 +34,14 @@
 				@else
 					@php
 						if( $task->type === 'form' ){
-							$btn_style = 'btn-primary';
-							$icon_complete = 'fa-file';
-							$action = 'Start';
-						} else {
-							$btn_style = 'btn-success';
-							$icon_complete ='fa-check';
-							$action = 'Done';
-						}
+                            $btn_style = 'btn-primary';
+                            $icon_complete = 'fa-file';
+                            $action = 'Start';
+                        } else {
+                            $btn_style = 'btn-success';
+                            $icon_complete ='fa-check';
+                            $action = 'Done';
+                        }
 					@endphp
 					<span>{{ $task->name }}</span>
 					<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link btn btn-sm force-xs {{$btn_style}}">
@@ -43,17 +50,8 @@
 					@break
 				@endif
 			@endforeach
-        </div>
-        <div class="r-table__cell column--part">
-            <span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part !== '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
-        </div>
-		<div class="r-table__cell column--category">
-			<span class="singer-category badge badge-pill {{ $category_class[$singer->category->name] }}">{{ $singer->category->name }}</span>
 		</div>
-        <div class="r-table__cell column--phone">
-            <span class="singer-phone"><i class="fa fa-phone-alt"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
-        </div>
-        <div class="r-table__cell column--actions">
+		<div class="r-table__cell column--actions">
 
 			@if ( Auth::user()->hasRole('Membership Team') )
 			<div class="dropdown">
@@ -66,8 +64,12 @@
 					@endforeach
 				</div>
 			</div>
+			@endif
+		</div>
 
-			<a href="{{route( 'singer.delete', ['singer' => $singer] )}}" class="link-confirm btn btn-link text-danger btn-sm ml-2"><i class="fa fa-fw fa-times"></i></a>
+		<div class="r-table__cell column--delete">
+			@if ( Auth::user()->hasRole('Membership Team') )
+				<a href="{{route( 'singer.delete', ['singer' => $singer] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-times"></i></a>
 			@endif
 		</div>
 
