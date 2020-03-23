@@ -69,7 +69,7 @@ abstract class Filter
     }
 
     public function isDefault(): bool {
-        return $this->current_option !== $this->default_option;
+        return $this->current_option === $this->default_option;
     }
 
     /**
