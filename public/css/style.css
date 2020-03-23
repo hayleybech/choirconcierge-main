@@ -118,6 +118,10 @@ main {
 	display: none;
 }
 @media screen and (max-width: 767px) {
+	.nav-collapse-link {
+		display: none;
+	}
+
 	/* Collapse menu by default on small screens */
 	/*header .logo,
 	header.link-text {
