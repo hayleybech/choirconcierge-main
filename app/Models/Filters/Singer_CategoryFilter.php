@@ -25,6 +25,13 @@ class Singer_CategoryFilter extends Filter
         {
             $this->options[$category->id] = $category->name;
         }
+
+        $categories = SingerCategory::all();
+        $categories_keyed = $categories->mapWithKeys(static function($item){
+            return [ $item['id'] => $item['name'] ];
+        });
+        $categories_keyed->prepend('Any status','any');
+        $this->options = $categories_keyed;
     }
 
     /**
