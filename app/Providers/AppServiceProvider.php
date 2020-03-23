@@ -33,7 +33,6 @@ class AppServiceProvider extends ServiceProvider
             $categories_move = $categories->mapWithKeys(function($item){
                 return [ $item['id'] => $item['name'] ];
             });
-            $categories_move->prepend('Select a Category', 0);
 
             $view->with('categories_move', $categories_move);
         });

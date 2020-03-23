@@ -59,18 +59,16 @@
         <div class="r-table__cell column--actions">
 
 			@if ( Auth::user()->hasRole('Membership Team') )
-			<form method="get" action="{{route( 'singer.move', ['singer' => $singer])}}" class="form-inline">
-                <div class="input-group input-group-sm">
-                    @php
-                echo Form::select('move_category', $categories_move,
-                0, ['class' => 'custom-select form-control-sm force-xs']);
-                    @endphp
-
-                    <div class="input-group-append">
-                        <input type="submit" value="Move" class="btn btn-secondary btn-sm force-xs">
-                    </div>
-                </div>
-            </form>
+			<div class="dropdown">
+				<button class="btn btn-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Move to
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					@foreach($categories_move as $id => $category)
+					<a class="dropdown-item " href="{{ route( 'singer.move', ['singer' => $singer, 'move_category' => $id] ) }}">{{ $category }}</a>
+					@endforeach
+				</div>
+			</div>
 
 			<a href="{{route( 'singer.delete', ['singer' => $singer] )}}" class="link-confirm btn btn-link text-danger btn-sm ml-2"><i class="fa fa-fw fa-times"></i></a>
 			@endif
