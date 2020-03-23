@@ -19,7 +19,14 @@
         {{ $song->pitch }}
     </div>
     <div class="r-table__cell song-col--created">
-        {{ $song->created_at->diffForHumans() }}
+        <div class="date">
+            <div class="date__diff-for-humans">
+                {{ $song->created_at->diffForHumans() }}
+            </div>
+            <div class="date__regular">
+                {{ $song->created_at->format('M d, H:i') }}
+            </div>
+        </div>
     </div>
     <div class="r-table__cell col--delete">
         <a href="{{route( 'song.delete', ['song' => $song] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-times"></i></a>

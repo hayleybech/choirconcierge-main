@@ -14,6 +14,7 @@
         {{ $group->list_type }}
     </div>
     <div class="r-table__cell column--created">
+        <div class="date">
         <div class="date__diff-for-humans">
             {{ $group->created_at->diffForHumans() }}
         </div>
@@ -21,7 +22,7 @@
             {{ $group->created_at->format('M d, H:i') }}
         </div>
     </div>
-    <div class="r-table__cell column--actions">
+    </div>
         {{ Form::open( array( 'route' => ['groups.destroy', $group], 'method' => 'delete' ) ) }}
         <button class="link-confirm btn btn-outline-danger btn-sm ml-2"><i class="fa fa-fw fa-trash"></i></button>
         {{ Form::close() }}

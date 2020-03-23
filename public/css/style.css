@@ -289,6 +289,21 @@ main {
 	content: "\f0dd"; /* Sort Down icon */
 }
 
+/* Table dates */
+.date {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-start;
+}
+.date__diff-for-humans {
+
+}
+.date__regular {
+	font-size: 0.8em;
+	color: #999;
+}
+
+
 /**********************************/
 /* Singers List */
 .row--singer {
@@ -476,18 +491,6 @@ main {
 }
 .event-col--created {
 	grid-area: created;
-}
-
-
-/* Event date */
-.date {
-	display: flex;
-	flex-flow: column nowrap;
-	align-items: flex-start;
-}
-.date__regular {
-	font-size: 0.8em;
-	color: #999;
 }
 
 /* Event Table - Tablet */
