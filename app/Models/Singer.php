@@ -42,6 +42,12 @@ class Singer extends Model
         'name', 'email',
     ];
 
+    protected static $filters = [
+        Singer_CategoryFilter::class,
+        Singer_AgeFilter::class,
+        Singer_VoicePartFilter::class,
+    ];
+
     public $notify_channels = ['mail'];
 
     /*
@@ -73,11 +79,5 @@ class Singer extends Model
             return date_diff( date_create($this->profile->dob), date_create('now') )->y;
         }
         return 0;
-    }
-
-    public static function initFilters(): void {
-        self::$filters['category']   = new Singer_CategoryFilter();
-        self::$filters['age']   = new Singer_AgeFilter();
-        self::$filters['part']   = new Singer_VoicePartFilter();
     }
 }

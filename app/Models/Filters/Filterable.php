@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Filterable
 {
-    /** @var Filter[] */
-    protected static $filters = [];
+    /** @var string[] $filters The filter classes to use for the extending Model. */
+    //protected static $filters = []; Define in the extending/using Model
+
+    /** @var Filter[] $_filters The instantiated filter objects */
+    protected static $_filters = [];
 
     /**
      * @param  Builder  $query
@@ -28,7 +31,13 @@ trait Filterable
     /**
      * Set up the static filters array for this Model
      */
-    abstract public static function initFilters(): void;
+    public static function initFilters(): void
+    {
+        foreach(static::$filters as $filter_class)
+        {
+            self::$_filters[] = new $filter_class;
+        }
+    }
 
     /**
      * Get the Filters for this Model
@@ -36,19 +45,19 @@ trait Filterable
      */
     public static function getFilters(): array {
         // Cache results
-        if( count(self::$filters) === 0 ) {
+        if( count(self::$_filters) === 0 ) {
             static::initFilters();
         }
 
-        return self::$filters;
+        return self::$_filters;
     }
 
     public static function getFilterQueryString(): string {
         $query_string = '';
-        foreach( self::$filters as $key => $filter ) {
+        foreach(self::$_filters as $key => $filter ) {
             $query_string .= $filter->name . '=' . $filter->current_option;
 
-            if ( $key !== array_key_last(self::$filters) ) {
+            if ( $key !== array_key_last(self::$_filters) ) {
                 $query_string .= '&';
             }
         }

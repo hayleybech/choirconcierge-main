@@ -46,6 +46,11 @@ class Song extends Model
         'pitch_blown',
     ];
 
+    protected static $filters = [
+        Song_StatusFilter::class,
+        Song_CategoryFilter::class,
+    ];
+
     public const PITCHES = [
         0   => 'A',
         1   => 'A#/Bb',
@@ -99,10 +104,5 @@ class Song extends Model
             $all_pitches = array_merge($all_pitches, $pitches);
         }
         return $all_pitches;
-    }
-
-    public static function initFilters(): void {
-        self::$filters['status']   = new Song_StatusFilter();
-        self::$filters['category']   = new Song_CategoryFilter();
     }
 }

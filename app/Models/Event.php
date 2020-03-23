@@ -51,6 +51,10 @@ class Event extends Model
         'description',
     ];
 
+    protected static $filters = [
+        Event_TypeFilter::class,
+    ];
+
     public $dates = [
         'updated_at',
         'created_at',
@@ -62,9 +66,5 @@ class Event extends Model
     public function type(): BelongsTo
     {
         return $this->belongsTo(EventType::class, 'type_id');
-    }
-
-    public static function initFilters(): void {
-        self::$filters['type']   = new Event_TypeFilter();
     }
 }
