@@ -63,16 +63,8 @@ class SingersController extends Controller
             'category.name',
         ];
 
-        // get URL ready
-        $url = $request->url() . '?';
-        $filters = Singer::getFilters();
-        foreach( $filters as $key => $filter ) {
-            $url .= $filter->name . '=' . $filter->current_option;
-
-            if ( $key !== array_key_last($filters) ) {
-                $url .= '&';
-            }
-        }
+        // Merge filters with sort query string
+        $url = $request->url() . '?' . Singer::getFilterQueryString();
 
         $current_sort = $request->input('sort_by', 'name');
         $current_dir =  $request->input('sort_dir', 'asc');

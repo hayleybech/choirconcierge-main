@@ -42,4 +42,16 @@ trait Filterable
 
         return self::$filters;
     }
+
+    public static function getFilterQueryString(): string {
+        $query_string = '';
+        foreach( self::$filters as $key => $filter ) {
+            $query_string .= $filter->name . '=' . $filter->current_option;
+
+            if ( $key !== array_key_last(self::$filters) ) {
+                $query_string .= '&';
+            }
+        }
+        return $query_string;
+    }
 }

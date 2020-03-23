@@ -140,16 +140,8 @@ class SongsController extends Controller
             'created_at',
         ];
 
-        // get URL ready
-        $url = $request->url() . '?';
-        $filters = Song::getFilters();
-        foreach( $filters as $key => $filter ) {
-            $url .= $filter->name . '=' . $filter->current_option;
-
-            if ( $key !== array_key_last($filters) ) {
-                $url .= '&';
-            }
-        }
+        // Merge filters with sort query string
+        $url = $request->url() . '?' . Song::getFilterQueryString();
 
         $current_sort = $request->input('sort_by', 'title');
         $current_dir =  $request->input('sort_dir', 'asc');
