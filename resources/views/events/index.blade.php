@@ -28,14 +28,14 @@
 
         <div class="r-table r-table--card-view-mobile">
             <div class="r-table__thead">
-                <div class="r-table__row">
-                    <div class="r-table__heading column--mark"><input type="checkbox"></div>
-                    <div class="r-table__heading column--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
-                    <div class="r-table__heading column--type"><a href="{{ $sorts['type.title']['url'] }}">Type<i class="fa fas sort-{{ $sorts['type.title']['dir'] }} {{ ($sorts['type.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
-                    <div class="r-table__heading column--start-date">Event Date</div>
-                    <div class="r-table__heading column--location">Location</div>
-                    <div class="r-table__heading column--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
-                    <div class="r-table__heading column--actions">Actions</div>
+                <div class="r-table__row row--event">
+                    <div class="r-table__heading col--mark"><input type="checkbox"></div>
+                    <div class="r-table__heading event-col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
+                    <div class="r-table__heading event-col--type"><a href="{{ $sorts['type.title']['url'] }}">Type<i class="fa fas sort-{{ $sorts['type.title']['dir'] }} {{ ($sorts['type.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
+                    <div class="r-table__heading event-col--date">Event Date</div>
+                    <div class="r-table__heading event-col--location">Location</div>
+                    <div class="r-table__heading event-col--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
+                    <div class="r-table__heading col--delete"></div>
                 </div>
             </div>
             <div class="r-table__tbody">
