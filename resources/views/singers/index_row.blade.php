@@ -8,23 +8,23 @@
 	);
 	?>
 	<div class="r-table__row row--singer">
-        <div class="r-table__cell column--mark">
+        <div class="r-table__cell col--mark">
             <input type="checkbox" />
         </div>
-		<div class="r-table__cell column--singer">
+		<div class="r-table__cell singer-col--title">
 			<a class="item-title" href="{{route('singers.show', ['singer' => $singer])}}">
 				{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
 			</a>
 			<div class="text-muted singer-email">{{ $singer->email }}</div>
 			<div class="singer-phone text-muted">{{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</div>
 		</div>
-        <div class="r-table__cell column--part">
+        <div class="r-table__cell singer-col--part">
 			<span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part !== '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
 		</div>
-		<div class="r-table__cell column--category">
+		<div class="r-table__cell singer-col--category">
 			<span class="singer-category badge badge-pill {{ $category_class[$singer->category->name] }}">{{ explode( ' ', $singer->category->name )[0] }}</span>
 		</div>
-		<div class="r-table__cell column--progress">
+		<div class="r-table__cell singer-col--progress">
 			<!--<div class="progress">
                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>-->
@@ -51,7 +51,7 @@
 				@endif
 			@endforeach
 		</div>
-		<div class="r-table__cell column--actions">
+		<div class="r-table__cell singer-col--actions">
 
 			@if ( Auth::user()->hasRole('Membership Team') )
 			<div class="dropdown">
@@ -67,7 +67,7 @@
 			@endif
 		</div>
 
-		<div class="r-table__cell column--delete">
+		<div class="r-table__cell col--delete">
 			@if ( Auth::user()->hasRole('Membership Team') )
 				<a href="{{route( 'singer.delete', ['singer' => $singer] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-times"></i></a>
 			@endif
