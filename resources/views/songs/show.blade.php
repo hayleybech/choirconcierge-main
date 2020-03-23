@@ -22,12 +22,13 @@
         <div class="r-table r-table--card-view-mobile">
 
             <div class="r-table__thead">
-                <div class="r-table__row row-attachment">
-                    <div class="r-table__heading column--mark"><input type="checkbox"></div>
-                    <div class="r-table__heading column--title">Title</div>
-                    <div class="r-table__heading column--filename">File</div>
-                    <div class="r-table__heading column--category">Category</div>
-                    <div class="r-table__heading column--actions">Actions</div>
+                <div class="r-table__row row--attachment">
+                    <div class="r-table__heading col--mark"><input type="checkbox"></div>
+                    <div class="r-table__heading col--title">Title</div>
+                    <div class="r-table__heading attachment-col--filename">File</div>
+                    <div class="r-table__heading attachment-col--category">Category</div>
+                    <div class="r-table__heading attachment-col--actions">Actions</div>
+                    <div class="r-table__heading col--delete"></div>
                 </div>
             </div>
             <div class="r-table__tbody">
@@ -35,17 +36,17 @@
             </div>
             <div class="r-table__tfoot">
 
-                {{ Form::open( [ 'route' => ['song.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row-attachment row-add needs-validation', 'novalidate' ] ) }}
-                <div class="r-table__cell column--mark">
+                {{ Form::open( [ 'route' => ['song.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row--attachment row-add needs-validation', 'novalidate' ] ) }}
+                <div class="r-table__cell col--mark">
 
                 </div>
-                <div class="r-table__cell column--title">
+                <div class="r-table__cell col--title">
                     {{ Form::label('title', 'Title') }}
                     <input id="title" name="title" type="text" required class="form-control form-control-sm @error('title') is-invalid @enderror">
                     <div class="valid-feedback">Looks good!</div>
                     <div class="invalid-feedback">Please type a file name.</div>
                 </div>
-                <div class="r-table__cell column--filename">
+                <div class="r-table__cell attachment-col--filename">
                     {{ Form::label('attachment_upload', 'File Upload') }}
 
                     <div class="custom-file custom-file-sm">
@@ -56,7 +57,7 @@
                     </div>
 
                 </div>
-                <div class="r-table__cell column--category">
+                <div class="r-table__cell attachment-col--category">
                     {{ Form::label('category', 'Category') }}
                     {{ Form::select('category',
                         $categories_keyed,
@@ -66,12 +67,14 @@
                     <div class="valid-feedback">Looks good!</div>
                     <div class="invalid-feedback">Please choose a category.</div>
                 </div>
-                <div class="r-table__cell column--actions">
+                <div class="r-table__cell attachment-col--actions">
                     {{ Form::label('', '&nbsp;') }}
 
                     <button type="submit" class="btn btn-success btn-sm">
                         <i class="fa fa-fw fa-plus"></i> Add
                     </button>
+                </div>
+                <div class="r-table__cell col--delete">
                 </div>
                 {{ Form::close() }}
 

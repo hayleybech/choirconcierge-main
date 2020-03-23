@@ -227,15 +227,6 @@ main {
 	place-items: stretch;
 }
 
-/* Temporary - replace with specific styles per module */
-.r-table__row {
-	grid-template-columns: 1% 30% 1fr 1fr 22% 10% 1em;
-	grid-template-rows: 1fr;
-	grid-template-areas:
-		"mark singer category part progress actions delete"
-	;
-}
-
 /* Select & Delete Columns */
 .col--mark {
 	grid-area: mark;
@@ -457,6 +448,53 @@ main {
 	}
 }
 
+/********************************/
+/** ATTACHMENT LIST **/
+.row--attachment {
+	grid-template-columns: 1% 30% 1fr 1fr 10% 1em;
+	grid-template-rows: 1fr;
+	grid-template-areas:
+		"mark title file category actions delete"
+	;
+}
+.attachment-col--filename {
+	grid-area: file;
+}
+.attachment-col--category {
+	grid-area: category;
+}
+.attachment-col--actions {
+	grid-area: actions;
+}
+
+/* Attachment Table - Tablet */
+@media screen and (max-width:980px) {
+	.r-table--card-view-mobile .row--attachment {
+		grid-template-columns: 1% 25% 1fr 1fr 20% 1em;
+		grid-template-rows: 1fr;
+		grid-template-areas:
+			"mark title file category actions delete"
+		;
+	}
+}
+/* Attachment Table - Mobile */
+@media screen and (max-width:767px) {
+
+	.r-table--card-view-mobile .row--attachment {
+		grid-template-columns: 0 55% 1fr 1em;
+		grid-template-rows: auto auto;
+		grid-template-areas:
+			"mark title category delete"
+			"mark file actions delete"
+		;
+	}
+
+	.attachment-col--category,
+	.attachment-col--actions {
+		justify-content: flex-end;
+	}
+}
+
 
 /********************************/
 /** EVENTS LIST **/
@@ -571,24 +609,6 @@ select.form-control-sm.force-xs {
 	height: 23px;
 	font-size: 12px !important;
 }
-
-
-/*** ATTACHMENT TABLE ***/
-.r-table__row.row-attachment {
-	grid-template-areas: "mark title filename category actions";
-	grid-template-columns: 1% 30% 30% 20% 20%;
-}
-@media screen and (max-width:980px) {
-	.r-table__row.row-attachment {
-		grid-template-areas:
-			"mark title category"
-			"mark filename actions"
-		;
-		grid-template-columns: 1% 60% 39%;
-		grid-template-rows: 1fr 1fr;
-	}
-}
-
 
 
 i.fa.fa-external-link {
