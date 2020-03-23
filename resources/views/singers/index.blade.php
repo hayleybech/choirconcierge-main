@@ -39,7 +39,6 @@
 					<div class="r-table__heading column--part"><a href="{{ $sorts['voice_placement.part']['url'] }}">Part<i class="fa fas sort-{{ $sorts['voice_placement.part']['dir'] }} {{ ($sorts['voice_placement.part']['current'] ? 'sort-active' : 'sort-inactive' ) }} "></i></a></div>
 					<div class="r-table__heading column--category"><a href="{{ $sorts['category.name']['url'] }}">Category<i class="fa fas sort-{{ $sorts['category.name']['dir'] }} {{ ($sorts['category.name']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
 					<div class="r-table__heading column--phone">Phone</div>
-					<div class="r-table__heading column--age">Age</div>
 					<div class="r-table__heading column--actions">Actions</div>
 				</div>
 			</div>

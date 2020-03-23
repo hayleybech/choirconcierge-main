@@ -53,9 +53,6 @@
         <div class="r-table__cell column--phone">
             <span class="singer-phone"><i class="fa fa-phone-alt"></i> {{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</span><br>
         </div>
-        <div class="r-table__cell column--age">
-            <span class="singer-age"><i class="fa fa-calendar"></i> {{ ( $singer->getAge() ) ? $singer->getAge() .'yrs' : 'None' }}</span>
-        </div>
         <div class="r-table__cell column--actions">
 
 			@if ( Auth::user()->hasRole('Membership Team') )
