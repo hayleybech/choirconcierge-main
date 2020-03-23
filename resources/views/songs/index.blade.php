@@ -29,11 +29,11 @@
             <div class="r-table__thead">
                 <div class="r-table__row row--song">
                     <div class="r-table__heading col--mark"><input type="checkbox"></div>
-                    <div class="r-table__heading song-col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
+                    <div class="r-table__heading col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
                     <div class="r-table__heading song-col--status"><a href="{{ $sorts['status.title']['url'] }}">Status<i class="fa fas sort-{{ $sorts['status.title']['dir'] }} {{ ($sorts['status.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
                     <div class="r-table__heading song-col--category">Category</div>
                     <div class="r-table__heading song-col--pitch">Pitch</div>
-                    <div class="r-table__heading song-col--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
+                    <div class="r-table__heading col--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
                     <div class="r-table__heading col--delete"></div>
                 </div>
             </div>

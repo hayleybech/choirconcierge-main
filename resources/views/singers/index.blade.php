@@ -34,7 +34,7 @@
 			<div class="r-table__thead">
 				<div class="r-table__row row--singer">
 					<div class="r-table__heading col--mark"><input type="checkbox"></div>
-					<div class="r-table__heading singer-col--title"><a href="{{ $sorts['name']['url'] }}">Singer<i class="fa fas sort-{{ $sorts['name']['dir'] }} {{ ($sorts['name']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
+					<div class="r-table__heading col--title"><a href="{{ $sorts['name']['url'] }}">Singer<i class="fa fas sort-{{ $sorts['name']['dir'] }} {{ ($sorts['name']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
 					<div class="r-table__heading singer-col--part"><a href="{{ $sorts['voice_placement.part']['url'] }}">Part<i class="fa fas sort-{{ $sorts['voice_placement.part']['dir'] }} {{ ($sorts['voice_placement.part']['current'] ? 'sort-active' : 'sort-inactive' ) }} "></i></a></div>
 					<div class="r-table__heading singer-col--category"><a href="{{ $sorts['category.name']['url'] }}">Category<i class="fa fas sort-{{ $sorts['category.name']['dir'] }} {{ ($sorts['category.name']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
 					<div class="r-table__heading singer-col--progress">Progress</div>

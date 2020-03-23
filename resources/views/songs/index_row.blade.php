@@ -2,7 +2,7 @@
     <div class="r-table__cell col--mark">
         <input type="checkbox" />
     </div>
-    <div class="r-table__cell song-col--title">
+    <div class="r-table__cell col--title">
         <a class="item-title" href="{{route('songs.show', ['song' => $song])}}">
         {{ ( isset($song->title) ) ? $song->title : 'Title Unknown' }}
         </a>
@@ -18,7 +18,7 @@
     <div class="r-table__cell song-col--pitch">
         {{ $song->pitch }}
     </div>
-    <div class="r-table__cell song-col--created">
+    <div class="r-table__cell col--created">
         <div class="date">
             <div class="date__diff-for-humans">
                 {{ $song->created_at->diffForHumans() }}

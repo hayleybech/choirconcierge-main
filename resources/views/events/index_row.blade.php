@@ -2,7 +2,7 @@
     <div class="r-table__cell col--mark">
         <input type="checkbox" />
     </div>
-    <div class="r-table__cell event-col--title">
+    <div class="r-table__cell col--title">
         <a class="item-title" href="{{route('events.show', ['event' => $event])}}">
         {{ ( isset($event->title) ) ? $event->title : 'Title Unknown' }}
         </a>
@@ -23,7 +23,7 @@
     <div class="r-table__cell event-col--location">
         <span class="place-icon" style="background-image: url('{{ $event->location_icon }}');"></span> <span class="place-name">{{ $event->location_name }}</span>
     </div>
-    <div class="r-table__cell event-col--created">
+    <div class="r-table__cell col--created">
         <div class="date">
             <div class="date__diff-for-humans">
                 {{ $event->created_at->diffForHumans() }}

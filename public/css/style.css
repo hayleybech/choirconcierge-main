@@ -243,6 +243,12 @@ main {
 	justify-content: center;
 	visibility: hidden; /* I haven't coded bulk actions yet */
 }
+.col--title {
+	grid-area: title;
+}
+.col--created {
+	grid-area: created;
+}
 .col--delete {
 	grid-area: delete;
 }
@@ -257,6 +263,12 @@ main {
 @media screen and (max-width:980px) {
 	.r-table--card-view-mobile .r-table__thead .r-table__row {
 		padding: 0 20px 0 12px;
+		grid-template-columns: 0 auto;
+		grid-template-rows: auto;
+		grid-template-areas: "mark title";
+	}
+	.r-table--card-view-mobile .r-table__thead .r-table__row .r-table__heading:not(.col--mark):not(.col--title) {
+		display: none;
 	}
 	.form-inline .input-group > .custom-select {
 		width: auto !important;
@@ -289,6 +301,23 @@ main {
 	content: "\f0dd"; /* Sort Down icon */
 }
 
+/** Table Fields **/
+.item-title-wrapper {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-start;
+	max-width: 100%;
+}
+.item-title {
+	font-size: 16px;
+	font-weight: 600;
+	max-height: 1.5em;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+	white-space: nowrap;
+}
 /* Table dates */
 .date {
 	display: flex;
@@ -310,18 +339,10 @@ main {
 	grid-template-columns: 1% 30% 1fr 1fr 22% 10% 1em;
 	grid-template-rows: 1fr;
 	grid-template-areas:
-		"mark singer category part progress actions delete"
+		"mark title category part progress actions delete"
 	;
 }
 
-.singer-col--title {
-	grid-area: singer;
-}
-.r-table__cell.singer-col--title {
-	flex-flow: column wrap;
-	align-items: flex-start;
-	justify-content: center;
-}
 .singer-col--progress {
 	grid-area: progress;
 }
@@ -341,14 +362,6 @@ main {
 
 /* Singer Table - Tablet */
 @media screen and (max-width:980px) {
-	.r-table--card-view-mobile .r-table__thead .row--singer {
-		grid-template-columns: 0 auto;
-		grid-template-rows: auto;
-		grid-template-areas: "mark singer";
-	}
-	.r-table--card-view-mobile .r-table__thead .row--singer .r-table__heading:not(.col--mark):not(.singer-col--title) {
-		display: none;
-	}
 	.r-table--card-view-mobile .singer-col--progress {
 		flex-flow: row wrap;
 		align-items: center;
@@ -362,8 +375,8 @@ main {
 		grid-template-columns: 0 60% 1fr 1em;
 		grid-template-rows: auto auto auto;
 		grid-template-areas:
-			"mark singer category delete"
-			"mark singer part delete"
+			"mark title category delete"
+			"mark title part delete"
 			"mark progress actions delete"
 		;
 	}
@@ -376,16 +389,6 @@ main {
 }
 
 /** Fields **/
-.item-title {
-	font-size: 16px;
-	font-weight: 600;
-	max-height: 1.5em;
-	max-width: 100%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: block;
-	white-space: nowrap;
-}
 .singer-email,
 .singer-phone {
 	font-size: 14px;
@@ -422,9 +425,6 @@ main {
 		"mark title status category pitch created delete"
 	;
 }
-.song-col--title {
-	grid-area: title;
-}
 .song-col--status {
 	grid-area: status;
 }
@@ -434,19 +434,10 @@ main {
 .song-col--pitch {
 	grid-area: pitch;
 }
-.song-col--created {
-	grid-area: created;
-}
+
 /* Song Table - Tablet */
 @media screen and (max-width:980px) {
-	.r-table--card-view-mobile .r-table__thead .row--song {
-		grid-template-columns: 0 auto;
-		grid-template-rows: auto;
-		grid-template-areas: "mark title";
-	}
-	.r-table--card-view-mobile .r-table__thead .row--song .r-table__heading:not(.col--mark):not(.song-col--title) {
-		display: none;
-	}
+
 }
 /* Song Table - Mobile */
 @media screen and (max-width:767px) {
@@ -462,7 +453,7 @@ main {
 
 	.song-col--status,
 	.song-col--pitch,
-	.song-col--created {
+	.col--created {
 		justify-content: flex-end;
 	}
 }
@@ -477,9 +468,6 @@ main {
 		"mark title type date location created delete"
 	;
 }
-.event-col--title {
-	grid-area: title;
-}
 .event-col--type {
 	grid-area: type;
 }
@@ -489,21 +477,9 @@ main {
 .event-col--location {
 	grid-area: location;
 }
-.event-col--created {
-	grid-area: created;
-}
 
 /* Event Table - Tablet */
 @media screen and (max-width:980px) {
-	.r-table--card-view-mobile .r-table__thead .row--event {
-		grid-template-columns: 0 auto;
-		grid-template-rows: auto;
-		grid-template-areas: "mark title";
-	}
-	.r-table--card-view-mobile .r-table__thead .row--event .r-table__heading:not(.col--mark):not(.event-col--title) {
-		display: none;
-	}
-
 	.r-table--card-view-mobile .row--event {
 		grid-template-columns: 1% 30% 1fr 1fr 2fr 1em;
 		grid-template-rows: 1fr;
@@ -511,7 +487,7 @@ main {
 			"mark title type date location delete"
 		;
 	}
-	.event-col--created {
+	.col--created {
 		display: none;
 	}
 }

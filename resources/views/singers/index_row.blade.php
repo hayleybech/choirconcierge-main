@@ -11,12 +11,14 @@
         <div class="r-table__cell col--mark">
             <input type="checkbox" />
         </div>
-		<div class="r-table__cell singer-col--title">
-			<a class="item-title" href="{{route('singers.show', ['singer' => $singer])}}">
-				{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
-			</a>
-			<div class="text-muted singer-email">{{ $singer->email }}</div>
-			<div class="singer-phone text-muted">{{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</div>
+		<div class="r-table__cell col--title">
+			<div class="item-title-wrapper">
+				<a class="item-title" href="{{route('singers.show', ['singer' => $singer])}}">
+					{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
+				</a>
+				<div class="text-muted singer-email">{{ $singer->email }}</div>
+				<div class="singer-phone text-muted">{{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</div>
+			</div>
 		</div>
         <div class="r-table__cell singer-col--part">
 			<span class="singer-part"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part !== '' ) ? $singer->placement->voice_part : 'No part' }}</span><br>
