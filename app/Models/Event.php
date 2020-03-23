@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Filters\Event_TypeFilter;
+use App\Models\Filters\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -31,6 +33,8 @@ use Illuminate\Support\Carbon;
  */
 class Event extends Model
 {
+    use Filterable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -58,5 +62,9 @@ class Event extends Model
     public function type(): BelongsTo
     {
         return $this->belongsTo(EventType::class, 'type_id');
+    }
+
+    public static function initFilters(): void {
+        self::$filters['type']   = new Event_TypeFilter();
     }
 }

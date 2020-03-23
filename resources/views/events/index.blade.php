@@ -14,24 +14,7 @@
 
         <div class="card-body">
             <form method="get" class="form-inline mb-0">
-                @foreach( $filters as $filter )
-                    <div class="input-group input-group-sm mb-2 mr-2">
-                        <div class="input-group-prepend">
-                            @php
-                                $label_class = ( $filter['current'] !== $filter['default'] ) ? 'border-primary bg-primary text-white' : 'bg-light';
-                            @endphp
-                            <label for="{{ $filter['name']}} " class="input-group-text {{$label_class}}">{{ $filter['label'] }}</label>
-                        </div>
-                        @php
-                            $field_class = ( $filter['current'] !== $filter['default'] ) ? 'border-primary' : '';
-                            echo Form::select($filter['name'],
-                                $filter['list'],
-                                $filter['current'],
-                                ['class' => 'custom-select form-control-sm ' . $field_class]
-                            );
-                        @endphp
-                    </div>
-                @endforeach
+                @each('partials.filter', $filters, 'filter')
 
                 <div class="input-group input-group-sm mb-2 mr-2">
                     <div class="btn-group" role="group" aria-label="Basic example">

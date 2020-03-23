@@ -13,20 +13,9 @@ class EventsController extends Controller
     public function index(Request $request): View
     {
         // Base query
-        $events = Event::with([]);
-
-        // Filter events
-        $where = [];
-        $filters = $this->getFilters($request);
-
-        // Filter by type
-        if($filters['type']['current'] !== 0) {
-            $where[] = ['type_id', '=', $filters['type']['current']];
-        }
-        $events = $events->where($where);
-
-        // Finish and fetch
-        $events = $events->get();
+        $events = Event::with([])
+            ->filter()
+            ->get();
 
         // Sort
         $sort_by = $request->input('sort_by', 'name');
@@ -43,6 +32,7 @@ class EventsController extends Controller
 
         $sorts = $this->getSorts($request);
 
+        $filters = Event::getFilters();
         return view('events.index', compact('events', 'filters', 'sorts') );
     }
 
@@ -96,30 +86,6 @@ class EventsController extends Controller
         return redirect()->route('events.index')->with(['status' => 'Event deleted. ', ]);
     }
 
-    public function getFilters(Request $request): array
-    {
-        return [
-            'type'    => $this->getFilterType($request),
-        ];
-    }
-    public function getFilterType(Request $request): array
-    {
-        $default = 0;
-
-        $types = EventType::all();
-        $types_keyed = $types->mapWithKeys(function($item){
-            return [ $item['id'] => $item['title'] ];
-        });
-        $types_keyed->prepend('Any type',0);
-
-        return [
-            'name'      => 'filter_type',
-            'label'     => 'Type',
-            'default'   => $default,
-            'current'   => $request->input('filter_type', $default),
-            'list'      => $types_keyed,
-        ];
-    }
 
     public function getSorts(Request $request): array
     {
@@ -131,10 +97,13 @@ class EventsController extends Controller
 
         // get URL ready
         $url = $request->url() . '?';
-        $filters = $this->getFilters($request);
+        $filters = Event::getFilters();
         foreach( $filters as $key => $filter ) {
-            $url .= $filter['name'] . '=' . $filter['current'];
-            if ( ! $key === array_key_last($filters) ) $url .= '&';
+            $url .= $filter->name . '=' . $filter->current_option;
+
+            if ( $key !== array_key_last($filters) ) {
+                $url .= '&';
+            }
         }
 
         $current_sort = $request->input('sort_by', 'title');
