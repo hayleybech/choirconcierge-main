@@ -16,28 +16,9 @@ class SongsController extends Controller
     public function index(Request $request): View
     {
         // Base query
-        $songs = Song::with([]);
-
-        // Filter songs
-        $where = [];
-        $filters = $this->getFilters($request);
-
-        // Filter by status
-        if($filters['status']['current'] !== 0) {
-            $where[] = ['status_id', '=', $filters['status']['current']];
-        }
-        $songs = $songs->where($where);
-
-        // Filter by category
-        if($filters['category']['current'] !== 0) {
-            $current = $filters['category']['current'];
-            $songs = $songs->whereHas('categories', function($query) use($current) {
-                $query->where('category_id', '=', $current);
-            });
-        }
-
-        // Finish and fetch
-        $songs = $songs->get();
+        $songs = Song::with([])
+            ->filter()
+            ->get();
 
         // Sort
         $sort_by = $request->input('sort_by', 'name');
@@ -54,34 +35,16 @@ class SongsController extends Controller
 
         $sorts = $this->getSorts($request);
 
+        $filters = Song::getFilters();
         return view('songs.index', compact('songs', 'filters', 'sorts') );
     }
 
     public function learning(Request $request): View
     {
         // Base query
-        $songs = Song::with(['attachments']);
-
-        // Filter songs
-        $where = [];
-        $filters = $this->getFilters($request);
-
-        // Filter by status
-        if($filters['status']['current'] !== 0) {
-            $where[] = ['status_id', '=', $filters['status']['current']];
-        }
-        $songs = $songs->where($where);
-
-        // Filter by category
-        if($filters['category']['current'] !== 0) {
-            $current = $filters['category']['current'];
-            $songs = $songs->whereHas('categories', function($query) use($current) {
-                $query->where('category_id', '=', $current);
-            });
-        }
-
-        // Finish and fetch
-        $songs = $songs->get();
+        $songs = Song::with(['attachments'])
+            ->filter()
+            ->get();
 
         // Sort
         $sort_by = $request->input('sort_by', 'name');
@@ -98,6 +61,7 @@ class SongsController extends Controller
 
         $sorts = $this->getSorts($request);
 
+        $filters = Song::getFilters();
         return view('songs.learning', compact('songs', 'filters', 'sorts') );
     }
 
@@ -168,51 +132,6 @@ class SongsController extends Controller
         return redirect()->route('songs.index')->with(['status' => 'Song deleted. ', ]);
     }
 
-    public function getFilters(Request $request): array
-    {
-        return [
-            'status'    => $this->getFilterStatus($request),
-            'category'    => $this->getFilterCategory($request),
-        ];
-    }
-    public function getFilterStatus(Request $request): array
-    {
-        $default = 0;
-
-        $statuses = SongStatus::all();
-        $statuses_keyed = $statuses->mapWithKeys(function($item){
-            return [ $item['id'] => $item['title'] ];
-        });
-        $statuses_keyed->prepend('Any status',0);
-
-        return [
-            'name'      => 'filter_status',
-            'label'     => 'Status',
-            'default'   => $default,
-            'current'   => $request->input('filter_status', $default),
-            'list'      => $statuses_keyed,
-        ];
-    }
-
-    public function getFilterCategory(Request $request): array
-    {
-        $default = 0;
-
-        $categories = SongCategory::all();
-        $categories_keyed = $categories->mapWithKeys(function($item){
-            return [ $item['id'] => $item['title'] ];
-        });
-        $categories_keyed->prepend('Any category',0);
-
-        return [
-            'name'      => 'filter_category',
-            'label'     => 'Category',
-            'default'   => $default,
-            'current'   => $request->input('filter_category', $default),
-            'list'      => $categories_keyed,
-        ];
-    }
-
     public function getSorts(Request $request): array
     {
         $sort_cols = [
@@ -223,10 +142,13 @@ class SongsController extends Controller
 
         // get URL ready
         $url = $request->url() . '?';
-        $filters = $this->getFilters($request);
+        $filters = Song::getFilters();
         foreach( $filters as $key => $filter ) {
-            $url .= $filter['name'] . '=' . $filter['current'];
-            if ( ! $key === array_key_last($filters) ) $url .= '&';
+            $url .= $filter->name . '=' . $filter->current_option;
+
+            if ( $key !== array_key_last($filters) ) {
+                $url .= '&';
+            }
         }
 
         $current_sort = $request->input('sort_by', 'title');

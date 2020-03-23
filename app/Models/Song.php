@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Filters\Filterable;
+use App\Models\Filters\Song_CategoryFilter;
+use App\Models\Filters\Song_StatusFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -31,6 +34,8 @@ use Illuminate\Support\Carbon;
  */
 class Song extends Model
 {
+    use Filterable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -94,5 +99,10 @@ class Song extends Model
             $all_pitches = array_merge($all_pitches, $pitches);
         }
         return $all_pitches;
+    }
+
+    public static function initFilters(): void {
+        self::$filters['status']   = new Song_StatusFilter();
+        self::$filters['category']   = new Song_CategoryFilter();
     }
 }
