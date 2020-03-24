@@ -66,12 +66,12 @@
 
             <div class="form-group">
                 <label for="recipient_roles"><i class="fa fa-fw fa-users"></i> Roles</label><br>
-                <select id="recipient_roles" name="recipient_roles[]" class="select2 custom-select" data-recipient-type="roles" multiple></select>
+                <select id="recipient_roles" name="recipient_roles[]" class="select2 custom-select" data-model="roles" multiple></select>
             </div>
 
             <div class="form-group">
                 <label for="recipient_users"><i class="fa fa-fw fa-user"></i> Users</label><br>
-                <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-recipient-type="users" multiple></select>
+                <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple></select>
             </div>
 
         </div>

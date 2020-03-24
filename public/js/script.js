@@ -46,16 +46,17 @@ $( document ).ready(function() {
 
 
     // Run Select2
-    $('.select2').select2({
-        placeholder: "Choose recipients...",
+    const URL_USERS = '/users/find';
+    const URL_ROLES = '/users/roles/find';
+    const SELECT2_CONFIG = {
+        placeholder: "Start typing...",
         minimumInputLength: 2,
         ajax: {
-            url: '/groups/find-recipient',
+            url: '', // Set a moment later
             dataType: 'json',
             data: function (params) {
                 return {
                     q: $.trim(params.term),
-                    type: $(this).data('recipient-type')
                 };
             },
             processResults: function (data) {
@@ -65,7 +66,13 @@ $( document ).ready(function() {
             },
             cache: true
         }
-    });
+    };
+
+    SELECT2_CONFIG.ajax.url = URL_USERS;
+    $('.select2[data-model=users]').select2(SELECT2_CONFIG);
+
+    SELECT2_CONFIG.ajax.url = URL_ROLES;
+    $('.select2[data-model=roles]').select2(SELECT2_CONFIG);
 });
 
 

@@ -143,6 +143,10 @@ Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static functio
     // Index
     Route::get('/', 'UsersController@index')->name('users.index');
 
+    // AJAX Search
+    Route::get('/find', 'UsersController@findUsers');
+    Route::get('/roles/find', 'UsersController@findRoles');
+
     // Attach/Detach role from a user
     Route::get('{user}/roles/{role}/detach', 'UsersController@detachRole')->name('users.detachrole');
     Route::post('{user}/role', 'UsersController@addRoles')->name('users.addroles');
@@ -150,7 +154,6 @@ Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static functio
 
 // User Groups module
 Route::middleware(['auth', 'role:Admin'])->group(static function () {
-    Route::get('/groups/find-recipient', 'UserGroupController@findRecipient');
     Route::resource('groups', 'UserGroupController');
 
 });
