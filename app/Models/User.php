@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Arr;
 use UnexpectedValueException;
 
 // http://alexsears.com/article/adding-roles-to-laravel-users/
@@ -83,7 +84,7 @@ class User extends Authenticatable
      */
     public function hasRole($check): bool
     {
-        return in_array($check, array_pluck($this->roles->toArray(), 'name'));
+        return in_array($check, Arr::pluck($this->roles->toArray(), 'name'));
     }
 	
 	/**
