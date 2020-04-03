@@ -45,13 +45,13 @@ class DatabaseSeeder extends Seeder
         $this->call('SingerCategorySeeder');
         $this->command->info('Notification Template table seeded!');
 
-        $this->call('Songs Seeder');
+        $this->call('SongsSeeder');
         $this->command->info('Songs table seeded!');
 
         $this->call('SongAttachmentCategorySeeder');
         $this->command->info('Song Attachment Categories table seeded!');
 
-        $this->call('Events Seeder');
+        $this->call('EventsSeeder');
         $this->command->info('Events table seeded!');
     }
 }
