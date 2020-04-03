@@ -42,17 +42,21 @@ class UserGroupController extends Controller
         // Update recipients
         // @todo refactor member attachment to separate method
         $members = [];
-        foreach($data['recipient_roles'] as $role){
-            $members[] = [
-                'memberable_id'     => $role,
-                'memberable_type'   => 'App\Models\Role',
-            ];
+        if( isset($data['recipient_roles']) ) {
+            foreach($data['recipient_roles'] as $role){
+                $members[] = [
+                    'memberable_id'     => $role,
+                    'memberable_type'   => 'App\Models\Role',
+                ];
+            }
         }
-        foreach($data['recipient_users'] as $user){
-            $members[] = [
-                'memberable_id'     => $user,
-                'memberable_type'   => 'App\Models\User',
-            ];
+        if( isset($data['recipient_users']) ) {
+            foreach($data['recipient_users'] as $user){
+                $members[] = [
+                    'memberable_id'     => $user,
+                    'memberable_type'   => 'App\Models\User',
+                ];
+            }
         }
         $group->members()->createMany($members);
 
@@ -98,17 +102,21 @@ class UserGroupController extends Controller
         // Update recipients
         // @todo refactor member attachment to separate method
         $members = [];
-        foreach($data['recipient_roles'] as $role){
-            $members[] = [
-                'memberable_id'     => $role,
-                'memberable_type'   => 'App\Models\Role',
-            ];
+        if( isset($data['recipient_roles']) ) {
+            foreach($data['recipient_roles'] as $role){
+                $members[] = [
+                    'memberable_id'     => $role,
+                    'memberable_type'   => 'App\Models\Role',
+                ];
+            }
         }
-        foreach($data['recipient_users'] as $user){
-            $members[] = [
-                'memberable_id'     => $user,
-                'memberable_type'   => 'App\Models\User',
-            ];
+        if( isset($data['recipient_users']) ) {
+            foreach($data['recipient_users'] as $user){
+                $members[] = [
+                    'memberable_id'     => $user,
+                    'memberable_type'   => 'App\Models\User',
+                ];
+            }
         }
         $group->members()->createMany($members);
 
