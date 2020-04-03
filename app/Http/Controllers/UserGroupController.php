@@ -140,43 +140,6 @@ class UserGroupController extends Controller
         return redirect()->route('groups.index')->with(['status' => 'Group deleted. ', ]);
     }
 
-    public function findRecipient(Request $request): JsonResponse
-    {
-        $term = trim($request->q);
-        $type = trim($request->type);
-
-        if( empty($term) ){
-            return \Response::json([]);
-        }
-
-        $formatted_recipients = [];
-        if( $type === 'users'){
-            $users = User::where('name', 'like', "%$term%")
-                ->limit(5)
-                ->get();
-
-            foreach( $users as $user ){
-                $formatted_recipients[] = [
-                    'id'    => $user->id,
-                    'text'  => $user->name
-                ];
-            }
-        } elseif( $type === 'roles' ){
-            $roles = Role::where('name', 'like', "%$term%")
-                ->limit(5)
-                ->get();
-
-            foreach( $roles as $role ){
-                $formatted_recipients[] = [
-                    'id'    => $role->id,
-                    'text'  => $role->name
-                ];
-            }
-        }
-
-        return \Response::json($formatted_recipients);
-    }
-
     /**
      * @param UserGroup $group
      * @return mixed
