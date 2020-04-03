@@ -22,7 +22,7 @@ class CreateEventsTables extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->integer('type_id');
+            $table->integer('type_id')->nullable();
             $table->timestamp('call_time')->useCurrent();
             $table->timestamp('start_date')->useCurrent();
             $table->timestamp('end_date')->useCurrent();

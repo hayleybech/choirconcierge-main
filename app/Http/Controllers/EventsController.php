@@ -46,7 +46,7 @@ class EventsController extends Controller
     public function store(): RedirectResponse
     {
         $data = $this->validateRequest();
-        $event = Event()::create($data);
+        $event = Event::create($data);
 
         // Associate status
         $type = EventType::find($data['type']);

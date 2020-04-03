@@ -29,7 +29,7 @@ class CreateSongsTables extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('pitch_blown');
-            $table->integer('status_id');
+            $table->integer('status_id')->nullable();
             $table->timestamps();
         });
 
