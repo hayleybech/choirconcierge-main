@@ -6,6 +6,7 @@ use App\Models\NotificationTemplate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use League\CommonMark\CommonMarkConverter;
 
 class NotificationTemplateController extends Controller
 {
@@ -19,8 +20,7 @@ class NotificationTemplateController extends Controller
         $templates = NotificationTemplate::all();
 
         foreach($templates as $template) {
-            $Parsedown = new \Parsedown();
-            $template->body_rendered = $Parsedown->text($template->body);
+            $template->body_rendered = (new CommonMarkConverter())->convertToHtml($template->body);
         }
 		
 		return view('notification-templates.index', compact('templates'));
