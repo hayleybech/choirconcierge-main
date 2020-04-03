@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
-@section('title', 'Login')
+@section('title', 'Welcome')
+@section('page-title', 'Welcome')
 
-@section('content')
-	<div class="jumbotron bg-light">
+@section('page-content')
+	<div class="jumbotron card bg-light">
 	  <h1 class="display-3">Welcome</h1>
 	  <p class="lead">Welcome to Choir Concierge, your singer management assistant. </p>
 	  <hr class="my-4">

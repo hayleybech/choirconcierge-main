@@ -3,7 +3,7 @@
 @section('title', 'Edit - ' . $group->title)
 @section('page-title', 'Edit')
 
-@section('content')
+@section('page-content')
     {{ Form::open( array( 'route' => ['groups.update', $group->id], 'method' => 'put' ) ) }}
 
     <div class="card bg-light">
