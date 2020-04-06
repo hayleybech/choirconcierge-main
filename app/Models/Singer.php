@@ -29,6 +29,7 @@ use Illuminate\Support\Carbon;
  * @property Profile $profile
  * @property Placement $placement
  * @property SingerCategory $category
+ * @property User $user
  *
  * Dynamic
  * @property int $age
@@ -74,6 +75,11 @@ class Singer extends Model
 	public function category(): BelongsTo
     {
         return $this->belongsTo(SingerCategory::class, 'singer_category_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getAge(): int
