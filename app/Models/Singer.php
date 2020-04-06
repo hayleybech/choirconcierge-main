@@ -20,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property boolean $onboarding_enabled
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -39,7 +40,9 @@ class Singer extends Model
     use Notifiable, Filterable;
 
     protected $fillable = [
-        'name', 'email',
+        'name',
+        'email',
+        'onboarding_enabled',
     ];
 
     protected static $filters = [

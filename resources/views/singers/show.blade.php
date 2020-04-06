@@ -9,11 +9,19 @@
 	<span class="badge badge-light">{{ $singer->category->name }}</span><br>
 	@if( $singer->placement)<i class="fa fa-fw fa-users"></i> {{ $singer->placement->voice_part }} <br>@endif
 	{{ $singer->email }}<br>
-	Added: {{$singer->created_at}}
+	Added: {{$singer->created_at}}<br>
+	<strong>
+		@if( $singer->onboarding_enabled )
+			Onboarding enabled
+		@else
+			Onboarding disabled
+		@endif
+	</strong>
 @endsection
 
 @section('page-content')
 
+	@if( $singer->onboarding_enabled )
 	<div class="card bg-light">
 		<h3 class="card-header h5">Tasks</h3>
 		<div class="list-group list-group-flush">
@@ -34,6 +42,7 @@
 			@endforeach
 		</div>
 	</div>
+	@endif
 	
 	<div class="card bg-light">
 		<h3 class="card-header h5">Member Profile</h3>
