@@ -40,7 +40,9 @@ class Singer extends Model
     use Notifiable, Filterable;
 
     protected $fillable = [
-        'name', 'email',
+        'name',
+        'email',
+        'onboarding_enabled',
     ];
 
     protected static $filters = [

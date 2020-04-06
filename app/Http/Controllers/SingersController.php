@@ -451,7 +451,8 @@ class SingersController extends Controller
             'email'	=> [
                 'required',
                 Rule::unique('singers')->ignore($singer->id ?? ''),
-            ]
+            ],
+            'onboarding_enabled'    => 'boolean',
         ]);
     }
 }
