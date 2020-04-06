@@ -83,9 +83,6 @@
 								<li class="nav-item">
 									<a href="{{ route('notification-templates.index') }}" class="nav-link {{ ( request()->routeIs('notification-templates.*') ) ? 'active' : '' }}"><i class="far fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
 								</li>
-								<li class="nav-item">
-									<a href="{{ route('users.index') }}" class="nav-link {{ ( request()->routeIs('users.*') ) ? 'active' : '' }}"><i class="fa fa-sitemap fa-fw"></i><span class="link-text"> Team</span></a>
-								</li>
 							@endif
 
 							<li class="nav-item nav-heading">Account</li>
