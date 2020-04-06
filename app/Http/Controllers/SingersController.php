@@ -125,18 +125,25 @@ class SingersController extends Controller
 	
 	public function store(): RedirectResponse
     {
+        $PROSPECTS_CAT_ID = 1;
+        $MEMBERS_CAT_ID = 3;
+
         $data = $this->validateRequest();
         $singer = Singer::create($data);
-		
-		// Attach all tasks
+
         if( $singer->onboarding_enabled ){
+            // Attach all tasks
             $tasks = Task::all();
             $singer->tasks()->attach( $tasks );
+
+            $category_id = $PROSPECTS_CAT_ID;
+        } else {
+            $category_id = $MEMBERS_CAT_ID;
         }
 
-		// Attach to Prospects category
-        $cat_prospects = SingerCategory::find(1);
-        $singer->category()->associate($cat_prospects);
+		// Attach to category
+        $category = SingerCategory::find($category_id);
+        $singer->category()->associate($category);
 
         $singer->save();
 		
