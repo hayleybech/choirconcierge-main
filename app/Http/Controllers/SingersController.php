@@ -129,8 +129,10 @@ class SingersController extends Controller
         $singer = Singer::create($data);
 		
 		// Attach all tasks
-		$tasks = Task::all();
-		$singer->tasks()->attach( $tasks );
+        if( $singer->onboarding_enabled ){
+            $tasks = Task::all();
+            $singer->tasks()->attach( $tasks );
+        }
 
 		// Attach to Prospects category
         $cat_prospects = SingerCategory::find(1);
