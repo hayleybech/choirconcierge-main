@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\TaskCompleted;
 use App\Imports\DripSingersImport;
 use App\Libraries\Drip\Response;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -12,6 +13,7 @@ use App\Models\Singer;
 use App\Models\Task;
 use App\Models\SingerCategory;
 use App\Libraries\Drip\Drip;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -145,6 +147,19 @@ class SingersController extends Controller
         $category = SingerCategory::find($category_id);
         $singer->category()->associate($category);
 
+        // Add matching user
+        $user = new User();
+        $user->name = $singer->name;
+        $user->email = $singer->email;
+        $user->password = Str::random(10);
+        $user->save();
+
+        // Sync roles
+        $user->roles()->sync($data['user_roles']);
+        $user->save();
+
+        $singer->user()->associate($user);
+
         $singer->save();
 		
 		// Exit
@@ -223,9 +238,14 @@ class SingersController extends Controller
         return view('singers.edit', compact('singer' ));
     }
     public function update(Singer $singer, Request $request): RedirectResponse
-    {;
+    {
+        // Update singer
         $data = $this->validateRequest($singer);
         $singer->update($data);
+
+        // Sync roles
+        $singer->user->roles()->sync($data['user_roles']);
+        $singer->save();
 
         // Exit
         return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer saved. ']);
@@ -466,6 +486,9 @@ class SingersController extends Controller
                 Rule::unique('singers')->ignore($singer->id ?? ''),
             ],
             'onboarding_enabled'    => 'boolean',
+            'user_roles' => [
+                'exists:roles,id',
+            ],
         ]);
     }
 }

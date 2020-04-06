@@ -45,6 +45,11 @@
 				</div>
 			</fieldset>
 
+			<div class="form-group">
+				<label for="user_roles"><i class="fa fa-fw fa-users"></i> Roles</label><br>
+				<select id="user_roles" name="user_roles[]" class="select2 form-control" data-model="roles" multiple></select>
+			</div>
+
 		</div>
 
 		<div class="card-footer">
