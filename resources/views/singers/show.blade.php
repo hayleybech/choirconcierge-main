@@ -21,6 +21,7 @@
 
 @section('page-content')
 
+	@if( $singer->onboarding_enabled )
 	<div class="card bg-light">
 		<h3 class="card-header h5">Tasks</h3>
 		<div class="list-group list-group-flush">
@@ -41,6 +42,7 @@
 			@endforeach
 		</div>
 	</div>
+	@endif
 	
 	<div class="card bg-light">
 		<h3 class="card-header h5">Member Profile</h3>

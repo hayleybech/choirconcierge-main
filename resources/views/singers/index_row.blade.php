@@ -32,28 +32,30 @@
 			<!--<div class="progress">
                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>-->
-			@foreach( $singer->tasks as $task )
-				@if( $task->pivot->completed )
-					@continue
-				@else
-					@php
-						if( $task->type === 'form' ){
-                            $btn_style = 'btn-primary';
-                            $icon_complete = 'fa-file';
-                            $action = 'Start';
-                        } else {
-                            $btn_style = 'btn-success';
-                            $icon_complete ='fa-check';
-                            $action = 'Done';
-                        }
-					@endphp
-					<span>{{ $task->name }}</span>
-					<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link btn btn-sm force-xs {{$btn_style}}">
-						<i class="fa fa-fw  {{$icon_complete}}"></i> {{$action}}
-					</a>
-					@break
-				@endif
-			@endforeach
+			@if( $singer->onboarding_enabled )
+				@foreach( $singer->tasks as $task )
+					@if( $task->pivot->completed )
+						@continue
+					@else
+						@php
+							if( $task->type === 'form' ){
+								$btn_style = 'btn-primary';
+								$icon_complete = 'fa-file';
+								$action = 'Start';
+							} else {
+								$btn_style = 'btn-success';
+								$icon_complete ='fa-check';
+								$action = 'Done';
+							}
+						@endphp
+						<span>{{ $task->name }}</span>
+						<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link btn btn-sm force-xs {{$btn_style}}">
+							<i class="fa fa-fw  {{$icon_complete}}"></i> {{$action}}
+						</a>
+						@break
+					@endif
+				@endforeach
+			@endif
 		</div>
 		<div class="r-table__cell singer-col--actions">
 
