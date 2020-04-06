@@ -20,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property boolean $onboarding_enabled
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
