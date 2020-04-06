@@ -182,12 +182,14 @@ class SingersController extends Controller
     {
 		$singer->profile()->create($request->all()); // refer to whitelist in model
 		
-		// Mark matching task completed
-		//$task = $singer->tasks()->where('name', 'Member Profile')->get();
-		$singer->tasks()->updateExistingPivot( self::PROFILE_TASK_ID, array('completed' => true) );
+		if( $singer->onboarding_enabled ) {
+            // Mark matching task completed
+            //$task = $singer->tasks()->where('name', 'Member Profile')->get();
+            $singer->tasks()->updateExistingPivot( self::PROFILE_TASK_ID, array('completed' => true) );
 
-        event( new TaskCompleted(Task::find(self::PROFILE_TASK_ID), $singer) );
-		
+            event( new TaskCompleted(Task::find(self::PROFILE_TASK_ID), $singer) );
+        }
+
 		return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
 	}
 	
@@ -200,12 +202,14 @@ class SingersController extends Controller
     {
 		$singer->placement()->create($request->all()); // refer to whitelist in model
 		
-		// Mark matching task completed
-		//$task = $singer->tasks()->where('name', 'Voice Placement')->get();
-		$singer->tasks()->updateExistingPivot( self::PLACEMENT_TASK_ID, array('completed' => true) );
+		if( $singer->onboarding_enabled ) {
+            // Mark matching task completed
+            //$task = $singer->tasks()->where('name', 'Voice Placement')->get();
+            $singer->tasks()->updateExistingPivot( self::PLACEMENT_TASK_ID, array('completed' => true) );
 
-        event( new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer) );
-		
+            event( new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer) );
+        }
+
 		return redirect('/singers')->with(['status' => 'Voice Placement created. ', ]);
 	}
 	
