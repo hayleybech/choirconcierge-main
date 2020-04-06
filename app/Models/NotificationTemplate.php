@@ -48,7 +48,7 @@ class NotificationTemplate extends Model
         switch($recipient_type){
             case 'role':
                 $role = Role::find($recipient_id);
-                $recipients = $role->users;
+                $recipients = $role->users->all();
                 break;
             case 'user':
                 $recipients[] = User::find($recipient_id);
