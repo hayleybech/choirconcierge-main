@@ -9,6 +9,7 @@ use App\Models\Filters\Singer_VoicePartFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -29,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property Profile $profile
  * @property Placement $placement
  * @property SingerCategory $category
+ * @property User $user
  *
  * Dynamic
  * @property int $age
@@ -75,6 +77,17 @@ class Singer extends Model
     {
         return $this->belongsTo(SingerCategory::class, 'singer_category_id');
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /*
+    public function roles(): HasManyThrough
+    {
+        return $this->hasManyThrough(Role::class, User::class);
+    }*/
 
     public function getAge(): int
     {

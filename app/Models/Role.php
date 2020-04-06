@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
@@ -46,4 +47,10 @@ class Role extends Model
     {
         return $this->morphMany(GroupMember::class, 'memberable');
     }
+
+    /*
+    public function singers(): HasManyThrough
+    {
+        return $this->hasManyThrough(Singer::class, User::class);
+    }*/
 }

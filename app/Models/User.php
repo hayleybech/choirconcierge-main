@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,6 +20,7 @@ use UnexpectedValueException;
  * Columns
  * @property int $id
  * @property string $name
+ * @property string $email
  * @property string $password
  * @property string $remember_token
  * @property Carbon $created_at
@@ -27,6 +29,7 @@ use UnexpectedValueException;
  * Relationships
  * @property Role[] $roles
  * @property GroupMember[] $memberships
+ * @property Singer $singer
  *
  * @package App\Models
  */
@@ -151,6 +154,11 @@ class User extends Authenticatable
     public function memberships(): MorphMany
     {
         return $this->morphMany(GroupMember::class, 'memberable');
+    }
+
+    public function singer(): HasOne
+    {
+        return $this->hasOne(Singer::class);
     }
 
 }

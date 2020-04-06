@@ -16,7 +16,11 @@
 		@else
 			Onboarding disabled
 		@endif
-	</strong>
+	</strong><br>
+	Roles:
+	@foreach($singer->user->roles as $role)
+		<span class="badge badge-secondary">{{$role->name}}</span>
+	@endforeach
 @endsection
 
 @section('page-content')

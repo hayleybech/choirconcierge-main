@@ -17,7 +17,6 @@
 
             @if( Auth::user()->hasRole('Admin') )
             <a href="{{ route('groups.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-users"></i> Groups List</a>
-            <a href="{{ route('users.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-sitemap"></i> Users List</a>
             <a href="{{ route('tasks.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-tasks"></i> Tasks List</a>
             @endif
 
