@@ -9,7 +9,14 @@
 	<span class="badge badge-light">{{ $singer->category->name }}</span><br>
 	@if( $singer->placement)<i class="fa fa-fw fa-users"></i> {{ $singer->placement->voice_part }} <br>@endif
 	{{ $singer->email }}<br>
-	Added: {{$singer->created_at}}
+	Added: {{$singer->created_at}}<br>
+	<strong>
+		@if( $singer->onboarding_enabled )
+			Onboarding enabled
+		@else
+			Onboarding disabled
+		@endif
+	</strong>
 @endsection
 
 @section('page-content')
