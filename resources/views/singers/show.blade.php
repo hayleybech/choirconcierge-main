@@ -39,11 +39,19 @@
 				</div>
 			</span>
 				@else
+					@if(Auth::user()->hasRole($task->role->name))
 					<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center link-confirm" >
 						<div class="d-flex w-100 justify-content-between">
 							<span><i class="far fa-fw fa-square"></i> {{ $task->name }}</span>
 						</div>
 					</a>
+					@else
+					<div class="list-group-item d-flex justify-content-between align-items-center disabled" >
+						<div class="d-flex w-100 justify-content-between">
+							<span><i class="far fa-fw fa-square"></i> {{ $task->name }}</span>
+						</div>
+					</div>
+					@endif
 				@endif
 			@endforeach
 		</div>

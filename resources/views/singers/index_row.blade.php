@@ -49,9 +49,12 @@
 							}
 						@endphp
 						<span>{{ $task->name }}</span>
+						@if( Auth::user()->hasRole($task->role->name) )
 						<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link btn btn-sm force-xs {{$btn_style}}">
 							<i class="fa fa-fw  {{$icon_complete}}"></i> {{$action}}
 						</a>
+						@endif
+					
 						@break
 					@endif
 				@endforeach
