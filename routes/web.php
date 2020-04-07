@@ -32,17 +32,23 @@ Route::prefix('dash')->middleware('auth')->group(static function (){
 // Singers module
 Route::prefix('singers')->middleware('auth')->group(static function (){
 
-    // Singers - Any Employee
-    Route::middleware('employee')->group(static function() {
+    // Singers - Any Authorised User
+    Route::middleware('auth')->group(static function() {
         // Index
         Route::get('/', 'SingersController@index')->name('singers.index');
+
+        // View
+        Route::get('{singer}', 'SingersController@show')->name('singers.show');
+    });
+
+    // Singers - Any Employee
+    Route::middleware('employee')->group(static function() {
 
         // Create
         Route::get('create', 'SingersController@create')->name('singer.create');
         Route::post('/', 'SingersController@store');
 
-        // View/Update/Delete
-        Route::get('{singer}', 'SingersController@show')->name('singers.show');
+        // Update/Delete
         Route::get('{singer}/edit', 'SingersController@edit')->name('singers.edit');
         Route::put('{singer}', 'SingersController@update')->name('singers.update');
         Route::get('{singer}/delete', 'SingersController@delete')->name('singer.delete');

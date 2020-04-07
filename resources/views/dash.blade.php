@@ -27,7 +27,7 @@
             @if( Auth::user()->hasRole('Music Team') )
             <a href="{{ route('voiceplacement.new') }}" class="list-group-item list-group-item-action" target="_blank"><i class="fa fa-plus"></i> Voice Placement</a>
             @endif--}}
-            @if( Auth::user()->isEmployee() )
+            @if( Auth::user() )
             <a href="{{ route('singers.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-user"></i> Singers List</a>
             <a href="{{ route('songs.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-music"></i> Songs List</a>
             <a href="{{ route('events.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-calendar"></i> Events List</a>

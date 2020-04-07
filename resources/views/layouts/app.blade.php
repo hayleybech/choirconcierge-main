@@ -59,7 +59,7 @@
                                 </div>
                             </li>--}}
 
-							@if( Auth::user()->isEmployee() )
+							@if( Auth::user() )
 								<li class="nav-item nav-heading">Singers</li>
 								<li class="nav-item">
 									<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.*') ) ? 'active' : '' }}"><i class="fa fa-user fa-fw"></i><span class="link-text"> Singers</span></a>
