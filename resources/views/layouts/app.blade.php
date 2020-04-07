@@ -90,7 +90,7 @@
 
 
 							<li class="nav-item">
-								<a href="#" class="nav-link">
+								<a href="{{ route('singers.show', ['singer' => Auth::user()->singer] ) }}" class="nav-link">
 									<i class="far fa-user-circle fa-fw"></i><span class="link-text"> {{ Auth::user()->name }}</span>
 								</a>
 							</li>
