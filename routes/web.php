@@ -100,25 +100,34 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
 
 // Songs module
 Route::prefix('songs')->middleware('auth')->group(static function (){
-    // Index
-    Route::get('/', 'SongsController@index')->name('songs.index');
 
-    // Create
-    Route::get('create', 'SongsController@create')->name('song.create');
-    Route::post('/', 'SongsController@store');
+    // Any Authorised User
+    Route::middleware('auth')->group(static function() {
+        // Index
+        Route::get('/', 'SongsController@index')->name('songs.index');
 
-    // Access Learning Mode
-    Route::get('learning', 'SongsController@learning')->name('songs.learning');
+        // View
+        Route::get('{song}', 'SongsController@show')->name('songs.show');
 
-    // View/Edit/Delete
-    Route::get('{song}', 'SongsController@show')->name('songs.show');
-    Route::get('{song}/edit', 'SongsController@edit')->name('song.edit');
-    Route::put('{song}', 'SongsController@update');
-    Route::get('{song}/delete', 'SongsController@delete')->name('song.delete');
+        // Learning Mode
+        Route::get('learning', 'SongsController@learning')->name('songs.learning');
+    });
 
-    // Create/Delete attachments
-    Route::post('{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
-    Route::get('{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('song.attachments.delete');
+    // Any employee
+    Route::middleware('employee')->group(static function() {
+        // Create
+        Route::get('create', 'SongsController@create')->name('song.create');
+        Route::post('/', 'SongsController@store');
+
+        // Edit/Delete
+        Route::get('{song}/edit', 'SongsController@edit')->name('song.edit');
+        Route::put('{song}', 'SongsController@update');
+        Route::get('{song}/delete', 'SongsController@delete')->name('song.delete');
+
+        // Create/Delete attachments
+        Route::post('{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
+        Route::get('{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('song.attachments.delete');
+    });
 });
 
 // Events module

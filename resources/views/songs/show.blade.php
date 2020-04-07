@@ -3,7 +3,9 @@
 @section('title', $song->title . ' - Songs')
 @section('page-title', $song->title)
 @section('page-action')
+    @if(Auth::user()->hasRole('Music Team'))
     <a href="{{route( 'song.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+    @endif
 @endsection
 @section('page-lead')
     <span class="badge badge-light">{{ $song->status->title }}</span><br>
@@ -34,6 +36,7 @@
             <div class="r-table__tbody">
                 @each('songs.show_attachment_row', $song->attachments, 'attachment', 'partials.noresults')
             </div>
+            @if(Auth::user()->hasRole('Music Team'))
             <div class="r-table__tfoot">
 
                 {{ Form::open( [ 'route' => ['song.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row--attachment row-add needs-validation', 'novalidate' ] ) }}
@@ -79,6 +82,7 @@
                 {{ Form::close() }}
 
             </div>
+            @endif
         </div>
 
         <div class="card-footer">
