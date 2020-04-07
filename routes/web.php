@@ -101,18 +101,6 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
 // Songs module
 Route::prefix('songs')->middleware('auth')->group(static function (){
 
-    // Any Authorised User
-    Route::middleware('auth')->group(static function() {
-        // Index
-        Route::get('/', 'SongsController@index')->name('songs.index');
-
-        // View
-        Route::get('{song}', 'SongsController@show')->name('songs.show');
-
-        // Learning Mode
-        Route::get('learning', 'SongsController@learning')->name('songs.learning');
-    });
-
     // Any employee
     Route::middleware('employee')->group(static function() {
         // Create
@@ -127,6 +115,18 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
         // Create/Delete attachments
         Route::post('{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
         Route::get('{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('song.attachments.delete');
+    });
+
+    // Any Authorised User
+    Route::middleware('auth')->group(static function() {
+        // Index
+        Route::get('/', 'SongsController@index')->name('songs.index');
+
+        // View
+        Route::get('{song}', 'SongsController@show')->name('songs.show');
+
+        // Learning Mode
+        Route::get('learning', 'SongsController@learning')->name('songs.learning');
     });
 });
 
