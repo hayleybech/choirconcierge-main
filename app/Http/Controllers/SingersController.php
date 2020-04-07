@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
 use App\Models\User;
+use Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -85,7 +86,7 @@ class SingersController extends Controller
         $user->name = $singer->name;
         $user->email = $singer->email;
         if( isset($data['password']) && ! empty($data['password']) ) {
-            $user->password = $data['password'];
+            $user->password = Hash::make( $data['password'] );
         } else {
             $user->password = Str::random(10);
         }
@@ -123,7 +124,7 @@ class SingersController extends Controller
         $singer->user->email = $data['email'];
         $singer->user->name = $data['name'];
         if( isset($data['password']) && ! empty($data['password']) ) {
-            $singer->user->password = $data['password'];
+            $singer->user->password = Hash::make( $data['password'] );
         }
         $singer->user->save();
 
