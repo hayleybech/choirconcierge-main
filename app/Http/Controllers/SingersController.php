@@ -155,7 +155,8 @@ class SingersController extends Controller
         $user->save();
 
         // Sync roles
-        $user->roles()->sync($data['user_roles']);
+        $user_roles = $data['user_roles'] ?? [];
+        $user->roles()->sync($user_roles);
         $user->save();
 
         $singer->user()->associate($user);
@@ -168,6 +169,7 @@ class SingersController extends Controller
 
     public function delete(Singer $singer): RedirectResponse
     {
+        $singer->user->delete();
         $singer->delete();
 
         return redirect()->route('singers.index')->with(['status' => 'Singer deleted. ', ]);
@@ -227,7 +229,7 @@ class SingersController extends Controller
 
 		return redirect('/singers')->with(['status' => 'Voice Placement created. ', ]);
 	}
-	
+
 	public function show(Singer $singer): View
     {
 		return view('singers.show', compact('singer'));
@@ -243,8 +245,17 @@ class SingersController extends Controller
         $data = $this->validateRequest($singer);
         $singer->update($data);
 
+        // Update user
+        $singer->user->email = $data['email'];
+        $singer->user->name = $data['name'];
+        if( isset($data['password']) && ! empty($data['password']) ) {
+            $singer->user->password = $data['password'];
+        }
+        $singer->user->save();
+
         // Sync roles
-        $singer->user->roles()->sync($data['user_roles']);
+        $user_roles = $data['user_roles'] ?? [];
+        $singer->user->roles()->sync($user_roles);
         $singer->save();
 
         // Exit
@@ -487,8 +498,10 @@ class SingersController extends Controller
             ],
             'onboarding_enabled'    => 'boolean',
             'user_roles' => [
+                'array',
                 'exists:roles,id',
             ],
+            'password' => 'confirmed|nullable',
         ]);
     }
 }
