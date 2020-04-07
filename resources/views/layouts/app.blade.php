@@ -38,9 +38,10 @@
 							<li class="nav-item {{ ( request()->routeIs('login') ) ? 'active' : '' }}">
 								<a href="{{ route('login') }}" class="nav-link"><i class="fa fa-sign-in-alt fa-fw"></i> Login</a>
 							</li>
+							{{--
 							<li class="nav-item {{ ( request()->routeIs('register') ) ? 'active' : '' }}">
 								<a href="{{ route('register') }}" class="nav-link"><i class="fa fa-user-plus fa-fw"></i> Register</a>
-							</li>
+							</li>--}}
 						@else
 
 							<li class="nav-item">

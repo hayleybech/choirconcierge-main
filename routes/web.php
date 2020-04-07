@@ -12,7 +12,7 @@
 */
 
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 // Public pages
 Route::prefix('')->group(static function (){
