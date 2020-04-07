@@ -35,6 +35,13 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
     // Singers - Any Employee
     Route::middleware('employee')->group(static function() {
 
+        // Complete Task
+        Route::get('{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
+    });
+
+    // Singers - Membership Team
+    Route::middleware('role:Membership Team')->group(static function() {
+
         // Create
         Route::get('create', 'SingersController@create')->name('singer.create');
         Route::post('/', 'SingersController@store');
@@ -43,16 +50,7 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::get('{singer}/edit', 'SingersController@edit')->name('singers.edit');
         Route::put('{singer}', 'SingersController@update')->name('singers.update');
         Route::get('{singer}/delete', 'SingersController@delete')->name('singer.delete');
-
-        // Complete Task
-        Route::get('{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
-
-        // Export
-        Route::get('export', 'SingersController@export')->name('singers.export');
-    });
-
-    // Singers - Membership Team
-    Route::middleware('role:Membership Team')->group(static function() {
+        
         // Create Profile
         Route::get('{singer}/profile/create', 'SingersController@createProfile')->name('profile.create');
         Route::post('{singer}/profile', 'SingersController@storeProfile')->name('profile');
@@ -62,6 +60,9 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
 
         // Move Singer
         Route::get('{singer}/move/', 'SingersController@move')->name('singer.move');
+
+        // Export
+        Route::get('export', 'SingersController@export')->name('singers.export');
     });
 
     // Singers - Music Team
