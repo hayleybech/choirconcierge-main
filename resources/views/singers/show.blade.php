@@ -3,7 +3,7 @@
 @section('title', $singer->name . ' - Singers')
 @section('page-title', $singer->name)
 @section('page-action')
-	@if(Auth::user()->hasRole('Membership Team'))
+	@if( Auth::user()->singer->id === $singer->id || Auth::user()->hasRole('Membership Team') )
 	<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
 	@endif
 @endsection

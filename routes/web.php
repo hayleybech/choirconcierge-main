@@ -39,6 +39,14 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::get('{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
     });
 
+    // Singers - Membership Team OR SELF USER
+    Route::middleware('role_or_self:Membership Team')->group(static function() {
+
+        // Update
+        Route::get('{singer}/edit', 'SingersController@edit')->name('singers.edit');
+        Route::put('{singer}', 'SingersController@update')->name('singers.update');
+    });
+
     // Singers - Membership Team
     Route::middleware('role:Membership Team')->group(static function() {
 
@@ -46,9 +54,7 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::get('create', 'SingersController@create')->name('singer.create');
         Route::post('/', 'SingersController@store');
 
-        // Update/Delete
-        Route::get('{singer}/edit', 'SingersController@edit')->name('singers.edit');
-        Route::put('{singer}', 'SingersController@update')->name('singers.update');
+        // Delete
         Route::get('{singer}/delete', 'SingersController@delete')->name('singer.delete');
         
         // Create Profile
