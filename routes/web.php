@@ -14,8 +14,8 @@
 
 Auth::routes();
 
-// Primary pages
-Route::prefix('')->middleware('auth')->group(static function (){
+// Public pages
+Route::prefix('')->group(static function (){
     // Home page
     Route::get('/', static function () {
         return view('welcome');
