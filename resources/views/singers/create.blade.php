@@ -21,6 +21,16 @@
 				{{ Form::email('email', '', array('class' => 'form-control')) }}
 			</p>
 
+			<p>
+				{{ Form::label('password', 'Change Password') }}
+				{{ Form::password('password', array('class' => 'form-control')) }}
+				<small class="form-text text-muted">You may leave this blank and update it later.</small>
+			</p>
+			<p>
+				{{ Form::label('password_confirmation', 'Confirm Password') }}
+				{{ Form::password('password_confirmation', array('class' => 'form-control')) }}
+			</p>
+
 			<fieldset class="form-group">
 				<legend class="col-form-label">Onboarding</legend>
 

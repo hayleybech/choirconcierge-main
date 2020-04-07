@@ -151,7 +151,11 @@ class SingersController extends Controller
         $user = new User();
         $user->name = $singer->name;
         $user->email = $singer->email;
-        $user->password = Str::random(10);
+        if( isset($data['password']) && ! empty($data['password']) ) {
+            $user->password = $data['password'];
+        } else {
+            $user->password = Str::random(10);
+        }
         $user->save();
 
         // Sync roles
