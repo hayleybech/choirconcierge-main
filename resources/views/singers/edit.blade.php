@@ -30,6 +30,7 @@
                 {{ Form::password('password_confirmation', array('class' => 'form-control')) }}
             </p>
 
+            @if(Auth::user()->hasRole('Membership Team'))
             <fieldset class="form-group">
                 <legend class="col-form-label">Onboarding</legend>
 
@@ -62,6 +63,7 @@
                     @endforeach
                 </select>
             </div>
+            @endif
 
         </div>
 
