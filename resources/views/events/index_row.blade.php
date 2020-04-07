@@ -34,7 +34,9 @@
         </div>
     </div>
     <div class="r-table__cell col--delete">
+        @if(Auth::user()->hasRole('Music Team'))
         <a href="{{route( 'event.delete', ['event' => $event] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-times"></i></a>
+        @endif
     </div>
 
 </div>

@@ -131,19 +131,28 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
 });
 
 // Events module
-Route::prefix('events')->middleware('auth')->group(static function (){
-    // Index
-    Route::get('/', 'EventsController@index')->name('events.index');
+Route::prefix('events')->group(static function (){
 
-    // Create
-    Route::get('create', 'EventsController@create')->name('event.create');
-    Route::post('/', 'EventsController@store');
+    /// Any Employee
+    Route::middleware('employee')->group(static function() {
+        // Create
+        Route::get('create', 'EventsController@create')->name('event.create');
+        Route::post('/', 'EventsController@store');
 
-    // View/Edit/Delete
-    Route::get('{event}', 'EventsController@show')->name('events.show');
-    Route::get('{event}/edit', 'EventsController@edit')->name('event.edit');
-    Route::put('{event}', 'EventsController@update');
-    Route::get('{event}/delete', 'EventsController@delete')->name('event.delete');
+        // Edit/Delete
+        Route::get('{event}/edit', 'EventsController@edit')->name('event.edit');
+        Route::put('{event}', 'EventsController@update');
+        Route::get('{event}/delete', 'EventsController@delete')->name('event.delete');
+    });
+
+    // Any Authorised User
+    Route::middleware('auth')->group(static function() {
+        // Index
+        Route::get('/', 'EventsController@index')->name('events.index');
+
+        //View
+        Route::get('{event}', 'EventsController@show')->name('events.show');
+    });
 });
 
 // Notifications module

@@ -4,7 +4,9 @@
 @section('page-title', 'Events')
 
 @section('page-action')
-<a href="{{route( 'event.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-calendar-plus"></i> Add New</a>
+    @if(Auth::user()->hasRole('Music Team'))
+    <a href="{{route( 'event.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-calendar-plus"></i> Add New</a>
+    @endif
 @endsection
 
 @section('page-content')

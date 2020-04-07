@@ -4,7 +4,9 @@
 @section('page-title', $event->title)
 
 @section('page-action')
-<a href="{{route( 'event.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+    @if(Auth::user()->hasRole('Music Team'))
+    <a href="{{route( 'event.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+    @endif
 @endsection
 
 @section('page-lead')
