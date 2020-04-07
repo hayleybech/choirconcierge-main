@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * Class UserGroup
@@ -36,5 +37,15 @@ class UserGroup extends Model
     public function members(): HasMany
     {
         return $this->hasMany(GroupMember::class, 'group_id');
+    }
+
+    public function roles(): MorphToMany
+    {
+        return $this->morphedByMany( Role::class, 'memberable', 'group_members', 'group_id');
+    }
+
+    public function users(): MorphToMany
+    {
+        return $this->morphedByMany( User::class, 'memberable', 'group_members', 'group_id');
     }
 }
