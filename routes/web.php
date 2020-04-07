@@ -32,15 +32,6 @@ Route::prefix('dash')->middleware('auth')->group(static function (){
 // Singers module
 Route::prefix('singers')->middleware('auth')->group(static function (){
 
-    // Singers - Any Authorised User
-    Route::middleware('auth')->group(static function() {
-        // Index
-        Route::get('/', 'SingersController@index')->name('singers.index');
-
-        // View
-        Route::get('{singer}', 'SingersController@show')->name('singers.show');
-    });
-
     // Singers - Any Employee
     Route::middleware('employee')->group(static function() {
 
@@ -94,6 +85,15 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
     Route::middleware('role:Uniforms Team')->group(static function() {
         // Mark uniform provided
         Route::get('{singer}/uniform/provided', 'SingersController@markUniformProvided')->name('singer.uniform.provided');
+    });
+
+    // Singers - Any Authorised User
+    Route::middleware('auth')->group(static function() {
+        // Index
+        Route::get('/', 'SingersController@index')->name('singers.index');
+
+        // View
+        Route::get('{singer}', 'SingersController@show')->name('singers.show');
     });
 });
 
