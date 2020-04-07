@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
-use App\Imports\DripSingersImport;
-use App\Libraries\Drip\Response;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,11 +10,9 @@ use Illuminate\Support\Facades\Input;
 use App\Models\Singer;
 use App\Models\Task;
 use App\Models\SingerCategory;
-use App\Libraries\Drip\Drip;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
-use Maatwebsite\Excel\Facades\Excel;
 
 class SingersController extends Controller
 {
@@ -90,35 +86,6 @@ class SingersController extends Controller
         }
         return $sorts;
     }
-	
-		public function getSingersByTag($tag): Response
-        {
-			$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
-		
-			// Get subscribers
-			$args = array(
-				'tags' => $tag,
-			);
-			
-			$Response = $Drip->get('subscribers', $args);
-					
-			/*
-			if( isset($Reponse->error) ) {
-				return view('singers', compact('Response'));
-			}*/
-			
-			return $Response;	
-		}
-	
-		public function getProspects(): Response
-        {
-			return self::getSingersByTag('Prospective Member');
-		}
-		
-		public function getMembersPaid(): Response
-        {
-			return self::getSingersByTag('Waiting for Account Creation');
-		}
 	
 	public function create(): View
     {
@@ -266,129 +233,6 @@ class SingersController extends Controller
         return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer saved. ']);
     }
 
-
-    public function auditionpass($email): RedirectResponse
-    {
-		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
-		
-		// Add 'Passed Vocal Assessment' Tag
-		$args = array(
-			'tags' => array(
-					array(
-					'email' => $email,
-					'tag' => 'Passed Vocal Assessment'
-				),
-			)
-		);
-		$Response = $Drip->post('tags', $args);
-		
-		if( isset($Reponse->error) ) {
-			return redirect('/singers')->with(['status' => 'Could not save audition results. ', 'Response' => $Response]);
-		}
-		
-		// Add 'Completed Vocal Assessment' Event
-		$args = array(
-			'events' => array(
-					array(
-					'email' => $email,
-					'action' => 'Completed Vocal Assessment'
-				),
-			)
-		);
-		$Response = $Drip->post('events', $args);
-		
-		if( isset($Reponse->error) ) {
-			return redirect('/singers')->with(['status' => 'Could not save audition results. ', 'Response' => $Response]);
-		}
-		
-		return redirect('/singers')->with(['status' => 'The singer\'s audition result has been saved. ', 'Response' => $Response]);
-
-	}
-	
-	public function feespaid($email): RedirectResponse
-    {
-		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
-		
-		// Add 'Membership Fees Paid' Tag
-		$args = array(
-			'tags' => array(
-				array(
-					'email' => $email,
-					'tag' => 'Membership Fees Paid'
-				),
-				array(
-					'email' => $email,
-					'tag' => 'Waiting for Account Creation'
-				),
-			)
-		);
-		$Response = $Drip->post('tags', $args);
-		
-		if( isset($Reponse->error) ) {
-			return redirect('/singers')->with(['status' => 'Could not save fee status. ', 'Response' => $Response]);
-		}
-		
-		$Response2 = $Drip->delete("subscribers/$email/tags/Prospective-Member");
-		if( isset($Reponse2->error) ) {
-			return redirect('/singers')->with(['status' => 'Could not save fee status. ', 'Response' => $Response2]);
-		}
-		
-		$Response3 = $Drip->delete("subscribers/$email/tags/Non-Member");
-		if( isset($Reponse3->error) ) {
-			return redirect('/singers')->with(['status' => 'Could not save fee status. ', 'Response' => $Response3]);
-		}
-		
-		return redirect('/singers')->with(['status' => 'The singer\'s fee status has been saved. ', 'Response' => $Response]);
-
-	}
-	
-	public function markUniformProvided($email): RedirectResponse
-    {
-		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
-		
-		// Add 'Uniform Provided' Tag
-		$args = array(
-			'tags' => array(
-				array(
-					'email' => $email,
-					'tag' => 'Uniform Provided'
-				),
-			)
-		);
-		$Response = $Drip->post('tags', $args);
-		
-		if( isset($Reponse->error) ) {
-			return redirect('/singers')->with(['status' => 'Could not save uniform status. ', 'Response' => $Response]);
-		}
-		
-		return redirect('/singers')->with(['status' => 'The singer\'s uniform status has been saved. ', 'Response' => $Response]);
-
-	}
-	
-	public function markAccountCreated($email): RedirectResponse
-    {
-		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
-		
-		// Add 'Account Created' Tag
-		$args = array(
-			'email' => $email,
-			'tags' => array(
-				'Account Created',
-			),
-			'remove_tags' => array(
-				'Waiting for Account Creation',
-			),
-		);
-		$Response = $Drip->post('subscribers', $args);
-		
-		if( isset($Reponse->error) ) {
-			return redirect('/singers')->with(['status' => 'Could not save account status. ', 'Response' => $Response]);
-		}
-		
-		return redirect('/singers')->with(['status' => 'The singer\'s account status has been saved. ', 'Response' => $Response]);
-
-	}
-
 	public function move(Singer $singer, Request $request): RedirectResponse
     {
         $category = $request->input('move_category', 0);
@@ -401,92 +245,6 @@ class SingersController extends Controller
 
         return redirect('/singers')->with(['status' => 'The singer was moved. ']);
     }
-
-    public function import(): RedirectResponse
-    {
-
-        // Default location: /storage/app
-        Excel::import(new DripSingersImport(), 'subscribers.csv');
-
-        // Exit
-        return redirect('/singers')->with(['status' => 'Import done. ', ]);
-    }
-	
-	public function export(): void
-    {
-		
-		// Get subscribers
-		$Drip = new Drip( config('app.drip_token'), config('app.drip_account')); 
-		$args = array(
-			'tags' => 'Member',
-		);
-		$Response = $Drip->get('subscribers', $args);
-		$singers = $Response->subscribers; // Todo: add error handling.
-		
-		if( empty($singers) ) return;
-		
-		$rows = array();
-		
-		foreach ($singers as $singer) { 
-		
-			if( ! in_array( 'Waiting for Account Creation', $singer['tags'] ) ) 
-				continue;
-				
-			// Process fields
-			$name = ( isset($singer['custom_fields']['Name']) ? $singer['custom_fields']['Name'] : 'Unknown Unknown'  );
-			$names = explode(' ', $name);
-			$first_name = $names[0];
-			$last_name = ( ! empty($names[1]) ) ? $names[1] : 'Unknown';
-			
-			$voice_part = ( isset($singer['custom_fields']['Voice_Part']) ? $singer['custom_fields']['Voice_Part'] : ''  );
-			
-			// Pack fields
-			$cell = array( 
-				'Login name'	=> $name,
-				'Email'			=> $singer['email'],
-				'Can Log In'	=> true,
-				'Roles'			=> 'Member',
-				'First name'	=> $first_name,
-				'Last name' 	=> $last_name,
-				'Nickname'  	=> '',
-				'Street'		=> '',
-				'Additional'	=> '',
-				'City'			=> '',
-				'Province'		=> '',
-				'Postal code'	=> '',
-				'Country'	 	=> '',
-				'Mobile phone'	=> '',
-				'Home phone'	=> '',
-				'Work phone'	=> '',
-				'Birthday'		=> '',
-				'Notes'			=> '',
-				'Voice part'	=> $voice_part,
-				'Member ID'		=> '',
-				'Skills'		=> '',
-				'Member since'	=> '',
-				'Dues paid until'	=> '',
-				'Voice type'	=> '',
-				'Height'		=> '',
-				'Parent'		=> '',
-				'Spouse name'	=> '',
-				'Spouse Birthday'	=> '',
-				'Anniversary'	=> '',
-			);
-			$rows[] = $cell;
-		}
-		
-		// Make file
-		Excel::create('Users', function($excel) use($rows) {
-			
-			$excel->sheet('Main', function($sheet) use($rows) {
-
-				 $sheet->fromArray( $rows );
-
-			});
-			
-		})->download('csv');
-		
-	}
 
     /**
      * @param Singer $singer
