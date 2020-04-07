@@ -53,6 +53,97 @@ class SingersController extends Controller
         return view('singers.index', compact('singers', 'filters', 'sorts' ));
 	}
 
+    public function create(): View
+    {
+        return view('singers.create');
+    }
+
+    public function store(): RedirectResponse
+    {
+        $PROSPECTS_CAT_ID = 1;
+        $MEMBERS_CAT_ID = 3;
+
+        $data = $this->validateRequest();
+        $singer = Singer::create($data);
+
+        if( $singer->onboarding_enabled ){
+            // Attach all tasks
+            $tasks = Task::all();
+            $singer->tasks()->attach( $tasks );
+
+            $category_id = $PROSPECTS_CAT_ID;
+        } else {
+            $category_id = $MEMBERS_CAT_ID;
+        }
+
+        // Attach to category
+        $category = SingerCategory::find($category_id);
+        $singer->category()->associate($category);
+
+        // Add matching user
+        $user = new User();
+        $user->name = $singer->name;
+        $user->email = $singer->email;
+        if( isset($data['password']) && ! empty($data['password']) ) {
+            $user->password = $data['password'];
+        } else {
+            $user->password = Str::random(10);
+        }
+        $user->save();
+
+        // Sync roles
+        $user_roles = $data['user_roles'] ?? [];
+        $user->roles()->sync($user_roles);
+        $user->save();
+
+        $singer->user()->associate($user);
+
+        $singer->save();
+
+        // Exit
+        return redirect('/singers')->with(['status' => 'Singer created. ', ]);
+    }
+
+    public function show(Singer $singer): View
+    {
+        return view('singers.show', compact('singer'));
+    }
+
+    public function edit(Singer $singer): View
+    {
+        return view('singers.edit', compact('singer' ));
+    }
+    public function update(Singer $singer, Request $request): RedirectResponse
+    {
+        // Update singer
+        $data = $this->validateRequest($singer);
+        $singer->update($data);
+
+        // Update user
+        $singer->user->email = $data['email'];
+        $singer->user->name = $data['name'];
+        if( isset($data['password']) && ! empty($data['password']) ) {
+            $singer->user->password = $data['password'];
+        }
+        $singer->user->save();
+
+        // Sync roles
+        $user_roles = $data['user_roles'] ?? [];
+        $singer->user->roles()->sync($user_roles);
+        $singer->save();
+
+        // Exit
+        return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer saved. ']);
+    }
+
+    public function delete(Singer $singer): RedirectResponse
+    {
+        $singer->user->delete();
+        $singer->delete();
+
+        return redirect()->route('singers.index')->with(['status' => 'Singer deleted. ', ]);
+    }
+
     public function getSorts(Request $request): array
     {
         $sort_cols = [
@@ -85,65 +176,6 @@ class SingersController extends Controller
             ];
         }
         return $sorts;
-    }
-	
-	public function create(): View
-    {
-		return view('singers.create');
-	}
-	
-	public function store(): RedirectResponse
-    {
-        $PROSPECTS_CAT_ID = 1;
-        $MEMBERS_CAT_ID = 3;
-
-        $data = $this->validateRequest();
-        $singer = Singer::create($data);
-
-        if( $singer->onboarding_enabled ){
-            // Attach all tasks
-            $tasks = Task::all();
-            $singer->tasks()->attach( $tasks );
-
-            $category_id = $PROSPECTS_CAT_ID;
-        } else {
-            $category_id = $MEMBERS_CAT_ID;
-        }
-
-		// Attach to category
-        $category = SingerCategory::find($category_id);
-        $singer->category()->associate($category);
-
-        // Add matching user
-        $user = new User();
-        $user->name = $singer->name;
-        $user->email = $singer->email;
-        if( isset($data['password']) && ! empty($data['password']) ) {
-            $user->password = $data['password'];
-        } else {
-            $user->password = Str::random(10);
-        }
-        $user->save();
-
-        // Sync roles
-        $user_roles = $data['user_roles'] ?? [];
-        $user->roles()->sync($user_roles);
-        $user->save();
-
-        $singer->user()->associate($user);
-
-        $singer->save();
-		
-		// Exit
-		return redirect('/singers')->with(['status' => 'Singer created. ', ]);
-	}
-
-    public function delete(Singer $singer): RedirectResponse
-    {
-        $singer->user->delete();
-        $singer->delete();
-
-        return redirect()->route('singers.index')->with(['status' => 'Singer deleted. ', ]);
     }
 	
 	public function completeTask(Singer $singer, Task $task): RedirectResponse
@@ -200,38 +232,6 @@ class SingersController extends Controller
 
 		return redirect('/singers')->with(['status' => 'Voice Placement created. ', ]);
 	}
-
-	public function show(Singer $singer): View
-    {
-		return view('singers.show', compact('singer'));
-	}
-
-    public function edit(Singer $singer): View
-    {
-        return view('singers.edit', compact('singer' ));
-    }
-    public function update(Singer $singer, Request $request): RedirectResponse
-    {
-        // Update singer
-        $data = $this->validateRequest($singer);
-        $singer->update($data);
-
-        // Update user
-        $singer->user->email = $data['email'];
-        $singer->user->name = $data['name'];
-        if( isset($data['password']) && ! empty($data['password']) ) {
-            $singer->user->password = $data['password'];
-        }
-        $singer->user->save();
-
-        // Sync roles
-        $user_roles = $data['user_roles'] ?? [];
-        $singer->user->roles()->sync($user_roles);
-        $singer->save();
-
-        // Exit
-        return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer saved. ']);
-    }
 
 	public function move(Singer $singer, Request $request): RedirectResponse
     {
