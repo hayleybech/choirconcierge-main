@@ -3,7 +3,9 @@
 @section('title', $singer->name . ' - Singers')
 @section('page-title', $singer->name)
 @section('page-action')
+	@if(Auth::user()->hasRole('Membership Team'))
 	<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+	@endif
 @endsection
 @section('page-lead')
 	<span class="badge badge-light">{{ $singer->category->name }}</span><br>
@@ -25,7 +27,7 @@
 
 @section('page-content')
 
-	@if( $singer->onboarding_enabled )
+	@if( $singer->onboarding_enabled && Auth::user()->isEmployee() )
 	<div class="card bg-light">
 		<h3 class="card-header h5">Tasks</h3>
 		<div class="list-group list-group-flush">
@@ -83,7 +85,8 @@
 		</div>
 		@endif
 	</div>
-	
+
+	@if( Auth::user()->hasRole('Music Team') )
 	<div class="card bg-light">
 		<h3 class="card-header h5">Voice Placement</h3>
 		@if( $singer->placement )
@@ -119,6 +122,7 @@
 		</div>
 		@endif
 	</div>
+	@endif
 	
 
 @endsection

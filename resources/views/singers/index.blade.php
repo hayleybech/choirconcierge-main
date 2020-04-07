@@ -3,7 +3,9 @@
 @section('title', 'Singers')
 @section('page-title', 'Singers')
 @section('page-action')
-<a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-user-plus"></i> Add New</a>
+	@if(Auth::user()->hasRole('Membership Team'))
+		<a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-user-plus"></i> Add New</a>
+	@endif
 @endsection
 
 @section('page-content')
