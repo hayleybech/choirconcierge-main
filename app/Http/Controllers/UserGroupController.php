@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GroupMember;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserGroup;
@@ -40,25 +41,8 @@ class UserGroupController extends Controller
         $group = UserGroup::create($data);
 
         // Update recipients
-        // @todo refactor member attachment to separate method
-        $members = [];
-        if( isset($data['recipient_roles']) ) {
-            foreach($data['recipient_roles'] as $role){
-                $members[] = [
-                    'memberable_id'     => $role,
-                    'memberable_type'   => 'App\Models\Role',
-                ];
-            }
-        }
-        if( isset($data['recipient_users']) ) {
-            foreach($data['recipient_users'] as $user){
-                $members[] = [
-                    'memberable_id'     => $user,
-                    'memberable_type'   => 'App\Models\User',
-                ];
-            }
-        }
-        $group->members()->createMany($members);
+        $group->syncPolymorhpic( $data['recipient_roles'] ?? [], Role::class );
+        $group->syncPolymorhpic( $data['recipient_users'] ?? [], User::class );
 
         return redirect('/groups')->with(['status' => 'Group created. ', ]);
     }
@@ -100,25 +84,8 @@ class UserGroupController extends Controller
         $group->update($data);
 
         // Update recipients
-        // @todo refactor member attachment to separate method
-        $members = [];
-        if( isset($data['recipient_roles']) ) {
-            foreach($data['recipient_roles'] as $role){
-                $members[] = [
-                    'memberable_id'     => $role,
-                    'memberable_type'   => 'App\Models\Role',
-                ];
-            }
-        }
-        if( isset($data['recipient_users']) ) {
-            foreach($data['recipient_users'] as $user){
-                $members[] = [
-                    'memberable_id'     => $user,
-                    'memberable_type'   => 'App\Models\User',
-                ];
-            }
-        }
-        $group->members()->createMany($members);
+        $group->syncPolymorhpic( $data['recipient_roles'] ?? [], Role::class );
+        $group->syncPolymorhpic( $data['recipient_users'] ?? [], User::class );
 
         return redirect()->route('groups.show', [$group])->with(['status' => 'Group updated. ', ]);
     }

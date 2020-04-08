@@ -48,4 +48,34 @@ class UserGroup extends Model
     {
         return $this->morphedByMany( User::class, 'memberable', 'group_members', 'group_id');
     }
+
+    /**
+     * @param int[] $memberables
+     * @param string $memberable_type
+     */
+    public function syncPolymorhpic($memberables, string $memberable_type ): void
+    {
+        // Detach the Memberables not listed in the incoming array
+        GroupMember::where('group_id', '=', $this->id)
+                ->where('memberable_type', '=', $memberable_type)
+                ->whereNotIn('memberable_id', $memberables)
+                ->delete();
+
+        // Insert new Memberables
+        $unchanged = GroupMember::where('group_id', '=', $this->id)
+            ->where('memberable_type', '=', $memberable_type)
+            ->whereIn('memberable_id', $memberables)
+            ->get()
+            ->all();
+        $new = array_diff( $memberables, $unchanged );
+
+        $attach = [];
+        foreach($new as $memberable_id) {
+            $attach[] = [
+                'memberable_id' => $memberable_id,
+                'memberable_type' => $memberable_type,
+            ];
+        }
+        $this->members()->createMany($attach);
+    }
 }
