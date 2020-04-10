@@ -22,7 +22,7 @@ class CreateAttachmentsTables extends Migration
             $table->string('title');
             $table->string('filepath');
             $table->integer('song_id')->unsigned()->index();
-            $table->integer('category_id')->unsigned()->index();
+            $table->integer('category_id')->nullable()->unsigned()->index();
             $table->timestamps();
             $table->foreign('song_id')
                 ->references('id')
