@@ -14,6 +14,16 @@ class SongsSeeder extends Seeder
     public function run(): void
     {
         /*
+         * STEP 0 - Clear
+         */
+        DB::table('song_attachments')->delete();
+        DB::table('song_attachment_categories')->delete();
+        DB::table('songs')->delete();
+        DB::table('songs_song_categories')->delete();
+        DB::table('song_statuses')->delete();
+        DB::table('song_categories')->delete();
+
+        /*
          * STEP 1 - Insert initial real data
          */
 
@@ -71,6 +81,14 @@ class SongsSeeder extends Seeder
                     SongsSeeder::attachRandomAttachmentCategory($attachment, $attachment_categories);
                 });
         });
+
+        /*
+         * ALSO - Insert a real song
+         * My arrangement of Touch of Paradise
+         */
+        DB::table('songs')->insert([
+            ['title' => 'Touch of Paradise', 'pitch_blown' => 5, 'status_id' => $statuses->first()->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+        ]);
     }
 
     /**
