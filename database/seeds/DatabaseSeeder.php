@@ -12,8 +12,9 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
+        /*
 		$user = User::create([
 			'name' => 'Hayden',
             'email' => 'haydenbech@gmail.com',
@@ -27,29 +28,30 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Accounts Team'],
             ['name' => 'Uniforms Team'],
         ]);
-		
 		$roles = Role::all()->pluck('id')->toArray();
-		
 		$user->roles()->attach($roles);
-		
-		
-		$this->call('SingerTableSeeder');
+        */
+
+        $this->call('UserTableSeeder');
 		$this->command->info('User table seeded!');
-		
+
+		//$this->call('SingerTableSeeder');
+		//$this->command->info('Singer table seeded!');
+
 		$this->call('TaskTableSeeder');
 		$this->command->info('Task table seeded!');	
 		
 		$this->call('NotificationTemplateSeeder');
 		$this->command->info('Notification Template table seeded!');
 
-        $this->call('SingerCategorySeeder');
-        $this->command->info('Notification Template table seeded!');
+        //$this->call('SingerCategorySeeder');
+        //$this->command->info('Notification Template table seeded!');
 
         $this->call('SongsSeeder');
         $this->command->info('Songs table seeded!');
 
-        $this->call('SongAttachmentCategorySeeder');
-        $this->command->info('Song Attachment Categories table seeded!');
+        //$this->call('SongAttachmentCategorySeeder');
+        //$this->command->info('Song Attachment Categories table seeded!');
 
         $this->call('EventsSeeder');
         $this->command->info('Events table seeded!');
