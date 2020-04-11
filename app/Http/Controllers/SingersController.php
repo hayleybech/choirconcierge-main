@@ -61,9 +61,6 @@ class SingersController extends Controller
 
     public function store(): RedirectResponse
     {
-        $PROSPECTS_CAT_ID = 1;
-        $MEMBERS_CAT_ID = 3;
-
         $data = $this->validateRequest();
         $singer = Singer::create($data);
 
@@ -72,13 +69,12 @@ class SingersController extends Controller
             $tasks = Task::all();
             $singer->tasks()->attach( $tasks );
 
-            $category_id = $PROSPECTS_CAT_ID;
+            $category = SingerCategory::where('name', '=', 'Prospects')->first();
         } else {
-            $category_id = $MEMBERS_CAT_ID;
+            $category = SingerCategory::where('name', '=', 'Members')->first();
         }
 
         // Attach to category
-        $category = SingerCategory::find($category_id);
         $singer->category()->associate($category);
 
         // Add matching user
