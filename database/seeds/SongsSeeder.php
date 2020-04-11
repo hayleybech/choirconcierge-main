@@ -68,17 +68,38 @@ class SongsSeeder extends Seeder
 
             // Generate random attachments
             Storage::disk('public')->makeDirectory( 'songs/'.$song->id);
-            $song->attachments()->saveMany( factory( SongAttachment::class, 5 )->make() )
+
+            // Sample mp3s
+            $song->attachments()->saveMany( factory( SongAttachment::class, 4 )->make() )
                 ->each(static function(SongAttachment $attachment) use ($song, $attachment_categories) {
 
                     // Copy random sample files
                     // Computer-generated music from https://www.fakemusicgenerator.com/
-                    $demo_dir = storage_path('app/sample');
+                    $demo_dir = storage_path('app/sample/mp3');
                     $song_dir = storage_path('app/public/songs/'.$song->id );
                     $faker = Faker\Factory::create();
                     $attachment->filepath = $faker->file( $demo_dir, $song_dir, false );
 
-                    SongsSeeder::attachRandomAttachmentCategory($attachment, $attachment_categories);
+                    // Attach to learning tracks category
+                    $category = SongAttachmentCategory::where('title', '=', 'Learning Tracks')->first();
+                    $attachment->category()->associate($category);
+                    $attachment->save();
+                });
+
+            // Sample PDFs
+            Storage::disk('public')->makeDirectory( 'songs/'.$song->id);
+            $song->attachments()->saveMany( factory( SongAttachment::class, 1 )->make() )
+                ->each(static function(SongAttachment $attachment) use ($song, $attachment_categories) {
+
+                    $demo_dir = storage_path('app/sample/pdf');
+                    $song_dir = storage_path('app/public/songs/'.$song->id );
+                    $faker = Faker\Factory::create();
+                    $attachment->filepath = $faker->file( $demo_dir, $song_dir, false );
+
+                    // Attach to sheet music category
+                    $category = SongAttachmentCategory::where('title', '=', 'Sheet Music')->first();
+                    $attachment->category()->associate($category);
+                    $attachment->save();
                 });
         });
 
@@ -114,17 +135,5 @@ class SongsSeeder extends Seeder
         $category = $categories->random($qty);
         $song->categories()->attach($category);
         $song->save();
-    }
-
-    /**
-     * @param SongAttachment $attachment
-     * @param Collection $attachment_categories
-     * @throws Exception
-     */
-    public static function attachRandomAttachmentCategory(SongAttachment $attachment, Collection $attachment_categories): void
-    {
-        $category = $attachment_categories->random(1)->first();
-        $attachment->category()->associate($category);
-        $attachment->save();
     }
 }
