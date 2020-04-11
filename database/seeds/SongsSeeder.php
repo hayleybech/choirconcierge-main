@@ -73,7 +73,7 @@ class SongsSeeder extends Seeder
 
                     // Copy random sample files
                     // Computer-generated music from https://www.fakemusicgenerator.com/
-                    $demo_dir = storage_path('app/public/songs/sample');
+                    $demo_dir = storage_path('app/sample');
                     $song_dir = storage_path('app/public/songs/'.$song->id );
                     $faker = Faker\Factory::create();
                     $attachment->filepath = $faker->file( $demo_dir, $song_dir, false );
