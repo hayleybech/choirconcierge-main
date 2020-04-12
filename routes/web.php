@@ -129,11 +129,12 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
         // Index
         Route::get('/', 'SongsController@index')->name('songs.index');
 
+        // Learning Mode
+        Route::get('learning', 'SongsController@learning')->name('songs.learning');
+
         // View
         Route::get('{song}', 'SongsController@show')->name('songs.show');
 
-        // Learning Mode
-        Route::get('learning', 'SongsController@learning')->name('songs.learning');
     });
 });
 
