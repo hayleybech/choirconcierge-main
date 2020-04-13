@@ -19,6 +19,8 @@ class ICalController extends Controller
 
         // loop over events
         foreach ($events as $event) {
+            $address = str_replace("\n", EOL, $event->location_address);
+
             $icalObject .=
             'BEGIN:VEVENT'.EOL.
             'DTSTART:'. date(ICAL_FORMAT, strtotime($event->call_time)) .EOL.
@@ -28,7 +30,7 @@ class ICalController extends Controller
             'DESCRIPTION:'. $event->description .EOL.
             'UID:'. $event->id .EOL.
             'LAST-MODIFIED:' . date(ICAL_FORMAT, strtotime($event->updated_at)) .EOL.
-            'LOCATION:'. $event->location_name. ', ' .$event->location_address .EOL.
+            'LOCATION:'. $event->location_name. ', ' .$address .EOL.
             'END:VEVENT'.EOL;
         }
 
