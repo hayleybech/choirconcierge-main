@@ -13,14 +13,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_MAILER', 'smtp'),
-
-    // Re-add the old pre-Laravel-7 stuff as L7 stuff isn't working.
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-    'port' => env('MAIL_PORT', 587),
-    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-    'username' => env('MAIL_USERNAME'),
-    'password' => env('MAIL_PASSWORD'),
+    'default' => env('MAIL_MAILER', 'smtp'),
 
     /*
     |--------------------------------------------------------------------------
