@@ -16,7 +16,8 @@
         "laravel/tinker": "^2.0",
         "laravelcollective/html": "~6.1.0",
         "maatwebsite/excel": "~3.1",
-        "mtolhuys/laravel-schematics": "^0.10.2"
+        "mtolhuys/laravel-schematics": "^0.10.2",
+        "webklex/laravel-imap": "^1.4"
     },
     "type": "project",
     "require-dev": {

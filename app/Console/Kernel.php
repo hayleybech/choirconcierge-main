@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\ProcessGroupMailbox;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -57,6 +58,9 @@ class Kernel extends ConsoleKernel
 
 
         })->name('monitor_queue_listener')->everyMinute();
+
+
+        $schedule->job(new ProcessGroupMailbox)->everyFiveMinutes();
     }
 
     /**
