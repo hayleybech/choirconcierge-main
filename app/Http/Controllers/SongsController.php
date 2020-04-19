@@ -74,18 +74,10 @@ class SongsController extends Controller
         return view('songs.create', compact('categories', 'statuses', 'pitches') );
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(): RedirectResponse
     {
         $data = $this->validateRequest();
         $song = Song::create($data);
-
-        // Associate status
-        $status = SongStatus::find($request->status);
-        $status->songs()->save($song);
-
-        // Attach categories
-        $song->categories()->attach($request->categories);
-        $song->save();
 
         return redirect('/songs')->with(['status' => 'Song created. ', ]);
     }
@@ -109,18 +101,10 @@ class SongsController extends Controller
         return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
     }
 
-    public function update(Song $song, Request $request): RedirectResponse
+    public function update(Song $song): RedirectResponse
     {
         $data = $this->validateRequest($song);
         $song->update($data);
-
-        // Associate status
-        $status = SongStatus::find($request->status);
-        $status->songs()->save($song);
-
-        // Attach categories
-        $song->categories()->sync($request->categories);
-        $song->save();
 
         return redirect()->route('song.edit', [$song])->with(['status' => 'Song updated. ', ]);
     }

@@ -77,6 +77,33 @@ class Song extends Model
      */
     protected $appends = ['pitch'];
 
+    public static function create( array $attributes = [] ) {
+        /** @var Song $song */
+        $song = static::query()->create($attributes);
+
+        // Associate status
+        $status = SongStatus::find($attributes['status']);
+        $status->songs()->save($song);
+
+        // Attach categories
+        $song->categories()->attach($attributes['categories']);
+        $song->save();
+
+        return $song;
+    }
+
+    public function update(array $attributes = [], array $options = []) {
+        parent::update($attributes, $options);
+
+        // Associate status
+        $status = SongStatus::find($attributes['status']);
+        $status->songs()->save($this);
+
+        // Attach categories
+        $this->categories()->sync($attributes['categories']);
+        $this->save();
+    }
+
     public function status(): BelongsTo
     {
         return $this->belongsTo(SongStatus::class, 'status_id');
