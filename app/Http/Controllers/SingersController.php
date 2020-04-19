@@ -3,15 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
-use App\Models\User;
-use Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use App\Models\Singer;
 use App\Models\Task;
-use App\Models\SingerCategory;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -64,39 +59,6 @@ class SingersController extends Controller
         $data = $this->validateRequest();
         $singer = Singer::create($data);
 
-        if( $singer->onboarding_enabled ){
-            // Attach all tasks
-            $tasks = Task::all();
-            $singer->tasks()->attach( $tasks );
-
-            $category = SingerCategory::where('name', '=', 'Prospects')->first();
-        } else {
-            $category = SingerCategory::where('name', '=', 'Members')->first();
-        }
-
-        // Attach to category
-        $singer->category()->associate($category);
-
-        // Add matching user
-        $user = new User();
-        $user->name = $singer->name;
-        $user->email = $singer->email;
-        if( isset($data['password']) && ! empty($data['password']) ) {
-            $user->password = Hash::make( $data['password'] );
-        } else {
-            $user->password = Str::random(10);
-        }
-        $user->save();
-
-        // Sync roles
-        $user_roles = $data['user_roles'] ?? [];
-        $user->roles()->sync($user_roles);
-        $user->save();
-
-        $singer->user()->associate($user);
-
-        $singer->save();
-
         // Exit
         return redirect('/singers')->with(['status' => 'Singer created. ', ]);
     }
@@ -115,19 +77,6 @@ class SingersController extends Controller
         // Update singer
         $data = $this->validateRequest($singer);
         $singer->update($data);
-
-        // Update user
-        $singer->user->email = $data['email'];
-        $singer->user->name = $data['name'];
-        if( isset($data['password']) && ! empty($data['password']) ) {
-            $singer->user->password = Hash::make( $data['password'] );
-        }
-        $singer->user->save();
-
-        // Sync roles
-        $user_roles = $data['user_roles'] ?? [];
-        $singer->user->roles()->sync($user_roles);
-        $singer->save();
 
         // Exit
         return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer saved. ']);
