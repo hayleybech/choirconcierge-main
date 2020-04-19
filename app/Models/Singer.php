@@ -6,14 +6,12 @@ use App\Models\Filters\Filterable;
 use App\Models\Filters\Singer_AgeFilter;
 use App\Models\Filters\Singer_CategoryFilter;
 use App\Models\Filters\Singer_VoicePartFilter;
-use Hash;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 
 /**
  * Class Singer
@@ -76,11 +74,7 @@ class Singer extends Model
         $user = new User();
         $user->name = $singer->name;
         $user->email = $singer->email;
-        if( isset($attributes['password']) && ! empty($attributes['password']) ) {
-            $user->password = Hash::make( $attributes['password'] );
-        } else {
-            $user->password = Str::random(10);
-        }
+        $user->setPassword( $attributes['password'] );
         $user->save();
 
         // Sync roles
@@ -98,9 +92,7 @@ class Singer extends Model
         // Update user
         $this->user->email = $attributes['email'];
         $this->user->name = $attributes['name'];
-        if( isset($attributes['password']) && ! empty($attributes['password']) ) {
-            $this->user->password = Hash::make( $attributes['password'] );
-        }
+        $this->user->setPassword( $attributes['password'] );
         $this->user->save();
 
         // Sync roles

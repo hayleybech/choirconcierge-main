@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Hash;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -9,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use UnexpectedValueException;
 
 // http://alexsears.com/article/adding-roles-to-laravel-users/
@@ -117,6 +119,14 @@ class User extends Authenticatable
 		$this->roles()->detach($id);
 		
 	}
+
+	public function setPassword( string $password = '' ): void {
+        if( empty($password) ) {
+            $this->password = Hash::make( $password );
+        } else {
+            $this->password = Str::random(10);
+        }
+    }
 	
 	/**
      * Add capabilities to user
