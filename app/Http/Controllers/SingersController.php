@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
+use App\Http\Requests\StoreSinger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Singer;
@@ -54,12 +55,10 @@ class SingersController extends Controller
         return view('singers.create');
     }
 
-    public function store(): RedirectResponse
+    public function store(StoreSinger $request): RedirectResponse
     {
-        $data = $this->validateRequest();
-        $singer = Singer::create($data);
+        $singer = Singer::create($request->validated());
 
-        // Exit
         return redirect('/singers')->with(['status' => 'Singer created. ', ]);
     }
 
@@ -72,13 +71,10 @@ class SingersController extends Controller
     {
         return view('singers.edit', compact('singer' ));
     }
-    public function update(Singer $singer, Request $request): RedirectResponse
+    public function update(Singer $singer, StoreSinger $request): RedirectResponse
     {
-        // Update singer
-        $data = $this->validateRequest($singer);
-        $singer->update($data);
+        $singer->update($request->validated());
 
-        // Exit
         return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer saved. ']);
     }
 
@@ -190,26 +186,5 @@ class SingersController extends Controller
         $singer->save();
 
         return redirect('/singers')->with(['status' => 'The singer was moved. ']);
-    }
-
-    /**
-     * @param Singer $singer
-     * @return mixed
-     */
-    public function validateRequest(Singer $singer = null)
-    {
-        return request()->validate([
-            'name'	=> 'required',
-            'email'	=> [
-                'required',
-                Rule::unique('singers')->ignore($singer->id ?? ''),
-            ],
-            'onboarding_enabled'    => 'boolean',
-            'user_roles' => [
-                'array',
-                'exists:roles,id',
-            ],
-            'password' => 'confirmed|nullable',
-        ]);
     }
 }

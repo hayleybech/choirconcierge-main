@@ -120,7 +120,7 @@ class User extends Authenticatable
 		
 	}
 
-	public function setPassword( string $password = '' ): void {
+	public function setPassword( string $password = null ): void {
         if( empty($password) ) {
             $this->password = Hash::make( $password );
         } else {
