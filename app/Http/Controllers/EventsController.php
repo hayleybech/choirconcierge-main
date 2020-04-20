@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEvent;
 use App\Models\Event;
 use App\Models\EventType;
 use Illuminate\Http\RedirectResponse;
@@ -43,10 +44,9 @@ class EventsController extends Controller
         return view('events.create', compact( 'types') );
     }
 
-    public function store(): RedirectResponse
+    public function store(StoreEvent $request): RedirectResponse
     {
-        $data = $this->validateRequest();
-        $event = Event::create($data);
+        $event = Event::create($request->validated());
 
         return redirect('/events')->with(['status' => 'Event created. ', ]);
     }
@@ -63,10 +63,9 @@ class EventsController extends Controller
         return view('events.edit', compact('event',  'types'));
     }
 
-    public function update(Event $event): RedirectResponse
+    public function update(Event $event, StoreEvent $request): RedirectResponse
     {
-        $data = $this->validateRequest();
-        $event->update($data);
+        $event->update($request->validated());
 
         return redirect()->route('event.edit', [$event])->with(['status' => 'Event updated. ', ]);
     }
@@ -111,24 +110,5 @@ class EventsController extends Controller
             ];
         }
         return $sorts;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function validateRequest()
-    {
-        return request()->validate([
-            'title'             => 'required|max:255',
-            'type'              => 'required|exists:event_types,id',
-            'call_time'         => 'required|date_format:Y-m-d H:i:s|before:start_date',
-            'start_date'        => 'required|date_format:Y-m-d H:i:s',
-            'end_date'          => 'required|date_format:Y-m-d H:i:s|after:start_date',
-            'location_place_id' => 'nullable',
-            'location_icon'     => 'nullable',
-            'location_name'     => 'nullable',
-            'location_address'  => 'nullable',
-            'description'       => 'nullable',
-        ]);
     }
 }
