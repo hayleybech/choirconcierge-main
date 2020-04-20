@@ -48,10 +48,6 @@ class EventsController extends Controller
         $data = $this->validateRequest();
         $event = Event::create($data);
 
-        // Associate status
-        $type = EventType::find($data['type']);
-        $type->events()->save($event);
-
         return redirect('/events')->with(['status' => 'Event created. ', ]);
     }
 
@@ -71,10 +67,6 @@ class EventsController extends Controller
     {
         $data = $this->validateRequest();
         $event->update($data);
-
-        // Associate status
-        $type = EventType::find($data['type']);
-        $type->events()->save($event);
 
         return redirect()->route('event.edit', [$event])->with(['status' => 'Event updated. ', ]);
     }

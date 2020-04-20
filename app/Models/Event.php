@@ -63,6 +63,26 @@ class Event extends Model
         'call_time',
     ];
 
+    public static function create( array $attributes = [] )
+    {
+        /** @var Event $event */
+        $event = static::query()->create($attributes);
+
+        $event->type = $attributes['type'];
+    }
+
+    public function update(array $attributes = [], array $options = [])
+    {
+        parent::update($attributes, $options);
+
+        $this->type = $attributes['type'];
+    }
+
+    public function setTypeAttribute($typeId) {
+        $type = EventType::find($typeId);
+        $type->events()->save($this);
+    }
+
     public function type(): BelongsTo
     {
         return $this->belongsTo(EventType::class, 'type_id');
