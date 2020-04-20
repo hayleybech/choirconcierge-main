@@ -74,8 +74,8 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
     // Singers - Music Team
     Route::middleware('role:Music Team')->group(static function() {
         // Create Voice Placement
-        Route::get('{singer}/placement/create', 'SingersController@createPlacement')->name('placement.create');
-        Route::post('{singer}/placement', 'SingersController@storePlacement')->name('placement');
+        Route::get('{singer}/placement/create', 'SingerPlacementController@create')->name('placement.create');
+        Route::post('{singer}/placement', 'SingerPlacementController@store')->name('placement');
 
         // Mark audition passed
         Route::get('{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');

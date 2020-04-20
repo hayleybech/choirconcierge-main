@@ -13,8 +13,6 @@ use Illuminate\View\View;
 
 class SingersController extends Controller
 {
-    const PLACEMENT_TASK_ID = 2;
-
     /**
      * Create a new controller instance.
      *
@@ -132,27 +130,6 @@ class SingersController extends Controller
 			// Redirect to form
 			// Shouldn't get to this line. Forms tasks skip this entire function.
 		}
-	}
-	
-	
-	public function createPlacement(Singer $singer): View
-    {
-		return view('singers.createplacement', compact('singer'));
-	}
-	
-	public function storePlacement(Singer $singer, Request $request): RedirectResponse
-    {
-		$singer->placement()->create($request->all()); // refer to whitelist in model
-		
-		if( $singer->onboarding_enabled ) {
-            // Mark matching task completed
-            //$task = $singer->tasks()->where('name', 'Voice Placement')->get();
-            $singer->tasks()->updateExistingPivot( self::PLACEMENT_TASK_ID, array('completed' => true) );
-
-            event( new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer) );
-        }
-
-		return redirect('/singers')->with(['status' => 'Voice Placement created. ', ]);
 	}
 
 	public function move(Singer $singer, Request $request): RedirectResponse
