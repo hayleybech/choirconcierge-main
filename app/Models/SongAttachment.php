@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -30,9 +31,29 @@ use Illuminate\Support\Facades\Storage;
  */
 class SongAttachment extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+        'category_id',
+        'song_id',
+        'file',
+    ];
+
     protected $appends = [
         'download_url',
     ];
+
+    public static function create( array $attributes = [] )
+    {
+        /** @var SongAttachment $attachment */
+        $attachment = static::query()->create($attributes);
+
+        return $attachment;
+    }
 
     public function delete() {
         if (Storage::disk('public')->exists( $this->getPath() )) {
@@ -40,6 +61,19 @@ class SongAttachment extends Model
         }
 
         parent::delete();
+    }
+
+    public function setFileAttribute(UploadedFile $file) {
+        $this->filepath = $file->getClientOriginalName();
+
+        Storage::disk('public')->makeDirectory( SongAttachment::getPathSongs() );
+        Storage::disk('public')->makeDirectory( $this->getPathSong() );
+
+        if (Storage::disk('public')->exists( $this->getPath() )) {
+            Storage::disk('public')->delete( $this->getPath() );
+        }
+
+        Storage::disk('public')->putFileAs( $this->getPathSong(), $file, $this->filepath );
     }
 
     public function song(): BelongsTo
