@@ -58,8 +58,8 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::get('{singer}/delete', 'SingersController@delete')->name('singer.delete');
         
         // Create Profile
-        Route::get('{singer}/profile/create', 'SingersController@createProfile')->name('profile.create');
-        Route::post('{singer}/profile', 'SingersController@storeProfile')->name('profile');
+        Route::get('{singer}/profile/create', 'SingerProfileController@create')->name('profile.create');
+        Route::post('{singer}/profile', 'SingerProfileController@store')->name('profile');
 
         // Mark "Account Created" task complete
         Route::get('{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');

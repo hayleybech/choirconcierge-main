@@ -13,7 +13,6 @@ use Illuminate\View\View;
 
 class SingersController extends Controller
 {
-    const PROFILE_TASK_ID = 1;
     const PLACEMENT_TASK_ID = 2;
 
     /**
@@ -135,25 +134,6 @@ class SingersController extends Controller
 		}
 	}
 	
-	public function createProfile(Singer $singer): View
-    {
-		return view('singers.createprofile', compact('singer'));
-	}
-	
-	public function storeProfile(Singer $singer, Request $request): RedirectResponse
-    {
-		$singer->profile()->create($request->all()); // refer to whitelist in model
-		
-		if( $singer->onboarding_enabled ) {
-            // Mark matching task completed
-            //$task = $singer->tasks()->where('name', 'Member Profile')->get();
-            $singer->tasks()->updateExistingPivot( self::PROFILE_TASK_ID, array('completed' => true) );
-
-            event( new TaskCompleted(Task::find(self::PROFILE_TASK_ID), $singer) );
-        }
-
-		return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
-	}
 	
 	public function createPlacement(Singer $singer): View
     {
