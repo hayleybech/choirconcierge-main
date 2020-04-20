@@ -10,7 +10,7 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\View\View;
 
-class UsersController extends Controller
+class UserController extends Controller
 {
     /**
      * Create a new controller instance.

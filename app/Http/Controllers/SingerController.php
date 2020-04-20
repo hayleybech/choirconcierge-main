@@ -11,7 +11,7 @@ use App\Models\Task;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
-class SingersController extends Controller
+class SingerController extends Controller
 {
     /**
      * Create a new controller instance.

@@ -11,7 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class SongsController extends Controller
+class SongController extends Controller
 {
     public function index(Request $request): View
     {

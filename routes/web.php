@@ -36,39 +36,39 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
     Route::middleware('employee')->group(static function() {
 
         // Complete Task
-        Route::get('{singer}/tasks/{task}/complete', 'SingersController@completeTask')->name('task.complete');
+        Route::get('{singer}/tasks/{task}/complete', 'SingerController@completeTask')->name('task.complete');
     });
 
     // Singers - Membership Team OR SELF USER
     Route::middleware('role_or_self:Membership Team')->group(static function() {
 
         // Update
-        Route::get('{singer}/edit', 'SingersController@edit')->name('singers.edit');
-        Route::put('{singer}', 'SingersController@update')->name('singers.update');
+        Route::get('{singer}/edit', 'SingerController@edit')->name('singers.edit');
+        Route::put('{singer}', 'SingerController@update')->name('singers.update');
     });
 
     // Singers - Membership Team
     Route::middleware('role:Membership Team')->group(static function() {
 
         // Create
-        Route::get('create', 'SingersController@create')->name('singer.create');
-        Route::post('/', 'SingersController@store');
+        Route::get('create', 'SingerController@create')->name('singer.create');
+        Route::post('/', 'SingerController@store');
 
         // Delete
-        Route::get('{singer}/delete', 'SingersController@delete')->name('singer.delete');
+        Route::get('{singer}/delete', 'SingerController@delete')->name('singer.delete');
         
         // Create Profile
         Route::get('{singer}/profile/create', 'SingerProfileController@create')->name('profile.create');
         Route::post('{singer}/profile', 'SingerProfileController@store')->name('profile');
 
         // Mark "Account Created" task complete
-        Route::get('{singer}/account/created', 'SingersController@markAccountCreated')->name('singer.account.created');
+        Route::get('{singer}/account/created', 'SingerController@markAccountCreated')->name('singer.account.created');
 
         // Move Singer
-        Route::get('{singer}/move/', 'SingersController@move')->name('singer.move');
+        Route::get('{singer}/move/', 'SingerController@move')->name('singer.move');
 
         // Export
-        Route::get('export', 'SingersController@export')->name('singers.export');
+        Route::get('export', 'SingerController@export')->name('singers.export');
     });
 
     // Singers - Music Team
@@ -78,29 +78,29 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::post('{singer}/placement', 'SingerPlacementController@store')->name('placement');
 
         // Mark audition passed
-        Route::get('{singer}/audition/pass', 'SingersController@auditionpass')->name('singer.audition.pass');
+        Route::get('{singer}/audition/pass', 'SingerController@auditionpass')->name('singer.audition.pass');
     });
 
     // Singers - Accounts Team
     Route::middleware('role:Accounts Team')->group(static function() {
         // Mark fees paid
-        Route::get('{singer}/fees/paid', 'SingersController@feespaid')->name('singer.fees.paid');
+        Route::get('{singer}/fees/paid', 'SingerController@feespaid')->name('singer.fees.paid');
     });
 
 
     // Singers - Uniforms Team
     Route::middleware('role:Uniforms Team')->group(static function() {
         // Mark uniform provided
-        Route::get('{singer}/uniform/provided', 'SingersController@markUniformProvided')->name('singer.uniform.provided');
+        Route::get('{singer}/uniform/provided', 'SingerController@markUniformProvided')->name('singer.uniform.provided');
     });
 
     // Singers - Any Authorised User
     Route::middleware('auth')->group(static function() {
         // Index
-        Route::get('/', 'SingersController@index')->name('singers.index');
+        Route::get('/', 'SingerController@index')->name('singers.index');
 
         // View
-        Route::get('{singer}', 'SingersController@show')->name('singers.show');
+        Route::get('{singer}', 'SingerController@show')->name('singers.show');
     });
 });
 
@@ -111,13 +111,13 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
     // Any employee
     Route::middleware('employee')->group(static function() {
         // Create
-        Route::get('create', 'SongsController@create')->name('song.create');
-        Route::post('/', 'SongsController@store');
+        Route::get('create', 'SongController@create')->name('song.create');
+        Route::post('/', 'SongController@store');
 
         // Edit/Delete
-        Route::get('{song}/edit', 'SongsController@edit')->name('song.edit');
-        Route::put('{song}', 'SongsController@update');
-        Route::get('{song}/delete', 'SongsController@delete')->name('song.delete');
+        Route::get('{song}/edit', 'SongController@edit')->name('song.edit');
+        Route::put('{song}', 'SongController@update');
+        Route::get('{song}/delete', 'SongController@delete')->name('song.delete');
 
         // Create/Delete attachments
         Route::post('{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
@@ -127,13 +127,13 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
     // Any Authorised User
     Route::middleware('auth')->group(static function() {
         // Index
-        Route::get('/', 'SongsController@index')->name('songs.index');
+        Route::get('/', 'SongController@index')->name('songs.index');
 
         // Learning Mode
-        Route::get('learning', 'SongsController@learning')->name('songs.learning');
+        Route::get('learning', 'SongController@learning')->name('songs.learning');
 
         // View
-        Route::get('{song}', 'SongsController@show')->name('songs.show');
+        Route::get('{song}', 'SongController@show')->name('songs.show');
 
     });
 });
@@ -144,22 +144,22 @@ Route::prefix('events')->group(static function (){
     /// Any Employee
     Route::middleware('employee')->group(static function() {
         // Create
-        Route::get('create', 'EventsController@create')->name('event.create');
-        Route::post('/', 'EventsController@store');
+        Route::get('create', 'EventController@create')->name('event.create');
+        Route::post('/', 'EventController@store');
 
         // Edit/Delete
-        Route::get('{event}/edit', 'EventsController@edit')->name('event.edit');
-        Route::put('{event}', 'EventsController@update');
-        Route::get('{event}/delete', 'EventsController@delete')->name('event.delete');
+        Route::get('{event}/edit', 'EventController@edit')->name('event.edit');
+        Route::put('{event}', 'EventController@update');
+        Route::get('{event}/delete', 'EventController@delete')->name('event.delete');
     });
 
     // Any Authorised User
     Route::middleware('auth')->group(static function() {
         // Index
-        Route::get('/', 'EventsController@index')->name('events.index');
+        Route::get('/', 'EventController@index')->name('events.index');
 
         //View
-        Route::get('{event}', 'EventsController@show')->name('events.show');
+        Route::get('{event}', 'EventController@show')->name('events.show');
     });
 });
 
@@ -173,15 +173,15 @@ Route::prefix('notifications')->name('notifications')->middleware(['auth', 'empl
 // Users/Team module
 Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static function () {
     // Index
-    Route::get('/', 'UsersController@index')->name('users.index');
+    Route::get('/', 'UserController@index')->name('users.index');
 
     // AJAX Search
-    Route::get('/find', 'UsersController@findUsers');
-    Route::get('/roles/find', 'UsersController@findRoles');
+    Route::get('/find', 'UserController@findUsers');
+    Route::get('/roles/find', 'UserController@findRoles');
 
     // Attach/Detach role from a user
-    Route::get('{user}/roles/{role}/detach', 'UsersController@detachRole')->name('users.detachrole');
-    Route::post('{user}/role', 'UsersController@addRoles')->name('users.addroles');
+    Route::get('{user}/roles/{role}/detach', 'UserController@detachRole')->name('users.detachrole');
+    Route::post('{user}/role', 'UserController@addRoles')->name('users.addroles');
 });
 
 // User Groups module
@@ -193,7 +193,7 @@ Route::middleware(['auth', 'role:Admin'])->group(static function () {
 // Tasks module
 Route::prefix('tasks')->middleware(['auth', 'role:Admin'])->group(static function () {
     // Index
-    Route::get('/', 'TasksController@index')->name('tasks.index');
+    Route::get('/', 'TaskController@index')->name('tasks.index');
 });
 
 // Notification Templates module
@@ -317,7 +317,7 @@ Route::prefix('seed')->middleware(['auth', 'role:Admin'])->group(static function
     });
 
     // Singer import
-    Route::get('import', 'SingersController@import');
+    Route::get('import', 'SingerController@import');
 });
 
 

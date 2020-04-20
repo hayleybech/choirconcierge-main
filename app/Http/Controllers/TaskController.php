@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use Illuminate\View\View;
 
-class TasksController extends Controller
+class TaskController extends Controller
 {
     public function index(): View
     {
