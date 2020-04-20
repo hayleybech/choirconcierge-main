@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserGroupRequest;
 use App\Models\GroupMember;
 use App\Models\Role;
 use App\Models\User;
@@ -34,11 +35,12 @@ class UserGroupController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @param UserGroupRequest $request
+     * @return RedirectResponse
      */
-    public function store(): RedirectResponse
+    public function store(UserGroupRequest $request): RedirectResponse
     {
-        $data = $this->validateRequest();
-        $group = UserGroup::create($data);
+        $group = UserGroup::create($request->validated());
 
         // Update recipients
         $group->syncPolymorhpic( $data['recipient_roles'] ?? [], Role::class );
@@ -75,13 +77,14 @@ class UserGroupController extends Controller
      * Update the specified resource in storage.
      *
      * @param UserGroup $group
+     * @param UserGroupRequest $request
+     *
      * @return RedirectResponse
      */
-    public function update(UserGroup $group): RedirectResponse
+    public function update(UserGroup $group, UserGroupRequest $request): RedirectResponse
     {
         // Update the group
-        $data = $this->validateRequest($group);
-        $group->update($data);
+        $group->update($request->validated());
 
         // Update recipients
         $group->syncPolymorhpic( $data['recipient_roles'] ?? [], Role::class );
@@ -105,24 +108,5 @@ class UserGroupController extends Controller
         }
 
         return redirect()->route('groups.index')->with(['status' => 'Group deleted. ', ]);
-    }
-
-    /**
-     * @param UserGroup $group
-     * @return mixed
-     */
-    public function validateRequest(UserGroup $group = null)
-    {
-        return request()->validate([
-            'title'             => 'required|max:255',
-            'slug'              => [
-                'required',
-                Rule::unique('user_groups')->ignore($group->id ?? ''),
-                'max:255'
-            ],
-            'list_type'         => 'required',
-            'recipient_roles'  => '',
-            'recipient_users'  => '',
-        ]);
     }
 }
