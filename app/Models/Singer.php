@@ -84,6 +84,8 @@ class Singer extends Model
 
         $singer->user()->associate($user);
         $singer->save();
+
+        return $singer;
     }
 
     public function update(array $attributes = [], array $options = []) {
