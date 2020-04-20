@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SongAttachmentController extends Controller
 {
-    public function store($songId, Request $request): RedirectResponse
+    public function store(Song $song, Request $request): RedirectResponse
     {
         $request->validate([
             'title'             => 'required|max:255',
@@ -35,7 +35,6 @@ class SongAttachmentController extends Controller
         */
 
         // Attach song
-        $song = Song::find($songId);
         $song->attachments()->save($attachment);
 
         $attachment->save();
@@ -50,12 +49,11 @@ class SongAttachmentController extends Controller
 
         Storage::disk('public')->putFileAs( $attachment->getPathSong(), $file_data, $file_name );
 
-        return redirect()->route('songs.show', [$songId])->with(['status' => 'Attachment added. ', ]);
+        return redirect()->route('songs.show', [$song])->with(['status' => 'Attachment added. ', ]);
     }
 
-    public function delete($songId, $attachmentId): RedirectResponse
+    public function delete(Song $song, SongAttachment $attachment): RedirectResponse
     {
-        $attachment = SongAttachment::find($attachmentId);
 
         if (Storage::disk('public')->exists( $attachment->getPath() )) {
             Storage::disk('public')->delete( $attachment->getPath() );
@@ -63,6 +61,6 @@ class SongAttachmentController extends Controller
 
         $attachment->delete();
 
-        return redirect()->route('songs.show', [$songId])->with(['status' => 'Attachment deleted. ', ]);
+        return redirect()->route('songs.show', [$song])->with(['status' => 'Attachment deleted. ', ]);
     }
 }
