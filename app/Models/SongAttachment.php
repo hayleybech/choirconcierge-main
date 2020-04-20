@@ -34,6 +34,14 @@ class SongAttachment extends Model
         'download_url',
     ];
 
+    public function delete() {
+        if (Storage::disk('public')->exists( $this->getPath() )) {
+            Storage::disk('public')->delete( $this->getPath() );
+        }
+
+        parent::delete();
+    }
+
     public function song(): BelongsTo
     {
         return $this->belongsTo(Song::class);

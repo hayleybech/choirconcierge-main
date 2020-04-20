@@ -54,11 +54,6 @@ class SongAttachmentController extends Controller
 
     public function delete(Song $song, SongAttachment $attachment): RedirectResponse
     {
-
-        if (Storage::disk('public')->exists( $attachment->getPath() )) {
-            Storage::disk('public')->delete( $attachment->getPath() );
-        }
-
         $attachment->delete();
 
         return redirect()->route('songs.show', [$song])->with(['status' => 'Attachment deleted. ', ]);
