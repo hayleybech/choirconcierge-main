@@ -2,22 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSongAttachment;
 use App\Models\Song;
 use App\Models\SongAttachment;
-use App\Models\SongAttachmentCategory;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class SongAttachmentController extends Controller
 {
-    public function store(Song $song, Request $request): RedirectResponse
+    public function store(Song $song, StoreSongAttachment $request): RedirectResponse
     {
-        $data = $request->validate([
-            'title'             => 'required|max:255',
-            'category'          => 'required|exists:song_attachment_categories,id',
-            'attachment_upload' => 'required|file'
-        ]);
+        $data = $request->validated();
 
         $attachment = SongAttachment::create([
             'title'             => $data['title'],
