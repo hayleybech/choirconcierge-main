@@ -34,6 +34,26 @@ class UserGroup extends Model
         'title', 'slug', 'list_type',
     ];
 
+    public static function create( array $attributes = [] )
+    {
+        /** @var UserGroup $group */
+        $group = static::query()->create($attributes);
+
+        // Update recipients
+        $group->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class );
+        $group->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class );
+        $group->save();
+    }
+
+    public function update(array $attributes = [], array $options = [])
+    {
+        parent::update($attributes, $options);
+
+        // Update recipients
+        $this->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class );
+        $this->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class );
+        $this->save();
+    }
     public function members(): HasMany
     {
         return $this->hasMany(GroupMember::class, 'group_id');

@@ -42,10 +42,6 @@ class UserGroupController extends Controller
     {
         $group = UserGroup::create($request->validated());
 
-        // Update recipients
-        $group->syncPolymorhpic( $data['recipient_roles'] ?? [], Role::class );
-        $group->syncPolymorhpic( $data['recipient_users'] ?? [], User::class );
-
         return redirect('/groups')->with(['status' => 'Group created. ', ]);
     }
 
@@ -83,12 +79,7 @@ class UserGroupController extends Controller
      */
     public function update(UserGroup $group, UserGroupRequest $request): RedirectResponse
     {
-        // Update the group
         $group->update($request->validated());
-
-        // Update recipients
-        $group->syncPolymorhpic( $data['recipient_roles'] ?? [], Role::class );
-        $group->syncPolymorhpic( $data['recipient_users'] ?? [], User::class );
 
         return redirect()->route('groups.show', [$group])->with(['status' => 'Group updated. ', ]);
     }
