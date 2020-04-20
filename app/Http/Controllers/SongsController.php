@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSong;
 use App\Models\Song;
 use App\Models\SongAttachmentCategory;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\View\View;
 
 class SongsController extends Controller
@@ -74,10 +74,9 @@ class SongsController extends Controller
         return view('songs.create', compact('categories', 'statuses', 'pitches') );
     }
 
-    public function store(): RedirectResponse
+    public function store(StoreSong $request): RedirectResponse
     {
-        $data = $this->validateRequest();
-        $song = Song::create($data);
+        $song = Song::create($request->validated());
 
         return redirect('/songs')->with(['status' => 'Song created. ', ]);
     }
@@ -101,10 +100,9 @@ class SongsController extends Controller
         return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
     }
 
-    public function update(Song $song): RedirectResponse
+    public function update(StoreSong $request, Song $song): RedirectResponse
     {
-        $data = $this->validateRequest($song);
-        $song->update($data);
+        $song->update($request->validated());
 
         return redirect()->route('song.edit', [$song])->with(['status' => 'Song updated. ', ]);
     }
@@ -148,19 +146,5 @@ class SongsController extends Controller
             ];
         }
         return $sorts;
-    }
-
-    /**
-     * @param Song $song
-     * @return mixed
-     */
-    public function validateRequest(Song $song = null)
-    {
-        return request()->validate([
-            'title'             => 'required|max:255',
-            'categories'        => 'required|exists:song_categories,id',
-            'status'            => 'required|exists:song_statuses,id',
-            'pitch_blown'       => 'required',
-        ]);
     }
 }
