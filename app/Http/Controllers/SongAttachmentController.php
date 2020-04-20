@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreSongAttachment;
+use App\Http\Requests\SongAttachmentRequest;
 use App\Models\Song;
 use App\Models\SongAttachment;
 use Illuminate\Http\RedirectResponse;
 
 class SongAttachmentController extends Controller
 {
-    public function store(Song $song, StoreSongAttachment $request): RedirectResponse
+    public function store(Song $song, SongAttachmentRequest $request): RedirectResponse
     {
         $data = $request->validated();
 

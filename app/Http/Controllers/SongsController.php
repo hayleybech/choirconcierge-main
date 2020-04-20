@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreSong;
+use App\Http\Requests\SongRequest;
 use App\Models\Song;
 use App\Models\SongAttachmentCategory;
 use App\Models\SongCategory;
@@ -74,7 +74,7 @@ class SongsController extends Controller
         return view('songs.create', compact('categories', 'statuses', 'pitches') );
     }
 
-    public function store(StoreSong $request): RedirectResponse
+    public function store(SongRequest $request): RedirectResponse
     {
         $song = Song::create($request->validated());
 
@@ -100,7 +100,7 @@ class SongsController extends Controller
         return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
     }
 
-    public function update(StoreSong $request, Song $song): RedirectResponse
+    public function update(SongRequest $request, Song $song): RedirectResponse
     {
         $song->update($request->validated());
 

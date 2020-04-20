@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEvent;
+use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\EventType;
 use Illuminate\Http\RedirectResponse;
@@ -44,7 +44,7 @@ class EventsController extends Controller
         return view('events.create', compact( 'types') );
     }
 
-    public function store(StoreEvent $request): RedirectResponse
+    public function store(EventRequest $request): RedirectResponse
     {
         $event = Event::create($request->validated());
 
@@ -63,7 +63,7 @@ class EventsController extends Controller
         return view('events.edit', compact('event',  'types'));
     }
 
-    public function update(Event $event, StoreEvent $request): RedirectResponse
+    public function update(Event $event, EventRequest $request): RedirectResponse
     {
         $event->update($request->validated());
 

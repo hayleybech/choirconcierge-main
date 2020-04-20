@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Singer;
+use App\Models\Song;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreSongAttachment extends FormRequest
+class SongRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,14 +22,17 @@ class StoreSongAttachment extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param Song $song
      * @return array
      */
-    public function rules()
+    public function rules(Song $song)
     {
         return [
             'title'             => 'required|max:255',
-            'category'          => 'required|exists:song_attachment_categories,id',
-            'attachment_upload' => 'required|file'
+            'categories'        => 'required|exists:song_categories,id',
+            'status'            => 'required|exists:song_statuses,id',
+            'pitch_blown'       => 'required',
+            'song'              => '',
         ];
     }
 }

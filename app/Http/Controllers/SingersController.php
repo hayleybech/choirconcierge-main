@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
-use App\Http\Requests\StoreSinger;
+use App\Http\Requests\SingerRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Singer;
@@ -52,7 +52,7 @@ class SingersController extends Controller
         return view('singers.create');
     }
 
-    public function store(StoreSinger $request): RedirectResponse
+    public function store(SingerRequest $request): RedirectResponse
     {
         $singer = Singer::create($request->validated());
 
@@ -68,7 +68,7 @@ class SingersController extends Controller
     {
         return view('singers.edit', compact('singer' ));
     }
-    public function update(Singer $singer, StoreSinger $request): RedirectResponse
+    public function update(Singer $singer, SingerRequest $request): RedirectResponse
     {
         $singer->update($request->validated());
 
