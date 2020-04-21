@@ -23,5 +23,6 @@ public/fonts/
 public/mix-manifest.json
 
 queue.pid
+/reports/
 
 .phpunit.result.cache
