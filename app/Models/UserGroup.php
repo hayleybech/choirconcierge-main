@@ -86,24 +86,24 @@ class UserGroup extends Model
     }
 
     /**
-     * @param int[] $memberables
+     * @param int[] $memberable_ids
      * @param string $memberable_type
      */
-    public function syncPolymorhpic($memberables, string $memberable_type ): void
+    public function syncPolymorhpic($memberable_ids, string $memberable_type ): void
     {
         // Detach the Memberables not listed in the incoming array
         GroupMember::where('group_id', '=', $this->id)
                 ->where('memberable_type', '=', $memberable_type)
-                ->whereNotIn('memberable_id', $memberables)
+                ->whereNotIn('memberable_id', $memberable_ids)
                 ->delete();
 
         // Insert new Memberables
-        $unchanged = GroupMember::where('group_id', '=', $this->id)
+        $unchanged_ids = GroupMember::where('group_id', '=', $this->id)
             ->where('memberable_type', '=', $memberable_type)
-            ->whereIn('memberable_id', $memberables)
-            ->get()
-            ->all();
-        $new = array_diff( $memberables, $unchanged );
+            ->whereIn('memberable_id', $memberable_ids)
+            ->pluck('memberable_id')
+            ->toArray();
+        $new = array_diff( $memberable_ids, $unchanged_ids );
 
         $attach = [];
         foreach($new as $memberable_id) {
@@ -112,6 +112,6 @@ class UserGroup extends Model
                 'memberable_type' => $memberable_type,
             ];
         }
-        $this->members()->createMany($attach);
+        $this->fresh()->members()->createmany($attach);
     }
 }

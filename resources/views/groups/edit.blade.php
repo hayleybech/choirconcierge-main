@@ -65,8 +65,8 @@
             <div class="form-group">
                 <label for="recipient_roles"><i class="fa fa-fw fa-users"></i> Roles</label><br>
                 <select id="recipient_roles" name="recipient_roles[]" class="select2 form-control" data-model="roles" multiple>
-                    @foreach($roles as $role)
-                        <option value="{{$role->memberable_id}}" selected>{{$role->memberable->name}}</option>
+                    @foreach($group->roles as $role)
+                        <option value="{{$role->id}}" selected>{{$role->name}}</option>
                     @endforeach
                 </select>
             </div>
@@ -74,8 +74,8 @@
             <div class="form-group">
                 <label for="recipient_users"><i class="fa fa-fw fa-user"></i> Users</label><br>
                 <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple>
-                    @foreach($users as $user)
-                        <option value="{{$user->memberable_id}}" selected>{{$user->memberable->name}}</option>
+                    @foreach($group->users as $user)
+                        <option value="{{$user->id}}" selected>{{$user->name}}</option>
                     @endforeach
                 </select>
             </div>

@@ -63,10 +63,7 @@ class UserGroupController extends Controller
      */
     public function edit(UserGroup $group): View
     {
-        $roles = $group->members()->where('memberable_type', '=', Role::class)->get();
-        $users = $group->members()->where('memberable_type', '=', User::class)->get();
-
-        return view('groups.edit', compact('group', 'roles', 'users' ));
+        return view('groups.edit', compact('group' ));
     }
 
     /**
