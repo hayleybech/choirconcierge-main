@@ -190,6 +190,9 @@ Route::middleware(['auth', 'role:Admin'])->group(static function () {
 
 });
 
+/** Mailbox **/
+Route::get('/mailbox/process', 'MailboxController@process');
+
 // Tasks module
 Route::prefix('tasks')->middleware(['auth', 'role:Admin'])->group(static function () {
     // Index

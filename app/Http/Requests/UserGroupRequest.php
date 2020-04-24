@@ -30,7 +30,7 @@ class UserGroupRequest extends FormRequest
             'title'             => 'required|max:255',
             'slug'              => [
                 'required',
-                Rule::unique('user_groups')->ignore($group->id ?? ''),
+                Rule::unique('user_groups')->ignore($this->group->id ?? ''),
                 'max:255'
             ],
             'list_type'         => 'required',
