@@ -1,14 +1,14 @@
 @extends('layouts.page')
 
-@section('title', 'Add Group')
-@section('page-title', 'Add Group')
+@section('title', 'Add Mailing List')
+@section('page-title', 'Add Mailing List')
 
 @section('page-content')
 
     {{ Form::open( array( 'route' => 'groups.index' ) ) }}
 
     <div class="card bg-light">
-        <h3 class="card-header h4">Group Details</h3>
+        <h3 class="card-header h4">List Details</h3>
 
         <div class="card-body">
             <div class="form-group">

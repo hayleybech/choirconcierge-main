@@ -1,13 +1,13 @@
 @extends('layouts.page')
 
 @section('title', 'Edit - ' . $group->title)
-@section('page-title', 'Edit')
+@section('page-title', $group->title)
 
 @section('page-content')
     {{ Form::open( array( 'route' => ['groups.update', $group->id], 'method' => 'put' ) ) }}
 
     <div class="card bg-light">
-        <h3 class="card-header h4">Group Details</h3>
+        <h3 class="card-header h4">List Details</h3>
 
         <div class="card-body">
             <div class="form-group">

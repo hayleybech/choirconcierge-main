@@ -184,7 +184,7 @@ Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static functio
     Route::post('{user}/role', 'UserController@addRoles')->name('users.addroles');
 });
 
-// User Groups module
+// Mailing Lists (User Groups) module
 Route::middleware(['auth', 'role:Admin'])->group(static function () {
     Route::resource('groups', 'UserGroupController');
 

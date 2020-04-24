@@ -1,7 +1,7 @@
 @extends('layouts.page')
 
-@section('title', 'Groups')
-@section('page-title', 'Groups')
+@section('title', 'Mailing Lists')
+@section('page-title', 'Mailing Lists')
 
 @section('page-action')
 <a href="{{route( 'groups.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-plus"></i> Add New</a>
@@ -10,7 +10,7 @@
 @section('page-content')
 
     <div class="card bg-light">
-        <h3 class="card-header h4">Groups List</h3>
+        <h3 class="card-header h4">Mailing Lists</h3>
 
         <div class="card-body">
 
@@ -73,7 +73,7 @@
         </div>
 
         <div class="card-footer">
-            {{ $groups->count() }} groups
+            {{ $groups->count() }} mailing lists
         </div>
 
     </div>

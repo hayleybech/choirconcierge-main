@@ -1,6 +1,6 @@
 @extends('layouts.page')
 
-@section('title', $group->title . ' - Groups')
+@section('title', $group->title . ' - Mailing Lists')
 @section('page-title', $group->title)
 @section('page-action')
 <a href="{{route( 'groups.edit', ['group' => $group] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>

@@ -76,7 +76,7 @@
 							@if( Auth::user()->hasRole('Admin') )
 								<li class="nav-item nav-heading">Management</li>
 								<li class="nav-item">
-									<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.*') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i><span class="link-text"> Groups</span></a>
+									<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.*') ) ? 'active' : '' }}"><i class="fa fa-mail-bulk fa-fw"></i><span class="link-text"> Mailing Lists</span></a>
 								</li>
 								<li class="nav-item">
 									<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : '' }}"><i class="fa fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
