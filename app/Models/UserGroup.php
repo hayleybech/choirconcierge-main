@@ -69,6 +69,22 @@ class UserGroup extends Model
         return $this->morphedByMany( User::class, 'memberable', 'group_members', 'group_id');
     }
 
+    public function get_all_users()
+    {
+        /* @todo use queries instead */
+
+        // Get directly-assigned users
+        $users = $this->users;
+
+        // Get users from roles
+        foreach( $this->roles as $role )
+        {
+            $users = $users->merge( $role->users );
+        }
+
+        return $users->unique();
+    }
+
     /**
      * @param int[] $memberables
      * @param string $memberable_type

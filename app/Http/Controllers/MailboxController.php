@@ -8,7 +8,7 @@ class MailboxController extends Controller
 {
     public function process(): void
     {
-        ProcessGroupMailbox::dispatchNow();
+        (new ProcessGroupMailbox)->handle();
     }
 
 }
