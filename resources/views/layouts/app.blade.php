@@ -134,17 +134,17 @@
 					<ul class="nav nav-pills nav-fill">
 						@if( Auth::user()->isEmployee() )
 							<li class="nav-item">
-								<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers', 'singers/*') ) ? 'active' : '' }}"><i class="fa fa-user fa-fw"></i><span class="link-text"> Singers</span></a>
+								<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers', 'singers/*') ) ? 'active' : '' }}"><i class="fad fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
 							</li>
 							<li class="nav-item">
-								<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs', 'songs/*') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
+								<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs', 'songs/*') ) ? 'active' : '' }}"><i class="fad fa-list-music fa-fw"></i><span class="link-text"> Songs</span></a>
 							</li>
 							<li class="nav-item">
-								<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events', 'events/*') ) ? 'active' : '' }}"><i class="fa fa-calendar fa-fw"></i><span class="link-text"> Events</span></a>
+								<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events', 'events/*') ) ? 'active' : '' }}"><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> Events</span></a>
 							</li>
 						@endif
 						<li class="nav-item">
-							<a href="" class="nav-link mobile-nav-collapse-link"><i class="fa fa-fw fa-ellipsis-v"></i><span class="link-text"> More</span></a>
+							<a href="" class="nav-link mobile-nav-collapse-link"><i class="fad fa-fw fa-ellipsis-v"></i><span class="link-text"> More</span></a>
 						</li>
 					</ul>
 				</nav>
