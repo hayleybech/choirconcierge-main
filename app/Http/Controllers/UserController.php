@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\VoicePart;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -100,6 +101,29 @@ class UserController extends Controller
             $formatted_results[] = [
                 'id'    => $role->id,
                 'text'  => $role->name
+            ];
+        }
+
+        return \Response::json($formatted_results);
+    }
+
+    public function findVoiceParts(Request $request): JsonResponse
+    {
+        $term = trim($request->q);
+
+        if( empty($term) ){
+            return \Response::json([]);
+        }
+
+        $formatted_results = [];
+        $parts = VoicePart::where('title', 'like', "%$term%")
+            ->limit(5)
+            ->get();
+
+        foreach( $parts as $part ){
+            $formatted_results[] = [
+                'id'    => $part->id,
+                'text'  => $part->title
             ];
         }
 

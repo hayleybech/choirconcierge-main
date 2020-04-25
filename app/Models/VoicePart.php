@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * Class VoicePart
@@ -13,14 +14,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string title
  *
  * Relationships
- * @property Singer[] $singer
+ * @property Singer[] $singers
+ * @property User[] $users
  *
  * @package App\Models
  */
 class VoicePart extends Model
 {
-    public function singer(): HasMany
+    public function singers(): HasMany
     {
         return $this->hasMany( Singer::class );
+    }
+
+    public function user(): HasManyThrough
+    {
+        return $this->hasManyThrough(User::class, Singer::class);
     }
 }

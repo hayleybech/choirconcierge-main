@@ -70,6 +70,11 @@
             </div>
 
             <div class="form-group">
+                <label for="recipient_voice_parts"><i class="fa fa-fw fa-users-class"></i> Voice Parts</label><br>
+                <select id="recipient_voice_parts" name="recipient_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple></select>
+            </div>
+
+            <div class="form-group">
                 <label for="recipient_users"><i class="fa fa-fw fa-user"></i> Users</label><br>
                 <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple></select>
             </div>

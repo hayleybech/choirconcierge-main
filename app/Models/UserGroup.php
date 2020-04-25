@@ -20,6 +20,9 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  *
  * Relationships
  * @property GroupMember[] $members
+ * @property Role[] $roles
+ * @property User[] $users
+ * @property VoicePart[] $voice_parts
  *
  * @package App\Models
  */
@@ -41,6 +44,7 @@ class UserGroup extends Model
 
         // Update recipients
         $group->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class );
+        $group->syncPolymorhpic( $attributes['recipient_voice_parts'] ?? [], VoicePart::class );
         $group->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class );
         $group->save();
     }
@@ -51,6 +55,7 @@ class UserGroup extends Model
 
         // Update recipients
         $this->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class );
+        $this->syncPolymorhpic( $attributes['recipient_voice_parts'] ?? [], VoicePart::class );
         $this->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class );
         $this->save();
     }
@@ -62,6 +67,11 @@ class UserGroup extends Model
     public function roles(): MorphToMany
     {
         return $this->morphedByMany( Role::class, 'memberable', 'group_members', 'group_id');
+    }
+
+    public function voice_parts(): MorphToMany
+    {
+        return $this->morphedByMany( VoicePart::class, 'memberable', 'group_members', 'group_id');
     }
 
     public function users(): MorphToMany
@@ -80,6 +90,12 @@ class UserGroup extends Model
         foreach( $this->roles as $role )
         {
             $users = $users->merge( $role->users );
+        }
+
+        // Get users from voice parts
+        foreach( $this->voice_parts as $part )
+        {
+            $users = $users->merge( $part->users );
         }
 
         return $users->unique();

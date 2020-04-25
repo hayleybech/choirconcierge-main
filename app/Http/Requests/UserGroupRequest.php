@@ -35,6 +35,7 @@ class UserGroupRequest extends FormRequest
             ],
             'list_type'         => 'required',
             'recipient_roles'  => '',
+            'recipient_voice_parts' => '',
             'recipient_users'  => '',
         ];
     }
