@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property Placement $placement
  * @property SingerCategory $category
  * @property User $user
+ * @property VoicePart $voice_part
  *
  * Dynamic
  * @property int $age
@@ -129,6 +130,11 @@ class Singer extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function voice_part(): BelongsTo
+    {
+        return $this->belongsTo(VoicePart::class);
     }
 
     /*

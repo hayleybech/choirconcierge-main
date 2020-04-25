@@ -22,7 +22,7 @@
 		</div>
         <div class="r-table__cell singer-col--part">
 			<span class="singer-part">
-				<span class="badge badge-secondary"><i class="fa fa-users"></i> {{ ( isset($singer->placement->voice_part) && $singer->placement->voice_part !== '' ) ? $singer->placement->voice_part->title : 'No part' }}</span><br>
+				<span class="badge badge-secondary"><i class="fa fa-users"></i> {{ ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? $singer->voice_part->title : 'No part' }}</span><br>
 			</span>
 		</div>
 		<div class="r-table__cell singer-col--category">

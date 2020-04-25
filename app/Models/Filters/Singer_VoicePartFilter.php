@@ -33,9 +33,7 @@ class Singer_VoicePartFilter extends Filter
     {
         // Voice Part
         if($this->current_option !== '0') {
-            return $query->whereHas('placement', function(Builder $query) {
-                $query->where('voice_part', '=', $this->current_option);
-            });
+            return $query->where('voice_part_id', '=', $this->current_option);
         }
 
         // Any

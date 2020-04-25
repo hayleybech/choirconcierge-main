@@ -27,7 +27,7 @@ class SingerController extends Controller
     public function index(Request $request): View
     {
         // Base query
-        $singers = Singer::with(['tasks', 'category', 'placement', 'profile'])
+        $singers = Singer::with(['tasks', 'category', 'placement', 'profile', 'voice_part'])
             ->filter()
             ->get();
 
@@ -87,7 +87,7 @@ class SingerController extends Controller
     {
         $sort_cols = [
             'name',
-            'voice_placement.part',
+            'voice_part',
             'category.name',
         ];
 
