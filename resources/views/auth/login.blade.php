@@ -1,7 +1,9 @@
 @extends('layouts.page')
 
 @section('title', 'Login')
-@section('page-title', 'Login')
+@section('page-title')
+<i class="fal fa-sign-in-alt fa-fw"></i> Login
+@endsection
 
 @section('page-content')
 <div class="card bg-light">

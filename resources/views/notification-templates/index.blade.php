@@ -1,7 +1,9 @@
 @extends('layouts.page')
 
 @section('title', 'Notification Templates')
-@section('page-title', 'Notification Templates')
+@section('page-title')
+<i class="fal fa-fw fa-clone"></i> Notification Templates
+@endsection
 @section('page-lead', 'This page lists notifications sent whenever a task is completed. ')
 
 @section('page-content')

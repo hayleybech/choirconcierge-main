@@ -1,7 +1,9 @@
 @extends('layouts.page')
 
 @section('title', 'Singers')
-@section('page-title', 'Singers')
+@section('page-title')
+<i class="fal fa-fw fa-users"></i> Singers
+@endsection
 @section('page-action')
 	@if(Auth::user()->hasRole('Membership Team'))
 		<a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-user-plus"></i> Add New</a>

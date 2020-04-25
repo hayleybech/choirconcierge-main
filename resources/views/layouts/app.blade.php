@@ -35,8 +35,8 @@
 					<ul class="navbar-nav nav-vertical">
 						<!-- Authentication Links -->
 						@guest
-							<li class="nav-item {{ ( request()->routeIs('login') ) ? 'active' : '' }}">
-								<a href="{{ route('login') }}" class="nav-link"><i class="fa fa-sign-in-alt fa-fw"></i> Login</a>
+							<li class="nav-item">
+								<a href="{{ route('login') }}" class="nav-link {{ ( request()->routeIs('login') ) ? 'active' : '' }}"><i class="fad fa-sign-in-alt fa-fw"></i> Login</a>
 							</li>
 							{{--
 							<li class="nav-item {{ ( request()->routeIs('register') ) ? 'active' : '' }}">
@@ -45,7 +45,7 @@
 						@else
 
 							<li class="nav-item">
-								<a class="nav-link {{ ( request()->routeIs('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-chart-line fa-fw"></i><span class="link-text"> Dashboard</span></a>
+								<a class="nav-link {{ ( request()->routeIs('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fad fa-chart-line fa-fw"></i><span class="link-text"> Dashboard</span></a>
 							</li>
 
 							{{--<li class="nav-item dropdown">
@@ -63,26 +63,26 @@
 							@if( Auth::user() )
 								<li class="nav-item nav-heading">Singers</li>
 								<li class="nav-item">
-									<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.*') ) ? 'active' : '' }}"><i class="fa fa-user fa-fw"></i><span class="link-text"> Singers</span></a>
+									<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.*') ) ? 'active' : '' }}"><i class="fad fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.*') ) ? 'active' : '' }}"><i class="fa fa-music fa-fw"></i><span class="link-text"> Songs</span></a>
+									<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.*') ) ? 'active' : '' }}"><i class="fad fa-list-music fa-fw"></i><span class="link-text"> Songs</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : '' }}"><i class="far fa-calendar fa-fw"></i><span class="link-text"> Events</span></a>
+									<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : '' }}"><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> Events</span></a>
 								</li>
 							@endif
 
 							@if( Auth::user()->hasRole('Admin') )
 								<li class="nav-item nav-heading">Management</li>
 								<li class="nav-item">
-									<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.*') ) ? 'active' : '' }}"><i class="fa fa-mail-bulk fa-fw"></i><span class="link-text"> Mailing Lists</span></a>
+									<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.*') ) ? 'active' : '' }}"><i class="fad fa-mail-bulk fa-fw"></i><span class="link-text"> Mailing Lists</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : '' }}"><i class="fa fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
+									<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : '' }}"><i class="fad fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('notification-templates.index') }}" class="nav-link {{ ( request()->routeIs('notification-templates.*') ) ? 'active' : '' }}"><i class="far fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
+									<a href="{{ route('notification-templates.index') }}" class="nav-link {{ ( request()->routeIs('notification-templates.*') ) ? 'active' : '' }}"><i class="fad fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
 								</li>
 							@endif
 
@@ -91,12 +91,12 @@
 
 							<li class="nav-item">
 								<a href="{{ route('singers.show', ['singer' => Auth::user()->singer] ) }}" class="nav-link">
-									<i class="far fa-user-circle fa-fw"></i><span class="link-text"> {{ Auth::user()->name }}</span>
+									<i class="fad fa-fw fa-user-circle fa-swap-opacity fa-swap-color"></i><span class="link-text"> {{ Auth::user()->name }}</span>
 								</a>
 							</li>
 
 							<li class="nav-item">
-								<a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="nav-link"><i class="fa fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
+								<a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="nav-link"><i class="fad fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
 							</li>
 
 							<li class="nav-item">
@@ -104,7 +104,7 @@
 								   class="nav-link {{ ( request()->routeIs('logout') ) ? 'active' : '' }}"
 								   onclick="event.preventDefault();
 									 document.getElementById('logout-form').submit();">
-									<i class="fa fa-sign-out-alt fa-fw"></i> <span class="link-text">Logout</span>
+									<i class="fad fa-sign-out-alt fa-fw"></i> <span class="link-text">Logout</span>
 								</a>
 								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 									{{ csrf_field() }}

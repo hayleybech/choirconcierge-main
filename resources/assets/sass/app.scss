@@ -9,10 +9,12 @@
 @import "~bootstrap/scss/bootstrap.scss";
 
 // Font Awesome
-@import '~@fortawesome/fontawesome-free/scss/fontawesome';
-@import '~@fortawesome/fontawesome-free/scss/regular';
-@import '~@fortawesome/fontawesome-free/scss/solid';
-@import '~@fortawesome/fontawesome-free/scss/brands';
+@import '~@fortawesome/fontawesome-pro/scss/fontawesome';
+@import '~@fortawesome/fontawesome-pro/scss/brands';
+@import '~@fortawesome/fontawesome-pro/scss/duotone';
+@import '~@fortawesome/fontawesome-pro/scss/light';
+@import '~@fortawesome/fontawesome-pro/scss/regular';
+@import '~@fortawesome/fontawesome-pro/scss/solid';
 
 // Select2
 @import "~select2/dist/css/select2";

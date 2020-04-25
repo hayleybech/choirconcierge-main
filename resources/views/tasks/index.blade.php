@@ -1,7 +1,9 @@
 @extends('layouts.page')
 
 @section('title', 'Global Task List')
-@section('page-title', 'Global Task List')
+@section('page-title')
+<i class="fal fa-tasks fa-fw"></i> Global Task List
+@endsection
 @section('page-lead', 'This page lists the onboarding tasks the choir must complete for every singer. ')
 
 @section('page-content')

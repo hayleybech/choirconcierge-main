@@ -1,7 +1,10 @@
 @extends('layouts.page')
 
 @section('title', 'Dashboard')
-@section('page-title', 'Dashboard')
+
+@section('page-title')
+<i class="fal fa-chart-line fa-fw"></i> Dashboard
+@endsection
 
 @section('page-content')
 

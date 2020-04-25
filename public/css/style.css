@@ -11,6 +11,10 @@ html, body, #app {
 body {
 	font-family: Lato, Raleway, Arial, Helvetica, sans-serif;
 }
+body .fad:after{
+	/*--fa-secondary-color: #6900c7;
+	--fa-secondary-opacity: 0.8;*/
+}
 #app {
 	display: flex;
 	flex-flow: column nowrap;
@@ -91,16 +95,36 @@ main {
 	letter-spacing: 0.03em;
 }
 
+.nav-link i {
+	font-size: 16px;
+}
+.nav-link:hover i.fad {
+	--fa-primary-color: #0061f2;
+	--fa-secondary-color: #6900c7;
+}
+.nav-link.active i.fad,
+.nav-link:active i.fad{
+	--fa-primary-color: #0061f2;
+	--fa-secondary-color: #6900c7;
+	--fa-secondary-opacity: 0.8;
+}
+.nav-link:hover i.fad.fa-swap-color {
+	--fa-primary-color: #6900c7;
+	--fa-secondary-color: #0061f2;
+}
+
+/*
 .nav-item i {
 	color: #0061f2;
 }
 .navbar-light .navbar-nav .nav-link {
 	color: rgba(0, 0, 0, 0.8);
-}
+}*/
 
+/*
 .navbar-nav .nav-link.active i {
 	color: #6900c7;
-}
+}*/
 .navbar-nav .nav-link.active .link-text {
 	color: #6900c7;
 	font-weight: 600;

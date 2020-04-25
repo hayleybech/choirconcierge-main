@@ -1,7 +1,9 @@
 @extends('layouts.page')
 
 @section('title', 'Mailing Lists')
-@section('page-title', 'Mailing Lists')
+@section('page-title')
+<i class="fal fa-fw fa-mail-bulk"></i> Mailing Lists
+@endsection
 
 @section('page-action')
 <a href="{{route( 'groups.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-plus"></i> Add New</a>

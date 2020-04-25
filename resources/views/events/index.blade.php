@@ -1,7 +1,9 @@
 @extends('layouts.page')
 
 @section('title', 'Events')
-@section('page-title', 'Events')
+@section('page-title')
+<i class="fal fa-fw fa-calendar"></i> Events
+@endsection
 
 @section('page-action')
     @if(Auth::user()->hasRole('Music Team'))
