@@ -36,16 +36,10 @@ class Placement extends Model
 		'skill_performance',
 		'skill_sightreading',
 		'voice_tone',
-		'voice_part',
 	];
 	
 	public function singer(): BelongsTo
     {
 		return $this->belongsTo(Singer::class );
 	}
-
-    public function setVoicePartAttribute(int $part_id)
-    {
-        $this->singer->voice_part()->associate($part_id);
-    }
 }

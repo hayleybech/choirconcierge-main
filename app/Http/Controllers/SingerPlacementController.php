@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\TaskCompleted;
 use App\Models\Singer;
 use App\Models\Task;
-use App\Models\VoicePart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -16,9 +15,7 @@ class SingerPlacementController extends Controller
 
     public function create(Singer $singer): View
     {
-        $voice_parts = VoicePart::all()->pluck('title', 'id');
-
-        return view('singers.createplacement', compact('singer', 'voice_parts'));
+        return view('singers.createplacement', compact('singer'));
     }
 
     public function store(Singer $singer, Request $request): RedirectResponse

@@ -56,6 +56,11 @@
             </fieldset>
 
             <div class="form-group">
+                {{ Form::label('voice_part_id', 'Voice Part') }}
+                {{ Form::select('voice_part_id', $voice_parts, '', array('class' => 'custom-select')) }}
+            </div>
+
+            <div class="form-group">
                 <label for="user_roles"><i class="fa fa-fw fa-users"></i> Roles</label><br>
                 <select id="user_roles" name="user_roles[]" class="select2 form-control" data-model="roles" multiple>
                     @foreach($singer->user->roles as $role)

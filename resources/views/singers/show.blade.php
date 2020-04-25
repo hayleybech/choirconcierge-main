@@ -120,9 +120,6 @@
 			<li class="list-group-item">
 				<strong>Voice Tone (1 = Fluty, 3 = Brassy):</strong> {{$singer->placement->voice_tone}}
 			</li>
-			<li class="list-group-item">
-				<strong>Voice Part:</strong> {{$singer->voice_part->title}}
-			</li>
 		</ul>
 		@else
 		<div class="card-body">

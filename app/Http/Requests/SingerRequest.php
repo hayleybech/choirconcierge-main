@@ -33,6 +33,7 @@ class SingerRequest extends FormRequest
                 Rule::unique('singers')->ignore($singer->id ?? ''),
             ],
             'onboarding_enabled'    => 'boolean',
+            'voice_part_id' => '',
             'user_roles' => [
                 'array',
                 'exists:roles,id',

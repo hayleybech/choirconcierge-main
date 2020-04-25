@@ -48,11 +48,6 @@
 				{{ Form::number('voice_tone', '', array('class' => 'form-control')) }}
 			</p>
 
-			<p>
-				{{ Form::label('voice_part', 'Voice Part') }}
-				{{ Form::select('voice_part', $voice_parts, '', array('class' => 'custom-select')) }}
-			</p>
-
 		</div>
 
 		<div class="card-footer">

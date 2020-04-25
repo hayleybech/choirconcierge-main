@@ -45,6 +45,7 @@ class Singer extends Model
         'name',
         'email',
         'onboarding_enabled',
+        'voice_part_id',
     ];
 
     protected static $filters = [

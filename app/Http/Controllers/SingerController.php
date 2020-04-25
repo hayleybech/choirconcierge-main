@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
 use App\Http\Requests\SingerRequest;
+use App\Models\VoicePart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Singer;
@@ -49,7 +50,9 @@ class SingerController extends Controller
 
     public function create(): View
     {
-        return view('singers.create');
+        $voice_parts = VoicePart::all()->pluck('title', 'id');
+
+        return view('singers.create', compact('voice_parts'));
     }
 
     public function store(SingerRequest $request): RedirectResponse
@@ -66,7 +69,9 @@ class SingerController extends Controller
 
     public function edit(Singer $singer): View
     {
-        return view('singers.edit', compact('singer' ));
+        $voice_parts = VoicePart::all()->pluck('title', 'id');
+
+        return view('singers.edit', compact('singer', 'voice_parts' ));
     }
     public function update(Singer $singer, SingerRequest $request): RedirectResponse
     {
