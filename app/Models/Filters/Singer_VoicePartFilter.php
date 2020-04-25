@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\Filters;
 
+use App\Models\VoicePart;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -17,13 +18,11 @@ class Singer_VoicePartFilter extends Filter
 
     protected function initOptions(): void
     {
-        $this->options = [
-            'any'   => 'Any part',
-            'tenor' => 'Tenor',
-            'lead'  => 'Lead',
-            'bari'  => 'Baritone',
-            'bass'  => 'Bass',
-        ];
+        $parts = VoicePart::all()->pluck('title', 'id')->toArray();
+
+        $this->options = array_merge([
+            '0'   => 'Any part',
+        ], $parts);
     }
 
     /**
@@ -33,7 +32,7 @@ class Singer_VoicePartFilter extends Filter
     protected function run(Builder $query): Builder
     {
         // Voice Part
-        if($this->current_option !== 'any') {
+        if($this->current_option !== '0') {
             return $query->whereHas('placement', function(Builder $query) {
                 $query->where('voice_part', '=', $this->current_option);
             });

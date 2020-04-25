@@ -50,7 +50,7 @@
 
 			<p>
 				{{ Form::label('voice_part', 'Voice Part') }}
-				{{ Form::select('voice_part', array('Tenor' => 'Tenor', 'Lead' => 'Lead', 'Baritone' => 'Baritone', 'Bass' => 'Bass'), '', array('class' => 'custom-select')) }}
+				{{ Form::select('voice_part', $voice_parts, '', array('class' => 'custom-select')) }}
 			</p>
 
 		</div>

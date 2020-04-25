@@ -18,12 +18,12 @@ use Illuminate\Support\Carbon;
  * @property int $skill_performance
  * @property int $skill_sightreading
  * @property int $voice_tone
- * @property string $voice_part
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * Relationships
  * @property Singer $singer
+ * @property VoicePart $voice_part
  *
  * @package App\Models
  */
@@ -44,4 +44,14 @@ class Placement extends Model
     {
 		return $this->belongsTo(Singer::class );
 	}
+
+	public function voice_part(): BelongsTo
+    {
+        return $this->belongsTo(VoicePart::class);
+    }
+
+    public function setVoicePartAttribute(int $part_id)
+    {
+        $this->voice_part()->associate($part_id);
+    }
 }

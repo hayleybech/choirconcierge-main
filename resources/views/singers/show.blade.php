@@ -9,7 +9,7 @@
 @endsection
 @section('page-lead')
 	<span class="badge badge-light">{{ $singer->category->name }}</span><br>
-	@if( $singer->placement)<i class="fa fa-fw fa-users"></i> {{ $singer->placement->voice_part }} <br>@endif
+	@if( $singer->placement)<i class="fa fa-fw fa-users"></i> {{ $singer->placement->voice_part->title }} <br>@endif
 	{{ $singer->email }}<br>
 	Added: {{$singer->created_at}}<br>
 	<strong>
@@ -121,7 +121,7 @@
 				<strong>Voice Tone (1 = Fluty, 3 = Brassy):</strong> {{$singer->placement->voice_tone}}
 			</li>
 			<li class="list-group-item">
-				<strong>Voice Part:</strong> {{$singer->placement->voice_part}}
+				<strong>Voice Part:</strong> {{$singer->placement->voice_part->title}}
 			</li>
 		</ul>
 		@else
