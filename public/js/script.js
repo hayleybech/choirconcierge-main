@@ -48,6 +48,7 @@ $( document ).ready(function() {
     // Run Select2
     const URL_USERS = '/users/find';
     const URL_ROLES = '/users/roles/find';
+    const URL_PARTS = '/users/voice-parts/find'
     const SELECT2_CONFIG = {
         placeholder: "Start typing...",
         minimumInputLength: 2,
@@ -73,6 +74,9 @@ $( document ).ready(function() {
 
     SELECT2_CONFIG.ajax.url = URL_ROLES;
     $('.select2[data-model=roles]').select2(SELECT2_CONFIG);
+
+    SELECT2_CONFIG.ajax.url = URL_PARTS;
+    $('.select2[data-model=voice_parts]').select2(SELECT2_CONFIG);
 });
 
 

@@ -72,6 +72,15 @@
             </div>
 
             <div class="form-group">
+                <label for="recipient_voice_parts"><i class="fa fa-fw fa-users-class"></i> Voice Parts</label><br>
+                <select id="recipient_voice_parts" name="recipient_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple>
+                    @foreach($group->voice_parts as $voice_part)
+                        <option value="{{$voice_part->id}}" selected>{{$voice_part->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="recipient_users"><i class="fa fa-fw fa-user"></i> Users</label><br>
                 <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple>
                     @foreach($group->users as $user)

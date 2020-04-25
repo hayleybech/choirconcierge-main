@@ -21,10 +21,12 @@
                 <strong>
                 @if($member->memberable_type === \App\Models\Role::class)
                     Role:
+                @elseif($member->memberable_type === \App\Models\VoicePart::class)
+                    Voice Part:
                 @elseif($member->memberable_type === \App\Models\User::class)
                     User:
                 @endif
-                </strong> {{ $member->memberable->name }}
+                </strong> {{ $member->memberable->name ?? $member->memberable->title ?? '' }}
             </li>
         @endforeach
         </ul>
