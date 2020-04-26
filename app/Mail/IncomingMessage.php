@@ -32,7 +32,7 @@ class IncomingMessage extends Mailable
             return;
         }
 
-        $group_email = $group->slug . '@' . config('imap.accounts.default.host');
+        $group_email = $group->slug . '@' . config('imap.host_display');
 
         $users = $group->get_all_users();
         foreach($users as $user)

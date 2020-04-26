@@ -24,6 +24,9 @@ return [
     */
     'default' => env('IMAP_DEFAULT_ACCOUNT', 'default'),
 
+    // incoming emails will be addressed to this host, but processed by the host at IMAP_HOST
+    'host_display' => env('IMAP_HOST_DISPLAY', 'demo.choirconcierge.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Default date format
