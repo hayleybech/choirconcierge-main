@@ -26,7 +26,7 @@ class VoicePart extends Model
         return $this->hasMany( Singer::class );
     }
 
-    public function user(): HasManyThrough
+    public function users(): HasManyThrough
     {
         return $this->hasManyThrough(User::class, Singer::class);
     }

@@ -75,7 +75,7 @@
                 <label for="recipient_voice_parts"><i class="fa fa-fw fa-users-class"></i> Voice Parts</label><br>
                 <select id="recipient_voice_parts" name="recipient_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple>
                     @foreach($group->voice_parts as $voice_part)
-                        <option value="{{$voice_part->id}}" selected>{{$voice_part->name}}</option>
+                        <option value="{{$voice_part->id}}" selected>{{$voice_part->title}}</option>
                     @endforeach
                 </select>
             </div>
@@ -85,6 +85,15 @@
                 <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple>
                     @foreach($group->users as $user)
                         <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="recipient_singer_categories"><i class="fa fa-fw fa-filter"></i> Filter by Singer Category</label><br>
+                <select id="recipient_singer_categories" name="recipient_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple>
+                    @foreach($group->singer_categories as $singer_category)
+                        <option value="{{$singer_category->id}}" selected>{{$singer_category->name}}</option>
                     @endforeach
                 </select>
             </div>

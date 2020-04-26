@@ -66,7 +66,7 @@ class User extends Authenticatable
     {
 		return $this->belongsToMany(Role::class, 'users_roles');
 	}
-	
+
 	 /**
       * Find out if User is an employee, based on if has any roles
       *

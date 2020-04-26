@@ -179,6 +179,7 @@ Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static functio
     Route::get('/find', 'UserController@findUsers');
     Route::get('/roles/find', 'UserController@findRoles');
     Route::get('/voice-parts/find', 'UserController@findVoiceParts');
+    Route::get('/singer-categories/find', 'UserController@findSingerCategories');
 
     // Attach/Detach role from a user
     Route::get('{user}/roles/{role}/detach', 'UserController@detachRole')->name('users.detachrole');

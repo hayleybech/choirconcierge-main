@@ -23,6 +23,8 @@
                     Role:
                 @elseif($member->memberable_type === \App\Models\VoicePart::class)
                     Voice Part:
+                @elseif($member->memberable_type === \App\Models\SingerCategory::class)
+                    Filter by Singer Category:
                 @elseif($member->memberable_type === \App\Models\User::class)
                     User:
                 @endif

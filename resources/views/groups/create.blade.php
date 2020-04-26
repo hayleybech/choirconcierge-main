@@ -79,6 +79,11 @@
                 <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple></select>
             </div>
 
+            <div class="form-group">
+                <label for="recipient_singer_categories"><i class="fa fa-fw fa-filter"></i> Filter by Singer Category</label><br>
+                <select id="recipient_singer_categories" name="recipient_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple></select>
+            </div>
+
         </div>
 
         <div class="card-footer">

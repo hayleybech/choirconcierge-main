@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SingerCategory;
 use App\Models\VoicePart;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -124,6 +125,29 @@ class UserController extends Controller
             $formatted_results[] = [
                 'id'    => $part->id,
                 'text'  => $part->title
+            ];
+        }
+
+        return \Response::json($formatted_results);
+    }
+
+    public function findSingerCategories(Request $request): JsonResponse
+    {
+        $term = trim($request->q);
+
+        if( empty($term) ){
+            return \Response::json([]);
+        }
+
+        $formatted_results = [];
+        $cats = SingerCategory::where('name', 'like', "%$term%")
+            ->limit(5)
+            ->get();
+
+        foreach( $cats as $cat ){
+            $formatted_results[] = [
+                'id'    => $cat->id,
+                'text'  => $cat->name
             ];
         }
 

@@ -49,6 +49,7 @@ $( document ).ready(function() {
     const URL_USERS = '/users/find';
     const URL_ROLES = '/users/roles/find';
     const URL_PARTS = '/users/voice-parts/find'
+    const URL_SINGER_CATS = '/users/singer-categories/find'
     const SELECT2_CONFIG = {
         placeholder: "Start typing...",
         minimumInputLength: 2,
@@ -77,6 +78,9 @@ $( document ).ready(function() {
 
     SELECT2_CONFIG.ajax.url = URL_PARTS;
     $('.select2[data-model=voice_parts]').select2(SELECT2_CONFIG);
+
+    SELECT2_CONFIG.ajax.url = URL_SINGER_CATS;
+    $('.select2[data-model=singer_categories]').select2(SELECT2_CONFIG);
 });
 
 

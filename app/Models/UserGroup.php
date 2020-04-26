@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
@@ -23,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property Role[] $roles
  * @property User[] $users
  * @property VoicePart[] $voice_parts
+ * @property SingerCategory[] $singer_categories
  *
  * @package App\Models
  */
@@ -46,6 +49,7 @@ class UserGroup extends Model
         $group->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class );
         $group->syncPolymorhpic( $attributes['recipient_voice_parts'] ?? [], VoicePart::class );
         $group->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class );
+        $group->syncPolymorhpic( $attributes['recipient_singer_categories'] ?? [], SingerCategory::class );
         $group->save();
     }
 
@@ -57,6 +61,7 @@ class UserGroup extends Model
         $this->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class );
         $this->syncPolymorhpic( $attributes['recipient_voice_parts'] ?? [], VoicePart::class );
         $this->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class );
+        $this->syncPolymorhpic( $attributes['recipient_singer_categories'] ?? [], SingerCategory::class );
         $this->save();
     }
     public function members(): HasMany
@@ -79,25 +84,43 @@ class UserGroup extends Model
         return $this->morphedByMany( User::class, 'memberable', 'group_members', 'group_id');
     }
 
+    public function singer_categories(): MorphToMany
+    {
+        return $this->morphedByMany( SingerCategory::class, 'memberable', 'group_members', 'group_id');
+    }
+
     public function get_all_users()
     {
         /* @todo use queries instead */
 
-        // Get directly-assigned users
-        $users = $this->users;
+        $cat_ids = $this->singer_categories()->get()->pluck('id');
 
-        // Get users from roles
+        // Get directly-assigned users
+        $users = $this->users()
+            ->whereHas('singer', function($singer_query) use($cat_ids) {
+                $singer_query->whereIn('singer_category_id', $cat_ids );
+            })
+            ->get();
+
         foreach( $this->roles as $role )
         {
-            $users = $users->merge( $role->users );
+            $role_users = $role->users()
+                ->whereHas('singer', function($singer_query) use($cat_ids) {
+                    $singer_query->whereIn('singer_category_id', $cat_ids );
+                })
+                ->get();
+            $users = $users->merge( $role_users );
         }
 
         // Get users from voice parts
-        foreach( $this->voice_parts as $part )
-        {
-            $users = $users->merge( $part->users );
-        }
-
+        $voice_part_ids = $this->voice_parts()->get()->pluck('id')->toArray();
+        $part_users = User::query()
+            ->whereHas('singer', function ($singer_query) use($voice_part_ids, $cat_ids) {
+                $singer_query->whereIn('voice_part_id', $voice_part_ids);
+                $singer_query->whereIn('singer_category_id', $cat_ids);
+            })
+            ->get();
+        $users = $users->merge($part_users);
         return $users->unique();
     }
 
