@@ -18,6 +18,10 @@ return [
 
     'domain' => env('TELESCOPE_DOMAIN', null),
 
+    // Conditionally skip the filtering that prevents Telescope from working on production.
+    // Hayden Bech 2020-04-26
+    'track_all' => env('TELESCOPE_TRACK_ALL', false),
+
     /*
     |--------------------------------------------------------------------------
     | Telescope Path

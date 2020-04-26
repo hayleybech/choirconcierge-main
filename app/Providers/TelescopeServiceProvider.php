@@ -25,6 +25,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
                 return true;
             }
 
+            if( config('telescope.track_all') ){
+                return true;
+            }
+
             return $entry->isReportableException() ||
                    $entry->isFailedRequest() ||
                    $entry->isFailedJob() ||
