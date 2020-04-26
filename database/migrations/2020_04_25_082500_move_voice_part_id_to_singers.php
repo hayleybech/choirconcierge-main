@@ -15,7 +15,7 @@ class MoveVoicePartIdToSingers extends Migration
     {
         // Add the column
         Schema::table('singers', function (Blueprint $table) {
-            $table->unsignedBigInteger('voice_part_id');
+            $table->unsignedBigInteger('voice_part_id')->nullable();
         });
 
         // Migrate the data
@@ -41,7 +41,7 @@ class MoveVoicePartIdToSingers extends Migration
     {
         // Re-add the column from placements table.
         Schema::table('placements', function (Blueprint $table) {
-            $table->unsignedBigInteger('voice_part_id');
+            $table->unsignedBigInteger('voice_part_id')->nullable();
         });
 
         // De-migrate the data.

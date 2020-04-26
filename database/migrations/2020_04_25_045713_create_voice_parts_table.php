@@ -74,7 +74,7 @@ class CreateVoicePartsTable extends Migration
     {
         // add voice_part_id column
         Schema::table('placements', function (Blueprint $table){
-            $table->unsignedBigInteger('voice_part_id');
+            $table->unsignedBigInteger('voice_part_id')->nullable();
         });
 
         // insert a voice_part_id based on existing voice_part string column
@@ -94,7 +94,7 @@ class CreateVoicePartsTable extends Migration
     {
         // re-add voice_part column
         Schema::table('placements', function (Blueprint $table){
-            $table->string('voice_part');
+            $table->string('voice_part')->nullable();
         });
 
         // re-insert a voice_part string based on voice_part_id
