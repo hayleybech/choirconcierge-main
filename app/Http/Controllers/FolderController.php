@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FolderRequest;
 use App\Models\Folder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -23,22 +25,24 @@ class FolderController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('folders.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param FolderRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(FolderRequest $request)
     {
-        //
+        $folder = Folder::create($request->validated());
+
+        return redirect()->route('folders.index',['status' => 'Song created. ', ]);
     }
 
     /**
