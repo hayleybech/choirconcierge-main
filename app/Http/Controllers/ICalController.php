@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\EventIcalFeed;
-use App\Models\Event;
 use Illuminate\Http\Response;
 
 class ICalController extends Controller
