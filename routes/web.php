@@ -163,6 +163,29 @@ Route::prefix('events')->group(static function (){
     });
 });
 
+// Documents module
+Route::prefix('folders')->group(static function (){
+
+    Route::middleware('employee')->group(static function() {
+        // Create
+        Route::get('create', 'FolderController@create')->name('folders.create');
+        Route::post('/', 'FolderController@store');
+
+        // Edit/Delete
+        Route::get('{folder}/edit', 'FolderController@edit')->name('folders.edit');
+        Route::put('{folder}', 'FolderController@update');
+        Route::get('{folder}/delete', 'FolderController@delete')->name('folders.delete');
+    });
+
+    // Any Authorised User
+    Route::middleware('auth')->group(static function() {
+        // Index
+        Route::get('/', 'FolderController@index')->name('folders.index');
+
+        //View
+        Route::get('{folder}', 'FolderController@show')->name('folders.show');
+    });
+});
 // Notifications module
 Route::prefix('notifications')->name('notifications')->middleware(['auth', 'employee'])->group(static function (){
     // Index - BROKEN
