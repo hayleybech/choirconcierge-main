@@ -71,6 +71,9 @@
 								<li class="nav-item">
 									<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : '' }}"><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> Events</span></a>
 								</li>
+								<li class="nav-item">
+								</li>
+								<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.*') ) ? 'active' : '' }}"><i class="fad fa-folders fa-fw fa-swap-opacity fa-swap-color"></i><span class="link-text"> Documents</span></a>
 							@endif
 
 							@if( Auth::user()->hasRole('Admin') )
