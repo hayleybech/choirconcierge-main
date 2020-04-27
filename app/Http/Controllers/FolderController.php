@@ -59,24 +59,26 @@ class FolderController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Folder  $folder
-     * @return \Illuminate\Http\Response
+     * @param Folder $folder
+     * @return View
      */
-    public function edit(Folder $folder)
+    public function edit(Folder $folder): View
     {
-        //
+        return view('folders.edit', compact('folder'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Folder  $folder
-     * @return \Illuminate\Http\Response
+     * @param FolderRequest $request
+     * @param Folder $folder
+     * @return RedirectResponse
      */
-    public function update(Request $request, Folder $folder)
+    public function update(FolderRequest $request, Folder $folder): RedirectResponse
     {
-        //
+        $folder->update($request->validated());
+
+        return redirect()->route('folders.show', [$folder])->with(['status' => 'Folder updated. ', ]);
     }
 
     /**
