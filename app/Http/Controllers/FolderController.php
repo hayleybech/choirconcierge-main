@@ -38,7 +38,7 @@ class FolderController extends Controller
      * @param FolderRequest $request
      * @return RedirectResponse
      */
-    public function store(FolderRequest $request)
+    public function store(FolderRequest $request): RedirectResponse
     {
         $folder = Folder::create($request->validated());
 
@@ -48,12 +48,12 @@ class FolderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Folder  $folder
-     * @return \Illuminate\Http\Response
+     * @param Folder $folder
+     * @return View
      */
-    public function show(Folder $folder)
+    public function show(Folder $folder): View
     {
-        //
+        return view('folders.show', compact('folder'));
     }
 
     /**
