@@ -84,11 +84,13 @@ class FolderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Folder  $folder
-     * @return \Illuminate\Http\Response
+     * @param Folder $folder
+     * @return RedirectResponse
      */
-    public function destroy(Folder $folder)
+    public function destroy(Folder $folder): RedirectResponse
     {
-        //
+        $folder->delete();
+
+        return redirect()->route('folders.index')->with(['status' => 'Folder deleted.']);
     }
 }
