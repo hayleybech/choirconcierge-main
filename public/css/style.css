@@ -106,13 +106,13 @@ main {
 .nav-link:active i.fad{
 	--fa-primary-color: #0061f2;
 	--fa-secondary-color: #6900c7;
-	--fa-secondary-opacity: 0.8;
+	--fa-secondary-opacity: 0.6;
 }
 .nav-link.active i.fad.fa-swap-color,
 .nav-link:active i.fad.fa-swap-color {
 	--fa-secondary-color: #0061f2;
 	--fa-primary-color: #6900c7;
-	--fa-secondary-opacity: 0.8;
+	--fa-secondary-opacity: 0.6;
 }
 
 .nav-link:hover i.fad.fa-swap-color {
