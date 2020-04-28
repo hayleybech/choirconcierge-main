@@ -55,5 +55,11 @@ class DatabaseSeeder extends Seeder
 
         $this->call('EventsSeeder');
         $this->command->info('Events table seeded!');
+
+        $this->call('FolderSeeder');
+        $this->command->info('Folder table seeded!');
+
+        $this->call('DocumentSeeder');
+        $this->command->info('Document table seeded!');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Folder
@@ -29,5 +30,10 @@ class Folder extends Model
         $folder = static::query()->create($attributes);
 
         return $folder;
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
     }
 }
