@@ -178,7 +178,7 @@ Route::prefix('folders')->group(static function (){
 
         // Create/Delete documents
         Route::post('{folder}/documents', 'DocumentController@store')->name('folders.documents.store');
-        Route::get('{folder}/documents/{document}/delete', 'DocumentController@delete')->name('folders.documents.delete');
+        Route::get('{folder}/documents/{document}/delete', 'DocumentController@destroy')->name('folders.documents.delete');
     });
 
     // Any Authorised User

@@ -36,6 +36,15 @@ class Document extends Model
         return $this->belongsTo(Folder::class);
     }
 
+    public function delete()
+    {
+        if( Storage::disk('public')->exists( $this->getPath() ) ) {
+            Storage::disk('public')->delete( $this->getPath() );
+        }
+
+        parent::delete();
+    }
+
     public function setDocumentUploadAttribute(UploadedFile $file): void
     {
         if( Storage::disk('public')->putFile(self::getDownloadsPath(), $file) )
@@ -47,7 +56,12 @@ class Document extends Model
 
     public function getDownloadUrlAttribute(): string
     {
-        return Storage::url( self::getDownloadsPath() . '/'. $this->filepath);
+        return Storage::url( $this->getPath() );
+    }
+
+    public function getPath(): string
+    {
+        return self::getDownloadsPath() . '/'. $this->filepath;
     }
 
     public static function getDownloadsPath(): string

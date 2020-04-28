@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use App\Models\Folder;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -81,11 +82,15 @@ class DocumentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Document  $document
-     * @return \Illuminate\Http\Response
+     * @param Folder $folder
+     * @param Document $document
+     * @return RedirectResponse
+     * @throws Exception
      */
-    public function destroy(Document $document)
+    public function destroy(Folder $folder, Document $document): RedirectResponse
     {
-        //
+        $document->delete();
+
+        return redirect()->route('folders.show', [$folder])->with(['status' => 'Document deleted. ', ]);
     }
 }
