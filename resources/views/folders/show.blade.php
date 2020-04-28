@@ -8,3 +8,66 @@
     @endif
 @endsection
 
+@section('page-content')
+
+    <div class="card bg-light">
+        <h4 class="card-header">Documents</h4>
+        <div class="r-table r-table--card-view-mobile">
+
+            <div class="r-table__thead">
+                <div class="r-table__row row--attachment">
+                    <div class="r-table__heading col--mark"><input type="checkbox"></div>
+                    <div class="r-table__heading col--title">Title</div>
+                    <div class="r-table__heading attachment-col--filename">File</div>
+                    <div class="r-table__heading attachment-col--actions">Actions</div>
+                    <div class="r-table__heading col--delete"></div>
+                </div>
+            </div>
+            <div class="r-table__tbody">
+                @each('folders.show_document_row', $folder->documents, 'document', 'partials.noresults')
+            </div>
+            @if( Auth::user()->isEmployee() )
+                <div class="r-table__tfoot">
+
+                    {{ Form::open( [ 'route' => ['folders.documents.store', $folder->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row--attachment row-add needs-validation', 'novalidate' ] ) }}
+                    <div class="r-table__cell col--mark">
+
+                    </div>
+                    <div class="r-table__cell col--title">
+                        {{ Form::label('title', 'Title') }}
+                        <input id="title" name="title" type="text" required class="form-control form-control-sm @error('title') is-invalid @enderror">
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please type a file name.</div>
+                    </div>
+                    <div class="r-table__cell attachment-col--filename">
+                        {{ Form::label('attachment_upload', 'File Upload') }}
+
+                        <div class="custom-file custom-file-sm">
+                            <input type="file" class="custom-file-input @error('document_upload') is-invalid @enderror" id="document_upload" name="attachment_upload" required>
+                            <div class="custom-file-label form-control-sm">Choose file</div>
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Please upload a file.</div>
+                        </div>
+
+                    </div>
+                    <div class="r-table__cell attachment-col--actions">
+                        {{ Form::label('', '&nbsp;') }}
+
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="fa fa-fw fa-plus"></i> Add
+                        </button>
+                    </div>
+                    <div class="r-table__cell col--delete">
+                    </div>
+                    {{ Form::close() }}
+
+                </div>
+            @endif
+        </div>
+
+        <div class="card-footer">
+            {{ $folder->documents->count() }} documents
+        </div>
+    </div>
+
+@endsection
