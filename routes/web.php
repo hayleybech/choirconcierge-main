@@ -174,7 +174,11 @@ Route::prefix('folders')->group(static function (){
         // Edit/Delete
         Route::get('{folder}/edit', 'FolderController@edit')->name('folders.edit');
         Route::put('{folder}', 'FolderController@update');
-        Route::get('{folder}/delete', 'FolderController@delete')->name('folders.delete');
+        Route::get('{folder}/delete', 'FolderController@destroy')->name('folders.delete');
+
+        // Create/Delete documents
+        Route::post('{folder}/documents', 'DocumentController@store')->name('folders.documents.store');
+        Route::get('{folder}/documents/{document}/delete', 'DocumentController@delete')->name('folders.documents.delete');
     });
 
     // Any Authorised User
@@ -186,6 +190,7 @@ Route::prefix('folders')->group(static function (){
         Route::get('{folder}', 'FolderController@show')->name('folders.show');
     });
 });
+
 // Notifications module
 Route::prefix('notifications')->name('notifications')->middleware(['auth', 'employee'])->group(static function (){
     // Index - BROKEN

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
+use App\Models\Folder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class DocumentController extends Controller
@@ -30,12 +33,15 @@ class DocumentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Folder $folder
+     * @param DocumentRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Folder $folder, DocumentRequest $request): RedirectResponse
     {
-        //
+        $folder->documents()->create($request->validated());
+
+        return redirect()->route('folders.show', [$folder])->with(['status' => 'Document added. ', ]);
     }
 
     /**

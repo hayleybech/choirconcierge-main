@@ -40,10 +40,10 @@
                         <div class="invalid-feedback">Please type a file name.</div>
                     </div>
                     <div class="r-table__cell attachment-col--filename">
-                        {{ Form::label('attachment_upload', 'File Upload') }}
+                        {{ Form::label('document_upload', 'File Upload') }}
 
                         <div class="custom-file custom-file-sm">
-                            <input type="file" class="custom-file-input @error('document_upload') is-invalid @enderror" id="document_upload" name="attachment_upload" required>
+                            <input type="file" class="custom-file-input @error('document_upload') is-invalid @enderror" id="document_upload" name="document_upload" required>
                             <div class="custom-file-label form-control-sm">Choose file</div>
                             <div class="valid-feedback">Looks good!</div>
                             <div class="invalid-feedback">Please upload a file.</div>
