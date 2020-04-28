@@ -7,6 +7,9 @@
         {{ ( isset($folder->title) ) ? $folder->title : 'Title Unknown' }}
         </a>
     </div>
+    <div class="r-table__cell song-col--status">
+        {{ $folder->documents->count() }} documents
+    </div>
     <div class="r-table__cell col--created">
         <div class="date">
             <div class="date__diff-for-humans">

@@ -19,6 +19,7 @@
                 <div class="r-table__row row--song">
                     <div class="r-table__heading col--mark"><input type="checkbox"></div>
                     <div class="r-table__heading col--title">Title</div>
+                    <div class="r-table__heading song-col--status">Documents</div>
                     <div class="r-table__heading col--created">Created</div>
                     <div class="r-table__heading col--delete"></div>
                 </div>
