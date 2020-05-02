@@ -26,7 +26,6 @@ class DocumentRequest extends FormRequest
     public function rules(Folder $folder)
     {
         return [
-            'title'             => 'required|max:255',
             'document_upload'   => 'required|file'
         ];
     }

@@ -27,7 +27,6 @@ class Document extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'title',
         'document_upload',
     ];
 
@@ -49,6 +48,7 @@ class Document extends Model
     {
         if( Storage::disk('public')->putFile(self::getDownloadsPath(), $file) )
         {
+            $this->title = $file->getClientOriginalName();
             $this->filepath = $file->hashName();
         }
     }

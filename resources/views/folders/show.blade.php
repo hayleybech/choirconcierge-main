@@ -17,8 +17,7 @@
             <div class="r-table__thead">
                 <div class="r-table__row row--attachment">
                     <div class="r-table__heading col--mark"><input type="checkbox"></div>
-                    <div class="r-table__heading col--title">Title</div>
-                    <div class="r-table__heading attachment-col--filename">File</div>
+                    <div class="r-table__heading col--title">Filename</div>
                     <div class="r-table__heading attachment-col--actions">Actions</div>
                     <div class="r-table__heading col--delete"></div>
                 </div>
@@ -33,13 +32,8 @@
                     <div class="r-table__cell col--mark">
 
                     </div>
+
                     <div class="r-table__cell col--title">
-                        {{ Form::label('title', 'Title') }}
-                        <input id="title" name="title" type="text" required class="form-control form-control-sm @error('title') is-invalid @enderror">
-                        <div class="valid-feedback">Looks good!</div>
-                        <div class="invalid-feedback">Please type a file name.</div>
-                    </div>
-                    <div class="r-table__cell attachment-col--filename">
                         {{ Form::label('document_upload', 'File Upload') }}
 
                         <div class="custom-file custom-file-sm">
@@ -48,8 +42,8 @@
                             <div class="valid-feedback">Looks good!</div>
                             <div class="invalid-feedback">Please upload a file.</div>
                         </div>
-
                     </div>
+
                     <div class="r-table__cell attachment-col--actions">
                         {{ Form::label('', '&nbsp;') }}
 
