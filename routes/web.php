@@ -166,7 +166,7 @@ Route::prefix('events')->group(static function (){
 // Documents module
 Route::prefix('folders')->group(static function (){
 
-    Route::middleware('employee')->group(static function() {
+    Route::middleware(['auth', 'employee'])->group(static function() {
         // Create
         Route::get('create', 'FolderController@create')->name('folders.create');
         Route::post('/', 'FolderController@store');
