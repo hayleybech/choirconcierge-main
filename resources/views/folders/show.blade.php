@@ -18,7 +18,7 @@
                 <div class="r-table__row row--attachment">
                     <div class="r-table__heading col--mark"><input type="checkbox"></div>
                     <div class="r-table__heading col--title">Filename</div>
-                    <div class="r-table__heading attachment-col--actions">Actions</div>
+                    <div class="r-table__heading col--created">Created</div>
                     <div class="r-table__heading col--delete"></div>
                 </div>
             </div>

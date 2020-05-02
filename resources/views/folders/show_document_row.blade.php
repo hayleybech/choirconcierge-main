@@ -7,8 +7,15 @@
             {{ ( isset($document->title) ) ? $document->title : 'Title Unknown' }}
         </div>
     </div>
-    <div class="r-table__cell attachment-col--filename">
-
+    <div class="r-table__cell col--created">
+        <div class="date">
+            <div class="date__diff-for-humans">
+                {{ $document->created_at->diffForHumans() }}
+            </div>
+            <div class="date__regular">
+                {{ $document->created_at->format('M d, H:i') }}
+            </div>
+        </div>
     </div>
     <div class="r-table__cell attachment-col--actions">
         <a href="{{ $document->download_url }}" class="btn btn-primary btn-sm" download="{{ $document->title }}"><i class="fa fa-fw fa-download"></i> Download</a>
@@ -17,4 +24,3 @@
         <a href="{{route( 'folders.documents.delete', ['folder' => $document->folder, 'document' => $document] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-times"></i></a>
     </div>
 </div>
-
