@@ -42,7 +42,7 @@ class DocumentController extends Controller
     {
         $folder->documents()->create($request->validated());
 
-        return redirect()->route('folders.show', [$folder])->with(['status' => 'Document added. ', ]);
+        return redirect()->back()->with(['status' => 'Document added. ', ]);
     }
 
     /**
@@ -91,6 +91,6 @@ class DocumentController extends Controller
     {
         $document->delete();
 
-        return redirect()->route('folders.show', [$folder])->with(['status' => 'Document deleted. ', ]);
+        return redirect()->back()->with(['status' => 'Document deleted. ', ]);
     }
 }

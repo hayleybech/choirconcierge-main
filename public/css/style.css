@@ -280,7 +280,7 @@ main {
 	grid-area: delete;
 }
 
-.r-table__tfoot .r-table__cell {
+.row-add .r-table__cell {
 	flex-flow: column;
 	align-items: flex-start;
 	justify-content: flex-start;
@@ -625,6 +625,99 @@ main {
 	}
 }
 
+/*********************************/
+/** FOLDERS LIST **/
+.row--folder {
+	grid-template-columns: 1% 1.5fr 1fr 10% 10% 1em;
+	grid-template-rows: 1fr;
+	grid-template-areas:
+			"mark title status created actions delete"
+	;
+}
+.folder-col--status {
+	grid-area: status;
+}
+.folder-col--actions {
+	grid-area: actions;
+}
+
+.parent-row--folder {
+	font-size: 16px;
+}
+.sub-row--document:nth-child(even) {
+	background-color: transparent;
+}
+.sub-row--document .col--title {
+	padding-left: 25px;
+}
+.sub-row--document .col--title .item-title,
+.sub-row--document .col--title label,
+.sub-row--document .folder-col--status,
+.sub-row--document .col--created {
+	font-size: 1em;
+}
+.sub-row--document .date {
+	line-height: 1.3;
+}
+
+/* Folder Accordion / Collapse */
+/* Add icons to accordion */
+.accordion .collapse-toggle {
+	display: block;
+	text-align: left;
+}
+.accordion .collapse-toggle:before {
+	width: 1.2em;
+	display: inline-block;
+	text-align: right;
+	margin-right: 10px;
+	font-family: "Font Awesome 5 Pro";
+	font-weight: 900;
+	content: "\F07C"; /* fa-folder-open */
+}
+
+.accordion .collapse-toggle.collapsed:before {
+	content: "\F07B"; /* fa-folder */
+}
+
+.form-control-sm {
+	height: calc(1.875rem + 1px);
+}
+
+.row--folder.row-add {
+	padding-top: 20px;
+	padding-bottom: 25px;
+	background-color: #EEF;
+	grid-template-areas:
+		"mark title title title actions delete"
+	;
+}
+
+/* Song Table - Tablet */
+@media screen and (max-width:980px) {
+
+}
+/* Song Table - Mobile */
+@media screen and (max-width:767px) {
+
+	.r-table--card-view-mobile .row--song {
+		grid-template-columns: 0 55% 1fr 1fr 1em;
+		grid-template-rows: auto auto;
+		grid-template-areas:
+				"mark title pitch status delete"
+				"mark category created created delete"
+	;
+	}
+
+	.song-col--status,
+	.song-col--pitch,
+	.row--song .col--created {
+		justify-content: flex-end;
+	}
+}
+
+/**************************************/
+
 
 
 select.form-control-sm.force-xs {
@@ -686,28 +779,6 @@ i.fa.fa-external-link {
 	top: -5px;
 	right: 0;
 }
-
-/* Accordion / Collapse */
-/* Add icons to accordion */
-.accordion a.btn {
-	display: block;
-	text-align: left;
-}
-.accordion a.btn:after {
-	width: 32px;
-	display: inline-block;
-	text-align: right;
-	margin-right: 10px;
-	font: normal normal normal 14px/1 FontAwesome;
-	content: "\f077";
-	float: right;
-}
-
-.accordion a.btn.collapsed:after {
-	content: "\f078";
-}
-
-
 
 /* LEARNING MODE */
 .learning-window {

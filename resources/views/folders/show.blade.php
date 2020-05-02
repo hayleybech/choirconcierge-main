@@ -15,10 +15,11 @@
         <div class="r-table r-table--card-view-mobile">
 
             <div class="r-table__thead">
-                <div class="r-table__row row--attachment">
+                <div class="r-table__row row--folder">
                     <div class="r-table__heading col--mark"><input type="checkbox"></div>
                     <div class="r-table__heading col--title">Filename</div>
                     <div class="r-table__heading col--created">Created</div>
+                    <div class="r-table__heading folder-col--actions">Actions</div>
                     <div class="r-table__heading col--delete"></div>
                 </div>
             </div>
@@ -28,7 +29,7 @@
             @if( Auth::user()->isEmployee() )
                 <div class="r-table__tfoot">
 
-                    {{ Form::open( [ 'route' => ['folders.documents.store', $folder->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row--attachment row-add needs-validation', 'novalidate' ] ) }}
+                    {{ Form::open( [ 'route' => ['folders.documents.store', $folder->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row--folder sub-row--document row-add needs-validation', 'novalidate' ] ) }}
                     <div class="r-table__cell col--mark">
 
                     </div>

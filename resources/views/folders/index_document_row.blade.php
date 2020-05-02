@@ -4,8 +4,11 @@
     </div>
     <div class="r-table__cell col--title">
         <div class="item-title">
-            {{ ( isset($document->title) ) ? $document->title : 'Title Unknown' }}
+            <i class="fa fa-fw {{ $document->getFileIcon() }}"></i> {{ ( isset($document->title) ) ? $document->title : 'Title Unknown' }}
         </div>
+    </div>
+    <div class="r-table__cell folder-col--status">
+        {{-- $document->filepath --}}
     </div>
     <div class="r-table__cell col--created">
         <div class="date">
@@ -18,7 +21,7 @@
         </div>
     </div>
     <div class="r-table__cell folder-col--actions">
-        <a href="{{ $document->download_url }}" class="btn btn-primary btn-sm" download="{{ $document->title }}"><i class="fa fa-fw fa-download"></i> Download</a>
+        <a href="{{ $document->download_url }}" download="{{ $document->title }}" class="btn btn-primary btn-sm force-xs btn-block"><i class="fa fa-fw fa-download"></i> Download</a>
     </div>
     <div class="r-table__cell col--delete">
         <a href="{{route( 'folders.documents.delete', ['folder' => $document->folder, 'document' => $document] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-times"></i></a>

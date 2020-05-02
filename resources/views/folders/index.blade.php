@@ -16,15 +16,16 @@
         <h3 class="card-header h4">Folder List</h3>
         <div class="r-table r-table--card-view-mobile">
             <div class="r-table__thead">
-                <div class="r-table__row row--song">
+                <div class="r-table__row row--folder">
                     <div class="r-table__heading col--mark"><input type="checkbox"></div>
                     <div class="r-table__heading col--title">Title</div>
-                    <div class="r-table__heading song-col--status">Documents</div>
+                    <div class="r-table__heading folder-col--status">Documents</div>
                     <div class="r-table__heading col--created">Created</div>
+                    <div class="r-table__heading folder-col--actions">Actions</div>
                     <div class="r-table__heading col--delete"></div>
                 </div>
             </div>
-            <div class="r-table__tbody">
+            <div id="folders-accordion" class="r-table__tbody accordion">
                 @each('folders.index_row', $folders, 'folder', 'partials.noresults')
             </div>
         </div>
