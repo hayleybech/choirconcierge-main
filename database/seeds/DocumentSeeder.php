@@ -9,7 +9,7 @@ class DocumentSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->deleteFiles();
+        //$this->deleteFiles();
 
         DB::table('documents')->delete();
 
