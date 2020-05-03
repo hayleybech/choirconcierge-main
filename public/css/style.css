@@ -693,9 +693,19 @@ main {
 	;
 }
 
-/* Song Table - Tablet */
+/* Folders Table - Tablet */
 @media screen and (max-width:980px) {
+	.r-table--card-view-mobile .row--folder {
+		grid-template-columns: 1% 50% 1fr 1fr 1em;
+		grid-template-rows: 1fr;
+		grid-template-areas:
+			"mark title status actions delete"
+		;
+	}
 
+	.row--folder .col--created {
+		display: none;
+	}
 }
 /* Song Table - Mobile */
 @media screen and (max-width:767px) {
