@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="r-table__tbody">
-                @each('folders.show_document_row', $folder->documents, 'document', 'partials.noresults')
+                @each('folders.folder_document_row', $folder->documents, 'document', 'partials.noresults')
             </div>
             @if( Auth::user()->isEmployee() )
                 <div class="r-table__tfoot">

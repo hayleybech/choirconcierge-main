@@ -32,7 +32,7 @@
 </div>
 
 <div id="folder-{{ $folder->id }}" class="folder-documents-list collapse" data-parent="#folders-accordion">
-    @each('folders.show_document_row', $folder->documents, 'document', 'partials.noresults')
+    @each('folders.folder_document_row', $folder->documents, 'document', 'partials.noresults')
 
     @if( Auth::user()->isEmployee() )
 

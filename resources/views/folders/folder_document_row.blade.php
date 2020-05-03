@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="r-table__cell folder-col--actions">
-        <a href="{{ $document->download_url }}" class="btn btn-primary btn-sm" download="{{ $document->title }}"><i class="fa fa-fw fa-download"></i> Download</a>
+        <a href="{{ $document->download_url }}" class="btn btn-primary btn-sm btn-block" download="{{ $document->title }}"><i class="fa fa-fw fa-download"></i> Download</a>
     </div>
     <div class="r-table__cell col--delete">
         <a href="{{route( 'folders.documents.delete', ['folder' => $document->folder, 'document' => $document] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-times"></i></a>
