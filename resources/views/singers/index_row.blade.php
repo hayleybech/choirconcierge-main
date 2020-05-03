@@ -64,7 +64,7 @@
 
 			@if ( Auth::user()->hasRole('Membership Team') )
 			<div class="dropdown">
-				<button class="btn btn-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-secondary btn-sm force-xs btn-block dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					Move to
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">

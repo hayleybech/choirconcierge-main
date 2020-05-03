@@ -48,7 +48,7 @@
                     <div class="r-table__cell attachment-col--actions">
                         {{ Form::label('', '&nbsp;') }}
 
-                        <button type="submit" class="btn btn-success btn-sm">
+                        <button type="submit" class="btn btn-success btn-sm btn-block">
                             <i class="fa fa-fw fa-plus"></i> Add
                         </button>
                     </div>

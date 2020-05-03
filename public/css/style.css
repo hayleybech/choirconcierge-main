@@ -441,6 +441,9 @@ main {
 .progress--link {
 	font-size: 12px;
 }
+.singer-col--actions .dropdown {
+	width: 100%;
+}
 
 /*********************************/
 /** SONGS LIST **/

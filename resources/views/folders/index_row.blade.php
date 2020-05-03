@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="r-table__cell folder-col--actions">
-        <a href="{{ route('folders.show', ['folder' => $folder]) }}" class="btn btn-secondary btn-sm">
+        <a href="{{ route('folders.show', ['folder' => $folder]) }}" class="btn btn-secondary btn-sm btn-block">
             <i class="fa fa-fw fa-eye"></i> View
         </a>
     </div>
@@ -54,7 +54,7 @@
         <div class="r-table__cell folder-col--actions">
             {{ Form::label('', '&nbsp;') }}
 
-            <button type="submit" class="btn btn-success btn-sm">
+            <button type="submit" class="btn btn-success btn-sm btn-block">
                 <i class="fa fa-fw fa-plus"></i> Add
             </button>
         </div>
