@@ -4,7 +4,7 @@
     </div>
     <div class="r-table__cell col--title">
         <div class="item-title">
-            {{ ( isset($document->title) ) ? $document->title : 'Title Unknown' }}
+            <i class="fa fa-fw {{ $document->getFileIcon() }}"></i> {{ ( isset($document->title) ) ? $document->title : 'Title Unknown' }}
         </div>
     </div>
     <div class="r-table__cell col--created">
