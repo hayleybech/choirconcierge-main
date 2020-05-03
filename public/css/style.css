@@ -742,12 +742,12 @@ main {
 	--fa-secondary-color: var(--danger);
 }
 .fad.fa-file-image {
-	--fa-primary-color: var(--pink);
-	--fa-secondary-color: var(--pink);
+	--fa-primary-color: var(--purple);
+	--fa-secondary-color: var(--purple);
 }
 .fad.fa-file-video {
-	--fa-primary-color: #6900c7;
-	--fa-secondary-color: #6900c7;
+	--fa-primary-color: var(--purple);
+	--fa-secondary-color: var(--purple);
 }
 .fad.fa-file-audio {
 	--fa-primary-color: #0061f2;
