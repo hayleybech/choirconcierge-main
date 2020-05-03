@@ -647,9 +647,6 @@ main {
 .sub-row--document:nth-child(even) {
 	background-color: transparent;
 }
-.sub-row--document .col--title {
-	padding-left: 25px;
-}
 .sub-row--document .col--title .item-title,
 .sub-row--document .col--title label,
 .sub-row--document .folder-col--status,
