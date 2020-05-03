@@ -5,7 +5,9 @@
     <div class="r-table__cell col--title">
         <div class="item-title">
             <i class="far fa-fw fa-level-up-alt fa-rotate-90"></i>
-            <i class="fad fa-fw {{ $document->getFileIcon() }} fa-swap-opacity"></i> {{ ( isset($document->title) ) ? $document->title : 'Title Unknown' }}
+            <a href="{{ $document->download_url }}" download="{{ $document->title }}">
+                <i class="fad fa-fw {{ $document->getFileIcon() }} fa-swap-opacity"></i> {{ ( isset($document->title) ) ? $document->title : 'Title Unknown' }}
+            </a>
         </div>
     </div>
     <div class="r-table__cell col--created">
