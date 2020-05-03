@@ -642,7 +642,7 @@ main {
 }
 
 .parent-row--folder {
-	font-size: 16px;
+	font-size: 14px;
 }
 .sub-row--document:nth-child(even) {
 	background-color: transparent;
