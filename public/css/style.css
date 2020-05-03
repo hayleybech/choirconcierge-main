@@ -704,22 +704,16 @@ main {
 		display: none;
 	}
 }
-/* Song Table - Mobile */
+/* Folders Table - Mobile */
 @media screen and (max-width:767px) {
 
-	.r-table--card-view-mobile .row--song {
-		grid-template-columns: 0 55% 1fr 1fr 1em;
+	.r-table--card-view-mobile .row--folder {
+		grid-template-columns: 0 55% 6.5em 1em;
 		grid-template-rows: auto auto;
 		grid-template-areas:
-				"mark title pitch status delete"
-				"mark category created created delete"
-	;
-	}
-
-	.song-col--status,
-	.song-col--pitch,
-	.row--song .col--created {
-		justify-content: flex-end;
+			"mark title actions delete"
+			"mark status created delete"
+		;
 	}
 }
 
