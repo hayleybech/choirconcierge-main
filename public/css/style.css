@@ -106,8 +106,15 @@ main {
 .nav-link:active i.fad{
 	--fa-primary-color: #0061f2;
 	--fa-secondary-color: #6900c7;
-	--fa-secondary-opacity: 0.8;
+	--fa-secondary-opacity: 0.6;
 }
+.nav-link.active i.fad.fa-swap-color,
+.nav-link:active i.fad.fa-swap-color {
+	--fa-secondary-color: #0061f2;
+	--fa-primary-color: #6900c7;
+	--fa-secondary-opacity: 0.6;
+}
+
 .nav-link:hover i.fad.fa-swap-color {
 	--fa-primary-color: #6900c7;
 	--fa-secondary-color: #0061f2;
@@ -273,7 +280,7 @@ main {
 	grid-area: delete;
 }
 
-.r-table__tfoot .r-table__cell {
+.row-add .r-table__cell {
 	flex-flow: column;
 	align-items: flex-start;
 	justify-content: flex-start;
@@ -618,6 +625,139 @@ main {
 	}
 }
 
+/*********************************/
+/** FOLDERS LIST **/
+.row--folder {
+	grid-template-columns: 1% 1.5fr 1fr 10% 10% 1em;
+	grid-template-rows: 1fr;
+	grid-template-areas:
+			"mark title status created actions delete"
+	;
+}
+.folder-col--status {
+	grid-area: status;
+}
+.folder-col--actions {
+	grid-area: actions;
+}
+
+.parent-row--folder {
+	font-size: 14px;
+}
+.sub-row--document:nth-child(even) {
+	background-color: transparent;
+}
+.sub-row--document .col--title .item-title,
+.sub-row--document .col--title label,
+.sub-row--document .folder-col--status,
+.sub-row--document .col--created {
+	font-size: 1em;
+}
+.sub-row--document .date {
+	line-height: 1.3;
+}
+
+/* Folder Accordion / Collapse */
+/* Add icons to accordion */
+.accordion .collapse-toggle {
+	display: block;
+	text-align: left;
+}
+.accordion .collapse-toggle:before {
+	width: 1.2em;
+	display: inline-block;
+	text-align: right;
+	margin-right: 10px;
+	font-family: "Font Awesome 5 Pro";
+	font-weight: 900;
+	content: "\F07C"; /* fa-folder-open */
+}
+
+.accordion .collapse-toggle.collapsed:before {
+	content: "\F07B"; /* fa-folder */
+}
+
+.form-control-sm {
+	height: calc(1.875rem + 1px);
+}
+
+.row--folder.row-add {
+	padding-top: 20px;
+	padding-bottom: 25px;
+	background-color: #EEF;
+	grid-template-areas:
+		"mark title title title actions delete"
+	;
+}
+
+/* Folders Table - Tablet */
+@media screen and (max-width:980px) {
+	.r-table--card-view-mobile .row--folder {
+		grid-template-columns: 1% 50% 1fr 1fr 1em;
+		grid-template-rows: 1fr;
+		grid-template-areas:
+			"mark title status actions delete"
+		;
+	}
+
+	.row--folder .col--created {
+		display: none;
+	}
+}
+/* Folders Table - Mobile */
+@media screen and (max-width:767px) {
+
+	.r-table--card-view-mobile .row--folder {
+		grid-template-columns: 0 55% 6.5em 1em;
+		grid-template-rows: auto auto;
+		grid-template-areas:
+			"mark title actions delete"
+			"mark status created delete"
+		;
+	}
+}
+
+/** FILE EXTENSION ICONS **/
+.fad.fa-file-word {
+	--fa-primary-color: var(--primary);
+	--fa-secondary-color: var(--primary);
+}
+.fad.fa-file-excel,
+.fad.fa-file-csv {
+	--fa-primary-color: var(--success);
+	--fa-secondary-color: var(--success);
+}
+.fad.fa-file-powerpoint {
+	--fa-primary-color: var(--orange);
+	--fa-secondary-color: var(--orange);
+}
+.fad.fa-file-pdf {
+	--fa-primary-color: var(--danger);
+	--fa-secondary-color: var(--danger);
+}
+.fad.fa-file-image {
+	--fa-primary-color: var(--purple);
+	--fa-secondary-color: var(--purple);
+}
+.fad.fa-file-video {
+	--fa-primary-color: var(--purple);
+	--fa-secondary-color: var(--purple);
+}
+.fad.fa-file-audio {
+	--fa-primary-color: #0061f2;
+	--fa-secondary-color: #0061f2;
+}
+.fad.fa-file-alt {
+	--fa-primary-color: var(--gray);
+	--fa-secondary-color: var(--gray);
+}
+.fad.fa-file {
+	--fa-primary-color: var(--gray-dark);
+	--fa-secondary-color: var(--gray-dark);
+}
+
+/**************************************/
+
 
 
 select.form-control-sm.force-xs {
@@ -679,28 +819,6 @@ i.fa.fa-external-link {
 	top: -5px;
 	right: 0;
 }
-
-/* Accordion / Collapse */
-/* Add icons to accordion */
-.accordion a.btn {
-	display: block;
-	text-align: left;
-}
-.accordion a.btn:after {
-	width: 32px;
-	display: inline-block;
-	text-align: right;
-	margin-right: 10px;
-	font: normal normal normal 14px/1 FontAwesome;
-	content: "\f077";
-	float: right;
-}
-
-.accordion a.btn.collapsed:after {
-	content: "\f078";
-}
-
-
 
 /* LEARNING MODE */
 .learning-window {
