@@ -191,6 +191,11 @@ Route::prefix('folders')->group(static function (){
     });
 });
 
+// Risers module
+Route::prefix('risers')->group(static function (){
+    Route::view('/', 'risers.index');
+});
+
 // Notifications module
 Route::prefix('notifications')->name('notifications')->middleware(['auth', 'employee'])->group(static function (){
     // Index - BROKEN
