@@ -4,43 +4,42 @@ import {XY} from './ArcMath';
 export class Arc
 {
     // Polar data
-    readonly #centre: XY;
-    readonly #start_angle: number;
-    readonly #end_angle: number;
-    readonly #radius: number;
+    private readonly centre: XY;
+    private readonly start_angle: number;
+    private readonly end_angle: number;
+    private readonly radius: number;
 
     // Cartesian data
-    readonly #cartesian: CartesianArc;
+    private readonly cartesian: CartesianArc;
 
     constructor(centre: XY, radius: number, start_angle: number, end_angle: number)
     {
-        this.#centre = centre;
-        this.#radius = radius;
-        this.#start_angle = start_angle;
-        this.#end_angle = end_angle;
+        this.centre = centre;
+        this.radius = radius;
+        this.start_angle = start_angle;
+        this.end_angle = end_angle;
 
-        this.#cartesian = this.toCartesian();
+        this.cartesian = this.toCartesian();
     }
 
     toCartesian(): CartesianArc
     {
         return {
-            start: ArcMath.polarToCartesian(this.#centre, this.#radius, this.#end_angle),
-            end: ArcMath.polarToCartesian(this.#centre, this.#radius, this.#start_angle),
-            radius: this.#radius,
-            large_arc_flag: this.#end_angle - this.#start_angle <= 180 ? "0" : "1"
+            start: ArcMath.polarToCartesian(this.centre, this.radius, this.end_angle),
+            end: ArcMath.polarToCartesian(this.centre, this.radius, this.start_angle),
+            radius: this.radius,
+            large_arc_flag: this.end_angle - this.start_angle <= 180 ? "0" : "1"
         }
-
     }
 
     getCartesian()
     {
-        return this.#cartesian;
+        return this.cartesian;
     }
 
     describe(): string
     {
-        return ArcMath.describeArcCartesian( this.#cartesian.start, this.#cartesian.radius, this.#cartesian.large_arc_flag, this.#cartesian.end);
+        return ArcMath.describeArcCartesian( this.cartesian.start, this.cartesian.radius, this.cartesian.large_arc_flag, this.cartesian.end);
     }
 
     toString(): string

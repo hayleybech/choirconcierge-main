@@ -908,3 +908,16 @@ i.fa.fa-external-link {
 	width: 100% !important;
 	height: 100% !important;
 }
+
+
+/****************************************************/
+/** RISERS
+ */
+.risers_frame {
+	fill: none;
+	stroke: #333;
+	stroke-width: 1;
+}
+.riser-spot {
+	fill: #ccc;
+}

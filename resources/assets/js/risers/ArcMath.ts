@@ -24,3 +24,8 @@ export interface XY {
     x: number;
     y: number;
 }
+
+export interface Polar {
+    r: number; // radius in px
+    t: number; // angle in degrees.
+}

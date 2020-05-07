@@ -6,7 +6,7 @@
     "noImplicitReturns": true,
     "strictNullChecks": true,
     "strict": true,
-    "sourceMap": false
+    "sourceMap": true
   },
   "include": [
     "resources/assets/js/**/*"
