@@ -921,3 +921,10 @@ i.fa.fa-external-link {
 .riser-spot {
 	fill: #ccc;
 }
+
+.riser-face {
+	text-align: center;
+}
+.riser-face img {
+	border-radius: 50%;
+}

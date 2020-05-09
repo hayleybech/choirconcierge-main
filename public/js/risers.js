@@ -214,7 +214,7 @@ class Risers {
         }
     }
 }
-exports.Risers = Risers;
+exports.RiserFrame = Risers;
 _snap = new WeakMap(), _canvas_height = new WeakMap(), _canvas_width = new WeakMap(), _origin = new WeakMap(), _origin_modifier = new WeakMap(), _total_width_deg = new WeakMap(), _num_rows = new WeakMap(), _num_cols = new WeakMap(), _risers_start_radius = new WeakMap(), _risers_end_radius = new WeakMap(), _risers_start_angle = new WeakMap(), _row_height_radius = new WeakMap(), _col_width_deg = new WeakMap(), _style = new WeakMap(), _edges = new WeakMap();
 
 

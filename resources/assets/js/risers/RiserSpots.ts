@@ -11,10 +11,11 @@ export class RiserSpots {
     private readonly spot_radius: number;
     private readonly total_width_deg: number;
     private readonly num_rows: number;
+    private readonly num_singers: number;
     private readonly first_row_odd: boolean;
     private readonly gap_angle: number;
 
-    constructor(snap: Snap.Paper, origin: XY, riser_start_radius: number, row_height_radius: number, total_width_deg: number, num_rows: number, first_row_odd: boolean) {
+    constructor(snap: Snap.Paper, origin: XY, riser_start_radius: number, row_height_radius: number, total_width_deg: number, num_rows: number, first_row_odd: boolean, singers: number) {
         this.snap = snap;
         this.origin = origin;
         this.start_radius = riser_start_radius + (row_height_radius / 2);
@@ -23,6 +24,7 @@ export class RiserSpots {
         this.num_rows = num_rows;
         this.spot_radius = (0.8 * this.row_height_radius) / 2;
         this.first_row_odd = first_row_odd;
+        this.num_singers = singers;
         this.gap_angle = this.calcGapAngle();
     }
 
@@ -43,10 +45,12 @@ export class RiserSpots {
     /**
      * Calculate the number of spots needed for this row.
      */
-    calcNumSpots(row: number): 9|10
+    calcNumSpots(row: number): number
     {
+        const max_spots_per_row = this.num_singers / 4;
+
         // Should the first row have an odd number of spots?
-        return ( this.rowNeedsOddSpots(row) ) ? 9 : 10;
+        return ( this.rowNeedsOddSpots(row) ) ? (max_spots_per_row - 1) : max_spots_per_row;
     }
 
     /**
@@ -120,7 +124,7 @@ export class RiserSpots {
      */
     calcGapAngle(): number
     {
-        const max_spots_per_row = 10;
+        const max_spots_per_row = this.num_singers / this.num_rows;
         return this.total_width_deg / max_spots_per_row;
     }
 }

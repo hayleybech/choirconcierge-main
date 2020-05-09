@@ -27,6 +27,8 @@ require('select2');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('riser-face', require('./components/RiserFace.vue').default);
+Vue.component('riser-stack', require('./components/RiserStack.vue').default);
 
 const app = new Vue({
     el: '#app'
@@ -37,8 +39,16 @@ const helloWorld = require('./test').test();
 console.log(helloWorld);
 
 window.onload = function() {
-    const Risers = require('./risers/Risers').Risers;
-    let r = new Risers('#risers', 500, 1000);
-    r.draw();
+    //const Risers = require('./risers/Risers').Risers;
+    //let r = new Risers();
+
+    jQuery(function($){
+        $('#riser_settings_submit').click(function(e){
+            //console.log('Re-creating the risers');
+            //r.update();
+
+            return false;
+        });
+    });
 
 };
