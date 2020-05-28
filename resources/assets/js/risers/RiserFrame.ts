@@ -8,7 +8,6 @@ import {ArcMath, XY} from './ArcMath';
 import {RiserSpots} from "./RiserSpots";
 
 export class RiserFrame {
-    private readonly selector: string;
     private readonly snap: Snap.Paper;
 
     // The full canvas size - the risers themselves only use part of the canvas
@@ -39,7 +38,6 @@ export class RiserFrame {
     private readonly edges: Line[];
 
     constructor(selector: string, height: number, width: number, rows: number, cols: number, singers: number) {
-        this.selector = selector;
         this.snap = Snap(selector);
 
         this.canvas_height = Number(height);

@@ -1,5 +1,6 @@
 import {ArcMath, XY} from './ArcMath';
 import * as SNAPSVG_TYPE from "snapsvg";
+
 declare var Snap: typeof SNAPSVG_TYPE;
 
 export class RiserSpots {
@@ -114,9 +115,36 @@ export class RiserSpots {
      */
     drawSpot(radius: number, angle: number): void
     {
+        // draw circle
+        // we need a real html element at this position,
+        // but we need to draw the circle first to get its screen position
         const pos = ArcMath.polarToCartesian(this.origin, radius, angle);
         const circle = this.snap.circle(pos.x, pos.y, this.spot_radius);
-        circle.addClass('riser-spot');
+
+        // get circle box relative to viewport
+        /*const circle_bcr = circle.node.getBoundingClientRect();
+
+        // get parent box relative to viewport
+        // @todo store riser spots selector in a property
+        let parent = document.getElementById('risers-spots');
+        const parent_bcr = parent?.getBoundingClientRect();
+
+        // calc circle pos relative to parent
+        const circle_rect = {
+            height: circle_bcr.height,
+            width: circle_bcr.width,
+            x: circle_bcr?.x - parent_bcr?.x,
+            y: circle_bcr?.y - parent_bcr?.y
+        };
+
+        // create the html element
+        let tag = document.createElement('div');
+        tag.style.height = circle_rect.height + 'px';
+        tag.style.width = circle_rect.width + 'px';
+        tag.style.left = circle_rect.x + 'px';
+        tag.style.top = circle_rect.y + 'px';
+        tag.classList.add('riser-spot-red');
+        parent?.appendChild(tag);*/
     }
 
     /**

@@ -29,6 +29,10 @@ require('select2');
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('riser-face', require('./components/RiserFace.vue').default);
 Vue.component('riser-stack', require('./components/RiserStack.vue').default);
+Vue.component('holding-area', require('./components/HoldingArea.vue').default);
+Vue.component('ddtest', require('./components/DDTest.vue').default);
+Vue.component('riser-frame', require('./components/RiserFrame').default);
+Vue.component('riser-spot', require('./components/RiserSpot').default);
 
 const app = new Vue({
     el: '#app'

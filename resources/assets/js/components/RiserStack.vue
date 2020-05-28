@@ -36,14 +36,21 @@
 
         <riser-face v-bind:email="email" v-bind:singer_name="singer"></riser-face>
 
+        <riser-frame :height="500" :width="1000" :rows="4" :cols="4" :singers="20"></riser-frame>
+
     </div>
 </template>
 
 <script>
+    import {Drag, Drop} from "vue-easy-dnd";
     import {RiserFrame} from "../risers/RiserFrame";
 
     export default {
         name: "RiserStack",
+        components: {
+            Drag,
+            Drop
+        },
         data() {
             return {
                 rows: 4,
@@ -51,7 +58,7 @@
                 singers: 20,
                 email: 'test@test.com',
                 singer: 'John Smith',
-                r: new RiserFrame('#risers', 500, 1000, 4, 4, 20)
+                r: new RiserFrame('#risers-frame', 500, 1000, 4, 4, 20)
             };
         },
         mounted() {
@@ -63,7 +70,7 @@
         methods: {
             redraw() {
                 this.r.destroy();
-                this.r = new RiserFrame('#risers', 500, 1000, this.rows, this.cols, this.singers);
+                this.r = new RiserFrame('#risers-frame', 500, 1000, this.rows, this.cols, this.singers);
                 this.r.draw();
             }
         }

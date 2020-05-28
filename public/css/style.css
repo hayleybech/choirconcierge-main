@@ -913,6 +913,16 @@ i.fa.fa-external-link {
 /****************************************************/
 /** RISERS
  */
+#risers {
+	position: relative;
+}
+#risers-spots {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
 .risers_frame {
 	fill: none;
 	stroke: #333;
@@ -921,10 +931,21 @@ i.fa.fa-external-link {
 .riser-spot {
 	fill: #ccc;
 }
+.riser-spot-red {
+	fill: #ff0000;
+	background-color: red;
+	border-radius: 50%;
+	position: absolute;
+}
 
 .riser-face {
 	text-align: center;
 }
 .riser-face img {
 	border-radius: 50%;
+}
+
+.drop-in circle {
+	stroke: red;
+	stroke-width: 2px;
 }
