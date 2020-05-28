@@ -26,11 +26,9 @@ require('select2');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('riser-face', require('./components/RiserFace.vue').default);
 Vue.component('riser-stack', require('./components/RiserStack.vue').default);
 Vue.component('holding-area', require('./components/HoldingArea.vue').default);
-Vue.component('ddtest', require('./components/DDTest.vue').default);
 Vue.component('riser-frame', require('./components/RiserFrame').default);
 Vue.component('riser-spot', require('./components/RiserSpot').default);
 
@@ -41,18 +39,3 @@ const app = new Vue({
 
 const helloWorld = require('./test').test();
 console.log(helloWorld);
-
-window.onload = function() {
-    //const Risers = require('./risers/Risers').Risers;
-    //let r = new Risers();
-
-    jQuery(function($){
-        $('#riser_settings_submit').click(function(e){
-            //console.log('Re-creating the risers');
-            //r.update();
-
-            return false;
-        });
-    });
-
-};

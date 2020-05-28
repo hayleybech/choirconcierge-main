@@ -3,14 +3,6 @@
 
         <form class="riser-settings form-inline">
             <div class="form-group">
-                <label for="riser_email">Email</label>
-                <input id="riser_email" name="email" type="text" class="form-control mx-3" v-model:value="email">
-            </div>
-            <div class="form-group">
-                <label for="riser_name">Singer Name</label>
-                <input id="riser_name" name="singer_name" type="text" class="form-control mx-3" v-model:value="singer">
-            </div>
-            <div class="form-group">
                 <label for="riser_rows">Rows</label>
                 <input id="riser_rows" name="rows" type="number" min="1" max="8" class="form-control mx-3" v-model:value="rows">
             </div>
@@ -30,12 +22,6 @@
             </div>
         </form>
 
-        <p>
-            Email: <span>{{email}}</span>
-        </p>
-
-        <riser-face v-bind:email="email" v-bind:singer_name="singer"></riser-face>
-
         <riser-frame :height="500" :width="1000" :rows="4" :cols="4" :singers="20"></riser-frame>
 
     </div>
@@ -43,7 +29,6 @@
 
 <script>
     import {Drag, Drop} from "vue-easy-dnd";
-    import {RiserFrame} from "../risers/RiserFrame";
 
     export default {
         name: "RiserStack",
@@ -56,24 +41,8 @@
                 rows: 4,
                 cols: 4,
                 singers: 20,
-                email: 'test@test.com',
-                singer: 'John Smith',
-                r: new RiserFrame('#risers-frame', 500, 1000, 4, 4, 20)
             };
         },
-        mounted() {
-            this.redraw();
-        },
-        updated() {
-            this.redraw();
-        },
-        methods: {
-            redraw() {
-                this.r.destroy();
-                this.r = new RiserFrame('#risers-frame', 500, 1000, this.rows, this.cols, this.singers);
-                this.r.draw();
-            }
-        }
     }
 </script>
 
