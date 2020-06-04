@@ -31,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @property SingerCategory $category
  * @property User $user
  * @property VoicePart $voice_part
+ * @property RiserStack[] $riser_stacks
  *
  * Dynamic
  * @property int $age
@@ -136,6 +137,12 @@ class Singer extends Model
     public function voice_part(): BelongsTo
     {
         return $this->belongsTo(VoicePart::class);
+    }
+    public function riser_stacks(): BelongsToMany
+    {
+        return $this->belongsToMany(RiserStack::class)
+            ->as('position')
+            ->withPivot('row', 'column');
     }
 
     /*
