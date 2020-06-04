@@ -74,6 +74,9 @@
 								<li class="nav-item">
 								</li>
 								<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.*') ) ? 'active' : '' }}"><i class="fad fa-folders fa-fw fa-swap-opacity fa-swap-color"></i><span class="link-text"> Documents</span></a>
+								<li class="nav-item">
+									<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('risers.*') ) ? 'active' : '' }}"><i class="fad fa-people-arrows fa-fw"></i><span class="link-text"> Riser Stacks</span></a>
+								</li>
 							@endif
 
 							@if( Auth::user()->hasRole('Admin') )

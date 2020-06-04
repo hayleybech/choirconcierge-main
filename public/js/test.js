@@ -94,13 +94,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function test() {
-    return 'Hello world!';
-}
-exports.test = test;
-
+eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nfunction test() {\n    return 'Hello world!';\n}\nexports.test = test;\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvYXNzZXRzL2pzL3Rlc3QudHM/MDNkMCJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUNBLFNBQWdCLElBQUk7SUFDaEIsT0FBTyxjQUFjLENBQUM7QUFDMUIsQ0FBQztBQUZELG9CQUVDIiwiZmlsZSI6Ii4vcmVzb3VyY2VzL2Fzc2V0cy9qcy90ZXN0LnRzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiXHJcbmV4cG9ydCBmdW5jdGlvbiB0ZXN0KCk6IHN0cmluZyB7XHJcbiAgICByZXR1cm4gJ0hlbGxvIHdvcmxkISc7XHJcbn0iXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./resources/assets/js/test.ts\n");
 
 /***/ }),
 

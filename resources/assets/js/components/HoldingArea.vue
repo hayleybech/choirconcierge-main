@@ -32,7 +32,7 @@ export default {
             type: Array,
             default: () => []
         },
-        part: String,
+        part: Number,
         theme: String
     },
     data() {
@@ -49,10 +49,8 @@ export default {
             this.singers.splice(index, 1);
         },
         accept(data) {
-            if(this.part === 'baritone' || this.part === 'bass') {
-                return (data.part === 'baritone' || data.part === 'bass');
-            }
-            return (data.part === 'lead' || data.part === 'tenor');
+            //return this.part === data.voice_part_id;
+            return true;
         }
     }
 }

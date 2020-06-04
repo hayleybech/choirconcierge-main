@@ -192,8 +192,28 @@ Route::prefix('folders')->group(static function (){
 });
 
 // Risers module
-Route::prefix('risers')->group(static function (){
-    Route::view('/', 'risers.index');
+Route::prefix('riser-stacks')->group(static function (){
+
+    /// Any Employee
+    Route::middleware('employee')->group(static function() {
+        // Create
+        Route::get('create', 'RiserStackController@create')->name('stacks.create');
+        Route::post('/', 'RiserStackController@store');
+
+        // Edit/Delete
+        Route::get('{stack}/edit', 'RiserStackController@edit')->name('stacks.edit');
+        Route::put('{stack}', 'RiserStackController@update');
+        Route::get('{stack}/delete', 'RiserStackController@delete')->name('stacks.delete');
+    });
+
+    // Any Authorised User
+    Route::middleware('auth')->group(static function() {
+        // Index
+        Route::get('/', 'RiserStackController@index')->name('stacks.index');
+
+        //View
+        Route::get('{stack}', 'RiserStackController@show')->name('stacks.show');
+    });
 });
 
 // Notifications module

@@ -1,8 +1,8 @@
 <template>
     <drop tag="g" @drop="onDrop" mode="cut">
-        <drag tag="g" :key="singer.id" :data="singer" @cut="onCut(singer)">
+        <drag tag="g" :key="singer.id" :data="singer" @cut="onCut(singer)" :disabled="disabled">
             <circle :cx="coords.centre.x" :cy="coords.centre.y" :r="coords.radius" :data-singer="singer.name" class="riser-spot" :style="style"></circle>
-            <template v-slot:drag-image="{ data: singer }">
+            <template v-slot:drag-image="{ data }">
                 <riser-face :singer="singer"></riser-face>
             </template>
         </drag>
@@ -21,20 +21,23 @@ export default {
     name: "RiserSpot",
     props: {
         coords: Object,
+        singer: {
+            type: Object,
+            default: {
+                id: 0,
+                name: '',
+                email: '',
+                part: 0
+            }
+        },
+        disabled: {
+            type: Boolean,
+            default: false
+        }
     },
     components: {
         Drop,
         Drag
-    },
-    data() {
-        return {
-            singer: {
-                id: 0,
-                name: '',
-                email: '',
-                part: ''
-            }
-        }
     },
     computed: {
         style() {
@@ -59,15 +62,17 @@ export default {
     },
     methods: {
         onDrop(event) {
-            this.singer = event.data;
+            //this.singer = event.data;
+            this.$emit('addedSinger', this.coords, event.data);
         },
         onCut() {
-            this.singer = {
+            /*this.singer = {
                 id: 0,
                 name: '',
                 email: '',
                 part: ''
-            };
+            };*/
+            this.$emit('removedSinger', this.coords);
         }
     }
 }

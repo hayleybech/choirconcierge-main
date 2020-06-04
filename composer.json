@@ -18,7 +18,8 @@
         "maatwebsite/excel": "~3.1",
         "mtolhuys/laravel-schematics": "^0.10.2",
         "spatie/icalendar-generator": "^1.0",
-        "webklex/laravel-imap": "^1.4"
+        "webklex/laravel-imap": "^1.4",
+      "ext-json": "*"
     },
     "type": "project",
     "require-dev": {
