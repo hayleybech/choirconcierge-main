@@ -4,17 +4,17 @@
         <div class="riser-settings form-inline" v-if="editDisabled !== true">
             <div class="form-group">
                 <label for="riser_rows">Rows</label>
-                <input id="riser_rows" name="rows" type="number" min="1" max="8" class="form-control mx-3" v-model:value="rows">
+                <input id="riser_rows" name="rows" type="number" min="1" max="8" class="form-control mx-3" v-model.number="rows">
             </div>
 
             <div class="form-group">
                 <label for="riser_cols">Columns</label>
-                <input id="riser_cols" name="columns" type="number" min="1" max="8" class="form-control mx-3" v-model:value="cols">
+                <input id="riser_cols" name="columns" type="number" min="1" max="8" class="form-control mx-3" v-model.number="cols">
             </div>
 
             <div class="form-group">
                 <label for="riser_singers">Singers</label>
-                <input id="riser_singers" name="singers" type="number" min="1" max="150" class="form-control mx-3" v-model:value="num_singers">
+                <input id="riser_singers" name="singers" type="number" min="1" max="150" class="form-control mx-3" v-model.number="num_singers">
             </div>
 
         </div>
