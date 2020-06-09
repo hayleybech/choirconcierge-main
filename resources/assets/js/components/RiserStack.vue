@@ -17,6 +17,11 @@
                 <input id="riser_singers" name="singers" type="number" min="1" max="150" class="form-control mx-3" v-model.number="num_singers">
             </div>
 
+            <div class="form-group">
+                <label for="riser_front_row_length">Front Row</label>
+                <input id="riser_front_row_length" name="front_row_length" type="number" min="1" max="150" class="form-control mx-3" v-model.number="front_row_length">
+            </div>
+
         </div>
 
         <svg :width="width" :height="height">
@@ -71,6 +76,7 @@ export default {
             cols: this.initialCols,
             singers: this.initialSingers,
             num_singers: 20,    // How many singers need to fit on the stack?
+            front_row_length: 0,
             height: 500,    // SVG height
             width: 1000,     // SVG width
 
