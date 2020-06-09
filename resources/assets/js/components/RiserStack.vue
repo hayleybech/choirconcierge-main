@@ -76,7 +76,7 @@ export default {
             cols: this.initialCols,
             singers: this.initialSingers,
             num_singers: 20,    // How many singers need to fit on the stack?
-            front_row_length: 0,
+            front_row_length: 1,
             height: 500,    // SVG height
             width: 1000,     // SVG width
 
@@ -132,6 +132,21 @@ export default {
             return edges;
         },
 
+
+        /**
+         * Calculate the front row
+         * All other rows are calculated off this one.
+         *
+         * Dev: Use Strategy 1a.
+         *
+         * Strategy 1a - Static: User inputs front row size.
+         * Strategy 1b - Static: User inputs the specific singers needed.
+         * Strategy 2 - Expanding: Calculate from (numSingersInLongestRow + 2)
+         */
+        numSpotsForFrontRow()
+        {
+            return this.front_row_length;
+        },
 
         /**
          * Start generating spots.
@@ -201,29 +216,15 @@ export default {
         },
 
 
-
-
         /**
          * Calculate the number of spots needed for this row.
          */
         calcNumSpots(row)
         {
-            const max_spots_per_row = this.num_singers / 4;
-
-            // Should the first row have an odd number of spots?
-            return ( this.rowNeedsOddSpots(row) ) ? (max_spots_per_row - 1) : max_spots_per_row;
-        },
-        /**
-         * Calculate whether this row needs an odd number of spots.
-         * Result is equal to the oddness of the row number,
-         * unless flipped by first_row_odd.
-         */
-        rowNeedsOddSpots(row)
-        {
-            if(this.first_row_odd) {
-                return row % 2 === 0;
+            if(row % 2 === 0) {
+                return this.numSpotsForFrontRow;
             }
-            return row % 2 !== 0;
+            return ( this.numSpotsForFrontRow + 1);
         },
 
         /**
@@ -282,6 +283,7 @@ export default {
          */
         calcGapAngle()
         {
+            // @todo rewrite this using the new calculation for spots per row.
             const max_spots_per_row = this.num_singers / this.rows;
             return this.total_width_deg / max_spots_per_row;
         },
