@@ -17,7 +17,7 @@
                 {{ Form::text('title', $stack->title, array('class' => 'form-control')) }}
             </div>
 
-            <riser-stack :rows="{{$stack->rows}}" :cols="{{ $stack->columns }}" :initial-singers="{{ $stack->singers->toJson() }}"></riser-stack>
+            <riser-stack :rows="{{$stack->rows}}" :cols="{{ $stack->columns }}" :initial-front-row-length="{{ $stack->front_row_length }}" :initial-singers="{{ $stack->singers->toJson() }}"></riser-stack>
 
             <div class="row">
 

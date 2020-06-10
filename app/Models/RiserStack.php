@@ -33,6 +33,7 @@ class RiserStack extends Model
         'title',
         'rows',
         'columns',
+        'front_row_length',
     ];
 
     public function singers(): BelongsToMany

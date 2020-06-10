@@ -61,6 +61,10 @@ export default {
             type: Number,
             default: 4
         },
+        initialFrontRowLength: {
+            type: Number,
+            default: 1
+        },
         initialSingers: {
             type: Array,
             default: () => []
@@ -75,7 +79,7 @@ export default {
             rows: this.initialRows,
             cols: this.initialCols,
             singers: this.initialSingers,
-            front_row_length: 1,
+            front_row_length: this.initialFrontRowLength,
             height: 500,    // SVG height
             width: 1000,     // SVG width
 
