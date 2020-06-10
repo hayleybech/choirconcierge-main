@@ -63,7 +63,7 @@ export default {
     methods: {
         onDrop(event) {
             //this.singer = event.data;
-            this.$emit('addedSinger', this.coords, event.data);
+            this.$parent.$emit('addedSinger', this.coords, event.data);
         },
         onCut() {
             /*this.singer = {
@@ -72,7 +72,7 @@ export default {
                 email: '',
                 part: ''
             };*/
-            this.$emit('removedSinger', this.coords);
+            this.$parent.$emit('removedSinger', this.coords);
         }
     }
 }
