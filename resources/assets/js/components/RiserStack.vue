@@ -13,13 +13,13 @@
             </div>
 
             <div class="form-group">
-                <label for="riser_singers">Singers</label>
-                <input id="riser_singers" name="singers" type="number" min="1" max="150" class="form-control mx-3" v-model.number="num_singers">
+                <label for="riser_front_row_length">Front Row</label>
+                <input id="riser_front_row_length" name="front_row_length" type="number" min="1" max="150" class="form-control mx-3" v-model.number="front_row_length">
             </div>
 
             <div class="form-group">
-                <label for="riser_front_row_length">Front Row</label>
-                <input id="riser_front_row_length" name="front_row_length" type="number" min="1" max="150" class="form-control mx-3" v-model.number="front_row_length">
+                <label for="riser_singers">Singers</label>
+                <input id="riser_singers" name="singers" type="number" min="1" max="150" class="form-control mx-3" v-model.number="num_singers" disabled>
             </div>
 
         </div>
@@ -75,7 +75,6 @@ export default {
             rows: this.initialRows,
             cols: this.initialCols,
             singers: this.initialSingers,
-            num_singers: 20,    // How many singers need to fit on the stack?
             front_row_length: 1,
             height: 500,    // SVG height
             width: 1000,     // SVG width
@@ -146,6 +145,16 @@ export default {
         numSpotsForFrontRow()
         {
             return this.front_row_length;
+        },
+
+        num_singers()
+        {
+            const num_odd_rows = Math.floor(this.rows / 2);
+            const num_even_rows = Math.ceil(this.rows / 2);
+
+            const singers_odds = this.calcNumSpots(1) * num_odd_rows;
+            const singers_evens = this.calcNumSpots(0) * num_even_rows;
+            return singers_odds + singers_evens;
         },
 
         /**
