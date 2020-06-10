@@ -50,6 +50,14 @@
 
         <input type="hidden" name="singer_positions" :value="JSON.stringify(singers)">
 
+        <div class="row" v-if="editDisabled !== true">
+
+            <div class="col-md-3" v-for="(part) in voiceParts">
+                <holding-area :title="part.title" :part="part.id" theme="primary" :singers="part.singers"></holding-area>
+            </div>
+
+        </div>
+
     </div>
 </template>
 
@@ -57,10 +65,11 @@
 import {Arc} from "../risers/Arc";
 import {ArcMath} from "../risers/ArcMath";
 import RiserLayerSpots from "./RiserLayerSpots";
+import HoldingArea from "./HoldingArea";
 
 export default {
     name: "RiserStack",
-    components: { RiserLayerSpots },
+    components: { HoldingArea, RiserLayerSpots },
     props: {
         initialRows: { // How many rows? We'll draw (num_rows + 1) arcs vertically.
             type: Number,
@@ -75,6 +84,10 @@ export default {
             default: 1
         },
         initialSingers: {
+            type: Array,
+            default: () => []
+        },
+        voiceParts: {
             type: Array,
             default: () => []
         },
