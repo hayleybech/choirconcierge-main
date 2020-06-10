@@ -283,8 +283,7 @@ export default {
          */
         calcGapAngle()
         {
-            // @todo rewrite this using the new calculation for spots per row.
-            const max_spots_per_row = this.num_singers / this.rows;
+            const max_spots_per_row = this.calcNumSpots(1);
             return this.total_width_deg / max_spots_per_row;
         },
         calcSpotStartRadius() {
