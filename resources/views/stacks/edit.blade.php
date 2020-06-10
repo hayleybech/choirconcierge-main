@@ -22,7 +22,7 @@
                 :initial-cols="{{ $stack->columns }}"
                 :initial-front-row-length="{{ $stack->front_row_length }}"
                 :initial-singers="{{ $stack->singers->toJson() }}"
-                :voice-parts="{{ $voice_parts->toJson() }}"
+                :initial-voice-parts="{{ $voice_parts->toJson() }}"
             ></riser-stack>
 
         </div>

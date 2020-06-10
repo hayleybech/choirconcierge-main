@@ -87,7 +87,7 @@ export default {
             type: Array,
             default: () => []
         },
-        voiceParts: {
+        initialVoiceParts: {
             type: Array,
             default: () => []
         },
@@ -102,6 +102,7 @@ export default {
             cols: this.initialCols,
             singers: this.initialSingers,
             front_row_length: this.initialFrontRowLength,
+            voiceParts: this.initialVoiceParts,
             height: 500,    // SVG height
             width: 1000,     // SVG width
 
@@ -205,7 +206,6 @@ export default {
 
 
         addSinger(coords, singer) {
-            console.log(singer);
             singer.position = {
                 row: coords.row,
                 column: coords.column
@@ -248,6 +248,38 @@ export default {
             }
             return ( this.numSpotsForFrontRow + 1);
         },
+
+        checkDroppedSingers()
+        {
+            this.singers.forEach(function(singer){
+                if(this.isOutsideBounds(singer)) {
+                    this.moveToHoldingArea(singer);
+                }
+            }, this);
+        },
+        isOutsideBounds(singer)
+        {
+            if(singer.id === 16) {
+                console.log('col: ' + singer.position.column);
+                console.log('spots per row: '+ this.calcNumSpots(singer.position.row));
+                console.log('max col: ' + Math.floor( this.calcNumSpots(singer.position.row) / 2 ));
+            }
+            return(
+                singer.position.row >= this.rows
+                || Math.abs( singer.position.column ) > Math.floor( this.calcNumSpots(singer.position.row) / 2 )
+            );
+        },
+        moveToHoldingArea(singer)
+        {
+            const part = this.voiceParts.find(p => p.id === singer.voice_part_id);
+            part.singers.push(singer);
+
+            this.removeSinger(singer.position);
+        }
+    },
+    watch: {
+        front_row_length() { this.checkDroppedSingers() },
+        rows() { this.checkDroppedSingers() }
     }
 }
 </script>

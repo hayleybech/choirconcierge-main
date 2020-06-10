@@ -17,7 +17,7 @@
                 {{ Form::text('title', '', array('class' => 'form-control')) }}
             </div>
 
-            <riser-stack :voice-parts="{{ $voice_parts->toJson() }}"></riser-stack>
+            <riser-stack :initial-voice-parts="{{ $voice_parts->toJson() }}"></riser-stack>
 
         </div>
 
