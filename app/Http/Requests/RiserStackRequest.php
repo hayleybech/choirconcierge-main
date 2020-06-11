@@ -23,6 +23,7 @@ class RiserStackRequest extends FormRequest
             'title'     => 'required|max:255',
             'rows'      => 'required|integer|min:1|max:255',
             'columns'   => 'required|integer|min:1|max:255',
+            'front_row_length'  => 'required|integer|min:1|max:255',
             'singer_positions'  => 'required|json',
         ];
     }

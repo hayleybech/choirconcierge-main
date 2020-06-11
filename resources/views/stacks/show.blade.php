@@ -38,7 +38,7 @@
 
         <div class="card-body">
 
-            <riser-stack :rows="{{$stack->rows}}" :cols="{{ $stack->columns }}" :initial-singers="{{ $stack->singers->toJson() }}" :edit-disabled="true"></riser-stack>
+            <riser-stack :initial-rows="{{$stack->rows}}" :initial-cols="{{ $stack->columns }}" :initial-front-row-length="{{ $stack->front_row_length }}" :initial-singers="{{ $stack->singers->toJson() }}" :edit-disabled="true"></riser-stack>
 
         </div>
     </div>

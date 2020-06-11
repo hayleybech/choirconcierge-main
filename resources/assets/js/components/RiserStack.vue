@@ -13,30 +13,52 @@
             </div>
 
             <div class="form-group">
+                <label for="riser_front_row_length">Front Row</label>
+                <input id="riser_front_row_length" name="front_row_length" type="number" min="1" max="150" class="form-control mx-3" v-model.number="front_row_length">
+            </div>
+
+            <div class="form-group">
                 <label for="riser_singers">Singers</label>
-                <input id="riser_singers" name="singers" type="number" min="1" max="150" class="form-control mx-3" v-model.number="num_singers">
+                <input id="riser_singers" name="singers" type="number" min="1" max="150" class="form-control mx-3" v-model.number="num_singers" disabled>
             </div>
 
         </div>
 
-        <svg :width="width" :height="height">
-            <!-- Arcs -->
-            <g v-for="(n, col) in cols">
-                <path v-for="(n, row) in loop_rows" :d="createArcPath(row, col)" class="risers_frame"></path>
-            </g>
+        <div class="riser-canvas-wrapper">
+            <svg :width="width" :height="height">
+                <!-- Arcs -->
+                <g v-for="(n, col) in cols">
+                    <path v-for="(n, row) in loop_rows" :d="createArcPath(row, col)" class="risers_frame"></path>
+                </g>
 
-            <!-- Edges -->
-            <g>
-                <line v-for="edge in edges" :x1="edge.start.x" :y1="edge.start.y" :x2="edge.end.x" :y2="edge.end.y" class="risers_frame"></line>
-            </g>
+                <!-- Edges -->
+                <g>
+                    <line v-for="edge in edges" :x1="edge.start.x" :y1="edge.start.y" :x2="edge.end.x" :y2="edge.end.y" class="risers_frame"></line>
+                </g>
 
-            <!-- Spots -->
-            <g>
-                <riser-spot v-for="(spot, index) in spots" :key="index" :coords="spot" :singer="spot.singer" :disabled="editDisabled" v-on:addedSinger="addSinger" v-on:removedSinger="removeSinger"></riser-spot>
-            </g>
-        </svg>
+                <riser-layer-spots
+                    :rows="rows"
+                    :front-row-length="front_row_length"
+                    :total-width-deg="total_width_deg"
+                    :origin="origin"
+                    :risers-start-radius="risers_start_radius"
+                    :row-height-radius="row_height_radius"
+                    :edit-disabled="editDisabled"
+                    v-on:addedSinger="addSinger"
+                    v-on:removedSinger="removeSinger"
+                ></riser-layer-spots>
+            </svg>
+        </div>
 
         <input type="hidden" name="singer_positions" :value="JSON.stringify(singers)">
+
+        <div class="row" v-if="editDisabled !== true">
+
+            <div class="col-md-3" v-for="(part) in voiceParts">
+                <holding-area :title="part.title" :part="part.id" theme="default" :singers="part.singers"></holding-area>
+            </div>
+
+        </div>
 
     </div>
 </template>
@@ -44,9 +66,12 @@
 <script>
 import {Arc} from "../risers/Arc";
 import {ArcMath} from "../risers/ArcMath";
+import RiserLayerSpots from "./RiserLayerSpots";
+import HoldingArea from "./HoldingArea";
 
 export default {
     name: "RiserStack",
+    components: { HoldingArea, RiserLayerSpots },
     props: {
         initialRows: { // How many rows? We'll draw (num_rows + 1) arcs vertically.
             type: Number,
@@ -56,7 +81,15 @@ export default {
             type: Number,
             default: 4
         },
+        initialFrontRowLength: {
+            type: Number,
+            default: 1
+        },
         initialSingers: {
+            type: Array,
+            default: () => []
+        },
+        initialVoiceParts: {
             type: Array,
             default: () => []
         },
@@ -70,7 +103,8 @@ export default {
             rows: this.initialRows,
             cols: this.initialCols,
             singers: this.initialSingers,
-            num_singers: 20,    // How many singers need to fit on the stack?
+            front_row_length: this.initialFrontRowLength,
+            voiceParts: this.initialVoiceParts,
             height: 500,    // SVG height
             width: 1000,     // SVG width
 
@@ -128,18 +162,30 @@ export default {
 
 
         /**
-         * Start generating spots.
-         * Loop through the rows, calculating spots needed per row.
+         * Calculate the front row
+         * All other rows are calculated off this one.
+         *
+         * Dev: Use Strategy 1a.
+         *
+         * Strategy 1a - Static: User inputs front row size.
+         * Strategy 1b - Static: User inputs the specific singers needed.
+         * Strategy 2 - Expanding: Calculate from (numSingersInLongestRow + 2)
          */
-        spots() {
-            let spots = [];
-            for(let row = 0; row < this.rows; row++)
-            {
-                const spots_this_row = this.calcNumSpots(row);
-                spots = spots.concat( this.createSpotsForRow(row, spots_this_row) );
-            }
-            return spots;
-        }
+        numSpotsForFrontRow()
+        {
+            return this.front_row_length;
+        },
+
+        num_singers()
+        {
+            const num_odd_rows = Math.floor(this.rows / 2);
+            const num_even_rows = Math.ceil(this.rows / 2);
+
+            const singers_odds = this.calcNumSpots(1) * num_odd_rows;
+            const singers_evens = this.calcNumSpots(0) * num_even_rows;
+            return singers_odds + singers_evens;
+        },
+
     },
     methods: {
         createArcPath(row, col) {
@@ -162,7 +208,6 @@ export default {
 
 
         addSinger(coords, singer) {
-            console.log(singer);
             singer.position = {
                 row: coords.row,
                 column: coords.column
@@ -170,31 +215,24 @@ export default {
             this.singers.push(singer);
         },
         removeSinger(coords) {
-            const index_to_remove = this.singers.findIndex(function(item){
-                return (
-                    item.position.row === coords.row &&
-                    item.position.column === coords.column
-                );
-            });
+            const index_to_remove = this.singers.findIndex(item =>
+                item.position.row === coords.row
+                && item.position.column === coords.column
+            );
             this.singers.splice( index_to_remove, 1 );
         },
         getSinger(coords) {
-            let singer = {
+            const nullSinger = {
                 id: 0,
                 name: '',
                 email: '',
                 part: 0
             }
-            this.singers.forEach(function(item){
-                if(item.position.row === coords.row
-                    && item.position.column === coords.column) {
-                    singer = item;
-                }
-            });
-            return singer;
+            return this.singers.find(item =>
+                item.position.row === coords.row
+                && item.position.column === coords.column
+            ) || nullSinger;
         },
-
-
 
 
         /**
@@ -202,107 +240,42 @@ export default {
          */
         calcNumSpots(row)
         {
-            const max_spots_per_row = this.num_singers / 4;
-
-            // Should the first row have an odd number of spots?
-            return ( this.rowNeedsOddSpots(row) ) ? (max_spots_per_row - 1) : max_spots_per_row;
-        },
-        /**
-         * Calculate whether this row needs an odd number of spots.
-         * Result is equal to the oddness of the row number,
-         * unless flipped by first_row_odd.
-         */
-        rowNeedsOddSpots(row)
-        {
-            if(this.first_row_odd) {
-                return row % 2 === 0;
+            if(row % 2 === 0) {
+                return this.numSpotsForFrontRow;
             }
-            return row % 2 !== 0;
+            return ( this.numSpotsForFrontRow + 1);
         },
 
-        /**
-         * Create spots for a row
-         * - Loop through the number of spots required
-         * - Draw 2 at a time (1 left, 1 right)
-         * - On odd rows, 1 spot straddles the centre point.
-         * - On even rows, 2 spots share either side of centre.
-         */
-        createSpotsForRow(row, spots_this_row)
+        checkDroppedSingers()
         {
-            const gap_angle = this.calcGapAngle();
-            const offset_angle = this.calcOffsetAngle(spots_this_row);
-            const start_radius = this.calcSpotStartRadius();
-            const radius = start_radius + (row * this.row_height_radius);
-
-            let spots = [];
-
-            // Draw center (for odd rows)
-            if(spots_this_row % 2 !== 0) {
-                spots.push( this.createSpot(radius, offset_angle, row, 0) );
-            }
-
-            // Draw non-center spots
-            for(let i = 1; i <= Math.floor(spots_this_row / 2); i++) {
-
-                const spot_angle = offset_angle + (gap_angle * i);
-
-                // Draw left side
-                spots.push( this.createSpot(radius, - spot_angle, row, -i) );
-
-                // Draw right side
-                spots.push( this.createSpot(radius, spot_angle, row, i) );
-            }
-            return spots;
+            this.singers.filter(singer => this.isOutsideBounds(singer), this)
+                .forEach(singer => this.moveToHoldingArea(singer), this);
         },
-
-        /**
-         * Calculate the offset from centre for a row
-         * Offset every other row to create the "windows" between people
-         * (0 for odd numbers)
-         */
-        calcOffsetAngle(spots_this_row)
+        isOutsideBounds(singer)
         {
-            const min_odd_angle = 0;
-            const min_even_angle = - (this.calcGapAngle() / 2 );
-
-            if (spots_this_row % 2 === 0) {
-                return min_even_angle;
-            }
-            return min_odd_angle;
+            return(
+                singer.position.row >= this.rows
+                || singer.position.column >= this.calcNumSpots(singer.position.row)
+            );
         },
-
-        /**
-         * Calculate the lateral distance between spots, in degrees.
-         */
-        calcGapAngle()
+        moveToHoldingArea(singer)
         {
-            const max_spots_per_row = this.num_singers / this.rows;
-            return this.total_width_deg / max_spots_per_row;
-        },
-        calcSpotStartRadius() {
-            return this.risers_start_radius + (this.row_height_radius / 2)
-        },
+            const part = this.voiceParts.find(p => p.id === singer.voice_part_id);
+            part.singers.push(singer);
 
-        /**
-         * Create a spot at the given position.
-         */
-        createSpot(pos_radius, pos_angle, row, column)
-        {
-            const pos = ArcMath.polarToCartesian(this.origin, pos_radius, pos_angle);
-            const radius = (0.8 * this.row_height_radius) / 2;
-            const singer = this.getSinger({row: row, column: column});
-            return {
-                centre: pos,
-                radius: radius,
-                row: row,
-                column: column,
-                singer: singer
-            };
+            this.removeSinger(singer.position);
         }
+    },
+    watch: {
+        front_row_length() { this.checkDroppedSingers() },
+        rows() { this.checkDroppedSingers() }
     }
 }
 </script>
 
 <style scoped>
-
+.riser-canvas-wrapper {
+    overflow-x: scroll;
+    margin-bottom: 20px;
+}
 </style>

@@ -1,9 +1,15 @@
 <template>
     <drop tag="g" @drop="onDrop" mode="cut">
+
         <drag tag="g" :key="singer.id" :data="singer" @cut="onCut(singer)" :disabled="disabled">
-            <circle :cx="coords.centre.x" :cy="coords.centre.y" :r="coords.radius" :data-singer="singer.name" class="riser-spot" :style="style"></circle>
+            <svg>
+                <circle :cx="coords.centre.x" :cy="coords.centre.y" :r="coords.radius + 15" class="riser-spot-drop-area"></circle>
+                <circle :cx="coords.centre.x" :cy="coords.centre.y" :r="coords.radius" :data-singer="singer.name" class="riser-spot" :style="style"></circle>
+            </svg>
             <template v-slot:drag-image="{ data }">
-                <riser-face :singer="singer"></riser-face>
+                <svg>
+                    <circle :cx="coords.radius" :cy="coords.radius" :r="coords.radius" :data-singer="singer.name" class="riser-spot" :style="style"></circle>
+                </svg>
             </template>
         </drag>
 
@@ -63,7 +69,7 @@ export default {
     methods: {
         onDrop(event) {
             //this.singer = event.data;
-            this.$emit('addedSinger', this.coords, event.data);
+            this.$parent.$emit('addedSinger', this.coords, event.data);
         },
         onCut() {
             /*this.singer = {
@@ -72,12 +78,16 @@ export default {
                 email: '',
                 part: ''
             };*/
-            this.$emit('removedSinger', this.coords);
+            this.$parent.$emit('removedSinger', this.coords);
         }
     }
 }
 </script>
 
 <style scoped>
-
+.riser-spot-drop-area {
+    fill: transparent;
+    stroke: transparent;
+    stroke-width: 1px;
+}
 </style>

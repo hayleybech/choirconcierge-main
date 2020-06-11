@@ -2,14 +2,18 @@
     <div :class="'card border-'+theme">
         <h5 :class="'card-header bg-transparent border-'+theme">{{ title }}</h5>
 
-        <drop-list class="card-body" :items="singers" @insert="onInsert" @reorder="$event.apply(singers)" :accepts-data="accept" mode="cut">
+        <drop-list class="list-group-flush" :items="singers" @insert="onInsert" @reorder="$event.apply(singers)" :accepts-data="accept" mode="cut">
             <template v-slot:item="{ item: singer }">
-                <drag :key="singer.id" :data="singer" @cut="onCut(singer)">
+                <drag class="list-group-item" :key="singer.id" :data="singer" @cut="onCut(singer)">
                     <riser-face :singer="singer"></riser-face>
+                    
+                    <!--<template v-slot:drag-image="{ data }">
+                        <riser-face :singer="singer"></riser-face>
+                    </template>-->
                 </drag>
             </template>
             <template v-slot:feedback="{ data: singer }">
-                <div :key="singer.id">
+                <div class="list-group-item" :key="singer.id">
                     <riser-face :singer="singer"></riser-face>
                 </div>
             </template>
@@ -57,11 +61,7 @@ export default {
 </script>
 
 <style scoped>
-    .card-body {
-        display: flex;
-        flex-flow: row wrap;
-    }
-    .card-body > * {
-        margin-right: 10px;
-    }
+.list-group-flush {
+    min-height: 45px;
+}
 </style>

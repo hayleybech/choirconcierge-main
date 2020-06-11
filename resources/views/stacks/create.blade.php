@@ -17,16 +17,7 @@
                 {{ Form::text('title', '', array('class' => 'form-control')) }}
             </div>
 
-            <riser-stack></riser-stack>
-
-            <div class="row">
-
-                @foreach($voice_parts as $part)
-                <div class="col-md-3">
-                    <holding-area title="{{$part->title}}" :part="{{$part->id}}" theme="primary" :singers="{{$part->singers->toJson()}}"></holding-area>
-                </div>
-                @endforeach
-            </div>
+            <riser-stack :initial-voice-parts="{{ $voice_parts->toJson() }}"></riser-stack>
 
         </div>
 
