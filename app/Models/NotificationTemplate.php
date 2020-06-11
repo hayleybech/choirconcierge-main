@@ -28,6 +28,11 @@ use Illuminate\Support\Facades\Log;
  */
 class NotificationTemplate extends Model
 {
+
+    protected $with = [
+        'task',
+    ];
+
     public function task(): BelongsTo
     {
 		return $this->belongsTo(Task::class);
