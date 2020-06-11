@@ -55,6 +55,10 @@ class Event extends Model
         Event_TypeFilter::class,
     ];
 
+    protected $with = [
+        'type',
+    ];
+
     public $dates = [
         'updated_at',
         'created_at',
