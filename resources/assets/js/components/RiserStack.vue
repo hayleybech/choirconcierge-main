@@ -254,11 +254,6 @@ export default {
         },
         isOutsideBounds(singer)
         {
-            if(singer.id === 16) {
-                console.log('col: ' + singer.position.column);
-                console.log('spots per row: '+ this.calcNumSpots(singer.position.row));
-                console.log('max col: ' + Math.floor( this.calcNumSpots(singer.position.row) / 2 ));
-            }
             return(
                 singer.position.row >= this.rows
                 || Math.abs( singer.position.column ) > Math.floor( this.calcNumSpots(singer.position.row) / 2 )
