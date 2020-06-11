@@ -276,5 +276,6 @@ export default {
 <style scoped>
 .riser-canvas-wrapper {
     overflow-x: scroll;
+    margin-bottom: 20px;
 }
 </style>
