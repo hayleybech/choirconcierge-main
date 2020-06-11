@@ -1,9 +1,12 @@
 <template>
     <drop tag="g" @drop="onDrop" mode="cut">
+
         <drag tag="g" :key="singer.id" :data="singer" @cut="onCut(singer)" :disabled="disabled">
             <circle :cx="coords.centre.x" :cy="coords.centre.y" :r="coords.radius" :data-singer="singer.name" class="riser-spot" :style="style"></circle>
             <template v-slot:drag-image="{ data }">
-                <riser-face :singer="singer"></riser-face>
+                <svg>
+                    <circle :cx="coords.radius" :cy="coords.radius" :r="coords.radius" :data-singer="singer.name" class="riser-spot" :style="style"></circle>
+                </svg>
             </template>
         </drag>
 
