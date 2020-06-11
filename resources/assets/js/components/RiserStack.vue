@@ -24,29 +24,31 @@
 
         </div>
 
-        <svg :width="width" :height="height">
-            <!-- Arcs -->
-            <g v-for="(n, col) in cols">
-                <path v-for="(n, row) in loop_rows" :d="createArcPath(row, col)" class="risers_frame"></path>
-            </g>
+        <div class="riser-canvas-wrapper">
+            <svg :width="width" :height="height">
+                <!-- Arcs -->
+                <g v-for="(n, col) in cols">
+                    <path v-for="(n, row) in loop_rows" :d="createArcPath(row, col)" class="risers_frame"></path>
+                </g>
 
-            <!-- Edges -->
-            <g>
-                <line v-for="edge in edges" :x1="edge.start.x" :y1="edge.start.y" :x2="edge.end.x" :y2="edge.end.y" class="risers_frame"></line>
-            </g>
+                <!-- Edges -->
+                <g>
+                    <line v-for="edge in edges" :x1="edge.start.x" :y1="edge.start.y" :x2="edge.end.x" :y2="edge.end.y" class="risers_frame"></line>
+                </g>
 
-            <riser-layer-spots
-                :rows="rows"
-                :front-row-length="front_row_length"
-                :total-width-deg="total_width_deg"
-                :origin="origin"
-                :risers-start-radius="risers_start_radius"
-                :row-height-radius="row_height_radius"
-                :edit-disabled="editDisabled"
-                v-on:addedSinger="addSinger"
-                v-on:removedSinger="removeSinger"
-            ></riser-layer-spots>
-        </svg>
+                <riser-layer-spots
+                    :rows="rows"
+                    :front-row-length="front_row_length"
+                    :total-width-deg="total_width_deg"
+                    :origin="origin"
+                    :risers-start-radius="risers_start_radius"
+                    :row-height-radius="row_height_radius"
+                    :edit-disabled="editDisabled"
+                    v-on:addedSinger="addSinger"
+                    v-on:removedSinger="removeSinger"
+                ></riser-layer-spots>
+            </svg>
+        </div>
 
         <input type="hidden" name="singer_positions" :value="JSON.stringify(singers)">
 
@@ -272,5 +274,7 @@ export default {
 </script>
 
 <style scoped>
-
+.riser-canvas-wrapper {
+    overflow-x: scroll;
+}
 </style>
