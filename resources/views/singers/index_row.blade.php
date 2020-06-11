@@ -68,7 +68,7 @@
 					Move to
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					@foreach($categories_move as $id => $category)
+					@foreach($singer_categories as $id => $category)
 					<a class="dropdown-item " href="{{ route( 'singer.move', ['singer' => $singer, 'move_category' => $id] ) }}">{{ $category }}</a>
 					@endforeach
 				</div>

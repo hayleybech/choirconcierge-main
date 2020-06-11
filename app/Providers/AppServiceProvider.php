@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
+use App\Http\View\Composers\SingerCategoryComposer;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Contracts\Auth\Guard;
-use App\Models\SingerCategory;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,15 +27,7 @@ class AppServiceProvider extends ServiceProvider
             }
         });*/
 
-        // Get list of singer categories
-        view()->composer('*', function($view) use ($auth) {
-            $categories = SingerCategory::all();
-            $categories_move = $categories->mapWithKeys(function($item){
-                return [ $item['id'] => $item['name'] ];
-            });
-
-            $view->with('categories_move', $categories_move);
-        });
+        View::composer('*', SingerCategoryComposer::class);
     }
 
     /**
@@ -45,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton(SingerCategoryComposer::class);
+        
         if ($this->app->environment() !== 'production') {
             $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         }
