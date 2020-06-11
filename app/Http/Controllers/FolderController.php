@@ -17,7 +17,7 @@ class FolderController extends Controller
      */
     public function index(): View
     {
-        $folders = Folder::all();
+        $folders = Folder::with('documents')->get();
 
         return view('folders.index', compact('folders'));
     }
