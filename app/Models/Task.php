@@ -29,6 +29,9 @@ use Illuminate\Support\Carbon;
  */
 class Task extends Model
 {
+
+    protected $with = ['role'];
+
     /*
 	 * Get the Role authorised for this task
 	 */
