@@ -246,17 +246,14 @@ export default {
 
         checkDroppedSingers()
         {
-            this.singers.forEach(function(singer){
-                if(this.isOutsideBounds(singer)) {
-                    this.moveToHoldingArea(singer);
-                }
-            }, this);
+            this.singers.filter(singer => this.isOutsideBounds(singer), this)
+                .forEach(singer => this.moveToHoldingArea(singer), this);
         },
         isOutsideBounds(singer)
         {
             return(
                 singer.position.row >= this.rows
-                || Math.abs( singer.position.column ) > Math.floor( this.calcNumSpots(singer.position.row) / 2 )
+                || singer.position.column >= this.calcNumSpots(singer.position.row)
             );
         },
         moveToHoldingArea(singer)

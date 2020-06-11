@@ -36,5 +36,5 @@ const app = new Vue({
 });
 
 
-const helloWorld = require('./test').test();
-console.log(helloWorld);
+//const helloWorld = require('./test').test();
+//console.log(helloWorld);
