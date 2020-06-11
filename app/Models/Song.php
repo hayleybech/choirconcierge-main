@@ -51,6 +51,11 @@ class Song extends Model
         Song_CategoryFilter::class,
     ];
 
+    protected $with = [
+        'categories',
+        'status',
+    ];
+
     public const PITCHES = [
         0   => 'A',
         1   => 'A#/Bb',
