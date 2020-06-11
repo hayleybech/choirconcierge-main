@@ -67,45 +67,19 @@ export default {
         createSpotsForRow(row, spots_this_row)
         {
             const gap_angle = this.calcGapAngle();
-            const offset_angle = this.calcOffsetAngle(spots_this_row);
             const start_radius = this.calcSpotStartRadius();
             const radius = start_radius + (row * this.rowHeightRadius);
+            const middleColumn = (spots_this_row / 2) - 0.5;
 
             let spots = [];
 
-            // Draw center (for odd rows)
-            if(spots_this_row % 2 !== 0) {
-                spots.push( this.createSpot(radius, offset_angle, row, 0) );
-            }
-
-            // Draw non-center spots
-            for(let i = 1; i <= Math.floor(spots_this_row / 2); i++) {
-
-                const spot_angle = offset_angle + (gap_angle * i);
-
-                // Draw left side
-                spots.push( this.createSpot(radius, - spot_angle, row, -i) );
-
-                // Draw right side
-                spots.push( this.createSpot(radius, spot_angle, row, i) );
+            for(let col = 0; col < spots_this_row; col++)
+            {
+                const distanceFromMiddle = col - middleColumn;
+                const spot_angle = gap_angle * distanceFromMiddle;
+                spots.push( this.createSpot(radius, spot_angle, row, col) );
             }
             return spots;
-        },
-
-        /**
-         * Calculate the offset from centre for a row
-         * Offset every other row to create the "windows" between people
-         * (0 for odd numbers)
-         */
-        calcOffsetAngle(spots_this_row)
-        {
-            const min_odd_angle = 0;
-            const min_even_angle = - (this.calcGapAngle() / 2 );
-
-            if (spots_this_row % 2 === 0) {
-                return min_even_angle;
-            }
-            return min_odd_angle;
         },
 
         /**
