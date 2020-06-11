@@ -20,5 +20,12 @@ export default {
 </script>
 
 <style scoped>
-
+.riser-face {
+    display: flex;
+    align-items: center;
+}
+.riser-face img {
+    height: 1.5em;
+    margin-right: 10px;
+}
 </style>

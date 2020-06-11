@@ -55,7 +55,7 @@
         <div class="row" v-if="editDisabled !== true">
 
             <div class="col-md-3" v-for="(part) in voiceParts">
-                <holding-area :title="part.title" :part="part.id" theme="primary" :singers="part.singers"></holding-area>
+                <holding-area :title="part.title" :part="part.id" theme="default" :singers="part.singers"></holding-area>
             </div>
 
         </div>
