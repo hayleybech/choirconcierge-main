@@ -213,28 +213,23 @@ export default {
             this.singers.push(singer);
         },
         removeSinger(coords) {
-            const index_to_remove = this.singers.findIndex(function(item){
-                return (
-                    item.position.row === coords.row &&
-                    item.position.column === coords.column
-                );
-            });
+            const index_to_remove = this.singers.findIndex(item =>
+                item.position.row === coords.row
+                && item.position.column === coords.column
+            );
             this.singers.splice( index_to_remove, 1 );
         },
         getSinger(coords) {
-            let singer = {
+            const nullSinger = {
                 id: 0,
                 name: '',
                 email: '',
                 part: 0
             }
-            this.singers.forEach(function(item){
-                if(item.position.row === coords.row
-                    && item.position.column === coords.column) {
-                    singer = item;
-                }
-            });
-            return singer;
+            return this.singers.find(item =>
+                item.position.row === coords.row
+                && item.position.column === coords.column
+            ) || nullSinger;
         },
 
 
