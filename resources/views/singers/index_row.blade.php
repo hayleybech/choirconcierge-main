@@ -12,6 +12,9 @@
             <input type="checkbox" />
         </div>
 		<div class="r-table__cell col--title">
+			<a href="{{route('singers.show', ['singer' => $singer])}}">
+				<img src="{{ $singer->user->getFirstMediaUrl('avatar', 'thumb') }}" alt="{{ $singer->name }}" class="user-avatar">
+			</a>
 			<div class="item-title-wrapper">
 				<a class="item-title" href="{{route('singers.show', ['singer' => $singer])}}">
 					{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}

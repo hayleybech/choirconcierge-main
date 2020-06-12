@@ -97,7 +97,7 @@
 
 							<li class="nav-item">
 								<a href="{{ route('singers.show', ['singer' => Auth::user()->singer] ) }}" class="nav-link">
-									<i class="fad fa-fw fa-user-circle fa-swap-opacity fa-swap-color"></i><span class="link-text"> {{ Auth::user()->name }}</span>
+									<img src="{{ Auth::user()->getFirstMediaUrl('avatar', 'thumb') }}" alt="{{ Auth::user()->name }}" class="user-avatar user-avatar-nav"> <span class="link-text"> {{ Auth::user()->name }}</span>
 								</a>
 							</li>
 

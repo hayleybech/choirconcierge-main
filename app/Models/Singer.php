@@ -55,6 +55,14 @@ class Singer extends Model
         Singer_VoicePartFilter::class,
     ];
 
+    protected $with = [
+        'user',
+    ];
+
+    protected $appends = [
+        'user_avatar_thumb_url',
+    ];
+
     public $notify_channels = ['mail'];
 
     public static function create( array $attributes = [] ) {
@@ -98,6 +106,9 @@ class Singer extends Model
         $this->user->email = $attributes['email'];
         $this->user->name = $attributes['name'];
         $this->user->setPassword( $attributes['password'] );
+        if( isset( $attributes['avatar'] ) ){
+            $this->user->addMediaFromRequest('avatar')->toMediaCollection('avatar');
+        }
         $this->user->save();
 
         // Sync roles
@@ -157,5 +168,10 @@ class Singer extends Model
             return date_diff( date_create($this->profile->dob), date_create('now') )->y;
         }
         return 0;
+    }
+
+    public function getUserAvatarThumbUrlAttribute()
+    {
+        return $this->user->getFirstMediaUrl('avatar', 'thumb');
     }
 }

@@ -11,6 +11,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Spatie\Image\Manipulations;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use UnexpectedValueException;
 
 // http://alexsears.com/article/adding-roles-to-laravel-users/
@@ -35,9 +39,9 @@ use UnexpectedValueException;
  *
  * @package App\Models
  */
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
-    use Notifiable;
+    use Notifiable, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -55,6 +59,10 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
+    ];
+
+    protected $with = [
+        'media',
     ];
 
     public $notify_channels = ['database', 'mail'];
@@ -169,6 +177,30 @@ class User extends Authenticatable
     public function singer(): HasOne
     {
         return $this->hasOne(Singer::class);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')
+            ->singleFile()
+            ->acceptsMimeTypes([
+                'image/jpeg',
+                'image/png',
+            ])
+            ->useFallbackUrl('https://api.adorable.io/avatars/50/'.$this->email.'.png')
+            ->registerMediaConversions(function (Media $media){
+                $this->addMediaConversion('thumb')
+                    ->width(50)
+                    ->height(50)
+                    ->crop(Manipulations::CROP_CENTER, 50, 50);
+                ;
+                
+                $this->addMediaConversion('profile')
+                    ->width(150)
+                    ->height(150)
+                    ->crop(Manipulations::CROP_CENTER, 150, 150)
+                ;
+            });
     }
 
 }

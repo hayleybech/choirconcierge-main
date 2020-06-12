@@ -59,11 +59,11 @@ export default {
             return 'url(#img_'+this.singer.id+')';
         },
         imageUrl() {
-            if(this.singer.email === '') {
+            if(this.singer.user_avatar_thumb_url === '') {
                 return '';
             }
 
-            return 'https://api.adorable.io/avatars/50/'+this.singer.email+'.png';
+            return this.singer.user_avatar_thumb_url;
         }
     },
     methods: {

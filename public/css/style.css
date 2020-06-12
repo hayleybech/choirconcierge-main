@@ -369,6 +369,20 @@ main {
 	;
 }
 
+.user-avatar {
+	border-radius: 50%;
+	margin-right: 15px;
+}
+.user-avatar-rounded {
+	border-radius: 10px;
+	margin-right: 15px;
+	width: 100%;
+}
+.user-avatar.user-avatar-nav {
+	width: 20px;
+	margin-right: 5px;
+}
+
 .singer-col--progress {
 	grid-area: progress;
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="riser-face">
-        <img :src="'https://api.adorable.io/avatars/50/'+ singer.email + '.png'" :alt="singer.name">
+        <img :src="singer.user_avatar_thumb_url" :alt="singer.name">
         <div class="singer-name">{{singer.name}}</div>
     </div>
 </template>
@@ -13,7 +13,8 @@ export default {
             id: 0,
             name: '',
             email: '',
-            part: ''
+            part: '',
+            user_avatar_thumb_url: ''
         }
     }
 }
