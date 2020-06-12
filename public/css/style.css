@@ -33,7 +33,7 @@ body .fad:after{
 
 /*** APP TOP ***/
 #app-header {
-	flex: 0;
+	width: 180px;
 }
 #app-header.fullscreen {
 	position: absolute;
@@ -148,8 +148,9 @@ main {
 	height:auto;
 	max-height: 100px;
 	margin-top: 20px;*/
-	height: 50px;
+	width: 100%;
 	margin-bottom: 10px;
+	padding: 10px;
 }
 .logo-collapse {
 	display: none;

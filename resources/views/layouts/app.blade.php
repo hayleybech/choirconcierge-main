@@ -28,7 +28,7 @@
 
 				<nav class="navbar navbar-expand-lg navbar-light bg-light">
 					<a class="" href="{{ url('/') }}">
-						<img src="/img/logo.png" alt="Choir Concierge" class="logo">
+						<img src="/img/choir-logo.png" alt="Choir Concierge" class="logo">
 						<img src="/favicon.png" alt="Choir Concierge" class="logo-collapse">
 					</a>
 
@@ -135,8 +135,7 @@
 			<main>
 				<nav id="top-menu" class="navbar navbar-expand navbar-light bg-transparent">
 					<div class="navbar-brand text-muted">
-						<!--<img src="/img/logo.png" alt="Choir Concierge" height="30" class="d-inline-block align-top">-->
-						Choir Concierge
+						<img src="/img/logo.png" alt="Choir Concierge" height="30" class="d-inline-block align-top">
 					</div>
 
 					<div class="d-flex justify-content-between flex-grow-1">
