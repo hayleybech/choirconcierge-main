@@ -121,9 +121,10 @@
 
 						@endguest
 
+						<!--
 						<li class="nav-item">
 							<a href="" class="nav-link nav-collapse-link"><i class="fa fa-fw fa-caret-left"></i><span class="link-text"> Collapse Menu</span></a>
-						</li>
+						</li>-->
 					</ul>
 
 				</nav>
