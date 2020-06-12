@@ -59,6 +59,10 @@ class Singer extends Model
         'user',
     ];
 
+    protected $appends = [
+        'user_avatar_thumb_url',
+    ];
+
     public $notify_channels = ['mail'];
 
     public static function create( array $attributes = [] ) {
@@ -164,5 +168,10 @@ class Singer extends Model
             return date_diff( date_create($this->profile->dob), date_create('now') )->y;
         }
         return 0;
+    }
+
+    public function getUserAvatarThumbUrlAttribute()
+    {
+        return $this->user->getFirstMediaUrl('avatar', 'thumb');
     }
 }
