@@ -369,6 +369,16 @@ main {
 	;
 }
 
+.user-avatar {
+	border-radius: 50%;
+	margin-right: 15px;
+}
+.user-avatar-rounded {
+	border-radius: 10px;
+	margin-right: 15px;
+	width: 100%;
+}
+
 .singer-col--progress {
 	grid-area: progress;
 }

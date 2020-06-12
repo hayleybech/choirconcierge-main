@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-    {{ Form::open( array( 'route' => ['singers.show', $singer->id], 'method' => 'put' ) ) }}
+    {{ Form::open( array( 'route' => ['singers.show', $singer->id], 'method' => 'put', 'files' => true ) ) }}
 
     <div class="card bg-light">
         <div class="card-header">Edit Singer</div>
@@ -15,6 +15,16 @@
                 {{ Form::label('name', 'Name') }}
                 {{ Form::text('name', $singer->name, array('class' => 'form-control')) }}
             </p>
+
+            <div class="form-group">
+                <label for="avatar">Profile Picture</label>
+                <div class="custom-file custom-file-sm">
+                    <input type="file" class="custom-file-input @error('avatar') is-invalid @enderror" id="avatar" name="avatar">
+                    <div class="custom-file-label form-control-sm">Choose file</div>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Please upload a valid image file.</div>
+                </div>
+            </div>
 
             <p>
                 {{ Form::label('email', 'E-Mail Address') }}

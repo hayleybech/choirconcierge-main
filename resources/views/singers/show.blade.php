@@ -8,21 +8,30 @@
 	@endif
 @endsection
 @section('page-lead')
-	<span class="badge badge-light">{{ $singer->category->name }}</span><br>
-	@if( $singer->voice_part)<i class="fa fa-fw fa-users"></i> {{ $singer->voice_part->title }} <br>@endif
-	{{ $singer->email }}<br>
-	Added: {{$singer->created_at}}<br>
-	<strong>
-		@if( $singer->onboarding_enabled )
-			Onboarding enabled
-		@else
-			Onboarding disabled
-		@endif
-	</strong><br>
-	Roles:
-	@foreach($singer->user->roles as $role)
-		<span class="badge badge-secondary">{{$role->name}}</span>
-	@endforeach
+	<div class="row">
+		<div class="col-md-2">
+			<a href="{{route('singers.show', ['singer' => $singer])}}">
+				<img src="{{ $singer->user->getFirstMediaUrl('avatar', 'profile') }}" alt="{{ $singer->name }}" class="user-avatar-rounded">
+			</a>
+		</div>
+		<div class="col">
+			<span class="badge badge-light">{{ $singer->category->name }}</span><br>
+			@if( $singer->voice_part)<i class="fa fa-fw fa-users"></i> {{ $singer->voice_part->title }} <br>@endif
+			{{ $singer->email }}<br>
+			Added: {{$singer->created_at}}<br>
+			<strong>
+				@if( $singer->onboarding_enabled )
+					Onboarding enabled
+				@else
+					Onboarding disabled
+				@endif
+			</strong><br>
+			Roles:
+			@foreach($singer->user->roles as $role)
+				<span class="badge badge-secondary">{{$role->name}}</span>
+			@endforeach
+		</div>
+	</div>
 @endsection
 
 @section('page-content')

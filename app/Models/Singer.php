@@ -98,6 +98,9 @@ class Singer extends Model
         $this->user->email = $attributes['email'];
         $this->user->name = $attributes['name'];
         $this->user->setPassword( $attributes['password'] );
+        if( isset( $attributes['avatar'] ) ){
+            $this->user->addMediaFromRequest('avatar')->toMediaCollection('avatar');
+        }
         $this->user->save();
 
         // Sync roles
