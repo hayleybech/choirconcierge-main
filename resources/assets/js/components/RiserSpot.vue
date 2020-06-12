@@ -5,6 +5,8 @@
             <svg>
                 <circle :cx="coords.centre.x" :cy="coords.centre.y" :r="coords.radius + 15" class="riser-spot-drop-area"></circle>
                 <circle :cx="coords.centre.x" :cy="coords.centre.y" :r="coords.radius" :data-singer="singer.name" class="riser-spot" :style="style"></circle>
+                <rect v-if="singer.name !== ''" :x="labelPosition.x" :y="labelPosition.y" :width="labelPosition.width" :height="labelPosition.height" class="riser-label"></rect>
+                <text v-if="singer.name !== ''" :x="namePosition.x" :y="namePosition.y" text-anchor="middle" class="riser-spot-name">{{ singerInitials }}</text>
             </svg>
             <template v-slot:drag-image="{ data }">
                 <svg>
@@ -64,6 +66,27 @@ export default {
             }
 
             return this.singer.user_avatar_thumb_url;
+        },
+        singerInitials() {
+            return this.singer.name.split(' ')
+                .map( name => name.charAt(0).toUpperCase() )
+                .join('');
+        },
+        namePosition() {
+            return {
+                x: this.coords.centre.x,
+                y: this.coords.centre.y + this.coords.radius + 15
+            };
+        },
+        labelPosition() {
+            const height = 15;
+            const width  = 35;
+            return {
+                x: this.namePosition.x - (width / 2),
+                y: this.namePosition.y - 12,
+                height: height,
+                width: width
+            }
         }
     },
     methods: {
@@ -89,5 +112,13 @@ export default {
     fill: transparent;
     stroke: transparent;
     stroke-width: 1px;
+}
+.riser-spot-name {
+    font-size: 12px;
+    font-weight: 600;
+}
+.riser-label {
+    fill: #eee;
+    rx: 10px;
 }
 </style>
