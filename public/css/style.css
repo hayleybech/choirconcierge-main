@@ -378,6 +378,10 @@ main {
 	margin-right: 15px;
 	width: 100%;
 }
+.user-avatar.user-avatar-nav {
+	width: 20px;
+	margin-right: 5px;
+}
 
 .singer-col--progress {
 	grid-area: progress;
