@@ -112,7 +112,7 @@ export default {
                 x: 0.5,
                 y: 1.55
             },
-            total_width_deg: 70,    // Total arc width in degrees
+            total_width_deg: 85,    // Total arc width in degrees
             first_row_odd: false
         };
     },
