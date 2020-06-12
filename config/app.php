@@ -16,6 +16,12 @@ return [
     'name' => env('APP_NAME', 'Choir Concierge'),
 
     /*
+     * CHOIR NAME
+     * :)
+     */
+    'choir_name' => env('CHOIR_NAME', 'Hypothetical Harmony'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
