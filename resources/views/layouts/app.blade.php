@@ -92,6 +92,7 @@
 								</li>
 							@endif
 
+							<!--
 							<li class="nav-item nav-heading">Account</li>
 
 
@@ -116,6 +117,7 @@
 									{{ csrf_field() }}
 								</form>
 							</li>
+							-->
 
 						@endguest
 
@@ -129,6 +131,41 @@
 			</header>
 
 			<main>
+				<nav id="top-menu" class="navbar navbar-expand-lg navbar-light bg-transparent">
+					<div class="navbar-brand text-muted">
+						<!--<img src="/img/logo.png" alt="Choir Concierge" height="30" class="d-inline-block align-top">-->
+						Choir Concierge
+					</div>
+
+					<div class="d-flex justify-content-between flex-grow-1">
+						<div></div>
+						<ul class="navbar-nav ml-auto">
+							@guest
+							@else
+								<li class="nav-item dropdown">
+									<a href="#" class="nav-link dropdown-toggle" id="profile-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<img src="{{ Auth::user()->getFirstMediaUrl('avatar', 'thumb') }}" alt="{{ Auth::user()->name }}" class="user-avatar user-avatar-nav"> <span class="link-text"> {{ Auth::user()->name }}</span>
+									</a>
+									<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+										<a href="{{ route('singers.show', ['singer' => Auth::user()->singer] ) }}" class="dropdown-item"><i class="fal fa-fw fa-user"></i> Edit Profile</a>
+										<a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="dropdown-item"><i class="fal fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
+
+										<div class="dropdown-item">
+											<a href="{{ route('logout') }}"
+											   onclick="event.preventDefault();
+										 document.getElementById('logout-form').submit();">
+												<i class="fal fa-sign-out-alt fa-fw"></i> <span class="link-text">Logout</span>
+											</a>
+											<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+												{{ csrf_field() }}
+											</form>
+										</div>
+									</div>
+								</li>
+							@endguest
+						</ul>
+					</div>
+				</nav>
 				@yield('content')
 			</main>
 		</div>

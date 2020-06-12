@@ -50,6 +50,12 @@ main {
 .container {
 	padding: 0 50px;
 }
+
+#top-menu {
+	box-shadow: 0 0.15rem 1.75rem 0 rgba(31, 45, 65, 0.15) !important;
+	/*background-image: linear-gradient(135deg, #0061f2 0%, rgba(105, 0, 199, 0.8) 100%);*/
+	/*background-color: #f8f9fa !important;*/
+}
 @media screen and (max-width:980px) {
 	.container {
 		padding: 0 25px;
