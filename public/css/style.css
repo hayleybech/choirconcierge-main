@@ -168,6 +168,25 @@ main {
 	.logo-collapse {
 		display: block;
 	}*/
+
+
+
+
+
+	#app-header .navbar {
+		padding: 20px 30px;
+		overflow: auto;
+	}
+
+	#app-header .navbar-nav {
+		padding-bottom: 50px;
+	}
+	#app-header .nav-item {
+		font-size: 16px;
+	}
+	#app-header .navbar-nav .nav-link {
+		padding: 0.6rem 1rem;
+	}
 }
 
 /* MOBILE TAP BAR */
