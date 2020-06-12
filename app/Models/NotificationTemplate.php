@@ -73,6 +73,7 @@ class NotificationTemplate extends Model
             '%%singer.email%%'      => $singer->email,
             '%%profile.create%%'    => '', //route( 'profile.create', $singer, $this->task ),
             '%%placement.create%%'  => '', //route( 'placement.create', $singer, $this->task ),
+            '%%choir.name%%'        => config('app.choir_name'),
         );
         if($singer->profile)
         {
