@@ -61,6 +61,10 @@ class User extends Authenticatable implements HasMedia
         'password', 'remember_token',
     ];
 
+    protected $with = [
+        'media',
+    ];
+
     public $notify_channels = ['database', 'mail'];
 	
 	/**

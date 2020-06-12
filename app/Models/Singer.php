@@ -55,6 +55,10 @@ class Singer extends Model
         Singer_VoicePartFilter::class,
     ];
 
+    protected $with = [
+        'user',
+    ];
+
     public $notify_channels = ['mail'];
 
     public static function create( array $attributes = [] ) {
