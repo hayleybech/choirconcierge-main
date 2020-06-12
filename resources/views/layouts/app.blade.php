@@ -131,7 +131,7 @@
 			</header>
 
 			<main>
-				<nav id="top-menu" class="navbar navbar-expand-lg navbar-light bg-transparent">
+				<nav id="top-menu" class="navbar navbar-expand navbar-light bg-transparent">
 					<div class="navbar-brand text-muted">
 						<!--<img src="/img/logo.png" alt="Choir Concierge" height="30" class="d-inline-block align-top">-->
 						Choir Concierge
