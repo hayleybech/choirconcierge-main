@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Models\Filters\Event_TypeFilter;
 use App\Models\Filters\Filterable;
+use App\Notifications\EventCreated;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Notification;
 
 /**
  * Class Event
@@ -73,6 +76,8 @@ class Event extends Model
         $event = static::query()->create($attributes);
 
         $event->type = $attributes['type'];
+
+        Notification::send(User::active()->get(), new EventCreated($event));
     }
 
     public function update(array $attributes = [], array $options = [])

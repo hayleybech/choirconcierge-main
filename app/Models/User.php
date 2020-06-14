@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Hash;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -201,6 +202,15 @@ class User extends Authenticatable implements HasMedia
                     ->crop(Manipulations::CROP_CENTER, 150, 150)
                 ;
             });
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->whereHas('singer', static function(Builder $query){
+            $query->whereHas('category', static function(Builder $query){
+                $query->where('name', '=', 'Members');
+            });
+        });
     }
 
 }
