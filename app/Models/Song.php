@@ -5,11 +5,13 @@ namespace App\Models;
 use App\Models\Filters\Filterable;
 use App\Models\Filters\Song_CategoryFilter;
 use App\Models\Filters\Song_StatusFilter;
+use App\Notifications\SongUploaded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Notification;
 
 /**
  * Class Song
@@ -93,6 +95,8 @@ class Song extends Model
         // Attach categories
         $song->categories()->attach($attributes['categories']);
         $song->save();
+
+        Notification::send(User::active()->get(), new SongUploaded($song));
 
         return $song;
     }
