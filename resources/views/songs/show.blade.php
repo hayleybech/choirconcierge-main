@@ -4,7 +4,7 @@
 @section('page-title', $song->title)
 @section('page-action')
     @if(Auth::user()->hasRole('Music Team'))
-    <a href="{{route( 'song.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+    <a href="{{route( 'songs.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
     @endif
 @endsection
 @section('page-lead')
@@ -39,7 +39,7 @@
             @if(Auth::user()->hasRole('Music Team'))
             <div class="r-table__tfoot">
 
-                {{ Form::open( [ 'route' => ['song.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row--attachment row-add needs-validation', 'novalidate' ] ) }}
+                {{ Form::open( [ 'route' => ['songs.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row--attachment row-add needs-validation', 'novalidate' ] ) }}
                 <div class="r-table__cell col--mark">
 
                 </div>

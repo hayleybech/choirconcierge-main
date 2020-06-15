@@ -6,7 +6,7 @@
 @endsection
 @section('page-action')
     @if(Auth::user()->hasRole('Music Team'))
-    <a href="{{route( 'song.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-plus"></i> Add New</a>
+    <a href="{{route( 'songs.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-plus"></i> Add New</a>
     @endif
 @endsection
 

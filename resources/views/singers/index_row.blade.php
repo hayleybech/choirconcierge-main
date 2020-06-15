@@ -72,7 +72,7 @@
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 					@foreach($singer_categories as $id => $category)
-					<a class="dropdown-item " href="{{ route( 'singer.move', ['singer' => $singer, 'move_category' => $id] ) }}">{{ $category }}</a>
+					<a class="dropdown-item " href="{{ route( 'singers.move', ['singer' => $singer, 'move_category' => $id] ) }}">{{ $category }}</a>
 					@endforeach
 				</div>
 			</div>
@@ -81,7 +81,7 @@
 
 		<div class="r-table__cell col--delete">
 			@if ( Auth::user()->hasRole('Membership Team') )
-				<a href="{{route( 'singer.delete', ['singer' => $singer] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-trash"></i></a>
+				<a href="{{route( 'singers.delete', ['singer' => $singer] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-trash"></i></a>
 			@endif
 		</div>
 

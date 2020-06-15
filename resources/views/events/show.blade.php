@@ -5,7 +5,7 @@
 
 @section('page-action')
     @if(Auth::user()->hasRole('Music Team'))
-    <a href="{{route( 'event.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+    <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
     @endif
 @endsection
 

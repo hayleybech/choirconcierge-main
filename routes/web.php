@@ -51,21 +51,21 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
     Route::middleware('role:Membership Team')->group(static function() {
 
         // Create
-        Route::get('create', 'SingerController@create')->name('singer.create');
+        Route::get('create', 'SingerController@create')->name('singers.create');
         Route::post('/', 'SingerController@store');
 
         // Delete
-        Route::get('{singer}/delete', 'SingerController@delete')->name('singer.delete');
+        Route::get('{singer}/delete', 'SingerController@delete')->name('singers.delete');
         
         // Create Profile
         Route::get('{singer}/profile/create', 'SingerProfileController@create')->name('profile.create');
         Route::post('{singer}/profile', 'SingerProfileController@store')->name('profile');
 
         // Mark "Account Created" task complete
-        Route::get('{singer}/account/created', 'SingerController@markAccountCreated')->name('singer.account.created');
+        Route::get('{singer}/account/created', 'SingerController@markAccountCreated')->name('singers.account.created');
 
         // Move Singer
-        Route::get('{singer}/move/', 'SingerController@move')->name('singer.move');
+        Route::get('{singer}/move/', 'SingerController@move')->name('singers.move');
 
         // Export
         Route::get('export', 'SingerController@export')->name('singers.export');
@@ -78,20 +78,20 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::post('{singer}/placement', 'SingerPlacementController@store')->name('placement');
 
         // Mark audition passed
-        Route::get('{singer}/audition/pass', 'SingerController@auditionpass')->name('singer.audition.pass');
+        Route::get('{singer}/audition/pass', 'SingerController@auditionpass')->name('singers.audition.pass');
     });
 
     // Singers - Accounts Team
     Route::middleware('role:Accounts Team')->group(static function() {
         // Mark fees paid
-        Route::get('{singer}/fees/paid', 'SingerController@feespaid')->name('singer.fees.paid');
+        Route::get('{singer}/fees/paid', 'SingerController@feespaid')->name('singers.fees.paid');
     });
 
 
     // Singers - Uniforms Team
     Route::middleware('role:Uniforms Team')->group(static function() {
         // Mark uniform provided
-        Route::get('{singer}/uniform/provided', 'SingerController@markUniformProvided')->name('singer.uniform.provided');
+        Route::get('{singer}/uniform/provided', 'SingerController@markUniformProvided')->name('singers.uniform.provided');
     });
 
     // Singers - Any Authorised User
@@ -111,17 +111,17 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
     // Any employee
     Route::middleware('employee')->group(static function() {
         // Create
-        Route::get('create', 'SongController@create')->name('song.create');
+        Route::get('create', 'SongController@create')->name('songs.create');
         Route::post('/', 'SongController@store');
 
         // Edit/Delete
-        Route::get('{song}/edit', 'SongController@edit')->name('song.edit');
+        Route::get('{song}/edit', 'SongController@edit')->name('songs.edit');
         Route::put('{song}', 'SongController@update');
-        Route::get('{song}/delete', 'SongController@delete')->name('song.delete');
+        Route::get('{song}/delete', 'SongController@delete')->name('songs.delete');
 
         // Create/Delete attachments
-        Route::post('{song}/attachments', 'SongAttachmentController@store')->name('song.attachments.store');
-        Route::get('{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('song.attachments.delete');
+        Route::post('{song}/attachments', 'SongAttachmentController@store')->name('songs.attachments.store');
+        Route::get('{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('songs.attachments.delete');
     });
 
     // Any Authorised User
@@ -144,13 +144,13 @@ Route::prefix('events')->group(static function (){
     /// Any Employee
     Route::middleware('employee')->group(static function() {
         // Create
-        Route::get('create', 'EventController@create')->name('event.create');
+        Route::get('create', 'EventController@create')->name('events.create');
         Route::post('/', 'EventController@store');
 
         // Edit/Delete
-        Route::get('{event}/edit', 'EventController@edit')->name('event.edit');
+        Route::get('{event}/edit', 'EventController@edit')->name('events.edit');
         Route::put('{event}', 'EventController@update');
-        Route::get('{event}/delete', 'EventController@delete')->name('event.delete');
+        Route::get('{event}/delete', 'EventController@delete')->name('events.delete');
     });
 
     // Any Authorised User

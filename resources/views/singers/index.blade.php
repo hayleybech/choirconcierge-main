@@ -6,7 +6,7 @@
 @endsection
 @section('page-action')
 	@if(Auth::user()->hasRole('Membership Team'))
-		<a href="{{route( 'singer.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-user-plus"></i> Add New</a>
+		<a href="{{route( 'singers.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-user-plus"></i> Add New</a>
 	@endif
 @endsection
 
