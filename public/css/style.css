@@ -237,6 +237,27 @@ main {
 	}
 }
 
+/* Breadcrumbs */
+.breadcrumb {
+	background-color: transparent;
+	padding: 0;
+}
+.breadcrumb-item a {
+	color: white;
+	text-decoration: underline;
+}
+.breadcrumb-item a:hover,
+.breadcrumb-item a:focus {
+	color: white;
+	text-decoration: none;
+}
+.breadcrumb-item + .breadcrumb-item::before {
+	color: white;
+}
+.breadcrumb-item.active {
+	color: white;
+}
+
 /**********************************/
 /** PAGE LAYOUT **/
 .card {
