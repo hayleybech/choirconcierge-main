@@ -31,7 +31,7 @@
 					<div class="input-group input-group-sm mb-2 mr-2">
 						<div class="btn-group" role="group" aria-label="Basic example">
 							<button class="btn btn-outline-success btn-sm"><i class="fa fa-check"></i> Apply</button>
-							<a href="{{ route('singers.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-times"></i> Clear</a>
+							<a href="{{ route('singers.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i> Clear</a>
 						</div>
 					</div>
 				</form>

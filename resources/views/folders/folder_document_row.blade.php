@@ -24,6 +24,6 @@
         <a href="{{ $document->download_url }}" class="btn btn-primary btn-sm btn-block" download="{{ $document->title }}"><i class="fa fa-fw fa-download"></i> Download</a>
     </div>
     <div class="r-table__cell col--delete">
-        <a href="{{route( 'folders.documents.delete', ['folder' => $document->folder_id, 'document' => $document] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-times"></i></a>
+        <a href="{{route( 'folders.documents.delete', ['folder' => $document->folder_id, 'document' => $document] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-trash"></i></a>
     </div>
 </div>

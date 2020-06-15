@@ -25,7 +25,7 @@
     </div>
     <div class="r-table__cell col--delete">
         {{ Form::open( array( 'route' => ['groups.destroy', $group], 'method' => 'delete' ) ) }}
-        <a href="" onclick="this.closest('form').submit();return false;" class="link-confirm text-danger"><i class="fa fa-fw fa-times"></i></a>
+        <a href="" onclick="this.closest('form').submit();return false;" class="link-confirm text-danger"><i class="fa fa-fw fa-trash"></i></a>
         {{ Form::close() }}
     </div>
 

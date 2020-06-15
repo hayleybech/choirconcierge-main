@@ -81,7 +81,7 @@
 
 		<div class="r-table__cell col--delete">
 			@if ( Auth::user()->hasRole('Membership Team') )
-				<a href="{{route( 'singer.delete', ['singer' => $singer] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-times"></i></a>
+				<a href="{{route( 'singer.delete', ['singer' => $singer] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-trash"></i></a>
 			@endif
 		</div>
 
