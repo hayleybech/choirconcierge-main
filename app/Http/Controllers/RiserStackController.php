@@ -35,7 +35,7 @@ class RiserStackController extends Controller
         $positions = $this->prepPositions($request);
         $stack->singers()->sync($positions);
 
-        return redirect('/riser-stacks')->with(['status' => 'Riser stack created. ', ]);
+        return redirect()->route('stacks.show', [$stack])->with(['status' => 'Riser stack created. ', ]);
     }
 
     public function show(RiserStack $stack): View
