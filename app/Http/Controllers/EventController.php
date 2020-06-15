@@ -48,7 +48,7 @@ class EventController extends Controller
     {
         $event = Event::create($request->validated());
 
-        return redirect('/events')->with(['status' => 'Event created. ', ]);
+        return redirect()->route('events.show', [$event])->with(['status' => 'Event created. ']);
     }
 
     public function show(Event $event): View
@@ -67,7 +67,7 @@ class EventController extends Controller
     {
         $event->update($request->validated());
 
-        return redirect()->route('event.edit', [$event])->with(['status' => 'Event updated. ', ]);
+        return redirect()->route('events.show', [$event])->with(['status' => 'Event updated. ', ]);
     }
 
     public function delete(Event $event): RedirectResponse

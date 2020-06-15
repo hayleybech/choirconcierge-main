@@ -78,6 +78,8 @@ class Event extends Model
         $event->type = $attributes['type'];
 
         Notification::send(User::active()->get(), new EventCreated($event));
+
+        return $event;
     }
 
     public function update(array $attributes = [], array $options = [])
