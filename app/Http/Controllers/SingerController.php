@@ -59,7 +59,7 @@ class SingerController extends Controller
     {
         $singer = Singer::create($request->validated());
 
-        return redirect('/singers')->with(['status' => 'Singer created. ', ]);
+        return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer created. ', ]);
     }
 
     public function show(Singer $singer): View
