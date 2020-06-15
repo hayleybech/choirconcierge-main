@@ -42,7 +42,7 @@ class UserGroupController extends Controller
     {
         $group = UserGroup::create($request->validated());
 
-        return redirect('/groups')->with(['status' => 'Group created. ', ]);
+        return redirect()->route('groups.show', [$group])->with(['status' => 'Group created. ', ]);
     }
 
     /**

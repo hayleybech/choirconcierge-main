@@ -51,6 +51,8 @@ class UserGroup extends Model
         $group->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class );
         $group->syncPolymorhpic( $attributes['recipient_singer_categories'] ?? [], SingerCategory::class );
         $group->save();
+
+        return $group;
     }
 
     public function update(array $attributes = [], array $options = [])
