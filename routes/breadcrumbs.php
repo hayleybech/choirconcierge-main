@@ -43,6 +43,7 @@ Breadcrumbs::for('dash', static function($trail){
 
 // Singers
 Breadcrumbs::for('singers.index', static function ($trail) {
+    $trail->parent('dash');
     $trail->push('Singers', route('singers.index'));
 });
 
@@ -81,6 +82,7 @@ Breadcrumbs::for('singers.create', static function ($trail) {
  */
 // Songs
 Breadcrumbs::for('songs.index', static function ($trail) {
+    $trail->parent('dash');
     $trail->push('Songs', route('songs.index'));
 });
 
@@ -113,6 +115,7 @@ Breadcrumbs::for('songs.learning', static function ($trail) {
  */
 // Events
 Breadcrumbs::for('events.index', static function ($trail) {
+    $trail->parent('dash');
     $trail->push('Events', route('events.index'));
 });
 
@@ -139,6 +142,7 @@ Breadcrumbs::for('events.create', static function ($trail) {
  */
 // Folders
 Breadcrumbs::for('folders.index', static function ($trail) {
+    $trail->parent('dash');
     $trail->push('Folders', route('folders.index'));
 });
 
@@ -165,6 +169,7 @@ Breadcrumbs::for('folders.create', static function ($trail) {
  */
 // Riser Stacks
 Breadcrumbs::for('stacks.index', static function ($trail) {
+    $trail->parent('dash');
     $trail->push('Riser Stacks', route('stacks.index'));
 });
 
@@ -191,6 +196,7 @@ Breadcrumbs::for('stacks.create', static function ($trail) {
  */
 // Mailing Lists
 Breadcrumbs::for('groups.index', static function ($trail) {
+    $trail->parent('dash');
     $trail->push('Mailing Lists', route('groups.index'));
 });
 
@@ -217,6 +223,7 @@ Breadcrumbs::for('groups.create', static function ($trail) {
  */
 // Tasks
 Breadcrumbs::for('tasks.index', static function ($trail) {
+    $trail->parent('dash');
     $trail->push('Tasks', route('tasks.index'));
 });
 
@@ -226,5 +233,6 @@ Breadcrumbs::for('tasks.index', static function ($trail) {
  */
 // Templates
 Breadcrumbs::for('notification-templates.index', static function ($trail) {
+    $trail->parent('dash');
     $trail->push('Notification Templates', route('notification-templates.index'));
 });
