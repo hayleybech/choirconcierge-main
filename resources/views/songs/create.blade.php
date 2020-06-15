@@ -49,7 +49,12 @@
         </div>
 
         <div class="card-footer">
-            {{ Form::submit('Create', array( 'class' => 'btn btn-primary' )) }}
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-fw fa-check"></i> Create
+            </button>
+            <a href="{{ route('songs.index') }}" class="btn btn-outline-secondary">
+                <i class="fa fa-fw fa-times"></i> Cancel
+            </a>
         </div>
     </div>
 
