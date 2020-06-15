@@ -78,7 +78,7 @@ class SongController extends Controller
     {
         $song = Song::create($request->validated());
 
-        return redirect('/songs')->with(['status' => 'Song created. ', ]);
+        return redirect()->route('songs.show', [$song])->with(['status' => 'Song created. ']);
     }
 
     public function show(Song $song): View
@@ -104,7 +104,7 @@ class SongController extends Controller
     {
         $song->update($request->validated());
 
-        return redirect()->route('song.edit', [$song])->with(['status' => 'Song updated. ', ]);
+        return redirect()->route('songs.show', [$song])->with(['status' => 'Song updated. ', ]);
     }
 
     public function delete(Song $song): RedirectResponse
