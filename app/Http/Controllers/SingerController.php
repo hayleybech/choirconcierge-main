@@ -50,7 +50,8 @@ class SingerController extends Controller
 
     public function create(): View
     {
-        $voice_parts = VoicePart::all()->pluck('title', 'id');
+        $voice_parts = VoicePart::all()->pluck('title', 'id')->toArray();
+        $voice_parts = array_merge([0 => "None"], $voice_parts);
 
         return view('singers.create', compact('voice_parts'));
     }
@@ -69,7 +70,8 @@ class SingerController extends Controller
 
     public function edit(Singer $singer): View
     {
-        $voice_parts = VoicePart::all()->pluck('title', 'id');
+        $voice_parts = VoicePart::all()->pluck('title', 'id')->toArray();
+        $voice_parts = array_merge([0 => "None"], $voice_parts);
 
         return view('singers.edit', compact('singer', 'voice_parts' ));
     }

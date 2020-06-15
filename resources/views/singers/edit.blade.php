@@ -67,7 +67,7 @@
 
             <div class="form-group">
                 {{ Form::label('voice_part_id', 'Voice Part') }}
-                {{ Form::select('voice_part_id', $voice_parts, $singer->voice_part->id, array('class' => 'custom-select')) }}
+                {{ Form::select('voice_part_id', $voice_parts, optional($singer->voice_part)->id, array('class' => 'custom-select')) }}
             </div>
 
             <div class="form-group">
