@@ -10,9 +10,7 @@
 @section('page-lead')
 	<div class="row">
 		<div class="col-md-2">
-			<a href="{{route('singers.show', ['singer' => $singer])}}">
-				<img src="{{ $singer->user->getFirstMediaUrl('avatar', 'profile') }}" alt="{{ $singer->name }}" class="user-avatar-rounded">
-			</a>
+			<img src="{{ $singer->user->getFirstMediaUrl('avatar', 'profile') }}" alt="{{ $singer->name }}" class="user-avatar-rounded">
 		</div>
 		<div class="col">
 			<span class="badge badge-light">{{ $singer->category->name }}</span><br>
