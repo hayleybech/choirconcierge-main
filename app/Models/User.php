@@ -204,6 +204,19 @@ class User extends Authenticatable implements HasMedia
             });
     }
 
+    public function getAvatarUrl(string $conversion): string
+    {
+        if( ! $this->hasMedia('avatar')){
+            return $this->getFallbackMediaUrl('avatar');
+        }
+
+        if($this->getFirstMedia('avatar')->hasGeneratedConversion($conversion))
+        {
+            return $this->getFirstMediaUrl('avatar', $conversion);
+        }
+        return $this->getFirstMediaUrl('avatar');
+    }
+
     public function scopeActive(Builder $query): Builder
     {
         return $query->whereHas('singer', static function(Builder $query){

@@ -10,7 +10,7 @@
 @section('page-lead')
 	<div class="row">
 		<div class="col-md-2">
-			<img src="{{ $singer->user->getFirstMediaUrl('avatar', 'profile') }}" alt="{{ $singer->name }}" class="user-avatar-rounded">
+			<img src="{{ $singer->user->getAvatarUrl('profile') }}" alt="{{ $singer->name }}" class="user-avatar-rounded">
 		</div>
 		<div class="col">
 			<span class="badge badge-light">{{ $singer->category->name }}</span><br>
