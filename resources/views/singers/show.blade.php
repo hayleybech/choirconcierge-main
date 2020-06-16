@@ -16,7 +16,7 @@
 			<span class="badge badge-light">{{ $singer->category->name }}</span><br>
 			@if( $singer->voice_part)<i class="fa fa-fw fa-users"></i> {{ $singer->voice_part->title }} <br>@endif
 			{{ $singer->email }}<br>
-			Added: {{$singer->created_at}}<br>
+			Added: {{$singer->created_at->toDayDateTimeString()}}<br>
 			<strong>
 				@if( $singer->onboarding_enabled )
 					Onboarding enabled
@@ -70,7 +70,7 @@
 		@if( $singer->profile )
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item">
-				<strong>DOB:</strong> {{$singer->profile->dob}}
+				<strong>DOB:</strong> {{$singer->profile->dob->toFormattedDateString()}}
 			</li>
 			<li class="list-group-item">
 				<strong>Phone:</strong> {{$singer->profile->phone}}

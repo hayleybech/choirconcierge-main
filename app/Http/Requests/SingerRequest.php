@@ -38,7 +38,7 @@ class SingerRequest extends FormRequest
                 'array',
                 'exists:roles,id',
             ],
-            'password' => 'confirmed|nullable',
+            'password' => 'sometimes|nullable|min:8|confirmed',
             'avatar' => 'file|mimetypes:image/jpeg,image/png|max:10240',
         ];
     }
