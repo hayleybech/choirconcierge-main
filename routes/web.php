@@ -12,6 +12,24 @@
 */
 
 
+use App\Http\Controllers\DashController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\FolderController;
+use App\Http\Controllers\ICalController;
+use App\Http\Controllers\MailboxController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationTemplateController;
+use App\Http\Controllers\RiserStackController;
+use App\Http\Controllers\SingerController;
+use App\Http\Controllers\SingerPlacementController;
+use App\Http\Controllers\SingerProfileController;
+use App\Http\Controllers\SongAttachmentController;
+use App\Http\Controllers\SongController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserGroupController;
+
 Auth::routes(['register' => false]);
 
 // Public pages
@@ -26,7 +44,7 @@ Route::prefix('')->group(static function (){
 // Dashboard
 Route::prefix('dash')->middleware('auth')->group(static function (){
     // Index
-    Route::get('/', 'DashController@index')->name('dash');
+    Route::get('/', [DashController::class, 'index'])->name('dash');
 });
 
 // Singers module
@@ -36,71 +54,71 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
     Route::middleware('employee')->group(static function() {
 
         // Complete Task
-        Route::get('{singer}/tasks/{task}/complete', 'SingerController@completeTask')->name('task.complete');
+        Route::get('{singer}/tasks/{task}/complete', [SingerController::class, 'completeTask'])->name('task.complete');
     });
 
     // Singers - Membership Team OR SELF USER
     Route::middleware('role_or_self:Membership Team')->group(static function() {
 
         // Update
-        Route::get('{singer}/edit', 'SingerController@edit')->name('singers.edit');
-        Route::put('{singer}', 'SingerController@update')->name('singers.update');
+        Route::get('{singer}/edit', [SingerController::class, 'edit'])->name('singers.edit');
+        Route::put('{singer}', [SingerController::class, 'update'])->name('singers.update');
     });
 
     // Singers - Membership Team
     Route::middleware('role:Membership Team')->group(static function() {
 
         // Create
-        Route::get('create', 'SingerController@create')->name('singers.create');
-        Route::post('/', 'SingerController@store');
+        Route::get('create', [SingerController::class, 'create'])->name('singers.create');
+        Route::post('/', [SingerController::class, 'store']);
 
         // Delete
-        Route::get('{singer}/delete', 'SingerController@delete')->name('singers.delete');
+        Route::get('{singer}/delete', [SingerController::class, 'delete'])->name('singers.delete');
         
         // Create Profile
-        Route::get('{singer}/profile/create', 'SingerProfileController@create')->name('profile.create');
-        Route::post('{singer}/profile', 'SingerProfileController@store')->name('profile');
+        Route::get('{singer}/profile/create', [SingerProfileController::class, 'create'])->name('profile.create');
+        Route::post('{singer}/profile', [SingerProfileController::class, 'store'])->name('profile');
 
         // Mark "Account Created" task complete
-        Route::get('{singer}/account/created', 'SingerController@markAccountCreated')->name('singers.account.created');
+        Route::get('{singer}/account/created', [SingerController::class, 'markAccountCreated'])->name('singers.account.created');
 
         // Move Singer
-        Route::get('{singer}/move/', 'SingerController@move')->name('singers.move');
+        Route::get('{singer}/move/', [SingerController::class ,'move'])->name('singers.move');
 
         // Export
-        Route::get('export', 'SingerController@export')->name('singers.export');
+        Route::get('export', [SingerController::class, 'export'])->name('singers.export');
     });
 
     // Singers - Music Team
     Route::middleware('role:Music Team')->group(static function() {
         // Create Voice Placement
-        Route::get('{singer}/placement/create', 'SingerPlacementController@create')->name('placement.create');
-        Route::post('{singer}/placement', 'SingerPlacementController@store')->name('placement');
+        Route::get('{singer}/placement/create', [SingerPlacementController::class, 'create'])->name('placement.create');
+        Route::post('{singer}/placement', [SingerPlacementController::class, 'store'])->name('placement');
 
         // Mark audition passed
-        Route::get('{singer}/audition/pass', 'SingerController@auditionpass')->name('singers.audition.pass');
+        Route::get('{singer}/audition/pass', [SingerController::class, 'auditionpass'])->name('singers.audition.pass');
     });
 
     // Singers - Accounts Team
     Route::middleware('role:Accounts Team')->group(static function() {
         // Mark fees paid
-        Route::get('{singer}/fees/paid', 'SingerController@feespaid')->name('singers.fees.paid');
+        Route::get('{singer}/fees/paid', [SingerController::class, 'feespaid'])->name('singers.fees.paid');
     });
 
 
     // Singers - Uniforms Team
     Route::middleware('role:Uniforms Team')->group(static function() {
         // Mark uniform provided
-        Route::get('{singer}/uniform/provided', 'SingerController@markUniformProvided')->name('singers.uniform.provided');
+        Route::get('{singer}/uniform/provided', [SingerController::class, 'markUniformProvided'])->name('singers.uniform.provided');
     });
 
     // Singers - Any Authorised User
     Route::middleware('auth')->group(static function() {
         // Index
-        Route::get('/', 'SingerController@index')->name('singers.index');
+        Route::get('/', [SingerController::class, 'index'])->name('singers.index');
 
         // View
-        Route::get('{singer}', 'SingerController@show')->name('singers.show');
+        Route::get('{singer}', [SingerController::class, 'show'])->name('singers.show');
     });
 });
 
@@ -111,29 +129,29 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
     // Any employee
     Route::middleware('employee')->group(static function() {
         // Create
-        Route::get('create', 'SongController@create')->name('songs.create');
-        Route::post('/', 'SongController@store');
+        Route::get('create', [SongController::class, 'create'])->name('songs.create');
+        Route::post('/', [SongController::class, 'store']);
 
         // Edit/Delete
-        Route::get('{song}/edit', 'SongController@edit')->name('songs.edit');
-        Route::put('{song}', 'SongController@update');
-        Route::get('{song}/delete', 'SongController@delete')->name('songs.delete');
+        Route::get('{song}/edit', [SongController::class, 'edit'])->name('songs.edit');
+        Route::put('{song}', [SongController::class, 'update']);
+        Route::get('{song}/delete', [SongController::class, 'delete'])->name('songs.delete');
 
         // Create/Delete attachments
-        Route::post('{song}/attachments', 'SongAttachmentController@store')->name('songs.attachments.store');
-        Route::get('{song}/attachments/{attachment}/delete', 'SongAttachmentController@delete')->name('songs.attachments.delete');
+        Route::post('{song}/attachments', [SongAttachmentController::class, 'store'])->name('songs.attachments.store');
+        Route::get('{song}/attachments/{attachment}/delete', [SongAttachmentController::class, 'delete'])->name('songs.attachments.delete');
     });
 
     // Any Authorised User
     Route::middleware('auth')->group(static function() {
         // Index
-        Route::get('/', 'SongController@index')->name('songs.index');
+        Route::get('/', [SongController::class, 'index'])->name('songs.index');
 
         // Learning Mode
-        Route::get('learning', 'SongController@learning')->name('songs.learning');
+        Route::get('learning', [SongController::class, 'learning'])->name('songs.learning');
 
         // View
-        Route::get('{song}', 'SongController@show')->name('songs.show');
+        Route::get('{song}', [SongController::class, 'show'])->name('songs.show');
 
     });
 });
@@ -144,22 +162,22 @@ Route::prefix('events')->group(static function (){
     /// Any Employee
     Route::middleware('employee')->group(static function() {
         // Create
-        Route::get('create', 'EventController@create')->name('events.create');
-        Route::post('/', 'EventController@store');
+        Route::get('create', [EventController::class, 'create'])->name('events.create');
+        Route::post('/', [EventController::class, 'store']);
 
         // Edit/Delete
-        Route::get('{event}/edit', 'EventController@edit')->name('events.edit');
-        Route::put('{event}', 'EventController@update');
-        Route::get('{event}/delete', 'EventController@delete')->name('events.delete');
+        Route::get('{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+        Route::put('{event}', [EventController::class, 'update']);
+        Route::get('{event}/delete', [EventController::class, 'delete'])->name('events.delete');
     });
 
     // Any Authorised User
     Route::middleware('auth')->group(static function() {
         // Index
-        Route::get('/', 'EventController@index')->name('events.index');
+        Route::get('/', [EventController::class, 'index'])->name('events.index');
 
         //View
-        Route::get('{event}', 'EventController@show')->name('events.show');
+        Route::get('{event}', [EventController::class, 'show'])->name('events.show');
     });
 });
 
@@ -168,26 +186,26 @@ Route::prefix('folders')->group(static function (){
 
     Route::middleware(['auth', 'employee'])->group(static function() {
         // Create
-        Route::get('create', 'FolderController@create')->name('folders.create');
-        Route::post('/', 'FolderController@store');
+        Route::get('create', [FolderController::class, 'create'])->name('folders.create');
+        Route::post('/', [FolderController::class, 'store']);
 
         // Edit/Delete
-        Route::get('{folder}/edit', 'FolderController@edit')->name('folders.edit');
-        Route::put('{folder}', 'FolderController@update');
-        Route::get('{folder}/delete', 'FolderController@destroy')->name('folders.delete');
+        Route::get('{folder}/edit', [FolderController::class, 'edit'])->name('folders.edit');
+        Route::put('{folder}', [FolderController::class, 'update']);
+        Route::get('{folder}/delete', [FolderController::class, 'destroy'])->name('folders.delete');
 
         // Create/Delete documents
-        Route::post('{folder}/documents', 'DocumentController@store')->name('folders.documents.store');
-        Route::get('{folder}/documents/{document}/delete', 'DocumentController@destroy')->name('folders.documents.delete');
+        Route::post('{folder}/documents', [DocumentController::class, 'store'])->name('folders.documents.store');
+        Route::get('{folder}/documents/{document}/delete', [DocumentController::class, 'destroy'])->name('folders.documents.delete');
     });
 
     // Any Authorised User
     Route::middleware('auth')->group(static function() {
         // Index
-        Route::get('/', 'FolderController@index')->name('folders.index');
+        Route::get('/', [FolderController::class, 'index'])->name('folders.index');
 
         //View
-        Route::get('{folder}', 'FolderController@show')->name('folders.show');
+        Route::get('{folder}', [FolderController::class, 'show'])->name('folders.show');
     });
 });
 
@@ -197,22 +215,22 @@ Route::prefix('riser-stacks')->group(static function (){
     /// Any Employee
     Route::middleware('employee')->group(static function() {
         // Create
-        Route::get('create', 'RiserStackController@create')->name('stacks.create');
-        Route::post('/', 'RiserStackController@store');
+        Route::get('create', [RiserStackController::class, 'create'])->name('stacks.create');
+        Route::post('/', [RiserStackController::class, 'store']);
 
         // Edit/Delete
-        Route::get('{stack}/edit', 'RiserStackController@edit')->name('stacks.edit');
-        Route::put('{stack}', 'RiserStackController@update');
-        Route::get('{stack}/delete', 'RiserStackController@delete')->name('stacks.delete');
+        Route::get('{stack}/edit', [RiserStackController::class, 'edit'])->name('stacks.edit');
+        Route::put('{stack}', [RiserStackController::class, 'update']);
+        Route::get('{stack}/delete', [RiserStackController::class, 'delete'])->name('stacks.delete');
     });
 
     // Any Authorised User
     Route::middleware('auth')->group(static function() {
         // Index
-        Route::get('/', 'RiserStackController@index')->name('stacks.index');
+        Route::get('/', [RiserStackController::class, 'index'])->name('stacks.index');
 
         //View
-        Route::get('{stack}', 'RiserStackController@show')->name('stacks.show');
+        Route::get('{stack}', [RiserStackController::class, 'show'])->name('stacks.show');
     });
 });
 
@@ -226,17 +244,17 @@ Route::prefix('notifications')->name('notifications')->middleware(['auth', 'empl
 // Users/Team module
 Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static function () {
     // Index
-    Route::get('/', 'UserController@index')->name('users.index');
+    Route::get('/', [UserController::class, 'index'])->name('users.index');
 
     // AJAX Search
-    Route::get('/find', 'UserController@findUsers');
-    Route::get('/roles/find', 'UserController@findRoles');
-    Route::get('/voice-parts/find', 'UserController@findVoiceParts');
-    Route::get('/singer-categories/find', 'UserController@findSingerCategories');
+    Route::get('/find', [UserController::class, 'findUsers']);
+    Route::get('/roles/find', [UserController::class, 'findRoles']);
+    Route::get('/voice-parts/find', [UserController::class, 'findVoiceParts']);
+    Route::get('/singer-categories/find', [UserController::class, 'findSingerCategories']);
 
     // Attach/Detach role from a user
-    Route::get('{user}/roles/{role}/detach', 'UserController@detachRole')->name('users.detachrole');
-    Route::post('{user}/role', 'UserController@addRoles')->name('users.addroles');
+    Route::get('{user}/roles/{role}/detach', [UserController::class, 'detachRole'])->name('users.detachrole');
+    Route::post('{user}/role', [UserController::class, 'addRoles'])->name('users.addroles');
 });
 
 // Mailing Lists (User Groups) module
@@ -246,12 +264,12 @@ Route::middleware(['auth', 'role:Admin'])->group(static function () {
 });
 
 /** Mailbox **/
-Route::get('/mailbox/process', 'MailboxController@process');
+Route::get('/mailbox/process', [MailboxController::class, 'process']);
 
 // Tasks module
 Route::prefix('tasks')->middleware(['auth', 'role:Admin'])->group(static function () {
     // Index
-    Route::get('/', 'TaskController@index')->name('tasks.index');
+    Route::get('/', [TaskController::class, 'index'])->name('tasks.index');
 });
 
 // Notification Templates module
@@ -329,7 +347,7 @@ Route::prefix('seed')->middleware(['auth', 'role:Admin'])->group(static function
     // Seed Users
     // db:seed --class=UserTableSeeder
     Route::get('users', function(){
-        echo Artisan::call('db:seed', ['--class' => 'UserTableSeeder']);
+        echo Artisan::call('db:seed', ['--class' => UserTableSeeder::class]);
         echo '<pre>'.Artisan::output().'</pre>';
     });
 
@@ -337,7 +355,7 @@ Route::prefix('seed')->middleware(['auth', 'role:Admin'])->group(static function
     // db:seed --class=SingerTableSeeder
     Route::get('singers', function(){
         echo Artisan::call('db:seed', [
-            '--class' => 'SingerTableSeeder',
+            '--class' => SingerTableSeeder::class,
             '--force' => true,
         ]);
         echo '<pre>'.Artisan::output().'</pre>';
@@ -348,7 +366,7 @@ Route::prefix('seed')->middleware(['auth', 'role:Admin'])->group(static function
     // db:seed --class=SingerCategorySeeder
     Route::get('singer-categories', function(){
         echo Artisan::call('db:seed', [
-            '--class' => 'SingerCategorySeeder',
+            '--class' => SingerCategorySeeder::class,
             '--force' => true,
         ]);
         echo '<pre>'.Artisan::output().'</pre>';
@@ -358,7 +376,7 @@ Route::prefix('seed')->middleware(['auth', 'role:Admin'])->group(static function
     // db:seed --class=TaskTableSeeder
     Route::get('tasks', function(){
         echo Artisan::call('db:seed', [
-            '--class' => 'TaskTableSeeder',
+            '--class' => TaskTableSeeder::class,
             '--force' => true,
         ]);
         echo '<pre>'.Artisan::output().'</pre>';
@@ -368,16 +386,16 @@ Route::prefix('seed')->middleware(['auth', 'role:Admin'])->group(static function
     // db:seed --class=NotificationTemplateSeeder
     Route::get('templates', function(){
         echo Artisan::call('db:seed', [
-            '--class' => 'NotificationTemplateSeeder',
+            '--class' => NotificationTemplateSeeder::class,
             '--force' => true,
         ]);
         echo '<pre>'.Artisan::output().'</pre>';
     });
 
     // Singer import
-    Route::get('import', 'SingerController@import');
+    Route::get('import', [SingerController::class, 'import']);
 });
 
 
 // Public calendar feed
-Route::get('/events-ical', 'ICalController@index');
+Route::get('/events-ical', [ICalController::class, 'index']);
