@@ -17,7 +17,7 @@
         </span>
     </div>
     <div class="r-table__cell attachment-col--actions">
-        <a href="{{ $attachment->download_url }}" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-download"></i> Download</a>
+        <a href="{{ route('songs.attachments.show', [$attachment->song, $attachment]) }}" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-download"></i> Download</a>
     </div>
     <div class="r-table__cell col--delete">
         <a href="{{route( 'songs.attachments.delete', ['song' => $attachment->song, 'attachment' => $attachment] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-trash"></i></a>

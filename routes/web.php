@@ -141,8 +141,9 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
         Route::put('{song}', [SongController::class, 'update']);
         Route::get('{song}/delete', [SongController::class, 'delete'])->name('songs.delete');
 
-        // Create/Delete attachments
+        // Create/Download/Delete attachments
         Route::post('{song}/attachments', [SongAttachmentController::class, 'store'])->name('songs.attachments.store');
+        Route::get('{song}/attachments/{attachment}', [SongAttachmentController::class, 'show'])->name('songs.attachments.show');
         Route::get('{song}/attachments/{attachment}/delete', [SongAttachmentController::class, 'delete'])->name('songs.attachments.delete');
     });
 

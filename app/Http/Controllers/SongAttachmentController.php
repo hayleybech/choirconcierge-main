@@ -9,6 +9,11 @@ use Illuminate\Http\RedirectResponse;
 
 class SongAttachmentController extends Controller
 {
+    public function show(Song $song, SongAttachment $attachment)
+    {
+        return response()->download( public_path( $attachment->download_url ) );
+    }
+
     public function store(Song $song, SongAttachmentRequest $request): RedirectResponse
     {
         $data = $request->validated();
