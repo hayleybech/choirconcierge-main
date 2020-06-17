@@ -108,7 +108,12 @@
 
 	@if( Auth::user()->hasRole('Music Team') )
 	<div class="card bg-light">
-		<h3 class="card-header h5">Voice Placement</h3>
+		<h3 class="card-header h5 d-flex align-items-center">
+			Voice Placement
+			@if($singer->placement)
+				<a href="{{route( 'placements.edit', ['singer' => $singer, 'placement' => $singer->placement] )}}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
+			@endif
+		</h3>
 		@if( $singer->placement )
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item">

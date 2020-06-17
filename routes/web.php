@@ -96,6 +96,8 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         // Create Voice Placement
         Route::get('{singer}/placement/create', [SingerPlacementController::class, 'create'])->name('placement.create');
         Route::post('{singer}/placement', [SingerPlacementController::class, 'store'])->name('placement');
+        Route::get('{singer}/placement/{placement}/edit', [SingerPlacementController::class, 'edit'])->name('placements.edit');
+        Route::put('{singer}/placement/{placement}', [SingerPlacementController::class, 'update'])->name('placements.update');
 
         // Mark audition passed
         Route::get('{singer}/audition/pass', [SingerController::class, 'auditionpass'])->name('singers.audition.pass');

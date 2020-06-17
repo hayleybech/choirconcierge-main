@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
+use App\Models\Placement;
 use App\Models\Singer;
 use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
@@ -31,5 +32,17 @@ class SingerPlacementController extends Controller
         }
 
         return redirect()->route('singers.show', $singer)->with(['status' => 'Voice Placement created. ', ]);
+    }
+
+    public function edit(Singer $singer, Placement $placement, Request $request): View
+    {
+        return view('singers.editplacement', compact('singer', 'placement'));
+    }
+
+    public function update(Request $request, Singer $singer, Placement $placement): RedirectResponse
+    {
+        $placement->update($request->all());
+
+        return redirect()->route('singers.show', $singer)->with(['status' => 'Voice Placement updated.']);
     }
 }

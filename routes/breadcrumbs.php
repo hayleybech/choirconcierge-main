@@ -77,6 +77,11 @@ Breadcrumbs::for('placement.create', static function ($trail, $singer) {
     $trail->parent('singers.show', $singer);
     $trail->push('Create Voice Placement', route('placement.create', $singer));
 });
+// Singers > [Singer] > [Voice Placement] > Edit
+Breadcrumbs::for('placements.edit', static function ($trail, $singer, $placement) {
+    $trail->parent('singers.show', $singer);
+    $trail->push('Edit Voice Placement', route('placements.edit', [$singer, $placement]));
+});
 
 // Singers > Create
 Breadcrumbs::for('singers.create', static function ($trail) {
