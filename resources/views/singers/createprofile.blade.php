@@ -13,10 +13,18 @@
 		<h3 class="card-header h4">Add Member Profile</h3>
 
 		<div class="card-body">
-			<p>
+			<div class="form-group">
+
 				{{ Form::label('dob', 'Date of Birth') }}
-				{{ Form::date('dob', '', array('class' => 'form-control')) }}
-			</p>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
+					</div>
+					{{ Form::text('dob_input', '', array('class' => 'form-control dob-single-date-picker')) }}
+					{{ Form::hidden('dob', '', array('class' => 'dob-hidden')) }}
+				</div>
+
+			</div>
 
 			<p>
 				{{ Form::label('phone', 'Phone') }}
@@ -66,5 +74,39 @@
 	</div>
 
 {{ Form::close() }}
+
+@push('scripts-footer-bottom')
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+	<script>
+		// DATREPICKER CONFIG
+		const DATE_FORMAT_RAW = 'YYYY-MM-DD HH:mm:ss';
+		const DATE_FORMAT_DISPLAY = 'MMMM D, YYYY';
+
+		const DATE_CONFIG = {
+			"showISOWeekNumbers": true,
+			"timePicker": false,
+			"locale": {
+				"format": DATE_FORMAT_DISPLAY,
+				"firstDay": 1
+			}
+		};
+
+		// DOB (Single Date Picker)
+		const $el_dob = $('.dob-single-date-picker');
+		const $el_dob_raw = $('.dob-hidden');
+		$el_dob.daterangepicker({
+					...DATE_CONFIG,
+					'singleDatePicker': true
+				},
+				function(start, end, label){
+					console.log(start.format(DATE_FORMAT_RAW));
+					$el_dob_raw.val( start.format(DATE_FORMAT_RAW) );
+				}
+		);
+	</script>
+@endpush
 
 @endsection
