@@ -33,13 +33,7 @@ use App\Http\Controllers\UserGroupController;
 Auth::routes(['register' => false]);
 
 // Public pages
-Route::prefix('')->group(static function (){
-    // Home page
-    Route::get('/', static function () {
-        return view('welcome');
-    })->name('menu');
-
-});
+Route::view('welcome', 'welcome');
 
 // Dashboard
 Route::prefix('dash')->middleware('auth')->group(static function (){
