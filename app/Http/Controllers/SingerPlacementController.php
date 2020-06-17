@@ -30,6 +30,6 @@ class SingerPlacementController extends Controller
             event( new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer) );
         }
 
-        return redirect('/singers')->with(['status' => 'Voice Placement created. ', ]);
+        return redirect()->route('singers.show', $singer)->with(['status' => 'Voice Placement created. ', ]);
     }
 }

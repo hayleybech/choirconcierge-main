@@ -30,6 +30,6 @@ class SingerProfileController extends Controller
             event( new TaskCompleted(Task::find(self::PROFILE_TASK_ID), $singer) );
         }
 
-        return redirect('/singers')->with(['status' => 'Member Profile created. ', ]);
+        return redirect()->route('singers.show', $singer)->with(['status' => 'Member Profile created. ', ]);
     }
 }
