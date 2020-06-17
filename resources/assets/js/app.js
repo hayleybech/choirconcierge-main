@@ -30,6 +30,7 @@ Vue.component('riser-face', require('./components/RiserFace.vue').default);
 Vue.component('riser-stack', require('./components/RiserStack.vue').default);
 Vue.component('holding-area', require('./components/HoldingArea.vue').default);
 Vue.component('riser-spot', require('./components/RiserSpot').default);
+Vue.component('load-button', require('./components/LoadButton').default);
 
 const app = new Vue({
     el: '#app'
@@ -38,3 +39,4 @@ const app = new Vue({
 
 //const helloWorld = require('./test').test();
 //console.log(helloWorld);
+

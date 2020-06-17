@@ -73,9 +73,7 @@
                 <div class="r-table__cell attachment-col--actions">
                     {{ Form::label('', '&nbsp;') }}
 
-                    <button type="submit" class="btn btn-success btn-sm">
-                        <i class="fa fa-fw fa-plus"></i> Add
-                    </button>
+                    <load-button theme="btn-success" size="btn-sm" icon="fa fa-plus" label="Add" label-loading="Uploading..."></load-button>
                 </div>
                 <div class="r-table__cell col--delete">
                 </div>
