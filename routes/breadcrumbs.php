@@ -65,6 +65,13 @@ Breadcrumbs::for('profile.create', static function ($trail, $singer) {
     $trail->push('Create Member Profile', route('profile.create', $singer));
 });
 
+// Singers > [Singer] > [Member Profile] > Edit
+Breadcrumbs::for('profiles.edit', static function ($trail, $singer, $profile) {
+    $trail->parent('singers.show', $singer);
+    $trail->push('Edit Member Profile', route('profiles.edit', [$singer, $profile]));
+});
+
+
 // Singers > [Singer] > Create Voice Placement
 Breadcrumbs::for('placement.create', static function ($trail, $singer) {
     $trail->parent('singers.show', $singer);

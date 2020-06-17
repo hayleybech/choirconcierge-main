@@ -78,6 +78,8 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         // Create Profile
         Route::get('{singer}/profile/create', [SingerProfileController::class, 'create'])->name('profile.create');
         Route::post('{singer}/profile', [SingerProfileController::class, 'store'])->name('profile');
+        Route::get('{singer}/profile/{profile}/edit', [SingerProfileController::class, 'edit'])->name('profiles.edit');
+        Route::put('{singer}/profile/{profile}', [SingerProfileController::class, 'update'])->name('profiles.update');
 
         // Mark "Account Created" task complete
         Route::get('{singer}/account/created', [SingerController::class, 'markAccountCreated'])->name('singers.account.created');

@@ -66,7 +66,12 @@
 	@endif
 	
 	<div class="card bg-light">
-		<h3 class="card-header h5">Member Profile</h3>
+		<h3 class="card-header h5 d-flex align-items-center">
+			Member Profile
+			@if($singer->profile)
+				<a href="{{route( 'profiles.edit', ['singer' => $singer, 'profile' => $singer->profile->id] )}}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
+			@endif
+		</h3>
 		@if( $singer->profile )
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item">

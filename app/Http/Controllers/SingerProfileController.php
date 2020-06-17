@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
+use App\Models\Profile;
 use App\Models\Singer;
 use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
@@ -31,5 +32,17 @@ class SingerProfileController extends Controller
         }
 
         return redirect()->route('singers.show', $singer)->with(['status' => 'Member Profile created. ', ]);
+    }
+
+    public function edit(Singer $singer, Profile $profile, Request $request): View
+    {
+        return view('singers.editprofile', compact('singer', 'profile'));
+    }
+
+    public function update(Request $request, Singer $singer, Profile $profile): RedirectResponse
+    {
+        $profile->update($request->all());
+
+        return redirect()->route('singers.show', $singer)->with(['status' => 'Member Profile updated.']);
     }
 }
