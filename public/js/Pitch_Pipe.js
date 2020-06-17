@@ -5,21 +5,27 @@ class Pitch_Pipe {
         this.synth = new Tone.Synth().toMaster();
 
         this.DEFAULT_OCTAVE = 4;
-        this.DEFAULT_DURATION = '1m';
 
         this.setKey(key);
         this.bindAll();
     }
 
     play() {
-        this.synth.triggerAttackRelease( this.pitch, this.DEFAULT_DURATION);
+        this.synth.triggerAttack( this.pitch );
+    }
+
+    stop() {
+        this.synth.triggerRelease();
     }
 
     bindAll() {
         let self = this;
-        this.el.addEventListener('click', function(){
+        this.el.addEventListener('mousedown', function(){
             self.play();
-        })
+        });
+        this.el.addEventListener('mouseup', function(){
+            self.stop();
+        });
     }
 
     setKey(key) {
