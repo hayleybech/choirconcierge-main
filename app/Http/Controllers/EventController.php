@@ -16,7 +16,12 @@ class EventController extends Controller
         // Base query
         $events = Event::with([])
             ->filter()
-            ->get();
+            ->get()
+            ->groupBy(static function($item, $key){
+                return $item['start_date'] > now();
+            });
+        $past_events = $events[0];
+        $upcoming_events = $events[1];
 
         // Sort
         $sort_by = $request->input('sort_by', 'name');
@@ -34,7 +39,7 @@ class EventController extends Controller
         $sorts = $this->getSorts($request);
 
         $filters = Event::getFilters();
-        return view('events.index', compact('events', 'filters', 'sorts') );
+        return view('events.index', compact('upcoming_events', 'past_events', 'filters', 'sorts') );
     }
 
     public function create(): View
