@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
+use App\Http\Requests\PlacementRequest;
 use App\Models\Placement;
 use App\Models\Singer;
 use App\Models\Task;
@@ -19,9 +20,9 @@ class SingerPlacementController extends Controller
         return view('singers.createplacement', compact('singer'));
     }
 
-    public function store(Singer $singer, Request $request): RedirectResponse
+    public function store(Singer $singer, PlacementRequest $request): RedirectResponse
     {
-        $singer->placement()->create($request->all()); // refer to whitelist in model
+        $singer->placement()->create($request->validated()); // refer to whitelist in model
 
         if( $singer->onboarding_enabled ) {
             // Mark matching task completed
@@ -39,9 +40,9 @@ class SingerPlacementController extends Controller
         return view('singers.editplacement', compact('singer', 'placement'));
     }
 
-    public function update(Request $request, Singer $singer, Placement $placement): RedirectResponse
+    public function update(PlacementRequest $request, Singer $singer, Placement $placement): RedirectResponse
     {
-        $placement->update($request->all());
+        $placement->update($request->validated());
 
         return redirect()->route('singers.show', $singer)->with(['status' => 'Voice Placement updated.']);
     }

@@ -25,27 +25,27 @@
 
 			<p>
 				{{ Form::label('skill_pitch', 'Pitch Skill (1-5)') }}
-				{{ Form::number('skill_pitch', '', array('class' => 'form-control')) }}
+				{{ Form::number('skill_pitch', '', array('class' => 'form-control', 'min' => 1, 'max' => 5)) }}
 			</p>
 
 			<p>
 				{{ Form::label('skill_harmony', 'Harmony Skill (1-5)') }}
-				{{ Form::number('skill_harmony', '', array('class' => 'form-control')) }}
+				{{ Form::number('skill_harmony', '', array('class' => 'form-control', 'min' => 1, 'max' => 5)) }}
 			</p>
 
 			<p>
 				{{ Form::label('skill_performance', 'Performance Skill (1-5)') }}
-				{{ Form::number('skill_performance', '', array('class' => 'form-control')) }}
+				{{ Form::number('skill_performance', '', array('class' => 'form-control', 'min' => 1, 'max' => 5)) }}
 			</p>
 
 			<p>
 				{{ Form::label('skill_sightreading', 'Sight Reading Skill (1-5)') }}
-				{{ Form::number('skill_sightreading', '', array('class' => 'form-control')) }}
+				{{ Form::number('skill_sightreading', '', array('class' => 'form-control', 'min' => 1, 'max' => 5)) }}
 			</p>
 
 			<p>
 				{{ Form::label('voice_tone', 'Voice Tone (1 = Fluty, 3 = Brassy)') }}
-				{{ Form::number('voice_tone', '', array('class' => 'form-control')) }}
+				{{ Form::number('voice_tone', '', array('class' => 'form-control', 'min' => 1, 'max' => 3)) }}
 			</p>
 
 		</div>
