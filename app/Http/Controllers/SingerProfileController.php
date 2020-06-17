@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
+use App\Http\Requests\ProfileRequest;
 use App\Models\Profile;
 use App\Models\Singer;
 use App\Models\Task;
@@ -19,9 +20,9 @@ class SingerProfileController extends Controller
         return view('singers.createprofile', compact('singer'));
     }
 
-    public function store(Singer $singer, Request $request): RedirectResponse
+    public function store(Singer $singer, ProfileRequest $request): RedirectResponse
     {
-        $singer->profile()->create($request->all()); // refer to whitelist in model
+        $singer->profile()->create($request->validated()); // refer to whitelist in model
 
         if( $singer->onboarding_enabled ) {
             // Mark matching task completed
@@ -39,9 +40,9 @@ class SingerProfileController extends Controller
         return view('singers.editprofile', compact('singer', 'profile'));
     }
 
-    public function update(Request $request, Singer $singer, Profile $profile): RedirectResponse
+    public function update(ProfileRequest $request, Singer $singer, Profile $profile): RedirectResponse
     {
-        $profile->update($request->all());
+        $profile->update($request->validated());
 
         return redirect()->route('singers.show', $singer)->with(['status' => 'Member Profile updated.']);
     }
