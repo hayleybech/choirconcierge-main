@@ -132,26 +132,8 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
         Route::get('{song}/attachments/{attachment}', [SongAttachmentController::class, 'show'])->name('songs.attachments.show');
         Route::get('{song}/attachments/{attachment}/delete', [SongAttachmentController::class, 'delete'])->name('songs.attachments.delete');
     });
-
-    // Create
-    Route::get('create', [SongController::class, 'create'])->name('songs.create');
-    Route::post('/', [SongController::class, 'store']);
-
-    // Edit/Delete
-    Route::get('{song}/edit', [SongController::class, 'edit'])->name('songs.edit');
-    Route::put('{song}', [SongController::class, 'update']);
-    Route::get('{song}/delete', [SongController::class, 'delete'])->name('songs.delete');
-
-    // Index
-    Route::get('/', [SongController::class, 'index'])->name('songs.index');
-
-    // Learning Mode
-    Route::get('learning', [SongController::class, 'learning'])->name('songs.learning');
-
-    // View
-    Route::get('{song}', [SongController::class, 'show'])->name('songs.show');
-
 });
+Route::resource('songs', 'SongController');
 
 // Events module
 Route::resource('events', 'EventController');

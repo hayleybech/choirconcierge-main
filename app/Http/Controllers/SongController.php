@@ -44,7 +44,7 @@ class SongController extends Controller
     public function learning(Request $request): View
     {
         $this->authorize('viewAny', Song::class);
-        
+
         // Base query
         $songs = Song::with(['attachments'])
             ->filter()
@@ -121,7 +121,7 @@ class SongController extends Controller
         return redirect()->route('songs.show', [$song])->with(['status' => 'Song updated. ', ]);
     }
 
-    public function delete(Song $song): RedirectResponse
+    public function destroy(Song $song): RedirectResponse
     {
         $this->authorize('delete', $song);
 
