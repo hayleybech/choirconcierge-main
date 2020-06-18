@@ -82,7 +82,7 @@ class RiserStackController extends Controller
         return redirect()->route('stacks.show', [$stack])->with(['status' => 'Riser stack updated. ', ]);
     }
 
-    public function delete(RiserStack $stack): RedirectResponse
+    public function destroy(RiserStack $stack): RedirectResponse
     {
         $this->authorize('delete', $stack);
 
