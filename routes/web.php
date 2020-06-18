@@ -266,17 +266,10 @@ Route::middleware(['auth', 'role:Admin'])->group(static function () {
 Route::get('/mailbox/process', [MailboxController::class, 'process']);
 
 // Tasks module
-Route::prefix('tasks')->middleware(['auth', 'role:Admin'])->group(static function () {
-    // Index
-    Route::get('/', [TaskController::class, 'index'])->name('tasks.index');
-});
+Route::resource('tasks', 'TaskController')->only(['index'])->middleware(['auth', 'role:Admin']);
 
 // Notification Templates module
-Route::prefix('notification-templates')->name('notification-templates.')->middleware(['auth', 'role:Admin'])->group(static function () {
-    // Index
-    Route::resource('/', 'NotificationTemplateController');
-
-});
+Route::resource('notification-templates', 'NotificationTemplateController')->only(['index'])->middleware(['auth', 'role:Admin']);
 
 // Migrations
 // @todo Create a super admin role
