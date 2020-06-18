@@ -94,7 +94,7 @@ class SingerController extends Controller
         return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer saved. ']);
     }
 
-    public function delete(Singer $singer): RedirectResponse
+    public function destroy(Singer $singer): RedirectResponse
     {
         $this->authorize('delete', $singer);
 

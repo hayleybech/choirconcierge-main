@@ -71,23 +71,7 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::put('{singer}/placement/{placement}', [SingerPlacementController::class, 'update'])->name('placements.update');
     });
 });
-
-// Index
-Route::get('/singers', [SingerController::class, 'index'])->name('singers.index');
-
-// Create
-Route::get('/singers/create', [SingerController::class, 'create'])->name('singers.create');
-Route::post('/singers', [SingerController::class, 'store']);
-
-// View
-Route::get('/singers/{singer}', [SingerController::class, 'show'])->name('singers.show');
-
-// Update
-Route::get('/singers/{singer}/edit', [SingerController::class, 'edit'])->name('singers.edit');
-Route::put('/singers/{singer}', [SingerController::class, 'update'])->name('singers.update');
-
-// Delete
-Route::get('/singers/{singer}/delete', [SingerController::class, 'delete'])->name('singers.delete');
+Route::resource('singers', 'SingerController');
 
 
 // Songs module
