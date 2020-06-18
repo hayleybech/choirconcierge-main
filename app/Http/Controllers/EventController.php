@@ -13,6 +13,8 @@ class EventController extends Controller
 {
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Event::class);
+
         // Base query
         $events = Event::with([])
             ->filter()
@@ -41,6 +43,8 @@ class EventController extends Controller
 
     public function create(): View
     {
+        $this->authorize('create', Event::class);
+
         $types = EventType::all();
 
         return view('events.create', compact( 'types') );
@@ -48,6 +52,8 @@ class EventController extends Controller
 
     public function store(EventRequest $request): RedirectResponse
     {
+        $this->authorize('create', Event::class);
+
         $event = Event::create($request->validated());
 
         return redirect()->route('events.show', [$event])->with(['status' => 'Event created. ']);
@@ -55,11 +61,15 @@ class EventController extends Controller
 
     public function show(Event $event): View
     {
+        $this->authorize('view', $event);
+
         return view('events.show', compact('event' ));
     }
 
     public function edit(Event $event): View
     {
+        $this->authorize('update', $event);
+
         $types = EventType::all();
 
         return view('events.edit', compact('event',  'types'));
@@ -67,6 +77,8 @@ class EventController extends Controller
 
     public function update(Event $event, EventRequest $request): RedirectResponse
     {
+        $this->authorize('update', $event);
+
         $event->update($request->validated());
 
         return redirect()->route('events.show', [$event])->with(['status' => 'Event updated. ', ]);
@@ -74,6 +86,8 @@ class EventController extends Controller
 
     public function delete(Event $event): RedirectResponse
     {
+        $this->authorize('delete', $event);
+
         $event->delete();
 
         return redirect()->route('events.index')->with(['status' => 'Event deleted. ', ]);
