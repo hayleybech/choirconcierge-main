@@ -299,9 +299,6 @@ Route::prefix('seed')->middleware(['auth', 'role:Admin'])->group(static function
         ]);
         echo '<pre>'.Artisan::output().'</pre>';
     });
-
-    // Singer import
-    Route::get('import', [SingerController::class, 'import']);
 });
 
 
