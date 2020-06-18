@@ -27,6 +27,7 @@ use App\Http\Controllers\SingerProfileController;
 use App\Http\Controllers\SongAttachmentController;
 use App\Http\Controllers\SongController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UpdateSingerCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 
@@ -73,7 +74,7 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::put('{singer}/profile/{profile}', [SingerProfileController::class, 'update'])->name('profiles.update');
 
         // Move Singer
-        Route::get('{singer}/move/', [SingerController::class ,'move'])->name('singers.move');
+        Route::get('{singer}/category/update', 'UpdateSingerCategoryController')->name('singers.categories.update');
     });
 
     // Singers - Music Team

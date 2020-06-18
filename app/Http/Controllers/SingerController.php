@@ -138,17 +138,4 @@ class SingerController extends Controller
 			// Shouldn't get to this line. Forms tasks skip this entire function.
 		}
 	}
-
-	public function move(Singer $singer, Request $request): RedirectResponse
-    {
-        $category = $request->input('move_category', 0);
-
-        if( $category === 0 ) return redirect('/singers')->with([ 'status' => 'No category selected. ', 'fail' => true ]);
-
-        // Attach to Prospects category
-        $singer->category()->associate($category);
-        $singer->save();
-
-        return redirect('/singers')->with(['status' => 'The singer was moved. ']);
-    }
 }
