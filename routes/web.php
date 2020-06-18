@@ -46,7 +46,7 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
     Route::middleware('employee')->group(static function() {
 
         // Complete Task
-        Route::get('{singer}/tasks/{task}/complete', [SingerController::class, 'completeTask'])->name('task.complete');
+        Route::get('{singer}/tasks/{task}/complete', 'CompleteSingerTaskController')->name('task.complete');
     });
 
     // Singers - Membership Team OR SELF USER

@@ -123,19 +123,4 @@ class SingerController extends Controller
         }
         return $sorts;
     }
-	
-	public function completeTask(Singer $singer, Task $task): RedirectResponse
-    {
-        event(new TaskCompleted($task, $singer));
-
-		// Complete type-specific action
-		if( $task->type === 'manual' ) {
-			// Simply mark as done. 
-			$singer->tasks()->updateExistingPivot($task, ['completed' => true]);
-			return redirect('/singers')->with(['status' => 'Task updated. ', ]);
-		} else {
-			// Redirect to form
-			// Shouldn't get to this line. Forms tasks skip this entire function.
-		}
-	}
 }
