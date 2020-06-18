@@ -184,28 +184,25 @@ Route::prefix('events')->group(static function (){
 Route::prefix('folders')->group(static function (){
 
     Route::middleware(['auth', 'employee'])->group(static function() {
-        // Create
-        Route::get('create', [FolderController::class, 'create'])->name('folders.create');
-        Route::post('/', [FolderController::class, 'store']);
-
-        // Edit/Delete
-        Route::get('{folder}/edit', [FolderController::class, 'edit'])->name('folders.edit');
-        Route::put('{folder}', [FolderController::class, 'update']);
-        Route::get('{folder}/delete', [FolderController::class, 'destroy'])->name('folders.delete');
-
         // Create/Delete documents
         Route::post('{folder}/documents', [DocumentController::class, 'store'])->name('folders.documents.store');
         Route::get('{folder}/documents/{document}/delete', [DocumentController::class, 'destroy'])->name('folders.documents.delete');
     });
 
-    // Any Authorised User
-    Route::middleware('auth')->group(static function() {
-        // Index
-        Route::get('/', [FolderController::class, 'index'])->name('folders.index');
+    // Create
+    Route::get('create', [FolderController::class, 'create'])->name('folders.create');
+    Route::post('/', [FolderController::class, 'store']);
 
-        //View
-        Route::get('{folder}', [FolderController::class, 'show'])->name('folders.show');
-    });
+    // Edit/Delete
+    Route::get('{folder}/edit', [FolderController::class, 'edit'])->name('folders.edit');
+    Route::put('{folder}', [FolderController::class, 'update']);
+    Route::get('{folder}/delete', [FolderController::class, 'destroy'])->name('folders.delete');
+
+    // Index
+    Route::get('/', [FolderController::class, 'index'])->name('folders.index');
+
+    //View
+    Route::get('{folder}', [FolderController::class, 'show'])->name('folders.show');
 });
 
 // Risers module
