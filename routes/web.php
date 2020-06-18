@@ -156,29 +156,7 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
 });
 
 // Events module
-Route::prefix('events')->group(static function (){
-
-    /// Any Employee
-    Route::middleware('employee')->group(static function() {
-        // Create
-        Route::get('create', [EventController::class, 'create'])->name('events.create');
-        Route::post('/', [EventController::class, 'store']);
-
-        // Edit/Delete
-        Route::get('{event}/edit', [EventController::class, 'edit'])->name('events.edit');
-        Route::put('{event}', [EventController::class, 'update']);
-        Route::get('{event}/delete', [EventController::class, 'delete'])->name('events.delete');
-    });
-
-    // Any Authorised User
-    Route::middleware('auth')->group(static function() {
-        // Index
-        Route::get('/', [EventController::class, 'index'])->name('events.index');
-
-        //View
-        Route::get('{event}', [EventController::class, 'show'])->name('events.show');
-    });
-});
+Route::resource('events', 'EventController');
 
 // Documents module
 Route::prefix('folders')->group(static function (){

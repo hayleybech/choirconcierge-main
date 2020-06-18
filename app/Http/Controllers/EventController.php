@@ -84,7 +84,7 @@ class EventController extends Controller
         return redirect()->route('events.show', [$event])->with(['status' => 'Event updated. ', ]);
     }
 
-    public function delete(Event $event): RedirectResponse
+    public function destroy(Event $event): RedirectResponse
     {
         $this->authorize('delete', $event);
 
