@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02d8372c61bb1ee38e0f74edb713a417",
+    "content-hash": "7e2f62c7fdf9420060b1250514cc9210",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1399,6 +1399,49 @@
                 }
             ],
             "time": "2020-04-28T08:47:37+00:00"
+        },
+        {
+            "name": "garygreen/pretty-routes",
+            "version": "1.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/garygreen/pretty-routes.git",
+                "reference": "5ccc9da7b61dec15ad733007956b0ea5af6dd8bd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/garygreen/pretty-routes/zipball/5ccc9da7b61dec15ad733007956b0ea5af6dd8bd",
+                "reference": "5ccc9da7b61dec15ad733007956b0ea5af6dd8bd",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "5.*|6.*|7.*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PrettyRoutes\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PrettyRoutes\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gary Green",
+                    "email": "holegary@gmail.com"
+                }
+            ],
+            "description": "Pretty routes for Laravel 5.",
+            "time": "2020-06-12T22:50:40+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
