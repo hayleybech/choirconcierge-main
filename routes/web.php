@@ -72,9 +72,6 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::get('{singer}/profile/{profile}/edit', [SingerProfileController::class, 'edit'])->name('profiles.edit');
         Route::put('{singer}/profile/{profile}', [SingerProfileController::class, 'update'])->name('profiles.update');
 
-        // Mark "Account Created" task complete
-        Route::get('{singer}/account/created', [SingerController::class, 'markAccountCreated'])->name('singers.account.created');
-
         // Move Singer
         Route::get('{singer}/move/', [SingerController::class ,'move'])->name('singers.move');
     });
@@ -86,22 +83,6 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::post('{singer}/placement', [SingerPlacementController::class, 'store'])->name('placement');
         Route::get('{singer}/placement/{placement}/edit', [SingerPlacementController::class, 'edit'])->name('placements.edit');
         Route::put('{singer}/placement/{placement}', [SingerPlacementController::class, 'update'])->name('placements.update');
-
-        // Mark audition passed
-        Route::get('{singer}/audition/pass', [SingerController::class, 'auditionpass'])->name('singers.audition.pass');
-    });
-
-    // Singers - Accounts Team
-    Route::middleware('role:Accounts Team')->group(static function() {
-        // Mark fees paid
-        Route::get('{singer}/fees/paid', [SingerController::class, 'feespaid'])->name('singers.fees.paid');
-    });
-
-
-    // Singers - Uniforms Team
-    Route::middleware('role:Uniforms Team')->group(static function() {
-        // Mark uniform provided
-        Route::get('{singer}/uniform/provided', [SingerController::class, 'markUniformProvided'])->name('singers.uniform.provided');
     });
 
     // Singers - Any Authorised User
