@@ -21,12 +21,14 @@ class SingerController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //
     }
 
 
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Singer::class);
+
         // Base query
         $singers = Singer::with(['tasks', 'category', 'placement', 'profile', 'voice_part'])
             ->filter()
@@ -50,6 +52,8 @@ class SingerController extends Controller
 
     public function create(): View
     {
+        $this->authorize('create', Singer::class);
+
         $voice_parts = VoicePart::all()->pluck('title', 'id')->toArray();
         $voice_parts = array_merge([0 => "None"], $voice_parts);
 
@@ -58,6 +62,8 @@ class SingerController extends Controller
 
     public function store(SingerRequest $request): RedirectResponse
     {
+        $this->authorize('create', Singer::class);
+
         $singer = Singer::create($request->validated());
 
         return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer created. ', ]);
@@ -65,11 +71,15 @@ class SingerController extends Controller
 
     public function show(Singer $singer): View
     {
+        $this->authorize('view', $singer);
+
         return view('singers.show', compact('singer'));
     }
 
     public function edit(Singer $singer): View
     {
+        $this->authorize('update', $singer);
+
         $voice_parts = VoicePart::all()->pluck('title', 'id')->toArray();
         $voice_parts = array_merge([0 => "None"], $voice_parts);
 
@@ -77,6 +87,8 @@ class SingerController extends Controller
     }
     public function update(Singer $singer, SingerRequest $request): RedirectResponse
     {
+        $this->authorize('update', $singer);
+
         $singer->update($request->validated());
 
         return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer saved. ']);
@@ -84,6 +96,8 @@ class SingerController extends Controller
 
     public function delete(Singer $singer): RedirectResponse
     {
+        $this->authorize('delete', $singer);
+
         $singer->user->delete();
         $singer->delete();
 

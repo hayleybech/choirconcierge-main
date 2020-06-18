@@ -49,24 +49,9 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::get('{singer}/tasks/{task}/complete', 'CompleteSingerTaskController')->name('task.complete');
     });
 
-    // Singers - Membership Team OR SELF USER
-    Route::middleware('role_or_self:Membership Team')->group(static function() {
-
-        // Update
-        Route::get('{singer}/edit', [SingerController::class, 'edit'])->name('singers.edit');
-        Route::put('{singer}', [SingerController::class, 'update'])->name('singers.update');
-    });
-
     // Singers - Membership Team
     Route::middleware('role:Membership Team')->group(static function() {
 
-        // Create
-        Route::get('create', [SingerController::class, 'create'])->name('singers.create');
-        Route::post('/', [SingerController::class, 'store']);
-
-        // Delete
-        Route::get('{singer}/delete', [SingerController::class, 'delete'])->name('singers.delete');
-        
         // Create Profile
         Route::get('{singer}/profile/create', [SingerProfileController::class, 'create'])->name('profile.create');
         Route::post('{singer}/profile', [SingerProfileController::class, 'store'])->name('profile');
@@ -85,16 +70,24 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::get('{singer}/placement/{placement}/edit', [SingerPlacementController::class, 'edit'])->name('placements.edit');
         Route::put('{singer}/placement/{placement}', [SingerPlacementController::class, 'update'])->name('placements.update');
     });
-
-    // Singers - Any Authorised User
-    Route::middleware('auth')->group(static function() {
-        // Index
-        Route::get('/', [SingerController::class, 'index'])->name('singers.index');
-
-        // View
-        Route::get('{singer}', [SingerController::class, 'show'])->name('singers.show');
-    });
 });
+
+// Index
+Route::get('/singers', [SingerController::class, 'index'])->name('singers.index');
+
+// Create
+Route::get('/singers/create', [SingerController::class, 'create'])->name('singers.create');
+Route::post('/singers', [SingerController::class, 'store']);
+
+// View
+Route::get('/singers/{singer}', [SingerController::class, 'show'])->name('singers.show');
+
+// Update
+Route::get('/singers/{singer}/edit', [SingerController::class, 'edit'])->name('singers.edit');
+Route::put('/singers/{singer}', [SingerController::class, 'update'])->name('singers.update');
+
+// Delete
+Route::get('/singers/{singer}/delete', [SingerController::class, 'delete'])->name('singers.delete');
 
 
 // Songs module
