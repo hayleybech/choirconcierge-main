@@ -188,22 +188,8 @@ Route::prefix('folders')->group(static function (){
         Route::post('{folder}/documents', [DocumentController::class, 'store'])->name('folders.documents.store');
         Route::get('{folder}/documents/{document}/delete', [DocumentController::class, 'destroy'])->name('folders.documents.delete');
     });
-
-    // Create
-    Route::get('create', [FolderController::class, 'create'])->name('folders.create');
-    Route::post('/', [FolderController::class, 'store']);
-
-    // Edit/Delete
-    Route::get('{folder}/edit', [FolderController::class, 'edit'])->name('folders.edit');
-    Route::put('{folder}', [FolderController::class, 'update']);
-    Route::get('{folder}/delete', [FolderController::class, 'destroy'])->name('folders.delete');
-
-    // Index
-    Route::get('/', [FolderController::class, 'index'])->name('folders.index');
-
-    //View
-    Route::get('{folder}', [FolderController::class, 'show'])->name('folders.show');
 });
+Route::resource('folders', 'FolderController');
 
 // Risers module
 Route::resource('stacks', 'RiserStackController');
