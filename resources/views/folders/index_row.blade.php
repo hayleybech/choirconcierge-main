@@ -25,7 +25,7 @@
     </div>
     <div class="r-table__cell col--delete">
         @if( Auth::user()->isEmployee() )
-        <a href="{{route( 'folders.destroy', ['folder' => $folder] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-trash"></i></a>
+        <x-delete-button :action="route( 'folders.destroy', ['folder' => $folder] )"/>
         @endif
     </div>
 
