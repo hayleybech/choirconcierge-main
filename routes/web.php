@@ -126,14 +126,6 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
 
     // Any employee
     Route::middleware('employee')->group(static function() {
-        // Create
-        Route::get('create', [SongController::class, 'create'])->name('songs.create');
-        Route::post('/', [SongController::class, 'store']);
-
-        // Edit/Delete
-        Route::get('{song}/edit', [SongController::class, 'edit'])->name('songs.edit');
-        Route::put('{song}', [SongController::class, 'update']);
-        Route::get('{song}/delete', [SongController::class, 'delete'])->name('songs.delete');
 
         // Create/Download/Delete attachments
         Route::post('{song}/attachments', [SongAttachmentController::class, 'store'])->name('songs.attachments.store');
@@ -141,18 +133,24 @@ Route::prefix('songs')->middleware('auth')->group(static function (){
         Route::get('{song}/attachments/{attachment}/delete', [SongAttachmentController::class, 'delete'])->name('songs.attachments.delete');
     });
 
-    // Any Authorised User
-    Route::middleware('auth')->group(static function() {
-        // Index
-        Route::get('/', [SongController::class, 'index'])->name('songs.index');
+    // Create
+    Route::get('create', [SongController::class, 'create'])->name('songs.create');
+    Route::post('/', [SongController::class, 'store']);
 
-        // Learning Mode
-        Route::get('learning', [SongController::class, 'learning'])->name('songs.learning');
+    // Edit/Delete
+    Route::get('{song}/edit', [SongController::class, 'edit'])->name('songs.edit');
+    Route::put('{song}', [SongController::class, 'update']);
+    Route::get('{song}/delete', [SongController::class, 'delete'])->name('songs.delete');
 
-        // View
-        Route::get('{song}', [SongController::class, 'show'])->name('songs.show');
+    // Index
+    Route::get('/', [SongController::class, 'index'])->name('songs.index');
 
-    });
+    // Learning Mode
+    Route::get('learning', [SongController::class, 'learning'])->name('songs.learning');
+
+    // View
+    Route::get('{song}', [SongController::class, 'show'])->name('songs.show');
+
 });
 
 // Events module

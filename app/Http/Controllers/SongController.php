@@ -15,6 +15,8 @@ class SongController extends Controller
 {
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Song::class);
+
         // Base query
         $songs = Song::with([])
             ->filter()
@@ -41,6 +43,8 @@ class SongController extends Controller
 
     public function learning(Request $request): View
     {
+        $this->authorize('viewAny', Song::class);
+        
         // Base query
         $songs = Song::with(['attachments'])
             ->filter()
@@ -67,6 +71,8 @@ class SongController extends Controller
 
     public function create(): View
     {
+        $this->authorize('create', Song::class);
+
         $categories = SongCategory::all();
         $statuses = SongStatus::all();
         $pitches = Song::KEYS;
@@ -76,6 +82,8 @@ class SongController extends Controller
 
     public function store(SongRequest $request): RedirectResponse
     {
+        $this->authorize('create', Song::class);
+
         $song = Song::create($request->validated());
 
         return redirect()->route('songs.show', [$song])->with(['status' => 'Song created. ']);
@@ -83,6 +91,8 @@ class SongController extends Controller
 
     public function show(Song $song): View
     {
+        $this->authorize('view', $song);
+
         $attachment_categories = SongAttachmentCategory::all();
         $categories_keyed = $attachment_categories->mapWithKeys(function($item){
             return [ $item['id'] => $item['title'] ];
@@ -93,6 +103,8 @@ class SongController extends Controller
 
     public function edit(Song $song): View
     {
+        $this->authorize('update', $song);
+
         $categories = SongCategory::all();
         $statuses = SongStatus::all();
         $pitches = Song::KEYS;
@@ -102,6 +114,8 @@ class SongController extends Controller
 
     public function update(SongRequest $request, Song $song): RedirectResponse
     {
+        $this->authorize('update', $song);
+
         $song->update($request->validated());
 
         return redirect()->route('songs.show', [$song])->with(['status' => 'Song updated. ', ]);
@@ -109,6 +123,8 @@ class SongController extends Controller
 
     public function delete(Song $song): RedirectResponse
     {
+        $this->authorize('delete', $song);
+
         $song->delete();
 
         return redirect()->route('songs.index')->with(['status' => 'Song deleted. ', ]);
