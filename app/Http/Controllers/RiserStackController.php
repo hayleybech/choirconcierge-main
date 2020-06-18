@@ -15,6 +15,8 @@ class RiserStackController extends Controller
 {
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', RiserStack::class);
+
         // Base query
         $stacks = RiserStack::all();
 
@@ -23,6 +25,8 @@ class RiserStackController extends Controller
 
     public function create(): View
     {
+        $this->authorize('create', RiserStack::class);
+
         $voice_parts = VoicePart::with(['singers'])->get();
 
         return view('stacks.create', compact('voice_parts') );
@@ -30,6 +34,8 @@ class RiserStackController extends Controller
 
     public function store(RiserStackRequest $request): RedirectResponse
     {
+        $this->authorize('create', RiserStack::class);
+
         $stack = RiserStack::create($request->validated());
 
         $positions = $this->prepPositions($request);
@@ -40,6 +46,8 @@ class RiserStackController extends Controller
 
     public function show(RiserStack $stack): View
     {
+        $this->authorize('view', $stack);
+
         $stack->load('singers');
 
         return view('stacks.show', compact('stack' ));
@@ -47,6 +55,8 @@ class RiserStackController extends Controller
 
     public function edit(RiserStack $stack): View
     {
+        $this->authorize('update', $stack);
+
         // Get singers that are already on the riser stack.
         $stack->load('singers');
 
@@ -62,6 +72,8 @@ class RiserStackController extends Controller
 
     public function update(RiserStack $stack, RiserStackRequest $request): RedirectResponse
     {
+        $this->authorize('update', $stack);
+
         $stack->update($request->validated());
 
         $positions = $this->prepPositions($request);
@@ -72,6 +84,8 @@ class RiserStackController extends Controller
 
     public function delete(RiserStack $stack): RedirectResponse
     {
+        $this->authorize('delete', $stack);
+
         $stack->delete();
 
         return redirect()->route('stacks.index')->with(['status' => 'Riser stack deleted. ', ]);
