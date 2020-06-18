@@ -36,10 +36,7 @@ Auth::routes(['register' => false]);
 Route::view('welcome', 'welcome');
 
 // Dashboard
-Route::prefix('dash')->middleware('auth')->group(static function (){
-    // Index
-    Route::get('/', [DashController::class, 'index'])->name('dash');
-});
+Route::get('/dash', [DashController::class, 'index'])->name('dash');
 
 // Singers module
 Route::prefix('singers')->middleware('auth')->group(static function (){
