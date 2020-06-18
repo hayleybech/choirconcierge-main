@@ -77,9 +77,6 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
 
         // Move Singer
         Route::get('{singer}/move/', [SingerController::class ,'move'])->name('singers.move');
-
-        // Export
-        Route::get('export', [SingerController::class, 'export'])->name('singers.export');
     });
 
     // Singers - Music Team
