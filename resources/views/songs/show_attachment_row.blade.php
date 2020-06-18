@@ -20,7 +20,7 @@
         <a href="{{ route('songs.attachments.show', [$attachment->song, $attachment]) }}" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-download"></i> Download</a>
     </div>
     <div class="r-table__cell col--delete">
-        <a href="{{route( 'songs.attachments.delete', ['song' => $attachment->song, 'attachment' => $attachment] )}}" class="link-confirm text-danger"><i class="fa fa-fw fa-trash"></i></a>
+        <x-delete-button :action="route( 'songs.attachments.destroy', ['song' => $attachment->song, 'attachment' => $attachment] )"/>
     </div>
 </div>
 

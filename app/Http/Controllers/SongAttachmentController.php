@@ -28,7 +28,7 @@ class SongAttachmentController extends Controller
         return redirect()->route('songs.show', [$song])->with(['status' => 'Attachment added. ', ]);
     }
 
-    public function delete(Song $song, SongAttachment $attachment): RedirectResponse
+    public function destroy(Song $song, SongAttachment $attachment): RedirectResponse
     {
         $attachment->delete();
 

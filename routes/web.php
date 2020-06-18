@@ -75,18 +75,8 @@ Route::resource('singers', 'SingerController');
 
 
 // Songs module
-Route::prefix('songs')->middleware('auth')->group(static function (){
-
-    // Any employee
-    Route::middleware('employee')->group(static function() {
-
-        // Create/Download/Delete attachments
-        Route::post('{song}/attachments', [SongAttachmentController::class, 'store'])->name('songs.attachments.store');
-        Route::get('{song}/attachments/{attachment}', [SongAttachmentController::class, 'show'])->name('songs.attachments.show');
-        Route::get('{song}/attachments/{attachment}/delete', [SongAttachmentController::class, 'delete'])->name('songs.attachments.delete');
-    });
-});
 Route::resource('songs', 'SongController');
+Route::resource('songs.attachments', 'SongAttachmentController')->only(['store', 'show', 'destroy'])->middleware('employee');
 
 // Events module
 Route::resource('events', 'EventController');
