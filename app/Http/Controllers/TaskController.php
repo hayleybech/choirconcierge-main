@@ -14,4 +14,10 @@ class TaskController extends Controller
 
         return view('tasks.index', compact('tasks'));
     }
+
+    public function show(Task $task): View
+    {
+        $task->load('notification_templates');
+        return view('tasks.show', compact('task'));
+    }
 }
