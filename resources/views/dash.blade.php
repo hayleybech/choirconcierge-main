@@ -18,11 +18,6 @@
           </a>
           <a href="#" class="list-group-item list-group-item-action">The Blenders Facebook Chat (New)</a>-->
 
-            @if( Auth::user()->hasRole('Admin') )
-            <a href="{{ route('groups.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-users"></i> Groups List</a>
-            <a href="{{ route('tasks.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-tasks"></i> Tasks List</a>
-            @endif
-
             {{--
             @if( Auth::user()->hasRole('Membership Team') )
             <a href="{{ route('memberprofile.new') }}" class="list-group-item list-group-item-action" target="_blank"><i class="fa fa-plus"></i> Member Profile</a>
@@ -31,9 +26,17 @@
             <a href="{{ route('voiceplacement.new') }}" class="list-group-item list-group-item-action" target="_blank"><i class="fa fa-plus"></i> Voice Placement</a>
             @endif--}}
             @if( Auth::user() )
-            <a href="{{ route('singers.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-user"></i> Singers List</a>
-            <a href="{{ route('songs.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-music"></i> Songs List</a>
-            <a href="{{ route('events.index') }}" class="list-group-item list-group-item-action"><i class="fa fa-calendar"></i> Events List</a>
+                <a href="{{ route('singers.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
+                <a href="{{ route('songs.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-list-music fa-fw"></i><span class="link-text"> Songs</span></a>
+                <a href="{{ route('events.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> Events</span></a>
+                <a href="{{ route('folders.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-folders fa-fw fa-swap-opacity fa-swap-color"></i><span class="link-text"> Documents</span></a>
+                <a href="{{ route('stacks.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-people-arrows fa-fw"></i><span class="link-text"> Riser Stacks</span></a>
+            @endif
+
+            @if( Auth::user()->hasRole('Admin') )
+                <a href="{{ route('groups.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-mail-bulk fa-fw"></i><span class="link-text"> Mailing Lists</span></a>
+                <a href="{{ route('tasks.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
+                <a href="{{ route('notification-templates.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
             @endif
       </div>
     </div>
