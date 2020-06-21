@@ -34,7 +34,7 @@ use App\Http\Controllers\UserGroupController;
 Auth::routes(['register' => false]);
 
 // Public pages
-Route::view('welcome', 'welcome');
+Route::view('/', 'welcome')->name('menu');
 
 // Dashboard
 Route::get('/dash', [DashController::class, 'index'])->name('dash');
