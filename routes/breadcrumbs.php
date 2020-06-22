@@ -236,7 +236,7 @@ Breadcrumbs::for('groups.create', static function ($trail) {
 // Tasks
 Breadcrumbs::for('tasks.index', static function ($trail) {
     $trail->parent('dash');
-    $trail->push('Tasks', route('tasks.index'));
+    $trail->push('Onboarding', route('tasks.index'));
 });
 
 // Tasks > [Task]
@@ -248,7 +248,7 @@ Breadcrumbs::for('tasks.show', static function ($trail, $task) {
 // Tasks > Create
 Breadcrumbs::for('tasks.create', static function ($trail) {
     $trail->parent('tasks.index');
-    $trail->push('Create', route('tasks.create'));
+    $trail->push('Add Task', route('tasks.create'));
 });
 
 

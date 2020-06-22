@@ -35,7 +35,7 @@
 
             @if( Auth::user()->hasRole('Admin') )
                 <a href="{{ route('groups.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-mail-bulk fa-fw"></i><span class="link-text"> Mailing Lists</span></a>
-                <a href="{{ route('tasks.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-tasks fa-fw"></i><span class="link-text"> Tasks</span></a>
+                <a href="{{ route('tasks.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-tasks fa-fw"></i><span class="link-text"> Onboarding</span></a>
                 <a href="{{ route('notification-templates.index') }}" class="list-group-item list-group-item-action"><i class="fad fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
             @endif
       </div>
