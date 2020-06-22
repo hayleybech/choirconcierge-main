@@ -31,7 +31,14 @@
 
 @section('page-content')
 
+    <div class="card bg-light">
+        <h3 class="card-header h4">Notifications</h3>
 
-
+        <div class="list-group-flush">
+        @foreach($task->notification_templates as $template)
+            <div class="list-group-item">{{ $template->subject }}</div>
+        @endforeach
+        </div>
+    </div>
 
 @endsection
