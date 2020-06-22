@@ -4,6 +4,13 @@
 @section('page-title')
 <i class="fal fa-tasks fa-fw"></i> Global Task List
 @endsection
+
+@section('page-action')
+	@if(Auth::user()->hasRole('Admin'))
+		<a href="{{route( 'tasks.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-plus"></i> Add New</a>
+	@endif
+@endsection
+
 @section('page-lead', 'This page lists the onboarding tasks the choir must complete for every singer. ')
 
 @section('page-content')

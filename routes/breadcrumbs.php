@@ -245,6 +245,12 @@ Breadcrumbs::for('tasks.show', static function ($trail, $task) {
     $trail->push($task->name, route('tasks.show', $task));
 });
 
+// Tasks > Create
+Breadcrumbs::for('tasks.create', static function ($trail) {
+    $trail->parent('tasks.index');
+    $trail->push('Create', route('tasks.create'));
+});
+
 
 /**
  * TEMPLATES

@@ -34,6 +34,13 @@ class Task extends Model
 
     protected $with = ['role'];
 
+    protected $fillable = [
+        'name',
+        'role_id',
+        'type',
+        'route',
+    ];
+
     /*
 	 * Get the Role authorised for this task
 	 */
