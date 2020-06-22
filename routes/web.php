@@ -125,7 +125,7 @@ Route::resource('groups', 'UserGroupController')->middleware(['auth', 'role:Admi
 Route::get('/mailbox/process', [MailboxController::class, 'process']);
 
 // Tasks module
-Route::resource('tasks', 'TaskController')->only(['index', 'show'])->middleware(['auth', 'role:Admin']);
+Route::resource('tasks', 'TaskController')->only(['index', 'show', 'destroy'])->middleware(['auth', 'role:Admin']);
 
 // Notification Templates module
 Route::resource('notification-templates', 'NotificationTemplateController')->only(['index'])->middleware(['auth', 'role:Admin']);
