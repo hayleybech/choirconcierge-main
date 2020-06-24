@@ -129,7 +129,7 @@ Route::resource('tasks', 'TaskController')->only(['index', 'create', 'store', 's
 Route::resource('tasks.notifications', 'TaskNotificationTemplateController')->except('index');
 
 // Voice Parts module
-Route::resource('voice-parts', 'VoicePartController')->only('index');
+Route::resource('voice-parts', 'VoicePartController');
 
 // Migrations
 // @todo Create a super admin role

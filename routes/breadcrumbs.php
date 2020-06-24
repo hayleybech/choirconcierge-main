@@ -278,3 +278,18 @@ Breadcrumbs::for('voice-parts.index', static function ($trail) {
     $trail->parent('singers.index');
     $trail->push('Voice Parts', route('voice-parts.index'));
 });
+// Singers > Voice Parts > Create
+Breadcrumbs::for('voice-parts.create', static function ($trail) {
+    $trail->parent('voice-parts.index');
+    $trail->push('Create', route('voice-parts.create'));
+});
+// Singers > Voice Parts > [Voice Part]
+Breadcrumbs::for('voice-parts.show', static function ($trail, $voice_part) {
+    $trail->parent('voice-parts.index');
+    $trail->push($voice_part->title, route('voice-parts.show', $voice_part));
+});
+// Singers > Voice Parts > [Voice Part] > Edit
+Breadcrumbs::for('voice-parts.edit', static function ($trail, $voice_part) {
+    $trail->parent('voice-parts.show', $voice_part);
+    $trail->push('Edit', route('voice-parts.edit', $voice_part));
+});

@@ -7,6 +7,8 @@
 @section('page-action')
 	@if(Auth::user()->hasRole('Membership Team'))
 		<a href="{{route( 'singers.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-user-plus"></i> Add New</a>
+	@endif
+	@if(Auth::user()->hasRole('Music Team'))
 		<a href="{{route( 'voice-parts.index' )}}" class="btn btn-add btn-sm btn-outline-light"><i class="fa fa-fw fa-users-class"></i> Manage Voice Parts</a>
 	@endif
 @endsection

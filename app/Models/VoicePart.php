@@ -21,6 +21,10 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  */
 class VoicePart extends Model
 {
+    protected $fillable = [
+        'title',
+    ];
+
     public function singers(): HasMany
     {
         return $this->hasMany( Singer::class );
