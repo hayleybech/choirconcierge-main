@@ -36,9 +36,8 @@ class TaskNotificationTemplateController extends Controller
     public function store(NotificationTemplateRequest $request, Task $task): RedirectResponse
     {
         $template = $task->notification_templates()->create($request->validated());
-
-        // @todo update route
-        return redirect()->route('tasks.show', $task)->with(['status' => 'Notification created.']);
+        
+        return redirect()->route('tasks.notifications.show', [$task, $template])->with(['status' => 'Notification created.']);
     }
 
     /**
