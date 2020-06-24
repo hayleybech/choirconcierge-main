@@ -130,7 +130,7 @@ class User extends Authenticatable implements HasMedia
 	}
 
 	public function setPassword( string $password = null ): void {
-        if( empty($password) ) {
+        if( ! empty($password) ) {
             $this->password = Hash::make( $password );
         } else {
             $this->password = Str::random(10);
