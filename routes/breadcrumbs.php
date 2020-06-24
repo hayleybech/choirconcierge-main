@@ -268,13 +268,3 @@ Breadcrumbs::for('tasks.create', static function ($trail) {
     $trail->parent('tasks.index');
     $trail->push('Add Task', route('tasks.create'));
 });
-
-
-/**
- * TEMPLATES
- */
-// Templates
-Breadcrumbs::for('notification-templates.index', static function ($trail) {
-    $trail->parent('dash');
-    $trail->push('Notification Templates', route('notification-templates.index'));
-});
