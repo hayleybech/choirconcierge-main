@@ -64,6 +64,7 @@
 							@if( Auth::user() )
 								<li class="nav-item nav-heading">Singers</li>
 								<li class="nav-item">
+									@can('create', \App\Models\Singer::class)
 									<a href="#collapse-singers" class="nav-link {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
 										<span><i class="fad fa-users fa-fw"></i><span class="link-text"> Singers</span></span>
 										<i class="far fa-fw menu-chevron"></i>
@@ -73,6 +74,9 @@
 										<a href="{{route( 'singers.create' )}}" class="nav-link {{ ( request()->routeIs('singers.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-user-plus"></i><span class="link-text"> Add New</span></a>
 										<a href="{{ route('voice-parts.index') }}" class="nav-link {{ ( request()->routeIs('voice-parts.*') ) ? 'active' : '' }}"><i class="fad fa-users-class fa-fw"></i><span class="link-text"> Voice Parts</span></a>
 									</div>
+									@else
+									<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.*') ) ? 'active' : '' }}"><i class="fad fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
+									@endcan
 								</li>
 								<li class="nav-item">
 									<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.*') ) ? 'active' : '' }}"><i class="fad fa-list-music fa-fw"></i><span class="link-text"> Songs</span></a>
