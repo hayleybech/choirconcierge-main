@@ -257,6 +257,12 @@ Breadcrumbs::for('tasks.notifications.show', static function ($trail, $task, $no
     $trail->push($notification->subject, route('tasks.notifications.show', [$task, $notification]));
 });
 
+// Tasks > [Task] > [Notification] > Edit
+Breadcrumbs::for('tasks.notifications.edit', static function ($trail, $task, $notification) {
+    $trail->parent('tasks.notifications.show', $task, $notification);
+    $trail->push('Edit', route('tasks.notifications.edit', [$task, $notification]));
+});
+
 // Tasks > Create
 Breadcrumbs::for('tasks.create', static function ($trail) {
     $trail->parent('tasks.index');

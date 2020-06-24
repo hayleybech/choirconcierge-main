@@ -51,30 +51,35 @@ class TaskNotificationTemplateController extends Controller
      */
     public function show(Task $task, NotificationTemplate $notification): View
     {
-        return view('tasks.notifications.show')->with(['notification' => $notification]);
+        return view('tasks.notifications.show')->with(compact('task', 'notification'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param NotificationTemplate $notificationTemplate
+     * @param Task                 $task
+     * @param NotificationTemplate $notification
+     *
      * @return View
      */
-    public function edit(NotificationTemplate $notificationTemplate): View
+    public function edit(Task $task, NotificationTemplate $notification): View
     {
-        //
+        return view('tasks.notifications.edit')->with(compact('task', 'notification'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param \App\Models\NotificationTemplate $notificationTemplate
+     * @param NotificationTemplateRequest $request
+     * @param Task                        $task
+     * @param NotificationTemplate        $notification
+     *
      * @return RedirectResponse
      */
-    public function update(Request $request, NotificationTemplate $notificationTemplate): RedirectResponse
+    public function update(NotificationTemplateRequest $request, Task $task, NotificationTemplate $notification): RedirectResponse
     {
-        //
+        $notification->update($request->validated());
+        return redirect()->route('tasks.notifications.show', [$task, $notification])->with(['status' => 'Task Notification update.']);
     }
 
     /**

@@ -126,7 +126,7 @@ Route::get('/mailbox/process', [MailboxController::class, 'process']);
 
 // Tasks module
 Route::resource('tasks', 'TaskController')->only(['index', 'create', 'store', 'show', 'destroy'])->middleware(['auth', 'role:Admin']);
-Route::resource('tasks.notifications', 'TaskNotificationTemplateController')->only(['create', 'store', 'show', 'destroy']);
+Route::resource('tasks.notifications', 'TaskNotificationTemplateController')->except('index');
 
 // Notification Templates module
 Route::resource('notification-templates', 'NotificationTemplateController')->only(['index'])->middleware(['auth', 'role:Admin']);
