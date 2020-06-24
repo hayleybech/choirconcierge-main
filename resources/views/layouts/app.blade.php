@@ -88,9 +88,6 @@
 								<li class="nav-item">
 									<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : '' }}"><i class="fad fa-tasks fa-fw"></i><span class="link-text"> Onboarding</span></a>
 								</li>
-								<li class="nav-item">
-									<a href="{{ route('notification-templates.index') }}" class="nav-link {{ ( request()->routeIs('notification-templates.*') ) ? 'active' : '' }}"><i class="fad fa-clone fa-fw"></i><span class="link-text"> Templates</span></a>
-								</li>
 							@endif
 
 							<!--
