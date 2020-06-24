@@ -121,7 +121,18 @@
 									@endcan
 								</li>
 								<li class="nav-item">
+									@can('create', \App\Models\RiserStack::class)
+									<a href="#collapse-stacks" class="nav-link {{ ( request()->routeIs('stacks.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
+										<span><i class="fad fa-people-arrows fa-fw"></i><span class="link-text"> Riser Stacks</span></span>
+										<i class="far fa-fw menu-chevron"></i>
+									</a>
+									<div id="collapse-stacks" class="collapse pl-2 small {{ ( request()->routeIs('stacks.*') ) ? 'show' : '' }}">
+										<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('stacks.index') ) ? 'active' : '' }}"><i class="fad fa-people-arrows fa-fw"></i><span class="link-text"> All Stacks</span></a>
+										<a href="{{route( 'stacks.create' )}}" class="nav-link {{ ( request()->routeIs('stacks.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
+									</div>
+									@else
 									<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('stacks.*') ) ? 'active' : '' }}"><i class="fad fa-people-arrows fa-fw"></i><span class="link-text"> Riser Stacks</span></a>
+									@endcan
 								</li>
 							@endif
 
