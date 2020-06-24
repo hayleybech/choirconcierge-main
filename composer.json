@@ -22,13 +22,13 @@
         "mtolhuys/laravel-schematics": "^0.10.2",
         "spatie/icalendar-generator": "^1.0",
         "spatie/laravel-medialibrary": "^8.0.0",
-        "webklex/laravel-imap": "^1.4"
+        "webklex/laravel-imap": "^1.4",
+        "fzaninotto/faker": "^1.9.1"
     },
     "type": "project",
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",
         "facade/ignition": "^2.0",
-        "fzaninotto/faker": "^1.9.1",
         "mockery/mockery": "^1.3.1",
         "nunomaduro/collision": "^4.1",
         "phpunit/phpunit": "^9.0",
