@@ -94,11 +94,11 @@
 								</li>
 								<li class="nav-item">
 									@can('create', \App\Models\Event::class)
-									<a href="#collapse-events" class="nav-link {{ ( request()->routeIs('events.*', 'voice-parts.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
+									<a href="#collapse-events" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
 										<span><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> Events</span></span>
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
-									<div id="collapse-events" class="collapse pl-2 small {{ ( request()->routeIs('events.*', 'voice-parts.*') ) ? 'show' : '' }}">
+									<div id="collapse-events" class="collapse pl-2 small {{ ( request()->routeIs('events.*') ) ? 'show' : '' }}">
 										<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.index') ) ? 'active' : '' }}"><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> All Events</span></a>
 										<a href="{{route( 'events.create' )}}" class="nav-link {{ ( request()->routeIs('events.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
 									</div>
