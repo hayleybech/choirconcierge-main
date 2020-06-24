@@ -17,7 +17,7 @@
 
 		<div class="list-group-flush">
 			@foreach($parts as $part)
-				<div class="list-group-item d-flex justify-content-between">
+				<div class="list-group-item d-flex justify-content-between" style="border-left: 3px solid {{ $part->colour }}">
 					<a href="{{ route('voice-parts.show', $part) }}">{{ $part->title }}</a>
 					<x-delete-button :action="route( 'voice-parts.destroy', $part )"/>
 				</div>

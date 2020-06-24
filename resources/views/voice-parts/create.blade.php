@@ -16,6 +16,11 @@
 				{{ Form::text('title', '', ['class' => 'form-control']) }}
 			</p>
 
+			<p>
+				{{ Form::label('colour', 'Colour') }}
+				{{ Form::color('colour', '', ['class' => 'form-control']) }}
+			</p>
+
 		</div>
 
 		<div class="card-footer">

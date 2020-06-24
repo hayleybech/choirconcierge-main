@@ -23,6 +23,7 @@ class VoicePart extends Model
 {
     protected $fillable = [
         'title',
+        'colour',
     ];
 
     public function singers(): HasMany

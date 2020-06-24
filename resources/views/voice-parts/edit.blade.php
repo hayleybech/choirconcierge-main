@@ -16,6 +16,11 @@
 				{{ Form::text('title', $voice_part->title, ['class' => 'form-control']) }}
 			</p>
 
+			<p>
+				{{ Form::label('colour', 'Colour') }}
+				{{ Form::color('colour', $voice_part->colour, ['class' => 'form-control']) }}
+			</p>
+
 		</div>
 
 		<div class="card-footer">

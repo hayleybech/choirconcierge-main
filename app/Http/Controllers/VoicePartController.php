@@ -24,6 +24,7 @@ class VoicePartController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|max:255',
+            'colour'=> 'required|max:255',
         ]);
         $part = VoicePart::create($data);
         return redirect()->route('voice-parts.show', $part)->with(['status' => 'Voice part created.']);
@@ -42,6 +43,7 @@ class VoicePartController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|max:255',
+            'colour'=> 'required|max:255',
         ]);
         $voice_part->update($data);
 
