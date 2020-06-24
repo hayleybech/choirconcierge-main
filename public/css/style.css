@@ -1029,6 +1029,6 @@ i.fa.fa-external-link {
 }
 
 .drop-in circle {
-	stroke: red;
+	stroke: #333;
 	stroke-width: 2px;
 }

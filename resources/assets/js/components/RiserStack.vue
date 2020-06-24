@@ -55,7 +55,7 @@
         <div class="row" v-if="editDisabled !== true">
 
             <div class="col-md-3" v-for="(part) in voiceParts">
-                <holding-area :title="part.title" :part="part.id" theme="default" :singers="part.singers"></holding-area>
+                <holding-area :title="part.title" :part="part.id" :colour="part.colour" theme="default" :singers="part.singers"></holding-area>
             </div>
 
         </div>
@@ -232,6 +232,13 @@ export default {
                 item.position.row === coords.row
                 && item.position.column === coords.column
             ) || nullSinger;
+        },
+
+        getColour(singer){
+            if( ! singer || ! singer.voice_part_id ) return '';
+            
+            const part = this.voiceParts.find(part => part.id === singer.voice_part_id);
+            return part.colour;
         },
 
 

@@ -38,6 +38,10 @@ export default {
                 part: 0
             }
         },
+        colour: {
+            type: String,
+            default: 'green'
+        },
         disabled: {
             type: Boolean,
             default: false
@@ -51,7 +55,9 @@ export default {
         style() {
             return {
                 backgroundImage: 'url('+this.imageUrl+')',
-                fill: this.fill
+                fill: this.fill,
+                strokeWidth: '2px',
+                stroke: this.colour
             }
         },
         fill() {

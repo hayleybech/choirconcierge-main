@@ -1,6 +1,6 @@
 <template>
-    <div :class="'card border-'+theme">
-        <h5 :class="'card-header bg-transparent border-'+theme">{{ title }}</h5>
+    <div :class="'card border-'+theme" :style="themeStyle">
+        <h5 :class="'card-header bg-transparent border-'+theme" :style="themeStyle">{{ title }}</h5>
 
         <drop-list class="list-group-flush" :items="singers" @insert="onInsert" @reorder="$event.apply(singers)" :accepts-data="accept" mode="cut">
             <template v-slot:item="{ item: singer }">
@@ -37,11 +37,17 @@ export default {
             default: () => []
         },
         part: Number,
+        colour: String,
         theme: String
     },
     data() {
         return {
 
+        }
+    },
+    computed: {
+        themeStyle() {
+            return 'border-color: ' + this.colour;
         }
     },
     methods: {
