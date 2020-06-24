@@ -142,6 +142,28 @@ main {
 	color: #6900c7;
 	font-weight: 600;
 }
+.navbar-light .navbar-nav .show > .nav-link {
+	color: rgba(0, 0, 0, 0.5);
+}
+.navbar-light .navbar-nav .show > .nav-link:hover,
+.navbar-light .navbar-nav .show > .nav-link:focus {
+	color: rgba(0, 0, 0, 0.7);
+}
+
+.navbar-nav i.menu-chevron {
+	font-size: 1em;
+}
+/*
+ * Show FA chevrons on BS collapse
+ * See: https://stackoverflow.com/questions/38970267/bootstrap-4-collapse-show-state-with-font-awesome-icon
+ */
+[data-toggle="collapse"] .menu-chevron:before {
+	content: "\f077";
+}
+
+[data-toggle="collapse"].collapsed .menu-chevron:before {
+	content: "\f078";
+}
 
 .logo {
 	/*max-width:100%;

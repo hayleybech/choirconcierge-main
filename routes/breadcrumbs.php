@@ -273,8 +273,8 @@ Breadcrumbs::for('tasks.create', static function ($trail) {
  * VOICE PARTS
  */
 
-// Voice Parts
+// Singers > Voice Parts
 Breadcrumbs::for('voice-parts.index', static function ($trail) {
-    $trail->parent('dash');
+    $trail->parent('singers.index');
     $trail->push('Voice Parts', route('voice-parts.index'));
 });
