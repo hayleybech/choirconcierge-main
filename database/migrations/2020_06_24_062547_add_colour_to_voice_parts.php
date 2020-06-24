@@ -14,7 +14,7 @@ class AddColourToVoiceParts extends Migration
     public function up(): void
     {
         Schema::table('voice_parts', static function (Blueprint $table) {
-            $table->string('colour');
+            $table->string('colour')->nullable();
         });
     }
 
