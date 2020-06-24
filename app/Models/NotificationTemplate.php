@@ -28,6 +28,12 @@ use Illuminate\Support\Facades\Log;
  */
 class NotificationTemplate extends Model
 {
+    protected $fillable = [
+        'subject',
+        'recipients',
+        'body',
+        'delay',
+    ];
 
     protected $with = [
         'task',
@@ -37,6 +43,23 @@ class NotificationTemplate extends Model
     {
 		return $this->belongsTo(Task::class);
 	}
+
+	public function getBodyWithHighlightsAttribute()
+    {
+        $replacements = array(
+            '%%singer.name%%'       => '<code>%%singer.name%%</code>',
+            '%%singer.email%%'      => '<code>%%singer.email%%</code>',
+            '%%profile.create%%'    => '<code>%%profile.create%%</code>',
+            '%%placement.create%%'  => '<code>%%placement.create%%</code>',
+            '%%choir.name%%'        => '<code>%%choir.name%%</code>',
+            '%%singer.dob%%'        => '<code>%%singer.dob%%</code>',
+            '%%singer.age%%'        => '<code>%%singer.age%%</code>',
+            '%%singer.phone%%'      => '<code>%%singer.phone%%</code>',
+            '%%singer.section%%'    => '<code>%%singer.section%%</code>',
+            '%%user.name%%' 	    => '<code>%%user.name%%</code>',
+        );
+        return str_replace( array_keys($replacements), $replacements, nl2br( e( $this->body ) ) );
+    }
 
     public function getRecipientType(): string
     {

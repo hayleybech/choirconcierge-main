@@ -32,11 +32,14 @@
 @section('page-content')
 
     <div class="card bg-light">
-        <h3 class="card-header h4">Notifications</h3>
+        <div class="card-header d-flex justify-content-start align-items-center">
+            <h3 class="h4 mb-0">Notifications</h3>
+            <a href="{{ route( 'tasks.notifications.create', $task ) }}" class="btn btn-add btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-plus"></i> Add Notification</a>
+        </div>
 
         <div class="list-group-flush">
         @foreach($task->notification_templates as $template)
-            <div class="list-group-item">{{ $template->subject }}</div>
+            <a href="{{ route('tasks.notifications.show', [$task, $template]) }}" class="list-group-item list-group-item-action">{{ $template->subject }}</a>
         @endforeach
         </div>
     </div>
