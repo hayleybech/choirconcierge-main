@@ -14,7 +14,7 @@ class AddFrontRowLengthToRisersTable extends Migration
     public function up(): void
     {
         Schema::table('riser_stacks', static function (Blueprint $table) {
-            $table->tinyInteger('front_row_length');
+            $table->tinyInteger('front_row_length')->nullable();
         });
     }
 
