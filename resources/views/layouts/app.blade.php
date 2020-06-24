@@ -107,7 +107,18 @@
 									@endcan	
 								</li>
 								<li class="nav-item">
+									@can('create', \App\Models\Folder::class)
+									<a href="#collapse-folders" class="nav-link {{ ( request()->routeIs('folders.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
+										<span><i class="fad fa-folders fa-fw"></i><span class="link-text"> Documents</span></span>
+										<i class="far fa-fw menu-chevron"></i>
+									</a>
+									<div id="collapse-folders" class="collapse pl-2 small {{ ( request()->routeIs('folders.*') ) ? 'show' : '' }}">
+										<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.index') ) ? 'active' : '' }}"><i class="fad fa-folders fa-fw"></i><span class="link-text"> All Folders</span></a>
+										<a href="{{route( 'folders.create' )}}" class="nav-link {{ ( request()->routeIs('folders.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add Folder</span></a>
+									</div>
+									@else
 									<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.*') ) ? 'active' : '' }}"><i class="fad fa-folders fa-fw fa-swap-opacity fa-swap-color"></i><span class="link-text"> Documents</span></a>
+									@endcan
 								</li>
 								<li class="nav-item">
 									<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('stacks.*') ) ? 'active' : '' }}"><i class="fad fa-people-arrows fa-fw"></i><span class="link-text"> Riser Stacks</span></a>
