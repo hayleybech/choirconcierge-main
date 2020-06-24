@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Singer;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 class UserTableSeeder extends Seeder
 {
@@ -46,7 +47,7 @@ class UserTableSeeder extends Seeder
 
         // Step 2 - Add dummy users - no roles
         factory(User::class, 30)->create()->each(static function(User $user) use ($singer_categories) {
-            $faker = \Faker\Factory::create();
+            $faker = Faker::create();
 
             // Step 2a - Create matching singer
             $user->singer()->create([
