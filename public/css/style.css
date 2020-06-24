@@ -33,7 +33,7 @@ body .fad:after{
 
 /*** APP TOP ***/
 #app-header {
-	width: 180px;
+	width: 200px;
 }
 #app-header.fullscreen {
 	position: absolute;
