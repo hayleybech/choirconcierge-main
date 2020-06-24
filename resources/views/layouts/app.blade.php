@@ -64,7 +64,10 @@
 							@if( Auth::user() )
 								<li class="nav-item nav-heading">Singers</li>
 								<li class="nav-item">
-									<a href="#collapse-singers" class="nav-link {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers"><span><i class="fad fa-users fa-fw"></i><span class="link-text"> Singers</span></span><i class="far fa-fw menu-chevron"></i></a>
+									<a href="#collapse-singers" class="nav-link {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
+										<span><i class="fad fa-users fa-fw"></i><span class="link-text"> Singers</span></span>
+										<i class="far fa-fw menu-chevron"></i>
+									</a>
 									<div id="collapse-singers" class="collapse pl-2 small {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'show' : '' }}">
 										<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.index') ) ? 'active' : '' }}"><i class="fad fa-users fa-fw"></i><span class="link-text"> All Singers</span></a>
 										<a href="{{route( 'singers.create' )}}" class="nav-link {{ ( request()->routeIs('singers.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-user-plus"></i><span class="link-text"> Add New</span></a>
