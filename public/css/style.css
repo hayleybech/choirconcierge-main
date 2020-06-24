@@ -152,6 +152,7 @@ main {
 
 .navbar-nav i.menu-chevron {
 	font-size: 1em;
+	margin-right: -0.1em;
 }
 /*
  * Show FA chevrons on BS collapse
