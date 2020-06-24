@@ -149,7 +149,14 @@
 									</div>
 								</li>
 								<li class="nav-item">
-									<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : '' }}"><i class="fad fa-tasks fa-fw"></i><span class="link-text"> Onboarding</span></a>
+									<a href="#collapse-tasks" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
+										<span><i class="fad fa-tasks fa-fw"></i><span class="link-text"> Onboarding</span></span>
+										<i class="far fa-fw menu-chevron"></i>
+									</a>
+									<div id="collapse-tasks" class="collapse pl-2 small {{ ( request()->routeIs('tasks.*') ) ? 'show' : '' }}">
+										<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.index') ) ? 'active' : '' }}"><i class="fad fa-tasks fa-fw"></i><span class="link-text"> All Tasks</span></a>
+										<a href="{{route( 'tasks.create' )}}" class="nav-link {{ ( request()->routeIs('tasks.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
+									</div>
 								</li>
 							@endif
 
