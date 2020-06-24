@@ -86,7 +86,7 @@
 									</a>
 									<div id="collapse-songs" class="collapse pl-2 small {{ ( request()->routeIs('songs.*') ) ? 'show' : '' }}">
 										<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.index') ) ? 'active' : '' }}"><i class="fad fa-list-music fa-fw"></i><span class="link-text"> All Songs</span></a>
-										<a href="{{route( 'songs.create' )}}" class="nav-link {{ ( request()->routeIs('songs.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square fa-swap-opaciy"></i><span class="link-text"> Add New</span></a>
+										<a href="{{route( 'songs.create' )}}" class="nav-link {{ ( request()->routeIs('songs.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
 									</div>
 									@else
 									<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.*') ) ? 'active' : '' }}"><i class="fad fa-list-music fa-fw"></i><span class="link-text"> Songs</span></a>
@@ -100,7 +100,7 @@
 									</a>
 									<div id="collapse-events" class="collapse pl-2 small {{ ( request()->routeIs('events.*', 'voice-parts.*') ) ? 'show' : '' }}">
 										<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.index') ) ? 'active' : '' }}"><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> All Events</span></a>
-										<a href="{{route( 'events.create' )}}" class="nav-link {{ ( request()->routeIs('events.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square fa-swap-opaciy"></i><span class="link-text"> Add New</span></a>
+										<a href="{{route( 'events.create' )}}" class="nav-link {{ ( request()->routeIs('events.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
 									</div>
 									@else
 									<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : '' }}"><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> Events</span></a>
