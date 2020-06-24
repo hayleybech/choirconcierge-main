@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Notifications\TaskCompleted;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -28,6 +29,8 @@ use Illuminate\Support\Facades\Log;
  */
 class NotificationTemplate extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'subject',
         'recipients',
@@ -72,7 +75,7 @@ class NotificationTemplate extends Model
     {
 
         $recipients = array();
-        list($recipient_type, $recipient_id) = explode(':', $this->recipients);
+        [$recipient_type, $recipient_id] = explode(':', $this->recipients);
         switch($recipient_type){
             case 'role':
                 $role = Role::find($recipient_id);
