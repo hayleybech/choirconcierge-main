@@ -128,6 +128,9 @@ Route::get('/mailbox/process', [MailboxController::class, 'process']);
 Route::resource('tasks', 'TaskController')->only(['index', 'create', 'store', 'show', 'destroy'])->middleware(['auth', 'role:Admin']);
 Route::resource('tasks.notifications', 'TaskNotificationTemplateController')->except('index');
 
+// Voice Parts module
+Route::resource('voice-parts', 'VoicePartController')->only('index');
+
 // Migrations
 // @todo Create a super admin role
 Route::prefix('migrate')->middleware(['auth', 'role:Admin'])->group(static function(){

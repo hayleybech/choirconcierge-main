@@ -268,3 +268,13 @@ Breadcrumbs::for('tasks.create', static function ($trail) {
     $trail->parent('tasks.index');
     $trail->push('Add Task', route('tasks.create'));
 });
+
+/**
+ * VOICE PARTS
+ */
+
+// Voice Parts
+Breadcrumbs::for('voice-parts.index', static function ($trail) {
+    $trail->parent('dash');
+    $trail->push('Voice Parts', route('voice-parts.index'));
+});
