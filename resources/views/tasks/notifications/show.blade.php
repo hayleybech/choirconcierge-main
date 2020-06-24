@@ -8,7 +8,7 @@
 @endsection
 
 @section('page-lead')
-    Recipients: {{ $notification->recipients }}<br>
+    Recipients: <code>{{ $notification->recipients }}</code><br>
     Delay: {{ $notification->delay }}<br>
     Created:
     <span class="date" style="display: inline-flex;">

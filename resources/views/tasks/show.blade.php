@@ -39,7 +39,10 @@
 
         <div class="list-group-flush">
         @foreach($task->notification_templates as $template)
-            <a href="{{ route('tasks.notifications.show', [$task, $template]) }}" class="list-group-item list-group-item-action">{{ $template->subject }}</a>
+            <div class="list-group-item d-flex justify-content-between">
+                <a href="{{ route('tasks.notifications.show', [$task, $template]) }}" class="">{{ $template->subject }}</a>
+                <x-delete-button :action="route( 'tasks.notifications.destroy', [$task, $template] )"/>
+            </div>
         @endforeach
         </div>
     </div>

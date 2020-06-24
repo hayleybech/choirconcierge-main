@@ -80,11 +80,15 @@ class TaskNotificationTemplateController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param NotificationTemplate $notificationTemplate
+     * @param Task                 $task
+     * @param NotificationTemplate $notification
+     *
      * @return RedirectResponse
+     * @throws \Exception
      */
-    public function destroy(NotificationTemplate $notificationTemplate): RedirectResponse
+    public function destroy(Task $task, NotificationTemplate $notification): RedirectResponse
     {
-        //
+        $notification->delete();
+        return redirect()->route('tasks.show', $task)->with(['status' => 'Task Notification deleted.']);
     }
 }
