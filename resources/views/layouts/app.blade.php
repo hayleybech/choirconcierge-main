@@ -139,7 +139,14 @@
 							@if( Auth::user()->hasRole('Admin') )
 								<li class="nav-item nav-heading">Management</li>
 								<li class="nav-item">
-									<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.*') ) ? 'active' : '' }}"><i class="fad fa-mail-bulk fa-fw"></i><span class="link-text"> Mailing Lists</span></a>
+									<a href="#collapse-groups" class="nav-link {{ ( request()->routeIs('groups.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
+										<span><i class="fad fa-mail-bulk fa-fw"></i><span class="link-text"> Mailing Lists</span></span>
+										<i class="far fa-fw menu-chevron"></i>
+									</a>
+									<div id="collapse-groups" class="collapse pl-2 small {{ ( request()->routeIs('groups.*') ) ? 'show' : '' }}">
+										<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.index') ) ? 'active' : '' }}"><i class="fad fa-mail-bulk fa-fw"></i><span class="link-text"> All Lists</span></a>
+										<a href="{{route( 'groups.create' )}}" class="nav-link {{ ( request()->routeIs('groups.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
+									</div>
 								</li>
 								<li class="nav-item">
 									<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : '' }}"><i class="fad fa-tasks fa-fw"></i><span class="link-text"> Onboarding</span></a>
