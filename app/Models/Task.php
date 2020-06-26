@@ -59,7 +59,7 @@ class Task extends Model
 		return $this->hasMany(NotificationTemplate::class);
 	}
 
-	public function generateNotificocations(Singer $singer): void
+	public function generateNotifications(Singer $singer): void
     {
 
         // Loop through templates for this Task to create Notifications
