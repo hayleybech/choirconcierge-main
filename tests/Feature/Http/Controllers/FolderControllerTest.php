@@ -174,6 +174,7 @@ class FolderControllerTest extends TestCase
         $response->assertViewIs('folders.show');
     }
 
+    /** @test */
     public function show_for_anon_returns_redirect(): void
     {
         $this->assertGuest();
@@ -201,6 +202,7 @@ class FolderControllerTest extends TestCase
         $response->assertViewIs('folders.edit');
     }
 
+    /** @test */
     public function edit_for_member_returns_redirect(): void
     {
         $user = User::query()->whereDoesntHave('roles')->first();
@@ -212,6 +214,7 @@ class FolderControllerTest extends TestCase
         $response->assertRedirect( route('dash') );
     }
 
+    /** @test */
     public function edit_for_anon_returns_redirect(): void
     {
         $this->assertGuest();
@@ -222,13 +225,103 @@ class FolderControllerTest extends TestCase
         $response->assertRedirect( route('login') );
     }
 
-    // @todo update for employee changes the folder
-    // @todo update for member doesnt change the folder
-    // @todo update for guest doesnt change the folder
+    /** @test */
+    public function update_for_employee_changes_the_folder(): void
+    {
+        $user = Role::first()->users->first(); // Any role is fine
+        $this->actingAs($user);
 
-    // @todo destroy for employee deletes the folder
-    // @todo destroy for member doesnt delete the folder
-    // @todo destroy for guest doesnt delete the folder
+        $folder = Folder::query()->inRandomOrder()->first();
+        $title = $this->faker->sentence;
+        $response = $this->put( route('folders.update', ['folder' => $folder]), [
+            'title' => $title,
+        ]);
 
-    // @todo update these tests to use file uploads - whoops!
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('folders', [
+            'id'    => $folder->id,
+            'title' => $title,
+        ]);
+    }
+
+    /** @test */
+    public function update_for_member_doesnt_change_the_folder(): void
+    {
+        $user = User::query()->whereDoesntHave('roles')->first();
+        $this->actingAs($user);
+
+        $folder = Folder::query()->inRandomOrder()->first();
+        $title = $this->faker->sentence;
+        $response = $this->put( route('folders.update', ['folder' => $folder]), [
+            'title' => $title,
+        ]);
+
+        $response->assertRedirect( route('dash') );
+        $this->assertDatabaseMissing('folders', [
+            'id'    => $folder->id,
+            'title' => $title,
+        ]);
+    }
+
+    /** @test */
+    public function update_for_anon_doesnt_change_the_folder(): void
+    {
+        $this->assertGuest();
+
+        $folder = Folder::query()->inRandomOrder()->first();
+        $title = $this->faker->sentence;
+        $response = $this->put( route('folders.update', ['folder' => $folder]), [
+            'title' => $title,
+        ]);
+
+        $response->assertRedirect( route('login') );
+        $this->assertDatabaseMissing('folders', [
+            'id'    => $folder->id,
+            'title' => $title,
+        ]);
+    }
+
+    /** @test */
+    public function destroy_for_employee_deletes_the_folder(): void
+    {
+        $user = Role::first()->users->first(); // Any role is fine
+        $this->actingAs($user);
+
+        $folder = Folder::query()->inRandomOrder()->first();
+        $response = $this->delete( route('folders.destroy', ['folder' => $folder]) );
+
+        $response->assertStatus(302);
+        $this->assertDatabaseMissing('folders', [
+            'id'    => $folder->id,
+        ]);
+    }
+
+    /** @test */
+    public function destroy_for_member_doesnt_delete_the_folder(): void
+    {
+        $user = User::query()->whereDoesntHave('roles')->first();
+        $this->actingAs($user);
+
+        $folder = Folder::query()->inRandomOrder()->first();
+        $response = $this->delete( route('folders.destroy', ['folder' => $folder]) );
+
+        $response->assertRedirect(route('dash'));
+        $this->assertDatabaseHas('folders', [
+            'id'    => $folder->id,
+        ]);
+    }
+    
+    /** @test */
+    public function destroy_for_anon_doesnt_delete_the_folder(): void
+    {
+        $this->assertGuest();
+
+        $folder = Folder::query()->inRandomOrder()->first();
+        $response = $this->delete( route('folders.destroy', ['folder' => $folder]) );
+
+        $response->assertRedirect(route('login'));
+        $this->assertDatabaseHas('folders', [
+            'id'    => $folder->id,
+        ]);
+    }
 }
