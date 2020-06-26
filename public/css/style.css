@@ -154,6 +154,10 @@ main {
 	font-size: 1em;
 	margin-right: -0.1em;
 }
+.nav-item .submenu {
+	border-left: 1px solid #ccc;
+	margin-left: 1rem;
+}
 /*
  * Show FA chevrons on BS collapse
  * See: https://stackoverflow.com/questions/38970267/bootstrap-4-collapse-show-state-with-font-awesome-icon
