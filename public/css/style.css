@@ -214,6 +214,9 @@ main {
 	#app-header .navbar-nav .nav-link {
 		padding: 0.6rem 1rem;
 	}
+	.nav-item .submenu {
+		margin-left: 1.5rem;
+	}
 }
 
 /* MOBILE TAP BAR */
