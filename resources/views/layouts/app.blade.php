@@ -70,7 +70,7 @@
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
 									<div id="collapse-singers" class="collapse pl-2 small {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.index') ) ? 'active' : '' }}"><i class="fad fa-users fa-fw"></i><span class="link-text"> All Singers</span></a>
+										<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Singers</span></a>
 										<a href="{{route( 'singers.create' )}}" class="nav-link {{ ( request()->routeIs('singers.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
 										<a href="{{ route('voice-parts.index') }}" class="nav-link {{ ( request()->routeIs('voice-parts.*') ) ? 'active' : '' }}"><i class="fad fa-users-class fa-fw"></i><span class="link-text"> Voice Parts</span></a>
 									</div>
@@ -85,7 +85,7 @@
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
 									<div id="collapse-songs" class="collapse pl-2 small {{ ( request()->routeIs('songs.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.index') ) ? 'active' : '' }}"><i class="fad fa-list-music fa-fw"></i><span class="link-text"> All Songs</span></a>
+										<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Songs</span></a>
 										<a href="{{route( 'songs.create' )}}" class="nav-link {{ ( request()->routeIs('songs.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
 									</div>
 									@else
@@ -99,7 +99,7 @@
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
 									<div id="collapse-events" class="collapse pl-2 small {{ ( request()->routeIs('events.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.index') ) ? 'active' : '' }}"><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> All Events</span></a>
+										<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Events</span></a>
 										<a href="{{route( 'events.create' )}}" class="nav-link {{ ( request()->routeIs('events.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
 									</div>
 									@else
@@ -113,7 +113,7 @@
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
 									<div id="collapse-folders" class="collapse pl-2 small {{ ( request()->routeIs('folders.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.index') ) ? 'active' : '' }}"><i class="fad fa-folders fa-fw"></i><span class="link-text"> All Folders</span></a>
+										<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Folders</span></a>
 										<a href="{{route( 'folders.create' )}}" class="nav-link {{ ( request()->routeIs('folders.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add Folder</span></a>
 									</div>
 									@else
@@ -127,7 +127,7 @@
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
 									<div id="collapse-stacks" class="collapse pl-2 small {{ ( request()->routeIs('stacks.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('stacks.index') ) ? 'active' : '' }}"><i class="fad fa-people-arrows fa-fw"></i><span class="link-text"> All Stacks</span></a>
+										<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('stacks.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Stacks</span></a>
 										<a href="{{route( 'stacks.create' )}}" class="nav-link {{ ( request()->routeIs('stacks.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
 									</div>
 									@else
@@ -144,7 +144,7 @@
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
 									<div id="collapse-groups" class="collapse pl-2 small {{ ( request()->routeIs('groups.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.index') ) ? 'active' : '' }}"><i class="fad fa-mail-bulk fa-fw"></i><span class="link-text"> All Lists</span></a>
+										<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Lists</span></a>
 										<a href="{{route( 'groups.create' )}}" class="nav-link {{ ( request()->routeIs('groups.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
 									</div>
 								</li>
@@ -154,7 +154,7 @@
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
 									<div id="collapse-tasks" class="collapse pl-2 small {{ ( request()->routeIs('tasks.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.index') ) ? 'active' : '' }}"><i class="fad fa-tasks fa-fw"></i><span class="link-text"> All Tasks</span></a>
+										<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Tasks</span></a>
 										<a href="{{route( 'tasks.create' )}}" class="nav-link {{ ( request()->routeIs('tasks.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
 									</div>
 								</li>
