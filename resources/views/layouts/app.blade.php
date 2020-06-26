@@ -71,7 +71,7 @@
 									</a>
 									<div id="collapse-singers" class="collapse pl-2 small {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
 										<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.index') ) ? 'active' : '' }}"><i class="fad fa-users fa-fw"></i><span class="link-text"> All Singers</span></a>
-										<a href="{{route( 'singers.create' )}}" class="nav-link {{ ( request()->routeIs('singers.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-user-plus"></i><span class="link-text"> Add New</span></a>
+										<a href="{{route( 'singers.create' )}}" class="nav-link {{ ( request()->routeIs('singers.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
 										<a href="{{ route('voice-parts.index') }}" class="nav-link {{ ( request()->routeIs('voice-parts.*') ) ? 'active' : '' }}"><i class="fad fa-users-class fa-fw"></i><span class="link-text"> Voice Parts</span></a>
 									</div>
 									@else
