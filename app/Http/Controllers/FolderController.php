@@ -10,6 +10,11 @@ use Illuminate\View\View;
 
 class FolderController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Folder::class, 'folder');
+    }
+
     /**
      * Display a listing of the resource.
      *
