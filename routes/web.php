@@ -90,7 +90,7 @@ Route::prefix('folders')->group(static function (){
         Route::get('{folder}/documents/{document}/delete', [DocumentController::class, 'destroy'])->name('folders.documents.delete');
     });
 });
-Route::resource('folders', 'FolderController');
+Route::resource('folders', 'FolderController')->middleware('auth');
 
 // Risers module
 Route::resource('stacks', 'RiserStackController');
