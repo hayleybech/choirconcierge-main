@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserGroupRequest;
+use App\Models\Folder;
 use App\Models\GroupMember;
 use App\Models\Role;
 use App\Models\User;
@@ -15,6 +16,10 @@ use Illuminate\View\View;
 
 class UserGroupController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(UserGroup::class, 'user_group');
+    }
     /**
      * Display a listing of the resource.
      */

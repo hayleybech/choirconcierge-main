@@ -107,7 +107,7 @@ Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static functio
 });
 
 // Mailing Lists (User Groups) module
-Route::resource('groups', 'UserGroupController')->middleware(['auth', 'role:Admin']);
+Route::resource('groups', 'UserGroupController')->middleware(['auth']);
 
 /** Mailbox **/
 Route::get('/mailbox/process', [MailboxController::class, 'process']);
