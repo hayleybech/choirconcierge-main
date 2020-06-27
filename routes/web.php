@@ -11,25 +11,13 @@
 |
 */
 
-
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
 use App\Http\Controllers\MailboxController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\NotificationTemplateController;
-use App\Http\Controllers\RiserStackController;
-use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SingerPlacementController;
 use App\Http\Controllers\SingerProfileController;
-use App\Http\Controllers\SongAttachmentController;
-use App\Http\Controllers\SongController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\UpdateSingerCategoryController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserGroupController;
 
 Auth::routes(['register' => false]);
 
