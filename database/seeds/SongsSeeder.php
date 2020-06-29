@@ -131,7 +131,7 @@ class SongsSeeder extends Seeder
      */
     public static function attachRandomCategories(Song $song, Collection $categories): void
     {
-        $qty = random_int(0, $categories->count() ); // How many categories should this song have?
+        $qty = random_int(0, 3 ); // How many categories should this song have?
         $category = $categories->random($qty);
         $song->categories()->attach($category);
         $song->save();
