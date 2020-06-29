@@ -1,7 +1,7 @@
 <template>
     <!-- Spots -->
     <g>
-        <riser-spot v-for="(spot, index) in spots" :key="index" :coords="spot" :singer="spot.singer" :colour="$parent.getColour(spot.singer)" :disabled="editDisabled"></riser-spot>
+        <riser-spot v-for="(spot, index) in spots" :key="index" :coords="spot" :singer="spot.singer" :colour="$parent.getColour(spot.singer)" :edit-disabled="editDisabled"></riser-spot>
     </g>
 </template>
 

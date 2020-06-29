@@ -1,7 +1,7 @@
 <template>
     <drop tag="g" @drop="onDrop" mode="cut">
 
-        <drag tag="g" :key="singer.id" :data="singer" @cut="onCut(singer)" :disabled="disabled">
+        <drag tag="g" :key="singer.id" :data="singer" @cut="onCut(singer)" :disabled="dragDisabled">
             <svg>
                 <circle :cx="coords.centre.x" :cy="coords.centre.y" :r="coords.radius + 15" class="riser-spot-drop-area"></circle>
                 <circle :cx="coords.centre.x" :cy="coords.centre.y" :r="coords.radius" :data-singer="singer.name" class="riser-spot" :style="style"></circle>
@@ -42,7 +42,7 @@ export default {
             type: String,
             default: 'green'
         },
-        disabled: {
+        editDisabled: {
             type: Boolean,
             default: false
         }
@@ -93,6 +93,17 @@ export default {
                 height: height,
                 width: width
             }
+        },
+        dragDisabled() {
+            if( this.editDisabled ) {
+                return true;
+            }
+
+            if( this.singer.id === 0 ) {
+                return true;
+            }
+
+            return false;
         }
     },
     methods: {
