@@ -8,7 +8,7 @@
         </a>
     </div>
     <div class="r-table__cell event-col--type">
-        <span class="badge badge-dark">{{ $event->type->title }}</span>
+        {{ $event->type->title }}
     </div>
     <div class="r-table__cell event-col--date">
         <div class="date">
