@@ -11,10 +11,8 @@
         {{ $attachment->filepath }}
     </div>
     <div class="r-table__cell attachment-col--category">
-        <span class="badge badge-dark">
-            <i class="@if($attachment->category->title === 'Learning Tracks') fa fa-fw fa-file-audio @elseif($attachment->category->title === 'Full Mix (Demo)') fa fa-fw fa-compact-disc @elseif($attachment->category->title === 'Sheet Music') fa fa-fw fa-file-pdf @else fa fa-fw fa-file-alt @endif"></i>
-            {{ $attachment->category->title }}
-        </span>
+        <i class="@if($attachment->category->title === 'Learning Tracks') fa fa-fw fa-file-audio @elseif($attachment->category->title === 'Full Mix (Demo)') fa fa-fw fa-compact-disc @elseif($attachment->category->title === 'Sheet Music') fa fa-fw fa-file-pdf @else fa fa-fw fa-file-alt @endif"></i>
+        {{ $attachment->category->title }}
     </div>
     <div class="r-table__cell attachment-col--actions">
         <a href="{{ route('songs.attachments.show', [$attachment->song, $attachment]) }}" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-download"></i> Download</a>
