@@ -8,7 +8,7 @@
     @endif
 @endsection
 @section('page-lead')
-    <span class="badge badge-light">{{ $song->status->title }}</span><br>
+    {{ $song->status->title }}<br>
     Category:
     @foreach( $song->categories as $cat )
         <span class="song-category">{{ $cat->title }}</span>@if( ! $loop->last ), @endif

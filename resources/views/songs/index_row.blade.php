@@ -8,7 +8,7 @@
         </a>
     </div>
     <div class="r-table__cell song-col--status">
-        <span class="badge badge-dark">{{ $song->status->title }}</span>
+        {{ $song->status->title }}
     </div>
     <div class="r-table__cell song-col--category">
         @foreach( $song->categories as $cat )
