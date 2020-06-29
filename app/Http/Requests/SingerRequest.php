@@ -21,16 +21,16 @@ class SingerRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @param Singer $singer
      * @return array
      */
-    public function rules(Singer $singer)
+    public function rules()
     {
+        $singer = $this->route('singer');
         return [
             'name'	=> 'required',
             'email'	=> [
                 'required',
-                Rule::unique('singers')->ignore($singer),
+                'unique:singers,email,'.$singer->id,
             ],
             'onboarding_enabled'    => 'boolean',
             'voice_part_id' => '',
