@@ -3,7 +3,7 @@ $( document ).ready(function() {
       e.preventDefault(); 
     });
 	
-	$('a.link-confirm').on('click', function (e) {
+	$('.link-confirm').on('click', function (e) {
 		console.log(e);
         return confirm( 'Are you sure? Action:' + e.target.innerText );
     });
