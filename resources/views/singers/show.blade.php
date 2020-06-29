@@ -14,7 +14,11 @@
 		</div>
 		<div class="col">
 			{{ $singer->category->name }}<br>
-			@if( $singer->voice_part)<i class="fa fa-fw fa-users"></i> {{ $singer->voice_part->title }} <br>@endif
+			@if( $singer->voice_part)
+			<span class="badge badge-secondary">
+				<i class="fa fa-fw fa-users"></i> {{ $singer->voice_part->title }}
+			</span><br>
+			@endif
 			{{ $singer->email }}<br>
 			Added: {{$singer->created_at->toDayDateTimeString()}}<br>
 			<strong>
