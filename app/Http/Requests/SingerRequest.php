@@ -30,7 +30,7 @@ class SingerRequest extends FormRequest
             'name'	=> 'required',
             'email'	=> [
                 'required',
-                //Rule::unique('singers')->ignore($singer->id ?? ''),
+                Rule::unique('singers')->ignore($singer),
             ],
             'onboarding_enabled'    => 'boolean',
             'voice_part_id' => '',
