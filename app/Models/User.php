@@ -226,4 +226,18 @@ class User extends Authenticatable implements HasMedia
         });
     }
 
+    public function scopeWithRole(Builder $query, string $role): Builder
+    {
+        return $query->whereHas('roles', static function(Builder $query) use ($role) {
+            $query->where('name', '=', $role);
+        });
+    }
+
+    public function scopeWithoutRole(Builder $query, string $role): Builder
+    {
+        return $query->whereDoesntHave('roles', static function(Builder $query) use ($role) {
+            $query->where('name', '=', $role);
+        });
+    }
+
 }

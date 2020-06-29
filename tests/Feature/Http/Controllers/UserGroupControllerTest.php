@@ -25,9 +25,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function index_for_admin_returns_list_view(): void
     {
-        $user = User::whereHas('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withRole('Admin')->first();
         $this->actingAs($user);
 
         $response = $this->get(route('groups.index'));
@@ -39,9 +37,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function index_for_unauthorised_returns_redirect(): void
     {
-        $user = User::whereDoesntHave('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withoutRole('Admin')->first();
         $this->actingAs($user);
 
         $response = $this->get(route('groups.index'));
@@ -62,9 +58,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function create_for_admin_returns_create_view(): void
     {
-        $user = User::whereHas('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withRole('Admin')->first();
         $this->actingAs($user);
 
         $response = $this->get(route('groups.create'));
@@ -76,9 +70,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function create_for_unauthorised_returns_redirect(): void
     {
-        $user = User::whereDoesntHave('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withoutRole('Admin')->first();
         $this->actingAs($user);
 
         $response = $this->get(route('groups.create'));
@@ -99,9 +91,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function store_for_admin_creates_a_group(): void
     {
-        $user = User::whereHas('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withRole('Admin')->first();
         $this->actingAs($user);
 
         $title = $this->faker->sentence;
@@ -118,9 +108,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function store_for_unauthorised_doesnt_create_a_group(): void
     {
-        $user = User::whereDoesntHave('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withoutRole('Admin')->first();
         $this->actingAs($user);
 
         $title = $this->faker->sentence;
@@ -155,10 +143,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function show_for_admin_returns_show_view(): void
     {
-        $this->withoutExceptionHandling();
-        $user = User::whereHas('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withRole('Admin')->first();
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
@@ -171,9 +156,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function show_for_unauthorised_returns_redirect(): void
     {
-        $user = User::whereDoesntHave('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withoutRole('Admin')->first();
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
@@ -196,9 +179,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function edit_for_admin_returns_edit_view(): void
     {
-        $user = User::whereHas('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withRole('Admin')->first();
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
@@ -211,9 +192,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function edit_for_unauthorised_returns_redirect(): void
     {
-        $user = User::whereDoesntHave('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withoutRole('Admin')->first();
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
@@ -236,9 +215,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function update_for_admin_changes_group(): void
     {
-        $user = User::whereHas('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withRole('Admin')->first();
         $this->actingAs($user);
 
         $title = $this->faker->sentence;
@@ -257,9 +234,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function update_for_unauthorised_doesnt_change_group(): void
     {
-        $user = User::whereDoesntHave('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withoutRole('Admin')->first();
         $this->actingAs($user);
 
         $title = $this->faker->sentence;
@@ -296,9 +271,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function destroy_for_admin_deletes_group(): void
     {
-        $user = User::whereHas('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withRole('Admin')->first();
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
@@ -311,9 +284,7 @@ class UserGroupControllerTest extends TestCase
     /** @test */
     public function destroy_for_unauthorised_doesnt_delete_group(): void
     {
-        $user = User::whereDoesntHave('roles', static function(Builder $query) {
-            $query->where('name', '=', 'Admin');
-        })->first();
+        $user = User::withoutRole('Admin')->first();
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
