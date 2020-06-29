@@ -59,8 +59,7 @@ export default {
             this.singers.splice(index, 1);
         },
         accept(data) {
-            //return this.part === data.voice_part_id;
-            return true;
+            return this.part === data.voice_part_id;
         }
     }
 }
