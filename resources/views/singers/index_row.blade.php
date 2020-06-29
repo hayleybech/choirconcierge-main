@@ -29,7 +29,7 @@
 			</span>
 		</div>
 		<div class="r-table__cell singer-col--category">
-			<span class="singer-category badge badge-pill {{ $category_class[$singer->category->name] }}">{{ explode( ' ', $singer->category->name )[0] }}</span>
+			<span class="singer-category">{{ $singer->category->name }}</span>
 		</div>
 		<div class="r-table__cell singer-col--progress">
 			<!--<div class="progress">

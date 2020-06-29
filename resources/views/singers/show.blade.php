@@ -13,7 +13,7 @@
 			<img src="{{ $singer->user->getAvatarUrl('profile') }}" alt="{{ $singer->name }}" class="user-avatar-rounded">
 		</div>
 		<div class="col">
-			<span class="badge badge-light">{{ $singer->category->name }}</span><br>
+			{{ $singer->category->name }}<br>
 			@if( $singer->voice_part)<i class="fa fa-fw fa-users"></i> {{ $singer->voice_part->title }} <br>@endif
 			{{ $singer->email }}<br>
 			Added: {{$singer->created_at->toDayDateTimeString()}}<br>
