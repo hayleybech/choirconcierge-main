@@ -25,7 +25,7 @@
     </div>
     <div class="r-table__cell col--delete">
         @if( Auth::user()->isEmployee() )
-        <x-delete-button :action="route( 'folders.destroy', ['folder' => $folder] )"/>
+        <x-delete-button :action="route( 'folders.destroy', ['folder' => $folder] )" :message="$folder->documents()->count() . ' documents will also be deleted.'" />
         @endif
     </div>
 

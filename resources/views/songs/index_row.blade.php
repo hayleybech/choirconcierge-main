@@ -30,7 +30,7 @@
     </div>
     <div class="r-table__cell col--delete">
         @if(Auth::user()->hasRole('Music Team'))
-            <x-delete-button :action="route( 'songs.destroy', ['song' => $song] )"/>
+            <x-delete-button :action="route( 'songs.destroy', ['song' => $song] )" :message="$song->attachments()->count() . ' attachments will also be deleted.'"/>
         @endif
     </div>
 
