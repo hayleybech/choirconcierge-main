@@ -24,9 +24,7 @@
         </div>
     </div>
     <div class="r-table__cell col--delete">
-        {{ Form::open( array( 'route' => ['groups.destroy', $group], 'method' => 'delete' ) ) }}
-        <a href="" onclick="this.closest('form').submit();return false;" class="link-confirm text-danger"><i class="fa fa-fw fa-trash"></i></a>
-        {{ Form::close() }}
+        <x-delete-button :action="route( 'groups.destroy', ['group' => $group] )" :message="'Any future emails addressed to this group will be lost!'" />
     </div>
 
 </div>
