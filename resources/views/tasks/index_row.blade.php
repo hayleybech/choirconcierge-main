@@ -4,7 +4,7 @@
 	<td>{{ $task->type }} <small>({{ $task->route }})</small></td>
 	<td>
 	@if(Auth::user()->hasRole('Admin'))
-		<x-delete-button :action="route( 'tasks.destroy', $task )"/>
+		<x-delete-button :action="route( 'tasks.destroy', $task )" :message="'This may break your onboarding process!'"/>
 	@endif
 	</td>
 </tr>
