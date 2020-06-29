@@ -86,6 +86,7 @@
 		const DATE_FORMAT_DISPLAY = 'MMMM D, YYYY';
 
 		const DATE_CONFIG = {
+			"showDropdowns": true,
 			"showISOWeekNumbers": true,
 			"timePicker": false,
 			"locale": {
