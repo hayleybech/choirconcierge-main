@@ -11,7 +11,7 @@
     {{ $song->status->title }}<br>
     Category:
     @foreach( $song->categories as $cat )
-        <span class="song-category">{{ $cat->title }}</span>@if( ! $loop->last ), @endif
+        <span class="song-category badge badge-light">{{ $cat->title }}</span>
     @endforeach
     <br>
     <button class="pitch btn btn-secondary btn-sm"><i class="fa fa-play"></i> <span class="key">{{ $song->pitch }}</span></button><br>
