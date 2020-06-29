@@ -18,7 +18,7 @@ class UserGroupController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(UserGroup::class, 'user_group');
+        $this->authorizeResource(UserGroup::class, 'group');
     }
     /**
      * Display a listing of the resource.
