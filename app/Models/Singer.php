@@ -105,8 +105,10 @@ class Singer extends Model
         // Update user
         $this->user->email = $attributes['email'];
         $this->user->name = $attributes['name'];
-        $this->user->setPassword( $attributes['password'] );
-        if( isset( $attributes['avatar'] ) ){
+        if( isset( $attributes['password'] ) ) {
+            $this->user->setPassword($attributes['password']);
+        }
+        if( isset( $attributes['avatar'] ) ) {
             $this->user->addMediaFromRequest('avatar')->toMediaCollection('avatar');
         }
         $this->user->save();
