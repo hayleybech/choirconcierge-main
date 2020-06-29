@@ -50,7 +50,9 @@ class RiserStackController extends Controller
 
         $stack->load('singers');
 
-        return view('stacks.show', compact('stack' ));
+        $voice_parts = VoicePart::all();
+
+        return view('stacks.show', compact('stack', 'voice_parts' ));
     }
 
     public function edit(RiserStack $stack): View
