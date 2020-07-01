@@ -351,9 +351,7 @@ main {
 	color: rgba(0, 0, 0, 0.8);
 }
 .nav-pills .nav-link.active {
-	background-color: #007bff55;
-	color: #6900c7;
-	font-weight: 600;
+	background-color: rgb(var(--c-dark-purple));
 }
 .tap-bar .nav-link i {
 	display: block;
