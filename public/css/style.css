@@ -287,9 +287,13 @@ main {
 }
 
 @media screen and (max-width: 767px) {
-	.navbar-dark .navbar-nav > .nav-item > .nav-link.active {
+	.navbar .nav-vertical:after {
+		display: none;
+	}
+	.navbar-dark .navbar-nav > .nav-item.active {
 		border-top-right-radius: var(--nav-item-border-radius);
 		border-bottom-right-radius: var(--nav-item-border-radius);
+		overflow: hidden;
 	}
 }
 
