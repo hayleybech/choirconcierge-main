@@ -5,7 +5,7 @@
     <div class="page-header mt-4">
         <div class="container-fluid px-5">
 
-            <h2 class="d-flex justify-content-between align-items-center"><span>@yield('page-title')</span> <span>@yield('page-action')</span></h2>
+            <h1 class="d-flex justify-content-between align-items-center"><span>@yield('page-title')</span> <span>@yield('page-action')</span></h1>
 
             <p class="lead">
                 @yield('page-lead')

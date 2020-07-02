@@ -41,6 +41,10 @@
 
 	<div class="card">
 
+		<div class="card-header justify-content-between align-items-center">
+			
+		</div>
+
 		<div class="r-table r-table--card-view-mobile">
 			<div class="r-table__thead">
 				<div class="r-table__row row--singer">

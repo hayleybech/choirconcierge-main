@@ -32,9 +32,10 @@
   display: grid;
   gap: 5px 8px;
   place-items: stretch;
+  border-bottom: 1px solid var(--c-light-pink);
 }
 .r-table__thead .r-table__row {
-  padding-top: 30px;
+  padding-top: 0;
   padding-bottom: 20px;
 }
 
@@ -137,7 +138,7 @@
 /**********************************/
 /* Singers List */
 .row--singer {
-  grid-template-columns: 1% 30% 1fr 1fr 22% 10% 1em;
+  grid-template-columns: 1% 30% 1fr 1fr 22% 8% 1em;
   grid-template-rows: 1fr;
   grid-template-areas:
 		"mark title category part progress actions delete"
@@ -216,10 +217,11 @@
   text-overflow: ellipsis;
 }
 .singer-part {
-  font-size: 14px;
+  font-size: 18px;
 }
 .singer-category {
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 600;
 }
 .progress {
   height: 0.7rem;

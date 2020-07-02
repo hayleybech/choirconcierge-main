@@ -1,10 +1,10 @@
 	<?php
 	// Store CSS badge classes for categories
 	$category_class = array(
-		'Prospects'             => 'badge-primary',
-		'Archived Prospects'    => 'badge-danger',
-		'Members'               => 'badge-success',
-		'Archived Members'      => 'badge-warning',
+		'Prospects'             => 'text-primary',
+		'Archived Prospects'    => 'text-info',
+		'Members'               => 'text-success',
+		'Archived Members'      => 'text-danger',
 	);
 	?>
 	<div class="r-table__row row--singer">
@@ -25,11 +25,11 @@
 		</div>
         <div class="r-table__cell singer-col--part">
 			<span class="singer-part">
-				<span class="badge badge-secondary" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>{{ ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? $singer->voice_part->title : 'No part' }}</span><br>
+				<span class="badge badge-pill badge-secondary" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>{{ ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? $singer->voice_part->title : 'No part' }}</span><br>
 			</span>
 		</div>
 		<div class="r-table__cell singer-col--category">
-			<span class="singer-category">{{ $singer->category->name }}</span>
+			<span class="singer-category {{ $category_class[$singer->category->name] }}"><i class="fas fa-fw fa-circle mr-2"></i> {{ $singer->category->name }}</span>
 		</div>
 		<div class="r-table__cell singer-col--progress">
 			<!--<div class="progress">
@@ -67,7 +67,7 @@
 
 			@if ( Auth::user()->hasRole('Membership Team') )
 			<div class="dropdown">
-				<button class="btn btn-secondary btn-sm force-xs btn-block dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-outline-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					Move to
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
