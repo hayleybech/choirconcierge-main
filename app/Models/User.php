@@ -188,7 +188,7 @@ class User extends Authenticatable implements HasMedia
                 'image/jpeg',
                 'image/png',
             ])
-            ->useFallbackUrl('https://api.adorable.io/avatars/50/'.$this->email.'.png')
+            ->useFallbackUrl('https://avatars.dicebear.com/api/human/'.$this->id.'.svg?mood[]=happy')
             ->registerMediaConversions(function (Media $media){
                 $this->addMediaConversion('thumb')
                     ->width(50)
