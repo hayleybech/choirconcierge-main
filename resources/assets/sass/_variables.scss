@@ -36,3 +36,14 @@ $input-color-placeholder: lighten($text-color, 30%);
 
 // Panels
 $panel-default-heading-bg: #fff;
+
+
+
+
+:root {
+  --c-dark-purple: 32, 1, 66;
+  --c-light-pink: hsla(269, 10%, 90%, 1);
+  --c-off-white: hsla(269, 7%, 95%, 1);
+
+  --nav-item-border-radius: 30px;
+}
