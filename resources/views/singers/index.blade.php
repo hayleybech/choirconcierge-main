@@ -3,53 +3,43 @@
 @section('title', 'Singers')
 @section('page-title')
 <i class="fal fa-fw fa-users"></i> Singers
+	@if(Auth::user()->hasRole('Membership Team'))
+		<a href="{{route( 'singers.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-user-plus"></i> Add New</a>
+	@endif
 @endsection
 @section('page-action')
-	@if(Auth::user()->hasRole('Membership Team'))
-		<a href="{{route( 'singers.create' )}}" class="btn btn-add btn-lg btn-primary"><i class="fa fa-fw fa-user-plus"></i> Add New</a>
-	@endif
+	<?php
+	use App\Models\Singer;
+	$filters_class = Singer::hasActiveFilters() ? 'btn-primary' : 'btn-outline-secondary';
+	?>
+	<a class="btn btn-sm {{ $filters_class }}" data-toggle="collapse" href="#filters" role="button" aria-expanded="false" aria-controls="filters"><i class="fa fa-filter"></i> Filter</a>
+
 	@if(Auth::user()->hasRole('Music Team'))
-		<a href="{{route( 'voice-parts.index' )}}" class="btn btn-add btn-lg btn-outline-secondary"><i class="fa fa-fw fa-users-class"></i> Manage Voice Parts</a>
+		<a href="{{route( 'voice-parts.index' )}}" class="btn btn-add btn-sm btn-outline-secondary"><i class="fa fa-fw fa-users-class"></i> Manage Voice Parts</a>
 	@endif
 @endsection
 
 @section('page-content')
 
-	<div class="card border-0 bg-light">
-		<h3 class="card-header bg-light border-0 p-3 d-flex justify-content-between">
-			Singers List
-			<div>
-				<?php
-				use App\Models\Singer;
-				$filters_class = Singer::hasActiveFilters() ? 'btn-primary' : 'btn-outline-secondary';
-				?>
-				<a class="btn btn-sm {{ $filters_class }}" data-toggle="collapse" href="#filters" role="button" aria-expanded="false" aria-controls="filters"><i class="fa fa-filter"></i> Filter</a>
+	<div class="d-flex justify-content-end">
 
-				<div class="collapse mt-2" id="filters">
+		<div class="collapse mt-2" id="filters">
 
-					<form method="get" class="form-inline mb-0">
-						@each('partials.filter', $filters, 'filter')
+			<form method="get" class="form-inline mb-0">
+				@each('partials.filter', $filters, 'filter')
 
-						<div class="input-group input-group-sm mb-2 mr-2">
-							<div class="btn-group" role="group" aria-label="Basic example">
-								<button class="btn btn-outline-success btn-sm"><i class="fa fa-check"></i> Apply</button>
-								<a href="{{ route('singers.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i> Clear</a>
-							</div>
-						</div>
-					</form>
-
+				<div class="input-group input-group-sm mb-2 mr-2">
+					<div class="btn-group" role="group" aria-label="Basic example">
+						<button class="btn btn-outline-success btn-sm"><i class="fa fa-check"></i> Apply</button>
+						<a href="{{ route('singers.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i> Clear</a>
+					</div>
 				</div>
-			</div>
-		</h3>
-
-		<div class="card-body d-none">
-
-
-			{{--@if ( $categories_keyed[$category] == 'Members')
-            <p><a href="{{ route('singers.export') }}" class="btn btn-link btn-sm">Export paid Singers.</a></p>
-            @endif--}}
+			</form>
 
 		</div>
+	</div>
+
+	<div class="card">
 
 		<div class="r-table r-table--card-view-mobile">
 			<div class="r-table__thead">

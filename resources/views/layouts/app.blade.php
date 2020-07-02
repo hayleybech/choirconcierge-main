@@ -212,8 +212,10 @@
 						<img src="/img/choir-logo.png" alt="{{ config('app.choir_name') }}" height="30" class="d-inline-block align-top">
 					</div>
 
-					<div class="d-flex justify-content-between flex-grow-1">
-						<div></div>
+					<div class="d-flex justify-content-between align-items-center flex-grow-1">
+
+						{{ Breadcrumbs::render() }}
+
 						<ul class="navbar-nav ml-auto">
 							@guest
 							@else
