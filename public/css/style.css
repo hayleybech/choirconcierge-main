@@ -28,14 +28,6 @@ a.disabled:hover {
 	margin-bottom: 0;
 	margin-left: 10px;
 }
-.breadcrumb-item a {
-
-	text-decoration: underline;
-}
-.breadcrumb-item a:hover,
-.breadcrumb-item a:focus {
-	text-decoration: none;
-}
 .breadcrumb-item + .breadcrumb-item::before {
 
 }
