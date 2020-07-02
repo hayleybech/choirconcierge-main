@@ -23,7 +23,7 @@ html, body, #app {
 	width: 100%;
 }
 body {
-	font-family: Lato, Raleway, Arial, Helvetica, sans-serif;
+	font-family: Lato, Arial, Helvetica, sans-serif;
 	background-color: var(--c-light-pink);
 }
 body .fad:after{
