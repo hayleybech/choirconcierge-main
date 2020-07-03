@@ -155,7 +155,7 @@
 								<div class="d-flex align-items-center">
 									<div class="mr-3">1</div>
 									<div class="progress" style="width: 100%; height: 20px;">
-										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_pitch * 10 }}%" aria-valuenow="{{ $singer->placement->skill_pitch }}" aria-valuemin="1" aria-valuemax="10">{{ $singer->placement->skill_pitch }}</div>
+										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_pitch * 10 }}%" aria-valuenow="{{ $singer->placement->skill_pitch }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_pitch }}</div>
 									</div>
 									<div class="ml-3">10</div>
 								</div>
@@ -165,7 +165,7 @@
 								<div class="d-flex align-items-center">
 									<div class="mr-3">1</div>
 									<div class="progress" style="width: 100%; height: 20px;">
-										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_harmony * 10 }}%" aria-valuenow="{{ $singer->placement->skill_harmony }}" aria-valuemin="1" aria-valuemax="10">{{ $singer->placement->skill_harmony }}</div>
+										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_harmony * 10 }}%" aria-valuenow="{{ $singer->placement->skill_harmony }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_harmony }}</div>
 									</div>
 									<div class="ml-3">10</div>
 								</div>
@@ -175,7 +175,7 @@
 								<div class="d-flex align-items-center">
 									<div class="mr-3">1</div>
 									<div class="progress" style="width: 100%; height: 20px;">
-										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_performance * 10 }}%" aria-valuenow="{{ $singer->placement->skill_performance }}" aria-valuemin="1" aria-valuemax="10">{{ $singer->placement->skill_performance }}</div>
+										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_performance * 10 }}%" aria-valuenow="{{ $singer->placement->skill_performance }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_performance }}</div>
 									</div>
 									<div class="ml-3">10</div>
 								</div>
@@ -185,7 +185,7 @@
 								<div class="d-flex align-items-center">
 									<div class="mr-3">1</div>
 									<div class="progress" style="width: 100%; height: 20px;">
-										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_sightreading * 10}}%" aria-valuenow="{{ $singer->placement->skill_sightreading }}" aria-valuemin="1" aria-valuemax="10">{{ $singer->placement->skill_sightreading }}</div>
+										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_sightreading * 10}}%" aria-valuenow="{{ $singer->placement->skill_sightreading }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_sightreading }}</div>
 									</div>
 									<div class="ml-3">10</div>
 								</div>
