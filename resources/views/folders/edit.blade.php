@@ -7,25 +7,30 @@
 
     {{ Form::open( array( 'route' => ['folders.show', $folder], 'method' => 'put' ) ) }}
 
-    <div class="card bg-light">
-        <h3 class="card-header h4">Folder Details</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <h3 class="card-header h4">Folder Details</h3>
 
-        <div class="card-body">
+                <div class="card-body">
 
-            <div class="form-group">
-                {{ Form::label('title', 'Folder Title') }}
-                {{ Form::text('title', $folder->title, array('class' => 'form-control')) }}
+                    <div class="form-group">
+                        {{ Form::label('title', 'Folder Title') }}
+                        {{ Form::text('title', $folder->title, array('class' => 'form-control')) }}
+                    </div>
+
+                </div>
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-fw fa-check"></i> Save
+                    </button>
+                    <a href="{{ route('folders.show', [$folder]) }}" class="btn btn-outline-secondary">
+                        <i class="fa fa-fw fa-times"></i> Cancel
+                    </a>
+                </div>
             </div>
 
-        </div>
-
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">
-                <i class="fa fa-fw fa-check"></i> Save
-            </button>
-            <a href="{{ route('folders.show', [$folder]) }}" class="btn btn-outline-secondary">
-                <i class="fa fa-fw fa-times"></i> Cancel
-            </a>
         </div>
     </div>
 
