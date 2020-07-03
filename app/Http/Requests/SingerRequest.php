@@ -27,7 +27,7 @@ class SingerRequest extends FormRequest
     {
         $singer = $this->route('singer');
         return [
-            'name'	=> 'required',
+            'name'	=> 'required|max:255',
             'email'	=> [
                 'required',
                 'unique:singers,email,'.$singer->id,
@@ -38,7 +38,7 @@ class SingerRequest extends FormRequest
                 'array',
                 'exists:roles,id',
             ],
-            'password' => 'sometimes|nullable|min:8|confirmed',
+            'password' => 'sometimes|nullable|min:8|max:255|confirmed',
             'avatar' => 'file|mimetypes:image/jpeg,image/png|max:10240',
         ];
     }
