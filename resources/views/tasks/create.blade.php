@@ -7,7 +7,7 @@
 
     {{ Form::open( [ 'route' => 'tasks.store', 'method' => 'post' ] ) }}
 
-    <div class="card bg-light">
+    <div class="card">
         <h3 class="card-header h4">Tasks Details</h3>
 
         <div class="card-body">

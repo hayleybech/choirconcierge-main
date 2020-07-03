@@ -31,7 +31,7 @@
 
 @section('page-content')
 
-    <div class="card bg-light">
+    <div class="card">
         <div class="card-header d-flex justify-content-start align-items-center">
             <h3 class="h4 mb-0">Notifications</h3>
             <a href="{{ route( 'tasks.notifications.create', $task ) }}" class="btn btn-add btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-plus"></i> Add Notification</a>

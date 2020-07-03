@@ -4,7 +4,7 @@
 @section('page-title', 'Welcome')
 
 @section('page-content')
-	<div class="jumbotron card bg-light">
+	<div class="jumbotron card">
 	  <h1 class="display-3">Welcome</h1>
 	  <p class="lead">Welcome to Choir Concierge, your singer management assistant. </p>
 	  <hr class="my-4">
