@@ -19,7 +19,7 @@
 
 @section('page-content')
 
-    <div class="card bg-light">
+    <div class="card">
         <h4 class="card-header">Attachments</h4>
         <div class="r-table r-table--card-view-mobile">
 
