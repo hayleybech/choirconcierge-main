@@ -2,18 +2,18 @@
 
 @section('title', 'Riser Stacks')
 @section('page-title')
-<i class="fal fa-fw fa-people-arrows"></i> Riser Stacks
+    <i class="fal fa-fw fa-people-arrows"></i> Riser Stacks
+    @if(Auth::user()->hasRole('Music Team'))
+        <a href="{{route( 'stacks.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-plus"></i> Add New</a>
+    @endif
 @endsection
 
 @section('page-action')
-    @if(Auth::user()->hasRole('Music Team'))
-    <a href="{{route( 'stacks.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-plus"></i> Add New</a>
-    @endif
 @endsection
 
 @section('page-content')
 
-    <div class="card bg-light">
+    <div class="card">
         <h3 class="card-header h4">Riser Stacks List</h3>
 
         <div class="r-table r-table--card-view-mobile">

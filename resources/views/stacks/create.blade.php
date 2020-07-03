@@ -7,7 +7,7 @@
 
     {{ Form::open( array( 'route' => 'stacks.index' ) ) }}
 
-    <div class="card bg-light">
+    <div class="card">
         <h3 class="card-header h4">Riser Stack Details</h3>
 
         <div class="card-body">
