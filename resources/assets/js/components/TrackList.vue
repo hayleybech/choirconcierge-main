@@ -1,5 +1,5 @@
 <template>
-    <div class="r-table__tbody">
+    <div class="list-group-flush">
         <track-list-item v-for="attachment in attachments" :attachment="attachment" :song="song" :key="attachment.id"></track-list-item>
     </div>
 </template>

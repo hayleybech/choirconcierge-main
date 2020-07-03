@@ -21,21 +21,12 @@
 
     <div class="card">
         <h4 class="card-header">Attachments</h4>
+        
+        <track-list :song="{{ $song->toJson() }}" :attachments="{{ $song->attachments->toJson() }}"></track-list>
+
         <div class="r-table r-table--card-view-mobile">
 
-            <div class="r-table__thead">
-                <div class="r-table__row row--attachment">
-                    <div class="r-table__heading col--mark"><input type="checkbox"></div>
-                    <div class="r-table__heading col--title">Title</div>
-                    <div class="r-table__heading attachment-col--filename">File</div>
-                    <div class="r-table__heading attachment-col--category">Category</div>
-                    <div class="r-table__heading attachment-col--actions">Actions</div>
-                    <div class="r-table__heading col--delete"></div>
-                </div>
-            </div>
 
-            <track-list :song="{{ $song->toJson() }}" :attachments="{{ $song->attachments->toJson() }}"></track-list>
-            
             @if(Auth::user()->hasRole('Music Team'))
             <div class="r-table__tfoot">
 

@@ -1,25 +1,16 @@
 <template>
-    <div class="r-table__row row--attachment">
-        <div class="r-table__cell col--mark">
-            <input type="checkbox" />
-        </div>
-        <div class="r-table__cell col--title">
+    <div class="list-group-item d-flex justify-content-between">
+        <div class="d-flex">
             <div class="item-title">
                 {{ attachment.title ? attachment.title : 'Title Unknown' }}
             </div>
         </div>
-        <div class="r-table__cell attachment-col--filename">
-            {{ attachment.filepath }}
-        </div>
-        <div class="r-table__cell attachment-col--category">
-            <i class="@if($attachment->category->title === 'Learning Tracks') fa fa-fw fa-file-audio @elseif($attachment->category->title === 'Full Mix (Demo)') fa fa-fw fa-compact-disc @elseif($attachment->category->title === 'Sheet Music') fa fa-fw fa-file-pdf @else fa fa-fw fa-file-alt @endif"></i>
-            {{ attachment.category.title }}
-        </div>
-        <div class="r-table__cell attachment-col--actions">
-            <a :href="'/songs/'+song.id+'/attachments/'+attachment.id" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-download"></i> Download</a>
-        </div>
-        <div class="r-table__cell col--delete">
-            <x-delete-button :action="'/songs/'+song.id+'/attachments/'+attachment.id"/>
+        <div class="d-flex">
+            <div class="ml-2 mr-4">
+                <i :class="icon"></i>
+                {{ attachment.category.title }}
+            </div>
+            <a :href="'/songs/'+song.id+'/attachments/'+attachment.id" class="btn btn-primary btn-sm mr-2"><i class="fa fa-fw fa-download"></i> Download</a>
             <delete-button :action="'/songs/'+song.id+'/attachments/'+attachment.id"></delete-button>
         </div>
     </div>
@@ -40,6 +31,20 @@
             csrf: {
                 type: String,
                 required: true
+            }
+        },
+        computed: {
+            icon() {
+                if(this.attachment.category.title === 'Learning Tracks'){
+                    return 'fa fa-fw fa-file-audio';
+                }
+                if(this.attachment.category.title === 'Full Mix (Demo)'){
+                    return 'fa fa-fw fa-compact-disc';
+                }
+                if(this.attachment.category.title === 'Sheet Music'){
+                    return 'fa fa-fw fa-file-pdf';
+                }
+                return 'fa fa-fw fa-file-alt';
             }
         }
     }
