@@ -7,31 +7,38 @@
 
 {{ Form::open( [ 'route' => 'voice-parts.store', 'method' => 'post' ] ) }}
 
-	<div class="card bg-light">
-		<div class="card-header">Voice Part Details</div>
+<div class="row">
+	<div class="col-md-6">
 
-		<div class="card-body">
-			<p>
-				{{ Form::label('title', 'Name') }}
-				{{ Form::text('title', '', ['class' => 'form-control']) }}
-			</p>
+		<div class="card">
+			<div class="card-header"><h3 class="h4">Voice Part Details</h3></div>
 
-			<p>
-				{{ Form::label('colour', 'Colour') }}
-				{{ Form::color('colour', '', ['class' => 'form-control']) }}
-			</p>
+			<div class="card-body">
+				<p>
+					{{ Form::label('title', 'Name') }}
+					{{ Form::text('title', '', ['class' => 'form-control']) }}
+				</p>
 
+				<p>
+					{{ Form::label('colour', 'Colour') }}
+					{{ Form::color('colour', '', ['class' => 'form-control']) }}
+				</p>
+
+			</div>
+
+			<div class="card-footer">
+				<button type="submit" class="btn btn-primary">
+					<i class="fa fa-fw fa-check"></i> Create
+				</button>
+				<a href="{{ route('voice-parts.index') }}" class="btn btn-outline-secondary">
+					<i class="fa fa-fw fa-times"></i> Cancel
+				</a>
+			</div>
 		</div>
 
-		<div class="card-footer">
-			<button type="submit" class="btn btn-primary">
-				<i class="fa fa-fw fa-check"></i> Create
-			</button>
-			<a href="{{ route('voice-parts.index') }}" class="btn btn-outline-secondary">
-				<i class="fa fa-fw fa-times"></i> Cancel
-			</a>
-		</div>
 	</div>
+</div>
+
 
 {{ Form::close() }}
 

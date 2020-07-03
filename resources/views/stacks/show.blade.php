@@ -33,7 +33,7 @@
 
 @section('page-content')
 
-    <div class="card bg-light">
+    <div class="card">
         <h3 class="card-header h4">Details</h3>
 
         <div class="card-body">

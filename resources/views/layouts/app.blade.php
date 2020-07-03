@@ -26,18 +26,23 @@
 
 			<header id="app-header">
 
-				<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<nav class="navbar navbar-expand-lg navbar-dark">
 					<a class="" href="{{ url('/') }}">
-						<img src="/img/choir-logo.png" alt="Choir Concierge" class="logo">
+						<img src="/img/logo-m2.png" alt="Choir Concierge" class="logo">
 						<img src="/favicon.png" alt="Choir Concierge" class="logo-collapse">
 					</a>
 
 
 					<ul class="navbar-nav nav-vertical accordion" id="main-menu-accordion">
+
+						<li class="nav-item nav-facade-top">
+							<span class="nav-link"></span>
+						</li>
+
 						<!-- Authentication Links -->
 						@guest
-							<li class="nav-item">
-								<a href="{{ route('login') }}" class="nav-link {{ ( request()->routeIs('login') ) ? 'active' : '' }}"><i class="fad fa-sign-in-alt fa-fw"></i> Login</a>
+							<li class="nav-item {{ ( request()->routeIs('login') ) ? 'active' : '' }}">
+								<a href="{{ route('login') }}" class="nav-link {{ ( request()->routeIs('login') ) ? 'active' : '' }}"><i class="fal fa-sign-in-alt fa-fw"></i> Login</a>
 							</li>
 							{{--
 							<li class="nav-item {{ ( request()->routeIs('register') ) ? 'active' : '' }}">
@@ -45,8 +50,8 @@
 							</li>--}}
 						@else
 
-							<li class="nav-item">
-								<a class="nav-link {{ ( request()->routeIs('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fad fa-chart-line fa-fw"></i><span class="link-text"> Dashboard</span></a>
+							<li class="nav-item {{ ( request()->routeIs('dash') ) ? 'active' : '' }}">
+								<a class="nav-link {{ ( request()->routeIs('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fal fa-chart-line fa-fw"></i><span class="link-text">Dashboard</span></a>
 							</li>
 
 							{{--<li class="nav-item dropdown">
@@ -62,103 +67,105 @@
                             </li>--}}
 
 							@if( Auth::user() )
-								<li class="nav-item nav-heading">Singers</li>
-								<li class="nav-item">
+								<li class="nav-item {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\Singer::class)
 									<a href="#collapse-singers" class="nav-link {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
-										<span><i class="fad fa-users fa-fw"></i><span class="link-text"> Singers</span></span>
+										<span><i class="fal fa-users fa-fw"></i><span class="link-text">Singers</span></span>
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
-									<div id="collapse-singers" class="submenu collapse pl-2 small {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Singers</span></a>
-										<a href="{{route( 'singers.create' )}}" class="nav-link {{ ( request()->routeIs('singers.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
-										<a href="{{ route('voice-parts.index') }}" class="nav-link {{ ( request()->routeIs('voice-parts.*') ) ? 'active' : '' }}"><i class="fad fa-users-class fa-fw"></i><span class="link-text"> Voice Parts</span></a>
+									<div id="collapse-singers" class="submenu collapse small {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
+										<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Singers</span></a>
+										<a href="{{route( 'singers.create' )}}" class="nav-link {{ ( request()->routeIs('singers.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add New</span></a>
+										<a href="{{ route('voice-parts.index') }}" class="nav-link {{ ( request()->routeIs('voice-parts.*') ) ? 'active' : '' }}"><i class="fal fa-users-class fa-fw"></i><span class="link-text">Voice Parts</span></a>
 									</div>
 									@else
-									<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.*') ) ? 'active' : '' }}"><i class="fad fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
+									<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.*') ) ? 'active' : '' }}"><i class="fal fa-users fa-fw"></i><span class="link-text">Singers</span></a>
 									@endcan
 								</li>
-								<li class="nav-item">
+								<li class="nav-item {{ ( request()->routeIs('songs.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\Song::class)
 									<a href="#collapse-songs" class="nav-link {{ ( request()->routeIs('songs.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
-										<span><i class="fad fa-list-music fa-fw"></i><span class="link-text"> Songs</span></span>
+										<span><i class="fal fa-list-music fa-fw"></i><span class="link-text">Songs</span></span>
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
-									<div id="collapse-songs" class="submenu collapse pl-2 small {{ ( request()->routeIs('songs.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Songs</span></a>
-										<a href="{{route( 'songs.create' )}}" class="nav-link {{ ( request()->routeIs('songs.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
+									<div id="collapse-songs" class="submenu collapse small {{ ( request()->routeIs('songs.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
+										<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Songs</span></a>
+										<a href="{{route( 'songs.create' )}}" class="nav-link {{ ( request()->routeIs('songs.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add New</span></a>
 									</div>
 									@else
-									<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.*') ) ? 'active' : '' }}"><i class="fad fa-list-music fa-fw"></i><span class="link-text"> Songs</span></a>
+									<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.*') ) ? 'active' : '' }}"><i class="fal fa-list-music fa-fw"></i><span class="link-text">Songs</span></a>
 									@endcan
 								</li>
-								<li class="nav-item">
+								<li class="nav-item  {{ ( request()->routeIs('events.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\Event::class)
 									<a href="#collapse-events" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
-										<span><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> Events</span></span>
+										<span><i class="fal fa-calendar-alt fa-fw"></i><span class="link-text">Events</span></span>
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
-									<div id="collapse-events" class="submenu collapse pl-2 small {{ ( request()->routeIs('events.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Events</span></a>
-										<a href="{{route( 'events.create' )}}" class="nav-link {{ ( request()->routeIs('events.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
+									<div id="collapse-events" class="submenu collapse small {{ ( request()->routeIs('events.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
+										<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Events</span></a>
+										<a href="{{route( 'events.create' )}}" class="nav-link {{ ( request()->routeIs('events.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add New</span></a>
 									</div>
 									@else
-									<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : '' }}"><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> Events</span></a>
+									<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : '' }}"><i class="fal fa-calendar-alt fa-fw"></i><span class="link-text">Events</span></a>
 									@endcan	
 								</li>
-								<li class="nav-item">
+								<li class="nav-item {{ ( request()->routeIs('folders.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\Folder::class)
 									<a href="#collapse-folders" class="nav-link {{ ( request()->routeIs('folders.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
-										<span><i class="fad fa-folders fa-fw"></i><span class="link-text"> Documents</span></span>
+										<span><i class="fal fa-folders fa-fw"></i><span class="link-text">Documents</span></span>
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
-									<div id="collapse-folders" class="submenu collapse pl-2 small {{ ( request()->routeIs('folders.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Folders</span></a>
-										<a href="{{route( 'folders.create' )}}" class="nav-link {{ ( request()->routeIs('folders.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add Folder</span></a>
+									<div id="collapse-folders" class="submenu collapse small {{ ( request()->routeIs('folders.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
+										<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Folders</span></a>
+										<a href="{{route( 'folders.create' )}}" class="nav-link {{ ( request()->routeIs('folders.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add Folder</span></a>
 									</div>
 									@else
-									<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.*') ) ? 'active' : '' }}"><i class="fad fa-folders fa-fw fa-swap-opacity fa-swap-color"></i><span class="link-text"> Documents</span></a>
+									<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.*') ) ? 'active' : '' }}"><i class="fal fa-folders fa-fw"></i><span class="link-text">Documents</span></a>
 									@endcan
 								</li>
-								<li class="nav-item">
+								<li class="nav-item {{ ( request()->routeIs('stacks.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\RiserStack::class)
 									<a href="#collapse-stacks" class="nav-link {{ ( request()->routeIs('stacks.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
-										<span><i class="fad fa-people-arrows fa-fw"></i><span class="link-text"> Riser Stacks</span></span>
+										<span><i class="fal fa-people-arrows fa-fw"></i><span class="link-text">Riser Stacks</span></span>
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
-									<div id="collapse-stacks" class="submenu collapse pl-2 small {{ ( request()->routeIs('stacks.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('stacks.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Stacks</span></a>
-										<a href="{{route( 'stacks.create' )}}" class="nav-link {{ ( request()->routeIs('stacks.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
+									<div id="collapse-stacks" class="submenu collapse small {{ ( request()->routeIs('stacks.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
+										<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('stacks.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Stacks</span></a>
+										<a href="{{route( 'stacks.create' )}}" class="nav-link {{ ( request()->routeIs('stacks.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add New</span></a>
 									</div>
 									@else
-									<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('stacks.*') ) ? 'active' : '' }}"><i class="fad fa-people-arrows fa-fw"></i><span class="link-text"> Riser Stacks</span></a>
+									<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('stacks.*') ) ? 'active' : '' }}"><i class="fal fa-people-arrows fa-fw"></i><span class="link-text">Riser Stacks</span></a>
 									@endcan
 								</li>
 							@endif
 
 							@if( Auth::user()->hasRole('Admin') )
-								<li class="nav-item nav-heading">Management</li>
-								<li class="nav-item">
+								<li class="nav-item {{ ( request()->routeIs('groups.*') ) ? 'active' : 'collapsed' }}">
 									<a href="#collapse-groups" class="nav-link {{ ( request()->routeIs('groups.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
-										<span><i class="fad fa-mail-bulk fa-fw"></i><span class="link-text"> Mailing Lists</span></span>
+										<span><i class="fal fa-mail-bulk fa-fw"></i><span class="link-text">Mailing Lists</span></span>
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
-									<div id="collapse-groups" class="submenu collapse pl-2 small {{ ( request()->routeIs('groups.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Lists</span></a>
-										<a href="{{route( 'groups.create' )}}" class="nav-link {{ ( request()->routeIs('groups.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
+									<div id="collapse-groups" class="submenu collapse small {{ ( request()->routeIs('groups.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
+										<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Lists</span></a>
+										<a href="{{route( 'groups.create' )}}" class="nav-link {{ ( request()->routeIs('groups.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add New</span></a>
 									</div>
 								</li>
-								<li class="nav-item">
+								<li class="nav-item {{ ( request()->routeIs('tasks.*') ) ? 'active' : 'collapsed' }}">
 									<a href="#collapse-tasks" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
-										<span><i class="fad fa-tasks fa-fw"></i><span class="link-text"> Onboarding</span></span>
+										<span><i class="fal fa-tasks fa-fw"></i><span class="link-text">Onboarding</span></span>
 										<i class="far fa-fw menu-chevron"></i>
 									</a>
-									<div id="collapse-tasks" class="submenu collapse pl-2 small {{ ( request()->routeIs('tasks.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
-										<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.index') ) ? 'active' : '' }}"><i class="fad fa-list fa-fw"></i><span class="link-text"> All Tasks</span></a>
-										<a href="{{route( 'tasks.create' )}}" class="nav-link {{ ( request()->routeIs('tasks.create') ) ? 'active' : '' }}"><i class="fad fa-fw fa-plus-square"></i><span class="link-text"> Add New</span></a>
+									<div id="collapse-tasks" class="submenu collapse small {{ ( request()->routeIs('tasks.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
+										<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Tasks</span></a>
+										<a href="{{route( 'tasks.create' )}}" class="nav-link {{ ( request()->routeIs('tasks.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add New</span></a>
 									</div>
 								</li>
 							@endif
+
+							<li class="nav-item nav-facade-bottom">
+								<span class="nav-link"></span>
+							</li>
 
 							<!--
 							<li class="nav-item nav-heading">Account</li>
@@ -166,12 +173,12 @@
 
 							<li class="nav-item">
 								<a href="{{ route('singers.show', ['singer' => Auth::user()->singer] ) }}" class="nav-link">
-									<img src="{{ Auth::user()->getFirstMediaUrl('avatar', 'thumb') }}" alt="{{ Auth::user()->name }}" class="user-avatar user-avatar-nav"> <span class="link-text"> {{ Auth::user()->name }}</span>
+									<img src="{{ Auth::user()->getFirstMediaUrl('avatar', 'thumb') }}" alt="{{ Auth::user()->name }}" class="user-avatar user-avatar-nav"> <span class="link-text">{{ Auth::user()->name }}</span>
 								</a>
 							</li>
 
 							<li class="nav-item">
-								<a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="nav-link"><i class="fad fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
+								<a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="nav-link"><i class="fal fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
 							</li>
 
 							<li class="nav-item">
@@ -179,7 +186,7 @@
 								   class="nav-link {{ ( request()->routeIs('logout') ) ? 'active' : '' }}"
 								   onclick="event.preventDefault();
 									 document.getElementById('logout-form').submit();">
-									<i class="fad fa-sign-out-alt fa-fw"></i> <span class="link-text">Logout</span>
+									<i class="fal fa-sign-out-alt fa-fw"></i> <span class="link-text">Logout</span>
 								</a>
 								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 									{{ csrf_field() }}
@@ -191,7 +198,7 @@
 
 						<!--
 						<li class="nav-item">
-							<a href="" class="nav-link nav-collapse-link"><i class="fa fa-fw fa-caret-left"></i><span class="link-text"> Collapse Menu</span></a>
+							<a href="" class="nav-link nav-collapse-link"><i class="fa fa-fw fa-caret-left"></i><span class="link-text">Collapse Menu</span></a>
 						</li>-->
 					</ul>
 
@@ -202,17 +209,19 @@
 			<main>
 				<nav id="top-menu" class="navbar navbar-expand navbar-light bg-transparent">
 					<div class="navbar-brand text-muted">
-						<img src="/img/logo.png" alt="Choir Concierge" height="30" class="d-inline-block align-top">
+						<img src="/img/choir-logo.png" alt="{{ config('app.choir_name') }}" height="30" class="d-inline-block align-top">
 					</div>
 
-					<div class="d-flex justify-content-between flex-grow-1">
-						<div></div>
+					<div class="d-flex justify-content-between align-items-center flex-grow-1">
+
+						{{ Breadcrumbs::render() }}
+
 						<ul class="navbar-nav ml-auto">
 							@guest
 							@else
 								<li class="nav-item dropdown">
 									<a href="#" class="nav-link dropdown-toggle" id="profile-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<img src="{{ Auth::user()->getFirstMediaUrl('avatar', 'thumb') }}" alt="{{ Auth::user()->name }}" class="user-avatar user-avatar-nav"> <span class="link-text"> {{ Auth::user()->name }}</span>
+										<img src="{{ Auth::user()->getFirstMediaUrl('avatar', 'thumb') }}" alt="{{ Auth::user()->name }}" class="user-avatar user-avatar-nav"> <span class="link-text">{{ Auth::user()->name }}</span>
 									</a>
 									<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 										<a href="{{ route('singers.show', ['singer' => Auth::user()->singer] ) }}" class="dropdown-item"><i class="fal fa-fw fa-user"></i> Edit Profile</a>
@@ -245,17 +254,17 @@
 					<ul class="nav nav-pills nav-fill">
 						@if( Auth::user()->isEmployee() )
 							<li class="nav-item">
-								<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers', 'singers/*') ) ? 'active' : '' }}"><i class="fad fa-users fa-fw"></i><span class="link-text"> Singers</span></a>
+								<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers', 'singers/*') ) ? 'active' : '' }}"><i class="fal fa-users fa-fw"></i><span class="link-text">Singers</span></a>
 							</li>
 							<li class="nav-item">
-								<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs', 'songs/*') ) ? 'active' : '' }}"><i class="fad fa-list-music fa-fw"></i><span class="link-text"> Songs</span></a>
+								<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs', 'songs/*') ) ? 'active' : '' }}"><i class="fal fa-list-music fa-fw"></i><span class="link-text">Songs</span></a>
 							</li>
 							<li class="nav-item">
-								<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events', 'events/*') ) ? 'active' : '' }}"><i class="fad fa-calendar-alt fa-fw"></i><span class="link-text"> Events</span></a>
+								<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events', 'events/*') ) ? 'active' : '' }}"><i class="fal fa-calendar-alt fa-fw"></i><span class="link-text">Events</span></a>
 							</li>
 						@endif
 						<li class="nav-item">
-							<a href="" class="nav-link mobile-nav-collapse-link"><i class="fad fa-fw fa-ellipsis-v"></i><span class="link-text"> More</span></a>
+							<a href="" class="nav-link mobile-nav-collapse-link"><i class="fal fa-fw fa-ellipsis-v"></i><span class="link-text">More</span></a>
 						</li>
 					</ul>
 				</nav>

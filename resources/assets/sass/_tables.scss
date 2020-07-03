@@ -1,0 +1,512 @@
+/*** INDEX TABLES ***/
+
+.r-table__cell,
+.r-table__heading {
+  flex: 1 0 auto;
+
+  display: flex;
+  align-items: center;
+}
+.r-table__heading {
+  font-weight: 600;
+}
+.r-table__heading,
+.r-table__heading a {
+  color: #777;
+  font-weight: 800;
+}
+.r-table__heading a {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.r-table__heading a:hover {
+  text-decoration: none;
+}
+.r-table__heading a i {
+  margin-left: 8px;
+}
+.r-table__row {
+  padding: 10px 50px 10px 20px;
+
+  display: grid;
+  gap: 5px 8px;
+  place-items: stretch;
+  border-bottom: 1px solid var(--c-light-pink);
+}
+.r-table__thead .r-table__row {
+  padding-top: 0;
+  padding-bottom: 20px;
+}
+
+/* Select & Delete Columns */
+.col--mark {
+  grid-area: mark;
+
+  justify-content: center;
+  visibility: hidden; /* I haven't coded bulk actions yet */
+}
+.col--title {
+  grid-area: title;
+}
+.col--created {
+  grid-area: created;
+}
+.col--delete {
+  grid-area: delete;
+}
+
+.row-add .r-table__cell {
+  flex-flow: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+/* Tables - Tablet */
+@media screen and (max-width:980px) {
+  .form-inline .input-group > .custom-select {
+    width: auto !important;
+  }
+}
+/* Tables - Mobile */
+@media screen and (max-width:767px) {
+  .r-table--card-view-mobile .r-table__thead .r-table__row {
+    padding: 0 20px 0 12px;
+    grid-template-columns: 0 auto;
+    grid-template-rows: auto;
+    grid-template-areas: "mark title";
+  }
+  .r-table--card-view-mobile .r-table__thead .r-table__row .r-table__heading:not(.col--mark):not(.col--title) {
+    display: none;
+  }
+  .r-table--card-view-mobile .r-table__row {
+    padding: 15px 20px 20px 12px;
+    gap: 8px 10px;
+  }
+}
+
+/* Table Sort */
+.sort-inactive {
+  opacity: 0.3;
+}
+.sort-active {
+  opacity: 0.8;
+}
+
+.sort-inactive:before {
+  content: "\f0dc"; /* Sort icon */
+}
+.sort-active.sort-asc:before {
+  content: "\f0de"; /* Sort Up icon */
+}
+.sort-active.sort-desc:before {
+  content: "\f0dd"; /* Sort Down icon */
+}
+
+/** Table Fields **/
+.item-title-wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  max-width: 100%;
+}
+.item-title {
+  font-size: 16px;
+  font-weight: 600;
+  max-height: 1.5em;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  white-space: nowrap;
+}
+/* Table dates */
+.date {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+}
+.date__diff-for-humans {
+
+}
+.date__regular {
+  font-size: 0.8em;
+  color: #999;
+}
+
+
+/**********************************/
+/* Singers List */
+.row--singer {
+  grid-template-columns: 1% 30% 1fr 1fr 22% 8% 1em;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+		"mark title category part progress actions delete"
+;
+}
+
+.user-avatar {
+  border-radius: 5px;
+  margin-right: 15px;
+}
+.user-avatar-rounded {
+  border-radius: 10px;
+  margin-right: 15px;
+  width: 100%;
+}
+.user-avatar.user-avatar-nav {
+  width: 20px;
+  margin-right: 5px;
+}
+
+.singer-col--progress {
+  grid-area: progress;
+}
+.r-table__cell.singer-col--progress {
+  font-size: 14px;
+  justify-content: space-between;
+}
+.singer-col--part {
+  grid-area: part;
+}
+.singer-col--category {
+  grid-area: category;
+}
+.singer-col--actions {
+  grid-area: actions;
+}
+
+/* Singer Table - Tablet */
+@media screen and (max-width:980px) {
+  .r-table--card-view-mobile .singer-col--progress {
+    flex-flow: row wrap;
+    align-items: center;
+  }
+}
+
+/* Singer Table - Mobile */
+@media screen and (max-width:767px) {
+
+  .r-table--card-view-mobile .row--singer {
+    grid-template-columns: 0 60% 1fr 1em;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+			"mark title category delete"
+			"mark title part delete"
+			"mark progress actions delete"
+  ;
+  }
+
+  .singer-col--category,
+  .singer-col--part,
+  .singer-col--actions {
+    justify-content: flex-end;
+  }
+}
+
+/** Fields **/
+.singer-email,
+.singer-phone {
+  font-size: 14px;
+  line-height: 1.2;
+}
+.singer-email {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.singer-part {
+  font-size: 18px;
+}
+.singer-category {
+  font-size: 14px;
+  font-weight: 600;
+}
+.progress {
+  height: 0.7rem;
+  width: 80px;
+  flex: 0 1 auto;
+  border: 1px solid #ddd;
+}
+.progress--link {
+  font-size: 12px;
+}
+.singer-col--actions .dropdown {
+  width: 100%;
+}
+
+/*********************************/
+/** SONGS LIST **/
+.row--song {
+  grid-template-columns: 1% 30% 1fr 2fr 1fr 10% 1em;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+		"mark title status category pitch created delete"
+;
+}
+.song-col--status {
+  grid-area: status;
+}
+.song-col--category {
+  grid-area: category;
+}
+.song-col--pitch {
+  grid-area: pitch;
+}
+
+/* Song Table - Tablet */
+@media screen and (max-width:980px) {
+
+}
+/* Song Table - Mobile */
+@media screen and (max-width:767px) {
+
+  .r-table--card-view-mobile .row--song {
+    grid-template-columns: 0 55% 1fr 1fr 1em;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+			"mark title pitch status delete"
+			"mark category created created delete"
+  ;
+  }
+
+  .song-col--status,
+  .song-col--pitch,
+  .row--song .col--created {
+    justify-content: flex-end;
+  }
+}
+
+/********************************/
+/** ATTACHMENT LIST **/
+.row--attachment {
+  grid-template-columns: 1% 30% 1fr 1fr 10% 1em;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+		"mark title file category actions delete"
+;
+}
+.attachment-col--filename {
+  grid-area: file;
+}
+.attachment-col--category {
+  grid-area: category;
+}
+.attachment-col--actions {
+  grid-area: actions;
+}
+
+/* Attachment Table - Tablet */
+@media screen and (max-width:980px) {
+  .r-table--card-view-mobile .row--attachment {
+    grid-template-columns: 1% 25% 1fr 1fr 20% 1em;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+			"mark title file category actions delete"
+  ;
+  }
+}
+/* Attachment Table - Mobile */
+@media screen and (max-width:767px) {
+
+  .r-table--card-view-mobile .row--attachment {
+    grid-template-columns: 0 55% 1fr 1em;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+			"mark title category delete"
+			"mark file actions delete"
+  ;
+  }
+
+  .attachment-col--category,
+  .attachment-col--actions {
+    justify-content: flex-end;
+  }
+}
+
+
+/********************************/
+/** EVENTS LIST **/
+.row--event {
+  grid-template-columns: 1% 30% 1fr 1fr 2fr 10% 1em;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+		"mark title type date location created delete"
+;
+}
+.event-col--type {
+  grid-area: type;
+}
+.event-col--date {
+  grid-area: date;
+}
+.event-col--location {
+  grid-area: location;
+}
+
+/* Event Table - Tablet */
+@media screen and (max-width:980px) {
+  .r-table--card-view-mobile .row--event {
+    grid-template-columns: 1% 30% 1fr 1fr 2fr 1em;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+			"mark title type date location delete"
+  ;
+  }
+  .row--event .col--created {
+    display: none;
+  }
+}
+/* Event Table - Mobile */
+@media screen and (max-width:767px) {
+
+  .r-table--card-view-mobile .row--event {
+    grid-template-columns: 0 60% 1fr 1em;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+			"mark title type delete"
+			"mark location date delete"
+  ;
+  }
+
+  .event-col--type,
+  .event-col--date {
+    justify-content: flex-end;
+  }
+}
+
+/********************************/
+/** GROUP LIST **/
+.row--group {
+  grid-template-columns: 1% 30% 1fr 1fr 10% 1em;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+		"mark title type slug created delete"
+;
+}
+.group-col--type {
+  grid-area: type;
+}
+.group-col--slug {
+  grid-area: slug;
+}
+/* Group Table - Tablet */
+@media screen and (max-width:980px) {
+  .r-table--card-view-mobile .row--group {
+    grid-template-columns: 1% 30% 1fr 1fr 1fr 1em;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+			"mark title type slug created delete"
+  ;
+  }
+}
+/* Group Table - Mobile */
+@media screen and (max-width:767px) {
+
+  .r-table--card-view-mobile .row--group {
+    grid-template-columns: 0 60% 1fr 1em;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+			"mark title type delete"
+			"mark slug created delete"
+  ;
+  }
+
+  .group-col--type,
+  .row--group .col--created {
+    justify-content: flex-end;
+  }
+}
+
+/*********************************/
+/** FOLDERS LIST **/
+.row--folder {
+  grid-template-columns: 1% 1.5fr 1fr 10% 10% 1em;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+			"mark title status created actions delete"
+;
+}
+.folder-col--status {
+  grid-area: status;
+}
+.folder-col--actions {
+  grid-area: actions;
+}
+
+.parent-row--folder {
+  font-size: 14px;
+}
+.sub-row--document:nth-child(even) {
+  background-color: transparent;
+}
+.sub-row--document .col--title .item-title,
+.sub-row--document .col--title label,
+.sub-row--document .folder-col--status,
+.sub-row--document .col--created {
+  font-size: 1em;
+}
+.sub-row--document .date {
+  line-height: 1.3;
+}
+
+/* Folder Accordion / Collapse */
+/* Add icons to accordion */
+.accordion .collapse-toggle {
+  display: block;
+  text-align: left;
+}
+.accordion .collapse-toggle:before {
+  width: 1.2em;
+  display: inline-block;
+  text-align: right;
+  margin-right: 10px;
+  font-family: "Font Awesome 5 Pro";
+  font-weight: 900;
+  content: "\F07C"; /* fa-folder-open */
+}
+
+.accordion .collapse-toggle.collapsed:before {
+  content: "\F07B"; /* fa-folder */
+}
+
+.form-control-sm {
+  height: calc(1.875rem + 1px);
+}
+
+.row--folder.row-add {
+  padding-top: 20px;
+  padding-bottom: 25px;
+  background-color: #EEF;
+  grid-template-areas:
+		"mark title title title actions delete"
+;
+}
+
+/* Folders Table - Tablet */
+@media screen and (max-width:980px) {
+  .r-table--card-view-mobile .row--folder {
+    grid-template-columns: 1% 50% 1fr 1fr 1em;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+			"mark title status actions delete"
+  ;
+  }
+
+  .row--folder .col--created {
+    display: none;
+  }
+}
+/* Folders Table - Mobile */
+@media screen and (max-width:767px) {
+
+  .r-table--card-view-mobile .row--folder {
+    grid-template-columns: 0 55% 6.5em 1em;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+			"mark title actions delete"
+			"mark status created delete"
+  ;
+  }
+}

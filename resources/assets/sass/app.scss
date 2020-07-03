@@ -1,16 +1,15 @@
 
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
 
 // Variables
 @import "variables";
 
 // Bootstrap
-@import "~bootstrap/scss/bootstrap.scss";
+@import "bootstrap";
 
 // Font Awesome
 @import '~@fortawesome/fontawesome-pro/scss/fontawesome';
-@import '~@fortawesome/fontawesome-pro/scss/brands';
+//@import '~@fortawesome/fontawesome-pro/scss/brands';
 @import '~@fortawesome/fontawesome-pro/scss/duotone';
 @import '~@fortawesome/fontawesome-pro/scss/light';
 @import '~@fortawesome/fontawesome-pro/scss/regular';
@@ -18,3 +17,13 @@
 
 // Select2
 @import "~select2/dist/css/select2";
+
+
+// Choir Concierge
+@import "layout";
+@import "menu";
+@import "tables";
+@import "forms";
+@import "files";
+@import "risers";
+@import "learning-mode";

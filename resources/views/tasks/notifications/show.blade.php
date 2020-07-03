@@ -30,7 +30,7 @@
 @endsection
 
 @section('page-content')
-    <div class="card bg-light">
+    <div class="card">
         <div class="card-header d-flex justify-content-start align-items-center">
             <h3 class="h4 mb-0">Body</h3>
         </div>

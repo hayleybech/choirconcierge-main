@@ -2,12 +2,10 @@
 
 @section('content')
 
-    <div class="page-header jumbotron jumbotron-fluid bg-light bg-gradient-blue-purple text-white">
-        <div class="container">
+    <div class="page-header mt-4">
+        <div class="container-fluid px-5">
 
-            {{ Breadcrumbs::render() }}
-
-            <h2 class="display-4">@yield('page-title') @yield('page-action')</h2>
+            <h1 class="d-flex justify-content-between align-items-center"><span>@yield('page-title')</span> <span>@yield('page-action')</span></h1>
 
             <p class="lead">
                 @yield('page-lead')
@@ -15,7 +13,7 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="container-fluid px-5">
         @include('partials.flash')
 
         @yield('page-content')

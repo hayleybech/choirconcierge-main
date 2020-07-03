@@ -3,15 +3,15 @@
 @section('title', 'Mailing Lists')
 @section('page-title')
 <i class="fal fa-fw fa-mail-bulk"></i> Mailing Lists
+<a href="{{route( 'groups.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-plus"></i> Add New</a>
 @endsection
 
 @section('page-action')
-<a href="{{route( 'groups.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-plus"></i> Add New</a>
 @endsection
 
 @section('page-content')
 
-    <div class="card bg-light">
+    <div class="card">
         <h3 class="card-header h4">Mailing Lists</h3>
 
         <div class="card-body">

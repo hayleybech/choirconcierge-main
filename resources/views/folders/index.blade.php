@@ -2,18 +2,18 @@
 
 @section('title', 'Documents')
 @section('page-title')
-<i class="fal fa-fw fa-folders"></i> Documents
+    <i class="fal fa-fw fa-folders"></i> Documents
+    @if( Auth::user()->isEmployee() )
+        <a href="{{route( 'folders.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-folder-plus"></i> Add Folder</a>
+    @endif
 @endsection
 @section('page-action')
-    @if( Auth::user()->isEmployee() )
-    <a href="{{route( 'folders.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-folder-plus"></i> Add Folder</a>
-    @endif
 @endsection
 
 @section('page-content')
 
-    <div class="card bg-light">
-        <h3 class="card-header h4">Folder List</h3>
+    <div class="card">
+        <h3 class="card-header h4"></h3>
         <div class="r-table r-table--card-view-mobile">
             <div class="r-table__thead">
                 <div class="r-table__row row--folder">

@@ -2,24 +2,24 @@
 
 @section('title', 'Onboarding Checklist')
 @section('page-title')
-<i class="fal fa-tasks fa-fw"></i> Onboarding Checklist
+	<i class="fal fa-tasks fa-fw"></i> Onboarding Checklist
+	@if(Auth::user()->hasRole('Admin'))
+		<a href="{{route( 'tasks.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-plus"></i> Add Task</a>
+	@endif
 @endsection
 
 @section('page-action')
-	@if(Auth::user()->hasRole('Admin'))
-		<a href="{{route( 'tasks.create' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-plus"></i> Add Task</a>
-	@endif
 @endsection
 
 @section('page-lead', 'On this page you can manage the onboarding workflow every new singer completes when joining the choir. ')
 
 @section('page-content')
 
-	<div class="card bg-light">
+	<div class="card">
 		<h3 class="card-header h4">Checklist</h3>
 
-		<table class="table table-striped table-borderless bg-light">
-			<thead class="table-light">
+		<table class="table table-striped table-borderless">
+			<thead>
 			<tr>
 				<th scope="col">Name</th>
 				<th scope="col">Role</th>

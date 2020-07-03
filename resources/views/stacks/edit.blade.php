@@ -7,7 +7,7 @@
 
     {{ Form::open( array( 'route' => ['stacks.show', $stack->id], 'method' => 'put' ) ) }}
 
-    <div class="card bg-light">
+    <div class="card">
         <h3 class="card-header h4">Edit Riser Stack</h3>
 
         <div class="card-body">
