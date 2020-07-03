@@ -93,6 +93,8 @@ class SongController extends Controller
     {
         $this->authorize('view', $song);
 
+        $song->load('attachments.category');
+
         $attachment_categories = SongAttachmentCategory::all();
         $categories_keyed = $attachment_categories->mapWithKeys(function($item){
             return [ $item['id'] => $item['title'] ];

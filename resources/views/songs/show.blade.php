@@ -33,9 +33,9 @@
                     <div class="r-table__heading col--delete"></div>
                 </div>
             </div>
-            <div class="r-table__tbody">
-                @each('songs.show_attachment_row', $song->attachments, 'attachment', 'partials.noresults')
-            </div>
+
+            <track-list :song="{{ $song->toJson() }}" :attachments="{{ $song->attachments->toJson() }}"></track-list>
+            
             @if(Auth::user()->hasRole('Music Team'))
             <div class="r-table__tfoot">
 
