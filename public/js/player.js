@@ -132,16 +132,6 @@ class Player {
         });
     }
 
-    /**
-     * Format the time from seconds to M:SS.
-     * @param  {Number} secs Seconds to format.
-     * @return {String}      Formatted time.
-     */
-    formatTime(secs) {
-        let minutes = Math.floor(secs / 60) || 0;
-        let seconds = (secs - minutes * 60) || 0;
 
-        return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-    }
 
 }

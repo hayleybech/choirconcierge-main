@@ -32,6 +32,7 @@ Vue.component('holding-area', require('./components/HoldingArea.vue').default);
 Vue.component('riser-spot', require('./components/RiserSpot').default);
 Vue.component('load-button', require('./components/LoadButton').default);
 Vue.component('track-list', require('./components/TrackList').default);
+Vue.component('track-player', require('./components/TrackPlayer').default);
 
 const app = new Vue({
     el: '#app'

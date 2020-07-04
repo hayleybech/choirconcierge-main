@@ -21,7 +21,9 @@
 
     <div class="card">
         <h4 class="card-header">Attachments</h4>
-        
+
+        <track-player title="{{ $song->attachments->first()->title }}" src="{{ $song->attachments->first()->download_url }}"></track-player>
+
         <track-list :song="{{ $song->toJson() }}" :attachments="{{ $song->attachments->toJson() }}"></track-list>
 
         <div class="r-table r-table--card-view-mobile">
