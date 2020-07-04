@@ -1,6 +1,8 @@
 <template>
     <div class="list-group-item d-flex justify-content-between">
         <div class="d-flex">
+            <button v-if="isPlayable && ! playing" v-on:click="$emit('play')" class="btn btn-link btn-sm mr-2"><i class="fas fa-fw fa-play"></i></button>
+            <button v-if="isPlayable && playing" class="btn btn-link disabled btn-sm mr-2" disabled><i class="fas fa-fw fa-waveform"></i></button>
             <div class="item-title">
                 {{ attachment.title ? attachment.title : 'Title Unknown' }}
             </div>
@@ -28,8 +30,16 @@
             song: {
                 required: true
             },
+            playing: {
+                type: Boolean,
+                required: true
+            }
         },
         computed: {
+            isPlayable() {
+                return this.attachment.category.title === 'Learning Tracks'
+                    || this.attachment.category.title === 'Full Mix (Demo)'
+            },
             icon() {
                 if(this.attachment.category.title === 'Learning Tracks'){
                     return 'fa fa-fw fa-file-audio';

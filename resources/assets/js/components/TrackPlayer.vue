@@ -3,9 +3,8 @@
         <div class="track-title">{{ title }}</div>
         <input type="range" class="audio-seek custom-range" :value="seek_value" v-on:mousedown="stopSeekBar" v-on:mouseup="startSeekBar" v-on:change="seekTo" min="0" max="1" step="0.001">
         <div class="play-controls">
-            <button v-if="! playing()" v-on:click="play()" class="play btn btn-primary"><i class="fa fa-play"></i></button>
-            <button v-if="playing()" v-on:click="pause()" class="pause btn btn-primary"><i class="fa fa-pause"></i></button>
-            <button v-on:click="stop()" class="stop btn btn-primary"><i class="fa fa-stop"></i></button>
+            <button v-if="! playing()" v-on:click="play()" class="play btn btn-primary mr-1"><i class="fa fa-play"></i></button>
+            <button v-if="playing()" v-on:click="pause()" class="pause btn btn-primary mr-1"><i class="fa fa-pause"></i></button>
 
             <div class="time">
                 <span class="time-position">{{ track_time }}</span> / <span class="time-length">{{ track_length }}</span>
@@ -38,6 +37,13 @@ export default {
             track_length: this.formatTime(0),
             track_time: this.formatTime(0),
             seek_value: 0,
+        }
+    },
+    watch: {
+        src() {
+            this.stop();
+            this.openTrack(this.src);
+            this.play();
         }
     },
     methods: {
