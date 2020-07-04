@@ -163,10 +163,6 @@
 								</li>
 							@endif
 
-							<li class="nav-item nav-facade-bottom">
-								<span class="nav-link"></span>
-							</li>
-
 							<!--
 							<li class="nav-item nav-heading">Account</li>
 
@@ -195,6 +191,10 @@
 							-->
 
 						@endguest
+
+						<li class="nav-item nav-facade-bottom">
+							<span class="nav-link"></span>
+						</li>
 
 						<!--
 						<li class="nav-item">
