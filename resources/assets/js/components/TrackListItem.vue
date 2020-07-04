@@ -28,10 +28,6 @@
             song: {
                 required: true
             },
-            csrf: {
-                type: String,
-                required: true
-            }
         },
         computed: {
             icon() {
