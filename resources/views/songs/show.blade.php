@@ -8,7 +8,7 @@
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-start">
-                    <h1>{{ $song->title }}</h1>
+                    <h1 class="h2 mb-0">{{ $song->title }}</h1>
 
                     @if(Auth::user()->hasRole('Music Team'))
                         <a href="{{route( 'songs.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-secondary ml-2 flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
@@ -16,12 +16,14 @@
                 </div>
 
                 <div class="card-body">
-                    {{ $song->status->title }}<br>
-                    Category:
-                    @foreach( $song->categories as $cat )
-                        <span class="song-category badge badge-pill badge-secondary">{{ $cat->title }}</span>
-                    @endforeach
-                    <br>
+                    <div class="mb-2">
+                        {{ $song->status->title }}
+                    </div>
+                    <div class="mb-2">
+                        @foreach( $song->categories as $cat )
+                            <span class="song-category badge badge-pill badge-secondary">{{ $cat->title }}</span>
+                        @endforeach
+                    </div>
                     <button class="pitch btn btn-secondary btn-sm"><i class="fa fa-play"></i> <span class="key">{{ $song->pitch }}</span></button><br>
                 </div>
             </div>
