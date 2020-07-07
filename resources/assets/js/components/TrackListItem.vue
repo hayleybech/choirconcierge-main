@@ -21,7 +21,9 @@
         <div class="d-flex">
             <div class="ml-2 mr-4">
                 <i :class="icon"></i>
-                {{ attachment.category.title }}
+                <span class="item-category-title">
+                    {{ attachment.category.title }}
+                </span>
             </div>
             <a :href="'/songs/'+song.id+'/attachments/'+attachment.id" class="btn btn-link btn-sm mr-2"><i class="fa fa-fw fa-download"></i></a>
             <delete-button :action="'/songs/'+song.id+'/attachments/'+attachment.id"></delete-button>
@@ -71,5 +73,9 @@
 </script>
 
 <style scoped>
-
+@media screen and (max-width: 767px) {
+    .item-category-title {
+        display: none;
+    }
+}
 </style>
