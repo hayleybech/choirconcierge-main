@@ -12,7 +12,7 @@
     </div>
     <div class="r-table__cell song-col--category">
         @foreach( $song->categories as $cat )
-        <span class="badge badge-secondary mr-1">{{ $cat->title }}</span>
+        <span class="badge badge-pill badge-secondary mr-1">{{ $cat->title }}</span>
         @endforeach
     </div>
     <div class="r-table__cell song-col--pitch">
