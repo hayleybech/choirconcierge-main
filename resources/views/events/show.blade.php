@@ -1,22 +1,23 @@
-@extends('layouts.page')
+@extends('layouts.page-blank')
 
 @section('title', $event->title . ' - Events')
-@section('page-title', $event->title)
-
-@section('page-action')
-    @if(Auth::user()->hasRole('Music Team'))
-    <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
-    @endif
-@endsection
-
-@section('page-lead')
-    Event Type: {{ $event->type->title }}<br>
-    {{ $event->start_date->format('M d, H:i') }} to {{ $event->end_date->format('M d, H:i') }}<br>
-    Call Time: {{ $event->call_time->format('M d, H:i') }}<br>
-    {{ $event->description }}
-@endsection
 
 @section('page-content')
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-start">
+            <h1 class="h2 mb-0">{{ $event->title }}</h1>
+            @if(Auth::user()->hasRole('Music Team'))
+                <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-light flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
+            @endif
+        </div>
+        <div class="card-body">
+            <div class="badge badge-pill badge-secondary">{{ $event->type->title }}</div>
+            <div><time class="font-weight-bold">{{ $event->start_date->format('M d, H:i') }}</time> to <time class="font-weight-bold">{{ $event->end_date->format('M d, H:i') }}</time></div>
+            <div>Call Time: <time>{{ $event->call_time->format('M d, H:i') }}</time></div>
+            <div>{{ $event->description }}</div>
+        </div>
+    </div>
 
     <div class="card">
         <h3 class="card-header h4">Location</h3>
