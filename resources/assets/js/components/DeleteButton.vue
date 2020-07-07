@@ -1,7 +1,7 @@
 <template>
     <div class="delete-button">
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-link text-danger p-0" data-toggle="modal" data-target="#deleteModal">
+        <button type="button" :class="'btn btn-link text-danger '+paddingClass+' '+className" data-toggle="modal" data-target="#deleteModal">
             <i class="fas fa-fw fa-trash"></i>
         </button>
 
@@ -44,11 +44,24 @@
             message: {
                 type: String,
                 default: 'Do you really want to delete this record?'
+            },
+            enablePadding: {
+                type: Boolean,
+                default: false
+            },
+            className: {
+                type: String,
+                default: ''
             }
         },
         data() {
             return {
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        },
+        computed: {
+            paddingClass() {
+                return this.enablePadding ? '' : 'p-0';
             }
         }
     }

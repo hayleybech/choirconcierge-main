@@ -1,34 +1,36 @@
 <template>
-    <div class="list-group-item d-flex justify-content-between">
-        <div class="d-flex">
+    <tr>
+        <td class="col--play">
             <template v-if="isPlayable">
-                <button v-if="isCurrent" class="btn btn-link disabled btn-sm mr-2" disabled><i class="fas fa-fw fa-waveform"></i></button>
-                <button v-else v-on:click="$emit('play')" class="btn btn-link btn-sm mr-2"><i class="fas fa-fw fa-play"></i></button>
+                <button v-if="isCurrent" class="btn btn-link disabled btn-sm" disabled><i class="fas fa-fw fa-waveform"></i></button>
+                <button v-else v-on:click="$emit('play')" class="btn btn-link btn-sm"><i class="fas fa-fw fa-play"></i></button>
             </template>
             <!--
             <template v-else-if="isViewable">
-                <button v-if="isCurrent" class="btn btn-link disabled btn-sm mr-2" disabled><i class="fas fa-fw fa-book-open"></i></button>
-                <button v-else v-on:click="$emit('view')" class="btn btn-link btn-sm mr-2"><i class="fas fa-fw fa-book"></i></button>
+                <button v-if="isCurrent" class="btn btn-link disabled btn-sm" disabled><i class="fas fa-fw fa-book-open"></i></button>
+                <button v-else v-on:click="$emit('view')" class="btn btn-link btn-sm"><i class="fas fa-fw fa-book"></i></button>
             </template>
             -->
             <template v-else>
-                <button class="btn btn-link disabled btn-sm mr-2" disabled><i class="fas fa-fw">&nbsp;</i></button>
+                <button class="btn btn-link disabled btn-sm" disabled><i class="fas fa-fw">&nbsp;</i></button>
             </template>
-            <div class="item-title">
-                {{ attachment.title ? attachment.title : attachment.filepath }}
-            </div>
-        </div>
-        <div class="d-flex">
-            <div class="ml-2 mr-4">
-                <i :class="icon"></i>
-                <span class="item-category-title">
-                    {{ attachment.category.title }}
-                </span>
-            </div>
-            <a :href="'/songs/'+song.id+'/attachments/'+attachment.id" class="btn btn-link btn-sm mr-2"><i class="fa fa-fw fa-download"></i></a>
-            <delete-button :action="'/songs/'+song.id+'/attachments/'+attachment.id"></delete-button>
-        </div>
-    </div>
+        </td>
+        <td class="col--title">
+            {{ attachment.title ? attachment.title : attachment.filepath }}
+        </td>
+        <td class="col--category">
+            <i :class="icon"></i>
+            <span class="item-category-title">
+                {{ attachment.category.title }}
+            </span>
+        </td>
+        <td class="col--download">
+            <a :href="'/songs/'+song.id+'/attachments/'+attachment.id" class="btn btn-link btn-sm"><i class="fa fa-fw fa-download"></i></a>
+        </td>
+        <td class="col--delete">
+            <delete-button :action="'/songs/'+song.id+'/attachments/'+attachment.id" class-name="btn-sm" :enable-padding="true"></delete-button>
+        </td>
+    </tr>
 </template>
 
 <script>
@@ -73,7 +75,33 @@
 </script>
 
 <style scoped>
+td {
+    padding: 1em 0;
+}
+td:first-child {
+    padding-left: 40px;
+}
+td:last-child {
+    padding-right: 40px;
+}
+.col--play,
+.col--download,
+.col--delete {
+    padding: 0.75em 0;
+    width: 1em;
+}
+
 @media screen and (max-width: 767px) {
+    td:first-child {
+        padding-left: 20px;
+    }
+    td:last-child {
+        padding-right: 20px;
+    }
+
+    .col--category {
+        width: 1em;
+    }
     .item-category-title {
         display: none;
     }
