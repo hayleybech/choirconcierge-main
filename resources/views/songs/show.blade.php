@@ -16,8 +16,22 @@
                 </div>
 
                 <div class="card-body">
-                    <div class="mb-2">
-                        {{ $song->status->title }}
+                    <?php
+                    $category_colour = '';
+                    if($song->status->title === 'Pending') {
+                        $category_colour = 'text-danger';
+                    } elseif($song->status->title === 'Learning') {
+                        $category_colour = 'text-primary';
+                    } elseif ($song->status->title === 'Active') {
+                        $category_colour = 'text-success';
+                    } elseif($song->status->title === 'Archived') {
+                        $category_colour = 'text-secondary';
+                    } else {
+                        $category_colour = '';
+                    }
+                    ?>
+                    <div class="mb-2 {{ $category_colour }} font-weight-bold">
+                        <i class="fas fa-fw fa-circle mr-2"></i>{{ $song->status->title }}
                     </div>
                     <div class="mb-2">
                         @foreach( $song->categories as $cat )

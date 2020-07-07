@@ -7,8 +7,22 @@
         {{ ( isset($song->title) ) ? $song->title : 'Title Unknown' }}
         </a>
     </div>
-    <div class="r-table__cell song-col--status">
-        {{ $song->status->title }}
+    <?php
+    $category_colour = '';
+    if($song->status->title === 'Pending') {
+        $category_colour = 'text-danger';
+    } elseif($song->status->title === 'Learning') {
+        $category_colour = 'text-primary';
+    } elseif ($song->status->title === 'Active') {
+        $category_colour = 'text-success';
+    } elseif($song->status->title === 'Archived') {
+        $category_colour = 'text-secondary';
+    } else {
+        $category_colour = '';
+    }
+    ?>
+    <div class="r-table__cell song-col--status {{ $category_colour }} font-weight-bold">
+        <i class="fas fa-fw fa-circle mr-2"></i>{{ $song->status->title }}
     </div>
     <div class="r-table__cell song-col--category">
         @foreach( $song->categories as $cat )
