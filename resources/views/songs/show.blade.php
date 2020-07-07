@@ -75,7 +75,6 @@
         </div>
 
         <div class="col-md-7">
-            <pdf-viewer></pdf-viewer>
         </div>
     </div>
 
