@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container-fluid px-5 py-5">
+    <div class="container-fluid px-md-5 py-5">
         @include('partials.flash')
 
         @yield('page-content')

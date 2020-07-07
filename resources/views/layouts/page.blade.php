@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="page-header mt-4">
-        <div class="container-fluid px-5">
+        <div class="container-fluid px-md-5">
 
             <h1 class="d-flex justify-content-between align-items-center"><span>@yield('page-title')</span> <span>@yield('page-action')</span></h1>
 
@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="container-fluid px-5">
+    <div class="container-fluid px-md-5">
         @include('partials.flash')
 
         @yield('page-content')
