@@ -23,7 +23,7 @@ class Pitch_Pipe {
         this.el.addEventListener('mousedown', function(){
             self.play();
         });
-        this.el.addEventListener('mouseup', function(){
+        window.addEventListener('mouseup', function(){
             self.stop();
         });
     }
