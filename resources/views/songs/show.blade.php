@@ -36,8 +36,8 @@
                 <div class="card-body">
                     {{ Form::open( [ 'route' => ['songs.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'needs-validation', 'novalidate' ] ) }}
 
-                    <div class="d-flex align-items-end">
-                        <div class="mr-2">
+                    <div class="d-flex flex-column flex-md-row align-items-sm-stretch align-items-md-end">
+                        <div class="mr-2 mb-2">
                             {{ Form::label('attachment_upload', 'File Upload') }}
 
                             <div class="custom-file custom-file-sm">
@@ -48,7 +48,7 @@
                             </div>
 
                         </div>
-                        <div class="mr-2">
+                        <div class="mr-2 mb-2">
                             {{ Form::label('category', 'Category') }}
                             {{ Form::select('category',
                                 $categories_keyed,
@@ -58,7 +58,7 @@
                             <div class="valid-feedback">Looks good!</div>
                             <div class="invalid-feedback">Please choose a category.</div>
                         </div>
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0 mb-2">
                             <load-button theme="btn-success" size="btn-sm" icon="fa fa-plus" label="Add" label-loading="Uploading..."></load-button>
                         </div>
                     </div>
