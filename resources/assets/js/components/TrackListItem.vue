@@ -1,10 +1,21 @@
 <template>
     <div class="list-group-item d-flex justify-content-between">
         <div class="d-flex">
-            <button v-if="isPlayable && ! playing" v-on:click="$emit('play')" class="btn btn-link btn-sm mr-2"><i class="fas fa-fw fa-play"></i></button>
-            <button v-if="isPlayable && playing" class="btn btn-link disabled btn-sm mr-2" disabled><i class="fas fa-fw fa-waveform"></i></button>
+            <template v-if="isPlayable">
+                <button v-if="isCurrent" class="btn btn-link disabled btn-sm mr-2" disabled><i class="fas fa-fw fa-waveform"></i></button>
+                <button v-else v-on:click="$emit('play')" class="btn btn-link btn-sm mr-2"><i class="fas fa-fw fa-play"></i></button>
+            </template>
+            <!--
+            <template v-else-if="isViewable">
+                <button v-if="isCurrent" class="btn btn-link disabled btn-sm mr-2" disabled><i class="fas fa-fw fa-book-open"></i></button>
+                <button v-else v-on:click="$emit('view')" class="btn btn-link btn-sm mr-2"><i class="fas fa-fw fa-book"></i></button>
+            </template>
+            -->
+            <template v-else>
+                <button class="btn btn-link disabled btn-sm mr-2" disabled><i class="fas fa-fw">&nbsp;</i></button>
+            </template>
             <div class="item-title">
-                {{ attachment.title ? attachment.title : 'Title Unknown' }}
+                {{ attachment.title ? attachment.title : attachment.filepath }}
             </div>
         </div>
         <div class="d-flex">
@@ -12,7 +23,7 @@
                 <i :class="icon"></i>
                 {{ attachment.category.title }}
             </div>
-            <a :href="'/songs/'+song.id+'/attachments/'+attachment.id" class="btn btn-primary btn-sm mr-2"><i class="fa fa-fw fa-download"></i> Download</a>
+            <a :href="'/songs/'+song.id+'/attachments/'+attachment.id" class="btn btn-link btn-sm mr-2"><i class="fa fa-fw fa-download"></i></a>
             <delete-button :action="'/songs/'+song.id+'/attachments/'+attachment.id"></delete-button>
         </div>
     </div>
@@ -30,15 +41,18 @@
             song: {
                 required: true
             },
-            playing: {
+            isCurrent: {
                 type: Boolean,
                 required: true
-            }
+            },
         },
         computed: {
             isPlayable() {
                 return this.attachment.category.title === 'Learning Tracks'
                     || this.attachment.category.title === 'Full Mix (Demo)'
+            },
+            isViewable() {
+                return this.attachment.category.title === 'Sheet Music';
             },
             icon() {
                 if(this.attachment.category.title === 'Learning Tracks'){

@@ -1,6 +1,7 @@
 <template>
     <div class="list-group-flush">
-        <track-list-item v-for="(attachment, index) in attachments" :attachment="attachment" :song="song" :key="attachment.id" :playing="isCurrent(index)" v-on:play="$emit('play', index)" v-on:pause="$emit('pause')"></track-list-item>
+        <track-list-item v-for="(attachment, index) in attachments" :attachment="attachment" :song="song" :key="attachment.id"
+                         :isCurrent="isCurrent(index)" v-on:play="$emit('play', index)" v-on:pause="$emit('pause')"></track-list-item>
     </div>
 </template>
 

@@ -19,7 +19,7 @@ class SongAttachmentController extends Controller
         $data = $request->validated();
 
         $attachment = SongAttachment::create([
-            'title'             => $data['title'],
+            'title'             => '',
             'song_id'           => $song->id,
             'category_id'       => $data['category'],
             'file'              => $request->file('attachment_upload'),
