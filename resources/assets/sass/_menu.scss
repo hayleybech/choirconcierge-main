@@ -264,6 +264,9 @@
   padding: 10px;
   z-index: 10000;
 }
+.tap-bar .nav {
+  flex-wrap: nowrap;
+}
 .nav-pills .nav-link {
   color: rgba(0, 0, 0, 0.8);
 }
