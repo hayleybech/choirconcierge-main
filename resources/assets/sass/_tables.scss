@@ -152,17 +152,18 @@
   .card-table th:last-child {
     padding-right: 20px;
   }
+
+  tr .col--status .status__title,
+  tr .col--category .status__title {
+    display: none;
+  }
 }
 
 
 /**********************************/
 /* Singers List */
-.row--singer {
-  grid-template-columns: 1% 30% 1fr 1fr 22% 8% 1em;
-  grid-template-rows: 1fr;
-  grid-template-areas:
-		"mark title category part progress actions delete"
-;
+.row--singer .user-avatar {
+  float: left;
 }
 
 .user-avatar {
@@ -179,48 +180,38 @@
   margin-right: 5px;
 }
 
-.singer-col--progress {
-  grid-area: progress;
+.col--delete {
+  width: 1em;
+  padding-left: 0;
+  padding-right: 0;
 }
-.r-table__cell.singer-col--progress {
-  font-size: 14px;
-  justify-content: space-between;
-}
-.singer-col--part {
-  grid-area: part;
-}
-.singer-col--category {
-  grid-area: category;
-}
-.singer-col--actions {
-  grid-area: actions;
-}
+
 
 /* Singer Table - Tablet */
 @media screen and (max-width:980px) {
-  .r-table--card-view-mobile .singer-col--progress {
-    flex-flow: row wrap;
-    align-items: center;
-  }
+
 }
 
 /* Singer Table - Mobile */
 @media screen and (max-width:767px) {
+  .row--singer {
 
-  .r-table--card-view-mobile .row--singer {
-    grid-template-columns: 0 60% 1fr 1em;
-    grid-template-rows: auto auto auto;
-    grid-template-areas:
-			"mark title category delete"
-			"mark title part delete"
-			"mark progress actions delete"
-  ;
-  }
+    .col--category {
+      width: 1em;
+      padding-left: 0;
+      padding-right: 0;
+    }
 
-  .singer-col--category,
-  .singer-col--part,
-  .singer-col--actions {
-    justify-content: flex-end;
+    .col--progress,
+    .col--actions {
+      display: none;
+    }
+
+    .user-avatar {
+      height: 40px;
+      width: 40px;
+      margin-right: 10px;
+    }
   }
 }
 
@@ -270,10 +261,6 @@
 @media screen and (max-width:767px) {
   .row--song {
     .col--category {
-      display: none;
-    }
-
-    .col--status .status__title {
       display: none;
     }
 

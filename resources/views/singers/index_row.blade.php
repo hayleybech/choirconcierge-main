@@ -1,89 +1,86 @@
-	<?php
-	// Store CSS badge classes for categories
-	$category_class = array(
-		'Prospects'             => 'text-primary',
-		'Archived Prospects'    => 'text-info',
-		'Members'               => 'text-success',
-		'Archived Members'      => 'text-danger',
-	);
-	?>
-	<div class="r-table__row row--singer">
-        <div class="r-table__cell col--mark">
-            <input type="checkbox" />
-        </div>
-		<div class="r-table__cell col--title">
+<?php
+// Store CSS badge classes for categories
+$category_class = array(
+	'Prospects'             => 'text-primary',
+	'Archived Prospects'    => 'text-info',
+	'Members'               => 'text-success',
+	'Archived Members'      => 'text-danger',
+);
+?>
+<tr class="row--singer">
+	<td class="col--title">
+		<a href="{{route('singers.show', ['singer' => $singer])}}">
+			<img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->name }}" class="user-avatar" width="50" height="50">
+		</a>
+		<div class="item-title-wrapper">
 			<a href="{{route('singers.show', ['singer' => $singer])}}">
-				<img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->name }}" class="user-avatar" width="50" height="50">
+				{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
 			</a>
-			<div class="item-title-wrapper">
-				<a class="item-title" href="{{route('singers.show', ['singer' => $singer])}}">
-					{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
-				</a>
-				<div class="text-muted singer-email">{{ $singer->email }}</div>
-				<div class="singer-phone text-muted">{{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</div>
-			</div>
+			<small class="text-muted">{{ $singer->email }}</small>
+			<small class="text-muted">{{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</small>
 		</div>
-        <div class="r-table__cell singer-col--part">
-			<span class="singer-part">
-				<span class="badge badge-pill badge-secondary" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>{{ ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? $singer->voice_part->title : 'No part' }}</span><br>
-			</span>
-		</div>
-		<div class="r-table__cell singer-col--category">
-			<span class="singer-category {{ $category_class[$singer->category->name] }}"><i class="fas fa-fw fa-circle mr-2"></i> {{ $singer->category->name }}</span>
-		</div>
-		<div class="r-table__cell singer-col--progress">
-			<!--<div class="progress">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>-->
-			@if( $singer->onboarding_enabled && Auth::user()->isEmployee() )
-				@foreach( $singer->tasks as $task )
-					@if( $task->pivot->completed )
-						@continue
-					@else
-						@php
-							if( $task->type === 'form' ){
-								$btn_style = 'btn-primary';
-								$icon_complete = 'fa-file';
-								$action = 'Start';
-							} else {
-								$btn_style = 'btn-success';
-								$icon_complete ='fa-check';
-								$action = 'Done';
-							}
-						@endphp
-						<span>{{ $task->name }}</span>
-						@if( Auth::user()->hasRole($task->role->name) )
-						<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link btn btn-sm force-xs {{$btn_style}}">
-							<i class="fa fa-fw  {{$icon_complete}}"></i> {{$action}}
-						</a>
-						@endif
-					
-						@break
+	</td>
+	<td class="col--part">
+		<span class="badge badge-pill badge-secondary" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>
+			<span class="d-md-none">{{ substr( $singer->voice_part->title ?? 'None', 0, 5 ) }}</span>
+			<span class="d-none d-md-inline">{{ ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? $singer->voice_part->title : 'No part' }}</span>
+		</span>
+	</td>
+	<td class="col--category">
+		<span class="singer-category {{ $category_class[$singer->category->name] }}"><i class="fas fa-fw fa-circle"></i><span class="status__title ml-2">{{ $singer->category->name }}</span></span>
+	</td>
+	<td class="col--progress">
+		<!--<div class="progress">
+			<div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+		</div>-->
+		@if( $singer->onboarding_enabled && Auth::user()->isEmployee() )
+			@foreach( $singer->tasks as $task )
+				@if( $task->pivot->completed )
+					@continue
+				@else
+					@php
+						if( $task->type === 'form' ){
+							$btn_style = 'btn-primary';
+							$icon_complete = 'fa-file';
+							$action = 'Start';
+						} else {
+							$btn_style = 'btn-success';
+							$icon_complete ='fa-check';
+							$action = 'Done';
+						}
+					@endphp
+					@if( Auth::user()->hasRole($task->role->name) )
+					<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link btn btn-sm force-xs mr-2 {{$btn_style}}">
+						<i class="fa fa-fw  {{$icon_complete}}"></i> {{$action}}
+					</a>
 					@endif
+					<span>{{ $task->name }}</span>
+
+					@break
+				@endif
+			@endforeach
+		@endif
+	</td>
+	<td class="col--actions">
+
+		@if ( Auth::user()->hasRole('Membership Team') )
+		<div class="dropdown">
+			<button class="btn btn-outline-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Move to
+			</button>
+			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+				@foreach($singer_categories as $id => $category)
+				<a class="dropdown-item " href="{{ route( 'singers.categories.update', ['singer' => $singer, 'move_category' => $id] ) }}">{{ $category }}</a>
 				@endforeach
-			@endif
-		</div>
-		<div class="r-table__cell singer-col--actions">
-
-			@if ( Auth::user()->hasRole('Membership Team') )
-			<div class="dropdown">
-				<button class="btn btn-outline-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Move to
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					@foreach($singer_categories as $id => $category)
-					<a class="dropdown-item " href="{{ route( 'singers.categories.update', ['singer' => $singer, 'move_category' => $id] ) }}">{{ $category }}</a>
-					@endforeach
-				</div>
 			</div>
-			@endif
 		</div>
+		@endif
+	</td>
 
-		<div class="r-table__cell col--delete">
-			@if ( Auth::user()->hasRole('Membership Team') )
-				<x-delete-button :action="route( 'singers.destroy', ['singer' => $singer] )"/>
-			@endif
-		</div>
+	<td class="col--delete">
+		@if ( Auth::user()->hasRole('Membership Team') )
+			<x-delete-button :action="route( 'singers.destroy', ['singer' => $singer] )"/>
+		@endif
+	</td>
 
-	</div>
-	
+</tr>
