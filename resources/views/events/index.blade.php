@@ -38,22 +38,21 @@
     <div class="card mb-5">
         <h3 class="card-header h4">Upcoming Events</h3>
 
-        <div class="r-table r-table--card-view-mobile">
-            <div class="r-table__thead">
-                <div class="r-table__row row--event">
-                    <div class="r-table__heading col--mark"><input type="checkbox"></div>
-                    <div class="r-table__heading col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
-                    <div class="r-table__heading event-col--type"><a href="{{ $sorts['type.title']['url'] }}">Type<i class="fa fas sort-{{ $sorts['type.title']['dir'] }} {{ ($sorts['type.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
-                    <div class="r-table__heading event-col--date">Event Date</div>
-                    <div class="r-table__heading event-col--location">Location</div>
-                    <div class="r-table__heading col--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
-                    <div class="r-table__heading col--delete"></div>
-                </div>
-            </div>
-            <div class="r-table__tbody">
+        <table class="table card-table">
+            <thead>
+                <tr class="row--event">
+                    <th class="col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
+                    <th class="col--type"><a href="{{ $sorts['type.title']['url'] }}">Type<i class="fa fas sort-{{ $sorts['type.title']['dir'] }} {{ ($sorts['type.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
+                    <th class="col--date">Event Date</th>
+                    <th class="col--location">Location</th>
+                    <th class="col--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
+                    <th class="col--delete"></th>
+                </tr>
+            </thead>
+            <tbody>
                 @each('events.index_row', $upcoming_events, 'event', 'partials.noresults')
-            </div>
-        </div>
+            </tbody>
+        </table>
 
         <div class="card-footer">
             {{ $upcoming_events->count() }} events
@@ -64,22 +63,21 @@
     <div class="card mb-5">
         <h3 class="card-header h4">Past Events</h3>
 
-        <div class="r-table r-table--card-view-mobile">
-            <div class="r-table__thead">
-                <div class="r-table__row row--event">
-                    <div class="r-table__heading col--mark"><input type="checkbox"></div>
-                    <div class="r-table__heading col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
-                    <div class="r-table__heading event-col--type"><a href="{{ $sorts['type.title']['url'] }}">Type<i class="fa fas sort-{{ $sorts['type.title']['dir'] }} {{ ($sorts['type.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
-                    <div class="r-table__heading event-col--date">Event Date</div>
-                    <div class="r-table__heading event-col--location">Location</div>
-                    <div class="r-table__heading col--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></div>
-                    <div class="r-table__heading col--delete"></div>
-                </div>
-            </div>
-            <div class="r-table__tbody">
+        <table class="table card-table">
+            <thead>
+                <tr class="row--event">
+                    <th class="col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
+                    <th class="col--type"><a href="{{ $sorts['type.title']['url'] }}">Type<i class="fa fas sort-{{ $sorts['type.title']['dir'] }} {{ ($sorts['type.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
+                    <th class="col--date">Event Date</th>
+                    <th class="col--location">Location</th>
+                    <th class="col--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
+                    <th class="col--delete"></th>
+                </tr>
+            </thead>
+            <tbody>
                 @each('events.index_row', $past_events, 'event', 'partials.noresults')
-            </div>
-        </div>
+            </tbody>
+        </table>
 
         <div class="card-footer">
             {{ $past_events->count() }} events

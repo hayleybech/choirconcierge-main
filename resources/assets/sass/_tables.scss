@@ -326,32 +326,9 @@
 
 /********************************/
 /** EVENTS LIST **/
-.row--event {
-  grid-template-columns: 1% 30% 1fr 1fr 2fr 10% 1em;
-  grid-template-rows: 1fr;
-  grid-template-areas:
-		"mark title type date location created delete"
-;
-}
-.event-col--type {
-  grid-area: type;
-}
-.event-col--date {
-  grid-area: date;
-}
-.event-col--location {
-  grid-area: location;
-}
 
 /* Event Table - Tablet */
 @media screen and (max-width:980px) {
-  .r-table--card-view-mobile .row--event {
-    grid-template-columns: 1% 30% 1fr 1fr 2fr 1em;
-    grid-template-rows: 1fr;
-    grid-template-areas:
-			"mark title type date location delete"
-  ;
-  }
   .row--event .col--created {
     display: none;
   }
@@ -359,18 +336,9 @@
 /* Event Table - Mobile */
 @media screen and (max-width:767px) {
 
-  .r-table--card-view-mobile .row--event {
-    grid-template-columns: 0 60% 1fr 1em;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-			"mark title type delete"
-			"mark location date delete"
-  ;
-  }
-
-  .event-col--type,
-  .event-col--date {
-    justify-content: flex-end;
+  .row--event .col--type,
+  .row--event .col--location {
+    display: none;
   }
 }
 
