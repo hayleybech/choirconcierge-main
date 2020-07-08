@@ -47,3 +47,8 @@ $panel-default-heading-bg: #fff;
 
   --nav-item-border-radius: 30px;
 }
+@media screen and (max-width: 767px) {
+  :root {
+    --nav-item-border-radius: 10px;
+  }
+}
