@@ -135,6 +135,26 @@
 }
 
 
+.card-table td:first-child,
+.card-table th:first-child {
+  padding-left: 40px;
+}
+.card-table td:last-child,
+.card-table th:last-child {
+  padding-right: 40px;
+}
+@media screen and (max-width: 767px) {
+  .card-table td:first-child,
+  .card-table th:first-child {
+    padding-left: 20px;
+  }
+  .card-table td:last-child,
+  .card-table th:last-child {
+    padding-right: 20px;
+  }
+}
+
+
 /**********************************/
 /* Singers List */
 .row--singer {
@@ -238,21 +258,8 @@
 
 /*********************************/
 /** SONGS LIST **/
-.row--song {
-  grid-template-columns: 1% 30% 1fr 2fr 1fr 10% 1em;
-  grid-template-rows: 1fr;
-  grid-template-areas:
-		"mark title status category pitch created delete"
-;
-}
-.song-col--status {
-  grid-area: status;
-}
-.song-col--category {
-  grid-area: category;
-}
-.song-col--pitch {
-  grid-area: pitch;
+.col--title {
+  font-weight: 600;
 }
 
 /* Song Table - Tablet */
@@ -261,21 +268,25 @@
 }
 /* Song Table - Mobile */
 @media screen and (max-width:767px) {
+  .row--song {
+    .col--category {
+      display: none;
+    }
 
-  .r-table--card-view-mobile .row--song {
-    grid-template-columns: 0 55% 1fr 1fr 1em;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-			"mark title pitch status delete"
-			"mark category created created delete"
-  ;
-  }
+    .col--status .status__title {
+      display: none;
+    }
 
-  .song-col--status,
-  .song-col--pitch,
-  .row--song .col--created {
-    justify-content: flex-end;
+    .col--created {
+      display: none;
+    }
+
+    th .sort-active,
+    th .sort-inactive, {
+      display: none;
+    }
   }
+  
 }
 
 /********************************/
