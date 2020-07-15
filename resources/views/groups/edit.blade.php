@@ -32,8 +32,16 @@
                         <legend class="col-form-label">List Type</legend>
 
                         <div class="custom-control custom-radio">
-                            <input id="list_type_chat" name="list_type" value="chat" class="custom-control-input" type="radio" {{ ($group->list_type === 'chat' ) ? 'checked' : '' }}>
-                            <label for="list_type_chat" class="custom-control-label"><i class="fa fa-fw fa-comments"></i> Chat</label>
+                            <input id="list_type_public" name="list_type" value="public" class="custom-control-input" type="radio" {{ ($group->list_type === 'public' ) ? 'checked' : '' }}>
+                            <label for="list_type_public" class="custom-control-label"><i class="fa fa-fw fa-inbox"></i> Public</label>
+                            <small class="form-text text-muted ml-2">
+                                Public lists are used like regular email addresses.
+                            </small>
+                        </div>
+
+                        <div class="custom-control custom-radio">
+                            <input id="list_type_chat" name="list_type" value="chat" class="custom-control-input" type="radio" {{ ($group->list_type === 'chat' ) ? 'checked' : '' }} disabled>
+                            <label for="list_type_chat" class="custom-control-label"><i class="fa fa-fw fa-comments"></i> Chat (Coming Soon)</label>
                             <small class="form-text text-muted ml-2">
                                 Chat lists allow all recipients to reply-all, and take part in a discussion.
                             </small>
@@ -45,14 +53,7 @@
                             <small class="form-text text-muted ml-2">
                                 Distribution lists only allow the original sender or list owner(s) to reply-all.
                             </small>
-                        </div>
 
-                        <div class="custom-control custom-radio">
-                            <input id="list_type_public" name="list_type" value="public" class="custom-control-input" type="radio" {{ ($group->list_type === 'public' ) ? 'checked' : '' }} disabled>
-                            <label for="list_type_public" class="custom-control-label"><i class="fa fa-fw fa-inbox"></i> Public (Coming soon)</label>
-                            <small class="form-text text-muted ml-2">
-                                Public lists are used like regular email addresses.
-                            </small>
                         </div>
 
                     </fieldset>
