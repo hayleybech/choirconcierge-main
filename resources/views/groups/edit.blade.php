@@ -31,28 +31,43 @@
                     <fieldset class="form-group">
                         <legend class="col-form-label">List Type</legend>
 
-                        <div class="custom-control custom-radio">
-                            <input id="list_type_public" name="list_type" value="public" class="custom-control-input" type="radio" {{ ($group->list_type === 'public' ) ? 'checked' : '' }}>
-                            <label for="list_type_public" class="custom-control-label"><i class="fa fa-fw fa-inbox"></i> Public</label>
-                            <small class="form-text text-muted ml-2">
-                                Public lists are used like regular email addresses.
-                            </small>
-                        </div>
+                        <div class="btn-group-vertical btn-group-toggle d-flex bg-white" data-toggle="buttons">
 
-                        <div class="custom-control custom-radio">
-                            <input id="list_type_chat" name="list_type" value="chat" class="custom-control-input" type="radio" {{ ($group->list_type === 'chat' ) ? 'checked' : '' }} disabled>
-                            <label for="list_type_chat" class="custom-control-label"><i class="fa fa-fw fa-comments"></i> Chat (Coming Soon)</label>
-                            <small class="form-text text-muted ml-2">
-                                Chat lists allow all recipients to reply-all, and take part in a discussion.
-                            </small>
-                        </div>
+                            <label for="list_type_public" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'public' ) ? 'active' : '' }}">
+                                <i class="fa fa-fw fa-envelope-open-text fa-2x mr-3"></i>
+                                <span>
+                                    <input id="list_type_public" name="list_type" value="public" type="radio" autocomplete="off" {{ ($group->list_type === 'public' ) ? 'checked' : '' }}>
+                                    <span class="h5">Public</span>
+                                    <span class="form-text">
+                                        <strong>Best for: </strong> General Enquiries.<br>
+                                        The general public can send to this address, and all recipients can respond.
+                                    </span>
+                                </span>
+                            </label>
 
-                        <div class="custom-control custom-radio">
-                            <input id="list_type_distribution" name="list_type" value="distribution" class="custom-control-input" type="radio" {{ ($group->list_type === 'distribution' ) ? 'checked' : '' }} disabled>
-                            <label for="list_type_distribution" class="custom-control-label"><i class="fa fa-fw fa-bullhorn"></i> Distribution (Coming soon)</label>
-                            <small class="form-text text-muted ml-2">
-                                Distribution lists only allow the original sender or list owner(s) to reply-all.
-                            </small>
+                            <label for="list_type_chat" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'chat' ) ? 'active' : '' }} disabled">
+                                <i class="fa fa-fw fa-comments fa-2x mr-3"></i>
+                                <span>
+                                    <input id="list_type_chat" name="list_type" value="chat" type="radio" autocomplete="off" {{ ($group->list_type === 'chat' ) ? 'checked' : '' }} disabled>
+                                    <span class="h5">Chat (Coming Soon)</span>
+                                    <span class="form-text">
+                                        <strong>Best for: </strong> Internal communication for teams/groups.<br>
+                                        Recipients are able to reply to all other recipients, and can compose new emails to the group.
+                                    </span>
+                                </span>
+                            </label>
+
+                            <label for="list_type_distribution" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'distribution' ) ? 'active' : '' }} disabled">
+                                <i class="fa fa-fw fa-paper-plane fa-2x mr-3"></i>
+                                <span>
+                                    <input id="list_type_distribution" name="list_type" value="distribution" type="radio" autocomplete="off" {{ ($group->list_type === 'distribution' ) ? 'checked' : '' }} disabled>
+                                    <span class="h5">Mailout (Coming soon)</span>
+                                    <span class="form-text">
+                                        <strong>Best for: </strong>Notifications, newsletters, reminders, etc.<br>
+                                        Recipients can see the emails and can reply to the sender, but cannot "reply-all".
+                                    </span>
+                                </span>
+                            </label>
 
                         </div>
 
