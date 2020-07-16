@@ -24,6 +24,15 @@ class IncomingMessage extends Mailable
             ->text('emails.clone_plain');
     }
 
+    /**
+     * Generate clones of the email
+     *
+     * EXAMPLE
+     *  From: Mr Director via Active Members <active@example.choirconcierge.com>
+     *  Reply-to: Mr Director <director@example.com>
+     *  To: Ms User <user@example.com>
+     *  Cc: Active Members <active@example.choirconcierge.com>
+     */
     public function resendToGroup(): void
     {
         $group = $this->getMatchingGroup();
@@ -33,13 +42,28 @@ class IncomingMessage extends Mailable
         }
 
         $group_email = $group->slug . '@' . config('imap.host_display');
+        $original_sender = $this->from[0];
 
         $users = $group->get_all_users();
         foreach($users as $user)
         {
+            // Clear replyTo, then put the original sender as the reply-to
+            $this->replyTo = [[
+                'address' => $original_sender['address'],
+                'name' => $original_sender['name'] ?? null
+            ]];
+
+            // Clear from, then put the mailing list as the clone sender
+            // e.g. From: Mr Director via Active Members <active@example.choirconcierge.com>
+            $this->from = [[
+                'address' => $group_email,
+                'name' => ($original_sender['name'] ?? $original_sender['address']) . ' via ' . $group->title
+            ]];
+
+            // Clear 'to', then put the group member as the recipient
             $this->to = [];
             Mail::to( $user )
-                ->cc( $group_email )
+                ->cc( $group_email ) // Required for recipients to reply-all
                 ->send( $this );
         }
     }
