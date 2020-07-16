@@ -85,25 +85,44 @@
                 <div class="card-body">
 
                     <div class="form-group">
-                        <label for="recipient_roles"><i class="fa fa-fw fa-users"></i> Roles</label><br>
-                        <select id="recipient_roles" name="recipient_roles[]" class="select2 custom-select" data-model="roles" multiple></select>
+                        <label for="recipient_roles">Roles</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-fw fa-users"></i></span>
+                            </div>
+                            <select id="recipient_roles" name="recipient_roles[]" class="select2 custom-select" data-model="roles" multiple></select>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="recipient_voice_parts"><i class="fa fa-fw fa-users-class"></i> Voice Parts</label><br>
-                        <select id="recipient_voice_parts" name="recipient_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple></select>
+                        <label for="recipient_voice_parts">Voice Parts</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-fw fa-users-class"></i></span>
+                            </div>
+                            <select id="recipient_voice_parts" name="recipient_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple></select>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="recipient_users"><i class="fa fa-fw fa-user"></i> Users</label><br>
-                        <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple></select>
+                        <label for="recipient_users">Users</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-fw fa-user"></i></span>
+                            </div>
+                            <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple></select>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="recipient_singer_categories"><i class="fa fa-fw fa-filter"></i> Filter by Singer Category</label><br>
-                        <select id="recipient_singer_categories" name="recipient_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple></select>
+                        <label for="recipient_singer_categories">Filter by Singer Category</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-fw fa-filter"></i></span>
+                            </div>
+                            <select id="recipient_singer_categories" name="recipient_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple></select>
+                        </div>
                     </div>
-
 
                 </div>
 
