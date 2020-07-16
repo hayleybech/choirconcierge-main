@@ -34,6 +34,8 @@ class IncomingMailbox
 
             $messages = $folder->getMessages('UNSEEN', null, true, true, true, self::BATCH_LIMIT);
 
+            echo count($messages)  . ' message(s) found.' . PHP_EOL;
+
         } catch( ConnectionFailedException $e ){
             report($e);
         } catch (GetMessagesFailedException $e) {

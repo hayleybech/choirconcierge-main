@@ -5,6 +5,7 @@ namespace App\Mail;
 
 
 use App\Models\UserGroup;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Mail\Mailable;
 use Mail;
 
@@ -70,8 +71,16 @@ class IncomingMessage extends Mailable
 
     public function getMatchingGroup(): ?UserGroup
     {
-        $group_slug =  explode( '@', $this->to[0]['address'])[0];
+        $to_slug = explode( '@', $this->to[0]['address'])[0];
+        $cc_slug = explode( '@', $this->cc[0]['address'] ?? '')[0] ?? '';
+        $from_slug = explode( '@', $this->from[0]['address'])[0];
 
-        return UserGroup::where('slug', 'LIKE', $group_slug)->first();
+        $query = UserGroup::where('slug', 'LIKE', $to_slug);
+
+        // Allow reply-all by cloning emails CCd to the group
+        if($from_slug !== $cc_slug){ // Don't allow cloning the initial email
+            $query = $query->orWhere('slug', 'LIKE', $cc_slug);
+        }
+        return $query->first();
     }
 }
