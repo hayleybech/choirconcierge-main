@@ -34,3 +34,12 @@ select.form-control-sm.force-xs {
   height: calc(calc(1.875rem + 1px) - 1px * 2);
   line-height: 1.2;
 }
+
+/**
+ * Select2
+ * Most styling is handled by the select2-bootstrap-theme plugin
+ * But for some reason it doesn't remove the inset box shadow
+ */
+.select2-container--bootstrap .select2-selection {
+  box-shadow: none;
+}
