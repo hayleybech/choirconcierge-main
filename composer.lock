@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a8b154777bbd2e916478657ba04e639",
+    "content-hash": "ef807e623117ac446e25e6a188cbe2db",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -183,6 +183,66 @@
                 }
             ],
             "time": "2018-12-13T10:34:14+00:00"
+        },
+        {
+            "name": "beyondcode/laravel-favicon",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/beyondcode/laravel-favicon.git",
+                "reference": "a3e655a9164c62b9d0a944735c57550caab93694"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/beyondcode/laravel-favicon/zipball/a3e655a9164c62b9d0a944735c57550caab93694",
+                "reference": "a3e655a9164c62b9d0a944735c57550caab93694",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "5.6.*|5.7.*|5.8.*|6.*|7.*",
+                "illuminate/support": "5.6.*|5.7.*|5.8.*|6.*|7.*",
+                "intervention/image": "^2.4",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^3.7|^4.0",
+                "phpunit/phpunit": "^7.0|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BeyondCode\\LaravelFavicon\\FaviconServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BeyondCode\\LaravelFavicon\\": "src"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marcel Pociot",
+                    "email": "marcel@beyondco.de",
+                    "homepage": "https://beyondcode.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Create dynamic favicons based on your environment settings.",
+            "homepage": "https://github.com/beyondcode/laravel-favicon",
+            "keywords": [
+                "beyondcode",
+                "laravel-favicon"
+            ],
+            "time": "2020-05-19T22:23:16+00:00"
         },
         {
             "name": "brick/math",

@@ -7,10 +7,12 @@
         "php": ">=7.4",
         "ext-json": "*",
         "barryvdh/laravel-ide-helper": "^2.6.7",
+        "beyondcode/laravel-favicon": "^1.2",
         "davejamesmiller/laravel-breadcrumbs": "5.x",
         "doctrine/dbal": "^2.8",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
+        "fzaninotto/faker": "^1.9.1",
         "garygreen/pretty-routes": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "^7.0",
@@ -22,8 +24,7 @@
         "mtolhuys/laravel-schematics": "^0.10.2",
         "spatie/icalendar-generator": "^1.0",
         "spatie/laravel-medialibrary": "^8.0.0",
-        "webklex/laravel-imap": "^1.4",
-        "fzaninotto/faker": "^1.9.1"
+        "webklex/laravel-imap": "^1.4"
     },
     "type": "project",
     "require-dev": {
