@@ -59,7 +59,7 @@ Route::prefix('singers')->middleware('auth')->group(static function (){
         Route::put('{singer}/placement/{placement}', [SingerPlacementController::class, 'update'])->name('placements.update');
     });
 });
-Route::resource('singers', 'SingerController');
+Route::resource('singers', 'SingerController')->middleware('auth');
 
 
 // Songs module
