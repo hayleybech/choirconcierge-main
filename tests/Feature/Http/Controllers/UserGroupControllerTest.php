@@ -18,8 +18,9 @@ class UserGroupControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(\UserTableSeeder::class);
-        $this->seed(\UserGroupSeeder::class);
+        $this->seed(\CriticalUserSeeder::class);
+        $this->seed(\DummyUserSeeder::class);
+        $this->seed(\DummyUserGroupSeeder::class);
     }
 
     /** @test */

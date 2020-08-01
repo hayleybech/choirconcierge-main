@@ -17,8 +17,9 @@ class FolderControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(\UserTableSeeder::class);
-        $this->seed(\FolderSeeder::class);
+        $this->seed(\CriticalUserSeeder::class);
+        $this->seed(\DummyUserSeeder::class);
+        $this->seed(\DummyFolderSeeder::class);
     }
 
     ////////////////////////////////////////////////////////////

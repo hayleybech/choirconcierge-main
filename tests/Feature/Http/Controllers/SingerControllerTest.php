@@ -19,7 +19,8 @@ class SingerControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(\UserTableSeeder::class);
+        $this->seed(\CriticalUserSeeder::class);
+        $this->seed(\DummyUserSeeder::class);
     }
 
     // INDEX

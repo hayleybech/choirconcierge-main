@@ -9,7 +9,7 @@
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 
-class UserGroupSeeder extends Seeder
+class DummyUserGroupSeeder extends Seeder
 {
     public function run()
     {

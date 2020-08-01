@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 
-class NotificationTemplateSeeder extends Seeder
+class DummyNotificationTemplateSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,8 +12,6 @@ class NotificationTemplateSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('notification_templates')->delete();
-
         $profile_reminder_body = <<<EOT
 Hi %%user.name%%,
 

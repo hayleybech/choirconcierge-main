@@ -14,52 +14,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        /*
-		$user = User::create([
-			'name' => 'Hayden',
-            'email' => 'haydenbech@gmail.com',
-            'password' => bcrypt('*tokra1#'),
-		]);
-		
-		DB::table('roles')->insert([
-            ['name' => 'Admin'],
-            ['name' => 'Music Team'],
-            ['name' => 'Membership Team'],
-            ['name' => 'Accounts Team'],
-            ['name' => 'Uniforms Team'],
-        ]);
-		$roles = Role::all()->pluck('id')->toArray();
-		$user->roles()->attach($roles);
-        */
+        $this->call(CriticalDataSeeder::class);
+        $this->command->info('All critical data seeded!');
 
-        $this->call('UserTableSeeder');
-		$this->command->info('User table seeded!');
-
-		//$this->call('SingerTableSeeder');
-		//$this->command->info('Singer table seeded!');
-
-		$this->call('TaskTableSeeder');
-		$this->command->info('Task table seeded!');	
-		
-		$this->call('NotificationTemplateSeeder');
-		$this->command->info('Notification Template table seeded!');
-
-        //$this->call('SingerCategorySeeder');
-        //$this->command->info('Notification Template table seeded!');
-
-        $this->call('SongsSeeder');
-        $this->command->info('Songs table seeded!');
-
-        //$this->call('SongAttachmentCategorySeeder');
-        //$this->command->info('Song Attachment Categories table seeded!');
-
-        $this->call('EventsSeeder');
-        $this->command->info('Events table seeded!');
-
-        $this->call('FolderSeeder');
-        $this->command->info('Folder table seeded!');
-
-        $this->call('DocumentSeeder');
-        $this->command->info('Document table seeded!');
+        if(App::environment('local')){
+            $this->call(DummyDataSeeder::class);
+            $this->command->info('All dummy data seeded!');
+        }
     }
 }

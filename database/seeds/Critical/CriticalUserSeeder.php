@@ -9,22 +9,13 @@ use App\Models\Singer;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
 
-class UserTableSeeder extends Seeder
+class CriticalUserSeeder extends Seeder
 {
 
     public function run(): void
     {
         /*
-         * STEP 0 - Clear
-         */
-        DB::table('users')->delete();
-        DB::table('roles')->delete();
-        DB::table('singers')->delete();
-        DB::table('singers_tasks')->delete();
-        DB::table('singer_categories')->delete();
-
-        /*
-         * STEP 1 - Insert initial real data
+         * STEP 1 - Insert categories
          */
 
         // Insert user roles
@@ -45,29 +36,10 @@ class UserTableSeeder extends Seeder
         ]);
         $singer_categories = SingerCategory::all();
 
-        // Step 2 - Add dummy users - no roles
-        factory(User::class, 30)->create()->each(static function(User $user) use ($singer_categories) {
-            $faker = Faker::create();
 
-            // Step 2a - Create matching singer
-            $user->singer()->create([
-                'name' => $user->name,
-                'email' => $user->email,
-                'onboarding_enabled' => $faker->boolean(30),
-            ]);
-
-            // Step 2b - Attach random singer category
-            UserTableSeeder::attachRandomSingerCategory($user->singer, $singer_categories);
-
-            // Step 2c - Generate profile and placement for singer
-            // @todo Seed singer profile and voice placement
-
-            // Step 2d - Generate tasks
-            // @todo Generate tasks for dummy singers
-        });
-
-
-        // Step 3 - Add admin
+        /*
+         * STEP 2 - Insert Admin
+         */
         $user = User::create([
             'name' => 'Hayden',
             'email' => 'haydenbech@gmail.com',
@@ -87,12 +59,5 @@ class UserTableSeeder extends Seeder
         $cat_member = $singer_categories->firstWhere('name', '=', 'Members');
         $user->singer->category()->associate($cat_member);
         $user->singer->save();
-    }
-
-    public static function attachRandomSingerCategory(Singer $singer, Collection $categories): void
-    {
-        $category = $categories->random(1)->first();
-        $singer->category()->associate($category);
-        $singer->save();
     }
 }

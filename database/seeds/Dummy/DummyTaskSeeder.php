@@ -5,12 +5,10 @@ use App\Models\Task;
 use App\Models\Singer;
 use App\Models\Role;
 
-class TaskTableSeeder extends Seeder {
+class DummyTaskSeeder extends Seeder {
 	
 	public function run()
 	{
-		DB::table('tasks')->delete();
-		
 		// Fetch roles
 		$music_role = Role::where('name', 'Music Team')->pluck('id');
 		$member_role = Role::where('name', 'Membership Team')->pluck('id');
