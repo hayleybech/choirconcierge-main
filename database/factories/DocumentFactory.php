@@ -8,15 +8,15 @@ use Illuminate\Http\UploadedFile;
 
 /** @var Factory $factory */
 
-$folders = Folder::all();
-
 /*
  * I'm going to use the actual storage in this case,
  * as I want to be able to create demo sites with file downloads.
  *
  * @todo Create a separate Document factory/state using fake storage.
  */
-$factory->define(Document::class, function (Faker $faker) use($folders) {
+$factory->define(Document::class, function (Faker $faker) {
+    $folders = Folder::all();
+
     $name = $faker->word().'.'.$faker->fileExtension;
     $file = UploadedFile::fake()->create($name, 5);
     $filepath = Storage::disk('public')->putFile( Document::getDownloadsPath(), $file);
