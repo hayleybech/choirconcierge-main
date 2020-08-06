@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Class SongStatus
@@ -22,6 +23,8 @@ use Illuminate\Support\Carbon;
  */
 class SongStatus extends Model
 {
+    use BelongsToTenant;
+
     public function songs(): HasMany
     {
         return $this->hasMany(Song::class, 'status_id');

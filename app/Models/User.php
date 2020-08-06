@@ -16,6 +16,7 @@ use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 use UnexpectedValueException;
 
 // http://alexsears.com/article/adding-roles-to-laravel-users/
@@ -42,7 +43,7 @@ use UnexpectedValueException;
  */
 class User extends Authenticatable implements HasMedia
 {
-    use Notifiable, InteractsWithMedia;
+    use Notifiable, InteractsWithMedia, BelongsToTenant;
 
     /**
      * The attributes that are mass assignable.
