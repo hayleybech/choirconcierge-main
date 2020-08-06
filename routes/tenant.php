@@ -31,14 +31,11 @@ Route::middleware([
     InitializeTenancyByDomainOrSubdomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-    Route::get('/', function () {
-        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
-    });
 
     Auth::routes(['register' => false]);
 
     // Dashboard
-    Route::get('/dash', [DashController::class, 'index'])->name('dash');
+    Route::get('/', [DashController::class, 'index'])->name('dash');
 
     // Singers module
     Route::prefix('singers')->middleware('auth')->group(static function (){
