@@ -37,6 +37,9 @@
         "wnx/laravel-stats": "^2.2"
     },
     "autoload": {
+        "files": [
+            "app/helpers.php"
+        ],
         "classmap": [
             "database/seeds",
             "database/factories"

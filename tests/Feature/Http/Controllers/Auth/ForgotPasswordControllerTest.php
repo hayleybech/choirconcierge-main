@@ -18,7 +18,8 @@ class ForgotPasswordControllerTest extends TestCase
     /** @test */
     public function forgot_password_displays_forgot_form()
     {
-        $response = $this->get(route('password.request'));
+        $this->withoutExceptionHandling();
+        $response = $this->get(the_tenant_route('password.request', []));
 
         $response->assertStatus(200);
         $response->assertViewIs('auth.passwords.email');
