@@ -16,8 +16,7 @@ class AddTenantIdToMainTables extends Migration
     {
         $tenant_url = parse_url( config('app.url') )['host'];  // clientname.choirconcierge.com
         $tenant_name = explode( '.', $tenant_url )[0];     // clientname
-        $tenant = Tenant::firstOrCreate(['id' => $tenant_name]);
-        $tenant->domains()->firstOrCreate(['domain' => $tenant_url]);
+        $tenant = $this->get_or_create_tenant($tenant_name, $tenant_url);
 
         // Primary Models
         //
@@ -194,5 +193,20 @@ class AddTenantIdToMainTables extends Migration
             $table->dropForeign('events_tenant_id_foreign');
             $table->dropColumn('tenant_id');
         });
+    }
+
+    public function get_or_create_tenant(string $tenant_name, string $tenant_url) {
+        // First or create - but without Eloquent
+        $tenant = DB::table('tenants')->where('id', '=', $tenant_name)->get()->first();
+        if( ! $tenant ) {
+            $tenant = DB::table('tenants')->insert(['id' => $tenant_name]);
+        }
+
+        $domain = DB::table('domains')->where('tenant_id', '=', $tenant_name)->get()->first();
+        if( ! $domain ) {
+            DB::table('domains')->insert(['tenant_id' => $tenant_name, 'domain' => $tenant_url]);
+        }
+
+        return $tenant;
     }
 }
