@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Task;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 
@@ -185,11 +186,11 @@ EOT;
 
 
 
-		
+		$tasks = Task::all();
 		// Create some dummy templates
 		DB::table('notification_templates')->insert([
             /*[
-                'task_id'		=> 1,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Member Profile')->id,
                 'subject'		=> 'Singer ready for Voice Placement',
                 'recipients'	=> 'role:2',
                 'body'			=> $placement_reminder_body,
@@ -198,7 +199,7 @@ EOT;
                 'updated_at'        => Carbon::now(),
             ],
             [
-                'task_id'		=> 2,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Voice Placement')->id,
                 'subject'		=> 'Singer ready for Member Profile',
                 'recipients'	=> 'role:3',
                 'body'			=> $profile_reminder_body,
@@ -207,7 +208,7 @@ EOT;
                 'updated_at'        => Carbon::now(),
             ],*/
 			[
-                'task_id'		=> 2,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Voice Placement')->id,
                 'subject'		=> 'Singer completed their details',
                 'recipients'	=> 'role:2',
                 'body'			=> $details_completed_body,
@@ -216,7 +217,7 @@ EOT;
                 'updated_at'        => Carbon::now(),
 			],
 			[
-                'task_id'		=> 2,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Voice Placement')->id,
                 'subject'		=> 'Welcome to The Blenders!',
                 'recipients'	=> 'singer:0',
                 'body'			=> $welcome_body,
@@ -225,7 +226,7 @@ EOT;
                 'updated_at'        => Carbon::now(),
 			],
             [
-                'task_id'		=> 2,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Voice Placement')->id,
                 'subject'		=> 'Time for your Vocal Assessment!',
                 'recipients'	=> 'singer:0',
                 'body'			=> $audition_due_singer_body,
@@ -234,7 +235,7 @@ EOT;
                 'updated_at'        => Carbon::now(),
             ],
             [
-                'task_id'		=> 2,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Voice Placement')->id,
                 'subject'		=> 'A singer is due for Vocal Assessment',
                 'recipients'	=> 'role:2',
                 'body'			=> $audition_due_team_body,
@@ -243,7 +244,7 @@ EOT;
                 'updated_at'        => Carbon::now(),
             ],
             [
-                'task_id'		=> 3,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Pass Audition')->id,
                 'subject'		=> 'Congratulations! You passed your audition',
                 'recipients'	=> 'singer:0',
                 'body'			=> $audition_congrats_body,
@@ -252,7 +253,7 @@ EOT;
                 'updated_at'        => Carbon::now(),
             ],
             [
-                'task_id'		=> 3,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Pass Audition')->id,
                 'subject'		=> 'Please invoice new member',
                 'recipients'	=> 'role:4',
                 'body'			=> $audition_completed_body,
@@ -261,7 +262,7 @@ EOT;
                 'updated_at'        => Carbon::now(),
             ],
             [
-                'task_id'		=> 4,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Pay Fees')->id,
                 'subject'		=> 'Please provide uniform to new member',
                 'recipients'	=> 'role:5',
                 'body'			=> $uniform_request_body,
@@ -270,7 +271,7 @@ EOT;
                 'updated_at'        => Carbon::now(),
             ],
             [
-                'task_id'		=> 4,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Pay Fees')->id,
                 'subject'		=> 'Please welcome new member',
                 'recipients'	=> 'role:3',
                 'body'			=> $membership_welcome_body,
@@ -279,7 +280,7 @@ EOT;
                 'updated_at'        => Carbon::now(),
             ],
             [
-                'task_id'		=> 4,
+                'task_id'		=> $tasks->firstWhere('name', '=', 'Pay Fees')->id,
                 'subject'		=> 'Please welcome new member',
                 'recipients'	=> 'user:1',
                 'body'			=> $director_welcome_body,

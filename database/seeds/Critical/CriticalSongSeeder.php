@@ -15,27 +15,27 @@ class CriticalSongSeeder extends Seeder
     {
         // Insert song statuses
         DB::table('song_statuses')->insert([
-            ['title' => 'Pending', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['title' => 'Learning', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['title' => 'Active', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['title' => 'Archived', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Pending', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Learning', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Active', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Archived', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
 
         // Insert song categories
         DB::table('song_categories')->insert([
-            ['title' => 'General', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['title' => 'Contest', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['title' => 'Polecats', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['title' => 'Christmas', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['title' => 'Special Events', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'General', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Contest', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Polecats', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Christmas', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Special Events', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
 
         // Insert song attachment categories
         DB::table('song_attachment_categories')->insert([
-            ['title' => 'Sheet Music'],
-            ['title' => 'Full Mix (Demo)'],
-            ['title' => 'Learning Tracks'],
-            ['title' => 'Other'],
+            ['tenant_id' => tenant('id'), 'title' => 'Sheet Music'],
+            ['tenant_id' => tenant('id'), 'title' => 'Full Mix (Demo)'],
+            ['tenant_id' => tenant('id'), 'title' => 'Learning Tracks'],
+            ['tenant_id' => tenant('id'), 'title' => 'Other'],
         ]);
     }
 }

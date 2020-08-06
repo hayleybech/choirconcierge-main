@@ -12,10 +12,10 @@ class CriticalEventSeeder extends Seeder
     {
         // Insert stock event types
         DB::table('event_types')->insert([
-            ['title' => 'Performance', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['title' => 'Rehearsal', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['title' => 'Social Event', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['title' => 'Other', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Performance', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Rehearsal', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Social Event', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'title' => 'Other', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
     }
 
