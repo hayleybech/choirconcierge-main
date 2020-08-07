@@ -24,6 +24,7 @@
         "mtolhuys/laravel-schematics": "^0.10.2",
         "spatie/icalendar-generator": "^1.0",
         "spatie/laravel-medialibrary": "^8.0.0",
+        "stancl/tenancy": "^3.1",
         "webklex/laravel-imap": "^1.4"
     },
     "type": "project",
@@ -36,6 +37,9 @@
         "wnx/laravel-stats": "^2.2"
     },
     "autoload": {
+        "files": [
+            "app/helpers.php"
+        ],
         "classmap": [
             "database/seeds",
             "database/factories"

@@ -17,7 +17,6 @@ class FolderControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(\CriticalUserSeeder::class);
         $this->seed(\DummyUserSeeder::class);
         $this->seed(\DummyFolderSeeder::class);
     }
@@ -31,7 +30,7 @@ class FolderControllerTest extends TestCase
         $user = Role::first()->users->first(); // Any role is fine
         $this->actingAs($user);
 
-        $response = $this->get(route('folders.index'));
+        $response = $this->get(the_tenant_route('folders.index'));
 
         $response->assertStatus(200);
         $response->assertViewIs('folders.index');
@@ -43,7 +42,7 @@ class FolderControllerTest extends TestCase
         $user = User::query()->whereDoesntHave('roles')->first();
         $this->actingAs($user);
 
-        $response = $this->get(route('folders.index'));
+        $response = $this->get(the_tenant_route('folders.index'));
 
         $response->assertStatus(200);
         $response->assertViewIs('folders.index');
@@ -54,8 +53,8 @@ class FolderControllerTest extends TestCase
     {
         $this->assertGuest();
 
-        $response = $this->get(route('folders.index'));
-        $response->assertRedirect(route('login'));
+        $response = $this->get(the_tenant_route('folders.index'));
+        $response->assertRedirect(the_tenant_route('login'));
     }
 
     ///////////////////////////////////////////////////////////////
@@ -67,7 +66,7 @@ class FolderControllerTest extends TestCase
         $user = Role::first()->users->first(); // Any role is fine
         $this->actingAs($user);
 
-        $response = $this->get(route('folders.create'));
+        $response = $this->get(the_tenant_route('folders.create'));
 
         $response->assertStatus(200);
         $response->assertViewIs('folders.create');
@@ -79,9 +78,9 @@ class FolderControllerTest extends TestCase
         $user = User::query()->whereDoesntHave('roles')->first();
         $this->actingAs($user);
 
-        $response = $this->get( route('folders.create') );
+        $response = $this->get( the_tenant_route('folders.create') );
 
-        $response->assertRedirect( route('dash') );
+        $response->assertRedirect( the_tenant_route('dash') );
     }
 
     /** @test */
@@ -89,8 +88,8 @@ class FolderControllerTest extends TestCase
     {
         $this->assertGuest();
 
-        $response = $this->get(route('folders.create'));
-        $response->assertRedirect(route('login'));
+        $response = $this->get(the_tenant_route('folders.create'));
+        $response->assertRedirect(the_tenant_route('login'));
     }
 
     ///////////////////////////////////////////////////////////
@@ -103,11 +102,11 @@ class FolderControllerTest extends TestCase
         $this->actingAs($user);
 
         $title = $this->faker->sentence;
-        $response = $this->post(route('folders.index'), [
+        $response = $this->post(the_tenant_route('folders.index'), [
             'title' => $title
         ]);
 
-        $response->assertRedirect( route('folders.index', ['status' => 'Folder created. ']) );
+        $response->assertRedirect( the_tenant_route('folders.index', ['status' => 'Folder created. ']) );
         $this->assertDatabaseHas('folders', [
             'title' => $title,
         ]);
@@ -120,11 +119,11 @@ class FolderControllerTest extends TestCase
         $this->actingAs($user);
 
         $title = $this->faker->sentence;
-        $response = $this->post(route('folders.index'), [
+        $response = $this->post(the_tenant_route('folders.index'), [
             'title' => $title
         ]);
 
-        $response->assertRedirect( route('dash' ) );
+        $response->assertRedirect( the_tenant_route('dash' ) );
         $this->assertDatabaseMissing('folders', [
             'title' => $title,
         ]);
@@ -136,11 +135,11 @@ class FolderControllerTest extends TestCase
         $this->assertGuest();
 
         $title = $this->faker->sentence;
-        $response = $this->post(route('folders.index'), [
+        $response = $this->post(the_tenant_route('folders.index'), [
             'title' => $title
         ]);
 
-        $response->assertRedirect( route('login' ) );
+        $response->assertRedirect( the_tenant_route('login' ) );
         $this->assertDatabaseMissing('folders', [
             'title' => $title,
         ]);
@@ -156,7 +155,7 @@ class FolderControllerTest extends TestCase
         $this->actingAs($user);
 
         $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( route('folders.show', ['folder' => $folder]) );
+        $response = $this->get( the_tenant_route('folders.show', ['folder' => $folder]) );
 
         $response->assertStatus(200);
         $response->assertViewIs('folders.show');
@@ -169,7 +168,7 @@ class FolderControllerTest extends TestCase
         $this->actingAs($user);
 
         $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( route('folders.show', ['folder' => $folder]) );
+        $response = $this->get( the_tenant_route('folders.show', ['folder' => $folder]) );
 
         $response->assertStatus(200);
         $response->assertViewIs('folders.show');
@@ -181,10 +180,10 @@ class FolderControllerTest extends TestCase
         $this->assertGuest();
 
         $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( route('folders.show', ['folder' => $folder]) );
+        $response = $this->get( the_tenant_route('folders.show', ['folder' => $folder]) );
 
 
-        $response->assertRedirect( route('login') );
+        $response->assertRedirect( the_tenant_route('login') );
     }
 
     ///////////////////////////////////////////////////////
@@ -197,7 +196,7 @@ class FolderControllerTest extends TestCase
         $this->actingAs($user);
 
         $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( route('folders.edit', ['folder' => $folder]) );
+        $response = $this->get( the_tenant_route('folders.edit', ['folder' => $folder]) );
 
         $response->assertStatus(200);
         $response->assertViewIs('folders.edit');
@@ -210,9 +209,9 @@ class FolderControllerTest extends TestCase
         $this->actingAs($user);
 
         $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( route('folders.edit', ['folder' => $folder]) );
+        $response = $this->get( the_tenant_route('folders.edit', ['folder' => $folder]) );
 
-        $response->assertRedirect( route('dash') );
+        $response->assertRedirect( the_tenant_route('dash') );
     }
 
     /** @test */
@@ -221,9 +220,9 @@ class FolderControllerTest extends TestCase
         $this->assertGuest();
 
         $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( route('folders.edit', ['folder' => $folder]) );
+        $response = $this->get( the_tenant_route('folders.edit', ['folder' => $folder]) );
 
-        $response->assertRedirect( route('login') );
+        $response->assertRedirect( the_tenant_route('login') );
     }
 
     /** @test */
@@ -234,7 +233,7 @@ class FolderControllerTest extends TestCase
 
         $folder = Folder::query()->inRandomOrder()->first();
         $title = $this->faker->sentence;
-        $response = $this->put( route('folders.update', ['folder' => $folder]), [
+        $response = $this->put( the_tenant_route('folders.update', ['folder' => $folder]), [
             'title' => $title,
         ]);
 
@@ -253,11 +252,11 @@ class FolderControllerTest extends TestCase
 
         $folder = Folder::query()->inRandomOrder()->first();
         $title = $this->faker->sentence;
-        $response = $this->put( route('folders.update', ['folder' => $folder]), [
+        $response = $this->put( the_tenant_route('folders.update', ['folder' => $folder]), [
             'title' => $title,
         ]);
 
-        $response->assertRedirect( route('dash') );
+        $response->assertRedirect( the_tenant_route('dash') );
         $this->assertDatabaseMissing('folders', [
             'id'    => $folder->id,
             'title' => $title,
@@ -271,11 +270,11 @@ class FolderControllerTest extends TestCase
 
         $folder = Folder::query()->inRandomOrder()->first();
         $title = $this->faker->sentence;
-        $response = $this->put( route('folders.update', ['folder' => $folder]), [
+        $response = $this->put( the_tenant_route('folders.update', ['folder' => $folder]), [
             'title' => $title,
         ]);
 
-        $response->assertRedirect( route('login') );
+        $response->assertRedirect( the_tenant_route('login') );
         $this->assertDatabaseMissing('folders', [
             'id'    => $folder->id,
             'title' => $title,
@@ -289,7 +288,7 @@ class FolderControllerTest extends TestCase
         $this->actingAs($user);
 
         $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->delete( route('folders.destroy', ['folder' => $folder]) );
+        $response = $this->delete( the_tenant_route('folders.destroy', ['folder' => $folder]) );
 
         $response->assertStatus(302);
         $this->assertDatabaseMissing('folders', [
@@ -304,9 +303,9 @@ class FolderControllerTest extends TestCase
         $this->actingAs($user);
 
         $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->delete( route('folders.destroy', ['folder' => $folder]) );
+        $response = $this->delete( the_tenant_route('folders.destroy', ['folder' => $folder]) );
 
-        $response->assertRedirect(route('dash'));
+        $response->assertRedirect(the_tenant_route('dash'));
         $this->assertDatabaseHas('folders', [
             'id'    => $folder->id,
         ]);
@@ -318,9 +317,9 @@ class FolderControllerTest extends TestCase
         $this->assertGuest();
 
         $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->delete( route('folders.destroy', ['folder' => $folder]) );
+        $response = $this->delete( the_tenant_route('folders.destroy', ['folder' => $folder]) );
 
-        $response->assertRedirect(route('login'));
+        $response->assertRedirect(the_tenant_route('login'));
         $this->assertDatabaseHas('folders', [
             'id'    => $folder->id,
         ]);

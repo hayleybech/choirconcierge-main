@@ -12,9 +12,9 @@
     <title>@yield('title') | {{ config('app.name', 'Choir Concierge') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-	<link rel="shortcut icon" href="{{ favicon( asset( '/img/favicon.png' )) }}">
+    <link href="{{ global_asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ global_asset('css/style.css') }}" rel="stylesheet">
+	<link rel="shortcut icon" href="{{ favicon( global_asset( '/img/favicon.png' )) }}">
 
 	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap" rel="stylesheet">
 
@@ -28,8 +28,8 @@
 
 				<nav class="navbar navbar-expand-lg navbar-dark">
 					<a class="" href="{{ url('/') }}">
-						<img src="/img/logo.svg" alt="Choir Concierge" class="logo">
-						<img src="/favicon.png" alt="Choir Concierge" class="logo-collapse">
+						<img src="{{ global_asset('/img/logo.svg') }}" alt="Choir Concierge" class="logo">
+						<img src="{{ global_asset('/favicon.png') }}" alt="Choir Concierge" class="logo-collapse">
 					</a>
 
 
@@ -283,8 +283,8 @@
 	</script>
 	<script async src="//cdn.headwayapp.co/widget.js"></script>
     
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ global_asset('js/app.js') }}"></script>
+    <script src="{{ global_asset('js/script.js') }}"></script>
 
 	@stack('scripts-footer-bottom')
 	

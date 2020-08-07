@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Class UserGroup
@@ -31,6 +32,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  */
 class UserGroup extends Model
 {
+    use BelongsToTenant;
+
     /**
      * The attributes that are mass assignable.
      *

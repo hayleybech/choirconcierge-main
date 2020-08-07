@@ -3,6 +3,8 @@
 /public/storage
 /public/mailoutput
 /storage/*.key
+/storate/tenant*
+/storage/tenant*/**
 /vendor
 /.idea
 /.vagrant

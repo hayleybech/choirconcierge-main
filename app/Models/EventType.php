@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Class EventType
@@ -22,6 +23,8 @@ use Illuminate\Support\Carbon;
  */
 class EventType extends Model
 {
+    use BelongsToTenant;
+
     public function events(): HasMany
     {
         return $this->hasMany(Event::class, 'type_id');

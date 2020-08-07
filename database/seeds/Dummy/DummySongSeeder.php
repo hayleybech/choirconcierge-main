@@ -32,8 +32,8 @@ class DummySongSeeder extends Seeder
 
                     // Copy random sample files
                     // Computer-generated music from https://www.fakemusicgenerator.com/
-                    $demo_dir = storage_path('app/sample/mp3');
-                    $song_dir = storage_path('app/public/songs/'.$song->id );
+                    $demo_dir = Storage::disk('global-local')->path('sample/mp3');
+                    $song_dir = Storage::disk('public')->path('songs/'.$song->id );
                     $faker = Faker\Factory::create();
                     $attachment->filepath = $faker->file( $demo_dir, $song_dir, false );
 
@@ -48,8 +48,8 @@ class DummySongSeeder extends Seeder
             $song->attachments()->saveMany( factory( SongAttachment::class, 1 )->make() )
                 ->each(static function(SongAttachment $attachment) use ($song, $attachment_categories) {
 
-                    $demo_dir = storage_path('app/sample/pdf');
-                    $song_dir = storage_path('app/public/songs/'.$song->id );
+                    $demo_dir = Storage::disk('global-local')->path('sample/mp3');
+                    $song_dir = Storage::disk('public')->path('songs/'.$song->id );
                     $faker = Faker\Factory::create();
                     $attachment->filepath = $faker->file( $demo_dir, $song_dir, false );
 
@@ -65,7 +65,7 @@ class DummySongSeeder extends Seeder
          * My arrangement of Touch of Paradise
          */
         DB::table('songs')->insert([
-            ['title' => 'Touch of Paradise', 'pitch_blown' => 5, 'status_id' => $statuses->first()->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+            ['tenant_id' => tenant('id'), 'title' => 'Touch of Paradise', 'pitch_blown' => 5, 'status_id' => $statuses->first()->id, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
         ]);
     }
 

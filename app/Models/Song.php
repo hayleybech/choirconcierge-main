@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Class Song
@@ -37,7 +38,7 @@ use Illuminate\Support\Facades\Notification;
  */
 class Song extends Model
 {
-    use Filterable, OnDeleteCascade;
+    use Filterable, OnDeleteCascade, BelongsToTenant;
 
     /**
      * The attributes that are mass assignable.

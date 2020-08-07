@@ -14,7 +14,7 @@ class LoginControllerTest extends TestCase
     /** @test */
     public function login_displays_the_login_form()
     {
-        $response = $this->get(route('login'));
+        $response = $this->get(the_tenant_route('login'));
 
         $response->assertStatus(200);
         $response->assertViewIs('auth.login');
@@ -23,7 +23,7 @@ class LoginControllerTest extends TestCase
     /** @test */
     public function invalid_login_displays_validation_errors()
     {
-        $response = $this->post('/login', []);
+        $response = $this->post(the_tenant_route('login'), []);
 
         $response->assertStatus(302);
         $response->assertSessionHasErrors('email');
@@ -34,12 +34,12 @@ class LoginControllerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $response = $this->post(route('login'), [
+        $response = $this->post(the_tenant_route('login'), [
             'email' => $user->email,
             'password' => 'password',
         ]);
 
-        $response->assertRedirect('/dash');
+        $response->assertRedirect(the_tenant_route('dash'));
         $this->assertAuthenticatedAs($user);
     }
 
@@ -49,15 +49,15 @@ class LoginControllerTest extends TestCase
         // login
         $user = factory(User::class)->create();
 
-        $response = $this->post(route('login'), [
+        $response = $this->post(the_tenant_route('login'), [
             'email' => $user->email,
             'password' => 'password',
         ]);
 
         // logout
-        $response = $this->post(route('logout'));
+        $response = $this->post(the_tenant_route('logout'));
 
-        $response->assertRedirect('/');
+        $response->assertRedirect(the_tenant_route('dash'));
         $this->assertGuest();
     }
 }

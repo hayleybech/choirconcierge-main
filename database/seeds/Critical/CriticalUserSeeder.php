@@ -9,7 +9,7 @@ use App\Models\Singer;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
 
-class CriticalUserSeeder extends Seeder
+class  CriticalUserSeeder extends Seeder
 {
 
     public function run(): void
@@ -20,19 +20,19 @@ class CriticalUserSeeder extends Seeder
 
         // Insert user roles
         DB::table('roles')->insert([
-            ['name' => 'Admin'],
-            ['name' => 'Music Team'],
-            ['name' => 'Membership Team'],
-            ['name' => 'Accounts Team'],
-            ['name' => 'Uniforms Team'],
+            ['tenant_id' => tenant('id'), 'name' => 'Admin'],
+            ['tenant_id' => tenant('id'), 'name' => 'Music Team'],
+            ['tenant_id' => tenant('id'), 'name' => 'Membership Team'],
+            ['tenant_id' => tenant('id'), 'name' => 'Accounts Team'],
+            ['tenant_id' => tenant('id'), 'name' => 'Uniforms Team'],
         ]);
 
         // Insert singer categories
         DB::table('singer_categories')->insert([
-            ['name' => 'Prospects', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['name' => 'Archived Prospects', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['name' => 'Members', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['name' => 'Archived Members', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'name' => 'Prospects', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'name' => 'Archived Prospects', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'name' => 'Members', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['tenant_id' => tenant('id'), 'name' => 'Archived Members', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
         $singer_categories = SingerCategory::all();
 

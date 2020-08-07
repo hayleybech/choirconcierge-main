@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Class SingerCategory
@@ -22,6 +23,8 @@ use Illuminate\Support\Carbon;
  */
 class SingerCategory extends Model
 {
+    use BelongsToTenant;
+    
     public function singers(): HasMany
     {
         return $this->hasMany(Singer::class);

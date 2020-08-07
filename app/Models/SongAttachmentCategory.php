@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 use Webklex\IMAP\Attachment;
 
 /**
@@ -20,6 +21,8 @@ use Webklex\IMAP\Attachment;
  */
 class SongAttachmentCategory extends Model
 {
+    use BelongsToTenant;
+
     public function attachments(): HasMany
     {
         return $this->hasMany(SongAttachment::class, 'category_id');

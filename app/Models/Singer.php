@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Class Singer
@@ -40,7 +41,7 @@ use Illuminate\Support\Carbon;
  */
 class Singer extends Model
 {
-    use Notifiable, Filterable;
+    use Notifiable, Filterable, BelongsToTenant;
 
     protected $fillable = [
         'name',

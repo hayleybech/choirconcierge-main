@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Class Event
@@ -36,7 +37,7 @@ use Illuminate\Support\Facades\Notification;
  */
 class Event extends Model
 {
-    use Filterable;
+    use Filterable, BelongsToTenant;
 
     /**
      * The attributes that are mass assignable.
