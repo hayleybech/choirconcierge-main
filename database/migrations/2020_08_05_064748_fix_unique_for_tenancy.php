@@ -14,13 +14,13 @@ class FixUniqueForTenancy extends Migration
     public function up()
     {
         Schema::table('users', static function (Blueprint $table) {
-            $table->dropUnique('users_email_unique');
-            $table->unique(['tenant_id', 'email']);
+            //$table->dropUnique('users_email_unique');
+            //$table->unique(['tenant_id', 'email']);
         });
 
         Schema::table('singers', static function (Blueprint $table) {
-            $table->dropUnique('singers_email_unique');
-            $table->unique(['tenant_id', 'email']);
+            //$table->dropUnique('singers_email_unique');
+            //$table->unique(['tenant_id', 'email']);
         });
 
         Schema::table('user_groups', static function (Blueprint $table) {
