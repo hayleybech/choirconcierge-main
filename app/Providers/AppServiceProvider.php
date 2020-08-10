@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Contracts\Auth\Guard;
+use Stancl\Tenancy\Controllers\TenantAssetsController;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
         });*/
 
         View::composer('*', SingerCategoryComposer::class);
+
+        TenantAssetsController::$tenancyMiddleware = 'Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain';
     }
 
     /**
