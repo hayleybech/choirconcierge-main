@@ -18,7 +18,7 @@ return [
      */
     'central_domains' => [
         'choirconcierge.test',
-        //'choirconcierge.com',
+        'choirconcierge.com',
     ],
 
     /**
