@@ -35,6 +35,7 @@ class SeedForTenant implements ShouldQueue
     public function handle()
     {
         Artisan::call('db:seed', [
+            '--force' => true,
             //'--tenants' => [$this->tenant->getTenantKey()],
         ]);
         /*Artisan::call('tenants:seed', [
