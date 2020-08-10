@@ -32,6 +32,9 @@
 						<img src="{{ global_asset('/favicon.png') }}" alt="Choir Concierge" class="logo-collapse">
 					</a>
 
+					<div class="choir-logo navbar-brand text-muted">
+						<img src="{{ asset('choir-logo.png') }}" alt="{{ tenant('choir_name') ?? 'Choir Name' }}" height="30" class="d-inline-block align-top">
+					</div>
 
 					<ul class="navbar-nav nav-vertical accordion" id="main-menu-accordion">
 
@@ -208,9 +211,6 @@
 
 			<main>
 				<nav id="top-menu" class="navbar navbar-expand navbar-light bg-transparent">
-					<div class="navbar-brand text-muted">
-						<img src="{{ asset('choir-logo.png') }}" alt="{{ tenant('choir_name') ?? 'Choir Name' }}" height="30" class="d-inline-block align-top">
-					</div>
 
 					<div class="d-flex justify-content-between align-items-center flex-grow-1">
 
