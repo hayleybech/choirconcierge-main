@@ -20,6 +20,9 @@ use Storage;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * Dynamic
+ * @property string $path
+ *
  * @package App\Models
  */
 class Document extends Model
@@ -57,7 +60,10 @@ class Document extends Model
 
     public function getDownloadUrlAttribute(): string
     {
-        return Storage::url( $this->getPath() );
+        return Storage::disk('public')->url( $this->getPath() );
+    }
+    public function getPathAttribute() {
+        return storage_path('app/public/' . $this->getPath());
     }
 
     public function getPath(): string

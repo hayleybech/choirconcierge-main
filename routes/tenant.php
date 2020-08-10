@@ -85,6 +85,7 @@ Route::middleware([
         Route::middleware(['auth', 'employee'])->group(static function() {
             // Create/Delete documents
             Route::post('{folder}/documents', [DocumentController::class, 'store'])->name('folders.documents.store');
+            Route::get('{folder}/documents/{document}', [DocumentController::class, 'show'])->name('folders.documents.show');
             Route::get('{folder}/documents/{document}/delete', [DocumentController::class, 'destroy'])->name('folders.documents.delete');
         });
     });

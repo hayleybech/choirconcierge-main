@@ -8,6 +8,7 @@ use App\Models\Folder;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DocumentController extends Controller
 {
@@ -48,18 +49,20 @@ class DocumentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Document  $document
-     * @return \Illuminate\Http\Response
+     * @param Document $document
+     *
+     * @return BinaryFileResponse
      */
-    public function show(Document $document)
+    public function show(Folder $folder, Document $document)
     {
-        //
+        return response()->download( $document->path );
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Document  $document
+     * @param Document $document
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Document $document)
@@ -70,8 +73,9 @@ class DocumentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Document  $document
+     * @param  \Illuminate\Http\Request $request
+     * @param Document                  $document
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Document $document)
