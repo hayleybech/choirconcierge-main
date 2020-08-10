@@ -209,7 +209,7 @@
 			<main>
 				<nav id="top-menu" class="navbar navbar-expand navbar-light bg-transparent">
 					<div class="navbar-brand text-muted">
-						<img src="/img/choir-logo.png" alt="{{ config('app.choir_name') }}" height="30" class="d-inline-block align-top">
+						<img src="/img/choir-logo.png" alt="{{ tenant('choir_name') ?? 'Choir Name' }}" height="30" class="d-inline-block align-top">
 					</div>
 
 					<div class="d-flex justify-content-between align-items-center flex-grow-1">
