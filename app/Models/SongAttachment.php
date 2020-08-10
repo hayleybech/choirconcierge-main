@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Storage;
  *
  * Dynamic
  * @property string $download_url
+ * @property string $path
  *
  * @package App\Models
  */
@@ -89,6 +90,9 @@ class SongAttachment extends Model
     public function getDownloadUrlAttribute(): string
     {
         return Storage::url($this->getPath());
+    }
+    public function getPathAttribute() {
+        return storage_path('app/public/' . $this->getPath());
     }
 
     public static function getPathSongs(): string
