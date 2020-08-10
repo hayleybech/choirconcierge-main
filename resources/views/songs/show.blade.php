@@ -96,8 +96,8 @@
 
 
     @push('scripts-footer-bottom')
-        <script src="{{ asset('js/lib/Tone.js') }}"></script>
-        <script src="{{ asset('js/Pitch_Pipe.js') }}"></script>
+        <script src="{{ global_asset('js/lib/Tone.js') }}"></script>
+        <script src="{{ global_asset('js/Pitch_Pipe.js') }}"></script>
         <script>
             let synth = new Tone.Synth().toMaster();
             let pipe = new Pitch_Pipe( '.pitch', @json($song->pitch) );

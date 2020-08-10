@@ -69,15 +69,15 @@
 @endsection
 
 @push('scripts-footer-bottom')
-    <script src="{{ asset('js/lib/howler.js') }}"></script>
-    <script src="{{ asset('js/lib/pdfjs-2-3-200/pdf.js') }}"></script>
-    <script src="{{ asset('js/lib/pdfjs-2-3-200/pdf.worker.js') }}"></script>
-    <script src="{{ asset('js/lib/Tone.js') }}"></script>
+    <script src="{{ global_asset('js/lib/howler.js') }}"></script>
+    <script src="{{ global_asset('js/lib/pdfjs-2-3-200/pdf.js') }}"></script>
+    <script src="{{ global_asset('js/lib/pdfjs-2-3-200/pdf.worker.js') }}"></script>
+    <script src="{{ global_asset('js/lib/Tone.js') }}"></script>
 
-    <script src="{{ asset('js/viewer.js') }}"></script>
-    <script src="{{ asset('js/player.js') }}"></script>
-    <script src="{{ asset('js/Pitch_Pipe.js') }}"></script>
-    <script src="{{ asset('js/learning_viewer.js') }}"></script>
+    <script src="{{ global_asset('js/viewer.js') }}"></script>
+    <script src="{{ global_asset('js/player.js') }}"></script>
+    <script src="{{ global_asset('js/Pitch_Pipe.js') }}"></script>
+    <script src="{{ global_asset('js/learning_viewer.js') }}"></script>
 
     <script>
         let songs = @json($songs);
