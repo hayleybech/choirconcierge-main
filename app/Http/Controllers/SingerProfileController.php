@@ -15,6 +15,11 @@ class SingerProfileController extends Controller
 {
     const PROFILE_TASK_ID = 1;
 
+    public function __construct()
+    {
+        $this->authorizeResource(Profile::class, 'profile');
+    }
+
     public function create(Singer $singer): View
     {
         return view('singers.createprofile', compact('singer'));

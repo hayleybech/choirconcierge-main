@@ -69,11 +69,11 @@
 			<div class="card">
 				<div class="card-header d-flex justify-content-between align-items-center">
 					<h2 class="h4">Member Profile</h2>
-					@if($singer->profile)
-					<a href="{{route( 'profiles.edit', ['singer' => $singer, 'profile' => $singer->profile->id] )}}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
-					@else
-					<a href="{{ route('profile.create', ['singer' => $singer, 'task' => 1]) }}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-fw fa-plus"></i> Create</a>
-					@endif
+					@can('update', $singer->profile)
+						<a href="{{route( 'profiles.edit', ['singer' => $singer, 'profile' => $singer->profile->id] )}}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
+					@elsecan('create', \App\Models\Profile::class)
+						<a href="{{ route('profile.create', ['singer' => $singer, 'task' => 1]) }}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-fw fa-plus"></i> Create</a>
+					@endcan
 				</div>
 				<div class="card-body">
 
@@ -123,7 +123,7 @@
 									{{ $singer->profile->skills ?? '' }}
 								</div>
 								@else
-								<p>No Member Profile yet. <a href="{{ route('profile.create', ['singer' => $singer, 'task' => 1]) }}">Create one now. </a></p>
+								<p>No Member Profile yet. @can('create', \App\Models\Profile::class)<a href="{{ route('profile.create', ['singer' => $singer, 'task' => 1]) }}">Create one now. </a>@endcan</p>
 								@endif
 							</div>
 						</div>

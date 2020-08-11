@@ -53,8 +53,6 @@ Route::middleware([
             // Create Profile
             Route::get('{singer}/profile/create', [SingerProfileController::class, 'create'])->name('profile.create');
             Route::post('{singer}/profile', [SingerProfileController::class, 'store'])->name('profile');
-            Route::get('{singer}/profile/{profile}/edit', [SingerProfileController::class, 'edit'])->name('profiles.edit');
-            Route::put('{singer}/profile/{profile}', [SingerProfileController::class, 'update'])->name('profiles.update');
 
             // Move Singer
             Route::get('{singer}/category/update', 'UpdateSingerCategoryController')->name('singers.categories.update');
@@ -69,6 +67,10 @@ Route::middleware([
             Route::put('{singer}/placement/{placement}', [SingerPlacementController::class, 'update'])->name('placements.update');
         });
     });
+    // Edit Profile
+    Route::get('{singer}/profile/{profile}/edit', [SingerProfileController::class, 'edit'])->name('profiles.edit');
+    Route::put('{singer}/profile/{profile}', [SingerProfileController::class, 'update'])->name('profiles.update');
+
     Route::resource('singers', 'SingerController')->middleware('auth');
 
 
