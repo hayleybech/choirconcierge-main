@@ -60,7 +60,7 @@ class Document extends Model
 
     public function getDownloadUrlAttribute(): string
     {
-        return Storage::disk('public')->url( $this->getPath() );
+        return asset($this->getPath());
     }
     public function getPathAttribute() {
         return storage_path('app/public/' . $this->getPath());
