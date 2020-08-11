@@ -89,7 +89,7 @@ class SongAttachment extends Model
 
     public function getDownloadUrlAttribute(): string
     {
-        return Storage::url($this->getPath());
+        return asset($this->getPath());
     }
     public function getPathAttribute() {
         return storage_path('app/public/' . $this->getPath());
