@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
 use App\Http\Requests\SingerRequest;
+use App\Models\User;
 use App\Models\VoicePart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -65,6 +66,7 @@ class SingerController extends Controller
         $this->authorize('create', Singer::class);
 
         $singer = Singer::create($request->validated());
+        User::sendWelcomeEmail($singer->user);
 
         return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer created. ', ]);
     }

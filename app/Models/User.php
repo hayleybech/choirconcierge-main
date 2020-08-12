@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Mail\Welcome;
 use Hash;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -12,6 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Mail;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -268,4 +270,12 @@ class User extends Authenticatable implements HasMedia
         return $query;
     }
 
+    public static function sendWelcomeEmail($user): void
+    {
+        // Generate a new reset password token
+        $token = app('auth.password.broker')->createToken($user);
+
+        // Send email
+        Mail::send(new Welcome($user, $token));
+    }
 }
