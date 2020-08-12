@@ -82,8 +82,7 @@ class SingerController extends Controller
     {
         $this->authorize('update', $singer);
 
-        $voice_parts = VoicePart::all()->pluck('title', 'id')->toArray();
-        $voice_parts = array_merge([0 => "None"], $voice_parts);
+        $voice_parts = [0 => "None"] + VoicePart::all()->pluck('title', 'id')->toArray();
 
         return view('singers.edit', compact('singer', 'voice_parts' ));
     }
