@@ -41,7 +41,12 @@ class DocumentController extends Controller
      */
     public function store(Folder $folder, DocumentRequest $request): RedirectResponse
     {
-        $folder->documents()->create($request->validated());
+        $files = $request->file('document_uploads') ;
+        foreach($files as $file) {
+            $folder->documents()->create([
+                'document_upload' => $file
+            ]);
+        }
 
         return redirect()->back()->with(['status' => 'Document added. ', ]);
     }
