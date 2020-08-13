@@ -3,9 +3,9 @@
 @section('title', $folder->title . ' - Folders')
 @section('page-title', $folder->title)
 @section('page-action')
-    @if( Auth::user()->isEmployee() )
+    @can('update', $folder)
     <a href="{{ route( 'folders.edit', ['folder' => $folder] ) }}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
-    @endif
+    @endcan
 @endsection
 
 @section('page-content')
@@ -26,7 +26,7 @@
             <div class="r-table__tbody">
                 @each('folders.folder_document_row', $folder->documents, 'document', 'partials.noresults')
             </div>
-            @if( Auth::user()->isEmployee() )
+            @can('update', $folder)
                 <div class="r-table__tfoot">
 
                     {{ Form::open( [ 'route' => ['folders.documents.store', $folder->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row--folder sub-row--document row-add needs-validation', 'novalidate' ] ) }}
@@ -55,7 +55,7 @@
                     {{ Form::close() }}
 
                 </div>
-            @endif
+            @endcan
         </div>
 
         <div class="card-footer">

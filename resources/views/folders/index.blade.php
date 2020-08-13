@@ -3,9 +3,9 @@
 @section('title', 'Documents')
 @section('page-title')
     <i class="fal fa-fw fa-folders"></i> Documents
-    @if( Auth::user()->isEmployee() )
+    @can('create', \App\Models\Folder::class)
         <a href="{{route( 'folders.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-folder-plus"></i> Add Folder</a>
-    @endif
+    @endcan
 @endsection
 @section('page-action')
 @endsection

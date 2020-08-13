@@ -118,7 +118,7 @@
 									@endcan
 								</li>
 							@endcan
-							@if( Auth::user() )
+							@can('viewAny', \App\Models\Folder::class)
 								<li class="nav-item {{ ( request()->routeIs('folders.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\Folder::class)
 									<a href="#collapse-folders" class="nav-link {{ ( request()->routeIs('folders.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
@@ -133,6 +133,8 @@
 									<a href="{{ route('folders.index') }}" class="nav-link {{ ( request()->routeIs('folders.*') ) ? 'active' : '' }}"><i class="fal fa-folders fa-fw"></i><span class="link-text">Documents</span></a>
 									@endcan
 								</li>
+							@endcan
+							@if( Auth::user() )
 								<li class="nav-item {{ ( request()->routeIs('stacks.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\RiserStack::class)
 									<a href="#collapse-stacks" class="nav-link {{ ( request()->routeIs('stacks.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">

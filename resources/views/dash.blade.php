@@ -34,8 +34,10 @@
             @can('viewAny', \App\Models\Event::class)
                 <a href="{{ route('events.index') }}" class="list-group-item list-group-item-action"><i class="fal fa-calendar-alt fa-fw"></i> <span class="link-text"> Events</span></a>
             @endcan
-            @if( Auth::user() )
+            @can('viewAny', \App\Models\Folder::class)
                 <a href="{{ route('folders.index') }}" class="list-group-item list-group-item-action"><i class="fal fa-folders fa-fw"></i> <span class="link-text"> Documents</span></a>
+            @endcan
+            @if( Auth::user() )
                 <a href="{{ route('stacks.index') }}" class="list-group-item list-group-item-action"><i class="fal fa-people-arrows fa-fw"></i> <span class="link-text"> Riser Stacks</span></a>
             @endif
 

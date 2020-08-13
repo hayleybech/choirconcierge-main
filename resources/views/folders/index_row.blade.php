@@ -24,9 +24,9 @@
         </a>
     </div>
     <div class="r-table__cell col--delete">
-        @if( Auth::user()->isEmployee() )
+        @can('delete', $folder)
         <x-delete-button :action="route( 'folders.destroy', ['folder' => $folder] )" :message="$folder->documents()->count() . ' documents will also be deleted.'" />
-        @endif
+        @endcan
     </div>
 
 </div>
@@ -34,7 +34,7 @@
 <div id="folder-{{ $folder->id }}" class="folder-documents-list collapse" data-parent="#folders-accordion">
     @each('folders.folder_document_row', $folder->documents, 'document', 'partials.noresults')
 
-    @if( Auth::user()->isEmployee() )
+    @can('update', $folder)
 
     {{ Form::open( [ 'route' => ['folders.documents.store', $folder->id], 'method' => 'post', 'files' => 'true', 'class' => 'r-table__row row--folder sub-row--document row-add needs-validation', 'novalidate' ] ) }}
         <div class="r-table__cell col--mark">
@@ -60,6 +60,6 @@
         </div>
     {{ Form::close() }}
 
-    @endif
+    @endcan
 </div>
 
