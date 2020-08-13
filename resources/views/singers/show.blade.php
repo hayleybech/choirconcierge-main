@@ -25,9 +25,9 @@
 
 						<div class="profile-header d-flex justify-content-between align-items-center">
 							<h1>{{ $singer->name }}</h1>
-							@if( Auth::user()->singer->id === $singer->id || Auth::user()->hasRole('Membership Team') )
+							@can('update', $singer)
 							<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-secondary"><i class="fa fa-fw fa-edit"></i> Edit</a>
-							@endif
+							@endcan
 						</div>
 
 						<div class="profile-item d-flex align-items-center">

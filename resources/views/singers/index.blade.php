@@ -3,9 +3,9 @@
 @section('title', 'Singers')
 @section('page-title')
 <i class="fal fa-fw fa-users"></i> Singers
-	@if(Auth::user()->hasRole('Membership Team'))
+	@can('create', \App\Models\Singer::class)
 		<a href="{{route( 'singers.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-user-plus"></i> Add New</a>
-	@endif
+	@endcan
 @endsection
 @section('page-action')
 	<?php

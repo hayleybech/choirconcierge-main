@@ -9,13 +9,21 @@ $category_class = array(
 ?>
 <tr class="row--singer">
 	<td class="col--title">
+		@can('view', $singer)
 		<a href="{{route('singers.show', ['singer' => $singer])}}">
 			<img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->name }}" class="user-avatar" width="50" height="50">
 		</a>
+		@else
+		<img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->name }}" class="user-avatar" width="50" height="50">
+		@endcan
 		<div class="item-title-wrapper">
+			@can('view', $singer)
 			<a href="{{route('singers.show', ['singer' => $singer])}}">
 				{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
 			</a>
+			@else
+			{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
+			@endcan
 			<small class="text-muted">{{ $singer->email }}</small>
 			<small class="text-muted">{{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</small>
 		</div>
@@ -63,7 +71,7 @@ $category_class = array(
 	</td>
 	<td class="col--actions">
 
-		@if ( Auth::user()->hasRole('Membership Team') )
+		@can('update', $singer)
 		<div class="dropdown">
 			<button class="btn btn-outline-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				Move to
@@ -74,13 +82,13 @@ $category_class = array(
 				@endforeach
 			</div>
 		</div>
-		@endif
+		@endcan
 	</td>
 
 	<td class="col--delete">
-		@if ( Auth::user()->hasRole('Membership Team') )
+		@can('delete', $singer)
 			<x-delete-button :action="route( 'singers.destroy', ['singer' => $singer] )"/>
-		@endif
+		@endcan
 	</td>
 
 </tr>
