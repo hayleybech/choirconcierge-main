@@ -1,6 +1,6 @@
 <template>
     <button class="pitch btn btn-secondary btn-sm" v-on:mousedown="play" v-on:mouseup="stop">
-        <i class="fa fa-play"></i> <span class="key">{{ note }}</span>
+        <i class="fa fa-play mr-1"></i> <span class="key">{{ note }}</span>
     </button>
 </template>
 
