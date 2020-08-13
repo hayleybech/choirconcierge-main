@@ -52,16 +52,8 @@ Route::middleware([
     Route::resource('events', 'EventController');
 
     // Documents module
-    Route::prefix('folders')->group(static function (){
-
-        Route::middleware(['auth', 'employee'])->group(static function() {
-            // Create/Delete documents
-            Route::post('{folder}/documents', [DocumentController::class, 'store'])->name('folders.documents.store');
-            Route::get('{folder}/documents/{document}', [DocumentController::class, 'show'])->name('folders.documents.show');
-            Route::get('{folder}/documents/{document}/delete', [DocumentController::class, 'destroy'])->name('folders.documents.delete');
-        });
-    });
     Route::resource('folders', 'FolderController')->middleware('auth');
+    Route::resource('folders.documents', 'DocumentController')->only(['store', 'show', 'destroy'])->middleware('auth');
 
     // Risers module
     Route::resource('stacks', 'RiserStackController');
