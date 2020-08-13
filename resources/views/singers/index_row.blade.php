@@ -18,7 +18,7 @@ $category_class = array(
 		@endcan
 		<div class="item-title-wrapper">
 			@can('view', $singer)
-			<a href="{{route('singers.show', ['singer' => $singer])}}">
+			<a href="{{ route('singers.show', ['singer' => $singer]) }}">
 				{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
 			</a>
 			@else

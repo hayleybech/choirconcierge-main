@@ -60,27 +60,27 @@ Breadcrumbs::for('singers.edit', static function ($trail, $singer) {
 });
 
 // Singers > [Singer] > Create Member Profile
-Breadcrumbs::for('profile.create', static function ($trail, $singer) {
+Breadcrumbs::for('singers.profiles.create', static function ($trail, $singer) {
     $trail->parent('singers.show', $singer);
-    $trail->push('Create Member Profile', route('profile.create', $singer));
+    $trail->push('Create Member Profile', route('singers.profiles.create', $singer));
 });
 
 // Singers > [Singer] > [Member Profile] > Edit
-Breadcrumbs::for('profiles.edit', static function ($trail, $singer, $profile) {
+Breadcrumbs::for('singers.profiles.edit', static function ($trail, $singer, $profile) {
     $trail->parent('singers.show', $singer);
-    $trail->push('Edit Member Profile', route('profiles.edit', [$singer, $profile]));
+    $trail->push('Edit Member Profile', route('singers.profiles.edit', [$singer, $profile]));
 });
 
 
 // Singers > [Singer] > Create Voice Placement
-Breadcrumbs::for('placement.create', static function ($trail, $singer) {
+Breadcrumbs::for('singers.placements.create', static function ($trail, $singer) {
     $trail->parent('singers.show', $singer);
-    $trail->push('Create Voice Placement', route('placement.create', $singer));
+    $trail->push('Create Voice Placement', route('singers.placements.create', $singer));
 });
 // Singers > [Singer] > [Voice Placement] > Edit
-Breadcrumbs::for('placements.edit', static function ($trail, $singer, $placement) {
+Breadcrumbs::for('singers.placements.edit', static function ($trail, $singer, $placement) {
     $trail->parent('singers.show', $singer);
-    $trail->push('Edit Voice Placement', route('placements.edit', [$singer, $placement]));
+    $trail->push('Edit Voice Placement', route('singers.placements.edit', [$singer, $placement]));
 });
 
 // Singers > Create

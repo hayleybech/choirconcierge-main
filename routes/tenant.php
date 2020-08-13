@@ -38,29 +38,11 @@ Route::middleware([
     Route::get('/', [DashController::class, 'index'])->name('dash');
 
     // Singers module
-    Route::prefix('singers')->group(static function (){
-
-        // Complete Task
-        Route::get('{singer}/tasks/{task}/complete', 'CompleteSingerTaskController')->name('task.complete');
-
-        // Move Singer
-        Route::get('{singer}/category/update', 'UpdateSingerCategoryController')->name('singers.categories.update');
-
-        // Voice Placement
-        Route::get('{singer}/placement/create', [SingerPlacementController::class, 'create'])->name('placement.create');
-        Route::post('{singer}/placement', [SingerPlacementController::class, 'store'])->name('placement');
-        Route::get('{singer}/placement/{placement}/edit', [SingerPlacementController::class, 'edit'])->name('placements.edit');
-        Route::put('{singer}/placement/{placement}', [SingerPlacementController::class, 'update'])->name('placements.update');
-
-        // Profile
-        Route::get('{singer}/profile/create', [SingerProfileController::class, 'create'])->name('profile.create');
-        Route::post('{singer}/profile', [SingerProfileController::class, 'store'])->name('profile');
-        Route::get('{singer}/profile/{profile}/edit', [SingerProfileController::class, 'edit'])->name('profiles.edit');
-        Route::put('{singer}/profile/{profile}', [SingerProfileController::class, 'update'])->name('profiles.update');
-    });
-
     Route::resource('singers', 'SingerController')->middleware('auth');
-
+    Route::resource('singers.profiles', 'SingerProfileController')->only(['create', 'store', 'edit', 'update'])->middleware('auth');
+    Route::resource('singers.placements', 'SingerPlacementController')->only(['create', 'store', 'edit', 'update'])->middleware('auth');
+    Route::get('singers/{singer}/category/update', 'UpdateSingerCategoryController')->name('singers.categories.update');
+    Route::get('singers/{singer}/tasks/{task}/complete', 'CompleteSingerTaskController')->name('task.complete');
 
     // Songs module
     Route::resource('songs', 'SongController');

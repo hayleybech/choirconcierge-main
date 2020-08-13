@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-	{{ Form::open( array( 'route' => array('profile', $singer->id) ) ) }}
+	{{ Form::open( array( 'route' => array('singers.profiles.store', $singer->id) ) ) }}
 
 	{{ Form::hidden('singer_id', $singer->id) }}
 

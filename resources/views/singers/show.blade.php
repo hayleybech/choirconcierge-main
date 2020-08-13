@@ -70,9 +70,9 @@
 				<div class="card-header d-flex justify-content-between align-items-center">
 					<h2 class="h4">Member Profile</h2>
 					@can('update', $singer->profile)
-						<a href="{{route( 'profiles.edit', ['singer' => $singer, 'profile' => $singer->profile->id] )}}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
+						<a href="{{ route( 'singers.profiles.edit', ['singer' => $singer, 'profile' => $singer->profile->id] ) }}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
 					@elsecan('create', \App\Models\Profile::class)
-						<a href="{{ route('profile.create', ['singer' => $singer, 'task' => 1]) }}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-fw fa-plus"></i> Create</a>
+						<a href="{{ route('singers.profiles.create', ['singer' => $singer, 'task' => 1]) }}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-fw fa-plus"></i> Create</a>
 					@endcan
 				</div>
 				<div class="card-body">
@@ -123,7 +123,7 @@
 									{{ $singer->profile->skills ?? '' }}
 								</div>
 								@else
-								<p>No Member Profile yet. @can('create', \App\Models\Profile::class)<a href="{{ route('profile.create', ['singer' => $singer, 'task' => 1]) }}">Create one now. </a>@endcan</p>
+								<p>No Member Profile yet. @can('create', \App\Models\Profile::class)<a href="{{ route('singers.profiles.create', ['singer' => $singer, 'task' => 1]) }}">Create one now. </a>@endcan</p>
 								@endif
 							</div>
 						</div>
@@ -145,7 +145,7 @@
 				<h3 class="card-header h4 d-flex justify-content-between align-items-center">
 					Voice Placement
 					@can('update', $singer->placement)
-					<a href="{{route( 'placements.edit', ['singer' => $singer, 'placement' => $singer->placement] )}}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
+					<a href="{{route( 'singers.placements.edit', ['singer' => $singer, 'placement' => $singer->placement] )}}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
 					@endcan
 				</h3>
 				<div class="card-body">
@@ -212,7 +212,7 @@
 			<div class="card">
 				<h3 class="card-header h4 d-flex justify-content-between align-items-center">Voice Placement</h3>
 				<div class="card-body">
-					<p>No Voice Placement yet. <a href="{{ route('placement.create', ['singer' => $singer, 'task' => 2]) }}">Create one now. </a></p>
+					<p>No Voice Placement yet. <a href="{{ route('singers.placements.create', ['singer' => $singer, 'task' => 2]) }}">Create one now. </a></p>
 				</div>
 			</div>
 			@endcan
