@@ -55,8 +55,7 @@ class SingerController extends Controller
     {
         $this->authorize('create', Singer::class);
 
-        $voice_parts = VoicePart::all()->pluck('title', 'id')->toArray();
-        $voice_parts = array_merge([0 => "None"], $voice_parts);
+        $voice_parts = [0 => "None"] + VoicePart::all()->pluck('title', 'id')->toArray();
 
         return view('singers.create', compact('voice_parts'));
     }
