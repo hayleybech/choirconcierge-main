@@ -38,7 +38,7 @@
                             <span class="song-category badge badge-pill badge-secondary">{{ $cat->title }}</span>
                         @endforeach
                     </div>
-                    <button class="pitch btn btn-secondary btn-sm"><i class="fa fa-play"></i> <span class="key">{{ $song->pitch }}</span></button><br>
+                    <pitch-button note="{{ explode('/',$song->pitch)[0] }}"></pitch-button>
                 </div>
             </div>
 
@@ -93,15 +93,5 @@
         <div class="col-md-7">
         </div>
     </div>
-
-
-    @push('scripts-footer-bottom')
-        <script src="{{ global_asset('js/lib/Tone.js') }}"></script>
-        <script src="{{ global_asset('js/Pitch_Pipe.js') }}"></script>
-        <script>
-            let synth = new Tone.Synth().toMaster();
-            let pipe = new Pitch_Pipe( '.pitch', @json($song->pitch) );
-        </script>
-    @endpush
 
 @endsection

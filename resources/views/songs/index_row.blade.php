@@ -31,7 +31,7 @@
         @endforeach
     </td>
     <td class="col--pitch">
-        {{ $song->pitch }}
+        <pitch-button note="{{ explode('/',$song->pitch)[0] }}"></pitch-button>
     </td>
     <td class="col--created">
         <div class="date">
@@ -50,4 +50,3 @@
     </td>
 
 </tr>
-
