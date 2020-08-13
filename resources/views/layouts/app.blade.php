@@ -150,9 +150,9 @@
 									@endcan
 								</li>
 							@endcan
-
-							@if( Auth::user()->hasRole('Admin') )
+							@can('viewAny', \App\Models\UserGroup::class)
 								<li class="nav-item {{ ( request()->routeIs('groups.*') ) ? 'active' : 'collapsed' }}">
+									@can('create', \App\Models\UserGroup::class)
 									<a href="#collapse-groups" class="nav-link {{ ( request()->routeIs('groups.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
 										<span><i class="fal fa-mail-bulk fa-fw"></i><span class="link-text">Mailing Lists</span></span>
 										<i class="far fa-fw menu-chevron"></i>
@@ -161,7 +161,12 @@
 										<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Lists</span></a>
 										<a href="{{route( 'groups.create' )}}" class="nav-link {{ ( request()->routeIs('groups.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add New</span></a>
 									</div>
+									@else
+									<a href="{{ route('groups.index') }}" class="nav-link {{ ( request()->routeIs('groups.*') ) ? 'active' : '' }}"><span><i class="fal fa-mail-bulk fa-fw"></i><span class="link-text">Mailing Lists</span></span></a>
+									@endcan
 								</li>
+							@endcan
+							@if( Auth::user()->hasRole('Admin') )
 								<li class="nav-item {{ ( request()->routeIs('tasks.*') ) ? 'active' : 'collapsed' }}">
 									<a href="#collapse-tasks" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
 										<span><i class="fal fa-tasks fa-fw"></i><span class="link-text">Onboarding</span></span>

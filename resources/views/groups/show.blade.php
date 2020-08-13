@@ -3,7 +3,9 @@
 @section('title', $group->title . ' - Mailing Lists')
 @section('page-title', $group->title)
 @section('page-action')
-<a href="{{route( 'groups.edit', ['group' => $group] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+    @can('update', $group)
+    <a href="{{route( 'groups.edit', ['group' => $group] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+    @endcan
 @endsection
 @section('page-lead')
     <span class="badge badge-light"><i class="{{ (( $group->list_type === 'chat' )) ? 'fa fa-fw fa-comments' : '' }}"></i> {{ ucwords($group->list_type) }}</span><br>

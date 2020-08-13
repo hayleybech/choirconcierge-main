@@ -24,7 +24,9 @@
         </div>
     </div>
     <div class="r-table__cell col--delete">
+        @can('delete', $group)
         <x-delete-button :action="route( 'groups.destroy', ['group' => $group] )" :message="'Any future emails addressed to this group will be lost!'" />
+        @endcan
     </div>
 
 </div>

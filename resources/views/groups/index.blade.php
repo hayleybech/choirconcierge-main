@@ -3,7 +3,9 @@
 @section('title', 'Mailing Lists')
 @section('page-title')
 <i class="fal fa-fw fa-mail-bulk"></i> Mailing Lists
-<a href="{{route( 'groups.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-plus"></i> Add New</a>
+    @can('create', \App\Models\UserGroup::class)
+    <a href="{{route( 'groups.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-plus"></i> Add New</a>
+    @endcan
 @endsection
 
 @section('page-action')
