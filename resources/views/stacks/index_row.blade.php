@@ -1,13 +1,10 @@
-<div class="r-table__row row--event">
-    <div class="r-table__cell col--mark">
-        <input type="checkbox" />
-    </div>
-    <div class="r-table__cell col--title">
+<tr class="row--event">
+    <td class="col--title">
         <a class="item-title" href="{{route('stacks.show', ['stack' => $stack])}}">
         {{ ( isset($stack->title) ) ? $stack->title : 'Title Unknown' }}
         </a>
-    </div>
-    <div class="r-table__cell col--created">
+    </td>
+    <td class="col--created">
         <div class="date">
             <div class="date__diff-for-humans">
                 {{ $stack->created_at->diffForHumans() }}
@@ -16,12 +13,12 @@
                 {{ $stack->created_at->format('M d, H:i') }}
             </div>
         </div>
-    </div>
-    <div class="r-table__cell col--delete">
+    </td>
+    <td class="col--delete">
         @can('delete', $stack)
             <x-delete-button :action="route( 'stacks.destroy', ['stack' => $stack] )"/>
         @endcan
-    </div>
+    </td>
 
-</div>
+</tr>
 

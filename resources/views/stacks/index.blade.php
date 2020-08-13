@@ -16,19 +16,18 @@
     <div class="card">
         <h3 class="card-header h4">Riser Stacks List</h3>
 
-        <div class="r-table r-table--card-view-mobile">
-            <div class="r-table__thead">
-                <div class="r-table__row row--event">
-                    <div class="r-table__heading col--mark"><input type="checkbox"></div>
-                    <div class="r-table__heading col--title">Title</div>
-                    <div class="r-table__heading col--created">Created</div>
-                    <div class="r-table__heading col--delete"></div>
-                </div>
-            </div>
-            <div class="r-table__tbody">
+        <table class="table card-table">
+            <thead>
+                <tr class="row--event">
+                    <th class="col--title">Title</th>
+                    <th class="col--created">Created</th>
+                    <th class="col--delete"></th>
+                </tr>
+            </thead>
+            <tbody>
                 @each('stacks.index_row', $stacks, 'stack', 'partials.noresults')
-            </div>
-        </div>
+            </tbody>
+        </table>
 
         <div class="card-footer">
             {{ $stacks->count() }} riser stacks
