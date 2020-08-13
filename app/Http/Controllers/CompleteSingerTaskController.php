@@ -12,6 +12,8 @@ class CompleteSingerTaskController extends Controller
 {
     public function __invoke(Singer $singer, Task $task): RedirectResponse
     {
+        $this->authorize('update', $singer); // @todo Check user has the role needed to complete the task
+
         event(new TaskCompleted($task, $singer));
 
         // Complete type-specific action
