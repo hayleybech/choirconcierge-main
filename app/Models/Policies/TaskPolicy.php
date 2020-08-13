@@ -10,7 +10,7 @@ class TaskPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user, string $ability): ?bool
+    public function before(User $user, string $ability)
     {
         if( $user->hasRole('Admin') ) {
             return true;
