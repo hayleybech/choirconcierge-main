@@ -86,7 +86,7 @@
 									@endcan
 								</li>
 							@endcan
-							@if( Auth::user() )
+							@can('viewAny', \App\Models\Song::class)
 								<li class="nav-item {{ ( request()->routeIs('songs.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\Song::class)
 									<a href="#collapse-songs" class="nav-link {{ ( request()->routeIs('songs.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
@@ -101,6 +101,8 @@
 									<a href="{{ route('songs.index') }}" class="nav-link {{ ( request()->routeIs('songs.*') ) ? 'active' : '' }}"><i class="fal fa-list-music fa-fw"></i><span class="link-text">Songs</span></a>
 									@endcan
 								</li>
+							@endcan
+							@if( Auth::user() )
 								<li class="nav-item  {{ ( request()->routeIs('events.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\Event::class)
 									<a href="#collapse-events" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">

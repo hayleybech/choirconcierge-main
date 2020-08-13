@@ -10,9 +10,9 @@
                 <div class="card-header d-flex justify-content-between align-items-start">
                     <h1 class="h2 mb-0">{{ $song->title }}</h1>
 
-                    @if(Auth::user()->hasRole('Music Team'))
-                        <a href="{{route( 'songs.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-secondary ml-2 flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
-                    @endif
+                    @can('update', $song)
+                    <a href="{{route( 'songs.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-secondary ml-2 flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                    @endcan
                 </div>
 
                 <div class="card-body">
@@ -46,9 +46,9 @@
             <div class="card">
                 <h4 class="card-header">Attachments</h4>
 
-                <track-list-player :song="{{ $song->toJson() }}" :attachments="{{ $song->attachments->toJson() }}"></track-list-player>
+                <track-list-player :song="{{ $song->toJson() }}" :attachments="{{ $song->attachments->toJson() }}" @can('update', $song):can-update="true"@endcan></track-list-player>
 
-                @if(Auth::user()->hasRole('Music Team'))
+                @can('update', $song)
                 <div class="card-body">
                     {{ Form::open( [ 'route' => ['songs.attachments.store', $song->id], 'method' => 'post', 'files' => 'true', 'class' => 'needs-validation', 'novalidate' ] ) }}
 
@@ -81,7 +81,7 @@
                     {{ Form::close() }}
                 </div>
 
-                @endif
+                @endcan
 
                 <div class="card-footer">
                     {{ $song->attachments->count() }} attachments

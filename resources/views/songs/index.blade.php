@@ -3,9 +3,9 @@
 @section('title', 'Songs')
 @section('page-title')
     <i class="fal fa-fw fa-list-music"></i> Songs
-    @if(Auth::user()->hasRole('Music Team'))
+    @can('create', \App\Models\Song::class)
         <a href="{{route( 'songs.create' )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-plus"></i> Add New</a>
-    @endif
+    @endcan
 @endsection
 @section('page-action')
 

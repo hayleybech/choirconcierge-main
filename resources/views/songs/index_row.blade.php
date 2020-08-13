@@ -1,8 +1,12 @@
 <tr class="row--song">
     <td class="col--title">
+        @can('view', $song)
         <a href="{{route('songs.show', ['song' => $song])}}">
         {{ $song->title ?? 'Title Unknown' }}
         </a>
+        @else
+        {{ $song->title ?? 'Title Unknown' }}
+        @endcan
     </td>
     <?php
     $category_colour = '';
@@ -40,9 +44,9 @@
         </div>
     </td>
     <td class="col--delete">
-        @if(Auth::user()->hasRole('Music Team'))
-            <x-delete-button :action="route( 'songs.destroy', ['song' => $song] )" :message="$song->attachments()->count() . ' attachments will also be deleted.'"/>
-        @endif
+        @can('delete', $song)
+        <x-delete-button :action="route( 'songs.destroy', ['song' => $song] )" :message="$song->attachments()->count() . ' attachments will also be deleted.'"/>
+        @endcan
     </td>
 
 </tr>

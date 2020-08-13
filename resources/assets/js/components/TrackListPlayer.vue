@@ -4,7 +4,7 @@
             <track-player :title="current_track.title" :src="current_track.download_url" ref="player"></track-player>
         </div>
 
-        <track-list :song="song" :attachments="attachments" :current="current_track_index" v-on:play="play"></track-list>
+        <track-list :song="song" :attachments="attachments" :current="current_track_index" v-on:play="play" :can-update="canUpdate"></track-list>
     </div>
 </template>
 
@@ -18,6 +18,10 @@ export default {
         attachments: {
             required: true,
             type: Array
+        },
+        canUpdate: {
+            default: false,
+            type: Boolean
         }
     },
     data() {

@@ -7,6 +7,7 @@
                 :song="song"
                 :key="attachment.id"
                 :isCurrent="isCurrent(index)"
+                :can-update="canUpdate"
                 v-on:play="$emit('play', index)"
                 v-on:pause="$emit('pause')"
             ></track-list-item>
@@ -30,6 +31,10 @@ export default {
         current: {
             type: Number,
             required: true
+        },
+        canUpdate: {
+            default: false,
+            type: Boolean
         }
     },
     methods: {
