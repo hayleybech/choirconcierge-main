@@ -28,6 +28,6 @@ class CheckRoleOrSameUser
         }
 
         Session::flash('message', "You don't have permission to do that. ");
-        return Redirect::to("/dash");
+        return Redirect::to("/");
     }
 }
