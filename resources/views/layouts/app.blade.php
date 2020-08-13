@@ -166,8 +166,9 @@
 									@endcan
 								</li>
 							@endcan
-							@if( Auth::user()->hasRole('Admin') )
+							@can('viewAny', \App\Models\Task::class)
 								<li class="nav-item {{ ( request()->routeIs('tasks.*') ) ? 'active' : 'collapsed' }}">
+									@can('create', \App\Models\Task::class)
 									<a href="#collapse-tasks" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
 										<span><i class="fal fa-tasks fa-fw"></i><span class="link-text">Onboarding</span></span>
 										<i class="far fa-fw menu-chevron"></i>
@@ -176,8 +177,11 @@
 										<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Tasks</span></a>
 										<a href="{{route( 'tasks.create' )}}" class="nav-link {{ ( request()->routeIs('tasks.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add New</span></a>
 									</div>
+									@else
+									<a href="{{ route('tasks.index') }}" class="nav-link {{ ( request()->routeIs('tasks.*') ) ? 'active' : 'collapsed' }}"><span><i class="fal fa-tasks fa-fw"></i><span class="link-text">Onboarding</span></span></a>
+									@endcan
 								</li>
-							@endif
+							@endcan
 
 							<!--
 							<li class="nav-item nav-heading">Account</li>

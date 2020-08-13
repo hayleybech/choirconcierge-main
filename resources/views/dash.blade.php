@@ -43,9 +43,9 @@
             @can('viewAny', \App\Models\UserGroup::class)
                 <a href="{{ route('groups.index') }}" class="list-group-item list-group-item-action"><i class="fal fa-mail-bulk fa-fw"></i> <span class="link-text"> Mailing Lists</span></a>
             @endcan
-            @if( Auth::user()->hasRole('Admin') )
+            @can('viewAny', \App\Models\Task::class)
                 <a href="{{ route('tasks.index') }}" class="list-group-item list-group-item-action"><i class="fal fa-tasks fa-fw"></i> <span class="link-text"> Onboarding</span></a>
-            @endif
+            @endcan
       </div>
     </div>
 @endsection

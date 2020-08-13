@@ -3,9 +3,9 @@
 @section('title', 'Onboarding Checklist')
 @section('page-title')
 	<i class="fal fa-tasks fa-fw"></i> Onboarding Checklist
-	@if(Auth::user()->hasRole('Admin'))
+	@can('create', \App\Models\Task::class)
 		<a href="{{route( 'tasks.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-plus"></i> Add Task</a>
-	@endif
+	@endcan
 @endsection
 
 @section('page-action')
