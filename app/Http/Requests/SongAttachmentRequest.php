@@ -26,7 +26,7 @@ class SongAttachmentRequest extends FormRequest
         return [
             //'title'             => 'required|max:255',
             'category'          => 'required|exists:song_attachment_categories,id',
-            'attachment_upload' => 'required|file'
+            'attachment_uploads.*' => 'required|file'
         ];
     }
 }

@@ -22,14 +22,17 @@ class SongAttachmentController extends Controller
 
         $data = $request->validated();
 
-        $attachment = SongAttachment::create([
-            'title'             => '',
-            'song_id'           => $song->id,
-            'category_id'       => $data['category'],
-            'file'              => $request->file('attachment_upload'),
-        ]);
+        $files = $request->file('attachment_uploads') ;
+        foreach($files as $file){
+            SongAttachment::create([
+                'title'             => '',
+                'song_id'           => $song->id,
+                'category_id'       => $data['category'],
+                'file'              => $file,
+            ]);
+        }
 
-        return redirect()->route('songs.show', [$song])->with(['status' => 'Attachment added. ', ]);
+        return redirect()->route('songs.show', [$song])->with(['status' => 'Attachment(s) added. ', ]);
     }
 
     public function destroy(Song $song, SongAttachment $attachment): RedirectResponse

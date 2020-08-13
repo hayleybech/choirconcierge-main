@@ -54,10 +54,10 @@
 
                     <div class="d-flex flex-column flex-md-row align-items-sm-stretch align-items-md-end">
                         <div class="mr-2 mb-2">
-                            {{ Form::label('attachment_upload', 'File Upload') }}
+                            {{ Form::label('attachment_uploads', 'File Upload') }}
 
                             <div class="custom-file custom-file-sm">
-                                <input type="file" class="custom-file-input @error('attachment_upload') is-invalid @enderror" id="attachment_upload" name="attachment_upload" required>
+                                <input type="file" class="custom-file-input @error('attachment_uploads') is-invalid @enderror" id="attachment_uploads" name="attachment_uploads[]" multiple required>
                                 <div class="custom-file-label form-control-sm">Choose file</div>
                                 <div class="valid-feedback">Looks good!</div>
                                 <div class="invalid-feedback">Please upload a file.</div>
