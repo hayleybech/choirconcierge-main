@@ -102,7 +102,7 @@
 									@endcan
 								</li>
 							@endcan
-							@if( Auth::user() )
+							@can('viewAny', \App\Models\Event::class)
 								<li class="nav-item  {{ ( request()->routeIs('events.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\Event::class)
 									<a href="#collapse-events" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
@@ -115,8 +115,10 @@
 									</div>
 									@else
 									<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.*') ) ? 'active' : '' }}"><i class="fal fa-calendar-alt fa-fw"></i><span class="link-text">Events</span></a>
-									@endcan	
+									@endcan
 								</li>
+							@endcan
+							@if( Auth::user() )
 								<li class="nav-item {{ ( request()->routeIs('folders.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\Folder::class)
 									<a href="#collapse-folders" class="nav-link {{ ( request()->routeIs('folders.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">

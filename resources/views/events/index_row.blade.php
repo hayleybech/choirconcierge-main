@@ -31,9 +31,9 @@
         </div>
     </td>
     <td class="col--delete">
-        @if(Auth::user()->hasRole('Music Team'))
+        @can('delete', $event)
             <x-delete-button :action="route( 'events.destroy', ['event' => $event] )"/>
-        @endif
+        @endcan
     </td>
 </tr>
 

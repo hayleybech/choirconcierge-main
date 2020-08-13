@@ -3,9 +3,9 @@
 @section('title', 'Events')
 @section('page-title')
     <i class="fal fa-fw fa-calendar"></i> Events
-    @if(Auth::user()->hasRole('Music Team'))
+    @can('create', \App\Models\Event::class)
         <a href="{{route( 'events.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-calendar-plus"></i> Add New</a>
-    @endif
+    @endcan
 @endsection
 
 @section('page-action')

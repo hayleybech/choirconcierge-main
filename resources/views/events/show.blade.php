@@ -7,9 +7,9 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-start">
             <h1 class="h2 mb-0">{{ $event->title }}</h1>
-            @if(Auth::user()->hasRole('Music Team'))
+            @can('update', $event)
                 <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-light flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
-            @endif
+            @endcan
         </div>
         <div class="card-body">
             <div class="badge badge-pill badge-secondary">{{ $event->type->title }}</div>
