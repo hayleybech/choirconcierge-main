@@ -3,9 +3,9 @@
 @section('title', 'Riser Stacks')
 @section('page-title')
     <i class="fal fa-fw fa-people-arrows"></i> Riser Stacks
-    @if(Auth::user()->hasRole('Music Team'))
+    @can('create', \App\Models\RiserStack::class)
         <a href="{{route( 'stacks.create' )}}" class="btn btn-add btn-sm btn-primary ml-2"><i class="fa fa-fw fa-plus"></i> Add New</a>
-    @endif
+    @endcan
 @endsection
 
 @section('page-action')

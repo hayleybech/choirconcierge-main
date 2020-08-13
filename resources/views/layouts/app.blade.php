@@ -134,7 +134,7 @@
 									@endcan
 								</li>
 							@endcan
-							@if( Auth::user() )
+							@can('viewAny', \App\Models\RiserStack::class)
 								<li class="nav-item {{ ( request()->routeIs('stacks.*') ) ? 'active' : 'collapsed' }}">
 									@can('create', \App\Models\RiserStack::class)
 									<a href="#collapse-stacks" class="nav-link {{ ( request()->routeIs('stacks.*') ) ? 'active' : 'collapsed' }} d-flex justify-content-between align-items-center" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse-singers">
@@ -149,7 +149,7 @@
 									<a href="{{ route('stacks.index') }}" class="nav-link {{ ( request()->routeIs('stacks.*') ) ? 'active' : '' }}"><i class="fal fa-people-arrows fa-fw"></i><span class="link-text">Riser Stacks</span></a>
 									@endcan
 								</li>
-							@endif
+							@endcan
 
 							@if( Auth::user()->hasRole('Admin') )
 								<li class="nav-item {{ ( request()->routeIs('groups.*') ) ? 'active' : 'collapsed' }}">

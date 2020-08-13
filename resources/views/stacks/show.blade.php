@@ -4,9 +4,9 @@
 @section('page-title', $stack->title)
 
 @section('page-action')
-    @if(Auth::user()->hasRole('Music Team'))
+    @can('update', $stack)
     <a href="{{route( 'stacks.edit', ['stack' => $stack] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
-    @endif
+    @endcan
 @endsection
 
 @section('page-lead')

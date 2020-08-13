@@ -37,9 +37,9 @@
             @can('viewAny', \App\Models\Folder::class)
                 <a href="{{ route('folders.index') }}" class="list-group-item list-group-item-action"><i class="fal fa-folders fa-fw"></i> <span class="link-text"> Documents</span></a>
             @endcan
-            @if( Auth::user() )
+            @can('viewAny', \App\Models\RiserStack::class)
                 <a href="{{ route('stacks.index') }}" class="list-group-item list-group-item-action"><i class="fal fa-people-arrows fa-fw"></i> <span class="link-text"> Riser Stacks</span></a>
-            @endif
+            @endcan
 
             @if( Auth::user()->hasRole('Admin') )
                 <a href="{{ route('groups.index') }}" class="list-group-item list-group-item-action"><i class="fal fa-mail-bulk fa-fw"></i> <span class="link-text"> Mailing Lists</span></a>

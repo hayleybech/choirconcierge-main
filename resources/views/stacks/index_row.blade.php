@@ -18,9 +18,9 @@
         </div>
     </div>
     <div class="r-table__cell col--delete">
-        @if(Auth::user()->hasRole('Music Team'))
+        @can('delete', $stack)
             <x-delete-button :action="route( 'stacks.destroy', ['stack' => $stack] )"/>
-        @endif
+        @endcan
     </div>
 
 </div>
