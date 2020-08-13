@@ -14,9 +14,9 @@
 	?>
 	<a class="btn btn-sm {{ $filters_class }}" data-toggle="collapse" href="#filters" role="button" aria-expanded="false" aria-controls="filters"><i class="fa fa-filter"></i> Filter</a>
 
-	@if(Auth::user()->hasRole('Music Team'))
+	@can('viewAny', \App\Models\VoicePart::class)
 		<a href="{{route( 'voice-parts.index' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-users-class"></i> Manage Voice Parts</a>
-	@endif
+	@endcan
 @endsection
 
 @section('page-content')

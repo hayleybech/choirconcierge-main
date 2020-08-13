@@ -9,6 +9,11 @@ use Illuminate\View\View;
 
 class VoicePartController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(VoicePart::class, 'voicePart');
+    }
+
     public function index(): View
     {
         $parts = VoicePart::all();
