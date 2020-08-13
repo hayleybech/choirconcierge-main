@@ -10,6 +10,8 @@ class UpdateSingerCategoryController extends Controller
 {
     public function __invoke(Singer $singer, Request $request): RedirectResponse
     {
+        $this->authorize('update', $singer);
+
         $category = $request->input('move_category', 0);
 
         if( $category === 0 ) return redirect()->route('singers.index')->with([ 'status' => 'No category selected. ', 'fail' => true ]);

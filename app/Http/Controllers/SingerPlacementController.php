@@ -15,6 +15,11 @@ class SingerPlacementController extends Controller
 {
     const PLACEMENT_TASK_ID = 2;
 
+    public function __construct()
+    {
+        $this->authorizeResource(Placement::class, 'placement');
+    }
+
     public function create(Singer $singer): View
     {
         return view('singers.createplacement', compact('singer'));

@@ -140,81 +140,82 @@
 
 		<div class="col-md-5">
 
-			@if( Auth::user()->hasRole('Music Team') )
+			@can('view', $singer->placement)
 			<div class="card">
-					<h3 class="card-header h4 d-flex justify-content-between align-items-center">
-						Voice Placement
-						@if($singer->placement)
-						<a href="{{route( 'placements.edit', ['singer' => $singer, 'placement' => $singer->placement] )}}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
-						@endif
-					</h3>
-					@if( $singer->placement )
-					<div class="card-body">
-							<div class="mb-2">
-								<strong>Pitch Skill</strong>
-								<div class="d-flex align-items-center">
-									<div class="mr-3">1</div>
-									<div class="progress" style="width: 100%; height: 20px;">
-										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_pitch * 10 }}%" aria-valuenow="{{ $singer->placement->skill_pitch }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_pitch }}</div>
-									</div>
-									<div class="ml-3">10</div>
+				<h3 class="card-header h4 d-flex justify-content-between align-items-center">
+					Voice Placement
+					@can('update', $singer->placement)
+					<a href="{{route( 'placements.edit', ['singer' => $singer, 'placement' => $singer->placement] )}}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
+					@endcan
+				</h3>
+				<div class="card-body">
+						<div class="mb-2">
+							<strong>Pitch Skill</strong>
+							<div class="d-flex align-items-center">
+								<div class="mr-3">1</div>
+								<div class="progress" style="width: 100%; height: 20px;">
+									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_pitch * 10 }}%" aria-valuenow="{{ $singer->placement->skill_pitch }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_pitch }}</div>
 								</div>
+								<div class="ml-3">10</div>
 							</div>
-							<div class="mb-2">
-								<strong>Harmony Skill</strong>
-								<div class="d-flex align-items-center">
-									<div class="mr-3">1</div>
-									<div class="progress" style="width: 100%; height: 20px;">
-										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_harmony * 10 }}%" aria-valuenow="{{ $singer->placement->skill_harmony }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_harmony }}</div>
-									</div>
-									<div class="ml-3">10</div>
+						</div>
+						<div class="mb-2">
+							<strong>Harmony Skill</strong>
+							<div class="d-flex align-items-center">
+								<div class="mr-3">1</div>
+								<div class="progress" style="width: 100%; height: 20px;">
+									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_harmony * 10 }}%" aria-valuenow="{{ $singer->placement->skill_harmony }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_harmony }}</div>
 								</div>
+								<div class="ml-3">10</div>
 							</div>
-							<div class="mb-2">
-								<strong>Performance Skill</strong>
-								<div class="d-flex align-items-center">
-									<div class="mr-3">1</div>
-									<div class="progress" style="width: 100%; height: 20px;">
-										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_performance * 10 }}%" aria-valuenow="{{ $singer->placement->skill_performance }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_performance }}</div>
-									</div>
-									<div class="ml-3">10</div>
+						</div>
+						<div class="mb-2">
+							<strong>Performance Skill</strong>
+							<div class="d-flex align-items-center">
+								<div class="mr-3">1</div>
+								<div class="progress" style="width: 100%; height: 20px;">
+									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_performance * 10 }}%" aria-valuenow="{{ $singer->placement->skill_performance }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_performance }}</div>
 								</div>
+								<div class="ml-3">10</div>
 							</div>
-							<div class="mb-2">
-								<strong>Sight Reading Skill</strong>
-								<div class="d-flex align-items-center">
-									<div class="mr-3">1</div>
-									<div class="progress" style="width: 100%; height: 20px;">
-										<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_sightreading * 10}}%" aria-valuenow="{{ $singer->placement->skill_sightreading }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_sightreading }}</div>
-									</div>
-									<div class="ml-3">10</div>
+						</div>
+						<div class="mb-2">
+							<strong>Sight Reading Skill</strong>
+							<div class="d-flex align-items-center">
+								<div class="mr-3">1</div>
+								<div class="progress" style="width: 100%; height: 20px;">
+									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_sightreading * 10}}%" aria-valuenow="{{ $singer->placement->skill_sightreading }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_sightreading }}</div>
 								</div>
+								<div class="ml-3">10</div>
 							</div>
-							<div class="mb-2">
-								<strong>Voice Tone</strong>
-								<div class="d-flex align-items-center">
-									<i class="fas fa-fw fa-flute mr-3 text fa-lg"></i>
-									<input type="range" class="custom-range" min="1" max="3" value="{{ $singer->placement->voice_tone }}" disabled>
-									<i class="fas fa-fw fa-trumpet ml-3 fa-lg"></i>
-								</div>
+						</div>
+						<div class="mb-2">
+							<strong>Voice Tone</strong>
+							<div class="d-flex align-items-center">
+								<i class="fas fa-fw fa-flute mr-3 text fa-lg"></i>
+								<input type="range" class="custom-range" min="1" max="3" value="{{ $singer->placement->voice_tone }}" disabled>
+								<i class="fas fa-fw fa-trumpet ml-3 fa-lg"></i>
 							</div>
-							<div class="mb-2">
-								<strong>Experience</strong>
-								<div>{{ $singer->placement->experience ?? 'N/A' }}</div>
-							</div>
-							<div class="mb-2">
-								<strong>Instruments</strong>
-								<div>{{ $singer->placement->instruments ?? 'N/A' }}</div>
-							</div>
+						</div>
+						<div class="mb-2">
+							<strong>Experience</strong>
+							<div>{{ $singer->placement->experience ?? 'N/A' }}</div>
+						</div>
+						<div class="mb-2">
+							<strong>Instruments</strong>
+							<div>{{ $singer->placement->instruments ?? 'N/A' }}</div>
+						</div>
 
-						</div>
-					@else
-					<div class="card-body">
-							<p>No Voice Placement yet. <a href="{{ route('placement.create', ['singer' => $singer, 'task' => 2]) }}">Create one now. </a></p>
-						</div>
-					@endif
+					</div>
 				</div>
-			@endif
+			@elsecan('create', \App\Models\Placement::class)
+			<div class="card">
+				<h3 class="card-header h4 d-flex justify-content-between align-items-center">Voice Placement</h3>
+				<div class="card-body">
+					<p>No Voice Placement yet. <a href="{{ route('placement.create', ['singer' => $singer, 'task' => 2]) }}">Create one now. </a></p>
+				</div>
+			</div>
+			@endcan
 
 			@if( $singer->onboarding_enabled && Auth::user()->isEmployee() )
 				<div class="card">
