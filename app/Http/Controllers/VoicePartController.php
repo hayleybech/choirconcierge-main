@@ -11,7 +11,7 @@ class VoicePartController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(VoicePart::class, 'voicePart');
+        $this->authorizeResource(VoicePart::class, 'voice_part');
     }
 
     public function index(): View

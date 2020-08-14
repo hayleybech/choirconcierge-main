@@ -33,11 +33,11 @@ class VoicePartPolicy
      * Determine whether the user can view the model.
      *
      * @param User      $user
-     * @param VoicePart $voicePart
+     * @param VoicePart $voice_part
      *
      * @return mixed
      */
-    public function view(User $user, VoicePart $voicePart)
+    public function view(User $user, VoicePart $voice_part)
     {
         return $user->hasRole('Music Team');
     }
@@ -58,11 +58,11 @@ class VoicePartPolicy
      * Determine whether the user can update the model.
      *
      * @param User  $user
-     * @param  VoicePart  $voicePart
+     * @param  VoicePart  $voice_part
      *
      * @return mixed
      */
-    public function update(User $user, VoicePart $voicePart)
+    public function update(User $user, VoicePart $voice_part)
     {
         return $user->hasRole('Music Team');
     }
@@ -71,11 +71,11 @@ class VoicePartPolicy
      * Determine whether the user can delete the model.
      *
      * @param  User  $user
-     * @param  VoicePart  $voicePart
+     * @param  VoicePart  $voice_part
      *
      * @return mixed
      */
-    public function delete(User $user, VoicePart $voicePart)
+    public function delete(User $user, VoicePart $voice_part)
     {
         return false;
     }
@@ -84,11 +84,11 @@ class VoicePartPolicy
      * Determine whether the user can restore the model.
      *
      * @param  User  $user
-     * @param  VoicePart  $voicePart
+     * @param  VoicePart  $voice_part
      *
      * @return mixed
      */
-    public function restore(User $user, VoicePart $voicePart)
+    public function restore(User $user, VoicePart $voice_part)
     {
         return false;
     }
@@ -97,11 +97,11 @@ class VoicePartPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  User  $user
-     * @param  VoicePart  $voicePart
+     * @param  VoicePart  $voice_part
      *
      * @return mixed
      */
-    public function forceDelete(User $user, VoicePart $voicePart)
+    public function forceDelete(User $user, VoicePart $voice_part)
     {
         return false;
     }
