@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Filters\Filterable;
 use App\Models\Filters\Singer_AgeFilter;
 use App\Models\Filters\Singer_CategoryFilter;
+use App\Models\Filters\Singer_RoleFilter;
 use App\Models\Filters\Singer_VoicePartFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -54,6 +55,7 @@ class Singer extends Model
         Singer_CategoryFilter::class,
         Singer_AgeFilter::class,
         Singer_VoicePartFilter::class,
+        Singer_RoleFilter::class,
     ];
 
     protected $with = [
