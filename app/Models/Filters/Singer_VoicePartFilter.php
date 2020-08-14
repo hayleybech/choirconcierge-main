@@ -18,11 +18,7 @@ class Singer_VoicePartFilter extends Filter
 
     protected function initOptions(): void
     {
-        $parts = VoicePart::all()->pluck('title', 'id')->toArray();
-
-        $this->options = array_merge([
-            '0'   => 'Any part',
-        ], $parts);
+        $this->options = ['0'   => 'Any part'] + VoicePart::all()->pluck('title', 'id')->toArray();
     }
 
     /**
