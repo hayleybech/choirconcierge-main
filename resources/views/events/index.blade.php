@@ -50,7 +50,7 @@
                 </tr>
             </thead>
             <tbody>
-                @each('events.index_row', $upcoming_events, 'event', 'partials.noresults')
+                @each('events.index_row', $upcoming_events, 'event', 'partials.noresults-table')
             </tbody>
         </table>
 

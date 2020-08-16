@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                @each('stacks.index_row', $stacks, 'stack', 'partials.noresults')
+                @each('stacks.index_row', $stacks, 'stack', 'partials.noresults-table')
             </tbody>
         </table>
 

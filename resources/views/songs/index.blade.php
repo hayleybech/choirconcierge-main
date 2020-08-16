@@ -52,7 +52,7 @@
                 </tr>
             </thead>
             <tbody>
-                @each('songs.index_row', $songs, 'song', 'partials.noresults')
+                @each('songs.index_row', $songs, 'song', 'partials.noresults-table')
             </tbody>
         </table>
 
