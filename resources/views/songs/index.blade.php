@@ -42,7 +42,9 @@
             <a href="#pane-all" class="card-tab nav-link" id="tab-all" data-toggle="tab">All</a>
             <a href="#pane-active" class="card-tab nav-link active" id="tab-active" data-toggle="tab">Active</a>
             <a href="#pane-learning" class="card-tab nav-link" id="tab-learning" data-toggle="tab">Learning</a>
-            <a href="#pane-pending" class="card-tab nav-link" id="tab-pending" data-toggle="tab">Pending</a>
+            @can('create', \App\Models\Song::class)
+            <a href="#pane-pending" class="card-tab nav-link" id="tab-pending" data-toggle="tab"><i class="fas fa-fw fa-lock"></i> Pending</a>
+            @endcan
             <a href="#pane-archived" class="card-tab nav-link" id="tab-archived" data-toggle="tab">Archived</a>
         </div>
 
@@ -56,9 +58,11 @@
             <div class="tab-pane" id="pane-learning" role="tabpanel" aria-labelledby="tab-learning">
                 @include('songs.table', ['songs' => $learning_songs, 'col_status' => false])
             </div>
+            @can('create', \App\Models\Song::class)
             <div class="tab-pane" id="pane-pending" role="tabpanel" aria-labelledby="tab-pending">
                 @include('songs.table', ['songs' => $pending_songs, 'col_status' => false])
             </div>
+            @endcan
             <div class="tab-pane" id="pane-archived" role="tabpanel" aria-labelledby="tab-archived">
                 @include('songs.table', ['songs' => $archived_songs, 'col_status' => false])
             </div>
