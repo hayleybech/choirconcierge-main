@@ -41,10 +41,6 @@
 
 	<div class="card">
 
-		<div class="card-header justify-content-between align-items-center">
-			
-		</div>
-
 		<table class="table card-table">
 			<thead>
 				<tr class="row--singer">

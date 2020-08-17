@@ -13,7 +13,6 @@
 @section('page-content')
 
     <div class="card">
-        <h3 class="card-header h4"></h3>
         <div class="r-table r-table--card-view-mobile">
             <div class="r-table__thead">
                 <div class="r-table__row row--folder">
