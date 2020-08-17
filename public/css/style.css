@@ -68,6 +68,9 @@ a.disabled:hover {
 	font-size: 16px;
 	border-bottom: 2px solid var(--c-light-pink);
 }
+.card-tabs .card-tab i {
+	font-size: inherit;
+}
 .card-tabs .card-tab:not(:last-child) {
 	margin-right: 3px;
 }
