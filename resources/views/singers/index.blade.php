@@ -41,11 +41,11 @@
 
 	<div class="card">
 		<div class="card-tabs nav nav-tabs">
-			<a href="#pane-all" class="card-tab nav-link" id="tab-all" data-toggle="tab">All</a>
-			<a href="#pane-active" class="card-tab nav-link active" id="tab-active" data-toggle="tab">Active</a>
-			<a href="#pane-members" class="card-tab nav-link" id="tab-members" data-toggle="tab">Members</a>
-			<a href="#pane-prospects" class="card-tab nav-link" id="tab-prospects" data-toggle="tab">Prospects</a>
-			<a href="#pane-archived" class="card-tab nav-link" id="tab-archived" data-toggle="tab">Archived</a>
+			<a href="#pane-all" class="card-tab nav-link" id="tab-all" data-toggle="tab">All <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $all_singers->count() }}</span></a>
+			<a href="#pane-active" class="card-tab nav-link active" id="tab-active" data-toggle="tab">Active <span class="badge badge-ligh ml-1 d-none d-md-inline-block">{{ $active_singers->count() }}</span></a>
+			<a href="#pane-members" class="card-tab nav-link" id="tab-members" data-toggle="tab">Members <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $member_singers->count() }}</span></a>
+			<a href="#pane-prospects" class="card-tab nav-link" id="tab-prospects" data-toggle="tab">Prospects <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $prospect_singers->count() }}</span></a>
+			<a href="#pane-archived" class="card-tab nav-link" id="tab-archived" data-toggle="tab">Archived <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $archived_singers->count() }}</span></a>
 		</div>
 
 		<div class="tab-content">

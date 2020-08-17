@@ -37,9 +37,9 @@
 
     <div class="card mb-5">
         <div class="card-tabs nav nav-tabs">
-            <a href="#pane-all" class="card-tab nav-link" id="tab-all" data-toggle="tab">All</a>
-            <a href="#pane-upcoming" class="card-tab nav-link active" id="tab-upcoming" data-toggle="tab">Upcoming</a>
-            <a href="#pane-past" class="card-tab nav-link" id="tab-past" data-toggle="tab">Past</a>
+            <a href="#pane-all" class="card-tab nav-link" id="tab-all" data-toggle="tab">All  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $all_events->count() }}</span></a>
+            <a href="#pane-upcoming" class="card-tab nav-link active" id="tab-upcoming" data-toggle="tab">Upcoming  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $upcoming_events->count() }}</span></a>
+            <a href="#pane-past" class="card-tab nav-link" id="tab-past" data-toggle="tab">Past  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $past_events->count() }}</span></a>
         </div>
 
         <div class="tab-content">
