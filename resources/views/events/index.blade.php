@@ -37,56 +37,20 @@
 
     <div class="card mb-5">
         <div class="card-tabs nav nav-tabs">
+            <a href="#pane-all" class="card-tab nav-link" id="tab-all" data-toggle="tab">All</a>
             <a href="#pane-upcoming" class="card-tab nav-link active" id="tab-upcoming" data-toggle="tab">Upcoming</a>
             <a href="#pane-past" class="card-tab nav-link" id="tab-past" data-toggle="tab">Past</a>
         </div>
 
         <div class="tab-content">
+            <div class="tab-pane" id="pane-all" role="tabpanel" aria-labelledby="tab-all">
+                @include('events.table', ['events' => $all_events])
+            </div>
             <div class="tab-pane active" id="pane-upcoming" role="tabpanel" aria-labelledby="tab-upcoming">
-
-                <table class="table card-table">
-                    <thead>
-                    <tr class="row--event">
-                        <th class="col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-                        <th class="col--type"><a href="{{ $sorts['type.title']['url'] }}">Type<i class="fa fas sort-{{ $sorts['type.title']['dir'] }} {{ ($sorts['type.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-                        <th class="col--date">Event Date</th>
-                        <th class="col--location">Location</th>
-                        <th class="col--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-                        <th class="col--delete"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @each('events.index_row', $upcoming_events, 'event', 'partials.noresults-table')
-                    </tbody>
-                </table>
-
-                <div class="card-footer">
-                    {{ $upcoming_events->count() }} events
-                </div>
-
+                @include('events.table', ['events' => $upcoming_events])
             </div>
             <div class="tab-pane" id="pane-past" role="tabpanel" aria-labelledby="tab-past">
-
-                <table class="table card-table">
-                    <thead>
-                    <tr class="row--event">
-                        <th class="col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-                        <th class="col--type"><a href="{{ $sorts['type.title']['url'] }}">Type<i class="fa fas sort-{{ $sorts['type.title']['dir'] }} {{ ($sorts['type.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-                        <th class="col--date">Event Date</th>
-                        <th class="col--location">Location</th>
-                        <th class="col--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-                        <th class="col--delete"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @each('events.index_row', $past_events, 'event', 'partials.noresults')
-                    </tbody>
-                </table>
-
-                <div class="card-footer">
-                    {{ $past_events->count() }} events
-                </div>
-
+                @include('events.table', ['events' => $past_events])
             </div>
         </div>
 

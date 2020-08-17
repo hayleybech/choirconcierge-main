@@ -16,11 +16,11 @@ class EventController extends Controller
         $this->authorize('viewAny', Event::class);
 
         // Base query
-        $events = Event::with([])
+        $all_events = Event::with([])
             ->filter()
             ->get();
-        $past_events = $events->where('start_date', '<', now());
-        $upcoming_events = $events->where('start_date', '>', now());
+        $past_events = $all_events->where('start_date', '<', now());
+        $upcoming_events = $all_events->where('start_date', '>', now());
 
         // Sort
         $sort_by = $request->input('sort_by', 'name');
@@ -30,15 +30,15 @@ class EventController extends Controller
         if($sort_by === 'created_at') $sort_dir = ($sort_dir === 'asc') ? 'desc' : 'asc';
 
         if( $sort_dir === 'asc') {
-            $events = $events->sortBy($sort_by);
+            $all_events = $all_events->sortBy($sort_by);
         } else {
-            $events = $events->sortByDesc($sort_by);
+            $all_events = $all_events->sortByDesc($sort_by);
         }
 
         $sorts = $this->getSorts($request);
 
         $filters = Event::getFilters();
-        return view('events.index', compact('upcoming_events', 'past_events', 'filters', 'sorts') );
+        return view('events.index', compact('all_events', 'upcoming_events', 'past_events', 'filters', 'sorts') );
     }
 
     public function create(): View
