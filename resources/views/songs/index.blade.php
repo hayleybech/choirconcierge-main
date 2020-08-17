@@ -38,25 +38,30 @@
     </div>
 
     <div class="card">
-        
-        <table class="table card-table">
-            <thead>
-                <tr class="row--song">
-                    <th class="col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-                    <th class="col--status"><a href="{{ $sorts['status.title']['url'] }}"><i class="fas fa-fw fa-circle mr-2 text-secondary"></i><span class="status__title">Status</span><i class="fa fas sort-{{ $sorts['status.title']['dir'] }} {{ ($sorts['status.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-                    <th class="col--category">Category</th>
-                    <th class="col--pitch">Pitch</th>
-                    <th class="col--created"><a href="{{ $sorts['created_at']['url'] }}">Created<i class="fa fas sort-{{ $sorts['created_at']['dir'] }} {{ ($sorts['created_at']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-                    <th class="col--delete"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @each('songs.index_row', $songs, 'song', 'partials.noresults-table')
-            </tbody>
-        </table>
+        <div class="card-tabs nav nav-tabs">
+            <a href="#pane-all" class="card-tab nav-link" id="tab-all" data-toggle="tab">All</a>
+            <a href="#pane-active" class="card-tab nav-link active" id="tab-active" data-toggle="tab">Active</a>
+            <a href="#pane-learning" class="card-tab nav-link" id="tab-learning" data-toggle="tab">Learning</a>
+            <a href="#pane-pending" class="card-tab nav-link" id="tab-pending" data-toggle="tab">Pending</a>
+            <a href="#pane-archived" class="card-tab nav-link" id="tab-archived" data-toggle="tab">Archived</a>
+        </div>
 
-        <div class="card-footer">
-            {{ $songs->count() }} songs
+        <div class="tab-content">
+            <div class="tab-pane" id="pane-all" role="tabpanel" aria-labelledby="tab-all">
+                @include('songs.table', ['songs' => $all_songs])
+            </div>
+            <div class="tab-pane active" id="pane-active" role="tabpanel" aria-labelledby="tab-active">
+                @include('songs.table', ['songs' => $active_songs])
+            </div>
+            <div class="tab-pane" id="pane-learning" role="tabpanel" aria-labelledby="tab-learning">
+                @include('songs.table', ['songs' => $learning_songs])
+            </div>
+            <div class="tab-pane" id="pane-pending" role="tabpanel" aria-labelledby="tab-pending">
+                @include('songs.table', ['songs' => $pending_songs])
+            </div>
+            <div class="tab-pane" id="pane-archived" role="tabpanel" aria-labelledby="tab-archived">
+                @include('songs.table', ['songs' => $archived_songs])
+            </div>
         </div>
 
     </div>

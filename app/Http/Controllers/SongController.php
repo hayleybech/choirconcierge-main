@@ -36,9 +36,13 @@ class SongController extends Controller
         }
 
         return view('songs.index', [
-            'songs'   => $songs,
-            'filters' => Song::getFilters(),
-            'sorts'   => $this->getSorts($request),
+            'all_songs'      => $songs,
+            'active_songs'   => $songs->where('status.title', '=', 'Active'),
+            'learning_songs' => $songs->where('status.title', '=', 'Learning'),
+            'pending_songs'  => $songs->where('status.title', '=', 'Pending'),
+            'archived_songs' => $songs->where('status.title', '=', 'Archived'),
+            'filters'        => Song::getFilters(),
+            'sorts'          => $this->getSorts($request),
         ]);
     }
 
