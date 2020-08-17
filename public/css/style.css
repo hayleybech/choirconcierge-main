@@ -41,15 +41,77 @@ a.disabled:hover {
 	margin-bottom: 30px;
 	box-shadow: none;
 	
-	border-radius: 20px;
+	border-radius: 0 0 15px 15px;
 	border: none;
 	overflow: hidden;
 
+	background-color: transparent;
+}
+
+/* card tabs */
+.card-tabs {
+	border-bottom: none;
+}
+.card-tabs .card-tab {
+	padding: 10px 30px;
+	display: inline-block;
+	background-color: hsl(269, 7%, 92%);
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+	border: none;
+	font-weight: 600;
+	font-size: 16px;
+	border-bottom: 2px solid var(--c-light-pink);
+}
+.card-tabs .card-tab:not(:last-child) {
+	margin-right: 3px;
+}
+.card-tabs .card-tab.active {
+	color: #555;
+	background-color: hsl(269, 7%, 95%);
+	border: none;
+	border-bottom: 2px solid transparent;
+}
+@media screen and (min-width: 980px) {
+	.card .tab-pane :first-child {
+		border-top-right-radius: 30px;
+	}
+
+}
+.card-body,
+.card-header,
+.card-footer,
+.card-table,
+.card .table,
+.card .r-table,
+.card .list-group-item {
 	background-color: var(--c-off-white);
 }
+.card-table {
+	margin-bottom: 0;
+}
+.card-table thead th {
+	border-top: none;
+}
+
+@media screen and (max-width: 979px) {
+	.card-tabs {
+		display: flex;
+	}
+	.card-tabs .card-tab {
+		flex: 1 1 auto;
+		font-size: 14px;
+		padding: 5px 10px;
+		text-align: center;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+	}
+}
+
+
+
 .card-header {
 	border: none;
-	background-color: transparent;
 	color: #222;
 	padding: 30px 40px 10px;
 }
@@ -61,7 +123,6 @@ a.disabled:hover {
 	font-size: 16px;
 }
 .card .list-group-item {
-	background-color: transparent;
 	padding: 15px 40px;
 	border-color: var(--c-light-pink);
 }
@@ -93,7 +154,7 @@ a.disabled:hover {
 
 	display: flex;
 	align-items: flex-start;
-	margin-bottom: 40px;
+	padding-bottom: 40px;
 	padding-top: 40px;
 }
 .profile-image {
