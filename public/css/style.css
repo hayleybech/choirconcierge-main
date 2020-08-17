@@ -48,6 +48,11 @@ a.disabled:hover {
 	background-color: transparent;
 }
 
+.card > :first-child:not(.card-tabs) {
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+}
+
 /* card tabs */
 .card-tabs {
 	border-bottom: none;
@@ -74,7 +79,7 @@ a.disabled:hover {
 }
 @media screen and (min-width: 980px) {
 	.card .tab-pane :first-child {
-		border-top-right-radius: 30px;
+		border-top-right-radius: 15px;
 	}
 
 }
