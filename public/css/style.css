@@ -78,7 +78,7 @@ a.disabled:hover {
 	border-bottom: 2px solid transparent;
 }
 @media screen and (min-width: 980px) {
-	.card .tab-pane :first-child {
+	.card .tab-pane > :first-child {
 		border-top-right-radius: 15px;
 	}
 
