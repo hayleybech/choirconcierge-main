@@ -43,16 +43,16 @@ class SingerController extends Controller
         } else {
             $all_singers = $all_singers->sortByDesc($sort_by);
         }
-        $active_singers = $all_singers->whereIn('category.name', ['Members', 'Prospects']);
-        $member_singers = $all_singers->whereIn('category.name', ['Members']);
-        $prospect_singers = $all_singers->whereIn('category.name', ['Prospects']);
-        $archived_singers = $all_singers->whereIn('category.name', ['Archived Members', 'Archived Prospects']);
 
-        $sorts = $this->getSorts($request);
-
-        $filters = Singer::getFilters();
-
-        return view('singers.index', compact('all_singers', 'active_singers', 'member_singers', 'prospect_singers', 'archived_singers', 'filters', 'sorts' ));
+        return view('singers.index', [
+            'all_singers'      => $all_singers,
+            'active_singers'   => $all_singers->whereIn('category.name', ['Members', 'Prospects']),
+            'member_singers'   => $all_singers->whereIn('category.name', ['Members']),
+            'prospect_singers' => $all_singers->whereIn('category.name', ['Prospects']),
+            'archived_singers' => $all_singers->whereIn('category.name', ['Archived Members', 'Archived Prospects']),
+            'filters'          => Singer::getFilters(),
+            'sorts'            => $sorts = $this->getSorts($request),
+        ]);
 	}
 
     public function create(): View

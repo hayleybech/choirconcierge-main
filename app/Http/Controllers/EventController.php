@@ -19,8 +19,6 @@ class EventController extends Controller
         $all_events = Event::with([])
             ->filter()
             ->get();
-        $past_events = $all_events->where('start_date', '<', now());
-        $upcoming_events = $all_events->where('start_date', '>', now());
 
         // Sort
         $sort_by = $request->input('sort_by', 'name');
@@ -35,10 +33,13 @@ class EventController extends Controller
             $all_events = $all_events->sortByDesc($sort_by);
         }
 
-        $sorts = $this->getSorts($request);
-
-        $filters = Event::getFilters();
-        return view('events.index', compact('all_events', 'upcoming_events', 'past_events', 'filters', 'sorts') );
+        return view('events.index', [
+            'all_events'      => $all_events,
+            'upcoming_events' => $all_events->where('start_date', '>', now()),
+            'past_events'     => $all_events->where('start_date', '<', now()),
+            'filters'         => Event::getFilters(),
+            'sorts'           => $sorts = $this->getSorts($request),
+        ]);
     }
 
     public function create(): View

@@ -35,10 +35,11 @@ class SongController extends Controller
             $songs = $songs->sortByDesc($sort_by);
         }
 
-        $sorts = $this->getSorts($request);
-
-        $filters = Song::getFilters();
-        return view('songs.index', compact('songs', 'filters', 'sorts') );
+        return view('songs.index', [
+            'songs'   => $songs,
+            'filters' => Song::getFilters(),
+            'sorts'   => $this->getSorts($request),
+        ]);
     }
 
     public function learning(Request $request): View
