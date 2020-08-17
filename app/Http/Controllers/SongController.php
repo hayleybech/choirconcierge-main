@@ -23,7 +23,7 @@ class SongController extends Controller
             ->get();
 
         // Sort
-        $sort_by = $request->input('sort_by', 'name');
+        $sort_by = $request->input('sort_by', 'title');
         $sort_dir = $request->input('sort_dir', 'asc');
 
         // Flip direction for date (so we sort by smallest age not smallest timestamp)
