@@ -48,19 +48,19 @@
 
         <div class="tab-content">
             <div class="tab-pane" id="pane-all" role="tabpanel" aria-labelledby="tab-all">
-                @include('songs.table', ['songs' => $all_songs])
+                @include('songs.table', ['songs' => $all_songs, 'col_status' => true])
             </div>
             <div class="tab-pane active" id="pane-active" role="tabpanel" aria-labelledby="tab-active">
-                @include('songs.table', ['songs' => $active_songs])
+                @include('songs.table', ['songs' => $active_songs, 'col_status' => false])
             </div>
             <div class="tab-pane" id="pane-learning" role="tabpanel" aria-labelledby="tab-learning">
-                @include('songs.table', ['songs' => $learning_songs])
+                @include('songs.table', ['songs' => $learning_songs, 'col_status' => false])
             </div>
             <div class="tab-pane" id="pane-pending" role="tabpanel" aria-labelledby="tab-pending">
-                @include('songs.table', ['songs' => $pending_songs])
+                @include('songs.table', ['songs' => $pending_songs, 'col_status' => false])
             </div>
             <div class="tab-pane" id="pane-archived" role="tabpanel" aria-labelledby="tab-archived">
-                @include('songs.table', ['songs' => $archived_songs])
+                @include('songs.table', ['songs' => $archived_songs, 'col_status' => false])
             </div>
         </div>
 

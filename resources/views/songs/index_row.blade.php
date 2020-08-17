@@ -8,6 +8,7 @@
         {{ $song->title ?? 'Title Unknown' }}
         @endcan
     </td>
+    @if($col_status)
     <?php
     $category_colour = '';
     if($song->status->title === 'Pending') {
@@ -25,6 +26,7 @@
     <td class="col--status {{ $category_colour }} font-weight-bold">
         <i class="fas fa-fw fa-circle mr-2"></i><span class="status__title">{{ $song->status->title }}</span>
     </td>
+    @endif
     <td class="col--category">
         @foreach( $song->categories as $cat )
         <span class="badge badge-pill badge-secondary mr-1">{{ $cat->title }}</span>
