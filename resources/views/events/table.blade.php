@@ -12,8 +12,9 @@
     <tbody>
     @each('events.index_row', $events, 'event', 'partials.noresults-table')
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="100">{{ $events->count() }} events</td>
+        </tr>
+    </tfoot>
 </table>
-
-<div class="card-footer">
-    {{ $events->count() }} events
-</div>

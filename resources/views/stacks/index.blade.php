@@ -27,11 +27,12 @@
             <tbody>
                 @each('stacks.index_row', $stacks, 'stack', 'partials.noresults-table')
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="100">{{ $stacks->count() }} riser stacks</td>
+                </tr>
+            </tfoot>
         </table>
-
-        <div class="card-footer">
-            {{ $stacks->count() }} riser stacks
-        </div>
 
     </div>
 

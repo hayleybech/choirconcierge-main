@@ -20,8 +20,9 @@
         @include('partials.noresults-table')
     @endforelse
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="100">{{ $singers->count() }} singers</td>
+        </tr>
+    </tfoot>
 </table>
-
-<div class="card-footer">
-    {{ $singers->count() }} singers
-</div>
