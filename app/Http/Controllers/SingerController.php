@@ -31,7 +31,7 @@ class SingerController extends Controller
         $this->authorize('viewAny', Singer::class);
 
         // Base query
-        $singers = Singer::with(['tasks', 'category', 'placement', 'profile', 'voice_part'])
+        $all_singers = Singer::with(['tasks', 'category', 'placement', 'profile', 'voice_part'])
             ->filter()
             ->get();
 
@@ -39,16 +39,20 @@ class SingerController extends Controller
         $sort_by = $request->input('sort_by', 'name');
         $sort_dir = $request->input('sort_dir', 'asc');
         if( $sort_dir === 'asc') {
-            $singers = $singers->sortBy($sort_by);
+            $all_singers = $all_singers->sortBy($sort_by);
         } else {
-            $singers = $singers->sortByDesc($sort_by);
+            $all_singers = $all_singers->sortByDesc($sort_by);
         }
+        $active_singers = $all_singers->whereIn('category.name', ['Members', 'Prospects']);
+        $member_singers = $all_singers->whereIn('category.name', ['Members']);
+        $prospect_singers = $all_singers->whereIn('category.name', ['Prospects']);
+        $archived_singers = $all_singers->whereIn('category.name', ['Archived Members', 'Archived Prospects']);
 
         $sorts = $this->getSorts($request);
 
         $filters = Singer::getFilters();
 
-        return view('singers.index', compact('singers', 'filters', 'sorts' ));
+        return view('singers.index', compact('all_singers', 'active_singers', 'member_singers', 'prospect_singers', 'archived_singers', 'filters', 'sorts' ));
 	}
 
     public function create(): View

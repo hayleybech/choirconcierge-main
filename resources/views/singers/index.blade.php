@@ -40,25 +40,30 @@
 	</div>
 
 	<div class="card">
+		<div class="card-tabs nav nav-tabs">
+			<a href="#pane-all" class="card-tab nav-link" id="tab-all" data-toggle="tab">All</a>
+			<a href="#pane-active" class="card-tab nav-link active" id="tab-active" data-toggle="tab">Active</a>
+			<a href="#pane-members" class="card-tab nav-link" id="tab-members" data-toggle="tab">Members</a>
+			<a href="#pane-prospects" class="card-tab nav-link" id="tab-prospects" data-toggle="tab">Prospects</a>
+			<a href="#pane-archived" class="card-tab nav-link" id="tab-archived" data-toggle="tab">Archived</a>
+		</div>
 
-		<table class="table card-table">
-			<thead>
-				<tr class="row--singer">
-					<th class="col--title"><a href="{{ $sorts['name']['url'] }}">Singer<i class="fa fas sort-{{ $sorts['name']['dir'] }} {{ ($sorts['name']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-					<th class="col--part"><a href="{{ $sorts['voice_part']['url'] }}">Part<i class="fa fas sort-{{ $sorts['voice_part']['dir'] }} {{ ($sorts['voice_part']['current'] ? 'sort-active' : 'sort-inactive' ) }} "></i></a></th>
-					<th class="col--category"><a href="{{ $sorts['category.name']['url'] }}"><span class="status__title">Category</span><i class="fa fas sort-{{ $sorts['category.name']['dir'] }} {{ ($sorts['category.name']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-					<th class="col--progress">Progress</th>
-					<th class="col--actions">Actions</th>
-					<th class="col--delete"></th>
-				</tr>
-			</thead>
-			<tbody>
-				@each('singers.index_row', $singers, 'singer', 'partials.noresults-table')
-			</tbody>
-		</table>
-
-		<div class="card-footer">
-			{{ $singers->count() }} singers
+		<div class="tab-content">
+			<div class="tab-pane" id="pane-all" role="tabpanel" aria-labelledby="tab-all">
+				@include('singers.table', ['singers' => $all_singers])
+			</div>
+			<div class="tab-pane active" id="pane-active" role="tabpanel" aria-labelledby="tab-active">
+				@include('singers.table', ['singers' => $active_singers])
+			</div>
+			<div class="tab-pane" id="pane-members" role="tabpanel" aria-labelledby="tab-members">
+				@include('singers.table', ['singers' => $member_singers])
+			</div>
+			<div class="tab-pane" id="pane-prospects" role="tabpanel" aria-labelledby="tab-prospects">
+				@include('singers.table', ['singers' => $prospect_singers])
+			</div>
+			<div class="tab-pane" id="pane-archived" role="tabpanel" aria-labelledby="tab-archived">
+				@include('singers.table', ['singers' => $archived_singers])
+			</div>
 		</div>
 
 	</div>
