@@ -50,19 +50,19 @@
 
 		<div class="tab-content">
 			<div class="tab-pane" id="pane-all" role="tabpanel" aria-labelledby="tab-all">
-				@include('singers.table', ['singers' => $all_singers])
+				@include('singers.table', ['singers' => $all_singers, 'col_category' => true, 'col_progress' => false])
 			</div>
 			<div class="tab-pane active" id="pane-active" role="tabpanel" aria-labelledby="tab-active">
-				@include('singers.table', ['singers' => $active_singers])
+				@include('singers.table', ['singers' => $active_singers, 'col_category' => true, 'col_progress' => false])
 			</div>
 			<div class="tab-pane" id="pane-members" role="tabpanel" aria-labelledby="tab-members">
-				@include('singers.table', ['singers' => $member_singers])
+				@include('singers.table', ['singers' => $member_singers, 'col_category' => false, 'col_progress' => false])
 			</div>
 			<div class="tab-pane" id="pane-prospects" role="tabpanel" aria-labelledby="tab-prospects">
-				@include('singers.table', ['singers' => $prospect_singers])
+				@include('singers.table', ['singers' => $prospect_singers, 'col_category' => false, 'col_progress' => true])
 			</div>
 			<div class="tab-pane" id="pane-archived" role="tabpanel" aria-labelledby="tab-archived">
-				@include('singers.table', ['singers' => $archived_singers])
+				@include('singers.table', ['singers' => $archived_singers, 'col_category' => true, 'col_progress' => false])
 			</div>
 		</div>
 

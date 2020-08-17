@@ -34,9 +34,12 @@ $category_class = array(
 			<span class="d-none d-md-inline">{{ ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? $singer->voice_part->title : 'No part' }}</span>
 		</span>
 	</td>
+	@if($col_category)
 	<td class="col--category">
 		<span class="singer-category {{ $category_class[$singer->category->name] }}"><i class="fas fa-fw fa-circle"></i><span class="status__title ml-2">{{ $singer->category->name }}</span></span>
 	</td>
+	@endif
+	@if($col_progress)
 	<td class="col--progress">
 		<!--<div class="progress">
 			<div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
@@ -69,6 +72,7 @@ $category_class = array(
 			@endforeach
 		@endif
 	</td>
+	@endif
 	<td class="col--actions">
 
 		@can('update', $singer)
