@@ -1,6 +1,6 @@
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-link text-danger p-0" data-toggle="modal" data-target="#deleteModal-{{ $id }}">
-    <i class="fas fa-fw fa-trash"></i>
+    <i class="far fa-fw fa-trash-alt"></i>
 </button>
 
 <!-- Modal -->
@@ -17,12 +17,12 @@
                 {{ $message }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <form action="{{ $action }}" method="post" class="d-inline-block">
                     @method('delete')
                     @csrf
-                    <button type="submit" class="btn btn-danger"><i class="fas fa-fw fa-trash"></i> Delete</button>
+                    <button type="submit" class="btn btn-link text-danger"><i class="far fa-fw fa-trash-alt"></i> Delete</button>
                 </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
