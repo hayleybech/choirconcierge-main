@@ -8,6 +8,7 @@
   height: 100%;
   background-color: rgb(var(--c-dark-purple)) !important;
   padding: 0;
+  text-align: center;
 }
 
 .choir-logo {
@@ -21,11 +22,25 @@
     width: 100%;
     height: auto;
   }
+
+  @media screen and (max-width: 767px){
+    border-radius: 15px;
+    padding: 10px 20px;
+
+    img {
+      height: 60px;
+      width: auto;
+    }
+  }
 }
 .navbar .nav-vertical {
   flex-flow: column nowrap;
   margin-left: 30px;
   position: relative;
+
+  @media screen and (max-width: 767px) {
+    margin-left: 0;
+  }
 }
 .navbar .nav-vertical:after {
   content: ' ';
@@ -48,6 +63,10 @@
   font-size: 12px;
   padding: 20px 30px;
   transition: all 0.2s;
+
+  @media screen and (max-width: 767px) {
+    font-size: 14px;
+  }
 }
 .navbar-dark .navbar-nav .nav-link,
 .navbar-dark .navbar-nav .show > .nav-link {
@@ -59,6 +78,13 @@
 
 .nav-link i {
   font-size: 16px;
+}
+.nav-link i:not(.menu-chevron) {
+  margin-right: 10px;
+
+  @media screen and (max-width: 767px){
+    margin-right: 20px;
+  }
 }
 
 
@@ -217,6 +243,12 @@
 }
 
 @media screen and (max-width: 767px) {
+  .logo {
+    padding-top: 5px;
+    height: 40px;
+    width: auto;
+  }
+
   .navbar .nav-vertical:after {
     display: none;
   }
