@@ -50,6 +50,7 @@ Route::middleware([
 
     // Events module
     Route::resource('events', 'EventController');
+    Route::resource('events.rsvps', 'RsvpController')->only(['store']);
 
     // Documents module
     Route::resource('folders', 'FolderController')->middleware('auth');

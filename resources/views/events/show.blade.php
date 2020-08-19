@@ -21,7 +21,28 @@
             @if($my_rsvp)
             {{ $my_rsvp->response_string }}
             @else
-            No RSVP added.
+            {{ Form::open(['route' => ['events.rsvps.store', $event->id]]) }}
+                <div class="form-group">
+                    <label for="rsvp_response" class="d-block">Will you attend?</label>
+
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input id="rsvp_response_yes" name="rsvp_response" value="yes" class="custom-control-input" type="radio">
+                        <label for="rsvp_response_yes" class="custom-control-label">Yes</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input id="rsvp_response_maybe" name="rsvp_response" value="maybe" class="custom-control-input" type="radio" checked>
+                        <label for="rsvp_response_maybe" class="custom-control-label">Maybe</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input id="rsvp_response_no" name="rsvp_response" value="no" class="custom-control-input" type="radio">
+                        <label for="rsvp_response_no" class="custom-control-label">No</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary"><i class="far fa-fw fa-check"></i> Save RSVP</button>
+                </div>
+            {{ Form::close() }}
             @endif
         </div>
     </div>
