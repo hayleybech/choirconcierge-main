@@ -19,9 +19,25 @@
 
             <h4 class="mt-2">My RSVP</h4>
             @if($my_rsvp)
-            {{ $my_rsvp->response_string }}
                 @if($event->isUpcoming())
-                    <x-delete-button :action="route( 'events.rsvps.destroy', ['event' => $event, 'rsvp' => $my_rsvp] )"/>
+                    <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $my_rsvp]) }}" value="{{ $my_rsvp->response_string }}" csrf="{{ csrf_token() }}">
+                        <label for="rsvp_response" class="d-block">Will you attend?</label>
+
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input id="rsvp_response_yes" name="rsvp_response" value="yes" class="custom-control-input" type="radio" {{ 'yes' === $my_rsvp->response ? 'checked' : '' }}>
+                            <label for="rsvp_response_yes" class="custom-control-label">Yes</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input id="rsvp_response_maybe" name="rsvp_response" value="maybe" class="custom-control-input" type="radio" {{ 'maybe' === $my_rsvp->response ? 'checked' : '' }}>
+                            <label for="rsvp_response_maybe" class="custom-control-label">Maybe</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input id="rsvp_response_no" name="rsvp_response" value="no" class="custom-control-input" type="radio" {{ 'no' === $my_rsvp->response ? 'checked' : '' }}>
+                            <label for="rsvp_response_no" class="custom-control-label">No</label>
+                        </div>
+                    </inline-edit-field>
+                @else
+                    {{ $my_rsvp->response_string }}
                 @endif
             @elseif($event->isUpcoming())
             {{ Form::open(['route' => ['events.rsvps.store', $event->id]]) }}
@@ -77,3 +93,9 @@
 
 
 @endsection
+<script>
+    import InlineEditField from "../../assets/js/components/InlineEditField";
+    export default {
+        components: {InlineEditField}
+    }
+</script>

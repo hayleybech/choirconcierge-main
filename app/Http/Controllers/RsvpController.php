@@ -26,6 +26,19 @@ class RsvpController extends Controller
         return redirect()->route('events.show', [$event])->with(['status' => 'RSVP saved.']);
     }
 
+    public function update(Request $request, Event $event, Rsvp $rsvp): RedirectResponse
+    {
+        $request->validate([
+            'rsvp_response' => 'required',
+        ]);
+
+        $rsvp->update([
+            'response'  => $request->input('rsvp_response'),
+        ]);
+
+        return redirect()->route('events.show', [$event])->with(['status' => 'RSVP saved.']);
+    }
+
     public function destroy(Event $event, Rsvp $rsvp): RedirectResponse
     {
         $rsvp->delete();
