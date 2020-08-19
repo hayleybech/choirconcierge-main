@@ -1,5 +1,5 @@
 <template>
-    <button class="pitch btn btn-secondary btn-sm" v-on:mousedown="play" v-on:mouseup="stop">
+    <button class="pitch btn btn-secondary btn-sm" v-on:mousedown="play" v-on:mouseup="stop" v-on:touchstart="play" v-on:touchend="stop">
         <i class="fa fa-play mr-1"></i> <span class="key">{{ note }}</span>
     </button>
 </template>
@@ -28,13 +28,20 @@ export default {
     },
     mounted() {
         document.addEventListener('mouseup', this.stop);
+        document.addEventListener('touchend', this.stop);
     },
     methods: {
-        play() {
+        play(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
             start();
             this.synth.triggerAttack( this.pitch );
         },
-        stop() {
+        stop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
             this.synth.triggerRelease();
         }
     }
