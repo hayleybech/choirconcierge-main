@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Event;
+use App\Models\Rsvp;
 use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,5 +24,12 @@ class RsvpController extends Controller
         ]);
 
         return redirect()->route('events.show', [$event])->with(['status' => 'RSVP saved.']);
+    }
+
+    public function destroy(Event $event, Rsvp $rsvp): RedirectResponse
+    {
+        $rsvp->delete();
+
+        return redirect()->route('events.show', [$event])->with(['status' => 'RSVP deleted.']);
     }
 }

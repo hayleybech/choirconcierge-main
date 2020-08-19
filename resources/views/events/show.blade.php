@@ -20,6 +20,9 @@
             <h4 class="mt-2">My RSVP</h4>
             @if($my_rsvp)
             {{ $my_rsvp->response_string }}
+                @if($event->isUpcoming())
+                    <x-delete-button :action="route( 'events.rsvps.destroy', ['event' => $event, 'rsvp' => $my_rsvp] )"/>
+                @endif
             @elseif($event->isUpcoming())
             {{ Form::open(['route' => ['events.rsvps.store', $event->id]]) }}
                 <div class="form-group">
