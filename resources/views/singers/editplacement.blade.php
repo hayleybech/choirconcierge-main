@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-	{{ Form::open( [ 'route' => ['placements.update', [$singer, $placement]], 'method' => 'put' ] ) }}
+	{{ Form::open( [ 'route' => ['singers.placements.update', [$singer, $placement]], 'method' => 'put' ] ) }}
 
 	<div class="row">
 		<div class="col-md-6">

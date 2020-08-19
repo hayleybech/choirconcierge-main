@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-	{{ Form::open( [ 'route' => ['profiles.update', [$singer, $profile]], 'method' => 'put' ] ) }}
+	{{ Form::open( [ 'route' => ['singers.profiles.update', [$singer, $profile]], 'method' => 'put' ] ) }}
 
 	{{ Form::hidden('singer_id', $singer->id) }}
 
