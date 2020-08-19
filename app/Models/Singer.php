@@ -10,6 +10,7 @@ use App\Models\Filters\Singer_VoicePartFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -34,6 +35,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property User $user
  * @property VoicePart $voice_part
  * @property RiserStack[] $riser_stacks
+ * @property Rsvp[] $rsvps
  *
  * Dynamic
  * @property int $age
@@ -159,6 +161,11 @@ class Singer extends Model
         return $this->belongsToMany(RiserStack::class)
             ->as('position')
             ->withPivot('row', 'column');
+    }
+
+    public function rsvps(): HasMany
+    {
+        return $this->hasMany(Rsvp::class);
     }
 
     /*
