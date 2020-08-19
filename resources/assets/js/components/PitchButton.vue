@@ -26,14 +26,12 @@ export default {
             return this.note + this.octave.toString();
         }
     },
-    mounted() {
-        document.addEventListener('mouseup', this.stop);
-        document.addEventListener('touchend', this.stop);
-    },
     methods: {
         play(e) {
             e.stopPropagation();
             e.preventDefault();
+            document.addEventListener('mouseup', this.stop);
+            document.addEventListener('touchend', this.stop);
 
             start();
             this.synth.triggerAttack( this.pitch );
@@ -41,6 +39,8 @@ export default {
         stop(e) {
             e.stopPropagation();
             e.preventDefault();
+            document.removeEventListener('mouseup', this.stop);
+            document.removeEventListener('touchend', this.stop);
 
             this.synth.triggerRelease();
         }
