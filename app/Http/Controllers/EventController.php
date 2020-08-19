@@ -64,7 +64,9 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
-        return view('events.show', compact('event' ));
+        $my_rsvp = $event->rsvps()->where('singer_id', '=', \Auth::user()->singer->id)->first();
+
+        return view('events.show', compact('event', 'my_rsvp' ));
     }
 
     public function edit(Event $event): View

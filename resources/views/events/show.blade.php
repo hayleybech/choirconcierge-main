@@ -16,6 +16,13 @@
             <div><time class="font-weight-bold">{{ $event->start_date->format('M d, H:i') }}</time> to <time class="font-weight-bold">{{ $event->end_date->format('M d, H:i') }}</time></div>
             <div>Call Time: <time>{{ $event->call_time->format('M d, H:i') }}</time></div>
             <div>{{ $event->description }}</div>
+
+            <h4 class="mt-2">My RSVP</h4>
+            @if($my_rsvp)
+            {{ $my_rsvp->response_string }}
+            @else
+            No RSVP added.
+            @endif
         </div>
     </div>
 
