@@ -20,7 +20,7 @@
             <h4 class="mt-2">My RSVP</h4>
             @if($my_rsvp)
             {{ $my_rsvp->response_string }}
-            @else
+            @elseif($event->isUpcoming())
             {{ Form::open(['route' => ['events.rsvps.store', $event->id]]) }}
                 <div class="form-group">
                     <label for="rsvp_response" class="d-block">Will you attend?</label>
@@ -43,6 +43,8 @@
                     <button type="submit" class="btn btn-primary"><i class="far fa-fw fa-check"></i> Save RSVP</button>
                 </div>
             {{ Form::close() }}
+            @else
+                You didn't RSVP for this event.
             @endif
         </div>
     </div>
