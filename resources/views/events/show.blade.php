@@ -145,8 +145,9 @@
             </div>
 
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-start">
                     <h4>Attendance Report</h4>
+                    <a href="{{ route('events.attendances.index', ['event' => $event]) }}" class="btn btn-light btn-sm"><i class="fas fa-fw fa-edit"></i> Record Attendance</a>
                 </div>
                 <div class="card-body">
                     <h5>Summary</h5>
