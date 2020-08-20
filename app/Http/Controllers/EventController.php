@@ -73,6 +73,7 @@ class EventController extends Controller
             'singers_rsvp_maybe_count'   => $event->singers_rsvp_response('maybe')->count(),
             'singers_rsvp_no_count'      => $event->singers_rsvp_response('no')->count(),
             'singers_rsvp_missing_count' => $event->singers_rsvp_missing()->count(),
+            'voice_parts_rsvp_yes_count' => $event->voice_parts_rsvp_response_count('yes'),
         ]);
     }
 

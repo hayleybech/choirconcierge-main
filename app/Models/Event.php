@@ -121,6 +121,18 @@ class Event extends Model
                 ->where('response', '=', $response);
         });
     }
+    public function voice_parts_rsvp_response_count(string $response)
+    {
+        $parts = VoicePart::all();
+        foreach($parts as $part)
+        {
+            $part->response_count = $part->singers()->whereHas('rsvps', function(Builder $query) use ($response) {
+                $query->where('event_id', '=', $this->id)
+                    ->where('response', '=', $response);
+            })->count();
+        }
+        return $parts;
+    }
 
     public function singers_rsvp_missing(): Builder
     {

@@ -79,11 +79,18 @@
                     <h5>RSVP Report</h5>
                 </div>
                 <div class="card-body">
+                    <h6>Summary</h6>
                     <ul>
                         <li>Yes: {{ $singers_rsvp_yes_count }}</li>
                         <li>Maybe: {{ $singers_rsvp_maybe_count }}</li>
                         <li>No: {{ $singers_rsvp_no_count }}</li>
                         <li>No response: {{ $singers_rsvp_missing_count }}</li>
+                    </ul>
+                    <h6>Voice Parts</h6>
+                    <ul>
+                    @foreach($voice_parts_rsvp_yes_count as $voice_part)
+                        <li>{{ $voice_part->title }}: Yes {{ $voice_part->response_count }}</li>
+                    @endforeach
                     </ul>
                 </div>
             </div>
