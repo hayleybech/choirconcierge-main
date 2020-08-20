@@ -149,6 +149,13 @@ Breadcrumbs::for('events.create', static function ($trail) {
     $trail->push('Create', route('events.create'));
 });
 
+// Events > [Event] > Attendances
+Breadcrumbs::for('events.attendances.index', static function ($trail, $event) {
+    $trail->parent('events.show', $event);
+    $trail->push('Attendance', route('events.attendances.index', $event));
+});
+
+
 /**
  * DOCUMENTS
  */
