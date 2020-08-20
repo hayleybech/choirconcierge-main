@@ -107,7 +107,7 @@ class Event extends Model
         return $this->hasMany(Rsvp::class);
     }
 
-    public function my_rsvp(): Rsvp
+    public function my_rsvp()
     {
         return $this->rsvps()
             ->where('singer_id', '=', \Auth::user()->singer->id)
