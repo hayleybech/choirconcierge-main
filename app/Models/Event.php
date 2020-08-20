@@ -154,6 +154,32 @@ class Event extends Model
         });
     }
 
+    public function singers_attendance(string $response): Builder
+    {
+        return Singer::whereHas('attendances', function(Builder $query) use ($response) {
+            $query->where('event_id', '=', $this->id)
+                ->where('response', '=', $response);
+        });
+    }
+    public function singers_attendance_missing(): Builder
+    {
+        return Singer::whereDoesntHave('attendances', function(Builder $query) {
+            $query->where('event_id', '=', $this->id);
+        });
+    }
+    public function voice_parts_attendance_count(string $response)
+    {
+        $parts = VoicePart::all();
+        foreach($parts as $part)
+        {
+            $part->response_count = $part->singers()->whereHas('attendances', function(Builder $query) use ($response) {
+                $query->where('event_id', '=', $this->id)
+                    ->where('response', '=', $response);
+            })->count();
+        }
+        return $parts;
+    }
+
     public function isUpcoming(): bool
     {
         return $this->start_date->greaterThan(Carbon::now());
