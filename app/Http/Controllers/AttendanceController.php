@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Singer;
 use Illuminate\Http\RedirectResponse;
@@ -11,6 +12,8 @@ class AttendanceController extends Controller
 {
     public function index(Event $event)
     {
+        $this->authorize('viewAny', Attendance::class);
+
         $singers = Singer::all();
         foreach($singers as $singer)
         {
@@ -25,6 +28,8 @@ class AttendanceController extends Controller
 
     public function updateAll(Event $event, Request $request): RedirectResponse
     {
+        $this->authorize('create', Attendance::class);
+
         $responses = $request->input('attendance_response');
         foreach($responses as $singer_id => $response){
             $event->attendances()->updateOrCreate(

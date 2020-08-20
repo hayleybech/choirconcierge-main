@@ -144,10 +144,13 @@
                 </div>
             </div>
 
+            @can('viewAny', \App\Models\Attendance::class)
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-start">
                     <h4>Attendance Report</h4>
+                    @can('create', \App\Models\Attendance::class)
                     <a href="{{ route('events.attendances.index', ['event' => $event]) }}" class="btn btn-light btn-sm"><i class="fas fa-fw fa-edit"></i> Record Attendance</a>
+                    @endcan
                 </div>
                 <div class="card-body">
                     <h5>Summary</h5>
@@ -177,6 +180,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
         </div>
 
     </div>
