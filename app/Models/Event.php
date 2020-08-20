@@ -107,6 +107,21 @@ class Event extends Model
         return $this->hasMany(Rsvp::class);
     }
 
+    public function singers_rsvp_response(string $response): Builder
+    {
+        return Singer::whereHas('rsvps', function(Builder $query) use ($response) {
+            $query->where('event_id', '=', $this->id)
+                ->where('response', '=', $response);
+        });
+    }
+
+    public function singers_rsvp_missing(): Builder
+    {
+        return Singer::whereDoesntHave('rsvps', function(Builder $query) {
+            $query->where('event_id', '=', $this->id);
+        });
+    }
+
     public function isUpcoming(): bool
     {
         return $this->start_date->greaterThan(Carbon::now());

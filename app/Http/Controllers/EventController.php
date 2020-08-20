@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\EventType;
+use App\Models\Singer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -65,8 +67,12 @@ class EventController extends Controller
         $this->authorize('view', $event);
 
         $my_rsvp = $event->rsvps()->where('singer_id', '=', \Auth::user()->singer->id)->first();
+        $singers_rsvp_yes_count = $event->singers_rsvp_response('yes')->count();
+        $singers_rsvp_maybe_count = $event->singers_rsvp_response('maybe')->count();
+        $singers_rsvp_no_count = $event->singers_rsvp_response('no')->count();
+        $singers_rsvp_missing_count = $event->singers_rsvp_missing()->count();
 
-        return view('events.show', compact('event', 'my_rsvp' ));
+        return view('events.show', compact('event', 'my_rsvp', 'singers_rsvp_yes_count', 'singers_rsvp_maybe_count', 'singers_rsvp_no_count', 'singers_rsvp_missing_count' ));
     }
 
     public function edit(Event $event): View

@@ -4,68 +4,91 @@
 
 @section('page-content')
 
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-start">
-            <h1 class="h2 mb-0">{{ $event->title }}</h1>
-            @can('update', $event)
-                <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-light flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
-            @endcan
-        </div>
-        <div class="card-body">
-            <div class="badge badge-pill badge-secondary">{{ $event->type->title }}</div>
-            <div><time class="font-weight-bold">{{ $event->start_date->format('M d, H:i') }}</time> to <time class="font-weight-bold">{{ $event->end_date->format('M d, H:i') }}</time></div>
-            <div>Call Time: <time>{{ $event->call_time->format('M d, H:i') }}</time></div>
-            <div>{{ $event->description }}</div>
+    <div class="row">
 
-            <h4 class="mt-2">My RSVP</h4>
-            @if($my_rsvp)
-                @if($event->isUpcoming())
-                    <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $my_rsvp]) }}" value="{{ $my_rsvp->response_string }}" csrf="{{ csrf_token() }}">
-                        <label for="rsvp_response" class="d-block">Will you attend?</label>
+        <div class="col-md-7">
 
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input id="rsvp_response_yes" name="rsvp_response" value="yes" class="custom-control-input" type="radio" {{ 'yes' === $my_rsvp->response ? 'checked' : '' }}>
-                            <label for="rsvp_response_yes" class="custom-control-label">Yes</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input id="rsvp_response_maybe" name="rsvp_response" value="maybe" class="custom-control-input" type="radio" {{ 'maybe' === $my_rsvp->response ? 'checked' : '' }}>
-                            <label for="rsvp_response_maybe" class="custom-control-label">Maybe</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input id="rsvp_response_no" name="rsvp_response" value="no" class="custom-control-input" type="radio" {{ 'no' === $my_rsvp->response ? 'checked' : '' }}>
-                            <label for="rsvp_response_no" class="custom-control-label">No</label>
-                        </div>
-                    </inline-edit-field>
-                @else
-                    {{ $my_rsvp->response_string }}
-                @endif
-            @elseif($event->isUpcoming())
-            {{ Form::open(['route' => ['events.rsvps.store', $event->id]]) }}
-                <div class="form-group">
-                    <label for="rsvp_response" class="d-block">Will you attend?</label>
-
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input id="rsvp_response_yes" name="rsvp_response" value="yes" class="custom-control-input" type="radio">
-                        <label for="rsvp_response_yes" class="custom-control-label">Yes</label>
-                    </div>
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input id="rsvp_response_maybe" name="rsvp_response" value="maybe" class="custom-control-input" type="radio" checked>
-                        <label for="rsvp_response_maybe" class="custom-control-label">Maybe</label>
-                    </div>
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input id="rsvp_response_no" name="rsvp_response" value="no" class="custom-control-input" type="radio">
-                        <label for="rsvp_response_no" class="custom-control-label">No</label>
-                    </div>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-start">
+                    <h1 class="h2 mb-0">{{ $event->title }}</h1>
+                    @can('update', $event)
+                        <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-light flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                    @endcan
                 </div>
+                <div class="card-body">
+                    <div class="badge badge-pill badge-secondary">{{ $event->type->title }}</div>
+                    <div><time class="font-weight-bold">{{ $event->start_date->format('M d, H:i') }}</time> to <time class="font-weight-bold">{{ $event->end_date->format('M d, H:i') }}</time></div>
+                    <div>Call Time: <time>{{ $event->call_time->format('M d, H:i') }}</time></div>
+                    <div>{{ $event->description }}</div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary"><i class="far fa-fw fa-check"></i> Save RSVP</button>
+                    <h4 class="mt-2">My RSVP</h4>
+                    @if($my_rsvp)
+                        @if($event->isUpcoming())
+                            <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $my_rsvp]) }}" value="{{ $my_rsvp->response_string }}" csrf="{{ csrf_token() }}">
+                                <label for="rsvp_response" class="d-block">Will you attend?</label>
+
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input id="rsvp_response_yes" name="rsvp_response" value="yes" class="custom-control-input" type="radio" {{ 'yes' === $my_rsvp->response ? 'checked' : '' }}>
+                                    <label for="rsvp_response_yes" class="custom-control-label">Yes</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input id="rsvp_response_maybe" name="rsvp_response" value="maybe" class="custom-control-input" type="radio" {{ 'maybe' === $my_rsvp->response ? 'checked' : '' }}>
+                                    <label for="rsvp_response_maybe" class="custom-control-label">Maybe</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input id="rsvp_response_no" name="rsvp_response" value="no" class="custom-control-input" type="radio" {{ 'no' === $my_rsvp->response ? 'checked' : '' }}>
+                                    <label for="rsvp_response_no" class="custom-control-label">No</label>
+                                </div>
+                            </inline-edit-field>
+                        @else
+                            {{ $my_rsvp->response_string }}
+                        @endif
+                    @elseif($event->isUpcoming())
+                        {{ Form::open(['route' => ['events.rsvps.store', $event->id]]) }}
+                        <div class="form-group">
+                            <label for="rsvp_response" class="d-block">Will you attend?</label>
+
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input id="rsvp_response_yes" name="rsvp_response" value="yes" class="custom-control-input" type="radio">
+                                <label for="rsvp_response_yes" class="custom-control-label">Yes</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input id="rsvp_response_maybe" name="rsvp_response" value="maybe" class="custom-control-input" type="radio" checked>
+                                <label for="rsvp_response_maybe" class="custom-control-label">Maybe</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input id="rsvp_response_no" name="rsvp_response" value="no" class="custom-control-input" type="radio">
+                                <label for="rsvp_response_no" class="custom-control-label">No</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary"><i class="far fa-fw fa-check"></i> Save RSVP</button>
+                        </div>
+                        {{ Form::close() }}
+                    @else
+                        You didn't RSVP for this event.
+                    @endif
                 </div>
-            {{ Form::close() }}
-            @else
-                You didn't RSVP for this event.
-            @endif
+            </div>
         </div>
+
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5>RSVP Report</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Yes: {{ $singers_rsvp_yes_count }}</li>
+                        <li>Maybe: {{ $singers_rsvp_maybe_count }}</li>
+                        <li>No: {{ $singers_rsvp_no_count }}</li>
+                        <li>No response: {{ $singers_rsvp_missing_count }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="card">
