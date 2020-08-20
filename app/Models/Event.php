@@ -8,6 +8,7 @@ use App\Notifications\EventCreated;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
@@ -32,6 +33,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property EventType type
+ * @property Rsvp[] rsvps
  *
  * @package App
  */
@@ -98,5 +100,49 @@ class Event extends Model
     public function type(): BelongsTo
     {
         return $this->belongsTo(EventType::class, 'type_id');
+    }
+
+    public function rsvps(): HasMany
+    {
+        return $this->hasMany(Rsvp::class);
+    }
+
+    public function my_rsvp(): Rsvp
+    {
+        return $this->rsvps()
+            ->where('singer_id', '=', \Auth::user()->singer->id)
+            ->first();
+    }
+
+    public function singers_rsvp_response(string $response): Builder
+    {
+        return Singer::whereHas('rsvps', function(Builder $query) use ($response) {
+            $query->where('event_id', '=', $this->id)
+                ->where('response', '=', $response);
+        });
+    }
+    public function voice_parts_rsvp_response_count(string $response)
+    {
+        $parts = VoicePart::all();
+        foreach($parts as $part)
+        {
+            $part->response_count = $part->singers()->whereHas('rsvps', function(Builder $query) use ($response) {
+                $query->where('event_id', '=', $this->id)
+                    ->where('response', '=', $response);
+            })->count();
+        }
+        return $parts;
+    }
+
+    public function singers_rsvp_missing(): Builder
+    {
+        return Singer::whereDoesntHave('rsvps', function(Builder $query) {
+            $query->where('event_id', '=', $this->id);
+        });
+    }
+
+    public function isUpcoming(): bool
+    {
+        return $this->start_date->greaterThan(Carbon::now());
     }
 }

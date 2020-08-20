@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\EventType;
+use App\Models\Singer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -64,7 +66,15 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
-        return view('events.show', compact('event' ));
+        return view('events.show', [
+            'event'   => $event,
+            'my_rsvp' => $event->my_rsvp(),
+            'singers_rsvp_yes_count'     => $event->singers_rsvp_response('yes')->count(),
+            'singers_rsvp_maybe_count'   => $event->singers_rsvp_response('maybe')->count(),
+            'singers_rsvp_no_count'      => $event->singers_rsvp_response('no')->count(),
+            'singers_rsvp_missing_count' => $event->singers_rsvp_missing()->count(),
+            'voice_parts_rsvp_yes_count' => $event->voice_parts_rsvp_response_count('yes'),
+        ]);
     }
 
     public function edit(Event $event): View
