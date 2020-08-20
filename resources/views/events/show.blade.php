@@ -69,6 +69,15 @@
                     @else
                         You didn't RSVP for this event.
                     @endif
+
+                    @if( ! $event->isUpcoming())
+                    <h4 class="mt-2">My Attendance</h4>
+                        @if($my_attendance)
+                        <p>{{ $my_attendance->response_string }}</p>
+                        @else
+                        <p>Not recorded.</p>
+                        @endif
+                    @endif
                 </div>
             </div>
         </div>
