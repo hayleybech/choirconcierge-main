@@ -11,9 +11,15 @@ class AttendanceController extends Controller
 {
     public function index(Event $event)
     {
+        $singers = Singer::all();
+        foreach($singers as $singer)
+        {
+            $singer->attendance = $event->attendances()->where('singer_id', '=', $singer->id)->first();
+        }
+
         return view('events.attendances.index', [
             'event'   => $event,
-            'singers' => Singer::all(),
+            'singers' => $singers,
         ]);
     }
 
