@@ -76,22 +76,38 @@
         <div class="col-md-5">
             <div class="card">
                 <div class="card-header">
-                    <h5>RSVP Report</h5>
+                    <h4>RSVP Report</h4>
                 </div>
                 <div class="card-body">
-                    <h6>Summary</h6>
-                    <ul>
-                        <li>Yes: {{ $singers_rsvp_yes_count }}</li>
-                        <li>Maybe: {{ $singers_rsvp_maybe_count }}</li>
-                        <li>No: {{ $singers_rsvp_no_count }}</li>
-                        <li>No response: {{ $singers_rsvp_missing_count }}</li>
-                    </ul>
-                    <h6>Voice Parts</h6>
-                    <ul>
-                    @foreach($voice_parts_rsvp_yes_count as $voice_part)
-                        <li>{{ $voice_part->title }}: Yes {{ $voice_part->response_count }}</li>
-                    @endforeach
-                    </ul>
+                    <h5>Summary</h5>
+                    <div class="row text-center mb-4">
+                        <div class="col-6 col-md-3">
+                            <strong>Going</strong><br>
+                            {{ $singers_rsvp_yes_count }}
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <strong>Unknown</strong><br>
+                            {{ $singers_rsvp_missing_count }}
+                        </div>
+                        <div class="col-6 col-md-3">
+                            Maybe<br>
+                            {{ $singers_rsvp_maybe_count }}
+                        </div>
+                        <div class="col-6 col-md-3">
+                            Not going<br>
+                            {{ $singers_rsvp_no_count }}
+                        </div>
+                    </div>
+                    <h5>Voice Parts</h5>
+                    <div class="row text-center mb-4">
+                        @foreach($voice_parts_rsvp_yes_count as $voice_part)
+                        <div class="col-6 col-md-3">
+                            {{ $voice_part->title }}<br>
+                            {{ $voice_part->response_count }}<br>
+                            <small>confirmed</small>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
