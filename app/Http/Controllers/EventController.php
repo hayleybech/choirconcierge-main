@@ -66,7 +66,7 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
-        $my_rsvp = $event->rsvps()->where('singer_id', '=', \Auth::user()->singer->id)->first();
+        $my_rsvp = $event->my_rsvp();
         $singers_rsvp_yes_count = $event->singers_rsvp_response('yes')->count();
         $singers_rsvp_maybe_count = $event->singers_rsvp_response('maybe')->count();
         $singers_rsvp_no_count = $event->singers_rsvp_response('no')->count();

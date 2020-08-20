@@ -107,6 +107,13 @@ class Event extends Model
         return $this->hasMany(Rsvp::class);
     }
 
+    public function my_rsvp(): Rsvp
+    {
+        return $this->rsvps()
+            ->where('singer_id', '=', \Auth::user()->singer->id)
+            ->first();
+    }
+
     public function singers_rsvp_response(string $response): Builder
     {
         return Singer::whereHas('rsvps', function(Builder $query) use ($response) {
