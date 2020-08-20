@@ -34,6 +34,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Relationships
  * @property EventType type
  * @property Rsvp[] rsvps
+ * @property Attendance[] attendances
  *
  * @package App
  */
@@ -110,6 +111,18 @@ class Event extends Model
     public function my_rsvp()
     {
         return $this->rsvps()
+            ->where('singer_id', '=', \Auth::user()->singer->id)
+            ->first();
+    }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function my_attendance()
+    {
+        return $this->attendances()
             ->where('singer_id', '=', \Auth::user()->singer->id)
             ->first();
     }
