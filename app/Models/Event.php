@@ -34,6 +34,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Relationships
  * @property EventType type
  * @property Rsvp[] rsvps
+ * @property Attendance[] attendances
  *
  * @package App
  */
@@ -107,9 +108,21 @@ class Event extends Model
         return $this->hasMany(Rsvp::class);
     }
 
-    public function my_rsvp(): Rsvp
+    public function my_rsvp()
     {
         return $this->rsvps()
+            ->where('singer_id', '=', \Auth::user()->singer->id)
+            ->first();
+    }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function my_attendance()
+    {
+        return $this->attendances()
             ->where('singer_id', '=', \Auth::user()->singer->id)
             ->first();
     }
@@ -139,6 +152,32 @@ class Event extends Model
         return Singer::whereDoesntHave('rsvps', function(Builder $query) {
             $query->where('event_id', '=', $this->id);
         });
+    }
+
+    public function singers_attendance(string $response): Builder
+    {
+        return Singer::whereHas('attendances', function(Builder $query) use ($response) {
+            $query->where('event_id', '=', $this->id)
+                ->where('response', '=', $response);
+        });
+    }
+    public function singers_attendance_missing(): Builder
+    {
+        return Singer::whereDoesntHave('attendances', function(Builder $query) {
+            $query->where('event_id', '=', $this->id);
+        });
+    }
+    public function voice_parts_attendance_count(string $response)
+    {
+        $parts = VoicePart::all();
+        foreach($parts as $part)
+        {
+            $part->response_count = $part->singers()->whereHas('attendances', function(Builder $query) use ($response) {
+                $query->where('event_id', '=', $this->id)
+                    ->where('response', '=', $response);
+            })->count();
+        }
+        return $parts;
     }
 
     public function isUpcoming(): bool

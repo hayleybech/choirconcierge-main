@@ -20,6 +20,11 @@
     <td class="col--location">
         <span class="place-icon" style="background-image: url('{{ $event->location_icon }}');"></span> <span class="place-name">{{ $event->location_name }}</span>
     </td>
+    @if($col_attendance)
+        @can('viewAny', \App\Models\Attendance::class)
+        <td class="col--attendance">{{ $event->singers_attendance('present')->count() }} present</td>
+        @endcan
+    @endif
     <td class="col--created">
         <div class="date">
             <div class="date__diff-for-humans">

@@ -69,11 +69,44 @@
                     @else
                         You didn't RSVP for this event.
                     @endif
+
+                    @if( ! $event->isUpcoming())
+                    <h4 class="mt-2">My Attendance</h4>
+                        @if($my_attendance)
+                        <p>{{ $my_attendance->response_string }}</p>
+                        @else
+                        <p>Not recorded.</p>
+                        @endif
+                    @endif
                 </div>
             </div>
+
+            <div class="card">
+                <h3 class="card-header h4">Location</h3>
+
+                <div class="card-body">
+                    <p>
+                        <span style="background-image: url('{{ $event->location_icon }}');" class="place-icon"></span> <span class="place-name">{{ $event->location_name }}</span> <br>
+                        <span class="place-address">{{ $event->location_address }}</span>
+                    </p>
+
+                    <div class="event-map google-maps">
+                        <iframe
+                                width="600"
+                                height="450"
+                                frameborder="0" style="border:0"
+                                src="https://www.google.com/maps/embed/v1/place?key=<?= env('API_GOOGLE_KEY') ?>&q=place_id:<?= urlencode($event->location_place_id)?>"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
 
         <div class="col-md-5">
+
             <div class="card">
                 <div class="card-header">
                     <h4>RSVP Report</h4>
@@ -110,30 +143,46 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div>
-
-    <div class="card">
-        <h3 class="card-header h4">Location</h3>
-
-        <div class="card-body">
-            <p>
-                <span style="background-image: url('{{ $event->location_icon }}');" class="place-icon"></span> <span class="place-name">{{ $event->location_name }}</span> <br>
-                <span class="place-address">{{ $event->location_address }}</span>
-            </p>
-
-            <div class="event-map google-maps">
-                <iframe
-                        width="600"
-                        height="450"
-                        frameborder="0" style="border:0"
-                        src="https://www.google.com/maps/embed/v1/place?key=<?= env('API_GOOGLE_KEY') ?>&q=place_id:<?= urlencode($event->location_place_id)?>"
-                        allowfullscreen>
-                </iframe>
+            @can('viewAny', \App\Models\Attendance::class)
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-start">
+                    <h4>Attendance Report</h4>
+                    @can('create', \App\Models\Attendance::class)
+                    <a href="{{ route('events.attendances.index', ['event' => $event]) }}" class="btn btn-light btn-sm"><i class="fas fa-fw fa-edit"></i> Record Attendance</a>
+                    @endcan
+                </div>
+                <div class="card-body">
+                    <h5>Summary</h5>
+                    <div class="row text-center mb-4">
+                        <div class="col-6 col-md-3">
+                            <strong>Present</strong><br>
+                            {{ $singers_attendance_present }}
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <strong>Absent</strong><br>
+                            {{ $singers_attendance_absent }}
+                        </div>
+                        <div class="col-6 col-md-3">
+                            Not recorded<br>
+                            {{ $singers_attendance_missing }}
+                        </div>
+                    </div>
+                    <h5>Voice Parts</h5>
+                    <div class="row text-center mb-4">
+                        @foreach($voice_parts_attendance as $voice_part)
+                            <div class="col-6 col-md-3">
+                                {{ $voice_part->title }}<br>
+                                {{ $voice_part->response_count }}<br>
+                                <small>present</small>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
-
+            @endcan
         </div>
+
     </div>
 
 

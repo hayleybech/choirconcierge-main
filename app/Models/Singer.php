@@ -36,6 +36,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property VoicePart $voice_part
  * @property RiserStack[] $riser_stacks
  * @property Rsvp[] $rsvps
+ * @property Attendance[] $attendances
  *
  * Dynamic
  * @property int $age
@@ -166,6 +167,11 @@ class Singer extends Model
     public function rsvps(): HasMany
     {
         return $this->hasMany(Rsvp::class);
+    }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
     }
 
     /*
