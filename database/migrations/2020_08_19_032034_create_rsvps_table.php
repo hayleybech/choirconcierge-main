@@ -17,9 +17,6 @@ class CreateRsvpsTable extends Migration
             $table->integer('event_id')->unsigned();
             $table->string('response');
             $table->timestamps();
-
-            $table->foreign('singer_id')->references('id')->on('singers')->onDelete('cascade');
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });
     }
 
