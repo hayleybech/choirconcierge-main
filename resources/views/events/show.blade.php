@@ -107,6 +107,7 @@
 
         <div class="col-md-5">
 
+            @can ('viewAny', \App\Models\Rsvp::class)
             <div class="card">
                 <div class="card-header">
                     <h4>RSVP Report</h4>
@@ -143,6 +144,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
 
             @can('viewAny', \App\Models\Attendance::class)
             <div class="card">
