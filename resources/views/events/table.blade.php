@@ -5,6 +5,11 @@
         <th class="col--type"><a href="{{ $sorts['type.title']['url'] }}">Type<i class="ml-1 fa fas sort-{{ $sorts['type.title']['dir'] }} {{ ($sorts['type.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
         <th class="col--date">Event Date</th>
         <th class="col--location">Location</th>
+        @if($col_rsvp)
+            @can('viewAny', \App\Models\Rsvp::class)
+                <th class="col--rsvp">RSVP</th>
+            @endcan
+        @endif
         @if($col_attendance)
             @can('viewAny', \App\Models\Attendance::class)
             <th class="col--attendance">Attendance</th>
@@ -16,7 +21,7 @@
     </thead>
     <tbody>
     @forelse($events as $event)
-        @include('events.index_row', ['event' => $event, 'col_attendance' => $col_attendance])
+        @include('events.index_row', ['event' => $event, 'col_attendance' => $col_attendance, 'col_rsvp' => $col_rsvp])
     @empty
         @include('partials.noresults-table')
     @endforelse

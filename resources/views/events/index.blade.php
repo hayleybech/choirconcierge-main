@@ -44,13 +44,13 @@
 
         <div class="tab-content">
             <div class="tab-pane" id="pane-all" role="tabpanel" aria-labelledby="tab-all">
-                @include('events.table', ['events' => $all_events, 'col_attendance' => false])
+                @include('events.table', ['events' => $all_events, 'col_attendance' => false, 'col_rsvp' => false])
             </div>
             <div class="tab-pane active" id="pane-upcoming" role="tabpanel" aria-labelledby="tab-upcoming">
-                @include('events.table', ['events' => $upcoming_events, 'col_attendance' => false])
+                @include('events.table', ['events' => $upcoming_events, 'col_attendance' => false, 'col_rsvp' => true])
             </div>
             <div class="tab-pane" id="pane-past" role="tabpanel" aria-labelledby="tab-past">
-                @include('events.table', ['events' => $past_events, 'col_attendance' => true])
+                @include('events.table', ['events' => $past_events, 'col_attendance' => true, 'col_rsvp' => false])
             </div>
         </div>
 

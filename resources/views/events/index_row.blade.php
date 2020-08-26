@@ -20,6 +20,11 @@
     <td class="col--location">
         <span class="place-icon" style="background-image: url('{{ $event->location_icon }}');"></span> <span class="place-name">{{ $event->location_name }}</span>
     </td>
+    @if($col_rsvp)
+        @can('viewAny', \App\Models\Rsvp::class)
+            <td class="col--rsvp">{{ $event->singers_rsvp_response('yes')->count() }} going</td>
+        @endcan
+    @endif
     @if($col_attendance)
         @can('viewAny', \App\Models\Attendance::class)
         <td class="col--attendance">{{ $event->singers_attendance('present')->count() }} present</td>

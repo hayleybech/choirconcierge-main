@@ -330,7 +330,8 @@
 /* Event Table - Tablet */
 @media screen and (max-width:980px) {
   .row--event .col--created,
-  .row--event .col--attendance {
+  .row--event .col--attendance,
+  .row--event .col--rsvp {
     display: none;
   }
 }
