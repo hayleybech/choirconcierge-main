@@ -31,6 +31,7 @@ class PlacementRequest extends FormRequest
             'skill_performance'  => 'nullable|sometimes|min:1|max:5',
             'skill_sightreading' => 'nullable|sometimes|min:1|max:5',
             'voice_tone'         => 'nullable|sometimes|min:1|max:3',
+            'voice_part_id'      => '',
         ];
     }
 }

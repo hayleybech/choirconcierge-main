@@ -109,8 +109,12 @@ class Singer extends Model
         parent::update($attributes, $options);
 
         // Update user
-        $this->user->email = $attributes['email'];
-        $this->user->name = $attributes['name'];
+        if( isset( $attributes['email'] ) ) {
+            $this->user->email = $attributes['email'];
+        }
+        if( isset( $attributes['name'] ) ) {
+            $this->user->name = $attributes['name'];
+        }
         if( isset( $attributes['password'] ) ) {
             $this->user->setPassword($attributes['password']);
         }
@@ -120,8 +124,10 @@ class Singer extends Model
         $this->user->save();
 
         // Sync roles
-        $user_roles = $attributes['user_roles'] ?? [];
-        $this->user->roles()->sync($user_roles);
+        if( isset( $attributes['user_roles'] ) ) {
+            $user_roles = $attributes['user_roles'] ?? [];
+            $this->user->roles()->sync($user_roles);
+        }
         $this->save();
     }
 

@@ -7,6 +7,7 @@ use App\Http\Requests\PlacementRequest;
 use App\Models\Placement;
 use App\Models\Singer;
 use App\Models\Task;
+use App\Models\VoicePart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -22,7 +23,9 @@ class SingerPlacementController extends Controller
 
     public function create(Singer $singer): View
     {
-        return view('singers.createplacement', compact('singer'));
+        $voice_parts = [0 => "None"] + VoicePart::all()->pluck('title', 'id')->toArray();
+
+        return view('singers.createplacement', compact('singer', 'voice_parts'));
     }
 
     public function store(Singer $singer, PlacementRequest $request): RedirectResponse
@@ -42,12 +45,17 @@ class SingerPlacementController extends Controller
 
     public function edit(Singer $singer, Placement $placement, Request $request): View
     {
-        return view('singers.editplacement', compact('singer', 'placement'));
+        $voice_parts = [0 => "None"] + VoicePart::all()->pluck('title', 'id')->toArray();
+        return view('singers.editplacement', compact('singer', 'placement', 'voice_parts'));
     }
 
     public function update(PlacementRequest $request, Singer $singer, Placement $placement): RedirectResponse
     {
         $placement->update($request->validated());
+
+        $singer->update([
+            'voice_part_id' => $request->validated()['voice_part_id']
+        ]);
 
         return redirect()->route('singers.show', $singer)->with(['status' => 'Voice Placement updated.']);
     }
