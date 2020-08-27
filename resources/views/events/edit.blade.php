@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-    {{ Form::open( array( 'route' => ['events.show', $event->id], 'method' => 'put' ) ) }}
+    {{ Form::open( [ 'route' => ['events.show', $event->id], 'method' => 'put' ] ) }}
 
     <div class="row">
         <div class="col-md-6">
@@ -15,7 +15,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         {{ Form::label('title', 'Event Title') }}
-                        {{ Form::text('title', $event->title, array('class' => 'form-control')) }}
+                        {{ Form::text('title', $event->title, ['class' => 'form-control']) }}
                     </div>
 
                     <fieldset class="form-group">
@@ -34,9 +34,9 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
                             </div>
-                            {{ Form::text('date_range', $event->start_date->format('M d, Y H:i') . ' - ' . $event->end_date->format('M d, Y H:i'), array('class' => 'form-control events-date-range-picker')) }}
-                            {{ Form::hidden('start_date', $event->start_date, array('class' => 'start-date-hidden')) }}
-                            {{ Form::hidden('end_date', $event->end_date, array('class' => 'end-date-hidden')) }}
+                            {{ Form::text('date_range', $event->start_date->format('M d, Y H:i') . ' - ' . $event->end_date->format('M d, Y H:i'), ['class' => 'form-control events-date-range-picker']) }}
+                            {{ Form::hidden('start_date', $event->start_date, ['class' => 'start-date-hidden']) }}
+                            {{ Form::hidden('end_date', $event->end_date, ['class' => 'end-date-hidden']) }}
 
                         </div>
                     </div>
@@ -47,8 +47,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-fw fa-clock"></i></span>
                             </div>
-                            {{ Form::text('call_time_input', $event->call_time->format('M d, Y H:i'), array('class' => 'form-control events-single-date-picker')) }}
-                            {{ Form::hidden('call_time', $event->call_time, array('class' => 'call-time-hidden')) }}
+                            {{ Form::text('call_time_input', $event->call_time->format('M d, Y H:i'), ['class' => 'form-control events-single-date-picker']) }}
+                            {{ Form::hidden('call_time', $event->call_time, ['class' => 'call-time-hidden']) }}
                         </div>
                     </div>
 
@@ -92,11 +92,11 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-fw fa-map-marker-alt"></i></span>
                             </div>
-                            {{ Form::text('location', $event->location_name . ', ' . $event->location_address, array('class' => 'form-control location-input', 'rows' => '3')) }}
-                            {{ Form::hidden('location_place_id', $event->location_place_id, array('class' => 'form-control location-place-id')) }}
-                            {{ Form::hidden('location_icon', $event->location_icon, array('class' => 'form-control location-icon')) }}
-                            {{ Form::hidden('location_name', $event->location_name, array('class' => 'form-control location-name')) }}
-                            {{ Form::hidden('location_address', $event->location_address, array('class' => 'form-control location-address')) }}
+                            {{ Form::text('location', $event->location_name . ', ' . $event->location_address, ['class' => 'form-control location-input', 'rows' => '3']) }}
+                            {{ Form::hidden('location_place_id', $event->location_place_id, ['class' => 'form-control location-place-id']) }}
+                            {{ Form::hidden('location_icon', $event->location_icon, ['class' => 'form-control location-icon']) }}
+                            {{ Form::hidden('location_name', $event->location_name, ['class' => 'form-control location-name']) }}
+                            {{ Form::hidden('location_address', $event->location_address, ['class' => 'form-control location-address']) }}
                         </div>
                         <small class="location-place form-text text-muted">
                             <span class="place-icon" style="background-image: url('{{ $event->location_icon }}');"></span>
@@ -107,7 +107,7 @@
 
                     <div class="form-group">
                         {{ Form::label('description', 'Description') }}
-                        {{ Form::textarea('description', $event->description, array('class' => 'form-control', 'rows' => '3')) }}
+                        {{ Form::textarea('description', $event->description, ['class' => 'form-control', 'rows' => '3']) }}
                     </div>
 
                 </div>

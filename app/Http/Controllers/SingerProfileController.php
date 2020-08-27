@@ -32,7 +32,7 @@ class SingerProfileController extends Controller
         if( $singer->onboarding_enabled ) {
             // Mark matching task completed
             //$task = $singer->tasks()->where('name', 'Member Profile')->get();
-            $singer->tasks()->updateExistingPivot( self::PROFILE_TASK_ID, array('completed' => true) );
+            $singer->tasks()->updateExistingPivot( self::PROFILE_TASK_ID, ['completed' => true] );
 
             event( new TaskCompleted(Task::find(self::PROFILE_TASK_ID), $singer) );
         }

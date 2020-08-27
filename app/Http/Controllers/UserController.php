@@ -37,10 +37,10 @@ class UserController extends Controller
 	public function create(): void
     {
 		$user = User::create(
-		array(
+		[
 			'name' => '',
 			'email' => '',
-		));
+		]);
 		$user->addRole('admin');
 		// @todo add missing redirect??
 	}

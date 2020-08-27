@@ -146,7 +146,7 @@ class User extends Authenticatable implements HasMedia
 	 /*
     public function addCap($title)
     {
-        $assigned_roles = array();
+        $assigned_roles = [];
 
         $roles = array_fetch(Role::all()->toArray(), 'name');
  

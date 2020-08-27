@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-    {{ Form::open( array( 'route' => 'songs.index' ) ) }}
+    {{ Form::open( [ 'route' => 'songs.index' ] ) }}
 
     <div class="row">
         <div class="col-md-6">
@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         {{ Form::label('title', 'Song Title') }}
-                        {{ Form::text('title', '', array('class' => 'form-control')) }}
+                        {{ Form::text('title', '', ['class' => 'form-control']) }}
                     </div>
 
                     <fieldset class="form-group">

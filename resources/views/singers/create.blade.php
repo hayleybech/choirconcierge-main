@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-{{ Form::open( array( 'route' => 'singers.index' ) ) }}
+{{ Form::open( [ 'route' => 'singers.index' ] ) }}
 
 <div class="row">
 	<div class="col-md-6">
@@ -16,22 +16,22 @@
 			<div class="card-body">
 				<p>
 					{{ Form::label('name', 'Name') }}
-					{{ Form::text('name', '', array('class' => 'form-control')) }}
+					{{ Form::text('name', '', ['class' => 'form-control']) }}
 				</p>
 
 				<p>
 					{{ Form::label('email', 'E-Mail Address') }}
-					{{ Form::email('email', '', array('class' => 'form-control')) }}
+					{{ Form::email('email', '', ['class' => 'form-control']) }}
 				</p>
 
 				<p>
 					{{ Form::label('password', 'Change Password') }}
-					{{ Form::password('password', array('class' => 'form-control')) }}
+					{{ Form::password('password', ['class' => 'form-control']) }}
 					<small class="form-text text-muted">You may leave this blank and update it later.</small>
 				</p>
 				<p>
 					{{ Form::label('password_confirmation', 'Confirm Password') }}
-					{{ Form::password('password_confirmation', array('class' => 'form-control')) }}
+					{{ Form::password('password_confirmation', ['class' => 'form-control']) }}
 				</p>
 
 				<fieldset class="form-group">
@@ -60,7 +60,7 @@
 
 				<div class="form-group">
 					{{ Form::label('voice_part_id', 'Voice Part') }}
-					{{ Form::select('voice_part_id', $voice_parts, '', array('class' => 'custom-select')) }}
+					{{ Form::select('voice_part_id', $voice_parts, '', ['class' => 'custom-select']) }}
 				</div>
 
 				<div class="form-group">

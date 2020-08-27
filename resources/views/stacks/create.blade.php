@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-    {{ Form::open( array( 'route' => 'stacks.index' ) ) }}
+    {{ Form::open( [ 'route' => 'stacks.index' ] ) }}
 
     <div class="card">
         <h3 class="card-header h4">Riser Stack Details</h3>
@@ -14,7 +14,7 @@
 
             <div class="form-group">
                 {{ Form::label('title', 'Stack Title') }}
-                {{ Form::text('title', '', array('class' => 'form-control')) }}
+                {{ Form::text('title', '', ['class' => 'form-control']) }}
             </div>
 
             <riser-stack :initial-voice-parts="{{ $voice_parts->toJson() }}"></riser-stack>

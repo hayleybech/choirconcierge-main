@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-    {{ Form::open( array( 'route' => ['singers.show', $singer->id], 'method' => 'put', 'files' => true ) ) }}
+    {{ Form::open( [ 'route' => ['singers.show', $singer->id], 'method' => 'put', 'files' => true ] ) }}
 
     <div class="row">
         <div class="col-md-6">
@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <p>
                         {{ Form::label('name', 'Name') }}
-                        {{ Form::text('name', $singer->name, array('class' => 'form-control')) }}
+                        {{ Form::text('name', $singer->name, ['class' => 'form-control']) }}
                     </p>
 
                     <div class="form-group">
@@ -31,16 +31,16 @@
 
                     <p>
                         {{ Form::label('email', 'E-Mail Address') }}
-                        {{ Form::email('email', $singer->email, array('class' => 'form-control')) }}
+                        {{ Form::email('email', $singer->email, ['class' => 'form-control']) }}
                     </p>
 
                     <p>
                         {{ Form::label('password', 'Change Password') }}
-                        {{ Form::password('password', array('class' => 'form-control')) }}
+                        {{ Form::password('password', ['class' => 'form-control']) }}
                     </p>
                     <p>
                         {{ Form::label('password_confirmation', 'Confirm Password') }}
-                        {{ Form::password('password_confirmation', array('class' => 'form-control')) }}
+                        {{ Form::password('password_confirmation', ['class' => 'form-control']) }}
                     </p>
 
                     @if(Auth::user()->hasRole('Membership Team'))
@@ -70,7 +70,7 @@
 
                         <div class="form-group">
                             {{ Form::label('voice_part_id', 'Voice Part') }}
-                            {{ Form::select('voice_part_id', $voice_parts, optional($singer->voice_part)->id, array('class' => 'custom-select')) }}
+                            {{ Form::select('voice_part_id', $voice_parts, optional($singer->voice_part)->id, ['class' => 'custom-select']) }}
                         </div>
 
                         <div class="form-group">

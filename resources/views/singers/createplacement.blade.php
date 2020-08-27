@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-	{{ Form::open( array( 'route' => array('singers.placements.store', $singer->id) ) ) }}
+	{{ Form::open( [ 'route' => ['singers.placements.store', $singer->id] ] ) }}
 
 	{{ Form::hidden('singer_id', $singer->id) }}
 

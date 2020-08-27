@@ -49,7 +49,7 @@ class NotificationTemplate extends Model
 
 	public function getBodyWithHighlightsAttribute()
     {
-        $replacements = array(
+        $replacements = [
             '%%singer.name%%'       => '<code>%%singer.name%%</code>',
             '%%singer.email%%'      => '<code>%%singer.email%%</code>',
             '%%profile.create%%'    => '<code>%%profile.create%%</code>',
@@ -60,7 +60,7 @@ class NotificationTemplate extends Model
             '%%singer.phone%%'      => '<code>%%singer.phone%%</code>',
             '%%singer.section%%'    => '<code>%%singer.section%%</code>',
             '%%user.name%%' 	    => '<code>%%user.name%%</code>',
-        );
+        ];
         return str_replace( array_keys($replacements), $replacements, nl2br( e( $this->body ) ) );
     }
 
@@ -74,7 +74,7 @@ class NotificationTemplate extends Model
     public function getRecipients(): array
     {
 
-        $recipients = array();
+        $recipients = [];
         [$recipient_type, $recipient_id] = explode(':', $this->recipients);
         switch($recipient_type){
             case 'role':
@@ -94,34 +94,34 @@ class NotificationTemplate extends Model
 
     public function generateBody(Singer $singer, User $user = null): string
     {
-        $replacements = array(
+        $replacements = [
             '%%singer.name%%'       => $singer->name,
             '%%singer.email%%'      => $singer->email,
             '%%profile.create%%'    => '', //route( 'profile.create', $singer, $this->task ),
             '%%placement.create%%'  => '', //route( 'placement.create', $singer, $this->task ),
             '%%choir.name%%'        => tenant('choir_name') ?? 'Choir Name',
-        );
+        ];
         if($singer->profile)
         {
-            $profile_replacements = array(
+            $profile_replacements = [
                 '%%singer.dob%%'        => $singer->profile->dob,
                 '%%singer.age%%'        => $singer->getAge(),
                 '%%singer.phone%%'      => $singer->profile->phone,
-            );
+            ];
             $replacements = array_merge($replacements, $profile_replacements);
         }
         if($singer->placement)
         {
-            $placement_replacements = array(
+            $placement_replacements = [
                 '%%singer.section%%'    => $singer->placement->voice_part,
-            );
+            ];
             $replacements = array_merge($replacements, $placement_replacements);
         }
         if($user)
         {
-            $user_replacements = array(
+            $user_replacements = [
                 '%%user.name%%' 	=> $user->name,
-            );
+            ];
             $replacements = array_merge($replacements, $user_replacements);
         }
 

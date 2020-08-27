@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-    {{ Form::open( array( 'route' => ['stacks.show', $stack->id], 'method' => 'put' ) ) }}
+    {{ Form::open( [ 'route' => ['stacks.show', $stack->id], 'method' => 'put' ] ) }}
 
     <div class="card">
         <h3 class="card-header h4">Edit Riser Stack</h3>
@@ -14,7 +14,7 @@
 
             <div class="form-group">
                 {{ Form::label('title', 'Stack Title') }}
-                {{ Form::text('title', $stack->title, array('class' => 'form-control')) }}
+                {{ Form::text('title', $stack->title, ['class' => 'form-control']) }}
             </div>
 
             <riser-stack

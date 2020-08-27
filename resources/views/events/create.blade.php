@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-    {{ Form::open( array( 'route' => 'events.index' ) ) }}
+    {{ Form::open( [ 'route' => 'events.index' ] ) }}
 
     <div class="row">
         <div class="col-md-6">
@@ -17,7 +17,7 @@
 
                     <div class="form-group">
                         {{ Form::label('title', 'Event Title') }}
-                        {{ Form::text('title', '', array('class' => 'form-control')) }}
+                        {{ Form::text('title', '', ['class' => 'form-control']) }}
                     </div>
 
                     <fieldset class="form-group">
@@ -36,9 +36,9 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
                             </div>
-                            {{ Form::text('date_range', '', array('class' => 'form-control events-date-range-picker')) }}
-                            {{ Form::hidden('start_date', '', array('class' => 'start-date-hidden')) }}
-                            {{ Form::hidden('end_date', '', array('class' => 'end-date-hidden')) }}
+                            {{ Form::text('date_range', '', ['class' => 'form-control events-date-range-picker']) }}
+                            {{ Form::hidden('start_date', '', ['class' => 'start-date-hidden']) }}
+                            {{ Form::hidden('end_date', '', ['class' => 'end-date-hidden']) }}
 
                         </div>
                     </div>
@@ -49,8 +49,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-fw fa-clock"></i></span>
                             </div>
-                            {{ Form::text('call_time_input', '', array('class' => 'form-control events-single-date-picker')) }}
-                            {{ Form::hidden('call_time', '', array('class' => 'call-time-hidden')) }}
+                            {{ Form::text('call_time_input', '', ['class' => 'form-control events-single-date-picker']) }}
+                            {{ Form::hidden('call_time', '', ['class' => 'call-time-hidden']) }}
                         </div>
                     </div>
 
@@ -86,7 +86,7 @@
                         'AM' => 'AM',
                         'PM' => 'PM'
                     ], '', ['class' => 'custom-select time-ampm']) }}
-                {{ Form::text('call_time', '', array('class' => 'call-time-hidden')) }}
+                {{ Form::text('call_time', '', ['class' => 'call-time-hidden']) }}
                         </div>
                     </div>-->
 
@@ -96,11 +96,11 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-fw fa-map-marker-alt"></i></span>
                             </div>
-                            {{ Form::text('location', '', array('class' => 'form-control location-input', 'rows' => '3')) }}
-                            {{ Form::hidden('location_place_id', '', array('class' => 'form-control location-place-id')) }}
-                            {{ Form::hidden('location_icon', '', array('class' => 'form-control location-icon')) }}
-                            {{ Form::hidden('location_name', '', array('class' => 'form-control location-name')) }}
-                            {{ Form::hidden('location_address', '', array('class' => 'form-control location-address')) }}
+                            {{ Form::text('location', '', ['class' => 'form-control location-input', 'rows' => '3']) }}
+                            {{ Form::hidden('location_place_id', '', ['class' => 'form-control location-place-id']) }}
+                            {{ Form::hidden('location_icon', '', ['class' => 'form-control location-icon']) }}
+                            {{ Form::hidden('location_name', '', ['class' => 'form-control location-name']) }}
+                            {{ Form::hidden('location_address', '', ['class' => 'form-control location-address']) }}
                         </div>
                         <small class="location-place form-text text-muted">
                             <span class="place-icon"></span>
@@ -111,7 +111,7 @@
 
                     <div class="form-group">
                         {{ Form::label('description', 'Description') }}
-                        {{ Form::textarea('description', '', array('class' => 'form-control', 'rows' => '3')) }}
+                        {{ Form::textarea('description', '', ['class' => 'form-control', 'rows' => '3']) }}
                     </div>
 
                 </div>

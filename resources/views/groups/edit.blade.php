@@ -4,7 +4,7 @@
 @section('page-title', $group->title)
 
 @section('page-content')
-    {{ Form::open( array( 'route' => ['groups.update', $group->id], 'method' => 'put' ) ) }}
+    {{ Form::open( [ 'route' => ['groups.update', $group->id], 'method' => 'put' ] ) }}
 
     <div class="row">
         <div class="col-md-6">
@@ -15,13 +15,13 @@
                 <div class="card-body">
                     <div class="form-group">
                         {{ Form::label('title', 'Title') }}
-                        {{ Form::text('title', $group->title, array('class' => 'form-control')) }}
+                        {{ Form::text('title', $group->title, ['class' => 'form-control']) }}
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('slug', 'Slug') }}
                         <div class="input-group mb-3">
-                            {{ Form::text('slug', $group->slug, array('class' => 'form-control')) }}
+                            {{ Form::text('slug', $group->slug, ['class' => 'form-control']) }}
                             <div class="input-group-append">
                                 <span class="input-group-text" id="basic-addon2">{{ '@'.Request::gethost() }}</span>
                             </div>

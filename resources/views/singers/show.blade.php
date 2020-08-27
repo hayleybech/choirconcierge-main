@@ -6,12 +6,12 @@
 
 	<?php
 	// Store CSS badge classes for categories
-	$category_class = array(
+	$category_class = [
 	'Prospects'             => 'text-primary',
 	'Archived Prospects'    => 'text-info',
 	'Members'               => 'text-success',
 	'Archived Members'      => 'text-danger',
-	);
+	];
 	?>
 	<div class="row">
 		<div class="col-md-7">

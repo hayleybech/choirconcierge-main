@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-    {{ Form::open( array( 'route' => ['folders.show', $folder], 'method' => 'put' ) ) }}
+    {{ Form::open( [ 'route' => ['folders.show', $folder], 'method' => 'put' ] ) }}
 
     <div class="row">
         <div class="col-md-6">
@@ -16,7 +16,7 @@
 
                     <div class="form-group">
                         {{ Form::label('title', 'Folder Title') }}
-                        {{ Form::text('title', $folder->title, array('class' => 'form-control')) }}
+                        {{ Form::text('title', $folder->title, ['class' => 'form-control']) }}
                     </div>
 
                 </div>

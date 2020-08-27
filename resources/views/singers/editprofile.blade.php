@@ -23,45 +23,45 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
 							</div>
-							{{ Form::text('dob_input', $profile->dob->format('M d, Y H:i'), array('class' => 'form-control dob-single-date-picker')) }}
-							{{ Form::hidden('dob', $profile->dob, array('class' => 'dob-hidden')) }}
+							{{ Form::text('dob_input', $profile->dob->format('M d, Y H:i'), ['class' => 'form-control dob-single-date-picker']) }}
+							{{ Form::hidden('dob', $profile->dob, ['class' => 'dob-hidden']) }}
 						</div>
 
 					</div>
 
 					<p>
 						{{ Form::label('phone', 'Phone') }}
-						{{ Form::text('phone', $profile->phone, array('class' => 'form-control')) }}
+						{{ Form::text('phone', $profile->phone, ['class' => 'form-control']) }}
 					</p>
 
 					<p>
 						{{ Form::label('ice_name', 'Emergency Contact Name') }}
-						{{ Form::text('ice_name', $profile->ice_name, array('class' => 'form-control')) }}
+						{{ Form::text('ice_name', $profile->ice_name, ['class' => 'form-control']) }}
 					</p>
 
 					<p>
 						{{ Form::label('ice_phone', 'Emergency Contact Phone') }}
-						{{ Form::text('ice_phone', $profile->ice_phone, array('class' => 'form-control')) }}
+						{{ Form::text('ice_phone', $profile->ice_phone, ['class' => 'form-control']) }}
 					</p>
 
 					<p>
 						{{ Form::label('reason_for_joining', 'Why are you joining?') }}
-						{{ Form::text('reason_for_joining', $profile->reason_for_joining, array('class' => 'form-control')) }}
+						{{ Form::text('reason_for_joining', $profile->reason_for_joining, ['class' => 'form-control']) }}
 					</p>
 
 					<p>
 						{{ Form::label('referrer', 'Where did you hear about us?') }}
-						{{ Form::text('referrer', $profile->referrer, array('class' => 'form-control')) }}
+						{{ Form::text('referrer', $profile->referrer, ['class' => 'form-control']) }}
 					</p>
 
 					<p>
 						{{ Form::label('profession', 'What is your profession?') }}
-						{{ Form::text('profession', $profile->profession, array('class' => 'form-control')) }}
+						{{ Form::text('profession', $profile->profession, ['class' => 'form-control']) }}
 					</p>
 
 					<p>
 						{{ Form::label('skills', 'What non-musical skills do you have?') }}
-						{{ Form::text('skills', $profile->skills, array('class' => 'form-control')) }}
+						{{ Form::text('skills', $profile->skills, ['class' => 'form-control']) }}
 					</p>
 
 				</div>

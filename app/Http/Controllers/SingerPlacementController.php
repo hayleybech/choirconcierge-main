@@ -35,7 +35,7 @@ class SingerPlacementController extends Controller
         if( $singer->onboarding_enabled ) {
             // Mark matching task completed
             //$task = $singer->tasks()->where('name', 'Voice Placement')->get();
-            $singer->tasks()->updateExistingPivot( self::PLACEMENT_TASK_ID, array('completed' => true) );
+            $singer->tasks()->updateExistingPivot( self::PLACEMENT_TASK_ID, ['completed' => true] );
 
             event( new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer) );
         }

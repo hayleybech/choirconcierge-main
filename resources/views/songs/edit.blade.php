@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-    {{ Form::open( array( 'route' => ['songs.show', $song->id], 'method' => 'put' ) ) }}
+    {{ Form::open( [ 'route' => ['songs.show', $song->id], 'method' => 'put' ] ) }}
 
     <div class="row">
         <div class="card-md-6">
@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         {{ Form::label('title', 'Song Title') }}
-                        {{ Form::text('title', $song->title, array('class' => 'form-control')) }}
+                        {{ Form::text('title', $song->title, ['class' => 'form-control']) }}
                     </div>
 
                     <fieldset class="form-group">
@@ -57,15 +57,15 @@
                     <h4>Add Attachment</h4>
                     <p>
                         {{ Form::label('attachment-title', 'Title') }}
-                        {{ Form::text('attachment-title', '', array('class' => 'form-control')) }}
+                        {{ Form::text('attachment-title', '', ['class' => 'form-control']) }}
                     </p>
                     <p>
                         {{ Form::label('attachment-category', 'Category') }}
-                        {{ Form::select('attachment-category', array('Learning Track', 'Demo', 'Sheet Music'), '', ['class' => 'custom-select form-control-sm']) }}
+                        {{ Form::select('attachment-category', ['Learning Track', 'Demo', 'Sheet Music'], '', ['class' => 'custom-select form-control-sm']) }}
                     </p>
                     <p>
                         {{ Form::label('attachment-upload', 'Upload Attachment') }}
-                        {{ Form::text('attachment-upload', '', array('class' => 'form-control')) }}
+                        {{ Form::text('attachment-upload', '', ['class' => 'form-control']) }}
                     </p>
                     --}}
 
