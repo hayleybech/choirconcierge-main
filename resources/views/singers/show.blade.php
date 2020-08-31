@@ -100,7 +100,7 @@
 								<h3 class="h4">Address</h3>
 								<p>
 									{{ $singer->profile->address_street_1 ?? 'No address' }}<br>
-									{{ $singer->profile->address_suburb ? $singer->profile->address_suburb . ', ' : '' }}{{ $singer->profile->address_state ?? '' }} {{ $singer->profile->address_postcode ?? '' }}
+									{{ optional($singer->profile)->address_suburb ? optional($singer->profile)->address_suburb . ', ' : '' }}{{ $singer->profile->address_state ?? '' }} {{ $singer->profile->address_postcode ?? '' }}
 								</p>
 							</div>
 						</div>
