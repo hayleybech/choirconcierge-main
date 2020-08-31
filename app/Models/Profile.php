@@ -16,6 +16,10 @@ use Illuminate\Support\Carbon;
  * @property string $phone
  * @property string $ice_name
  * @property string $ice_phone
+ * @property string address_street_1
+ * @property string address_suburb
+ * @property string address_state
+ * @property string address_postcode
  * @property string $reason_for_joining
  * @property string $referrer
  * @property string $profession
@@ -34,7 +38,11 @@ class Profile extends Model
 		'dob', 
 		'phone', 
 		'ice_name', 
-		'ice_phone', 
+		'ice_phone',
+        'address_street_1',
+        'address_suburb',
+        'address_state',
+        'address_postcode',
 		'reason_for_joining', 
 		'referrer', 
 		'profession', 

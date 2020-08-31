@@ -96,6 +96,12 @@
 								<div class="profile-item">
 									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->profile->ice_phone ?? '?' }}
 								</div>
+
+								<h3 class="h4">Address</h3>
+								<p>
+									{{ $singer->profile->address_street_1 ?? 'No address' }}<br>
+									{{ $singer->profile->address_suburb ? $singer->profile->address_suburb . ', ' : '' }}{{ $singer->profile->address_state ?? '' }} {{ $singer->profile->address_postcode ?? '' }}
+								</p>
 							</div>
 						</div>
 						<div class="col-md-7">

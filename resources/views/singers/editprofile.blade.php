@@ -29,40 +29,79 @@
 
 					</div>
 
-					<p>
-						{{ Form::label('phone', 'Phone') }}
-						{{ Form::text('phone', $profile->phone, ['class' => 'form-control']) }}
-					</p>
+					<fieldset>
+						<legend>Contact Details</legend>
 
-					<p>
-						{{ Form::label('ice_name', 'Emergency Contact Name') }}
-						{{ Form::text('ice_name', $profile->ice_name, ['class' => 'form-control']) }}
-					</p>
+						<p>
+							{{ Form::label('phone', 'Phone') }}
+							{{ Form::text('phone', $profile->phone, ['class' => 'form-control']) }}
+						</p>
 
-					<p>
-						{{ Form::label('ice_phone', 'Emergency Contact Phone') }}
-						{{ Form::text('ice_phone', $profile->ice_phone, ['class' => 'form-control']) }}
-					</p>
+						<p>
+							{{ Form::label('ice_name', 'Emergency Contact Name') }}
+							{{ Form::text('ice_name', $profile->ice_name, ['class' => 'form-control']) }}
+						</p>
 
-					<p>
-						{{ Form::label('reason_for_joining', 'Why are you joining?') }}
-						{{ Form::text('reason_for_joining', $profile->reason_for_joining, ['class' => 'form-control']) }}
-					</p>
+						<p>
+							{{ Form::label('ice_phone', 'Emergency Contact Phone') }}
+							{{ Form::text('ice_phone', $profile->ice_phone, ['class' => 'form-control']) }}
+						</p>
+					</fieldset>
 
-					<p>
-						{{ Form::label('referrer', 'Where did you hear about us?') }}
-						{{ Form::text('referrer', $profile->referrer, ['class' => 'form-control']) }}
-					</p>
+					<fieldset>
+						<legend>Address</legend>
+						<p>
+							{{ Form::label('address_street_1', 'Street Address') }}
+							{{ Form::text('address_street_1', $profile->address_street_1, ['class' => 'form-control']) }}
+						</p>
+						<div class="row mb-3">
+							<div class="col-md-8">
+								{{ Form::label('address_suburb', 'Suburb') }}
+								{{ Form::text('address_suburb', $profile->address_suburb, ['class' => 'form-control']) }}
+							</div>
+							<div class="col-md-2">
+								{{ Form::label('address_state', 'State') }}
+								{{ Form::select('address_state', [
+									'ACT' => 'ACT',
+									'NSW' => 'NSW',
+									'NT'  => 'NT',
+									'QLD' => 'QLD',
+									'SA'  => 'SA',
+									'TAS' => 'TAS',
+									'VIC' => 'VIC',
+									'WA'  => 'WA',
+								], $profile->address_state, ['class' => 'custom-select']) }}
+							</div>
+							<div class="col-md-2">
+								{{ Form::label('address_postcode', 'Postcode') }}
+								{{ Form::text('address_postcode', $profile->address_postcode, ['class' => 'form-control']) }}
+							</div>
+						</div>
+					</fieldset>
 
-					<p>
-						{{ Form::label('profession', 'What is your profession?') }}
-						{{ Form::text('profession', $profile->profession, ['class' => 'form-control']) }}
-					</p>
+					<fieldset>
+						<legend>Other Info</legend>
 
-					<p>
-						{{ Form::label('skills', 'What non-musical skills do you have?') }}
-						{{ Form::text('skills', $profile->skills, ['class' => 'form-control']) }}
-					</p>
+						<p>
+							{{ Form::label('reason_for_joining', 'Why are you joining?') }}
+							{{ Form::text('reason_for_joining', $profile->reason_for_joining, ['class' => 'form-control']) }}
+						</p>
+
+						<p>
+							{{ Form::label('referrer', 'Where did you hear about us?') }}
+							{{ Form::text('referrer', $profile->referrer, ['class' => 'form-control']) }}
+						</p>
+
+						<p>
+							{{ Form::label('profession', 'What is your profession?') }}
+							{{ Form::text('profession', $profile->profession, ['class' => 'form-control']) }}
+						</p>
+
+						<p>
+							{{ Form::label('skills', 'What non-musical skills do you have?') }}
+							{{ Form::text('skills', $profile->skills, ['class' => 'form-control']) }}
+						</p>
+					</fieldset>
 
 				</div>
 
