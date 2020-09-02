@@ -83,7 +83,7 @@ class FolderController extends Controller
     {
         $folder->update($request->validated());
 
-        return redirect()->route('folders.show', [$folder])->with(['status' => 'Folder updated. ', ]);
+        return redirect()->route('folders.index')->with(['status' => 'Folder updated. ', ]);
     }
 
     /**
