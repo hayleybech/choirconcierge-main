@@ -404,7 +404,6 @@
 }
 
 .parent-row--folder {
-  font-size: 14px;
 }
 .sub-row--document:nth-child(even) {
   background-color: transparent;
@@ -468,6 +467,15 @@
 }
 /* Folders Table - Mobile */
 @media screen and (max-width:767px) {
+
+  .r-table--card-view-mobile .row--folder.parent-row--folder {
+    grid-template-columns: 0 55% 6.5em 1em;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+        "mark title title delete"
+        "mark status created delete"
+    ;
+  }
 
   .r-table--card-view-mobile .row--folder {
     grid-template-columns: 0 55% 6.5em 1em;
