@@ -22,11 +22,6 @@
             </div>
         </div>
     </div>
-    <div class="r-table__cell folder-col--actions">
-        <a href="{{ route('folders.show', ['folder' => $folder]) }}" class="btn btn-primary btn-sm btn-block">
-            <i class="fa fa-fw fa-eye"></i> View
-        </a>
-    </div>
     <div class="r-table__cell col--delete">
         @can('delete', $folder)
         <x-delete-button :action="route( 'folders.destroy', ['folder' => $folder] )" :message="$folder->documents()->count() . ' documents will also be deleted.'" />
