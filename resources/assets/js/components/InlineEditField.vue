@@ -12,7 +12,7 @@
         </form>
     </div>
     <div v-else>
-        {{ value }} <button type="button" class="btn btn-link" v-on:click="editing = true;"><i class="far fa-fw fa-edit"></i> Edit</button>
+        {{ value }} <button type="button" class="btn btn-link" v-on:click="editing = true;"><i class="far fa-fw fa-edit"></i> {{ editLabel }}</button>
     </div>
 
 
@@ -33,6 +33,10 @@ export default {
         csrf: {
             type: String,
             required: true
+        },
+        editLabel: {
+            type: String,
+            default: 'Edit'
         }
     },
     data() {

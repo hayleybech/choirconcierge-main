@@ -24,7 +24,7 @@
                     <h4 class="mt-2">My RSVP</h4>
                     @if($my_rsvp)
                         @if($event->isUpcoming())
-                            <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $my_rsvp]) }}" value="{{ $my_rsvp->response_string }}" csrf="{{ csrf_token() }}">
+                            <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $my_rsvp]) }}" value="{{ $my_rsvp->response_string }}" csrf="{{ csrf_token() }}" edit-label="Change response">
                                 <label for="rsvp_response" class="d-block">Will you attend?</label>
 
                                 <div class="custom-control custom-radio custom-control-inline">
