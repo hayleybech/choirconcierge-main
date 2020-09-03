@@ -73,7 +73,12 @@
                     @if( ! $event->isUpcoming())
                     <h4 class="mt-2">My Attendance</h4>
                         @if($my_attendance)
-                        <p>{{ $my_attendance->response_string }}</p>
+                        <p>
+                            {{ $my_attendance->response_string }}<br>
+                            @if($my_attendance->absent_reason)
+                            Reason: {{ $my_attendance->absent_reason }}
+                            @endif
+                        </p>
                         @else
                         <p>Not recorded.</p>
                         @endif

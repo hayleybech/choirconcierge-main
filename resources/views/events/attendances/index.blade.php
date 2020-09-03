@@ -6,7 +6,7 @@
 
     <div class="row">
 
-        <div class="col-md-5">
+        <div class="col-md-7">
 
             {{ Form::open(['route' => ['events.attendances.updateAll', $event]]) }}
 
@@ -15,12 +15,13 @@
                     <h1 class="h2 mb-0">Attendance for: {{ $event->title }}</h1>
                 </div>
 
-                <table class="table card-table">
+                <table class="table card-table table-responsive">
                     <thead>
-                    <tr class="row--singer">
-                        <th class="col--title">Singer</th>
-                        <th class="col--attendance">Attendance</th>
-                    </tr>
+                        <tr class="row--singer">
+                            <th class="col--title">Singer</th>
+                            <th class="col--attendance">Did they attend?</th>
+                            <th class="col--attendance">Reason for absence</th>
+                        </tr>
                     </thead>
                     <tbody>
                     @each('events.attendances.index_row', $singers, 'singer', 'partials.noresults-table')

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Columns
  * @property int id
  * @property string response
+ * @property string absent_reason
  *
  * Relationships
  * @property Singer singer
@@ -25,6 +26,7 @@ class Attendance extends Model
     protected $fillable = [
         'singer_id',
         'response',
+        'absent_reason',
         'event_id',
     ];
 
@@ -38,6 +40,6 @@ class Attendance extends Model
     }
 
     public function getResponseStringAttribute(){
-        return ucfirst($this->response);
+        return ($this->response === 'absent_apology') ? 'Absent (With Apology)' : ucfirst($this->response);
     }
 }

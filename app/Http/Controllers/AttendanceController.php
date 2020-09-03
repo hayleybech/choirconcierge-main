@@ -30,11 +30,15 @@ class AttendanceController extends Controller
     {
         $this->authorize('create', Attendance::class);
 
+        $absent_reason = $request->input('absent_reason');
         $responses = $request->input('attendance_response');
         foreach($responses as $singer_id => $response){
             $event->attendances()->updateOrCreate(
                 ['singer_id' => $singer_id],
-                ['response'  => $response]
+                [
+                    'response'  => $response,
+                    'absent_reason' => $absent_reason[$singer_id],
+                ]
             );
         }
 
