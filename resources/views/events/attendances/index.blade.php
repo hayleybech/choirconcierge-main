@@ -6,7 +6,7 @@
 
     <div class="row">
 
-        <div class="col-md-7">
+        <div class="col-md-8">
 
             {{ Form::open(['route' => ['events.attendances.updateAll', $event]]) }}
 
@@ -15,7 +15,7 @@
                     <h1 class="h2 mb-0">Attendance for: {{ $event->title }}</h1>
                 </div>
 
-                <table class="table card-table table-responsive">
+                <table class="table card-table table-attendance">
                     <thead>
                         <tr class="row--singer">
                             <th class="col--title">Singer</th>

@@ -15,11 +15,12 @@
             @else
             {{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
             @endcan
-            <p>
+            <div>
                 <span class="badge badge-pill badge-secondary" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>
-			    <span class="d-md-none">{{ substr( $singer->voice_part->title ?? 'None', 0, 5 ) }}</span>
-			    <span class="d-none d-md-inline">{{ ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? $singer->voice_part->title : 'No part' }}</span>
-		</span></p>
+                    <span class="d-md-none">{{ substr( $singer->voice_part->title ?? 'None', 0, 5 ) }}</span>
+                    <span class="d-none d-md-inline">{{ ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? $singer->voice_part->title : 'No part' }}</span>
+		        </span>
+            </div>
         </div>
     </td>
     <td class="col--attendance">
@@ -38,7 +39,7 @@
         </div>
 
     </td>
-    <td class="col--attendance">
-        <label for="absent_reason_{{ $singer->id }}" class="mr-2 sr-only">Reason</label>
+    <td class="col--reason">
+        <label for="absent_reason_{{ $singer->id }}" class="mr-2 d-sm-none">Reason</label>
         <input type="text" id="absent_reason_{{ $singer->id }}" name="absent_reason[{{ $singer->id }}]" value="{{ optional($singer->attendance)->absent_reason }}" class="form-control form-control-sm">
     </td>

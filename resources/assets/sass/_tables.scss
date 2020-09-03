@@ -486,3 +486,33 @@
   ;
   }
 }
+
+
+/* Attendance Table */
+
+/* Attendance Table - Mobile */
+@media screen and (max-width: 767px) {
+    .table-attendance {
+
+        thead {
+            display: none;
+        }
+        tbody {
+            display: flex;
+            flex-flow: column nowrap;
+        }
+        .row--singer {
+            display: grid;
+            flex-flow: column nowrap;
+            grid-template-areas:
+            "title attendance"
+            "reason reason"
+        ;
+            grid-template-columns: 50% 50%;
+            grid-template-rows: auto auto;
+        }
+        .row--singer .col--reason {
+            grid-area: reason;
+        }
+    }
+}
