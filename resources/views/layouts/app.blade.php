@@ -234,17 +234,21 @@
 			@else
 				<nav class="tap-bar">
 					<ul class="nav nav-pills nav-fill">
-						@if( Auth::user()->isEmployee() )
-							<li class="nav-item">
-								<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers', 'singers/*') ) ? 'active' : '' }}"><i class="fal fa-users fa-fw"></i><span class="link-text">Singers</span></a>
-							</li>
-							<li class="nav-item">
-								<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs', 'songs/*') ) ? 'active' : '' }}"><i class="fal fa-list-music fa-fw"></i><span class="link-text">Songs</span></a>
-							</li>
-							<li class="nav-item">
-								<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events', 'events/*') ) ? 'active' : '' }}"><i class="fal fa-calendar-alt fa-fw"></i><span class="link-text">Events</span></a>
-							</li>
-						@endif
+						@can('ViewAny', \App\Models\Singer::class)
+						<li class="nav-item">
+							<a href="{{ route('singers.index') }}" class="nav-link {{ ( \Request::is('singers', 'singers/*') ) ? 'active' : '' }}"><i class="fal fa-users fa-fw"></i><span class="link-text">Singers</span></a>
+						</li>
+						@endcan
+						@can('viewAny', \App\Models\Song::class)
+						<li class="nav-item">
+							<a href="{{ route('songs.index') }}" class="nav-link {{ ( \Request::is('songs', 'songs/*') ) ? 'active' : '' }}"><i class="fal fa-list-music fa-fw"></i><span class="link-text">Songs</span></a>
+						</li>
+						@endcan
+						@can('viewAny', \App\Models\Event::class)
+						<li class="nav-item">
+							<a href="{{ route('events.index') }}" class="nav-link {{ ( \Request::is('events', 'events/*') ) ? 'active' : '' }}"><i class="fal fa-calendar-alt fa-fw"></i><span class="link-text">Events</span></a>
+						</li>
+						@endcan
 						<li class="nav-item">
 							<a href="" class="nav-link mobile-nav-collapse-link"><i class="fal fa-fw fa-ellipsis-v"></i><span class="link-text">More</span></a>
 						</li>
