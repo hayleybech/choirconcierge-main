@@ -107,7 +107,7 @@
 
                     <div class="form-group">
                         {{ Form::label('description', 'Description') }}
-                        <limited-textarea field-id="description" field-name="description" value="{{ $event->description }}" :maxlength="255"></limited-textarea>
+                        <limited-textarea field-id="description" field-name="description" value="{{ $event->description }}" :maxlength="5000"></limited-textarea>
                     </div>
 
                 </div>

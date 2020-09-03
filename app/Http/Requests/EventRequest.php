@@ -33,7 +33,7 @@ class EventRequest extends FormRequest
             'location_icon'     => 'nullable',
             'location_name'     => 'nullable',
             'location_address'  => 'nullable',
-            'description'       => 'nullable|max:255',
+            'description'       => 'nullable|max:5000',
         ];
     }
 }
