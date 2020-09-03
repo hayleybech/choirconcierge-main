@@ -171,6 +171,10 @@
                             {{ $singers_attendance_absent }}
                         </div>
                         <div class="col-6 col-md-3">
+                            With Apology<br>
+                            {{ $singers_attendance_absent_apology }}
+                        </div>
+                        <div class="col-6 col-md-3">
                             Not recorded<br>
                             {{ $singers_attendance_missing }}
                         </div>
