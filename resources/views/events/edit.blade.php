@@ -107,7 +107,7 @@
 
                     <div class="form-group">
                         {{ Form::label('description', 'Description') }}
-                        {{ Form::textarea('description', $event->description, ['class' => 'form-control', 'rows' => '3']) }}
+                        <limited-textarea field-id="description" field-name="description" value="{{ $event->description }}" :maxlength="255"></limited-textarea>
                     </div>
 
                 </div>
@@ -129,7 +129,6 @@
     {{ Form::close() }}
 
     @push('scripts-footer-bottom')
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= env('API_GOOGLE_KEY') ?>&libraries=places&callback=initMap" async defer></script>

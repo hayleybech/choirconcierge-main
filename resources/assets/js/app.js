@@ -36,6 +36,7 @@ Vue.component('track-player', require('./components/TrackPlayer').default);
 Vue.component('track-list-player', require('./components/TrackListPlayer').default);
 Vue.component('pitch-button', require('./components/PitchButton').default);
 Vue.component('inline-edit-field', require('./components/InlineEditField').default);
+Vue.component('limited-textarea', require('./components/LimitedTextarea').default);
 
 const app = new Vue({
     el: '#app'

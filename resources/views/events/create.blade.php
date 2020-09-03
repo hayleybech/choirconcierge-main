@@ -111,7 +111,7 @@
 
                     <div class="form-group">
                         {{ Form::label('description', 'Description') }}
-                        {{ Form::textarea('description', '', ['class' => 'form-control', 'rows' => '3']) }}
+                        <limited-textarea field-id="description" field-name="description" value="" :maxlength="255"></limited-textarea>
                     </div>
 
                 </div>
