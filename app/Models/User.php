@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
@@ -45,7 +46,7 @@ use UnexpectedValueException;
  */
 class User extends Authenticatable implements HasMedia
 {
-    use Notifiable, InteractsWithMedia, BelongsToTenant;
+    use Notifiable, InteractsWithMedia, BelongsToTenant, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.

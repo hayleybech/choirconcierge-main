@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
@@ -23,7 +24,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class SingerCategory extends Model
 {
-    use BelongsToTenant;
+    use BelongsToTenant, SoftDeletes;
     
     public function singers(): HasMany
     {

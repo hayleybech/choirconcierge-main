@@ -5,12 +5,12 @@ namespace App\Models;
 use App\Models\Filters\Filterable;
 use App\Models\Filters\Song_CategoryFilter;
 use App\Models\Filters\Song_StatusFilter;
-use App\Models\Traits\OnDeleteCascade;
 use App\Notifications\SongUploaded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
@@ -38,7 +38,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Song extends Model
 {
-    use Filterable, OnDeleteCascade, BelongsToTenant;
+    use Filterable, BelongsToTenant, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -53,10 +53,6 @@ class Song extends Model
     protected static $filters = [
         Song_StatusFilter::class,
         Song_CategoryFilter::class,
-    ];
-
-    protected static array $delete_cascaded = [
-        'attachments',
     ];
 
     protected $with = [

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
@@ -40,7 +41,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Event extends Model
 {
-    use Filterable, BelongsToTenant;
+    use Filterable, BelongsToTenant, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
