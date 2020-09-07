@@ -13,7 +13,7 @@
                     <div class="input-group input-group-sm mb-2 mr-2">
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <button class="btn btn-outline-success btn-sm"><i class="fa fa-check"></i> Apply</button>
-                            <a href="{{ route('events.index') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i> Clear</a>
+                            <a href="{{ route('events.reports.attendance') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i> Clear</a>
                         </div>
                     </div>
                 </form>
@@ -61,13 +61,20 @@
                 <td>Singers present</td>
                 @foreach($events as $event)
                 <td>
-                    <small>{{ $event->singers_attendance('present')->get()->count() }}/{{ \App\Models\Singer::all()->count() }}</small>
+                    <small>
+                        {{ floor($event->singers_attendance('present')->get()->count() / \App\Models\Singer::all()->count() * 100) }}%<br>
+                        ({{ $event->singers_attendance('present')->get()->count() }}/{{ \App\Models\Singer::all()->count() }})
+                    </small>
                 </td>
                 @endforeach
                 <td></td>
             </tr>
             </tfoot>
         </table>
+
+        <div class="card-footer">
+            Average singers per event: {{ $avg_singers_per_event }} | Average events per singer {{ $avg_events_per_singer }}
+        </div>
 
     </div>
 @endsection

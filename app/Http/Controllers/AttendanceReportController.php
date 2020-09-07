@@ -26,10 +26,26 @@ class AttendanceReportController extends Controller
         $no_part->singers = Singer::whereDoesntHave('voice_part')->get();
         $voice_parts[] = $no_part;
 
+        $avg_singers_per_event = round(
+            $all_events->reduce(static function($carry, $event){
+                return $carry + $event->singers_attendance('present')->count();
+            }, 0)
+            / $all_events->count()
+        , 2);
+
+        $avg_events_per_singer = round(
+            Singer::all()->reduce(static function($carry, $singer){
+                return $carry + $singer->attendances()->where('response', 'present')->count();
+            }, 0)
+            / Singer::all()->count()
+        , 2);
+
         return view('events.reports.attendance', [
             'voice_parts' => $voice_parts,
             'events' => $all_events->where('start_date', '<', now()),
             'filters' => Event::getFilters(),
+            'avg_singers_per_event' => $avg_singers_per_event,
+            'avg_events_per_singer' => $avg_events_per_singer,
         ]);
     }
 }

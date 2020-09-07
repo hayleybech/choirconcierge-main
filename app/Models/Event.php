@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Filters\Event_DateFilter;
 use App\Models\Filters\Event_TypeFilter;
 use App\Models\Filters\Filterable;
 use App\Notifications\EventCreated;
@@ -61,6 +62,7 @@ class Event extends Model
 
     protected static $filters = [
         Event_TypeFilter::class,
+        Event_DateFilter::class,
     ];
 
     protected $with = [

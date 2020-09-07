@@ -33,8 +33,8 @@ abstract class Filter
     protected $options = [];
 
     public function __construct() {
-        $this->initOptions();
         $this->current_option = request()->input($this->name, $this->default_option);
+        $this->initOptions();
     }
 
     /**

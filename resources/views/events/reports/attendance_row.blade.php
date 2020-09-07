@@ -46,6 +46,8 @@
     @endforeach
 
     <td class="col--response">
-        <small>{{ $singer->attendances->where('response', 'present')->count() }}/{{ $events->count() }}</small>
+        <small>
+            {{ floor( $singer->attendances->where('response', 'present')->count() / $events->count() * 100 ) }}%&nbsp;({{ $singer->attendances->where('response', 'present')->count() }}/{{ $events->count() }})
+        </small>
     </td>
 </tr>
