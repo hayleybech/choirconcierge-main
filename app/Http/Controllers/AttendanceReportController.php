@@ -4,14 +4,17 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Singer;
 use App\Models\VoicePart;
 
-class AttendanceReportController
+class AttendanceReportController extends Controller
 {
     public function __invoke()
     {
+        $this->authorize('viewAny', Attendance::class);
+
         $all_events = Event::with([])
             ->orderBy('start_date')
             ->filter()
