@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AttendanceReportController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -54,6 +55,7 @@ Route::middleware([
     Route::resource('events.rsvps', 'RsvpController')->only(['store', 'update', 'destroy']);
     Route::resource('events.attendances', 'AttendanceController')->only(['index']);
     Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
+    Route::get('events/reports/attendance', 'AttendanceReportController')->name('events.reports.attendance');
 
     // Documents module
     Route::resource('folders', 'FolderController')->middleware('auth');

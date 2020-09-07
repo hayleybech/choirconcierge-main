@@ -155,6 +155,13 @@ Breadcrumbs::for('events.attendances.index', static function ($trail, $event) {
     $trail->push('Attendance', route('events.attendances.index', $event));
 });
 
+// Events > Reports > Attendance
+Breadcrumbs::for('events.reports.attendance', static function($trail) {
+    $trail->parent('events.index');
+    $trail->push('Reports');
+    $trail->push('Attendance', route('events.reports.attendance'));
+});
+
 
 /**
  * DOCUMENTS

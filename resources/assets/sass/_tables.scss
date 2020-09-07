@@ -516,3 +516,73 @@
         }
     }
 }
+
+
+
+
+
+/* Attendance Report */
+th.th-diagonal {
+    height: 140px;
+    white-space: nowrap;
+    padding: 5px !important;
+    position: relative;
+}
+th.th-date {
+    font-size: 12px;
+    font-weight: 400;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+    border-right: 1px solid #dee2e6;
+    min-width: 3.9em;
+    vertical-align: middle;
+}
+
+.th-diagonal > div {
+    transform:
+        translate(17px, 0px)
+        rotate(315deg)
+    ;
+    width: 30px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.th-diagonal > div > span {
+    border-bottom: 1px solid #dee2e6;
+    padding: 5px 10px 7px 10px;
+    max-width: 160px;
+    width: 160px;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.table-report-attendance .col--title {
+    min-width: 200px;
+}
+.table-report-attendance .col--response {
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+    vertical-align: middle;
+}
+.table-report-attendance tbody td {
+    border-right: 1px solid #dee2e6;
+}
+.table-report-attendance tfoot td {
+    border-right: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+}
+.table-report-attendance td:last-child,
+.table-report-attendance th:last-child, {
+    padding-right: 5px;
+}
+
+.table-report-attendance th.th-part {
+    background-color: #ddd;
+    border-bottom: 1px solid #ccc;
+}
