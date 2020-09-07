@@ -4,6 +4,7 @@
 namespace App\Models\Filters;
 
 
+use Form;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\View\View;
@@ -40,6 +41,16 @@ abstract class Filter
      * Set up the options array (as label => value)
      */
     abstract protected function initOptions(): void;
+
+    public function render(): void
+    {
+        $field_class = $this->isDefault() ? '' : 'border-primary';
+        echo Form::select($this->name,
+            $this->options,
+            $this->current_option,
+            ['class' => 'custom-select form-control-sm ' . $field_class]
+        );
+    }
 
     /**
      * The actual query occurs here

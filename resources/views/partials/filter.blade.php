@@ -5,12 +5,5 @@
         @endphp
         <label for="{{ $filter->name }} " class="input-group-text {{$label_class}}">{{ $filter->label }}</label>
     </div>
-    @php
-        $field_class = $filter->isDefault() ? '' : 'border-primary';
-        echo Form::select($filter->name,
-            $filter->options,
-            $filter->current_option,
-            ['class' => 'custom-select form-control-sm ' . $field_class]
-        );
-    @endphp
+    @php($filter->render())
 </div>
