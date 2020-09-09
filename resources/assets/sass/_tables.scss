@@ -523,7 +523,7 @@
 
 /* Attendance Report */
 th.th-diagonal {
-    height: 140px;
+    height: 185px;
     white-space: nowrap;
     padding: 5px !important;
     position: relative;
@@ -541,7 +541,7 @@ th.th-date {
 
 .th-diagonal > div {
     transform:
-        translate(17px, 0px)
+        translate(15px, 0px)
         rotate(315deg)
     ;
     width: 30px;
@@ -549,11 +549,11 @@ th.th-date {
     right: 0;
     bottom: 0;
 }
-.th-diagonal > div > span {
+.th-diagonal > div > * {
     border-bottom: 1px solid #dee2e6;
-    padding: 5px 10px 7px 10px;
-    max-width: 160px;
-    width: 160px;
+    padding: 10px 10px 10px 0;
+    max-width: 250px;
+    width: 250px;
     overflow: hidden;
     display: inline-block;
     text-overflow: ellipsis;
