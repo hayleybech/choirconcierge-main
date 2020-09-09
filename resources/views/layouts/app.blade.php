@@ -99,6 +99,9 @@
 									<div id="collapse-events" class="submenu collapse small {{ ( request()->routeIs('events.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
 										<a href="{{ route('events.index') }}" class="nav-link {{ ( request()->routeIs('events.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Events</span></a>
 										<a href="{{route( 'events.create' )}}" class="nav-link {{ ( request()->routeIs('events.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add New</span></a>
+										@can('viewAny', \App\Models\Attendance::class)
+										<a href="{{ route( 'events.reports.attendance' ) }}" class="nav-link {{ ( request()->routeIs('events.reports.attendance') ) ? 'active' : '' }}"><i class="fal fa-fw fa-analytics"></i><span class="link-text">Attendance Report</span></a>
+										@endcan
 									</div>
 									@endcan
 								</li>

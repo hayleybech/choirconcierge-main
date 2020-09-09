@@ -15,6 +15,9 @@
     ?>
     <a class="btn btn-sm {{ $filters_class }}" data-toggle="collapse" href="#filters" role="button" aria-expanded="false" aria-controls="filters"><i class="fa fa-filter"></i> Filter</a>
 
+    @can('viewAny', \App\Models\Attendance::class)
+        <a href="{{route( 'events.reports.attendance' )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-analytics"></i> View Attendance Report</a>
+    @endcan
 @endsection
 
 @section('page-content')
