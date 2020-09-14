@@ -4,10 +4,12 @@
 namespace App\Mail;
 
 
+use App\ManuallyInitializeTenancyByDomainOrSubdomain;
 use App\Models\UserGroup;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Mail\Mailable;
 use Mail;
+use Stancl\Tenancy\Exceptions\TenantCountNotBeIdentifiedById;
 
 class IncomingMessage extends Mailable
 {
@@ -36,13 +38,20 @@ class IncomingMessage extends Mailable
      */
     public function resendToGroup(): void
     {
+        try {
+            app(ManuallyInitializeTenancyByDomainOrSubdomain::class)->handle( explode('@', $this->to[0]['address'])[1] );
+        }
+        catch (TenantCountNotBeIdentifiedById $e) {
+            return;
+        }
+
         $group = $this->getMatchingGroup();
         if( ! $group )
         {
             return;
         }
-
-        $group_email = $group->slug . '@' . config('imap.host_display');
+        
+        $group_email = $this->to[0]['address'];
         $original_sender = $this->from[0];
 
         $users = $group->get_all_users();
