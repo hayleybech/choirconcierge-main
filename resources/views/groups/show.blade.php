@@ -9,7 +9,7 @@
 @endsection
 @section('page-lead')
     <span class="badge badge-light"><i class="{{ (( $group->list_type === 'chat' )) ? 'fa fa-fw fa-comments' : '' }}"></i> {{ ucwords($group->list_type) }}</span><br>
-    {{ $group->slug }}<br>
+    {{ $group->slug }}{{ '@'.Request::gethost() }}<br>
 @endsection
 
 @section('page-content')
