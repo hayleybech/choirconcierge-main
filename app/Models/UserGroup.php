@@ -50,10 +50,11 @@ class UserGroup extends Model
         $group = static::query()->create($attributes);
 
         // Update recipients
-        $group->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class );
-        $group->syncPolymorhpic( $attributes['recipient_voice_parts'] ?? [], VoicePart::class );
-        $group->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class );
-        $group->syncPolymorhpic( $attributes['recipient_singer_categories'] ?? [], SingerCategory::class );
+        $group->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class, GroupMember::class, 'members', 'memberable', 'group_id' );
+        $group->syncPolymorhpic( $attributes['recipient_voice_parts'] ?? [], VoicePart::class, GroupMember::class, 'members', 'memberable', 'group_id' );
+        $group->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class, GroupMember::class, 'members', 'memberable', 'group_id' );
+        $group->syncPolymorhpic( $attributes['recipient_singer_categories'] ?? [], SingerCategory::class, GroupMember::class, 'members', 'memberable', 'group_id' );
+
         $group->save();
 
         return $group;
@@ -64,10 +65,10 @@ class UserGroup extends Model
         parent::update($attributes, $options);
 
         // Update recipients
-        $this->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class );
-        $this->syncPolymorhpic( $attributes['recipient_voice_parts'] ?? [], VoicePart::class );
-        $this->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class );
-        $this->syncPolymorhpic( $attributes['recipient_singer_categories'] ?? [], SingerCategory::class );
+        $this->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class, GroupMember::class, 'members', 'memberable', 'group_id' );
+        $this->syncPolymorhpic( $attributes['recipient_voice_parts'] ?? [], VoicePart::class, GroupMember::class, 'members', 'memberable', 'group_id' );
+        $this->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class, GroupMember::class, 'members', 'memberable', 'group_id' );
+        $this->syncPolymorhpic( $attributes['recipient_singer_categories'] ?? [], SingerCategory::class, GroupMember::class, 'members', 'memberable', 'group_id' );
         $this->save();
     }
     public function members(): HasMany
@@ -131,33 +132,37 @@ class UserGroup extends Model
     }
 
     /**
-     * @param int[] $memberable_ids
-     * @param string $memberable_type
+     * @param int[]  $poly_ids The ids to sync
+     * @param string $poly_type The type we're currently syncing
+     * @param string $poly_class The class name of the polymorphic model
+     * @param string $poly_relationship The name of the other model's relationship to the polymorph
+     * @param string $poly_name The name of the polymorph used in table columns (x_id, x_type)
+     * @param string $related_id_col The name of the foreign key column connecting the polymorph to the other model
      */
-    public function syncPolymorhpic($memberable_ids, string $memberable_type ): void
+    public function syncPolymorhpic(array $poly_ids, string $poly_type, string $poly_class, string $poly_relationship, string $poly_name, string $related_id_col ): void
     {
-        // Detach the Memberables not listed in the incoming array
-        GroupMember::where('group_id', '=', $this->id)
-                ->where('memberable_type', '=', $memberable_type)
-                ->whereNotIn('memberable_id', $memberable_ids)
+        // Detach the records not listed in the incoming array
+        $poly_class::where($related_id_col, '=', $this->id)
+                ->where($poly_name.'_type', '=', $poly_type)
+                ->whereNotIn($poly_name.'_id', $poly_ids)
                 ->delete();
 
-        // Insert new Memberables
-        $unchanged_ids = GroupMember::where('group_id', '=', $this->id)
-            ->where('memberable_type', '=', $memberable_type)
-            ->whereIn('memberable_id', $memberable_ids)
-            ->pluck('memberable_id')
+        // Insert new records
+        $unchanged_ids = $poly_class::where($related_id_col, '=', $this->id)
+            ->where($poly_name.'_type', '=', $poly_type)
+            ->whereIn($poly_name.'_id', $poly_ids)
+            ->pluck($poly_name.'_id')
             ->toArray();
-        $new = array_diff( $memberable_ids, $unchanged_ids );
+        $new_poly_ids = array_diff( $poly_ids, $unchanged_ids );
 
         $attach = [];
-        foreach($new as $memberable_id) {
+        foreach($new_poly_ids as $new_poly_id) {
             $attach[] = [
-                'memberable_id' => $memberable_id,
-                'memberable_type' => $memberable_type,
+                $poly_name.'_id' => $new_poly_id,
+                $poly_name.'_type' => $poly_type,
             ];
         }
-        $this->fresh()->members()->createmany($attach);
+        $this->fresh()->$poly_relationship()->createmany($attach);
     }
 
     public function authoriseSender(String $senderEmail): bool
