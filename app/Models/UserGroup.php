@@ -24,10 +24,10 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property GroupMember[] $members
- * @property Role[] $roles
- * @property User[] $users
- * @property VoicePart[] $voice_parts
- * @property SingerCategory[] $singer_categories
+ * @property Role[] $recipient_roles
+ * @property User[] $recipient_users
+ * @property VoicePart[] $recipient_voice_parts
+ * @property SingerCategory[] $recipient_singer_categories
  *
  * @package App\Models
  */
@@ -75,22 +75,22 @@ class UserGroup extends Model
         return $this->hasMany(GroupMember::class, 'group_id');
     }
 
-    public function roles(): MorphToMany
+    public function recipient_roles(): MorphToMany
     {
         return $this->morphedByMany( Role::class, 'memberable', 'group_members', 'group_id');
     }
 
-    public function voice_parts(): MorphToMany
+    public function recipient_voice_parts(): MorphToMany
     {
         return $this->morphedByMany( VoicePart::class, 'memberable', 'group_members', 'group_id');
     }
 
-    public function users(): MorphToMany
+    public function recipient_users(): MorphToMany
     {
         return $this->morphedByMany( User::class, 'memberable', 'group_members', 'group_id');
     }
 
-    public function singer_categories(): MorphToMany
+    public function recipient_singer_categories(): MorphToMany
     {
         return $this->morphedByMany( SingerCategory::class, 'memberable', 'group_members', 'group_id');
     }
@@ -99,16 +99,16 @@ class UserGroup extends Model
     {
         /* @todo use queries instead */
 
-        $cat_ids = $this->singer_categories()->get()->pluck('id');
+        $cat_ids = $this->recipient_singer_categories()->get()->pluck('id');
 
         // Get directly-assigned users
-        $users = $this->users()
+        $users = $this->recipient_users()
             ->whereHas('singer', function($singer_query) use($cat_ids) {
                 $singer_query->whereIn('singer_category_id', $cat_ids );
             })
             ->get();
 
-        foreach( $this->roles as $role )
+        foreach( $this->recipient_roles as $role )
         {
             $role_users = $role->users()
                 ->whereHas('singer', function($singer_query) use($cat_ids) {
@@ -119,7 +119,7 @@ class UserGroup extends Model
         }
 
         // Get users from voice parts
-        $voice_part_ids = $this->voice_parts()->get()->pluck('id')->toArray();
+        $voice_part_ids = $this->recipient_voice_parts()->get()->pluck('id')->toArray();
         $part_users = User::query()
             ->whereHas('singer', function ($singer_query) use($voice_part_ids, $cat_ids) {
                 $singer_query->whereIn('voice_part_id', $voice_part_ids);

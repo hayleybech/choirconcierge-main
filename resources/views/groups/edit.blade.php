@@ -89,9 +89,9 @@
                                 <span class="input-group-text"><i class="fa fa-fw fa-users"></i></span>
                             </div>
                             <select id="recipient_roles" name="recipient_roles[]" class="select2 custom-select" data-model="roles" multiple>
-                                @foreach($group->roles as $role)
-                                    <option value="{{$role->id}}" selected>{{$role->name}}</option>
-                                @endforeach
+                            @foreach($group->recipient_roles as $role)
+                                <option value="{{$role->id}}" selected>{{$role->name}}</option>
+                            @endforeach
                             </select>
                         </div>
                     </div>
@@ -103,9 +103,9 @@
                                 <span class="input-group-text"><i class="fa fa-fw fa-users-class"></i></span>
                             </div>
                             <select id="recipient_voice_parts" name="recipient_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple>
-                                @foreach($group->voice_parts as $voice_part)
-                                    <option value="{{$voice_part->id}}" selected>{{$voice_part->title}}</option>
-                                @endforeach
+                            @foreach($group->recipient_voice_parts as $voice_part)
+                                <option value="{{$voice_part->id}}" selected>{{$voice_part->title}}</option>
+                            @endforeach
                             </select>
                         </div>
                     </div>
@@ -117,9 +117,9 @@
                                 <span class="input-group-text"><i class="fa fa-fw fa-user"></i></span>
                             </div>
                             <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple>
-                                @foreach($group->users as $user)
-                                    <option value="{{$user->id}}" selected>{{$user->name}}</option>
-                                @endforeach
+                            @foreach($group->recipient_users as $user)
+                                <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                            @endforeach
                             </select>
                         </div>
                     </div>
@@ -131,9 +131,9 @@
                                 <span class="input-group-text"><i class="fa fa-fw fa-filter"></i></span>
                             </div>
                             <select id="recipient_singer_categories" name="recipient_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple>
-                                @foreach($group->singer_categories as $singer_category)
-                                    <option value="{{$singer_category->id}}" selected>{{$singer_category->name}}</option>
-                                @endforeach
+                            @foreach($group->recipient_singer_categories as $singer_category)
+                                <option value="{{$singer_category->id}}" selected>{{$singer_category->name}}</option>
+                            @endforeach
                             </select>
                         </div>
                     </div>
