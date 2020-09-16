@@ -50,10 +50,12 @@ class UserGroup extends Model
         $group = static::query()->create($attributes);
 
         // Update recipients
-        $group->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class, GroupMember::class, 'members', 'memberable', 'group_id' );
-        $group->syncPolymorhpic( $attributes['recipient_voice_parts'] ?? [], VoicePart::class, GroupMember::class, 'members', 'memberable', 'group_id' );
-        $group->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class, GroupMember::class, 'members', 'memberable', 'group_id' );
-        $group->syncPolymorhpic( $attributes['recipient_singer_categories'] ?? [], SingerCategory::class, GroupMember::class, 'members', 'memberable', 'group_id' );
+        $group->syncPolymorphicMany(GroupMember::class, 'members', 'memberable', 'group_id', [
+            Role::class           => $attributes['recipient_roles'] ?? [],
+            VoicePart::class      => $attributes['recipient_voice_parts'] ?? [],
+            User::class           => $attributes['recipient_users'] ?? [],
+            SingerCategory::class => $attributes['recipient_singer_categories'] ?? []
+        ]);
 
         $group->save();
 
@@ -65,10 +67,12 @@ class UserGroup extends Model
         parent::update($attributes, $options);
 
         // Update recipients
-        $this->syncPolymorhpic( $attributes['recipient_roles'] ?? [], Role::class, GroupMember::class, 'members', 'memberable', 'group_id' );
-        $this->syncPolymorhpic( $attributes['recipient_voice_parts'] ?? [], VoicePart::class, GroupMember::class, 'members', 'memberable', 'group_id' );
-        $this->syncPolymorhpic( $attributes['recipient_users'] ?? [], User::class, GroupMember::class, 'members', 'memberable', 'group_id' );
-        $this->syncPolymorhpic( $attributes['recipient_singer_categories'] ?? [], SingerCategory::class, GroupMember::class, 'members', 'memberable', 'group_id' );
+        $this->syncPolymorphicMany(GroupMember::class, 'members', 'memberable', 'group_id', [
+            Role::class           => $attributes['recipient_roles'] ?? [],
+            VoicePart::class      => $attributes['recipient_voice_parts'] ?? [],
+            User::class           => $attributes['recipient_users'] ?? [],
+            SingerCategory::class => $attributes['recipient_singer_categories'] ?? []
+        ]);
         $this->save();
     }
     public function members(): HasMany
@@ -132,14 +136,29 @@ class UserGroup extends Model
     }
 
     /**
-     * @param int[]  $poly_ids The ids to sync
-     * @param string $poly_type The type we're currently syncing
      * @param string $poly_class The class name of the polymorphic model
      * @param string $poly_relationship The name of the other model's relationship to the polymorph
      * @param string $poly_name The name of the polymorph used in table columns (x_id, x_type)
      * @param string $related_id_col The name of the foreign key column connecting the polymorph to the other model
+     * @param array $poly_records An associative array where the keys are the model class names of each poly type and the values are arrays of ids to sync
      */
-    public function syncPolymorhpic(array $poly_ids, string $poly_type, string $poly_class, string $poly_relationship, string $poly_name, string $related_id_col ): void
+    public function syncPolymorphicMany(string $poly_class, string $poly_relationship, string $poly_name, string $related_id_col, array $poly_records): void
+    {
+        foreach($poly_records as $class => $records)
+        {
+            $this->syncPolymorhpic($poly_class, $poly_relationship, $poly_name, $related_id_col, $class, $records);
+        }
+    }
+
+    /**
+     * @param string $poly_class The class name of the polymorphic model
+     * @param string $poly_relationship The name of the other model's relationship to the polymorph
+     * @param string $poly_name The name of the polymorph used in table columns (x_id, x_type)
+     * @param string $related_id_col The name of the foreign key column connecting the polymorph to the other model
+     * @param string $poly_type The model class name of type we're currently syncing
+     * @param int[]  $poly_ids The ids to sync
+     */
+    public function syncPolymorhpic(string $poly_class, string $poly_relationship, string $poly_name, string $related_id_col, string $poly_type, array $poly_ids): void
     {
         // Detach the records not listed in the incoming array
         $poly_class::where($related_id_col, '=', $this->id)
