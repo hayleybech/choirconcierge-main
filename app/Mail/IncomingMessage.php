@@ -61,7 +61,7 @@ class IncomingMessage extends Mailable
 
         $group_email = $this->to[0]['address'];
 
-        $users = $group->get_all_users();
+        $users = $group->get_all_recipients();
         foreach($users as $user)
         {
             // Clear replyTo, then put the original sender as the reply-to

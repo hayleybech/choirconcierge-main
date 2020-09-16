@@ -95,7 +95,7 @@ class UserGroup extends Model
         return $this->morphedByMany( SingerCategory::class, 'memberable', 'group_members', 'group_id');
     }
 
-    public function get_all_users()
+    public function get_all_recipients()
     {
         /* @todo use queries instead */
 
@@ -176,7 +176,7 @@ class UserGroup extends Model
         if($this->list_type === 'chat')
         {
             // check if sender is in recipients list
-            return $this->get_all_users()->contains($user);
+            return $this->get_all_recipients()->contains($user);
         }
         return false;
     }
