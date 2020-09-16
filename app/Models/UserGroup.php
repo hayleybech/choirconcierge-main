@@ -290,7 +290,7 @@ class UserGroup extends Model
         if($this->list_type === 'distribution')
         {
             // check if sender is in senders list
-            return false;
+            return $this->get_all_senders()->contains($user);
         }
         return false;
     }
