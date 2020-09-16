@@ -50,9 +50,16 @@ class IncomingMessage extends Mailable
         {
             return;
         }
-        
-        $group_email = $this->to[0]['address'];
+
         $original_sender = $this->from[0];
+        if( ! $group->authoriseSender($original_sender['address']) )
+        {
+            Mail::to($original_sender['address'])->send(new NotPermittedSenderMessage($group));
+
+            return;
+        }
+
+        $group_email = $this->to[0]['address'];
 
         $users = $group->get_all_users();
         foreach($users as $user)

@@ -159,4 +159,25 @@ class UserGroup extends Model
         }
         $this->fresh()->members()->createmany($attach);
     }
+
+    public function authoriseSender(String $senderEmail): bool
+    {
+        // todo: implement strategy pattern
+
+        if($this->list_type === 'public') {
+            return true;
+        }
+
+        $user = User::where('email', '=', $senderEmail)->first();
+        if( ! $user ){
+            return false;
+        }
+
+        if($this->list_type === 'chat')
+        {
+            // check if sender is in recipients list
+            return $this->get_all_users()->contains($user);
+        }
+        return false;
+    }
 }

@@ -45,11 +45,11 @@
                                 </span>
                             </label>
 
-                            <label for="list_type_chat" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'chat' ) ? 'active' : '' }} disabled">
+                            <label for="list_type_chat" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'chat' ) ? 'active' : '' }}">
                                 <i class="fa fa-fw fa-comments fa-2x mr-3"></i>
                                 <span>
-                                    <input id="list_type_chat" name="list_type" value="chat" type="radio" autocomplete="off" {{ ($group->list_type === 'chat' ) ? 'checked' : '' }} disabled>
-                                    <span class="h5">Chat (Coming Soon)</span>
+                                    <input id="list_type_chat" name="list_type" value="chat" type="radio" autocomplete="off" {{ ($group->list_type === 'chat' ) ? 'checked' : '' }}>
+                                    <span class="h5">Chat</span>
                                     <span class="form-text">
                                         <strong>Best for: </strong> Internal communication for teams/groups.<br>
                                         Recipients are able to reply to all other recipients, and can compose new emails to the group.
