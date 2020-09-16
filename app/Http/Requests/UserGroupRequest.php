@@ -38,6 +38,10 @@ class UserGroupRequest extends FormRequest
             'recipient_voice_parts' => '',
             'recipient_users'  => '',
             'recipient_singer_categories'  => '',
+            'sender_roles'  => '',
+            'sender_voice_parts' => '',
+            'sender_users'  => '',
+            'sender_singer_categories'  => '',
         ];
     }
 }

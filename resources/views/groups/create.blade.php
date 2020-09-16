@@ -60,11 +60,11 @@
                                 </span>
                             </label>
 
-                            <label for="list_type_distribution" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center disabled">
+                            <label for="list_type_distribution" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center">
                                 <i class="fa fa-fw fa-paper-plane fa-2x mr-3"></i>
                                 <span>
-                                    <input id="list_type_distribution" name="list_type" value="distribution" type="radio" autocomplete="off" disabled>
-                                    <span class="h5">Mailout (Coming soon)</span>
+                                    <input id="list_type_distribution" name="list_type" value="distribution" type="radio" autocomplete="off">
+                                    <span class="h5">Mailout</span>
                                     <span class="form-text">
                                         <strong>Best for: </strong>Notifications, newsletters, reminders, etc.<br>
                                         <strong>Example: </strong> Active Members<br>
@@ -81,6 +81,12 @@
 
 
             </div><!-- /.card -->
+
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+
+    <div class="row">
+        <div class="col-md-6">
 
             <div class="card">
                 <h3 class="card-header h4">Recipients</h3>
@@ -129,17 +135,70 @@
 
                 </div>
 
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-fw fa-check"></i> Create
-                    </button>
-                    <a href="{{ route('groups.index') }}" class="btn btn-outline-secondary">
-                        <i class="fa fa-fw fa-times"></i> Cancel
-                    </a>
-                </div>
             </div>
 
         </div>
+        <div class="col-md-6">
+
+            <div class="card">
+                <h3 class="card-header h4">Senders</h3>
+
+                <div class="card-body">
+
+                    <div class="form-group">
+                        <label for="sender_roles">Roles</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-fw fa-users"></i></span>
+                            </div>
+                            <select id="sender_roles" name="sender_roles[]" class="select2 custom-select" data-model="roles" multiple></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sender_voice_parts">Voice Parts</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-fw fa-users-class"></i></span>
+                            </div>
+                            <select id="sender_voice_parts" name="sender_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sender_users">Users</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-fw fa-user"></i></span>
+                            </div>
+                            <select id="sender_users" name="sender_users[]" class="select2 form-control" data-model="users" multiple></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sender_singer_categories">Filter by Singer Category</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-fw fa-filter"></i></span>
+                            </div>
+                            <select id="sender_singer_categories" name="sender_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple></select>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+
+    <div class="mb-5">
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-fw fa-check"></i> Create
+        </button>
+        <a href="{{ route('groups.index') }}" class="btn btn-outline-secondary">
+            <i class="fa fa-fw fa-times"></i> Cancel
+        </a>
     </div>
 
 

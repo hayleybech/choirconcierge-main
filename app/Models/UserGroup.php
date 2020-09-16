@@ -15,6 +15,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Class UserGroup
  *
  * Columns
+ *
  * @property int $id
  * @property string $title
  * @property string $slug
@@ -28,6 +29,12 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property User[] $recipient_users
  * @property VoicePart[] $recipient_voice_parts
  * @property SingerCategory[] $recipient_singer_categories
+ *
+ * @property GroupSender[] $senders
+ * @property Role[] $sender_roles
+ * @property User[] $sender_users
+ * @property VoicePart[] $sender_voice_parts
+ * @property SingerCategory[] $sender_singer_categories
  *
  * @package App\Models
  */
@@ -57,6 +64,14 @@ class UserGroup extends Model
             SingerCategory::class => $attributes['recipient_singer_categories'] ?? []
         ]);
 
+        // Update senders
+        $group->syncPolymorphicMany(GroupSender::class, 'senders', 'sender', 'group_id', [
+            Role::class           => $attributes['sender_roles'] ?? [],
+            VoicePart::class      => $attributes['sender_voice_parts'] ?? [],
+            User::class           => $attributes['sender_users'] ?? [],
+            SingerCategory::class => $attributes['sender_singer_categories'] ?? []
+        ]);
+
         $group->save();
 
         return $group;
@@ -73,6 +88,15 @@ class UserGroup extends Model
             User::class           => $attributes['recipient_users'] ?? [],
             SingerCategory::class => $attributes['recipient_singer_categories'] ?? []
         ]);
+
+        // Update senders
+        $this->syncPolymorphicMany(GroupSender::class, 'senders', 'sender', 'group_id', [
+            Role::class           => $attributes['sender_roles'] ?? [],
+            VoicePart::class      => $attributes['sender_voice_parts'] ?? [],
+            User::class           => $attributes['sender_users'] ?? [],
+            SingerCategory::class => $attributes['sender_singer_categories'] ?? []
+        ]);
+
         $this->save();
     }
     public function members(): HasMany
@@ -125,6 +149,66 @@ class UserGroup extends Model
 
         // Get users from voice parts
         $voice_part_ids = $this->recipient_voice_parts()->get()->pluck('id')->toArray();
+        $part_users = User::query()
+            ->whereHas('singer', function ($singer_query) use($voice_part_ids, $cat_ids) {
+                $singer_query->whereIn('voice_part_id', $voice_part_ids);
+                $singer_query->whereIn('singer_category_id', $cat_ids);
+            })
+            ->get();
+        $users = $users->merge($part_users);
+        return $users->unique();
+    }
+
+    public function senders(): HasMany
+    {
+        return $this->hasMany(GroupSender::class, 'group_id');
+    }
+
+    public function sender_roles(): MorphToMany
+    {
+        return $this->morphedByMany( Role::class, 'sender', 'group_senders', 'group_id');
+    }
+
+    public function sender_voice_parts(): MorphToMany
+    {
+        return $this->morphedByMany( VoicePart::class, 'sender', 'group_senders', 'group_id');
+    }
+
+    public function sender_users(): MorphToMany
+    {
+        return $this->morphedByMany( User::class, 'sender', 'group_senders', 'group_id');
+    }
+
+    public function sender_singer_categories(): MorphToMany
+    {
+        return $this->morphedByMany( SingerCategory::class, 'sender', 'group_senders', 'group_id');
+    }
+
+    public function get_all_senders()
+    {
+        // @todo use queries instead
+
+        $cat_ids = $this->sender_singer_categories()->get()->pluck('id');
+
+        // Get directly-assigned users
+        $users = $this->sender_users()
+            ->whereHas('singer', function($singer_query) use($cat_ids) {
+                $singer_query->whereIn('singer_category_id', $cat_ids );
+            })
+            ->get();
+
+        foreach( $this->sender_roles as $role )
+        {
+            $role_users = $role->users()
+                ->whereHas('singer', function($singer_query) use($cat_ids) {
+                    $singer_query->whereIn('singer_category_id', $cat_ids );
+                })
+                ->get();
+            $users = $users->merge( $role_users );
+        }
+
+        // Get users from voice parts
+        $voice_part_ids = $this->sender_voice_parts()->get()->pluck('id')->toArray();
         $part_users = User::query()
             ->whereHas('singer', function ($singer_query) use($voice_part_ids, $cat_ids) {
                 $singer_query->whereIn('voice_part_id', $voice_part_ids);
@@ -201,6 +285,12 @@ class UserGroup extends Model
         {
             // check if sender is in recipients list
             return $this->get_all_recipients()->contains($user);
+        }
+
+        if($this->list_type === 'distribution')
+        {
+            // check if sender is in senders list
+            return false;
         }
         return false;
     }
