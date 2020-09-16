@@ -41,6 +41,7 @@
                                     <span class="h5">Public</span>
                                     <span class="form-text">
                                         <strong>Best for: </strong> General Enquiries.<br>
+                                        <strong>Example: </strong> Director<br>
                                         The general public can send to this address, and all recipients can respond.
                                     </span>
                                 </span>
@@ -53,6 +54,7 @@
                                     <span class="h5">Chat</span>
                                     <span class="form-text">
                                         <strong>Best for: </strong> Internal communication for teams/groups.<br>
+                                        <strong>Example: </strong> Music Team<br>
                                         Recipients are able to reply to all other recipients, and can compose new emails to the group.
                                     </span>
                                 </span>
@@ -65,6 +67,7 @@
                                     <span class="h5">Mailout (Coming soon)</span>
                                     <span class="form-text">
                                         <strong>Best for: </strong>Notifications, newsletters, reminders, etc.<br>
+                                        <strong>Example: </strong> Active Members<br>
                                         Recipients can see the emails and can reply to the sender, but cannot "reply-all".
                                     </span>
                                 </span>
