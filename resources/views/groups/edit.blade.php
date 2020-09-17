@@ -33,7 +33,7 @@
 
                         <div class="btn-group-vertical btn-group-toggle d-flex bg-white" data-toggle="buttons">
 
-                            <label for="list_type_public" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'public' ) ? 'active' : '' }}">
+                            <label for="list_type_public" class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'public' ) ? 'active' : '' }}">
                                 <i class="fa fa-fw fa-envelope-open-text fa-2x mr-3"></i>
                                 <span>
                                     <input id="list_type_public" name="list_type" value="public" type="radio" autocomplete="off" {{ ($group->list_type === 'public' ) ? 'checked' : '' }}>
@@ -46,7 +46,7 @@
                                 </span>
                             </label>
 
-                            <label for="list_type_chat" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'chat' ) ? 'active' : '' }}">
+                            <label for="list_type_chat" class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'chat' ) ? 'active' : '' }}">
                                 <i class="fa fa-fw fa-comments fa-2x mr-3"></i>
                                 <span>
                                     <input id="list_type_chat" name="list_type" value="chat" type="radio" autocomplete="off" {{ ($group->list_type === 'chat' ) ? 'checked' : '' }}>
@@ -59,7 +59,7 @@
                                 </span>
                             </label>
 
-                            <label for="list_type_distribution" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'distribution' ) ? 'active' : '' }}">
+                            <label for="list_type_distribution" class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'distribution' ) ? 'active' : '' }}">
                                 <i class="fa fa-fw fa-paper-plane fa-2x mr-3"></i>
                                 <span>
                                     <input id="list_type_distribution" name="list_type" value="distribution" type="radio" autocomplete="off" {{ ($group->list_type === 'distribution' ) ? 'checked' : '' }}>
@@ -107,15 +107,14 @@
 
                     <div class="form-group">
                         <label for="recipient_voice_parts">Voice Parts</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-users-class"></i></span>
-                            </div>
-                            <select id="recipient_voice_parts" name="recipient_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple>
-                            @foreach($group->recipient_voice_parts as $voice_part)
-                                <option value="{{$voice_part->id}}" selected>{{$voice_part->title}}</option>
-                            @endforeach
-                            </select>
+
+                        <div class="btn-group btn-group-toggle d-flex bg-white" data-toggle="buttons">
+                        @foreach($voice_parts as $voice_part)
+                            <label for="recipient_voice_parts_{{ $voice_part->id }}" class="btn btn-outline-dark btn-check py-1 px-3 text-left d-flex align-items-center @if($group->recipient_voice_parts->contains($voice_part)) active @endif">
+                                <input id="recipient_voice_parts_{{ $voice_part->id }}" name="recipient_voice_parts[]" value="{{ $voice_part->id }}" type="checkbox" autocomplete="off" @if($group->recipient_voice_parts->contains($voice_part)) checked @endif>
+                                <span>{{ $voice_part->title }}</span>
+                            </label>
+                        @endforeach
                         </div>
                     </div>
 
@@ -135,15 +134,14 @@
 
                     <div class="form-group">
                         <label for="recipient_singer_categories">Singer Category</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-circle"></i></span>
-                            </div>
-                            <select id="recipient_singer_categories" name="recipient_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple>
-                            @foreach($group->recipient_singer_categories as $singer_category)
-                                <option value="{{$singer_category->id}}" selected>{{$singer_category->name}}</option>
-                            @endforeach
-                            </select>
+
+                        <div class="btn-group btn-group-toggle d-flex bg-white" data-toggle="buttons">
+                        @foreach($singer_categories as $category_id => $category_name)
+                            <label for="recipient_singer_categories_{{ $category_id }}" class="btn btn-outline-dark btn-check py-1 px-3 text-left d-flex align-items-center @if($group->recipient_singer_categories->contains($category_id)) active @endif">
+                                <input id="recipient_singer_categories_{{ $category_id }}" name="recipient_singer_categories[]" value="{{ $category_id }}" type="checkbox" autocomplete="off" @if($group->recipient_singer_categories->contains($category_id)) checked @endif>
+                                <span>{{ $category_name }}</span>
+                            </label>
+                        @endforeach
                         </div>
                     </div>
                 </div>
@@ -175,15 +173,14 @@
 
                     <div class="form-group">
                         <label for="sender_voice_parts">Voice Parts</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-users-class"></i></span>
-                            </div>
-                            <select id="sender_voice_parts" name="sender_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple>
-                            @foreach($group->sender_voice_parts as $voice_part)
-                                <option value="{{$voice_part->id}}" selected>{{$voice_part->title}}</option>
+
+                        <div class="btn-group btn-group-toggle d-flex bg-white" data-toggle="buttons">
+                            @foreach($voice_parts as $voice_part)
+                                <label for="sender_voice_parts_{{ $voice_part->id }}" class="btn btn-outline-dark btn-check py-1 px-3 text-left d-flex align-items-center @if($group->sender_voice_parts->contains($voice_part)) active @endif">
+                                    <input id="sender_voice_parts_{{ $voice_part->id }}" name="sender_voice_parts[]" value="{{ $voice_part->id }}" type="checkbox" autocomplete="off" @if($group->sender_voice_parts->contains($voice_part)) checked @endif>
+                                    <span>{{ $voice_part->title }}</span>
+                                </label>
                             @endforeach
-                            </select>
                         </div>
                     </div>
 
@@ -203,15 +200,14 @@
 
                     <div class="form-group">
                         <label for="sender_singer_categories">Singer Category</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-circle"></i></span>
-                            </div>
-                            <select id="sender_singer_categories" name="sender_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple>
-                            @foreach($group->sender_singer_categories as $singer_category)
-                                <option value="{{$singer_category->id}}" selected>{{$singer_category->name}}</option>
+
+                        <div class="btn-group btn-group-toggle d-flex bg-white" data-toggle="buttons">
+                            @foreach($singer_categories as $category_id => $category_name)
+                                <label for="sender_singer_categories_{{ $category_id }}" class="btn btn-outline-dark btn-check py-1 px-3 text-left d-flex align-items-center @if($group->sender_singer_categories->contains($category_id)) active @endif">
+                                    <input id="sender_singer_categories_{{ $category_id }}" name="sender_singer_categories[]" value="{{ $category_id }}" type="checkbox" autocomplete="off" @if($group->sender_singer_categories->contains($category_id)) checked @endif>
+                                    <span>{{ $category_name }}</span>
+                                </label>
                             @endforeach
-                            </select>
                         </div>
                     </div>
                 </div>

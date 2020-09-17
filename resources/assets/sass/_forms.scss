@@ -43,3 +43,29 @@ select.form-control-sm.force-xs {
 .select2-container--bootstrap .select2-selection {
   box-shadow: none;
 }
+
+
+/** Custom Radio Buttons **/
+.btn-radio:before {
+  content: '';
+  font-family: "Font Awesome 5 Pro";
+  font-weight: 400;
+  align-self: center;
+  font-size: 1.5em;
+  margin-right: 1em;
+}
+.btn-radio.active:before {
+  content: '';
+}
+
+.btn-check:before {
+  content: '';
+  font-family: "Font Awesome 5 Pro";
+  font-weight: 400;
+  align-self: center;
+  font-size: 1.5em;
+  margin-right: 1em;
+}
+.btn-check.active:before {
+  content: '';
+}

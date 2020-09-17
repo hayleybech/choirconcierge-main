@@ -6,8 +6,10 @@ use App\Http\Requests\UserGroupRequest;
 use App\Models\Folder;
 use App\Models\GroupMember;
 use App\Models\Role;
+use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\UserGroup;
+use App\Models\VoicePart;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,7 +37,9 @@ class UserGroupController extends Controller
      */
     public function create() : View
     {
-        return view('groups.create');
+        $voice_parts = VoicePart::all();
+        $singer_categories = SingerCategory::all();
+        return view('groups.create', compact('voice_parts', 'singer_categories'));
     }
 
     /**
@@ -68,7 +72,9 @@ class UserGroupController extends Controller
      */
     public function edit(UserGroup $group): View
     {
-        return view('groups.edit', compact('group' ));
+        $voice_parts = VoicePart::all();
+        $singer_categories = SingerCategory::all();
+        return view('groups.edit', compact('group', 'voice_parts', 'singer_categories' ));
     }
 
     /**

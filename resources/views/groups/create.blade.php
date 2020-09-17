@@ -34,7 +34,7 @@
 
                         <div class="btn-group-vertical btn-group-toggle d-flex bg-white" data-toggle="buttons">
 
-                            <label for="list_type_public" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center active">
+                            <label for="list_type_public" class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center active">
                                 <i class="fa fa-fw fa-envelope-open-text fa-2x mr-3"></i>
                                 <span>
                                     <input id="list_type_public" name="list_type" value="public" type="radio" autocomplete="off" checked>
@@ -47,7 +47,7 @@
                                 </span>
                             </label>
 
-                            <label for="list_type_chat" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center">
+                            <label for="list_type_chat" class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center">
                                 <i class="fa fa-fw fa-comments fa-2x mr-3"></i>
                                 <span>
                                     <input id="list_type_chat" name="list_type" value="chat" type="radio" autocomplete="off">
@@ -60,7 +60,7 @@
                                 </span>
                             </label>
 
-                            <label for="list_type_distribution" class="btn btn-outline-dark py-3 px-3 text-left d-flex align-items-center">
+                            <label for="list_type_distribution" class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center">
                                 <i class="fa fa-fw fa-paper-plane fa-2x mr-3"></i>
                                 <span>
                                     <input id="list_type_distribution" name="list_type" value="distribution" type="radio" autocomplete="off">
@@ -105,11 +105,14 @@
 
                     <div class="form-group">
                         <label for="recipient_voice_parts">Voice Parts</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-users-class"></i></span>
-                            </div>
-                            <select id="recipient_voice_parts" name="recipient_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple></select>
+
+                        <div class="btn-group btn-group-toggle d-flex bg-white" data-toggle="buttons">
+                            @foreach($voice_parts as $voice_part)
+                                <label for="recipient_voice_parts_{{ $voice_part->id }}" class="btn btn-outline-dark btn-check py-1 px-3 text-left d-flex align-items-center">
+                                    <input id="recipient_voice_parts_{{ $voice_part->id }}" name="recipient_voice_parts[]" value="{{ $voice_part->id }}" type="checkbox" autocomplete="off">
+                                    <span>{{ $voice_part->title }}</span>
+                                </label>
+                            @endforeach
                         </div>
                     </div>
 
@@ -125,11 +128,14 @@
 
                     <div class="form-group">
                         <label for="recipient_singer_categories">Singer Category</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-circle"></i></span>
-                            </div>
-                            <select id="recipient_singer_categories" name="recipient_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple></select>
+
+                        <div class="btn-group btn-group-toggle d-flex bg-white" data-toggle="buttons">
+                        @foreach($singer_categories as $category_id => $category_name)
+                            <label for="recipient_singer_categories_{{ $category_id }}" class="btn btn-outline-dark btn-check py-1 px-3 text-left d-flex align-items-center">
+                                <input id="recipient_singer_categories_{{ $category_id }}" name="recipient_singer_categories[]" value="{{ $category_id }}" type="checkbox" autocomplete="off">
+                                <span>{{ $category_name }}</span>
+                            </label>
+                        @endforeach
                         </div>
                     </div>
 
@@ -157,11 +163,14 @@
 
                     <div class="form-group">
                         <label for="sender_voice_parts">Voice Parts</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-users-class"></i></span>
-                            </div>
-                            <select id="sender_voice_parts" name="sender_voice_parts[]" class="select2 form-control" data-model="voice_parts" multiple></select>
+
+                        <div class="btn-group btn-group-toggle d-flex bg-white" data-toggle="buttons">
+                            @foreach($voice_parts as $voice_part)
+                                <label for="sender_voice_parts_{{ $voice_part->id }}" class="btn btn-outline-dark btn-check py-1 px-3 text-left d-flex align-items-center">
+                                    <input id="sender_voice_parts_{{ $voice_part->id }}" name="sender_voice_parts[]" value="{{ $voice_part->id }}" type="checkbox" autocomplete="off">
+                                    <span>{{ $voice_part->title }}</span>
+                                </label>
+                            @endforeach
                         </div>
                     </div>
 
@@ -177,11 +186,14 @@
 
                     <div class="form-group">
                         <label for="sender_singer_categories">Singer Category</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-circle"></i></span>
-                            </div>
-                            <select id="sender_singer_categories" name="sender_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple></select>
+
+                        <div class="btn-group btn-group-toggle d-flex bg-white" data-toggle="buttons">
+                        @foreach($singer_categories as $category_id => $category_name)
+                            <label for="sender_singer_categories_{{ $category_id }}" class="btn btn-outline-dark btn-check py-1 px-3 text-left d-flex align-items-center">
+                                <input id="sender_singer_categories_{{ $category_id }}" name="sender_singer_categories[]" value="{{ $category_id }}" type="checkbox" autocomplete="off">
+                                <span>{{ $category_name }}</span>
+                            </label>
+                        @endforeach
                         </div>
                     </div>
 
