@@ -124,10 +124,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="recipient_singer_categories">Filter by Singer Category</label>
+                        <label for="recipient_singer_categories">Singer Category</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-filter"></i></span>
+                                <span class="input-group-text"><i class="fa fa-fw fa-circle"></i></span>
                             </div>
                             <select id="recipient_singer_categories" name="recipient_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple></select>
                         </div>
@@ -176,10 +176,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="sender_singer_categories">Filter by Singer Category</label>
+                        <label for="sender_singer_categories">Singer Category</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-filter"></i></span>
+                                <span class="input-group-text"><i class="fa fa-fw fa-circle"></i></span>
                             </div>
                             <select id="sender_singer_categories" name="sender_singer_categories[]" class="select2 form-control" data-model="singer_categories" multiple></select>
                         </div>

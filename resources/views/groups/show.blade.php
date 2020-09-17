@@ -28,7 +28,7 @@
                                     @elseif($member->memberable_type === \App\Models\VoicePart::class)
                                         Voice Part:
                                     @elseif($member->memberable_type === \App\Models\SingerCategory::class)
-                                        Filter by Singer Category:
+                                        Singer Category:
                                     @elseif($member->memberable_type === \App\Models\User::class)
                                         User:
                                     @endif
@@ -54,7 +54,7 @@
                                     @elseif($sender->sender_type === \App\Models\VoicePart::class)
                                         Voice Part:
                                     @elseif($sender->sender_type === \App\Models\SingerCategory::class)
-                                        Filter by Singer Category:
+                                        Singer Category:
                                     @elseif($sender->sender_type === \App\Models\User::class)
                                         User:
                                     @endif

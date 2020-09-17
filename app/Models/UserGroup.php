@@ -128,34 +128,31 @@ class UserGroup extends Model
     {
         /* @todo use queries instead */
 
-        $cat_ids = $this->recipient_singer_categories()->get()->pluck('id');
-
         // Get directly-assigned users
-        $users = $this->recipient_users()
-            ->whereHas('singer', function($singer_query) use($cat_ids) {
-                $singer_query->whereIn('singer_category_id', $cat_ids );
-            })
-            ->get();
-
+        $users = $this->recipient_users()->get();
         foreach( $this->recipient_roles as $role )
         {
-            $role_users = $role->users()
-                ->whereHas('singer', function($singer_query) use($cat_ids) {
-                    $singer_query->whereIn('singer_category_id', $cat_ids );
-                })
-                ->get();
+            $role_users = $role->users()->get();
             $users = $users->merge( $role_users );
         }
 
         // Get users from voice parts
         $voice_part_ids = $this->recipient_voice_parts()->get()->pluck('id')->toArray();
         $part_users = User::query()
-            ->whereHas('singer', function ($singer_query) use($voice_part_ids, $cat_ids) {
+            ->whereHas('singer', function ($singer_query) use($voice_part_ids) {
                 $singer_query->whereIn('voice_part_id', $voice_part_ids);
-                $singer_query->whereIn('singer_category_id', $cat_ids);
             })
             ->get();
         $users = $users->merge($part_users);
+
+        // Get singers from categories
+        $cat_ids = $this->recipient_singer_categories()->get()->pluck('id');
+        $category_users = User::query()
+            ->whereHas('singer', function ($singer_query) use ($cat_ids) {
+                $singer_query->whereIn('singer_category_id', $cat_ids);
+            })
+            ->get();
+        $users = $users->merge($category_users);
         return $users->unique();
     }
 
@@ -188,34 +185,32 @@ class UserGroup extends Model
     {
         // @todo use queries instead
 
-        $cat_ids = $this->sender_singer_categories()->get()->pluck('id');
-
         // Get directly-assigned users
-        $users = $this->sender_users()
-            ->whereHas('singer', function($singer_query) use($cat_ids) {
-                $singer_query->whereIn('singer_category_id', $cat_ids );
-            })
-            ->get();
-
+        $users = $this->sender_users()->get();
         foreach( $this->sender_roles as $role )
         {
-            $role_users = $role->users()
-                ->whereHas('singer', function($singer_query) use($cat_ids) {
-                    $singer_query->whereIn('singer_category_id', $cat_ids );
-                })
-                ->get();
+            $role_users = $role->users()->get();
             $users = $users->merge( $role_users );
         }
 
         // Get users from voice parts
         $voice_part_ids = $this->sender_voice_parts()->get()->pluck('id')->toArray();
         $part_users = User::query()
-            ->whereHas('singer', function ($singer_query) use($voice_part_ids, $cat_ids) {
+            ->whereHas('singer', function ($singer_query) use($voice_part_ids) {
                 $singer_query->whereIn('voice_part_id', $voice_part_ids);
-                $singer_query->whereIn('singer_category_id', $cat_ids);
             })
             ->get();
         $users = $users->merge($part_users);
+
+        // Get singers from categories
+        $cat_ids = $this->sender_singer_categories()->get()->pluck('id');
+        $category_users = User::query()
+            ->whereHas('singer', function ($singer_query) use ($cat_ids) {
+                $singer_query->whereIn('singer_category_id', $cat_ids);
+            })
+            ->get();
+        $users = $users->merge($category_users);
+
         return $users->unique();
     }
 
