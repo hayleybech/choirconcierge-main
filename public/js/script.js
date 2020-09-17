@@ -82,6 +82,31 @@ $( document ).ready(function() {
 
     SELECT2_CONFIG.ajax.url = URL_SINGER_CATS;
     $('.select2[data-model=singer_categories]').select2(SELECT2_CONFIG);
+
+
+    /**
+     * Conditional Fields
+     */
+
+    // Hide Senders unless the list type is Mailout/Distribution
+    const $senders = $('#senders')
+    const $list_type = $('#list_type');
+    const $type_distribution = $('#list_type_distribution');
+
+    // Check initial state on page load
+    if( ! $type_distribution.is(':checked')) {
+        $senders.hide();
+    }
+
+    // Set event handler
+    $list_type.click(function(){
+        if( $type_distribution.closest('.btn').is('.active')) {
+            $senders.show();
+        } else {
+            $senders.hide();
+        }
+    });
+
 });
 
 

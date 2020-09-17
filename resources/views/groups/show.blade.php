@@ -40,6 +40,7 @@
             </div>
         </div><!-- /.col -->
 
+        @if($group->list_type === 'distribution')
         <div class="col-md-6">
             <div class="card">
                 <h3 class="card-header h4">Senders</h3>
@@ -65,6 +66,7 @@
                 @endif
             </div>
         </div><!-- /.col -->
+        @endif
     </div><!-- /.row -->
 
 @endsection

@@ -31,7 +31,7 @@
                     <fieldset class="form-group">
                         <legend class="col-form-label">List Type</legend>
 
-                        <div class="btn-group-vertical btn-group-toggle d-flex bg-white" data-toggle="buttons">
+                        <div id="list_type" class="btn-group-vertical btn-group-toggle d-flex bg-white" data-toggle="buttons">
 
                             <label for="list_type_public" class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center {{ ($group->list_type === 'public' ) ? 'active' : '' }}">
                                 <i class="fa fa-fw fa-envelope-open-text fa-2x mr-3"></i>
@@ -151,7 +151,7 @@
 
         <div class="col-md-6">
 
-            <div class="card">
+            <div class="card hide-unless" id="senders">
 
                 <h3 class="card-header h4">Senders</h3>
 
