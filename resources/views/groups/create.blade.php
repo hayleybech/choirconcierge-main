@@ -20,7 +20,7 @@
                     </div>
 
                     <div class="form-group">
-                        {{ Form::label('slug', 'Slug') }}
+                        {{ Form::label('slug', 'Address') }}
                         <div class="input-group mb-3">
                             {{ Form::text('slug', '', ['class' => 'form-control']) }}
                             <div class="input-group-append">

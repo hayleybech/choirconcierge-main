@@ -65,7 +65,7 @@
                 <div class="r-table__row row--group">
                     <div class="r-table__heading col--mark"><input type="checkbox"></div>
                     <div class="r-table__heading col--title">Title</div>
-                    <div class="r-table__heading group-col--slug">Slug</div>
+                    <div class="r-table__heading group-col--slug">Address</div>
                     <div class="r-table__heading group-col--type">Type</div>
                     <div class="r-table__heading col--created">Created</div>
                     <div class="r-table__heading col--delete"></div>
