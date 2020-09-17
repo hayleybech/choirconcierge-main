@@ -92,6 +92,20 @@
                 <div class="card-body">
 
                     <div class="form-group">
+                        <label for="recipient_users">Users</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-fw fa-user"></i></span>
+                            </div>
+                            <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple>
+                            @foreach($group->recipient_users as $user)
+                                <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="recipient_roles">Roles</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -115,20 +129,6 @@
                                 <span>{{ $voice_part->title }}</span>
                             </label>
                         @endforeach
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="recipient_users">Users</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-user"></i></span>
-                            </div>
-                            <select id="recipient_users" name="recipient_users[]" class="select2 form-control" data-model="users" multiple>
-                            @foreach($group->recipient_users as $user)
-                                <option value="{{$user->id}}" selected>{{$user->name}}</option>
-                            @endforeach
-                            </select>
                         </div>
                     </div>
 
@@ -158,6 +158,20 @@
                 <div class="card-body">
 
                     <div class="form-group">
+                        <label for="sender_users">Users</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-fw fa-user"></i></span>
+                            </div>
+                            <select id="sender_users" name="sender_users[]" class="select2 form-control" data-model="users" multiple>
+                            @foreach($group->sender_users as $user)
+                                <option value="{{$user->id}}" selected>{{$user->name}}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="sender_roles">Roles</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -181,20 +195,6 @@
                                     <span>{{ $voice_part->title }}</span>
                                 </label>
                             @endforeach
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sender_users">Users</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-user"></i></span>
-                            </div>
-                            <select id="sender_users" name="sender_users[]" class="select2 form-control" data-model="users" multiple>
-                            @foreach($group->sender_users as $user)
-                                <option value="{{$user->id}}" selected>{{$user->name}}</option>
-                            @endforeach
-                            </select>
                         </div>
                     </div>
 
