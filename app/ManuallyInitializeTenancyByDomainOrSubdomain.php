@@ -26,6 +26,6 @@ class ManuallyInitializeTenancyByDomainOrSubdomain
 
     protected function isSubdomain(string $hostname): bool
     {
-        return Str::endsWith($hostname, config('tenancy.central_domains'));
+        return Str::endsWith($hostname, config('tenancy.central_domains')) && ! Str::startsWith($hostname, config('tenancy.central_domains'));
     }
 }
