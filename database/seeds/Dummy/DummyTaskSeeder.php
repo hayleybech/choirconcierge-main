@@ -24,14 +24,14 @@ class DummyTaskSeeder extends Seeder {
                 'name'		=> 'Member Profile',
                 'role_id'	=> $member_role[0],
                 'type'		=> 'form',
-                'route'		=> 'profile.create',
+                'route'		=> 'singers.profiles.create',
 			],
 			[
                 'tenant_id' => tenant('id'),
                 'name'		=> 'Voice Placement',
                 'role_id'	=> $music_role[0],
                 'type'		=> 'form',
-                'route'		=> 'placement.create',
+                'route'		=> 'singers.placements.create',
 			],
 			[
                 'tenant_id' => tenant('id'),
