@@ -21,18 +21,14 @@ class RsvpPolicy
 
     public function viewAny(User $user): bool
     {
-        return (
-            $user->hasRole('Music Team')
-            || $user->hasRole('Membership Team')
-        );
+        return $user->hasAbility('rsvps_view');
     }
 
     public function view(User $user, Rsvp $rsvp): bool
     {
         return (
-            $user->hasRole('Music Team')
-            || $user->hasRole('Membership Team')
-            || $user->is($rsvp->singer->user)
+            $user->is($rsvp->singer->user)
+            || $user->hasAbility('rsvps_view')
         );
     }
 

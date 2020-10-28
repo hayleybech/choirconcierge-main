@@ -37,7 +37,10 @@ class ProfilePolicy
      */
     public function view(User $user, Profile $profile)
     {
-        return true;
+        return (
+            $user->singer->is($profile->singer)
+            || $user->hasAbility('singer_profiles_view')
+        );
     }
 
     /**
@@ -49,9 +52,7 @@ class ProfilePolicy
      */
     public function create(User $user)
     {
-        return (
-            $user->hasRole('Membership Team')
-        );
+        return $user->hasAbility('singer_profiles_create');
     }
 
     /**
@@ -66,7 +67,7 @@ class ProfilePolicy
     {
         return (
             $user->singer->is($profile->singer)
-            || $user->hasRole('Membership Team')
+            || $user->hasAbility('singer_profiles_update')
         );
     }
 }

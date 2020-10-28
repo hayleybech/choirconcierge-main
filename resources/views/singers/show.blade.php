@@ -223,7 +223,7 @@
 			</div>
 			@endcan
 
-			@if( $singer->onboarding_enabled && Auth::user()->isEmployee() )
+			@if( $singer->onboarding_enabled && Auth::user()->can('viewAny', \App\Models\Task::class) )
 				<div class="card">
 					<h3 class="card-header h5">Tasks</h3>
 					<div class="card-body">

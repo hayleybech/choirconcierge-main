@@ -37,7 +37,10 @@ class PlacementPolicy
      */
     public function view(User $user, Placement $placement)
     {
-        return true;
+        if( $user->singer->is($placement->singer) ) {
+            return false;
+        }
+        return $user->hasAbility('singer_placements_view');
     }
 
     /**
@@ -49,9 +52,7 @@ class PlacementPolicy
      */
     public function create(User $user)
     {
-        return (
-            $user->hasRole('Music Team')
-        );
+        return $user->hasAbility('singer_placements_create');
     }
 
     /**
@@ -64,8 +65,9 @@ class PlacementPolicy
      */
     public function update(User $user, Placement $placement)
     {
-        return (
-            $user->hasRole('Music Team')
-        );
+        if( $user->singer->is($placement->singer) ) {
+            return false;
+        }
+        return $user->hasAbility('singer_placements_update');
     }
 }

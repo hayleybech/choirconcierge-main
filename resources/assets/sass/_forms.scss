@@ -69,3 +69,12 @@ select.form-control-sm.force-xs {
 .btn-check.active:before {
   content: '';
 }
+
+
+/* OPTIONAL labels */
+.label-optional:after {
+  content: '(Optional)';
+  font-size: 0.8em;
+  color: #dc3545;
+  margin-left: 5px;
+}

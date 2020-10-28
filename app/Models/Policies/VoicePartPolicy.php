@@ -26,7 +26,7 @@ class VoicePartPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->hasRole('Music Team');
+        return $user->hasAbility('voice_parts_view');
     }
 
     /**
@@ -39,7 +39,7 @@ class VoicePartPolicy
      */
     public function view(User $user, VoicePart $voice_part)
     {
-        return $user->hasRole('Music Team');
+        return $user->hasAbility('voice_parts_view');
     }
 
     /**
@@ -51,7 +51,7 @@ class VoicePartPolicy
      */
     public function create(User $user)
     {
-        return $user->hasRole('Music Team');
+        return $user->hasAbility('voice_parts_create');
     }
 
     /**
@@ -64,7 +64,7 @@ class VoicePartPolicy
      */
     public function update(User $user, VoicePart $voice_part)
     {
-        return $user->hasRole('Music Team');
+        return $user->hasAbility('voice_parts_update');
     }
 
     /**
@@ -77,7 +77,7 @@ class VoicePartPolicy
      */
     public function delete(User $user, VoicePart $voice_part)
     {
-        return false;
+        return $user->hasAbility('voice_parts_delete');
     }
 
     /**

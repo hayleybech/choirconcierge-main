@@ -70,13 +70,14 @@
                             </li>--}}
 
 							@can('viewAny', \App\Models\Singer::class)
-								<li class="nav-item {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'active' : 'collapsed' }}">
+								<li class="nav-item {{ ( request()->routeIs('singers.*', 'voice-parts.*', 'roles.*') ) ? 'active' : 'collapsed' }}">
 									<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.*') ) ? 'active' : '' }}"><i class="fal fa-users fa-fw"></i><span class="link-text">Singers</span></a>
 									@can('create', \App\Models\Singer::class)
-									<div id="collapse-singers" class="submenu collapse small {{ ( request()->routeIs('singers.*', 'voice-parts.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
+									<div id="collapse-singers" class="submenu collapse small {{ ( request()->routeIs('singers.*', 'voice-parts.*', 'roles.*') ) ? 'show' : '' }}" data-parent="#main-menu-accordion">
 										<a href="{{ route('singers.index') }}" class="nav-link {{ ( request()->routeIs('singers.index') ) ? 'active' : '' }}"><i class="fal fa-list fa-fw"></i><span class="link-text">All Singers</span></a>
 										<a href="{{route( 'singers.create' )}}" class="nav-link {{ ( request()->routeIs('singers.create') ) ? 'active' : '' }}"><i class="fal fa-fw fa-plus-square"></i><span class="link-text">Add New</span></a>
 										@can('viewAny', \App\Models\VoicePart::class)<a href="{{ route('voice-parts.index') }}" class="nav-link {{ ( request()->routeIs('voice-parts.*') ) ? 'active' : '' }}"><i class="fal fa-users-class fa-fw"></i><span class="link-text">Voice Parts</span></a>@endcan
+										@can('viewAny', \App\Models\Role::class)<a href="{{ route('roles.index') }}" class="nav-link {{ ( request()->routeIs('roles.*') ) ? 'active' : '' }}"><i class="fal fa-user-tag fa-fw"></i><span class="link-text">Roles</span></a>@endcan
 									</div>
 									@endcan
 								</li>

@@ -43,7 +43,7 @@
                         {{ Form::password('password_confirmation', ['class' => 'form-control']) }}
                     </p>
 
-                    @if(Auth::user()->hasRole('Membership Team'))
+                    @if(Auth::user()->can('create', \App\Models\Profile::class))
                         <fieldset class="form-group">
                             <legend class="col-form-label">Onboarding</legend>
 
@@ -74,12 +74,21 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="user_roles"><i class="fa fa-fw fa-users"></i> Roles</label><br>
-                            <select id="user_roles" name="user_roles[]" class="select2 form-control" data-model="roles" multiple>
-                                @foreach($singer->user->roles as $role)
-                                    <option value="{{$role->id}}" selected>{{$role->name}}</option>
-                                @endforeach
-                            </select>
+                            <label for="user_roles" class="label-optional">Roles</label><br>
+                            <div class="row">
+                            @foreach($roles as $role)
+                                @if($role->name === 'User')
+                                    <input type="hidden" name="user_roles[]" id="user_roles_{{ $role->id }}" value="{{ $role->id }}">
+                                    @continue
+                                @endif
+                                <div class="col-md-6">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" name="user_roles[]" value="{{ $role->id }}" id="user_roles_{{ $role->id }}" @if($singer->user->roles->contains($role)) checked @endif>
+                                        <label class="custom-control-label" for="user_roles_{{ $role->id }}">{{ $role->name }}</label>
+                                    </div>
+                                </div>
+                            @endforeach
+                            </div>
                         </div>
                     @endif
 

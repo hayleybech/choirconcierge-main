@@ -100,6 +100,9 @@ Route::middleware([
     // Voice Parts module
     Route::resource('voice-parts', 'VoicePartController');
 
+    // Roles module
+    Route::resource('roles', 'RoleController');
+
     // Public calendar feed
     Route::get('/events-ical', [ICalController::class, 'index']);
 });

@@ -307,3 +307,28 @@ Breadcrumbs::for('voice-parts.edit', static function ($trail, $voice_part) {
     $trail->parent('voice-parts.show', $voice_part);
     $trail->push('Edit', route('voice-parts.edit', $voice_part));
 });
+
+/**
+ * ROLES
+ */
+
+// Singers > Roles
+Breadcrumbs::for('roles.index', static function ($trail) {
+    $trail->parent('singers.index');
+    $trail->push('Roles', route('roles.index'));
+});
+// Singers > Roles > Create
+Breadcrumbs::for('roles.create', static function ($trail) {
+    $trail->parent('roles.index');
+    $trail->push('Create', route('roles.create'));
+});
+// Singers > Roles > [Role]
+Breadcrumbs::for('roles.show', static function ($trail, $role) {
+    $trail->parent('roles.index');
+    $trail->push($role->name, route('roles.show', $role));
+});
+// Singers > Roles > [Role] > Edit
+Breadcrumbs::for('roles.edit', static function ($trail, $role) {
+    $trail->parent('roles.show', $role);
+    $trail->push('Edit', route('roles.edit', $role));
+});

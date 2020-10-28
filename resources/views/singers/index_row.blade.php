@@ -44,7 +44,7 @@ $category_class = [
 		<!--<div class="progress">
 			<div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
 		</div>-->
-		@if( $singer->onboarding_enabled && Auth::user()->isEmployee() )
+		@if( $singer->onboarding_enabled && Auth::user()->can('viewAny', \App\Models\Task::class) )
 			@foreach( $singer->tasks as $task )
 				@if( $task->pivot->completed )
 					@continue

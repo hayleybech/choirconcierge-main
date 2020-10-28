@@ -64,8 +64,21 @@
 				</div>
 
 				<div class="form-group">
-					<label for="user_roles"><i class="fa fa-fw fa-users"></i> Roles</label><br>
-					<select id="user_roles" name="user_roles[]" class="select2 form-control" data-model="roles" multiple></select>
+					<label for="user_roles" class="label-optional">Roles</label><br>
+					<div class="row">
+						@foreach($roles as $role)
+							@if($role->name === 'User')
+								<input type="hidden" name="user_roles[]" id="user_roles_{{ $role->id }}" value="{{ $role->id }}">
+								@continue
+							@endif
+							<div class="col-md-6">
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" name="user_roles[]" value="{{ $role->id }}" id="user_roles_{{ $role->id }}">
+									<label class="custom-control-label" for="user_roles_{{ $role->id }}">{{ $role->name }}</label>
+								</div>
+							</div>
+						@endforeach
+					</div>
 				</div>
 
 			</div>

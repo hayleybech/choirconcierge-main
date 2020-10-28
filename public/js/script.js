@@ -107,6 +107,14 @@ $( document ).ready(function() {
         }
     });
 
+    /**
+     * CREATE/EDIT ROLE
+     * Select All/None
+     */
+    $('#role-abilities-table .check-all').change(function(){
+        $(this).parents('tr').find('input[type=checkbox]').prop('checked', $(this).prop('checked'));
+    });
+
 });
 
 

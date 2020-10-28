@@ -26,7 +26,7 @@ class FolderPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return $user->hasAbility('folders_view');
     }
 
     /**
@@ -39,7 +39,7 @@ class FolderPolicy
      */
     public function view(User $user, Folder $folder)
     {
-        return true;
+        return $user->hasAbility('folders_view');
     }
 
     /**
@@ -51,7 +51,7 @@ class FolderPolicy
      */
     public function create(User $user)
     {
-        return $user->isEmployee();
+        return $user->hasAbility('folders_create');
     }
 
     /**
@@ -64,7 +64,7 @@ class FolderPolicy
      */
     public function update(User $user, Folder $folder)
     {
-        return $user->isEmployee();
+        return $user->hasAbility('folders_update');
     }
 
     /**
@@ -77,7 +77,7 @@ class FolderPolicy
      */
     public function delete(User $user, Folder $folder)
     {
-        return $user->isEmployee();
+        return $user->hasAbility('folders_delete');
     }
 
     /**

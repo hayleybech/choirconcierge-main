@@ -26,7 +26,7 @@ class UserGroupPolicy
      */
     public function viewAny(User $user)
     {
-        return false;
+        return $user->hasAbility('mailing_lists_view');
     }
 
     /**
@@ -39,7 +39,7 @@ class UserGroupPolicy
      */
     public function view(User $user, UserGroup $user_group)
     {
-        return false;
+        return $user->hasAbility('mailing_lists_view');
     }
 
     /**
@@ -51,7 +51,7 @@ class UserGroupPolicy
      */
     public function create(User $user)
     {
-        return false;
+        return $user->hasAbility('mailing_lists_create');
     }
 
     /**
@@ -64,7 +64,7 @@ class UserGroupPolicy
      */
     public function update(User $user, UserGroup $user_group)
     {
-        return false;
+        return $user->hasAbility('mailing_lists_update');
     }
 
     /**
@@ -77,7 +77,7 @@ class UserGroupPolicy
      */
     public function delete(User $user, UserGroup $user_group)
     {
-        return false;
+        return $user->hasAbility('mailing_lists_delete');
     }
 
     /**

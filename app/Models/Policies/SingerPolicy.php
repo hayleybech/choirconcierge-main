@@ -26,7 +26,7 @@ class SingerPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return $user->hasAbility('singers_view');
     }
 
     /**
@@ -39,7 +39,10 @@ class SingerPolicy
      */
     public function view(User $user, Singer $singer)
     {
-        return true;
+        return (
+            $user->singer->is($singer)
+            || $user->hasAbility('singers_view')
+        );
     }
 
     /**
@@ -51,10 +54,7 @@ class SingerPolicy
      */
     public function create(User $user)
     {
-        return (
-            $user->hasRole('Music Team')
-            || $user->hasRole('Membership Team')
-        );
+        return $user->hasAbility('singers_create');
     }
 
     /**
@@ -69,8 +69,7 @@ class SingerPolicy
     {
         return (
             $user->singer->is($singer)
-            || $user->hasRole('Music Team')
-            || $user->hasRole('Membership Team')
+            || $user->hasAbility('singers_update')
         );
     }
 
@@ -84,7 +83,7 @@ class SingerPolicy
      */
     public function delete(User $user, Singer $singer)
     {
-        return false;
+        return $user->hasAbility('singers_delete');
     }
 
     /**

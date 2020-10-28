@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
 use App\Http\Requests\SingerRequest;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\VoicePart;
 use Illuminate\Http\RedirectResponse;
@@ -60,8 +61,9 @@ class SingerController extends Controller
         $this->authorize('create', Singer::class);
 
         $voice_parts = [0 => "None"] + VoicePart::all()->pluck('title', 'id')->toArray();
+        $roles = Role::all();
 
-        return view('singers.create', compact('voice_parts'));
+        return view('singers.create', compact('voice_parts', 'roles'));
     }
 
     public function store(SingerRequest $request): RedirectResponse
@@ -87,7 +89,9 @@ class SingerController extends Controller
 
         $voice_parts = [0 => "None"] + VoicePart::all()->pluck('title', 'id')->toArray();
 
-        return view('singers.edit', compact('singer', 'voice_parts' ));
+        $roles = Role::all();
+
+        return view('singers.edit', compact('singer', 'voice_parts', 'roles' ));
     }
     public function update(Singer $singer, SingerRequest $request): RedirectResponse
     {

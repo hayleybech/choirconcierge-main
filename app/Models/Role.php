@@ -14,7 +14,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Columns
  * @property int $id
- * @property string name
+ * @property string $name
+ * @property string[] $abilities
  *
  * Relationships
  * @property User[] $users
@@ -25,6 +26,25 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 class Role extends Model
 {
     use BelongsToTenant, SoftDeletes;
+
+    public $timestamps = false;
+
+    protected $casts = [
+        'abilities' => 'array',
+    ];
+
+    protected $fillable = [
+        'name',
+        'abilities',
+    ];
+
+    /**
+     * Default values
+     * @var array
+     */
+    protected $attributes = [
+        'abilities' => '{}',
+    ];
 
     /**
      * Get users with a certain role

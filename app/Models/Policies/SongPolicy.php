@@ -26,7 +26,7 @@ class SongPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return $user->hasAbility('songs_view');
     }
 
     /**
@@ -39,7 +39,7 @@ class SongPolicy
      */
     public function view(User $user, Song $song)
     {
-        return true;
+        return $user->hasAbility('songs_view');
     }
 
     /**
@@ -51,7 +51,7 @@ class SongPolicy
      */
     public function create(User $user)
     {
-        return $user->hasRole('Music Team');
+        return $user->hasAbility('songs_create');
     }
 
     /**
@@ -64,7 +64,7 @@ class SongPolicy
      */
     public function update(User $user, Song $song)
     {
-        return $user->hasRole('Music Team');
+        return $user->hasAbility('songs_update');
     }
 
     /**
@@ -77,7 +77,7 @@ class SongPolicy
      */
     public function delete(User $user, Song $song)
     {
-        return $user->hasRole('Music Team');
+        return $user->hasAbility('songs_delete');
     }
 
     /**

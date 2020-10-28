@@ -20,39 +20,27 @@ class AttendancePolicy
 
     public function viewAny(User $user): bool
     {
-        return (
-            $user->hasRole('Music Team')
-            || $user->hasRole('Membership Team')
-        );
+        return $user->hasAbility('attendances_view');
     }
 
     public function view(User $user): bool
     {
-        return (
-            $user->hasRole('Music Team')
-            || $user->hasRole('Membership Team')
-        );
+        return $user->hasAbility('attendances_view');
     }
 
     public function create(User $user): bool
     {
-        return (
-            $user->hasRole('Music Team')
-            || $user->hasRole('Membership Team')
-        );
+        return $user->hasAbility('attendances_create');
     }
 
     public function update(User $user): bool
     {
-        return (
-            $user->hasRole('Music Team')
-            || $user->hasRole('Membership Team')
-        );
+        return $user->hasAbility('attendances_update');
     }
 
     public function delete(User $user): bool
     {
-        return false;
+        return $user->hasAbility('attendances_delete');
     }
 
     public function restore(User $user): bool

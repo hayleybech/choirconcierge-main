@@ -279,4 +279,14 @@ class User extends Authenticatable implements HasMedia
         // Send email
         Mail::send(new Welcome($user, $token));
     }
+
+    public function hasAbility(string $ability): bool
+    {
+        foreach($this->roles as $role){
+            if( in_array($ability, $role->abilities) ){
+                return true;
+            }
+        }
+        return false;
+    }
 }

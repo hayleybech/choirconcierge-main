@@ -26,7 +26,7 @@ class RiserStackPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return $user->hasAbility('riser_stacks_view');
     }
 
     /**
@@ -39,7 +39,7 @@ class RiserStackPolicy
      */
     public function view(User $user, RiserStack $riserStack)
     {
-        return true;
+        return $user->hasAbility('riser_stacks_view');
     }
 
     /**
@@ -51,7 +51,7 @@ class RiserStackPolicy
      */
     public function create(User $user)
     {
-        return $user->hasRole('Music Team');
+        return $user->hasAbility('riser_stacks_create');
     }
 
     /**
@@ -64,7 +64,7 @@ class RiserStackPolicy
      */
     public function update(User $user, RiserStack $riserStack)
     {
-        return $user->hasRole('Music Team');
+        return $user->hasAbility('riser_stacks_update');
     }
 
     /**
@@ -77,7 +77,7 @@ class RiserStackPolicy
      */
     public function delete(User $user, RiserStack $riserStack)
     {
-        return $user->hasRole('Music Team');
+        return $user->hasAbility('riser_stacks_delete');
     }
 
     /**
