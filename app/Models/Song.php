@@ -6,12 +6,14 @@ use App\Models\Filters\Filterable;
 use App\Models\Filters\Song_CategoryFilter;
 use App\Models\Filters\Song_StatusFilter;
 use App\Notifications\SongUploaded;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
@@ -85,6 +87,18 @@ class Song extends Model
      * @var array
      */
     protected $appends = ['pitch'];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('filterPending', static function (Builder $builder) {
+            if( Auth::user()->hasAbility('songs_update')) {
+                return;
+            }
+            $builder->whereDoesntHave('status', static function(Builder $query) {
+                $query->where('title', '=', 'Pending');
+            });
+        });
+    }
 
     public static function create( array $attributes = [] ) {
         /** @var Song $song */

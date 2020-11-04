@@ -39,6 +39,9 @@ class SongPolicy
      */
     public function view(User $user, Song $song)
     {
+        if($song->status->title === 'Pending') {
+            return $user->hasAbility('songs_update');
+        }
         return $user->hasAbility('songs_view');
     }
 
