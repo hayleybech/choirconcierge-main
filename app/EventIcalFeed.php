@@ -39,8 +39,8 @@ class EventIcalFeed
                 ->createdAt($event->created_at)
                 ->startsAt($event->call_time)
                 ->endsAt($event->end_date)
-                ->addressName($event->location_name)
-                ->address($event->location_address);
+                ->addressName($event->location_name ?? '')
+                ->address($event->location_address ?? '');
             $this->calendar->event($ical_event);
         }
     }
