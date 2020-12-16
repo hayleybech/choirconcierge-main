@@ -102,7 +102,7 @@
 					<button type="submit" class="btn btn-primary">
 						<i class="fa fa-fw fa-check"></i> Save
 					</button>
-					<a href="{{ route('singers.show', [$singer]) }}" class="btn btn-outline-secondary">
+					<a href="{{ route('singers.show', [$singer]) }}" class="btn btn-link text-danger">
 						<i class="fa fa-fw fa-times"></i> Cancel
 					</a>
 				</div>

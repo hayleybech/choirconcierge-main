@@ -5,7 +5,7 @@
 
 @section('page-action')
     @can('update', $stack)
-    <a href="{{route( 'stacks.edit', ['stack' => $stack] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+    <a href="{{route( 'stacks.edit', ['stack' => $stack] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
     @endcan
 @endsection
 

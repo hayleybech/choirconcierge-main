@@ -29,7 +29,7 @@
     @endif
     <td class="col--category">
         @foreach( $song->categories as $cat )
-        <span class="badge badge-pill badge-secondary mr-1">{{ $cat->title }}</span>
+        <span class="badge badge-dark mr-1">{{ $cat->title }}</span>
         @endforeach
     </td>
     <td class="col--pitch">

@@ -4,7 +4,7 @@
 @section('page-title', $role->name)
 @section('page-action')
     @can('update', $role)
-	<a href="{{ route( 'roles.edit', ['role' => $role] ) }}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+	<a href="{{ route( 'roles.edit', ['role' => $role] ) }}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
     @endcan
 @endsection
 @section('page-lead')

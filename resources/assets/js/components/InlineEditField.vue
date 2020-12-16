@@ -8,7 +8,7 @@
             <slot></slot>
 
             <button type="submit" :class="'btn btn-primary ' + btnSize"><i class="far fa-fw fa-check"></i> Save</button>
-            <button type="button" :class="'btn btn-link ' + btnSize" v-on:click="editing = false;"><i class="far fa-fw fa-times"></i> Cancel</button>
+            <button type="button" :class="'btn btn-link text-danger' + btnSize" v-on:click="editing = false;"><i class="far fa-fw fa-times"></i> Cancel</button>
         </form>
     </div>
     <div v-else>
