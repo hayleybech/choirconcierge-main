@@ -12,8 +12,8 @@
 
                     <div class="input-group input-group-sm mb-2 mr-2">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button class="btn btn-outline-success btn-sm"><i class="fa fa-check"></i> Apply</button>
-                            <a href="{{ route('events.reports.attendance') }}" class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i> Clear</a>
+                            <button class="btn btn-success btn-sm"><i class="fa fa-check"></i> Apply</button>
+                            <a href="{{ route('events.reports.attendance') }}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Clear</a>
                         </div>
                     </div>
                 </form>

@@ -120,7 +120,7 @@
                     <button type="submit" class="btn btn-primary">
                         <i class="fa fa-fw fa-check"></i> Create
                     </button>
-                    <a href="{{ route('events.index') }}" class="btn btn-outline-secondary">
+                    <a href="{{ route('events.index') }}" class="btn btn-link text-danger">
                         <i class="fa fa-fw fa-times"></i> Cancel
                     </a>
                 </div>

@@ -26,16 +26,16 @@
 						<div class="profile-header d-flex justify-content-between align-items-center">
 							<h1>{{ $singer->name }}</h1>
 							@can('update', $singer)
-							<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-secondary"><i class="fa fa-fw fa-edit"></i> Edit</a>
+							<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
 							@endcan
 						</div>
 
 						<div class="profile-item d-flex align-items-center">
 							<div class="singer-part mr-4">
 								@if( $singer->voice_part)
-									<span class="badge badge-secondary badge-pill" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>{{ $singer->voice_part->title }}</span><br>
+									<span class="badge badge-light badge-pill" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>{{ $singer->voice_part->title }}</span><br>
 								@else
-									<span class="badge badge-secondary badge-pill">No part</span>
+									<span class="badge badge-light badge-pill">No part</span>
 								@endif
 							</div>
 							<span class="singer-category {{ $category_class[$singer->category->name] }}">
@@ -58,7 +58,7 @@
 						<div class="profile-item">
 							<strong>Roles</strong><br>
 							@foreach($singer->user->roles as $role)
-							<span class="badge badge-secondary">{{$role->name}}</span>
+							<span class="badge badge-dark">{{$role->name}}</span>
 							@endforeach
 						</div>
 					</div>
@@ -70,9 +70,9 @@
 				<div class="card-header d-flex justify-content-between align-items-center">
 					<h2 class="h4">Member Profile</h2>
 					@can('update', $singer->profile)
-						<a href="{{ route( 'singers.profiles.edit', ['singer' => $singer, 'profile' => $singer->profile->id] ) }}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
+						<a href="{{ route( 'singers.profiles.edit', ['singer' => $singer, 'profile' => $singer->profile->id] ) }}" class="btn btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
 					@elsecan('create', \App\Models\Profile::class)
-						<a href="{{ route('singers.profiles.create', ['singer' => $singer, 'task' => 1]) }}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-fw fa-plus"></i> Create</a>
+						<a href="{{ route('singers.profiles.create', ['singer' => $singer, 'task' => 1]) }}" class="btn btn-sm btn-secondary"><i class="fa fa-fw fa-plus"></i> Create</a>
 					@endcan
 				</div>
 				<div class="card-body">
@@ -151,7 +151,7 @@
 				<h3 class="card-header h4 d-flex justify-content-between align-items-center">
 					Voice Placement
 					@can('update', $singer->placement)
-					<a href="{{route( 'singers.placements.edit', ['singer' => $singer, 'placement' => $singer->placement] )}}" class="btn btn-sm btn-outline-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
+					<a href="{{route( 'singers.placements.edit', ['singer' => $singer, 'placement' => $singer->placement] )}}" class="btn btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
 					@endcan
 				</h3>
 				<div class="card-body">

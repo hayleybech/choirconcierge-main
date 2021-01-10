@@ -2,7 +2,7 @@
 // Store CSS badge classes for categories
 $category_class = [
 	'Prospects'             => 'text-primary',
-	'Archived Prospects'    => 'text-info',
+	'Archived Prospects'    => 'text-warning',
 	'Members'               => 'text-success',
 	'Archived Members'      => 'text-danger',
 ];
@@ -29,7 +29,7 @@ $category_class = [
 		</div>
 	</td>
 	<td class="col--part">
-		<span class="badge badge-pill badge-secondary" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>
+		<span class="badge badge-pill badge-light" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>
 			<span class="d-md-none">{{ substr( $singer->voice_part->title ?? 'None', 0, 5 ) }}</span>
 			<span class="d-none d-md-inline">{{ ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? $singer->voice_part->title : 'No part' }}</span>
 		</span>
@@ -77,7 +77,7 @@ $category_class = [
 
 		@can('update', $singer)
 		<div class="dropdown">
-			<button class="btn btn-outline-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<button class="btn btn-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				Move to
 			</button>
 			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">

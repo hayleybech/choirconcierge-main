@@ -12,11 +12,11 @@
                 <div class="card-header d-flex justify-content-between align-items-start">
                     <h1 class="h2 mb-0">{{ $event->title }}</h1>
                     @can('update', $event)
-                        <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-light flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                        <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-primary flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
                     @endcan
                 </div>
                 <div class="card-body">
-                    <div class="badge badge-pill badge-secondary">{{ $event->type->title }}</div>
+                    <div class="badge badge-pill badge-dark">{{ $event->type->title }}</div>
                     <div><time class="font-weight-bold">{{ $event->start_date->format('M d, H:i') }}</time> to <time class="font-weight-bold">{{ $event->end_date->format('M d, H:i') }}</time></div>
                     <div>Call Time: <time>{{ $event->call_time->format('M d, H:i') }}</time></div>
                     <div>{{ $event->description }}</div>
@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary"><i class="far fa-fw fa-check"></i> Save RSVP</button>
+                            <button type="submit" class="btn btn-secondary"><i class="far fa-fw fa-check"></i> Save RSVP</button>
                         </div>
                         {{ Form::close() }}
                     @else
@@ -156,7 +156,7 @@
                 <div class="card-header d-flex justify-content-between align-items-start">
                     <h4>Attendance Report</h4>
                     @can('create', \App\Models\Attendance::class)
-                    <a href="{{ route('events.attendances.index', ['event' => $event]) }}" class="btn btn-light btn-sm"><i class="fas fa-fw fa-edit"></i> Record Attendance</a>
+                    <a href="{{ route('events.attendances.index', ['event' => $event]) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Attendance</a>
                     @endcan
                 </div>
                 <div class="card-body">

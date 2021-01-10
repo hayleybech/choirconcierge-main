@@ -4,7 +4,7 @@
 @section('page-title', $group->title)
 @section('page-action')
     @can('update', $group)
-    <a href="{{route( 'groups.edit', ['group' => $group] )}}" class="btn btn-add btn-sm btn-light"><i class="fa fa-fw fa-edit"></i> Edit</a>
+    <a href="{{route( 'groups.edit', ['group' => $group] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
     @endcan
 @endsection
 @section('page-lead')

@@ -34,8 +34,8 @@
                 </table>
 
                 <div class="card-footer">
-                    <button class="btn btn-primary" type="submit">Save</button>
-                    <a href="{{ route('events.show', ['event' => $event]) }}" class="btn btn-link">Cancel</a>
+                    <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-check"></i> Save</button>
+                    <a href="{{ route('events.show', ['event' => $event]) }}" class="btn btn-link text-danger"><i class="fa fa-fw fa-times"></i>  Cancel</a>
                 </div>
 
             </div>

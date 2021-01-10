@@ -11,7 +11,7 @@
                     <h1 class="h2 mb-0">{{ $song->title }}</h1>
 
                     @can('update', $song)
-                    <a href="{{route( 'songs.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-secondary ml-2 flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                    <a href="{{route( 'songs.edit', ['song' => $song] )}}" class="btn btn-add btn-sm btn-primary ml-2 flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
                     @endcan
                 </div>
 
