@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.tenant')
 
-@section('content')
+@section('tenant-content')
 
     <div class="container-fluid px-md-5 py-5">
         @include('partials.flash')

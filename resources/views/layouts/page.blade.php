@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.tenant')
 
-@section('content')
+@section('tenant-content')
 
     <div class="page-header mt-4">
         <div class="container-fluid px-md-5">
