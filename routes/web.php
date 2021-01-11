@@ -14,4 +14,4 @@
 
 
 // Public pages
-Route::view('/', 'welcome')->name('menu');
+Route::view('/', 'home')->name('menu');
