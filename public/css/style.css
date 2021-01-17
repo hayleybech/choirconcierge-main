@@ -242,4 +242,24 @@ i.fa.fa-external-link {
 	height: 100% !important;
 }
 
+/********************/
+/**** PUBLIC SITE ***/
+.navbar{
+	padding: 0.5rem 0rem;
+}
+#wrapper{
+	background-image: url("/img/header_background.svg");
+	height: 100%;
+	background-position: -120px -120px;
+	background-repeat: no-repeat;
+}
 
+.container-fluid{
+	width: 80%;
+}
+
+.cc-header{
+	display: flex;
+	flex-flow: row nowrap;
+	margin-top: 50px;
+}
