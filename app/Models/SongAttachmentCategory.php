@@ -24,6 +24,8 @@ class SongAttachmentCategory extends Model
 {
     use BelongsToTenant, SoftDeletes;
 
+    public $timestamps = false;
+
     public function attachments(): HasMany
     {
         return $this->hasMany(SongAttachment::class, 'category_id');
