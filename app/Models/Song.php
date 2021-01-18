@@ -50,6 +50,7 @@ class Song extends Model
     protected $fillable = [
         'title',
         'pitch_blown',
+        'suppress_email',
     ];
 
     protected static $filters = [
@@ -101,6 +102,9 @@ class Song extends Model
     }
 
     public static function create( array $attributes = [] ) {
+        $suppress_email = $attributes['suppress_email'] ?? 'no';
+        unset($attributes['suppress_email']);
+
         /** @var Song $song */
         $song = static::query()->create($attributes);
 
@@ -112,7 +116,9 @@ class Song extends Model
         $song->categories()->attach($attributes['categories']);
         $song->save();
 
-        Notification::send(User::active()->get(), new SongUploaded($song));
+        if($suppress_email !== 'yes') {
+            Notification::send(User::active()->get(), new SongUploaded($song));
+        }
 
         return $song;
     }

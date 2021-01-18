@@ -49,6 +49,13 @@
                         ) }}
                     </div>
 
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input id="suppress_email" name="suppress_email" value="yes" class="custom-control-input" type="checkbox">
+                            <label for="suppress_email" class="custom-control-label">Suppress "New Song" notification</label>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="card-footer">
