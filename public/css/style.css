@@ -244,7 +244,7 @@ i.fa.fa-external-link {
 
 /********************/
 /**** PUBLIC SITE ***/
-.navbar{
+#wrapper .navbar{
 	padding: 0.5rem 0rem;
 }
 #wrapper{
@@ -254,7 +254,7 @@ i.fa.fa-external-link {
 	background-repeat: no-repeat;
 }
 
-.container-fluid{
+#wrapper .container-fluid{
 	width: 80%;
 }
 
