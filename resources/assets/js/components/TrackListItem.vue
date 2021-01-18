@@ -28,7 +28,7 @@
             <a :href="attachment.download_url" class="btn btn-link btn-sm" :download="attachment.filepath"><i class="fa fa-fw fa-download"></i></a>
         </td>
         <td class="col--delete" v-if="canUpdate">
-            <delete-button :action="'/songs/'+song.id+'/attachments/'+attachment.id" class-name="btn-sm" :enable-padding="true"></delete-button>
+            <delete-button :index="'attachment-'+attachment.id" :action="'/songs/'+song.id+'/attachments/'+attachment.id" class-name="btn-sm" :enable-padding="true"></delete-button>
         </td>
     </tr>
 </template>

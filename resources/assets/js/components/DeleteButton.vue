@@ -1,12 +1,12 @@
 <template>
     <div class="delete-button">
         <!-- Button trigger modal -->
-        <button type="button" :class="'btn btn-link text-danger '+paddingClass+' '+className" data-toggle="modal" data-target="#deleteModal">
+        <button type="button" :class="'btn btn-link text-danger '+paddingClass+' '+className" data-toggle="modal" :data-target="'#deleteModal-'+index">
             <i class="far fa-fw fa-trash-alt"></i>
         </button>
 
         <!-- Modal -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal fade" :id="'deleteModal-'+index" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -37,6 +37,10 @@
     export default {
         name: "DeleteButton",
         props: {
+            index: {
+              type: String,
+              required: true
+            },
             action: {
                 type: String,
                 required: true
