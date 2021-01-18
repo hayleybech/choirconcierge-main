@@ -27,3 +27,5 @@ queue.pid
 /reports/
 
 .phpunit.result.cache
+
+public/js/test.js
