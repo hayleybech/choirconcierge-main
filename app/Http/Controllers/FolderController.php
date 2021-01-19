@@ -22,7 +22,9 @@ class FolderController extends Controller
      */
     public function index(): View
     {
-        $folders = Folder::with('documents')->get();
+        $folders = Folder::with(['documents' => static function($query){
+            $query->orderBy('title');        // documents by document title
+        }])->orderBy('title')->get(); // folders by folder title
 
         return view('folders.index', compact('folders'));
     }
