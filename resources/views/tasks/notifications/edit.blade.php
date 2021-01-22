@@ -31,7 +31,9 @@
                     </div>
                     <div class="col-3">
                         <small class="form-text text-muted"><strong>You can include any of the following snippets:</strong>
-                            Singer name: <code>%%singer.name%%</code>, <br>
+                            Singer full name: <code>%%singer.name%%</code>, <br>
+                            Singer first name: <code>%%singer.fname%%</code>, <br>
+                            Singer last name: <code>%%singer.lname%%</code>, <br>
                             Singer email: <code>%%singer.email%%</code>, <br>
                             Create profile link: <code>%%profile.create%%</code>, <br>
                             Create placement link: <code>%%placement.create%%</code>, <br>

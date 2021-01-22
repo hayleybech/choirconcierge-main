@@ -51,6 +51,8 @@ class NotificationTemplate extends Model
     {
         $replacements = [
             '%%singer.name%%'       => '<code>%%singer.name%%</code>',
+            '%%singer.fname%%'       => '<code>%%singer.fname%%</code>',
+            '%%singer.lname%%'       => '<code>%%singer.lname%%</code>',
             '%%singer.email%%'      => '<code>%%singer.email%%</code>',
             '%%profile.create%%'    => '<code>%%profile.create%%</code>',
             '%%placement.create%%'  => '<code>%%placement.create%%</code>',
@@ -96,6 +98,8 @@ class NotificationTemplate extends Model
     {
         $replacements = [
             '%%singer.name%%'       => $singer->name,
+            '%%singer.fname%%'       => $singer->first_name,
+            '%%singer.lname%%'       => $singer->last_name,
             '%%singer.email%%'      => $singer->email,
             '%%profile.create%%'    => '', //route( 'profile.create', $singer, $this->task ),
             '%%placement.create%%'  => '', //route( 'placement.create', $singer, $this->task ),
