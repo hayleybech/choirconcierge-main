@@ -28,6 +28,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property boolean $onboarding_enabled
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon $joined_at
  *
  * Relationships
  * @property Task[] $tasks
@@ -67,6 +68,12 @@ class Singer extends Model
 
     protected $with = [
         'user',
+    ];
+
+    public $dates = [
+        'updated_at',
+        'created_at',
+        'joined_at',
     ];
 
     protected $appends = [

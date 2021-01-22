@@ -47,6 +47,10 @@
 							<span class="text-muted">{{ $singer->created_at->toDayDateTimeString() }}</span><br>
 						</div>
 						<div class="profile-item">
+							<strong>Joined</strong><br>
+							<span class="text-muted">{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->toDayDateTimeString() }})</span><br>
+						</div>
+						<div class="profile-item">
 							<strong>
 								@if( $singer->onboarding_enabled )
 								Onboarding enabled
