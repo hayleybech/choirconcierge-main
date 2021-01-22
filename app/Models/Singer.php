@@ -78,6 +78,7 @@ class Singer extends Model
 
     protected $appends = [
         'user_avatar_thumb_url',
+        'name',
     ];
 
     public $notify_channels = ['mail'];
