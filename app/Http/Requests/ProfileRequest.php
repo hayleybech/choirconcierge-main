@@ -29,6 +29,7 @@ class ProfileRequest extends FormRequest
             'ice_name'              => 'max:255',
             'ice_phone'             => 'max:255',
             'address_street_1'      => 'max:255',
+            'address_street_2'      => 'max:255',
             'address_suburb'        => 'max:255',
             'address_state'         => 'max:3',
             'address_postcode'      => 'max:4',

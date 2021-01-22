@@ -56,6 +56,10 @@
 							{{ Form::label('address_street_1', 'Street Address') }}
 							{{ Form::text('address_street_1', '', ['class' => 'form-control']) }}
 						</p>
+						<p>
+							{{ Form::label('address_street_2', 'Street Address 2') }}
+							{{ Form::text('address_street_2', '', ['class' => 'form-control']) }}
+						</p>
 						<div class="row mb-3">
 							<div class="col-md-8">
 								{{ Form::label('address_suburb', 'Suburb') }}

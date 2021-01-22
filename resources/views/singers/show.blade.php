@@ -100,6 +100,7 @@
 								<h3 class="h4">Address</h3>
 								<p>
 									{{ $singer->profile->address_street_1 ?? 'No address' }}<br>
+									@if( isset($singer->profile->address_street_2) && $singer->profile->address_street_2 !== ''){{ $singer->profile->address_street_2 ?? 'No address' }}<br>@endif
 									{{ optional($singer->profile)->address_suburb ? optional($singer->profile)->address_suburb . ', ' : '' }}{{ $singer->profile->address_state ?? '' }} {{ $singer->profile->address_postcode ?? '' }}
 								</p>
 							</div>
