@@ -38,6 +38,7 @@ class ProfileRequest extends FormRequest
             'profession'            => 'max:255',
             'skills'                => 'max:255',
             'height'                => 'numeric|between:0,300',
+            'membership_details'    => 'max:255',
         ];
     }
 }

@@ -117,6 +117,10 @@
 							</div>
 							<small class="form-text text-muted">Knowing the singer's height is useful for riser stacks.</small>
 						</div>
+						<div class="form-group">
+							{{ Form::label('membership_details', 'Society Membership Details (e.g. BHA #1234)') }}
+							{{ Form::text('membership_details', '', ['class' => 'form-control']) }}
+						</div>
 					</fieldset>
 
 				</div>

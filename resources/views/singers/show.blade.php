@@ -137,6 +137,10 @@
 									<strong>Other Skills</strong><br>
 									{{ $singer->profile->skills ?? '' }}
 								</div>
+								<div class="profile-item">
+									<strong>Society Membership Details</strong><br>
+									{{ $singer->profile->membership_details ?? '' }}
+								</div>
 								@else
 								<p>No Member Profile yet. @can('create', \App\Models\Profile::class)<a href="{{ route('singers.profiles.create', ['singer' => $singer, 'task' => 1]) }}">Create one now. </a>@endcan</p>
 								@endif
