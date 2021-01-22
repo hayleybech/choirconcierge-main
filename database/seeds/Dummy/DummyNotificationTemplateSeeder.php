@@ -103,7 +103,7 @@ Hi %%user.fname%%,
 
 A new member, %%singer.name%%, has passed their audition. Please invoice them for their registration fees. Ensure you inform us when the fees have been paid. 
 
-Here are the subscriber's details:
+Here are the singer's details:
 Email: %%singer.email%%
 DOB: %%singer.dob%%
 Age: %%singer.age%%
