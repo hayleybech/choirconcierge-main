@@ -27,7 +27,8 @@ class SingerRequest extends FormRequest
     {
         $singer = $this->route('singer');
         return [
-            'name'	=> 'required|max:255',
+            'first_name' => 'required|max:127',
+            'last_name'	 => 'required|max:127',
             'email'	=> [
                 'required',
                 Rule::unique('singers')->where('tenant_id', tenant('id'))->ignore($singer->id ?? '')

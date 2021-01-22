@@ -22,7 +22,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Columns
  * @property int $id
- * @property string $name
+ * @property string $first_name
+ * @property string $last_name
  * @property string $email
  * @property boolean $onboarding_enabled
  * @property Carbon $created_at
@@ -40,6 +41,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Attendance[] $attendances
  *
  * Dynamic
+ * @property string $name
  * @property int $age
  *
  * @package App\Models
@@ -49,7 +51,8 @@ class Singer extends Model
     use Notifiable, Filterable, BelongsToTenant, SoftDeletes;
 
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'onboarding_enabled',
         'voice_part_id',
@@ -113,8 +116,8 @@ class Singer extends Model
         if( isset( $attributes['email'] ) ) {
             $this->user->email = $attributes['email'];
         }
-        if( isset( $attributes['name'] ) ) {
-            $this->user->name = $attributes['name'];
+        if( isset( $attributes['first_name'] ) || isset( $attributes['last_name']) ) {
+            $this->user->name = $this->name;
         }
         if( isset( $attributes['password'] ) ) {
             $this->user->setPassword($attributes['password']);
@@ -186,6 +189,11 @@ class Singer extends Model
     {
         return $this->hasManyThrough(Role::class, User::class);
     }*/
+
+    public function getNameAttribute(): String
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
 
     public function getAge(): int
     {

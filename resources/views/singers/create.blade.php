@@ -14,10 +14,20 @@
 			<div class="card-header"><h3 class="h4">Singer Details</h3></div>
 
 			<div class="card-body">
-				<p>
-					{{ Form::label('name', 'Name') }}
-					{{ Form::text('name', '', ['class' => 'form-control']) }}
-				</p>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							{{ Form::label('first_name', 'First Name') }}
+							{{ Form::text('first_name', '', ['class' => 'form-control']) }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							{{ Form::label('last_name', 'Last Name') }}
+							{{ Form::text('last_name', '', ['class' => 'form-control']) }}
+						</div>
+					</div>
+				</div>
 
 				<p>
 					{{ Form::label('email', 'E-Mail Address') }}
