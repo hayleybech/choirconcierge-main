@@ -107,6 +107,16 @@
 							{{ Form::label('skills', 'What non-musical skills do you have?') }}
 							{{ Form::text('skills', '', ['class' => 'form-control']) }}
 						</p>
+						<div class="form-group">
+							{{ Form::label('height', 'Height') }}
+							<div class="input-group">
+								{{ Form::number('height', '', ['class' => 'form-control', 'step' => '0.05']) }}
+								<div class="input-group-append">
+									<div class="input-group-text">cm</div>
+								</div>
+							</div>
+							<small class="form-text text-muted">Knowing the singer's height is useful for riser stacks.</small>
+						</div>
 					</fieldset>
 
 				</div>
