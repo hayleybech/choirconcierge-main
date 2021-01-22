@@ -118,6 +118,10 @@
 									</div>
 
 								<div class="profile-item">
+									<i class="fas fa-fw fa-ruler-vertical mr-2"></i>{{ round( $singer->profile->height, 2) }} cm
+								</div>
+
+								<div class="profile-item">
 									<strong>Reason for joining</strong><br>
 									{{ $singer->profile->reason_for_joining ?? '' }}
 								</div>

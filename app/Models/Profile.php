@@ -25,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @property string $referrer
  * @property string $profession
  * @property string $skills
+ * @property float $height
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -49,6 +50,7 @@ class Profile extends Model
 		'referrer', 
 		'profession', 
 		'skills',
+        'height',
 	];
 
     public $dates = [

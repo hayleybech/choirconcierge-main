@@ -37,6 +37,7 @@ class ProfileRequest extends FormRequest
             'referrer'              => 'max:255',
             'profession'            => 'max:255',
             'skills'                => 'max:255',
+            'height'                => 'numeric|between:0,300',
         ];
     }
 }
