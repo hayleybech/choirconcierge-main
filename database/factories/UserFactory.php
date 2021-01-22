@@ -19,7 +19,7 @@ $factory->define(User::class, static function (Faker $faker) {
     static $password;
 
     return [
-        'name' => $faker->name,
+        'name' => $faker->firstName.' '.$faker->lastName,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('password'),
         'remember_token' => Str::random(10),

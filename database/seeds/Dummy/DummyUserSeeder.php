@@ -21,8 +21,10 @@ class DummyUserSeeder extends Seeder
             $faker = Faker::create();
 
             // Create matching singer
+            $name = explode(' ', $user->name);
             $user->singer()->create([
-                'name' => $user->name,
+                'first_name' => $name[0],
+                'last_name' => $name[1],
                 'email' => $user->email,
                 'onboarding_enabled' => $faker->boolean(30),
             ]);
