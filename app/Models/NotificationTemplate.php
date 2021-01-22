@@ -62,6 +62,8 @@ class NotificationTemplate extends Model
             '%%singer.phone%%'      => '<code>%%singer.phone%%</code>',
             '%%singer.section%%'    => '<code>%%singer.section%%</code>',
             '%%user.name%%' 	    => '<code>%%user.name%%</code>',
+            '%%user.fname%%' 	    => '<code>%%user.fname%%</code>',
+            '%%user.lname%%' 	    => '<code>%%user.lname%%</code>',
         ];
         return str_replace( array_keys($replacements), $replacements, nl2br( e( $this->body ) ) );
     }
@@ -125,6 +127,8 @@ class NotificationTemplate extends Model
         {
             $user_replacements = [
                 '%%user.name%%' 	=> $user->name,
+                '%%user.fname%%' 	=> $user->singer->first_name,
+                '%%user.lname%%' 	=> $user->singer->last_name,
             ];
             $replacements = array_merge($replacements, $user_replacements);
         }

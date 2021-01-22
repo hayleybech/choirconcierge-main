@@ -38,7 +38,9 @@
                             Create profile link: <code>%%profile.create%%</code>, <br>
                             Create placement link: <code>%%placement.create%%</code>, <br>
                             Choir name: <code>%%choir.name%%</code>, <br>
-                            Recipient name: <code>%%user.name%%</code>, <br>
+                            Recipient full name: <code>%%user.name%%</code>, <br>
+                            Recipient first name: <code>%%user.fname%%</code>, <br>
+                            Recipient last name: <code>%%user.lname%%</code>, <br>
                             <br>
                             <strong>If the singer has a member profile: </strong><br>
                             Singer DOB: <code>%%singer.dob%%</code>, <br>
