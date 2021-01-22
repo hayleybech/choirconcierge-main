@@ -40,6 +40,10 @@ class SingerPlacementController extends Controller
             event( new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer) );
         }
 
+        $singer->update([
+            'voice_part_id' => $request->validated()['voice_part_id']
+        ]);
+
         return redirect()->route('singers.show', $singer)->with(['status' => 'Voice Placement created. ', ]);
     }
 
