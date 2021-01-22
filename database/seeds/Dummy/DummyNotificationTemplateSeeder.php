@@ -14,7 +14,7 @@ class DummyNotificationTemplateSeeder extends Seeder
     public function run()
     {
         $profile_reminder_body = <<<EOT
-Hi %%user.name%%,
+Hi %%user.fname%%,
 
 A prospective member, %%singer.name%%, has completed a voice placement. Please complete the Member Profile to provide basic information and contact details for the singer.
 
@@ -26,7 +26,7 @@ Choir Concierge
 EOT;
 
         $placement_reminder_body = <<<EOT
-Hi %%user.name%%,
+Hi %%user.fname%%,
 
 A prospective member, %%singer.name%%, is ready for voice placement. 
 
@@ -39,7 +39,7 @@ EOT;
 
 
         $details_completed_body = <<<EOT
-Hi %%user.name%%,
+Hi %%user.fname%%,
 
 A prospective member, %%singer.name%%, has completed a Voice Placement. The singer is in the %%singer.section%% section.
 
@@ -52,7 +52,7 @@ EOT;
 
 
         $welcome_body = <<<EOT
-Hi %%singer.name%%,
+Hi %%singer.fname%%,
 
 Welcome to the Blenders!
 
@@ -73,7 +73,7 @@ __Your Journey__
 - Download our entire repertoire and start singing!
 EOT;
         $audition_due_singer_body = <<<EOT
-Hi %%singer.name%%,
+Hi %%singer.fname%%,
 
 We hope you've had a fantastic few weeks at The Blenders. It's now time for your Vocal Assessment! After your initial four weeks with us, you must be assessed by one of our friendly music team.
 
@@ -87,7 +87,7 @@ Membership Team - The Blenders
 EOT;
 
         $audition_due_team_body = <<<EOT
-Hi %%user.name%%,
+Hi %%user.fname%%,
 
 %%singer.name%% is due for vocal assessment.
 
@@ -99,7 +99,7 @@ EOT;
 
 
         $audition_completed_body = <<<EOT
-Hi %%user.name%%,
+Hi %%user.fname%%,
 
 A new member, %%singer.name%%, has passed their audition. Please invoice them for their registration fees. Ensure you inform us when the fees have been paid. 
 
@@ -114,7 +114,7 @@ Choir Concierge
 EOT;
 
         $audition_congrats_body = <<<EOT
-Hi %%singer.name%%,
+Hi %%singer.fname%%,
 
 Congratulations on passing your audition! You are now eligible to become a full member of The Blenders! Below, you'll find a link to The Blenders' core repertoire, which you can start learning straight away. 
 
@@ -142,7 +142,7 @@ __Your Journey__
 EOT;
 
         $uniform_request_body = <<<EOT
-Hi %%user.name%%,
+Hi %%user.fname%%,
 
 A new member, %%singer.name%%, has paid their fees.
 
@@ -154,7 +154,7 @@ Choir Concierge
 EOT;
 
         $membership_welcome_body = <<<EOT
-Hi %%user.name%%,
+Hi %%user.fname%%,
 
 A new member, %%singer.name%%, has paid their fees.
 
@@ -169,7 +169,7 @@ Choir Concierge
 EOT;
 
         $director_welcome_body = <<<EOT
-Hi %%user.name%%,
+Hi %%user.fname%%,
 
 A new member, %%singer.name%%, has paid their fees.
 
