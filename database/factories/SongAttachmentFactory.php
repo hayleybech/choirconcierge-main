@@ -1,11 +1,20 @@
 <?php
+
+namespace Database\Factories;
+
 use App\Models\SongAttachment;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(SongAttachment::class, static function (Faker $faker) {
+class SongAttachmentFactory extends Factory
+{
+    /** @var string */
+    protected $model = SongAttachment::class;
 
-    return [
-        'title' => $faker->sentence(2, true),
-        'filepath' => '---',    // Set in seeder, this temporarily circumvents non nullable column
-    ];
-});
+    public function definition(): array
+    {
+        return [
+            'title' => $this->faker->sentence(2, true),
+            'filepath' => '---',    // Set in seeder, this temporarily circumvents non nullable column
+        ];
+    }
+}
