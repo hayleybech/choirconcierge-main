@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\SingerCategory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
@@ -8,6 +10,7 @@ use App\Models\User;
 use App\Models\Singer;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
 
 class  CriticalUserSeeder extends Seeder
 {

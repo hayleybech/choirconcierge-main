@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Song;
 use App\Models\SongAttachment;
 use App\Models\SongAttachmentCategory;
@@ -8,6 +10,7 @@ use App\Models\SongStatus;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CriticalSongSeeder extends Seeder
 {

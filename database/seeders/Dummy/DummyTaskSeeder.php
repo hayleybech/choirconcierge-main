@@ -1,9 +1,12 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use App\Models\Task;
 use App\Models\Singer;
 use App\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 class DummyTaskSeeder extends Seeder {
 	

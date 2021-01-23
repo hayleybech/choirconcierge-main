@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\SingerCategory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
@@ -17,7 +19,7 @@ class DummyUserSeeder extends Seeder
         $singer_categories = SingerCategory::all();
 
         // Add dummy users - no roles
-        factory(User::class, 30)->create()->each(static function(User $user) use ($singer_categories) {
+        User::factory()->count(30)->create()->each(static function(User $user) use ($singer_categories) {
             $faker = Faker::create();
 
             // Create matching singer

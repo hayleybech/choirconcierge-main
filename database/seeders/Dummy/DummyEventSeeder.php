@@ -1,7 +1,11 @@
 <?php
 
+namespace Database\Seeders;
+
+
 use App\Models\EventType;
 use App\Models\Event;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
@@ -14,7 +18,7 @@ class DummyEventSeeder extends Seeder
         $types = EventType::all();
 
         // Generate dummy events
-        factory(Event::class, 30)->create()->each(static function($event) use ($types) {
+        Event::factory()->count(30)->create()->each(static function($event) use ($types) {
             DummyEventSeeder::attachRandomType($event, $types);
         });
     }

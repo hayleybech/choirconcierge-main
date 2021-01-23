@@ -1,10 +1,13 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\EventType;
 use App\Models\Event;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CriticalEventSeeder extends Seeder
 {
