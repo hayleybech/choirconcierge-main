@@ -1,13 +1,19 @@
 <?php
 
+namespace Database\Seeders\Dummy;
+
 use App\Models\Song;
 use App\Models\SongAttachment;
 use App\Models\SongAttachmentCategory;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Faker;
 
 class DummySongSeeder extends Seeder
 {
@@ -19,7 +25,7 @@ class DummySongSeeder extends Seeder
         $attachment_categories = SongAttachmentCategory::all();
 
         // Generate random songs
-        factory(Song::class, 30)->create()->each(static function(Song $song) use ($statuses, $categories, $attachment_categories) {
+        Song::factory()->count(30)->create()->each(static function(Song $song) use ($statuses, $categories, $attachment_categories) {
             DummySongSeeder::attachRandomStatus($song, $statuses);
             DummySongSeeder::attachRandomCategories($song, $categories);
 
@@ -27,7 +33,7 @@ class DummySongSeeder extends Seeder
             Storage::disk('public')->makeDirectory( 'songs/'.$song->id);
 
             // Sample mp3s
-            $song->attachments()->saveMany( factory( SongAttachment::class, 4 )->make() )
+            $song->attachments()->saveMany( SongAttachment::factory()->count(4)->make() )
                 ->each(static function(SongAttachment $attachment) use ($song, $attachment_categories) {
 
                     // Copy random sample files
@@ -45,7 +51,7 @@ class DummySongSeeder extends Seeder
 
             // Sample PDFs
             Storage::disk('public')->makeDirectory( 'songs/'.$song->id);
-            $song->attachments()->saveMany( factory( SongAttachment::class, 1 )->make() )
+            $song->attachments()->saveMany( SongAttachment::factory()->count(1)->make() )
                 ->each(static function(SongAttachment $attachment) use ($song, $attachment_categories) {
 
                     $demo_dir = Storage::disk('global-local')->path('sample/mp3');

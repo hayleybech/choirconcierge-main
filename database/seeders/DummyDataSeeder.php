@@ -1,6 +1,16 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Role;
+use Database\Seeders\Dummy\DummyDocumentSeeder;
+use Database\Seeders\Dummy\DummyEventSeeder;
+use Database\Seeders\Dummy\DummyFolderSeeder;
+use Database\Seeders\Dummy\DummyNotificationTemplateSeeder;
+use Database\Seeders\Dummy\DummySongSeeder;
+use Database\Seeders\Dummy\DummyTaskSeeder;
+use Database\Seeders\Dummy\DummyUserGroupSeeder;
+use Database\Seeders\Dummy\DummyUserSeeder;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Task;

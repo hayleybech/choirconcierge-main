@@ -1,9 +1,12 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Role;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Task;
+use Illuminate\Support\Facades\App;
 
 class DatabaseSeeder extends Seeder
 {

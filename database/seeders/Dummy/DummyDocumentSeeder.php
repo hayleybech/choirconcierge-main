@@ -1,6 +1,9 @@
 <?php
 
+namespace Database\Seeders\Dummy;
+
 use Illuminate\Database\Seeder;
+use App\Models\Document;
 
 class DummyDocumentSeeder extends Seeder
 {
@@ -9,6 +12,6 @@ class DummyDocumentSeeder extends Seeder
      */
     public function run(): void
     {
-        factory(App\Models\Document::class, 30)->create();
+        Document::factory()->count(30)->create();
     }
 }

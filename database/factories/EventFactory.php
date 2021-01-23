@@ -1,20 +1,30 @@
 <?php
 
+namespace Database\Factories;
+
+use App\Models\Event;
 use Carbon\Carbon;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(\App\Models\Event::class, static function (Faker $faker) {
-    $call_time = Carbon::instance( $faker->dateTimeThisYear() );
-    $start_time = (clone $call_time)->addHour();
-    $end_time = (clone $start_time)->addHours(2);
+class EventFactory extends Factory
+{
+    /** @var string */
+    protected $model = Event::class;
 
-    return [
-        'title' => $faker->sentence(6, true),
-        'call_time' => $call_time,
-        'start_date' => $start_time,
-        'end_date' => $end_time,
-        'location_name' => $faker->sentence(3, true),
-        'location_address' => $faker->address, // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
-        'description' => $faker->optional()->sentence,
-    ];
-});
+    public function definition(): array
+    {
+        $call_time = Carbon::instance( $this->faker->dateTimeThisYear() );
+        $start_time = (clone $call_time)->addHour();
+        $end_time = (clone $start_time)->addHours(2);
+
+        return [
+            'title' => $this->faker->sentence(6, true),
+            'call_time' => $call_time,
+            'start_date' => $start_time,
+            'end_date' => $end_time,
+            'location_name' => $this->faker->sentence(3, true),
+            'location_address' => $this->faker->address, // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
+            'description' => $this->faker->optional()->sentence,
+        ];
+    }
+}

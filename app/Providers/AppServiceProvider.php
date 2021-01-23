@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\View\Composers\SingerCategoryComposer;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', SingerCategoryComposer::class);
 
         TenantAssetsController::$tenancyMiddleware = 'Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain';
+
+        Paginator::useBootstrap();
     }
 
     /**

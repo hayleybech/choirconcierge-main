@@ -1,6 +1,9 @@
 <?php
 
+namespace Database\Seeders\Dummy;
+
 use Illuminate\Database\Seeder;
+use App\Models\Folder;
 
 class DummyFolderSeeder extends Seeder
 {
@@ -11,6 +14,6 @@ class DummyFolderSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\Folder::class, 10)->create();
+        Folder::factory()->count(10)->create();
     }
 }

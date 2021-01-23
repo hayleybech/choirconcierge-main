@@ -1,9 +1,19 @@
 <?php
 
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(\App\Models\NotificationTemplate::class, function (Faker $faker) {
-    return [
-        //
-    ];
-});
+use App\Models\NotificationTemplate;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class NotificationTemplateFactory extends Factory
+{
+    /** @var string */
+    protected $model = NotificationTemplate::class;
+
+    public function definition(): array
+    {
+        return [
+            //
+        ];
+    }
+}

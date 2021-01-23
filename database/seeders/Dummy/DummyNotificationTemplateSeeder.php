@@ -1,8 +1,11 @@
 <?php
 
+namespace Database\Seeders\Dummy;
+
 use App\Models\Task;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DummyNotificationTemplateSeeder extends Seeder
 {
