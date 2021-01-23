@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Class RiserStack
@@ -25,7 +26,7 @@ use Illuminate\Support\Carbon;
  */
 class RiserStack extends Model
 {
-    use SoftDeletes;
+    use BelongsToTenant, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
