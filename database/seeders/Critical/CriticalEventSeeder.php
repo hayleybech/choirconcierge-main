@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Critical;
 
 use App\Models\EventType;
 use App\Models\Event;

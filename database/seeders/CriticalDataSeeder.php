@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
+use Database\Seeders\Critical;
+use Database\Seeders\Critical\CriticalEventSeeder;
+use Database\Seeders\Critical\CriticalSongSeeder;
+use Database\Seeders\Critical\CriticalUserSeeder;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Task;

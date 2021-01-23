@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Critical;
 
 use App\Models\Song;
 use App\Models\SongAttachment;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Critical;
 
 use App\Models\SingerCategory;
 use Illuminate\Database\Eloquent\Collection;
