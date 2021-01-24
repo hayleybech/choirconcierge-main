@@ -11,15 +11,12 @@ class UserFactory extends Factory
     /** @var string */
     protected $model = User::class;
 
-    // All faked users have "password" for their password, so only bcrypt() once
-    protected static string $password;
-
     public function definition(): array
     {
         return [
             'name' => $this->faker->firstName . ' ' . $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,
-            'password' => self::$password ?: self::$password = bcrypt('password'),
+            'password' => bcrypt('password'),
             'remember_token' => Str::random(10),
         ];
     }
