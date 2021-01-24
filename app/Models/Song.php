@@ -7,6 +7,7 @@ use App\Models\Filters\Song_CategoryFilter;
 use App\Models\Filters\Song_StatusFilter;
 use App\Notifications\SongUploaded;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -40,7 +41,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Song extends Model
 {
-    use Filterable, BelongsToTenant, SoftDeletes;
+    use Filterable, BelongsToTenant, SoftDeletes, HasFactory;
 
     /**
      * The attributes that are mass assignable.

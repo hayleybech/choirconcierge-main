@@ -7,6 +7,7 @@ use App\Models\Filters\Event_TypeFilter;
 use App\Models\Filters\Filterable;
 use App\Notifications\EventCreated;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -42,7 +43,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Event extends Model
 {
-    use Filterable, BelongsToTenant, SoftDeletes;
+    use Filterable, BelongsToTenant, SoftDeletes, HasFactory;
 
     /**
      * The attributes that are mass assignable.

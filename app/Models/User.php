@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Mail\Welcome;
 use Hash;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -46,7 +47,7 @@ use UnexpectedValueException;
  */
 class User extends Authenticatable implements HasMedia
 {
-    use Notifiable, InteractsWithMedia, BelongsToTenant, SoftDeletes;
+    use Notifiable, InteractsWithMedia, BelongsToTenant, SoftDeletes, HasFactory;
 
     /**
      * The attributes that are mass assignable.

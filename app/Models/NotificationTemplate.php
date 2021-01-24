@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\TaskCompleted;
 use Carbon\Carbon;
@@ -29,7 +30,7 @@ use Illuminate\Support\Facades\Log;
  */
 class NotificationTemplate extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = [
         'subject',
