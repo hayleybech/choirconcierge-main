@@ -309,7 +309,7 @@ class SingerControllerTest extends TestCase
         $response = $this->delete( the_tenant_route('singers.destroy', ['singer' => $singer]) );
 
         $response->assertRedirect();
-        $this->assertDatabaseMissing('singers', ['id' => $singer->id]);
+        $this->assertSoftDeleted('singers', ['id' => $singer->id]);
     }
 
     /** @test */
