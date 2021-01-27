@@ -22,8 +22,13 @@ abstract class TestCase extends BaseTestCase
 
     public function initializeTenancy(): void
     {
-        $tenant = Tenant::create(['id' => 'test']);
-        $tenant->domains()->create(['domain' => 'test.choirconcierge.com']);
+        $tenant = Tenant::create([
+            'id' => 'test',
+            'choir_name' => 'Hypothetical Harmony',
+        ]);
+        $tenant->domains()->create(['domain' => 'test']);
+        $tenant->save();
+
         tenancy()->initialize($tenant);
     }
 }
