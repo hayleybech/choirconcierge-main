@@ -299,7 +299,7 @@ class FolderControllerTest extends TestCase
         $response = $this->delete( the_tenant_route('folders.destroy', ['folder' => $folder]) );
 
         $response->assertStatus(302);
-        $this->assertDatabaseMissing('folders', [
+        $this->assertSoftDeleted('folders', [
             'id'    => $folder->id,
         ]);
     }
