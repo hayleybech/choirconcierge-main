@@ -27,7 +27,7 @@ class SingerControllerTest extends TestCase
 
     /** @test */
     public function index_for_employee_returns_list_view(): void {
-        $user = Role::first()->users->first(); // Any role is fine
+        $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
         $this->actingAs($user);
 
         $response = $this->get(the_tenant_route('singers.index'));
@@ -173,7 +173,7 @@ class SingerControllerTest extends TestCase
     /** @test */
     public function show_for_employee_returns_show_view(): void
     {
-        $user = Role::first()->users->first(); // Any role is fine
+        $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
         $this->actingAs($user);
 
         $singer = Singer::query()->inRandomOrder()->first();
