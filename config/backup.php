@@ -143,11 +143,11 @@ return [
         'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
 
         'mail' => [
-            'to' => 'your@example.com',
+            'to' => 'haydenbech@gmail.com',
 
             'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'name' => env('MAIL_FROM_NAME', 'Example'),
+                'address' => env('MAIL_FROM_ADDRESS', 'backup@choirconcierge.com'),
+                'name' => env('MAIL_FROM_NAME', 'Choir Concierge Backups'),
             ],
         ],
 
