@@ -3,6 +3,7 @@
 namespace Database\Seeders\Critical;
 
 use App\Models\SingerCategory;
+use App\Models\VoicePart;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use App\Models\Role;
@@ -166,6 +167,16 @@ class  CriticalUserSeeder extends Seeder
         ]);
         $singer_categories = SingerCategory::all();
 
+        /*
+         * STEP 1b - Insert Voice Parts
+         */
+        DB::table('voice_parts')->insert([
+            ['tenant_id' => tenant('id'), 'title' => 'Tenor'],
+            ['tenant_id' => tenant('id'), 'title' => 'Lead'],
+            ['tenant_id' => tenant('id'), 'title' => 'Baritone'],
+            ['tenant_id' => tenant('id'), 'title' => 'Bass'],
+        ]);
+
 
         /*
          * STEP 2 - Insert Admin
@@ -189,6 +200,10 @@ class  CriticalUserSeeder extends Seeder
         // Attach admin to member category
         $cat_member = $singer_categories->firstWhere('name', '=', 'Members');
         $user->singer->category()->associate($cat_member);
+
+        // Attach admin to a voice part
+        $part = VoicePart::firstWhere('title', '=', 'Tenor');
+        $user->singer->voice_part_id = $part->id;
         $user->singer->save();
     }
 }

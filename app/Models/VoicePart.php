@@ -14,6 +14,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Columns
  * @property int id
  * @property string title
+ * @property string colour
  *
  * Relationships
  * @property Singer[] $singers
