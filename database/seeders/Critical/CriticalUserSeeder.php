@@ -121,6 +121,40 @@ class  CriticalUserSeeder extends Seeder
                     'notifications_view',
                 ], JSON_THROW_ON_ERROR),
             ],
+            [
+                'tenant_id' => tenant('id'),
+                'name' => 'Events Team',
+                'abilities' => json_encode([
+                    'singers_view',
+                    'singer_profiles_view',
+                    'voice_parts_view',
+                    'songs_view',
+                    'song_attachments_view',
+                    'events_view', 'events_create', 'events_update', 'events_delete',
+                    'attendances_view', 'attendances_create', 'attendances_update', 'attendances_delete',
+                    'rsvps_view',
+                    'folders_view', 'folders_create', 'folders_update', 'folders_delete',
+                    'documents_view', 'documents_create', 'documents_delete',
+                    'mailing_lists_view',
+                    'tasks_view',
+                    'notifications_view',
+                ], JSON_THROW_ON_ERROR, 512)
+            ],
+            [
+                'tenant_id' => tenant('id'),
+                'name' => 'User',
+                'abilities' => json_encode([
+                    'singers_view',
+                    'singer_profiles_view',
+                    'voice_parts_view',
+                    'songs_view',
+                    'song_attachments_view',
+                    'events_view',
+                    'rsvps_view',
+                    'folders_view',
+                    'documents_view',
+                ], JSON_THROW_ON_ERROR, 512)
+            ],
         ]);
 
         // Insert singer categories
