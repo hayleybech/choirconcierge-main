@@ -280,7 +280,7 @@ class UserGroupControllerTest extends TestCase
         $response = $this->delete( the_tenant_route('groups.destroy', ['group' => $group]) );
 
         $response->assertRedirect();
-        $this->assertDatabaseMissing('user_groups', ['id' => $group->id]);
+        $this->assertSoftDeleted('user_groups', ['id' => $group->id]);
     }
 
     /** @test */
