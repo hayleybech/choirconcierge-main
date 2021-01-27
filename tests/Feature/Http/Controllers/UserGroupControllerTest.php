@@ -4,6 +4,8 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserGroup;
+use Database\Seeders\Dummy\DummyUserGroupSeeder;
+use Database\Seeders\Dummy\DummyUserSeeder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -18,8 +20,8 @@ class UserGroupControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(\DummyUserSeeder::class);
-        $this->seed(\DummyUserGroupSeeder::class);
+        $this->seed(DummyUserSeeder::class);
+        $this->seed(DummyUserGroupSeeder::class);
     }
 
     /** @test */
@@ -278,7 +280,7 @@ class UserGroupControllerTest extends TestCase
         $response = $this->delete( the_tenant_route('groups.destroy', ['group' => $group]) );
 
         $response->assertRedirect();
-        $this->assertDatabaseMissing('user_groups', ['id' => $group->id]);
+        $this->assertSoftDeleted('user_groups', ['id' => $group->id]);
     }
 
     /** @test */
