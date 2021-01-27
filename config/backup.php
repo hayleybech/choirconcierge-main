@@ -29,6 +29,10 @@ return [
                 'exclude' => [
                     base_path('vendor'),
                     base_path('node_modules'),
+                    base_path('tmp'),
+                    base_path('public'),
+                    base_path('etc'),
+                    base_path('logs')
                 ],
 
                 /*
