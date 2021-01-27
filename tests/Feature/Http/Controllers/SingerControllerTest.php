@@ -103,8 +103,11 @@ class SingerControllerTest extends TestCase
         $this->actingAs($user);
 
         $password = Str::random(8);
+        $first_name = $this->faker->firstName;
+        $last_name = $this->faker->lastName;
         $data  = [
-            'name' => $this->faker->name,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $this->faker->email,
             'onboarding_enabled' => $this->faker->boolean(10),
             'password' => $password,
@@ -115,7 +118,8 @@ class SingerControllerTest extends TestCase
         $response->assertRedirect(); // @todo assert redirect to singers.show (with ID)?
 
         $this->assertDatabaseHas('singers', [
-            'name' => $data['name'],
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $data['email'],
             'onboarding_enabled' => $data['onboarding_enabled'],
         ]);
@@ -129,8 +133,11 @@ class SingerControllerTest extends TestCase
         $this->actingAs($user);
 
         $password = Str::random(8);
+        $first_name = $this->faker->firstName;
+        $last_name = $this->faker->lastName;
         $data  = [
-            'name' => $this->faker->name,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $this->faker->email,
             'onboarding_enabled' => $this->faker->boolean(10),
             'password' => $password,
@@ -140,7 +147,8 @@ class SingerControllerTest extends TestCase
 
         $response->assertRedirect(the_tenant_route('dash'));
         $this->assertDatabaseMissing('singers', [
-            'name' => $data['name'],
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $data['email'],
             'onboarding_enabled' => $data['onboarding_enabled'],
         ]);
@@ -152,8 +160,11 @@ class SingerControllerTest extends TestCase
         $this->assertGuest();
 
         $password = Str::random(8);
+        $first_name = $this->faker->firstName;
+        $last_name = $this->faker->lastName;
         $data  = [
-            'name' => $this->faker->name,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $this->faker->email,
             'onboarding_enabled' => $this->faker->boolean(10),
             'password' => $password,
@@ -163,7 +174,8 @@ class SingerControllerTest extends TestCase
 
         $response->assertRedirect(the_tenant_route('login'));
         $this->assertDatabaseMissing('singers', [
-            'name' => $data['name'],
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $data['email'],
             'onboarding_enabled' => $data['onboarding_enabled'],
         ]);
@@ -251,8 +263,11 @@ class SingerControllerTest extends TestCase
         $user = User::withRoles(['Membership Team', 'Music Team'])->first();
         $this->actingAs($user);
 
+        $first_name = $this->faker->firstName;
+        $last_name = $this->faker->lastName;
         $data  = [
-            'name' => $this->faker->name,
+            'first_name' => $first_name,
+            'last_name' => $first_name,
             'email' => $this->faker->email,
             'onboarding_enabled' => $this->faker->boolean(10),
         ];
@@ -269,8 +284,11 @@ class SingerControllerTest extends TestCase
         $user = User::withoutRoles(['Membership Team', 'Music Team'])->first();
         $this->actingAs($user);
 
+        $first_name = $this->faker->firstName;
+        $last_name = $this->faker->lastName;
         $data  = [
-            'name' => $this->faker->name,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $this->faker->email,
             'onboarding_enabled' => $this->faker->boolean(10),
         ];
@@ -286,8 +304,11 @@ class SingerControllerTest extends TestCase
     {
         $this->assertGuest();
 
+        $first_name = $this->faker->firstName;
+        $last_name = $this->faker->lastName;
         $data  = [
-            'name' => $this->faker->name,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $this->faker->email,
             'onboarding_enabled' => $this->faker->boolean(10),
         ];
