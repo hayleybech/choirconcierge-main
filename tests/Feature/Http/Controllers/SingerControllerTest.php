@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Role;
 use App\Models\Singer;
 use App\Models\User;
+use Database\Seeders\Dummy\DummyUserSeeder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -19,7 +20,7 @@ class SingerControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(\DummyUserSeeder::class);
+        $this->seed(DummyUserSeeder::class);
     }
 
     // INDEX

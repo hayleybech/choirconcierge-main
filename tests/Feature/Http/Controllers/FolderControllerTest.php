@@ -5,6 +5,8 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Folder;
 use App\Models\Role;
 use App\Models\User;
+use Database\Seeders\Dummy\DummyFolderSeeder;
+use Database\Seeders\Dummy\DummyUserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -17,8 +19,8 @@ class FolderControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(\DummyUserSeeder::class);
-        $this->seed(\DummyFolderSeeder::class);
+        $this->seed(DummyUserSeeder::class);
+        $this->seed(DummyFolderSeeder::class);
     }
 
     ////////////////////////////////////////////////////////////
