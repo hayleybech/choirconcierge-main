@@ -30,6 +30,7 @@
     "type": "project",
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",
+        "brianium/paratest": "^6.1",
         "facade/ignition": "^2.3.6",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
