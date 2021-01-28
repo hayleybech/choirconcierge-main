@@ -32,7 +32,10 @@ return [
                     base_path('tmp'),
                     base_path('public'),
                     base_path('etc'),
-                    base_path('logs')
+                    base_path('logs'),
+                    base_path('.git'),
+                    base_path('.idea'),
+                    base_path('storage/logs'),
                 ],
 
                 /*
