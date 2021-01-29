@@ -43,6 +43,7 @@ Route::middleware([
     Route::resource('singers', 'SingerController')->middleware('auth');
     Route::resource('singers.profiles', 'SingerProfileController')->only(['create', 'store', 'edit', 'update'])->middleware('auth');
     Route::resource('singers.placements', 'SingerPlacementController')->only(['create', 'store', 'edit', 'update'])->middleware('auth');
+    Route::post('singers/import', 'ImportSingerController')->name('singers.import');
     Route::get('singers/{singer}/category/update', 'UpdateSingerCategoryController')->name('singers.categories.update');
     Route::get('singers/{singer}/tasks/{task}/complete', 'CompleteSingerTaskController')->name('task.complete');
 

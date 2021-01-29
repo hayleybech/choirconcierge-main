@@ -68,5 +68,28 @@
 
 	</div>
 
+	{{ Form::open( [ 'route' => 'singers.import', 'method' => 'post', 'files' => 'true', 'class' => 'form-inline mb-4' ] ) }}
+
+		<div class="input-group input-group-sm">
+			<div class="input-group-prepend">
+				<div class="input-group-text">
+					<label for="import_csv" class="mb-0">Import CSV</label>
+				</div>
+			</div>
+			<div class="custom-file custom-file-sm">
+				<input type="file" class="custom-file-input @error('import_csv') is-invalid @enderror" id="import_csv" name="import_csv" required>
+				<div class="custom-file-label form-control-sm">Choose file</div>
+				<div class="valid-feedback">Looks good!</div>
+				<div class="invalid-feedback">Please upload a file.</div>
+			</div>
+
+			<div class="input-group-append">
+				<input value="Import" type="submit" class="btn btn-secondary btn-sm">
+			</div>
+
+		</div>
+
+	{{ Form::close() }}
+
 
 @endsection
