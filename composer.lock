@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02a25db065cfb4f66ed96b9e66108d89",
+    "content-hash": "72db9e892646617458134a9c0611f09e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -645,46 +645,48 @@
             "time": "2020-11-13T08:04:11+00:00"
         },
         {
-            "name": "davejamesmiller/laravel-breadcrumbs",
-            "version": "5.3.2",
+            "name": "diglactic/laravel-breadcrumbs",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/davejamesmiller/laravel-breadcrumbs.git",
-                "reference": "99f92a706faefb5e1816caa96e877a0184509e5b"
+                "url": "https://github.com/diglactic/laravel-breadcrumbs.git",
+                "reference": "027178500b57295290d9930f113f81df1a7188cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/davejamesmiller/laravel-breadcrumbs/zipball/99f92a706faefb5e1816caa96e877a0184509e5b",
-                "reference": "99f92a706faefb5e1816caa96e877a0184509e5b",
+                "url": "https://api.github.com/repos/diglactic/laravel-breadcrumbs/zipball/027178500b57295290d9930f113f81df1a7188cb",
+                "reference": "027178500b57295290d9930f113f81df1a7188cb",
                 "shasum": ""
             },
             "require": {
                 "facade/ignition-contracts": "^1.0",
-                "illuminate/support": ">=5.6",
-                "illuminate/view": ">=5.6",
-                "php": ">=7.1.3"
+                "laravel/framework": "^6.0 || ^7.0 || ^8.0",
+                "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "orchestra/testbench": ">=3.6",
-                "php-coveralls/php-coveralls": "^2.0",
-                "phpunit/phpunit": "^7.0|^8.0",
-                "spatie/phpunit-snapshot-assertions": "^2.0"
+                "orchestra/testbench": "^4.10 || ^5.9 || ^6.4",
+                "php-coveralls/php-coveralls": "^2.4",
+                "phpunit/phpunit": "^8.5 || ^9.4",
+                "spatie/phpunit-snapshot-assertions": "^2.2 || ^4.2"
             },
             "type": "library",
             "extra": {
                 "laravel": {
                     "providers": [
-                        "DaveJamesMiller\\Breadcrumbs\\BreadcrumbsServiceProvider"
+                        "Diglactic\\Breadcrumbs\\ServiceProvider"
                     ],
                     "aliases": {
-                        "Breadcrumbs": "DaveJamesMiller\\Breadcrumbs\\Facades\\Breadcrumbs"
+                        "Breadcrumbs": "Diglactic\\Breadcrumbs\\Breadcrumbs"
                     }
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "DaveJamesMiller\\Breadcrumbs\\": "src/"
-                }
+                    "Diglactic\\Breadcrumbs\\": "src/"
+                },
+                "files": [
+                    "src/deprecated.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -692,17 +694,22 @@
             ],
             "authors": [
                 {
+                    "name": "Sheng Slogar",
+                    "email": "sheng@diglactic.com",
+                    "role": "Maintainer"
+                },
+                {
                     "name": "Dave James Miller",
-                    "email": "dave@davejamesmiller.com"
+                    "email": "dave@davejamesmiller.com",
+                    "role": "Original Creator"
                 }
             ],
             "description": "A simple Laravel-style way to create breadcrumbs.",
-            "homepage": "https://github.com/davejamesmiller/laravel-breadcrumbs",
+            "homepage": "https://github.com/diglactic/laravel-breadcrumbs",
             "keywords": [
                 "laravel"
             ],
-            "abandoned": "diglactic/laravel-breadcrumbs",
-            "time": "2019-12-30T22:50:51+00:00"
+            "time": "2021-01-25T18:38:42+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -3486,16 +3493,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.43.0",
+            "version": "2.44.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "d32c57d8389113742f4a88725a170236470012e2"
+                "reference": "e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/d32c57d8389113742f4a88725a170236470012e2",
-                "reference": "d32c57d8389113742f4a88725a170236470012e2",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd",
+                "reference": "e6ef33cb1f67a4bed831ed6d0f7e156739a5d8cd",
                 "shasum": ""
             },
             "require": {
@@ -3511,7 +3518,7 @@
                 "phpmd/phpmd": "^2.9",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.12.54",
-                "phpunit/phpunit": "^7.5 || ^8.0",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.14",
                 "squizlabs/php_codesniffer": "^3.4"
             },
             "bin": [
@@ -3561,10 +3568,6 @@
                 "datetime",
                 "time"
             ],
-            "support": {
-                "issues": "https://github.com/briannesbitt/Carbon/issues",
-                "source": "https://github.com/briannesbitt/Carbon"
-            },
             "funding": [
                 {
                     "url": "https://opencollective.com/Carbon",
@@ -3575,7 +3578,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-17T20:55:32+00:00"
+            "time": "2021-01-26T20:46:41+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -5155,16 +5158,16 @@
         },
         {
             "name": "spatie/laravel-backup",
-            "version": "7.2.0",
+            "version": "7.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-backup.git",
-                "reference": "5233499d669e7f131d0d8e0ff8b9b3fb3e1c9c1e"
+                "reference": "888c09412400bbd1afe36ded6b1e6d3c17b559b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/5233499d669e7f131d0d8e0ff8b9b3fb3e1c9c1e",
-                "reference": "5233499d669e7f131d0d8e0ff8b9b3fb3e1c9c1e",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/888c09412400bbd1afe36ded6b1e6d3c17b559b2",
+                "reference": "888c09412400bbd1afe36ded6b1e6d3c17b559b2",
                 "shasum": ""
             },
             "require": {
@@ -5238,7 +5241,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2021-01-25T14:49:44+00:00"
+            "time": "2021-01-28T15:54:01+00:00"
         },
         {
             "name": "spatie/laravel-medialibrary",
@@ -5342,16 +5345,16 @@
         },
         {
             "name": "spatie/laravel-package-tools",
-            "version": "1.2.3",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-package-tools.git",
-                "reference": "cde3b1e7997657da9f4cede6a9f8345a09bc9618"
+                "reference": "e9f79b607f3c50103bc1ea00e527b4066595d352"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/cde3b1e7997657da9f4cede6a9f8345a09bc9618",
-                "reference": "cde3b1e7997657da9f4cede6a9f8345a09bc9618",
+                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/e9f79b607f3c50103bc1ea00e527b4066595d352",
+                "reference": "e9f79b607f3c50103bc1ea00e527b4066595d352",
                 "shasum": ""
             },
             "require": {
@@ -5394,7 +5397,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-27T16:02:11+00:00"
+            "time": "2021-01-28T13:24:55+00:00"
         },
         {
             "name": "spatie/temporary-directory",

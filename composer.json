@@ -7,7 +7,7 @@
         "php": ">=8.0",
         "ext-json": "*",
         "barryvdh/laravel-ide-helper": "^2.6.7",
-        "davejamesmiller/laravel-breadcrumbs": "5.x",
+        "diglactic/laravel-breadcrumbs": "^6.1",
         "doctrine/dbal": "^2.8",
         "fakerphp/faker": "^1.9.1",
         "fideloper/proxy": "^4.4",
