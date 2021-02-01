@@ -318,13 +318,12 @@
 }
 .nav-pills .nav-link {
   color: rgba(0, 0, 0, 0.8);
+
+  display: flex;
+  justify-content: center;
 }
 .nav-pills .nav-link.active {
   background-color: rgb(var(--c-dark-purple));
-}
-.tap-bar .nav-link i {
-  display: block;
-  margin: 0 auto;
 }
 .nav-pills .nav-link.active i {
   color: white;
