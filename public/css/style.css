@@ -152,33 +152,13 @@ a.disabled:hover {
 
 
 /**************************************/
-.profile-summary,
 .profile-contact,
 .profile-other {
 	font-size: 16px;
 }
-.profile-summary .card-body {
-	line-height: 1.5;
 
-	display: flex;
-	align-items: flex-start;
-	padding-bottom: 40px;
-	padding-top: 40px;
-}
-.profile-image {
-	width: 250px;
-	margin-right: 30px;
-}
-.profile-summary-content {
-	flex: 1 1 auto;
-}
-.profile-item {
-	margin-bottom: 10px;
-}
-
-
-.profile-summary .singer-category {
-	margin-top: 0.25em;
+.img-rounded {
+	border-radius: 10px;
 }
 /**************************************/
 

@@ -16,56 +16,65 @@
 	<div class="row">
 		<div class="col-md-7">
 
-			<div class="profile-summary card">
-				<div class="card-body">
+			<div class="card">
+				<div class="card-body py-4">
 
-					<img src="{{ $singer->user->getAvatarUrl('profile') }}" alt="{{ $singer->name }}" class="profile-image user-avatar-rounded">
+					<div class="row">
 
-					<div class="profile-summary-content">
-
-						<div class="profile-header d-flex justify-content-between align-items-center">
-							<h1>{{ $singer->name }}</h1>
-							@can('update', $singer)
-							<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
-							@endcan
+						<div class="col-xl-6 col-lg-5">
+							<img src="{{ $singer->user->getAvatarUrl('profile') }}" alt="{{ $singer->name }}" class="mb-4 mr-2 mw-100 img-rounded">
 						</div>
 
-						<div class="profile-item d-flex align-items-center">
-							<div class="singer-part mr-4">
-								@if( $singer->voice_part)
-									<span class="badge badge-light badge-pill" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>{{ $singer->voice_part->title }}</span><br>
-								@else
-									<span class="badge badge-light badge-pill">No part</span>
-								@endif
+						<div class="col-xl-6 col-lg-7">
+
+							<div class="d-flex justify-content-between align-items-center mb-2">
+								<h1 class="h4 mb-0">{{ $singer->name }}</h1>
+								@can('update', $singer)
+									<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
+								@endcan
 							</div>
-							<span class="singer-category {{ $category_class[$singer->category->name] }}">
+
+							<div class="mb-1 d-flex align-items-center">
+								<div class="singer-part mr-4">
+									@if( $singer->voice_part)
+										<span class="badge badge-light badge-pill" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>{{ $singer->voice_part->title }}</span><br>
+									@else
+										<span class="badge badge-light badge-pill">No part</span>
+									@endif
+								</div>
+								<span class="singer-category {{ $category_class[$singer->category->name] }}">
 								<i class="fas fa-fw fa-circle mr-2"></i> {{ $singer->category->name }}</span>
-							<br>
-						</div>
-						<div class="profile-item">
-							<strong>Added</strong><br>
-							<span class="text-muted">{{ $singer->created_at->toDayDateTimeString() }}</span><br>
-						</div>
-						<div class="profile-item">
-							<strong>Joined</strong><br>
-							<span class="text-muted">{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->toDayDateTimeString() }})</span><br>
-						</div>
-						<div class="profile-item">
-							<strong>
-								@if( $singer->onboarding_enabled )
-								Onboarding enabled
-								@else
-								Onboarding disabled
-								@endif
-							</strong>
-						</div>
-						<div class="profile-item">
-							<strong>Roles</strong><br>
-							@foreach($singer->user->roles as $role)
-							<span class="badge badge-dark">{{$role->name}}</span>
-							@endforeach
+								<br>
+							</div>
+
+							<div class="mb-1">
+								<strong>Added</strong><br>
+								<span class="text-muted">{{ $singer->created_at->toDayDateTimeString() }}</span><br>
+							</div>
+							<div class="mb-1">
+								<strong>Joined</strong><br>
+								<span class="text-muted">{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->toDayDateTimeString() }})</span><br>
+							</div>
+
+							<div class="mb-1">
+								<strong>
+									@if( $singer->onboarding_enabled )
+										Onboarding enabled
+									@else
+										Onboarding disabled
+									@endif
+								</strong>
+							</div>
+							<div class="mb-1">
+								<strong>Roles</strong><br>
+								@foreach($singer->user->roles as $role)
+									<span class="badge badge-dark">{{$role->name}}</span>
+								@endforeach
+							</div>
+
 						</div>
 					</div>
+
 
 				</div>
 			</div>
@@ -86,22 +95,22 @@
 						<div class="col-md-5">
 							<div class="profile-contact">
 								<h3 class="h4">Contact</h3>
-								<div class="profile-item">
+								<p class="mb-1">
 									<i class="fas fa-fw fa-envelope mr-2"></i>{{ $singer->email }}
-								</div>
-								<div class="profile-item">
+								</p>
+								<div class="mb-1">
 									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->profile->phone ?? '?' }}
 								</div>
 
 								<h4 class="h5 mt-4">Emergency Contact</h4>
-								<div class="profile-item">
+								<div class="mb-1">
 									<i class="fas fa-fw fa-user mr-2"></i>{{ $singer->profile->ice_name ?? '?' }}
 								</div>
-								<div class="profile-item">
+								<div class="mb-1">
 									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->profile->ice_phone ?? '?' }}
 								</div>
 
-								<h3 class="h4">Address</h3>
+								<h3 class="h4 mt-4">Address</h3>
 								<p>
 									{{ $singer->profile->address_street_1 ?? 'No address' }}<br>
 									@if( isset($singer->profile->address_street_2) && $singer->profile->address_street_2 !== ''){{ $singer->profile->address_street_2 ?? 'No address' }}<br>@endif
@@ -117,27 +126,27 @@
 										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->profile->dob->toFormattedDateString() ?? '?' }}
 									</div>
 
-								<div class="profile-item">
+								<div class="mb-1">
 									<i class="fas fa-fw fa-ruler-vertical mr-2"></i>{{ round( $singer->profile->height, 2) }} cm
 								</div>
 
-								<div class="profile-item">
+								<div class="mb-1">
 									<strong>Reason for joining</strong><br>
 									{{ $singer->profile->reason_for_joining ?? '' }}
 								</div>
-								<div class="profile-item">
+								<div class="mb-1">
 									<strong>Referred by</strong><br>
 									{{ $singer->profile->referrer ?? '' }}
 								</div>
-								<div class="profile-item">
+								<div class="mb-1">
 									<strong>Profession</strong><br>
 									{{ $singer->profile->profession ?? '' }}
 								</div>
-								<div class="profile-item">
+								<div class="mb-1">
 									<strong>Other Skills</strong><br>
 									{{ $singer->profile->skills ?? '' }}
 								</div>
-								<div class="profile-item">
+								<div class="mb-1">
 									<strong>Society Membership Details</strong><br>
 									{{ $singer->profile->membership_details ?? '' }}
 								</div>
@@ -242,20 +251,20 @@
 					<div class="card-body">
 						@foreach( $singer->tasks as $task )
 							@if( $task->pivot->completed )
-								<span class="profile-item d-flex justify-content-between align-items-center link-confirm disabled" >
+								<span class="mb-1 d-flex justify-content-between align-items-center link-confirm disabled" >
 									<div class="d-flex w-100 justify-content-between">
 										<span><i class="far fa-fw fa-check-square"></i> {{ $task->name }}</span>
 									</div>
 								</span>
 							@else
 								@if(Auth::user()->hasRole($task->role->name))
-									<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="profile-item d-flex justify-content-between align-items-center link-confirm" >
+									<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="mb-1 d-flex justify-content-between align-items-center link-confirm" >
 										<div class="d-flex w-100 justify-content-between">
 											<span><i class="far fa-fw fa-square"></i> {{ $task->name }}</span>
 										</div>
 									</a>
 								@else
-									<div class="profile-item d-flex justify-content-between align-items-center disabled" >
+									<div class="mb-1 d-flex justify-content-between align-items-center disabled" >
 										<div class="d-flex w-100 justify-content-between">
 											<span><i class="far fa-fw fa-square"></i> {{ $task->name }}</span>
 										</div>
