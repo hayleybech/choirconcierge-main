@@ -18,6 +18,11 @@
 
 	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap" rel="stylesheet">
 
+    <!-- Scripts -->
+    @if (App::environment('production'))
+        @include ('snippets.hotjar')
+    @endif
+
 </head>
 <body>
     <div id="app">
