@@ -23,7 +23,7 @@
     height: auto;
   }
 
-  @media screen and (max-width: 767px){
+  @media screen and (max-width: 1199px){
     border-radius: 15px;
     padding: 10px 20px;
 
@@ -38,7 +38,7 @@
   margin-left: 30px;
   position: relative;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 1199px) {
     margin-left: 0;
   }
 }
@@ -64,7 +64,7 @@
   padding: 20px 30px;
   transition: all 0.2s;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 1199px) {
     font-size: 14px;
   }
 }
@@ -82,7 +82,7 @@
 .nav-link i:not(.menu-chevron) {
   margin-right: 10px;
 
-  @media screen and (max-width: 767px){
+  @media screen and (max-width: 1199px){
     margin-right: 20px;
   }
 }
@@ -245,7 +245,7 @@
   display: none;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1199px) {
   .logo {
     padding-top: 5px;
     height: 40px;
@@ -264,7 +264,7 @@
 
 
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1199px) {
   .nav-collapse-link {
     display: none;
   }
@@ -318,18 +318,17 @@
 }
 .nav-pills .nav-link {
   color: rgba(0, 0, 0, 0.8);
+
+  display: flex;
+  justify-content: center;
 }
 .nav-pills .nav-link.active {
   background-color: rgb(var(--c-dark-purple));
 }
-.tap-bar .nav-link i {
-  display: block;
-  margin: 0 auto;
-}
 .nav-pills .nav-link.active i {
   color: white;
 }
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1199px) {
   .tap-bar {
     display: block;
   }
