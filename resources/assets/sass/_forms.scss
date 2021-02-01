@@ -1,0 +1,80 @@
+/*** FORMS ***/
+
+select.form-control-sm.force-xs {
+  width: 90px !important;
+  height: 25px !important;
+  line-height: 1em;
+  padding-top: 0.3rem;
+  padding-left: 0.6rem;
+  font-size: 14px;
+}
+.btn-sm.force-xs {
+  line-height: 1em !important;
+  height: 25px;
+  font-size: 14px !important;
+}
+.btn-sm.force-xxs {
+  line-height: 1em !important;
+  height: 23px;
+  font-size: 12px !important;
+}
+
+
+/** Custom File Upload **/
+/* Change the height for small forms */
+.custom-file.custom-file-sm,
+.custom-file.custom-file-sm .custom-file-input,
+.custom-file.custom-file-sm .custom-file-label.form-control-sm {
+  height: calc(1.875rem + 1px);
+}
+.custom-file-label.form-control-sm {
+  line-height: 1.2;
+}
+.custom-file-label.form-control-sm::after {
+  height: calc(calc(1.875rem + 1px) - 1px * 2);
+  line-height: 1.2;
+}
+
+/**
+ * Select2
+ * Most styling is handled by the select2-bootstrap-theme plugin
+ * But for some reason it doesn't remove the inset box shadow
+ */
+.select2-container--bootstrap .select2-selection {
+  box-shadow: none;
+}
+
+
+/** Custom Radio Buttons **/
+.btn-radio:before {
+  content: '';
+  font-family: "Font Awesome 5 Pro";
+  font-weight: 400;
+  align-self: center;
+  font-size: 1.5em;
+  margin-right: 1em;
+}
+.btn-radio.active:before {
+  content: '';
+}
+
+.btn-check:before {
+  content: '';
+  font-family: "Font Awesome 5 Pro";
+  font-weight: 400;
+  align-self: center;
+  font-size: 1.5em;
+  margin-right: 1em;
+}
+.btn-check.active:before {
+  content: '';
+}
+
+
+/* OPTIONAL labels */
+.label-optional:after {
+  content: '(Optional)';
+  font-size: 0.8em;
+  color: #dc3545;
+  margin-left: 5px;
+}

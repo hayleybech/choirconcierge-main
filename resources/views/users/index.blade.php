@@ -1,27 +1,13 @@
-@extends('layouts.app')
+@extends('layouts.page')
 
 @section('title', 'Users')
+@section('page-title', 'Users')
 
-@section('content')
-
-	<h2>Users</h2>
-
-	@if (session('status'))
-	<div class="alert {{ isset($Response->error) ? 'alert-danger' : 'alert-success' }}" role="alert">
-		{{ session('status') }}
-		
-		@isset( $Response->error )
-		<pre>
-			{{ var_dump($Response) }} 
-			@json($args)
-		</pre>
-		@endisset
-	</div>
-	@endif
+@section('page-content')
 	
 	<div id="accordion" class="accordion">
 	@foreach($users as $key => $user)
-	<div class="card">
+	<div class="card bg-light">
 		<div class="card-header"><a class="btn btn-link collapsed" data-toggle="collapse" href="#collapse-{{$key}}" aria-expanded="false" aria-controls="collapse-{{$key}}">{{$user->name}}</a></div>
 		<div class="collapse" id="collapse-{{$key}}" data-parent="#accordion" >
 			<ul class="list-group list-group-flush">
@@ -29,7 +15,7 @@
 				<li class="list-group-item d-flex justify-content-between align-items-center">
 					{{ $role->name }}
 					<form method="get" action="/users/{{$user->id}}/roles/{{$role->id}}/detach">
-						<button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>
+						<button type="submit" class="btn btn-link text-danger btn-sm"><i class="fa fa-trash"></i></button>
 					</form>
 				</li>
 				@endforeach

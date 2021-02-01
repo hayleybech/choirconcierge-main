@@ -48,7 +48,19 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'global-local' => [
+            'driver' => 'local',
+            'root' => storage_path('app'),
+        ],
+
         'public' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+
+        'global-public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
@@ -62,6 +74,12 @@ return [
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
         ],
+
+        'dropbox' => [
+            'driver' => 'dropbox',
+            'accessToken' => env('DROPBOX_ACCESS_TOKEN'),
+            'appSecret' => env('DROPBOX_APP_SECRET'),
+        ]
 
     ],
 

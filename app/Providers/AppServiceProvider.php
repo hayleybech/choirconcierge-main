@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Http\View\Composers\SingerCategoryComposer;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Contracts\Auth\Guard;
-use App\SingerCategory;
+use Stancl\Tenancy\Controllers\TenantAssetsController;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,22 +23,17 @@ class AppServiceProvider extends ServiceProvider
 		Schema::defaultStringLength(191);
 
 		// Get Notifications for current user, show on all pages
-        view()->composer('*', function($view) use ($auth) {
+        /*view()->composer('*', function($view) use ($auth) {
             if($auth->check()) {
                 $view->with('notifications', $auth->user()->unreadNotifications);
             }
-        });
+        });*/
 
-        // Get list of singer categories
-        view()->composer('*', function($view) use ($auth) {
-            $categories = SingerCategory::all();
-            $categories_move = $categories->mapWithKeys(function($item){
-                return [ $item['id'] => $item['name'] ];
-            });
-            $categories_move->prepend('Select a Category', 0);
+        View::composer('*', SingerCategoryComposer::class);
 
-            $view->with('categories_move', $categories_move);
-        });
+        TenantAssetsController::$tenancyMiddleware = 'Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain';
+
+        Paginator::useBootstrap();
     }
 
     /**
@@ -46,6 +43,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton(SingerCategoryComposer::class);
+        
         if ($this->app->environment() !== 'production') {
             $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         }

@@ -5,11 +5,11 @@ namespace App\Imports;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use App\Singer;
-use App\Profile;
-use App\Placement;
-use App\Task;
-use App\SingerCategory;
+use App\Models\Singer;
+use App\Models\Profile;
+use App\Models\Placement;
+use App\Models\Task;
+use App\Models\SingerCategory;
 
 class DripSingersImport implements ToCollection, WithHeadingRow
 {
@@ -66,12 +66,12 @@ class DripSingersImport implements ToCollection, WithHeadingRow
 
                 // Mark task completed if row has relevant tag
                 if(
-                       ( $task->name == 'Member Profile' && in_array('Member Profile Completed', $tags) )
-                    || ( $task->name == 'Voice Placement' && in_array('Voice Placement Completed', $tags) )
-                    || ( $task->name == 'Pass Audition' && in_array('Passed Vocal Assessment', $tags) )
-                    || ( $task->name == 'Pay Fees' && in_array('Membership Fees Paid', $tags) )
-                    || ( $task->name == 'Provide Uniform' && in_array('Uniform Provided', $tags) )
-                    || ( $task->name == 'Create Account' && in_array('Account Created', $tags) )
+                       ( $task->name === 'Member Profile' && in_array('Member Profile Completed', $tags) )
+                    || ( $task->name === 'Voice Placement' && in_array('Voice Placement Completed', $tags) )
+                    || ( $task->name === 'Pass Audition' && in_array('Passed Vocal Assessment', $tags) )
+                    || ( $task->name === 'Pay Fees' && in_array('Membership Fees Paid', $tags) )
+                    || ( $task->name === 'Provide Uniform' && in_array('Uniform Provided', $tags) )
+                    || ( $task->name === 'Create Account' && in_array('Account Created', $tags) )
                 )
                 {
                     $completed = true;

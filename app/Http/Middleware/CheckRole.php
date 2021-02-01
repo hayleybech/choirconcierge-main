@@ -19,7 +19,7 @@ class CheckRole
     {
 		if ( ! $request->user()->hasRole($role)) {
             Session::flash('message', "You don't have permission to do that. ");
-			return Redirect::to("/dash");
+			return Redirect::to("/");
         }
 		
         return $next($request);

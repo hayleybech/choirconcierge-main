@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class DashController extends Controller
 {
@@ -19,9 +20,9 @@ class DashController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         return view('dash');
     }

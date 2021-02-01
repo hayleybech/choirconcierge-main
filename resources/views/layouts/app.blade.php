@@ -3,122 +3,31 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Choir Concierge') }} - @yield('title')</title>
+    <title>@yield('title') | {{ config('app.name', 'Choir Concierge') }}</title>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <!--<link href="{{ asset('css/app.css') }}" rel="stylesheet">-->
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ global_asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ global_asset('css/style.css') }}" rel="stylesheet">
+	<link rel="shortcut icon" href="{{ global_asset( '/img/favicon.png' ) }}">
+
+	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap" rel="stylesheet">
 
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
 
-				<a class="navbar-brand" href="{{ url('/') }}">
-					<img src="/img/logo.png" alt="Choir Concierge" class="logo">
-				</a>
+		@yield('app-content')
 
-				<!-- Left Side Of Navbar -->
-				<ul class="navbar-nav">
-
-				</ul>
-
-				<!-- Right Side Of Navbar -->
-				<ul class="navbar-nav">
-					<li class="nav-item">
-						<span id="changelog-link" class="navbar-text">
-							<i class="fa fa-code"></i> <span class="headway-badge"></span>
-						</span>
-					</li>
-					<!-- Authentication Links -->
-					@guest
-						<li class="nav-item {{ ( \Request::is('login') ) ? 'active' : '' }}">
-							<a href="{{ route('login') }}" class="nav-link"><i class="fa fa-sign-in fa-fw"></i> Login</a>
-						</li>
-						<li class="nav-item {{ ( \Request::is('register') ) ? 'active' : '' }}">
-							<a href="{{ route('register') }}" class="nav-link"><i class="fa fa-user-plus fa-fw"></i> Register</a>
-						</li>
-					@else
-						<li class="nav-item dropdown">
-							<a href="#" id="notificationsDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-								<i class="fa fa-bell"></i> Notifications <span class="badge badge-pill badge-secondary">{{$notifications->count()}}</span>
-							</a>
-
-							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
-								@foreach( $notifications as $notification )
-									<span class="dropdown-item text-muted"><strong>{{ $notification->data['subject'] }}</strong><br> {{ $notification->data['body'] }}</span>
-								@endforeach
-							</div>
-						</li>
-						<li class="nav-item dropdown">
-							<a href="#" id="navbarDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
-								<i class="fa fa-user-circle fa-fw"></i> {{ Auth::user()->name }} <span class="caret"></span>
-							</a>
-
-							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-								
-								<a class="dropdown-item {{ ( \Request::is('dash') ) ? 'active' : '' }}" href="{{ route('dash') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-
-								@if( Auth::user()->isEmployee() )
-									<div class="dropdown-divider"></div>
-									<a href="{{ route('singers.index') }}" class="dropdown-item {{ ( \Request::is('singers.index') ) ? 'active' : '' }}"><i class="fa fa-users fa-fw"></i> Singers</a>
-								@endif
-								
-								@if( Auth::user()->hasRole('Admin') )
-									<div class="dropdown-divider"></div>
-									<a href="{{ route('tasks.index') }}" class="dropdown-item"><i class="fa fa-list-alt fa-fw"></i> Tasks</a>
-									<a href="{{ route('notification-templates.index') }}" class="dropdown-item"><i class="fa fa-clone fa-fw"></i> Templates</a>
-									<a href="{{ route('users.index') }}" class="dropdown-item"><i class="fa fa-sitemap fa-fw"></i> Team</a>
-								@endif
-								
-								{{--@if( Auth::user()->hasRole('Membership Team') )
-								<a href="{{ route('memberprofile.new') }}" class="dropdown-item" target="_blank"><i class="fa fa-plus fa-fw"></i> Member Profile</a>
-								@endif
-								@if( Auth::user()->hasRole('Music Team') )
-								<a href="{{ route('voiceplacement.new') }}" class="dropdown-item" target="_blank"><i class="fa fa-plus fa-fw"></i> Voice Placement</a>	
-								@endif--}}
-								
-								<div class="dropdown-divider"></div>
-								
-								<a href="{{ route('logout') }}" 
-									class="dropdown-item {{ ( \Request::is('logout') ) ? 'active' : '' }}"
-									onclick="event.preventDefault();
-											 document.getElementById('logout-form').submit();">
-									<i class="fa fa-sign-out fa-fw"></i> Logout
-								</a>
-								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-									{{ csrf_field() }}
-								</form>
-								
-							</div>
-						</li>
-					@endguest
-				</ul>
-                
-            </div>
-        </nav>
-		
-
-		<main>
-			<div class="container">
-			@yield('content')
-			</div>
-		</main>
     </div>
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
-    <script src="https://use.fontawesome.com/7679517f07.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 	
 	<script>
 	  var HW_config = {
@@ -128,8 +37,10 @@
 	</script>
 	<script async src="//cdn.headwayapp.co/widget.js"></script>
     
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ global_asset('js/app.js') }}"></script>
+    <script src="{{ global_asset('js/script.js') }}"></script>
+
+	@stack('scripts-footer-bottom')
 	
 </body>
 </html>

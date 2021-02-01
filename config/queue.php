@@ -17,6 +17,8 @@ return [
 
     'default' => env('QUEUE_DRIVER', 'database'),
 
+    'cron_fix' => env('QUEUE_DIRTY_CRON_FIX', false),
+
     /*
     |--------------------------------------------------------------------------
     | Queue Connections

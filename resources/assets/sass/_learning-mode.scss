@@ -1,0 +1,54 @@
+/*** LEARNING MODE ***/
+
+.learning-window {
+  display: flex;
+  flex-flow: row nowrap;
+}
+.audio-panel {
+  width: 25%;
+  margin: 20px 20px 50px 0;
+}
+.viewer-panel {
+  flex: 1 0 auto;
+  border: 1px solid #eee;
+  border-radius: 3px;
+}
+.song-list {
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 767px){
+  .learning-window {
+    flex-flow: column-reverse nowrap;
+  }
+  .audio-panel {
+    width: 100%;
+  }
+}
+
+/* AUDIO CONTROLS */
+.track-title {
+  text-align: center;
+}
+.audio-seek {
+  width: 100%;
+}
+.play-controls {
+  display: flex;
+  margin-bottom: 10px;
+}
+.time {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+/* PDF VIEWER */
+.page-controls {
+  display: flex;
+  justify-content: space-around;
+}
+#the-canvas {
+  display: block;
+  margin: 0 auto;
+}

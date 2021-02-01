@@ -3,6 +3,8 @@
 /public/storage
 /public/mailoutput
 /storage/*.key
+/storate/tenant*
+/storage/tenant*/**
 /vendor
 /.idea
 /.vagrant
@@ -14,3 +16,16 @@ yarn-error.log
 .phpstorm.meta.php
 _ide_helper.php
 _ide_helper_models.php
+
+public/css/app.css
+public/js/app.js
+
+public/fonts/
+public/mix-manifest.json
+
+queue.pid
+/reports/
+
+.phpunit.result.cache
+
+public/js/test.js

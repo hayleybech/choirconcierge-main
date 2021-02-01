@@ -17,9 +17,9 @@ class CheckAnyRole
      */
     public function handle($request, Closure $next)
     {
-		if ( ! $request->user()->isEmployee()) {
+		if ( $request->user() && ! $request->user()->isEmployee()) {
             Session::flash('message', "You don't have permission to do anything. ");
-			return Redirect::to("/dash");
+			return Redirect::to("/");
         }
 		
         return $next($request);
