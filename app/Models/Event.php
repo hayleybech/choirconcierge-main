@@ -20,24 +20,24 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Class Event
  *
  * Columns
- * @property int id
- * @property string title
- * @property int type_id
- * @property Carbon call_time
- * @property Carbon start_date
- * @property Carbon end_date
- * @property string location_place_id
- * @property string location_icon
- * @property string location_name
- * @property string location_address
- * @property string description
- * @property Carbon created_at
- * @property Carbon updated_at
+ * @property int $id
+ * @property string $title
+ * @property int $type_id
+ * @property Carbon $call_time
+ * @property Carbon $start_date
+ * @property Carbon $end_date
+ * @property string $location_place_id
+ * @property string $location_icon
+ * @property string $location_name
+ * @property string $location_address
+ * @property string $description
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * Relationships
- * @property EventType type
- * @property Rsvp[] rsvps
- * @property Attendance[] attendances
+ * @property EventType $type
+ * @property Rsvp[] $rsvps
+ * @property Attendance[] $attendances
  *
  * @package App
  */

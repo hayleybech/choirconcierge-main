@@ -11,13 +11,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class Attendance
  *
  * Columns
- * @property int id
- * @property string response
- * @property string absent_reason
+ * @property int $id
+ * @property string $response
+ * @property string $absent_reason
  *
  * Relationships
- * @property Singer singer
- * @property Event event
+ * @property Singer $singer
+ * @property Event $event
  *
  * @package App\Models
  */

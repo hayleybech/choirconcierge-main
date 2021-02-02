@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class Rsvp
  *
  * Columns
- * @property int id
- * @property string response
+ * @property int $id
+ * @property string $response
  *
  * Relationships
- * @property Singer singer
- * @property Event event
+ * @property Singer $singer
+ * @property Event $event
  *
  * @package App\Models
  */

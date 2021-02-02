@@ -12,15 +12,15 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Class RiserStack
  *
  * Columns
- * @property int id
- * @property string title
- * @property int rows
- * @property int columns
- * @property Carbon created_at
- * @property Carbon updated_at
+ * @property int $id
+ * @property string $title
+ * @property int $rows
+ * @property int $columns
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * Relationships
- * @property Singer[] singers
+ * @property Singer[] $singers
  *
  * @package App\Models
  */

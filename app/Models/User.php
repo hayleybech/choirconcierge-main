@@ -95,9 +95,7 @@ class User extends Authenticatable implements HasMedia
     /**
      * Find out if user has a specific role
      *
-     * $return boolean
-     *
-     * @param $check
+     * @param string $check
      *
      * @return bool
      */

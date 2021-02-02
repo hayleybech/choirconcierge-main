@@ -12,9 +12,9 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Class VoicePart
  *
  * Columns
- * @property int id
- * @property string title
- * @property string colour
+ * @property int $id
+ * @property string $title
+ * @property string $colour
  *
  * Relationships
  * @property Singer[] $singers

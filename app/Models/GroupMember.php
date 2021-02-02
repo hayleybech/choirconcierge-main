@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
  *
  * Columns
  * @property int $id
- * @property int group_id
+ * @property int $group_id
  * @property string $memberable_type
  * @property string $memberable_id
  * @property Carbon $created_at

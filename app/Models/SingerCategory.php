@@ -13,7 +13,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Columns
  * @property int $id
- * @property string name
+ * @property string $name
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
