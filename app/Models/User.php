@@ -201,9 +201,9 @@ class User extends Authenticatable implements HasMedia
                 ;
                 
                 $this->addMediaConversion('profile')
-                    ->width(150)
-                    ->height(150)
-                    ->crop(Manipulations::CROP_CENTER, 150, 150)
+                    ->width(400)
+                    ->height(600)
+                    ->crop(Manipulations::CROP_CENTER, 400, 600)
                 ;
             });
     }
