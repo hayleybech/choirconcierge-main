@@ -134,6 +134,8 @@ class Song extends Model
         // Attach categories
         $this->categories()->sync($attributes['categories']);
         $this->save();
+
+        return true;
     }
 
     public function status(): BelongsTo

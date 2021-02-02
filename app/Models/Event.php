@@ -95,6 +95,8 @@ class Event extends Model
         parent::update($attributes, $options);
 
         $this->type = $attributes['type'];
+
+        return true;
     }
 
     public function setTypeAttribute($typeId) {

@@ -142,6 +142,8 @@ class Singer extends Model
             $this->user->roles()->sync($user_roles);
         }
         $this->save();
+
+        return true;
     }
 
     /*

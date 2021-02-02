@@ -99,6 +99,8 @@ class UserGroup extends Model
         ]);
 
         $this->save();
+
+        return true;
     }
     public function members(): HasMany
     {
