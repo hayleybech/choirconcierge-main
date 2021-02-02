@@ -14,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Mail;
 use Spatie\Image\Manipulations;
@@ -39,8 +40,8 @@ use UnexpectedValueException;
  * @property Carbon $updated_at
  *
  * Relationships
- * @property Role[] $roles
- * @property GroupMember[] $memberships
+ * @property Collection<Role> $roles
+ * @property Collection<GroupMember> $memberships
  * @property Singer $singer
  *
  * @package App\Models

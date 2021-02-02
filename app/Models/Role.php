@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -18,8 +19,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string[] $abilities
  *
  * Relationships
- * @property User[] $users
- * @property Task[] $tasks
+ * @property Collection<User> $users
+ * @property Collection<Task> $tasks
  *
  * @package App\Models
  */

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 use Webklex\IMAP\Attachment;
 
@@ -16,7 +17,7 @@ use Webklex\IMAP\Attachment;
  * @property string $title
  *
  * Relationships
- * @property Attachment[] $attachments
+ * @property Collection<Attachment> $attachments
  *
  * @package App\Models
  */

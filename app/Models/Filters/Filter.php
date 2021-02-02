@@ -7,6 +7,7 @@ namespace App\Models\Filters;
 use Form;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 /***
@@ -29,7 +30,7 @@ abstract class Filter
     /** @var string $current_option The option selected by the user. */
     protected $current_option;
 
-    /** @var array $options All the options defined by this filter (as label => value). */
+    /** @var array|Collection $options All the options defined by this filter (as label => value). */
     protected $options = [];
 
     public function __construct() {

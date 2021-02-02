@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
@@ -31,8 +32,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property SongStatus $status
- * @property SongCategory[] $categories
- * @property SongAttachment[] $attachments
+ * @property Collection<SongCategory> $categories
+ * @property Collection<SongAttachment> $attachments
  *
  * Dynamic
  * @property string $pitch

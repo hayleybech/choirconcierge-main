@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -31,15 +32,15 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $joined_at
  *
  * Relationships
- * @property Task[] $tasks
+ * @property Collection<Task> $tasks
  * @property Profile $profile
  * @property Placement $placement
  * @property SingerCategory $category
  * @property User $user
  * @property VoicePart $voice_part
- * @property RiserStack[] $riser_stacks
- * @property Rsvp[] $rsvps
- * @property Attendance[] $attendances
+ * @property Collection<RiserStack> $riser_stacks
+ * @property Collection<Rsvp> $rsvps
+ * @property Collection<Attendance> $attendances
  *
  * Dynamic
  * @property string $name

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
@@ -36,8 +37,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property EventType $type
- * @property Rsvp[] $rsvps
- * @property Attendance[] $attendances
+ * @property Collection<Rsvp> $rsvps
+ * @property Collection<Attendance> $attendances
  *
  * @package App
  */
