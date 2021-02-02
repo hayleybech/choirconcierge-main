@@ -23,27 +23,17 @@ class UserController extends Controller
     {
         $this->middleware('auth');
     }
-	
+
 	public function index(): View
     {
-		
+
 		//$users = User::all();
 		$users = User::with('roles')->get();
 		$roles_all = Role::all();
-		
+
 		return view('users.index', compact('users', 'roles_all'));
 	}
-	
-	public function create(): void
-    {
-		$user = User::create(
-		[
-			'name' => '',
-			'email' => '',
-		]);
-		$user->addRole('admin');
-		// @todo add missing redirect??
-	}
+
 	
 	public function addRoles( Request $request, $userid ): RedirectResponse
     {

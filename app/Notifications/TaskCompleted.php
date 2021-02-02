@@ -16,8 +16,8 @@ class TaskCompleted extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      *
-     * @param subject The Notification subject - Should include the task name
-     * @param body The main message content
+     * @param string $subject The Notification subject - Should include the task name
+     * @param string $body The main message content
      * @return void
      */
     public function __construct($subject, $body)

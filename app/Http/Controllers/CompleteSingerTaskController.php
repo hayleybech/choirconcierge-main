@@ -16,14 +16,14 @@ class CompleteSingerTaskController extends Controller
 
         event(new TaskCompleted($task, $singer));
 
-        // Complete type-specific action
-        if( $task->type === 'manual' ) {
-            // Simply mark as done.
-            $singer->tasks()->updateExistingPivot($task, ['completed' => true]);
-            return redirect('/singers')->with(['status' => 'Task updated. ', ]);
-        } else {
-            // Redirect to form
+        if( $task->type !== 'manual') {
             // Shouldn't get to this line. Forms tasks skip this entire function.
+            throw new \LogicException('This function should only be called for manual tasks.');
         }
+
+        // Simply mark as done.
+        $singer->tasks()->updateExistingPivot($task, ['completed' => true]);
+
+        return redirect('/singers')->with(['status' => 'Task updated. ', ]);
     }
 }

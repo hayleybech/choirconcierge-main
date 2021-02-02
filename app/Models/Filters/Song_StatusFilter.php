@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Song_StatusFilter extends Filter
 {
-    protected $name = 'filter_status';
-    protected $label = 'Status';
-    protected $default_option = 'any';
+    protected string $name = 'filter_status';
+    protected string $label = 'Status';
+    protected string $default_option = 'any';
 
     protected function initOptions(): void
     {
@@ -25,10 +25,6 @@ class Song_StatusFilter extends Filter
         $this->options->prepend('Any status','any');
     }
 
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
     protected function run(Builder $query): Builder
     {
         // Status

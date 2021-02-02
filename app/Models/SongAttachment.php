@@ -65,6 +65,7 @@ class SongAttachment extends Model
         }
 
         parent::delete();
+        return true;
     }
 
     public function setFileAttribute(UploadedFile $file) {

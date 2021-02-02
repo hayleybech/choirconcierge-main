@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -25,17 +25,17 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $updated_at
  *
  * Relationships
- * @property GroupMember[] $members
- * @property Role[] $recipient_roles
- * @property User[] $recipient_users
- * @property VoicePart[] $recipient_voice_parts
- * @property SingerCategory[] $recipient_singer_categories
+ * @property Collection<GroupMember> $members
+ * @property Collection<Role> $recipient_roles
+ * @property Collection<User> $recipient_users
+ * @property Collection<VoicePart> $recipient_voice_parts
+ * @property Collection<SingerCategory> $recipient_singer_categories
  *
- * @property GroupSender[] $senders
- * @property Role[] $sender_roles
- * @property User[] $sender_users
- * @property VoicePart[] $sender_voice_parts
- * @property SingerCategory[] $sender_singer_categories
+ * @property Collection<GroupSender> $senders
+ * @property Collection<Role> $sender_roles
+ * @property Collection<User> $sender_users
+ * @property Collection<VoicePart> $sender_voice_parts
+ * @property Collection<SingerCategory> $sender_singer_categories
  *
  * @package App\Models
  */
@@ -99,6 +99,8 @@ class UserGroup extends Model
         ]);
 
         $this->save();
+
+        return true;
     }
     public function members(): HasMany
     {

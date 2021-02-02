@@ -21,7 +21,7 @@ class FolderRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @param Folder $folder
-     * @return array
+     * @return array<string>
      */
     public function rules(Folder $folder)
     {

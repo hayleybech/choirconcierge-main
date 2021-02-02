@@ -23,7 +23,7 @@ class SongRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @param Song $song
-     * @return array
+     * @return array<string>
      */
     public function rules(Song $song)
     {

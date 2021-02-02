@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
@@ -20,24 +21,24 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Class Event
  *
  * Columns
- * @property int id
- * @property string title
- * @property int type_id
- * @property Carbon call_time
- * @property Carbon start_date
- * @property Carbon end_date
- * @property string location_place_id
- * @property string location_icon
- * @property string location_name
- * @property string location_address
- * @property string description
- * @property Carbon created_at
- * @property Carbon updated_at
+ * @property int $id
+ * @property string $title
+ * @property int $type_id
+ * @property Carbon $call_time
+ * @property Carbon $start_date
+ * @property Carbon $end_date
+ * @property string $location_place_id
+ * @property string $location_icon
+ * @property string $location_name
+ * @property string $location_address
+ * @property string $description
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * Relationships
- * @property EventType type
- * @property Rsvp[] rsvps
- * @property Attendance[] attendances
+ * @property EventType $type
+ * @property Collection<Rsvp> $rsvps
+ * @property Collection<Attendance> $attendances
  *
  * @package App
  */
@@ -95,6 +96,8 @@ class Event extends Model
         parent::update($attributes, $options);
 
         $this->type = $attributes['type'];
+
+        return true;
     }
 
     public function setTypeAttribute($typeId) {

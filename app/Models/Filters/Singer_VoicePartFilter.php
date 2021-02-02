@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Singer_VoicePartFilter extends Filter
 {
-    protected $name = 'filter_part';
-    protected $label = 'Part';
-    protected $default_option = 'any';
+    protected string $name = 'filter_part';
+    protected string $label = 'Part';
+    protected string $default_option = 'any';
 
     protected function initOptions(): void
     {

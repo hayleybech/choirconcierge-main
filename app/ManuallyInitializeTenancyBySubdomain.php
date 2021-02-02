@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Stancl\Tenancy\Exceptions\NotASubdomainException;
-use Stancl\Tenancy\Exceptions\TenantCountNotBeIdentifiedById;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
 use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
 
 
@@ -24,7 +24,7 @@ class ManuallyInitializeTenancyBySubdomain
     public static int $subdomainIndex = 0;
 
     /**
-     * @throws TenantCountNotBeIdentifiedById
+     * @throws TenantCouldNotBeIdentifiedById
      */
     public function handle(string $hostname): void
     {

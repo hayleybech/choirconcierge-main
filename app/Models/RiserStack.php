@@ -6,21 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Class RiserStack
  *
  * Columns
- * @property int id
- * @property string title
- * @property int rows
- * @property int columns
- * @property Carbon created_at
- * @property Carbon updated_at
+ * @property int $id
+ * @property string $title
+ * @property int $rows
+ * @property int $columns
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * Relationships
- * @property Singer[] singers
+ * @property Collection<Singer> $singers
  *
  * @package App\Models
  */

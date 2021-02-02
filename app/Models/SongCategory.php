@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -18,7 +19,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $updated_at
  *
  * Relationships
- * @property Song[] $songs
+ * @property Collection<Song> $songs
  *
  * @package App\Models
  */

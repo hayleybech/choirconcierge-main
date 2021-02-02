@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Singer_CategoryFilter extends Filter
 {
-    protected $name = 'filter_category';
-    protected $label = 'Category';
-    protected $default_option = 'any';
+    protected string $name = 'filter_category';
+    protected string $label = 'Category';
+    protected string $default_option = 'any';
 
     protected function initOptions(): void
     {
@@ -31,10 +31,6 @@ class Singer_CategoryFilter extends Filter
         $this->options->prepend('Any status','any');
     }
 
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
     protected function run(Builder $query): Builder
     {
         // Category

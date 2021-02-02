@@ -49,6 +49,7 @@ class Document extends Model
         }
 
         parent::delete();
+        return true;
     }
 
     public function setDocumentUploadAttribute(UploadedFile $file): void

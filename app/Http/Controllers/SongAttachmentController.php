@@ -6,10 +6,11 @@ use App\Http\Requests\SongAttachmentRequest;
 use App\Models\Song;
 use App\Models\SongAttachment;
 use Illuminate\Http\RedirectResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SongAttachmentController extends Controller
 {
-    public function show(Song $song, SongAttachment $attachment)
+    public function show(Song $song, SongAttachment $attachment): BinaryFileResponse
     {
         $this->authorize('view', $song);
 

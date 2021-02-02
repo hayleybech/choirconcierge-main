@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Singer_AgeFilter extends Filter
 {
-    protected $name = 'filter_age';
-    protected $label = 'Age';
-    protected $default_option = 'any';
+    protected string $name = 'filter_age';
+    protected string $label = 'Age';
+    protected string $default_option = 'any';
     private const ADULT_AGE = 18;
 
     protected function initOptions(): void

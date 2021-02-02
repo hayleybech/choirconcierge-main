@@ -68,6 +68,7 @@
 
 	</div>
 
+	@if(Auth::user()->hasRole('Admin'))
 	{{ Form::open( [ 'route' => 'singers.import', 'method' => 'post', 'files' => 'true', 'class' => 'form-inline mb-4' ] ) }}
 
 		<div class="input-group input-group-sm">
@@ -90,6 +91,7 @@
 		</div>
 
 	{{ Form::close() }}
+	@endif
 
 
 @endsection

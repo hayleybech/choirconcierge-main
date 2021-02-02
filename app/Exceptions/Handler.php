@@ -3,6 +3,10 @@
 namespace App\Exceptions;
 
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Throwable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -32,7 +36,7 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Throwable  $exception
+     * @param Throwable $exception
      * @return void
      */
     public function report(Throwable $exception)
@@ -43,10 +47,10 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
+     * @param  Request  $request
+     * @param Throwable $exception
      *
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     * @return JsonResponse|RedirectResponse|Response|\Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Throwable $exception)
     {

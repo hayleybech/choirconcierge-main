@@ -16,17 +16,17 @@ use Illuminate\Support\Carbon;
  * @property string $phone
  * @property string $ice_name
  * @property string $ice_phone
- * @property string address_street_1
- * @property string address_street_2
- * @property string address_suburb
- * @property string address_state
- * @property string address_postcode
+ * @property string $address_street_1
+ * @property string $address_street_2
+ * @property string $address_suburb
+ * @property string $address_state
+ * @property string $address_postcode
  * @property string $reason_for_joining
  * @property string $referrer
  * @property string $profession
  * @property string $skills
  * @property float $height
- * @property string membership_details
+ * @property string $membership_details
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *

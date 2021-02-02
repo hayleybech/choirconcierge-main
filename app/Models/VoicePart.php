@@ -6,19 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Class VoicePart
  *
  * Columns
- * @property int id
- * @property string title
- * @property string colour
+ * @property int $id
+ * @property string $title
+ * @property string $colour
  *
  * Relationships
- * @property Singer[] $singers
- * @property User[] $users
+ * @property Collection<Singer> $singers
+ * @property Collection<User> $users
  *
  * @package App\Models
  */
