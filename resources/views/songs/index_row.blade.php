@@ -47,7 +47,7 @@
     </td>
     <td class="col--delete">
         @can('delete', $song)
-        <x-delete-button :action="route( 'songs.destroy', ['song' => $song] )" :message="$song->attachments()->count() . ' attachments will also be deleted.'"/>
+        <x-delete-button :action="route( 'songs.destroy', ['song' => $song] )" :message="$song->attachments_count . ' attachments will also be deleted.'"/>
         @endcan
     </td>
 
