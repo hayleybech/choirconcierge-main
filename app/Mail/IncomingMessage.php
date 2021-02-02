@@ -9,7 +9,7 @@ use App\Models\UserGroup;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Mail\Mailable;
 use Mail;
-use Stancl\Tenancy\Exceptions\TenantCountNotBeIdentifiedById;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
 
 class IncomingMessage extends Mailable
 {
@@ -41,7 +41,7 @@ class IncomingMessage extends Mailable
         try {
             app(ManuallyInitializeTenancyByDomainOrSubdomain::class)->handle( explode('@', $this->to[0]['address'])[1] );
         }
-        catch (TenantCountNotBeIdentifiedById $e) {
+        catch (TenantCouldNotBeIdentifiedById $e) {
             return;
         }
 

@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Support\Str;
-use Stancl\Tenancy\Exceptions\TenantCountNotBeIdentifiedById;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 
 /**
@@ -12,7 +12,7 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 class ManuallyInitializeTenancyByDomainOrSubdomain
 {
     /**
-     * @throws TenantCountNotBeIdentifiedById
+     * @throws TenantCouldNotBeIdentifiedById
      */
     public function handle(string $hostname): void
     {
