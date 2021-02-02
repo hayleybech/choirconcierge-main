@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Singer_RoleFilter extends Filter
 {
-    protected $name = 'filter_role';
-    protected $label = 'Role';
-    protected $default_option = 'any';
+    protected string $name = 'filter_role';
+    protected string $label = 'Role';
+    protected string $default_option = 'any';
 
     protected function initOptions(): void
     {

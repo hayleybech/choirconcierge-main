@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Event_TypeFilter extends Filter
 {
-    protected $name = 'filter_type';
-    protected $label = 'Type';
-    protected $default_option = 'any';
+    protected string $name = 'filter_type';
+    protected string $label = 'Type';
+    protected string $default_option = 'any';
 
     protected function initOptions(): void
     {
@@ -25,10 +25,6 @@ class Event_TypeFilter extends Filter
         $this->options->prepend('Any type','any');
     }
 
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
     protected function run(Builder $query): Builder
     {
         // Type

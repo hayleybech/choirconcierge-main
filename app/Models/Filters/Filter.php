@@ -14,24 +14,25 @@ use Illuminate\View\View;
  * Class Filter
  * Extend this class to create Filters for Models.
  *
+ * @property string $name The human-readable Filter name.
+ * @property string $label The label to use for the form field.
+ * @property string $default_option The option selected by default.
+ * @property string|array $current_option The option(s) selected by the user.
+ * @property array|Collection $options All the options defined by this filter (as label => value).
+ *
  * @package App\Models\Filters
  */
 abstract class Filter
 {
-    /** @var string $name The human-readable Filter name. */
-    protected $name;
+    protected string $name;
 
-    /** @var string $label The label to use for the form field. */
-    protected $label;
+    protected string $label;
 
-    /** @var string $default_option The option selected by default. */
-    protected $default_option;
+    protected string $default_option;
 
-    /** @var string $current_option The option selected by the user. */
-    protected $current_option;
+    protected string|array $current_option;
 
-    /** @var array|Collection $options All the options defined by this filter (as label => value). */
-    protected $options = [];
+    protected array|Collection $options = [];
 
     public function __construct() {
         $this->current_option = request()->input($this->name, $this->default_option);

@@ -13,9 +13,9 @@ use Illuminate\Database\Eloquent\Builder;
 class Event_DateFilter extends Filter
 {
 
-    protected $name = 'filter_date';
-    protected $label = 'Date Range';
-    protected $default_option = 'any';
+    protected string $name = 'filter_date';
+    protected string $label = 'Date Range';
+    protected string $default_option = 'any';
 
     protected ?Carbon $start_date;
     protected ?Carbon $end_date;

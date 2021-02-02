@@ -12,12 +12,8 @@ trait Filterable
     //protected static $filters = []; Define in the extending/using Model
 
     /** @var Filter[] $_filters The instantiated filter objects */
-    protected static $_filters = [];
+    protected static array $_filters = [];
 
-    /**
-     * @param  Builder  $query
-     * @return Builder
-     */
     public function scopeFilter(Builder $query): Builder
     {
         // Apply filters one at a time
@@ -41,7 +37,6 @@ trait Filterable
 
     /**
      * Get the Filters for this Model
-     * @return array
      */
     public static function getFilters(): array {
         // Cache results
@@ -66,7 +61,6 @@ trait Filterable
 
     /**
      * Checks if any filter has been changed from the default
-     * @return bool
      */
     public static function hasActiveFilters(): bool {
         foreach(self::$_filters as $filter) {
