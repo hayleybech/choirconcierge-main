@@ -22,7 +22,7 @@ class UserGroupRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @param UserGroup $group
-     * @return array
+     * @return array<string|array>
      */
     public function rules(UserGroup $group)
     {

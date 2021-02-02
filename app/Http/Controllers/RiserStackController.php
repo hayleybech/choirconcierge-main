@@ -101,7 +101,7 @@ class RiserStackController extends Controller
      *
      * @param RiserStackRequest $request
      *
-     * @return array
+     * @return array<array>
      */
     private function prepPositions(RiserStackRequest $request): array
     {
