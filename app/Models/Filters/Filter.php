@@ -93,4 +93,12 @@ abstract class Filter
     private static function selected( string $this_value, string $selected_value ): string {
         return $this_value === $selected_value ? 'selected' : '';
     }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function getCurrentOption(): string {
+        return $this->current_option;
+    }
 }

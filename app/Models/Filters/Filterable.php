@@ -55,7 +55,7 @@ trait Filterable
     public static function getFilterQueryString(): string {
         $query_string = '';
         foreach(self::$_filters as $key => $filter ) {
-            $query_string .= $filter->name . '=' . $filter->current_option;
+            $query_string .= $filter->getName() . '=' . $filter->getCurrentOption();
 
             if ( $key !== array_key_last(self::$_filters) ) {
                 $query_string .= '&';
