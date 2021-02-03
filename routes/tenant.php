@@ -65,13 +65,6 @@ Route::middleware([
     // Risers module
     Route::resource('stacks', 'RiserStackController');
 
-    // Notifications module
-    Route::prefix('notifications')->name('notifications')->middleware(['auth', 'employee'])->group(static function (){
-        // Index - BROKEN
-        Route::resource('/', 'NotificationController');
-    });
-
-
     // Users/Team module
     Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static function () {
         // Index
