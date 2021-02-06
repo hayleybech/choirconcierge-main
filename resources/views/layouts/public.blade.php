@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('app-content')
-    <div id="wrapper">
+    <div style="background-color: rgb(var(--c-dark-purple)); height: 100%; ">
 
-
+        {{--
         <header class="home_header">
             <div class="container-fluid">
                 <nav class="navbar navbar-expand-lg">
@@ -44,7 +44,7 @@
                     </div>
                 </nav>
             </div>
-        </header>
+        </header>--}}
 
         <main>
             @yield('public-content')
