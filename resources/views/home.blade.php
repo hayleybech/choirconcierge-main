@@ -4,6 +4,7 @@
 @section('page-title', 'Welcome')
 
 @section('public-content')
+	{{--
 	<div class="container-fluid">
 		<div class="cc-header">
 			<div>
@@ -20,5 +21,14 @@
 				<img src="{{ global_asset('/img/group-58.svg') }}">
 			</div>
 		</div>
-	</div>
+	</div>--}}
+
+    <div class="container">
+        <img src="{{ global_asset('/img/logo.svg') }}" height="50" alt="Choir Concierge" style="margin: 40px auto;">
+        <div class="jumbotron">
+            <h1>Coming Soon</h1>
+            <p class="lead">Our website is still under construction, but our software is ready to go! Please contact us for a demo!</p>
+            <p>hayden@choirconcierge.com</p>
+        </div>
+    </div>
 @endsection
