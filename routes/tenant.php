@@ -10,6 +10,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
+use App\Http\Controllers\ImpersonateUserController;
 use App\Http\Controllers\ImportSingerController;
 use App\Http\Controllers\MailboxController;
 use App\Http\Controllers\RiserStackController;
@@ -61,6 +62,7 @@ Route::middleware([
     Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
     Route::get('singers/{singer}/tasks/{task}/complete', CompleteSingerTaskController::class)->name('task.complete');
 
+
     // Songs module
     Route::resource('songs', SongController::class);
     Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'destroy'])->middleware('employee');
@@ -80,7 +82,7 @@ Route::middleware([
     Route::resource('stacks', RiserStackController::class);
 
     // Users/Team module
-    Route::prefix('users')->middleware(['auth', 'role:Admin'])->group(static function () {
+    Route::prefix('users')->middleware(['auth'])->group(static function () {
         // Index
         Route::get('/', [UserController::class, 'index'])->name('users.index');
 
@@ -93,6 +95,10 @@ Route::middleware([
         // Attach/Detach role from a user
         Route::get('{user}/roles/{role}/detach', [UserController::class, 'detachRole'])->name('users.detachrole');
         Route::post('{user}/role', [UserController::class, 'addRoles'])->name('users.addroles');
+
+        // User Impersonation
+        Route::get('{user}/impersonate', [ImpersonateUserController::class, 'start'])->name('users.impersonate');
+        Route::get('/impersonation/stop', [ImpersonateUserController::class, 'stop'])->name('impersonation.stop');
     });
 
     // Mailing Lists (User Groups) module

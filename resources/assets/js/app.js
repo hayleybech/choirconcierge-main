@@ -37,6 +37,23 @@ Vue.component('track-list-player', require('./components/TrackListPlayer').defau
 Vue.component('pitch-button', require('./components/PitchButton').default);
 Vue.component('inline-edit-field', require('./components/InlineEditField').default);
 Vue.component('limited-textarea', require('./components/LimitedTextarea').default);
+Vue.component('impersonate-user-modal', require('./components/ImpersonateUserModal').default);
+
+// Allow binding select2 fields (add v-select attribute to select element to enable)
+// https://stackoverflow.com/a/51260727/563974
+Vue.directive('select2', {
+    inserted(el) {
+        $(el).on('select2:select', () => {
+            const event = new Event('change', { bubbles: true, cancelable: true });
+            el.dispatchEvent(event);
+        });
+
+        $(el).on('select2:unselect', () => {
+            const event = new Event('change', {bubbles: true, cancelable: true})
+            el.dispatchEvent(event)
+        })
+    },
+});
 
 const app = new Vue({
     el: '#app'
