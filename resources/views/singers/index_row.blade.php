@@ -75,7 +75,7 @@ $category_class = [
 	@endif
 	<td class="col--actions">
 
-		@can('update', $singer)
+		@can('create', \App\Models\Singer::class)
 		<div class="dropdown">
 			<button class="btn btn-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				Move to
