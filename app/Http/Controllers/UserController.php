@@ -62,13 +62,15 @@ class UserController extends Controller
 
         $formatted_results = [];
         $users = User::where('name', 'like', "%$term%")
+            ->with('roles:id,name')
             ->limit(5)
             ->get();
 
         foreach( $users as $user ){
+            $role_string = ($user->roles->count()) ? ' ['.$user->roles->implode('name', ', ').']' : '';
             $formatted_results[] = [
                 'id'    => $user->id,
-                'text'  => $user->name
+                'text'  => $user->name.$role_string
             ];
         }
 

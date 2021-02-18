@@ -18,7 +18,7 @@ class SongController extends Controller
         $this->authorize('viewAny', Song::class);
 
         // Base query
-        $songs = Song::with([])
+        $songs = Song::withCount(['attachments'])
             ->filter()
             ->get();
 

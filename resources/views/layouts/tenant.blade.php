@@ -185,12 +185,20 @@
                         @guest
                         @else
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" id="profile-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a href="#" class="nav-link dropdown-toggle @if( session()->has('impersonation:active') ) bg-danger text-white @endif" id="profile-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <img src="{{ Auth::user()->getFirstMediaUrl('avatar', 'thumb') }}" alt="{{ Auth::user()->name }}" class="user-avatar user-avatar-nav"> <span class="link-text">{{ Auth::user()->name }}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a href="{{ route('singers.show', ['singer' => Auth::user()->singer] ) }}" class="dropdown-item"><i class="fal fa-fw fa-user"></i> Edit Profile</a>
                                     <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="dropdown-item"><i class="fal fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
+
+                                    @if( Auth::user()->hasRole('Admin') && ! session()->has('impersonation:active') )
+                                        <!-- Impersonate User modal trigger button -->
+                                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#impersonateUserModal"><i class="fal fa-user-unlock"></i> Impersonate User</a>
+                                    @endif
+                                    @if( session()->has('impersonation:active') )
+                                        <a href="{{ route('impersonation.stop') }}" class="dropdown-item bg-danger text-white"><i class="fal fa-user-lock"></i> Stop Impersonating</a>
+                                    @endif
 
                                     <div class="dropdown-item">
                                         <a href="{{ route('logout') }}"
@@ -239,4 +247,7 @@
             </nav>
         @endguest
     </div>
+
+    <impersonate-user-modal route="{{ route('users.impersonate', '--replace--') }}"></impersonate-user-modal>
+
 @endsection

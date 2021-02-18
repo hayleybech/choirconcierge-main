@@ -51,6 +51,10 @@ class SongAttachment extends Model
         'download_url',
     ];
 
+    protected $with = [
+        'song',
+    ];
+
     public static function create( array $attributes = [] )
     {
         /** @var SongAttachment $attachment */

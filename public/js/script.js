@@ -68,7 +68,7 @@ $( document ).ready(function() {
             },
             cache: true
         },
-        theme: "bootstrap"
+        theme: "bootstrap4"
     };
 
     SELECT2_CONFIG.ajax.url = URL_USERS;
