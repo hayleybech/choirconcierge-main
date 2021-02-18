@@ -10,7 +10,7 @@ class UpdateSingerCategoryController extends Controller
 {
     public function __invoke(Singer $singer, Request $request): RedirectResponse
     {
-        $this->authorize('update', $singer);
+        $this->authorize('create', $singer);
 
         $category = $request->input('move_category', 0);
 
