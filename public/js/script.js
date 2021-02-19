@@ -115,6 +115,19 @@ $( document ).ready(function() {
         $(this).parents('tr').find('input[type=checkbox]').prop('checked', $(this).prop('checked'));
     });
 
+    /**
+     * Recurring Events
+     */
+    const $repeatDetails = $('#repeat_details');
+    $repeatDetails.hide();
+    $('#is_repeating').change(function () {
+        if(this.checked) {
+            $repeatDetails.show();
+        } else {
+            $repeatDetails.hide();
+        }
+    });
+
 });
 
 

@@ -31,7 +31,6 @@ const DATE_CONFIG = {
 //const $el_call_time_min = $('.call-time-min');
 //const $el_call_time_date = $('.call-time-date');
 const $el_call_time = $('.events-single-date-picker');
-const $el_call_time_raw = $('.call-time-hidden');
 const $el_range = $('.events-date-range-picker');
 const $el_start_raw = $('.start-date-hidden');
 const $el_end_raw   = $('.end-date-hidden');
@@ -43,7 +42,7 @@ $el_call_time.daterangepicker({
     },
     function(start, end, label){
         console.log(start.format(DATE_FORMAT_RAW));
-        $el_call_time_raw.val( start.format(DATE_FORMAT_RAW) );
+        this.element.siblings('.call-time-hidden').val( start.format(DATE_FORMAT_RAW) );
     }
 );
 

@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
@@ -35,10 +36,21 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * Columns - Repeating events
+ * @property bool $is_repeating
+ * @property int $repeat_parent_id
+ * @property Carbon $repeat_until
+ * @property int $repeat_frequency_amount e.g. 2 (day) - fortnightly
+ * @property string $repeat_frequency_unit (day, week, month, year)
+ *
  * Relationships
  * @property EventType $type
  * @property Collection<Rsvp> $rsvps
  * @property Collection<Attendance> $attendances
+ *
+ * Relationships - Repeating Events
+ * @property Event $repeat_parent
+ * @property Collection<Event> $repeat_children
  *
  * @package App
  */
@@ -60,6 +72,12 @@ class Event extends Model
         'location_name',
         'location_address',
         'description',
+
+        'is_repeating',
+        'repeat_parent_id',
+        'repeat_until',
+        'repeat_frequency_amount',
+        'repeat_frequency_unit',
     ];
 
     protected static $filters = [
@@ -77,18 +95,73 @@ class Event extends Model
         'start_date',
         'end_date',
         'call_time',
+        'repeat_until',
     ];
 
-    public static function create( array $attributes = [] )
+    protected $casts = [
+        'is_repeating' => 'boolean',
+    ];
+
+    public static function create( array $attributes = [], bool $send_notifications = true )
     {
         /** @var Event $event */
         $event = static::query()->create($attributes);
 
         $event->type = $attributes['type'];
 
-        Notification::send(User::active()->get(), new EventCreated($event));
+        if( $send_notifications ){
+            Notification::send(User::active()->get(), new EventCreated($event));
+        }
+
+        $event->createRepeats();
 
         return $event;
+    }
+
+    /**
+     * Generates occurrences for a repeating event
+     * - Starts at the date of the second occurrence
+     * - Increments the date by the frequency
+     * - Loops until date is after the repeat end date
+     * - Doesn't yet support repeat_frequency_amount (always = 1 for now)
+     */
+    private function createRepeats(): void{
+        if( ! $this->is_repeating) {
+            return;
+        }
+
+        $this->repeat_parent_id = $this->id;
+
+        // temporary fix? repeat_until shouldn't ask for hours/min
+        $this->repeat_until = $this->repeat_until->setHours($this->start_date->hour);
+        $this->repeat_until = $this->repeat_until->setMinutes($this->start_date->minute);
+
+        $second_event_start_date = $this->start_date->copy()->add($this->repeat_frequency_unit, 1);
+        $second_event_end_date = $this->end_date->copy()->add($this->repeat_frequency_unit, 1);
+        $second_event_call_time = $this->call_time->copy()->add($this->repeat_frequency_unit, 1);
+
+        $mysql_date_format = 'Y-m-d H:i:s';
+
+        $event_occurrences = [];
+        for($current_start_date = $second_event_start_date,
+                $current_event_end_date = $second_event_end_date,
+                $current_event_call_time = $second_event_call_time;
+            $current_start_date <= $this->repeat_until;
+            $current_start_date->add($this->repeat_frequency_unit, 1),
+                $current_event_end_date->add($this->repeat_frequency_unit, 1),
+                $current_event_call_time->add($this->repeat_frequency_unit, 1)
+        ) {
+            // save single event to array, bulk save all at the end
+            $event_occurrences[] = array_merge($this->replicate()->attributesToArray(), [
+                'start_date' => $current_start_date->format($mysql_date_format),
+                'end_date' => $current_event_end_date->format($mysql_date_format),
+                'call_time' => $current_event_call_time->format($mysql_date_format),
+                'repeat_until' => $this->repeat_until->format($mysql_date_format),
+                'created_at' => Carbon::now()->format($mysql_date_format),
+                'updated_at' => Carbon::now()->format($mysql_date_format)
+            ]);
+        }
+        DB::table('events')->insert($event_occurrences);
     }
 
     public function update(array $attributes = [], array $options = [])
@@ -125,6 +198,16 @@ class Event extends Model
     public function attendances(): HasMany
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function repeat_parent(): BelongsTo
+    {
+        return $this->belongsTo(__CLASS__, 'repeat_parent_id');
+    }
+
+    public function repeat_children(): HasMany
+    {
+        return $this->hasMany(__CLASS__, 'repeat_parent_id');
     }
 
     public function my_attendance()
