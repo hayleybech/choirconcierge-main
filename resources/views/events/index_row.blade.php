@@ -3,6 +3,9 @@
         <a href="{{route('events.show', ['event' => $event])}}">
         {{ ( isset($event->title) ) ? $event->title : 'Title Unknown' }}
         </a>
+        @if( $event->is_repeating )
+            <i class="fal fa-fw fa-repeat" title="Repeating Event"></i>
+        @endif
     </td>
     <td class="col--type">
         {{ $event->type->title }}

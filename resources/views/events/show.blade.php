@@ -10,7 +10,12 @@
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-start">
-                    <h1 class="h2 mb-0">{{ $event->title }}</h1>
+                    <h1 class="h2 mb-0">
+                        {{ $event->title }}
+                        @if( $event->is_repeating )
+                            <i class="fal fa-fw fa-repeat" title="Repeating Event"></i>
+                        @endif
+                    </h1>
                     @can('update', $event)
                         <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-primary flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
                     @endcan
