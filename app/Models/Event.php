@@ -124,6 +124,7 @@ class Event extends Model
      * - Increments the date by the frequency
      * - Loops until date is after the repeat end date
      * - Doesn't yet support repeat_frequency_amount (always = 1 for now)
+     * - Doesn't yet differentiate between e.g. "every month on the 18th" and "every month on the 3rd thursday" and "every 30 days"
      */
     private function createRepeats(): void{
         if( ! $this->is_repeating) {
@@ -182,8 +183,7 @@ class Event extends Model
         }
 
         $edit_mode = 'all';
-        // Method 1 - Update ONLY this event (remove it from the series) e.g. Google Calender "Update only this event"
-        //		- doing this would remove the parent_recurring_event_id from the single event and update its fields
+
         if($edit_mode === 'single') {
             $this->updateSingle();
         } elseif ($edit_mode === 'all') {
@@ -191,6 +191,10 @@ class Event extends Model
         }
     }
 
+    /**
+     * Updates one event in a repeating series
+     * For simplicity, it converts the event into regular single event.
+     */
     private function updateSingle(): void {
         // If this event was the parent, reset parent id on children to next child
         if($this->isRepeatParent()){
@@ -204,6 +208,11 @@ class Event extends Model
         // @todo allow creating new repeating events when editing a single occurrence
     }
 
+    /**
+     * Updates ALL events in a repeating series
+     * For simplicity, it deletes and regenerates the entire series.
+     * As a result, existing RSVPs will be deleted, but as the dates may have changed this is ideal.
+     */
     private function updateAll(): void {
         // Only perform this on an event parent
         if(! $this->isRepeatParent()) {
