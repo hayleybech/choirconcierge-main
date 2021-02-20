@@ -198,7 +198,7 @@ class Event extends Model
     private function updateSingle(): void {
         // If this event was the parent, reset parent id on children to next child
         if($this->isRepeatParent()){
-            $new_parent = $this->repeat_children()->orderBy('start_date')->first(); // second item
+            $new_parent = $this->nextRepeat();
             optional($new_parent)->repeat_children()->saveMany($this->repeat_children);
         }
         // Reset parent id on this event
@@ -261,6 +261,33 @@ class Event extends Model
     public function repeat_children(): HasMany
     {
         return $this->hasMany(__CLASS__, 'repeat_parent_id')->whereColumn('id', '!=', 'repeat_parent_id');
+    }
+    public function repeat_siblings(): Builder
+    {
+        return self::query()->where('id', '!=', $this->id)
+            ->where('repeat_parent_id', '=', $this->repeat_parent_id);
+    }
+    public function nextRepeats(): Builder
+    {
+        return $this->repeat_siblings()
+            ->whereDate('start_date', '>', $this->start_date);
+    }
+    public function nextRepeat(): Event|Model
+    {
+        return $this->nextRepeats()
+            ->orderBy('start_date')
+            ->first();
+    }
+    public function prevRepeats(): Builder
+    {
+        return $this->repeat_siblings()
+            ->whereDate('start_date', '<', $this->start_date);
+    }
+    public function prevRepeat(): Event|Model
+    {
+        return $this->prevRepeats()
+            ->orderBy('start_date', 'desc')
+            ->first();
     }
 
     public function my_attendance()
