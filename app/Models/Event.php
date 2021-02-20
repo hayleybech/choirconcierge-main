@@ -170,7 +170,34 @@ class Event extends Model
 
         $this->type = $attributes['type'];
 
+        $this->updateRepeats();
+
         return true;
+    }
+
+    private function updateRepeats(): void
+    {
+        if ( ! $this->is_repeating) {
+            return;
+        }
+
+        $edit_mode = 'single';
+        // Method 1 - Update ONLY this event (remove it from the series) e.g. Google Calender "Update only this event"
+        //		- doing this would remove the parent_recurring_event_id from the single event and update its fields
+        if($edit_mode === 'single') {
+            $this->updateSingle();
+        }
+    }
+    private function updateSingle(): void {
+        // If this event was the parent, reset parent id on children to next child
+        if($this->repeat_parent_id === $this->id){
+            $new_parent = $this->repeat_children()->orderBy('start_date')->first(); // second item
+            optional($new_parent)->repeat_children()->saveMany($this->repeat_children);
+        }
+        // Reset parent id on this event
+        $this->repeat_parent_id = 0;
+        // Convert to single
+        $this->is_repeating = false;
     }
 
     public function setTypeAttribute($typeId) {
@@ -207,7 +234,7 @@ class Event extends Model
 
     public function repeat_children(): HasMany
     {
-        return $this->hasMany(__CLASS__, 'repeat_parent_id');
+        return $this->hasMany(__CLASS__, 'repeat_parent_id')->whereColumn('id', '!=', 'repeat_parent_id');
     }
 
     public function my_attendance()
