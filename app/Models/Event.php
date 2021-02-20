@@ -197,7 +197,7 @@ class Event extends Model
      */
     private function updateSingle(): void {
         // If this event was the parent, reset parent id on children to next child
-        if($this->isRepeatParent()){
+        if($this->isRepeatParent() && $this->repeat_children->count()){
             $new_parent = $this->nextRepeat();
             optional($new_parent)->repeat_children()->saveMany($this->repeat_children);
         }
