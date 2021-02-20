@@ -202,7 +202,7 @@ class Event extends Model
             optional($new_parent)->repeat_children()->saveMany($this->repeat_children);
         }
         // Reset parent id on this event
-        $this->repeat_parent_id = 0;
+        $this->repeat_parent_id = null;
         // Convert to single
         $this->is_repeating = false;
         // @todo allow creating new repeating events when editing a single occurrence
