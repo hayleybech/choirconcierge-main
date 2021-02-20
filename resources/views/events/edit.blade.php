@@ -1,3 +1,4 @@
+<?php /** @var App\Models\Event $event */ ?>
 @extends('layouts.page')
 
 @section('title', 'Edit - ' . $event->title)
@@ -85,6 +86,41 @@
                     ], $event->call_time_ampm, ['class' => 'custom-select time-ampm']) }}
                         </div>
                     </div>-->
+
+                    <div class="form-group">
+                        {{ Form::label('', 'Repeating Event') }}
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="is_repeating" name="is_repeating" value="1" {{ $event->is_repeating ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="is_repeating">Repeat?</label>
+                        </div>
+                    </div>
+
+                    <fieldset id="repeat_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
+
+                        <div class="form-group">
+                            {{ Form::label('repeat_frequency_unit', 'Repeat every') }}<br>
+
+                            @foreach(['day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'] as $key => $unit)
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input id="repeat_frequency_unit_{{$key}}" name="repeat_frequency_unit" value="{{$key}}" class="custom-control-input" type="radio" {{ ($event->repeat_frequency_unit === $key ) ? 'checked' : '' }}>
+                                    <label for="repeat_frequency_unit_{{$key}}" class="custom-control-label">{{$unit}}</label>
+                                </div>
+                            @endforeach
+
+                        </div>
+
+                        <div class="form-group">
+                            {{ Form::label('repeat_until', 'Repeat until') }}
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
+                                </div>
+                                {{ Form::text('repeat_until_input', $event->repeat_until->format('M d, Y H:i'), ['class' => 'form-control events-single-date-picker']) }}
+                                {{ Form::hidden('repeat_until', $event->repeat_until, ['class' => 'call-time-hidden']) }}
+                            </div>
+                        </div>
+
+                    </fieldset>
 
                     <div class="form-group location-input-wrapper">
                         {{ Form::label('location', 'Location') }}

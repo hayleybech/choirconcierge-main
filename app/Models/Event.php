@@ -181,13 +181,16 @@ class Event extends Model
             return;
         }
 
-        $edit_mode = 'single';
+        $edit_mode = 'all';
         // Method 1 - Update ONLY this event (remove it from the series) e.g. Google Calender "Update only this event"
         //		- doing this would remove the parent_recurring_event_id from the single event and update its fields
         if($edit_mode === 'single') {
             $this->updateSingle();
+        } elseif ($edit_mode === 'all') {
+            $this->updateAll();
         }
     }
+
     private function updateSingle(): void {
         // If this event was the parent, reset parent id on children to next child
         if($this->isRepeatParent()){
@@ -198,6 +201,20 @@ class Event extends Model
         $this->repeat_parent_id = 0;
         // Convert to single
         $this->is_repeating = false;
+        // @todo allow creating new repeating events when editing a single occurrence
+    }
+
+    private function updateAll(): void {
+        // Only perform this on an event parent
+        if(! $this->isRepeatParent()) {
+            abort(500, 'The server attempted to update all repeats of an event without finding the parent event. ');
+        }
+
+        // Delete children
+        $this->repeat_children()->delete();
+
+        // Re-create children
+        $this->createRepeats();
     }
 
     public function setTypeAttribute($typeId) {
