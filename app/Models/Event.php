@@ -272,7 +272,7 @@ class Event extends Model
         return $this->repeat_siblings()
             ->whereDate('start_date', '>', $this->start_date);
     }
-    public function nextRepeat(): Event|Model
+    public function nextRepeat(): Event|Model|null
     {
         return $this->nextRepeats()
             ->orderBy('start_date')
@@ -283,7 +283,7 @@ class Event extends Model
         return $this->repeat_siblings()
             ->whereDate('start_date', '<', $this->start_date);
     }
-    public function prevRepeat(): Event|Model
+    public function prevRepeat(): Event|Model|null
     {
         return $this->prevRepeats()
             ->orderBy('start_date', 'desc')
