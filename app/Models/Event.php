@@ -190,7 +190,7 @@ class Event extends Model
     }
     private function updateSingle(): void {
         // If this event was the parent, reset parent id on children to next child
-        if($this->repeat_parent_id === $this->id){
+        if($this->isRepeatParent()){
             $new_parent = $this->repeat_children()->orderBy('start_date')->first(); // second item
             optional($new_parent)->repeat_children()->saveMany($this->repeat_children);
         }
@@ -300,5 +300,10 @@ class Event extends Model
     public function isUpcoming(): bool
     {
         return $this->start_date->greaterThan(Carbon::now());
+    }
+
+    public function isRepeatParent(): bool
+    {
+        return $this->repeat_parent_id === $this->id;
     }
 }
