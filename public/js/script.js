@@ -118,9 +118,17 @@ $( document ).ready(function() {
     /**
      * Recurring Events
      */
+    const $is_repeating = $('#is_repeating');
     const $repeatDetails = $('#repeat_details');
-    $repeatDetails.hide();
-    $('#is_repeating').change(function () {
+    
+    // Set initial state
+    if(! $is_repeating[0].checked) {
+        $repeatDetails.hide();
+    } else {
+        $repeatDetails.show();
+    }
+    // Set event handler
+    $is_repeating.change(function () {
         if(this.checked) {
             $repeatDetails.show();
         } else {
