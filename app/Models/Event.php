@@ -115,6 +115,8 @@ class Event extends Model
 
         $event->createRepeats();
 
+        $event->save(); // @todo remove double save without losing data
+
         return $event;
     }
 
@@ -167,11 +169,14 @@ class Event extends Model
 
     public function update(array $attributes = [], array $options = [])
     {
+        // @todo delay update to eliminate double save
         parent::update($attributes, $options);
 
         $this->type = $attributes['type'];
 
         $this->updateRepeats();
+
+        $this->save();
 
         return true;
     }
