@@ -187,12 +187,16 @@ class Event extends Model
             return;
         }
 
-        $edit_mode = 'all';
+        $edit_mode = 'forward';
 
         if($edit_mode === 'single') {
             $this->updateSingle();
         } elseif ($edit_mode === 'all') {
             $this->updateAll();
+        } elseif ($edit_mode === 'forward') {
+            $this->updateForward();
+        } else {
+            abort(500, 'The server failed to determine the edit mode on the repeating event.');
         }
     }
 
@@ -228,6 +232,32 @@ class Event extends Model
         $this->repeat_children()->delete();
 
         // Re-create children
+        $this->createRepeats();
+    }
+
+    /**
+     * Updates the target event and all repeats after it.
+     * Makes this event an event parent then deletes and regenerates the following children.
+     * Also, update the older events that still exist in the old series with new repeat_until dates.
+     */
+    private function updateForward(): void {
+        // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
+        if($this->isRepeatParent()) {
+            abort(405, 'Cannot do "forward" update method on a repeating event parent. Try "all" update method instead.');
+        }
+
+        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
+        if($this->start_date < Carbon::now()) {
+            abort(405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
+        }
+
+        // Update prev siblings with repeat_until dates that reflect their smaller scope.
+        $this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
+
+        $this->repeat_parent_id = $this->id;
+
+        // Delete all repeats following this one
+        $this->nextRepeats()->delete();
         $this->createRepeats();
     }
 
