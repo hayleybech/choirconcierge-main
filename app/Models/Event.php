@@ -389,7 +389,7 @@ class Event extends Model
         return $parts;
     }
 
-    public function isUpcoming(): bool
+    public function inFuture(): bool
     {
         return $this->start_date->greaterThan(Carbon::now());
     }
