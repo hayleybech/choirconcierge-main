@@ -257,10 +257,11 @@ class Event extends Model
         // Update prev siblings with repeat_until dates that reflect their smaller scope.
         $this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
 
-        $this->repeat_parent_id = $this->id;
-
         // Delete all repeats following this one
         $this->nextRepeats()->delete();
+
+        // Re-create events with this as the new parent
+        $this->repeat_parent_id = $this->id;
         $this->createRepeats();
     }
 
