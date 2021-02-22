@@ -174,26 +174,24 @@ class Event extends Model
 
         $this->type = $attributes['type'];
 
-        $this->updateRepeats();
+        $this->updateRepeats($options['edit_mode']);
 
         $this->save();
 
         return true;
     }
 
-    private function updateRepeats(): void
+    private function updateRepeats(String $edit_mode): void
     {
         if ( ! $this->is_repeating) {
             return;
         }
 
-        $edit_mode = 'forward';
-
         if($edit_mode === 'single') {
             $this->updateSingle();
         } elseif ($edit_mode === 'all') {
             $this->updateAll();
-        } elseif ($edit_mode === 'forward') {
+        } elseif ($edit_mode === 'following') {
             $this->updateForward();
         } else {
             abort(500, 'The server failed to determine the edit mode on the repeating event.');

@@ -2,11 +2,50 @@
 @extends('layouts.page')
 
 @section('title', 'Edit - ' . $event->title)
-@section('page-title', $event->title)
+@section('page-title')
+    {{ $event->title }}
+    @if( $event->is_repeating )
+        <i class="fal fa-fw fa-repeat" title="Repeating Event"></i>
+    @endif
+@endsection
 
 @section('page-content')
 
     {{ Form::open( [ 'route' => ['events.show', $event->id], 'method' => 'put' ] ) }}
+
+    <input type="hidden" name="edit_mode" value="{{ request()->query('mode') }}">
+
+    @if($event->is_repeating)
+        <div class="alert alert-warning  py-3 px-3 text-left d-flex align-items-center">
+            @if('single' === request()->query('mode'))
+            <i class="far fa-fw fa-calendar-day fa-2x mr-3"></i>
+            <span>
+                <span class="h5">Editing only this event</span>
+                <span class="form-text">
+                    All other events in the series will remain the same.
+                </span>
+            </span>
+            @elseif('following' === request()->query('mode'))
+                <i class="far fa-fw fa-calendar-week fa-2x mr-3"></i>
+                <span>
+                    <span class="h5">Editing following events</span>
+                    <span class="form-text">
+                        This and all the following events will be changed.<br>
+                        <strong>Any changes to future events will be lost, including RSVPs.</strong>
+                    </span>
+                </span>
+            @elseif('all' === request()->query('mode'))
+            <i class="far fa-fw fa-calendar-alt fa-2x mr-3"></i>
+            <span>
+                <span class="h5">Editing all events</span>
+                <span class="form-text">
+                    All events in the series will be changed.<br>
+                    <strong>Any changes to other events will be lost, including RSVPs and attendance records.</strong>
+                </span>
+            </span>
+            @endif
+        </div>
+    @endif
 
     <div class="row">
         <div class="col-md-6">

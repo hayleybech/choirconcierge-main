@@ -96,7 +96,7 @@ class EventController extends Controller
     {
         $this->authorize('update', $event);
 
-        $event->update($request->validated());
+        $event->update($request->validated(), ['edit_mode' => $request->get('edit_mode')]);
 
         return redirect()->route('events.show', [$event])->with(['status' => 'Event updated. ', ]);
     }

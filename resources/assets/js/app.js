@@ -37,6 +37,7 @@ Vue.component('track-list-player', require('./components/TrackListPlayer').defau
 Vue.component('pitch-button', require('./components/PitchButton').default);
 Vue.component('inline-edit-field', require('./components/InlineEditField').default);
 Vue.component('limited-textarea', require('./components/LimitedTextarea').default);
+Vue.component('repeating-event-edit-mode-modal', require('./components/RepeatingEventEditModeModal').default);
 
 const app = new Vue({
     el: '#app'

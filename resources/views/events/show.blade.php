@@ -17,7 +17,11 @@
                         @endif
                     </h1>
                     @can('update', $event)
+                        @if($event->is_repeating)
+                            <a href="#" data-toggle="modal" data-target="#repeatingEventEditModeModal" class="btn btn-add btn-sm btn-primary flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                        @else
                         <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-primary flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                        @endif
                     @endcan
                 </div>
                 <div class="card-body">
@@ -202,6 +206,7 @@
     </div>
 
 
+    <repeating-event-edit-mode-modal route="{{ route('events.edit-recurring', ['event' => $event, 'mode' => '--replace--']) }}"></repeating-event-edit-mode-modal>
 
 @endsection
 <script>
