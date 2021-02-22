@@ -192,7 +192,7 @@ class Event extends Model
         } elseif ($edit_mode === 'all') {
             $this->updateAll();
         } elseif ($edit_mode === 'following') {
-            $this->updateForward();
+            $this->updateFollowing();
         } else {
             abort(500, 'The server failed to determine the edit mode on the repeating event.');
         }
@@ -238,10 +238,10 @@ class Event extends Model
      * Makes this event an event parent then deletes and regenerates the following children.
      * Also, update the older events that still exist in the old series with new repeat_until dates.
      */
-    private function updateForward(): void {
+    private function updateFollowing(): void {
         // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
         if($this->isRepeatParent()) {
-            abort(405, 'Cannot do "forward" update method on a repeating event parent. Try "all" update method instead.');
+            abort(405, 'Cannot do "following" update method on a repeating event parent. Try "all" update method instead.');
         }
 
         // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
