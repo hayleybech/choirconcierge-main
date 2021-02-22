@@ -23,7 +23,7 @@ class EventController extends Controller
             ->get();
 
         // Sort
-        $sort_by = $request->input('sort_by', 'name');
+        $sort_by = $request->input('sort_by', 'start_date');
         $sort_dir = $request->input('sort_dir', 'asc');
 
         // Flip direction for date (so we sort by smallest age not smallest timestamp)
@@ -117,12 +117,13 @@ class EventController extends Controller
             'title',
             'type.title',
             'created_at',
+            'start_date',
         ];
 
         // Merge filters with sort query string
         $url = $request->url() . '?' . Event::getFilterQueryString();
 
-        $current_sort = $request->input('sort_by', 'title');
+        $current_sort = $request->input('sort_by', 'start_date');
         $current_dir =  $request->input('sort_dir', 'asc');
 
         $sorts = [];
