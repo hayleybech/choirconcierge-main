@@ -226,6 +226,11 @@ class Event extends Model
             abort(500, 'The server attempted to update all repeats of an event without finding the parent event. ');
         }
 
+        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
+        if($this->start_date < Carbon::now()) {
+            abort(405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
+        }
+
         // Delete children
         $this->repeat_children()->delete();
 
