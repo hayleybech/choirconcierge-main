@@ -43,6 +43,11 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property int $repeat_frequency_amount e.g. 2 (day) - fortnightly
  * @property string $repeat_frequency_unit (day, week, month, year)
  *
+ * Attributes
+ * @property bool $in_past
+ * @property bool $in_future
+ * @property bool $is_repeat_parent
+ *
  * Relationships
  * @property EventType $type
  * @property Collection<Rsvp> $rsvps
@@ -204,7 +209,7 @@ class Event extends Model
      */
     private function updateSingle(): void {
         // If this event was the parent, reset parent id on children to next child
-        if($this->isRepeatParent() && $this->repeat_children->count()){
+        if($this->is_repeat_parent && $this->repeat_children->count()){
             $new_parent = $this->nextRepeat();
             optional($new_parent)->repeat_children()->saveMany($this->repeat_children);
         }
@@ -222,12 +227,12 @@ class Event extends Model
      */
     private function updateAll(): void {
         // Only perform this on an event parent
-        if(! $this->isRepeatParent()) {
+        if(! $this->is_repeat_parent) {
             abort(500, 'The server attempted to update all repeats of an event without finding the parent event. ');
         }
 
         // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        if($this->start_date < Carbon::now()) {
+        if($this->in_past) {
             abort(405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
         }
 
@@ -245,12 +250,12 @@ class Event extends Model
      */
     private function updateFollowing(): void {
         // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
-        if($this->isRepeatParent()) {
+        if($this->is_repeat_parent) {
             abort(405, 'Cannot do "following" update method on a repeating event parent. Try "all" update method instead.');
         }
 
         // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        if($this->start_date < Carbon::now()) {
+        if($this->in_past) {
             abort(405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
         }
 
@@ -389,12 +394,17 @@ class Event extends Model
         return $parts;
     }
 
-    public function inFuture(): bool
+    public function getInPastAttribute(): bool
+    {
+        return $this->start_date->lessThan(Carbon::now());
+    }
+
+    public function getInFutureAttribute(): bool
     {
         return $this->start_date->greaterThan(Carbon::now());
     }
 
-    public function isRepeatParent(): bool
+    public function getIsRepeatParentAttribute(): bool
     {
         return $this->repeat_parent_id === $this->id;
     }
