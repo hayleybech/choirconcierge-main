@@ -126,6 +126,7 @@
                         </div>
                     </div>-->
 
+                    @if('single' !== request()->query('mode'))
                     <div class="form-group">
                         {{ Form::label('', 'Repeating Event') }}
                         <div class="custom-control custom-switch">
@@ -160,6 +161,7 @@
                         </div>
 
                     </fieldset>
+                    @endif
 
                     <div class="form-group location-input-wrapper">
                         {{ Form::label('location', 'Location') }}
