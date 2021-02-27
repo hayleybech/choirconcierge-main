@@ -49,8 +49,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-fw fa-clock"></i></span>
                             </div>
-                            {{ Form::text('call_time_input', '', ['class' => 'form-control events-single-date-picker']) }}
-                            {{ Form::hidden('call_time', '', ['class' => 'call-time-hidden']) }}
+                            {{ Form::text('call_time_input', '', ['class' => 'form-control events-single-date-time-picker']) }}
+                            {{ Form::hidden('call_time', '', ['class' => 'date-time-hidden']) }}
                         </div>
                     </div>
 
@@ -86,7 +86,7 @@
                         'AM' => 'AM',
                         'PM' => 'PM'
                     ], '', ['class' => 'custom-select time-ampm']) }}
-                {{ Form::text('call_time', '', ['class' => 'call-time-hidden']) }}
+                {{ Form::text('call_time', '', ['class' => 'date-time-hidden']) }}
                         </div>
                     </div>-->
 
@@ -119,7 +119,7 @@
                                     <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
                                 </div>
                                 {{ Form::text('repeat_until_input', '', ['class' => 'form-control events-single-date-picker']) }}
-                                {{ Form::hidden('repeat_until', '', ['class' => 'call-time-hidden']) }}
+                                {{ Form::hidden('repeat_until', '', ['class' => 'date-time-hidden']) }}
                             </div>
                         </div>
 
