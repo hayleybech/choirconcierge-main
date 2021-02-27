@@ -154,7 +154,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
                                 </div>
-                                {{ Form::text('repeat_until_input', $event->repeat_until->format('M d, Y H:i'), ['class' => 'form-control events-single-date-picker']) }}
+                                {{ Form::text('repeat_until_input', optional($event->repeat_until)->format('M d, Y H:i') ?? '', ['class' => 'form-control events-single-date-picker']) }}
                                 {{ Form::hidden('repeat_until', $event->repeat_until, ['class' => 'date-time-hidden']) }}
                             </div>
                         </div>

@@ -80,7 +80,7 @@ class EventController extends Controller
             'singers_attendance_absent_apology'  => $event->singers_attendance('absent_apology')->count(),
             'singers_attendance_missing' => $event->singers_attendance_missing()->count(),
             'voice_parts_attendance'     => $event->voice_parts_attendance_count('present'),
-            'parent_in_past' => $event->repeat_parent->in_past,
+            'parent_in_past' => $event->repeat_parent->in_past ?? null,
         ]);
     }
 

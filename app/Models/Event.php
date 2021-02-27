@@ -186,7 +186,7 @@ class Event extends Model
         return true;
     }
 
-    private function updateRepeats(String $edit_mode): void
+    private function updateRepeats(?string $edit_mode): void
     {
         if ( ! $this->is_repeating) {
             return;
