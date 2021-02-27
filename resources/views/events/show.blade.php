@@ -205,8 +205,14 @@
 
     </div>
 
-
-    <repeating-event-edit-mode-modal route="{{ route('events.edit-recurring', ['event' => $event, 'mode' => '--replace--']) }}"></repeating-event-edit-mode-modal>
+    @if($event->is_repeating)
+    <repeating-event-edit-mode-modal
+            route="{{ route('events.edit-recurring', ['event' => $event, 'mode' => '--replace--']) }}"
+            :event-in-past="{{ json_encode($event->in_past, JSON_THROW_ON_ERROR) }}"
+            :parent-in-past="{{ json_encode($parent_in_past, JSON_THROW_ON_ERROR) }}"
+            :is-parent="{{ json_encode($event->is_repeat_parent), JSON_THROW_ON_ERROR) }}"
+    ></repeating-event-edit-mode-modal>
+    @endif
 
 @endsection
 <script>
