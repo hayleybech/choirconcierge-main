@@ -19,6 +19,14 @@ class EventController extends Controller
 
         // Base query
         $all_events = Event::with([])
+            ->withCount([
+                'rsvps as going_count' => function($query) {
+                    $query->where('response', '=', 'yes');
+                },
+                'attendances as present_count' => function($query) {
+                    $query->where('response', '=', 'present');
+                },
+            ])
             ->filter()
             ->get();
 

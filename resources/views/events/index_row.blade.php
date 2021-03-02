@@ -22,12 +22,12 @@
     </td>
     @if($col_rsvp)
         @can('viewAny', \App\Models\Rsvp::class)
-            <td class="col--rsvp">{{ $event->singers_rsvp_response('yes')->count() }} going</td>
+            <td class="col--rsvp">{{ $event->going_count }} going</td>
         @endcan
     @endif
     @if($col_attendance)
         @can('viewAny', \App\Models\Attendance::class)
-        <td class="col--attendance">{{ $event->singers_attendance('present')->count() }} present</td>
+        <td class="col--attendance">{{ $event->present_count }} present</td>
         @endcan
     @endif
     <td class="col--created">
