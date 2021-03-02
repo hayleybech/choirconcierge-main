@@ -24,14 +24,18 @@
     </div>
     <div class="r-table__cell col--delete">
         @can('delete', $folder)
-        <x-delete-button :action="route( 'folders.destroy', ['folder' => $folder] )" :message="$folder->documents()->count() . ' documents will also be deleted.'" />
+        <x-delete-button :action="route( 'folders.destroy', ['folder' => $folder] )" :message="$folder->documents->count() . ' documents will also be deleted.'" />
         @endcan
     </div>
 
 </div>
 
 <div id="folder-{{ $folder->id }}" class="folder-documents-list collapse" data-parent="#folders-accordion">
-    @each('folders.folder_document_row', $folder->documents, 'document', 'partials.noresults')
+    @forelse($folder->documents as $document)
+        @include('folders.folder_document_row', ['folder' => $folder, 'document' => $document])
+    @empty
+        @include('partials.noresults')
+    @endforelse
 
     @can('update', $folder)
 
