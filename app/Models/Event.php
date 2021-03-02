@@ -270,7 +270,6 @@ class Event extends Model
         $this->repeat_parent_id = $this->id;
         $this->createRepeats();
 
-        $this->delete();
     }
 
     public function delete_single(): bool
