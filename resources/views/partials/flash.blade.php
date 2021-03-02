@@ -1,22 +1,24 @@
-@if (session('status'))
-    <div class="alert {{ isset($Response->error) || session('fail') ? 'alert-danger' : 'alert-success' }}" role="alert">
-        {{ session('status') }}
+@if(session('status') || $errors->any())
+<x-alert variant="{{ $errors->any() || session('fail') || isset($Response->error) ? 'danger' : 'success' }}">
+    @if($errors->any())
+    <x-slot name="title">Error</x-slot>
 
-        @isset( $Response->error )
-            <pre>
-			{{ var_dump($Response) }}
-			@ json($args)
-		</pre>
-        @endisset
-    </div>
-@endif
+    <ul class="list-unstyled">
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
 
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @elseif( isset($Response->error) )
+    <x-slot name="title">Error</x-slot>
+
+    <pre>
+    {{ var_dump($Response) }}
+    @ json($args)
+    </pre>
+
+    @else
+    {{ session('status') }}
+    @endif
+</x-alert>
 @endif
