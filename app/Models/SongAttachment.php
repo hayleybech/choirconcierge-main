@@ -55,6 +55,8 @@ class SongAttachment extends Model
         'song',
     ];
 
+    protected $touches = ['song'];
+
     public static function create( array $attributes = [] )
     {
         /** @var SongAttachment $attachment */
