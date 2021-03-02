@@ -273,6 +273,16 @@ class Event extends Model
         $this->delete();
     }
 
+    public function delete_single(): bool
+    {
+        // Re-assign parent to the next event
+        if($this->is_repeat_parent) {
+            $this->nextRepeats()->update(['repeat_parent_id' => $this->nextRepeat()->id]);
+        }
+
+        return $this->delete();
+    }
+
     public function delete_with_following(): bool
     {
         // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()

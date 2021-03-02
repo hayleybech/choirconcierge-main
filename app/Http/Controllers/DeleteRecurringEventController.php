@@ -26,8 +26,7 @@ class DeleteRecurringEventController extends Controller
         }
 
         if('single' === $mode) {
-            // @todo: re-assign parent if target is parent
-            $event->delete();
+            $event->delete_single();
         } elseif('following' === $mode) {
             $event->delete_with_following();
         } elseif('all' === $mode) {
