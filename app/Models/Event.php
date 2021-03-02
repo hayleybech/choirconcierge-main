@@ -113,7 +113,7 @@ class Event extends Model
         /** @var Event $event */
         $event = static::query()->create($attributes);
 
-        $event->type = $attributes['type'];
+        $event->type_id = $attributes['type'];
 
         if( $send_notifications && ! App::isLocal() ){
             Notification::send(User::active()->get(), new EventCreated($event));
@@ -175,14 +175,13 @@ class Event extends Model
 
     public function update(array $attributes = [], array $options = [])
     {
-        // @todo delay update to eliminate double save
-        parent::update($attributes, $options);
+        $this->fill($attributes);
 
-        $this->type = $attributes['type'];
+        $this->type_id = $attributes['type'];
 
         $this->updateRepeats($options['edit_mode']);
 
-        $this->save();
+        $this->save($options);
 
         return true;
     }
@@ -223,7 +222,7 @@ class Event extends Model
 
     /**
      * Updates ALL events in a repeating series
-     * For simplicity, it deletes and regenerates the entire series.
+     * When the date or repeat details change, it deletes and regenerates the entire series.
      * As a result, existing RSVPs will be deleted, but as the dates may have changed this is ideal.
      */
     private function updateAll(): void {
@@ -237,16 +236,30 @@ class Event extends Model
             abort(405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
         }
 
-        // Delete children
-        $this->repeat_children()->delete();
+        // Update or regenerate children
+        // Check if any of the repeat data has changed - includes start time
+        // @todo allow changing the time (not the date) without causing series regeneration
+        if($this->isDirty([
+            'start_date',
+            'repeat_until',
+            'repeat_frequency_unit',
+            'repeat_frequency_amount'
+        ])) {
+            // Delete children
+            $this->repeat_children()->delete();
 
-        // Re-create children
-        $this->createRepeats();
+            // Re-create children
+            $this->createRepeats();
+        } else {
+            // Update attributes on children
+            $this->repeat_children()->update($this->getDirty());
+        }
     }
 
     /**
      * Updates the target event and all repeats after it.
-     * Makes this event an event parent then deletes and regenerates the following children.
+     * Makes this event the event parent for following events.
+     * If repeat data (including start date) has changed, then delete and regenerate the new children.
      * Also, update the older events that still exist in the old series with new repeat_until dates.
      */
     private function updateFollowing(): void {
@@ -261,21 +274,38 @@ class Event extends Model
         }
 
         // Update prev siblings with repeat_until dates that reflect their smaller scope.
-        $this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
+        //$this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
 
-        // Delete all repeats following this one
-        $this->nextRepeats()->delete();
+        // Update or regenerate children
+        // Check if any of the repeat data has changed - includes start time
+        // @todo allow changing the time (not the date) without causing series regeneration
+        if($this->isDirty([
+            'start_date',
+            'repeat_until',
+            'repeat_frequency_unit',
+            'repeat_frequency_amount'
+        ])) {
+            // Delete all repeats following this one
+            $this->nextRepeats()->delete();
 
-        // Re-create events with this as the new parent
-        $this->repeat_parent_id = $this->id;
-        $this->createRepeats();
-
+            // Re-create events with this as the new parent
+            $this->repeat_parent_id = $this->id;
+            $this->createRepeats();
+        } else {
+            // Update attributes on following events and make them children
+            $this->nextRepeats()->update(array_merge(
+                ['repeat_parent_id' => $this->id],
+                $this->getDirty()
+            ));
+            $this->repeat_parent_id = $this->id;
+        }
     }
+
 
     public function delete_single(): bool
     {
         // Re-assign parent to the next event
-        if($this->is_repeat_parent) {
+        if($this->is_repeat_parent && $this->nextRepeat()) {
             $this->nextRepeats()->update(['repeat_parent_id' => $this->nextRepeat()->id]);
         }
 
@@ -318,11 +348,6 @@ class Event extends Model
         $this->repeat_children()->delete();
 
         return $this->delete();
-    }
-
-    public function setTypeAttribute($typeId) {
-        $type = EventType::find($typeId);
-        $type->events()->save($this);
     }
 
     public function type(): BelongsTo
