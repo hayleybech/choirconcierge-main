@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
@@ -114,7 +115,7 @@ class Event extends Model
 
         $event->type = $attributes['type'];
 
-        if( $send_notifications ){
+        if( $send_notifications && ! App::isLocal() ){
             Notification::send(User::active()->get(), new EventCreated($event));
         }
 
@@ -268,6 +269,46 @@ class Event extends Model
         // Re-create events with this as the new parent
         $this->repeat_parent_id = $this->id;
         $this->createRepeats();
+
+        $this->delete();
+    }
+
+    public function delete_with_following(): bool
+    {
+        // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
+        if($this->is_repeat_parent) {
+            abort(405, 'Cannot do "following" delete method on a repeating event parent. Try "all" delete method instead.');
+        }
+
+        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
+        if($this->in_past) {
+            abort(405, 'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.');
+        }
+
+        // Update prev siblings with repeat_until dates that reflect their smaller scope.
+        $this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
+
+        // Delete all repeats following this one
+        $this->nextRepeats()->delete();
+
+        return $this->delete();
+    }
+
+    public function delete_with_all(): bool
+    {
+        // Only perform this on an event parent
+        if(! $this->is_repeat_parent) {
+            abort(500, 'The server attempted to delete all repeats of an event without finding the parent event. ');
+        }
+
+        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
+        if($this->in_past) {
+            abort(405, 'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.');
+        }
+
+        $this->repeat_children()->delete();
+
+        return $this->delete();
     }
 
     public function setTypeAttribute($typeId) {

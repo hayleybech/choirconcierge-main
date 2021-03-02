@@ -18,7 +18,7 @@ class EventController extends Controller
         $this->authorize('viewAny', Event::class);
 
         // Base query
-        $all_events = Event::with([])
+        $all_events = Event::with(['repeat_parent:id,start_date'])
             ->filter()
             ->get();
 
@@ -66,6 +66,8 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
+        $event->load('repeat_parent:id,start_date');
+
         return view('events.show', [
             'event'   => $event,
             'my_rsvp' => $event->my_rsvp(),
@@ -80,7 +82,6 @@ class EventController extends Controller
             'singers_attendance_absent_apology'  => $event->singers_attendance('absent_apology')->count(),
             'singers_attendance_missing' => $event->singers_attendance_missing()->count(),
             'voice_parts_attendance'     => $event->voice_parts_attendance_count('present'),
-            'parent_in_past' => $event->repeat_parent->in_past ?? null,
         ]);
     }
 

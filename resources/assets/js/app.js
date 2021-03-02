@@ -38,6 +38,8 @@ Vue.component('pitch-button', require('./components/PitchButton').default);
 Vue.component('inline-edit-field', require('./components/InlineEditField').default);
 Vue.component('limited-textarea', require('./components/LimitedTextarea').default);
 Vue.component('repeating-event-edit-mode-modal', require('./components/RepeatingEventEditModeModal').default);
+Vue.component('repeating-event-delete-modal', require('./components/RepeatingEventDeleteModal').default);
+Vue.component('repeating-event-delete-button', require('./components/RepeatingEventDeleteButton').default);
 
 const app = new Vue({
     el: '#app'

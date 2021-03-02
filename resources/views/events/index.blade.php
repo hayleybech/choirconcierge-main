@@ -59,4 +59,6 @@
 
     </div>
 
+    <repeating-event-delete-modal></repeating-event-delete-modal>
+
 @endsection
