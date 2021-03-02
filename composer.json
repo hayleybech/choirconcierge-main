@@ -31,6 +31,7 @@
     "type": "project",
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",
+        "beyondcode/laravel-query-detector": "^1.5",
         "brianium/paratest": "^6.1",
         "facade/ignition": "^2.3.6",
         "laravel/sail": "^1.0.1",
