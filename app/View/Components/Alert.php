@@ -11,6 +11,8 @@ class Alert extends Component
 
     public string $title;
 
+    private string $icon;
+
     protected static int $instances = 0;
 
     public int $id;
@@ -19,14 +21,16 @@ class Alert extends Component
      * Create a new component instance.
      * @param string $variant
      * @param string $title
+     * @param string $icon
      */
-    public function __construct(string $variant = 'info', string $title = '')
+    public function __construct(string $variant = 'info', string $title = '', string $icon = '')
     {
         self::$instances++;
         $this->id = self::$instances;
 
         $this->variant = $variant;
         $this->title = $title;
+        $this->icon = $icon;
     }
 
     /**
@@ -40,6 +44,10 @@ class Alert extends Component
     }
 
     public function icon(): string {
+        if($this->icon) {
+            return $this->icon;
+        }
+
         $icons = [
             'success' => 'fa-check-circle',
             'warning' => 'fa-exclamation-square',
