@@ -15,7 +15,7 @@
     <div class="card">
         <div class="r-table r-table--card-view-mobile">
             <div class="r-table__thead">
-                <div class="r-table__row row--folder">
+                <div class="r-table__row row--folder pt-4">
                     <div class="r-table__heading col--mark"><input type="checkbox"></div>
                     <div class="r-table__heading col--title">Title</div>
                     <div class="r-table__heading folder-col--status">Documents</div>

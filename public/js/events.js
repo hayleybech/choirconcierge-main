@@ -30,20 +30,32 @@ const DATE_CONFIG = {
 //const $el_call_time_hr = $('.call-time-hr');
 //const $el_call_time_min = $('.call-time-min');
 //const $el_call_time_date = $('.call-time-date');
-const $el_call_time = $('.events-single-date-picker');
-const $el_call_time_raw = $('.call-time-hidden');
+const $el_date_picker = $('.events-single-date-picker');
+const $el_call_time = $('.events-single-date-time-picker');
 const $el_range = $('.events-date-range-picker');
 const $el_start_raw = $('.start-date-hidden');
 const $el_end_raw   = $('.end-date-hidden');
 
-// Events - Call Time (Single Date Picker)
+// Events - Single Date Picker
+$el_date_picker.daterangepicker({
+        ...DATE_CONFIG,
+        'singleDatePicker': true,
+        'timePicker': false
+    },
+    function(start, end, label){
+        console.log(start.format(DATE_FORMAT_RAW));
+        this.element.siblings('.date-time-hidden').val( start.format(DATE_FORMAT_RAW) );
+    }
+);
+
+// Events - Call Time (Single Date & Time Picker)
 $el_call_time.daterangepicker({
         ...DATE_CONFIG,
         'singleDatePicker': true
     },
     function(start, end, label){
         console.log(start.format(DATE_FORMAT_RAW));
-        $el_call_time_raw.val( start.format(DATE_FORMAT_RAW) );
+        this.element.siblings('.date-time-hidden').val( start.format(DATE_FORMAT_RAW) );
     }
 );
 

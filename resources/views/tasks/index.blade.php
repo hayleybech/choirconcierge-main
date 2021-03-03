@@ -18,7 +18,7 @@
 	<div class="card">
 		<h3 class="card-header h4">Checklist</h3>
 
-		<table class="table table-striped table-borderless">
+		<table class="table card-table">
 			<thead>
 			<tr>
 				<th scope="col">Name</th>

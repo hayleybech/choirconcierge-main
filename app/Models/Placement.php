@@ -37,6 +37,8 @@ class Placement extends Model
 		'skill_sightreading',
 		'voice_tone',
 	];
+
+    protected $touches = ['singer'];
 	
 	public function singer(): BelongsTo
     {

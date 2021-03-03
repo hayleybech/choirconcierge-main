@@ -24,8 +24,8 @@
         <a href="{{ $document->download_url }}" class="btn btn-secondary btn-sm btn-block" download="{{ $document->title }}"><i class="fa fa-fw fa-download"></i> Download</a>
     </div>
     <div class="r-table__cell col--delete">
-        @can('update', $document->folder)
-        <x-delete-button :action="route( 'folders.documents.destroy', ['folder' => $document->folder, 'document' => $document] )" />
+        @can('update', $folder)
+        <x-delete-button :action="route( 'folders.documents.destroy', ['folder' => $folder, 'document' => $document] )" />
         @endcan
     </div>
 </div>

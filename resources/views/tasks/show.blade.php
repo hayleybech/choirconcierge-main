@@ -37,14 +37,28 @@
             <a href="{{ route( 'tasks.notifications.create', $task ) }}" class="btn btn-add btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-plus"></i> Add Notification</a>
         </div>
 
-        <div class="list-group-flush">
-        @foreach($task->notification_templates as $template)
-            <div class="list-group-item d-flex justify-content-between">
-                <a href="{{ route('tasks.notifications.show', [$task, $template]) }}" class="">{{ $template->subject }}</a>
-                <x-delete-button :action="route( 'tasks.notifications.destroy', [$task, $template] )"/>
-            </div>
-        @endforeach
-        </div>
+        <table class="table card-table">
+            <thead>
+                <tr>
+                    <th class="col--title">Subject</th>
+                    <th>Recipients</th>
+                    <th>Delay</th>
+                    <th class="col--delete"></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach($task->notification_templates as $template)
+                <tr>
+                    <td class="col--title">
+                        <a href="{{ route('tasks.notifications.show', [$task, $template]) }}" class="">{{ $template->subject }}</a>
+                    </td>
+                    <td><code>{{ $template->recipients }}</code></td>
+                    <td>{{ $template->delay }}</td>
+                    <td class="col--delete"><x-delete-button :action="route( 'tasks.notifications.destroy', [$task, $template] )"/></td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
     </div>
 
 @endsection

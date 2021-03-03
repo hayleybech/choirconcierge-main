@@ -18,12 +18,20 @@ class EventController extends Controller
         $this->authorize('viewAny', Event::class);
 
         // Base query
-        $all_events = Event::with([])
+        $all_events = Event::with(['repeat_parent:id,start_date'])
+            ->withCount([
+                'rsvps as going_count' => function($query) {
+                    $query->where('response', '=', 'yes');
+                },
+                'attendances as present_count' => function($query) {
+                    $query->where('response', '=', 'present');
+                },
+            ])
             ->filter()
             ->get();
 
         // Sort
-        $sort_by = $request->input('sort_by', 'name');
+        $sort_by = $request->input('sort_by', 'start_date');
         $sort_dir = $request->input('sort_dir', 'asc');
 
         // Flip direction for date (so we sort by smallest age not smallest timestamp)
@@ -66,6 +74,8 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
+        $event->load('repeat_parent:id,start_date');
+
         return view('events.show', [
             'event'   => $event,
             'my_rsvp' => $event->my_rsvp(),
@@ -96,7 +106,7 @@ class EventController extends Controller
     {
         $this->authorize('update', $event);
 
-        $event->update($request->validated());
+        $event->update($request->validated(), ['edit_mode' => $request->get('edit_mode')]);
 
         return redirect()->route('events.show', [$event])->with(['status' => 'Event updated. ', ]);
     }
@@ -117,12 +127,13 @@ class EventController extends Controller
             'title',
             'type.title',
             'created_at',
+            'start_date',
         ];
 
         // Merge filters with sort query string
         $url = $request->url() . '?' . Event::getFilterQueryString();
 
-        $current_sort = $request->input('sort_by', 'title');
+        $current_sort = $request->input('sort_by', 'start_date');
         $current_dir =  $request->input('sort_dir', 'asc');
 
         $sorts = [];

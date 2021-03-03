@@ -49,7 +49,7 @@ class FolderController extends Controller
     {
         $folder = Folder::create($request->validated());
 
-        return redirect()->route('folders.index', ['status' => 'Folder created. ', ]);
+        return redirect()->route('folders.index')->with(['status' => 'Folder created. ']);
     }
 
     /**

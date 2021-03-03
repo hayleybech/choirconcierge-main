@@ -60,6 +60,8 @@ class Profile extends Model
         'created_at',
         'dob',
     ];
+
+    protected $touches = ['singer'];
 	
     public function singer(): BelongsTo
 	{
