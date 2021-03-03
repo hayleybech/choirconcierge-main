@@ -6,7 +6,9 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceReportController;
 use App\Http\Controllers\CompleteSingerTaskController;
 use App\Http\Controllers\DashController;
+use App\Http\Controllers\DeleteRecurringEventController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EditRecurringEventController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
@@ -71,6 +73,8 @@ Route::middleware([
     Route::resource('events', EventController::class);
     Route::resource('events.rsvps', RsvpController::class)->only(['store', 'update', 'destroy']);
     Route::resource('events.attendances', AttendanceController::class)->only(['index']);
+    Route::get('events/{event}/edit-recurring/{mode}', EditRecurringEventController::class)->name('events.edit-recurring');
+    Route::get('events/{event}/delete-recurring/{mode}', DeleteRecurringEventController::class)->name('events.delete-recurring');
     Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
     Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
 

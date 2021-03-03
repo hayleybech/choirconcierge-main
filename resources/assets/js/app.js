@@ -38,6 +38,9 @@ Vue.component('pitch-button', require('./components/PitchButton').default);
 Vue.component('inline-edit-field', require('./components/InlineEditField').default);
 Vue.component('limited-textarea', require('./components/LimitedTextarea').default);
 Vue.component('impersonate-user-modal', require('./components/ImpersonateUserModal').default);
+Vue.component('repeating-event-edit-mode-modal', require('./components/RepeatingEventEditModeModal').default);
+Vue.component('repeating-event-delete-modal', require('./components/RepeatingEventDeleteModal').default);
+Vue.component('repeating-event-delete-button', require('./components/RepeatingEventDeleteButton').default);
 
 // Allow binding select2 fields (add v-select attribute to select element to enable)
 // https://stackoverflow.com/a/51260727/563974

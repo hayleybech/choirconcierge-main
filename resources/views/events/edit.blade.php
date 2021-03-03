@@ -1,11 +1,51 @@
+<?php /** @var App\Models\Event $event */ ?>
 @extends('layouts.page')
 
 @section('title', 'Edit - ' . $event->title)
-@section('page-title', $event->title)
+@section('page-title')
+    {{ $event->title }}
+    @if( $event->is_repeating )
+        <i class="fal fa-fw fa-repeat" title="Repeating Event"></i>
+    @endif
+@endsection
 
 @section('page-content')
 
     {{ Form::open( [ 'route' => ['events.show', $event->id], 'method' => 'put' ] ) }}
+
+    <input type="hidden" name="edit_mode" value="{{ request()->query('mode') }}">
+
+    @if($event->is_repeating)
+        <div class="alert alert-warning  py-3 px-3 text-left d-flex align-items-center">
+            @if('single' === request()->query('mode'))
+            <i class="far fa-fw fa-calendar-day fa-2x mr-3"></i>
+            <span>
+                <span class="h5">Editing only this event</span>
+                <span class="form-text">
+                    All other events in the series will remain the same.
+                </span>
+            </span>
+            @elseif('following' === request()->query('mode'))
+                <i class="far fa-fw fa-calendar-week fa-2x mr-3"></i>
+                <span>
+                    <span class="h5">Editing following events</span>
+                    <span class="form-text">
+                        This and all the following events will be changed.<br>
+                        <strong>Any changes to future events will be lost, including RSVPs.</strong>
+                    </span>
+                </span>
+            @elseif('all' === request()->query('mode'))
+            <i class="far fa-fw fa-calendar-alt fa-2x mr-3"></i>
+            <span>
+                <span class="h5">Editing all events</span>
+                <span class="form-text">
+                    All events in the series will be changed.<br>
+                    <strong>Any changes to other events will be lost, including RSVPs and attendance records.</strong>
+                </span>
+            </span>
+            @endif
+        </div>
+    @endif
 
     <div class="row">
         <div class="col-md-6">
@@ -47,8 +87,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-fw fa-clock"></i></span>
                             </div>
-                            {{ Form::text('call_time_input', $event->call_time->format('M d, Y H:i'), ['class' => 'form-control events-single-date-picker']) }}
-                            {{ Form::hidden('call_time', $event->call_time, ['class' => 'call-time-hidden']) }}
+                            {{ Form::text('call_time_input', $event->call_time->format('M d, Y H:i'), ['class' => 'form-control events-single-date-time-picker']) }}
+                            {{ Form::hidden('call_time', $event->call_time, ['class' => 'date-time-hidden']) }}
                         </div>
                     </div>
 
@@ -85,6 +125,43 @@
                     ], $event->call_time_ampm, ['class' => 'custom-select time-ampm']) }}
                         </div>
                     </div>-->
+
+                    @if('single' !== request()->query('mode'))
+                    <div class="form-group">
+                        {{ Form::label('', 'Repeating Event') }}
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="is_repeating" name="is_repeating" value="1" {{ $event->is_repeating ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="is_repeating">Repeat?</label>
+                        </div>
+                    </div>
+
+                    <fieldset id="repeat_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
+
+                        <div class="form-group">
+                            {{ Form::label('repeat_frequency_unit', 'Repeat every') }}<br>
+
+                            @foreach(['day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'] as $key => $unit)
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input id="repeat_frequency_unit_{{$key}}" name="repeat_frequency_unit" value="{{$key}}" class="custom-control-input" type="radio" {{ ($event->repeat_frequency_unit === $key ) ? 'checked' : '' }}>
+                                    <label for="repeat_frequency_unit_{{$key}}" class="custom-control-label">{{$unit}}</label>
+                                </div>
+                            @endforeach
+
+                        </div>
+
+                        <div class="form-group">
+                            {{ Form::label('repeat_until', 'Repeat until') }}
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
+                                </div>
+                                {{ Form::text('repeat_until_input', optional($event->repeat_until)->format('M d, Y H:i') ?? '', ['class' => 'form-control events-single-date-picker']) }}
+                                {{ Form::hidden('repeat_until', $event->repeat_until, ['class' => 'date-time-hidden']) }}
+                            </div>
+                        </div>
+
+                    </fieldset>
+                    @endif
 
                     <div class="form-group location-input-wrapper">
                         {{ Form::label('location', 'Location') }}

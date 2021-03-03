@@ -10,9 +10,18 @@
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-start">
-                    <h1 class="h2 mb-0">{{ $event->title }}</h1>
+                    <h1 class="h2 mb-0">
+                        {{ $event->title }}
+                        @if( $event->is_repeating )
+                            <i class="fal fa-fw fa-repeat" title="Repeating Event"></i>
+                        @endif
+                    </h1>
                     @can('update', $event)
+                        @if($event->is_repeating)
+                            <a href="#" data-toggle="modal" data-target="#repeatingEventEditModeModal" class="btn btn-add btn-sm btn-primary flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                        @else
                         <a href="{{route( 'events.edit', ['event' => $event] )}}" class="btn btn-add btn-sm btn-primary flex-shrink-0"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                        @endif
                     @endcan
                 </div>
                 <div class="card-body">
@@ -23,7 +32,7 @@
 
                     <h4 class="mt-2">My RSVP</h4>
                     @if($my_rsvp)
-                        @if($event->isUpcoming())
+                        @if($event->in_future)
                             <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $my_rsvp]) }}" value="{{ $my_rsvp->response_string }}" csrf="{{ csrf_token() }}" edit-label="Change response">
                                 <label for="rsvp_response" class="d-block">Will you attend?</label>
 
@@ -43,7 +52,7 @@
                         @else
                             {{ $my_rsvp->response_string }}
                         @endif
-                    @elseif($event->isUpcoming())
+                    @elseif($event->in_future)
                         {{ Form::open(['route' => ['events.rsvps.store', $event->id]]) }}
                         <div class="form-group">
                             <label for="rsvp_response" class="d-block">Will you attend?</label>
@@ -70,7 +79,7 @@
                         You didn't RSVP for this event.
                     @endif
 
-                    @if( ! $event->isUpcoming())
+                    @if( ! $event->in_future )
                     <h4 class="mt-2">My Attendance</h4>
                         @if($my_attendance)
                         <p>
@@ -196,7 +205,14 @@
 
     </div>
 
-
+    @if($event->is_repeating)
+    <repeating-event-edit-mode-modal
+            route="{{ route('events.edit-recurring', ['event' => $event, 'mode' => '--replace--']) }}"
+            :event-in-past="{{ json_encode($event->in_past, JSON_THROW_ON_ERROR) }}"
+            :parent-in-past="{{ json_encode(optional($event->repeat_parent)->in_past ?? null, JSON_THROW_ON_ERROR) }}"
+            :is-parent="{{ json_encode($event->is_repeat_parent, JSON_THROW_ON_ERROR) }}"
+    ></repeating-event-edit-mode-modal>
+    @endif
 
 @endsection
 <script>

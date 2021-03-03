@@ -115,6 +115,27 @@ $( document ).ready(function() {
         $(this).parents('tr').find('input[type=checkbox]').prop('checked', $(this).prop('checked'));
     });
 
+    /**
+     * Recurring Events
+     */
+    const $is_repeating = $('#is_repeating');
+    const $repeatDetails = $('#repeat_details');
+    
+    // Set initial state
+    if(! $is_repeating[0].checked) {
+        $repeatDetails.hide();
+    } else {
+        $repeatDetails.show();
+    }
+    // Set event handler
+    $is_repeating.change(function () {
+        if(this.checked) {
+            $repeatDetails.show();
+        } else {
+            $repeatDetails.hide();
+        }
+    });
+
 });
 
 

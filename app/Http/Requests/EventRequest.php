@@ -16,6 +16,13 @@ class EventRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'is_repeating' => $this->has('is_repeating'),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -34,6 +41,10 @@ class EventRequest extends FormRequest
             'location_name'     => 'nullable',
             'location_address'  => 'nullable',
             'description'       => 'nullable|max:5000',
+
+            'is_repeating'          => 'boolean',
+            'repeat_frequency_unit' => 'exclude_unless:is_repeating,true|required',
+            'repeat_until'          => 'exclude_unless:is_repeating,true|required|date_format:Y-m-d H:i:s|after:start_date',
         ];
     }
 }
