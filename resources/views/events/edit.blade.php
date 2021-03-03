@@ -23,12 +23,12 @@
         @elseif('following' === request()->query('mode'))
         <x-alert variant="warning" icon="fa-calendar-week" title="Editing following events">
             This and all the following events will be changed.<br>
-            <strong>Any changes to future events will be lost, including RSVPs.</strong>
+            <strong>Changes to future events may be lost, including RSVPs, if dates are changed.</strong>
         </x-alert>
         @elseif('all' === request()->query('mode'))
         <x-alert variant="warning" icon="fa-calendar-alt" title="Editing all events">
             All events in the series will be changed.<br>
-            <strong>Any changes to other events will be lost, including RSVPs and attendance records.</strong>
+            <strong>Changes to other events may be lost, including RSVPs and attendance records, if dates are changed.</strong>
         </x-alert>
         @endif
     @endif
