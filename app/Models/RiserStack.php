@@ -39,7 +39,10 @@ class RiserStack extends Model
         'rows',
         'columns',
         'front_row_length',
+        'front_row_on_floor'
     ];
+
+    protected $casts = ['front_row_on_floor' => 'boolean'];
 
     public function singers(): BelongsToMany
     {

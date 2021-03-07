@@ -14,6 +14,13 @@ class RiserStackRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'front_row_on_floor' => $this->has('front_row_on_floor'),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      * @return array<string>
@@ -26,6 +33,7 @@ class RiserStackRequest extends FormRequest
             'columns'   => 'required|integer|min:1|max:255',
             'front_row_length'  => 'required|integer|min:1|max:255',
             'singer_positions'  => 'required|json',
+            'front_row_on_floor' => '',
         ];
     }
 }

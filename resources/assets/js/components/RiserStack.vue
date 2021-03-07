@@ -22,13 +22,22 @@
                 <input id="riser_singers" name="singers" type="number" min="1" max="150" class="form-control mx-3" v-model.number="num_singers" disabled>
             </div>
 
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" id="riser_front_row_on_floor" name="front_row_on_floor" type="checkbox" value="true" v-model="frontRowOnFloor">
+                    <label class="custom-control-label" for="riser_front_row_on_floor">Front Row on Floor</label>
+                </div>
+            </div>
+
         </div>
 
         <div class="riser-canvas-wrapper">
             <svg :width="width" :height="height">
                 <!-- Arcs -->
                 <g v-for="(n, col) in cols">
-                    <path v-for="(n, row) in loop_rows" :d="createArcPath(row, col)" class="risers_frame"></path>
+                    <template v-for="(n, row) in loop_rows">
+                        <path v-if="! frontRowOnFloor || row !== 0" :d="createArcPath(row, col)" class="risers_frame"></path>
+                    </template>
                 </g>
 
                 <!-- Edges -->
@@ -93,6 +102,10 @@ export default {
             type: Array,
             default: () => []
         },
+        initialFrontRowOnFloor: {
+            type: Boolean,
+            default: true
+        },
         editDisabled: {
             type: Boolean,
             default: false
@@ -105,6 +118,7 @@ export default {
             singers: this.initialSingers,
             front_row_length: this.initialFrontRowLength,
             voiceParts: this.initialVoiceParts,
+            frontRowOnFloor: this.initialFrontRowOnFloor,
             height: 500,    // SVG height
             width: 1000,     // SVG width
 
@@ -147,11 +161,20 @@ export default {
         },
         edges() {
             let edges = [];
+
+            let edge_start_radius = this.risers_start_radius;
+            let edge_end_radius = this.risers_start_radius + this.risers_end_radius;
+
+            // Support front row on floor (invisible first row)
+            if(this.frontRowOnFloor){
+                edge_start_radius += this.row_height_radius;
+            }
+
             for(let col = 0; col <= this.cols; col++) {
                 const angle = this.risers_start_angle + ( this.col_width_deg * col );
 
-                const xy_start = ArcMath.polarToCartesian(this.origin, this.risers_start_radius, angle );
-                const xy_end   = ArcMath.polarToCartesian(this.origin, (this.risers_start_radius + this.risers_end_radius), angle)
+                const xy_start = ArcMath.polarToCartesian(this.origin, edge_start_radius, angle );
+                const xy_end   = ArcMath.polarToCartesian(this.origin, edge_end_radius, angle)
                 edges.push({
                     start: xy_start,
                     end: xy_end
