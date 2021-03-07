@@ -17,6 +17,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use Spatie\CalendarLinks\Link;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -107,6 +108,8 @@ class Event extends Model
     protected $casts = [
         'is_repeating' => 'boolean',
     ];
+
+    private Link $_add_to_calendar_link;
 
     public static function create( array $attributes = [], bool $send_notifications = true )
     {
@@ -482,5 +485,15 @@ class Event extends Model
     public function getIsRepeatParentAttribute(): bool
     {
         return $this->repeat_parent_id === $this->id;
+    }
+
+    public function getAddToCalendarLinkAttribute(): Link
+    {
+        if(! isset($this->_add_to_calendar_link)) {
+            $this->_add_to_calendar_link = Link::create($this->title, $this->call_time, $this->end_date)
+                ->description($this->description)
+                ->address($this->location_address ?? '');
+        }
+        return $this->_add_to_calendar_link;
     }
 }
