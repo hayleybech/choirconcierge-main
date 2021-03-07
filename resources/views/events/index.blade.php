@@ -59,6 +59,8 @@
 
     </div>
 
+    <p><small class="text-muted">Calendar Sync URL: {{route( 'events.feed' )}}</small></p>
+
     <repeating-event-delete-modal></repeating-event-delete-modal>
 
 @endsection

@@ -122,5 +122,5 @@ Route::middleware([
     Route::resource('roles', RoleController::class);
 
     // Public calendar feed
-    Route::get('/events-ical', [ICalController::class, 'index']);
+    Route::get('/events-ical', [ICalController::class, 'index'])->name('events.feed');
 });
