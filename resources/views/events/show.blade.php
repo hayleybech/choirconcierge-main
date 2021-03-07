@@ -25,6 +25,20 @@
                     @endcan
                 </div>
                 <div class="card-body">
+                    <p>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="addToCalendarDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="far fa-fw fa-calendar-plus"></i> Add to Calendar
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="addToCalendarDropdownButton">
+                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->google() }}" target="_blank"><i class="fab fa-fw fa-google"></i> Google</a>
+                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->yahoo() }}" target="_blank"><i class="fab fa-fw fa-yahoo"></i> Yahoo</a>
+                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->webOutlook() }}" target="_blank"><i class="fab fa-fw fa-microsoft"></i> Outlook Web</a>
+                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->ics() }}" target="_blank"><i class="fas fa-fw fa-download"></i> ICS (iCal, Outlook etc)</a>
+                            </div>
+                        </div>
+                    </p>
+
                     <div class="badge badge-pill badge-dark">{{ $event->type->title }}</div>
                     <div><time class="font-weight-bold">{{ $event->start_date->format('M d, H:i') }}</time> to <time class="font-weight-bold">{{ $event->end_date->format('M d, H:i') }}</time></div>
                     <div>Call Time: <time>{{ $event->call_time->format('M d, H:i') }}</time></div>
