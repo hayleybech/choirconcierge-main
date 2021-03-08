@@ -491,7 +491,7 @@ class Event extends Model
     {
         if(! isset($this->_add_to_calendar_link)) {
             $this->_add_to_calendar_link = Link::create($this->title, $this->call_time, $this->end_date)
-                ->description($this->description)
+                ->description($this->description ?? '')
                 ->address($this->location_address ?? '');
         }
         return $this->_add_to_calendar_link;
