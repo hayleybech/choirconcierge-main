@@ -11,7 +11,7 @@
         <span class="badge badge-dark">{{ ucwords($group->list_type) }}</span>
     </div>
     <div class="r-table__cell group-col--slug">
-        <strong>{{ $group->slug }}</strong>{{ '@'.Request::gethost() }}
+        <strong>{{ $group->slug }}@</strong><span class="text-muted d-none d-lg-inline">{{ Request::gethost() }}</span>
     </div>
     <div class="r-table__cell col--created">
         <div class="date">
