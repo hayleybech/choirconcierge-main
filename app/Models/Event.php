@@ -6,6 +6,7 @@ use App\Models\Filters\Event_DateFilter;
 use App\Models\Filters\Event_TypeFilter;
 use App\Models\Filters\Filterable;
 use App\Notifications\EventCreated;
+use App\Notifications\EventUpdated;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -185,6 +186,10 @@ class Event extends Model
         $this->updateRepeats($options['edit_mode']);
 
         $this->save($options);
+
+        if( $options['send_notification'] ){
+            Notification::send(User::active()->get(), new EventUpdated($this));
+        }
 
         return true;
     }
