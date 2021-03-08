@@ -69,6 +69,13 @@
                     </p>
                     --}}
 
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input id="send_notification" name="send_notification" class="custom-control-input" type="checkbox" value="true" checked>
+                            <label for="send_notification" class="custom-control-label">Send "Song Updated" notification</label>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="card-footer">

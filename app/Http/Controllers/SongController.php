@@ -126,7 +126,12 @@ class SongController extends Controller
     {
         $this->authorize('update', $song);
 
-        $song->update($request->validated());
+        $song->update(
+            attributes: collect($request->validated())->except('send_notification')->toArray(),
+            options: [
+                'send_notification' => $request->input('send_notification'),
+            ]
+        );
 
         return redirect()->route('songs.show', [$song])->with(['status' => 'Song updated. ', ]);
     }
