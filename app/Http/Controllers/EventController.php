@@ -65,7 +65,10 @@ class EventController extends Controller
     {
         $this->authorize('create', Event::class);
 
-        $event = Event::create($request->validated());
+        $event = Event::create(
+            attributes: collect($request->validated())->except('send_notification')->toArray(),
+            send_notification: $request->input('send_notification')
+        );
 
         return redirect()->route('events.show', [$event])->with(['status' => 'Event created. ']);
     }

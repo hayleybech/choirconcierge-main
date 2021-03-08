@@ -111,14 +111,14 @@ class Event extends Model
 
     private Link $_add_to_calendar_link;
 
-    public static function create( array $attributes = [], bool $send_notifications = true )
+    public static function create( array $attributes = [], bool $send_notification = true )
     {
         /** @var Event $event */
         $event = static::query()->create($attributes);
 
         $event->type_id = $attributes['type'];
 
-        if( $send_notifications && ! App::isLocal() ){
+        if( $send_notification ){
             Notification::send(User::active()->get(), new EventCreated($event));
         }
 
