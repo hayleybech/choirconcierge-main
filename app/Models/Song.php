@@ -103,9 +103,7 @@ class Song extends Model
         });
     }
 
-    public static function create( array $attributes = [] ) {
-        $suppress_email = $attributes['suppress_email'] ?? 'no';
-        unset($attributes['suppress_email']);
+    public static function create( array $attributes = [], bool $send_notification = true ) {
 
         /** @var Song $song */
         $song = static::query()->create($attributes);
@@ -118,7 +116,7 @@ class Song extends Model
         $song->categories()->attach($attributes['categories']);
         $song->save();
 
-        if($suppress_email !== 'yes') {
+        if($send_notification) {
             Notification::send(User::active()->get(), new SongUploaded($song));
         }
 

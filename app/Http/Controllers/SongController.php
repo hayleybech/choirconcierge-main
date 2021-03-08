@@ -89,7 +89,10 @@ class SongController extends Controller
     {
         $this->authorize('create', Song::class);
 
-        $song = Song::create($request->validated());
+        $song = Song::create(
+            attributes: collect($request->validated())->except('send_notification')->toArray(),
+            send_notification: $request->input('send_notification')
+        );
 
         return redirect()->route('songs.show', [$song])->with(['status' => 'Song created. ']);
     }
