@@ -44,6 +44,7 @@ class EventUpdated extends Notification
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
+            ->from(tenant('mail_from_address'), tenant('mail_from_name'))
             ->greeting('An even has been updated!')
             ->line('The event '.$this->event->type->title.' event, "'.$this->event->title . '" has new changes. ')
             ->line('Date: ' . $this->event->call_time->diffForHumans())

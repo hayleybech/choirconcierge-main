@@ -17,4 +17,15 @@ class Tenant extends BaseTenant
             $query->where('domain', '=', $domain);
         })->first();
     }
+
+    public function getMailFromNameAttribute(): string
+    {
+        return $this->choir_name.' via Choir Concierge';
+    }
+
+    public function getMailFromAddressAttribute(): string
+    {
+        return 'hello@'.\Request::getHost();
+    }
+
 }

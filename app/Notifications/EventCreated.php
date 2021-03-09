@@ -44,6 +44,7 @@ class EventCreated extends Notification
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
+            ->from(tenant('mail_from_address'), tenant('mail_from_name'))
             ->greeting('New event posted!')
             ->line('A new '.$this->event->type->title.' event, "'.$this->event->title . '" has been created. ')
             ->line('Date: ' . $this->event->call_time->diffForHumans())

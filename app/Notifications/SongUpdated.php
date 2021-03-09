@@ -44,6 +44,7 @@ class SongUpdated extends Notification
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
+            ->from(tenant('mail_from_address'), tenant('mail_from_name'))
             ->greeting('Updated song')
             ->line('The song, "'.$this->song->title.'", has recently been modified.')
             ->action('View Song', route('songs.show', $this->song))

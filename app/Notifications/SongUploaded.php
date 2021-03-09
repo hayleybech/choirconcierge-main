@@ -44,6 +44,7 @@ class SongUploaded extends Notification
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
+            ->from(tenant('mail_from_address'), tenant('mail_from_name'))
             ->greeting('New song uploaded!')
             ->line('A new song, "'.$this->song->title.'", has been uploaded.')
             ->action('View Song', route('songs.show', $this->song))
