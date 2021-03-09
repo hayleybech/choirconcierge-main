@@ -28,4 +28,14 @@ class Tenant extends BaseTenant
         return 'hello@'.\Request::getHost();
     }
 
+    // @todo create a way to assign the primary domain in the database
+    public function getPrimaryDomainAttribute(): string
+    {
+        return $this->domains->last()->domain;
+    }
+
+    public function getHostAttribute(): string
+    {
+        return $this->primary_domain . '.' . app('url')->formatRoot('');
+    }
 }
