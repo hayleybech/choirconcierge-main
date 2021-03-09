@@ -2,26 +2,26 @@
 
 namespace App\Notifications;
 
-use App\Models\Event;
+use App\Models\Song;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class EventCreated extends Notification
+class SongUpdated extends Notification
 {
     use Queueable;
 
-    private Event $event;
+    private Song $song;
 
     /**
      * Create a new notification instance.
      *
-     * @param Event $event
+     * @return void
      */
-    public function __construct(Event $event)
+    public function __construct(Song $song)
     {
-        $this->event = $event;
+        $this->song = $song;
     }
 
     /**
@@ -45,13 +45,10 @@ class EventCreated extends Notification
     {
         return (new MailMessage)
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
-            ->greeting('New event posted!')
-            ->line('A new '.$this->event->type->title.' event, "'.$this->event->title . '" has been created. ')
-            ->line('Date: ' . $this->event->call_time->diffForHumans())
-            ->line('Location: ' . $this->event->location_name . ' ' . $this->event->location_address)
-            ->action('View Event', route('events.show', $this->event))
-            ->line($this->event->description)
-        ;
+            ->greeting('Updated song')
+            ->line('The song, "'.$this->song->title.'", has recently been modified.')
+            ->action('View Song', route('songs.show', $this->song))
+            ->line('Enjoy!');
     }
 
     /**

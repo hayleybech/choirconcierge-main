@@ -17,4 +17,25 @@ class Tenant extends BaseTenant
             $query->where('domain', '=', $domain);
         })->first();
     }
+
+    public function getMailFromNameAttribute(): string
+    {
+        return $this->choir_name.' via Choir Concierge';
+    }
+
+    public function getMailFromAddressAttribute(): string
+    {
+        return 'hello@'.\Request::getHost();
+    }
+
+    // @todo create a way to assign the primary domain in the database
+    public function getPrimaryDomainAttribute(): string
+    {
+        return $this->domains->last()->domain;
+    }
+
+    public function getHostAttribute(): string
+    {
+        return $this->primary_domain . '.' . app('url')->formatRoot('');
+    }
 }

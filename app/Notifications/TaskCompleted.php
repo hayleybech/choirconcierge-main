@@ -46,6 +46,7 @@ class TaskCompleted extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
+                    ->from(tenant('mail_from_address'), tenant('mail_from_name'))
                     ->replyTo( tenant('choir_reply_to') ?? 'hello@choirconcierge.com')
                     ->subject($this->subject)
                     ->markdown(

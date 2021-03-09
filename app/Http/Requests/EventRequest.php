@@ -20,6 +20,7 @@ class EventRequest extends FormRequest
     {
         $this->merge([
             'is_repeating' => $this->has('is_repeating'),
+            'send_notification' => $this->has('send_notification'),
         ]);
     }
 
@@ -45,6 +46,8 @@ class EventRequest extends FormRequest
             'is_repeating'          => 'boolean',
             'repeat_frequency_unit' => 'exclude_unless:is_repeating,true|required',
             'repeat_until'          => 'exclude_unless:is_repeating,true|required|date_format:Y-m-d H:i:s|after:start_date',
+
+            'send_notification' => 'boolean',
         ];
     }
 }

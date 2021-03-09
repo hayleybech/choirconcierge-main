@@ -51,8 +51,8 @@
 
                     <div class="form-group">
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input id="suppress_email" name="suppress_email" value="yes" class="custom-control-input" type="checkbox">
-                            <label for="suppress_email" class="custom-control-label">Suppress "New Song" notification</label>
+                            <input id="send_notification" name="send_notification" class="custom-control-input" type="checkbox" value="true" checked>
+                            <label for="send_notification" class="custom-control-label">Send "New Song" notification</label>
                         </div>
                     </div>
 

@@ -150,6 +150,13 @@
                         <limited-textarea field-id="description" field-name="description" value="" :maxlength="5000"></limited-textarea>
                     </div>
 
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="send_notification" name="send_notification" type="checkbox" value="true" checked>
+                            <label class="custom-control-label" for="send_notification">Send "Event Created" Notification</label>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="card-footer">

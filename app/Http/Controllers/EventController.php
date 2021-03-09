@@ -65,7 +65,10 @@ class EventController extends Controller
     {
         $this->authorize('create', Event::class);
 
-        $event = Event::create($request->validated());
+        $event = Event::create(
+            attributes: collect($request->validated())->except('send_notification')->toArray(),
+            send_notification: $request->input('send_notification')
+        );
 
         return redirect()->route('events.show', [$event])->with(['status' => 'Event created. ']);
     }
@@ -106,7 +109,13 @@ class EventController extends Controller
     {
         $this->authorize('update', $event);
 
-        $event->update($request->validated(), ['edit_mode' => $request->get('edit_mode')]);
+        $event->update(
+            attributes: collect($request->validated())->except('send_notification')->toArray(),
+            options: [
+                'edit_mode' => $request->get('edit_mode'),
+                'send_notification' => $request->input('send_notification'),
+            ]
+        );
 
         return redirect()->route('events.show', [$event])->with(['status' => 'Event updated. ', ]);
     }
