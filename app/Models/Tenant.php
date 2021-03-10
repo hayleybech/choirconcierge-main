@@ -36,6 +36,6 @@ class Tenant extends BaseTenant
 
     public function getHostAttribute(): string
     {
-        return $this->primary_domain . '.' . app('url')->formatRoot('');
+        return $this->primary_domain . '.' . central_domain();
     }
 }

@@ -21,3 +21,10 @@ if (! function_exists('global_tenant_asset')) {
         return tenant_route($tenant->host, 'stancl.tenancy.asset', ['path' => $asset]);
     }
 }
+
+if (! function_exists('central_domain')) {
+    function central_domain(): string
+    {
+        return parse_url(config('app.url'), PHP_URL_HOST);
+    }
+}
