@@ -12,9 +12,8 @@ class ImportSingerController extends Controller
 {
     public function __invoke(Request $request): RedirectResponse
     {
-        if( ! optional(Auth::user())->hasRole('Admin')) {
-            abort(403);
-        }
+        abort_if(! optional(Auth::user())->hasRole('Admin'), 403);
+
         $request->validate([
             'import_csv' => 'required|file',
         ]);
