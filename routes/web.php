@@ -12,7 +12,7 @@
 */
 
 // Central app will redirect to public site for now.
-Route::redirect('', 'https://www.choirconcierge.com');
+Route::redirect('/', 'https://www.choirconcierge.com')->name('menu');
 
 // Public pages
 //Route::view('/', 'home')->name('menu');
