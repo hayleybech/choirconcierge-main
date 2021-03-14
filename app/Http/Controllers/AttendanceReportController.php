@@ -8,10 +8,11 @@ use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Singer;
 use App\Models\VoicePart;
+use Illuminate\Contracts\View\View;
 
 class AttendanceReportController extends Controller
 {
-    public function __invoke()
+    public function __invoke(): View
     {
         $this->authorize('viewAny', Attendance::class);
 

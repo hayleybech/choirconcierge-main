@@ -7,12 +7,12 @@ use App\Http\Requests\SingerRequest;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\VoicePart;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Singer;
 use App\Models\Task;
 use Illuminate\Validation\Rule;
-use Illuminate\View\View;
 
 class SingerController extends Controller
 {

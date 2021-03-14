@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NotificationTemplateRequest;
 use App\Models\NotificationTemplate;
 use App\Models\Task;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use League\CommonMark\CommonMarkConverter;
 
 class TaskNotificationTemplateController extends Controller

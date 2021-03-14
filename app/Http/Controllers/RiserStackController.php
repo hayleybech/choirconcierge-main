@@ -6,9 +6,9 @@ use App\Http\Requests\RiserStackRequest;
 use App\Models\RiserStack;
 use App\Models\Singer;
 use App\Models\VoicePart;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
 class RiserStackController extends Controller

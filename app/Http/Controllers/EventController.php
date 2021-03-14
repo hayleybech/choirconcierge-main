@@ -6,10 +6,10 @@ use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Singer;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class EventController extends Controller
 {

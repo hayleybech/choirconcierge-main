@@ -7,9 +7,9 @@ use App\Models\Song;
 use App\Models\SongAttachmentCategory;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class SongController extends Controller
 {

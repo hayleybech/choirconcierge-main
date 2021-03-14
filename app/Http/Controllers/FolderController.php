@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FolderRequest;
 use App\Models\Folder;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class FolderController extends Controller
 {

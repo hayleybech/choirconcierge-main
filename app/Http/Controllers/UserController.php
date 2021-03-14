@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\SingerCategory;
 use App\Models\VoicePart;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Models\User;
 use App\Models\Role;
-use Illuminate\View\View;
 
 class UserController extends Controller
 {

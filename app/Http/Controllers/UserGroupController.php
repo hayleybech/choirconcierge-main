@@ -10,11 +10,11 @@ use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\UserGroup;
 use App\Models\VoicePart;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\View\View;
 
 class UserGroupController extends Controller
 {
