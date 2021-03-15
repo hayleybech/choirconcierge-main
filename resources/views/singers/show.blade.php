@@ -7,10 +7,10 @@
 	<?php
 	// Store CSS badge classes for categories
 	$category_class = [
-	'Prospects'             => 'text-primary',
-	'Archived Prospects'    => 'text-info',
-	'Members'               => 'text-success',
-	'Archived Members'      => 'text-danger',
+		'Members'               => 'success',
+		'Prospects'             => 'warning',
+		'Archived Prospects'    => 'secondary',
+		'Archived Members'      => 'danger',
 	];
 	?>
 	<div class="row">
@@ -42,7 +42,7 @@
 										<span class="badge badge-light badge-pill">No part</span>
 									@endif
 								</div>
-								<span class="singer-category {{ $category_class[$singer->category->name] }}">
+								<span class="singer-category text-{{ $category_class[$singer->category->name] }}">
 								<i class="fas fa-fw fa-circle mr-2"></i> {{ $singer->category->name }}</span>
 								<br>
 							</div>
