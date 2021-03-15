@@ -32,12 +32,19 @@
 
                     <fieldset class="form-group">
                         <legend class="col-form-label">Status</legend>
+                        <?php
+                        $status_colours = [
+                            'Pending' => 'text-danger',
+                            'Learning' => 'text-warning',
+                            'Active' => 'text-success',
+                            'Archived' => 'text-secondary',
+                        ]; ?>
                         @foreach($statuses as $status)
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input id="status_{{$status->id}}" name="status" value="{{$status->id}}" class="custom-control-input" type="radio">
-                                <label for="status_{{$status->id}}" class="custom-control-label">
+                                <label for="status_{{$status->id}}" class="custom-control-label {{ $status_colours[$status->title] }}">
                                     @if('Pending' === $status->title)
-                                        <i class="fas fa-fw fa-lock"></i>
+                                        <i class="fas fa-fw fa-lock mr-2"></i>
                                     @endif
                                     {{$status->title}}
                                 </label>

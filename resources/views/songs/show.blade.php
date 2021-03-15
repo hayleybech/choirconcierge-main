@@ -21,7 +21,7 @@
                     if($song->status->title === 'Pending') {
                         $category_colour = 'text-danger';
                     } elseif($song->status->title === 'Learning') {
-                        $category_colour = 'text-primary';
+                        $category_colour = 'text-warning';
                     } elseif ($song->status->title === 'Active') {
                         $category_colour = 'text-success';
                     } elseif($song->status->title === 'Archived') {
@@ -31,7 +31,12 @@
                     }
                     ?>
                     <div class="mb-2 {{ $category_colour }} font-weight-bold">
-                        <i class="fas fa-fw fa-circle mr-2"></i>{{ $song->status->title }}
+                        @if('Pending' === $song->status->title)
+                            <i class="fas fa-fw fa-lock mr-2"></i>
+                        @else
+                            <i class="fas fa-fw fa-circle mr-2"></i>
+                        @endif
+                        {{ $song->status->title }}
                     </div>
                     <div class="mb-2">
                         @foreach( $song->categories as $cat )
