@@ -10,20 +10,13 @@
     </td>
     @if($col_status)
     <?php
-    $category_colour = '';
-    if($song->status->title === 'Pending') {
-        $category_colour = 'text-danger';
-    } elseif($song->status->title === 'Learning') {
-        $category_colour = 'text-warning';
-    } elseif ($song->status->title === 'Active') {
-        $category_colour = 'text-success';
-    } elseif($song->status->title === 'Archived') {
-        $category_colour = 'text-secondary';
-    } else {
-        $category_colour = '';
-    }
-    ?>
-    <td class="col--status {{ $category_colour }} font-weight-bold">
+    $status_colours = [
+        'Pending' => 'danger',
+        'Learning' => 'warning',
+        'Active' => 'success',
+        'Archived' => 'secondary',
+    ]; ?>
+    <td class="col--status text-{{ $status_colours[$song->status->title] }} font-weight-bold">
         @if('Pending' === $song->status->title)
         <i class="fas fa-fw fa-lock mr-2"></i>
         @else

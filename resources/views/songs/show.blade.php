@@ -17,20 +17,13 @@
 
                 <div class="card-body">
                     <?php
-                    $category_colour = '';
-                    if($song->status->title === 'Pending') {
-                        $category_colour = 'text-danger';
-                    } elseif($song->status->title === 'Learning') {
-                        $category_colour = 'text-warning';
-                    } elseif ($song->status->title === 'Active') {
-                        $category_colour = 'text-success';
-                    } elseif($song->status->title === 'Archived') {
-                        $category_colour = 'text-secondary';
-                    } else {
-                        $category_colour = '';
-                    }
-                    ?>
-                    <div class="mb-2 {{ $category_colour }} font-weight-bold">
+                    $status_colours = [
+                        'Pending' => 'danger',
+                        'Learning' => 'warning',
+                        'Active' => 'success',
+                        'Archived' => 'secondary',
+                    ]; ?>
+                    <div class="mb-2 text-{{ $status_colours[$song->status->title] }} font-weight-bold">
                         @if('Pending' === $song->status->title)
                             <i class="fas fa-fw fa-lock mr-2"></i>
                         @else
