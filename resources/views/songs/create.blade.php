@@ -35,9 +35,15 @@
                         @foreach($statuses as $status)
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input id="status_{{$status->id}}" name="status" value="{{$status->id}}" class="custom-control-input" type="radio">
-                                <label for="status_{{$status->id}}" class="custom-control-label">{{$status->title}}</label>
+                                <label for="status_{{$status->id}}" class="custom-control-label">
+                                    @if('Pending' === $status->title)
+                                        <i class="fas fa-fw fa-lock"></i>
+                                    @endif
+                                    {{$status->title}}
+                                </label>
                             </div>
                         @endforeach
+                        <div class="text-muted">Songs are hidden from general members when they are "Pending".</div>
                     </fieldset>
 
                     <div class="form-group">
