@@ -7,10 +7,10 @@
 	<?php
 	// Store CSS badge classes for categories
 	$category_class = [
-	'Prospects'             => 'text-primary',
-	'Archived Prospects'    => 'text-info',
-	'Members'               => 'text-success',
-	'Archived Members'      => 'text-danger',
+		'Members'               => 'success',
+		'Prospects'             => 'warning',
+		'Archived Prospects'    => 'secondary',
+		'Archived Members'      => 'danger',
 	];
 	?>
 	<div class="row">
@@ -35,6 +35,7 @@
 							</div>
 
 							<div class="mb-1 d-flex align-items-center">
+
 								<div class="singer-part mr-4">
 									@if( $singer->voice_part)
 										<span class="badge badge-light badge-pill" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>{{ $singer->voice_part->title }}</span><br>
@@ -42,9 +43,31 @@
 										<span class="badge badge-light badge-pill">No part</span>
 									@endif
 								</div>
-								<span class="singer-category {{ $category_class[$singer->category->name] }}">
-								<i class="fas fa-fw fa-circle mr-2"></i> {{ $singer->category->name }}</span>
+
+								<span class="singer-category text-{{ $category_class[$singer->category->name] }}">
+									<i class="fas fa-fw fa-circle mr-2"></i>
+									{{ $singer->category->name }}
+								</span>
+
 								<br>
+							</div>
+
+							<div>
+								@can('create', \App\Models\Singer::class)
+									<div class="dropdown mt-2 mb-3">
+										<button class="btn btn-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											Move to
+										</button>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+											@foreach($singer_categories as $id => $category)
+												<a class="dropdown-item text-{{ $category_class[$category] }}" href="{{ route( 'singers.categories.update', ['singer' => $singer, 'move_category' => $id] ) }}">
+													<i class="fas fa-fw fa-circle mr-2"></i>
+													{{ $category }}
+												</a>
+											@endforeach
+										</div>
+									</div>
+								@endcan
 							</div>
 
 							<div class="mb-1">

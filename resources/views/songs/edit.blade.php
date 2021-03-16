@@ -32,18 +32,30 @@
 
                     <fieldset class="form-group">
                         <legend class="col-form-label">Status</legend>
+                        <?php
+                        $status_colours = [
+                            'Pending' => 'danger',
+                            'Learning' => 'warning',
+                            'Active' => 'success',
+                            'Archived' => 'secondary',
+                        ]; ?>
+
+                        <div id="status" class="btn-group btn-group-mobile-vertical btn-group-toggle bg-white" data-toggle="buttons">
                         @foreach($statuses as $status)
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input id="status_{{$status->id}}" name="status" value="{{$status->id}}" class="custom-control-input" type="radio" {{ ($song->status->id === $status->id ) ? 'checked' : '' }}>
-                                <label for="status_{{$status->id}}" class="custom-control-label">
-                                    @if('Pending' === $status->title)
-                                        <i class="fas fa-fw fa-lock"></i>
-                                    @endif
-                                    {{$status->title}}
-                                </label>
-                            </div>
+                            <label for="status_{{ $status->id }}" class="btn btn-outline-{{ $status_colours[$status->title] }} btn-radio py-3 px-3 text-left d-flex align-items-center {{ $song->status->is($status) ? 'active' : '' }}">
+                                @if('Pending' === $status->title)
+                                    <i class="fas fa-fw fa-lock mr-2"></i>
+                                @endif
+                                <span>
+                                    <input id="status_{{ $status->id }}" name="status" value="{{ $status->id }}" type="radio" autocomplete="off" {{ $song->status->is($status) ? 'checked' : '' }}>
+                                    <span class="h5">{{ $status->title }}</span>
+                                </span>
+                            </label>
                         @endforeach
+                        </div>
+
                         <div class="text-muted">Songs are hidden from general members when they are "Pending".</div>
+
                     </fieldset>
 
                     <div class="form-group">

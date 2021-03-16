@@ -78,3 +78,28 @@ select.form-control-sm.force-xs {
   color: #dc3545;
   margin-left: 5px;
 }
+
+/** BUTTON GROUPS **/
+
+.btn-group-mobile-vertical {
+  display: flex;
+  flex-direction: row;
+
+  @media screen and (max-width: 991px) {
+    flex-direction: column;
+
+    .btn {
+      border-radius: 0.25rem !important;
+    }
+    & > .btn:not(:last-child):not(.dropdown-toggle),
+    & > .btn-group:not(:last-child) > .btn {
+      border-bottom-right-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+    }
+    & > .btn:not(:first-child),
+    & > .btn-group:not(:first-child) > .btn {
+       border-top-left-radius: 0 !important;
+       border-top-right-radius: 0 !important;
+     }
+  }
+}
