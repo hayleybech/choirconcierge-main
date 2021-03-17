@@ -34,19 +34,19 @@
                         <legend class="col-form-label">Status</legend>
                         <div id="status" class="btn-group btn-group-mobile-vertical btn-group-toggle bg-white" data-toggle="buttons">
                         @foreach($statuses as $status)
-                            <label for="status_{{ $status->id }}" class="btn btn-outline-{{ $status->colour }} btn-radio py-3 px-3 text-left d-flex align-items-center {{ $song->status->is($status) ? 'active' : '' }}">
+                            <label for="status_{{ $status->id }}" class="btn btn-outline-{{ $status->colour }} btn-radio py-1 px-3 text-left d-flex align-items-center {{ $song->status->is($status) ? 'active' : '' }}">
                                 @if('Pending' === $status->title)
                                     <i class="fas fa-fw fa-lock mr-2"></i>
                                 @endif
                                 <span>
                                     <input id="status_{{ $status->id }}" name="status" value="{{ $status->id }}" type="radio" autocomplete="off" {{ $song->status->is($status) ? 'checked' : '' }}>
-                                    <span class="h5">{{ $status->title }}</span>
+                                    <span>{{ $status->title }}</span>
                                 </span>
                             </label>
                         @endforeach
                         </div>
 
-                        <div class="text-muted">Songs are hidden from general members when they are "Pending".</div>
+                        <div class="text-muted mt-1">Songs are hidden from general members when they are "Pending".</div>
 
                     </fieldset>
 
