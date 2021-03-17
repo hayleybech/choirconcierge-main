@@ -1,12 +1,3 @@
-<?php
-// Store CSS badge classes for categories
-$category_class = [
-	'Members'               => 'success',
-	'Prospects'             => 'warning',
-	'Archived Prospects'    => 'secondary',
-	'Archived Members'      => 'danger',
-];
-?>
 <tr class="row--singer">
 	<td class="col--title">
 		@can('view', $singer)
@@ -36,7 +27,7 @@ $category_class = [
 	</td>
 	@if($col_category)
 	<td class="col--category">
-		<span class="singer-category text-{{ $category_class[$singer->category->name] }}">
+		<span class="singer-category text-{{ $singer->category->colour }}">
 			<i class="fas fa-fw fa-circle mr-2"></i>
 			<span class="status__title">{{ $singer->category->name }}</span>
 		</span>
@@ -84,10 +75,10 @@ $category_class = [
 				Move to
 			</button>
 			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				@foreach($singer_categories as $id => $category)
-				<a class="dropdown-item text-{{ $category_class[$category] }}" href="{{ route( 'singers.categories.update', ['singer' => $singer, 'move_category' => $id] ) }}">
+				@foreach($categories as $category)
+				<a class="dropdown-item text-{{ $category->colour }}" href="{{ route( 'singers.categories.update', ['singer' => $singer, 'move_category' => $category->id] ) }}">
 					<i class="fas fa-fw fa-circle mr-2"></i>
-					{{ $category }}
+					{{ $category->name }}
 				</a>
 				@endforeach
 			</div>

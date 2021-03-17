@@ -9,14 +9,7 @@
         @endcan
     </td>
     @if($col_status)
-    <?php
-    $status_colours = [
-        'Pending' => 'danger',
-        'Learning' => 'warning',
-        'Active' => 'success',
-        'Archived' => 'secondary',
-    ]; ?>
-    <td class="col--status text-{{ $status_colours[$song->status->title] }} font-weight-bold">
+    <td class="col--status text-{{ $song->status->colour }} font-weight-bold">
         @if('Pending' === $song->status->title)
         <i class="fas fa-fw fa-lock mr-2"></i>
         @else

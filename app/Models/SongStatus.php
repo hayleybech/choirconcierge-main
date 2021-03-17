@@ -21,14 +21,28 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Relationships
  * @property Collection<Song> $songs
  *
+ * Attributes
+ * @property string colour
+ *
  * @package App\Models
  */
 class SongStatus extends Model
 {
     use BelongsToTenant, SoftDeletes;
 
+    public const STATUS_COLOURS = [
+        'Pending' => 'danger',
+        'Learning' => 'warning',
+        'Active' => 'success',
+        'Archived' => 'secondary',
+    ];
+
     public function songs(): HasMany
     {
         return $this->hasMany(Song::class, 'status_id');
+    }
+
+    public function getColourAttribute(): string {
+        return self::STATUS_COLOURS[$this->title];
     }
 }

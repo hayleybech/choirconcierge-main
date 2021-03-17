@@ -16,14 +16,7 @@
                 </div>
 
                 <div class="card-body">
-                    <?php
-                    $status_colours = [
-                        'Pending' => 'danger',
-                        'Learning' => 'warning',
-                        'Active' => 'success',
-                        'Archived' => 'secondary',
-                    ]; ?>
-                    <div class="mb-2 text-{{ $status_colours[$song->status->title] }} font-weight-bold">
+                    <div class="mb-2 text-{{ $song->status->colour }} font-weight-bold">
                         @if('Pending' === $song->status->title)
                             <i class="fas fa-fw fa-lock mr-2"></i>
                         @else

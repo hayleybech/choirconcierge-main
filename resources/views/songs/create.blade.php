@@ -32,16 +32,9 @@
 
                     <fieldset class="form-group">
                         <legend class="col-form-label">Status</legend>
-                        <?php
-                        $status_colours = [
-                            'Pending' => 'danger',
-                            'Learning' => 'warning',
-                            'Active' => 'success',
-                            'Archived' => 'secondary',
-                        ]; ?>
                         <div id="status" class="btn-group btn-group-mobile-vertical btn-group-toggle bg-white" data-toggle="buttons">
                         @foreach($statuses as $status)
-                            <label for="status_{{ $status->id }}" class="btn btn-outline-{{ $status_colours[$status->title] }} btn-radio py-3 px-3 text-left d-flex align-items-center">
+                            <label for="status_{{ $status->id }}" class="btn btn-outline-{{ $status->colour }} btn-radio py-3 px-3 text-left d-flex align-items-center">
                                 @if('Pending' === $status->title)
                                     <i class="fas fa-fw fa-lock mr-2"></i>
                                 @endif
