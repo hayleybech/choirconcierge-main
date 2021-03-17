@@ -9,13 +9,43 @@ $navbar-default-border: $laravel-border-color;
 $panel-default-border: $laravel-border-color;
 $panel-inner-border: $laravel-border-color;
 
-// Brands
+// Grey
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+
+// Brand Colours
 $primary: #7566aa;
 $secondary: #21a7eb;
 $info: #BD89A1;
 $success: #42a19b;
 $warning: #EE7744;
 $danger: #DC3545;
+$light:         $gray-100 !default;
+$dark:          $gray-800 !default;
+
+$theme-colors: () !default;
+$theme-colors: map-merge(
+    (
+        "primary":    $primary,
+        "secondary":  $secondary,
+        "tertiary":   $gray-600,
+        "success":    $success,
+        "info":       $info,
+        "warning":    $warning,
+        "danger":     $danger,
+        "light":      $light,
+        "dark":       $dark
+    ),
+    $theme-colors
+);
+
 
 // Typography
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";

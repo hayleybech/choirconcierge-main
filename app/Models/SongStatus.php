@@ -34,7 +34,7 @@ class SongStatus extends Model
         'Pending' => 'danger',
         'Learning' => 'warning',
         'Active' => 'success',
-        'Archived' => 'secondary',
+        'Archived' => 'tertiary',
     ];
 
     public function songs(): HasMany

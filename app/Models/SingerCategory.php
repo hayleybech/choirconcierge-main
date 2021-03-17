@@ -33,8 +33,8 @@ class SingerCategory extends Model
     public const CATEGORY_COLOURS = [
         'Members' => 'success',
         'Prospects' => 'warning',
-        'Archived Prospects' => 'secondary',
-        'Archived Members' => 'danger',
+        'Archived Prospects' => 'dark',
+        'Archived Members' => 'tertiary',
     ];
 
     public function singers(): HasMany
