@@ -83,6 +83,11 @@ $alert-color-level:                 -12.5;
 
   --nav-item-border-radius: 30px;
 }
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+  :root {
+    --nav-item-border-radius: 15px;
+  }
+}
 @media screen and (max-width: 767px) {
   :root {
     --nav-item-border-radius: 10px;
