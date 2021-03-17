@@ -94,12 +94,11 @@ class Song extends Model
 
     protected static function booted(): void
     {
-        static::addGlobalScope('filterPending', static function (Builder $builder) {
-            if( Auth::user()->hasAbility('songs_update')) {
-                return;
-            }
-            $builder->whereDoesntHave('status', static function(Builder $query) {
-                $query->where('title', '=', 'Pending');
+        static::addGlobalScope('filterPending', static function (Builder $builder): void {
+            $builder->when(Auth::user()?->hasAbility('songs_update'), function(Builder $query): Builder {
+                return $query->whereDoesntHave('status', static function(Builder $query): Builder {
+                    return $query->where('title', '=', 'Pending');
+                });
             });
         });
     }
