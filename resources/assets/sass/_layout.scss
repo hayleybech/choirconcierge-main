@@ -61,3 +61,20 @@ main {
     padding: 0 10px;
   }
 }
+
+/** BREADCRUMBS **/
+.breadcrumb {
+  margin-left: 0 !important;
+  max-width: 60%;
+}
+.breadcrumb-item {
+  max-width: 80%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+@media screen and (max-width: 991px) {
+  .breadcrumb-item + .breadcrumb-item::before {
+    display: none;
+  }
+}
