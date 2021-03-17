@@ -40,15 +40,16 @@
     <div class="card">
         <div class="card-tabs nav nav-tabs">
             <a href="#pane-all" class="card-tab nav-link" id="tab-all" data-toggle="tab">All <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $all_songs->count() }}</span></a>
-            <a href="#pane-active" class="card-tab nav-link active" id="tab-active" data-toggle="tab">Active  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $active_songs->count() }}</span></a>
-            <a href="#pane-learning" class="card-tab nav-link" id="tab-learning" data-toggle="tab">Learning  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $learning_songs->count() }}</span></a>
+            <a href="#pane-active" class="card-tab nav-link active text-{{ \App\Models\SongStatus::STATUS_COLOURS['Active'] }}" id="tab-active" data-toggle="tab"><i class="fas fa-fw fa-circle mr-2"></i>Active  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $active_songs->count() }}</span></a>
+            <a href="#pane-learning" class="card-tab nav-link text-{{ \App\Models\SongStatus::STATUS_COLOURS['Learning'] }}" id="tab-learning" data-toggle="tab"><i class="fas fa-fw fa-circle mr-2"></i>Learning  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $learning_songs->count() }}</span></a>
             @can('create', \App\Models\Song::class)
-            <a href="#pane-pending" class="card-tab nav-link" id="tab-pending" data-toggle="tab"><i class="fas fa-fw fa-lock"></i> Pending  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $pending_songs->count() }}</span></a>
+            <a href="#pane-pending" class="card-tab nav-link text-{{ \App\Models\SongStatus::STATUS_COLOURS['Pending'] }}" id="tab-pending" data-toggle="tab"><i class="fas fa-fw fa-lock"></i>Pending  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $pending_songs->count() }}</span></a>
             @endcan
-            <a href="#pane-archived" class="card-tab nav-link" id="tab-archived" data-toggle="tab">Archived  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $archived_songs->count() }}</span></a>
+            <a href="#pane-archived" class="card-tab nav-link text-{{ \App\Models\SongStatus::STATUS_COLOURS['Archived'] }}" id="tab-archived" data-toggle="tab"><i class="fas fa-fw fa-circle mr-2"></i>Archived  <span class="badge badge-light ml-1 d-none d-md-inline-block">{{ $archived_songs->count() }}</span></a>
         </div>
 
         <div class="tab-content">
+
             <div class="tab-pane" id="pane-all" role="tabpanel" aria-labelledby="tab-all">
                 @include('songs.table', ['songs' => $all_songs, 'col_status' => true])
             </div>

@@ -32,12 +32,20 @@
 
                     <fieldset class="form-group">
                         <legend class="col-form-label">Status</legend>
+                        <div id="status" class="btn-group btn-group-mobile-vertical btn-group-toggle bg-white" data-toggle="buttons">
                         @foreach($statuses as $status)
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input id="status_{{$status->id}}" name="status" value="{{$status->id}}" class="custom-control-input" type="radio">
-                                <label for="status_{{$status->id}}" class="custom-control-label">{{$status->title}}</label>
-                            </div>
+                            <label for="status_{{ $status->id }}" class="btn btn-outline-{{ $status->colour }} btn-radio p1-3 px-3 text-left d-flex align-items-center">
+                                @if('Pending' === $status->title)
+                                    <i class="fas fa-fw fa-lock mr-2"></i>
+                                @endif
+                                <span>
+                                <input id="status_{{ $status->id }}" name="status" value="{{ $status->id }}" type="radio" autocomplete="off">
+                                <span>{{ $status->title }}</span>
+                            </span>
+                            </label>
                         @endforeach
+                        </div>
+                        <div class="text-muted mt-1">Songs are hidden from general members when they are "Pending".</div>
                     </fieldset>
 
                     <div class="form-group">

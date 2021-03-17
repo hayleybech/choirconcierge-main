@@ -58,14 +58,14 @@ a.disabled:hover {
 	border-bottom: none;
 }
 .card-tabs .card-tab {
-	padding: 10px 30px;
+	padding: 10px 20px;
 	display: inline-block;
 	background-color: hsl(269, 7%, 92%);
 	border-top-left-radius: 15px;
 	border-top-right-radius: 15px;
 	border: none;
 	font-weight: 600;
-	font-size: 16px;
+	font-size: 14px;
 	border-bottom: 2px solid var(--c-light-pink);
 }
 .card-tabs .card-tab i {

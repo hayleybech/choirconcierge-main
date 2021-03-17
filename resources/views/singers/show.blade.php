@@ -4,15 +4,6 @@
 
 @section('page-content')
 
-	<?php
-	// Store CSS badge classes for categories
-	$category_class = [
-	'Prospects'             => 'text-primary',
-	'Archived Prospects'    => 'text-info',
-	'Members'               => 'text-success',
-	'Archived Members'      => 'text-danger',
-	];
-	?>
 	<div class="row">
 		<div class="col-md-7">
 
@@ -35,6 +26,7 @@
 							</div>
 
 							<div class="mb-1 d-flex align-items-center">
+
 								<div class="singer-part mr-4">
 									@if( $singer->voice_part)
 										<span class="badge badge-light badge-pill" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>{{ $singer->voice_part->title }}</span><br>
@@ -42,9 +34,31 @@
 										<span class="badge badge-light badge-pill">No part</span>
 									@endif
 								</div>
-								<span class="singer-category {{ $category_class[$singer->category->name] }}">
-								<i class="fas fa-fw fa-circle mr-2"></i> {{ $singer->category->name }}</span>
+
+								<span class="singer-category text-{{ $singer->category->colour }}">
+									<i class="fas fa-fw fa-circle mr-2"></i>
+									{{ $singer->category->name }}
+								</span>
+
 								<br>
+							</div>
+
+							<div>
+								@can('create', \App\Models\Singer::class)
+									<div class="dropdown mt-2 mb-3">
+										<button class="btn btn-secondary btn-sm force-xs dropdown-toggle" type="button" id="moveDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											Move to
+										</button>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+											@foreach($categories as $category)
+												<a class="dropdown-item text-{{ $category->colour }}" href="{{ route( 'singers.categories.update', ['singer' => $singer, 'move_category' => $category->id] ) }}">
+													<i class="fas fa-fw fa-circle mr-2"></i>
+													{{ $category->name }}
+												</a>
+											@endforeach
+										</div>
+									</div>
+								@endcan
 							</div>
 
 							<div class="mb-1">

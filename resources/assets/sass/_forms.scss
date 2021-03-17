@@ -51,7 +51,7 @@ select.form-control-sm.force-xs {
   font-family: "Font Awesome 5 Pro";
   font-weight: 400;
   align-self: center;
-  font-size: 1.5em;
+  font-size: 1.3em;
   margin-right: 1em;
 }
 .btn-radio.active:before {
@@ -63,7 +63,7 @@ select.form-control-sm.force-xs {
   font-family: "Font Awesome 5 Pro";
   font-weight: 400;
   align-self: center;
-  font-size: 1.5em;
+  font-size: 1.3em;
   margin-right: 1em;
 }
 .btn-check.active:before {
@@ -77,4 +77,29 @@ select.form-control-sm.force-xs {
   font-size: 0.8em;
   color: #dc3545;
   margin-left: 5px;
+}
+
+/** BUTTON GROUPS **/
+
+.btn-group-mobile-vertical {
+  display: flex;
+  flex-direction: row;
+
+  @media screen and (max-width: 991px) {
+    flex-direction: column;
+
+    .btn {
+      border-radius: 0.25rem !important;
+    }
+    & > .btn:not(:last-child):not(.dropdown-toggle),
+    & > .btn-group:not(:last-child) > .btn {
+      border-bottom-right-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+    }
+    & > .btn:not(:first-child),
+    & > .btn-group:not(:first-child) > .btn {
+       border-top-left-radius: 0 !important;
+       border-top-right-radius: 0 !important;
+     }
+  }
 }

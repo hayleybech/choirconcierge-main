@@ -21,14 +21,28 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Relationships
  * @property Collection<Singer> $singers
  *
+ * Attributes
+ * @property string $colour
+ *
  * @package App\Models
  */
 class SingerCategory extends Model
 {
     use BelongsToTenant, SoftDeletes;
-    
+
+    public const CATEGORY_COLOURS = [
+        'Members' => 'success',
+        'Prospects' => 'warning',
+        'Archived Prospects' => 'dark',
+        'Archived Members' => 'tertiary',
+    ];
+
     public function singers(): HasMany
     {
         return $this->hasMany(Singer::class);
+    }
+
+    public function getColourAttribute(): string {
+        return self::CATEGORY_COLOURS[$this->name];
     }
 }

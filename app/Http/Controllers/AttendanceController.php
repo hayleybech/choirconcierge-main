@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Singer;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    public function index(Event $event)
+    public function index(Event $event): View
     {
         $this->authorize('viewAny', Attendance::class);
 

@@ -1,12 +1,3 @@
-<?php
-// Store CSS badge classes for categories
-$category_class = [
-	'Prospects'             => 'text-primary',
-	'Archived Prospects'    => 'text-warning',
-	'Members'               => 'text-success',
-	'Archived Members'      => 'text-danger',
-];
-?>
 <tr class="row--singer">
 	<td class="col--title">
 		@can('view', $singer)
@@ -36,7 +27,10 @@ $category_class = [
 	</td>
 	@if($col_category)
 	<td class="col--category">
-		<span class="singer-category {{ $category_class[$singer->category->name] }}"><i class="fas fa-fw fa-circle"></i><span class="status__title ml-2">{{ $singer->category->name }}</span></span>
+		<span class="singer-category text-{{ $singer->category->colour }}">
+			<i class="fas fa-fw fa-circle mr-2"></i>
+			<span class="status__title">{{ $singer->category->name }}</span>
+		</span>
 	</td>
 	@endif
 	@if($col_progress)
@@ -81,8 +75,11 @@ $category_class = [
 				Move to
 			</button>
 			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				@foreach($singer_categories as $id => $category)
-				<a class="dropdown-item " href="{{ route( 'singers.categories.update', ['singer' => $singer, 'move_category' => $id] ) }}">{{ $category }}</a>
+				@foreach($categories as $category)
+				<a class="dropdown-item text-{{ $category->colour }}" href="{{ route( 'singers.categories.update', ['singer' => $singer, 'move_category' => $category->id] ) }}">
+					<i class="fas fa-fw fa-circle mr-2"></i>
+					{{ $category->name }}
+				</a>
 				@endforeach
 			</div>
 		</div>

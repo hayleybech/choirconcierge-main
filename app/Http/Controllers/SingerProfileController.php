@@ -7,9 +7,9 @@ use App\Http\Requests\ProfileRequest;
 use App\Models\Profile;
 use App\Models\Singer;
 use App\Models\Task;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class SingerProfileController extends Controller
 {

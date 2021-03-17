@@ -9,22 +9,13 @@
         @endcan
     </td>
     @if($col_status)
-    <?php
-    $category_colour = '';
-    if($song->status->title === 'Pending') {
-        $category_colour = 'text-danger';
-    } elseif($song->status->title === 'Learning') {
-        $category_colour = 'text-primary';
-    } elseif ($song->status->title === 'Active') {
-        $category_colour = 'text-success';
-    } elseif($song->status->title === 'Archived') {
-        $category_colour = 'text-secondary';
-    } else {
-        $category_colour = '';
-    }
-    ?>
-    <td class="col--status {{ $category_colour }} font-weight-bold">
-        <i class="fas fa-fw fa-circle mr-2"></i><span class="status__title">{{ $song->status->title }}</span>
+    <td class="col--status text-{{ $song->status->colour }} font-weight-bold">
+        @if('Pending' === $song->status->title)
+        <i class="fas fa-fw fa-lock mr-2"></i>
+        @else
+        <i class="fas fa-fw fa-circle mr-2"></i>
+        @endif
+        <span class="status__title">{{ $song->status->title }}</span>
     </td>
     @endif
     <td class="col--category">

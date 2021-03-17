@@ -8,9 +8,9 @@ use App\Models\Placement;
 use App\Models\Singer;
 use App\Models\Task;
 use App\Models\VoicePart;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class SingerPlacementController extends Controller
 {

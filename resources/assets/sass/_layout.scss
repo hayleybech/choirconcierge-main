@@ -52,6 +52,11 @@ main {
   /*background-image: linear-gradient(135deg, #0061f2 0%, rgba(105, 0, 199, 0.8) 100%);*/
   background-color: var(--c-off-white) !important;
 }
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+  #app-header {
+    width: 200px;
+  }
+}
 @media screen and (max-width: 1199px) {
   #app-header {
     display: none;
@@ -59,5 +64,22 @@ main {
 
   .container {
     padding: 0 10px;
+  }
+}
+
+/** BREADCRUMBS **/
+.breadcrumb {
+  margin-left: 0 !important;
+  max-width: 60%;
+}
+.breadcrumb-item {
+  max-width: 80%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+@media screen and (max-width: 991px) {
+  .breadcrumb-item + .breadcrumb-item::before {
+    display: none;
   }
 }

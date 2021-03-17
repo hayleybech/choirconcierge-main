@@ -235,14 +235,10 @@ class Event extends Model
      */
     private function updateAll(): void {
         // Only perform this on an event parent
-        if(! $this->is_repeat_parent) {
-            abort(500, 'The server attempted to update all repeats of an event without finding the parent event. ');
-        }
+        abort_if(! $this->is_repeat_parent, 500, 'The server attempted to update all repeats of an event without finding the parent event. ');
 
         // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        if($this->in_past) {
-            abort(405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
-        }
+        abort_if($this->in_past, 405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
 
         // Update or regenerate children
         // Check if any of the repeat data has changed - includes start time
@@ -272,14 +268,10 @@ class Event extends Model
      */
     private function updateFollowing(): void {
         // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
-        if($this->is_repeat_parent) {
-            abort(405, 'Cannot do "following" update method on a repeating event parent. Try "all" update method instead.');
-        }
+        abort_if($this->is_repeat_parent, 405, 'Cannot do "following" update method on a repeating event parent. Try "all" update method instead.');
 
         // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        if($this->in_past) {
-            abort(405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
-        }
+        abort_if($this->in_past, 405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
 
         // Update prev siblings with repeat_until dates that reflect their smaller scope.
         //$this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
@@ -323,14 +315,10 @@ class Event extends Model
     public function delete_with_following(): bool
     {
         // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
-        if($this->is_repeat_parent) {
-            abort(405, 'Cannot do "following" delete method on a repeating event parent. Try "all" delete method instead.');
-        }
+        abort_if($this->is_repeat_parent, 405, 'Cannot do "following" delete method on a repeating event parent. Try "all" delete method instead.');
 
         // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        if($this->in_past) {
-            abort(405, 'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.');
-        }
+        abort_if($this->in_past, 405, 'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.');
 
         // Update prev siblings with repeat_until dates that reflect their smaller scope.
         $this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
@@ -344,14 +332,10 @@ class Event extends Model
     public function delete_with_all(): bool
     {
         // Only perform this on an event parent
-        if(! $this->is_repeat_parent) {
-            abort(500, 'The server attempted to delete all repeats of an event without finding the parent event. ');
-        }
+        abort_if(! $this->is_repeat_parent, 500, 'The server attempted to delete all repeats of an event without finding the parent event. ');
 
         // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        if($this->in_past) {
-            abort(405, 'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.');
-        }
+        abort_if($this->in_past, 405, 'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.');
 
         $this->repeat_children()->delete();
 

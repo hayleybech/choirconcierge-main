@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Events\TaskCompleted;
 use App\Http\Requests\SingerRequest;
 use App\Models\Role;
+use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Singer;
 use App\Models\Task;
 use Illuminate\Validation\Rule;
-use Illuminate\View\View;
 
 class SingerController extends Controller
 {
@@ -53,6 +54,7 @@ class SingerController extends Controller
             'archived_singers' => $all_singers->whereIn('category.name', ['Archived Members', 'Archived Prospects']),
             'filters'          => Singer::getFilters(),
             'sorts'            => $sorts = $this->getSorts($request),
+            'categories'       => SingerCategory::all(),
         ]);
 	}
 
@@ -80,7 +82,10 @@ class SingerController extends Controller
     {
         $this->authorize('view', $singer);
 
-        return view('singers.show', compact('singer'));
+        return view('singers.show', [
+            'singer'        => $singer,
+            'categories'    => SingerCategory::all(),
+        ]);
     }
 
     public function edit(Singer $singer): View

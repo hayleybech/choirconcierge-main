@@ -21,9 +21,7 @@ class DeleteRecurringEventController extends Controller
         $this->authorize('delete', $event);
 
         // No point being here if the event isn't repeating
-        if( ! $event->is_repeating) {
-            abort(405, 'This action is intended for repeating events only.');
-        }
+        abort_if(! $event->is_repeating, 403, 'This action is intended for repeating events only.');
 
         if('single' === $mode) {
             $event->delete_single();
