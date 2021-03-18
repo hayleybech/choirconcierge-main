@@ -48,5 +48,6 @@ export default {
 <style scoped>
 table {
     margin-bottom: 1px;
+    table-layout: fixed;
 }
 </style>

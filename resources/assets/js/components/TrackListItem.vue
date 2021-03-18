@@ -19,8 +19,8 @@
             {{ attachment.title ? attachment.title : attachment.filepath }}
         </td>
         <td class="col--category">
-            <i :class="icon"></i>
-            <span class="item-category-title">
+            <i :class="icon" :title="attachment.category.title"></i>
+            <span class="d-none d-xxl-inline">
                 {{ attachment.category.title }}
             </span>
         </td>
@@ -82,32 +82,26 @@
 td {
     padding: 1em 0;
 }
-td:first-child {
-    padding-left: 40px;
-}
-td:last-child {
-    padding-right: 40px;
+.col--category {
+    width: 120px;
 }
 .col--play,
 .col--download,
 .col--delete {
     padding: 0.75em 0;
-    width: 1em;
+    width: 3em;
+    text-align: center;
 }
 
-@media screen and (max-width: 767px) {
-    td:first-child {
-        padding-left: 20px;
+@media screen and (min-width: 1400px) {
+    .d-xxl-inline {
+        display: inline !important;
     }
-    td:last-child {
-        padding-right: 20px;
-    }
+}
 
+@media screen and (max-width: 1399px) {
     .col--category {
         width: 1em;
-    }
-    .item-category-title {
-        display: none;
     }
 }
 </style>
