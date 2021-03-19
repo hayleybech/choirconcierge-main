@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Rsvp
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Columns
  * @property int $id
  * @property string $response
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * Relationships
  * @property Singer $singer

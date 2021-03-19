@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
@@ -16,6 +17,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property int $id
  * @property string $title
  * @property string $colour
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * Relationships
  * @property Collection<Singer> $singers
