@@ -13,6 +13,7 @@ use Stancl\Tenancy\Database\Models\Tenant As BaseTenant;
  *
  * Virtual Columns
  * @property string choir_name
+ * @property string timezone
  *
  * Attributes
  * @property string mail_from_name
@@ -26,9 +27,9 @@ class Tenant extends BaseTenant
 {
     use HasDomains;
 
-    public static function create(string $id, string $choir_name, array $attributes = []): Tenant|Model
+    public static function create(string $id, string $choir_name, string $timezone, array $attributes = []): Tenant|Model
     {
-        return static::query()->create(array_merge($attributes, compact('id', 'choir_name')));
+        return static::query()->create(array_merge($attributes, compact('id', 'choir_name', 'timezone')));
     }
 
     public static function findByDomain(string $domain): ?Tenant
