@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -32,7 +33,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Task extends Model
 {
-    use SoftDeletes, BelongsToTenant;
+    use SoftDeletes, BelongsToTenant, TenantTimezoneDates;
 
     protected $with = ['role'];
 

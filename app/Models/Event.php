@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Filters\Event_DateFilter;
 use App\Models\Filters\Event_TypeFilter;
 use App\Models\Filters\Filterable;
+use App\Models\Traits\TenantTimezoneDates;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
 use Illuminate\Database\Eloquent\Builder;
@@ -64,7 +65,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Event extends Model
 {
-    use Filterable, BelongsToTenant, SoftDeletes, HasFactory;
+    use Filterable, BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
 
     /**
      * The attributes that are mass assignable.
@@ -166,10 +167,10 @@ class Event extends Model
         ) {
             // save single event to array, bulk save all at the end
             $event_occurrences[] = array_merge($this->replicate()->attributesToArray(), [
-                'start_date' => $current_start_date->format($mysql_date_format),
-                'end_date' => $current_event_end_date->format($mysql_date_format),
-                'call_time' => $current_event_call_time->format($mysql_date_format),
-                'repeat_until' => $this->repeat_until->format($mysql_date_format),
+                'start_date' => tz_from_tenant_to_utc($current_start_date->toString())->format($mysql_date_format),
+                'end_date' => tz_from_tenant_to_utc($current_event_end_date->toString())->format($mysql_date_format),
+                'call_time' => tz_from_tenant_to_utc($current_event_call_time->toString())->format($mysql_date_format),
+                'repeat_until' => tz_from_tenant_to_utc($this->repeat_until->toString())->format($mysql_date_format),
                 'created_at' => Carbon::now()->format($mysql_date_format),
                 'updated_at' => Carbon::now()->format($mysql_date_format)
             ]);
@@ -274,7 +275,7 @@ class Event extends Model
         abort_if($this->in_past, 405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
 
         // Update prev siblings with repeat_until dates that reflect their smaller scope.
-        //$this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
+        $this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
 
         // Update or regenerate children
         // Check if any of the repeat data has changed - includes start time
@@ -461,14 +462,51 @@ class Event extends Model
         return $parts;
     }
 
+
+    public function getStartDateAttribute(string $value): Carbon
+    {
+        return tz_from_utc_to_tenant($value);
+    }
+    public function setStartDateAttribute(string $value): void
+    {
+        $this->attributes['start_date'] = tz_from_tenant_to_utc($value);
+    }
+
+    public function getEndDateAttribute(string $value): Carbon
+    {
+        return tz_from_utc_to_tenant($value);
+    }
+    public function setEndDateAttribute(string $value): void
+    {
+        $this->attributes['end_date'] = tz_from_tenant_to_utc($value);
+    }
+
+    public function getCallTimeAttribute(string $value): Carbon
+    {
+        return tz_from_utc_to_tenant($value);
+    }
+    public function setCallTimeAttribute(string $value): void
+    {
+        $this->attributes['call_time'] = tz_from_tenant_to_utc($value);
+    }
+    public function getRepeatUntilAttribute(?string $value): ?Carbon
+    {
+        return $value ? tz_from_utc_to_tenant($value) : null;
+    }
+    public function setRepeatUntilAttribute(string $value): void
+    {
+        $this->attributes['repeat_until'] = tz_from_tenant_to_utc($value);
+    }
+
+
     public function getInPastAttribute(): bool
     {
-        return $this->start_date->lessThan(Carbon::now());
+        return $this->start_date < Carbon::now();
     }
 
     public function getInFutureAttribute(): bool
     {
-        return $this->start_date->greaterThan(Carbon::now());
+        return $this->start_date > Carbon::now();
     }
 
     public function getIsRepeatParentAttribute(): bool

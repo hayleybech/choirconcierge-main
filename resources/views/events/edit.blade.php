@@ -65,6 +65,7 @@
                             {{ Form::hidden('end_date', $event->end_date, ['class' => 'end-date-hidden']) }}
 
                         </div>
+                        <p><small class="text-muted">Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</small></p>
                     </div>
 
                     <div class="form-group">
@@ -195,6 +196,8 @@
 
         </div>
     </div>
+
+    <p><small class="text-muted">Choir's Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</small></p>
 
     {{ Form::close() }}
 

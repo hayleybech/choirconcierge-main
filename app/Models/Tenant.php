@@ -3,6 +3,8 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TenantTimezoneDates;
+use Carbon\CarbonTimeZone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
@@ -13,9 +15,9 @@ use Stancl\Tenancy\Database\Models\Tenant As BaseTenant;
  *
  * Virtual Columns
  * @property string choir_name
- * @property string timezone
  *
  * Attributes
+ * @property CarbonTimeZone timezone from virtual column 'timezone'
  * @property string mail_from_name
  * @property string mail_from_address
  * @property string primary_domain
@@ -25,7 +27,7 @@ use Stancl\Tenancy\Database\Models\Tenant As BaseTenant;
  */
 class Tenant extends BaseTenant
 {
-    use HasDomains;
+    use HasDomains, TenantTimezoneDates;
 
     public static function create(string $id, string $choir_name, string $timezone, array $attributes = []): Tenant|Model
     {
@@ -37,6 +39,10 @@ class Tenant extends BaseTenant
         return self::whereHas('domains', static function (Builder $query) use ($domain) {
             $query->where('domain', '=', $domain);
         })->first();
+    }
+
+    public function getTimezoneAttribute($value): CarbonTimeZone {
+        return new CarbonTimeZone($value);
     }
 
     public function getMailFromNameAttribute(): string
