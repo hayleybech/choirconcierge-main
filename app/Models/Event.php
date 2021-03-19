@@ -166,10 +166,10 @@ class Event extends Model
         ) {
             // save single event to array, bulk save all at the end
             $event_occurrences[] = array_merge($this->replicate()->attributesToArray(), [
-                'start_date' => $current_start_date->format($mysql_date_format),
-                'end_date' => $current_event_end_date->format($mysql_date_format),
-                'call_time' => $current_event_call_time->format($mysql_date_format),
-                'repeat_until' => $this->repeat_until->format($mysql_date_format),
+                'start_date' => tz_from_tenant_to_utc($current_start_date->toString())->format($mysql_date_format),
+                'end_date' => tz_from_tenant_to_utc($current_event_end_date->toString())->format($mysql_date_format),
+                'call_time' => tz_from_tenant_to_utc($current_event_call_time->toString())->format($mysql_date_format),
+                'repeat_until' => tz_from_tenant_to_utc($this->repeat_until->toString())->format($mysql_date_format),
                 'created_at' => Carbon::now()->format($mysql_date_format),
                 'updated_at' => Carbon::now()->format($mysql_date_format)
             ]);
