@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Builder;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant As BaseTenant;
 
+/**
+ * Class Tenant
+ *
+ * Virtual Columns
+ * @property string choir_name
+ *
+ * Attributes
+ * @property string mail_from_name
+ * @property string mail_from_address
+ * @property string primary_domain
+ * @property string host
+ *
+ * @package App\Models
+ */
 class Tenant extends BaseTenant
 {
     use HasDomains;
