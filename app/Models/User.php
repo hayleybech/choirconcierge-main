@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Mail\Welcome;
+use App\Models\Traits\TenantTimezoneDates;
 use Hash;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,7 +49,7 @@ use UnexpectedValueException;
  */
 class User extends Authenticatable implements HasMedia
 {
-    use Notifiable, InteractsWithMedia, BelongsToTenant, SoftDeletes, HasFactory;
+    use Notifiable, InteractsWithMedia, BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
 
     /**
      * The attributes that are mass assignable.

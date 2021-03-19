@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\TaskCompleted;
@@ -30,7 +31,7 @@ use Illuminate\Support\Facades\Log;
  */
 class NotificationTemplate extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, HasFactory, TenantTimezoneDates;
 
     protected $fillable = [
         'subject',

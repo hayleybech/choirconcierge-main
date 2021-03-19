@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Rsvp
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Columns
  * @property int $id
  * @property string $response
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * Relationships
  * @property Singer $singer
@@ -20,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Rsvp extends Model
 {
+    use TenantTimezoneDates;
+
     protected $fillable = [
         'singer_id',
         'response',
