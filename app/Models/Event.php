@@ -463,27 +463,27 @@ class Event extends Model
     }
 
 
-    public function getStartDateAttribute(string $value): Carbon
+    public function getStartDateAttribute(?string $value): ?Carbon
     {
-        return tz_from_utc_to_tenant($value);
+        return $value ? tz_from_utc_to_tenant($value) : null;
     }
     public function setStartDateAttribute(string $value): void
     {
         $this->attributes['start_date'] = tz_from_tenant_to_utc($value);
     }
 
-    public function getEndDateAttribute(string $value): Carbon
+    public function getEndDateAttribute(?string $value): ?Carbon
     {
-        return tz_from_utc_to_tenant($value);
+        return $value ? tz_from_utc_to_tenant($value) : null;
     }
     public function setEndDateAttribute(string $value): void
     {
         $this->attributes['end_date'] = tz_from_tenant_to_utc($value);
     }
 
-    public function getCallTimeAttribute(string $value): Carbon
+    public function getCallTimeAttribute(?string $value): ?Carbon
     {
-        return tz_from_utc_to_tenant($value);
+        return $value ? tz_from_utc_to_tenant($value): null;
     }
     public function setCallTimeAttribute(string $value): void
     {
