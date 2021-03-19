@@ -182,6 +182,11 @@
                     {{ Breadcrumbs::render() }}
 
                     <ul class="navbar-nav ml-auto">
+                        <li class="d-none d-md-inline">
+                            <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="nav-link">
+                                <i class="fal fa-fw fa-code mr-2"></i><span class="link-text">Updates </span><span class="headway-badge"></span>
+                            </a>
+                        </li>
                         @guest
                         @else
                             <li class="nav-item dropdown">
@@ -190,7 +195,8 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a href="{{ route('singers.show', ['singer' => Auth::user()->singer] ) }}" class="dropdown-item"><i class="fal fa-fw fa-user"></i> Edit Profile</a>
-                                    <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="dropdown-item"><i class="fal fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
+
+                                    <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="dropdown-item d-md-none"><i class="fal fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
 
                                     @if( Auth::user()->hasRole('Admin') && ! session()->has('impersonation:active') )
                                         <!-- Impersonate User modal trigger button -->
