@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
@@ -33,7 +34,7 @@ use Illuminate\Support\Facades\Storage;
  */
 class SongAttachment extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantTimezoneDates;
 
     /**
      * The attributes that are mass assignable.

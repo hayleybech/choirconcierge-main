@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Filters\Event_DateFilter;
 use App\Models\Filters\Event_TypeFilter;
 use App\Models\Filters\Filterable;
+use App\Models\Traits\TenantTimezoneDates;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
 use Illuminate\Database\Eloquent\Builder;
@@ -64,7 +65,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Event extends Model
 {
-    use Filterable, BelongsToTenant, SoftDeletes, HasFactory;
+    use Filterable, BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
 
     /**
      * The attributes that are mass assignable.

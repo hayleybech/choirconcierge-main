@@ -7,6 +7,7 @@ use App\Models\Filters\Singer_AgeFilter;
 use App\Models\Filters\Singer_CategoryFilter;
 use App\Models\Filters\Singer_RoleFilter;
 use App\Models\Filters\Singer_VoicePartFilter;
+use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -50,7 +51,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Singer extends Model
 {
-    use Notifiable, Filterable, BelongsToTenant, SoftDeletes;
+    use Notifiable, Filterable, BelongsToTenant, SoftDeletes, TenantTimezoneDates;
 
     protected $fillable = [
         'first_name',

@@ -3,6 +3,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
@@ -25,7 +26,7 @@ use Stancl\Tenancy\Database\Models\Tenant As BaseTenant;
  */
 class Tenant extends BaseTenant
 {
-    use HasDomains;
+    use HasDomains, TenantTimezoneDates;
 
     public static function create(string $id, string $choir_name, string $timezone, array $attributes = []): Tenant|Model
     {

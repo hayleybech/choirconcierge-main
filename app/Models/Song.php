@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Filters\Filterable;
 use App\Models\Filters\Song_CategoryFilter;
 use App\Models\Filters\Song_StatusFilter;
+use App\Models\Traits\TenantTimezoneDates;
 use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
 use Illuminate\Database\Eloquent\Builder;
@@ -43,7 +44,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Song extends Model
 {
-    use Filterable, BelongsToTenant, SoftDeletes, HasFactory;
+    use Filterable, BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
 
     /**
      * The attributes that are mass assignable.

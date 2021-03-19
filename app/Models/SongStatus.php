@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -28,7 +29,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class SongStatus extends Model
 {
-    use BelongsToTenant, SoftDeletes;
+    use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
 
     public const STATUS_COLOURS = [
         'Pending' => 'danger',

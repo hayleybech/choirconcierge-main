@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,7 +29,7 @@ use Storage;
  */
 class Document extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantTimezoneDates;
 
     /**
      * The attributes that are mass assignable.

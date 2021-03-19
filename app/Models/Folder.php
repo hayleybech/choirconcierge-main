@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -26,7 +27,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Folder extends Model
 {
-    use BelongsToTenant, SoftDeletes, HasFactory;
+    use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
 
     /**
      * The attributes that are mass assignable.

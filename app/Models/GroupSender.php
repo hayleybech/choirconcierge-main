@@ -4,6 +4,7 @@
 namespace App\Models;
 
 
+use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -27,6 +28,8 @@ use Illuminate\Support\Carbon;
  */
 class GroupSender extends Model
 {
+    use TenantTimezoneDates;
+
     /**
      * The attributes that are mass assignable.
      */
