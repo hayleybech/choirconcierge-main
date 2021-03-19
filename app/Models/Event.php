@@ -274,7 +274,7 @@ class Event extends Model
         abort_if($this->in_past, 405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
 
         // Update prev siblings with repeat_until dates that reflect their smaller scope.
-        //$this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
+        $this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
 
         // Update or regenerate children
         // Check if any of the repeat data has changed - includes start time
