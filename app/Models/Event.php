@@ -488,9 +488,9 @@ class Event extends Model
     {
         $this->attributes['call_time'] = tz_from_tenant_to_utc($value);
     }
-    public function getRepeatUntilAttribute(string $value): Carbon
+    public function getRepeatUntilAttribute(?string $value): ?Carbon
     {
-        return tz_from_utc_to_tenant($value);
+        return $value ? tz_from_utc_to_tenant($value) : null;
     }
     public function setRepeatUntilAttribute(string $value): void
     {
