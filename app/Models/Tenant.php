@@ -4,6 +4,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant As BaseTenant;
 
@@ -24,6 +25,11 @@ use Stancl\Tenancy\Database\Models\Tenant As BaseTenant;
 class Tenant extends BaseTenant
 {
     use HasDomains;
+
+    public static function create(string $id, string $choir_name, array $attributes = []): Tenant|Model
+    {
+        return static::query()->create(array_merge($attributes, compact('id', 'choir_name')));
+    }
 
     public static function findByDomain(string $domain): ?Tenant
     {
