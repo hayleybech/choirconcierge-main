@@ -59,6 +59,7 @@
 
     </div>
 
+    <p><small class="text-muted">Choir's Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</small></p>
     <p><small class="text-muted">Calendar Sync URL: {{route( 'events.feed' )}}</small></p>
 
     <repeating-event-delete-modal></repeating-event-delete-modal>
