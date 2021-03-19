@@ -500,12 +500,12 @@ class Event extends Model
 
     public function getInPastAttribute(): bool
     {
-        return $this->start_date->lessThan(Carbon::now());
+        return $this->start_date < Carbon::now();
     }
 
     public function getInFutureAttribute(): bool
     {
-        return $this->start_date->greaterThan(Carbon::now());
+        return $this->start_date > Carbon::now();
     }
 
     public function getIsRepeatParentAttribute(): bool
