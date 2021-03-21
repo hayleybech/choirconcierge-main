@@ -93,10 +93,7 @@
 
                     <div class="form-group">
                         {{ Form::label('', 'Repeating Event') }}
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="is_repeating" name="is_repeating" value="1">
-                            <label class="custom-control-label" for="is_repeating">Repeat?</label>
-                        </div>
+                        <x-inputs.switch label="Repeat?" name="is_repeating" value="1"></x-inputs.switch>
                     </div>
 
                     <fieldset id="repeat_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
