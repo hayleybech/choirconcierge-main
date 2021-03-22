@@ -47,25 +47,23 @@
 				<fieldset class="form-group">
 					<legend class="col-form-label">Onboarding</legend>
 
-					<div class="custom-control custom-radio">
-						<input id="onboarding_enabled_yes" name="onboarding_enabled" value="1" class="custom-control-input" type="radio" checked>
-						<label for="onboarding_enabled_yes" class="custom-control-label">
+					<x-inputs.radio id="onboarding_enabled_yes" name="onboarding_enabled" value="1" checked="true">
+						<x-slot name="label">
 							Enabled
 							<small class="text-muted ml-2">
 								Choose this option for new/prospective singers.
 							</small>
-						</label>
-					</div>
+						</x-slot>
+					</x-inputs.radio>
 
-					<div class="custom-control custom-radio">
-						<input id="onboarding_enabled_no" name="onboarding_enabled" value="0" class="custom-control-input" type="radio">
-						<label for="onboarding_enabled_no" class="custom-control-label">
+					<x-inputs.radio id="onboarding_enabled_no" name="onboarding_enabled" value="0">
+						<x-slot name="label">
 							Disabled
 							<small class="text-muted ml-2">
 								Choose this option when you're adding existing singers.
 							</small>
-						</label>
-					</div>
+						</x-slot>
+					</x-inputs.radio>
 				</fieldset>
 
 				<div class="form-group">

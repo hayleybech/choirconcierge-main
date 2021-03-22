@@ -47,10 +47,7 @@
                     <fieldset class="form-group">
                         <legend class="col-form-label">Type</legend>
                         @foreach($types as $type)
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input id="type_{{$type->id}}" name="type" value="{{$type->id}}" class="custom-control-input" type="radio" {{ ($event->type->id === $type->id ) ? 'checked' : '' }}>
-                                <label for="type_{{$type->id}}" class="custom-control-label">{{$type->title}}</label>
-                            </div>
+                            <x-inputs.radio label="{{ $type->title }}" id="type_{{ $type->id }}" name="type" value="{{ $type->id }}" inline="true" :checked="$event->type->id === $type->id"></x-inputs.radio>
                         @endforeach
                     </fieldset>
 
@@ -125,10 +122,7 @@
                             {{ Form::label('repeat_frequency_unit', 'Repeat every') }}<br>
 
                             @foreach(['day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'] as $key => $unit)
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input id="repeat_frequency_unit_{{$key}}" name="repeat_frequency_unit" value="{{$key}}" class="custom-control-input" type="radio" {{ ($event->repeat_frequency_unit === $key ) ? 'checked' : '' }}>
-                                    <label for="repeat_frequency_unit_{{$key}}" class="custom-control-label">{{$unit}}</label>
-                                </div>
+                                <x-inputs.radio label="{{ $unit }}" id="repeat_frequency_unit_{{ $key }}" name="repeat_frequency_unit" value="{{ $key }}" inline="true" :checked="$event->repeat_frequency_unit === $key"></x-inputs.radio>
                             @endforeach
 
                         </div>
