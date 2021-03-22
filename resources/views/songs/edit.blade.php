@@ -51,13 +51,6 @@
                     </fieldset>
 
                     <div class="form-group">
-                        <div class="custom-control custom-checkbox custom-control-inline">
-                            <input id="visible_for_prospects" name="visible_for_prospects" class="custom-control-input" type="checkbox" value="true">
-                            <label for="visible_for_prospects" class="custom-control-label">Make available for prospective members</label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         {{ Form::label('pitch_blown', 'Pitch Blown') }}
                         {{ Form::select('pitch_blown',
                             $pitches,
