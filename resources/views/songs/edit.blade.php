@@ -54,12 +54,7 @@
                     </div>
 
                     <div class="form-group">
-                        {{ Form::label('pitch_blown', 'Pitch Blown') }}
-                        {{ Form::select('pitch_blown',
-                            $pitches,
-                            $song->pitch_blown,
-                            ['class' => 'custom-select']
-                        ) }}
+                        <x-inputs.select label="Pitch Blown" id="pitch_blown" name="pitch_blown" :options="$pitches" :selected="$song->pitch_blown"></x-inputs.select>
                     </div>
 
                     {{--

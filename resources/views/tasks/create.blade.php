@@ -18,12 +18,7 @@
             </div>
 
             <div class="form-group">
-                {{ Form::label('role_id', 'Role') }}
-                {{ Form::select('role_id',
-                    $roles_keyed,
-                    '',
-                    ['required', 'class' => 'custom-select']
-                ) }}
+                <x-inputs.select label="Role" id="role_id" name="role_id" :options="$roles_keyed"></x-inputs.select>
             </div>
 
             <div class="form-group">

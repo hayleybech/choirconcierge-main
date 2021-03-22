@@ -64,8 +64,7 @@
 								{{ Form::text('address_suburb', $profile->address_suburb, ['class' => 'form-control']) }}
 							</div>
 							<div class="col-md-2">
-								{{ Form::label('address_state', 'State') }}
-								{{ Form::select('address_state', [
+								@php $states = [
 									'ACT' => 'ACT',
 									'NSW' => 'NSW',
 									'NT'  => 'NT',
@@ -74,7 +73,8 @@
 									'TAS' => 'TAS',
 									'VIC' => 'VIC',
 									'WA'  => 'WA',
-								], $profile->address_state, ['class' => 'custom-select']) }}
+								];@endphp
+								<x-inputs.select label="State" id="address_state" name="address_state" :options="$states"></x-inputs.select>
 							</div>
 							<div class="col-md-2">
 								{{ Form::label('address_postcode', 'Postcode') }}

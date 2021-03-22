@@ -48,14 +48,7 @@
                             <x-inputs.file label="File Upload" id="attachment_uploads" name="attachment_uploads[]" required="true" multiple="true"></x-inputs.file>
                         </div>
                         <div class="mr-2 mb-2">
-                            {{ Form::label('category', 'Category') }}
-                            {{ Form::select('category',
-                                $categories_keyed,
-                                '',
-                                ['required', 'class' => 'custom-select custom-select-sm']
-                            ) }}
-                            <div class="valid-feedback">Looks good!</div>
-                            <div class="invalid-feedback">Please choose a category.</div>
+                            <x-inputs.select label="Category" id="category" name="category" :options="$categories_keyed"></x-inputs.select>
                         </div>
                         <div class="flex-shrink-0 mb-2">
                             <load-button theme="btn-success" size="btn-sm" icon="fa fa-plus" label="Add" label-loading="Uploading..."></load-button>

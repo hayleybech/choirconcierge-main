@@ -45,12 +45,7 @@
                     </fieldset>
 
                     <div class="form-group">
-                        {{ Form::label('pitch_blown', 'Pitch Blown') }}
-                        {{ Form::select('pitch_blown',
-                            $pitches,
-                            '',
-                            ['class' => 'custom-select']
-                        ) }}
+                        <x-inputs.select label="Pitch Blown" id="pitch_blown" name="pitch_blown" :options="$pitches"></x-inputs.select>
                     </div>
 
                     <div class="form-group">

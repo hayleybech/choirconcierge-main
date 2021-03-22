@@ -92,8 +92,7 @@
 					</div>
 
 					<div class="form-group">
-						{{ Form::label('voice_part_id', 'Voice Part') }}
-						{{ Form::select('voice_part_id', $voice_parts, optional($placement->singer->voice_part)->id, ['class' => 'custom-select']) }}
+						<x-inputs.select label="Voice Part" id="voice_part_id" name="voice_part_id" :options="$voice_parts" :selected="optional($placement->singer->voice_part)->id"></x-inputs.select>
 					</div>
 
 				</div>
