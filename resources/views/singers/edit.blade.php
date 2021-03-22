@@ -28,13 +28,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="avatar">Profile Picture</label>
-                        <div class="custom-file custom-file-sm">
-                            <input type="file" class="custom-file-input @error('avatar') is-invalid @enderror" id="avatar" name="avatar">
-                            <div class="custom-file-label form-control-sm">Choose file</div>
-                            <div class="valid-feedback">Looks good!</div>
-                            <div class="invalid-feedback">Please upload a valid image file.</div>
-                        </div>
+                        <x-inputs.file label="Profile Picture" id="avatar" name="avatar"></x-inputs.file>
                     </div>
 
                     <p>
