@@ -82,10 +82,7 @@
 								@continue
 							@endif
 							<div class="col-md-6">
-								<div class="custom-control custom-checkbox">
-									<input type="checkbox" class="custom-control-input" name="user_roles[]" value="{{ $role->id }}" id="user_roles_{{ $role->id }}">
-									<label class="custom-control-label" for="user_roles_{{ $role->id }}">{{ $role->name }}</label>
-								</div>
+								<x-inputs.checkbox :label="$role->name" :id="'user_roles_'.$role->id" name="user_roles[]" :value="$role->id"></x-inputs.checkbox>
 							</div>
 						@endforeach
 					</div>

@@ -149,10 +149,7 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" id="send_notification" name="send_notification" type="checkbox" value="true" checked>
-                            <label class="custom-control-label" for="send_notification">Send "Event Created" Notification</label>
-                        </div>
+                        <x-inputs.checkbox :label='"Send \"Event Created\" Notification"' id="send_notification" name="send_notification" value="true" :checked="true"></x-inputs.checkbox>
                     </div>
 
                 </div>

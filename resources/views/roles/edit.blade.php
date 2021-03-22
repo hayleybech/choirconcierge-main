@@ -43,60 +43,33 @@
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="singers_all">
-								<label class="custom-control-label" for="singers_all">Singers</label>
-							</div>
+							<x-inputs.checkbox label="Singers" id="singers_all" name="singers_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="singers_view" name="abilities[]" value="singers_view" @if( in_array('singers_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="singers_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="singers_view" name="abilities[]" value="singers_view" :checked="in_array('singers_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="singers_create" name="abilities[]" value="singers_create" @if( in_array('singers_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="singers_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="singers_create" name="abilities[]" value="singers_create" :checked="in_array('singers_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="singers_update" name="abilities[]" value="singers_update" @if( in_array('singers_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="singers_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="singers_update" name="abilities[]" value="singers_update" :checked="in_array('singers_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="singers_delete" name="abilities[]" value="singers_delete" @if( in_array('singers_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="singers_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="singers_delete" name="abilities[]" value="singers_delete" :checked="in_array('singers_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="singer_profiles_all">
-								<label class="custom-control-label" for="singer_profiles_all">Singer Profiles</label>
-							</div>
+							<x-inputs.checkbox label="Singer Profiles" id="singer_profiles_all" name="singer_profiles_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="singer_profiles_view" name="abilities[]" value="singer_profiles_view" @if( in_array('singer_profiles_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="singer_profiles_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="singer_profiles_view" name="abilities[]" value="singer_profiles_view" :checked="in_array('singer_profiles_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="singer_profiles_create" name="abilities[]" value="singer_profiles_create" @if( in_array('singer_profiles_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="singer_profiles_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="singer_profiles_create" name="abilities[]" value="singer_profiles_create" :checked="in_array('singer_profiles_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="singer_profiles_update" name="abilities[]" value="singer_profiles_update" @if( in_array('singer_profiles_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="singer_profiles_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="singer_profiles_update" name="abilities[]" value="singer_profiles_update" :checked="in_array('singer_profiles_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
 							&nbsp;
@@ -104,28 +77,16 @@
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="singer_placements_all">
-								<label class="custom-control-label" for="singer_placements_all">Singer Placements</label>
-							</div>
+							<x-inputs.checkbox label="Singer Placements" id="singer_placements_all" name="singer_placements_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="singer_placements_view" name="abilities[]" value="singer_placements_view" @if( in_array('singer_placements_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="singer_placements_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="singer_placements_view" name="abilities[]" value="singer_placements_view" :checked="in_array('singer_placements_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="singer_placements_create" name="abilities[]" value="singer_placements_create" @if( in_array('singer_placements_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="singer_placements_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="singer_placements_create" name="abilities[]" value="singer_placements_create" :checked="in_array('singer_placements_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="singer_placements_update" name="abilities[]" value="singer_placements_update" @if( in_array('singer_placements_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="singer_placements_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="singer_placements_update" name="abilities[]" value="singer_placements_update" :checked="in_array('singer_placements_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
 							&nbsp;
@@ -133,66 +94,36 @@
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="voice_parts_all">
-								<label class="custom-control-label" for="voice_parts_all">Voice Parts</label>
-							</div>
+							<x-inputs.checkbox label="Voice Parts" id="voice_parts_all" name="voice_parts_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="voice_parts_view" name="abilities[]" value="voice_parts_view" @if( in_array('voice_parts_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="voice_parts_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="voice_parts_view" name="abilities[]" value="voice_parts_view" :checked="in_array('voice_parts_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="voice_parts_create" name="abilities[]" value="voice_parts_create" @if( in_array('voice_parts_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="voice_parts_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="voice_parts_create" name="abilities[]" value="voice_parts_create" :checked="in_array('voice_parts_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="voice_parts_update" name="abilities[]" value="voice_parts_update" @if( in_array('voice_parts_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="voice_parts_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="voice_parts_update" name="abilities[]" value="voice_parts_update" :checked="in_array('voice_parts_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="voice_parts_delete" name="abilities[]" value="voice_parts_delete" @if( in_array('voice_parts_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="voice_parts_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="voice_parts_delete" name="abilities[]" value="voice_parts_delete" :checked="in_array('voice_parts_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="roles_all">
-								<label class="custom-control-label" for="roles_all">Roles</label>
-							</div>
+							<x-inputs.checkbox label="Roles" id="roles_all" name="roles_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="roles_view" name="abilities[]" value="roles_view" @if( in_array('roles_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="roles_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="roles_view" name="abilities[]" value="roles_view" :checked="in_array('roles_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="roles_create" name="abilities[]" value="roles_create" @if( in_array('roles_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="roles_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="roles_create" name="abilities[]" value="roles_create" :checked="in_array('roles_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="roles_update" name="abilities[]" value="roles_update" @if( in_array('roles_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="roles_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="roles_update" name="abilities[]" value="roles_update" :checked="in_array('roles_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="roles_delete" name="abilities[]" value="roles_delete" @if( in_array('roles_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="roles_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="roles_delete" name="abilities[]" value="roles_delete" :checked="in_array('roles_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr class="table-light">
@@ -200,34 +131,19 @@
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="songs_all">
-								<label class="custom-control-label" for="songs_all">Songs</label>
-							</div>
+							<x-inputs.checkbox label="Songs" id="songs_all" name="songs_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="songs_view" name="abilities[]" value="songs_view" @if( in_array('songs_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="songs_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="songs_view" name="abilities[]" value="songs_view" :checked="in_array('songs_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="songs_create" name="abilities[]" value="songs_create" @if( in_array('songs_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="songs_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="songs_create" name="abilities[]" value="songs_create" :checked="in_array('songs_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="songs_update" name="abilities[]" value="songs_update" @if( in_array('songs_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="songs_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="songs_update" name="abilities[]" value="songs_update" :checked="in_array('songs_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="songs_delete" name="abilities[]" value="songs_delete" @if( in_array('songs_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="songs_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="songs_delete" name="abilities[]" value="songs_delete" :checked="in_array('songs_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr class="table-light">
@@ -235,80 +151,44 @@
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="events_all">
-								<label class="custom-control-label" for="events_all">Events</label>
-							</div>
+							<x-inputs.checkbox label="Events" id="events_all" name="events_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="events_view" name="abilities[]" value="events_view" @if( in_array('events_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="events_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="events_view" name="abilities[]" value="events_view" :checked="in_array('events_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="events_create" name="abilities[]" value="events_create" @if( in_array('events_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="events_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="events_create" name="abilities[]" value="events_create" :checked="in_array('events_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="events_update" name="abilities[]" value="events_update" @if( in_array('events_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="events_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="events_update" name="abilities[]" value="events_update" :checked="in_array('events_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="events_delete" name="abilities[]" value="events_delete" @if( in_array('events_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="events_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="events_delete" name="abilities[]" value="events_delete" :checked="in_array('events_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="attendances_all">
-								<label class="custom-control-label" for="attendances_all">Attendances</label>
-							</div>
+							<x-inputs.checkbox label="Attendances" id="attendances_all" name="attendances_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="attendances_view" name="abilities[]" value="attendances_view" @if( in_array('attendances_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="attendances_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="attendances_view" name="abilities[]" value="attendances_view" :checked="in_array('attendances_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="attendances_create" name="abilities[]" value="attendances_create" @if( in_array('attendances_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="attendances_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="attendances_create" name="abilities[]" value="attendances_create" :checked="in_array('attendances_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="attendances_update" name="abilities[]" value="attendances_update" @if( in_array('attendances_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="attendances_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="attendances_update" name="abilities[]" value="attendances_update" :checked="in_array('attendances_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="attendances_delete" name="abilities[]" value="attendances_delete" @if( in_array('attendances_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="attendances_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="attendances_delete" name="abilities[]" value="attendances_delete" :checked="in_array('attendances_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="rsvps_all">
-								<label class="custom-control-label" for="rsvps_all">RSVPs</label>
-							</div>
+							<x-inputs.checkbox label="RSVPs" id="rsvps_all" name="rsvps_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="rsvps_view" name="abilities[]" value="rsvps_view" @if( in_array('rsvps_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="rsvps_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="rsvps_view" name="abilities[]" value="rsvps_view" :checked="in_array('rsvps_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
 							&nbsp;
@@ -325,63 +205,36 @@
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="folders_all">
-								<label class="custom-control-label" for="folders_all">Folders</label>
-							</div>
+							<x-inputs.checkbox label="Folders" id="folders_all" name="folders_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="folders_view" name="abilities[]" value="folders_view" @if( in_array('folders_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="folders_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="folders_view" name="abilities[]" value="folders_view" :checked="in_array('folders_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="folders_create" name="abilities[]" value="folders_create" @if( in_array('folders_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="folders_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="folders_create" name="abilities[]" value="folders_create" :checked="in_array('folders_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="folders_update" name="abilities[]" value="folders_update" @if( in_array('folders_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="folders_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="folders_update" name="abilities[]" value="folders_update" :checked="in_array('folders_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="folders_delete" name="abilities[]" value="folders_delete" @if( in_array('folders_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="folders_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="folders_delete" name="abilities[]" value="folders_delete" :checked="in_array('folders_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="documents_all">
-								<label class="custom-control-label" for="documents_all">Documents</label>
-							</div>
+							<x-inputs.checkbox label="Documents" id="documents_all" name="documents_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="documents_view" name="abilities[]" value="documents_view" @if( in_array('documents_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="documents_view">Download</label>
-							</div>
+							<x-inputs.checkbox label="View" id="documents_view" name="abilities[]" value="documents_view" :checked="in_array('documents_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="documents_create" name="abilities[]" value="documents_create" @if( in_array('documents_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="documents_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="documents_create" name="abilities[]" value="documents_create" :checked="in_array('documents_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
 							&nbsp;
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="documents_delete" name="abilities[]" value="documents_delete" @if( in_array('documents_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="documents_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="documents_delete" name="abilities[]" value="documents_delete" :checked="in_array('documents_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr class="table-light">
@@ -389,34 +242,19 @@
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="riser_stacks_all">
-								<label class="custom-control-label" for="riser_stacks_all">Riser Stacks</label>
-							</div>
+							<x-inputs.checkbox label="Riser Stacks" id="riser_stacks_all" name="riser_stacks_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="riser_stacks_view" name="abilities[]" value="riser_stacks_view" @if( in_array('riser_stacks_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="riser_stacks_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="riser_stacks_view" name="abilities[]" value="riser_stacks_view" :checked="in_array('riser_stacks_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="riser_stacks_create" name="abilities[]" value="riser_stacks_create" @if( in_array('riser_stacks_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="riser_stacks_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="riser_stacks_create" name="abilities[]" value="riser_stacks_create" :checked="in_array('riser_stacks_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="riser_stacks_update" name="abilities[]" value="riser_stacks_update" @if( in_array('riser_stacks_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="riser_stacks_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="riser_stacks_update" name="abilities[]" value="riser_stacks_update" :checked="in_array('riser_stacks_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="riser_stacks_delete" name="abilities[]" value="riser_stacks_delete" @if( in_array('riser_stacks_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="riser_stacks_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="riser_stacks_delete" name="abilities[]" value="riser_stacks_delete" :checked="in_array('riser_stacks_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr class="table-light">
@@ -424,34 +262,19 @@
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="mailing_lists_all">
-								<label class="custom-control-label" for="mailing_lists_all">Mailing Lists</label>
-							</div>
+							<x-inputs.checkbox label="Mailing Lists" id="mailing_lists_all" name="mailing_lists_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="mailing_lists_view" name="abilities[]" value="mailing_lists_view" @if( in_array('mailing_lists_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="mailing_lists_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="mailing_lists_view" name="abilities[]" value="mailing_lists_view" :checked="in_array('mailing_lists_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="mailing_lists_create" name="abilities[]" value="mailing_lists_create" @if( in_array('mailing_lists_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="mailing_lists_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="mailing_lists_create" name="abilities[]" value="mailing_lists_create" :checked="in_array('mailing_lists_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="mailing_lists_update" name="abilities[]" value="mailing_lists_update" @if( in_array('mailing_lists_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="mailing_lists_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="mailing_lists_update" name="abilities[]" value="mailing_lists_update" :checked="in_array('mailing_lists_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="mailing_lists_delete" name="abilities[]" value="mailing_lists_delete" @if( in_array('mailing_lists_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="mailing_lists_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="mailing_lists_delete" name="abilities[]" value="mailing_lists_delete" :checked="in_array('mailing_lists_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr class="table-light">
@@ -459,63 +282,36 @@
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="tasks_all">
-								<label class="custom-control-label" for="tasks_all">Tasks</label>
-							</div>
+							<x-inputs.checkbox label="Tasks" id="tasks_all" name="tasks_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="tasks_view" name="abilities[]" value="tasks_view" @if( in_array('tasks_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="tasks_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="tasks_view" name="abilities[]" value="tasks_view" :checked="in_array('tasks_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="tasks_create" name="abilities[]" value="tasks_create" @if( in_array('tasks_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="tasks_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="tasks_create" name="abilities[]" value="tasks_create" :checked="in_array('tasks_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
 							&nbsp;
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="tasks_delete" name="abilities[]" value="tasks_delete" @if( in_array('tasks_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="tasks_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="tasks_delete" name="abilities[]" value="tasks_delete" :checked="in_array('tasks_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input check-all" id="notifications_all">
-								<label class="custom-control-label" for="notifications_all">Task Notifications</label>
-							</div>
+							<x-inputs.checkbox label="Task Notifications" id="notifications_all" name="notifications_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="notifications_view" name="abilities[]" value="notifications_view" @if( in_array('notifications_view', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="notifications_view">View</label>
-							</div>
+							<x-inputs.checkbox label="View" id="notifications_view" name="abilities[]" value="notifications_view" :checked="in_array('notifications_view', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="notifications_create" name="abilities[]" value="notifications_create" @if( in_array('notifications_create', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="notifications_create">Create</label>
-							</div>
+							<x-inputs.checkbox label="Create" id="notifications_create" name="abilities[]" value="notifications_create" :checked="in_array('notifications_create', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="notifications_update" name="abilities[]" value="notifications_update" @if( in_array('notifications_update', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="notifications_update">Update</label>
-							</div>
+							<x-inputs.checkbox label="Update" id="notifications_update" name="abilities[]" value="notifications_update" :checked="in_array('notifications_update', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 						<td>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="notifications_delete" name="abilities[]" value="notifications_delete" @if( in_array('notifications_delete', $role->abilities, true) ) checked @endif>
-								<label class="custom-control-label" for="notifications_delete">Delete</label>
-							</div>
+							<x-inputs.checkbox label="Delete" id="notifications_delete" name="abilities[]" value="notifications_delete" :checked="in_array('notifications_delete', $role->abilities, true)"></x-inputs.checkbox>
 						</td>
 					</tr>
 					</tbody>

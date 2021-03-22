@@ -22,10 +22,7 @@
                     <fieldset class="form-group">
                         <legend class="col-form-label">Category</legend>
                         @foreach($categories as $cat)
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                                <input id="categories_{{$cat->id}}" name="categories[]" value="{{$cat->id}}" class="custom-control-input" type="checkbox" {{ ( $song->categories->contains($cat->id) ) ? 'checked' : '' }}>
-                                <label for="categories_{{$cat->id}}" class="custom-control-label">{{$cat->title}}</label>
-                            </div>
+                            <x-inputs.checkbox label="{{ $cat->title }}" id="categories_{{ $cat->id }}" name="categories[]" value="{{ $cat->id }}" inline="true"></x-inputs.checkbox>
                         @endforeach
                     </fieldset>
 
@@ -87,10 +84,7 @@
                     --}}
 
                     <div class="form-group">
-                        <div class="custom-control custom-checkbox custom-control-inline">
-                            <input id="send_notification" name="send_notification" class="custom-control-input" type="checkbox" value="true" checked>
-                            <label for="send_notification" class="custom-control-label">Send "Song Updated" notification</label>
-                        </div>
+                        <x-inputs.checkbox :label='"Send \"Song Updated\" notification"' id="send_notification" name="send_notification" value="true" :checked="true"></x-inputs.checkbox>
                     </div>
 
                 </div>
