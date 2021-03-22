@@ -15,8 +15,7 @@
 
                 <div class="card-body">
                     <div class="form-group">
-                        {{ Form::label('title', 'Song Title') }}
-                        {{ Form::text('title', $song->title, ['class' => 'form-control']) }}
+                        <x-inputs.text label="Song Title" id="title" name="title" :value="$song->title"></x-inputs.text>
                     </div>
 
                     <fieldset class="form-group">

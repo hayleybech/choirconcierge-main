@@ -17,14 +17,12 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                {{ Form::label('first_name', 'First Name') }}
-                                {{ Form::text('first_name', $singer->first_name, ['class' => 'form-control']) }}
+                                <x-inputs.text label="First Name" id="first_name" name="first_name" :value="$singer->first_name"></x-inputs.text>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                {{ Form::label('last_name', 'Last Name') }}
-                                {{ Form::text('last_name', $singer->last_name, ['class' => 'form-control']) }}
+                                <x-inputs.text label="Last Name" id="last_name" name="last_name" :value="$singer->last_name"></x-inputs.text>
                             </div>
                         </div>
                     </div>
@@ -40,17 +38,14 @@
                     </div>
 
                     <p>
-                        {{ Form::label('email', 'E-Mail Address') }}
-                        {{ Form::email('email', $singer->email, ['class' => 'form-control']) }}
+                        <x-inputs.text label="Email Address" id="email" name="email" type="email" :value="$singer->email"></x-inputs.text>
                     </p>
 
                     <p>
-                        {{ Form::label('password', 'Change Password') }}
-                        {{ Form::password('password', ['class' => 'form-control']) }}
+                        <x-inputs.text label="Change Password" id="password" name="password" type="password"></x-inputs.text>
                     </p>
                     <p>
-                        {{ Form::label('password_confirmation', 'Confirm Password') }}
-                        {{ Form::password('password_confirmation', ['class' => 'form-control']) }}
+                        <x-inputs.text label="Confirm Password" id="password_confirmation" name="password_confirmation" type="password"></x-inputs.text>
                     </p>
 
                     @if(Auth::user()->can('create', \App\Models\Profile::class))

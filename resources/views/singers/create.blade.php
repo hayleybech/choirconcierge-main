@@ -17,31 +17,25 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
-							{{ Form::label('first_name', 'First Name') }}
-							{{ Form::text('first_name', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="First Name" id="first_name" name="first_name"></x-inputs.text>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
-							{{ Form::label('last_name', 'Last Name') }}
-							{{ Form::text('last_name', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="Last Name" id="last_name" name="last_name"></x-inputs.text>
 						</div>
 					</div>
 				</div>
 
 				<p>
-					{{ Form::label('email', 'E-Mail Address') }}
-					{{ Form::email('email', '', ['class' => 'form-control']) }}
+					<x-inputs.text label="Email Address" id="email" name="email" type="email"></x-inputs.text>
 				</p>
 
 				<p>
-					{{ Form::label('password', 'Change Password') }}
-					{{ Form::password('password', ['class' => 'form-control']) }}
-					<small class="form-text text-muted">You may leave this blank and update it later.</small>
+					<x-inputs.text label="Password" id="password" name="password" type="password" help-text="You may leave this blank and update it later."></x-inputs.text>
 				</p>
 				<p>
-					{{ Form::label('password_confirmation', 'Confirm Password') }}
-					{{ Form::password('password_confirmation', ['class' => 'form-control']) }}
+					<x-inputs.text label="Confirm Password" id="password_confirmation" name="password_confirmation" type="password"></x-inputs.text>
 				</p>
 
 				<fieldset class="form-group">
