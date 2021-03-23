@@ -23,70 +23,32 @@
 					</div>
 
 					<div class="form-group">
-						{{ Form::label('skill_pitch', 'Pitch Skill') }}
-						<div class="d-flex align-items-start">
-							<div class="mr-4">
-								1
-							</div>
-							<input id="skill_pitch" name="skill_pitch" type="range" class="custom-range" min="1" max="5" value="{{ $placement->skill_pitch }}">
-							<div class="ml-4">
-								5
-							</div>
-						</div>
+						<x-inputs.range label="Pitch Skill" id="skill_pitch" name="skill_pitch" min="1" max="5" value="{{ $placement->skill_pitch }}"></x-inputs.range>
 					</div>
 
 					<div class="form-group">
-						{{ Form::label('skill_harmony', 'Harmony Skill') }}
-						<div class="d-flex align-items-start">
-							<div class="mr-4">
-								1
-							</div>
-							<input id="skill_harmony" name="skill_harmony" type="range" class="custom-range" min="1" max="5" value="{{ $placement->skill_harmony }}">
-							<div class="ml-4">
-								5
-							</div>
-						</div>
+						<x-inputs.range label="Harmony Skill" id="skill_harmony" name="skill_harmony" min="1" max="5" value="{{ $placement->skill_harmony }}"></x-inputs.range>
 					</div>
 
 					<div class="form-group">
-						{{ Form::label('skill_performance', 'Performance Skill') }}
-						<div class="d-flex align-items-start">
-							<div class="mr-4">
-								1
-							</div>
-							<input id="skill_performance" name="skill_performance" type="range" class="custom-range" min="1" max="5" value="{{ $placement->skill_performance }}">
-							<div class="ml-4">
-								5
-							</div>
-						</div>
+						<x-inputs.range label="Performance Skill" id="skill_performance" name="skill_performance" min="1" max="5" value="{{ $placement->skill_performance }}"></x-inputs.range>
 					</div>
 
 					<div class="form-group">
-						{{ Form::label('skill_sightreading', 'Sight Reading Skill') }}
-						<div class="d-flex align-items-start">
-							<div class="mr-4">
-								1
-							</div>
-							<input id="skill_sightreading" name="skill_sightreading" type="range" class="custom-range" min="1" max="5" value="{{ $placement->skill_sightreading }}">
-							<div class="ml-4">
-								5
-							</div>
-						</div>
+						<x-inputs.range label="Sight Reading Skill" id="skill_sightreading" name="skill_sightreading" min="1" max="5" value="{{ $placement->skill_sightreading }}"></x-inputs.range>
 					</div>
 
 					<div class="form-group">
-						{{ Form::label('voice_tone', 'Voice Tone') }}
-						<div class="d-flex align-items-start">
-							<div>
-								<i class="fas fa-fw fa-flute fa-lg mr-3"></i>
+						<x-inputs.range label="Voice Tone" id="voice_tone" name="voice_tone" min="1" max="3" value="{{ $placement->voice_tone }}">
+							<x-slot name="minDesc">
+								<i class="fas fa-fw fa-flute fa-lg"></i>
 								<small class="form-text text-muted">Fluty</small>
-							</div>
-							<input id="voice_tone" name="voice_tone" type="range" class="custom-range" min="1" max="3" value="{{ $placement->voice_tone }}">
-							<div>
-								<i class="fas fa-fw fa-trumpet fa-lg ml-3"></i>
+							</x-slot>
+							<x-slot name="maxDesc">
+								<i class="fas fa-fw fa-trumpet fa-lg"></i>
 								<small class="form-text text-muted">Brassy</small>
-							</div>
-						</div>
+							</x-slot>
+						</x-inputs.range>
 					</div>
 
 					<div class="form-group">

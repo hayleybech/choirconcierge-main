@@ -232,12 +232,10 @@
 							</div>
 						</div>
 						<div class="mb-2">
-							<strong>Voice Tone</strong>
-							<div class="d-flex align-items-center">
-								<i class="fas fa-fw fa-flute mr-3 text fa-lg"></i>
-								<input type="range" class="custom-range" min="1" max="3" value="{{ $singer->placement->voice_tone }}" disabled>
-								<i class="fas fa-fw fa-trumpet ml-3 fa-lg"></i>
-							</div>
+							<x-inputs.range label="Voice Tone" id="voice_tone" name="voice_tone" min="1" max="3" value="{{ $singer->placement->voice_tone }}" disabled label-class="font-weight-bold">
+								<x-slot name="minDesc"><i class="fas fa-fw fa-flute fa-lg"></i></x-slot>
+								<x-slot name="maxDesc"><i class="fas fa-fw fa-trumpet fa-lg"></i></x-slot>
+							</x-inputs.range>
 						</div>
 						<div class="mb-2">
 							<strong>Experience</strong>
