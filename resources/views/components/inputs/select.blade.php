@@ -1,7 +1,7 @@
-@props(['label', 'id', 'name', 'options', 'selected' => ''])
+@props(['label', 'id', 'name', 'options', 'selected' => '', 'small' => false])
 
 <label for="{{ $id }}">{{ $label }}</label>
-<select name="{{ $name }}" id="{{ $id }}" class="custom-select">
+<select name="{{ $name }}" id="{{ $id }}" {{ $attributes->class(['custom-select', 'custom-select-sm' => $small]) }}>
 @if(is_array( collect($options)->first() ))
     @foreach($options as $label => $options_inner)
         <optgroup label="{{ $label }}">

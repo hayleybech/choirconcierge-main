@@ -48,7 +48,7 @@
                             <x-inputs.file label="File Upload" id="attachment_uploads" name="attachment_uploads[]" required="true" multiple="true"></x-inputs.file>
                         </div>
                         <div class="mr-2 mb-2">
-                            <x-inputs.select label="Category" id="category" name="category" :options="$categories_keyed"></x-inputs.select>
+                            <x-inputs.select label="Category" id="category" name="category" :options="$categories_keyed" small="true"></x-inputs.select>
                         </div>
                         <div class="flex-shrink-0 mb-2">
                             <load-button theme="btn-success" size="btn-sm" icon="fa fa-plus" label="Add" label-loading="Uploading..."></load-button>
