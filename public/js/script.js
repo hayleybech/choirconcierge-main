@@ -90,19 +90,25 @@ $( document ).ready(function() {
 
     // Hide Senders unless the list type is Mailout/Distribution
     const $senders = $('#senders')
-    const $list_type = $('#list_type');
     const $type_distribution = $('#list_type_distribution');
 
     // Check initial state on page load
-    if( ! $type_distribution.is(':checked')) {
+    if( ! $type_distribution[0]?.checked ) {
         $senders.hide();
+    } else {
+        $senders.show();
     }
 
-    // Set event handler
-    $list_type.click(function(){
-        if( $type_distribution.closest('.btn').is('.active')) {
+    // Set enable event handler
+    $type_distribution.change(function(){
+        if( this.checked ) {
             $senders.show();
-        } else {
+        }
+    });
+
+    // Set disable event handler
+    $('#list_type_chat, #list_type').change(function(){
+        if( this.checked ) {
             $senders.hide();
         }
     });
