@@ -1,6 +1,6 @@
-@props(['type' => 'text', 'label', 'id', 'name', 'value' => '', 'helpText' => ''])
-<label for="{{ $id }}">{{ $label }}</label>
-<input type="{{ $type }}" id="{{ $id }}" name="{{ $name }}" value="{{ $value }}" class="form-control">
+@props(['label', 'id', 'name', 'helpText' => '', 'small' => false, 'labelClass' => ''])
+<label for="{{ $id }}" class="{{ $labelClass }}">{{ $label }}</label>
+<input id="{{ $id }}" name="{{ $name }}" {{ $attributes->class(['form-control', 'form-control-sm' => $small])->merge(['value' => '', 'type' => 'text']) }}>
 @if( $helpText )
 <p>
     <small class="text-muted">{{ $helpText }}</small>
