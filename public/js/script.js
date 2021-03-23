@@ -128,7 +128,7 @@ $( document ).ready(function() {
     const $repeatDetails = $('#repeat_details');
     
     // Set initial state
-    if(! $is_repeating[0].checked) {
+    if(! $is_repeating[0]?.checked) {
         $repeatDetails.hide();
     } else {
         $repeatDetails.show();
