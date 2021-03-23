@@ -41,6 +41,7 @@ Vue.component('impersonate-user-modal', require('./components/ImpersonateUserMod
 Vue.component('repeating-event-edit-mode-modal', require('./components/RepeatingEventEditModeModal').default);
 Vue.component('repeating-event-delete-modal', require('./components/RepeatingEventDeleteModal').default);
 Vue.component('repeating-event-delete-button', require('./components/RepeatingEventDeleteButton').default);
+Vue.component('link-confirm', require('./components/LinkConfirm').default);
 
 // Allow binding select2 fields (add v-select attribute to select element to enable)
 // https://stackoverflow.com/a/51260727/563974

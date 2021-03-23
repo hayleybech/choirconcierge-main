@@ -263,18 +263,18 @@
 					<div class="card-body">
 						@foreach( $singer->tasks as $task )
 							@if( $task->pivot->completed )
-								<span class="mb-1 d-flex justify-content-between align-items-center link-confirm disabled" >
+								<span class="mb-1 d-flex justify-content-between align-items-center disabled">
 									<div class="d-flex w-100 justify-content-between">
 										<span><i class="far fa-fw fa-check-square"></i> {{ $task->name }}</span>
 									</div>
 								</span>
 							@else
 								@if(Auth::user()->hasRole($task->role->name))
-									<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="mb-1 d-flex justify-content-between align-items-center link-confirm" >
+									<link-confirm href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" description="{{ $task->name }}" class="mb-1 d-flex justify-content-between align-items-center">
 										<div class="d-flex w-100 justify-content-between">
 											<span><i class="far fa-fw fa-square"></i> {{ $task->name }}</span>
 										</div>
-									</a>
+									</link-confirm>
 								@else
 									<div class="mb-1 d-flex justify-content-between align-items-center disabled" >
 										<div class="d-flex w-100 justify-content-between">

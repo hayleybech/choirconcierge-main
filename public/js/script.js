@@ -2,11 +2,6 @@ $( document ).ready(function() {
     $('a.disabled').click(function(e) { 
       e.preventDefault(); 
     });
-	
-	$('.link-confirm').on('click', function (e) {
-		console.log(e);
-        return confirm( 'Are you sure? Action:' + e.target.innerText );
-    });
 
 	// Setup menu collapse
 	$menu_collapsibles = $('#app-header .navbar .logo, #app-header .navbar .logo-collapse, #app-header .navbar .link-text, .nav-heading');
