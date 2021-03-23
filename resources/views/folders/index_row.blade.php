@@ -5,8 +5,7 @@
     <div class="r-table__cell col--title">
         <a href="#folder-{{ $folder->id }}" data-toggle="collapse" class="collapse-toggle collapsed"></a>
         <inline-edit-field action="{{ route('folders.update', ['folder' => $folder]) }}" value="{{ $folder->title }}" csrf="{{ csrf_token() }}" edit-label="Rename" small-buttons="true">
-            <label for="rename_title_{{ $folder->id }}" class="sr-only">Name</label>
-            <input type="text" value="{{ $folder->title }}" class="form-control form-control-sm d-inline-flex align-middle mr-2" id="rename_title_{{ $folder->id }}" name="title" style="width: auto; ">
+            <x-inputs.text label="Name" id="rename_title_{{ $folder->id }}" name="title" value="{{ $folder->title }}" small="true" label-class="sr-only" class="d-inline-flex align-middle mr-2" style="width: auto; "></x-inputs.text>
         </inline-edit-field>
     </div>
     <div class="r-table__cell folder-col--status">

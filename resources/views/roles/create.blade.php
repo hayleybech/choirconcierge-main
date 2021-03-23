@@ -15,8 +15,7 @@
 
 			<div class="card-body">
 				<p>
-					{{ Form::label('name', 'Name') }}
-					{{ Form::text('name', '', ['class' => 'form-control']) }}
+					<x-inputs.text label="Name" id="name" name="name"></x-inputs.text>
 				</p>
 			</div>
 

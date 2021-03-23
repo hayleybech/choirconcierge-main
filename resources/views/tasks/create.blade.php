@@ -13,8 +13,7 @@
         <div class="card-body">
 
             <div class="form-group">
-                {{ Form::label('name', 'Task Name') }}
-                {{ Form::text('name', '', ['class' => 'form-control']) }}
+                <x-inputs.text label="Task Name" id="name" name="name"></x-inputs.text>
             </div>
 
             <div class="form-group">
@@ -22,8 +21,7 @@
             </div>
 
             <div class="form-group">
-                {{ Form::label('type', 'Type') }}
-                {{ Form::text('type', 'manual', ['class' => 'form-control-plaintext', 'readonly']) }}
+                <x-inputs.text label="Type" id="type" name="type" value="manual" readonly plain="true"></x-inputs.text>
             </div>
 
         </div>

@@ -18,8 +18,7 @@
 				@else
 				<div class="card-body">
 					<p>
-						{{ Form::label('name', 'Name') }}
-						{{ Form::text('name', $role->name, ['class' => 'form-control']) }}
+						<x-inputs.text label="Name" id="name" name="name" value="{{ $role->name }}"></x-inputs.text>
 					</p>
 				</div>
 				@endif

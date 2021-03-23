@@ -15,13 +15,11 @@
 
 				<div class="card-body">
 					<div class="form-group">
-						{{ Form::label('experience', 'Experience') }}
-						{{ Form::text('experience', $placement->experience, ['class' => 'form-control']) }}
+						<x-inputs.text label="Experience" id="experience" name="experience" :value="$placement->experience"></x-inputs.text>
 					</div>
 
 					<div class="form-group">
-						{{ Form::label('instruments', 'Instruments') }}
-						{{ Form::text('instruments', $placement->instruments, ['class' => 'form-control']) }}
+						<x-inputs.text label="Instruments" id="instruments" name="instruments" :value="$placement->instruments"></x-inputs.text>
 					</div>
 
 					<div class="form-group">

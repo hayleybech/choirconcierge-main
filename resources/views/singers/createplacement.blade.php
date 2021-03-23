@@ -17,13 +17,11 @@
 
 				<div class="card-body">
 					<div class="form-group">
-						{{ Form::label('experience', 'Experience') }}
-						{{ Form::text('experience', '', ['class' => 'form-control']) }}
+						<x-inputs.text label="Experience" id="experience" name="experience"></x-inputs.text>
 					</div>
 
 					<div class="form-group">
-						{{ Form::label('instruments', 'Instruments') }}
-						{{ Form::text('instruments', '', ['class' => 'form-control']) }}
+						<x-inputs.text label="Instruments" id="instruments" name="instruments"></x-inputs.text>
 					</div>
 
 					<div class="form-group">

@@ -40,6 +40,5 @@
 
     </td>
     <td class="col--reason">
-        <label for="absent_reason_{{ $singer->id }}" class="mr-2 d-sm-none">Reason</label>
-        <input type="text" id="absent_reason_{{ $singer->id }}" name="absent_reason[{{ $singer->id }}]" value="{{ optional($singer->attendance)->absent_reason }}" class="form-control form-control-sm">
+        <x-inputs.text label="Reason" id="absent_reason_{{ $singer->id }}" name="absent_reason[{{ $singer->id }}]" :value="optional($singer->attendance)->absent_reason" small="true" label-class="mr-2 d-sm-none"></x-inputs.text>
     </td>
