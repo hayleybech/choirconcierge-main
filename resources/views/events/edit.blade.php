@@ -61,14 +61,7 @@
                     </div>
 
                     <div class="form-group">
-                        {{ Form::label('call_time', 'Call Time') }}
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-clock"></i></span>
-                            </div>
-                            {{ Form::text('call_time_input', $event->call_time->format('M d, Y H:i'), ['class' => 'form-control events-single-date-time-picker']) }}
-                            {{ Form::hidden('call_time', $event->call_time, ['class' => 'date-time-hidden']) }}
-                        </div>
+                        <input-datetime label="Call Time" input-name="call_time_input" output-name="call_time" value="{{ $event->call_time }}"></input-datetime>
                     </div>
 
                 <!--
@@ -129,14 +122,7 @@
                         </div>
 
                         <div class="form-group">
-                            {{ Form::label('repeat_until', 'Repeat until') }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
-                                </div>
-                                {{ Form::text('repeat_until_input', optional($event->repeat_until)->format('M d, Y H:i') ?? '', ['class' => 'form-control events-single-date-picker']) }}
-                                {{ Form::hidden('repeat_until', $event->repeat_until, ['class' => 'date-time-hidden']) }}
-                            </div>
+                            <input-datetime label="Repeat until" input-name="repeat_until_input" output-name="repeat_until" value="{{ $event->repeat_until }}"></input-datetime>
                         </div>
 
                     </fieldset>
@@ -194,9 +180,6 @@
     {{ Form::close() }}
 
     @push('scripts-footer-bottom')
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= config('services.google.key') ?>&libraries=places&callback=initMap" async defer></script>
 
         <script src="{{ global_asset('js/events.js') }}"></script>
