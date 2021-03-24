@@ -43,6 +43,7 @@ Vue.component('repeating-event-delete-modal', require('./components/RepeatingEve
 Vue.component('repeating-event-delete-button', require('./components/RepeatingEventDeleteButton').default);
 Vue.component('input-datetime-range', require('./components/inputs/DateTimeRange').default);
 Vue.component('input-datetime', require('./components/inputs/DateTime').default);
+Vue.component('input-date', require('./components/inputs/Date').default);
 
 // Allow binding select2 fields (add v-select attribute to select element to enable)
 // https://stackoverflow.com/a/51260727/563974
