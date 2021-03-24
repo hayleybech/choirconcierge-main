@@ -32,10 +32,12 @@
         "@ttskch/select2-bootstrap4-theme": "^1.5.2",
         "@types/snapsvg": "^0.5.0",
         "howler": "^2.2.1",
+        "moment": "^2.29.1",
         "pdfjs-dist": "^2.6.347",
         "select2": "~4.0",
         "snapsvg-cjs": "0.0.6",
         "tone": "^14.7.77",
-        "vue-easy-dnd": "^1.10.2"
+        "vue-easy-dnd": "^1.10.2",
+        "vue2-datepicker": "^3.9.0"
     }
 }
