@@ -31,17 +31,9 @@
                     </fieldset>
 
                     <div class="form-group">
-                        {{ Form::label('date_range', 'Event Date') }}
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
-                            </div>
-                            {{ Form::text('date_range', '', ['class' => 'form-control events-date-range-picker']) }}
-                            {{ Form::hidden('start_date', '', ['class' => 'start-date-hidden']) }}
-                            {{ Form::hidden('end_date', '', ['class' => 'end-date-hidden']) }}
-
-                        </div>
-                        <p><small class="text-muted">Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</small></p>
+                        <input-datetime-range label="Event Date" input-name="date_range" start-name="start_date" end-name="end_date">
+                            <template #help>Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</template>
+                        </input-datetime-range>
                     </div>
 
                     <div class="form-group">
