@@ -9,6 +9,7 @@
             :use12h="true"
             :show-second="false"
             :format="displayFormat"
+            :input-class="inputClass"
             :input-attr="{ name: inputName }"
             style="width:100%"
             :shortcuts="shortcuts"
@@ -109,6 +110,10 @@ export default {
         hasHelpText () {
             return !!this.$slots['helpText'];
         },
+        inputClass() {
+            return this.small ? 'form-control form-control-sm' : 'form-control';
+        },
+    },
     methods: {
         // Why oh why can't JS have PHP-style assoc arrays? :'(
         // @see https://stackoverflow.com/a/14810722/563974
@@ -126,5 +131,7 @@ export default {
 </script>
 
 <style scoped>
-
+div >>> .form-control {
+    padding-right: 30px !important;
+}
 </style>
