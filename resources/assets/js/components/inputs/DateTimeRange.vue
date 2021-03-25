@@ -11,6 +11,7 @@
             :format="displayFormat"
             :input-attr="{ name: inputName }"
             style="width:100%"
+            :shortcuts="shortcuts"
         ></date-picker>
 
         <input type="hidden" :name="startName" :value="startTime">
@@ -52,7 +53,12 @@ export default {
         endValue: {
             type: String,
             default: null
-        }
+        },
+        showShortcuts: {
+            type: Boolean,
+            default: false
+        },
+        small: Boolean,
     },
     data() {
         return {
@@ -70,7 +76,48 @@ export default {
         },
         endTime() {
             return moment(this.time[1]).format(this.rawFormat);
-        }
+        },
+        shortcuts() {
+            if(!this.showShortcuts){
+                return [];
+            }
+            const ranges = {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            };
+
+            const that = this;
+
+            return Object.values(
+                this.objectMap(ranges, (dates, name) => {
+                    return {
+                        text: name,
+                        onClick: () => {
+                            that.time = [
+                                dates[0].toDate(),
+                                dates[1].toDate()
+                            ]
+                        }
+                    }
+                })
+            );
+        },
+    methods: {
+        // Why oh why can't JS have PHP-style assoc arrays? :'(
+        // @see https://stackoverflow.com/a/14810722/563974
+        // @todo move objectMap to somewhere more re-usable
+        // returns a new object with the values at each key mapped using fn(value)
+        objectMap(obj, fn) {
+            return Object.fromEntries(
+                Object.entries(obj).map(
+                    ([k, v], i) => [k, fn(v, k, i)]
+                )
+            );
+        },
     }
 }
 </script>
