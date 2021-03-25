@@ -12,7 +12,7 @@
 
         <input type="hidden" :name="outputName" :value="outputTime">
 
-        <p>
+        <p v-if="hasHelpText">
             <small class="text-muted">
                 <slot name="help"></slot>
             </small>
@@ -52,7 +52,10 @@ export default {
     computed: {
         outputTime() {
             return moment(this.time).format(this.rawFormat);
-        }
+        },
+        hasHelpText () {
+            return !!this.$slots['helpText'];
+        },
     }
 }
 </script>
