@@ -5,7 +5,7 @@
         <date-picker
             v-model="time"
             range
-            type="datetime"
+            :type="type"
             :use12h="true"
             :show-second="false"
             :format="displayFormat"
@@ -38,6 +38,10 @@ export default {
             type: String,
             required: true
         },
+        type: {
+            type: String,
+            default: 'datetime' // datetime || date || time
+        },
         inputName: String,
         startName: {
             type: String,
@@ -68,10 +72,17 @@ export default {
                 this.endValue ? new Date(this.endValue) : new Date
             ],
             rawFormat: 'YYYY-MM-DD HH:mm:ss',
-            displayFormat: 'MMMM D, YYYY hh:mm A',
         }
     },
     computed: {
+        displayFormat() {
+            const formats = {
+                date: 'YYYY-MM-DD',
+                time: 'hh:mm A',
+                datetime: 'MMMM D, YYYY hh:mm A'
+            }
+            return formats[this.type];
+        },
         startTime() {
             return moment(this.time[0]).format(this.rawFormat);
         },

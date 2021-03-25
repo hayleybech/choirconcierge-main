@@ -1,1 +1,1 @@
-<input-datetime-range :show-shortcuts="true" label="" input-name="date_range" start-name="filter_date[start" end-name="filter_date[end]" start-value="{{ $filter->start_date }}" end-value="{{ $filter->end_date }}" :small="true"></input-datetime-range>
+<input-datetime-range :show-shortcuts="true" label="" input-name="date_range" start-name="filter_date[start" end-name="filter_date[end]" start-value="{{ $filter->start_date }}" end-value="{{ $filter->end_date }}" :small="true" type="date"></input-datetime-range>
