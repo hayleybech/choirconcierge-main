@@ -8,6 +8,7 @@
             :type="type"
             :use12h="true"
             :show-second="false"
+            :minute-step="5"
             :format="displayFormat"
             :input-class="inputClass"
             :input-attr="{ name: inputName }"
