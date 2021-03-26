@@ -33,7 +33,7 @@
         <input type="hidden" :name="startName" :value="startTime">
         <input type="hidden" :name="endName" :value="endTime">
 
-        <p v-if="hasHelpText">
+        <p v-if="hasHelp">
             <small class="text-muted">
                 <slot name="help"></slot>
             </small>
@@ -134,8 +134,8 @@ export default {
                 })
             );
         },
-        hasHelpText () {
-            return !!this.$slots['helpText'];
+        hasHelp () {
+            return !!this.$slots['help'];
         },
         inputClass() {
             return this.small ? 'form-control form-control-sm' : 'form-control';

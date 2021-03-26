@@ -30,7 +30,7 @@
 
         <input type="hidden" :name="outputName" :value="outputTime">
 
-        <p v-if="hasHelpText">
+        <p v-if="hasHelp">
             <small class="text-muted">
                 <slot name="help"></slot>
             </small>
@@ -73,8 +73,8 @@ export default {
         outputTime() {
             return moment(this.time).format(this.rawFormat);
         },
-        hasHelpText () {
-            return !!this.$slots['helpText'];
+        hasHelp () {
+            return !!this.$slots['help'];
         },
         inputClass() {
             return this.small ? 'form-control form-control-sm' : 'form-control';
