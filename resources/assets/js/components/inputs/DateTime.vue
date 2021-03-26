@@ -42,6 +42,7 @@
 import moment from 'moment';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+
 export default {
     components: { DatePicker },
     name: "DateTime",
@@ -68,7 +69,7 @@ export default {
     },
     data() {
         return {
-            time: this.value ? new Date(this.value) : new Date,
+            time: this.value ?? null,
             rawFormat: 'YYYY-MM-DD HH:mm:ss',
         }
     },
