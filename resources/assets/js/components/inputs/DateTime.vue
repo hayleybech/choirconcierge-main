@@ -1,6 +1,9 @@
 <template>
     <div>
-        <label :for="inputName">{{ label }}</label>
+        <label :for="inputName">
+	        {{ label }}
+	        <small v-if="optional" class="text-muted">(Optional)</small>
+        </label>
 
         <date-picker
             v-model="time"
@@ -57,6 +60,7 @@ export default {
             default: null
         },
         small: Boolean,
+	    optional: Boolean
     },
     data() {
         return {
