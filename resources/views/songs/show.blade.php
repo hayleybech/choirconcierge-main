@@ -45,25 +45,10 @@
 
                     <div class="d-flex flex-column flex-md-row align-items-sm-stretch align-items-md-end">
                         <div class="mr-2 mb-2">
-                            {{ Form::label('attachment_uploads', 'File Upload') }}
-
-                            <div class="custom-file custom-file-sm">
-                                <input type="file" class="custom-file-input @error('attachment_uploads') is-invalid @enderror" id="attachment_uploads" name="attachment_uploads[]" multiple required>
-                                <div class="custom-file-label form-control-sm">Choose file</div>
-                                <div class="valid-feedback">Looks good!</div>
-                                <div class="invalid-feedback">Please upload a file.</div>
-                            </div>
-
+                            <x-inputs.file label="File Upload" id="attachment_uploads" name="attachment_uploads[]" required="true" multiple="true"></x-inputs.file>
                         </div>
                         <div class="mr-2 mb-2">
-                            {{ Form::label('category', 'Category') }}
-                            {{ Form::select('category',
-                                $categories_keyed,
-                                '',
-                                ['required', 'class' => 'custom-select custom-select-sm']
-                            ) }}
-                            <div class="valid-feedback">Looks good!</div>
-                            <div class="invalid-feedback">Please choose a category.</div>
+                            <x-inputs.select label="Category" id="category" name="category" :options="$categories_keyed" small="true"></x-inputs.select>
                         </div>
                         <div class="flex-shrink-0 mb-2">
                             <load-button theme="btn-success" size="btn-sm" icon="fa fa-plus" label="Add" label-loading="Uploading..."></load-button>

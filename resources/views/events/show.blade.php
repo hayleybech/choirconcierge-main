@@ -52,19 +52,10 @@
                         @if($event->in_future)
                             <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $my_rsvp]) }}" value="{{ $my_rsvp->response_string }}" csrf="{{ csrf_token() }}" edit-label="Change response">
                                 <label for="rsvp_response" class="d-block">Will you attend?</label>
-
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input id="rsvp_response_yes" name="rsvp_response" value="yes" class="custom-control-input" type="radio" {{ 'yes' === $my_rsvp->response ? 'checked' : '' }}>
-                                    <label for="rsvp_response_yes" class="custom-control-label">Yes</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input id="rsvp_response_maybe" name="rsvp_response" value="maybe" class="custom-control-input" type="radio" {{ 'maybe' === $my_rsvp->response ? 'checked' : '' }}>
-                                    <label for="rsvp_response_maybe" class="custom-control-label">Maybe</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input id="rsvp_response_no" name="rsvp_response" value="no" class="custom-control-input" type="radio" {{ 'no' === $my_rsvp->response ? 'checked' : '' }}>
-                                    <label for="rsvp_response_no" class="custom-control-label">No</label>
-                                </div>
+                                
+                                <x-inputs.radio label="Yes" id="rsvp_response_yes" name="rsvp_response" value="yes" inline="true" :checked="'yes' === $my_rsvp->response"></x-inputs.radio>
+                                <x-inputs.radio label="Maybe" id="rsvp_response_maybe" name="rsvp_response" value="maybe" inline="true" :checked="'maybe' === $my_rsvp->response"></x-inputs.radio>
+                                <x-inputs.radio label="No" id="rsvp_response_no" name="rsvp_response" value="no" inline="true" :checked="'no' === $my_rsvp->response"></x-inputs.radio>
                             </inline-edit-field>
                         @else
                             {{ $my_rsvp->response_string }}
@@ -74,18 +65,9 @@
                         <div class="form-group">
                             <label for="rsvp_response" class="d-block">Will you attend?</label>
 
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input id="rsvp_response_yes" name="rsvp_response" value="yes" class="custom-control-input" type="radio">
-                                <label for="rsvp_response_yes" class="custom-control-label">Yes</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input id="rsvp_response_maybe" name="rsvp_response" value="maybe" class="custom-control-input" type="radio" checked>
-                                <label for="rsvp_response_maybe" class="custom-control-label">Maybe</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input id="rsvp_response_no" name="rsvp_response" value="no" class="custom-control-input" type="radio">
-                                <label for="rsvp_response_no" class="custom-control-label">No</label>
-                            </div>
+                            <x-inputs.radio label="Yes" id="rsvp_response_yes" name="rsvp_response" value="yes" inline="true"></x-inputs.radio>
+                            <x-inputs.radio label="Maybe" id="rsvp_response_maybe" name="rsvp_response" value="maybe" inline="true" checked="true"></x-inputs.radio>
+                            <x-inputs.radio label="No" id="rsvp_response_no" name="rsvp_response" value="no" inline="true"></x-inputs.radio>
                         </div>
 
                         <div class="form-group">

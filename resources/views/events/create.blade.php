@@ -16,17 +16,13 @@
                 <div class="card-body">
 
                     <div class="form-group">
-                        {{ Form::label('title', 'Event Title') }}
-                        {{ Form::text('title', '', ['class' => 'form-control']) }}
+                        <x-inputs.text label="Event Title" id="title" name="title"></x-inputs.text>
                     </div>
 
                     <fieldset class="form-group">
                         <legend class="col-form-label">Type</legend>
                         @foreach($types as $type)
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input id="type_{{$type->id}}" name="type" value="{{$type->id}}" class="custom-control-input" type="radio">
-                                <label for="type_{{$type->id}}" class="custom-control-label">{{$type->title}}</label>
-                            </div>
+                            <x-inputs.radio label="{{ $type->title }}" id="type_{{ $type->id }}" name="type" value="{{ $type->id }}" inline="true"></x-inputs.radio>
                         @endforeach
                     </fieldset>
 
@@ -43,10 +39,7 @@
 
                     <div class="form-group">
                         {{ Form::label('', 'Repeating Event') }}
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="is_repeating" name="is_repeating" value="1">
-                            <label class="custom-control-label" for="is_repeating">Repeat?</label>
-                        </div>
+                        <x-inputs.switch label="Repeat?" name="is_repeating" value="1"></x-inputs.switch>
                     </div>
 
                     <fieldset id="repeat_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
@@ -55,10 +48,7 @@
                             {{ Form::label('repeat_frequency_unit', 'Repeat every') }}<br>
 
                             @foreach(['day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'] as $key => $unit)
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input id="repeat_frequency_unit_{{$key}}" name="repeat_frequency_unit" value="{{$key}}" class="custom-control-input" type="radio">
-                                    <label for="repeat_frequency_unit_{{$key}}" class="custom-control-label">{{$unit}}</label>
-                                </div>
+                                <x-inputs.radio label="{{ $unit }}" id="repeat_frequency_unit_{{ $key }}" name="repeat_frequency_unit" value="{{ $key }}" inline="true"></x-inputs.radio>
                             @endforeach
 
                         </div>
@@ -95,10 +85,7 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" id="send_notification" name="send_notification" type="checkbox" value="true" checked>
-                            <label class="custom-control-label" for="send_notification">Send "Event Created" Notification</label>
-                        </div>
+                        <x-inputs.checkbox :label='"Send \"Event Created\" Notification"' id="send_notification" name="send_notification" value="true" :checked="true"></x-inputs.checkbox>
                     </div>
 
                 </div>

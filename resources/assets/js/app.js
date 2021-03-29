@@ -45,6 +45,7 @@ Vue.component('input-datetime-range', require('./components/inputs/DateTimeRange
 Vue.component('input-datetime', require('./components/inputs/DateTime').default);
 Vue.component('input-date', require('./components/inputs/Date').default);
 Vue.component('event-dates', require('./components/EventDates').default);
+Vue.component('link-confirm', require('./components/LinkConfirm').default);
 
 // Allow binding select2 fields (add v-select attribute to select element to enable)
 // https://stackoverflow.com/a/51260727/563974

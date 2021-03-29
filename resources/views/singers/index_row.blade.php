@@ -55,9 +55,9 @@
 						}
 					@endphp
 					@if( Auth::user()->hasRole($task->role->name) )
-					<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="link-confirm progress--link btn btn-sm force-xs mr-2 {{$btn_style}}">
-						<i class="fa fa-fw  {{$icon_complete}}"></i> {{$action}}
-					</a>
+					<link-confirm href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" description="{{ $action.' - '.$task->name }}" class="progress--link btn btn-sm force-xs mr-2 {{$btn_style}}">
+						<i class="fa fa-fw {{$icon_complete}}"></i> {{$action}}
+					</link-confirm>
 					@endif
 					<span>{{ $task->name }}</span>
 

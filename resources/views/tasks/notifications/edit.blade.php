@@ -13,14 +13,13 @@
         <div class="card-body">
 
             <div class="form-group">
-                {{ Form::label('subject', 'Subject') }}
-                {{ Form::text('subject', $notification->subject, ['class' => 'form-control', 'placeholder' => 'Congrats for doing a thing!']) }}
+                <x-inputs.text label="Subject" id="subject" name="subject" placeholder="Congrats for doing a thing!" value="{{ $notification->subject }}"></x-inputs.text>
             </div>
 
             <div class="form-group">
-                {{ Form::label('recipients', 'Recipient(s)') }}
-                {{ Form::text('recipients', $notification->recipients, ['class' => 'form-control']) }}
-                <small class="form-text text-muted">e.g. The singer: <code>singer:0</code>, a user role: <code>role:1</code>, a specific user: <code>user:1</code>.</small>
+                <x-inputs.text label="Recipient(s)" id="recipients" name="recipients" value="{{ $notification->recipients }}">
+                    <x-slot name="helpText">e.g. The singer: <code>singer:0</code>, a user role: <code>role:1</code>, a specific user: <code>user:1</code>.</x-slot>
+                </x-inputs.text>
             </div>
 
             <div class="form-group">
@@ -55,9 +54,7 @@
             </div>
 
             <div class="form-group">
-                {{ Form::label('delay', 'Delay') }}
-                {{ Form::text('delay', $notification->delay, ['class' => 'form-control', 'placeholder' => '1 second']) }}
-                <small class="form-text text-muted">Try something like "4 hours" or "28 days". </small>
+                <x-inputs.text label="Delay" id="delay" name="delay" placeholder="1 second" help-text="Try something like '4 hours' or '28 days'. " value="{{ $notification->delay }}"></x-inputs.text>
             </div>
 
         </div>
