@@ -11,10 +11,10 @@
 
 		<div class="row mb-2">
 			<div class="col-md-6">
-				<input-datetime label="Onstage Time" :optional="true" type="time" input-name="start_date_input" output-name="start_date" v-model="startDate" :default-value="defaultStartDate" :disabled-time="disabledStartTime" @change="changeStartTime"></input-datetime>
+				<input-datetime label="Onstage Time" type="time" input-name="start_date_input" output-name="start_date" v-model="startDate" :default-value="defaultStartDate" :disabled-time="disabledStartTime" @change="changeStartTime"></input-datetime>
 			</div>
 			<div class="col-md-6">
-				<input-datetime label="End Time" :optional="true" type="time" input-name="end_date_input" output-name="end_date" v-model="endDate" :default-value="defaultEndDate" :disabled-time="disabledEndTime" @change="changeEndTime"></input-datetime>
+				<input-datetime label="End Time" type="time" input-name="end_date_input" output-name="end_date" v-model="endDate" :default-value="defaultEndDate" :disabled-time="disabledEndTime" @change="changeEndTime"></input-datetime>
 			</div>
 		</div>
 
