@@ -31,13 +31,14 @@
                     </fieldset>
 
                     <div class="form-group">
-                        <input-datetime-range label="Event Date" input-name="date_range" start-name="start_date" end-name="end_date">
-                            <template #help>Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</template>
-                        </input-datetime-range>
-                    </div>
-
-                    <div class="form-group">
-                        <input-datetime label="Call Time" input-name="call_time_input" output-name="call_time"></input-datetime>
+                        <div v-if="loading">
+                            <i class="fas fa-fw fa-compact-disc fa-spin"></i>
+                        </div>
+                        <div v-else>
+                            <event-dates>
+                                <template #description>Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</template>
+                            </event-dates>
+                        </div>
                     </div>
 
                 <!--
