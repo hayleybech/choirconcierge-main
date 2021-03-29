@@ -66,50 +66,50 @@ export default {
 			const newStartDate = moment(dates[0]);
 			const newEndDate = moment(dates[1]);
 
-			this.startDate = moment(this.startDate)
-				.year(newStartDate.year())
-				.month(newStartDate.month())
-				.date(newStartDate.date())
-				.toDate();
+			this.startDate = moment(this.startDate).set({
+					year: newStartDate.year(),
+					month: newStartDate.month(),
+					date: newStartDate.date(),
+				}).toDate();
 
-			this.endDate = moment(this.endDate)
-				.year(newEndDate.year())
-				.month(newEndDate.month())
-				.date(newEndDate.date())
-				.toDate();
+			this.endDate = moment(this.endDate).set({
+					year: newEndDate.year(),
+					month: newEndDate.month(),
+					date: newEndDate.date(),
+				}).toDate();
 
-			this.callTime = moment(this.callTime)
-				.year(newStartDate.year())
-				.month(newStartDate.month())
-				.date(newStartDate.date())
-				.toDate();
+			this.callTime = moment(this.callTime).set({
+					year: newStartDate.year(),
+					month: newStartDate.month(),
+					date: newStartDate.date(),
+				}).toDate();
 
 			this.updateDefaults();
 		},
 		changeStartTime(date) {
 			const newStartDate = moment(date);
-			this.startDate = moment(this.startDate)
-				.hour(newStartDate.hour())
-				.minute(newStartDate.minute())
-				.toDate();
+			this.startDate = moment(this.startDate).set({
+					hour: newStartDate.hour(),
+					minute: newStartDate.minute(),
+				}).toDate();
 
 			this.updateDefaults();
 		},
 		changeEndTime(date) {
 			const newEndDate = moment(date);
-			this.endDate = moment(this.endDate)
-				.hour(newEndDate.hour())
-				.minute(newEndDate.minute())
-				.toDate();
+			this.endDate = moment(this.endDate).set({
+					hour: newEndDate.hour(),
+					minute: newEndDate.minute(),
+				}).toDate();
 
 			this.updateDefaults();
 		},
 		changeCallTime(date) {
 			const newCall = moment(date);
-			this.callTime = moment(this.callTime)
-				.hour(newCall.hour())
-				.minute(newCall.minute())
-				.toDate();
+			this.callTime = moment(this.callTime).set({
+					hour: newCall.hour(),
+					minute: newCall.minute(),
+				}).toDate();
 
 			this.updateDefaults();
 		},
