@@ -18,7 +18,7 @@ class EventController extends Controller
         $this->authorize('viewAny', Event::class);
 
         // Base query
-        $all_events = Event::with(['repeat_parent:id,start_date'])
+        $all_events = Event::with(['repeat_parent:id,call_time'])
             ->withCount([
                 'rsvps as going_count' => function($query) {
                     $query->where('response', '=', 'yes');
@@ -31,7 +31,7 @@ class EventController extends Controller
             ->get();
 
         // Sort
-        $sort_by = $request->input('sort_by', 'start_date');
+        $sort_by = $request->input('sort_by', 'call_time');
         $sort_dir = $request->input('sort_dir', 'asc');
 
         // Flip direction for date (so we sort by smallest age not smallest timestamp)
@@ -45,8 +45,8 @@ class EventController extends Controller
 
         return view('events.index', [
             'all_events'      => $all_events,
-            'upcoming_events' => $all_events->where('start_date', '>', now()),
-            'past_events'     => $all_events->where('start_date', '<', now()),
+            'upcoming_events' => $all_events->where('call_time', '>', now()),
+            'past_events'     => $all_events->where('call_time', '<', now()),
             'filters'         => Event::getFilters(),
             'sorts'           => $sorts = $this->getSorts($request),
         ]);
@@ -77,7 +77,7 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
-        $event->load('repeat_parent:id,start_date');
+        $event->load('repeat_parent:id,call_time');
 
         return view('events.show', [
             'event'   => $event,
@@ -136,13 +136,13 @@ class EventController extends Controller
             'title',
             'type.title',
             'created_at',
-            'start_date',
+            'call_time',
         ];
 
         // Merge filters with sort query string
         $url = $request->url() . '?' . Event::getFilterQueryString();
 
-        $current_sort = $request->input('sort_by', 'start_date');
+        $current_sort = $request->input('sort_by', 'call_time');
         $current_dir =  $request->input('sort_dir', 'asc');
 
         $sorts = [];

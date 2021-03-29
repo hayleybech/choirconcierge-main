@@ -103,3 +103,16 @@ select.form-control-sm.force-xs {
      }
   }
 }
+
+
+/** INPUT GROUPS **/
+
+/* Force the vue2-datepicker to respect border-radius in input-group */
+.input-group > :not(:first-child) .mx-datepicker input[type="text"] {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.input-group > :not(:last-child) .mx-datepicker input[type="text"] {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}

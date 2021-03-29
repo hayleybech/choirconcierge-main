@@ -18,16 +18,7 @@
 
 				<div class="card-body">
 					<div class="form-group">
-
-						{{ Form::label('dob', 'Date of Birth') }}
-						<div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
-							</div>
-							{{ Form::text('dob_input', '', ['class' => 'form-control dob-single-date-picker']) }}
-							{{ Form::hidden('dob', '', ['class' => 'dob-hidden']) }}
-						</div>
-
+						<input-date label="Date of Birth" input-name="dob_input" output-name="dob"></input-date>
 					</div>
 
 					<fieldset>

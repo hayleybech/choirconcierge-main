@@ -55,63 +55,15 @@
                     </fieldset>
 
                     <div class="form-group">
-                        {{ Form::label('date_range', 'Event Date') }}
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
-                            </div>
-                            {{ Form::text('date_range', $event->start_date->format('M d, Y H:i') . ' - ' . $event->end_date->format('M d, Y H:i'), ['class' => 'form-control events-date-range-picker']) }}
-                            {{ Form::hidden('start_date', $event->start_date, ['class' => 'start-date-hidden']) }}
-                            {{ Form::hidden('end_date', $event->end_date, ['class' => 'end-date-hidden']) }}
-
+                        <div v-if="loading">
+                            <i class="fas fa-fw fa-compact-disc fa-spin"></i>
                         </div>
-                        <p><small class="text-muted">Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</small></p>
-                    </div>
-
-                    <div class="form-group">
-                        {{ Form::label('call_time', 'Call Time') }}
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-clock"></i></span>
-                            </div>
-                            {{ Form::text('call_time_input', $event->call_time->format('M d, Y H:i'), ['class' => 'form-control events-single-date-time-picker']) }}
-                            {{ Form::hidden('call_time', $event->call_time, ['class' => 'date-time-hidden']) }}
+                        <div v-else>
+                            <event-dates start-date="{{ $event->start_date }}" end-date="{{ $event->end_date }}" call-time="{{ $event->call_time }}">
+                                <template #description>Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</template>
+                            </event-dates>
                         </div>
                     </div>
-
-                <!--
-    <div class="form-group">
-        {{ Form::label('call_time_hr', 'Call Time') }}
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-clock"></i></span>
-                            </div>
-{{ Form::select('call_time_hr', [
-                    '01',
-                    '02',
-                    '03',
-                    '04',
-                    '05',
-                    '06',
-                    '07',
-                    '08',
-                    '09',
-                    '10',
-                    '11',
-                    '12',
-                ], $event->call_time_hr, ['class' => 'custom-select time-hr']) }}
-                {{ Form::select('call_time_min', [
-                        '00',
-                        '15',
-                        '30',
-                        '45',
-                    ], $event->call_time_min, ['class' => 'custom-select time-min']) }}
-                {{ Form::select('call_time_ampm', [
-                        'AM',
-                        'PM'
-                    ], $event->call_time_ampm, ['class' => 'custom-select time-ampm']) }}
-                        </div>
-                    </div>-->
 
                     @if('single' !== request()->query('mode'))
                     <div class="form-group">
@@ -137,14 +89,7 @@
                         </div>
 
                         <div class="form-group">
-                            {{ Form::label('repeat_until', 'Repeat until') }}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
-                                </div>
-                                {{ Form::text('repeat_until_input', optional($event->repeat_until)->format('M d, Y H:i') ?? '', ['class' => 'form-control events-single-date-picker']) }}
-                                {{ Form::hidden('repeat_until', $event->repeat_until, ['class' => 'date-time-hidden']) }}
-                            </div>
+                            <input-datetime label="Repeat until" input-name="repeat_until_input" output-name="repeat_until" :value="new Date({{ $event->repeat_until }})"></input-datetime>
                         </div>
 
                     </fieldset>
@@ -202,9 +147,6 @@
     {{ Form::close() }}
 
     @push('scripts-footer-bottom')
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= config('services.google.key') ?>&libraries=places&callback=initMap" async defer></script>
 
         <script src="{{ global_asset('js/events.js') }}"></script>

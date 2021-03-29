@@ -40,8 +40,10 @@
                     </p>
 
                     <div class="badge badge-pill badge-dark">{{ $event->type->title }}</div>
-                    <div><time class="font-weight-bold">{{ $event->start_date->format('M d, H:i') }}</time> to <time class="font-weight-bold">{{ $event->end_date->format('M d, H:i') }}</time></div>
-                    <div>Call Time: <time>{{ $event->call_time->format('M d, H:i') }}</time></div>
+                    <div><time class="font-weight-bold">{{ $event->call_time->format('M d, H:i') }}</time> to <time class="font-weight-bold">{{ $event->end_date->format('M d, H:i') }}</time></div>
+                    @can('update', $event)
+                        <div>Onstage Time: <time>{{ $event->start_date->format('H:i') }}</time></div>
+                    @endcan
                     <div class="text-muted">Timezone: {{ $event->start_date->format('e P') }}</div>
                     <div>{{ $event->description }}</div>
 

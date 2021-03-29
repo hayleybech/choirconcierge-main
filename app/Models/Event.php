@@ -245,6 +245,7 @@ class Event extends Model
         // Check if any of the repeat data has changed - includes start time
         // @todo allow changing the time (not the date) without causing series regeneration
         if($this->isDirty([
+        	'call_time',
             'start_date',
             'repeat_until',
             'repeat_frequency_unit',
@@ -281,6 +282,7 @@ class Event extends Model
         // Check if any of the repeat data has changed - includes start time
         // @todo allow changing the time (not the date) without causing series regeneration
         if($this->isDirty([
+        	'call_time',
             'start_date',
             'repeat_until',
             'repeat_frequency_unit',
@@ -501,12 +503,12 @@ class Event extends Model
 
     public function getInPastAttribute(): bool
     {
-        return $this->start_date < Carbon::now();
+        return $this->call_time < Carbon::now();
     }
 
     public function getInFutureAttribute(): bool
     {
-        return $this->start_date > Carbon::now();
+        return $this->call_time > Carbon::now();
     }
 
     public function getIsRepeatParentAttribute(): bool
