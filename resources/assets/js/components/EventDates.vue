@@ -123,7 +123,7 @@ export default {
 				this.defaultStartDate = this.startDate;
 			}
 			// endDate must be at least y later than startDate
-			const minAfterStartDate = {hours: 1};
+			const minAfterStartDate = {minutes: 15};
 			if(moment(this.startDate).add(minAfterStartDate).isSameOrAfter(this.endDate)) {
 				this.endDate = moment(this.startDate)
 					.add(minAfterStartDate)
