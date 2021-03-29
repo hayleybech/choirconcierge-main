@@ -65,40 +65,6 @@
                         </div>
                     </div>
 
-                <!--
-    <div class="form-group">
-        {{ Form::label('call_time_hr', 'Call Time') }}
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-clock"></i></span>
-                            </div>
-{{ Form::select('call_time_hr', [
-                    '01',
-                    '02',
-                    '03',
-                    '04',
-                    '05',
-                    '06',
-                    '07',
-                    '08',
-                    '09',
-                    '10',
-                    '11',
-                    '12',
-                ], $event->call_time_hr, ['class' => 'custom-select time-hr']) }}
-                {{ Form::select('call_time_min', [
-                        '00',
-                        '15',
-                        '30',
-                        '45',
-                    ], $event->call_time_min, ['class' => 'custom-select time-min']) }}
-                {{ Form::select('call_time_ampm', [
-                        'AM',
-                        'PM'
-                    ], $event->call_time_ampm, ['class' => 'custom-select time-ampm']) }}
-                        </div>
-                    </div>-->
-
                     @if('single' !== request()->query('mode'))
                     <div class="form-group">
                         {{ Form::label('', 'Repeating Event') }}
