@@ -33,7 +33,7 @@ class Event_DateFilter extends Filter
 
     protected function run(Builder $query): Builder
     {
-        return $query->where('start_date', '>', $this->start_date)
+        return $query->where('call_time', '>', $this->start_date)
             ->where('end_date', '<', $this->end_date);
     }
 }

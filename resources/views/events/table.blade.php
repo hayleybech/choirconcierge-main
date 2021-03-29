@@ -3,7 +3,7 @@
     <tr class="row--event">
         <th class="col--title"><a href="{{ $sorts['title']['url'] }}">Title<i class="ml-1 fa fas sort-{{ $sorts['title']['dir'] }} {{ ($sorts['title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
         <th class="col--type"><a href="{{ $sorts['type.title']['url'] }}">Type<i class="ml-1 fa fas sort-{{ $sorts['type.title']['dir'] }} {{ ($sorts['type.title']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
-        <th class="col--date"><a href="{{ $sorts['start_date']['url'] }}">Event Date<i class="ml-1 fa fas sort-{{ $sorts['start_date']['dir'] }} {{ ($sorts['start_date']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
+        <th class="col--date"><a href="{{ $sorts['call_time']['url'] }}">Event Date<i class="ml-1 fa fas sort-{{ $sorts['call_time']['dir'] }} {{ ($sorts['call_time']['current'] ? 'sort-active' : 'sort-inactive' ) }}"></i></a></th>
         <th class="col--location">Location</th>
         @if($col_rsvp)
             @can('viewAny', \App\Models\Rsvp::class)

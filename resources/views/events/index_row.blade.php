@@ -13,10 +13,10 @@
     <td class="col--date">
         <div class="date">
             <div class="date__diff-for-humans">
-                {{ $event->start_date->diffForHumans() }}
+                {{ $event->call_time->diffForHumans() }}
             </div>
             <div class="date__regular">
-                {{ $event->start_date->format('M d, H:i') }}
+                {{ $event->call_time->format('M d, H:i') }}
             </div>
         </div>
     </td>
