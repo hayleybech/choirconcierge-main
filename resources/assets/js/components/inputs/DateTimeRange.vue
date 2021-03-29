@@ -6,7 +6,9 @@
         </label>
 
         <date-picker
-            v-model="time"
+	        v-bind:value="value"
+	        v-on:input="onInput"
+	        v-on:change="onChange"
             range
             :type="type"
             :use12h="true"
@@ -66,14 +68,9 @@ export default {
             type: String,
             required: true,
         },
-        startValue: {
-            type: String,
-            default: null
-        },
-        endValue: {
-            type: String,
-            default: null
-        },
+	    value: {
+        	type: Array // Array<Date>
+	    },
         showShortcuts: {
             type: Boolean,
             default: false
@@ -83,10 +80,6 @@ export default {
     },
     data() {
         return {
-            time: [
-                this.startValue ? new Date(this.startValue) : new Date,
-                this.endValue ? new Date(this.endValue) : new Date
-            ],
             rawFormat: 'YYYY-MM-DD HH:mm:ss',
         }
     },
@@ -100,10 +93,10 @@ export default {
             return formats[this.type];
         },
         startTime() {
-            return moment(this.time[0]).format(this.rawFormat);
+            return moment(this.value[0]).format(this.rawFormat);
         },
         endTime() {
-            return moment(this.time[1]).format(this.rawFormat);
+            return moment(this.value[1]).format(this.rawFormat);
         },
         shortcuts() {
             if(!this.showShortcuts){
@@ -125,7 +118,7 @@ export default {
                     return {
                         text: name,
                         onClick: () => {
-                            that.time = [
+                            that.value = [
                                 dates[0].toDate(),
                                 dates[1].toDate()
                             ]
@@ -153,6 +146,12 @@ export default {
                 )
             );
         },
+	    onInput(date, type) {
+		    this.$emit('input', date, type);
+	    },
+	    onChange(date, type){
+		    this.$emit('change', date, type);
+	    }
     }
 }
 </script>

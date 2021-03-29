@@ -123,7 +123,7 @@
                         </div>
 
                         <div class="form-group">
-                            <input-datetime label="Repeat until" input-name="repeat_until_input" output-name="repeat_until" value="{{ $event->repeat_until }}"></input-datetime>
+                            <input-datetime label="Repeat until" input-name="repeat_until_input" output-name="repeat_until" :value="new Date({{ $event->repeat_until }})"></input-datetime>
                         </div>
 
                     </fieldset>

@@ -6,7 +6,9 @@
         </label>
 
         <date-picker
-            v-model="time"
+	        v-bind:value="value"
+	        v-on:input="onInput"
+            v-on:change="onChange"
             :type="type"
             :use12h="true"
             :show-second="false"
@@ -14,6 +16,7 @@
             :format="displayFormat"
             :input-class="inputClass"
             :input-attr="{ name: inputName }"
+	        :disabled-time="disabledTime"
             style="width:100%"
         >
             <!-- TEMPORARY: Add icon for time type. The lib dev has already committed this as the default in the upcoming release -->
@@ -61,15 +64,16 @@ export default {
             required: true,
         },
         value: {
-            type: String,
-            default: null
+            type: Date,
         },
         small: Boolean,
-	    optional: Boolean
+	    optional: Boolean,
+	    disabledTime: {
+		    type: Function
+	    },
     },
     data() {
         return {
-            time: this.value ?? null,
             rawFormat: 'YYYY-MM-DD HH:mm:ss',
         }
     },
@@ -83,7 +87,7 @@ export default {
             return formats[this.type];
         },
         outputTime() {
-            return moment(this.time).format(this.rawFormat);
+            return moment(this.value).format(this.rawFormat);
         },
         hasHelp () {
             return !!this.$slots['help'];
@@ -91,7 +95,15 @@ export default {
         inputClass() {
             return this.small ? 'form-control form-control-sm' : 'form-control';
         },
-    }
+    },
+	methods: {
+    	onInput(date, type) {
+		    this.$emit('input', date, type);
+	    },
+		onChange(date, type){
+			this.$emit('change', date, type);
+		}
+	}
 }
 </script>
 
