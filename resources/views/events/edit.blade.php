@@ -55,7 +55,7 @@
                             <i class="fas fa-fw fa-compact-disc fa-spin"></i>
                         </div>
                         <div v-else>
-                            <event-dates start-date="{{ $event->start_date }}" end-date="{{ $event->end_date }}" call-time="{{ $event->call_time }}">
+                            <event-dates init-start-date="{{ $event->start_date }}" init-end-date="{{ $event->end_date }}" init-call-time="{{ $event->call_time }}">
                                 <template #description>Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</template>
                             </event-dates>
                         </div>
