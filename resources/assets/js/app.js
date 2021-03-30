@@ -9,6 +9,9 @@ import Vue from 'vue'
 require('./bootstrap');
 require('select2');
 
+import ReadMore from 'vue-read-more';
+Vue.use(ReadMore);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

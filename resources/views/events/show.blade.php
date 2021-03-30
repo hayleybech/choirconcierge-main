@@ -70,7 +70,9 @@
                     </div>
 
                     <h5>Event Description</h5>
-                    <div class="mb-4">{{ $event->description }}</div>
+                    <div class="mb-4">
+                        <read-more more-str="Read More" text="{{ $event->description }}" less-str="Read Less" :max-chars="500"></read-more>
+                    </div>
 
                     <div class="dropdown m">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="addToCalendarDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
