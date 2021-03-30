@@ -1,6 +1,6 @@
 <template>
     <div>
-        <switch-input :label="label" :name="name" :value="value" v-model="isOpen"></switch-input>
+        <switch-input :label="label" :name="name" :value="value" v-model="isOpen" class="mb-4"></switch-input>
         <div v-if="isOpen">
             <slot></slot>
         </div>
