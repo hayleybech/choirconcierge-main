@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-pro": "^5.15.3",
+        "@googlemaps/js-api-loader": "^1.11.3",
         "@ttskch/select2-bootstrap4-theme": "^1.5.2",
         "@types/snapsvg": "^0.5.0",
         "howler": "^2.2.1",

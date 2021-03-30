@@ -59,24 +59,8 @@
 
                     </fieldset>
 
-
                     <div class="form-group location-input-wrapper">
-                        {{ Form::label('location', 'Location') }}
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-fw fa-map-marker-alt"></i></span>
-                            </div>
-                            {{ Form::text('location', '', ['class' => 'form-control location-input', 'rows' => '3']) }}
-                            {{ Form::hidden('location_place_id', '', ['class' => 'form-control location-place-id']) }}
-                            {{ Form::hidden('location_icon', '', ['class' => 'form-control location-icon']) }}
-                            {{ Form::hidden('location_name', '', ['class' => 'form-control location-name']) }}
-                            {{ Form::hidden('location_address', '', ['class' => 'form-control location-address']) }}
-                        </div>
-                        <small class="location-place form-text text-muted">
-                            <span class="place-icon"></span>
-                            <span class="place-name"></span>
-                            <span class="place-address"></span>
-                        </small>
+                        <location-input label="Location" input-name="location" api-key="{{ config('services.google.key') }}"></location-input>
                     </div>
 
                     <div class="form-group">
@@ -108,11 +92,5 @@
 
 
     {{ Form::close() }}
-
-    @push('scripts-footer-bottom')
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= config('services.google.key') ?>&libraries=places&callback=initMap" async defer></script>
-
-    <script src="{{ global_asset('js/events.js') }}"></script>
-    @endpush
 
 @endsection
