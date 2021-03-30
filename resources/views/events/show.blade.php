@@ -25,27 +25,64 @@
                     @endcan
                 </div>
                 <div class="card-body">
-                    <p>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="addToCalendarDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="far fa-fw fa-calendar-plus"></i> Add to Calendar
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="addToCalendarDropdownButton">
-                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->google() }}" target="_blank"><i class="fab fa-fw fa-google"></i> Google</a>
-                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->yahoo() }}" target="_blank"><i class="fab fa-fw fa-yahoo"></i> Yahoo</a>
-                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->webOutlook() }}" target="_blank"><i class="fab fa-fw fa-microsoft"></i> Outlook Web</a>
-                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->ics() }}" target="_blank"><i class="fas fa-fw fa-download"></i> ICS (iCal, Outlook etc)</a>
-                            </div>
-                        </div>
-                    </p>
 
-                    <div class="badge badge-pill badge-dark">{{ $event->type->title }}</div>
-                    <div><time class="font-weight-bold">{{ $event->call_time->format('M d, H:i') }}</time> to <time class="font-weight-bold">{{ $event->end_date->format('M d, H:i') }}</time></div>
-                    @can('update', $event)
-                        <div>Onstage Time: <time>{{ $event->start_date->format('H:i') }}</time></div>
-                    @endcan
-                    <div class="text-muted">Timezone: {{ $event->start_date->format('e P') }}</div>
-                    <div>{{ $event->description }}</div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            @if($event->call_time->isSameDay($event->end_date))
+                                <div class="h3">
+                                    <!-- Single Date -->
+                                    <time>{{ $event->call_time->format('M d, Y') }}</time>
+                                </div>
+                                <div class="h5">
+                                    <!-- Time -->
+                                    <time>{{ $event->call_time->format('H:i') }}</time> to <time>{{ $event->end_date->format('H:i') }}</time>
+                                </div>
+                            @else
+                                <div class="h3">
+                                    <!-- Date Range -->
+                                    <time>{{ $event->call_time->format('M d') }}</time> to <time>{{ $event->end_date->format('M d, Y') }}</time>
+                                </div>
+                                <div class="h5">
+                                    <!-- Time -->
+                                    <time>{{ $event->call_time->format('M d, H:i') }}</time> to <time>{{ $event->end_date->format('M d, H:i') }}</time>
+                                </div>
+                            @endif
+
+                            <small class="text-muted">Timezone: {{ $event->start_date->format('e P') }}</small>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Event Details</h5>
+                            <dl class="row mx-n1">
+                                <dt class="col-sm-4 px-1">Category:</dt>
+                                <dd class="col-sm-8 px-1"><span class="badge badge-pill badge-dark">{{ $event->type->title }}</span></dd>
+
+                                @can('update', $event)
+                                <dt class="col-sm-4 px-1">On stage:</dt>
+                                <dd class="col-sm-8 px-1"><time>{{ $event->start_date->format('H:i') }}</time></dd>
+                                @endcan
+
+                                @if($event->is_repeating)
+                                <dt class="col-sm-4 px-1">Repeat:</dt>
+                                <dd class="col-sm-8 px-1">Every {{ $event->repeat_frequency_unit }} until <time>{{ $event->repeat_until->format('Y-m-d') }}</time></dd>
+                                @endif
+                            </dl>
+                        </div>
+                    </div>
+
+                    <h5>Event Description</h5>
+                    <div class="mb-4">{{ $event->description }}</div>
+
+                    <div class="dropdown m">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="addToCalendarDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="far fa-fw fa-calendar-plus"></i> Add to Calendar
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="addToCalendarDropdownButton">
+                            <a class="dropdown-item" href="{{ $event->add_to_calendar_link->google() }}" target="_blank"><i class="fab fa-fw fa-google"></i> Google</a>
+                            <a class="dropdown-item" href="{{ $event->add_to_calendar_link->yahoo() }}" target="_blank"><i class="fab fa-fw fa-yahoo"></i> Yahoo</a>
+                            <a class="dropdown-item" href="{{ $event->add_to_calendar_link->webOutlook() }}" target="_blank"><i class="fab fa-fw fa-microsoft"></i> Outlook Web</a>
+                            <a class="dropdown-item" href="{{ $event->add_to_calendar_link->ics() }}" target="_blank"><i class="fas fa-fw fa-download"></i> ICS (iCal, Outlook etc)</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
