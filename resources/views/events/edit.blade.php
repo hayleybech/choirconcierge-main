@@ -62,27 +62,27 @@
                     </div>
 
                     @if('single' !== request()->query('mode'))
-                    <div class="form-group">
-                        {{ Form::label('', 'Repeating Event') }}
-                        <x-inputs.switch label="Repeat?" name="is_repeating" value="1" checked="{{ $event->is_repeating }}"></x-inputs.switch>
-                    </div>
 
-                    <fieldset id="repeat_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
+                    {{ Form::label('', 'Repeating Event') }}
 
-                        <div class="form-group">
-                            {{ Form::label('repeat_frequency_unit', 'Repeat every') }}<br>
+                    <toggleable-input label="Repeat?" name="is_repeating" :is-open="{{ $event->is_repeating }}">
+                        <fieldset id="repeat_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
 
-                            @foreach(['day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'] as $key => $unit)
-                                <x-inputs.radio label="{{ $unit }}" id="repeat_frequency_unit_{{ $key }}" name="repeat_frequency_unit" value="{{ $key }}" inline="true" :checked="$event->repeat_frequency_unit === $key"></x-inputs.radio>
-                            @endforeach
+                            <div class="form-group">
+                                {{ Form::label('repeat_frequency_unit', 'Repeat every') }}<br>
 
-                        </div>
+                                @foreach(['day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'] as $key => $unit)
+                                    <x-inputs.radio label="{{ $unit }}" id="repeat_frequency_unit_{{ $key }}" name="repeat_frequency_unit" value="{{ $key }}" inline="true" :checked="$event->repeat_frequency_unit === $key"></x-inputs.radio>
+                                @endforeach
+                            </div>
 
-                        <div class="form-group">
-                            <datetime-input label="Repeat until" input-name="repeat_until_input" output-name="repeat_until" :value="new Date({{ $event->repeat_until }})"></datetime-input>
-                        </div>
+                            <div class="form-group">
+                                <datetime-input label="Repeat until" input-name="repeat_until_input" output-name="repeat_until" :value="new Date({{ $event->repeat_until }})"></datetime-input>
+                            </div>
 
-                    </fieldset>
+                        </fieldset>
+                    </toggleable-input>
+
                     @endif
 
                     <div class="form-group location-input-wrapper">

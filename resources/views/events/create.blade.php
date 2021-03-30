@@ -37,27 +37,27 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        {{ Form::label('', 'Repeating Event') }}
-                        <x-inputs.switch label="Repeat?" name="is_repeating" value="1"></x-inputs.switch>
-                    </div>
+                    {{ Form::label('', 'Repeating Event') }}
 
-                    <fieldset id="repeat_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
+                    <toggleable-input label="Repeat?" name="is_repeating">
+                        <fieldset id="repeat_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
 
-                        <div class="form-group">
-                            {{ Form::label('repeat_frequency_unit', 'Repeat every') }}<br>
+                            <div class="form-group">
+                                {{ Form::label('repeat_frequency_unit', 'Repeat every') }}<br>
 
-                            @foreach(['day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'] as $key => $unit)
-                                <x-inputs.radio label="{{ $unit }}" id="repeat_frequency_unit_{{ $key }}" name="repeat_frequency_unit" value="{{ $key }}" inline="true"></x-inputs.radio>
-                            @endforeach
+                                @foreach(['day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'] as $key => $unit)
+                                    <x-inputs.radio label="{{ $unit }}" id="repeat_frequency_unit_{{ $key }}" name="repeat_frequency_unit" value="{{ $key }}" inline="true"></x-inputs.radio>
+                                @endforeach
 
-                        </div>
+                            </div>
 
-                        <div class="form-group">
-                            <datetime-input label="Repeat until" input-name="repeat_until_input" output-name="repeat_until"></datetime-input>
-                        </div>
+                            <div class="form-group">
+                                <datetime-input label="Repeat until" input-name="repeat_until_input" output-name="repeat_until"></datetime-input>
+                            </div>
 
-                    </fieldset>
+                        </fieldset>
+                    </toggleable-input>
+
 
                     <div class="form-group location-input-wrapper">
                         <location-input label="Location" input-name="location" api-key="{{ config('services.google.key') }}"></location-input>
