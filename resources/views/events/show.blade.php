@@ -216,9 +216,3 @@
     @endif
 
 @endsection
-<script>
-    import InlineEditField from "../../assets/js/components/InlineEditField";
-    export default {
-        components: {InlineEditField}
-    }
-</script>
