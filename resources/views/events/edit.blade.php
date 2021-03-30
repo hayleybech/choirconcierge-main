@@ -65,7 +65,7 @@
 
                     {{ Form::label('', 'Repeating Event') }}
 
-                    <toggleable-input label="Repeat?" name="is_repeating" start-open="{{ $event->is_repeating }}">
+                    <toggleable-input label="Repeat?" name="is_repeating" :start-open="@json($event->is_repeating)">
                         <fieldset id="repeat_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
 
                             <div class="form-group">
