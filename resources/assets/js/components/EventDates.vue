@@ -2,19 +2,19 @@
 	<div>
 		<div class="row mb-2">
 			<div class="col-md-12">
-				<input-datetime-range label="Event Date" type="date" input-name="date_range" start-name="range_start_date" end-name="range_end_date" v-model="range" @change="changeDates"></input-datetime-range>
+				<datetime-range-input label="Event Date" type="date" input-name="date_range" start-name="range_start_date" end-name="range_end_date" v-model="range" @change="changeDates"></datetime-range-input>
 			</div>
 		</div>
 
 		<div class="row mb-2">
 			<div class="col-md-6">
-				<input-datetime label="Call Time" type="time" input-name="call_time_input" output-name="call_time" v-model="callTime" @change="changeCallTime"></input-datetime>
+				<datetime-input label="Call Time" type="time" input-name="call_time_input" output-name="call_time" v-model="callTime" @change="changeCallTime"></datetime-input>
 			</div>
 			<div class="col-md-3">
-				<input-datetime label="Onstage Time" type="time" input-name="start_date_input" output-name="start_date" v-model="startDate" :default-value="defaultStartDate" :disabled-time="disabledStartTime" @change="changeStartTime"></input-datetime>
+				<datetime-input label="Onstage Time" type="time" input-name="start_date_input" output-name="start_date" v-model="startDate" :default-value="defaultStartDate" :disabled-time="disabledStartTime" @change="changeStartTime"></datetime-input>
 			</div>
 			<div class="col-md-3">
-				<input-datetime label="End Time" type="time" input-name="end_date_input" output-name="end_date" v-model="endDate" :default-value="defaultEndDate" :disabled-time="disabledEndTime" @change="changeEndTime"></input-datetime>
+				<datetime-input label="End Time" type="time" input-name="end_date_input" output-name="end_date" v-model="endDate" :default-value="defaultEndDate" :disabled-time="disabledEndTime" @change="changeEndTime"></datetime-input>
 			</div>
 		</div>
 

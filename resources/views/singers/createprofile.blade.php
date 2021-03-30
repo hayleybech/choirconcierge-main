@@ -18,7 +18,7 @@
 
 				<div class="card-body">
 					<div class="form-group">
-						<input-date label="Date of Birth" input-name="dob_input" output-name="dob"></input-date>
+						<date-input label="Date of Birth" input-name="dob_input" output-name="dob"></date-input>
 					</div>
 
 					<fieldset>

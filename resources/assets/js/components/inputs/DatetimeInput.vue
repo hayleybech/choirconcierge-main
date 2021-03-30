@@ -8,8 +8,7 @@
         <date-picker
 	        v-bind:value="value"
 	        v-on:input="onInput"
-	        v-on:change="onChange"
-            range
+            v-on:change="onChange"
             :type="type"
             :use12h="true"
             :show-second="false"
@@ -17,8 +16,8 @@
             :format="displayFormat"
             :input-class="inputClass"
             :input-attr="{ name: inputName }"
+	        :disabled-time="disabledTime"
             style="width:100%"
-            :shortcuts="shortcuts"
         >
             <!-- TEMPORARY: Add icon for time type. The lib dev has already committed this as the default in the upcoming release -->
             <template #icon-calendar v-if="'time' === type">
@@ -32,8 +31,7 @@
             </template>
         </date-picker>
 
-        <input type="hidden" :name="startName" :value="startTime">
-        <input type="hidden" :name="endName" :value="endTime">
+        <input type="hidden" :name="outputName" :value="outputTime">
 
         <p v-if="hasHelp">
             <small class="text-muted">
@@ -47,9 +45,10 @@
 import moment from 'moment';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+
 export default {
     components: { DatePicker },
-    name: "DateTimeRange",
+    name: "DateTimeInput",
     props: {
         label: {
             type: String,
@@ -60,23 +59,18 @@ export default {
             default: 'datetime' // datetime || date || time
         },
         inputName: String,
-        startName: {
+        outputName: {
             type: String,
             required: true,
         },
-        endName: {
-            type: String,
-            required: true,
-        },
-	    value: {
-        	type: Array // Array<Date>
-	    },
-        showShortcuts: {
-            type: Boolean,
-            default: false
+        value: {
+            type: Date,
         },
         small: Boolean,
-	    optional: Boolean
+	    optional: Boolean,
+	    disabledTime: {
+		    type: Function
+	    },
     },
     data() {
         return {
@@ -92,40 +86,8 @@ export default {
             }
             return formats[this.type];
         },
-        startTime() {
-            return moment(this.value[0]).format(this.rawFormat);
-        },
-        endTime() {
-            return moment(this.value[1]).format(this.rawFormat);
-        },
-        shortcuts() {
-            if(!this.showShortcuts){
-                return [];
-            }
-            const ranges = {
-                'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            };
-
-            const that = this;
-
-            return Object.values(
-                this.objectMap(ranges, (dates, name) => {
-                    return {
-                        text: name,
-                        onClick: () => {
-                            that.value = [
-                                dates[0].toDate(),
-                                dates[1].toDate()
-                            ]
-                        }
-                    }
-                })
-            );
+        outputTime() {
+            return moment(this.value).format(this.rawFormat);
         },
         hasHelp () {
             return !!this.$slots['help'];
@@ -134,25 +96,14 @@ export default {
             return this.small ? 'form-control form-control-sm' : 'form-control';
         },
     },
-    methods: {
-        // Why oh why can't JS have PHP-style assoc arrays? :'(
-        // @see https://stackoverflow.com/a/14810722/563974
-        // @todo move objectMap to somewhere more re-usable
-        // returns a new object with the values at each key mapped using fn(value)
-        objectMap(obj, fn) {
-            return Object.fromEntries(
-                Object.entries(obj).map(
-                    ([k, v], i) => [k, fn(v, k, i)]
-                )
-            );
-        },
-	    onInput(date, type) {
+	methods: {
+    	onInput(date, type) {
 		    this.$emit('input', date, type);
 	    },
-	    onChange(date, type){
-		    this.$emit('change', date, type);
-	    }
-    }
+		onChange(date, type){
+			this.$emit('change', date, type);
+		}
+	}
 }
 </script>
 
