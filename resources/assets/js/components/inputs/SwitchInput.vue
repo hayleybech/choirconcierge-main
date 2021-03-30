@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" :id="name" :name="name" :value="value" v-model="checked" @change='$emit("change", $event.target.checked)'>
+            <input type="checkbox" class="custom-control-input" :id="name" :name="name" :value="value" v-bind:checked="checked" @change='$emit("change", $event.target.checked)'>
             <label class="custom-control-label" :for="name">{{ label }}</label>
         </div>
         <p v-if="helpText">

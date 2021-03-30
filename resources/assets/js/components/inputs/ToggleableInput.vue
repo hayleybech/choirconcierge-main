@@ -23,8 +23,16 @@ export default {
         	type: String,
             default: '1',
         },
-        isOpen: Boolean,
+        startOpen: {
+        	type: Boolean,
+	        default: false,
+        }
     },
+	data() {
+    	return {
+    		isOpen: this.startOpen,
+	    }
+	}
 }
 </script>
 
