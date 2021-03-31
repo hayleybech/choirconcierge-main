@@ -17,55 +17,39 @@
 
 				<div class="card-body">
 					<div class="form-group">
-
-						{{ Form::label('dob', 'Date of Birth') }}
-						<div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
-							</div>
-							{{ Form::text('dob_input', $profile->dob->format('M d, Y H:i'), ['class' => 'form-control dob-single-date-picker']) }}
-							{{ Form::hidden('dob', $profile->dob, ['class' => 'dob-hidden']) }}
-						</div>
-
+						<date-input label="Date of Birth" input-name="dob_input" output-name="dob" value="{{ $profile->dob }}"></date-input>
 					</div>
 
 					<fieldset>
 						<legend>Contact Details</legend>
 
 						<p>
-							{{ Form::label('phone', 'Phone') }}
-							{{ Form::text('phone', $profile->phone, ['class' => 'form-control']) }}
+							<x-inputs.text label="Phone" id="phone" name="phone" :value="$profile->phone"></x-inputs.text>
 						</p>
 
 						<p>
-							{{ Form::label('ice_name', 'Emergency Contact Name') }}
-							{{ Form::text('ice_name', $profile->ice_name, ['class' => 'form-control']) }}
+							<x-inputs.text label="Emergency Contact Name" id="ice_name" name="ice_name" :value="$profile->ice_name"></x-inputs.text>
 						</p>
 
 						<p>
-							{{ Form::label('ice_phone', 'Emergency Contact Phone') }}
-							{{ Form::text('ice_phone', $profile->ice_phone, ['class' => 'form-control']) }}
+							<x-inputs.text label="Emergency Contact Phone" id="ice_phone" name="ice_phone" :value="$profile->ice_phone"></x-inputs.text>
 						</p>
 					</fieldset>
 
 					<fieldset>
 						<legend>Address</legend>
 						<p>
-							{{ Form::label('address_street_1', 'Street Address') }}
-							{{ Form::text('address_street_1', $profile->address_street_1, ['class' => 'form-control']) }}
+							<x-inputs.text label="Street Address" id="address_street_1" name="address_street_1" :value="$profile->address_street_1"></x-inputs.text>
 						</p>
 						<p>
-							{{ Form::label('address_street_2', 'Street Address 2') }}
-							{{ Form::text('address_street_2', $profile->address_street_2, ['class' => 'form-control']) }}
+							<x-inputs.text label="Street Address 2" id="address_street_2" name="address_street_2" :value="$profile->address_street_2"></x-inputs.text>
 						</p>
 						<div class="row mb-3">
 							<div class="col-md-8">
-								{{ Form::label('address_suburb', 'Suburb') }}
-								{{ Form::text('address_suburb', $profile->address_suburb, ['class' => 'form-control']) }}
+								<x-inputs.text label="Suburb" id="address_suburb" name="address_suburb" :value="$profile->address_suburb"></x-inputs.text>
 							</div>
 							<div class="col-md-2">
-								{{ Form::label('address_state', 'State') }}
-								{{ Form::select('address_state', [
+								@php $states = [
 									'ACT' => 'ACT',
 									'NSW' => 'NSW',
 									'NT'  => 'NT',
@@ -74,11 +58,11 @@
 									'TAS' => 'TAS',
 									'VIC' => 'VIC',
 									'WA'  => 'WA',
-								], $profile->address_state, ['class' => 'custom-select']) }}
+								];@endphp
+								<x-inputs.select label="State" id="address_state" name="address_state" :options="$states"></x-inputs.select>
 							</div>
 							<div class="col-md-2">
-								{{ Form::label('address_postcode', 'Postcode') }}
-								{{ Form::text('address_postcode', $profile->address_postcode, ['class' => 'form-control']) }}
+								<x-inputs.text label="Postcode" id="address_postcode" name="address_postcode" :value="$profile->address_postcode"></x-inputs.text>
 							</div>
 						</div>
 					</fieldset>
@@ -87,23 +71,19 @@
 						<legend>Other Info</legend>
 
 						<p>
-							{{ Form::label('reason_for_joining', 'Why are you joining?') }}
-							{{ Form::text('reason_for_joining', $profile->reason_for_joining, ['class' => 'form-control']) }}
+							<x-inputs.text label="Why are you joining?" id="reason_for_joining" name="reason_for_joining" :value="$profile->reason_for_joining"></x-inputs.text>
 						</p>
 
 						<p>
-							{{ Form::label('referrer', 'Where did you hear about us?') }}
-							{{ Form::text('referrer', $profile->referrer, ['class' => 'form-control']) }}
+							<x-inputs.text label="Where did you hear about us?" id="referrer" name="referrer" :value="$profile->referrer"></x-inputs.text>
 						</p>
 
 						<p>
-							{{ Form::label('profession', 'What is your profession?') }}
-							{{ Form::text('profession', $profile->profession, ['class' => 'form-control']) }}
+							<x-inputs.text label="What is your profession?" id="profession" name="profession" :value="$profile->profession"></x-inputs.text>
 						</p>
 
 						<p>
-							{{ Form::label('skills', 'What non-musical skills do you have?') }}
-							{{ Form::text('skills', $profile->skills, ['class' => 'form-control']) }}
+							<x-inputs.text label="What non-musical skills do you have?" id="skills" name="skills" :value="$profile->skills"></x-inputs.text>
 						</p>
 						<div class="form-group">
 							{{ Form::label('height', 'Height') }}
@@ -116,8 +96,7 @@
 							<small class="form-text text-muted">Knowing the singer's height is useful for riser stacks.</small>
 						</div>
 						<div class="form-group">
-							{{ Form::label('membership_details', 'Society Membership Details (e.g. BHA #1234)') }}
-							{{ Form::text('membership_details', $profile->membership_details, ['class' => 'form-control']) }}
+							<x-inputs.text label="Society Membership Details (e.g. BHA #1234)" id="membership_details" name="membership_details" :value="$profile->membership_details"></x-inputs.text>
 						</div>
 					</fieldset>
 
@@ -138,40 +117,5 @@
 
 
 {{ Form::close() }}
-
-@push('scripts-footer-bottom')
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
-	<script>
-		// DATREPICKER CONFIG
-		const DATE_FORMAT_RAW = 'YYYY-MM-DD HH:mm:ss';
-		const DATE_FORMAT_DISPLAY = 'MMMM D, YYYY';
-
-		const DATE_CONFIG = {
-			"showDropdowns": true,
-			"showISOWeekNumbers": true,
-			"timePicker": false,
-			"locale": {
-				"format": DATE_FORMAT_DISPLAY,
-				"firstDay": 1
-			}
-		};
-
-		// DOB (Single Date Picker)
-		const $el_dob = $('.dob-single-date-picker');
-		const $el_dob_raw = $('.dob-hidden');
-		$el_dob.daterangepicker({
-				...DATE_CONFIG,
-				'singleDatePicker': true
-			},
-			function(start, end, label){
-				console.log(start.format(DATE_FORMAT_RAW));
-				$el_dob_raw.val( start.format(DATE_FORMAT_RAW) );
-			}
-		);
-	</script>
-@endpush
 
 @endsection

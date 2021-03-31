@@ -63,11 +63,11 @@
 
 							<div class="mb-1">
 								<strong>Added</strong><br>
-								<span class="text-muted">{{ $singer->created_at->toDayDateTimeString() }}</span><br>
+								<span class="text-muted">{{ $singer->created_at->format(config('app.formats.timestamp_lg')) }}</span><br>
 							</div>
 							<div class="mb-1">
 								<strong>Joined</strong><br>
-								<span class="text-muted">{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->toDayDateTimeString() }})</span><br>
+								<span class="text-muted">{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->format(config('app.formats.date_lg')) }})</span><br>
 							</div>
 
 							<div class="mb-1">
@@ -137,7 +137,7 @@
 								<h3 class="h4">Other Info</h3>
 								@if( $singer->profile )
 								<div class="profile-item">
-										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->profile->dob->toFormattedDateString() ?? '?' }}
+										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->profile->dob->format(config('app.formats.date_md')) ?? '?' }}
 									</div>
 
 								<div class="mb-1">
@@ -196,9 +196,9 @@
 							<div class="d-flex align-items-center">
 								<div class="mr-3">1</div>
 								<div class="progress" style="width: 100%; height: 20px;">
-									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_pitch * 10 }}%" aria-valuenow="{{ $singer->placement->skill_pitch }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_pitch }}</div>
+									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_pitch / 5 * 100 }}%" aria-valuenow="{{ $singer->placement->skill_pitch }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_pitch }}</div>
 								</div>
-								<div class="ml-3">10</div>
+								<div class="ml-3">5</div>
 							</div>
 						</div>
 						<div class="mb-2">
@@ -206,9 +206,9 @@
 							<div class="d-flex align-items-center">
 								<div class="mr-3">1</div>
 								<div class="progress" style="width: 100%; height: 20px;">
-									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_harmony * 10 }}%" aria-valuenow="{{ $singer->placement->skill_harmony }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_harmony }}</div>
+									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_harmony / 5 * 100 }}%" aria-valuenow="{{ $singer->placement->skill_harmony }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_harmony }}</div>
 								</div>
-								<div class="ml-3">10</div>
+								<div class="ml-3">5</div>
 							</div>
 						</div>
 						<div class="mb-2">
@@ -216,9 +216,9 @@
 							<div class="d-flex align-items-center">
 								<div class="mr-3">1</div>
 								<div class="progress" style="width: 100%; height: 20px;">
-									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_performance * 10 }}%" aria-valuenow="{{ $singer->placement->skill_performance }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_performance }}</div>
+									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_performance / 5 * 100 }}%" aria-valuenow="{{ $singer->placement->skill_performance }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_performance }}</div>
 								</div>
-								<div class="ml-3">10</div>
+								<div class="ml-3">5</div>
 							</div>
 						</div>
 						<div class="mb-2">
@@ -226,18 +226,16 @@
 							<div class="d-flex align-items-center">
 								<div class="mr-3">1</div>
 								<div class="progress" style="width: 100%; height: 20px;">
-									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_sightreading * 10}}%" aria-valuenow="{{ $singer->placement->skill_sightreading }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_sightreading }}</div>
+									<div class="progress-bar" role="progressbar" style="width: {{ $singer->placement->skill_sightreading / 5 * 100}}%" aria-valuenow="{{ $singer->placement->skill_sightreading }}" aria-valuemin="1" aria-valuemax="5">{{ $singer->placement->skill_sightreading }}</div>
 								</div>
-								<div class="ml-3">10</div>
+								<div class="ml-3">5</div>
 							</div>
 						</div>
 						<div class="mb-2">
-							<strong>Voice Tone</strong>
-							<div class="d-flex align-items-center">
-								<i class="fas fa-fw fa-flute mr-3 text fa-lg"></i>
-								<input type="range" class="custom-range" min="1" max="3" value="{{ $singer->placement->voice_tone }}" disabled>
-								<i class="fas fa-fw fa-trumpet ml-3 fa-lg"></i>
-							</div>
+							<x-inputs.range label="Voice Tone" id="voice_tone" name="voice_tone" min="1" max="3" value="{{ $singer->placement->voice_tone }}" disabled label-class="font-weight-bold">
+								<x-slot name="minDesc"><i class="fas fa-fw fa-flute fa-lg"></i></x-slot>
+								<x-slot name="maxDesc"><i class="fas fa-fw fa-trumpet fa-lg"></i></x-slot>
+							</x-inputs.range>
 						</div>
 						<div class="mb-2">
 							<strong>Experience</strong>
@@ -265,18 +263,18 @@
 					<div class="card-body">
 						@foreach( $singer->tasks as $task )
 							@if( $task->pivot->completed )
-								<span class="mb-1 d-flex justify-content-between align-items-center link-confirm disabled" >
+								<span class="mb-1 d-flex justify-content-between align-items-center disabled">
 									<div class="d-flex w-100 justify-content-between">
 										<span><i class="far fa-fw fa-check-square"></i> {{ $task->name }}</span>
 									</div>
 								</span>
 							@else
 								@if(Auth::user()->hasRole($task->role->name))
-									<a href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" class="mb-1 d-flex justify-content-between align-items-center link-confirm" >
+									<link-confirm href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" description="{{ $task->name }}" class="mb-1 d-flex justify-content-between align-items-center">
 										<div class="d-flex w-100 justify-content-between">
 											<span><i class="far fa-fw fa-square"></i> {{ $task->name }}</span>
 										</div>
-									</a>
+									</link-confirm>
 								@else
 									<div class="mb-1 d-flex justify-content-between align-items-center disabled" >
 										<div class="d-flex w-100 justify-content-between">

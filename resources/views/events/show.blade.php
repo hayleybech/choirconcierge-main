@@ -25,88 +25,66 @@
                     @endcan
                 </div>
                 <div class="card-body">
-                    <p>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="addToCalendarDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="far fa-fw fa-calendar-plus"></i> Add to Calendar
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="addToCalendarDropdownButton">
-                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->google() }}" target="_blank"><i class="fab fa-fw fa-google"></i> Google</a>
-                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->yahoo() }}" target="_blank"><i class="fab fa-fw fa-yahoo"></i> Yahoo</a>
-                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->webOutlook() }}" target="_blank"><i class="fab fa-fw fa-microsoft"></i> Outlook Web</a>
-                                <a class="dropdown-item" href="{{ $event->add_to_calendar_link->ics() }}" target="_blank"><i class="fas fa-fw fa-download"></i> ICS (iCal, Outlook etc)</a>
-                            </div>
-                        </div>
-                    </p>
 
-                    <div class="badge badge-pill badge-dark">{{ $event->type->title }}</div>
-                    <div><time class="font-weight-bold">{{ $event->start_date->format('M d, H:i') }}</time> to <time class="font-weight-bold">{{ $event->end_date->format('M d, H:i') }}</time></div>
-                    <div>Call Time: <time>{{ $event->call_time->format('M d, H:i') }}</time></div>
-                    <div class="text-muted">Timezone: {{ $event->start_date->format('e P') }}</div>
-                    <div>{{ $event->description }}</div>
-
-                    <h4 class="mt-2">My RSVP</h4>
-                    @if($my_rsvp)
-                        @if($event->in_future)
-                            <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $my_rsvp]) }}" value="{{ $my_rsvp->response_string }}" csrf="{{ csrf_token() }}" edit-label="Change response">
-                                <label for="rsvp_response" class="d-block">Will you attend?</label>
-
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input id="rsvp_response_yes" name="rsvp_response" value="yes" class="custom-control-input" type="radio" {{ 'yes' === $my_rsvp->response ? 'checked' : '' }}>
-                                    <label for="rsvp_response_yes" class="custom-control-label">Yes</label>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            @if($event->call_time->isSameDay($event->end_date))
+                                <div class="h3">
+                                    <!-- Single Date -->
+                                    <time>{{ $event->call_time->format(config('app.formats.date_lg')) }}</time>
                                 </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input id="rsvp_response_maybe" name="rsvp_response" value="maybe" class="custom-control-input" type="radio" {{ 'maybe' === $my_rsvp->response ? 'checked' : '' }}>
-                                    <label for="rsvp_response_maybe" class="custom-control-label">Maybe</label>
+                                <div class="h5">
+                                    <!-- Time -->
+                                    <time>{{ $event->call_time->format(config('app.formats.time')) }}</time> to <time>{{ $event->end_date->format(config('app.formats.time')) }}</time>
                                 </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input id="rsvp_response_no" name="rsvp_response" value="no" class="custom-control-input" type="radio" {{ 'no' === $my_rsvp->response ? 'checked' : '' }}>
-                                    <label for="rsvp_response_no" class="custom-control-label">No</label>
+                            @else
+                                <div class="h3">
+                                    <!-- Date Range -->
+                                    <time>{{ $event->call_time->format(config('app.formats.date_md')) }}</time> to <time>{{ $event->end_date->format(config('app.formats.date_lg')) }}</time>
                                 </div>
-                            </inline-edit-field>
-                        @else
-                            {{ $my_rsvp->response_string }}
-                        @endif
-                    @elseif($event->in_future)
-                        {{ Form::open(['route' => ['events.rsvps.store', $event->id]]) }}
-                        <div class="form-group">
-                            <label for="rsvp_response" class="d-block">Will you attend?</label>
-
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input id="rsvp_response_yes" name="rsvp_response" value="yes" class="custom-control-input" type="radio">
-                                <label for="rsvp_response_yes" class="custom-control-label">Yes</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input id="rsvp_response_maybe" name="rsvp_response" value="maybe" class="custom-control-input" type="radio" checked>
-                                <label for="rsvp_response_maybe" class="custom-control-label">Maybe</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input id="rsvp_response_no" name="rsvp_response" value="no" class="custom-control-input" type="radio">
-                                <label for="rsvp_response_no" class="custom-control-label">No</label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-secondary"><i class="far fa-fw fa-check"></i> Save RSVP</button>
-                        </div>
-                        {{ Form::close() }}
-                    @else
-                        You didn't RSVP for this event.
-                    @endif
-
-                    @if( ! $event->in_future )
-                    <h4 class="mt-2">My Attendance</h4>
-                        @if($my_attendance)
-                        <p>
-                            {{ $my_attendance->response_string }}<br>
-                            @if($my_attendance->absent_reason)
-                            Reason: {{ $my_attendance->absent_reason }}
+                                <div class="h5">
+                                    <!-- Time -->
+                                    <time>{{ $event->call_time->format(config('app.formats.timestamp_md')) }}</time> to <time>{{ $event->end_date->format(config('app.formats.timestamp_md')) }}</time>
+                                </div>
                             @endif
-                        </p>
-                        @else
-                        <p>Not recorded.</p>
-                        @endif
-                    @endif
+
+                            <small class="text-muted">Timezone: {{ $event->start_date->format(config('app.formats.timezone')) }}</small>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Event Details</h5>
+                            <dl class="row mx-n1">
+                                <dt class="col-sm-4 px-1">Category:</dt>
+                                <dd class="col-sm-8 px-1"><span class="badge badge-pill badge-dark">{{ $event->type->title }}</span></dd>
+
+                                @can('update', $event)
+                                <dt class="col-sm-4 px-1">On stage:</dt>
+                                <dd class="col-sm-8 px-1"><time>{{ $event->start_date->format(config('app.formats.time')) }}</time></dd>
+                                @endcan
+
+                                @if($event->is_repeating)
+                                <dt class="col-sm-4 px-1">Repeat:</dt>
+                                <dd class="col-sm-8 px-1">Every {{ $event->repeat_frequency_unit }} until <time>{{ $event->repeat_until->format(config('app.formats.date_sm')) }}</time></dd>
+                                @endif
+                            </dl>
+                        </div>
+                    </div>
+
+                    <h5>Event Description</h5>
+                    <div class="mb-4">
+                        <read-more more-str="Read More" text="{{ $event->description }}" less-str="Read Less" :max-chars="500"></read-more>
+                    </div>
+
+                    <div class="dropdown m">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="addToCalendarDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="far fa-fw fa-calendar-plus"></i> Add to Calendar
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="addToCalendarDropdownButton">
+                            <a class="dropdown-item" href="{{ $event->add_to_calendar_link->google() }}" target="_blank"><i class="fab fa-fw fa-google"></i> Google</a>
+                            <a class="dropdown-item" href="{{ $event->add_to_calendar_link->yahoo() }}" target="_blank"><i class="fab fa-fw fa-yahoo"></i> Yahoo</a>
+                            <a class="dropdown-item" href="{{ $event->add_to_calendar_link->webOutlook() }}" target="_blank"><i class="fab fa-fw fa-microsoft"></i> Outlook Web</a>
+                            <a class="dropdown-item" href="{{ $event->add_to_calendar_link->ics() }}" target="_blank"><i class="fas fa-fw fa-download"></i> ICS (iCal, Outlook etc)</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -119,22 +97,66 @@
                         <span class="place-address">{{ $event->location_address }}</span>
                     </p>
 
-                    <div class="event-map google-maps">
-                        <iframe
-                                width="600"
-                                height="450"
-                                frameborder="0" style="border:0"
-                                src="https://www.google.com/maps/embed/v1/place?key=<?= config('services.google.key') ?>&q=place_id:<?= urlencode($event->location_place_id)?>"
-                                allowfullscreen>
-                        </iframe>
-                    </div>
-
+                    <google-map api-key="{{ config('services.google.key')  }}" place-id="{{ urlencode($event->location_place_id) }}"></google-map>
                 </div>
             </div>
 
         </div>
 
         <div class="col-md-5">
+
+            <div class="card">
+                <div class="card-header"><h4>My Attendance</h4></div>
+                <div class="card-body">
+                    <!-- RSVP -->
+                    @if($my_rsvp)
+                        Your RSVP response:
+                        @if($event->in_future)
+                            <!-- Edit RSVP -->
+                            <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $my_rsvp]) }}" value="{{ $my_rsvp->response_string }}" csrf="{{ csrf_token() }}" edit-label="Change response">
+                                <label for="rsvp_response" class="d-block">Will you attend?</label>
+
+                                <x-inputs.radio label="Yes" id="rsvp_response_yes" name="rsvp_response" value="yes" inline="true" :checked="'yes' === $my_rsvp->response"></x-inputs.radio>
+                                <x-inputs.radio label="Maybe" id="rsvp_response_maybe" name="rsvp_response" value="maybe" inline="true" :checked="'maybe' === $my_rsvp->response"></x-inputs.radio>
+                                <x-inputs.radio label="No" id="rsvp_response_no" name="rsvp_response" value="no" inline="true" :checked="'no' === $my_rsvp->response"></x-inputs.radio>
+                            </inline-edit-field>
+                        @else
+                            {{ $my_rsvp->response_string }}
+                        @endif
+                    @elseif($event->in_future)
+                        <!-- Create RSVP -->
+                        {{ Form::open(['route' => ['events.rsvps.store', $event->id]]) }}
+                        <div class="form-group">
+                            <label for="rsvp_response" class="d-block">Will you attend?</label>
+
+                            <x-inputs.radio label="Yes" id="rsvp_response_yes" name="rsvp_response" value="yes" inline="true"></x-inputs.radio>
+                            <x-inputs.radio label="Maybe" id="rsvp_response_maybe" name="rsvp_response" value="maybe" inline="true" checked="true"></x-inputs.radio>
+                            <x-inputs.radio label="No" id="rsvp_response_no" name="rsvp_response" value="no" inline="true"></x-inputs.radio>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-secondary"><i class="far fa-fw fa-check"></i> Save RSVP</button>
+                        </div>
+                        {{ Form::close() }}
+                    @else
+                        You didn't RSVP for this event.
+                    @endif
+
+                    @if( ! $event->in_future )
+                        <!-- Attendance -->
+                        @if($my_attendance)
+                            <p>
+                                You were {{ strtolower($my_attendance->response_string) }} for this event.<br>
+                                @if($my_attendance->absent_reason)
+                                    Reason: {{ $my_attendance->absent_reason }}
+                                @endif
+                            </p>
+                        @else
+                            <p>Your attendance has not been recorded for this event.</p>
+                        @endif
+                    @endif
+                </div>
+            </div>
 
             @can ('viewAny', \App\Models\Rsvp::class)
             <div class="card">
@@ -232,9 +254,3 @@
     @endif
 
 @endsection
-<script>
-    import InlineEditField from "../../assets/js/components/InlineEditField";
-    export default {
-        components: {InlineEditField}
-    }
-</script>

@@ -15,8 +15,7 @@
                 <div class="card-body">
 
                     <div class="form-group">
-                        {{ Form::label('title', 'Folder Title') }}
-                        {{ Form::text('title', '', ['class' => 'form-control']) }}
+                        <x-inputs.text label="Folder Title" id="title" name="title"></x-inputs.text>
                     </div>
 
                 </div>

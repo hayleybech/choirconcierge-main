@@ -15,17 +15,13 @@
 
                 <div class="card-body">
                     <div class="form-group">
-                        {{ Form::label('title', 'Song Title') }}
-                        {{ Form::text('title', '', ['class' => 'form-control']) }}
+                        <x-inputs.text label="Song Title" id="title" name="title"></x-inputs.text>
                     </div>
 
                     <fieldset class="form-group">
                         <legend class="col-form-label">Category</legend>
                         @foreach($categories as $cat)
-                            <div class="custom-control custom-checkbox custom-control-inline">
-                                <input id="categories_{{$cat->id}}" name="categories[]" value="{{$cat->id}}" class="custom-control-input" type="checkbox">
-                                <label for="categories_{{$cat->id}}" class="custom-control-label">{{$cat->title}}</label>
-                            </div>
+                            <x-inputs.checkbox label="{{ $cat->title }}" id="categories_{{ $cat->id }}" name="categories[]" value="{{ $cat->id }}" inline="true"></x-inputs.checkbox>
                         @endforeach
                     </fieldset>
 
@@ -49,19 +45,11 @@
                     </fieldset>
 
                     <div class="form-group">
-                        {{ Form::label('pitch_blown', 'Pitch Blown') }}
-                        {{ Form::select('pitch_blown',
-                            $pitches,
-                            '',
-                            ['class' => 'custom-select']
-                        ) }}
+                        <x-inputs.select label="Pitch Blown" id="pitch_blown" name="pitch_blown" :options="$pitches"></x-inputs.select>
                     </div>
 
                     <div class="form-group">
-                        <div class="custom-control custom-checkbox custom-control-inline">
-                            <input id="send_notification" name="send_notification" class="custom-control-input" type="checkbox" value="true" checked>
-                            <label for="send_notification" class="custom-control-label">Send "New Song" notification</label>
-                        </div>
+                        <x-inputs.checkbox :label='"Send \"New Song\" notification"' id="send_notification" name="send_notification" value="true" :checked="true"></x-inputs.checkbox>
                     </div>
 
                 </div>

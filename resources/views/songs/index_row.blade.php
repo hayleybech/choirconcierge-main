@@ -32,7 +32,7 @@
                 {{ $song->created_at->diffForHumans() }}
             </div>
             <div class="date__regular">
-                {{ $song->created_at->format('M d, H:i') }}
+                {{ $song->created_at->format(config('app.formats.timestamp_md')) }}
             </div>
         </div>
     </td>

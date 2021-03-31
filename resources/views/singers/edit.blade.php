@@ -17,70 +17,56 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                {{ Form::label('first_name', 'First Name') }}
-                                {{ Form::text('first_name', $singer->first_name, ['class' => 'form-control']) }}
+                                <x-inputs.text label="First Name" id="first_name" name="first_name" :value="$singer->first_name"></x-inputs.text>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                {{ Form::label('last_name', 'Last Name') }}
-                                {{ Form::text('last_name', $singer->last_name, ['class' => 'form-control']) }}
+                                <x-inputs.text label="Last Name" id="last_name" name="last_name" :value="$singer->last_name"></x-inputs.text>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="avatar">Profile Picture</label>
-                        <div class="custom-file custom-file-sm">
-                            <input type="file" class="custom-file-input @error('avatar') is-invalid @enderror" id="avatar" name="avatar">
-                            <div class="custom-file-label form-control-sm">Choose file</div>
-                            <div class="valid-feedback">Looks good!</div>
-                            <div class="invalid-feedback">Please upload a valid image file.</div>
-                        </div>
+                        <x-inputs.file label="Profile Picture" id="avatar" name="avatar"></x-inputs.file>
                     </div>
 
                     <p>
-                        {{ Form::label('email', 'E-Mail Address') }}
-                        {{ Form::email('email', $singer->email, ['class' => 'form-control']) }}
+                        <x-inputs.text label="Email Address" id="email" name="email" type="email" :value="$singer->email"></x-inputs.text>
                     </p>
 
                     <p>
-                        {{ Form::label('password', 'Change Password') }}
-                        {{ Form::password('password', ['class' => 'form-control']) }}
+                        <x-inputs.text label="Change Password" id="password" name="password" type="password"></x-inputs.text>
                     </p>
                     <p>
-                        {{ Form::label('password_confirmation', 'Confirm Password') }}
-                        {{ Form::password('password_confirmation', ['class' => 'form-control']) }}
+                        <x-inputs.text label="Confirm Password" id="password_confirmation" name="password_confirmation" type="password"></x-inputs.text>
                     </p>
 
                     @if(Auth::user()->can('create', \App\Models\Profile::class))
                         <fieldset class="form-group">
                             <legend class="col-form-label">Onboarding</legend>
 
-                            <div class="custom-control custom-radio">
-                                <input id="onboarding_enabled_yes" name="onboarding_enabled" value="1" class="custom-control-input" type="radio" {{ ( $singer->onboarding_enabled ) ? 'checked' : '' }}>
-                                <label for="onboarding_enabled_yes" class="custom-control-label">
+                            <x-inputs.radio id="onboarding_enabled_yes" name="onboarding_enabled" value="1" :checked="$singer->onboarding_enabled">
+                                <x-slot name="label">
                                     Enabled
                                     <small class="text-muted ml-2">
                                         Choose this option for new/prospective singers.
                                     </small>
-                                </label>
-                            </div>
+                                </x-slot>
+                            </x-inputs.radio>
 
-                            <div class="custom-control custom-radio">
-                                <input id="onboarding_enabled_no" name="onboarding_enabled" value="0" class="custom-control-input" type="radio" {{ ( ! $singer->onboarding_enabled ) ? 'checked' : '' }}>
-                                <label for="onboarding_enabled_no" class="custom-control-label">
+                            <x-inputs.radio id="onboarding_enabled_no" name="onboarding_enabled" value="0" :checked="! $singer->onboarding_enabled">
+                                <x-slot name="label">
                                     Disabled
                                     <small class="text-muted ml-2">
                                         Choose this option when you're adding existing singers.
                                     </small>
-                                </label>
-                            </div>
+                                </x-slot>
+                            </x-inputs.radio>
                         </fieldset>
 
                         <div class="form-group">
-                            {{ Form::label('voice_part_id', 'Voice Part') }}
-                            {{ Form::select('voice_part_id', $voice_parts, optional($singer->voice_part)->id, ['class' => 'custom-select']) }}
+                            <x-inputs.select label="Voice Part" id="voice_part_id" name="voice_part_id" :options="$voice_parts" :selected="optional($singer->voice_part)->id"></x-inputs.select>
                         </div>
 
                         <div class="form-group">
@@ -92,10 +78,7 @@
                                     @continue
                                 @endif
                                 <div class="col-md-6">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" name="user_roles[]" value="{{ $role->id }}" id="user_roles_{{ $role->id }}" @if($singer->user->roles->contains($role)) checked @endif>
-                                        <label class="custom-control-label" for="user_roles_{{ $role->id }}">{{ $role->name }}</label>
-                                    </div>
+                                    <x-inputs.checkbox :label="$role->name" :id="'user_roles_'.$role->id" name="user_roles[]" :value="$role->id" :checked="$singer->user->roles->contains($role)"></x-inputs.checkbox>
                                 </div>
                             @endforeach
                             </div>

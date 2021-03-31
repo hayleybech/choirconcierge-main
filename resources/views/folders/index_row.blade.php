@@ -5,8 +5,7 @@
     <div class="r-table__cell col--title">
         <a href="#folder-{{ $folder->id }}" data-toggle="collapse" class="collapse-toggle collapsed"></a>
         <inline-edit-field action="{{ route('folders.update', ['folder' => $folder]) }}" value="{{ $folder->title }}" csrf="{{ csrf_token() }}" edit-label="Rename" small-buttons="true">
-            <label for="rename_title_{{ $folder->id }}" class="sr-only">Name</label>
-            <input type="text" value="{{ $folder->title }}" class="form-control form-control-sm d-inline-flex align-middle mr-2" id="rename_title_{{ $folder->id }}" name="title" style="width: auto; ">
+            <x-inputs.text label="Name" id="rename_title_{{ $folder->id }}" name="title" value="{{ $folder->title }}" small="true" label-class="sr-only" class="d-inline-flex align-middle mr-2" style="width: auto; "></x-inputs.text>
         </inline-edit-field>
     </div>
     <div class="r-table__cell folder-col--status">
@@ -18,7 +17,7 @@
                 {{ $folder->created_at->diffForHumans() }}
             </div>
             <div class="date__regular">
-                {{ $folder->created_at->format('M d, H:i') }}
+                {{ $folder->created_at->format(config('app.formats.timestamp_md')) }}
             </div>
         </div>
     </div>
@@ -44,14 +43,7 @@
 
         </div>
         <div class="r-table__cell col--title">
-            {{ Form::label('document_uploads', 'File Upload') }}
-
-            <div class="custom-file custom-file-sm">
-                <input type="file" class="custom-file-input @error('document_uploads') is-invalid @enderror" id="document_uploads" name="document_uploads[]" multiple required>
-                <div class="custom-file-label form-control-sm">Choose file</div>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please upload a file.</div>
-            </div>
+            <x-inputs.file label="File Upload" id="document_uploads" name="document_uploads[]" required="true" multiple="true"></x-inputs.file>
         </div>
 
         <div class="r-table__cell folder-col--actions">

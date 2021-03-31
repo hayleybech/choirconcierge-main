@@ -18,34 +18,22 @@
 
 				<div class="card-body">
 					<div class="form-group">
-
-						{{ Form::label('dob', 'Date of Birth') }}
-						<div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fa fa-fw fa-calendar-day"></i></span>
-							</div>
-							{{ Form::text('dob_input', '', ['class' => 'form-control dob-single-date-picker']) }}
-							{{ Form::hidden('dob', '', ['class' => 'dob-hidden']) }}
-						</div>
-
+						<date-input label="Date of Birth" input-name="dob_input" output-name="dob"></date-input>
 					</div>
 
 					<fieldset>
 						<legend>Contact Details</legend>
 
 						<p>
-							{{ Form::label('phone', 'Phone') }}
-							{{ Form::text('phone', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="Phone" id="phone" name="phone"></x-inputs.text>
 						</p>
 
 						<p>
-							{{ Form::label('ice_name', 'Emergency Contact Name') }}
-							{{ Form::text('ice_name', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="Emergency Contact Name" id="ice_name" name="ice_name"></x-inputs.text>
 						</p>
 
 						<p>
-							{{ Form::label('ice_phone', 'Emergency Contact Phone') }}
-							{{ Form::text('ice_phone', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="Emergency Contact Phone" id="ice_phone" name="ice_phone"></x-inputs.text>
 						</p>
 					</fieldset>
 
@@ -53,21 +41,17 @@
 						<legend>Address</legend>
 
 						<p>
-							{{ Form::label('address_street_1', 'Street Address') }}
-							{{ Form::text('address_street_1', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="Street Address" id="address_street_1" name="address_street_1"></x-inputs.text>
 						</p>
 						<p>
-							{{ Form::label('address_street_2', 'Street Address 2') }}
-							{{ Form::text('address_street_2', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="Street Address 2" id="address_street_2" name="address_street_2"></x-inputs.text>
 						</p>
 						<div class="row mb-3">
 							<div class="col-md-8">
-								{{ Form::label('address_suburb', 'Suburb') }}
-								{{ Form::text('address_suburb', '', ['class' => 'form-control']) }}
+								<x-inputs.text label="Suburb" id="address_suburb" name="address_suburb"></x-inputs.text>
 							</div>
 							<div class="col-md-2">
-								{{ Form::label('address_state', 'State') }}
-								{{ Form::select('address_state', [
+								@php $states = [
 									'ACT' => 'ACT',
 									'NSW' => 'NSW',
 									'NT'  => 'NT',
@@ -76,11 +60,11 @@
 									'TAS' => 'TAS',
 									'VIC' => 'VIC',
 									'WA'  => 'WA',
-								], '', ['class' => 'custom-select']) }}
+								];@endphp
+								<x-inputs.select label="State" id="address_state" name="address_state" :options="$states"></x-inputs.select>
 							</div>
 							<div class="col-md-2">
-								{{ Form::label('address_postcode', 'Postcode') }}
-								{{ Form::text('address_postcode', '', ['class' => 'form-control']) }}
+								<x-inputs.text label="Postcode" id="address_postcode" name="address_postcode"></x-inputs.text>
 							</div>
 						</div>
 					</fieldset>
@@ -89,23 +73,19 @@
 						<legend>Other Info</legend>
 
 						<p>
-							{{ Form::label('reason_for_joining', 'Why are you joining?') }}
-							{{ Form::text('reason_for_joining', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="Why are you joining?" id="reason_for_joining" name="reason_for_joining"></x-inputs.text>
 						</p>
 
 						<p>
-							{{ Form::label('referrer', 'Where did you hear about us?') }}
-							{{ Form::text('referrer', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="Where did you hear about us?" id="referrer" name="referrer"></x-inputs.text>
 						</p>
 
 						<p>
-							{{ Form::label('profession', 'What is your profession?') }}
-							{{ Form::text('profession', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="What is your profession?" id="profession" name="profession"></x-inputs.text>
 						</p>
 
 						<p>
-							{{ Form::label('skills', 'What non-musical skills do you have?') }}
-							{{ Form::text('skills', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="What non-musical skills do you have?" id="skills" name="skills"></x-inputs.text>
 						</p>
 						<div class="form-group">
 							{{ Form::label('height', 'Height') }}
@@ -118,8 +98,7 @@
 							<small class="form-text text-muted">Knowing the singer's height is useful for riser stacks.</small>
 						</div>
 						<div class="form-group">
-							{{ Form::label('membership_details', 'Society Membership Details (e.g. BHA #1234)') }}
-							{{ Form::text('membership_details', '', ['class' => 'form-control']) }}
+							<x-inputs.text label="Society Membership Details (e.g. BHA #1234)" id="membership_details" name="membership_details"></x-inputs.text>
 						</div>
 					</fieldset>
 

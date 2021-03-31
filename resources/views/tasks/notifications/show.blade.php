@@ -16,7 +16,7 @@
             {{ optional($notification->created_at)->diffForHumans() }}
         </span>
         <span class="date__regular">
-            {{ optional($notification->created_at)->format('M d, H:i') }}
+            {{ optional($notification->created_at)->format(config('app.formats.timestamp_md')) }}
         </span>
     </span><br>
     Updated: <span class="date" style="display: inline-flex;">
@@ -24,7 +24,7 @@
             {{ optional($notification->updated_at)->diffForHumans() }}
         </span>
         <span class="date__regular">
-            {{ optional($notification->updated_at)->format('M d, H:i') }}
+            {{ optional($notification->updated_at)->format(config('app.formats.timestamp_md')) }}
         </span>
     </span><br>
 @endsection

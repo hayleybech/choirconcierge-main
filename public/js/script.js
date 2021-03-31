@@ -2,11 +2,6 @@ $( document ).ready(function() {
     $('a.disabled').click(function(e) { 
       e.preventDefault(); 
     });
-	
-	$('.link-confirm').on('click', function (e) {
-		console.log(e);
-        return confirm( 'Are you sure? Action:' + e.target.innerText );
-    });
 
 	// Setup menu collapse
 	$menu_collapsibles = $('#app-header .navbar .logo, #app-header .navbar .logo-collapse, #app-header .navbar .link-text, .nav-heading');
@@ -90,19 +85,25 @@ $( document ).ready(function() {
 
     // Hide Senders unless the list type is Mailout/Distribution
     const $senders = $('#senders')
-    const $list_type = $('#list_type');
     const $type_distribution = $('#list_type_distribution');
 
     // Check initial state on page load
-    if( ! $type_distribution.is(':checked')) {
+    if( ! $type_distribution[0]?.checked ) {
         $senders.hide();
+    } else {
+        $senders.show();
     }
 
-    // Set event handler
-    $list_type.click(function(){
-        if( $type_distribution.closest('.btn').is('.active')) {
+    // Set enable event handler
+    $type_distribution.change(function(){
+        if( this.checked ) {
             $senders.show();
-        } else {
+        }
+    });
+
+    // Set disable event handler
+    $('#list_type_chat, #list_type').change(function(){
+        if( this.checked ) {
             $senders.hide();
         }
     });
@@ -113,27 +114,6 @@ $( document ).ready(function() {
      */
     $('#role-abilities-table .check-all').change(function(){
         $(this).parents('tr').find('input[type=checkbox]').prop('checked', $(this).prop('checked'));
-    });
-
-    /**
-     * Recurring Events
-     */
-    const $is_repeating = $('#is_repeating');
-    const $repeatDetails = $('#repeat_details');
-    
-    // Set initial state
-    if(! $is_repeating[0].checked) {
-        $repeatDetails.hide();
-    } else {
-        $repeatDetails.show();
-    }
-    // Set event handler
-    $is_repeating.change(function () {
-        if(this.checked) {
-            $repeatDetails.show();
-        } else {
-            $repeatDetails.hide();
-        }
     });
 
 });

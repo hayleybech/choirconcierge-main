@@ -12,8 +12,8 @@
     <title>@yield('title') | {{ config('app.name', 'Choir Concierge') }}</title>
 
     <!-- Styles -->
-    <link href="{{ global_asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ global_asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ global_asset(mix('/css/app.css')) }}" rel="stylesheet">
+    <link href="{{ global_asset('/css/style.css') }}" rel="stylesheet">
 	<link rel="shortcut icon" href="{{ global_asset( '/img/favicon.png' ) }}">
 
 	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap" rel="stylesheet">
@@ -42,8 +42,8 @@
 	</script>
 	<script async src="//cdn.headwayapp.co/widget.js"></script>
     
-    <script src="{{ global_asset('js/app.js') }}"></script>
-    <script src="{{ global_asset('js/script.js') }}"></script>
+    <script src="{{ global_asset(mix('/js/app.js')) }}"></script>
+    <script src="{{ global_asset('/js/script.js') }}"></script>
 
 	@stack('scripts-footer-bottom')
 	
