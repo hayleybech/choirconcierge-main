@@ -19,7 +19,7 @@
                 {{ $group->created_at->diffForHumans() }}
             </div>
             <div class="date__regular">
-                {{ $group->created_at->format('M d, H:i') }}
+                {{ $group->created_at->format(config('app.formats.timestamp_md')) }}
             </div>
         </div>
     </div>

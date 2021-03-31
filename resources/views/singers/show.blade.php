@@ -63,11 +63,11 @@
 
 							<div class="mb-1">
 								<strong>Added</strong><br>
-								<span class="text-muted">{{ $singer->created_at->toDayDateTimeString() }}</span><br>
+								<span class="text-muted">{{ $singer->created_at->format(config('app.formats.timestamp_lg')) }}</span><br>
 							</div>
 							<div class="mb-1">
 								<strong>Joined</strong><br>
-								<span class="text-muted">{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->toDayDateTimeString() }})</span><br>
+								<span class="text-muted">{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->format(config('app.formats.date_lg')) }})</span><br>
 							</div>
 
 							<div class="mb-1">
@@ -137,7 +137,7 @@
 								<h3 class="h4">Other Info</h3>
 								@if( $singer->profile )
 								<div class="profile-item">
-										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->profile->dob->toFormattedDateString() ?? '?' }}
+										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->profile->dob->format(config('app.formats.date_md')) ?? '?' }}
 									</div>
 
 								<div class="mb-1">

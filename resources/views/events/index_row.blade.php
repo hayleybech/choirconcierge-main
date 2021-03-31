@@ -16,7 +16,7 @@
                 {{ $event->call_time->diffForHumans() }}
             </div>
             <div class="date__regular">
-                {{ $event->call_time->format('M d, H:i') }}
+                {{ $event->call_time->format(config('app.formats.timestamp_md')) }}
             </div>
         </div>
     </td>
@@ -39,7 +39,7 @@
                 {{ $event->created_at->diffForHumans() }}
             </div>
             <div class="date__regular">
-                {{ $event->created_at->format('M d, H:i') }}
+                {{ $event->created_at->format(config('app.formats.timestamp_md')) }}
             </div>
         </div>
     </td>

@@ -31,24 +31,24 @@
                             @if($event->call_time->isSameDay($event->end_date))
                                 <div class="h3">
                                     <!-- Single Date -->
-                                    <time>{{ $event->call_time->format('M d, Y') }}</time>
+                                    <time>{{ $event->call_time->format(config('app.formats.date_lg')) }}</time>
                                 </div>
                                 <div class="h5">
                                     <!-- Time -->
-                                    <time>{{ $event->call_time->format('H:i') }}</time> to <time>{{ $event->end_date->format('H:i') }}</time>
+                                    <time>{{ $event->call_time->format(config('app.formats.time')) }}</time> to <time>{{ $event->end_date->format(config('app.formats.time')) }}</time>
                                 </div>
                             @else
                                 <div class="h3">
                                     <!-- Date Range -->
-                                    <time>{{ $event->call_time->format('M d') }}</time> to <time>{{ $event->end_date->format('M d, Y') }}</time>
+                                    <time>{{ $event->call_time->format(config('app.formats.date_md')) }}</time> to <time>{{ $event->end_date->format(config('app.formats.date_lg')) }}</time>
                                 </div>
                                 <div class="h5">
                                     <!-- Time -->
-                                    <time>{{ $event->call_time->format('M d, H:i') }}</time> to <time>{{ $event->end_date->format('M d, H:i') }}</time>
+                                    <time>{{ $event->call_time->format(config('app.formats.timestamp_md')) }}</time> to <time>{{ $event->end_date->format(config('app.formats.timestamp_md')) }}</time>
                                 </div>
                             @endif
 
-                            <small class="text-muted">Timezone: {{ $event->start_date->format('e P') }}</small>
+                            <small class="text-muted">Timezone: {{ $event->start_date->format(config('app.formats.timezone')) }}</small>
                         </div>
                         <div class="col-md-6">
                             <h5>Event Details</h5>
@@ -58,12 +58,12 @@
 
                                 @can('update', $event)
                                 <dt class="col-sm-4 px-1">On stage:</dt>
-                                <dd class="col-sm-8 px-1"><time>{{ $event->start_date->format('H:i') }}</time></dd>
+                                <dd class="col-sm-8 px-1"><time>{{ $event->start_date->format(config('app.formats.time')) }}</time></dd>
                                 @endcan
 
                                 @if($event->is_repeating)
                                 <dt class="col-sm-4 px-1">Repeat:</dt>
-                                <dd class="col-sm-8 px-1">Every {{ $event->repeat_frequency_unit }} until <time>{{ $event->repeat_until->format('Y-m-d') }}</time></dd>
+                                <dd class="col-sm-8 px-1">Every {{ $event->repeat_frequency_unit }} until <time>{{ $event->repeat_until->format(config('app.formats.date_sm')) }}</time></dd>
                                 @endif
                             </dl>
                         </div>

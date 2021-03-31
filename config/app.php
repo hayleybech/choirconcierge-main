@@ -243,5 +243,18 @@ return [
 
 	'drip_token' 	=> 'nsef8o9sjpmfake3czoq',
 	'drip_account' 	=> '9922956',
+
+	'formats' => [
+		'date_sm'      => 'Y-m-d',             // 2021-05-04 (ISO 8601)
+		'date_md'      => 'M d',               // May 4
+		'date_lg'      => 'M d, Y',            // May 4, 2021
+
+		'time'         => 'h:i a',             // e.g. 1:30 pm
+
+		'timestamp_md' => 'M d, h:i a',        // May 4, 1:30 pm
+		'timestamp_lg' => 'M d, Y @ h:i a',    // May 4, 2021 @ 1:30 pm
+
+		'timezone'     => 'e P',               // e.g. Australia/Perth +08:00
+	],
 	
 ];

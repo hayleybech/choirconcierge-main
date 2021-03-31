@@ -13,7 +13,7 @@
             {{ optional($voice_part->created_at)->diffForHumans() }}
         </span>
         <span class="date__regular">
-            {{ optional($voice_part->created_at)->format('M d, H:i') }}
+            {{ optional($voice_part->created_at)->format(config('app.formats.timestamp_md')) }}
         </span>
     </span><br>
 	Updated: <span class="date" style="display: inline-flex;">
@@ -21,7 +21,7 @@
             {{ optional($voice_part->updated_at)->diffForHumans() }}
         </span>
         <span class="date__regular">
-            {{ optional($voice_part->updated_at)->format('M d, H:i') }}
+            {{ optional($voice_part->updated_at)->format(config('app.formats.timestamp_md')) }}
         </span>
     </span><br>
 @endsection
