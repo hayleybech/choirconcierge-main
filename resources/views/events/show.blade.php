@@ -26,8 +26,8 @@
                 </div>
                 <div class="card-body">
 
-                    <div class="row mb-4">
-                        <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
                             @if($event->call_time->isSameDay($event->end_date))
                                 <div class="h3">
                                     <!-- Single Date -->
@@ -50,7 +50,7 @@
 
                             <small class="text-muted">Timezone: {{ $event->start_date->format(config('app.formats.timezone')) }}</small>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-4">
                             <h5>Event Details</h5>
                             <dl class="row mx-n1">
                                 <dt class="col-sm-4 px-1">Category:</dt>
