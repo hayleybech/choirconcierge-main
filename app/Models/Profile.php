@@ -31,6 +31,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * Attributes
+ * @property Carbon $birthday
+ *
  * Relationships
  * @property Singer $singer
  *
@@ -69,5 +72,10 @@ class Profile extends Model
     public function singer(): BelongsTo
 	{
 		return $this->belongsTo(Singer::class);
+	}
+
+	public function getBirthdayAttribute(): Carbon
+	{
+		return $this->dob->copy()->year( now()->year );
 	}
 }

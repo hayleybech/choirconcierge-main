@@ -8,6 +8,7 @@ use App\Models\Filters\Singer_CategoryFilter;
 use App\Models\Filters\Singer_RoleFilter;
 use App\Models\Filters\Singer_VoicePartFilter;
 use App\Models\Traits\TenantTimezoneDates;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -219,5 +220,20 @@ class Singer extends Model
     public function getUserAvatarThumbUrlAttribute()
     {
         return $this->user->getFirstMediaUrl('avatar', 'thumb');
+    }
+
+    public function scopeBirthdays(Builder $query): Builder {
+    	return $query->whereHas('profile', static function (Builder $query){
+    		return $query->whereMonth('dob', '>=', now())
+			    ->whereMonth('dob', '<=', now()->addMonth());
+	    });
+    }
+
+    public function scopeEmptyDobs(Builder $query): Builder {
+	    return $query->whereHas('category', static function (Builder $query){
+		        return $query->whereIn('name', ['Members', 'Prospects']);
+		    })->whereHas('profile', static function (Builder $query){
+			    return $query->whereNull('dob');
+		    })->orWhereDoesntHave('profile');
     }
 }
