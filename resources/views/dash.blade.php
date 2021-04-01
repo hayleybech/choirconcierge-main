@@ -55,6 +55,10 @@
         </div>
 
         <div class="col-md-4">
+            <x-widgets.songs :songs="$songs"></x-widgets.songs>
+        </div>
+
+        <div class="col-md-4">
             <x-widgets.birthdays :birthdays="$birthdays" :empty-dobs="$empty_dobs"></x-widgets.birthdays>
         </div>
     </div>
