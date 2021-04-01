@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Singer;
+use App\Models\Song;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class DashController extends Controller
@@ -43,6 +45,9 @@ class DashController extends Controller
 	        'empty_dobs' => Singer::query()
 		        ->emptyDobs()
 		        ->count(),
+	        'songs' => Song::whereHas('status', static function(Builder $query){
+	        	return $query->where('title', 'Learning');
+	        })->get(),
         ]);
     }
 }
