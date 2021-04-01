@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Singer;
 use App\Models\Song;
 use Illuminate\Contracts\View\View;
@@ -48,6 +49,9 @@ class DashController extends Controller
 	        'songs' => Song::whereHas('status', static function(Builder $query){
 	        	return $query->where('title', 'Learning');
 	        })->get(),
+	        'events' => Event::where('call_time', '>', now())
+		        ->where('call_time', '<', now()->addMonth())
+	            ->get(),
         ]);
     }
 }

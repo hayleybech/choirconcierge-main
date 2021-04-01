@@ -10,7 +10,7 @@
 
     <div class="row">
         <div class="col-md-4">
-
+            <x-widgets.events :events="$events"></x-widgets.events>
         </div>
 
         <div class="col-md-4">
