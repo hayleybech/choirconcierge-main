@@ -77,7 +77,7 @@
                             </div>
 
                             <div class="form-group">
-                                <datetime-input label="Repeat until" input-name="repeat_until_input" output-name="repeat_until" :value="new Date({{ $event->repeat_until }})"></datetime-input>
+                                <datetime-input label="Repeat until" input-name="repeat_until_input" output-name="repeat_until" :value="Date('{{ $event->repeat_until }}')"></datetime-input>
                             </div>
 
                         </fieldset>
