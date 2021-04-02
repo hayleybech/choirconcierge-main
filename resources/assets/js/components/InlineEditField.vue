@@ -7,7 +7,7 @@
 
             <slot></slot>
 
-            <button type="submit" :class="'btn btn-primary ' + btnSize"><i class="far fa-fw fa-check"></i> Save</button>
+            <button type="submit" :class="'btn btn-secondary ' + btnSize"><i class="far fa-fw fa-check"></i> Save</button>
         </form>
     </div>
     <div v-else>
