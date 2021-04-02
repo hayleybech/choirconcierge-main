@@ -49,7 +49,9 @@ class DashController extends Controller
 	        'songs' => Song::whereHas('status', static function(Builder $query){
 	        	return $query->where('title', 'Learning');
 	        })->get(),
-	        'events' => Event::where('call_time', '>', now())
+	        'events' => Event::query()
+		        ->with(['my_rsvp'])
+		        ->where('call_time', '>', now())
 		        ->where('call_time', '<', now()->addMonth())
 	            ->get(),
         ]);

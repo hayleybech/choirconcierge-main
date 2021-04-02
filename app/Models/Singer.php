@@ -32,6 +32,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $joined_at
+ * @property int $user_id
  *
  * Relationships
  * @property Collection<Task> $tasks

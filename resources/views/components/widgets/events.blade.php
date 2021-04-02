@@ -5,7 +5,12 @@
     <div class="list-group list-group-flush">
         @forelse($events as $event)
             <div class="list-group-item">
-                {{ $event->call_time->format('D, '.config('app.formats.date_md')) }} - <a href="{{ route('events.show', $event) }}">{{ $event->title }}</a>
+                <div>
+                    {{ $event->call_time->format('D, '.config('app.formats.date_md')) }} - <a href="{{ route('events.show', $event) }}">{{ $event->title }}</a>
+                </div>
+                <div>
+                    <small><x-inline-rsvp :event="$event" :compact="true"></x-inline-rsvp></small>
+                </div>
             </div>
         @empty
             <div class="list-group-item">No events this month.</div>

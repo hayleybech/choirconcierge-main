@@ -15,6 +15,8 @@ use Illuminate\Support\Carbon;
  * @property string $response
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property int $event_id
+ * @property int $singer_id
  *
  * Relationships
  * @property Singer $singer
@@ -43,5 +45,14 @@ class Rsvp extends Model
 
     public function getResponseStringAttribute(){
         return ucfirst($this->response);
+    }
+
+    public function getResponseLabelAttribute(){
+    	$labels = [
+    		'yes'   => 'Going',
+		    'maybe' => 'Maybe',
+		    'no'    => 'Not Going',
+	    ];
+    	return $labels[$this->response];
     }
 }
