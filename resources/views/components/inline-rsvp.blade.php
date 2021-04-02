@@ -17,14 +17,14 @@
             @endif
 
             <div class="btn-group btn-group-sm btn-group-toggle mr-2" data-toggle="buttons">
-                <label class="btn btn-outline-success">
-                    <input type="radio" name="rsvp_response" id="rsvp_response_yes" value="yes" {{'yes' === $event->my_rsvp->response ? 'checked' : ''}}> <i class="far fa-fw fa-check"></i><span class="d-none d-sm-inline"> Going</span>
+                <label class="btn btn-outline-success {{'yes' === $event->my_rsvp->response ? 'active' : ''}}">
+                    <input type="radio" name="rsvp_response" id="event_{{ $event->id }}_rsvp_response_yes" value="yes" {{'yes' === $event->my_rsvp->response ? 'checked' : ''}}> <i class="far fa-fw fa-check"></i><span class="d-none d-sm-inline"> Going</span>
                 </label>
-                <label class="btn btn-outline-warning">
-                    <input type="radio" name="rsvp_response" id="rsvp_response_maybe" value="maybe" {{'maybe' === $event->my_rsvp->response ? 'checked' : ''}}> <i class="far fa-fw fa-question"></i><span class="d-none d-sm-inline"> Maybe</span>
+                <label class="btn btn-outline-warning {{'maybe' === $event->my_rsvp->response ? 'active' : ''}}">
+                    <input type="radio" name="rsvp_response" id="event_{{ $event->id }}_rsvp_response_maybe" value="maybe" {{'maybe' === $event->my_rsvp->response ? 'checked' : ''}}> <i class="far fa-fw fa-question"></i><span class="d-none d-sm-inline"> Maybe</span>
                 </label>
-                <label class="btn btn-outline-danger">
-                    <input type="radio" name="rsvp_response" id="rsvp_response_no" value="no" {{'no' === $event->my_rsvp->response ? 'checked' : ''}}> <i class="far fa-fw fa-times"></i> <span class="d-none d-sm-inline">Not Going</span>
+                <label class="btn btn-outline-danger {{'no' === $event->my_rsvp->response ? 'active' : ''}}">
+                    <input type="radio" name="rsvp_response" id="event_{{ $event->id }}_rsvp_response_no" value="no" {{'no' === $event->my_rsvp->response ? 'checked' : ''}}> <i class="far fa-fw fa-times"></i> <span class="d-none d-sm-inline">Not Going</span>
                 </label>
             </div>
         </inline-edit-field>
@@ -41,13 +41,13 @@
 
         <div class="btn-group btn-group-sm btn-group-toggle mr-2" data-toggle="buttons">
             <label class="btn btn-outline-success">
-                <input type="radio" name="rsvp_response" id="rsvp_response_yes" value="yes"> <i class="far fa-fw fa-check"></i><span class="d-none d-sm-inline"> Going</span>
+                <input type="radio" name="rsvp_response" id="event_{{ $event->id }}_rsvp_response_yes" value="yes"> <i class="far fa-fw fa-check"></i><span class="d-none d-sm-inline"> Going</span>
             </label>
             <label class="btn btn-outline-warning">
-                <input type="radio" name="rsvp_response" id="rsvp_response_maybe" value="maybe" checked> <i class="far fa-fw fa-question"></i><span class="d-none d-sm-inline"> Maybe</span>
+                <input type="radio" name="rsvp_response" id="event_{{ $event->id }}_rsvp_response_maybe" value="maybe" checked> <i class="far fa-fw fa-question"></i><span class="d-none d-sm-inline"> Maybe</span>
             </label>
             <label class="btn btn-outline-danger">
-                <input type="radio" name="rsvp_response" id="rsvp_response_no" value="no"> <i class="far fa-fw fa-times"></i> <span class="d-none d-sm-inline">Not Going</span>
+                <input type="radio" name="rsvp_response" id="event_{{ $event->id }}_rsvp_response_no" value="no"> <i class="far fa-fw fa-times"></i> <span class="d-none d-sm-inline">Not Going</span>
             </label>
         </div>
 
