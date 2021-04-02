@@ -109,38 +109,7 @@
                 <div class="card-header"><h4>My Attendance</h4></div>
                 <div class="card-body">
                     <!-- RSVP -->
-                    @if($my_rsvp)
-                        Your RSVP response:
-                        @if($event->in_future)
-                            <!-- Edit RSVP -->
-                            <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $my_rsvp]) }}" value="{{ $my_rsvp->response_string }}" csrf="{{ csrf_token() }}" edit-label="Change response">
-                                <label for="rsvp_response" class="d-block">Will you attend?</label>
-
-                                <x-inputs.radio label="Yes" id="rsvp_response_yes" name="rsvp_response" value="yes" inline="true" :checked="'yes' === $my_rsvp->response"></x-inputs.radio>
-                                <x-inputs.radio label="Maybe" id="rsvp_response_maybe" name="rsvp_response" value="maybe" inline="true" :checked="'maybe' === $my_rsvp->response"></x-inputs.radio>
-                                <x-inputs.radio label="No" id="rsvp_response_no" name="rsvp_response" value="no" inline="true" :checked="'no' === $my_rsvp->response"></x-inputs.radio>
-                            </inline-edit-field>
-                        @else
-                            {{ $my_rsvp->response_string }}
-                        @endif
-                    @elseif($event->in_future)
-                        <!-- Create RSVP -->
-                        {{ Form::open(['route' => ['events.rsvps.store', $event->id]]) }}
-                        <div class="form-group">
-                            <label for="rsvp_response" class="d-block">Will you attend?</label>
-
-                            <x-inputs.radio label="Yes" id="rsvp_response_yes" name="rsvp_response" value="yes" inline="true"></x-inputs.radio>
-                            <x-inputs.radio label="Maybe" id="rsvp_response_maybe" name="rsvp_response" value="maybe" inline="true" checked="true"></x-inputs.radio>
-                            <x-inputs.radio label="No" id="rsvp_response_no" name="rsvp_response" value="no" inline="true"></x-inputs.radio>
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-secondary"><i class="far fa-fw fa-check"></i> Save RSVP</button>
-                        </div>
-                        {{ Form::close() }}
-                    @else
-                        You didn't RSVP for this event.
-                    @endif
+                    <x-inline-rsvp :event="$event"></x-inline-rsvp>
 
                     @if( ! $event->in_future )
                         <!-- Attendance -->

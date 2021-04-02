@@ -25,7 +25,7 @@ class RsvpController extends Controller
             'singer_id' => Auth::id(),
         ]);
 
-        return redirect()->route('events.show', [$event])->with(['status' => 'RSVP saved.']);
+        return back()->with(['status' => 'RSVP saved.']);
     }
 
     public function update(Request $request, Event $event, Rsvp $rsvp): RedirectResponse
@@ -40,7 +40,7 @@ class RsvpController extends Controller
             'response'  => $request->input('rsvp_response'),
         ]);
 
-        return redirect()->route('events.show', [$event])->with(['status' => 'RSVP saved.']);
+        return back()->with(['status' => 'RSVP saved.']);
     }
 
     public function destroy(Event $event, Rsvp $rsvp): RedirectResponse
@@ -49,6 +49,6 @@ class RsvpController extends Controller
 
         $rsvp->delete();
 
-        return redirect()->route('events.show', [$event])->with(['status' => 'RSVP deleted.']);
+        return back()->with(['status' => 'RSVP deleted.']);
     }
 }

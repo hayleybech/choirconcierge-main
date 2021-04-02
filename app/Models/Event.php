@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -55,6 +56,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Relationships
  * @property EventType $type
  * @property Collection<Rsvp> $rsvps
+ * @property Rsvp $my_rsvp
  * @property Collection<Attendance> $attendances
  *
  * Relationships - Repeating Events
@@ -355,11 +357,10 @@ class Event extends Model
         return $this->hasMany(Rsvp::class);
     }
 
-    public function my_rsvp()
+    public function my_rsvp(): ?HasOne
     {
-        return $this->rsvps()
-            ->where('singer_id', '=', \Auth::user()->singer->id)
-            ->first();
+        return $this->hasOne(Rsvp::class)
+            ->where('singer_id', '=', DB::table('singers')->where( 'user_id', auth()->id() )->value('id'));
     }
 
     public function attendances(): HasMany
