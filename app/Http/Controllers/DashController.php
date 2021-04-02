@@ -51,8 +51,8 @@ class DashController extends Controller
 	        })->get(),
 	        'events' => Event::query()
 		        ->with(['my_rsvp'])
-		        ->where('call_time', '>', now())
-		        ->where('call_time', '<', now()->addMonth())
+		        ->where('call_time', '>', today())
+		        ->where('call_time', '<', today()->addMonth())
 	            ->get(),
         ]);
     }
