@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
+use App\Models\Singer;
+use App\Models\Song;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class DashController extends Controller
@@ -24,6 +28,32 @@ class DashController extends Controller
      */
     public function index(): View
     {
-        return view('dash');
+    	$birthdays = Singer::query()
+		    ->birthdays()
+		    ->with('profile')
+		    ->get()
+		    ->sort(static function(Singer $singer1, Singer $singer2): int {
+		    	// Sort by birthday
+
+			    if( $singer1->profile->birthday->equalTo($singer2->profile->birthday) ) {
+			        return 0;
+			    }
+			    return $singer1->profile->birthday < $singer2->profile->birthday ? -1 : 1;
+		    });
+
+        return view('dash', [
+        	'birthdays' => $birthdays,
+	        'empty_dobs' => Singer::query()
+		        ->emptyDobs()
+		        ->count(),
+	        'songs' => Song::whereHas('status', static function(Builder $query){
+	        	return $query->where('title', 'Learning');
+	        })->get(),
+	        'events' => Event::query()
+		        ->with(['my_rsvp'])
+		        ->where('call_time', '>', today())
+		        ->where('call_time', '<', today()->addMonth())
+	            ->get(),
+        ]);
     }
 }

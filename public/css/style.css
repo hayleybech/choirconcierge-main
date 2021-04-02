@@ -140,6 +140,11 @@ a.disabled:hover {
 	font-size: 16px;
 }
 
+.card-footer {
+	border-top: 1px solid var(--c-light-pink) !important;
+	padding: 15px 40px;
+}
+
 @media screen and (max-width: 767px) {
 	h4.card-header,
 	.h4.card-header {

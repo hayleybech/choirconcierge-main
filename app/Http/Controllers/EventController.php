@@ -81,7 +81,6 @@ class EventController extends Controller
 
         return view('events.show', [
             'event'   => $event,
-            'my_rsvp' => $event->my_rsvp(),
             'my_attendance' => $event->my_attendance(),
             'singers_rsvp_yes_count'     => $event->singers_rsvp_response('yes')->count(),
             'singers_rsvp_maybe_count'   => $event->singers_rsvp_response('maybe')->count(),
