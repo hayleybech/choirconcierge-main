@@ -1,12 +1,14 @@
 <?php
 
+$VERSION = 'choir-concierge@2021-04-02a';
+
 return [
 
     'dsn' => env('SENTRY_LARAVEL_DSN', env('MIX_SENTRY_DSN')),
 
     // capture release as git sha
     // 'release' => trim(exec('git --git-dir ' . base_path('.git') . ' log --pretty="%h" -n1 HEAD')),
-	'release' => env('APP_ENV') === 'production' ? 'choir-concierge@2021-04-02a': 'choir-concierge@2021-04-02a:dev',
+	'release' => env('APP_ENV') === 'production' ? $VERSION : $VERSION.':dev',
 
     // When left empty or `null` the Laravel environment will be used
     'environment' => env('SENTRY_ENVIRONMENT'),
