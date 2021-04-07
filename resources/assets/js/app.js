@@ -20,7 +20,7 @@ Sentry.init({
     dsn: process.env.MIX_SENTRY_DSN,
     logErrors: true,
     integrations: [new TracingIntegrations.BrowserTracing()],
-    tracesSampleRate: 0.2,
+    tracesSampleRate: process.env.MIX_SENTRY_TRACES_SAMPLE_RATE,
     tracingOptions: {
         trackComponents: true,
     },
