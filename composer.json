@@ -21,6 +21,7 @@
         "laravelcollective/html": "~6.2.0",
         "maatwebsite/excel": "~3.1",
         "renatomarinho/laravel-page-speed": "^2.0",
+        "sentry/sentry-laravel": "^2.4",
         "spatie/calendar-links": "^1.4",
         "spatie/flysystem-dropbox": "^1.2",
         "spatie/icalendar-generator": "^2.0",
