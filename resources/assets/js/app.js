@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -11,6 +10,19 @@ require('select2');
 
 import ReadMore from 'vue-read-more';
 Vue.use(ReadMore);
+
+import * as Sentry from "@sentry/vue";
+import { Integrations as TracingIntegrations } from "@sentry/tracing";
+Sentry.init({
+    Vue: Vue,
+    dsn: process.env.MIX_SENTRY_DSN,
+    logErrors: true,
+    integrations: [new TracingIntegrations.BrowserTracing()],
+    tracesSampleRate: 0.2,
+    tracingOptions: {
+        trackComponents: true,
+    },
+});
 
 /**
  * The following block of code may be used to automatically register your
