@@ -22,6 +22,7 @@ Sentry.init({
     tracingOptions: {
         trackComponents: true,
     },
+    release: process.env.MIX_APP_ENV === 'production' ? 'choir-concierge@2021-04-02a': 'choir-concierge@2021-04-02a:dev',
 });
 
 /**
