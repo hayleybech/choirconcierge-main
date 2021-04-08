@@ -18,7 +18,8 @@ class ConvertTimezonesInEvents extends Migration
         // Update event times for each tenant
         foreach($tenants as $tenant) {
             // Convert tz name to offset
-            $offset = CarbonTimeZone::create($tenant->data->timezone)->toOffsetName();
+	        $fallback_timezone = 'Australia/Perth';
+            $offset = CarbonTimeZone::create($tenant->data->timezone ?? $fallback_timezone)->toOffsetName();
             $utc = '+0:00';
 
             DB::table('events')->where('tenant_id', $tenant->id)
