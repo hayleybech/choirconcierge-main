@@ -26,7 +26,8 @@ class SingerControllerTest extends TestCase
     // INDEX
 
     /** @test */
-    public function index_for_employee_returns_list_view(): void {
+    public function index_for_employee_returns_list_view(): void
+    {
         $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
         $this->actingAs($user);
 
@@ -59,6 +60,7 @@ class SingerControllerTest extends TestCase
     }
 
     // CREATE
+
     /** @test */
     public function create_for_membership_or_music_team_returns_create_view(): void
     {
@@ -95,6 +97,7 @@ class SingerControllerTest extends TestCase
     }
 
     // STORE
+
     /** @test */
     public function store_for_membership_or_music_team_creates_a_singer(): void
     {
@@ -105,7 +108,7 @@ class SingerControllerTest extends TestCase
         $password = Str::random(8);
         $first_name = $this->faker->firstName;
         $last_name = $this->faker->lastName;
-        $data  = [
+        $data = [
             'first_name' => $first_name,
             'last_name' => $last_name,
             'email' => $this->faker->email,
@@ -135,7 +138,7 @@ class SingerControllerTest extends TestCase
         $password = Str::random(8);
         $first_name = $this->faker->firstName;
         $last_name = $this->faker->lastName;
-        $data  = [
+        $data = [
             'first_name' => $first_name,
             'last_name' => $last_name,
             'email' => $this->faker->email,
@@ -162,7 +165,7 @@ class SingerControllerTest extends TestCase
         $password = Str::random(8);
         $first_name = $this->faker->firstName;
         $last_name = $this->faker->lastName;
-        $data  = [
+        $data = [
             'first_name' => $first_name,
             'last_name' => $last_name,
             'email' => $this->faker->email,
@@ -182,6 +185,7 @@ class SingerControllerTest extends TestCase
     }
 
     // SHOW
+
     /** @test */
     public function show_for_employee_returns_show_view(): void
     {
@@ -189,7 +193,7 @@ class SingerControllerTest extends TestCase
         $this->actingAs($user);
 
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('singers.show', $singer) );
+        $response = $this->get(the_tenant_route('singers.show', $singer));
 
         $response->assertViewIs('singers.show');
         $response->assertOk();
@@ -215,7 +219,7 @@ class SingerControllerTest extends TestCase
         $this->assertGuest();
 
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('singers.show', $singer) );
+        $response = $this->get(the_tenant_route('singers.show', $singer));
 
         $response->assertRedirect(the_tenant_route('login'));
     }
@@ -227,7 +231,7 @@ class SingerControllerTest extends TestCase
         $this->actingAs($user);
 
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('singers.edit', ['singer' => $singer]) );
+        $response = $this->get(the_tenant_route('singers.edit', ['singer' => $singer]));
 
         $response->assertOk();
         $response->assertViewIs('singers.edit');
@@ -240,7 +244,7 @@ class SingerControllerTest extends TestCase
         $this->actingAs($user);
 
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('singers.edit', ['singer' => $singer]) );
+        $response = $this->get(the_tenant_route('singers.edit', ['singer' => $singer]));
 
         $response->assertRedirect(the_tenant_route('dash'));
     }
@@ -251,12 +255,13 @@ class SingerControllerTest extends TestCase
         $this->assertGuest();
 
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('singers.edit', ['singer' => $singer]) );
+        $response = $this->get(the_tenant_route('singers.edit', ['singer' => $singer]));
 
         $response->assertRedirect(the_tenant_route('login'));
     }
 
     // UPDATE
+
     /** @test */
     public function update_for_membership_team_changes_singer(): void
     {
@@ -265,14 +270,14 @@ class SingerControllerTest extends TestCase
 
         $first_name = $this->faker->firstName;
         $last_name = $this->faker->lastName;
-        $data  = [
+        $data = [
             'first_name' => $first_name,
             'last_name' => $first_name,
             'email' => $this->faker->email,
             'onboarding_enabled' => $this->faker->boolean(10),
         ];
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->put( the_tenant_route('singers.update', ['singer' => $singer]), $data );
+        $response = $this->put(the_tenant_route('singers.update', ['singer' => $singer]), $data);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('singers', $data);
@@ -286,14 +291,14 @@ class SingerControllerTest extends TestCase
 
         $first_name = $this->faker->firstName;
         $last_name = $this->faker->lastName;
-        $data  = [
+        $data = [
             'first_name' => $first_name,
             'last_name' => $last_name,
             'email' => $this->faker->email,
             'onboarding_enabled' => $this->faker->boolean(10),
         ];
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->put( the_tenant_route('singers.update', ['singer' => $singer]), $data );
+        $response = $this->put(the_tenant_route('singers.update', ['singer' => $singer]), $data);
 
         $response->assertRedirect(the_tenant_route('dash'));
         $this->assertDatabaseMissing('singers', $data);
@@ -306,20 +311,21 @@ class SingerControllerTest extends TestCase
 
         $first_name = $this->faker->firstName;
         $last_name = $this->faker->lastName;
-        $data  = [
+        $data = [
             'first_name' => $first_name,
             'last_name' => $last_name,
             'email' => $this->faker->email,
             'onboarding_enabled' => $this->faker->boolean(10),
         ];
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->put( the_tenant_route('singers.update', ['singer' => $singer]), $data );
+        $response = $this->put(the_tenant_route('singers.update', ['singer' => $singer]), $data);
 
         $response->assertRedirect(the_tenant_route('login'));
         $this->assertDatabaseMissing('singers', $data);
     }
 
     // DESTROY
+
     /** @test */
     public function destroy_for_admin_deletes_singer(): void
     {
@@ -327,7 +333,7 @@ class SingerControllerTest extends TestCase
         $this->actingAs($user);
 
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('singers.destroy', ['singer' => $singer]) );
+        $response = $this->delete(the_tenant_route('singers.destroy', ['singer' => $singer]));
 
         $response->assertRedirect();
         $this->assertSoftDeleted('singers', ['id' => $singer->id]);
@@ -340,7 +346,7 @@ class SingerControllerTest extends TestCase
         $this->actingAs($user);
 
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('singers.destroy', ['singer' => $singer]) );
+        $response = $this->delete(the_tenant_route('singers.destroy', ['singer' => $singer]));
 
         $response->assertRedirect();
         $this->assertDatabaseHas('singers', ['id' => $singer->id]);
@@ -352,7 +358,7 @@ class SingerControllerTest extends TestCase
         $this->assertGuest();
 
         $singer = Singer::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('singers.destroy', ['singer' => $singer]) );
+        $response = $this->delete(the_tenant_route('singers.destroy', ['singer' => $singer]));
 
         $response->assertRedirect();
         $this->assertDatabaseHas('singers', ['id' => $singer->id]);

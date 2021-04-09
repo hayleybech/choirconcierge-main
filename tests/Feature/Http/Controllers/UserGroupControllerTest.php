@@ -97,7 +97,7 @@ class UserGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $title = $this->faker->sentence;
-        $data  = [
+        $data = [
             'title' => $title,
             'slug' => Str::slug($title),
             'list_type' => 'chat',
@@ -107,6 +107,7 @@ class UserGroupControllerTest extends TestCase
         $response->assertRedirect(); // @todo assert redirect to groups.show (with ID)?
         $this->assertDatabaseHas('user_groups', $data);
     }
+
     /** @test */
     public function store_for_unauthorised_doesnt_create_a_group(): void
     {
@@ -114,7 +115,7 @@ class UserGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $title = $this->faker->sentence;
-        $data  = [
+        $data = [
             'title' => $title,
             'slug' => Str::slug($title),
             'list_type' => 'chat',
@@ -131,7 +132,7 @@ class UserGroupControllerTest extends TestCase
         $this->assertGuest();
 
         $title = $this->faker->sentence;
-        $data  = [
+        $data = [
             'title' => $title,
             'slug' => Str::slug($title),
             'list_type' => 'chat',
@@ -149,7 +150,7 @@ class UserGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('groups.show', $group) );
+        $response = $this->get(the_tenant_route('groups.show', $group));
 
         $response->assertViewIs('groups.show');
         $response->assertOk();
@@ -162,7 +163,7 @@ class UserGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('groups.show', ['group' => $group]) );
+        $response = $this->get(the_tenant_route('groups.show', ['group' => $group]));
 
         $response->assertRedirect(the_tenant_route('dash'));
     }
@@ -173,7 +174,7 @@ class UserGroupControllerTest extends TestCase
         $this->assertGuest();
 
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('groups.show', ['group' => $group]) );
+        $response = $this->get(the_tenant_route('groups.show', ['group' => $group]));
 
         $response->assertRedirect(the_tenant_route('login'));
     }
@@ -185,7 +186,7 @@ class UserGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('groups.edit', ['group' => $group]) );
+        $response = $this->get(the_tenant_route('groups.edit', ['group' => $group]));
 
         $response->assertOk();
         $response->assertViewIs('groups.edit');
@@ -198,7 +199,7 @@ class UserGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('groups.edit', ['group' => $group]) );
+        $response = $this->get(the_tenant_route('groups.edit', ['group' => $group]));
 
         $response->assertRedirect(the_tenant_route('dash'));
     }
@@ -209,7 +210,7 @@ class UserGroupControllerTest extends TestCase
         $this->assertGuest();
 
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('groups.edit', ['group' => $group]) );
+        $response = $this->get(the_tenant_route('groups.edit', ['group' => $group]));
 
         $response->assertRedirect(the_tenant_route('login'));
     }
@@ -221,13 +222,13 @@ class UserGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $title = $this->faker->sentence;
-        $data  = [
+        $data = [
             'title' => $title,
             'slug' => Str::slug($title),
             'list_type' => 'chat',
         ];
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->put( the_tenant_route('groups.update', ['group' => $group]), $data );
+        $response = $this->put(the_tenant_route('groups.update', ['group' => $group]), $data);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('user_groups', $data);
@@ -240,13 +241,13 @@ class UserGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $title = $this->faker->sentence;
-        $data  = [
+        $data = [
             'title' => $title,
             'slug' => Str::slug($title),
             'list_type' => 'chat',
         ];
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->put( the_tenant_route('groups.update', ['group' => $group]), $data );
+        $response = $this->put(the_tenant_route('groups.update', ['group' => $group]), $data);
 
         $response->assertRedirect();
         $this->assertDatabaseMissing('user_groups', $data);
@@ -258,13 +259,13 @@ class UserGroupControllerTest extends TestCase
         $this->assertGuest();
 
         $title = $this->faker->sentence;
-        $data  = [
+        $data = [
             'title' => $title,
             'slug' => Str::slug($title),
             'list_type' => 'chat',
         ];
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->put( the_tenant_route('groups.update', ['group' => $group]), $data );
+        $response = $this->put(the_tenant_route('groups.update', ['group' => $group]), $data);
 
         $response->assertRedirect();
         $this->assertDatabaseMissing('user_groups', $data);
@@ -277,7 +278,7 @@ class UserGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('groups.destroy', ['group' => $group]) );
+        $response = $this->delete(the_tenant_route('groups.destroy', ['group' => $group]));
 
         $response->assertRedirect();
         $this->assertSoftDeleted('user_groups', ['id' => $group->id]);
@@ -290,7 +291,7 @@ class UserGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('groups.destroy', ['group' => $group]) );
+        $response = $this->delete(the_tenant_route('groups.destroy', ['group' => $group]));
 
         $response->assertRedirect();
         $this->assertDatabaseHas('user_groups', ['id' => $group->id]);
@@ -302,7 +303,7 @@ class UserGroupControllerTest extends TestCase
         $this->assertGuest();
 
         $group = UserGroup::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('groups.destroy', ['group' => $group]) );
+        $response = $this->delete(the_tenant_route('groups.destroy', ['group' => $group]));
 
         $response->assertRedirect();
         $this->assertDatabaseHas('user_groups', ['id' => $group->id]);
