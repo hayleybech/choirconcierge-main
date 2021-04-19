@@ -47,8 +47,10 @@ class DashController extends Controller
 		        ->emptyDobs()
 		        ->count(),
 	        'songs' => Song::whereHas('status', static function(Builder $query){
-	        	return $query->where('title', 'Learning');
-	        })->get(),
+	        	    return $query->where('title', 'Learning');
+	            })
+		        ->orderBy('title')
+		        ->get(),
 	        'events' => Event::query()
 		        ->with(['my_rsvp'])
 		        ->where('call_time', '>', today())
