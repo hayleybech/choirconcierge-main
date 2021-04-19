@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -6,11 +5,27 @@
  */
 import Vue from 'vue'
 
+const VERSION = 'choir-concierge@2021-04-19a';
+
 require('./bootstrap');
 require('select2');
 
 import ReadMore from 'vue-read-more';
 Vue.use(ReadMore);
+
+import * as Sentry from "@sentry/vue";
+import { Integrations as TracingIntegrations } from "@sentry/tracing";
+Sentry.init({
+    Vue: Vue,
+    dsn: process.env.MIX_SENTRY_DSN,
+    logErrors: true,
+    integrations: [new TracingIntegrations.BrowserTracing()],
+    tracesSampleRate: process.env.MIX_SENTRY_TRACES_SAMPLE_RATE,
+    tracingOptions: {
+        trackComponents: true,
+    },
+    release: process.env.MIX_APP_ENV === 'production' ? VERSION: VERSION+':dev',
+});
 
 /**
  * The following block of code may be used to automatically register your
