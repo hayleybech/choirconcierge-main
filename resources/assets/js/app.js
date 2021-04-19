@@ -5,7 +5,7 @@
  */
 import Vue from 'vue'
 
-const VERSION = 'choir-concierge@2021-04-19b';
+const VERSION = 'choir-concierge@2021-04-20a';
 
 require('./bootstrap');
 require('select2');
