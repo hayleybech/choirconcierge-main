@@ -53,6 +53,7 @@ class DashController extends Controller
 		        ->with(['my_rsvp'])
 		        ->where('call_time', '>', today())
 		        ->where('call_time', '<', today()->addMonth())
+		        ->orderBy('call_time')
 	            ->get(),
         ]);
     }
