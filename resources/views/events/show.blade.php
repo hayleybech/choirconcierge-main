@@ -74,7 +74,7 @@
                         <read-more more-str="Read More" text="{{ $event->description }}" less-str="Read Less" :max-chars="500"></read-more>
                     </div>
 
-                    <div class="dropdown m">
+                    <div class="dropup">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="addToCalendarDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="far fa-fw fa-calendar-plus"></i> Add to Calendar
                         </button>
