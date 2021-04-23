@@ -22,7 +22,7 @@ class RsvpController extends Controller
 
         $event->rsvps()->create([
             'response'  => $request->input('rsvp_response'),
-            'singer_id' => Auth::id(),
+            'singer_id' => Auth::user()->singer->id,
         ]);
 
         return back()->with(['status' => 'RSVP saved.']);
