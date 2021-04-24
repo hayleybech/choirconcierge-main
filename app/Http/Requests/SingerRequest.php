@@ -18,6 +18,12 @@ class SingerRequest extends FormRequest
         return true;
     }
 
+	public function prepareForValidation()
+	{
+		$this->whenHas('onboarding_disabled', fn() => $this->merge(['onboarding_enabled' => false]) );
+
+	}
+
     /**
      * Get the validation rules that apply to the request.
      *
