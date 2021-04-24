@@ -39,6 +39,10 @@
 				</p>
 
 				<div class="form-group">
+					<x-inputs.select label="Voice Part" id="voice_part_id" name="voice_part_id" :options="$voice_parts"></x-inputs.select>
+				</div>
+
+				<div class="form-group">
 					<date-input label="Joined" input-name="joined_at_input" output-name="joined_at"></date-input>
 				</div>
 
@@ -63,10 +67,6 @@
 						</x-slot>
 					</x-inputs.radio>
 				</fieldset>
-
-				<div class="form-group">
-					<x-inputs.select label="Voice Part" id="voice_part_id" name="voice_part_id" :options="$voice_parts"></x-inputs.select>
-				</div>
 
 				<div class="form-group">
 					<label for="user_roles" class="label-optional">Roles</label><br>
