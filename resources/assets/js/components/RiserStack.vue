@@ -55,6 +55,7 @@
                     :edit-disabled="editDisabled"
                     v-on:addedSinger="addSinger"
                     v-on:removedSinger="removeSinger"
+                    v-on:replacedSinger="replacedSinger"
                 ></riser-layer-spots>
             </svg>
         </div>
@@ -237,13 +238,16 @@ export default {
             };
             this.singers.push(singer);
         },
-        removeSinger(coords) {
-            const index_to_remove = this.singers.findIndex(item =>
-                item.position.row === coords.row
-                && item.position.column === coords.column
-            );
+        removeSinger(singer) {
+            const index_to_remove = this.singers.findIndex(item => singer.id === item.id);
+            if(index_to_remove === -1) {
+            	return;
+            }
             this.singers.splice( index_to_remove, 1 );
         },
+	    replacedSinger(singer) {
+        	this.moveToHoldingArea(singer);
+	    },
         getSinger(coords) {
             const nullSinger = {
                 id: 0,
@@ -293,7 +297,7 @@ export default {
             const part = this.voiceParts.find(p => p.id === singer.voice_part_id);
             part.singers.push(singer);
 
-            this.removeSinger(singer.position);
+            this.removeSinger(singer);
         }
     },
     watch: {

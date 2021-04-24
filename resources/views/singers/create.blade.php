@@ -38,46 +38,33 @@
 					<x-inputs.text label="Confirm Password" id="password_confirmation" name="password_confirmation" type="password"></x-inputs.text>
 				</p>
 
-				<fieldset class="form-group">
-					<legend class="col-form-label">Onboarding</legend>
-
-					<x-inputs.radio id="onboarding_enabled_yes" name="onboarding_enabled" value="1" checked="true">
-						<x-slot name="label">
-							Enabled
-							<small class="text-muted ml-2">
-								Choose this option for new/prospective singers.
-							</small>
-						</x-slot>
-					</x-inputs.radio>
-
-					<x-inputs.radio id="onboarding_enabled_no" name="onboarding_enabled" value="0">
-						<x-slot name="label">
-							Disabled
-							<small class="text-muted ml-2">
-								Choose this option when you're adding existing singers.
-							</small>
-						</x-slot>
-					</x-inputs.radio>
-				</fieldset>
-
 				<div class="form-group">
 					<x-inputs.select label="Voice Part" id="voice_part_id" name="voice_part_id" :options="$voice_parts"></x-inputs.select>
 				</div>
 
-				<div class="form-group">
-					<label for="user_roles" class="label-optional">Roles</label><br>
-					<div class="row">
-						@foreach($roles as $role)
-							@if($role->name === 'User')
-								<input type="hidden" name="user_roles[]" id="user_roles_{{ $role->id }}" value="{{ $role->id }}">
-								@continue
-							@endif
-							<div class="col-md-6">
-								<x-inputs.checkbox :label="$role->name" :id="'user_roles_'.$role->id" name="user_roles[]" :value="$role->id"></x-inputs.checkbox>
+				<toggleable-input label="I'm adding a current member" name="onboarding_disabled" help-text="Onboarding will be disabled when adding an existing singer.">
+					<fieldset id="existing_singer_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
+
+						<div class="form-group">
+							<date-input label="Joined" input-name="joined_at_input" output-name="joined_at"></date-input>
+						</div>
+
+						<div class="form-group">
+							<label for="user_roles" class="label-optional">Roles</label><br>
+							<div class="row">
+								@foreach($roles as $role)
+									@if($role->name === 'User')
+										<input type="hidden" name="user_roles[]" id="user_roles_{{ $role->id }}" value="{{ $role->id }}">
+										@continue
+									@endif
+									<div class="col-md-6">
+										<x-inputs.checkbox :label="$role->name" :id="'user_roles_'.$role->id" name="user_roles[]" :value="$role->id"></x-inputs.checkbox>
+									</div>
+								@endforeach
 							</div>
-						@endforeach
-					</div>
-				</div>
+						</div>
+					</fieldset>
+				</toggleable-input>
 
 			</div>
 

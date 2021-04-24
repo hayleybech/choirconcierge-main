@@ -19,14 +19,14 @@ class SongAttachmentRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string>
+     * @return array<array>
      */
     public function rules()
     {
         return [
-            //'title'             => 'required|max:255',
-            'category'          => 'required|exists:song_attachment_categories,id',
-            'attachment_uploads.*' => 'required|file'
+            //'title'               => ['required', 'max:255'],
+            'category'              => ['required', 'exists:song_attachment_categories,id'],
+            'attachment_uploads.*'  => ['required', 'file']
         ];
     }
 }

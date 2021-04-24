@@ -69,6 +69,17 @@
 								<strong>Joined</strong><br>
 								<span class="text-muted">{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->format(config('app.formats.date_lg')) }})</span><br>
 							</div>
+							<div class="mb-1">
+								<strong>Last Login</strong><br>
+								<span class="text-muted">
+									@if( ! $singer->user->last_login )
+									Never
+									@else
+									{{ $singer->user->last_login->diffForHumans() }} ({{ $singer->user->last_login->format(config('app.formats.timestamp_md')) }})
+									@endif
+								</span>
+								<br>
+							</div>
 
 							<div class="mb-1">
 								<strong>

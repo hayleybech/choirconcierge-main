@@ -21,12 +21,12 @@ class DocumentRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @param Folder $folder
-     * @return array<string>
+     * @return array<array>
      */
     public function rules(Folder $folder)
     {
         return [
-            'document_uploads.*'   => 'required|file'
+            'document_uploads.*'   => ['required', 'file'],
         ];
     }
 }

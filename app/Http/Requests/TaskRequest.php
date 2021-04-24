@@ -19,13 +19,13 @@ class TaskRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string>
+     * @return array<array>
      */
     public function rules(): array
     {
         return [
-            'name'  => 'required|max:255',
-            'role_id'  => 'required|exists:roles,id'
+            'name'      => ['required', 'max:255'],
+            'role_id'   => ['required', 'exists:roles,id'],
         ];
     }
 }

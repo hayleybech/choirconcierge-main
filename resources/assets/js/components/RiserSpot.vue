@@ -108,17 +108,13 @@ export default {
     },
     methods: {
         onDrop(event) {
-            //this.singer = event.data;
+	        if( this.singer.id > 0 ){
+		        this.$parent.$emit('replacedSinger', this.singer);
+	        }
             this.$parent.$emit('addedSinger', this.coords, event.data);
         },
         onCut() {
-            /*this.singer = {
-                id: 0,
-                name: '',
-                email: '',
-                part: ''
-            };*/
-            this.$parent.$emit('removedSinger', this.coords);
+            this.$parent.$emit('removedSinger', this.singer);
         }
     }
 }

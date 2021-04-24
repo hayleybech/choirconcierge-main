@@ -144,10 +144,6 @@
                             {{ $singers_rsvp_missing_count }}
                         </div>
                         <div class="col-6 col-md-3">
-                            Maybe<br>
-                            {{ $singers_rsvp_maybe_count }}
-                        </div>
-                        <div class="col-6 col-md-3">
                             Not going<br>
                             {{ $singers_rsvp_no_count }}
                         </div>

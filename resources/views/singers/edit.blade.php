@@ -42,7 +42,15 @@
                         <x-inputs.text label="Confirm Password" id="password_confirmation" name="password_confirmation" type="password"></x-inputs.text>
                     </p>
 
+                    <div class="form-group">
+                        <x-inputs.select label="Voice Part" id="voice_part_id" name="voice_part_id" :options="$voice_parts" :selected="optional($singer->voice_part)->id"></x-inputs.select>
+                    </div>
+
                     @if(Auth::user()->can('create', \App\Models\Profile::class))
+                        <div class="form-group">
+                            <date-input label="Joined" input-name="joined_at_input" output-name="joined_at" value="{{ $singer->joined_at }}"></date-input>
+                        </div>
+
                         <fieldset class="form-group">
                             <legend class="col-form-label">Onboarding</legend>
 
@@ -64,10 +72,6 @@
                                 </x-slot>
                             </x-inputs.radio>
                         </fieldset>
-
-                        <div class="form-group">
-                            <x-inputs.select label="Voice Part" id="voice_part_id" name="voice_part_id" :options="$voice_parts" :selected="optional($singer->voice_part)->id"></x-inputs.select>
-                        </div>
 
                         <div class="form-group">
                             <label for="user_roles" class="label-optional">Roles</label><br>

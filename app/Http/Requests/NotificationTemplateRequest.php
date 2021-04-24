@@ -19,15 +19,15 @@ class NotificationTemplateRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string>
+     * @return array<array>
      */
     public function rules(): array
     {
         return [
-            'subject'       => 'required|max:255',
-            'recipients'    => 'required|max:255',
-            'body'          => 'required|max:2000',
-            'delay'         => 'required|max:255'
+            'subject'       => ['required', 'max:255'],
+            'recipients'    => ['required', 'max:255'],
+            'body'          => ['required', 'max:2000'],
+            'delay'         => ['required', 'max:255'],
         ];
     }
 }

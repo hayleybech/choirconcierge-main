@@ -39,6 +39,7 @@ use UnexpectedValueException;
  * @property string $remember_token
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon $last_login
  *
  * Relationships
  * @property Collection<Role> $roles
@@ -72,6 +73,12 @@ class User extends Authenticatable implements HasMedia
     protected $with = [
         'media',
     ];
+
+	public $dates = [
+		'updated_at',
+		'created_at',
+		'last_login',
+	];
 
     public $notify_channels = ['database', 'mail'];
 	
