@@ -108,16 +108,9 @@ export default {
     },
     methods: {
         onDrop(event) {
-            //this.singer = event.data;
             this.$parent.$emit('addedSinger', this.coords, event.data);
         },
         onCut() {
-            /*this.singer = {
-                id: 0,
-                name: '',
-                email: '',
-                part: ''
-            };*/
             this.$parent.$emit('removedSinger', this.coords);
         }
     }
