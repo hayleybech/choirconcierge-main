@@ -239,6 +239,9 @@ export default {
         },
         removeSinger(singer) {
             const index_to_remove = this.singers.findIndex(item => singer.id === item.id);
+            if(index_to_remove === -1) {
+            	return;
+            }
             this.singers.splice( index_to_remove, 1 );
         },
         getSinger(coords) {
