@@ -21,12 +21,12 @@ class FolderRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @param Folder $folder
-     * @return array<string>
+     * @return array<array>
      */
     public function rules(Folder $folder)
     {
         return [
-            'title'     => 'required|max:255',
+            'title'     => ['required', 'max:255'],
         ];
     }
 }

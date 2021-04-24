@@ -27,14 +27,14 @@ class SingerRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string|array>
+     * @return array<array>
      */
     public function rules()
     {
         $singer = $this->route('singer');
         return [
-            'first_name' => 'required|max:127',
-            'last_name'	 => 'required|max:127',
+            'first_name' => ['required', 'max:127'],
+            'last_name'	 => ['required', 'max:127'],
             'email'	=> [
                 'required',
                 Rule::unique('singers')->where('tenant_id', tenant('id'))->ignore($singer->id ?? '')
@@ -43,14 +43,14 @@ class SingerRequest extends FormRequest
 	        	'date',
 		        'before_or_equal:today'
 	        ],
-            'onboarding_enabled'    => 'boolean',
-            'voice_part_id' => '',
+            'onboarding_enabled'    => ['boolean'],
+            'voice_part_id' => [],
             'user_roles' => [
                 'array',
                 'exists:roles,id',
             ],
-            'password' => 'sometimes|nullable|min:8|max:255|confirmed',
-            'avatar' => 'file|mimetypes:image/jpeg,image/png|max:10240',
+            'password' => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
+            'avatar' => ['file', 'mimetypes:image/jpeg,image/png', 'max:10240'],
         ];
     }
 }

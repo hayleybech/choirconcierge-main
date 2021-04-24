@@ -30,18 +30,18 @@ class SongRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @param Song $song
-     * @return array<string>
+     * @return array<array>
      */
     public function rules(Song $song)
     {
         return [
-            'title'             => 'required|max:255',
-            'categories'        => 'required|exists:song_categories,id',
-            'status'            => 'required|exists:song_statuses,id',
-            'pitch_blown'       => 'required',
-            'song'              => '',
+            'title'             => ['required', 'max:255'],
+            'categories'        => ['required', 'exists:song_categories,id'],
+            'status'            => ['required', 'exists:song_statuses,id'],
+            'pitch_blown'       => ['required'],
+            'song'              => [],
 
-            'send_notification'    => 'boolean',
+            'send_notification'    => ['boolean'],
         ];
     }
 }
