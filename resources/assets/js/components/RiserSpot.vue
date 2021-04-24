@@ -111,7 +111,7 @@ export default {
             this.$parent.$emit('addedSinger', this.coords, event.data);
         },
         onCut() {
-            this.$parent.$emit('removedSinger', this.coords);
+            this.$parent.$emit('removedSinger', this.singer);
         }
     }
 }

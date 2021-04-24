@@ -237,11 +237,8 @@ export default {
             };
             this.singers.push(singer);
         },
-        removeSinger(coords) {
-            const index_to_remove = this.singers.findIndex(item =>
-                item.position.row === coords.row
-                && item.position.column === coords.column
-            );
+        removeSinger(singer) {
+            const index_to_remove = this.singers.findIndex(item => singer.id === item.id);
             this.singers.splice( index_to_remove, 1 );
         },
         getSinger(coords) {
@@ -293,7 +290,7 @@ export default {
             const part = this.voiceParts.find(p => p.id === singer.voice_part_id);
             part.singers.push(singer);
 
-            this.removeSinger(singer.position);
+            this.removeSinger(singer);
         }
     },
     watch: {
