@@ -24,8 +24,8 @@ class TaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'  => ['required', 'max:255'],
-            'role_id'  => ['required', 'exists:roles,id'],
+            'name'      => ['required', 'max:255'],
+            'role_id'   => ['required', 'exists:roles,id'],
         ];
     }
 }

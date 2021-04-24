@@ -33,24 +33,26 @@ class SingerRequest extends FormRequest
     {
         $singer = $this->route('singer');
         return [
-            'first_name' => ['required', 'max:127'],
-            'last_name'	 => ['required', 'max:127'],
-            'email'	=> [
+            'first_name'            => ['required', 'max:127'],
+            'last_name'	            => ['required', 'max:127'],
+            'email'	                => [
                 'required',
-                Rule::unique('singers')->where('tenant_id', tenant('id'))->ignore($singer->id ?? '')
+                Rule::unique('singers')
+	                ->where('tenant_id', tenant('id'))
+	                ->ignore($singer->id ?? ''),
             ],
-	        'joined_at' => [
+	        'joined_at'             => [
 	        	'date',
 		        'before_or_equal:today'
 	        ],
             'onboarding_enabled'    => ['boolean'],
-            'voice_part_id' => [],
-            'user_roles' => [
+            'voice_part_id'         => [],
+            'user_roles'            => [
                 'array',
                 'exists:roles,id',
             ],
-            'password' => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
-            'avatar' => ['file', 'mimetypes:image/jpeg,image/png', 'max:10240'],
+            'password'              => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
+            'avatar'                => ['file', 'mimetypes:image/jpeg,image/png', 'max:10240'],
         ];
     }
 }

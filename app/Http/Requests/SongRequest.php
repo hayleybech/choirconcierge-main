@@ -41,7 +41,7 @@ class SongRequest extends FormRequest
             'pitch_blown'       => ['required'],
             'song'              => [],
 
-            'send_notification'    => ['boolean'],
+            'send_notification' => ['boolean'],
         ];
     }
 }

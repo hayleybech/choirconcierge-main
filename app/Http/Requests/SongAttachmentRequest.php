@@ -24,9 +24,9 @@ class SongAttachmentRequest extends FormRequest
     public function rules()
     {
         return [
-            //'title'             => ['required', 'max:255'],
-            'category'          => ['required', 'exists:song_attachment_categories,id'],
-            'attachment_uploads.*' => ['required', 'file']
+            //'title'               => ['required', 'max:255'],
+            'category'              => ['required', 'exists:song_attachment_categories,id'],
+            'attachment_uploads.*'  => ['required', 'file']
         ];
     }
 }
