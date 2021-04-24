@@ -24,6 +24,7 @@
         <div class="col-md-4">
             @can('viewAny', \App\Models\Singer::class)
             <x-widgets.birthdays :birthdays="$birthdays" :empty-dobs="$empty_dobs"></x-widgets.birthdays>
+            <x-widgets.memberversaries :memberversaries="$memberversaries"></x-widgets.memberversaries>
             @endcan
         </div>
     </div>

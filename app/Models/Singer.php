@@ -45,6 +45,9 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Rsvp> $rsvps
  * @property Collection<Attendance> $attendances
  *
+ * Attributes
+ * @property Carbon memberversary
+ *
  * Dynamic
  * @property string $name
  * @property int $age
@@ -224,6 +227,11 @@ class Singer extends Model
         return $this->user->getFirstMediaUrl('avatar', 'thumb');
     }
 
+	public function getMemberversaryAttribute(): Carbon
+	{
+		return $this->joined_at->copy()->year( now()->year );
+	}
+
     public function scopeBirthdays(Builder $query): Builder {
     	return $query->whereHas('profile', static function (Builder $query){
     		return $query->whereMonth('dob', '>=', now())
@@ -237,5 +245,11 @@ class Singer extends Model
 		    })->whereHas('profile', static function (Builder $query){
 			    return $query->whereNull('dob');
 		    })->orWhereDoesntHave('profile');
+    }
+
+    public function scopeMemberversaries(Builder $query): Builder {
+    	return $query->whereYear('joined_at', '<', now())
+		    ->whereMonth('joined_at', '>=', now())
+		    ->whereMonth('joined_at', '<=', now()->addMonth());
     }
 }

@@ -41,8 +41,20 @@ class DashController extends Controller
 			    return $singer1->profile->birthday < $singer2->profile->birthday ? -1 : 1;
 		    });
 
+    	$memberversaries = Singer::query()
+		    ->memberversaries()
+		    ->get()
+		    ->sort(static function(Singer $singer1, Singer $singer2): int {
+			    // Sort by joined date
+			    if( $singer1->joined_at->equalTo($singer2->joined_at) ) {
+				    return 0;
+			    }
+			    return $singer1->joined_at < $singer2->joined_at ? -1 : 1;
+		    });
+
         return view('dash', [
         	'birthdays' => $birthdays,
+	        'memberversaries' => $memberversaries,
 	        'empty_dobs' => Singer::query()
 		        ->emptyDobs()
 		        ->count(),
