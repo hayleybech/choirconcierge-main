@@ -38,6 +38,10 @@
 					<x-inputs.text label="Confirm Password" id="password_confirmation" name="password_confirmation" type="password"></x-inputs.text>
 				</p>
 
+				<div class="form-group">
+					<date-input label="Joined" input-name="joined_at_input" output-name="joined_at"></date-input>
+				</div>
+
 				<fieldset class="form-group">
 					<legend class="col-form-label">Onboarding</legend>
 

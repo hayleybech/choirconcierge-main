@@ -43,6 +43,10 @@
                     </p>
 
                     @if(Auth::user()->can('create', \App\Models\Profile::class))
+                        <div class="form-group">
+                            <date-input label="Joined" input-name="joined_at_input" output-name="joined_at" value="{{ $singer->joined_at }}"></date-input>
+                        </div>
+
                         <fieldset class="form-group">
                             <legend class="col-form-label">Onboarding</legend>
 

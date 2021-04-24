@@ -33,6 +33,10 @@ class SingerRequest extends FormRequest
                 'required',
                 Rule::unique('singers')->where('tenant_id', tenant('id'))->ignore($singer->id ?? '')
             ],
+	        'joined_at' => [
+	        	'date',
+		        'before_or_equal:today'
+	        ],
             'onboarding_enabled'    => 'boolean',
             'voice_part_id' => '',
             'user_roles' => [
