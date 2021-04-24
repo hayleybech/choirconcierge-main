@@ -1,6 +1,6 @@
 <template>
     <div>
-        <switch-input :label="label" :name="name" :value="value" v-model="isOpen" class="mb-4"></switch-input>
+        <switch-input :label="label" :name="name" :value="value" v-model="isOpen" class="mb-4" :help-text="helpText"></switch-input>
         <div v-if="isOpen">
             <slot></slot>
         </div>
@@ -26,7 +26,8 @@ export default {
         startOpen: {
         	type: Boolean,
 	        default: false,
-        }
+        },
+	    helpText: String,
     },
 	data() {
     	return {
