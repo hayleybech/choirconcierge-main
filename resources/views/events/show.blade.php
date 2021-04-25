@@ -171,7 +171,7 @@
                     @endcan
                 </div>
                 <div class="card-body">
-                    <h5>Summary</h5>
+                    <h5 class="text-center">Summary</h5>
                     <div class="row text-center mb-4">
                         <div class="col-6 col-md-3">
                             <strong>Present</strong><br>
@@ -190,7 +190,7 @@
                             {{ $singers_attendance_missing }}
                         </div>
                     </div>
-                    <h5>Voice Parts</h5>
+                    <h5 class="text-center">Voice Parts</h5>
                     <div class="row text-center mb-4">
                         @foreach($voice_parts_attendance as $voice_part)
                             <div class="col-6 col-md-3">
