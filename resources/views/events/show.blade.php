@@ -173,19 +173,16 @@
                 <div class="card-body">
                     <h5 class="text-center">Summary</h5>
                     <div class="row text-center mb-4">
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             <strong>Present</strong><br>
                             {{ $singers_attendance_present }}
                         </div>
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             <strong>Absent</strong><br>
-                            {{ $singers_attendance_absent }}
+                            {{ $singers_attendance_absent + $singers_attendance_absent_apology }}<br>
+                            <small class="text-muted">({{ $singers_attendance_absent_apology }} With Apology)</small><br>
                         </div>
-                        <div class="col-6 col-md-3">
-                            With Apology<br>
-                            {{ $singers_attendance_absent_apology }}
-                        </div>
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             Not recorded<br>
                             {{ $singers_attendance_missing }}
                         </div>
