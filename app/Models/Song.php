@@ -31,6 +31,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property int $status_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon $deleted_at
+ * @property int $tenant_id
  *
  * Relationships
  * @property SongStatus $status
