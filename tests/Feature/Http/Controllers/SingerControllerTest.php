@@ -112,6 +112,7 @@ class SingerControllerTest extends TestCase
 	    $data = $getData();
         $response = $this->post(the_tenant_route('singers.store'), $data);
 
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('singers', [
         	'first_name'            => $data['first_name'],
 	        'last_name'             => $data['last_name'],
@@ -136,6 +137,7 @@ class SingerControllerTest extends TestCase
 	    $data = $getData();
         $response = $this->put(the_tenant_route('singers.update', [$singer]), $data);
 
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('singers', [
 	        'first_name'            => $data['first_name'],
 	        'last_name'             => $data['last_name'],

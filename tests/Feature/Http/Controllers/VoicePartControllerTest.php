@@ -99,6 +99,7 @@ class VoicePartControllerTest extends TestCase
 	    $data = $getData();
         $response = $this->post(the_tenant_route('voice-parts.store'), $data);
 
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('voice_parts', $data);
 
         $voice_part = VoicePart::firstWhere('title', $data['title']);
@@ -118,6 +119,7 @@ class VoicePartControllerTest extends TestCase
 	    $data = $getData();
         $response = $this->put(the_tenant_route('voice-parts.update', [$voice_part]), $data);
 
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('voice_parts', $data);
         $response->assertRedirect(the_tenant_route('voice-parts.show', $voice_part));
     }

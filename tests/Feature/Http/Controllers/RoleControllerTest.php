@@ -100,6 +100,8 @@ class RoleControllerTest extends TestCase
 	    $data = $getData();
         $response = $this->post(the_tenant_route('roles.store'), $data);
 
+        $response->assertSessionHasNoErrors();
+
         $role = Role::firstWhere('name', $data['name']);
         $response->assertRedirect(the_tenant_route('roles.show', $role));
     }
@@ -116,6 +118,8 @@ class RoleControllerTest extends TestCase
 
 	    $data = $getData();
 	    $response = $this->put(the_tenant_route('roles.update', [$role]), $data);
+
+	    $response->assertSessionHasNoErrors();
 
 	    // assertDatabaseHas didn't work for the json abilities
 	    $updated_role = Role::find($role->id);
