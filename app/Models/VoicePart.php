@@ -20,6 +20,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string $colour
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon $deleted_at
+ * @property Carbon $tenant_id
  *
  * Relationships
  * @property Collection<Singer> $singers
