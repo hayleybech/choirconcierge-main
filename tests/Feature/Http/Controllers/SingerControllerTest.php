@@ -33,7 +33,7 @@ class SingerControllerTest extends TestCase
     /**
      * @test
      */
-    public function destroy_returns_an_ok_response(): void
+    public function destroy_redirects_to_index(): void
     {
 	    $this->actingAs($this->createUserWithRole('Membership Team'));
 

@@ -30,7 +30,7 @@ class VoicePartControllerTest extends TestCase
     /**
      * @test
      */
-    public function destroy_returns_an_ok_response(): void
+    public function destroy_redirects_to_index(): void
     {
 	    $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -92,7 +92,7 @@ class VoicePartControllerTest extends TestCase
      * @test
      * @dataProvider voicePartProvider
      */
-    public function store_returns_an_ok_response($getData): void
+    public function store_redirects_to_show($getData): void
     {
 	    $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -109,7 +109,7 @@ class VoicePartControllerTest extends TestCase
      * @test
      * @dataProvider voicePartProvider
      */
-    public function update_returns_an_ok_response($getData): void
+    public function update_redirects_to_show($getData): void
     {
 	    $this->actingAs($this->createUserWithRole('Admin'));
 
