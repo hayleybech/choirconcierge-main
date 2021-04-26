@@ -18,9 +18,7 @@ class DashControllerTest extends TestCase
      */
     public function index_returns_an_ok_response(): void
     {
-	    $this->seed(DummyUserSeeder::class);
-	    $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
-	    $this->actingAs($user);
+	    $this->actingAs($this->createUserWithRole('Membership Team')); // Any role is fine
 
         $response = $this->get(the_tenant_route('dash'));
 
