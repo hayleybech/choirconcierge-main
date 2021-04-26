@@ -13,7 +13,9 @@ class FolderFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence,
+            'title'         => $this->faker->sentence,
+	        'created_at'    => now(),
+	        'updated_at'    => now(),
         ];
     }
 }
