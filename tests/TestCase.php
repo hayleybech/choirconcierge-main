@@ -2,6 +2,9 @@
 
 namespace Tests;
 
+use App\Models\Role;
+use App\Models\Singer;
+use App\Models\User;
 use JMac\Testing\Traits\AdditionalAssertions;
 use App\Models\Tenant;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -33,5 +36,13 @@ abstract class TestCase extends BaseTestCase
         $tenant->save();
 
         tenancy()->initialize($tenant);
+    }
+
+    protected function createUserWithRole(string $roleName): User
+    {
+	    $singer = Singer::factory()->create();
+	    $singer->user->roles()->attach([Role::where('name', $roleName)->value('id')]);
+
+	    return $singer->user;
     }
 }
