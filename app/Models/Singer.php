@@ -31,8 +31,12 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property boolean $onboarding_enabled
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon $deleted_at
  * @property Carbon $joined_at
+ * @property int $singer_category_id
+ * @property int $voice_part_id
  * @property int $user_id
+ * @property int $tenant_id
  *
  * Relationships
  * @property Collection<Task> $tasks
