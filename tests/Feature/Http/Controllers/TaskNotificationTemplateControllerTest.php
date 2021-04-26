@@ -43,7 +43,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
         $this->actingAs($user);
 
         $task = Task::query()->inRandomOrder()->first();
-        $data  = [
+        $data = [
             'subject' => $this->faker->sentence,
             'recipients' => 'singer:0',
             'body' => $this->faker->paragraph,
@@ -63,7 +63,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
         $this->actingAs($user);
 
         $template = NotificationTemplate::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('tasks.notifications.show', ['task' => $template->task, 'notification' => $template]) );
+        $response = $this->get(the_tenant_route('tasks.notifications.show', ['task' => $template->task, 'notification' => $template]));
 
         $response->assertViewIs('tasks.notifications.show');
         $response->assertOk();
@@ -76,7 +76,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
         $this->actingAs($user);
 
         $template = NotificationTemplate::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('tasks.notifications.destroy', ['task' => $template->task, 'notification' => $template]) );
+        $response = $this->delete(the_tenant_route('tasks.notifications.destroy', ['task' => $template->task, 'notification' => $template]));
 
         $response->assertRedirect();
         $this->assertSoftDeleted('notification_templates', ['id' => $template->id]);

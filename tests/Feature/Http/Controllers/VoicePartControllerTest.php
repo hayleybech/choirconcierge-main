@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Tests\Feature\Http\Controllers;
-
 
 use App\Models\Role;
 use App\Models\User;
@@ -55,7 +53,7 @@ class VoicePartControllerTest extends TestCase
             ->first();
         $this->actingAs($user);
 
-        $data  = [
+        $data = [
             'title' => $this->faker->word,
             'colour' => $this->faker->hexColor,
         ];
@@ -73,7 +71,7 @@ class VoicePartControllerTest extends TestCase
         $this->actingAs($user);
 
         $voice_part = VoicePart::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('voice-parts.edit', ['voice_part' => $voice_part]) );
+        $response = $this->get(the_tenant_route('voice-parts.edit', ['voice_part' => $voice_part]));
 
         $response->assertOk();
         $response->assertViewIs('voice-parts.edit');
@@ -85,12 +83,12 @@ class VoicePartControllerTest extends TestCase
         $user = User::withRoles(['Music Team'])->first();
         $this->actingAs($user);
 
-        $data  = [
+        $data = [
             'title' => $this->faker->word,
             'colour' => $this->faker->hexColor,
         ];
         $voice_part = VoicePart::query()->inRandomOrder()->first();
-        $response = $this->put( the_tenant_route('voice-parts.update', ['voice_part' => $voice_part]), $data );
+        $response = $this->put(the_tenant_route('voice-parts.update', ['voice_part' => $voice_part]), $data);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('voice_parts', $data);
@@ -103,7 +101,7 @@ class VoicePartControllerTest extends TestCase
         $this->actingAs($user);
 
         $voice_part = VoicePart::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('voice-parts.destroy', ['voice_part' => $voice_part]) );
+        $response = $this->delete(the_tenant_route('voice-parts.destroy', ['voice_part' => $voice_part]));
 
         $response->assertRedirect();
         $this->assertSoftDeleted('voice_parts', ['id' => $voice_part->id]);

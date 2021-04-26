@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Tests\Feature\Http\Controllers;
-
 
 use App\Models\Role;
 use App\Models\Singer;
@@ -33,9 +31,9 @@ class UpdateSingerCategoryControllerTest extends TestCase
 
         $singer = Singer::query()->inRandomOrder()->first();
         $new_category = SingerCategory::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('singers.categories.update', ['singer' => $singer]), [
+        $response = $this->get(the_tenant_route('singers.categories.update', ['singer' => $singer]), [
             'move_category' => $new_category,
-        ] );
+        ]);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('singers', [

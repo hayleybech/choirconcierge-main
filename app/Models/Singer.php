@@ -9,6 +9,7 @@ use App\Models\Filters\Singer_RoleFilter;
 use App\Models\Filters\Singer_VoicePartFilter;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -31,8 +32,12 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property boolean $onboarding_enabled
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon $deleted_at
  * @property Carbon $joined_at
+ * @property int $singer_category_id
+ * @property int $voice_part_id
  * @property int $user_id
+ * @property int $tenant_id
  *
  * Relationships
  * @property Collection<Task> $tasks
@@ -56,7 +61,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Singer extends Model
 {
-    use Notifiable, Filterable, BelongsToTenant, SoftDeletes, TenantTimezoneDates;
+    use Notifiable, Filterable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
     protected $fillable = [
         'first_name',

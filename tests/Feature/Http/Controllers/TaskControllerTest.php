@@ -22,7 +22,8 @@ class TaskControllerTest extends TestCase
     }
 
     /** @test */
-    public function index_for_admin_returns_list_view(): void {
+    public function index_for_admin_returns_list_view(): void
+    {
         $user = User::withRole('Admin')->first();
         $this->actingAs($user);
 
@@ -50,7 +51,7 @@ class TaskControllerTest extends TestCase
         $user = User::withRole('Admin')->first();
         $this->actingAs($user);
 
-        $data  = [
+        $data = [
             'name' => $this->faker->sentence,
             'role_id' => Role::query()->inRandomOrder()->first()->id,
             'type' => 'manual',
@@ -70,7 +71,7 @@ class TaskControllerTest extends TestCase
         $this->actingAs($user);
 
         $task = Task::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('tasks.show', $task) );
+        $response = $this->get(the_tenant_route('tasks.show', $task));
 
         $response->assertViewIs('tasks.show');
         $response->assertOk();
@@ -83,7 +84,7 @@ class TaskControllerTest extends TestCase
         $this->actingAs($user);
 
         $task = Task::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('tasks.destroy', ['task' => $task]) );
+        $response = $this->delete(the_tenant_route('tasks.destroy', ['task' => $task]));
 
         $response->assertRedirect();
         $this->assertSoftDeleted('tasks', ['id' => $task->id]);

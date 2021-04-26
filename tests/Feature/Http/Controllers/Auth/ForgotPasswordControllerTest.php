@@ -16,9 +16,8 @@ class ForgotPasswordControllerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function forgot_password_displays_forgot_form()
+    public function forgot_password_displays_forgot_form(): void
     {
-        $this->withoutExceptionHandling();
         $response = $this->get(the_tenant_route('password.request', []));
 
         $response->assertStatus(200);
