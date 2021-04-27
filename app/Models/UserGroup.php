@@ -24,6 +24,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string $list_type
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon $deleted_at
+ * @property int $tenant_id
  *
  * Relationships
  * @property Collection<GroupMember> $members
