@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,12 +18,14 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Columns
  * @property int $id
- * @property string $title
+ * @property string $name
  * @property int $role_id
  * @property string $type
  * @property string $route
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon $deleted_at
+ * @property int $tenant_id
  *
  * Relationships
  * @property Role $role
@@ -33,7 +36,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Task extends Model
 {
-    use SoftDeletes, BelongsToTenant, TenantTimezoneDates;
+    use SoftDeletes, BelongsToTenant, TenantTimezoneDates, HasFactory;
 
     protected $with = ['role'];
 
