@@ -133,22 +133,22 @@
                     <h4>RSVP Report</h4>
                 </div>
                 <div class="card-body">
-                    <h5>Summary</h5>
+                    <h5 class="text-center">Summary</h5>
                     <div class="row text-center mb-4">
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             <strong>Going</strong><br>
                             {{ $singers_rsvp_yes_count }}
                         </div>
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             <strong>Unknown</strong><br>
                             {{ $singers_rsvp_missing_count }}
                         </div>
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             Not going<br>
                             {{ $singers_rsvp_no_count }}
                         </div>
                     </div>
-                    <h5>Voice Parts</h5>
+                    <h5 class="text-center">Voice Parts</h5>
                     <div class="row text-center mb-4">
                         @foreach($voice_parts_rsvp_yes_count as $voice_part)
                         <div class="col-6 col-md-3">
@@ -171,26 +171,23 @@
                     @endcan
                 </div>
                 <div class="card-body">
-                    <h5>Summary</h5>
+                    <h5 class="text-center">Summary</h5>
                     <div class="row text-center mb-4">
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             <strong>Present</strong><br>
                             {{ $singers_attendance_present }}
                         </div>
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             <strong>Absent</strong><br>
-                            {{ $singers_attendance_absent }}
+                            {{ $singers_attendance_absent + $singers_attendance_absent_apology }}<br>
+                            <small class="text-muted">({{ $singers_attendance_absent_apology }} With Apology)</small><br>
                         </div>
-                        <div class="col-6 col-md-3">
-                            With Apology<br>
-                            {{ $singers_attendance_absent_apology }}
-                        </div>
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             Not recorded<br>
                             {{ $singers_attendance_missing }}
                         </div>
                     </div>
-                    <h5>Voice Parts</h5>
+                    <h5 class="text-center">Voice Parts</h5>
                     <div class="row text-center mb-4">
                         @foreach($voice_parts_attendance as $voice_part)
                             <div class="col-6 col-md-3">

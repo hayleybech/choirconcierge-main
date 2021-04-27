@@ -3,334 +3,104 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Folder;
-use App\Models\Role;
-use App\Models\User;
-use Database\Seeders\Dummy\DummyFolderSeeder;
-use Database\Seeders\Dummy\DummyUserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+/**
+ * @see \App\Http\Controllers\FolderController
+ */
 class FolderControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function setUp(): void
+    /**
+     * @test
+     */
+    public function create_returns_an_ok_response(): void
     {
-        parent::setUp();
-
-        $this->seed(DummyUserSeeder::class);
-        $this->seed(DummyFolderSeeder::class);
-    }
-
-    ////////////////////////////////////////////////////////////
-    /// INDEX
-
-    /** @test */
-    public function index_for_employee_returns_list_view(): void
-    {
-        $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any promoted role is fine
-        $this->actingAs($user);
-
-        $response = $this->get(the_tenant_route('folders.index'));
-
-        $response->assertStatus(200);
-        $response->assertViewIs('folders.index');
-    }
-
-    /** @test */
-    /*
-    public function index_for_member_returns_list_view(): void
-    {
-        $user = User::query()->whereDoesntHave('roles')->first();
-        $this->actingAs($user);
-
-        $response = $this->get(the_tenant_route('folders.index'));
-
-        $response->assertStatus(200);
-        $response->assertViewIs('folders.index');
-    }*/
-
-    /** @test */
-    public function index_for_anon_returns_redirect(): void
-    {
-        $this->assertGuest();
-
-        $response = $this->get(the_tenant_route('folders.index'));
-        $response->assertRedirect(the_tenant_route('login'));
-    }
-
-    ///////////////////////////////////////////////////////////////
-    /// CREATE
-
-    /** @test */
-    public function create_for_employee_returns_create_view(): void
-    {
-        $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
-        $this->actingAs($user);
+	    $this->actingAs($this->createUserWithRole('Music Team'));
 
         $response = $this->get(the_tenant_route('folders.create'));
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertViewIs('folders.create');
     }
 
-    /** @test */
-    /*
-    public function create_for_member_returns_redirect(): void
+    /**
+     * @test
+     */
+    public function destroy_redirects_to_index(): void
     {
-        $user = User::query()->whereDoesntHave('roles')->first();
-        $this->actingAs($user);
+	    $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $response = $this->get( the_tenant_route('folders.create') );
+        $folder = Folder::factory()->create();
 
-        $response->assertRedirect( the_tenant_route('dash') );
-    }*/
+        $response = $this->delete(the_tenant_route('folders.destroy', [$folder]));
 
-    /** @test */
-    public function create_for_anon_returns_redirect(): void
-    {
-        $this->assertGuest();
-
-        $response = $this->get(the_tenant_route('folders.create'));
-        $response->assertRedirect(the_tenant_route('login'));
+	    $this->assertSoftDeleted($folder);
+	    $response->assertRedirect(the_tenant_route('folders.index'));
     }
 
-    ///////////////////////////////////////////////////////////
-    /// STORE
-
-    /** @test */
-    public function store_for_employee_creates_a_folder(): void
+    /**
+     * @test
+     */
+    public function index_returns_an_ok_response(): void
     {
-        $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
-        $this->actingAs($user);
+	    $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $title = $this->faker->sentence;
-        $response = $this->post(the_tenant_route('folders.index'), [
-            'title' => $title
-        ]);
+        $response = $this->get(the_tenant_route('folders.index'));
 
-        $response->assertRedirect( the_tenant_route('folders.index', ['status' => 'Folder created. ']) );
-        $this->assertDatabaseHas('folders', [
-            'title' => $title,
-        ]);
+        $response->assertOk();
+        $response->assertViewIs('folders.index');
+        $response->assertViewHas('folders');
     }
 
-    /** @test */
-    /*
-    public function store_for_member_returns_redirect(): void
+    /**
+     * @test
+     * @dataProvider folderProvider
+     */
+    public function store_redirects_to_index($getData): void
     {
-        $user = User::query()->whereDoesntHave('roles')->first();
-        $this->actingAs($user);
+	    $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $title = $this->faker->sentence;
-        $response = $this->post(the_tenant_route('folders.index'), [
-            'title' => $title
-        ]);
+	    $data = $getData();
+        $response = $this->post(the_tenant_route('folders.store'), $data);
 
-        $response->assertRedirect( the_tenant_route('dash' ) );
-        $this->assertDatabaseMissing('folders', [
-            'title' => $title,
-        ]);
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('folders', $data);
+        $response->assertRedirect(the_tenant_route('folders.index'));
     }
 
-    /** @test */
-    public function store_for_anon_returns_redirect(): void
+    /**
+     * @test
+     * @dataProvider folderProvider
+     */
+    public function update_redirects_to_index($getData): void
     {
-        $this->assertGuest();
+	    $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $title = $this->faker->sentence;
-        $response = $this->post(the_tenant_route('folders.index'), [
-            'title' => $title
-        ]);
+        $folder = Folder::factory()->create();
 
-        $response->assertRedirect( the_tenant_route('login' ) );
-        $this->assertDatabaseMissing('folders', [
-            'title' => $title,
-        ]);
+        $data = $getData();
+        $response = $this->put(the_tenant_route('folders.update', [$folder]), $data);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('folders', $data);
+        $response->assertRedirect(the_tenant_route('folders.index'));
     }
 
-    ////////////////////////////////////////////////////////////////////
-    /// SHOW
-
-    /** @test */
-    public function show_for_employee_returns_a_view(): void
-    {
-        $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
-        $this->actingAs($user);
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('folders.show', ['folder' => $folder]) );
-
-        $response->assertStatus(200);
-        $response->assertViewIs('folders.show');
-    }
-
-    /** @test */
-    /*
-    public function show_for_member_returns_a_view(): void
-    {
-        $user = User::query()->whereDoesntHave('roles')->first();
-        $this->actingAs($user);
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('folders.show', ['folder' => $folder]) );
-
-        $response->assertStatus(200);
-        $response->assertViewIs('folders.show');
-    }*/
-
-    /** @test */
-    public function show_for_anon_returns_redirect(): void
-    {
-        $this->assertGuest();
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('folders.show', ['folder' => $folder]) );
-
-
-        $response->assertRedirect( the_tenant_route('login') );
-    }
-
-    ///////////////////////////////////////////////////////
-    /// EDIT
-
-    /** @test */
-    public function edit_for_employee_returns_a_view(): void
-    {
-        $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
-        $this->actingAs($user);
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('folders.edit', ['folder' => $folder]) );
-
-        $response->assertStatus(200);
-        $response->assertViewIs('folders.edit');
-    }
-
-    /** @test */
-    /*
-    public function edit_for_member_returns_redirect(): void
-    {
-        $user = User::query()->whereDoesntHave('roles')->first();
-        $this->actingAs($user);
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('folders.edit', ['folder' => $folder]) );
-
-        $response->assertRedirect( the_tenant_route('dash') );
-    }*/
-
-    /** @test */
-    public function edit_for_anon_returns_redirect(): void
-    {
-        $this->assertGuest();
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('folders.edit', ['folder' => $folder]) );
-
-        $response->assertRedirect( the_tenant_route('login') );
-    }
-
-    /** @test */
-    public function update_for_employee_changes_the_folder(): void
-    {
-        $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
-        $this->actingAs($user);
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $title = $this->faker->sentence;
-        $response = $this->put( the_tenant_route('folders.update', ['folder' => $folder]), [
-            'title' => $title,
-        ]);
-
-        $response->assertStatus(302);
-        $this->assertDatabaseHas('folders', [
-            'id'    => $folder->id,
-            'title' => $title,
-        ]);
-    }
-
-    /** @test */
-    /*
-    public function update_for_member_doesnt_change_the_folder(): void
-    {
-        $user = User::query()->whereDoesntHave('roles')->first();
-        $this->actingAs($user);
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $title = $this->faker->sentence;
-        $response = $this->put( the_tenant_route('folders.update', ['folder' => $folder]), [
-            'title' => $title,
-        ]);
-
-        $response->assertRedirect( the_tenant_route('dash') );
-        $this->assertDatabaseMissing('folders', [
-            'id'    => $folder->id,
-            'title' => $title,
-        ]);
-    }*/
-
-    /** @test */
-    public function update_for_anon_doesnt_change_the_folder(): void
-    {
-        $this->assertGuest();
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $title = $this->faker->sentence;
-        $response = $this->put( the_tenant_route('folders.update', ['folder' => $folder]), [
-            'title' => $title,
-        ]);
-
-        $response->assertRedirect( the_tenant_route('login') );
-        $this->assertDatabaseMissing('folders', [
-            'id'    => $folder->id,
-            'title' => $title,
-        ]);
-    }
-
-    /** @test */
-    public function destroy_for_employee_deletes_the_folder(): void
-    {
-        $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
-        $this->actingAs($user);
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('folders.destroy', ['folder' => $folder]) );
-
-        $response->assertStatus(302);
-        $this->assertSoftDeleted('folders', [
-            'id'    => $folder->id,
-        ]);
-    }
-
-    /** @test */
-    /*
-    public function destroy_for_member_doesnt_delete_the_folder(): void
-    {
-        $user = User::query()->whereDoesntHave('roles')->first();
-        $this->actingAs($user);
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('folders.destroy', ['folder' => $folder]) );
-
-        $response->assertRedirect(the_tenant_route('dash'));
-        $this->assertDatabaseHas('folders', [
-            'id'    => $folder->id,
-        ]);
-    }*/
-    
-    /** @test */
-    public function destroy_for_anon_doesnt_delete_the_folder(): void
-    {
-        $this->assertGuest();
-
-        $folder = Folder::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('folders.destroy', ['folder' => $folder]) );
-
-        $response->assertRedirect(the_tenant_route('login'));
-        $this->assertDatabaseHas('folders', [
-            'id'    => $folder->id,
-        ]);
-    }
+	public function folderProvider(): array
+	{
+		return [
+			[
+				function() {
+					$this->setUpFaker();
+					return [
+						'title'     => $this->faker->sentence,
+					];
+				}
+			]
+		];
+	}
 }

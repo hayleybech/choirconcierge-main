@@ -17,8 +17,10 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Columns
  * @property int $id
  * @property string $title
- * @property Carbon created_at
- * @property Carbon updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon $deleted_at
+ * @property int $tenant_id
  *
  * Relationships
  * @property Collection<Document> $documents

@@ -1,111 +1,141 @@
 <?php
 
-
 namespace Tests\Feature\Http\Controllers;
 
-
-use App\Models\Role;
-use App\Models\User;
 use App\Models\VoicePart;
-use Database\Seeders\Dummy\DummyUserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+/**
+ * @see \App\Http\Controllers\VoicePartController
+ */
 class VoicePartControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function setUp(): void
+    /**
+     * @test
+     */
+    public function create_returns_an_ok_response(): void
     {
-        parent::setUp();
-
-        $this->seed(DummyUserSeeder::class);
-    }
-
-    /** @test */
-    public function index_for_employee_returns_list_view(): void
-    {
-        $user = Role::firstWhere('name', '!=', 'User')->users->first(); // Any role is fine
-        $this->actingAs($user);
-
-        $response = $this->get(the_tenant_route('voice-parts.index'));
-
-        $response->assertStatus(200);
-        $response->assertViewIs('voice-parts.index');
-    }
-
-    /** @test */
-    public function create_for_music_team_returns_create_view(): void
-    {
-        $user = User::withRoles(['Music Team'])
-            ->first();
-        $this->actingAs($user);
+	    $this->actingAs($this->createUserWithRole('Admin'));
 
         $response = $this->get(the_tenant_route('voice-parts.create'));
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertViewIs('voice-parts.create');
     }
 
-    /** @test */
-    public function store_for_music_team_creates_a_voice_part(): void
+    /**
+     * @test
+     */
+    public function destroy_redirects_to_index(): void
     {
-        $user = User::withRoles(['Music Team'])
-            ->first();
-        $this->actingAs($user);
+	    $this->actingAs($this->createUserWithRole('Admin'));
 
-        $data  = [
-            'title' => $this->faker->word,
-            'colour' => $this->faker->hexColor,
-        ];
-        $response = $this->post(the_tenant_route('voice-parts.store'), $data);
+        $voice_part = VoicePart::factory()->create();
 
-        $response->assertRedirect();
+        $response = $this->delete(the_tenant_route('voice-parts.destroy', [$voice_part]));
 
-        $this->assertDatabaseHas('voice_parts', $data);
+        $response->assertRedirect(the_tenant_route('voice-parts.index'));
+        $this->assertSoftDeleted($voice_part);
     }
 
-    /** @test */
-    public function edit_for_music_team_returns_edit_view(): void
+    /**
+     * @test
+     */
+    public function edit_returns_an_ok_response(): void
     {
-        $user = User::withRoles(['Music Team'])->first();
-        $this->actingAs($user);
+	    $this->actingAs($this->createUserWithRole('Admin'));
 
-        $voice_part = VoicePart::query()->inRandomOrder()->first();
-        $response = $this->get( the_tenant_route('voice-parts.edit', ['voice_part' => $voice_part]) );
+        $voice_part = VoicePart::factory()->create();
+
+        $response = $this->get(the_tenant_route('voice-parts.edit', [$voice_part]));
 
         $response->assertOk();
         $response->assertViewIs('voice-parts.edit');
+        $response->assertViewHas('voice_part');
     }
 
-    /** @test */
-    public function update_for_music_team_changes_voice_part(): void
+    /**
+     * @test
+     */
+    public function index_returns_an_ok_response(): void
     {
-        $user = User::withRoles(['Music Team'])->first();
-        $this->actingAs($user);
+	    $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $data  = [
-            'title' => $this->faker->word,
-            'colour' => $this->faker->hexColor,
-        ];
-        $voice_part = VoicePart::query()->inRandomOrder()->first();
-        $response = $this->put( the_tenant_route('voice-parts.update', ['voice_part' => $voice_part]), $data );
+        $response = $this->get(the_tenant_route('voice-parts.index'));
 
-        $response->assertRedirect();
+        $response->assertOk();
+        $response->assertViewIs('voice-parts.index');
+	    $response->assertViewHas('parts');
+    }
+
+    /**
+     * @test
+     */
+    public function show_returns_an_ok_response(): void
+    {
+	    $this->actingAs($this->createUserWithRole('Music Team'));
+
+        $voice_part = VoicePart::factory()->create();
+
+        $response = $this->get(the_tenant_route('voice-parts.show', [$voice_part]));
+
+        $response->assertOk();
+        $response->assertViewIs('voice-parts.show');
+	    $response->assertViewHas('voice_part');
+    }
+
+    /**
+     * @test
+     * @dataProvider voicePartProvider
+     */
+    public function store_redirects_to_show($getData): void
+    {
+	    $this->actingAs($this->createUserWithRole('Admin'));
+
+	    $data = $getData();
+        $response = $this->post(the_tenant_route('voice-parts.store'), $data);
+
+        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('voice_parts', $data);
+
+        $voice_part = VoicePart::firstWhere('title', $data['title']);
+        $response->assertRedirect(the_tenant_route('voice-parts.show', $voice_part));
     }
 
-    /** @test */
-    public function destroy_for_admin_soft_deletes_voice_part(): void
+    /**
+     * @test
+     * @dataProvider voicePartProvider
+     */
+    public function update_redirects_to_show($getData): void
     {
-        $user = User::withRole('Admin')->first();
-        $this->actingAs($user);
+	    $this->actingAs($this->createUserWithRole('Admin'));
 
-        $voice_part = VoicePart::query()->inRandomOrder()->first();
-        $response = $this->delete( the_tenant_route('voice-parts.destroy', ['voice_part' => $voice_part]) );
+        $voice_part = VoicePart::factory()->create();
 
-        $response->assertRedirect();
-        $this->assertSoftDeleted('voice_parts', ['id' => $voice_part->id]);
+	    $data = $getData();
+        $response = $this->put(the_tenant_route('voice-parts.update', [$voice_part]), $data);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('voice_parts', $data);
+        $response->assertRedirect(the_tenant_route('voice-parts.show', $voice_part));
     }
+
+	public function voicePartProvider(): array
+	{
+		return [
+			[
+				function() {
+					$this->setUpFaker();
+					return [
+						'title'     => $this->faker->word,
+						'colour'    => $this->faker->hexColor,
+					];
+				}
+			]
+		];
+	}
 }

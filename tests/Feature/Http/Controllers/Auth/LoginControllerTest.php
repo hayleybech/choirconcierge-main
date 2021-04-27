@@ -12,7 +12,7 @@ class LoginControllerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function login_displays_the_login_form()
+    public function login_displays_the_login_form(): void
     {
         $response = $this->get(the_tenant_route('login'));
 
@@ -21,7 +21,7 @@ class LoginControllerTest extends TestCase
     }
 
     /** @test */
-    public function invalid_login_displays_validation_errors()
+    public function invalid_login_displays_validation_errors(): void
     {
         $response = $this->post(the_tenant_route('login'), []);
 
@@ -30,9 +30,9 @@ class LoginControllerTest extends TestCase
     }
 
     /** @test */
-    public function login_authenticates_and_redirects_user()
+    public function login_authenticates_and_redirects_user(): void
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $response = $this->post(the_tenant_route('login'), [
             'email' => $user->email,
@@ -44,12 +44,12 @@ class LoginControllerTest extends TestCase
     }
 
     /** @test */
-    public function logout_deauthenticates_and_redirects_user()
+    public function logout_deauthenticates_and_redirects_user(): void
     {
         // login
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
-        $response = $this->post(the_tenant_route('login'), [
+        $this->post(the_tenant_route('login'), [
             'email' => $user->email,
             'password' => 'password',
         ]);
