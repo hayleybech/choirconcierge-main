@@ -103,7 +103,7 @@ class SongAttachment extends Model
         return asset($this->getPath());
     }
     public function getPathAttribute() {
-        return storage_path('app/public/' . $this->getPath());
+        return Storage::disk('public')->path($this->getPath());
     }
 
     public static function getPathSongs(): string

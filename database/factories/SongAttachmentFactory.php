@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\SongAttachment;
+use App\Models\SongAttachmentCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Http\UploadedFile;
 
 class SongAttachmentFactory extends Factory
 {
@@ -13,8 +15,10 @@ class SongAttachmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(2, true),
-            'filepath' => '---',    // Set in seeder, this temporarily circumvents non nullable column
+        	'song_id'       => '#', // overridden later, added here to ensure it's added before file, otherwise tests would fail.
+	        'title'         => '',
+	        'file'          => UploadedFile::fake()->create('random.mp3'),
+	        'category_id'   => SongAttachmentCategory::inRandomOrder()->value('id'),
         ];
     }
 }
