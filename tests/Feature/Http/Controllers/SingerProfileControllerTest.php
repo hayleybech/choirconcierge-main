@@ -55,7 +55,7 @@ class SingerProfileControllerTest extends TestCase
      * @test
      * @dataProvider profileProvider
      */
-    public function store_returns_an_ok_response($getData): void
+    public function store_redirects_to_singer($getData): void
     {
 	    $this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -73,7 +73,7 @@ class SingerProfileControllerTest extends TestCase
      * @test
      * @dataProvider profileProvider
      */
-    public function update_returns_an_ok_response($getData): void
+    public function update_redirects_to_singer($getData): void
     {
 	    $this->actingAs($this->createUserWithRole('Membership Team'));
 
