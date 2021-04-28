@@ -42,7 +42,7 @@ class SongAttachmentControllerTest extends TestCase
     /**
      * @test
      */
-    public function show_returns_an_ok_response(): void
+    public function show_returns_file(): void
     {
 	    $this->actingAs($this->createUserWithRole('Music Team'));
 
