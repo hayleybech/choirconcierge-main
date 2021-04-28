@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -13,9 +14,10 @@ use Illuminate\Support\Carbon;
  * Columns
  * @property int $id
  * @property int $singer_id
- * @property int $experience
+ * @property string $experience
  * @property string $instruments
  * @property int $skill_pitch
+ * @property int $skill_harmony
  * @property int $skill_performance
  * @property int $skill_sightreading
  * @property int $voice_tone
@@ -29,7 +31,7 @@ use Illuminate\Support\Carbon;
  */
 class Placement extends Model
 {
-    use TenantTimezoneDates;
+    use TenantTimezoneDates, HasFactory;
 
     protected $fillable = [
 		'experience',
