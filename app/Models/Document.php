@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use _HumbugBox61bfe547a037\Nette\Neon\Exception;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Storage;
 
 /**
  * Class Document
@@ -55,11 +56,15 @@ class Document extends Model
 
     public function setDocumentUploadAttribute(UploadedFile $file): void
     {
-        if( Storage::disk('public')->putFile(self::getDownloadsPath(), $file) )
+    	if( ! Storage::disk('public')->exists(self::getDownloadsPath())) {
+		    Storage::disk('public')->makeDirectory( self::getDownloadsPath() );
+	    }
+        if( ! Storage::disk('public')->putFile(self::getDownloadsPath(), $file) )
         {
-            $this->title = $file->getClientOriginalName();
-            $this->filepath = $file->hashName();
+        	throw new Exception('Failed to save the document.');
         }
+	    $this->title = $file->getClientOriginalName();
+	    $this->filepath = $file->hashName();
     }
 
 
@@ -68,7 +73,7 @@ class Document extends Model
         return asset($this->getPath());
     }
     public function getPathAttribute() {
-        return storage_path('app/public/' . $this->getPath());
+	    return Storage::disk('public')->path($this->getPath());
     }
 
     public function getPath(): string
