@@ -13,7 +13,10 @@ class NotificationTemplateFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+	        'subject'       => $this->faker->sentence,
+	        'recipients'    => 'role:1',
+	        'body'          => $this->faker->paragraph,
+	        'delay'         => $this->faker->numberBetween(2, 50).' '.$this->faker->randomElement(['seconds', 'minutes', 'hours', 'days', 'weeks', 'months']),
         ];
     }
 }

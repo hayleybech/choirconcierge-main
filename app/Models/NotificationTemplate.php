@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Log;
  * @property string $delay
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Carbon $deleted_at
  *
  * Relationships
  * @property Task $task
