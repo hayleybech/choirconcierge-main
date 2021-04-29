@@ -22,8 +22,8 @@ class PlacementFactory extends Factory
     public function definition()
     {
         return [
-            'experience'            => $this->faker->sentence,
-	        'instruments'           => $this->faker->sentence,
+            'experience'            => $this->faker->sentence(),
+	        'instruments'           => $this->faker->sentence(),
 	        'skill_pitch'           => $this->faker->numberBetween(1, 5),
 	        'skill_harmony'         => $this->faker->numberBetween(1, 5),
 	        'skill_performance'     => $this->faker->numberBetween(1, 5),

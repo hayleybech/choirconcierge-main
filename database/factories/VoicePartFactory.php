@@ -22,8 +22,8 @@ class VoicePartFactory extends Factory
     public function definition()
     {
         return [
-            'title'         => $this->faker->word,
-	        'colour'        => $this->faker->hexColor,
+            'title'         => $this->faker->word(),
+	        'colour'        => $this->faker->hexColor(),
 	        'created_at'    => now(),
 	        'updated_at'    => now(),
         ];

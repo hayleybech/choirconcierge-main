@@ -136,8 +136,8 @@ class UserGroupControllerTest extends TestCase
 				function() {
 					$this->setUpFaker();
 					return [
-						'title'         => $this->faker->sentence,
-						'slug'          => $this->faker->unique()->slug,
+						'title'         => $this->faker->sentence(),
+						'slug'          => $this->faker->unique()->slug(),
 						'list_type'     => $this->faker->randomElement(['public', 'chat', 'distribution']),
 					];
 				}

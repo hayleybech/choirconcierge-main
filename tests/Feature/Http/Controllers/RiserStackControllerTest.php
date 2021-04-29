@@ -157,7 +157,7 @@ class RiserStackControllerTest extends TestCase
 					$this->setUpFaker();
 
 					return [
-						'title'                 => $this->faker->sentence,
+						'title'                 => $this->faker->sentence(),
 						'rows'                  => $this->faker->numberBetween(2, 5),
 						'columns'               => $this->faker->numberBetween(1,  8),
 						'front_row_length'      => $this->faker->numberBetween(1, 10),

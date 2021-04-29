@@ -69,7 +69,7 @@ class DocumentControllerTest extends TestCase
 
         $folder = Folder::factory()->create();
 
-        $filename = $this->faker->word().'.'.$this->faker->fileExtension;
+        $filename = $this->faker->word().'.'.$this->faker->fileExtension();
         $data = [
         	'document_uploads' => [UploadedFile::fake()->create($filename, 5)],
         ];

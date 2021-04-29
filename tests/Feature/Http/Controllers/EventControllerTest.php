@@ -181,8 +181,8 @@ class EventControllerTest extends TestCase
 						'start_date'            => $start_time->format($date_format),
 						'end_date'              => $end_time->format($date_format),
 						'location_name'         => $this->faker->sentence(3, true),
-						'location_address'      => $this->faker->address, // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
-						'description'           => $this->faker->optional()->sentence,
+						'location_address'      => $this->faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
+						'description'           => $this->faker->optional()->sentence(),
 						'type'                  => EventType::where('title', 'Rehearsal')->value('id'),
 						'created_at'            => now(),
 						'updated_at'            => now(),

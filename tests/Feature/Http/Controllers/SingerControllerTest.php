@@ -155,9 +155,9 @@ class SingerControllerTest extends TestCase
 					$this->setUpFaker();
 					$password = Str::random(8);
 					return [
-						'first_name' => $this->faker->firstName,
-						'last_name' => $this->faker->lastName,
-						'email' => $this->faker->email,
+						'first_name' => $this->faker->firstName(),
+						'last_name' => $this->faker->lastName(),
+						'email' => $this->faker->email(),
 						'onboarding_enabled' => $this->faker->boolean(10),
 						'password' => $password,
 						'password_confirmation' => $password,

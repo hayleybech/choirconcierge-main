@@ -96,9 +96,9 @@ class TaskNotificationTemplateControllerTest extends TestCase
         $task = Task::factory()->create();
 
         $data = [
-	        'subject'       => $this->faker->sentence,
+	        'subject'       => $this->faker->sentence(),
 	        'recipients'    => 'role:1',
-	        'body'          => $this->faker->paragraph,
+	        'body'          => $this->faker->paragraph(),
 	        'delay'         => $this->faker->numberBetween(2, 50).' '.$this->faker->randomElement(['seconds', 'minutes', 'hours', 'days', 'weeks', 'months']),
         ];
         $response = $this->post(the_tenant_route('tasks.notifications.store', [$task]), $data);
@@ -123,9 +123,9 @@ class TaskNotificationTemplateControllerTest extends TestCase
 		    ->create();
 
 	    $data = [
-		    'subject'       => $this->faker->sentence,
+		    'subject'       => $this->faker->sentence(),
 		    'recipients'    => 'role:1',
-		    'body'          => $this->faker->paragraph,
+		    'body'          => $this->faker->paragraph(),
 		    'delay'         => $this->faker->numberBetween(2, 50).' '.$this->faker->randomElement(['seconds', 'minutes', 'hours', 'days', 'weeks', 'months']),
 	    ];
         $response = $this->put(the_tenant_route('tasks.notifications.update', [$task, 'notification' => $task->notification_templates->first()]), $data);

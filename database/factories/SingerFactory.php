@@ -24,9 +24,9 @@ class SingerFactory extends Factory
     public function definition()
     {
         return [
-            'first_name'            => $this->faker->firstName,
-            'last_name'             => $this->faker->lastName,
-	        'email'                 => $this->faker->safeEmail,
+            'first_name'            => $this->faker->firstName(),
+            'last_name'             => $this->faker->lastName(),
+	        'email'                 => $this->faker->safeEmail(),
 	        'user_id'               => User::factory(),
 	        'singer_category_id'    => SingerCategory::where('name', 'Members')->value('id'),
 	        'onboarding_enabled'    => false,

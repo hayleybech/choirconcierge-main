@@ -131,8 +131,8 @@ class VoicePartControllerTest extends TestCase
 				function() {
 					$this->setUpFaker();
 					return [
-						'title'     => $this->faker->word,
-						'colour'    => $this->faker->hexColor,
+						'title'     => $this->faker->word(),
+						'colour'    => $this->faker->hexColor(),
 					];
 				}
 			]

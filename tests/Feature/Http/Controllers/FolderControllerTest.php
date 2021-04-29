@@ -97,7 +97,7 @@ class FolderControllerTest extends TestCase
 				function() {
 					$this->setUpFaker();
 					return [
-						'title'     => $this->faker->sentence,
+						'title'     => $this->faker->sentence(),
 					];
 				}
 			]

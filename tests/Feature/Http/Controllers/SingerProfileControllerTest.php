@@ -97,20 +97,20 @@ class SingerProfileControllerTest extends TestCase
 					$this->setUpFaker();
 					return [
 						'dob'                   => Carbon::instance($this->faker->dateTimeBetween('-100 years', '-5 years'))->format('Y-m-d'),
-						'phone'                 => $this->faker->phoneNumber,
-						'ice_name'              => $this->faker->name,
-						'ice_phone'             => $this->faker->phoneNumber,
-						'address_street_1'      => $this->faker->streetAddress,
-						'address_street_2'      => $this->faker->secondaryAddress,
-						'address_suburb'        => $this->faker->city,
-						'address_state'         => $this->faker->stateAbbr,
+						'phone'                 => $this->faker->phoneNumber(),
+						'ice_name'              => $this->faker->name(),
+						'ice_phone'             => $this->faker->phoneNumber(),
+						'address_street_1'      => $this->faker->streetAddress(),
+						'address_street_2'      => $this->faker->secondaryAddress(),
+						'address_suburb'        => $this->faker->city(),
+						'address_state'         => $this->faker->stateAbbr(),
 						'address_postcode'      => $this->faker->numerify('####'),
-						'reason_for_joining'    => $this->faker->sentence,
-						'referrer'              => $this->faker->sentence,
-						'profession'            => $this->faker->sentence,
-						'skills'                => $this->faker->sentence,
+						'reason_for_joining'    => $this->faker->sentence(),
+						'referrer'              => $this->faker->sentence(),
+						'profession'            => $this->faker->sentence(),
+						'skills'                => $this->faker->sentence(),
 						'height'                => $this->faker->randomFloat(2, 0, 300),
-						'membership_details'    => $this->faker->sentence,
+						'membership_details'    => $this->faker->sentence(),
 					];
 				}
 			]

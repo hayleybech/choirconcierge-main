@@ -17,7 +17,7 @@ class DocumentFactory extends Factory
     {
         $folders = Folder::all();
 
-        $name = $this->faker->word().'.'.$this->faker->fileExtension;
+        $name = $this->faker->word().'.'.$this->faker->fileExtension();
         $file = UploadedFile::fake()->create($name, 5);
         //$filepath = Storage::disk('public')->putFile( Document::getDownloadsPath(), $file);
 

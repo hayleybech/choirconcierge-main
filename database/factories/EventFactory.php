@@ -24,8 +24,8 @@ class EventFactory extends Factory
             'start_date'            => $start_time,
             'end_date'              => $end_time,
             'location_name'         => $this->faker->sentence(3, true),
-            'location_address'      => $this->faker->address, // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
-            'description'           => $this->faker->optional()->sentence,
+            'location_address'      => $this->faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
+            'description'           => $this->faker->optional()->sentence(),
 	        'type_id'               => EventType::where('title', 'Rehearsal')->value('id'),
 	        'created_at'            => now(),
 	        'updated_at'            => now(),

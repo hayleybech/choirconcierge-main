@@ -43,7 +43,7 @@ class AttendanceControllerTest extends TestCase
         $singer = Singer::factory()->create();
 
         $attendance_response = $this->faker->randomElement(['present', 'absent', 'absent_apology']);
-        $absent_reason = $this->faker->optional(0.3)->sentence;
+        $absent_reason = $this->faker->optional(0.3)->sentence();
         $response = $this->post(the_tenant_route('events.attendances.updateAll', [$event]), [
             'attendance_response' => [
 	           $singer->id =>  $attendance_response,

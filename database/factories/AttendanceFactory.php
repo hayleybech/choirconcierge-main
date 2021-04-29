@@ -23,7 +23,7 @@ class AttendanceFactory extends Factory
     {
         return [
 	        'response'      => $this->faker->randomElement(['present', 'absent', 'absent_apology']),
-	        'absent_reason' => $this->faker->optional(0.3)->sentence,
+	        'absent_reason' => $this->faker->optional(0.3)->sentence(),
 	        'created_at'    => now(),
 	        'updated_at'    => now(),
         ];
