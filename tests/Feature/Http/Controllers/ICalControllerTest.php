@@ -12,6 +12,8 @@ use Tests\TestCase;
  */
 class ICalControllerTest extends TestCase
 {
+	use RefreshDatabase;
+
     /**
      * @test
      */

@@ -12,6 +12,8 @@ use Tests\TestCase;
  */
 class ImpersonateUserControllerTest extends TestCase
 {
+	use RefreshDatabase;
+
     /**
      * @test
      */
