@@ -15,7 +15,7 @@ class SongFactory extends Factory
     {
         return [
             'title'         => $this->faker->sentence(6, true),
-            'pitch_blown'   => $this->faker->numberBetween(0, count(Song::getAllPitches())),
+            'pitch_blown'   => $this->faker->numberBetween(0, count(Song::KEYS)),
 	        'status_id'     => SongStatus::where('title', 'Active')->value('id'),
 	        'created_at'    => now(),
 	        'updated_at'    => now(),
