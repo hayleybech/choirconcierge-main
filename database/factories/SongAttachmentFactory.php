@@ -15,7 +15,6 @@ class SongAttachmentFactory extends Factory
     public function definition(): array
     {
         return [
-        	'song_id'       => '#', // overridden later, added here to ensure it's added before file, otherwise tests would fail.
 	        'title'         => '',
 	        'file'          => UploadedFile::fake()->create('random.mp3'),
 	        'category_id'   => SongAttachmentCategory::inRandomOrder()->value('id'),

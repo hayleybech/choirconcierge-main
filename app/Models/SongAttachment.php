@@ -30,6 +30,9 @@ use Illuminate\Support\Facades\Storage;
  * @property string $download_url
  * @property string $path
  *
+ * Other
+ * @property UploadedFile $file
+ *
  * @package App\Models
  */
 class SongAttachment extends Model
@@ -58,7 +61,16 @@ class SongAttachment extends Model
 
     protected $touches = ['song'];
 
-    public static function create( array $attributes = [] )
+	protected static function booted()
+	{
+		static::creating(static function ($song_attachment) {
+			$song_attachment->saveFile();
+		});
+	}
+
+	private UploadedFile $file;
+
+	public static function create( array $attributes = [] )
     {
         /** @var SongAttachment $attachment */
         $attachment = static::query()->create($attributes);
@@ -75,17 +87,23 @@ class SongAttachment extends Model
         return true;
     }
 
-    public function setFileAttribute(UploadedFile $file) {
-        $this->filepath = $file->getClientOriginalName();
+    public function setFileAttribute(UploadedFile $file): void
+    {
+		$this->file = $file;
+    }
 
-        Storage::disk('public')->makeDirectory( SongAttachment::getPathSongs() );
+    public function saveFile(): void
+    {
+        $this->filepath = $this->file->getClientOriginalName();
+
+        Storage::disk('public')->makeDirectory( self::getPathSongs() );
         Storage::disk('public')->makeDirectory( $this->getPathSong() );
 
         if (Storage::disk('public')->exists( $this->getPath() )) {
             Storage::disk('public')->delete( $this->getPath() );
         }
 
-        Storage::disk('public')->putFileAs( $this->getPathSong(), $file, $this->filepath );
+        Storage::disk('public')->putFileAs( $this->getPathSong(), $this->file, $this->filepath );
     }
 
     public function song(): BelongsTo
