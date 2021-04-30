@@ -96,21 +96,16 @@ class Singer extends Model
 
     public $notify_channels = ['mail'];
 
+	protected static function booted()
+	{
+		static::created(static function ($singer) {
+			$singer->initOnboarding();
+		});
+	}
+
     public static function create( array $attributes = [] ) {
         /** @var Singer $singer */
         $singer = static::query()->create($attributes);
-
-        // Attach all tasks
-        if( $singer->onboarding_enabled ){
-            $tasks = Task::all();
-            $singer->tasks()->attach( $tasks );
-
-            $category = SingerCategory::where('name', '=', 'Prospects')->first();
-        } else {
-            $category = SingerCategory::where('name', '=', 'Members')->first();
-        }
-        // Attach to category
-        $singer->category()->associate($category);
 
         // Add matching user
         $user = new User();
@@ -157,6 +152,18 @@ class Singer extends Model
         $this->save();
 
         return true;
+    }
+
+    public function initOnboarding(): void
+    {
+    	$category_name = $this->onboarding_enabled ? 'Prospects' : 'Members';
+	    $this->category()->associate(SingerCategory::firstWhere('name', '=', $category_name));
+
+	    if( ! $this->onboarding_enabled ){
+		    return;
+	    }
+	    $tasks = Task::all();
+	    $this->tasks()->attach( $tasks );
     }
 
     /*
