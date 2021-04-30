@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Singer;
+use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
@@ -107,6 +108,8 @@ class SingerControllerTest extends TestCase
      */
     public function store_redirects_to_show($getData): void
     {
+	    $task = Task::factory()->create();
+
 	    $this->actingAs($this->createUserWithRole('Membership Team'));
 
 	    $data = $getData();
@@ -121,8 +124,36 @@ class SingerControllerTest extends TestCase
         ]);
 
         $singer = Singer::firstWhere('email', $data['email']);
+        $this->assertDatabaseMissing('singers_tasks', [
+        	'singer_id' => $singer->id,
+	        'task_id'   => $task->id,
+        ]);
+
         $response->assertRedirect(the_tenant_route('singers.show', [$singer]));
     }
+
+	/**
+	 * @test
+	 * @dataProvider singerProvider
+	 */
+	public function store_inserts_tasks_for_prospects($getData): void
+	{
+		$task = Task::factory()->create();
+
+		$this->actingAs($this->createUserWithRole('Membership Team'));
+
+		$data = $getData();
+		$data['onboarding_enabled'] = true;
+		$response = $this->post(the_tenant_route('singers.store'), $data);
+
+		$singer = Singer::firstWhere('email', $data['email']);
+		$this->assertDatabaseHas('singers_tasks', [
+			'singer_id' => $singer->id,
+			'task_id'   => $task->id,
+		]);
+
+		$response->assertRedirect(the_tenant_route('singers.show', [$singer]));
+	}
 
     /**
      * @test
@@ -158,7 +189,7 @@ class SingerControllerTest extends TestCase
 						'first_name' => $this->faker->firstName(),
 						'last_name' => $this->faker->lastName(),
 						'email' => $this->faker->email(),
-						'onboarding_enabled' => $this->faker->boolean(10),
+						'onboarding_enabled' => false,
 						'password' => $password,
 						'password_confirmation' => $password,
 					];
