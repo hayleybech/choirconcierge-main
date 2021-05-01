@@ -40,7 +40,7 @@ class EventFactory extends Factory
 		    return [
 			    'is_repeating'          => true,
 			    'repeat_frequency_unit' => $repeat_unit,
-			    'repeat_until'          => $attributes['call_time']->add($total_repeats.' '.$repeat_unit),
+			    'repeat_until'          => $attributes['call_time']->clone()->add($total_repeats.' '.$repeat_unit),
 		    ];
 	    });
     }

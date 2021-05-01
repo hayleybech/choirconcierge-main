@@ -179,12 +179,15 @@ class EventControllerTest extends TestCase
 		$this->assertDatabaseHas('events', array_merge($saved_data, [
 
 			'call_time'             => tz_from_tenant_to_utc($saved_data['call_time'])
+				->clone()
 				->add('1 '.$repeat_unit)
 				->format($date_format),
 			'start_date'            => tz_from_tenant_to_utc($saved_data['start_date'])
+				->clone()
 				->add('1 '.$repeat_unit)
 				->format($date_format),
 			'end_date'              => tz_from_tenant_to_utc($saved_data['end_date'])
+				->clone()
 				->add('1 '.$repeat_unit)
 				->format($date_format),
 		]));
@@ -192,12 +195,15 @@ class EventControllerTest extends TestCase
 		// Check child 2
 		$this->assertDatabaseHas('events', array_merge($saved_data, [
 			'call_time'             => tz_from_tenant_to_utc($saved_data['call_time'])
+				->clone()
 				->add('2 '.$repeat_unit)
 				->format($date_format),
 			'start_date'            => tz_from_tenant_to_utc($saved_data['start_date'])
+				->clone()
 				->add('2 '.$repeat_unit)
 				->format($date_format),
 			'end_date'              => tz_from_tenant_to_utc($saved_data['end_date'])
+				->clone()
 				->add('2 '.$repeat_unit)
 				->format($date_format),
 		]));
