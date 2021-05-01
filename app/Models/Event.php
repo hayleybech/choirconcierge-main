@@ -115,6 +115,13 @@ class Event extends Model
 
     private Link $_add_to_calendar_link;
 
+	protected static function booted(): void
+	{
+		static::created(static function ($event) {
+			$event->createRepeats();
+		});
+	}
+
     public static function create( array $attributes = [], bool $send_notification = true )
     {
         /** @var Event $event */
@@ -125,8 +132,6 @@ class Event extends Model
         if( $send_notification ){
             Notification::send(User::active()->get(), new EventCreated($event));
         }
-
-        $event->createRepeats();
 
         $event->save(); // @todo remove double save without losing data
 
@@ -151,6 +156,8 @@ class Event extends Model
         // temporary fix? repeat_until shouldn't ask for hours/min
         $this->repeat_until = $this->repeat_until->setHours($this->start_date->hour);
         $this->repeat_until = $this->repeat_until->setMinutes($this->start_date->minute);
+
+        $this->save();
 
         $second_event_start_date = $this->start_date->copy()->add($this->repeat_frequency_unit, 1);
         $second_event_end_date = $this->end_date->copy()->add($this->repeat_frequency_unit, 1);
