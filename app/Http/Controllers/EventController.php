@@ -6,10 +6,14 @@ use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Singer;
+use App\Models\User;
+use App\Notifications\EventCreated;
+use App\Notifications\EventUpdated;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class EventController extends Controller
 {
@@ -65,10 +69,9 @@ class EventController extends Controller
     {
         $this->authorize('create', Event::class);
 
-        $event = Event::create(
-            attributes: collect($request->validated())->except('send_notification')->toArray(),
-            send_notification: $request->input('send_notification')
-        );
+        $event = Event::create(collect($request->validated())->except('send_notification')->toArray());
+
+        $request->whenHas('send_notification', fn() => Notification::send(User::active()->get(), new EventCreated($event)));
 
         return redirect()->route('events.show', [$event])->with(['status' => 'Event created. ']);
     }
@@ -111,9 +114,10 @@ class EventController extends Controller
             attributes: collect($request->validated())->except('send_notification')->toArray(),
             options: [
                 'edit_mode' => $request->get('edit_mode'),
-                'send_notification' => $request->input('send_notification'),
             ]
         );
+
+        $request->whenHas('send_notification', fn() => Notification::send(User::active()->get(), new EventUpdated($event)));
 
         return redirect()->route('events.show', [$event])->with(['status' => 'Event updated. ', ]);
     }

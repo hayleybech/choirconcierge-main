@@ -123,14 +123,10 @@ class Event extends Model
 		});
 	}
 
-    public static function create( array $attributes = [], bool $send_notification = true )
+    public static function create( array $attributes = [] )
     {
         /** @var Event $event */
         $event = static::query()->create($attributes);
-
-        if( $send_notification ){
-            Notification::send(User::active()->get(), new EventCreated($event));
-        }
 
         return $event;
     }
@@ -191,10 +187,6 @@ class Event extends Model
         $this->updateRepeats($options['edit_mode']);
 
         $this->save($options);
-
-        if( $options['send_notification'] ){
-            Notification::send(User::active()->get(), new EventUpdated($this));
-        }
 
         return true;
     }

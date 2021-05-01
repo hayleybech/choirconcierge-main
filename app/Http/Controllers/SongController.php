@@ -7,9 +7,13 @@ use App\Models\Song;
 use App\Models\SongAttachmentCategory;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
+use App\Models\User;
+use App\Notifications\SongUpdated;
+use App\Notifications\SongUploaded;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class SongController extends Controller
 {
@@ -89,10 +93,9 @@ class SongController extends Controller
     {
         $this->authorize('create', Song::class);
 
-        $song = Song::create(
-            attributes: collect($request->validated())->except('send_notification')->toArray(),
-            send_notification: $request->input('send_notification')
-        );
+        $song = Song::create(collect($request->validated())->except('send_notification')->toArray());
+
+	    $request->whenHas('send_notification', fn() => Notification::send(User::active()->get(), new SongUploaded($song)));
 
         return redirect()->route('songs.show', [$song])->with(['status' => 'Song created. ']);
     }
@@ -126,12 +129,9 @@ class SongController extends Controller
     {
         $this->authorize('update', $song);
 
-        $song->update(
-            attributes: collect($request->validated())->except('send_notification')->toArray(),
-            options: [
-                'send_notification' => $request->input('send_notification'),
-            ]
-        );
+        $song->update(collect($request->validated())->except('send_notification')->toArray());
+
+	    $request->whenHas('send_notification', fn() => Notification::send(User::active()->get(), new SongUpdated($song)));
 
         return redirect()->route('songs.show', [$song])->with(['status' => 'Song updated. ', ]);
     }

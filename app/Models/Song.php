@@ -106,7 +106,7 @@ class Song extends Model
         });
     }
 
-    public static function create( array $attributes = [], bool $send_notification = true ) {
+    public static function create( array $attributes = []) {
 
         /** @var Song $song */
         $song = static::query()->create($attributes);
@@ -118,10 +118,6 @@ class Song extends Model
         // Attach categories
         $song->categories()->attach($attributes['categories']);
         $song->save();
-
-        if($send_notification) {
-            Notification::send(User::active()->get(), new SongUploaded($song));
-        }
 
         return $song;
     }
@@ -136,10 +132,6 @@ class Song extends Model
         // Attach categories
         $this->categories()->sync($attributes['categories']);
         $this->save();
-
-        if($options['send_notification']) {
-            Notification::send(User::active()->get(), new SongUpdated($this));
-        }
 
         return true;
     }
