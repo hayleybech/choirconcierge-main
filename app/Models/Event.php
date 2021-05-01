@@ -154,25 +154,25 @@ class Event extends Model
         $this->repeat_parent_id = $this->id;
 
         // temporary fix? repeat_until shouldn't ask for hours/min
-        $this->repeat_until = $this->repeat_until->setHours($this->start_date->hour);
-        $this->repeat_until = $this->repeat_until->setMinutes($this->start_date->minute);
+        $this->repeat_until = $this->repeat_until->setHours($this->call_time->hour);
+        $this->repeat_until = $this->repeat_until->setMinutes($this->call_time->minute);
 
         $this->save();
 
-        $second_event_start_date = $this->start_date->copy()->add($this->repeat_frequency_unit, 1);
-        $second_event_end_date = $this->end_date->copy()->add($this->repeat_frequency_unit, 1);
-        $second_event_call_time = $this->call_time->copy()->add($this->repeat_frequency_unit, 1);
+	    $second_event_call_time = $this->call_time->copy()->add($this->repeat_frequency_unit, 1);
+	    $second_event_start_date = $this->start_date->copy()->add($this->repeat_frequency_unit, 1);
+	    $second_event_end_date = $this->end_date->copy()->add($this->repeat_frequency_unit, 1);
 
         $mysql_date_format = 'Y-m-d H:i:s';
 
         $event_occurrences = [];
-        for($current_start_date = $second_event_start_date,
-                $current_event_end_date = $second_event_end_date,
-                $current_event_call_time = $second_event_call_time;
-            $current_start_date <= $this->repeat_until;
-            $current_start_date->add($this->repeat_frequency_unit, 1),
-                $current_event_end_date->add($this->repeat_frequency_unit, 1),
-                $current_event_call_time->add($this->repeat_frequency_unit, 1)
+        for($current_event_call_time = $second_event_call_time,
+                $current_start_date = $second_event_start_date,
+                $current_event_end_date = $second_event_end_date;
+            $current_event_call_time <= $this->repeat_until;
+            $current_event_call_time->add($this->repeat_frequency_unit, 1),
+                $current_start_date->add($this->repeat_frequency_unit, 1),
+                $current_event_end_date->add($this->repeat_frequency_unit, 1)
         ) {
             // save single event to array, bulk save all at the end
             $event_occurrences[] = array_merge($this->replicate()->attributesToArray(), [
