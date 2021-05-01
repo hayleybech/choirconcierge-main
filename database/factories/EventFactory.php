@@ -31,4 +31,17 @@ class EventFactory extends Factory
 	        'updated_at'            => now(),
         ];
     }
+
+    public function repeating()
+    {
+    	$total_repeats = $this->faker->numberBetween(2, 20);
+    	$repeat_unit = $this->faker->randomElement(['days', 'weeks', 'months']);
+	    return $this->state(function (array $attributes) use ($total_repeats, $repeat_unit) {
+		    return [
+			    'is_repeating'          => true,
+			    'repeat_frequency_unit' => $repeat_unit,
+			    'repeat_until'          => $attributes['call_time']->add($total_repeats.' '.$repeat_unit),
+		    ];
+	    });
+    }
 }

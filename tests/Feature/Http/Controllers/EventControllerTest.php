@@ -135,6 +135,77 @@ class EventControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('events.show', [$event]));
     }
 
+	/**
+	 * @test
+	 * @dataProvider eventProvider
+	 */
+	public function store_creates_repeat_children($getData): void
+	{
+		$this->actingAs($this->createUserWithRole('Events Team'));
+
+		$date_format = 'Y-m-d H:i:s';
+
+		$data = $getData();
+		$total_repeats = $this->faker->numberBetween(2, 20);
+		$repeat_unit = $this->faker->randomElement(['days', 'weeks', 'months']);
+		$request_data = array_merge($data, [
+			'is_repeating'          => true,
+			'repeat_frequency_unit' => $repeat_unit,
+			'repeat_until'          => Carbon::create($data['call_time'])
+				->add($total_repeats.' '.$repeat_unit)
+				->format($date_format),
+		]);
+
+		$response = $this->post(the_tenant_route('events.store'), $request_data);
+		$response->assertSessionHasNoErrors();
+		
+		$saved_data = array_merge($request_data, [
+			'repeat_until'          => tz_from_tenant_to_utc($request_data['repeat_until'])->format($date_format),
+			'type_id'               => $request_data['type'],
+		]);
+		unset($saved_data['type']);
+		
+		// Parent
+		$this->assertDatabaseHas('events', array_merge($saved_data, [
+			'call_time'             => tz_from_tenant_to_utc($request_data['call_time'])->format($date_format),
+			'start_date'            => tz_from_tenant_to_utc($request_data['start_date'])->format($date_format),
+			'end_date'              => tz_from_tenant_to_utc($request_data['end_date'])->format($date_format),
+		]));
+
+		// Total Children
+		$this->assertDatabaseCount('events', 1 + $total_repeats);
+
+		// Check child 1
+		$this->assertDatabaseHas('events', array_merge($saved_data, [
+
+			'call_time'             => tz_from_tenant_to_utc($saved_data['call_time'])
+				->add('1 '.$repeat_unit)
+				->format($date_format),
+			'start_date'            => tz_from_tenant_to_utc($saved_data['start_date'])
+				->add('1 '.$repeat_unit)
+				->format($date_format),
+			'end_date'              => tz_from_tenant_to_utc($saved_data['end_date'])
+				->add('1 '.$repeat_unit)
+				->format($date_format),
+		]));
+
+		// Check child 2
+		$this->assertDatabaseHas('events', array_merge($saved_data, [
+			'call_time'             => tz_from_tenant_to_utc($saved_data['call_time'])
+				->add('2 '.$repeat_unit)
+				->format($date_format),
+			'start_date'            => tz_from_tenant_to_utc($saved_data['start_date'])
+				->add('2 '.$repeat_unit)
+				->format($date_format),
+			'end_date'              => tz_from_tenant_to_utc($saved_data['end_date'])
+				->add('2 '.$repeat_unit)
+				->format($date_format),
+		]));
+
+		$event = Event::firstWhere('title', $request_data['title']);
+		$response->assertRedirect(the_tenant_route('events.show', [$event]));
+	}
+
     /**
      * @test
      * @dataProvider eventProvider
