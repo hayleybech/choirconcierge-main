@@ -238,15 +238,7 @@ class Event extends Model
         abort_if($this->in_past, 405, 'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
 
         // Update or regenerate children
-        // Check if any of the repeat data has changed - includes start time
-        // @todo allow changing the time (not the date) without causing series regeneration
-        if($this->isDirty([
-        	'call_time',
-            'start_date',
-            'repeat_until',
-            'repeat_frequency_unit',
-            'repeat_frequency_amount'
-        ])) {
+        if($this->isRepeatDirty()) {
             // Delete children
             $this->repeat_children()->delete();
 
@@ -275,15 +267,7 @@ class Event extends Model
         $this->prevRepeats()->update(['repeat_until' => $this->prevRepeat()->start_date]);
 
         // Update or regenerate children
-        // Check if any of the repeat data has changed - includes start time
-        // @todo allow changing the time (not the date) without causing series regeneration
-        if($this->isDirty([
-        	'call_time',
-            'start_date',
-            'repeat_until',
-            'repeat_frequency_unit',
-            'repeat_frequency_amount'
-        ])) {
+        if($this->isRepeatDirty()) {
             // Delete all repeats following this one
             $this->nextRepeats()->delete();
 
@@ -520,4 +504,19 @@ class Event extends Model
         }
         return $this->_add_to_calendar_link;
     }
+
+	/**
+	 * Checks if any of the repeat data has changed - including call/start time
+	 * @todo allow changing the time (not the date) without causing series regeneration
+	 */
+	public function isRepeatDirty(): bool
+	{
+		return $this->isDirty([
+			'call_time',
+			'start_date',
+			'repeat_until',
+			'repeat_frequency_unit',
+			'repeat_frequency_amount'
+		]);
+	}
 }
