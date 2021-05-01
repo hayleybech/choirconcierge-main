@@ -5,8 +5,11 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Song;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
+use App\Notifications\SongUpdated;
+use App\Notifications\SongUploaded;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 /**
@@ -110,6 +113,7 @@ class SongControllerTest extends TestCase
      */
     public function store_redirects_to_show($getData): void
     {
+	    Notification::fake();
 	    $this->actingAs($this->createUserWithRole('Music Team'));
 
 	    $data = $getData();
@@ -124,7 +128,27 @@ class SongControllerTest extends TestCase
 
         $song = Song::firstWhere('title', $data['title']);
         $response->assertRedirect(the_tenant_route('songs.show', [$song]));
+	    Notification::assertNothingSent();
     }
+
+	/**
+	 * @test
+	 * @dataProvider songProvider
+	 */
+	public function store_sends_notification($getData): void
+	{
+		Notification::fake();
+		$this->actingAs($this->createUserWithRole('Music Team'));
+
+		$data = $getData();
+		$data['send_notification'] = true;
+		$response = $this->post(the_tenant_route('songs.store'), $data);
+
+		$response->assertSessionHasNoErrors();
+		$this->assertDatabaseHas('songs', ['title' => $data['title']]);
+
+		Notification::assertSentTo(auth()->user(), SongUploaded::class);
+	}
 
     /**
      * @test
@@ -132,6 +156,7 @@ class SongControllerTest extends TestCase
      */
     public function update_redirects_to_show($getData): void
     {
+    	Notification::fake();
 	    $this->actingAs($this->createUserWithRole('Music Team'));
 
         $song = Song::factory()->create();
@@ -146,7 +171,28 @@ class SongControllerTest extends TestCase
 	        'status_id'     => $data['status'],
         ]);
         $response->assertRedirect(the_tenant_route('songs.show', [$song]));
+	    Notification::assertNothingSent();
     }
+
+	/**
+	 * @test
+	 * @dataProvider songProvider
+	 */
+	public function update_sends_notification($getData): void
+	{
+		Notification::fake();
+		$this->actingAs($this->createUserWithRole('Music Team'));
+
+		$song = Song::factory()->create();
+
+		$data = $getData();
+		$data['send_notification'] = true;
+		$response = $this->put(the_tenant_route('songs.update', [$song]), $data);
+
+		$response->assertSessionHasNoErrors();
+		$this->assertDatabaseHas('songs', ['title' => $data['title']]);
+		Notification::assertSentTo(auth()->user(), SongUpdated::class);
+	}
 
 	public function songProvider(): array
 	{

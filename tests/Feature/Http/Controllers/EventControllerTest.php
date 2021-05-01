@@ -4,9 +4,13 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\EventType;
+use App\Models\User;
+use App\Notifications\EventCreated;
+use App\Notifications\EventUpdated;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Notification;
 use Tests\TestCase;
 
 /**
@@ -112,15 +116,16 @@ class EventControllerTest extends TestCase
      */
     public function store_redirects_to_show($getData): void
     {
+	    Notification::fake();
 	    $this->actingAs($this->createUserWithRole('Events Team'));
 
 	    $data = $getData();
-        $response = $this->post(the_tenant_route('events.store'), $data);
+	    $response = $this->post(the_tenant_route('events.store'), $data);
 
-        $response->assertSessionHasNoErrors();
+	    $response->assertSessionHasNoErrors();
 
 	    $date_format = 'Y-m-d H:i:s';
-        $this->assertDatabaseHas('events', [
+	    $this->assertDatabaseHas('events', [
         	'title'                 => $data['title'],
 	        'call_time'             => tz_from_tenant_to_utc($data['call_time'])->format($date_format),
 	        'start_date'            => tz_from_tenant_to_utc($data['start_date'])->format($date_format),
@@ -131,9 +136,31 @@ class EventControllerTest extends TestCase
 	        'type_id'               => $data['type_id'],
         ]);
 
+	    Notification::assertNothingSent();
+
         $event = Event::firstWhere('title', $data['title']);
         $response->assertRedirect(the_tenant_route('events.show', [$event]));
     }
+
+	/**
+	 * @test
+	 * @dataProvider eventProvider
+	 */
+	public function store_sends_notification($getData): void
+	{
+		Notification::fake();
+		$this->actingAs($this->createUserWithRole('Events Team'));
+
+		$data = $getData();
+		$data['send_notification'] = true;
+		$response = $this->post(the_tenant_route('events.store'), $data);
+
+		$response->assertSessionHasNoErrors();
+
+		$this->assertDatabaseHas('events', ['title' => $data['title']]);
+
+		Notification::assertSentTo(auth()->user(), EventCreated::class);
+	}
 
 	/**
 	 * @test
@@ -216,12 +243,13 @@ class EventControllerTest extends TestCase
      */
     public function update_redirects_to_show($getData): void
     {
+	    Notification::fake();
 	    $this->actingAs($this->createUserWithRole('Events Team'));
 
-        $event = Event::factory()->create();
+	    $event = Event::factory()->create();
 
 	    $data = $getData();
-        $response = $this->put(the_tenant_route('events.update', [$event]), $data);
+	    $response = $this->put(the_tenant_route('events.update', [$event]), $data);
 
 	    $response->assertSessionHasNoErrors();
 
@@ -236,7 +264,28 @@ class EventControllerTest extends TestCase
 		    'description'           => $data['description'],
 		    'type_id'               => $data['type_id'],
 	    ]);
-        $response->assertRedirect(the_tenant_route('events.show', [$event]));
+	    $response->assertRedirect(the_tenant_route('events.show', [$event]));
+	    Notification::assertNothingSent();
+    }
+
+	/**
+	 * @test
+	 * @dataProvider eventProvider
+	 */
+	public function update_sends_notification($getData): void
+	{
+    	Notification::fake();
+	    $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $event = Event::factory()->create();
+
+	    $data = $getData();
+		$data['send_notification'] = true;
+        $response = $this->put(the_tenant_route('events.update', [$event]), $data);
+
+	    $response->assertSessionHasNoErrors();
+	    $this->assertDatabaseHas('events', ['title' => $data['title']]);
+	    Notification::assertSentTo(auth()->user(), EventUpdated::class);
     }
 
 	public function eventProvider(): array
