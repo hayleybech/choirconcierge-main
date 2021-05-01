@@ -40,9 +40,9 @@ class EditRecurringEventControllerTest extends TestCase
     public function modeProvider(): array
     {
     	return [
-		   ['single'],
-		   ['following'],
-		   ['all'],
+		   'single'     => ['single'],
+		   'following'  => ['following'],
+		   'all'        =>['all'],
 	    ];
     }
 }
