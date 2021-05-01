@@ -98,7 +98,7 @@ class Singer extends Model
 
 	protected static function booted()
 	{
-		static::created(static function ($singer) {
+		static::created(static function (Singer $singer) {
 			$singer->initOnboarding();
 		});
 	}

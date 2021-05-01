@@ -63,7 +63,7 @@ class SongAttachment extends Model
 
 	protected static function booted()
 	{
-		static::creating(static function ($song_attachment) {
+		static::creating(static function (SongAttachment $song_attachment) {
 			$song_attachment->saveFile();
 		});
 	}

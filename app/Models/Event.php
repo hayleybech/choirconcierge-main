@@ -118,7 +118,7 @@ class Event extends Model
 
 	protected static function booted(): void
 	{
-		static::created(static function ($event) {
+		static::created(static function (Event $event) {
 			$event->createRepeats();
 		});
 	}
