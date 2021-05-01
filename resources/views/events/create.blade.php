@@ -22,7 +22,7 @@
                     <fieldset class="form-group">
                         <legend class="col-form-label">Type</legend>
                         @foreach($types as $type)
-                            <x-inputs.radio label="{{ $type->title }}" id="type_{{ $type->id }}" name="type" value="{{ $type->id }}" inline="true"></x-inputs.radio>
+                            <x-inputs.radio label="{{ $type->title }}" id="type_id_{{ $type->id }}" name="type_id" value="{{ $type->id }}" inline="true"></x-inputs.radio>
                         @endforeach
                     </fieldset>
 

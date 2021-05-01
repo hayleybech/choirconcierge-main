@@ -128,7 +128,7 @@ class EventControllerTest extends TestCase
 	        'location_name'         => $data['location_name'],
 	        'location_address'      => $data['location_address'],
 	        'description'           => $data['description'],
-	        'type_id'               => $data['type'],
+	        'type_id'               => $data['type_id'],
         ]);
 
         $event = Event::firstWhere('title', $data['title']);
@@ -161,9 +161,7 @@ class EventControllerTest extends TestCase
 		
 		$saved_data = array_merge($request_data, [
 			'repeat_until'          => tz_from_tenant_to_utc($request_data['repeat_until'])->format($date_format),
-			'type_id'               => $request_data['type'],
 		]);
-		unset($saved_data['type']);
 		
 		// Parent
 		$this->assertDatabaseHas('events', array_merge($saved_data, [
@@ -236,7 +234,7 @@ class EventControllerTest extends TestCase
 		    'location_name'         => $data['location_name'],
 		    'location_address'      => $data['location_address'],
 		    'description'           => $data['description'],
-		    'type_id'               => $data['type'],
+		    'type_id'               => $data['type_id'],
 	    ]);
         $response->assertRedirect(the_tenant_route('events.show', [$event]));
     }
@@ -260,7 +258,7 @@ class EventControllerTest extends TestCase
 						'location_name'         => $this->faker->sentence(3, true),
 						'location_address'      => $this->faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
 						'description'           => $this->faker->optional()->sentence(),
-						'type'                  => EventType::where('title', 'Rehearsal')->value('id'),
+						'type_id'               => EventType::where('title', 'Rehearsal')->value('id'),
 						'created_at'            => now(),
 						'updated_at'            => now(),
 					];

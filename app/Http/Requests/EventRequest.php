@@ -33,7 +33,7 @@ class EventRequest extends FormRequest
     {
         return [
             'title'                 => ['required', 'max:255'],
-            'type'                  => ['required', 'exists:event_types,id'],
+            'type_id'               => ['required', 'exists:event_types,id'],
             'call_time'             => ['required', 'date_format:Y-m-d H:i:s', 'before:start_date'],
             'start_date'            => ['required', 'date_format:Y-m-d H:i:s'],
             'end_date'              => ['required', 'date_format:Y-m-d H:i:s', 'after:start_date'],

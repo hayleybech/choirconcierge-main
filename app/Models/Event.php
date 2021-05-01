@@ -83,6 +83,7 @@ class Event extends Model
         'location_name',
         'location_address',
         'description',
+	    'type_id',
 
         'is_repeating',
         'repeat_parent_id',
@@ -127,13 +128,9 @@ class Event extends Model
         /** @var Event $event */
         $event = static::query()->create($attributes);
 
-        $event->type_id = $attributes['type'];
-
         if( $send_notification ){
             Notification::send(User::active()->get(), new EventCreated($event));
         }
-
-        $event->save(); // @todo remove double save without losing data
 
         return $event;
     }
@@ -190,8 +187,6 @@ class Event extends Model
     public function update(array $attributes = [], array $options = [])
     {
         $this->fill($attributes);
-
-        $this->type_id = $attributes['type'];
 
         $this->updateRepeats($options['edit_mode']);
 
