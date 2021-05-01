@@ -19,7 +19,7 @@ class EventRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'is_repeating' => $this->has('is_repeating'),
+            'is_repeating'      => $this->has('is_repeating'),
             'send_notification' => $this->has('send_notification'),
         ]);
     }
