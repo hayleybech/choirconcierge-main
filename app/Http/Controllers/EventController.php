@@ -110,12 +110,15 @@ class EventController extends Controller
     {
         $this->authorize('update', $event);
 
-        $event->update(
-            attributes: collect($request->validated())->except('send_notification')->toArray(),
-            options: [
-                'edit_mode' => $request->get('edit_mode'),
-            ]
-        );
+        if($event->is_repeating){
+
+	        $event->updateRepeats(
+		        collect($request->validated())->except('send_notification')->toArray(),
+		        $request->get('edit_mode')
+	        );
+        } else {
+	        $event->update(collect($request->validated())->except('send_notification')->toArray());
+        }
 
         $request->whenHas('send_notification', fn() => Notification::send(User::active()->get(), new EventUpdated($event)));
 

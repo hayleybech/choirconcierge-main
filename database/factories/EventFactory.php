@@ -14,7 +14,7 @@ class EventFactory extends Factory
 
     public function definition(): array
     {
-        $call_time = Carbon::instance( $this->faker->dateTimeThisYear() );
+        $call_time = Carbon::instance( $this->faker->dateTimeBetween('now', '+1 year') );
         $start_time = (clone $call_time)->addHour();
         $end_time = (clone $start_time)->addHours(2);
 
@@ -34,7 +34,7 @@ class EventFactory extends Factory
 
     public function repeating()
     {
-    	$total_repeats = $this->faker->numberBetween(2, 20);
+    	$total_repeats = $this->faker->numberBetween(4, 20);
     	$repeat_unit = $this->faker->randomElement(['days', 'weeks', 'months']);
 	    return $this->state(function (array $attributes) use ($total_repeats, $repeat_unit) {
 		    return [
