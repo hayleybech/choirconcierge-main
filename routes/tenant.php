@@ -15,6 +15,7 @@ use App\Http\Controllers\ICalController;
 use App\Http\Controllers\ImpersonateUserController;
 use App\Http\Controllers\ImportSingerController;
 use App\Http\Controllers\MailboxController;
+use App\Http\Controllers\RecurringEventController;
 use App\Http\Controllers\RiserStackController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RsvpController;
@@ -73,8 +74,9 @@ Route::middleware([
     Route::resource('events', EventController::class);
     Route::resource('events.rsvps', RsvpController::class)->only(['store', 'update', 'destroy']);
     Route::resource('events.attendances', AttendanceController::class)->only(['index']);
-    Route::get('events/{event}/edit-recurring/{mode}', EditRecurringEventController::class)->name('events.edit-recurring');
-    Route::get('events/{event}/delete-recurring/{mode}', DeleteRecurringEventController::class)->name('events.delete-recurring');
+    Route::get('events/{event}/recurring/edit/{mode}', [RecurringEventController::class, 'edit'])->name('events.edit-recurring');
+    Route::put('events/{event}/recurring/{mode}', [RecurringEventController::class, 'update'])->name('events.update-recurring');
+    Route::get('events/{event}/recurring/delete/{mode}', [RecurringEventController::class, 'destroy'])->name('events.delete-recurring');
     Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
     Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
 

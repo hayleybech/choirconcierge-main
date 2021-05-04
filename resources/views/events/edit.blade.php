@@ -11,7 +11,11 @@
 
 @section('page-content')
 
-    {{ Form::open( [ 'route' => ['events.show', $event->id], 'method' => 'put' ] ) }}
+    @if($event->is_repeating)
+        {{ Form::open( [ 'route' => ['events.update-recurring', $event->id], 'method' => 'put' ] ) }}
+    @else
+        {{ Form::open( [ 'route' => ['events.update', $event->id], 'method' => 'put' ] ) }}
+    @endif
 
     <input type="hidden" name="edit_mode" value="{{ request()->query('mode') }}">
 

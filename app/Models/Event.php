@@ -176,28 +176,11 @@ class Event extends Model
         DB::table('events')->insert($event_occurrences);
     }
 
-    public function updateRepeats(array $attributes, ?string $edit_mode): void
-    {
-        if ( ! $this->is_repeating) {
-            return;
-        }
-
-        if($edit_mode === 'single') {
-            $this->updateSingle($attributes);
-        } elseif ($edit_mode === 'all') {
-            $this->updateAll($attributes);
-        } elseif ($edit_mode === 'following') {
-            $this->updateFollowing($attributes);
-        } else {
-            abort(500, 'The server failed to determine the edit mode on the repeating event.');
-        }
-    }
-
     /**
      * Updates one event in a repeating series
      * For simplicity, it converts the event into regular single event.
      */
-    private function updateSingle(array $attributes): void
+    public function updateSingle(array $attributes): void
     {
         // If this event was the parent, reset parent id on children to next child
         if($this->is_repeat_parent && $this->repeat_children->count()){
@@ -221,7 +204,7 @@ class Event extends Model
      * When the date or repeat details change, it deletes and regenerates the entire series.
      * As a result, existing RSVPs will be deleted, but as the dates may have changed this is ideal.
      */
-    private function updateAll(array $attributes): void
+    public function updateAll(array $attributes): void
     {
         // Only perform this on an event parent
         abort_if(! $this->is_repeat_parent, 500, 'The server attempted to update all repeats of an event without finding the parent event. ');
@@ -252,7 +235,7 @@ class Event extends Model
      * If repeat data (including start date) has changed, then delete and regenerate the new children.
      * Also, update the older events that still exist in the old series with new repeat_until dates.
      */
-    private function updateFollowing(array $attributes): void
+    public function updateFollowing(array $attributes): void
     {
         // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
         abort_if($this->is_repeat_parent, 405, 'Cannot do "following" update method on a repeating event parent. Try "all" update method instead.');
