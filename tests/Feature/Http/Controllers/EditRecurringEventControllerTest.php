@@ -42,7 +42,7 @@ class EditRecurringEventControllerTest extends TestCase
     	return [
 		   'single'     => ['single'],
 		   'following'  => ['following'],
-		   'all'        =>['all'],
+		   'all'        => ['all'],
 	    ];
     }
 }
