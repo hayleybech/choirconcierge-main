@@ -126,14 +126,6 @@ class Event extends Model
 
 	}
 
-    public static function create( array $attributes = [] )
-    {
-        /** @var Event $event */
-        $event = static::query()->create($attributes);
-
-        return $event;
-    }
-
     /**
      * Generates occurrences for a repeating event
      * - Starts at the date of the second occurrence
