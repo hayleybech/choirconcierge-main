@@ -162,15 +162,16 @@ class Event extends Model
                 $current_start_date->add($this->repeat_frequency_unit, 1),
                 $current_event_end_date->add($this->repeat_frequency_unit, 1)
         ) {
-            // save single event to array, bulk save all at the end
-            $event_occurrences[] = array_merge($this->replicate()->attributesToArray(), [
-                'start_date' => tz_from_tenant_to_utc($current_start_date->toString())->format($mysql_date_format),
-                'end_date' => tz_from_tenant_to_utc($current_event_end_date->toString())->format($mysql_date_format),
-                'call_time' => tz_from_tenant_to_utc($current_event_call_time->toString())->format($mysql_date_format),
-                'repeat_until' => tz_from_tenant_to_utc($this->repeat_until->toString())->format($mysql_date_format),
-                'created_at' => Carbon::now()->format($mysql_date_format),
-                'updated_at' => Carbon::now()->format($mysql_date_format)
-            ]);
+	        $event_occurrences[] = $this->replicate()
+		        ->fill([
+			        'start_date' => tz_from_tenant_to_utc($current_start_date->toString())->format($mysql_date_format),
+			        'end_date' => tz_from_tenant_to_utc($current_event_end_date->toString())->format($mysql_date_format),
+			        'call_time' => tz_from_tenant_to_utc($current_event_call_time->toString())->format($mysql_date_format),
+			        'repeat_until' => tz_from_tenant_to_utc($this->repeat_until->toString())->format($mysql_date_format),
+			        'created_at' => Carbon::now()->format($mysql_date_format),
+			        'updated_at' => Carbon::now()->format($mysql_date_format)
+		        ])
+		        ->attributesToArray();
         }
         DB::table('events')->insert($event_occurrences);
     }
