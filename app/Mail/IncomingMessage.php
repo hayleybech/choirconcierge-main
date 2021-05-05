@@ -87,16 +87,39 @@ class IncomingMessage extends Mailable
 
     public function getMatchingGroup(): ?UserGroup
     {
-        $to_slug = explode( '@', $this->to[0]['address'])[0];
-        $cc_slug = explode( '@', $this->cc[0]['address'] ?? '')[0] ?? '';
-        $from_slug = explode( '@', $this->from[0]['address'])[0];
+    	// @todo make DTOs
+    	$recipients_raw_by_type = [
+    		'to'    => $this->to,
+		    'cc'    => $this->cc,
+		    'from'  => $this->from,
+	    ];
+    	$recipients_found_by_type = [
+    		'to'    => [],
+		    'cc'    => [],
+		    'from'  => [],
+	    ];
 
-        $query = UserGroup::where('slug', 'LIKE', $to_slug);
+    	// @todo test for multiple tenants
+    	foreach($recipients_raw_by_type as $recipient_type => $recipients_raw){
+    		foreach($recipients_raw as $recipient_raw){
+			    $slug =  explode( '@', $recipient_raw['address'])[0];
+			    $group = UserGroup::firstWhere('slug', 'LIKE', $slug);
 
-        // Allow reply-all by cloning emails CCd to the group
-        if($from_slug !== $cc_slug){ // Don't allow cloning the initial email
-            $query = $query->orWhere('slug', 'LIKE', $cc_slug);
-        }
-        return $query->first();
+			    if(!$group) {
+			    	continue;
+			    }
+			    $recipients_found_by_type[$recipient_type][] = $group;
+		    }
+	    }
+
+	    // Allow reply-all by cloning emails CCd to the group
+	    // Don't allow cloning the initial email
+    	$recipients_found_by_type['cc'] = array_diff($recipients_found_by_type['cc'], $recipients_found_by_type['from']);
+
+    	// temporary code. return only the FIRST result found.
+	    // @todo return multiple matches
+    	return $recipients_found_by_type['to'][0] ??
+		    $recipients_found_by_type['cc'][0] ?? null;
+		    //$recipients_found_by_type['from'][0] ?? null;
     }
 }

@@ -60,10 +60,34 @@ class IncomingMessageTest extends TestCase
 		        ],
 				true
 			],
+			'Multiple TOs' => [
+		        'input' => [
+			        'to'     => [
+			        	'skip@example.com',
+			        	'music-team@tenant1.choirconcierge.com',
+			        ],
+			        'cc'     => 'somebody@example.com',
+			        'bcc'    => 'nobody@example.com',
+			        'from'   => 'nothing@example.com',
+		        ],
+				true
+			],
 		    'Single CC' => [
 			    'input' => [
 				    'to'     => 'somebody@example.com',
 				    'cc'     => 'music-team@tenant1.choirconcierge.com',
+				    'bcc'    => 'nobody@example.com',
+				    'from'   => 'nothing@example.com',
+			    ],
+			    true
+		    ],
+		    'Multiple CCs' => [
+			    'input' => [
+				    'to'     => 'somebody@example.com',
+				    'cc'     => [
+					    'skip@example.com',
+					    'music-team@tenant1.choirconcierge.com',
+				    ],
 				    'bcc'    => 'nobody@example.com',
 				    'from'   => 'nothing@example.com',
 			    ],
