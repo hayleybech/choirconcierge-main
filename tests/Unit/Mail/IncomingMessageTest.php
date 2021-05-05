@@ -93,6 +93,27 @@ class IncomingMessageTest extends TestCase
 			    ],
 			    true
 		    ],
+		    'Single BCC' => [
+			    'input' => [
+				    'to'     => 'somebody@example.com',
+				    'cc'    => 'nobody@example.com',
+				    'bcc'     => 'music-team@tenant1.choirconcierge.com',
+				    'from'   => 'nothing@example.com',
+			    ],
+			    true
+		    ],
+		    'Multiple BCCs' => [
+			    'input' => [
+				    'to'     => 'somebody@example.com',
+				    'cc'    => 'nobody@example.com',
+				    'bcc'     => [
+					    'skip@example.com',
+					    'music-team@tenant1.choirconcierge.com',
+				    ],
+				    'from'   => 'nothing@example.com',
+			    ],
+			    true
+		    ],
 	    ];
     }
 

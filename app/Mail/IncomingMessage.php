@@ -91,11 +91,13 @@ class IncomingMessage extends Mailable
     	$recipients_raw_by_type = [
     		'to'    => $this->to,
 		    'cc'    => $this->cc,
+		    'bcc'   => $this->bcc,
 		    'from'  => $this->from,
 	    ];
     	$recipients_found_by_type = [
     		'to'    => [],
 		    'cc'    => [],
+		    'bcc'   => [],
 		    'from'  => [],
 	    ];
 
@@ -119,7 +121,8 @@ class IncomingMessage extends Mailable
     	// temporary code. return only the FIRST result found.
 	    // @todo return multiple matches
     	return $recipients_found_by_type['to'][0] ??
-		    $recipients_found_by_type['cc'][0] ?? null;
+		    $recipients_found_by_type['cc'][0] ??
+		    $recipients_found_by_type['bcc'][0] ?? null;
 		    //$recipients_found_by_type['from'][0] ?? null;
     }
 }
