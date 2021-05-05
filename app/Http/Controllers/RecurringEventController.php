@@ -45,7 +45,7 @@ class RecurringEventController extends Controller
 
 		match($mode) {
 			'single'    => $event->updateSingle(Arr::except($request->validated(), 'send_notification')),
-			'all'       => $event->updateAll($request->validated()),
+			'all'       => $event->updateAll(Arr::except($request->validated(), 'send_notification')),
 			'following' => $event->updateFollowing(Arr::except($request->validated(), 'send_notification')),
 			default     => abort(500, 'The server failed to determine the edit mode on the repeating event.'),
 		};
