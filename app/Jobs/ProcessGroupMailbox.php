@@ -23,7 +23,15 @@ class ProcessGroupMailbox implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
+	private IncomingMailbox $mailbox;
+
+	public function __construct(IncomingMailbox $mailbox)
+    {
+    	$this->mailbox = $mailbox;
+    }
+
+
+	/**
      * Execute the job.
      *
      * @return void
@@ -31,7 +39,7 @@ class ProcessGroupMailbox implements ShouldQueue
     public function handle(): void
     {
         // get unread
-        $msgs_unread = (new IncomingMailbox())->getMessages();
+        $msgs_unread = $this->mailbox->getMessages();
 
         if( count($msgs_unread) === 0){
             return;

@@ -6,9 +6,9 @@ use App\Jobs\ProcessGroupMailbox;
 
 class MailboxController extends Controller
 {
-    public function process(): void
+    public function process(ProcessGroupMailbox $processGroupMailbox): void
     {
-        (new ProcessGroupMailbox)->handle();
+        $processGroupMailbox->handle();
     }
 
 }

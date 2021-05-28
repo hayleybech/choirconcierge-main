@@ -68,7 +68,7 @@ class Kernel extends ConsoleKernel
         }
 
 
-        $schedule->job(new ProcessGroupMailbox)->everyFiveMinutes();
+        $schedule->job(ProcessGroupMailbox::class)->everyFiveMinutes();
 
         $schedule->command('backup:clean')->daily()->at('03:00');
         $schedule->command('backup:run')->daily()->at('04:00');
