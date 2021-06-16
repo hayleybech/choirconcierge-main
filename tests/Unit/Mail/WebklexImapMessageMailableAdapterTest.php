@@ -35,18 +35,18 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
      * @test
      * @dataProvider recipientProvider
      */
-	public function copies_recipients($recipient_type, $count, $addresses, $names): void
+	public function copies_recipients($recipient_type, $count, $recipients): void
 	{
 		// Arrange
-		$message = $this->mockMessage();
+		$message = $this->mockMessage([$recipient_type => $recipients]);
 
 		// Act
 		$mailable = (new WebklexImapMessageMailableAdapter($message))->toMailable();
 
 		// Assert
 		self::assertCount($count, $mailable->$recipient_type);
-		self::assertEquals($addresses[0], $mailable->$recipient_type[0]['address']);
-		self::assertEquals($names[0], $mailable->$recipient_type[0]['name']);
+		self::assertEquals($recipients[0]->mail, $mailable->$recipient_type[0]['address']);
+		self::assertEquals($recipients[0]->personal, $mailable->$recipient_type[0]['name']);
 	}
 
 	/** @test */
@@ -88,24 +88,29 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 		self::assertEquals('<html>Hello</html>', $mailable->content_html);
 	}
 
-	private function mockMessage(): MockInterface
+	private function mockMessage(array $test_recipients = []): MockInterface
 	{
-		return $this->mock(Message::class, function (MockInterface $mock) {
+	    $recipients = array_merge([
+            'to' => [(object) [
+                'mail'  => 'to@example.com',
+                'personal' => 'Name To'
+            ]],
+            'cc' => [(object) [
+                'mail' => 'cc@example.com',
+                'personal' => 'Name Cc'
+            ]],
+            'from' => [(object) [
+                'mail'  => 'to@example.com',
+                'personal' => 'Name To'
+            ]],
+        ], $test_recipients);
+		return $this->mock(Message::class, function (MockInterface $mock) use ($recipients) {
 			$mock->shouldReceive('getTo')
-				->andReturn([(object) [
-					'mail'  => 'to@example.com',
-					'personal' => 'Name To'
-				]]);
+				->andReturn($recipients['to']);
 			$mock->shouldReceive('getCc')
-				->andReturn([(object) [
-					'mail' => 'cc@example.com',
-					'personal' => 'Name Cc'
-				]]);
+				->andReturn($recipients['cc']);
 			$mock->shouldReceive('getFrom')
-				->andReturn([(object) [
-					'mail' => 'from@example.com',
-					'personal' => 'Name From',
-				]]);
+				->andReturn($recipients['from']);
 			$mock->shouldReceive('getSubject')
 				->andReturn('A Test Subject');
 			$mock->shouldReceive('getTextBody')
@@ -122,20 +127,31 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 	        'single to' => [
 	            'recipient_type' => 'to',
 	            'count' => 1,
-                'addresses' => ['to@example.com'],
-                'name'  => ['Name To'],
+                'recipients' => [
+                    (object) ['personal' => 'Name To', 'mail' => 'to@example.com'],
+                ],
+            ],
+            'multiple to' => [
+                'recipient_type' => 'to',
+                'count' => 2,
+                'recipients' => [
+                    (object) ['personal' => 'Name To 1', 'mail' => 'to_1@example.com'],
+                    (object) ['personal' => 'Name To 2', 'mail' => 'to_2@example.com'],
+                ],
             ],
             'single cc' => [
                 'recipient_type' => 'cc',
                 'count' => 1,
-                'addresses' => ['cc@example.com'],
-                'name'  => ['Name Cc'],
+                'recipients' => [
+                    (object) ['personal' => 'Name Cc', 'mail' => 'cc@example.com'],
+                ],
             ],
             'single from' => [
                 'recipient_type' => 'from',
                 'count' => 1,
-                'addresses' => ['from@example.com'],
-                'name'  => ['Name From'],
+                'recipients' => [
+                    (object) ['personal' => 'Name From', 'mail' => 'from@example.com'],
+                ],
             ],
         ];
     }
