@@ -26,7 +26,7 @@ class ProcessGroupMailboxTest extends TestCase
 
 		$this->mock(IncomingMailbox::class, function(MockInterface $mock) use ($message) {
 			$mock->shouldReceive('getMessages')
-				->andReturn([$message]);
+				->andReturn(collect([$message]));
 		});
 
 		// Act
