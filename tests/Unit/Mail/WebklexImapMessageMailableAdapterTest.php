@@ -31,8 +31,11 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 		self::assertInstanceOf(IncomingMessage::class, $mailable);
 	}
 
-	/** @test */
-	public function copies_to(): void
+	/**
+     * @test
+     * @dataProvider recipientProvider
+     */
+	public function copies_recipients($recipient_type, $count, $addresses, $names): void
 	{
 		// Arrange
 		$message = $this->mockMessage();
@@ -41,39 +44,9 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 		$mailable = (new WebklexImapMessageMailableAdapter($message))->toMailable();
 
 		// Assert
-		self::assertCount(1, $mailable->to);
-		self::assertEquals('to@example.com', $mailable->to[0]['address']);
-		self::assertEquals('Name To', $mailable->to[0]['name']);
-	}
-
-	/** @test */
-	public function copies_cc(): void
-	{
-		// Arrange
-		$message = $this->mockMessage();
-
-		// Act
-		$mailable = (new WebklexImapMessageMailableAdapter($message))->toMailable();
-
-		// Assert
-		self::assertCount(1, $mailable->cc);
-		self::assertEquals('cc@example.com', $mailable->cc[0]['address']);
-		self::assertEquals('Name Cc', $mailable->cc[0]['name']);
-	}
-
-	/** @test */
-	public function copies_from(): void
-	{
-		// Arrange
-		$message = $this->mockMessage();
-
-		// Act
-		$mailable = (new WebklexImapMessageMailableAdapter($message))->toMailable();
-
-		// Assert
-		self::assertCount(1, $mailable->from);
-		self::assertEquals('from@example.com', $mailable->from[0]['address']);
-		self::assertEquals('Name From', $mailable->from[0]['name']);
+		self::assertCount($count, $mailable->$recipient_type);
+		self::assertEquals($addresses[0], $mailable->$recipient_type[0]['address']);
+		self::assertEquals($names[0], $mailable->$recipient_type[0]['name']);
 	}
 
 	/** @test */
@@ -143,4 +116,27 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 				->andReturn([]);
 		});
 	}
+
+	public function recipientProvider(){
+	    return [
+	        'single to' => [
+	            'recipient_type' => 'to',
+	            'count' => 1,
+                'addresses' => ['to@example.com'],
+                'name'  => ['Name To'],
+            ],
+            'single cc' => [
+                'recipient_type' => 'cc',
+                'count' => 1,
+                'addresses' => ['cc@example.com'],
+                'name'  => ['Name Cc'],
+            ],
+            'single from' => [
+                'recipient_type' => 'from',
+                'count' => 1,
+                'addresses' => ['from@example.com'],
+                'name'  => ['Name From'],
+            ],
+        ];
+    }
 }
