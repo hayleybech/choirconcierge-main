@@ -25,13 +25,15 @@ class WebklexImapMessageMailableAdapter implements MailableInterface
                 ->map(fn($to) => ['email' => $to->mail, 'name' => $to->personal ?? ''])
         );
 
-        if( $this->message->getCc() ){
-            $cc = $this->message->getCc()[0];
-            $mailable->cc( $cc->mail, $cc->personal ?? '');
-        }
+        $mailable->cc(
+            collect($this->message->getCc())
+                ->map(fn($cc) => ['email' => $cc->mail, 'name' => $cc->personal ?? ''])
+        );
 
-        $from = $this->message->getFrom()[0];
-        $mailable->from( $from->mail, $from->personal ?? '' );
+        $mailable->from(
+            collect($this->message->getFrom())
+                ->map(fn($from) => ['email' => $from->mail, 'name' => $from->personal ?? ''])
+        );
 
         $mailable->subject( $this->message->getSubject() );
 

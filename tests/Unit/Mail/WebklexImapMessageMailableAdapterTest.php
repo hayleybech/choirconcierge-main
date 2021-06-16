@@ -146,11 +146,27 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
                     (object) ['personal' => 'Name Cc', 'mail' => 'cc@example.com'],
                 ],
             ],
+            'multiple cc' => [
+                'recipient_type' => 'cc',
+                'count' => 2,
+                'recipients' => [
+                    (object) ['personal' => 'Name Cc 1', 'mail' => 'cc_1@example.com'],
+                    (object) ['personal' => 'Name Cc 2', 'mail' => 'cc_2@example.com'],
+                ],
+            ],
             'single from' => [
                 'recipient_type' => 'from',
                 'count' => 1,
                 'recipients' => [
                     (object) ['personal' => 'Name From', 'mail' => 'from@example.com'],
+                ],
+            ],
+            'multiple from' => [
+                'recipient_type' => 'from',
+                'count' => 2,
+                'recipients' => [
+                    (object) ['personal' => 'Name From 1', 'mail' => 'from_1@example.com'],
+                    (object) ['personal' => 'Name From 2', 'mail' => 'from_2@example.com'],
                 ],
             ],
         ];
