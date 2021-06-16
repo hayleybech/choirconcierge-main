@@ -114,49 +114,46 @@ class IncomingMessageTest extends TestCase
 
     public function recipientsToAcceptProvider(): array
     {
+        $default_groups = [
+            ['name' => 'Music Team', 'tenant' => 'tenant1'],
+        ];
+        $default_input = [
+            'to'     => 'anybody@example.com',
+            'cc'     => 'somebody@example.com',
+            'bcc'    => 'nobody@example.com',
+            'from'   => 'permitted@example.com',
+        ];
+
     	return [
 			'Single TO' => [
-                'groups' => [
-                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
-                ],
-		   	    'input' => [
+                'groups' => $default_groups,
+		   	    'input' => array_merge($default_input, [
                     'to'     => 'music-team@tenant1.choirconcierge.test', // @todo test different subdomains
-                    'cc'     => 'somebody@example.com',
-                    'bcc'    => 'nobody@example.com',
-                    'from'   => 'permitted@example.com',
-		        ],
-				true
+		        ]),
+				1,
 			],
 			'Match single To in multiple TOs' => [
-                'groups' => [
-                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
-                ],
-		        'input' => [
-			        'to'     => [
-			        	'skip@example.com',
-			        	'music-team@tenant1.choirconcierge.test',
-			        ],
-			        'cc'     => 'somebody@example.com',
-			        'bcc'    => 'nobody@example.com',
-			        'from'   => 'permitted@example.com',
-		        ],
-				1
+                'groups' => $default_groups,
+                'input' => array_merge($default_input, [
+                    'to'     => [
+                        'skip@example.com',
+                        'music-team@tenant1.choirconcierge.test',
+                    ],
+                ]),
+                1
 			],
             'Match multiple Tos' => [
                 'groups' => [
                     ['name' => 'Music Team', 'tenant' => 'tenant1'],
                     ['name' => 'Membership Team', 'tenant' => 'tenant1'],
                 ],
-                'input' => [
+                'input' => array_merge($default_input, [
                     'to'     => [
                         'skip@example.com',
                         'music-team@tenant1.choirconcierge.test',
                         'membership-team@tenant1.choirconcierge.test',
                     ],
-                    'cc'     => 'somebody@example.com',
-                    'bcc'    => 'nobody@example.com',
-                    'from'   => 'permitted@example.com',
-                ],
+                ]),
                 2
             ],
             'Match Tos from multiple tenants' => [
@@ -164,70 +161,47 @@ class IncomingMessageTest extends TestCase
                     ['name' => 'Music Team', 'tenant' => 'tenant1'],
                     ['name' => 'Music Team', 'tenant' => 'tenant2'],
                 ],
-                'input' => [
+                'input' => array_merge($default_input, [
                     'to'     => [
                         'skip@example.com',
                         'music-team@tenant1.choirconcierge.test',
                         'music-team@tenant2.choirconcierge.test',
                     ],
-                    'cc'     => 'somebody@example.com',
-                    'bcc'    => 'nobody@example.com',
-                    'from'   => 'permitted@example.com',
-                ],
+                ]),
                 2
             ],
 		    'Single CC' => [
-                'groups' => [
-                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
-                ],
-			    'input' => [
-				    'to'     => 'somebody@example.com',
+                'groups' => $default_groups,
+			    'input' => array_merge($default_input, [
 				    'cc'     => 'music-team@tenant1.choirconcierge.test',
-				    'bcc'    => 'nobody@example.com',
-				    'from'   => 'permitted@example.com',
-			    ],
+			    ]),
 			    true
 		    ],
 		    'Multiple CCs' => [
-                'groups' => [
-                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
-                ],
-			    'input' => [
-				    'to'     => 'somebody@example.com',
-				    'cc'     => [
-					    'skip@example.com',
-					    'music-team@tenant1.choirconcierge.test',
-				    ],
-				    'bcc'    => 'nobody@example.com',
-				    'from'   => 'permitted@example.com',
-			    ],
+                'groups' => $default_groups,
+                'input' => array_merge($default_input, [
+                    'cc'     => [
+                        'skip@example.com',
+                        'music-team@tenant1.choirconcierge.test',
+                    ],
+                ]),
 			    true
 		    ],
 		    'Single BCC' => [
-                'groups' => [
-                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
-                ],
-			    'input' => [
-				    'to'     => 'somebody@example.com',
-				    'cc'    => 'nobody@example.com',
-				    'bcc'     => 'music-team@tenant1.choirconcierge.test',
-				    'from'   => 'permitted@example.com',
-			    ],
+                'groups' => $default_groups,
+                'input' => array_merge($default_input, [
+                    'bcc'     => 'music-team@tenant1.choirconcierge.test',
+                ]),
 			    true
 		    ],
 		    'Multiple BCCs' => [
-                'groups' => [
-                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
-                ],
-			    'input' => [
-				    'to'     => 'somebody@example.com',
-				    'cc'    => 'nobody@example.com',
+                'groups' => $default_groups,
+                'input' => array_merge($default_input, [
 				    'bcc'     => [
-					    'skip@example.com',
-					    'music-team@tenant1.choirconcierge.test',
-				    ],
-				    'from'   => 'permitted@example.com',
-			    ],
+                        'skip@example.com',
+                        'music-team@tenant1.choirconcierge.test',
+                    ],
+                ]),
 			    true
 		    ],
 	    ];
