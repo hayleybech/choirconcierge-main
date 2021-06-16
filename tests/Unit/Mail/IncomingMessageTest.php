@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -76,26 +77,27 @@ class IncomingMessageTest extends TestCase
 	 * @dataProvider recipientsToAcceptProvider
 	 * @dataProvider recipientsToRejectProvider
 	 */
-    public function getMatchingGroup($input, $should_match): void
+    public function getMatchingGroup($groups, $input, $should_match): void
     {
     	// Arrange
-	    $tenant = Tenant::create(
+	    Tenant::create(
 	    	'tenant1',
 		    'Tenant One',
 		    'Australia/Perth',
 	    );
-    	$groups_expected[] = UserGroup::create([
-    		'title'     => 'Music Team',
-		    'slug'      => 'music-team',
-		    'list_type' => 'chat',
-		    'tenant_id' => $tenant->id,
-	    ]);
-        $groups_expected[] = UserGroup::create([
-            'title'     => 'Membership Team',
-            'slug'      => 'membership-team',
+        Tenant::create(
+            'tenant2',
+            'Tenant Two',
+            'Australia/Perth',
+        );
+
+	    $groups_expected = array_map(static fn($group) => UserGroup::create([
+	        'title'     => $group['name'],
+            'slug'      => Str::slug($group['name']),
             'list_type' => 'chat',
-            'tenant_id' => $tenant->id,
-        ]);
+            'tenant_id' => $group['tenant'],
+        ]), $groups);
+
     	$message = (new IncomingMessage())
 	        ->to($input['to'])
 	        ->cc($input['cc'])
@@ -114,15 +116,21 @@ class IncomingMessageTest extends TestCase
     {
     	return [
 			'Single TO' => [
+                'groups' => [
+                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
+                ],
 		   	    'input' => [
-				   'to'     => 'music-team@tenant1.choirconcierge.test', // @todo test different subdomains
-				   'cc'     => 'somebody@example.com',
-				   'bcc'    => 'nobody@example.com',
-				   'from'   => 'permitted@example.com',
+                    'to'     => 'music-team@tenant1.choirconcierge.test', // @todo test different subdomains
+                    'cc'     => 'somebody@example.com',
+                    'bcc'    => 'nobody@example.com',
+                    'from'   => 'permitted@example.com',
 		        ],
 				true
 			],
 			'Match single To in multiple TOs' => [
+                'groups' => [
+                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
+                ],
 		        'input' => [
 			        'to'     => [
 			        	'skip@example.com',
@@ -135,6 +143,10 @@ class IncomingMessageTest extends TestCase
 				1
 			],
             'Match multiple Tos' => [
+                'groups' => [
+                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
+                    ['name' => 'Membership Team', 'tenant' => 'tenant1'],
+                ],
                 'input' => [
                     'to'     => [
                         'skip@example.com',
@@ -148,6 +160,9 @@ class IncomingMessageTest extends TestCase
                 2
             ],
 		    'Single CC' => [
+                'groups' => [
+                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
+                ],
 			    'input' => [
 				    'to'     => 'somebody@example.com',
 				    'cc'     => 'music-team@tenant1.choirconcierge.test',
@@ -157,6 +172,9 @@ class IncomingMessageTest extends TestCase
 			    true
 		    ],
 		    'Multiple CCs' => [
+                'groups' => [
+                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
+                ],
 			    'input' => [
 				    'to'     => 'somebody@example.com',
 				    'cc'     => [
@@ -169,6 +187,9 @@ class IncomingMessageTest extends TestCase
 			    true
 		    ],
 		    'Single BCC' => [
+                'groups' => [
+                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
+                ],
 			    'input' => [
 				    'to'     => 'somebody@example.com',
 				    'cc'    => 'nobody@example.com',
@@ -178,6 +199,9 @@ class IncomingMessageTest extends TestCase
 			    true
 		    ],
 		    'Multiple BCCs' => [
+                'groups' => [
+                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
+                ],
 			    'input' => [
 				    'to'     => 'somebody@example.com',
 				    'cc'    => 'nobody@example.com',
@@ -196,6 +220,9 @@ class IncomingMessageTest extends TestCase
 	{
 		return [
 			'Reject FROM matches CC' => [
+                'groups' => [
+                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
+                ],
 				'input' => [
 					'to'     => 'somebody@example.com',
 					'cc'     => 'music-team@tenant1.choirconcierge.test',
