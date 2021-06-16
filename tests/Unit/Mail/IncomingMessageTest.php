@@ -84,12 +84,18 @@ class IncomingMessageTest extends TestCase
 		    'Tenant One',
 		    'Australia/Perth',
 	    );
-    	$group_expected = UserGroup::create([
+    	$groups_expected[] = UserGroup::create([
     		'title'     => 'Music Team',
 		    'slug'      => 'music-team',
 		    'list_type' => 'chat',
 		    'tenant_id' => $tenant->id,
 	    ]);
+        $groups_expected[] = UserGroup::create([
+            'title'     => 'Membership Team',
+            'slug'      => 'membership-team',
+            'list_type' => 'chat',
+            'tenant_id' => $tenant->id,
+        ]);
     	$message = (new IncomingMessage())
 	        ->to($input['to'])
 	        ->cc($input['cc'])
@@ -98,10 +104,10 @@ class IncomingMessageTest extends TestCase
 	        ->subject('Just a test');
 
     	// Act
-        $group_found = $message->getMatchingGroup();
+        $groups_found = $message->getMatchingGroups()->flatten(1);
 
 	    // Assert
-	    self::assertEquals($should_match, $group_expected->is($group_found), $should_match ? 'Not the same group.' : 'No group should be returned.');
+        self::assertCount($should_match, $groups_found);
     }
 
     public function recipientsToAcceptProvider(): array
@@ -116,7 +122,7 @@ class IncomingMessageTest extends TestCase
 		        ],
 				true
 			],
-			'Multiple TOs' => [
+			'Match single To in multiple TOs' => [
 		        'input' => [
 			        'to'     => [
 			        	'skip@example.com',
@@ -126,8 +132,21 @@ class IncomingMessageTest extends TestCase
 			        'bcc'    => 'nobody@example.com',
 			        'from'   => 'permitted@example.com',
 		        ],
-				true
+				1
 			],
+            'Match multiple Tos' => [
+                'input' => [
+                    'to'     => [
+                        'skip@example.com',
+                        'music-team@tenant1.choirconcierge.test',
+                        'membership-team@tenant1.choirconcierge.test',
+                    ],
+                    'cc'     => 'somebody@example.com',
+                    'bcc'    => 'nobody@example.com',
+                    'from'   => 'permitted@example.com',
+                ],
+                2
+            ],
 		    'Single CC' => [
 			    'input' => [
 				    'to'     => 'somebody@example.com',

@@ -46,7 +46,7 @@ class IncomingMessage extends Mailable
             return;
         }
 
-        $group = $this->getMatchingGroup();
+        $group = $this->getMatchingGroups()->flatten(1)[0];
         if( ! $group )
         {
             return;
@@ -86,7 +86,7 @@ class IncomingMessage extends Mailable
         }
     }
 
-    public function getMatchingGroup(): ?UserGroup
+    public function getMatchingGroups(): Collection
     {
     	$recipients_raw_by_type = collect([
     		'to'    => collect($this->to),
@@ -109,11 +109,6 @@ class IncomingMessage extends Mailable
         // Don't allow cloning the initial email
         $recipients_found_by_type['cc'] = $recipients_found_by_type['cc']->diff($recipients_found_by_type['from']);
 
-        // temporary code. return only the FIRST result found.
-	    // @todo return multiple matches
-    	return $recipients_found_by_type['to']->first() ??
-		    $recipients_found_by_type['cc']->first() ??
-		    $recipients_found_by_type['bcc']->first() ?? null;
-		    //$recipients_found_by_type['from'][0] ?? null;
+        return $recipients_found_by_type->except('from');
     }
 }
