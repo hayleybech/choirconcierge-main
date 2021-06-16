@@ -28,7 +28,6 @@
         "webpack-cli": "^4.5.0"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-pro": "^5.15.3",
         "@googlemaps/js-api-loader": "^1.11.3",
         "@sentry/tracing": "^6.2.5",
         "@sentry/vue": "^6.2.5",
