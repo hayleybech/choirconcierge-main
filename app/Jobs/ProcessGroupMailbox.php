@@ -30,7 +30,6 @@ class ProcessGroupMailbox implements ShouldQueue
     	$this->mailbox = $mailbox;
     }
 
-
 	/**
      * Execute the job.
      *
@@ -38,17 +37,7 @@ class ProcessGroupMailbox implements ShouldQueue
      */
     public function handle(): void
     {
-        // get unread
-        $msgs_unread = $this->mailbox->getMessages();
-
-        if( count($msgs_unread) === 0){
-            return;
-        }
-
-        /** @var IncomingMessage $message */
-        foreach($msgs_unread as $message)
-        {
-            $message->resendToGroup();
-        }
+        $this->mailbox->getMessages()
+            ->each(fn(IncomingMessage $message) => $message->resendToGroup());
     }
 }

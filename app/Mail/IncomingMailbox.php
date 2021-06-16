@@ -1,10 +1,9 @@
 <?php
 
-
 namespace App\Mail;
 
-
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Collection;
 use Webklex\IMAP\Client;
 use Webklex\IMAP\Exceptions\ConnectionFailedException;
 use Webklex\IMAP\Exceptions\GetMessagesFailedException;
@@ -19,9 +18,9 @@ class IncomingMailbox
 
     /**
      * @param bool $read
-     * @return Mailable[]
+     * @return Collection<Mailable>
      */
-    public function getMessages( $read = false ): array
+    public function getMessages(bool $read = false ): Collection
     {
         $messages = new MessageCollection();
 
@@ -36,24 +35,12 @@ class IncomingMailbox
 
             echo count($messages)  . ' message(s) found.' . PHP_EOL;
 
-        } catch( ConnectionFailedException $e ){
-            report($e);
-        } catch (GetMessagesFailedException $e) {
-            report($e);
-        } catch (InvalidWhereQueryCriteriaException $e) {
+        } catch( ConnectionFailedException | GetMessagesFailedException | InvalidWhereQueryCriteriaException $e ){
             report($e);
         } finally {
-            return $this->convertMessages($messages);
+            return $messages->map(fn($message) =>
+                (new WebklexImapMessageMailableAdapter($message))->toMailable()
+            )->toBase();
         }
-    }
-
-    /* Should this also be an adapter? */
-    private function convertMessages(MessageCollection $messageCollection)
-    {
-        $messages = [];
-        foreach($messageCollection as $message){
-            $messages[] = (new WebklexImapMessageMailableAdapter($message))->toMailable();
-        }
-        return $messages;
     }
 }
