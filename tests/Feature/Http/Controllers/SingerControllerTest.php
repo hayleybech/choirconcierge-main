@@ -2,10 +2,12 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Mail\Welcome;
 use App\Models\Singer;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -109,6 +111,7 @@ class SingerControllerTest extends TestCase
     public function store_redirects_to_show($getData): void
     {
 	    $task = Task::factory()->create();
+	    $mail = Mail::fake();
 
 	    $this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -130,6 +133,7 @@ class SingerControllerTest extends TestCase
         ]);
 
         $response->assertRedirect(the_tenant_route('singers.show', [$singer]));
+        $mail->assertSent(Welcome::class);
     }
 
 	/**
@@ -139,6 +143,7 @@ class SingerControllerTest extends TestCase
 	public function store_inserts_tasks_for_prospects($getData): void
 	{
 		$task = Task::factory()->create();
+		$mail = Mail::fake();
 
 		$this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -153,6 +158,7 @@ class SingerControllerTest extends TestCase
 		]);
 
 		$response->assertRedirect(the_tenant_route('singers.show', [$singer]));
+		$mail->assertSent(Welcome::class);
 	}
 
     /**
