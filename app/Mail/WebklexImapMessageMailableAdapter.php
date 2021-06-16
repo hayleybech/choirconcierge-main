@@ -40,13 +40,12 @@ class WebklexImapMessageMailableAdapter implements MailableInterface
         $mailable->content_text = $this->message->getTextBody();
         $mailable->content_html = $this->message->getHTMLBody();
 
-        $attachments = $this->message->getAttachments();
-        /** @var Attachment $attachment */
-        foreach($attachments as $attachment){
-            $mailable->attachData( $attachment->getContent(), $attachment->getName(), [
-                'mime'      => $attachment->getMimeType(),
-            ]);
-        }
+        collect($this->message->getAttachments())
+            ->each(fn(Attachment $attachment) =>
+                $mailable->attachData( $attachment->getContent(), $attachment->getName(), [
+                    'mime'      => $attachment->getMimeType(),
+                ])
+            );
 
         return $mailable;
     }
