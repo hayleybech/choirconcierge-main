@@ -8,6 +8,7 @@ use App\ManuallyInitializeTenancyByDomainOrSubdomain;
 use App\Models\UserGroup;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Collection;
 use Mail;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
 
@@ -87,42 +88,32 @@ class IncomingMessage extends Mailable
 
     public function getMatchingGroup(): ?UserGroup
     {
-    	// @todo make DTOs
-    	$recipients_raw_by_type = [
-    		'to'    => $this->to,
-		    'cc'    => $this->cc,
-		    'bcc'   => $this->bcc,
-		    'from'  => $this->from,
-	    ];
-    	$recipients_found_by_type = [
-    		'to'    => [],
-		    'cc'    => [],
-		    'bcc'   => [],
-		    'from'  => [],
-	    ];
+    	$recipients_raw_by_type = collect([
+    		'to'    => collect($this->to),
+		    'cc'    => collect($this->cc),
+		    'bcc'   => collect($this->bcc),
+		    'from'  => collect($this->from),
+	    ]);
 
-    	// @todo test for multiple tenants
-    	foreach($recipients_raw_by_type as $recipient_type => $recipients_raw){
-    		foreach($recipients_raw as $recipient_raw){
-			    $slug =  explode( '@', $recipient_raw['address'])[0];
-			    $group = UserGroup::firstWhere('slug', 'LIKE', $slug);
+        // @todo test for multiple tenants
+    	$recipients_found_by_type = $recipients_raw_by_type
+            ->map(fn(Collection $recipients) =>
+                $recipients->map(function($recipient) {
+                    $slug =  explode( '@', $recipient['address'])[0];
+                    return UserGroup::firstWhere('slug', 'LIKE', $slug);
+                })
+                ->filter(fn($recipient) => $recipient)
+            );
 
-			    if(!$group) {
-			    	continue;
-			    }
-			    $recipients_found_by_type[$recipient_type][] = $group;
-		    }
-	    }
+        // Allow reply-all by cloning emails CCd to the group
+        // Don't allow cloning the initial email
+        $recipients_found_by_type['cc'] = $recipients_found_by_type['cc']->diff($recipients_found_by_type['from']);
 
-	    // Allow reply-all by cloning emails CCd to the group
-	    // Don't allow cloning the initial email
-    	$recipients_found_by_type['cc'] = array_diff($recipients_found_by_type['cc'], $recipients_found_by_type['from']);
-
-    	// temporary code. return only the FIRST result found.
+        // temporary code. return only the FIRST result found.
 	    // @todo return multiple matches
-    	return $recipients_found_by_type['to'][0] ??
-		    $recipients_found_by_type['cc'][0] ??
-		    $recipients_found_by_type['bcc'][0] ?? null;
+    	return $recipients_found_by_type['to']->first() ??
+		    $recipients_found_by_type['cc']->first() ??
+		    $recipients_found_by_type['bcc']->first() ?? null;
 		    //$recipients_found_by_type['from'][0] ?? null;
     }
 }

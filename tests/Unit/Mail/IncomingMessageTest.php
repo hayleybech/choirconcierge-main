@@ -98,7 +98,7 @@ class IncomingMessageTest extends TestCase
 	        ->subject('Just a test');
 
     	// Act
-	    $group_found = $message->getMatchingGroup();
+        $group_found = $message->getMatchingGroup();
 
 	    // Assert
 	    self::assertEquals($should_match, $group_expected->is($group_found), $should_match ? 'Not the same group.' : 'No group should be returned.');
