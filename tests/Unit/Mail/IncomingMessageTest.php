@@ -91,12 +91,12 @@ class IncomingMessageTest extends TestCase
             'Australia/Perth',
         );
 
-	    $groups_expected = array_map(static fn($group) => UserGroup::create([
+	    $groups_expected = collect($groups)->map(fn($group) => Tenant::find($group['tenant'])
+            ->run(fn() => UserGroup::create([
 	        'title'     => $group['name'],
             'slug'      => Str::slug($group['name']),
             'list_type' => 'chat',
-            'tenant_id' => $group['tenant'],
-        ]), $groups);
+        ])));
 
     	$message = (new IncomingMessage())
 	        ->to($input['to'])
@@ -152,6 +152,23 @@ class IncomingMessageTest extends TestCase
                         'skip@example.com',
                         'music-team@tenant1.choirconcierge.test',
                         'membership-team@tenant1.choirconcierge.test',
+                    ],
+                    'cc'     => 'somebody@example.com',
+                    'bcc'    => 'nobody@example.com',
+                    'from'   => 'permitted@example.com',
+                ],
+                2
+            ],
+            'Match Tos from multiple tenants' => [
+                'groups' => [
+                    ['name' => 'Music Team', 'tenant' => 'tenant1'],
+                    ['name' => 'Music Team', 'tenant' => 'tenant2'],
+                ],
+                'input' => [
+                    'to'     => [
+                        'skip@example.com',
+                        'music-team@tenant1.choirconcierge.test',
+                        'music-team@tenant2.choirconcierge.test',
                     ],
                     'cc'     => 'somebody@example.com',
                     'bcc'    => 'nobody@example.com',

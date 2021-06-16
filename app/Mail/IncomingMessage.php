@@ -99,8 +99,11 @@ class IncomingMessage extends Mailable
     	$recipients_found_by_type = $recipients_raw_by_type
             ->map(fn(Collection $recipients) =>
                 $recipients->map(function($recipient) {
-                    $slug =  explode( '@', $recipient['address'])[0];
-                    return UserGroup::firstWhere('slug', 'LIKE', $slug);
+                    [$slug, $host] = explode( '@', $recipient['address']);
+                    return UserGroup::withoutTenancy()->firstWhere([
+                        ['tenant_id', '=', explode('.', $host)[0]],
+                        ['slug', 'LIKE', $slug],
+                    ]);
                 })
                 ->filter(fn($recipient) => $recipient)
             );
