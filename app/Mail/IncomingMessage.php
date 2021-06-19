@@ -123,7 +123,7 @@ class IncomingMessage extends Mailable
         $this->to = [];
         Mail::to( $user )
             ->cc( $group->email ) // Required for recipients to reply-all
-            ->send( $this );
+            ->send( clone $this );
 
     }
 }

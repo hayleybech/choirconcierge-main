@@ -76,7 +76,7 @@ class IncomingMessageTest extends TestCase
     /**
      * @test
      */
-    public function resendToGroups_with_one_group(): void
+    public function resendToGroups_with_one_group_resends_to_sender(): void
     {
         // Arrange
         Mail::fake();
@@ -102,8 +102,6 @@ class IncomingMessageTest extends TestCase
 
         $message = (new IncomingMessage())
             ->to('music-team@tenant1.choirconcierge.test')
-//            ->cc('')
-//            ->bcc('')
             ->from('permitted@example.com')
             ->subject('Just a test');
 
@@ -116,7 +114,60 @@ class IncomingMessageTest extends TestCase
         Mail::assertSent(IncomingMessage::class, static function($mail) {
             $mail->build();
             return $mail->hasFrom('music-team@tenant1.choirconcierge.test')
-                && $mail->hasReplyTo('permitted@example.com');
+                && $mail->hasReplyTo('permitted@example.com')
+                && $mail->hasTo('permitted@example.com');
+        });
+    }
+
+    /**
+     * @test
+     */
+    public function resendToGroups_with_one_group_resends_to_group_members(): void
+    {
+        // Arrange
+        Mail::fake();
+
+        $tenant = Tenant::create(
+            'tenant1',
+            'Tenant One',
+            'Australia/Perth',
+        );
+        $tenant->domains()->create(['domain' => 'tenant1']);
+
+        $group_expected = UserGroup::create([
+            'title'     => 'Music Team',
+            'slug'      => 'music-team',
+            'list_type' => 'chat',
+            'tenant_id' => $tenant->id,
+        ]);
+        $users = collect([
+            User::factory()->create([
+                'email'     => 'permitted@example.com',
+                'tenant_id' => $tenant->id,
+            ]),
+            User::factory()->create([
+                'email'     => 'recipient_1@example.com',
+                'tenant_id' => $tenant->id,
+            ]),
+            User::factory()->create([
+                'email'     => 'recipient_2@example.com',
+                'tenant_id' => $tenant->id,
+            ]),
+        ]);
+        $group_expected->recipient_users()->attach($users->pluck('id'));
+
+        $message = (new IncomingMessage())
+            ->to('music-team@tenant1.choirconcierge.test')
+            ->from('permitted@example.com')
+            ->subject('Just a test');
+
+        // Act
+        $message->resendToGroups();
+
+        // Assert
+        Mail::assertSent(IncomingMessage::class, 3);
+        Mail::assertSent(IncomingMessage::class, static function($mail) use ($users) {
+            return $mail->hasTo($users);
         });
     }
 
