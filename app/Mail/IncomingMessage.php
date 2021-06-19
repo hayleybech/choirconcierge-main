@@ -47,12 +47,6 @@ class IncomingMessage extends Mailable
             return;
         }
 
-        $group = $this->getMatchingGroups()->flatten(1)[0];
-        if( ! $group )
-        {
-            return;
-        }
-
         $this->original_sender = $this->from[0];
 
         // Clear replyTo, then put the original sender as the reply-to
@@ -61,10 +55,14 @@ class IncomingMessage extends Mailable
             'name' => $this->original_sender['name'] ?? null
         ]];
 
-        if( ! $group->authoriseSender(User::firstWhere('email', '=', $this->original_sender['address'])) )
+        $group = $this->getMatchingGroups()->flatten(1)[0];
+        if( ! $group )
         {
-            Mail::to($this->original_sender['address'])->send(new NotPermittedSenderMessage($group));
+            return;
+        }
 
+        if( ! $this->authoriseSenderForGroup($group) )
+        {
             return;
         }
 
@@ -99,6 +97,17 @@ class IncomingMessage extends Mailable
         $recipients_found_by_type['cc'] = $recipients_found_by_type['cc']->diff($recipients_found_by_type['from']);
 
         return $recipients_found_by_type->except('from');
+    }
+
+    private function authoriseSenderForGroup(UserGroup $group): bool
+    {
+        if( $group->authoriseSender(User::firstWhere('email', '=', $this->original_sender['address'])) )
+        {
+            return true;
+        }
+
+        Mail::to($this->original_sender['address'])->send(new NotPermittedSenderMessage($group));
+        return false;
     }
 
     private function resendToUser(User $user, UserGroup $group): void
