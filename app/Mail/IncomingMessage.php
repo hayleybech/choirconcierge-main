@@ -72,31 +72,31 @@ class IncomingMessage extends Mailable
 
     public function getMatchingGroups(): Collection
     {
-    	$recipients_raw_by_type = collect([
-    		'to'    => collect($this->to),
-		    'cc'    => collect($this->cc),
-		    'bcc'   => collect($this->bcc),
-		    'from'  => collect($this->from),
-	    ]);
-
-        // @todo test for multiple tenants
-    	$recipients_found_by_type = $recipients_raw_by_type
-            ->map(fn(Collection $recipients) =>
-                $recipients->map(function($recipient) {
-                    [$slug, $host] = explode( '@', $recipient['address']);
-                    return UserGroup::withoutTenancy()->firstWhere([
-                        ['tenant_id', '=', explode('.', $host)[0]],
-                        ['slug', 'LIKE', $slug],
-                    ]);
-                })
-                ->filter(fn($recipient) => $recipient)
-            );
+    	$recipients_found_by_type = collect([
+            'to'    => collect($this->to),
+            'cc'    => collect($this->cc),
+            'bcc'   => collect($this->bcc),
+            'from'  => collect($this->from),
+            ]
+        )->map(fn(Collection $recipients) => $recipients
+            ->map(fn($recipient) => $this->getGroupByEmail($recipient['address']))
+            ->filter(fn($recipient) => $recipient)
+        );
 
         // Allow reply-all by cloning emails CCd to the group
         // Don't allow cloning the initial email
         $recipients_found_by_type['cc'] = $recipients_found_by_type['cc']->diff($recipients_found_by_type['from']);
 
         return $recipients_found_by_type->except('from');
+    }
+
+    private function getGroupByEmail(string $email): ?UserGroup
+    {
+        [$slug, $host] = explode( '@', $email);
+        return UserGroup::withoutTenancy()->firstWhere([
+            ['tenant_id', '=', explode('.', $host)[0]],
+            ['slug', 'LIKE', $slug],
+        ]);
     }
 
     private function authoriseSenderForGroup(UserGroup $group): bool
