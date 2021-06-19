@@ -21,9 +21,7 @@ class IncomingMessageTest extends TestCase
 
 	protected bool $tenancy = false;
 
-    /**
-     * @test
-     */
+    /** @test */
     public function resendToGroups_with_one_group_resends_to_sender(): void
     {
         // Arrange
@@ -67,9 +65,7 @@ class IncomingMessageTest extends TestCase
         });
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function resendToGroups_with_one_group_resends_to_group_members(): void
     {
         // Arrange
@@ -119,9 +115,7 @@ class IncomingMessageTest extends TestCase
         });
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function resendToGroups_with_multiple_groups_from_same_tenant(): void
     {
         // Arrange
@@ -239,7 +233,7 @@ class IncomingMessageTest extends TestCase
         });
 
         $message = (new IncomingMessage())
-            ->to(['test-group-1@test-tenant@choirconcierge.test', 'test-group-2@test-tenant@choirconcierge.test'])
+            ->to(['test-group-1@test-tenant.choirconcierge.test', 'test-group-2@test-tenant.choirconcierge.test'])
             ->from('sender@example.com')
             ->subject('Just a test');
 
@@ -279,9 +273,9 @@ class IncomingMessageTest extends TestCase
         });
 
         $message = (new IncomingMessage())
-            ->to('test-group-1@test-tenant@choirconcierge.test')
-            ->cc('test-group-2@test-tenant@choirconcierge.test')
-            ->bcc('test-group-3@test-tenant@choirconcierge.test')
+            ->to('test-group-1@test-tenant.choirconcierge.test')
+            ->cc('test-group-2@test-tenant.choirconcierge.test')
+            ->bcc('test-group-3@test-tenant.choirconcierge.test')
             ->from('sender@example.com')
             ->subject('Just a test');
 
@@ -321,9 +315,9 @@ class IncomingMessageTest extends TestCase
         });
 
         $message = (new IncomingMessage())
-            ->to(['dummy@example.com', 'test-group-1@test-tenant@choirconcierge.test'])
-            ->cc(['dummy@example.com', 'test-group-2@test-tenant@choirconcierge.test'])
-            ->bcc(['dummy@example.com', 'test-group-3@test-tenant@choirconcierge.test'])
+            ->to(['dummy@example.com', 'test-group-1@test-tenant.choirconcierge.test'])
+            ->cc(['dummy@example.com', 'test-group-2@test-tenant.choirconcierge.test'])
+            ->bcc(['dummy@example.com', 'test-group-3@test-tenant.choirconcierge.test'])
             ->from('sender@example.com')
             ->subject('Just a test');
 
@@ -365,7 +359,7 @@ class IncomingMessageTest extends TestCase
         });
 
         $message = (new IncomingMessage())
-            ->to(['test-group-1@test-tenant-1@choirconcierge.test', 'test-group-2@test-tenant-2@choirconcierge.test'])
+            ->to(['test-group-1@test-tenant-1.choirconcierge.test', 'test-group-2@test-tenant-2.choirconcierge.test'])
             ->from('sender@example.com')
             ->subject('Just a test');
 
