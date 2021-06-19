@@ -309,6 +309,42 @@ class IncomingMessageTest extends TestCase
     }
 
     /** @test */
+    public function getMatchingGroups_checks_the_tenant_slug_before_matching(): void
+    {
+        // Arrange
+        $tenant = Tenant::create(
+            'test-tenant',
+            'Test Tenant',
+            'Australia/Perth',
+        );
+
+        $tenant->run(function () {
+            UserGroup::create([
+                'title'     => 'Test Group 1',
+                'slug'      => 'test-group-1',
+                'list_type' => 'chat',
+            ]);
+            UserGroup::create([
+                'title'     => 'Test Group 2',
+                'slug'      => 'test-group-2',
+                'list_type' => 'chat',
+            ]);
+        });
+        $tenant->domains()->create(['domain' => 'test-tenant']);
+
+        $message = (new IncomingMessage())
+            ->to(['test-group-1@test-tenant@choirconcierge.test', 'test-group-2@dummy-tenant.choirconcierge.test'])
+            ->from('sender@example.com')
+            ->subject('Just a test');
+
+        // Act
+        $groups_found = $message->getMatchingGroups()->flatten(1);
+
+        // Assert
+        self::assertCount(1, $groups_found);
+    }
+
+    /** @test */
     public function getMatchingGroups_rejects_groups_that_are_in_both_the_cc_and_from(): void
     {
         // Arrange
