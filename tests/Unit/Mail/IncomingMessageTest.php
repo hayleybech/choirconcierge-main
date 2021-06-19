@@ -3,6 +3,7 @@
 namespace Tests\Unit\Mail;
 
 use App\Mail\IncomingMessage;
+use App\Mail\NotPermittedSenderMessage;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UserGroup;
@@ -71,6 +72,53 @@ class IncomingMessageTest extends TestCase
 				&& $mail->hasReplyTo($input['from']);
 		});
 	}
+
+    /**
+     * @test
+     */
+    public function resendToGroup_with_one_group(): void
+    {
+        // Arrange
+        Mail::fake();
+
+        $tenant = Tenant::create(
+            'tenant1',
+            'Tenant One',
+            'Australia/Perth',
+        );
+        $tenant->domains()->create(['domain' => 'tenant1']);
+
+        $group_expected = UserGroup::create([
+            'title'     => 'Music Team',
+            'slug'      => 'music-team',
+            'list_type' => 'chat',
+            'tenant_id' => $tenant->id,
+        ]);
+        $user1 = User::factory()->create([
+            'email'     => 'permitted@example.com',
+            'tenant_id' => $tenant->id,
+        ]);
+        $group_expected->recipient_users()->attach([$user1->id]);
+
+        $message = (new IncomingMessage())
+            ->to('music-team@tenant1.choirconcierge.test')
+//            ->cc('')
+//            ->bcc('')
+            ->from('permitted@example.com')
+            ->subject('Just a test');
+
+        // Act
+        $message->resendToGroup();
+
+        // Assert
+        Mail::assertNotSent(NotPermittedSenderMessage::class);
+        Mail::assertSent(IncomingMessage::class, 1);
+        Mail::assertSent(IncomingMessage::class, static function($mail) {
+            $mail->build();
+            return $mail->hasFrom('music-team@tenant1.choirconcierge.test')
+                && $mail->hasReplyTo('permitted@example.com');
+        });
+    }
 
 	/**
 	 * @test
