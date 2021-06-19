@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
@@ -17,7 +16,6 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Class UserGroup
  *
  * Columns
- *
  * @property int $id
  * @property string $title
  * @property string $slug
@@ -39,6 +37,9 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<User> $sender_users
  * @property Collection<VoicePart> $sender_voice_parts
  * @property Collection<SingerCategory> $sender_singer_categories
+ *
+ * Attributes
+ * @property string $email
  *
  * @package App\Models
  */
@@ -130,7 +131,10 @@ class UserGroup extends Model
         return $this->morphedByMany( SingerCategory::class, 'memberable', 'group_members', 'group_id');
     }
 
-    public function get_all_recipients()
+    /**
+     * @return Collection<User>
+     */
+    public function get_all_recipients(): Collection
     {
         /* @todo use queries instead */
 
@@ -185,6 +189,11 @@ class UserGroup extends Model
     public function sender_singer_categories(): MorphToMany
     {
         return $this->morphedByMany( SingerCategory::class, 'sender', 'group_senders', 'group_id');
+    }
+
+    public function getEmailAttribute(): string
+    {
+        return $this->slug.'@'.$this->tenant->host;
     }
 
     public function get_all_senders()
