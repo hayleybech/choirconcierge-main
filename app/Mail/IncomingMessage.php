@@ -37,7 +37,7 @@ class IncomingMessage extends Mailable
      *  To: Ms User <user@example.com>
      *  Cc: Active Members <active@example.choirconcierge.com>
      */
-    public function resendToGroup(): void
+    public function resendToGroups(): void
     {
         try {
             app(ManuallyInitializeTenancyByDomainOrSubdomain::class)->handle( explode('@', $this->to[0]['address'])[1] );

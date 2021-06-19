@@ -62,7 +62,7 @@ class IncomingMessageTest extends TestCase
 			->subject('Just a test');
 
 		// Act
-		$message->resendToGroup();
+		$message->resendToGroups();
 
 		// Assert
 		Mail::assertSent(IncomingMessage::class, 2);
@@ -76,7 +76,7 @@ class IncomingMessageTest extends TestCase
     /**
      * @test
      */
-    public function resendToGroup_with_one_group(): void
+    public function resendToGroups_with_one_group(): void
     {
         // Arrange
         Mail::fake();
@@ -108,7 +108,7 @@ class IncomingMessageTest extends TestCase
             ->subject('Just a test');
 
         // Act
-        $message->resendToGroup();
+        $message->resendToGroups();
 
         // Assert
         Mail::assertNotSent(NotPermittedSenderMessage::class);

@@ -38,6 +38,6 @@ class ProcessGroupMailbox implements ShouldQueue
     public function handle(): void
     {
         $this->mailbox->getMessages()
-            ->each(fn(IncomingMessage $message) => $message->resendToGroup());
+            ->each(fn(IncomingMessage $message) => $message->resendToGroups());
     }
 }
