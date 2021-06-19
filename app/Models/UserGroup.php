@@ -196,7 +196,10 @@ class UserGroup extends Model
         return $this->slug.'@'.$this->tenant->host;
     }
 
-    public function get_all_senders()
+    /**
+     * @return Collection<User>
+     */
+    public function get_all_senders(): Collection
     {
         // @todo use queries instead
 
