@@ -1,16 +1,12 @@
 <?php
 
-
 namespace App\Mail;
 
-
-use App\ManuallyInitializeTenancyByDomainOrSubdomain;
 use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
-use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
 
 class IncomingMessage extends Mailable
 {
@@ -40,13 +36,6 @@ class IncomingMessage extends Mailable
      */
     public function resendToGroups(): void
     {
-        try {
-            app(ManuallyInitializeTenancyByDomainOrSubdomain::class)->handle( explode('@', $this->to[0]['address'])[1] );
-        }
-        catch (TenantCouldNotBeIdentifiedById $e) {
-            return;
-        }
-
         $this->original_sender = $this->from[0];
 
         // Clear replyTo, then put the original sender as the reply-to
@@ -93,7 +82,10 @@ class IncomingMessage extends Mailable
 
     private function authoriseSenderForGroup(UserGroup $group): bool
     {
-        if( $group->authoriseSender(User::firstWhere('email', '=', $this->original_sender['address'])) )
+        if($group->authoriseSender(User::firstWhere([
+            ['tenant_id', '=', $group->tenant_id, ],
+            ['email', '=', $this->original_sender['address']],
+        ])))
         {
             return true;
         }
