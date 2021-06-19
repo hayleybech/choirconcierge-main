@@ -278,30 +278,14 @@ class UserGroup extends Model
         $this->fresh()->$poly_relationship()->createmany($attach);
     }
 
-    public function authoriseSender(String $senderEmail): bool
+    public function authoriseSender(?User $user): bool
     {
-        // todo: implement strategy pattern
-
-        if($this->list_type === 'public') {
-            return true;
-        }
-
-        $user = User::where('email', '=', $senderEmail)->first();
-        if( ! $user ){
-            return false;
-        }
-
-        if($this->list_type === 'chat')
+        return match($this->list_type)
         {
-            // check if sender is in recipients list
-            return $this->get_all_recipients()->contains($user);
-        }
-
-        if($this->list_type === 'distribution')
-        {
-            // check if sender is in senders list
-            return $this->get_all_senders()->contains($user);
-        }
-        return false;
+            'public' => true,
+            'chat' => $user && $this->get_all_recipients()->contains($user),
+            'distribution' => $user && $this->get_all_senders()->contains($user),
+            default => false
+        };
     }
 }

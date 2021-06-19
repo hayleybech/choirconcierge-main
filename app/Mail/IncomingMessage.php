@@ -5,6 +5,7 @@ namespace App\Mail;
 
 
 use App\ManuallyInitializeTenancyByDomainOrSubdomain;
+use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Mail\Mailable;
@@ -53,7 +54,7 @@ class IncomingMessage extends Mailable
         }
 
         $original_sender = $this->from[0];
-        if( ! $group->authoriseSender($original_sender['address']) )
+        if( ! $group->authoriseSender(User::firstWhere('email', '=', $original_sender['address'])) )
         {
             Mail::to($original_sender['address'])->send(new NotPermittedSenderMessage($group));
 
