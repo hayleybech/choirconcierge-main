@@ -119,6 +119,74 @@ class IncomingMessageTest extends TestCase
         });
     }
 
+    /**
+     * @test
+     */
+    public function resendToGroups_with_multiple_groups_from_same_tenant(): void
+    {
+        // Arrange
+        Mail::fake();
+
+        $tenant = Tenant::create(
+            'test-tenant',
+            'Test Tenant',
+            'Australia/Perth',
+        );
+        $tenant->domains()->create(['domain' => 'test-tenant']);
+
+        $sender_user = User::factory()->create([
+            'email'     => 'sender@example.com',
+            'tenant_id' => $tenant->id,
+        ]);
+        $group_expected_1 = UserGroup::create([
+            'title'     => 'Music Team',
+            'slug'      => 'music-team',
+            'list_type' => 'chat',
+            'tenant_id' => $tenant->id,
+        ]);
+        $recipient_user_1 = User::factory()->create([
+            'email'     => 'recipient-1@example.com',
+            'tenant_id' => $tenant->id,
+        ]);
+        $group_expected_1->recipient_users()->attach([$sender_user->id, $recipient_user_1->id]);
+
+        $group_expected_2 = UserGroup::create([
+            'title'     => 'Membership Team',
+            'slug'      => 'membership-team',
+            'list_type' => 'chat',
+            'tenant_id' => $tenant->id,
+        ]);
+        $recipient_user_2 = User::factory()->create([
+            'email'     => 'recipient-2@example.com',
+            'tenant_id' => $tenant->id,
+        ]);
+        $group_expected_2->recipient_users()->attach([$sender_user->id, $recipient_user_2->id]);
+
+        $message = (new IncomingMessage())
+            ->to(['music-team@test-tenant.choirconcierge.test', 'membership-team@test-tenant.choirconcierge.test'])
+            ->from('sender@example.com')
+            ->subject('Just a test');
+
+        // Act
+        $message->resendToGroups();
+
+        // Assert
+        Mail::assertNotSent(NotPermittedSenderMessage::class);
+        Mail::assertSent(IncomingMessage::class, 4);
+        Mail::assertSent(IncomingMessage::class, static function($mail) {
+            $mail->build();
+            return $mail->hasFrom('music-team@test-tenant.choirconcierge.test')
+                && $mail->hasReplyTo('sender@example.com')
+                && $mail->hasTo(['sender@example.com', 'recipient-1@example.com']);
+        });
+        Mail::assertSent(IncomingMessage::class, static function($mail) {
+            $mail->build();
+            return $mail->hasFrom('membership-team@test-tenant.choirconcierge.test')
+                && $mail->hasReplyTo('sender@example.com')
+                && $mail->hasTo(['sender@example.com', 'recipient-2@example.com']);
+        });
+    }
+
 	/** @test */
     public function getMatchingGroups_matches_one_group(): void
     {

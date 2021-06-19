@@ -55,19 +55,11 @@ class IncomingMessage extends Mailable
             'name' => $this->original_sender['name'] ?? null
         ]];
 
-        $group = $this->getMatchingGroups()->flatten(1)[0];
-        if( ! $group )
-        {
-            return;
-        }
-
-        if( ! $this->authoriseSenderForGroup($group) )
-        {
-            return;
-        }
-
-        $group->get_all_recipients()
-            ->each(fn($user) => $this->resendToUser($user, $group));
+        $this->getMatchingGroups()->flatten(1)
+            ->filter(fn(UserGroup $group) => $this->authoriseSenderForGroup($group))
+            ->each(fn(UserGroup $group) => $group->get_all_recipients()
+                ->each(fn($user) => $this->resendToUser($user, $group))
+            );
     }
 
     public function getMatchingGroups(): Collection
