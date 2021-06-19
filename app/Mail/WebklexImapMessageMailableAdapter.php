@@ -20,29 +20,32 @@ class WebklexImapMessageMailableAdapter implements MailableInterface
     {
         $mailable = new IncomingMessage();
 
-        $to = $this->message->getTo()[0];
-        $mailable->to( $to->mail, $to->personal ?? '' );
+        $mailable->to(
+            collect($this->message->getTo())
+                ->map(fn($to) => ['email' => $to->mail, 'name' => $to->personal ?? ''])
+        );
 
-        if( $this->message->getCc() ){
-            $cc = $this->message->getCc()[0];
-            $mailable->cc( $cc->mail, $cc->personal ?? '');
-        }
+        $mailable->cc(
+            collect($this->message->getCc())
+                ->map(fn($cc) => ['email' => $cc->mail, 'name' => $cc->personal ?? ''])
+        );
 
-        $from = $this->message->getFrom()[0];
-        $mailable->from( $from->mail, $from->personal ?? '' );
+        $mailable->from(
+            collect($this->message->getFrom())
+                ->map(fn($from) => ['email' => $from->mail, 'name' => $from->personal ?? ''])
+        );
 
         $mailable->subject( $this->message->getSubject() );
 
         $mailable->content_text = $this->message->getTextBody();
         $mailable->content_html = $this->message->getHTMLBody();
 
-        $attachments = $this->message->getAttachments();
-        /** @var Attachment $attachment */
-        foreach($attachments as $attachment){
-            $mailable->attachData( $attachment->getContent(), $attachment->getName(), [
-                'mime'      => $attachment->getMimeType(),
-            ]);
-        }
+        collect($this->message->getAttachments())
+            ->each(fn(Attachment $attachment) =>
+                $mailable->attachData( $attachment->getContent(), $attachment->getName(), [
+                    'mime'      => $attachment->getMimeType(),
+                ])
+            );
 
         return $mailable;
     }

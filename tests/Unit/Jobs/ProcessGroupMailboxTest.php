@@ -34,6 +34,6 @@ class ProcessGroupMailboxTest extends TestCase
 		$processGroupMailbox->handle();
 
 		// Assert
-		$message->shouldHaveReceived('resendToGroup');
+		$message->shouldHaveReceived('resendToGroups');
 	}
 }

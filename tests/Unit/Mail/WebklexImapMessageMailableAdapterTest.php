@@ -31,49 +31,22 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 		self::assertInstanceOf(IncomingMessage::class, $mailable);
 	}
 
-	/** @test */
-	public function copies_to(): void
+	/**
+     * @test
+     * @dataProvider recipientProvider
+     */
+	public function copies_recipients($recipient_type, $count, $recipients): void
 	{
 		// Arrange
-		$message = $this->mockMessage();
+		$message = $this->mockMessage([$recipient_type => $recipients]);
 
 		// Act
 		$mailable = (new WebklexImapMessageMailableAdapter($message))->toMailable();
 
 		// Assert
-		self::assertCount(1, $mailable->to);
-		self::assertEquals('to@example.com', $mailable->to[0]['address']);
-		self::assertEquals('Name To', $mailable->to[0]['name']);
-	}
-
-	/** @test */
-	public function copies_cc(): void
-	{
-		// Arrange
-		$message = $this->mockMessage();
-
-		// Act
-		$mailable = (new WebklexImapMessageMailableAdapter($message))->toMailable();
-
-		// Assert
-		self::assertCount(1, $mailable->cc);
-		self::assertEquals('cc@example.com', $mailable->cc[0]['address']);
-		self::assertEquals('Name Cc', $mailable->cc[0]['name']);
-	}
-
-	/** @test */
-	public function copies_from(): void
-	{
-		// Arrange
-		$message = $this->mockMessage();
-
-		// Act
-		$mailable = (new WebklexImapMessageMailableAdapter($message))->toMailable();
-
-		// Assert
-		self::assertCount(1, $mailable->from);
-		self::assertEquals('from@example.com', $mailable->from[0]['address']);
-		self::assertEquals('Name From', $mailable->from[0]['name']);
+		self::assertCount($count, $mailable->$recipient_type);
+		self::assertEquals($recipients[0]->mail, $mailable->$recipient_type[0]['address']);
+		self::assertEquals($recipients[0]->personal, $mailable->$recipient_type[0]['name']);
 	}
 
 	/** @test */
@@ -115,24 +88,29 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 		self::assertEquals('<html>Hello</html>', $mailable->content_html);
 	}
 
-	private function mockMessage(): MockInterface
+	private function mockMessage(array $test_recipients = []): MockInterface
 	{
-		return $this->mock(Message::class, function (MockInterface $mock) {
+	    $recipients = array_merge([
+            'to' => [(object) [
+                'mail'  => 'to@example.com',
+                'personal' => 'Name To'
+            ]],
+            'cc' => [(object) [
+                'mail' => 'cc@example.com',
+                'personal' => 'Name Cc'
+            ]],
+            'from' => [(object) [
+                'mail'  => 'to@example.com',
+                'personal' => 'Name To'
+            ]],
+        ], $test_recipients);
+		return $this->mock(Message::class, function (MockInterface $mock) use ($recipients) {
 			$mock->shouldReceive('getTo')
-				->andReturn([(object) [
-					'mail'  => 'to@example.com',
-					'personal' => 'Name To'
-				]]);
+				->andReturn($recipients['to']);
 			$mock->shouldReceive('getCc')
-				->andReturn([(object) [
-					'mail' => 'cc@example.com',
-					'personal' => 'Name Cc'
-				]]);
+				->andReturn($recipients['cc']);
 			$mock->shouldReceive('getFrom')
-				->andReturn([(object) [
-					'mail' => 'from@example.com',
-					'personal' => 'Name From',
-				]]);
+				->andReturn($recipients['from']);
 			$mock->shouldReceive('getSubject')
 				->andReturn('A Test Subject');
 			$mock->shouldReceive('getTextBody')
@@ -143,4 +121,54 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 				->andReturn([]);
 		});
 	}
+
+	public function recipientProvider(){
+	    return [
+	        'single to' => [
+	            'recipient_type' => 'to',
+	            'count' => 1,
+                'recipients' => [
+                    (object) ['personal' => 'Name To', 'mail' => 'to@example.com'],
+                ],
+            ],
+            'multiple to' => [
+                'recipient_type' => 'to',
+                'count' => 2,
+                'recipients' => [
+                    (object) ['personal' => 'Name To 1', 'mail' => 'to_1@example.com'],
+                    (object) ['personal' => 'Name To 2', 'mail' => 'to_2@example.com'],
+                ],
+            ],
+            'single cc' => [
+                'recipient_type' => 'cc',
+                'count' => 1,
+                'recipients' => [
+                    (object) ['personal' => 'Name Cc', 'mail' => 'cc@example.com'],
+                ],
+            ],
+            'multiple cc' => [
+                'recipient_type' => 'cc',
+                'count' => 2,
+                'recipients' => [
+                    (object) ['personal' => 'Name Cc 1', 'mail' => 'cc_1@example.com'],
+                    (object) ['personal' => 'Name Cc 2', 'mail' => 'cc_2@example.com'],
+                ],
+            ],
+            'single from' => [
+                'recipient_type' => 'from',
+                'count' => 1,
+                'recipients' => [
+                    (object) ['personal' => 'Name From', 'mail' => 'from@example.com'],
+                ],
+            ],
+            'multiple from' => [
+                'recipient_type' => 'from',
+                'count' => 2,
+                'recipients' => [
+                    (object) ['personal' => 'Name From 1', 'mail' => 'from_1@example.com'],
+                    (object) ['personal' => 'Name From 2', 'mail' => 'from_2@example.com'],
+                ],
+            ],
+        ];
+    }
 }
