@@ -52,7 +52,7 @@
                             </div>
 
                             <div class="form-group">
-                                <datetime-input label="Repeat until" input-name="repeat_until_input" output-name="repeat_until"></datetime-input>
+                                <date-input label="Repeat until" input-name="repeat_until_input" output-name="repeat_until" />
                             </div>
 
                         </fieldset>
