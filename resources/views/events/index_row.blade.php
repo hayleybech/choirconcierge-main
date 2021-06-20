@@ -36,10 +36,10 @@
     <td class="col--created">
         <div class="date">
             <div class="date__diff-for-humans">
-                {{ $event->created_at->diffForHumans() }}
+                {{ $event->created_at?->diffForHumans() }}
             </div>
             <div class="date__regular">
-                {{ $event->created_at->format(config('app.formats.timestamp_md')) }}
+                {{ $event->created_at?->format(config('app.formats.timestamp_md')) }}
             </div>
         </div>
     </td>
