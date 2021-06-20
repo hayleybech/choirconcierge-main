@@ -12,7 +12,7 @@
 @section('page-content')
 
     @if($event->is_repeating)
-        {{ Form::open( [ 'route' => ['events.update-recurring', $event->id], 'method' => 'put' ] ) }}
+        {{ Form::open( [ 'route' => ['events.update-recurring', $event->id, request()->query('mode')], 'method' => 'put' ] ) }}
     @else
         {{ Form::open( [ 'route' => ['events.update', $event->id], 'method' => 'put' ] ) }}
     @endif
