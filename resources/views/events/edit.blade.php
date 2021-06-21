@@ -44,13 +44,20 @@
 
                 <div class="card-body">
                     <div class="form-group">
-                        <x-inputs.text label="Event Title" id="title" name="title" :value="$event->title"></x-inputs.text>
+                        <x-inputs.text label="Event Title" id="title" name="title" :value="old('title', $event->title)" />
                     </div>
 
                     <fieldset class="form-group">
                         <legend class="col-form-label">Type</legend>
                         @foreach($types as $type)
-                            <x-inputs.radio label="{{ $type->title }}" id="type_id_{{ $type->id }}" name="type_id" value="{{ $type->id }}" inline="true" :checked="$event->type->id === $type->id"></x-inputs.radio>
+                            <x-inputs.radio
+                                label="{{ $type->title }}"
+                                id="type_id_{{ $type->id }}"
+                                name="type_id"
+                                value="{{ $type->id }}"
+                                inline="true"
+                                :checked="old('type_id', $event->type->id) == $type->id"
+                            />
                         @endforeach
                     </fieldset>
 
@@ -59,7 +66,11 @@
                             <i class="fas fa-fw fa-compact-disc fa-spin"></i>
                         </div>
                         <div v-else>
-                            <event-dates init-start-date="{{ $event->start_date }}" init-end-date="{{ $event->end_date }}" init-call-time="{{ $event->call_time }}">
+                            <event-dates
+                                init-start-date="{{ old('start_date', $event->start_date) }}"
+                                init-end-date="{{ old('end_date', $event->end_date) }}"
+                                init-call-time="{{ old('call_time', $event->call_time) }}"
+                            >
                                 <template #description>Timezone: {{ tenant('timezone')->toRegionName() }} {{ tenant('timezone')->toOffsetName() }}</template>
                             </event-dates>
                         </div>
@@ -69,19 +80,31 @@
 
                     {{ Form::label('', 'Repeating Event') }}
 
-                    <toggleable-input label="Repeat?" name="is_repeating" :start-open="@json($event->is_repeating)">
+                    <toggleable-input label="Repeat?" name="is_repeating" :start-open="@json((bool) old('is_repeating', $event->is_repeating))">
                         <fieldset id="repeat_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
 
                             <div class="form-group">
                                 {{ Form::label('repeat_frequency_unit', 'Repeat every') }}<br>
 
                                 @foreach(['day' => 'Day', 'week' => 'Week', 'month' => 'Month', 'year' => 'Year'] as $key => $unit)
-                                    <x-inputs.radio label="{{ $unit }}" id="repeat_frequency_unit_{{ $key }}" name="repeat_frequency_unit" value="{{ $key }}" inline="true" :checked="$event->repeat_frequency_unit === $key"></x-inputs.radio>
+                                    <x-inputs.radio
+                                        label="{{ $unit }}"
+                                        id="repeat_frequency_unit_{{ $key }}"
+                                        name="repeat_frequency_unit"
+                                        value="{{ $key }}"
+                                        inline="true"
+                                        :checked="old('repeat_frequency_unit', $event->repeat_frequency_unit) == $key"
+                                    />
                                 @endforeach
                             </div>
 
                             <div class="form-group">
-                                <date-input label="Repeat until" input-name="repeat_until_input" output-name="repeat_until" :value="Date('{{ $event->repeat_until }}')" />
+                                <date-input
+                                    label="Repeat until"
+                                    input-name="repeat_until_input"
+                                    output-name="repeat_until"
+                                    :value="'{{ old('repeat_until_input', $event->repeat_until) }}'"
+                                />
                             </div>
 
                         </fieldset>
@@ -90,16 +113,30 @@
                     @endif
 
                     <div class="form-group location-input-wrapper">
-                        <location-input label="Location" input-name="location" location-name="{{ $event->location_name }}" location-place-id="{{ $event->location_place_id }}" location-icon="{{ $event->location_icon }}" location-address="{{ $event->location_address }}" api-key="{{ config('services.google.key') }}"></location-input>
+                        <location-input
+                            label="Location"
+                            input-name="location"
+                            location-name="{{ old('location_name', $event->location_name) }}"
+                            location-place-id="{{ old('location_place_id', $event->location_place_id) }}"
+                            location-icon="{{ old('location_icon', $event->location_icon) }}"
+                            location-address="{{ old('location_address', $event->location_address) }}"
+                            api-key="{{ config('services.google.key') }}"
+                        />
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('description', 'Description') }}
-                        <limited-textarea field-id="description" field-name="description" value="{{ $event->description }}" :maxlength="5000"></limited-textarea>
+                        <limited-textarea field-id="description" field-name="description" value="{{ old('description', $event->description) }}" :maxlength="5000"></limited-textarea>
                     </div>
 
                     <div class="form-group">
-                        <x-inputs.checkbox :label='"Send \"Event Updated\" Notification"' id="send_notification" name="send_notification" value="true" :checked="true"></x-inputs.checkbox>
+                        <x-inputs.checkbox
+                            :label='"Send \"Event Updated\" Notification"'
+                            id="send_notification"
+                            name="send_notification"
+                            value="true"
+                            :checked="! empty(old()) ? (bool) old('send_notification') : true"
+                        />
                     </div>
 
                 </div>
