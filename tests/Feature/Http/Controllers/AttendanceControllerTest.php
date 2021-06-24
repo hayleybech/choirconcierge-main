@@ -13,53 +13,53 @@ use Tests\TestCase;
  */
 class AttendanceControllerTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+	use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function index_returns_an_ok_response(): void
-    {
-	    $this->actingAs($this->createUserWithRole('Events Team'));
+	/**
+	 * @test
+	 */
+	public function index_returns_an_ok_response(): void
+	{
+		$this->actingAs($this->createUserWithRole('Events Team'));
 
-        $event = Event::factory()->create();
+		$event = Event::factory()->create();
 
-        $response = $this->get(the_tenant_route('events.attendances.index', [$event]));
+		$response = $this->get(the_tenant_route('events.attendances.index', [$event]));
 
-        $response->assertOk();
-        $response->assertViewIs('events.attendances.index');
-        $response->assertViewHas('event');
-        $response->assertViewHas('singers');
-    }
+		$response->assertOk();
+		$response->assertViewIs('events.attendances.index');
+		$response->assertViewHas('event');
+		$response->assertViewHas('singers');
+	}
 
-    /**
-     * @test
-     */
-    public function update_all_redirects_to_event(): void
-    {
-	    $this->actingAs($this->createUserWithRole('Events Team'));
+	/**
+	 * @test
+	 */
+	public function update_all_redirects_to_event(): void
+	{
+		$this->actingAs($this->createUserWithRole('Events Team'));
 
-        $event = Event::factory()->create();
-        $singer = Singer::factory()->create();
+		$event = Event::factory()->create();
+		$singer = Singer::factory()->create();
 
-        $attendance_response = $this->faker->randomElement(['present', 'absent', 'absent_apology']);
-        $absent_reason = $this->faker->optional(0.3)->sentence();
-        $response = $this->post(the_tenant_route('events.attendances.updateAll', [$event]), [
-            'attendance_response' => [
-	           $singer->id =>  $attendance_response,
-            ],
-	        'absent_reason' => [
-		        $singer->id => $absent_reason,
-	        ],
-        ]);
+		$attendance_response = $this->faker->randomElement(['present', 'absent', 'absent_apology']);
+		$absent_reason = $this->faker->optional(0.3)->sentence();
+		$response = $this->post(the_tenant_route('events.attendances.updateAll', [$event]), [
+			'attendance_response' => [
+				$singer->id => $attendance_response,
+			],
+			'absent_reason' => [
+				$singer->id => $absent_reason,
+			],
+		]);
 
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect(the_tenant_route('events.show', ['event' => $event]));
-        $this->assertDatabaseHas('attendances', [
-	        'response'      => $attendance_response,
-	        'absent_reason' => $absent_reason,
-	        'event_id'      => $event->id,
-	        'singer_id'     => $singer->id,
-        ]);
-    }
+		$response->assertSessionHasNoErrors();
+		$response->assertRedirect(the_tenant_route('events.show', ['event' => $event]));
+		$this->assertDatabaseHas('attendances', [
+			'response' => $attendance_response,
+			'absent_reason' => $absent_reason,
+			'event_id' => $event->id,
+			'singer_id' => $singer->id,
+		]);
+	}
 }

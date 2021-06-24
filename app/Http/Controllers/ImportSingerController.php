@@ -10,16 +10,18 @@ use Illuminate\Support\Facades\Auth;
 
 class ImportSingerController extends Controller
 {
-    public function __invoke(Request $request): RedirectResponse
-    {
-        abort_if(! optional(Auth::user())->hasRole('Admin'), 403);
+	public function __invoke(Request $request): RedirectResponse
+	{
+		abort_if(!optional(Auth::user())->hasRole('Admin'), 403);
 
-        $request->validate([
-            'import_csv' => 'required|file',
-        ]);
+		$request->validate([
+			'import_csv' => 'required|file',
+		]);
 
-        Excel::import(new SingersImport, request()->file('import_csv'));
+		Excel::import(new SingersImport(), request()->file('import_csv'));
 
-        return redirect()->route('singers.index')->with(['status' => 'Import completed. ']);
-    }
+		return redirect()
+			->route('singers.index')
+			->with(['status' => 'Import completed. ']);
+	}
 }

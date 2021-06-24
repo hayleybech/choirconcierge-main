@@ -42,41 +42,37 @@ use Illuminate\Support\Carbon;
  */
 class Profile extends Model
 {
-    use TenantTimezoneDates, HasFactory;
+	use TenantTimezoneDates, HasFactory;
 
 	protected $fillable = [
-		'dob', 
-		'phone', 
-		'ice_name', 
+		'dob',
+		'phone',
+		'ice_name',
 		'ice_phone',
-        'address_street_1',
-        'address_street_2',
-        'address_suburb',
-        'address_state',
-        'address_postcode',
-		'reason_for_joining', 
-		'referrer', 
-		'profession', 
+		'address_street_1',
+		'address_street_2',
+		'address_suburb',
+		'address_state',
+		'address_postcode',
+		'reason_for_joining',
+		'referrer',
+		'profession',
 		'skills',
-        'height',
-        'membership_details',
+		'height',
+		'membership_details',
 	];
 
-    public $dates = [
-        'updated_at',
-        'created_at',
-        'dob',
-    ];
+	public $dates = ['updated_at', 'created_at', 'dob'];
 
-    protected $touches = ['singer'];
-	
-    public function singer(): BelongsTo
+	protected $touches = ['singer'];
+
+	public function singer(): BelongsTo
 	{
 		return $this->belongsTo(Singer::class);
 	}
 
 	public function getBirthdayAttribute(): Carbon
 	{
-		return $this->dob->copy()->year( now()->year );
+		return $this->dob->copy()->year(now()->year);
 	}
 }

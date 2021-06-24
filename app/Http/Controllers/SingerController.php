@@ -17,137 +17,146 @@ use Illuminate\Validation\Rule;
 
 class SingerController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-
-    public function index(Request $request): View
-    {
-        $this->authorize('viewAny', Singer::class);
-
-        // Base query
-        $all_singers = Singer::with(['tasks', 'category', 'profile', 'voice_part'])
-            ->filter()
-            ->get();
-
-        // Sort
-        $sort_by = $request->input('sort_by', 'name');
-        $sort_dir = $request->input('sort_dir', 'asc');
-        if( $sort_dir === 'asc') {
-            $all_singers = $all_singers->sortBy($sort_by);
-        } else {
-            $all_singers = $all_singers->sortByDesc($sort_by);
-        }
-
-        return view('singers.index', [
-            'all_singers'      => $all_singers,
-            'active_singers'   => $all_singers->whereIn('category.name', ['Members', 'Prospects']),
-            'member_singers'   => $all_singers->whereIn('category.name', ['Members']),
-            'prospect_singers' => $all_singers->whereIn('category.name', ['Prospects']),
-            'archived_singers' => $all_singers->whereIn('category.name', ['Archived Members', 'Archived Prospects']),
-            'filters'          => Singer::getFilters(),
-            'sorts'            => $sorts = $this->getSorts($request),
-            'categories'       => SingerCategory::all(),
-        ]);
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		//
 	}
 
-    public function create(): View
-    {
-        $this->authorize('create', Singer::class);
+	public function index(Request $request): View
+	{
+		$this->authorize('viewAny', Singer::class);
 
-        $voice_parts = [0 => "None"] + VoicePart::all()->pluck('title', 'id')->toArray();
-        $roles = Role::all();
+		// Base query
+		$all_singers = Singer::with(['tasks', 'category', 'profile', 'voice_part'])
+			->filter()
+			->get();
 
-        return view('singers.create', compact('voice_parts', 'roles'));
-    }
+		// Sort
+		$sort_by = $request->input('sort_by', 'name');
+		$sort_dir = $request->input('sort_dir', 'asc');
+		if ($sort_dir === 'asc') {
+			$all_singers = $all_singers->sortBy($sort_by);
+		} else {
+			$all_singers = $all_singers->sortByDesc($sort_by);
+		}
 
-    public function store(SingerRequest $request): RedirectResponse
-    {
-        $this->authorize('create', Singer::class);
+		return view('singers.index', [
+			'all_singers' => $all_singers,
+			'active_singers' => $all_singers->whereIn('category.name', ['Members', 'Prospects']),
+			'member_singers' => $all_singers->whereIn('category.name', ['Members']),
+			'prospect_singers' => $all_singers->whereIn('category.name', ['Prospects']),
+			'archived_singers' => $all_singers->whereIn('category.name', ['Archived Members', 'Archived Prospects']),
+			'filters' => Singer::getFilters(),
+			'sorts' => ($sorts = $this->getSorts($request)),
+			'categories' => SingerCategory::all(),
+		]);
+	}
 
-        $singer = Singer::create($request->validated());
-        User::sendWelcomeEmail($singer->user);
+	public function create(): View
+	{
+		$this->authorize('create', Singer::class);
 
-        return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer created. ', ]);
-    }
+		$voice_parts =
+			[0 => 'None'] +
+			VoicePart::all()
+				->pluck('title', 'id')
+				->toArray();
+		$roles = Role::all();
 
-    public function show(Singer $singer): View
-    {
-        $this->authorize('view', $singer);
+		return view('singers.create', compact('voice_parts', 'roles'));
+	}
 
-        return view('singers.show', [
-            'singer'        => $singer,
-            'categories'    => SingerCategory::all(),
-        ]);
-    }
+	public function store(SingerRequest $request): RedirectResponse
+	{
+		$this->authorize('create', Singer::class);
 
-    public function edit(Singer $singer): View
-    {
-        $this->authorize('update', $singer);
+		$singer = Singer::create($request->validated());
+		User::sendWelcomeEmail($singer->user);
 
-        $voice_parts = [0 => "None"] + VoicePart::all()->pluck('title', 'id')->toArray();
+		return redirect()
+			->route('singers.show', [$singer])
+			->with(['status' => 'Singer created. ']);
+	}
 
-        $roles = Role::all();
+	public function show(Singer $singer): View
+	{
+		$this->authorize('view', $singer);
 
-        return view('singers.edit', compact('singer', 'voice_parts', 'roles' ));
-    }
-    public function update(Singer $singer, SingerRequest $request): RedirectResponse
-    {
-        $this->authorize('update', $singer);
+		return view('singers.show', [
+			'singer' => $singer,
+			'categories' => SingerCategory::all(),
+		]);
+	}
 
-        $singer->update($request->validated());
+	public function edit(Singer $singer): View
+	{
+		$this->authorize('update', $singer);
 
-        return redirect()->route('singers.show', [$singer])->with(['status' => 'Singer saved. ']);
-    }
+		$voice_parts =
+			[0 => 'None'] +
+			VoicePart::all()
+				->pluck('title', 'id')
+				->toArray();
 
-    public function destroy(Singer $singer): RedirectResponse
-    {
-        $this->authorize('delete', $singer);
+		$roles = Role::all();
 
-        $singer->user->delete();
-        $singer->delete();
+		return view('singers.edit', compact('singer', 'voice_parts', 'roles'));
+	}
+	public function update(Singer $singer, SingerRequest $request): RedirectResponse
+	{
+		$this->authorize('update', $singer);
 
-        return redirect()->route('singers.index')->with(['status' => 'Singer deleted. ', ]);
-    }
+		$singer->update($request->validated());
 
-    public function getSorts(Request $request): array
-    {
-        $sort_cols = [
-            'name',
-            'voice_part',
-            'category.name',
-        ];
+		return redirect()
+			->route('singers.show', [$singer])
+			->with(['status' => 'Singer saved. ']);
+	}
 
-        // Merge filters with sort query string
-        $url = $request->url() . '?' . Singer::getFilterQueryString();
+	public function destroy(Singer $singer): RedirectResponse
+	{
+		$this->authorize('delete', $singer);
 
-        $current_sort = $request->input('sort_by', 'name');
-        $current_dir =  $request->input('sort_dir', 'asc');
+		$singer->user->delete();
+		$singer->delete();
 
-        $sorts = [];
-        foreach($sort_cols as $col) {
-            // If current sort
-            if( $col === $current_sort ) {
-                // Create link for opposite sort direction
-                $current = true;
-                $dir = ( 'asc' === $current_dir ) ? 'desc' : 'asc';
-            } else {
-                $current = false;
-                $dir = 'asc';
-            };
-            $sorts[$col] = [
-                'url'       => $url . "&sort_by=$col&sort_dir=$dir",
-                'dir'       => $current_dir,
-                'current'   => $current,
-            ];
-        }
-        return $sorts;
-    }
+		return redirect()
+			->route('singers.index')
+			->with(['status' => 'Singer deleted. ']);
+	}
+
+	public function getSorts(Request $request): array
+	{
+		$sort_cols = ['name', 'voice_part', 'category.name'];
+
+		// Merge filters with sort query string
+		$url = $request->url() . '?' . Singer::getFilterQueryString();
+
+		$current_sort = $request->input('sort_by', 'name');
+		$current_dir = $request->input('sort_dir', 'asc');
+
+		$sorts = [];
+		foreach ($sort_cols as $col) {
+			// If current sort
+			if ($col === $current_sort) {
+				// Create link for opposite sort direction
+				$current = true;
+				$dir = 'asc' === $current_dir ? 'desc' : 'asc';
+			} else {
+				$current = false;
+				$dir = 'asc';
+			}
+			$sorts[$col] = [
+				'url' => $url . "&sort_by=$col&sort_dir=$dir",
+				'dir' => $current_dir,
+				'current' => $current,
+			];
+		}
+		return $sorts;
+	}
 }

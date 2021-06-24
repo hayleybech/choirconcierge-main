@@ -37,29 +37,20 @@ use Illuminate\Support\Facades\Storage;
  */
 class SongAttachment extends Model
 {
-    use HasFactory, TenantTimezoneDates;
+	use HasFactory, TenantTimezoneDates;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'title',
-        'category_id',
-        'song_id',
-        'file',
-    ];
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['title', 'category_id', 'song_id', 'file'];
 
-    protected $appends = [
-        'download_url',
-    ];
+	protected $appends = ['download_url'];
 
-    protected $with = [
-        'song',
-    ];
+	protected $with = ['song'];
 
-    protected $touches = ['song'];
+	protected $touches = ['song'];
 
 	protected static function booted()
 	{
@@ -70,72 +61,74 @@ class SongAttachment extends Model
 
 	private UploadedFile $file;
 
-	public static function create( array $attributes = [] )
-    {
-        /** @var SongAttachment $attachment */
-        $attachment = static::query()->create($attributes);
+	public static function create(array $attributes = [])
+	{
+		/** @var SongAttachment $attachment */
+		$attachment = static::query()->create($attributes);
 
-        return $attachment;
-    }
+		return $attachment;
+	}
 
-    public function delete() {
-        if (Storage::disk('public')->exists( $this->getPath() )) {
-            Storage::disk('public')->delete( $this->getPath() );
-        }
+	public function delete()
+	{
+		if (Storage::disk('public')->exists($this->getPath())) {
+			Storage::disk('public')->delete($this->getPath());
+		}
 
-        parent::delete();
-        return true;
-    }
+		parent::delete();
+		return true;
+	}
 
-    public function setFileAttribute(UploadedFile $file): void
-    {
+	public function setFileAttribute(UploadedFile $file): void
+	{
 		$this->file = $file;
-    }
+	}
 
-    public function saveFile(): void
-    {
-        $this->filepath = $this->file->getClientOriginalName();
+	public function saveFile(): void
+	{
+		$this->filepath = $this->file->getClientOriginalName();
 
-        Storage::disk('public')->makeDirectory( self::getPathSongs() );
-        Storage::disk('public')->makeDirectory( $this->getPathSong() );
+		Storage::disk('public')->makeDirectory(self::getPathSongs());
+		Storage::disk('public')->makeDirectory($this->getPathSong());
 
-        if (Storage::disk('public')->exists( $this->getPath() )) {
-            Storage::disk('public')->delete( $this->getPath() );
-        }
+		if (Storage::disk('public')->exists($this->getPath())) {
+			Storage::disk('public')->delete($this->getPath());
+		}
 
-        Storage::disk('public')->putFileAs( $this->getPathSong(), $this->file, $this->filepath );
-    }
+		Storage::disk('public')->putFileAs($this->getPathSong(), $this->file, $this->filepath);
+	}
 
-    public function song(): BelongsTo
-    {
-        return $this->belongsTo(Song::class);
-    }
+	public function song(): BelongsTo
+	{
+		return $this->belongsTo(Song::class);
+	}
 
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(SongAttachmentCategory::class, 'category_id');
-    }
+	public function category(): BelongsTo
+	{
+		return $this->belongsTo(SongAttachmentCategory::class, 'category_id');
+	}
 
-    public function getDownloadUrlAttribute(): string
-    {
-        return asset($this->getPath());
-    }
-    public function getPathAttribute() {
-        return Storage::disk('public')->path($this->getPath());
-    }
+	public function getDownloadUrlAttribute(): string
+	{
+		return asset($this->getPath());
+	}
+	public function getPathAttribute()
+	{
+		return Storage::disk('public')->path($this->getPath());
+	}
 
-    public static function getPathSongs(): string
-    {
-        return 'songs';
-    }
+	public static function getPathSongs(): string
+	{
+		return 'songs';
+	}
 
-    public function getPathSong(): string
-    {
-        return self::getPathSongs() . '/' . $this->song->id;
-    }
+	public function getPathSong(): string
+	{
+		return self::getPathSongs() . '/' . $this->song->id;
+	}
 
-    public function getPath(): string
-    {
-        return $this->getPathSong() . '/' . $this->filepath;
-    }
+	public function getPath(): string
+	{
+		return $this->getPathSong() . '/' . $this->filepath;
+	}
 }

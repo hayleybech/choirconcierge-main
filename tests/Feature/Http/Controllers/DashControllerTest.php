@@ -13,20 +13,20 @@ use Tests\TestCase;
  */
 class DashControllerTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function index_returns_an_ok_response(): void
-    {
-	    $this->actingAs($this->createUserWithRole('Membership Team')); // Any role is fine
+	/**
+	 * @test
+	 */
+	public function index_returns_an_ok_response(): void
+	{
+		$this->actingAs($this->createUserWithRole('Membership Team')); // Any role is fine
 
-        $response = $this->get(the_tenant_route('dash'));
+		$response = $this->get(the_tenant_route('dash'));
 
-        $response->assertOk();
-        $response->assertViewIs('dash');
-        $response->assertViewHas('birthdays');
-        $response->assertViewHas('empty_dobs');
-        $response->assertViewHas('songs');
-        $response->assertViewHas('events');
-    }
+		$response->assertOk();
+		$response->assertViewIs('dash');
+		$response->assertViewHas('birthdays');
+		$response->assertViewHas('empty_dobs');
+		$response->assertViewHas('songs');
+		$response->assertViewHas('events');
+	}
 }

@@ -11,38 +11,42 @@ use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    public function index(Event $event): View
-    {
-        $this->authorize('viewAny', Attendance::class);
+	public function index(Event $event): View
+	{
+		$this->authorize('viewAny', Attendance::class);
 
-        $singers = Singer::all();
-        foreach($singers as $singer)
-        {
-            $singer->attendance = $event->attendances()->where('singer_id', '=', $singer->id)->first();
-        }
+		$singers = Singer::all();
+		foreach ($singers as $singer) {
+			$singer->attendance = $event
+				->attendances()
+				->where('singer_id', '=', $singer->id)
+				->first();
+		}
 
-        return view('events.attendances.index', [
-            'event'   => $event,
-            'singers' => $singers,
-        ]);
-    }
+		return view('events.attendances.index', [
+			'event' => $event,
+			'singers' => $singers,
+		]);
+	}
 
-    public function updateAll(Event $event, Request $request): RedirectResponse
-    {
-        $this->authorize('create', Attendance::class);
+	public function updateAll(Event $event, Request $request): RedirectResponse
+	{
+		$this->authorize('create', Attendance::class);
 
-        $absent_reason = $request->input('absent_reason');
-        $responses = $request->input('attendance_response');
-        foreach($responses as $singer_id => $response){
-            $event->attendances()->updateOrCreate(
-                ['singer_id' => $singer_id],
-                [
-                    'response'  => $response,
-                    'absent_reason' => $absent_reason[$singer_id],
-                ]
-            );
-        }
+		$absent_reason = $request->input('absent_reason');
+		$responses = $request->input('attendance_response');
+		foreach ($responses as $singer_id => $response) {
+			$event->attendances()->updateOrCreate(
+				['singer_id' => $singer_id],
+				[
+					'response' => $response,
+					'absent_reason' => $absent_reason[$singer_id],
+				],
+			);
+		}
 
-        return redirect()->route('events.show', ['event' => $event])->with(['status' => 'Attendance recorded.']);
-    }
+		return redirect()
+			->route('events.show', ['event' => $event])
+			->with(['status' => 'Attendance recorded.']);
+	}
 }

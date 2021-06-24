@@ -12,27 +12,27 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Event_TypeFilter extends Filter
 {
-    protected string $name = 'filter_type';
-    protected string $label = 'Type';
-    protected string $default_option = 'any';
+	protected string $name = 'filter_type';
+	protected string $label = 'Type';
+	protected string $default_option = 'any';
 
-    protected function initOptions(): void
-    {
-        $types = EventType::all();
-        $this->options = $types->mapWithKeys(static function($item){
-            return [ $item['id'] => $item['title'] ];
-        });
-        $this->options->prepend('Any type','any');
-    }
+	protected function initOptions(): void
+	{
+		$types = EventType::all();
+		$this->options = $types->mapWithKeys(static function ($item) {
+			return [$item['id'] => $item['title']];
+		});
+		$this->options->prepend('Any type', 'any');
+	}
 
-    protected function run(Builder $query): Builder
-    {
-        // Type
-        if( $this->current_option !== 'any' ) {
-            return $query->where('type_id', '=', $this->current_option);
-        }
+	protected function run(Builder $query): Builder
+	{
+		// Type
+		if ($this->current_option !== 'any') {
+			return $query->where('type_id', '=', $this->current_option);
+		}
 
-        // Any
-        return $query;
-    }
+		// Any
+		return $query;
+	}
 }

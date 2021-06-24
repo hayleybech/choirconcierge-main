@@ -29,21 +29,22 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class SingerCategory extends Model
 {
-    use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
+	use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
 
-    public const CATEGORY_COLOURS = [
-        'Members' => 'success',
-        'Prospects' => 'warning',
-        'Archived Prospects' => 'dark',
-        'Archived Members' => 'tertiary',
-    ];
+	public const CATEGORY_COLOURS = [
+		'Members' => 'success',
+		'Prospects' => 'warning',
+		'Archived Prospects' => 'dark',
+		'Archived Members' => 'tertiary',
+	];
 
-    public function singers(): HasMany
-    {
-        return $this->hasMany(Singer::class);
-    }
+	public function singers(): HasMany
+	{
+		return $this->hasMany(Singer::class);
+	}
 
-    public function getColourAttribute(): string {
-        return self::CATEGORY_COLOURS[$this->name];
-    }
+	public function getColourAttribute(): string
+	{
+		return self::CATEGORY_COLOURS[$this->name];
+	}
 }

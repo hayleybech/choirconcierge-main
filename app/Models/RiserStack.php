@@ -33,27 +33,21 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class RiserStack extends Model
 {
-    use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
+	use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'title',
-        'rows',
-        'columns',
-        'front_row_length',
-        'front_row_on_floor'
-    ];
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['title', 'rows', 'columns', 'front_row_length', 'front_row_on_floor'];
 
-    protected $casts = ['front_row_on_floor' => 'boolean'];
+	protected $casts = ['front_row_on_floor' => 'boolean'];
 
-    public function singers(): BelongsToMany
-    {
-        return $this->belongsToMany(Singer::class)
-            ->as('position')
-            ->withPivot('row', 'column');
-    }
+	public function singers(): BelongsToMany
+	{
+		return $this->belongsToMany(Singer::class)
+			->as('position')
+			->withPivot('row', 'column');
+	}
 }

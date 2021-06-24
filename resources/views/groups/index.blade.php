@@ -19,7 +19,7 @@
         <div class="card-body">
 
             <?php
-                /*
+/*
             use App\Models\UserGroup;
             $filters_class = UserGroup::hasActiveFilters() ? 'btn-primary' : 'btn-outline-secondary';
             ?>
@@ -55,7 +55,8 @@
                     </div>
                 </form>
 
-            </div>*/?>
+            </div>*/
+?>
 
         </div>
 

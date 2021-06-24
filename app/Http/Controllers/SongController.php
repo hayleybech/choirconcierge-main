@@ -17,165 +17,185 @@ use Illuminate\Support\Facades\Notification;
 
 class SongController extends Controller
 {
-    public function index(Request $request): View
-    {
-        $this->authorize('viewAny', Song::class);
+	public function index(Request $request): View
+	{
+		$this->authorize('viewAny', Song::class);
 
-        // Base query
-        $songs = Song::withCount(['attachments'])
-            ->filter()
-            ->get();
+		// Base query
+		$songs = Song::withCount(['attachments'])
+			->filter()
+			->get();
 
-        // Sort
-        $sort_by = $request->input('sort_by', 'title');
-        $sort_dir = $request->input('sort_dir', 'asc');
+		// Sort
+		$sort_by = $request->input('sort_by', 'title');
+		$sort_dir = $request->input('sort_dir', 'asc');
 
-        // Flip direction for date (so we sort by smallest age not smallest timestamp)
-        if($sort_by === 'created_at') $sort_dir = ($sort_dir === 'asc') ? 'desc' : 'asc';
+		// Flip direction for date (so we sort by smallest age not smallest timestamp)
+		if ($sort_by === 'created_at') {
+			$sort_dir = $sort_dir === 'asc' ? 'desc' : 'asc';
+		}
 
-        if( $sort_dir === 'asc') {
-            $songs = $songs->sortBy($sort_by);
-        } else {
-            $songs = $songs->sortByDesc($sort_by);
-        }
+		if ($sort_dir === 'asc') {
+			$songs = $songs->sortBy($sort_by);
+		} else {
+			$songs = $songs->sortByDesc($sort_by);
+		}
 
-        return view('songs.index', [
-            'all_songs'      => $songs,
-            'active_songs'   => $songs->where('status.title', '=', 'Active'),
-            'learning_songs' => $songs->where('status.title', '=', 'Learning'),
-            'pending_songs'  => $songs->where('status.title', '=', 'Pending'),
-            'archived_songs' => $songs->where('status.title', '=', 'Archived'),
-            'filters'        => Song::getFilters(),
-            'sorts'          => $this->getSorts($request),
-        ]);
-    }
+		return view('songs.index', [
+			'all_songs' => $songs,
+			'active_songs' => $songs->where('status.title', '=', 'Active'),
+			'learning_songs' => $songs->where('status.title', '=', 'Learning'),
+			'pending_songs' => $songs->where('status.title', '=', 'Pending'),
+			'archived_songs' => $songs->where('status.title', '=', 'Archived'),
+			'filters' => Song::getFilters(),
+			'sorts' => $this->getSorts($request),
+		]);
+	}
 
-    public function learning(Request $request): View
-    {
-        $this->authorize('viewAny', Song::class);
+	public function learning(Request $request): View
+	{
+		$this->authorize('viewAny', Song::class);
 
-        // Base query
-        $songs = Song::with(['attachments'])
-            ->filter()
-            ->get();
+		// Base query
+		$songs = Song::with(['attachments'])
+			->filter()
+			->get();
 
-        // Sort
-        $sort_by = $request->input('sort_by', 'name');
-        $sort_dir = $request->input('sort_dir', 'asc');
+		// Sort
+		$sort_by = $request->input('sort_by', 'name');
+		$sort_dir = $request->input('sort_dir', 'asc');
 
-        // Flip direction for date (so we sort by smallest age not smallest timestamp)
-        if($sort_by === 'created_at') $sort_dir = ($sort_dir === 'asc') ? 'desc' : 'asc';
+		// Flip direction for date (so we sort by smallest age not smallest timestamp)
+		if ($sort_by === 'created_at') {
+			$sort_dir = $sort_dir === 'asc' ? 'desc' : 'asc';
+		}
 
-        if( $sort_dir === 'asc') {
-            $songs = $songs->sortBy($sort_by);
-        } else {
-            $songs = $songs->sortByDesc($sort_by);
-        }
+		if ($sort_dir === 'asc') {
+			$songs = $songs->sortBy($sort_by);
+		} else {
+			$songs = $songs->sortByDesc($sort_by);
+		}
 
-        $sorts = $this->getSorts($request);
+		$sorts = $this->getSorts($request);
 
-        $filters = Song::getFilters();
-        return view('songs.learning', compact('songs', 'filters', 'sorts') );
-    }
+		$filters = Song::getFilters();
+		return view('songs.learning', compact('songs', 'filters', 'sorts'));
+	}
 
-    public function create(): View
-    {
-        $this->authorize('create', Song::class);
+	public function create(): View
+	{
+		$this->authorize('create', Song::class);
 
-        $categories = SongCategory::all();
-        $statuses = SongStatus::all();
-        $pitches = Song::KEYS;
+		$categories = SongCategory::all();
+		$statuses = SongStatus::all();
+		$pitches = Song::KEYS;
 
-        return view('songs.create', compact('categories', 'statuses', 'pitches') );
-    }
+		return view('songs.create', compact('categories', 'statuses', 'pitches'));
+	}
 
-    public function store(SongRequest $request): RedirectResponse
-    {
-        $this->authorize('create', Song::class);
+	public function store(SongRequest $request): RedirectResponse
+	{
+		$this->authorize('create', Song::class);
 
-        $song = Song::create(collect($request->validated())->except('send_notification')->toArray());
+		$song = Song::create(
+			collect($request->validated())
+				->except('send_notification')
+				->toArray(),
+		);
 
-	    $request->whenHas('send_notification', fn() => Notification::send(User::active()->get(), new SongUploaded($song)));
+		$request->whenHas(
+			'send_notification',
+			fn() => Notification::send(User::active()->get(), new SongUploaded($song)),
+		);
 
-        return redirect()->route('songs.show', [$song])->with(['status' => 'Song created. ']);
-    }
+		return redirect()
+			->route('songs.show', [$song])
+			->with(['status' => 'Song created. ']);
+	}
 
-    public function show(Song $song): View
-    {
-        $this->authorize('view', $song);
+	public function show(Song $song): View
+	{
+		$this->authorize('view', $song);
 
-        $song->load('attachments.category');
+		$song->load('attachments.category');
 
-        $attachment_categories = SongAttachmentCategory::all();
-        $categories_keyed = $attachment_categories->mapWithKeys(function($item){
-            return [ $item['id'] => $item['title'] ];
-        });
+		$attachment_categories = SongAttachmentCategory::all();
+		$categories_keyed = $attachment_categories->mapWithKeys(function ($item) {
+			return [$item['id'] => $item['title']];
+		});
 
-        return view('songs.show', compact('song', 'categories_keyed'));
-    }
+		return view('songs.show', compact('song', 'categories_keyed'));
+	}
 
-    public function edit(Song $song): View
-    {
-        $this->authorize('update', $song);
+	public function edit(Song $song): View
+	{
+		$this->authorize('update', $song);
 
-        $categories = SongCategory::all();
-        $statuses = SongStatus::all();
-        $pitches = Song::KEYS;
+		$categories = SongCategory::all();
+		$statuses = SongStatus::all();
+		$pitches = Song::KEYS;
 
-        return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
-    }
+		return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
+	}
 
-    public function update(SongRequest $request, Song $song): RedirectResponse
-    {
-        $this->authorize('update', $song);
+	public function update(SongRequest $request, Song $song): RedirectResponse
+	{
+		$this->authorize('update', $song);
 
-        $song->update(collect($request->validated())->except('send_notification')->toArray());
+		$song->update(
+			collect($request->validated())
+				->except('send_notification')
+				->toArray(),
+		);
 
-	    $request->whenHas('send_notification', fn() => Notification::send(User::active()->get(), new SongUpdated($song)));
+		$request->whenHas(
+			'send_notification',
+			fn() => Notification::send(User::active()->get(), new SongUpdated($song)),
+		);
 
-        return redirect()->route('songs.show', [$song])->with(['status' => 'Song updated. ', ]);
-    }
+		return redirect()
+			->route('songs.show', [$song])
+			->with(['status' => 'Song updated. ']);
+	}
 
-    public function destroy(Song $song): RedirectResponse
-    {
-        $this->authorize('delete', $song);
+	public function destroy(Song $song): RedirectResponse
+	{
+		$this->authorize('delete', $song);
 
-        $song->delete();
+		$song->delete();
 
-        return redirect()->route('songs.index')->with(['status' => 'Song deleted. ', ]);
-    }
+		return redirect()
+			->route('songs.index')
+			->with(['status' => 'Song deleted. ']);
+	}
 
-    public function getSorts(Request $request): array
-    {
-        $sort_cols = [
-            'title',
-            'status.title',
-            'created_at',
-        ];
+	public function getSorts(Request $request): array
+	{
+		$sort_cols = ['title', 'status.title', 'created_at'];
 
-        // Merge filters with sort query string
-        $url = $request->url() . '?' . Song::getFilterQueryString();
+		// Merge filters with sort query string
+		$url = $request->url() . '?' . Song::getFilterQueryString();
 
-        $current_sort = $request->input('sort_by', 'title');
-        $current_dir =  $request->input('sort_dir', 'asc');
+		$current_sort = $request->input('sort_by', 'title');
+		$current_dir = $request->input('sort_dir', 'asc');
 
-        $sorts = [];
-        foreach($sort_cols as $col) {
-            // If current sort
-            if( $col === $current_sort ) {
-                // Create link for opposite sort direction
-                $current = true;
-                $dir = ( 'asc' === $current_dir ) ? 'desc' : 'asc';
-            } else {
-                $current = false;
-                $dir = 'asc';
-            };
-            $sorts[$col] = [
-                'url'       => $url . "&sort_by=$col&sort_dir=$dir",
-                'dir'       => $current_dir,
-                'current'   => $current,
-            ];
-        }
-        return $sorts;
-    }
+		$sorts = [];
+		foreach ($sort_cols as $col) {
+			// If current sort
+			if ($col === $current_sort) {
+				// Create link for opposite sort direction
+				$current = true;
+				$dir = 'asc' === $current_dir ? 'desc' : 'asc';
+			} else {
+				$current = false;
+				$dir = 'asc';
+			}
+			$sorts[$col] = [
+				'url' => $url . "&sort_by=$col&sort_dir=$dir",
+				'dir' => $current_dir,
+				'current' => $current,
+			];
+		}
+		return $sorts;
+	}
 }

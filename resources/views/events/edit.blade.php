@@ -1,4 +1,6 @@
-<?php /** @var App\Models\Event $event */ ?>
+<?php
+/** @var App\Models\Event $event */
+?>
 @extends('layouts.page')
 
 @section('title', 'Edit - ' . $event->title)

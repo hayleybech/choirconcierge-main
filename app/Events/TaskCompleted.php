@@ -14,31 +14,31 @@ use App\Models\Singer;
 
 class TaskCompleted
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+	use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $task;
-    public $singer;
+	public $task;
+	public $singer;
 
-    /**
-     * Create a new event instance.
-     *
-     * @param \App\Models\Task $task
-     * @param \App\Models\Singer $singer
-     * @return void
-     */
-    public function __construct(Task $task, Singer $singer)
-    {
-        $this->task = $task;
-        $this->singer = $singer;
-    }
+	/**
+	 * Create a new event instance.
+	 *
+	 * @param \App\Models\Task $task
+	 * @param \App\Models\Singer $singer
+	 * @return void
+	 */
+	public function __construct(Task $task, Singer $singer)
+	{
+		$this->task = $task;
+		$this->singer = $singer;
+	}
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
-    }
+	/**
+	 * Get the channels the event should broadcast on.
+	 *
+	 * @return \Illuminate\Broadcasting\Channel|array
+	 */
+	public function broadcastOn()
+	{
+		return new PrivateChannel('channel-name');
+	}
 }

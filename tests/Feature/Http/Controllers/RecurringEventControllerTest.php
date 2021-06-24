@@ -15,39 +15,39 @@ use Tests\TestCase;
  */
 class RecurringEventControllerTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+	use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function destroy_for_single_deletes_one(): void
-    {
-    	$this->markAsRisky(); // @todo sometimes fails, but I don't know why
+	/**
+	 * @test
+	 */
+	public function destroy_for_single_deletes_one(): void
+	{
+		$this->markAsRisky(); // @todo sometimes fails, but I don't know why
 
-	    $this->actingAs($this->createUserWithRole('Events Team'));
+		$this->actingAs($this->createUserWithRole('Events Team'));
 
-        $parent = Event::factory()
-	        ->repeating()
-	        ->create();
+		$parent = Event::factory()
+			->repeating()
+			->create();
 
-        $first_child = $parent->repeat_children->first();
+		$first_child = $parent->repeat_children->first();
 
-        $response = $this->get(the_tenant_route('events.delete-recurring', [$parent, 'mode' => 'single']));
-        $response->assertRedirect(the_tenant_route('events.index'));
+		$response = $this->get(the_tenant_route('events.delete-recurring', [$parent, 'mode' => 'single']));
+		$response->assertRedirect(the_tenant_route('events.index'));
 
-        // Assert parent deleted
-	    $this->assertSoftDeleted($parent);
+		// Assert parent deleted
+		$this->assertSoftDeleted($parent);
 
-	    // Assert children still exist
-        $this->assertDatabaseHas('events', [
-        	'id'            => $first_child->id,
-        	'repeat_until'  => tz_from_tenant_to_utc($parent->repeat_until)->format('Y-m-d H:i:s'),
-        ]);
+		// Assert children still exist
+		$this->assertDatabaseHas('events', [
+			'id' => $first_child->id,
+			'repeat_until' => tz_from_tenant_to_utc($parent->repeat_until)->format('Y-m-d H:i:s'),
+		]);
 
-        // Assert parent ID changed
-	    $first_child->refresh();
-	    self::assertEquals($first_child->id, $first_child->repeat_parent_id);
-    }
+		// Assert parent ID changed
+		$first_child->refresh();
+		self::assertEquals($first_child->id, $first_child->repeat_parent_id);
+	}
 
 	/**
 	 * @test
@@ -124,9 +124,9 @@ class RecurringEventControllerTest extends TestCase
 		$response = $this->get(the_tenant_route('events.edit-recurring', [$event, 'mode' => $mode]));
 
 		$edit_urls = [
-			'single'    => route('events.edit', ['event' => $event, 'mode' => $mode]),
+			'single' => route('events.edit', ['event' => $event, 'mode' => $mode]),
 			'following' => route('events.edit', ['event' => $event, 'mode' => $mode]),
-			'all'       => route('events.edit', ['event' => $event->repeat_parent, 'mode' => $mode]),
+			'all' => route('events.edit', ['event' => $event->repeat_parent, 'mode' => $mode]),
 		];
 		$response->assertRedirect($edit_urls[$mode]);
 	}
@@ -159,7 +159,7 @@ class RecurringEventControllerTest extends TestCase
 
 		// Assert siblings not changed
 		$this->assertDatabaseMissing('events', [
-			'id'    => $next_sibling->id,
+			'id' => $next_sibling->id,
 			'title' => $saved_data['title'],
 		]);
 
@@ -200,11 +200,11 @@ class RecurringEventControllerTest extends TestCase
 
 		// Assert siblings changed but not regenerated
 		$this->assertDatabaseHas('events', [
-			'id'    => $first_child->id,
+			'id' => $first_child->id,
 			'title' => $saved_data['title'],
 		]);
 		$this->assertDatabaseHas('events', [
-			'id'    => $last_child->id,
+			'id' => $last_child->id,
 			'title' => $saved_data['title'],
 		]);
 
@@ -275,11 +275,11 @@ class RecurringEventControllerTest extends TestCase
 		// Make the update request
 		$date_format = 'Y-m-d H:i:s';
 		$request_data = array_merge($request_data, [
-			'title'     => 'New title',
+			'title' => 'New title',
 
 			'call_time' => $target->call_time->format($date_format),
-			'start_date'=> $target->start_date->format($date_format),
-			'end_date'  => $target->end_date->format($date_format),
+			'start_date' => $target->start_date->format($date_format),
+			'end_date' => $target->end_date->format($date_format),
 		]);
 		$saved_data['title'] = 'New title';
 		$response = $this->put(the_tenant_route('events.update-recurring', [$target, 'following']), $request_data);
@@ -287,20 +287,20 @@ class RecurringEventControllerTest extends TestCase
 
 		// Assert target and siblings updated but not regenerated
 		$this->assertDatabaseHas('events', [
-			'id'    => $target->id,
+			'id' => $target->id,
 			'title' => $saved_data['title'],
 		]);
 		$this->assertDatabaseHas('events', [
-			'id'                => $next_sibling->id,
-			'title'             => $saved_data['title'],
-			'repeat_parent_id'  => $target->id,
-			'deleted_at'        => null,
+			'id' => $next_sibling->id,
+			'title' => $saved_data['title'],
+			'repeat_parent_id' => $target->id,
+			'deleted_at' => null,
 		]);
 		$this->assertDatabaseHas('events', [
-			'id'                => $last_sibling->id,
-			'title'             => $saved_data['title'],
-			'repeat_parent_id'  => $target->id,
-			'deleted_at'        => null,
+			'id' => $last_sibling->id,
+			'title' => $saved_data['title'],
+			'repeat_parent_id' => $target->id,
+			'deleted_at' => null,
 		]);
 
 		// Assert earlier events intact
@@ -340,7 +340,7 @@ class RecurringEventControllerTest extends TestCase
 
 		// Assert target updated
 		$this->assertDatabaseHas('events', [
-			'id'    => $target->id,
+			'id' => $target->id,
 			'title' => $saved_data['title'],
 		]);
 
@@ -366,9 +366,9 @@ class RecurringEventControllerTest extends TestCase
 	public function modeProvider(): array
 	{
 		return [
-			'single'     => ['single'],
-			'following'  => ['following'],
-			'all'        => ['all'],
+			'single' => ['single'],
+			'following' => ['following'],
+			'all' => ['all'],
 		];
 	}
 
@@ -376,40 +376,40 @@ class RecurringEventControllerTest extends TestCase
 	{
 		return [
 			'randomised' => [
-				function() {
+				function () {
 					$this->setUpFaker();
 
 					$date_format = 'Y-m-d H:i:s';
-					$call_time = Carbon::instance( $this->faker->dateTimeBetween('now', '+1 year') );
+					$call_time = Carbon::instance($this->faker->dateTimeBetween('now', '+1 year'));
 					$start_time = (clone $call_time)->addHour();
 					$end_time = (clone $start_time)->addHours(2);
 
 					$request_data = [
-						'title'                 => $this->faker->sentence(6, true),
-						'call_time'             => $call_time->format($date_format),
-						'start_date'            => $start_time->format($date_format),
-						'end_date'              => $end_time->format($date_format),
-						'location_name'         => $this->faker->sentence(3, true),
-						'location_address'      => $this->faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
-						'description'           => $this->faker->optional()->sentence(),
-						'type_id'               => EventType::where('title', 'Rehearsal')->value('id'),
+						'title' => $this->faker->sentence(6, true),
+						'call_time' => $call_time->format($date_format),
+						'start_date' => $start_time->format($date_format),
+						'end_date' => $end_time->format($date_format),
+						'location_name' => $this->faker->sentence(3, true),
+						'location_address' => $this->faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
+						'description' => $this->faker->optional()->sentence(),
+						'type_id' => EventType::where('title', 'Rehearsal')->value('id'),
 					];
 
 					return [
 						'request' => $request_data,
 						'saved' => [
-							'title'                 => $request_data['title'],
-							'call_time'             => tz_from_tenant_to_utc($request_data['call_time'])->format($date_format),
-							'start_date'            => tz_from_tenant_to_utc($request_data['start_date'])->format($date_format),
-							'end_date'              => tz_from_tenant_to_utc($request_data['end_date'])->format($date_format),
-							'location_name'         => $request_data['location_name'],
-							'location_address'      => $request_data['location_address'],
-							'description'           => $request_data['description'],
-							'type_id'               => $request_data['type_id'],
+							'title' => $request_data['title'],
+							'call_time' => tz_from_tenant_to_utc($request_data['call_time'])->format($date_format),
+							'start_date' => tz_from_tenant_to_utc($request_data['start_date'])->format($date_format),
+							'end_date' => tz_from_tenant_to_utc($request_data['end_date'])->format($date_format),
+							'location_name' => $request_data['location_name'],
+							'location_address' => $request_data['location_address'],
+							'description' => $request_data['description'],
+							'type_id' => $request_data['type_id'],
 						],
 					];
-				}
-			]
+				},
+			],
 		];
 	}
 
@@ -417,11 +417,11 @@ class RecurringEventControllerTest extends TestCase
 	{
 		return [
 			[
-				function() {
+				function () {
 					$this->setUpFaker();
 
 					$date_format = 'Y-m-d H:i:s';
-					$call_time = Carbon::instance( $this->faker->dateTimeBetween('now', '+1 year') );
+					$call_time = Carbon::instance($this->faker->dateTimeBetween('now', '+1 year'));
 					$start_time = (clone $call_time)->addHour();
 					$end_time = (clone $start_time)->addHours(2);
 
@@ -429,38 +429,39 @@ class RecurringEventControllerTest extends TestCase
 					$repeat_unit = $this->faker->randomElement(['days', 'weeks', 'months']);
 
 					$request_data = [
-						'title'                 => $this->faker->sentence(6, true),
-						'call_time'             => $call_time->format($date_format),
-						'start_date'            => $start_time->format($date_format),
-						'end_date'              => $end_time->format($date_format),
-						'location_name'         => $this->faker->sentence(3, true),
-						'location_address'      => $this->faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
-						'description'           => $this->faker->optional()->sentence(),
-						'type_id'               => EventType::where('title', 'Rehearsal')->value('id'),
+						'title' => $this->faker->sentence(6, true),
+						'call_time' => $call_time->format($date_format),
+						'start_date' => $start_time->format($date_format),
+						'end_date' => $end_time->format($date_format),
+						'location_name' => $this->faker->sentence(3, true),
+						'location_address' => $this->faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
+						'description' => $this->faker->optional()->sentence(),
+						'type_id' => EventType::where('title', 'Rehearsal')->value('id'),
 
-						'is_repeating'          => true,
+						'is_repeating' => true,
 						'repeat_frequency_unit' => $repeat_unit,
-						'repeat_until'          => $call_time->clone()
-							->add($total_repeats.' '.$repeat_unit)
+						'repeat_until' => $call_time
+							->clone()
+							->add($total_repeats . ' ' . $repeat_unit)
 							->format($date_format),
 					];
 					return [
 						'request' => $request_data,
 						'saved' => [
-							'title'                 => $request_data['title'],
-							'call_time'             => tz_from_tenant_to_utc($request_data['call_time'])->format($date_format),
-							'start_date'            => tz_from_tenant_to_utc($request_data['start_date'])->format($date_format),
-							'end_date'              => tz_from_tenant_to_utc($request_data['end_date'])->format($date_format),
-							'location_name'         => $request_data['location_name'],
-							'location_address'      => $request_data['location_address'],
-							'description'           => $request_data['description'],
-							'type_id'               => $request_data['type_id'],
+							'title' => $request_data['title'],
+							'call_time' => tz_from_tenant_to_utc($request_data['call_time'])->format($date_format),
+							'start_date' => tz_from_tenant_to_utc($request_data['start_date'])->format($date_format),
+							'end_date' => tz_from_tenant_to_utc($request_data['end_date'])->format($date_format),
+							'location_name' => $request_data['location_name'],
+							'location_address' => $request_data['location_address'],
+							'description' => $request_data['description'],
+							'type_id' => $request_data['type_id'],
 
-							'repeat_until'          => tz_from_tenant_to_utc($request_data['repeat_until']),
+							'repeat_until' => tz_from_tenant_to_utc($request_data['repeat_until']),
 						],
 					];
-				}
-			]
+				},
+			],
 		];
 	}
 }

@@ -869,6 +869,15 @@
     "@nodelib/fs.scandir" "2.1.4"
     "fastq" "^1.6.0"
 
+"@prettier/plugin-php@^0.17.1":
+  "integrity" "sha512-TJIk6sH7ONtKO/ZNTCyDQl83kVbFQMtk7Z9ms4TczIqZhUTo07L0PLRfhcLTyG2ILnEOOjI+gKsaKsZjIkpaKw=="
+  "resolved" "https://registry.npmjs.org/@prettier/plugin-php/-/plugin-php-0.17.1.tgz"
+  "version" "0.17.1"
+  dependencies:
+    "linguist-languages" "^7.5.1"
+    "mem" "^8.0.0"
+    "php-parser" "git+https://github.com/glayzzle/php-parser.git#bb89fff9e636a991aa3ac931d5f8a66a365fccce"
+
 "@sentry/browser@6.2.5":
   "integrity" "sha512-nlvaE+D7oaj4MxoY9ikw+krQDOjftnDYJQnOwOraXPk7KYM6YwmkakLuE+x/AkaH3FQVTQF330VAa9d6SWETlA=="
   "resolved" "https://registry.npmjs.org/@sentry/browser/-/browser-6.2.5.tgz"
@@ -4385,6 +4394,11 @@
   "resolved" "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.1.6.tgz"
   "version" "1.1.6"
 
+"linguist-languages@^7.5.1":
+  "integrity" "sha512-qkSSNDjDDycZ2Wcw+GziNBB3nNo3ddYUInM/PL8Amgwbd9RQ/BKGj2/1d6mdxKgBFnUqZuaDbkIwkE4KUwwmtQ=="
+  "resolved" "https://registry.npmjs.org/linguist-languages/-/linguist-languages-7.15.0.tgz"
+  "version" "7.15.0"
+
 "loader-runner@^4.2.0":
   "integrity" "sha512-92+huvxMvYlMzMt0iIOukcwYBFpkYJdpl2xsZ7LrlayO7E8SOv+JJUEK17B/dJIHAOLMfh2dZZ/Y18WgmGtYNw=="
   "resolved" "https://registry.npmjs.org/loader-runner/-/loader-runner-4.2.0.tgz"
@@ -5192,6 +5206,11 @@
   "resolved" "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-2.6.347.tgz"
   "version" "2.6.347"
 
+"php-parser@git+https://github.com/glayzzle/php-parser.git#bb89fff9e636a991aa3ac931d5f8a66a365fccce":
+  "integrity" "sha512-Botjly2ynr3INxUJNm+/i51GW7QZW20XNLXaUSUfsoKUPGbDHTb8cJjQxyCMuiaZQnJGZY+gIwlo9sn9n9dmZA=="
+  "resolved" "git+ssh://git@github.com/glayzzle/php-parser.git#bb89fff9e636a991aa3ac931d5f8a66a365fccce"
+  "version" "3.0.2"
+
 "picomatch@^2.0.4", "picomatch@^2.0.5", "picomatch@^2.2.1":
   "integrity" "sha512-q0M/9eZHzmr0AulXyPwNfZjtwZ/RBZlbN3K3CErVrk50T2ASYI7Bye0EvekFY3IP1Nt2DHu0re+V2ZHIpMkuWg=="
   "resolved" "https://registry.npmjs.org/picomatch/-/picomatch-2.2.2.tgz"
@@ -5609,7 +5628,7 @@
     "source-map" "^0.6.1"
     "supports-color" "^6.1.0"
 
-"prettier@^1.18.2", "prettier@1.19.1":
+"prettier@^1.15.0 || ^2.0.0", "prettier@^1.18.2", "prettier@^1.19.1":
   "integrity" "sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew=="
   "resolved" "https://registry.npmjs.org/prettier/-/prettier-1.19.1.tgz"
   "version" "1.19.1"

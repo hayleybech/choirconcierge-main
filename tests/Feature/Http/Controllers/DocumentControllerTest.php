@@ -15,75 +15,80 @@ use Tests\TestCase;
  */
 class DocumentControllerTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+	use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_back(): void
-    {
-	    Storage::fake('public');
+	/**
+	 * @test
+	 */
+	public function destroy_redirects_back(): void
+	{
+		Storage::fake('public');
 
-	    $this->actingAs($this->createUserWithRole('Music Team'));
+		$this->actingAs($this->createUserWithRole('Music Team'));
 
-        $folder = Folder::factory()
-	        ->hasDocuments()
-	        ->create();
+		$folder = Folder::factory()
+			->hasDocuments()
+			->create();
 
-        $response = $this->from(the_tenant_route('folders.index'))
-	        ->delete(the_tenant_route('folders.documents.destroy', [$folder, $folder->documents->first()]));
+		$response = $this->from(the_tenant_route('folders.index'))->delete(
+			the_tenant_route('folders.documents.destroy', [$folder, $folder->documents->first()]),
+		);
 
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect(the_tenant_route('folders.index'));
-        $this->assertDeleted($folder->documents->first());
-    }
+		$response->assertSessionHasNoErrors();
+		$response->assertRedirect(the_tenant_route('folders.index'));
+		$this->assertDeleted($folder->documents->first());
+	}
 
-    /**
-     * @test
-     */
-    public function show_returns_file(): void
-    {
-	    Storage::fake('public');
+	/**
+	 * @test
+	 */
+	public function show_returns_file(): void
+	{
+		Storage::fake('public');
 
-	    $this->actingAs($this->createUserWithRole('Music Team'));
+		$this->actingAs($this->createUserWithRole('Music Team'));
 
-	    $folder = Folder::factory()
-		    ->hasDocuments()
-		    ->create();
-	    Storage::disk('public')->assertExists($folder->documents->first()->getPath());
+		$folder = Folder::factory()
+			->hasDocuments()
+			->create();
+		Storage::disk('public')->assertExists($folder->documents->first()->getPath());
 
-        $response = $this->get(the_tenant_route('folders.documents.show', [$folder, $folder->documents->first()]));
+		$response = $this->get(the_tenant_route('folders.documents.show', [$folder, $folder->documents->first()]));
 
-        $response->assertOk();
-	    self::assertEquals('attachment; filename='.$folder->documents->first()->filepath, $response->headers->get('content-disposition'));
-    }
+		$response->assertOk();
+		self::assertEquals(
+			'attachment; filename=' . $folder->documents->first()->filepath,
+			$response->headers->get('content-disposition'),
+		);
+	}
 
-    /**
-     * @test
-     */
-    public function store_redirects_back(): void
-    {
-	    Storage::fake('public');
+	/**
+	 * @test
+	 */
+	public function store_redirects_back(): void
+	{
+		Storage::fake('public');
 
-	    $this->actingAs($this->createUserWithRole('Music Team'));
+		$this->actingAs($this->createUserWithRole('Music Team'));
 
-        $folder = Folder::factory()->create();
+		$folder = Folder::factory()->create();
 
-        $filename = $this->faker->word().'.'.$this->faker->fileExtension();
-        $data = [
-        	'document_uploads' => [UploadedFile::fake()->create($filename, 5)],
-        ];
-        $response = $this->from(the_tenant_route('folders.index'))
-	        ->post(the_tenant_route('folders.documents.store', [$folder]), $data);
+		$filename = $this->faker->word() . '.' . $this->faker->fileExtension();
+		$data = [
+			'document_uploads' => [UploadedFile::fake()->create($filename, 5)],
+		];
+		$response = $this->from(the_tenant_route('folders.index'))->post(
+			the_tenant_route('folders.documents.store', [$folder]),
+			$data,
+		);
 
-        $response->assertSessionHasNoErrors();
-	    $response->assertRedirect(the_tenant_route('folders.index'));
-	    $this->assertDatabaseHas('documents', [
-	    	'folder_id' => $folder->id,
-		    'filepath'  => $data['document_uploads'][0]->hashName(),
-	    ]);
-	    $document = Document::firstWhere('filepath', $data['document_uploads'][0]->hashName());
-	    Storage::disk('public')->assertExists($document->getPath());
-
-    }
+		$response->assertSessionHasNoErrors();
+		$response->assertRedirect(the_tenant_route('folders.index'));
+		$this->assertDatabaseHas('documents', [
+			'folder_id' => $folder->id,
+			'filepath' => $data['document_uploads'][0]->hashName(),
+		]);
+		$document = Document::firstWhere('filepath', $data['document_uploads'][0]->hashName());
+		Storage::disk('public')->assertExists($document->getPath());
+	}
 }

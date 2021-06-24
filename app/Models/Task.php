@@ -36,44 +36,38 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Task extends Model
 {
-    use SoftDeletes, BelongsToTenant, TenantTimezoneDates, HasFactory;
+	use SoftDeletes, BelongsToTenant, TenantTimezoneDates, HasFactory;
 
-    protected $with = ['role'];
+	protected $with = ['role'];
 
-    protected $fillable = [
-        'name',
-        'role_id',
-        'type',
-        'route',
-    ];
+	protected $fillable = ['name', 'role_id', 'type', 'route'];
 
-    /*
+	/*
 	 * Get the Role authorised for this task
 	 */
 	public function role(): BelongsTo
 	{
 		return $this->belongsTo(Role::class);
 	}
-	
+
 	public function singers(): BelongsToMany
 	{
-		return $this->belongsToMany(Singer::class, 'singers_tasks')->withPivot('completed')->withTimestamps();
+		return $this->belongsToMany(Singer::class, 'singers_tasks')
+			->withPivot('completed')
+			->withTimestamps();
 	}
-	
+
 	public function notification_templates(): HasMany
 	{
 		return $this->hasMany(NotificationTemplate::class);
 	}
 
 	public function generateNotifications(Singer $singer): void
-    {
-
-        // Loop through templates for this Task to create Notifications
-        $notification_templates = $this->notification_templates;
-        foreach( $notification_templates as $template ){
-
-            $template->generateNotifications($singer);
-
-        }
-    }
+	{
+		// Loop through templates for this Task to create Notifications
+		$notification_templates = $this->notification_templates;
+		foreach ($notification_templates as $template) {
+			$template->generateNotifications($singer);
+		}
+	}
 }

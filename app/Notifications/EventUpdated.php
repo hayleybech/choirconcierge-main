@@ -10,60 +10,59 @@ use Illuminate\Notifications\Notification;
 
 class EventUpdated extends Notification
 {
-    use Queueable;
+	use Queueable;
 
-    private Event $event;
+	private Event $event;
 
-    /**
-     * Create a new notification instance.
-     *
-     * @param Event $event
-     */
-    public function __construct(Event $event)
-    {
-        $this->event = $event;
-    }
+	/**
+	 * Create a new notification instance.
+	 *
+	 * @param Event $event
+	 */
+	public function __construct(Event $event)
+	{
+		$this->event = $event;
+	}
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function via($notifiable): array
-    {
-        return ['mail'];
-    }
+	/**
+	 * Get the notification's delivery channels.
+	 *
+	 * @param  mixed  $notifiable
+	 * @return array
+	 */
+	public function via($notifiable): array
+	{
+		return ['mail'];
+	}
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return MailMessage
-     */
-    public function toMail($notifiable): MailMessage
-    {
-        return (new MailMessage)
-            ->from(tenant('mail_from_address'), tenant('mail_from_name'))
-            ->greeting('An even has been updated!')
-            ->line('The event '.$this->event->type->title.' event, "'.$this->event->title . '" has new changes. ')
-            ->line('Date: ' . $this->event->call_time->diffForHumans())
-            ->line('Location: ' . $this->event->location_name . ' ' . $this->event->location_address)
-            ->action('View Event', route('events.show', $this->event))
-            ->line($this->event->description)
-        ;
-    }
+	/**
+	 * Get the mail representation of the notification.
+	 *
+	 * @param  mixed  $notifiable
+	 * @return MailMessage
+	 */
+	public function toMail($notifiable): MailMessage
+	{
+		return (new MailMessage())
+			->from(tenant('mail_from_address'), tenant('mail_from_name'))
+			->greeting('An even has been updated!')
+			->line('The event ' . $this->event->type->title . ' event, "' . $this->event->title . '" has new changes. ')
+			->line('Date: ' . $this->event->call_time->diffForHumans())
+			->line('Location: ' . $this->event->location_name . ' ' . $this->event->location_address)
+			->action('View Event', route('events.show', $this->event))
+			->line($this->event->description);
+	}
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function toArray($notifiable): array
-    {
-        return [
-            //
-        ];
-    }
+	/**
+	 * Get the array representation of the notification.
+	 *
+	 * @param  mixed  $notifiable
+	 * @return array
+	 */
+	public function toArray($notifiable): array
+	{
+		return [
+				//
+			];
+	}
 }

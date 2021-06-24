@@ -27,28 +27,25 @@ use Illuminate\Support\Carbon;
  */
 class GroupMember extends Model
 {
-    use TenantTimezoneDates;
+	use TenantTimezoneDates;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'memberable_id',
-        'memberable_type',
-    ];
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['memberable_id', 'memberable_type'];
 
-    /**
-     * Get all of the member models (users, roles etc).
-     */
-    public function memberable(): MorphTo
-    {
-        return $this->morphTo();
-    }
+	/**
+	 * Get all of the member models (users, roles etc).
+	 */
+	public function memberable(): MorphTo
+	{
+		return $this->morphTo();
+	}
 
-    public function group(): BelongsTo
-    {
-        return $this->belongsTo(UserGroup::class);
-    }
+	public function group(): BelongsTo
+	{
+		return $this->belongsTo(UserGroup::class);
+	}
 }

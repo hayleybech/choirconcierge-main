@@ -13,27 +13,30 @@ use Tests\TestCase;
  */
 class UpdateSingerCategoryControllerTest extends TestCase
 {
-    use RefreshDatabase;
+	use RefreshDatabase;
 
-    /**
-     * @test
-     */
-    public function invoke_redirects_to_index(): void
-    {
-	    $this->actingAs($this->createUserWithRole('Membership Team'));
+	/**
+	 * @test
+	 */
+	public function invoke_redirects_to_index(): void
+	{
+		$this->actingAs($this->createUserWithRole('Membership Team'));
 
-        $singer = Singer::factory()->create();
+		$singer = Singer::factory()->create();
 
-        $new_category_id = SingerCategory::inRandomOrder()->value('id');
-        $response = $this->get(the_tenant_route('singers.categories.update', [$singer]).'?move_category='.$new_category_id, [
-        	'move_category' => $new_category_id,
-        ]);
+		$new_category_id = SingerCategory::inRandomOrder()->value('id');
+		$response = $this->get(
+			the_tenant_route('singers.categories.update', [$singer]) . '?move_category=' . $new_category_id,
+			[
+				'move_category' => $new_category_id,
+			],
+		);
 
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect(the_tenant_route('singers.index'));
-        $this->assertDatabaseHas('singers', [
-        	'id'                    => $singer->id,
-	        'singer_category_id'    => $new_category_id,
-        ]);
-    }
+		$response->assertSessionHasNoErrors();
+		$response->assertRedirect(the_tenant_route('singers.index'));
+		$this->assertDatabaseHas('singers', [
+			'id' => $singer->id,
+			'singer_category_id' => $new_category_id,
+		]);
+	}
 }

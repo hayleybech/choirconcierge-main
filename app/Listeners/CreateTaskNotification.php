@@ -8,24 +8,24 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CreateTaskNotification
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
+	/**
+	 * Create the event listener.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		//
+	}
 
-    /**
-     * Handle the event.
-     *
-     * @param  TaskCompleted  $event
-     * @return void
-     */
-    public function handle(TaskCompleted $event)
-    {
-        $event->task->generateNotifications($event->singer);
-    }
+	/**
+	 * Handle the event.
+	 *
+	 * @param  TaskCompleted  $event
+	 * @return void
+	 */
+	public function handle(TaskCompleted $event)
+	{
+		$event->task->generateNotifications($event->singer);
+	}
 }
