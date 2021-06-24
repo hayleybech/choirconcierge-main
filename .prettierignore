@@ -30,6 +30,7 @@ queue.pid
 
 public/js/test.js
 
+# Prettier
 composer.phar
 composer.json
 composer.lock
@@ -41,4 +42,17 @@ phpstan.neon
 phpunit.xml
 server.php
 artisan
-*.php
+
+/public/index.php
+/public/vendor
+/resources/assets/js/lib
+/resources/assets/js/bootstrap.js
+/resources/lang
+/resources/views/vendor
+/routes
+/config
+/storage
+/bootstrap
+
+# npx prettier --l . **/*.{js,vue}
+# npx prettier --write . **/*.{js,vue}
