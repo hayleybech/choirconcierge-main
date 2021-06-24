@@ -135,7 +135,7 @@
                             id="send_notification"
                             name="send_notification"
                             value="true"
-                            :checked="! empty(old()) ? (bool) old('send_notification') : true"
+                            :checked="checkbox_old('send_notification', true)"
                         />
                     </div>
 

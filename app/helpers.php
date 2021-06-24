@@ -51,3 +51,35 @@ if (! function_exists('tz_from_utc_to_tenant')) {
             ->timezone($timezone);
     }
 }
+
+if (! function_exists('checkbox_old')) {
+    function checkbox_old(string $input_name, bool $default_value, bool $saved_value = null): bool
+    {
+        if(empty(old())){
+            return $saved_value ?? $default_value;
+        }
+
+        return (bool) old($input_name);
+    }
+}
+
+if (! function_exists('checkbox_group_old')) {
+    function checkbox_group_old(string $input_name, string $this_value, array $saved_values = []): bool
+    {
+        if(empty(old())){
+            return in_array($this_value, $saved_values, false);
+        }
+        return in_array($this_value, old($input_name), false);
+    }
+}
+
+if (! function_exists('radio_old')) {
+    function radio_old(string $group_name, string $this_value, string $default_group_value, string $saved_group_value = null): bool
+    {
+        if(empty(old())){
+            return ($saved_group_value ?? $default_group_value) === (string) old($group_name);
+        }
+
+        return $this_value === (string) old($group_name);
+    }
+}
