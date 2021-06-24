@@ -29,3 +29,16 @@ queue.pid
 .phpunit.result.cache
 
 public/js/test.js
+
+composer.phar
+composer.json
+composer.lock
+package.json
+package-lock.json
+yarn.lock
+tsconfig.json
+phpstan.neon
+phpunit.xml
+server.php
+artisan
+*.php
