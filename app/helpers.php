@@ -79,7 +79,7 @@ if (!function_exists('radio_old')) {
 		string $saved_group_value = null
 	): bool {
 		if (empty(old())) {
-			return ($saved_group_value ?? $default_group_value) === (string) old($group_name);
+			return ($saved_group_value ?? $default_group_value) === $this_value;
 		}
 
 		return $this_value === (string) old($group_name);
