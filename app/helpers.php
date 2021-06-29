@@ -57,7 +57,7 @@ if (!function_exists('checkbox_old')) {
 			return $saved_value ?? $default_value;
 		}
 
-		return (bool) old($input_name);
+		return (bool) old($input_name, $default_value);
 	}
 }
 

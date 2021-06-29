@@ -14,10 +14,17 @@
 
             <div class="form-group">
                 {{ Form::label('title', 'Stack Title') }}
-                {{ Form::text('title', '', ['class' => 'form-control']) }}
+                {{ Form::text('title', old('title'), ['class' => 'form-control']) }}
             </div>
 
-            <riser-stack :initial-voice-parts="{{ $voice_parts->toJson() }}"></riser-stack>
+            <riser-stack
+                :initial-voice-parts="{{ $voice_parts->toJson() }}"
+                :initial-singers="{{ old('singer_positions', json_encode([])) }}"
+                :initial-rows="{{ old('rows', 4)}}"
+                :initial-cols="{{ old('columns', 4) }}"
+                :initial-front-row-length="{{ old('front_row_length', 1) }}"
+                :initial-front-row-on-floor="{{ json_encode(checkbox_old('front_row_on_floor', true)) }}"
+            />
 
         </div>
 
