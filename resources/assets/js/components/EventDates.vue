@@ -19,7 +19,6 @@
             output-name="start_date"
             v-model="startDate"
             :default-value="defaultStartDate"
-            :disabled-time="disabledStartTime"
             @change="changeStartTime"
         />
       </div>
@@ -30,6 +29,8 @@
             input-name="call_time_input"
             output-name="call_time"
             v-model="callTime"
+            :default-value="defaultCallTime"
+            :disabled-time="disabledCallTime"
             @change="changeCallTime"
             :click-to-edit="true"
         />
@@ -86,8 +87,9 @@ export default {
 		return {
 			startDate: this.initStartDate ? new Date(this.initStartDate) : new Date(),
 			endDate: this.initEndDate ? new Date(this.initEndDate) : new Date(),
-			callTime: this.initEndDate ? new Date(this.initCallTime) : new Date(),
+			callTime: this.initCallTime ? new Date(this.initCallTime) : new Date(),
 			rawFormat: 'YYYY-MM-DD HH:mm:ss',
+			defaultCallTime: this.initCallTime ? new Date(this.initCallTime) : new Date(),
 			defaultStartDate: this.initStartDate ? new Date(this.initStartDate) : new Date(),
 			defaultEndDate: this.initEndDate ? new Date(this.initEndDate) : new Date(),
 		};
@@ -171,33 +173,34 @@ export default {
 			this.updateDefaults();
 		},
 		updateDefaults() {
-			// startDate must be at least x later than callTime
-			const minAfterCallTime = { minutes: 15 };
-			if (
-				moment(this.callTime)
-					.add(minAfterCallTime)
-					.isSameOrAfter(this.startDate)
-			) {
-				this.startDate = moment(this.callTime)
-					.add(minAfterCallTime)
-					.toDate();
-				this.defaultStartDate = this.startDate;
-			}
-			// endDate must be at least y later than startDate
-			const minAfterStartDate = { minutes: 15 };
+      // callTime must be at least x earlier than startDate
+      const minCallTimeBeforeStartTime = { minutes: 15}
+      if (
+          moment(this.callTime)
+              .add(minCallTimeBeforeStartTime)
+              .isSameOrAfter(this.startDate)
+      ) {
+        this.callTime = moment(this.startDate)
+            .subtract(minCallTimeBeforeStartTime)
+            .toDate();
+        this.defaultCallTime = this.callTime;
+      }
+
+      // endDate must be at least y later than startDate
+			const minEndDateAfterStartDate = { minutes: 15 };
 			if (
 				moment(this.startDate)
-					.add(minAfterStartDate)
+					.add(minEndDateAfterStartDate)
 					.isSameOrAfter(this.endDate)
 			) {
 				this.endDate = moment(this.startDate)
-					.add(minAfterStartDate)
+					.add(minEndDateAfterStartDate)
 					.toDate();
 				this.defaultEndDate = this.endDate;
 			}
 		},
-		disabledStartTime(date) {
-			return date <= this.callTime;
+		disabledCallTime(date) {
+			return date >= this.startDate;
 		},
 		disabledEndTime(date) {
 			return date <= this.startDate;
