@@ -124,7 +124,7 @@ export default {
           })
           .toDate();
 
-      this.updateDefaults();
+      this.constrain();
     },
     changeEndDate(date) {
       const newEndDate = moment(date);
@@ -137,7 +137,7 @@ export default {
           })
           .toDate();
 
-      this.updateDefaults();
+      this.constrain();
     },
 		changeStartTime(date) {
 			const newStartDate = moment(date);
@@ -148,7 +148,7 @@ export default {
 				})
 				.toDate();
 
-			this.updateDefaults();
+			this.constrain();
 		},
 		changeEndTime(date) {
 			const newEndDate = moment(date);
@@ -159,7 +159,7 @@ export default {
 				})
 				.toDate();
 
-			this.updateDefaults();
+			this.constrain();
 		},
 		changeCallTime(date) {
 			const newCall = moment(date);
@@ -170,9 +170,14 @@ export default {
 				})
 				.toDate();
 
-			this.updateDefaults();
+			this.constrain();
 		},
-		updateDefaults() {
+		constrain() {
+      this.constrainCallTime();
+      this.constrainEndTime();
+		},
+    constrainCallTime()
+    {
       // callTime must be at least x earlier than startDate
       const minCallTimeBeforeStartTime = { minutes: 15}
       if (
@@ -185,20 +190,22 @@ export default {
             .toDate();
         this.defaultCallTime = this.callTime;
       }
-
+    },
+    constrainEndTime()
+    {
       // endDate must be at least y later than startDate
-			const minEndDateAfterStartDate = { minutes: 15 };
-			if (
-				moment(this.startDate)
-					.add(minEndDateAfterStartDate)
-					.isSameOrAfter(this.endDate)
-			) {
-				this.endDate = moment(this.startDate)
-					.add(minEndDateAfterStartDate)
-					.toDate();
-				this.defaultEndDate = this.endDate;
-			}
-		},
+      const minEndDateAfterStartDate = { minutes: 15 };
+      if (
+          moment(this.startDate)
+              .add(minEndDateAfterStartDate)
+              .isSameOrAfter(this.endDate)
+      ) {
+        this.endDate = moment(this.startDate)
+            .add(minEndDateAfterStartDate)
+            .toDate();
+        this.defaultEndDate = this.endDate;
+      }
+    },
 		disabledCallTime(date) {
 			return date >= this.startDate;
 		},
