@@ -5,31 +5,33 @@
 			<small v-if="optional" class="text-muted">(Optional)</small>
 		</label>
 
-		<date-picker
-			v-bind:value="value"
-			v-on:input="onInput"
-			v-on:change="onChange"
-			:type="type"
-			:use12h="true"
-			:show-second="false"
-			:minute-step="5"
-			:format="displayFormat"
-			:input-class="inputClass"
-			:input-attr="{ name: inputName }"
-			:disabled-time="disabledTime"
-			style="width:100%"
-		>
-			<!-- TEMPORARY: Add icon for time type. The lib dev has already committed this as the default in the upcoming release -->
-			<template #icon-calendar v-if="'time' === type">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px">
-					<path d="M0 0h24v24H0z" fill="none" />
-					<path
-						d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-					/>
-					<path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
-				</svg>
-			</template>
-		</date-picker>
+    <click-to-edit-field :enabled="clickToEdit" :value="displayTime">
+      <date-picker
+        v-bind:value="value"
+        v-on:input="onInput"
+        v-on:change="onChange"
+        :type="type"
+        :use12h="true"
+        :show-second="false"
+        :minute-step="5"
+        :format="displayFormat"
+        :input-class="inputClass"
+        :input-attr="{ name: inputName }"
+        :disabled-time="disabledTime"
+        style="width:100%"
+      >
+        <!-- TEMPORARY: Add icon for time type. The lib dev has already committed this as the default in the upcoming release -->
+        <template #icon-calendar v-if="'time' === type">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+            />
+            <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+          </svg>
+        </template>
+      </date-picker>
+    </click-to-edit-field>
 
 		<input type="hidden" :name="outputName" :value="outputTime" />
 
@@ -71,6 +73,10 @@ export default {
 		disabledTime: {
 			type: Function,
 		},
+    clickToEdit: {
+      type: Boolean,
+      default: false,
+    },
 	},
 	data() {
 		return {
@@ -89,6 +95,9 @@ export default {
 		outputTime() {
 			return moment(this.value).format(this.rawFormat);
 		},
+    displayTime() {
+      return moment(this.value).format(this.displayFormat);
+    },
 		hasHelp() {
 			return !!this.$slots['help'];
 		},
