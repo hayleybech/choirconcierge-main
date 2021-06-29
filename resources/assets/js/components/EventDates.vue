@@ -105,71 +105,25 @@ export default {
 		 * Since we've opted for separate date and time controls,
 		 * we need to copy the changes in both directions.
 		 */
-    changeStartDate(date) {
-      const newStartDate = moment(date);
-
-      this.startDate = moment(this.startDate)
-          .set({
-            year: newStartDate.year(),
-            month: newStartDate.month(),
-            date: newStartDate.date(),
-          })
-          .toDate();
-
-      this.callTime = moment(this.callTime)
-          .set({
-            year: newStartDate.year(),
-            month: newStartDate.month(),
-            date: newStartDate.date(),
-          })
-          .toDate();
-
+    changeStartDate(newStartDate) {
+      this.startDate = this.setDate(newStartDate, this.startDate);
+      this.callTime =  this.setDate(newStartDate, this.callTime);
       this.constrain();
     },
-    changeEndDate(date) {
-      const newEndDate = moment(date);
-
-      this.endDate = moment(this.endDate)
-          .set({
-            year: newEndDate.year(),
-            month: newEndDate.month(),
-            date: newEndDate.date(),
-          })
-          .toDate();
-
+    changeEndDate(newEndDate) {
+      this.endDate = this.setDate(newEndDate, this.endDate);
       this.constrain();
     },
-		changeStartTime(date) {
-			const newStartDate = moment(date);
-			this.startDate = moment(this.startDate)
-				.set({
-					hour: newStartDate.hour(),
-					minute: newStartDate.minute(),
-				})
-				.toDate();
-
+		changeStartTime(newStartTime) {
+			this.startDate = this.setTime(newStartTime, this.startDate);
 			this.constrain();
 		},
-		changeEndTime(date) {
-			const newEndDate = moment(date);
-			this.endDate = moment(this.endDate)
-				.set({
-					hour: newEndDate.hour(),
-					minute: newEndDate.minute(),
-				})
-				.toDate();
-
+		changeEndTime(newEndTime) {
+			this.endDate = this.setTime(newEndTime, this.endDate)
 			this.constrain();
 		},
-		changeCallTime(date) {
-			const newCall = moment(date);
-			this.callTime = moment(this.callTime)
-				.set({
-					hour: newCall.hour(),
-					minute: newCall.minute(),
-				})
-				.toDate();
-
+		changeCallTime(newCallTime) {
+			this.callTime = this.setTime(newCallTime, this.callTime);
 			this.constrain();
 		},
 		constrain() {
@@ -212,6 +166,27 @@ export default {
 		disabledEndTime(date) {
 			return date <= this.startDate;
 		},
+    setTime(source, target)
+    {
+      const sourceMoment = moment(source);
+      return moment(target)
+          .set({
+            hour: sourceMoment.hour(),
+            minute: sourceMoment.minute(),
+          })
+          .toDate();
+    },
+    setDate(source, target)
+    {
+      const sourceMoment = moment(source);
+      return moment(target)
+          .set({
+            year: sourceMoment.year(),
+            month: sourceMoment.month(),
+            date: sourceMoment.date(),
+          })
+          .toDate();
+    }
 	},
 };
 </script>
