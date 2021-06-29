@@ -50,109 +50,98 @@ use UnexpectedValueException;
  */
 class User extends Authenticatable implements HasMedia
 {
-    use Notifiable, InteractsWithMedia, BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
+	use Notifiable, InteractsWithMedia, BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
-    protected $with = [
-        'media',
-    ];
-
-	public $dates = [
-		'updated_at',
-		'created_at',
-		'last_login',
-	];
-
-    public $notify_channels = ['database', 'mail'];
-	
 	/**
-      * Get the roles a user has
-      */
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['name', 'email', 'password'];
+
+	/**
+	 * The attributes that should be hidden for arrays.
+	 *
+	 * @var array
+	 */
+	protected $hidden = ['password', 'remember_token'];
+
+	protected $with = ['media'];
+
+	public $dates = ['updated_at', 'created_at', 'last_login'];
+
+	public $notify_channels = ['database', 'mail'];
+
+	/**
+	 * Get the roles a user has
+	 */
 	public function roles(): BelongsToMany
-    {
+	{
 		return $this->belongsToMany(Role::class, 'users_roles');
 	}
 
-	 /**
-      * Find out if User is an employee, based on if has any roles
-      *
-      * @return boolean
-      */
-    public function isEmployee(): bool
-    {
-       $roles = $this->roles->toArray();
-       return ! empty($roles);
-    }
-
-    /**
-     * Find out if user has a specific role
-     *
-     * @param string $check
-     *
-     * @return bool
-     */
-    public function hasRole($check): bool
-    {
-        return in_array($check, Arr::pluck($this->roles->toArray(), 'name'));
-    }
-	
 	/**
-     * Get key in array with corresponding value
-     *
-     * @return int
-     */
-    private function getIdInArray($array, $term)
-    {
-        foreach ($array as $key => $value) {
-            if ($value === $term) {
-                return $key;
-            }
-        }
-
-        throw new UnexpectedValueException;
-    }
-	
-	public function addRoles($ids): void
-    {
-		$this->roles()->attach($ids);
-    }
-	
-	public function detachRole($id): void
-    {
-		
-		$this->roles()->detach($id);
-		
+	 * Find out if User is an employee, based on if has any roles
+	 *
+	 * @return boolean
+	 */
+	public function isEmployee(): bool
+	{
+		$roles = $this->roles->toArray();
+		return !empty($roles);
 	}
 
-	public function setPassword( string $password = null ): void {
-        if( ! empty($password) ) {
-            $this->password = Hash::make( $password );
-        } else {
-            $this->password = Str::random(10);
-        }
-    }
-	
 	/**
-     * Add capabilities to user
-     */
-	 /*
+	 * Find out if user has a specific role
+	 *
+	 * @param string $check
+	 *
+	 * @return bool
+	 */
+	public function hasRole($check): bool
+	{
+		return in_array($check, Arr::pluck($this->roles->toArray(), 'name'));
+	}
+
+	/**
+	 * Get key in array with corresponding value
+	 *
+	 * @return int
+	 */
+	private function getIdInArray($array, $term)
+	{
+		foreach ($array as $key => $value) {
+			if ($value === $term) {
+				return $key;
+			}
+		}
+
+		throw new UnexpectedValueException();
+	}
+
+	public function addRoles($ids): void
+	{
+		$this->roles()->attach($ids);
+	}
+
+	public function detachRole($id): void
+	{
+		$this->roles()->detach($id);
+	}
+
+	public function setPassword(string $password = null): void
+	{
+		if (!empty($password)) {
+			$this->password = Hash::make($password);
+		} else {
+			$this->password = Str::random(10);
+		}
+	}
+
+	/**
+	 * Add capabilities to user
+	 */
+	/*
     public function addCap($title)
     {
         $assigned_roles = [];
@@ -179,122 +168,115 @@ class User extends Authenticatable implements HasMedia
         $this->roles()->attach($assigned_roles);
     }*/
 
-    /*
-    * Get all groups this is a member of.
-    */
-    public function memberships(): MorphMany
-    {
-        return $this->morphMany(GroupMember::class, 'memberable');
-    }
+	/*
+	 * Get all groups this is a member of.
+	 */
+	public function memberships(): MorphMany
+	{
+		return $this->morphMany(GroupMember::class, 'memberable');
+	}
 
-    public function singer(): HasOne
-    {
-        return $this->hasOne(Singer::class);
-    }
+	public function singer(): HasOne
+	{
+		return $this->hasOne(Singer::class);
+	}
 
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('avatar')
-            ->singleFile()
-            ->acceptsMimeTypes([
-                'image/jpeg',
-                'image/png',
-            ])
-            ->useFallbackUrl('https://avatars.dicebear.com/api/human/'.$this->id.'.svg?mood[]=happy')
-            ->registerMediaConversions(function (Media $media){
-                $this->addMediaConversion('thumb')
-                    ->width(50)
-                    ->height(50)
-                    ->crop(Manipulations::CROP_CENTER, 50, 50);
-                ;
-                
-                $this->addMediaConversion('profile')
-                    ->width(400)
-                    ->height(600)
-                    ->crop(Manipulations::CROP_CENTER, 400, 600)
-                ;
-            });
-    }
+	public function registerMediaCollections(): void
+	{
+		$this->addMediaCollection('avatar')
+			->singleFile()
+			->acceptsMimeTypes(['image/jpeg', 'image/png'])
+			->useFallbackUrl('https://avatars.dicebear.com/api/human/' . $this->id . '.svg?mood[]=happy')
+			->registerMediaConversions(function (Media $media) {
+				$this->addMediaConversion('thumb')
+					->width(50)
+					->height(50)
+					->crop(Manipulations::CROP_CENTER, 50, 50);
+				$this->addMediaConversion('profile')
+					->width(400)
+					->height(600)
+					->crop(Manipulations::CROP_CENTER, 400, 600);
+			});
+	}
 
-    public function getAvatarUrl(string $conversion): string
-    {
-        if( ! $this->hasMedia('avatar')){
-            return $this->getFallbackMediaUrl('avatar');
-        }
+	public function getAvatarUrl(string $conversion): string
+	{
+		if (!$this->hasMedia('avatar')) {
+			return $this->getFallbackMediaUrl('avatar');
+		}
 
-        if($this->getFirstMedia('avatar')->hasGeneratedConversion($conversion))
-        {
-            return $this->getFirstMediaUrl('avatar', $conversion);
-        }
-        return $this->getFirstMediaUrl('avatar');
-    }
+		if ($this->getFirstMedia('avatar')->hasGeneratedConversion($conversion)) {
+			return $this->getFirstMediaUrl('avatar', $conversion);
+		}
+		return $this->getFirstMediaUrl('avatar');
+	}
 
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query->whereHas('singer', static function(Builder $query){
-            $query->whereHas('category', static function(Builder $query){
-                $query->where('name', '=', 'Members');
-            });
-        });
-    }
+	public function scopeActive(Builder $query): Builder
+	{
+		return $query->whereHas('singer', static function (Builder $query) {
+			$query->whereHas('category', static function (Builder $query) {
+				$query->where('name', '=', 'Members');
+			});
+		});
+	}
 
-    public function scopeWithRole(Builder $query, string $role): Builder
-    {
-        return $query->whereHas('roles', static function(Builder $query) use ($role) {
-            $query->where('name', '=', $role);
-        });
-    }
+	public function scopeWithRole(Builder $query, string $role): Builder
+	{
+		return $query->whereHas('roles', static function (Builder $query) use ($role) {
+			$query->where('name', '=', $role);
+		});
+	}
 
-    /** @param string[] $roles */
-    public function scopeWithRoles(Builder $query, array $roles): Builder
-    {
-        foreach($roles as $key => $role) {
-            if($key === 0) {
-                $query->whereHas('roles', static function(Builder $query) use ($role) {
-                    $query->where('name', '=', $role);
-                });
-            }
-            $query->orWhereHas('roles', static function(Builder $query) use ($role) {
-                $query->where('name', '=', $role);
-            });
-        }
-        return $query;
-    }
+	/** @param string[] $roles */
+	public function scopeWithRoles(Builder $query, array $roles): Builder
+	{
+		foreach ($roles as $key => $role) {
+			if ($key === 0) {
+				$query->whereHas('roles', static function (Builder $query) use ($role) {
+					$query->where('name', '=', $role);
+				});
+			}
+			$query->orWhereHas('roles', static function (Builder $query) use ($role) {
+				$query->where('name', '=', $role);
+			});
+		}
+		return $query;
+	}
 
-    public function scopeWithoutRole(Builder $query, string $role): Builder
-    {
-        return $query->whereDoesntHave('roles', static function(Builder $query) use ($role) {
-            $query->where('name', '=', $role);
-        });
-    }
+	public function scopeWithoutRole(Builder $query, string $role): Builder
+	{
+		return $query->whereDoesntHave('roles', static function (Builder $query) use ($role) {
+			$query->where('name', '=', $role);
+		});
+	}
 
-    /** @param string[] $roles */
-    public function scopeWithoutRoles(Builder $query, array $roles): Builder
-    {
-        foreach($roles as $key => $role) {
-            $query->whereDoesntHave('roles', static function(Builder $query) use ($role) {
-                $query->where('name', '=', $role);
-            });
-        }
-        return $query;
-    }
+	/** @param string[] $roles */
+	public function scopeWithoutRoles(Builder $query, array $roles): Builder
+	{
+		foreach ($roles as $key => $role) {
+			$query->whereDoesntHave('roles', static function (Builder $query) use ($role) {
+				$query->where('name', '=', $role);
+			});
+		}
+		return $query;
+	}
 
-    public static function sendWelcomeEmail($user): void
-    {
-        // Generate a new reset password token
-        $token = app('auth.password.broker')->createToken($user);
+	public static function sendWelcomeEmail($user): void
+	{
+		// Generate a new reset password token
+		$token = app('auth.password.broker')->createToken($user);
 
-        // Send email
-        Mail::send(new Welcome($user, $token));
-    }
+		// Send email
+		Mail::send(new Welcome($user, $token));
+	}
 
-    public function hasAbility(string $ability): bool
-    {
-        foreach($this->roles as $role){
-            if( in_array($ability, $role->abilities) ){
-                return true;
-            }
-        }
-        return false;
-    }
+	public function hasAbility(string $ability): bool
+	{
+		foreach ($this->roles as $role) {
+			if (in_array($ability, $role->abilities)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

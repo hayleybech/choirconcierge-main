@@ -6,160 +6,179 @@ use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Singer;
+use App\Models\User;
+use App\Notifications\EventCreated;
+use App\Notifications\EventUpdated;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class EventController extends Controller
 {
-    public function index(Request $request): View
-    {
-        $this->authorize('viewAny', Event::class);
+	public function index(Request $request): View
+	{
+		$this->authorize('viewAny', Event::class);
 
-        // Base query
-        $all_events = Event::with(['repeat_parent:id,call_time'])
-            ->withCount([
-                'rsvps as going_count' => function($query) {
-                    $query->where('response', '=', 'yes');
-                },
-                'attendances as present_count' => function($query) {
-                    $query->where('response', '=', 'present');
-                },
-            ])
-            ->filter()
-            ->get();
+		// Base query
+		$all_events = Event::with(['repeat_parent:id,call_time'])
+			->withCount([
+				'rsvps as going_count' => function ($query) {
+					$query->where('response', '=', 'yes');
+				},
+				'attendances as present_count' => function ($query) {
+					$query->where('response', '=', 'present');
+				},
+			])
+			->filter()
+			->get();
 
-        // Sort
-        $sort_by = $request->input('sort_by', 'call_time');
-        $sort_dir = $request->input('sort_dir', 'asc');
+		// Sort
+		$sort_by = $request->input('sort_by', 'call_time');
+		$sort_dir = $request->input('sort_dir', 'asc');
 
-        // Flip direction for date (so we sort by smallest age not smallest timestamp)
-        if($sort_by === 'created_at') $sort_dir = ($sort_dir === 'asc') ? 'desc' : 'asc';
+		// Flip direction for date (so we sort by smallest age not smallest timestamp)
+		if ($sort_by === 'created_at') {
+			$sort_dir = $sort_dir === 'asc' ? 'desc' : 'asc';
+		}
 
-        if( $sort_dir === 'asc') {
-            $all_events = $all_events->sortBy($sort_by);
-        } else {
-            $all_events = $all_events->sortByDesc($sort_by);
-        }
+		if ($sort_dir === 'asc') {
+			$all_events = $all_events->sortBy($sort_by);
+		} else {
+			$all_events = $all_events->sortByDesc($sort_by);
+		}
 
-        return view('events.index', [
-            'all_events'      => $all_events,
-            'upcoming_events' => $all_events->where('call_time', '>', now()),
-            'past_events'     => $all_events->where('call_time', '<', now()),
-            'filters'         => Event::getFilters(),
-            'sorts'           => $sorts = $this->getSorts($request),
-        ]);
-    }
+		return view('events.index', [
+			'all_events' => $all_events,
+			'upcoming_events' => $all_events->where('call_time', '>', now()),
+			'past_events' => $all_events->where('call_time', '<', now()),
+			'filters' => Event::getFilters(),
+			'sorts' => ($sorts = $this->getSorts($request)),
+		]);
+	}
 
-    public function create(): View
-    {
-        $this->authorize('create', Event::class);
+	public function create(): View
+	{
+		$this->authorize('create', Event::class);
 
-        $types = EventType::all();
+		$types = EventType::all();
 
-        return view('events.create', compact( 'types') );
-    }
+		return view('events.create', compact('types'));
+	}
 
-    public function store(EventRequest $request): RedirectResponse
-    {
-        $this->authorize('create', Event::class);
+	public function store(EventRequest $request): RedirectResponse
+	{
+		$this->authorize('create', Event::class);
 
-        $event = Event::create(
-            attributes: collect($request->validated())->except('send_notification')->toArray(),
-            send_notification: $request->input('send_notification')
-        );
+		$event = Event::create(
+			collect($request->validated())
+				->except('send_notification')
+				->toArray(),
+		);
 
-        return redirect()->route('events.show', [$event])->with(['status' => 'Event created. ']);
-    }
+		$request->whenHas(
+			'send_notification',
+			fn() => Notification::send(User::active()->get(), new EventCreated($event)),
+		);
 
-    public function show(Event $event): View
-    {
-        $this->authorize('view', $event);
+		return redirect()
+			->route('events.show', [$event])
+			->with(['status' => 'Event created. ']);
+	}
 
-        $event->load('repeat_parent:id,call_time');
+	public function show(Event $event): View
+	{
+		$this->authorize('view', $event);
 
-        return view('events.show', [
-            'event'   => $event,
-            'my_attendance' => $event->my_attendance(),
-            'singers_rsvp_yes_count'     => $event->singers_rsvp_response('yes')->count(),
-            'singers_rsvp_no_count'      => $event->singers_rsvp_response('no')->count(),
-            'singers_rsvp_missing_count' => $event->singers_rsvp_missing()->count(),
-            'voice_parts_rsvp_yes_count' => $event->voice_parts_rsvp_response_count('yes'),
-            'singers_attendance_present' => $event->singers_attendance('present')->count(),
-            'singers_attendance_absent'  => $event->singers_attendance('absent')->count(),
-            'singers_attendance_absent_apology'  => $event->singers_attendance('absent_apology')->count(),
-            'singers_attendance_missing' => $event->singers_attendance_missing()->count(),
-            'voice_parts_attendance'     => $event->voice_parts_attendance_count('present'),
-        ]);
-    }
+		$event->load('repeat_parent:id,call_time');
 
-    public function edit(Event $event): View
-    {
-        $this->authorize('update', $event);
+		return view('events.show', [
+			'event' => $event,
+			'my_attendance' => $event->my_attendance(),
+			'singers_rsvp_yes_count' => $event->singers_rsvp_response('yes')->count(),
+			'singers_rsvp_no_count' => $event->singers_rsvp_response('no')->count(),
+			'singers_rsvp_missing_count' => $event->singers_rsvp_missing()->count(),
+			'voice_parts_rsvp_yes_count' => $event->voice_parts_rsvp_response_count('yes'),
+			'singers_attendance_present' => $event->singers_attendance('present')->count(),
+			'singers_attendance_absent' => $event->singers_attendance('absent')->count(),
+			'singers_attendance_absent_apology' => $event->singers_attendance('absent_apology')->count(),
+			'singers_attendance_missing' => $event->singers_attendance_missing()->count(),
+			'voice_parts_attendance' => $event->voice_parts_attendance_count('present'),
+		]);
+	}
 
-        $types = EventType::all();
+	public function edit(Event $event): View
+	{
+		$this->authorize('update', $event);
 
-        return view('events.edit', compact('event',  'types'));
-    }
+		$types = EventType::all();
 
-    public function update(Event $event, EventRequest $request): RedirectResponse
-    {
-        $this->authorize('update', $event);
+		return view('events.edit', compact('event', 'types'));
+	}
 
-        $event->update(
-            attributes: collect($request->validated())->except('send_notification')->toArray(),
-            options: [
-                'edit_mode' => $request->get('edit_mode'),
-                'send_notification' => $request->input('send_notification'),
-            ]
-        );
+	public function update(Event $event, EventRequest $request): RedirectResponse
+	{
+		$this->authorize('update', $event);
 
-        return redirect()->route('events.show', [$event])->with(['status' => 'Event updated. ', ]);
-    }
+		if ($event->is_repeating) {
+			return back()->with(['error' => 'The server tried to edit a repeating event incorrectly.']);
+		}
 
-    public function destroy(Event $event): RedirectResponse
-    {
-        $this->authorize('delete', $event);
+		$event->update(
+			collect($request->validated())
+				->except('send_notification')
+				->toArray(),
+		);
 
-        $event->delete();
+		$request->whenHas(
+			'send_notification',
+			fn() => Notification::send(User::active()->get(), new EventUpdated($event)),
+		);
 
-        return redirect()->route('events.index')->with(['status' => 'Event deleted. ', ]);
-    }
+		return redirect()
+			->route('events.show', [$event])
+			->with(['status' => 'Event updated. ']);
+	}
 
+	public function destroy(Event $event): RedirectResponse
+	{
+		$this->authorize('delete', $event);
 
-    public function getSorts(Request $request): array
-    {
-        $sort_cols = [
-            'title',
-            'type.title',
-            'created_at',
-            'call_time',
-        ];
+		$event->delete();
 
-        // Merge filters with sort query string
-        $url = $request->url() . '?' . Event::getFilterQueryString();
+		return redirect()
+			->route('events.index')
+			->with(['status' => 'Event deleted. ']);
+	}
 
-        $current_sort = $request->input('sort_by', 'call_time');
-        $current_dir =  $request->input('sort_dir', 'asc');
+	public function getSorts(Request $request): array
+	{
+		$sort_cols = ['title', 'type.title', 'created_at', 'call_time'];
 
-        $sorts = [];
-        foreach($sort_cols as $col) {
-            // If current sort
-            if( $col === $current_sort ) {
-                // Create link for opposite sort direction
-                $current = true;
-                $dir = ( 'asc' === $current_dir ) ? 'desc' : 'asc';
-            } else {
-                $current = false;
-                $dir = 'asc';
-            };
-            $sorts[$col] = [
-                'url'       => $url . "&sort_by=$col&sort_dir=$dir",
-                'dir'       => $current_dir,
-                'current'   => $current,
-            ];
-        }
-        return $sorts;
-    }
+		// Merge filters with sort query string
+		$url = $request->url() . '?' . Event::getFilterQueryString();
+
+		$current_sort = $request->input('sort_by', 'call_time');
+		$current_dir = $request->input('sort_dir', 'asc');
+
+		$sorts = [];
+		foreach ($sort_cols as $col) {
+			// If current sort
+			if ($col === $current_sort) {
+				// Create link for opposite sort direction
+				$current = true;
+				$dir = 'asc' === $current_dir ? 'desc' : 'asc';
+			} else {
+				$current = false;
+				$dir = 'asc';
+			}
+			$sorts[$col] = [
+				'url' => $url . "&sort_by=$col&sort_dir=$dir",
+				'dir' => $current_dir,
+				'current' => $current,
+			];
+		}
+		return $sorts;
+	}
 }

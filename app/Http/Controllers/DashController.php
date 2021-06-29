@@ -11,64 +11,64 @@ use Illuminate\Http\Request;
 
 class DashController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		$this->middleware('auth');
+	}
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return View
-     */
-    public function index(): View
-    {
-    	$birthdays = Singer::query()
-		    ->birthdays()
-		    ->with('profile')
-		    ->get()
-		    ->sort(static function(Singer $singer1, Singer $singer2): int {
-		    	// Sort by birthday
+	/**
+	 * Show the application dashboard.
+	 *
+	 * @return View
+	 */
+	public function index(): View
+	{
+		$birthdays = Singer::query()
+			->birthdays()
+			->with('profile')
+			->get()
+			->sort(static function (Singer $singer1, Singer $singer2): int {
+				// Sort by birthday
 
-			    if( $singer1->profile->birthday->equalTo($singer2->profile->birthday) ) {
-			        return 0;
-			    }
-			    return $singer1->profile->birthday < $singer2->profile->birthday ? -1 : 1;
-		    });
+				if ($singer1->profile->birthday->equalTo($singer2->profile->birthday)) {
+					return 0;
+				}
+				return $singer1->profile->birthday < $singer2->profile->birthday ? -1 : 1;
+			});
 
-    	$memberversaries = Singer::query()
-		    ->memberversaries()
-		    ->get()
-		    ->sort(static function(Singer $singer1, Singer $singer2): int {
-			    // Sort by joined date
-			    if( $singer1->joined_at->equalTo($singer2->joined_at) ) {
-				    return 0;
-			    }
-			    return $singer1->joined_at < $singer2->joined_at ? -1 : 1;
-		    });
+		$memberversaries = Singer::query()
+			->memberversaries()
+			->get()
+			->sort(static function (Singer $singer1, Singer $singer2): int {
+				// Sort by joined date
+				if ($singer1->joined_at->equalTo($singer2->joined_at)) {
+					return 0;
+				}
+				return $singer1->joined_at < $singer2->joined_at ? -1 : 1;
+			});
 
-        return view('dash', [
-        	'birthdays' => $birthdays,
-	        'memberversaries' => $memberversaries,
-	        'empty_dobs' => Singer::query()
-		        ->emptyDobs()
-		        ->count(),
-	        'songs' => Song::whereHas('status', static function(Builder $query){
-	        	    return $query->where('title', 'Learning');
-	            })
-		        ->orderBy('title')
-		        ->get(),
-	        'events' => Event::query()
-		        ->with(['my_rsvp'])
-		        ->where('call_time', '>', today())
-		        ->where('call_time', '<', today()->addMonth())
-		        ->orderBy('call_time')
-	            ->get(),
-        ]);
-    }
+		return view('dash', [
+			'birthdays' => $birthdays,
+			'memberversaries' => $memberversaries,
+			'empty_dobs' => Singer::query()
+				->emptyDobs()
+				->count(),
+			'songs' => Song::whereHas('status', static function (Builder $query) {
+				return $query->where('title', 'Learning');
+			})
+				->orderBy('title')
+				->get(),
+			'events' => Event::query()
+				->with(['my_rsvp'])
+				->where('call_time', '>', today())
+				->where('call_time', '<', today()->addMonth())
+				->orderBy('call_time')
+				->get(),
+		]);
+	}
 }

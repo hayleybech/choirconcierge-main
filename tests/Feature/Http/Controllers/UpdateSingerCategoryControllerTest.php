@@ -2,42 +2,41 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\Role;
 use App\Models\Singer;
 use App\Models\SingerCategory;
-use App\Models\User;
-use App\Models\VoicePart;
-use Database\Seeders\Dummy\DummyUserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+/**
+ * @see \App\Http\Controllers\UpdateSingerCategoryController
+ */
 class UpdateSingerCategoryControllerTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+	use RefreshDatabase;
 
-    public function setUp(): void
-    {
-        parent::setUp();
+	/**
+	 * @test
+	 */
+	public function invoke_redirects_to_index(): void
+	{
+		$this->actingAs($this->createUserWithRole('Membership Team'));
 
-        $this->seed(DummyUserSeeder::class);
-    }
+		$singer = Singer::factory()->create();
 
-    /** @test */
-    public function update_for_admin_changes_category(): void
-    {
-        $user = User::withRoles(['Admin'])->first();
-        $this->actingAs($user);
+		$new_category_id = SingerCategory::inRandomOrder()->value('id');
+		$response = $this->get(
+			the_tenant_route('singers.categories.update', [$singer]) . '?move_category=' . $new_category_id,
+			[
+				'move_category' => $new_category_id,
+			],
+		);
 
-        $singer = Singer::query()->inRandomOrder()->first();
-        $new_category = SingerCategory::query()->inRandomOrder()->first();
-        $response = $this->get(the_tenant_route('singers.categories.update', ['singer' => $singer]), [
-            'move_category' => $new_category,
-        ]);
-
-        $response->assertRedirect();
-        $this->assertDatabaseHas('singers', [
-            'singer_category_id' => $new_category->id,
-        ]);
-    }
+		$response->assertSessionHasNoErrors();
+		$response->assertRedirect(the_tenant_route('singers.index'));
+		$this->assertDatabaseHas('singers', [
+			'id' => $singer->id,
+			'singer_category_id' => $new_category_id,
+		]);
+	}
 }

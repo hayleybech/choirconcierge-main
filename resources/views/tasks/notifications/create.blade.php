@@ -16,12 +16,20 @@
         <div class="card-body">
 
             <div class="form-group">
-                <x-inputs.text label="Subject" id="subject" name="subject" placeholder="Congrats for doing a thing!"></x-inputs.text>
+                <x-inputs.text
+                    label="Subject"
+                    id="subject"
+                    name="subject"
+                    placeholder="Congrats for doing a thing!"
+                    value="{{ old('subject') }}"
+                />
             </div>
 
             <div class="form-group">
-                <x-inputs.text label="Recipient(s)" id="recipients" name="recipients">
-                    <x-slot name="helpText">e.g. The singer: <code>singer:0</code>, a user role: <code>role:1</code>, a specific user: <code>user:1</code>.</x-slot>
+                <x-inputs.text label="Recipient(s)" id="recipients" name="recipients" value="{{ old('recipients') }}">
+                    <x-slot name="helpText">
+                        e.g. The singer: <code>singer:0</code>, a user role: <code>role:1</code>, a specific user: <code>user:1</code>.
+                    </x-slot>
                 </x-inputs.text>
             </div>
 
@@ -29,7 +37,7 @@
                 {{ Form::label('body', 'Body') }}
                 <div class="row">
                     <div class="col-9">
-                        {{ Form::textarea('body', '', ['class' => 'form-control']) }}
+                        {{ Form::textarea('body', old('body'), ['class' => 'form-control']) }}
                     </div>
                     <div class="col-3">
                         <small class="form-text text-muted"><strong>You can include any of the following snippets:</strong>
@@ -57,7 +65,14 @@
             </div>
 
             <div class="form-group">
-                <x-inputs.text label="Delay" id="delay" name="delay" placeholder="1 second" help-text="Try something like '4 hours' or '28 days'. "></x-inputs.text>
+                <x-inputs.text
+                    label="Delay"
+                    id="delay"
+                    name="delay"
+                    placeholder="1 second"
+                    help-text="Try something like '4 hours' or '28 days'. "
+                    value="{{ old('delay') }}"
+                />
             </div>
 
         </div>

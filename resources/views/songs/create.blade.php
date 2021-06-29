@@ -21,7 +21,14 @@
                     <fieldset class="form-group">
                         <legend class="col-form-label">Category</legend>
                         @foreach($categories as $cat)
-                            <x-inputs.checkbox label="{{ $cat->title }}" id="categories_{{ $cat->id }}" name="categories[]" value="{{ $cat->id }}" inline="true"></x-inputs.checkbox>
+                            <x-inputs.checkbox
+                                label="{{ $cat->title }}"
+                                id="categories_{{ $cat->id }}"
+                                name="categories[]"
+                                value="{{ $cat->id }}"
+                                inline="true"
+                                :checked="checkbox_group_old('categories', $cat->id)"
+                            />
                         @endforeach
                     </fieldset>
 
@@ -30,12 +37,22 @@
                         <legend class="col-form-label">Status</legend>
                         <div id="status" class="btn-group btn-group-mobile-vertical btn-group-toggle bg-white" data-toggle="buttons">
                         @foreach($statuses as $status)
-                            <label for="status_{{ $status->id }}" class="btn btn-outline-{{ $status->colour }} btn-radio p1-3 px-3 text-left d-flex align-items-center">
+                            <label
+                                for="status_{{ $status->id }}"
+                                class="btn btn-outline-{{ $status->colour }} btn-radio p1-3 px-3 text-left d-flex align-items-center {{ radio_old('status', $status->id, '') ? 'active' : '' }}"
+                            >
                                 @if('Pending' === $status->title)
                                     <i class="fas fa-fw fa-lock mr-2"></i>
                                 @endif
                                 <span>
-                                <input id="status_{{ $status->id }}" name="status" value="{{ $status->id }}" type="radio" autocomplete="off">
+                                <input
+                                    id="status_{{ $status->id }}"
+                                    name="status"
+                                    value="{{ $status->id }}"
+                                    type="radio"
+                                    autocomplete="off"
+                                    {{ radio_old('status', $status->id, '') ? 'checked' : '' }}
+                                >
                                 <span>{{ $status->title }}</span>
                             </span>
                             </label>
@@ -45,11 +62,23 @@
                     </fieldset>
 
                     <div class="form-group">
-                        <x-inputs.select label="Pitch Blown" id="pitch_blown" name="pitch_blown" :options="$pitches"></x-inputs.select>
+                        <x-inputs.select
+                            label="Pitch Blown"
+                            id="pitch_blown"
+                            name="pitch_blown"
+                            :options="$pitches"
+                            :selected="old('pitch_blown')"
+                        />
                     </div>
 
                     <div class="form-group">
-                        <x-inputs.checkbox :label='"Send \"New Song\" notification"' id="send_notification" name="send_notification" value="true" :checked="true"></x-inputs.checkbox>
+                        <x-inputs.checkbox
+                            :label='"Send \"New Song\" notification"'
+                            id="send_notification"
+                            name="send_notification"
+                            value="true"
+                            :checked="checkbox_old('send_notification', true)"
+                        />
                     </div>
 
                 </div>

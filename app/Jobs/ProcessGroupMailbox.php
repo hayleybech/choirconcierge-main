@@ -21,26 +21,22 @@ use Illuminate\Queue\SerializesModels;
  */
 class ProcessGroupMailbox implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle(): void
-    {
-        // get unread
-        $msgs_unread = (new IncomingMailbox())->getMessages();
+	private IncomingMailbox $mailbox;
 
-        if( count($msgs_unread) === 0){
-            return;
-        }
+	public function __construct(IncomingMailbox $mailbox)
+	{
+		$this->mailbox = $mailbox;
+	}
 
-        /** @var IncomingMessage $message */
-        foreach($msgs_unread as $message)
-        {
-            $message->resendToGroup();
-        }
-    }
+	/**
+	 * Execute the job.
+	 *
+	 * @return void
+	 */
+	public function handle(): void
+	{
+		$this->mailbox->getMessages()->each(fn(IncomingMessage $message) => $message->resendToGroups());
+	}
 }

@@ -10,27 +10,24 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentFactory extends Factory
 {
-    /** @var string */
-    protected $model = Document::class;
+	/** @var string */
+	protected $model = Document::class;
 
-    /*
-     * I'm going to use the actual storage in this case,
-     * as I want to be able to create demo sites with file downloads.
-     *
-     * @todo Create a separate Document factory/state using fake storage.
-     */
-    public function definition(): array
-    {
-        $folders = Folder::all();
+	public function definition(): array
+	{
+		$folders = Folder::all();
 
-        $name = $this->faker->word().'.'.$this->faker->fileExtension;
-        $file = UploadedFile::fake()->create($name, 5);
-        $filepath = Storage::disk('public')->putFile( Document::getDownloadsPath(), $file);
+		$name = $this->faker->word() . '.' . $this->faker->fileExtension();
+		$file = UploadedFile::fake()->create($name, 5);
+		//$filepath = Storage::disk('public')->putFile( Document::getDownloadsPath(), $file);
 
-        return [
-            'title'     => $this->faker->sentence(3, true),
-            'folder_id' => $folders->random(1)->first()->id,
-            'filepath'  => $name,
-        ];
-    }
+		return [
+			'title' => $this->faker->sentence(3, true),
+			'folder_id' => $folders->random(1)->first()->id,
+			//'filepath'          => $name,
+			'document_upload' => $file,
+			'created_at' => now(),
+			'updated_at' => now(),
+		];
+	}
 }

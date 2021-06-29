@@ -13,40 +13,40 @@ use Stancl\Tenancy\Controllers\TenantAssetsController;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot(Guard $auth)
-    {
+	/**
+	 * Bootstrap any application services.
+	 *
+	 * @return void
+	 */
+	public function boot(Guard $auth)
+	{
 		Schema::defaultStringLength(191);
 
 		// Get Notifications for current user, show on all pages
-        /*view()->composer('*', function($view) use ($auth) {
+		/*view()->composer('*', function($view) use ($auth) {
             if($auth->check()) {
                 $view->with('notifications', $auth->user()->unreadNotifications);
             }
         });*/
 
-        View::composer('*', SingerCategoryComposer::class);
+		View::composer('*', SingerCategoryComposer::class);
 
-        TenantAssetsController::$tenancyMiddleware = 'Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain';
+		TenantAssetsController::$tenancyMiddleware = 'Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain';
 
-        Paginator::useBootstrap();
-    }
+		Paginator::useBootstrap();
+	}
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->singleton(SingerCategoryComposer::class);
-        
-        if ($this->app->environment() !== 'production') {
-            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
-        }
-    }
+	/**
+	 * Register any application services.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		$this->app->singleton(SingerCategoryComposer::class);
+
+		if ($this->app->environment() !== 'production') {
+			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+		}
+	}
 }

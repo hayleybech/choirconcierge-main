@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Models;
-
 
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Model;
@@ -28,26 +26,23 @@ use Illuminate\Support\Carbon;
  */
 class GroupSender extends Model
 {
-    use TenantTimezoneDates;
+	use TenantTimezoneDates;
 
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected $fillable = [
-        'sender_id',
-        'sender_type',
-    ];
+	/**
+	 * The attributes that are mass assignable.
+	 */
+	protected $fillable = ['sender_id', 'sender_type'];
 
-    /**
-     * Get all of the sender models (users, roles etc).
-     */
-    public function sender(): MorphTo
-    {
-        return $this->morphTo();
-    }
+	/**
+	 * Get all of the sender models (users, roles etc).
+	 */
+	public function sender(): MorphTo
+	{
+		return $this->morphTo();
+	}
 
-    public function group(): BelongsTo
-    {
-        return $this->belongsTo(UserGroup::class);
-    }
+	public function group(): BelongsTo
+	{
+		return $this->belongsTo(UserGroup::class);
+	}
 }

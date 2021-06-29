@@ -15,27 +15,43 @@
 
                 <div class="card-body">
                     <div class="form-group">
-                        <x-inputs.text label="Song Title" id="title" name="title" :value="$song->title"></x-inputs.text>
+                        <x-inputs.text label="Song Title" id="title" name="title" :value="old('title', $song->title)" />
                     </div>
 
                     <fieldset class="form-group">
                         <legend class="col-form-label">Category</legend>
                         @foreach($categories as $cat)
-                            <x-inputs.checkbox label="{{ $cat->title }}" id="categories_{{ $cat->id }}" name="categories[]" value="{{ $cat->id }}" inline="true"></x-inputs.checkbox>
+                            <x-inputs.checkbox
+                                label="{{ $cat->title }}"
+                                id="categories_{{ $cat->id }}"
+                                name="categories[]"
+                                value="{{ $cat->id }}"
+                                inline="true"
+                                :checked="checkbox_group_old('categories', $cat->id, $song->categories->pluck('id')->all())"
+                            />
                         @endforeach
                     </fieldset>
-
 
                     <fieldset class="form-group">
                         <legend class="col-form-label">Status</legend>
                         <div id="status" class="btn-group btn-group-mobile-vertical btn-group-toggle bg-white" data-toggle="buttons">
                         @foreach($statuses as $status)
-                            <label for="status_{{ $status->id }}" class="btn btn-outline-{{ $status->colour }} btn-radio py-1 px-3 text-left d-flex align-items-center {{ $song->status->is($status) ? 'active' : '' }}">
+                            <label
+                                for="status_{{ $status->id }}"
+                                class="btn btn-outline-{{ $status->colour }} btn-radio py-1 px-3 text-left d-flex align-items-center {{ radio_old('status', $status->id, '', $song->status->id) ? 'active' : '' }}"
+                            >
                                 @if('Pending' === $status->title)
                                     <i class="fas fa-fw fa-lock mr-2"></i>
                                 @endif
                                 <span>
-                                    <input id="status_{{ $status->id }}" name="status" value="{{ $status->id }}" type="radio" autocomplete="off" {{ $song->status->is($status) ? 'checked' : '' }}>
+                                    <input
+                                        id="status_{{ $status->id }}"
+                                        name="status"
+                                        value="{{ $status->id }}"
+                                        type="radio"
+                                        autocomplete="off"
+                                        {{ radio_old('status', $status->id, '', $song->status->id) ? 'checked' : '' }}
+                                    >
                                     <span>{{ $status->title }}</span>
                                 </span>
                             </label>
@@ -47,7 +63,13 @@
                     </fieldset>
 
                     <div class="form-group">
-                        <x-inputs.select label="Pitch Blown" id="pitch_blown" name="pitch_blown" :options="$pitches" :selected="$song->pitch_blown"></x-inputs.select>
+                        <x-inputs.select
+                            label="Pitch Blown"
+                            id="pitch_blown"
+                            name="pitch_blown"
+                            :options="$pitches"
+                            :selected="old('pitch_blown', $song->pitch_blown)"
+                        />
                     <div class="form-group">
                     </div>
 
@@ -72,7 +94,13 @@
                     --}}
 
                     <div class="form-group">
-                        <x-inputs.checkbox :label='"Send \"Song Updated\" notification"' id="send_notification" name="send_notification" value="true" :checked="true"></x-inputs.checkbox>
+                        <x-inputs.checkbox
+                            :label='"Send \"Song Updated\" notification"'
+                            id="send_notification"
+                            name="send_notification"
+                            value="true"
+                            :checked="checkbox_old('send_notification', true)"
+                        />
                     </div>
 
                 </div>

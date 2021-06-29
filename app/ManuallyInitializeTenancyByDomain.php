@@ -10,8 +10,8 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
  */
 class ManuallyInitializeTenancyByDomain
 {
-    public function handle(string $hostname): void
-    {
-        tenancy()->initialize(Tenant::findByDomain($hostname));
-    }
+	public function handle(string $hostname): void
+	{
+		tenancy()->initialize(Tenant::findByDomain($hostname));
+	}
 }

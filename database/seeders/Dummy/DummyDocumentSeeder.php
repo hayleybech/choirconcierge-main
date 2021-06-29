@@ -7,11 +7,13 @@ use App\Models\Document;
 
 class DummyDocumentSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
-    {
-        Document::factory()->count(30)->create();
-    }
+	/**
+	 * Run the database seeds.
+	 */
+	public function run(): void
+	{
+		Document::factory()
+			->count(30)
+			->create();
+	}
 }

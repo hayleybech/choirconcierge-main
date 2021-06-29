@@ -1,102 +1,122 @@
 <?php
 
-
 namespace App\Mail;
 
-
-use App\ManuallyInitializeTenancyByDomainOrSubdomain;
+use App\Models\User;
 use App\Models\UserGroup;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Mail\Mailable;
-use Mail;
-use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
 
 class IncomingMessage extends Mailable
 {
-    public $content_html;
-    public $content_text;
+	public $content_html;
+	public $content_text;
+	private $original_sender;
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
-    public function build(): self
-    {
-        return $this->view('emails.clone')
-            ->text('emails.clone_plain');
-    }
+	/**
+	 * Build the message.
+	 *
+	 * @return $this
+	 */
+	public function build(): self
+	{
+		return $this->view('emails.clone')->text('emails.clone_plain');
+	}
 
-    /**
-     * Generate clones of the email
-     *
-     * EXAMPLE
-     *  From: Mr Director via Active Members <active@example.choirconcierge.com>
-     *  Reply-to: Mr Director <director@example.com>
-     *  To: Ms User <user@example.com>
-     *  Cc: Active Members <active@example.choirconcierge.com>
-     */
-    public function resendToGroup(): void
-    {
-        try {
-            app(ManuallyInitializeTenancyByDomainOrSubdomain::class)->handle( explode('@', $this->to[0]['address'])[1] );
-        }
-        catch (TenantCouldNotBeIdentifiedById $e) {
-            return;
-        }
+	/**
+	 * Generate clones of the email
+	 *
+	 * EXAMPLE
+	 *  From: Mr Director via Active Members <active@example.choirconcierge.com>
+	 *  Reply-to: Mr Director <director@example.com>
+	 *  To: Ms User <user@example.com>
+	 *  Cc: Active Members <active@example.choirconcierge.com>
+	 */
+	public function resendToGroups(): void
+	{
+		$this->original_sender = $this->from[0];
 
-        $group = $this->getMatchingGroup();
-        if( ! $group )
-        {
-            return;
-        }
+		// Clear replyTo, then put the original sender as the reply-to
+		$this->replyTo = [
+			[
+				'address' => $this->original_sender['address'],
+				'name' => $this->original_sender['name'] ?? null,
+			],
+		];
 
-        $original_sender = $this->from[0];
-        if( ! $group->authoriseSender($original_sender['address']) )
-        {
-            Mail::to($original_sender['address'])->send(new NotPermittedSenderMessage($group));
+		$this->getMatchingGroups()
+			->flatten(1)
+			->filter(fn(UserGroup $group) => $this->authoriseSenderForGroup($group))
+			->each(
+				fn(UserGroup $group) => $group
+					->get_all_recipients()
+					->each(fn($user) => $this->resendToUser($user, $group)),
+			);
+	}
 
-            return;
-        }
+	public function getMatchingGroups(): Collection
+	{
+		$recipients_found_by_type = collect([
+			'to' => collect($this->to),
+			'cc' => collect($this->cc),
+			'bcc' => collect($this->bcc),
+			'from' => collect($this->from),
+		])->map(
+			fn(Collection $recipients) => $recipients
+				->map(fn($recipient) => $this->getGroupByEmail($recipient['address']))
+				->filter(fn($recipient) => $recipient),
+		);
 
-        $group_email = $this->to[0]['address'];
+		// Allow reply-all by cloning emails CCd to the group
+		// Don't allow cloning the initial email
+		$recipients_found_by_type['cc'] = $recipients_found_by_type['cc']->diff($recipients_found_by_type['from']);
 
-        $users = $group->get_all_recipients();
-        foreach($users as $user)
-        {
-            // Clear replyTo, then put the original sender as the reply-to
-            $this->replyTo = [[
-                'address' => $original_sender['address'],
-                'name' => $original_sender['name'] ?? null
-            ]];
+		return $recipients_found_by_type->except('from');
+	}
 
-            // Clear from, then put the mailing list as the clone sender
-            // e.g. From: Mr Director via Active Members <active@example.choirconcierge.com>
-            $this->from = [[
-                'address' => $group_email,
-                'name' => ($original_sender['name'] ?? $original_sender['address']) . ' via ' . $group->title
-            ]];
+	private function getGroupByEmail(string $email): ?UserGroup
+	{
+		[$slug, $host] = explode('@', $email);
+		return UserGroup::withoutTenancy()->firstWhere([
+			['tenant_id', '=', explode('.', $host)[0]],
+			['slug', 'LIKE', $slug],
+		]);
+	}
 
-            // Clear 'to', then put the group member as the recipient
-            $this->to = [];
-            Mail::to( $user )
-                ->cc( $group_email ) // Required for recipients to reply-all
-                ->send( $this );
-        }
-    }
+	private function authoriseSenderForGroup(UserGroup $group): bool
+	{
+		if (
+			$group->authoriseSender(
+				User::firstWhere([
+					['tenant_id', '=', $group->tenant_id],
+					['email', '=', $this->original_sender['address']],
+				]),
+			)
+		) {
+			return true;
+		}
 
-    public function getMatchingGroup(): ?UserGroup
-    {
-        $to_slug = explode( '@', $this->to[0]['address'])[0];
-        $cc_slug = explode( '@', $this->cc[0]['address'] ?? '')[0] ?? '';
-        $from_slug = explode( '@', $this->from[0]['address'])[0];
+		Mail::to($this->original_sender['address'])->send(new NotPermittedSenderMessage($group));
+		return false;
+	}
 
-        $query = UserGroup::where('slug', 'LIKE', $to_slug);
+	private function resendToUser(User $user, UserGroup $group): void
+	{
+		// Clear from, then put the mailing list as the clone sender
+		// e.g. From: Mr Director via Active Members <active@example.choirconcierge.com>
+		$this->from = [
+			[
+				'address' => $group->email,
+				'name' =>
+					($this->original_sender['name'] ?? $this->original_sender['address']) . ' via ' . $group->title,
+			],
+		];
 
-        // Allow reply-all by cloning emails CCd to the group
-        if($from_slug !== $cc_slug){ // Don't allow cloning the initial email
-            $query = $query->orWhere('slug', 'LIKE', $cc_slug);
-        }
-        return $query->first();
-    }
+		// Clear 'to', then put the group member as the recipient
+		$this->to = [];
+		Mail::to($user)
+			->cc($group->email) // Required for recipients to reply-all
+			->send(clone $this);
+	}
 }

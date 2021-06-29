@@ -17,31 +17,31 @@
 
 				<div class="card-body">
 					<div class="form-group">
-						<x-inputs.text label="Experience" id="experience" name="experience"></x-inputs.text>
+						<x-inputs.text label="Experience" id="experience" name="experience" :value="old('experience')" />
 					</div>
 
 					<div class="form-group">
-						<x-inputs.text label="Instruments" id="instruments" name="instruments"></x-inputs.text>
+						<x-inputs.text label="Instruments" id="instruments" name="instruments" :value="old('instruments')" />
 					</div>
 
 					<div class="form-group">
-						<x-inputs.range label="Pitch Skill" id="skill_pitch" name="skill_pitch" min="1" max="5"></x-inputs.range>
+						<x-inputs.range label="Pitch Skill" id="skill_pitch" name="skill_pitch" min="1" max="5" :value="old('skill_pitch')" />
 					</div>
 
 					<div class="form-group">
-						<x-inputs.range label="Harmony Skill" id="skill_harmony" name="skill_harmony" min="1" max="5"></x-inputs.range>
+						<x-inputs.range label="Harmony Skill" id="skill_harmony" name="skill_harmony" min="1" max="5" :value="old('skill_harmony')" />
 					</div>
 
 					<div class="form-group">
-						<x-inputs.range label="Performance Skill" id="skill_performance" name="skill_performance" min="1" max="5"></x-inputs.range>
+						<x-inputs.range label="Performance Skill" id="skill_performance" name="skill_performance" min="1" max="5" :value="old('skill_performance')" />
 					</div>
 
 					<div class="form-group">
-						<x-inputs.range label="Sight Reading Skill" id="skill_sightreading" name="skill_sightreading" min="1" max="5"></x-inputs.range>
+						<x-inputs.range label="Sight Reading Skill" id="skill_sightreading" name="skill_sightreading" min="1" max="5" :value="old('skill_sightreading')" />
 					</div>
 
 					<div class="form-group">
-						<x-inputs.range label="Voice Tone" id="voice_tone" name="voice_tone" min="1" max="3">
+						<x-inputs.range label="Voice Tone" id="voice_tone" name="voice_tone" min="1" max="3" :value="old('voice_tone')">
 							<x-slot name="minDesc">
 								<i class="fas fa-fw fa-flute fa-lg"></i>
 								<small class="form-text text-muted">Fluty</small>
@@ -54,7 +54,7 @@
 					</div>
 
 					<div class="form-group">
-						<x-inputs.select label="Voice Part" id="voice_part_id" name="voice_part_id" :options="$voice_parts"></x-inputs.select>
+						<x-inputs.select label="Voice Part" id="voice_part_id" name="voice_part_id" :options="$voice_parts" :selected="old('voice_part_id')" />
 					</div>
 
 				</div>

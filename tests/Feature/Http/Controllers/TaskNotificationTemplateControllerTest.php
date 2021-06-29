@@ -4,81 +4,169 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\NotificationTemplate;
 use App\Models\Task;
-use App\Models\User;
-use Database\Seeders\Dummy\DummyNotificationTemplateSeeder;
-use Database\Seeders\Dummy\DummyTaskSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+/**
+ * @see \App\Http\Controllers\TaskNotificationTemplateController
+ */
 class TaskNotificationTemplateControllerTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+	use RefreshDatabase, WithFaker;
 
-    public function setUp(): void
-    {
-        parent::setUp();
+	/**
+	 * @test
+	 */
+	public function create_returns_an_ok_response(): void
+	{
+		$this->actingAs($this->createUserWithRole('Admin'));
 
-        $this->seed(DummyTaskSeeder::class);
-        $this->seed(DummyNotificationTemplateSeeder::class);
-    }
+		$task = Task::factory()->create();
 
-    /** @test */
-    public function create_for_admin_returns_create_view(): void
-    {
-        $user = User::withRole('Admin')->first();
-        $this->actingAs($user);
+		$response = $this->get(the_tenant_route('tasks.notifications.create', [$task]));
 
-        $task = Task::query()->inRandomOrder()->first();
-        $response = $this->get(the_tenant_route('tasks.notifications.create', ['task' => $task]));
+		$response->assertOk();
+		$response->assertViewIs('tasks.notifications.create');
+		$response->assertViewHas('task');
+	}
 
-        $response->assertStatus(200);
-        $response->assertViewIs('tasks.notifications.create');
-    }
+	/**
+	 * @test
+	 */
+	public function destroy_redirects_to_task(): void
+	{
+		$this->actingAs($this->createUserWithRole('Admin'));
 
-    /** @test */
-    public function store_for_admin_creates_a_template(): void
-    {
-        $user = User::withRole('Admin')->first();
-        $this->actingAs($user);
+		$task = Task::factory()
+			->has(NotificationTemplate::factory(), 'notification_templates')
+			->create();
 
-        $task = Task::query()->inRandomOrder()->first();
-        $data = [
-            'subject' => $this->faker->sentence,
-            'recipients' => 'singer:0',
-            'body' => $this->faker->paragraph,
-            'delay' => '1 second',
-        ];
-        $response = $this->post(the_tenant_route('tasks.notifications.store', ['task' => $task]), $data);
+		$response = $this->delete(
+			the_tenant_route('tasks.notifications.destroy', [
+				$task,
+				'notification' => $task->notification_templates->first(),
+			]),
+		);
 
-        $response->assertRedirect();
+		$response->assertRedirect(the_tenant_route('tasks.show', $task));
+		$this->assertSoftDeleted($task->notification_templates->first());
+	}
 
-        $this->assertDatabaseHas('notification_templates', $data);
-    }
+	/**
+	 * @test
+	 */
+	public function edit_returns_an_ok_response(): void
+	{
+		$this->actingAs($this->createUserWithRole('Admin'));
 
-    /** @test */
-    public function show_for_admin_returns_show_view(): void
-    {
-        $user = User::withRole('Admin')->first();
-        $this->actingAs($user);
+		$task = Task::factory()
+			->has(NotificationTemplate::factory(), 'notification_templates')
+			->create();
 
-        $template = NotificationTemplate::query()->inRandomOrder()->first();
-        $response = $this->get(the_tenant_route('tasks.notifications.show', ['task' => $template->task, 'notification' => $template]));
+		$response = $this->get(
+			the_tenant_route('tasks.notifications.edit', [
+				$task,
+				'notification' => $task->notification_templates->first(),
+			]),
+		);
 
-        $response->assertViewIs('tasks.notifications.show');
-        $response->assertOk();
-    }
+		$response->assertOk();
+		$response->assertViewIs('tasks.notifications.edit');
+		$response->assertViewHas('task');
+		$response->assertViewHas('notification');
+	}
 
-    /** @test */
-    public function destroy_for_admin_soft_deletes_template(): void
-    {
-        $user = User::withRole('Admin')->first();
-        $this->actingAs($user);
+	/**
+	 * @test
+	 */
+	public function show_returns_an_ok_response(): void
+	{
+		$this->actingAs($this->createUserWithRole('Admin'));
 
-        $template = NotificationTemplate::query()->inRandomOrder()->first();
-        $response = $this->delete(the_tenant_route('tasks.notifications.destroy', ['task' => $template->task, 'notification' => $template]));
+		$task = Task::factory()
+			->has(NotificationTemplate::factory(), 'notification_templates')
+			->create();
 
-        $response->assertRedirect();
-        $this->assertSoftDeleted('notification_templates', ['id' => $template->id]);
-    }
+		$response = $this->get(
+			the_tenant_route('tasks.notifications.show', [
+				$task,
+				'notification' => $task->notification_templates->first(),
+			]),
+		);
+
+		$response->assertOk();
+		$response->assertViewIs('tasks.notifications.show');
+		$response->assertViewHas('task');
+		$response->assertViewHas('notification');
+	}
+
+	/**
+	 * @test
+	 */
+	public function store_redirects_to_show(): void
+	{
+		$this->actingAs($this->createUserWithRole('Admin'));
+
+		$task = Task::factory()->create();
+
+		$data = [
+			'subject' => $this->faker->sentence(),
+			'recipients' => 'role:1',
+			'body' => $this->faker->paragraph(),
+			'delay' =>
+				$this->faker->numberBetween(2, 50) .
+				' ' .
+				$this->faker->randomElement(['seconds', 'minutes', 'hours', 'days', 'weeks', 'months']),
+		];
+		$response = $this->post(the_tenant_route('tasks.notifications.store', [$task]), $data);
+
+		$response->assertSessionHasNoErrors();
+		$this->assertDatabaseHas(
+			'notification_templates',
+			array_merge($data, [
+				'task_id' => $task->id,
+			]),
+		);
+		$notification_template = NotificationTemplate::firstWhere('subject', $data['subject']);
+		$response->assertRedirect(the_tenant_route('tasks.notifications.show', [$task, $notification_template]));
+	}
+
+	/**
+	 * @test
+	 */
+	public function update_redirects_to_show(): void
+	{
+		$this->actingAs($this->createUserWithRole('Admin'));
+
+		$task = Task::factory()
+			->has(NotificationTemplate::factory(), 'notification_templates')
+			->create();
+
+		$data = [
+			'subject' => $this->faker->sentence(),
+			'recipients' => 'role:1',
+			'body' => $this->faker->paragraph(),
+			'delay' =>
+				$this->faker->numberBetween(2, 50) .
+				' ' .
+				$this->faker->randomElement(['seconds', 'minutes', 'hours', 'days', 'weeks', 'months']),
+		];
+		$response = $this->put(
+			the_tenant_route('tasks.notifications.update', [
+				$task,
+				'notification' => $task->notification_templates->first(),
+			]),
+			$data,
+		);
+
+		$response->assertSessionHasNoErrors();
+		$this->assertDatabaseHas(
+			'notification_templates',
+			array_merge($data, [
+				'task_id' => $task->id,
+			]),
+		);
+		$response->assertRedirect(route('tasks.notifications.show', [$task, $task->notification_templates->first()]));
+	}
 }

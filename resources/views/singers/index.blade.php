@@ -9,9 +9,9 @@
 @endsection
 @section('page-action')
 	<?php
-	use App\Models\Singer;
-	$filters_class = Singer::hasActiveFilters() ? 'btn-primary' : 'btn-light';
-	?>
+ use App\Models\Singer;
+ $filters_class = Singer::hasActiveFilters() ? 'btn-primary' : 'btn-light';
+ ?>
 	<a class="btn btn-sm {{ $filters_class }}" data-toggle="collapse" href="#filters" role="button" aria-expanded="false" aria-controls="filters"><i class="fa fa-filter"></i> Filter</a>
 
 	@can('viewAny', \App\Models\VoicePart::class)
