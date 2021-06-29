@@ -14,53 +14,65 @@ use Illuminate\Http\Request;
 
 class SingerPlacementController extends Controller
 {
-    const PLACEMENT_TASK_ID = 2;
+	const PLACEMENT_TASK_ID = 2;
 
-    public function __construct()
-    {
-        $this->authorizeResource(Placement::class, 'placement');
-    }
+	public function __construct()
+	{
+		$this->authorizeResource(Placement::class, 'placement');
+	}
 
-    public function create(Singer $singer): View
-    {
-        $voice_parts = [0 => "None"] + VoicePart::all()->pluck('title', 'id')->toArray();
+	public function create(Singer $singer): View
+	{
+		$voice_parts =
+			[0 => 'None'] +
+			VoicePart::all()
+				->pluck('title', 'id')
+				->toArray();
 
-        return view('singers.createplacement', compact('singer', 'voice_parts'));
-    }
+		return view('singers.createplacement', compact('singer', 'voice_parts'));
+	}
 
-    public function store(Singer $singer, PlacementRequest $request): RedirectResponse
-    {
-        $singer->placement()->create($request->validated()); // refer to whitelist in model
+	public function store(Singer $singer, PlacementRequest $request): RedirectResponse
+	{
+		$singer->placement()->create($request->validated()); // refer to whitelist in model
 
-        if( $singer->onboarding_enabled ) {
-            // Mark matching task completed
-            //$task = $singer->tasks()->where('name', 'Voice Placement')->get();
-            $singer->tasks()->updateExistingPivot( self::PLACEMENT_TASK_ID, ['completed' => true] );
+		if ($singer->onboarding_enabled) {
+			// Mark matching task completed
+			//$task = $singer->tasks()->where('name', 'Voice Placement')->get();
+			$singer->tasks()->updateExistingPivot(self::PLACEMENT_TASK_ID, ['completed' => true]);
 
-            event( new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer) );
-        }
+			event(new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer));
+		}
 
-        $singer->update([
-            'voice_part_id' => $request->validated()['voice_part_id']
-        ]);
+		$singer->update([
+			'voice_part_id' => $request->validated()['voice_part_id'],
+		]);
 
-        return redirect()->route('singers.show', $singer)->with(['status' => 'Voice Placement created. ', ]);
-    }
+		return redirect()
+			->route('singers.show', $singer)
+			->with(['status' => 'Voice Placement created. ']);
+	}
 
-    public function edit(Singer $singer, Placement $placement, Request $request): View
-    {
-        $voice_parts = [0 => "None"] + VoicePart::all()->pluck('title', 'id')->toArray();
-        return view('singers.editplacement', compact('singer', 'placement', 'voice_parts'));
-    }
+	public function edit(Singer $singer, Placement $placement, Request $request): View
+	{
+		$voice_parts =
+			[0 => 'None'] +
+			VoicePart::all()
+				->pluck('title', 'id')
+				->toArray();
+		return view('singers.editplacement', compact('singer', 'placement', 'voice_parts'));
+	}
 
-    public function update(PlacementRequest $request, Singer $singer, Placement $placement): RedirectResponse
-    {
-        $placement->update($request->validated());
+	public function update(PlacementRequest $request, Singer $singer, Placement $placement): RedirectResponse
+	{
+		$placement->update($request->validated());
 
-        $singer->update([
-            'voice_part_id' => $request->validated()['voice_part_id']
-        ]);
+		$singer->update([
+			'voice_part_id' => $request->validated()['voice_part_id'],
+		]);
 
-        return redirect()->route('singers.show', $singer)->with(['status' => 'Voice Placement updated.']);
-    }
+		return redirect()
+			->route('singers.show', $singer)
+			->with(['status' => 'Voice Placement updated.']);
+	}
 }

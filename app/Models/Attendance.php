@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Models;
-
 
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Model;
@@ -29,25 +27,21 @@ use Illuminate\Support\Carbon;
  */
 class Attendance extends Model
 {
-    use TenantTimezoneDates;
+	use TenantTimezoneDates;
 
-    protected $fillable = [
-        'singer_id',
-        'response',
-        'absent_reason',
-        'event_id',
-    ];
+	protected $fillable = ['singer_id', 'response', 'absent_reason', 'event_id'];
 
-    public function singer(): BelongsTo
-    {
-        return $this->belongsTo(Singer::class);
-    }
-    public function event(): BelongsTo
-    {
-        return $this->belongsTo(Event::class);
-    }
+	public function singer(): BelongsTo
+	{
+		return $this->belongsTo(Singer::class);
+	}
+	public function event(): BelongsTo
+	{
+		return $this->belongsTo(Event::class);
+	}
 
-    public function getResponseStringAttribute(){
-        return ($this->response === 'absent_apology') ? 'Absent (With Apology)' : ucfirst($this->response);
-    }
+	public function getResponseStringAttribute()
+	{
+		return $this->response === 'absent_apology' ? 'Absent (With Apology)' : ucfirst($this->response);
+	}
 }

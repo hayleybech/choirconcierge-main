@@ -17,36 +17,52 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
-							<x-inputs.text label="First Name" id="first_name" name="first_name"></x-inputs.text>
+							<x-inputs.text label="First Name" id="first_name" name="first_name" :value="old('first_name')" />
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
-							<x-inputs.text label="Last Name" id="last_name" name="last_name"></x-inputs.text>
+							<x-inputs.text label="Last Name" id="last_name" name="last_name" :value="old('last_name')" />
 						</div>
 					</div>
 				</div>
 
 				<p>
-					<x-inputs.text label="Email Address" id="email" name="email" type="email"></x-inputs.text>
+					<x-inputs.text label="Email Address" id="email" name="email" type="email" :value="old('email')"/>
 				</p>
 
 				<p>
-					<x-inputs.text label="Password" id="password" name="password" type="password" help-text="You may leave this blank and update it later."></x-inputs.text>
+					<x-inputs.text label="Password" id="password" name="password" type="password" help-text="You may leave this blank and update it later." />
 				</p>
 				<p>
-					<x-inputs.text label="Confirm Password" id="password_confirmation" name="password_confirmation" type="password"></x-inputs.text>
+					<x-inputs.text label="Confirm Password" id="password_confirmation" name="password_confirmation" type="password" />
 				</p>
 
 				<div class="form-group">
-					<x-inputs.select label="Voice Part" id="voice_part_id" name="voice_part_id" :options="$voice_parts"></x-inputs.select>
+					<x-inputs.select
+						label="Voice Part"
+						id="voice_part_id"
+						name="voice_part_id"
+						:options="$voice_parts"
+						:selected="(int) old('voice_part_id')"
+					/>
 				</div>
 
-				<toggleable-input label="I'm adding a current member" name="onboarding_disabled" help-text="Onboarding will be disabled when adding an existing singer.">
+				<toggleable-input
+					label="I'm adding a current member"
+					name="onboarding_disabled"
+					help-text="Onboarding will be disabled when adding an existing singer."
+					start-open="{{ old('onboarding_disabled') }}"
+				>
 					<fieldset id="existing_singer_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
 
 						<div class="form-group">
-							<date-input label="Joined" input-name="joined_at_input" output-name="joined_at"></date-input>
+							<date-input
+								label="Joined"
+								input-name="joined_at_input"
+								output-name="joined_at"
+								value="{{ old('joined_at') }}"
+							/>
 						</div>
 
 						<div class="form-group">
@@ -58,7 +74,13 @@
 										@continue
 									@endif
 									<div class="col-md-6">
-										<x-inputs.checkbox :label="$role->name" :id="'user_roles_'.$role->id" name="user_roles[]" :value="$role->id"></x-inputs.checkbox>
+										<x-inputs.checkbox
+											:label="$role->name"
+											:id="'user_roles_'.$role->id"
+											name="user_roles[]"
+											:value="$role->id"
+											:checked="checkbox_group_old('user_roles', (string) $role->id)"
+										/>
 									</div>
 								@endforeach
 							</div>

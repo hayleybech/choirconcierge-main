@@ -31,9 +31,9 @@ use Illuminate\Support\Carbon;
  */
 class Placement extends Model
 {
-    use TenantTimezoneDates, HasFactory;
+	use TenantTimezoneDates, HasFactory;
 
-    protected $fillable = [
+	protected $fillable = [
 		'experience',
 		'instruments',
 		'skill_pitch',
@@ -43,10 +43,10 @@ class Placement extends Model
 		'voice_tone',
 	];
 
-    protected $touches = ['singer'];
-	
+	protected $touches = ['singer'];
+
 	public function singer(): BelongsTo
-    {
-		return $this->belongsTo(Singer::class );
+	{
+		return $this->belongsTo(Singer::class);
 	}
 }

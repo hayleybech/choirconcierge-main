@@ -6,13 +6,21 @@
 				<span class="input-group-text"><i class="fa fa-fw fa-map-marker-alt"></i></span>
 			</div>
 
-			<input ref="locationInput" type="text" :name="inputName" :id="inputName" :value="value" @change="clear" class="form-control">
+			<input
+				ref="locationInput"
+				type="text"
+				:name="inputName"
+				:id="inputName"
+				:value="value"
+				@change="clear"
+				class="form-control"
+			/>
 		</div>
 
-		<input type="hidden" :name="inputName+'_place_id'" :value="location.placeId">
-		<input type="hidden" :name="inputName+'_icon'" :value="location.icon">
-		<input type="hidden" :name="inputName+'_name'" :value="location.name">
-		<input type="hidden" :name="inputName+'_address'" :value="location.address">
+		<input type="hidden" :name="inputName + '_place_id'" :value="location.placeId" />
+		<input type="hidden" :name="inputName + '_icon'" :value="location.icon" />
+		<input type="hidden" :name="inputName + '_name'" :value="location.name" />
+		<input type="hidden" :name="inputName + '_address'" :value="location.address" />
 
 		<small class="location-place form-text text-muted">
 			<span class="place-icon" :style="iconStyle"></span>
@@ -25,7 +33,7 @@
 <script>
 import { Loader } from '@googlemaps/js-api-loader';
 export default {
-	name: "LocationInput",
+	name: 'LocationInput',
 	props: {
 		inputName: {
 			type: String,
@@ -50,7 +58,7 @@ export default {
 		apiKey: {
 			type: String,
 			required: true,
-		}
+		},
 	},
 	data() {
 		return {
@@ -60,34 +68,33 @@ export default {
 				name: this.locationName,
 				address: this.locationAddress,
 				placeId: this.locationPlaceId,
-				icon: this.locationIcon
-			}
-		}
+				icon: this.locationIcon,
+			},
+		};
 	},
 	computed: {
 		value() {
-			if(! this.location.name || ! this.location.address) {
+			if (!this.location.name || !this.location.address) {
 				return '';
 			}
-			return this.location.name+', '+this.location.address;
+			return this.location.name + ', ' + this.location.address;
 		},
 		iconStyle() {
-			if(! this.location.icon) {
+			if (!this.location.icon) {
 				return '';
 			}
-			return 'background-image: url("'+this.location.icon+'");'
-		}
+			return 'background-image: url("' + this.location.icon + '");';
+		},
 	},
 	async mounted() {
 		this.loader = new Loader({
 			apiKey: this.apiKey,
-			version: "weekly",
-			libraries: ["places"]
+			version: 'weekly',
+			libraries: ['places'],
 		});
 
 		await this.loader.load();
 		this.autocomplete = new google.maps.places.Autocomplete(this.$refs.locationInput);
-
 
 		// Set the data fields to return when the user selects a place.
 		this.autocomplete.setFields(['place_id', 'address_components', 'icon', 'name']);
@@ -98,7 +105,7 @@ export default {
 		placeChanged() {
 			let place = this.autocomplete.getPlace();
 
-			if ( ! place.place_id ) {
+			if (!place.place_id) {
 				// User entered the name of a Place that was not suggested and
 				// pressed the Enter key, or the Place Details request failed.
 				window.alert("No details available for input: '" + place.name + "'");
@@ -109,8 +116,8 @@ export default {
 			let address = '';
 			let address_parts = [];
 			if (place.address_components) {
-				place.address_components.forEach(function(part){
-					if(part.short_name) {
+				place.address_components.forEach(function(part) {
+					if (part.short_name) {
 						address_parts.push(part.short_name);
 					}
 				});
@@ -131,10 +138,8 @@ export default {
 			this.location.name = '';
 			this.location.address = '';
 		},
-	}
-}
+	},
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

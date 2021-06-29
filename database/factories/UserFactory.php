@@ -8,16 +8,16 @@ use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
-    /** @var string */
-    protected $model = User::class;
+	/** @var string */
+	protected $model = User::class;
 
-    public function definition(): array
-    {
-        return [
-            'name' => $this->faker->firstName() . ' ' . $this->faker->lastName(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('password'),
-            'remember_token' => Str::random(10),
-        ];
-    }
+	public function definition(): array
+	{
+		return [
+			'name' => $this->faker->firstName() . ' ' . $this->faker->lastName(),
+			'email' => $this->faker->unique()->safeEmail(),
+			'password' => bcrypt('password'),
+			'remember_token' => Str::random(10),
+		];
+	}
 }

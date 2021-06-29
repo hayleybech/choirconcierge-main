@@ -32,9 +32,9 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 	}
 
 	/**
-     * @test
-     * @dataProvider recipientProvider
-     */
+	 * @test
+	 * @dataProvider recipientProvider
+	 */
 	public function copies_recipients($recipient_type, $count, $recipients): void
 	{
 		// Arrange
@@ -90,85 +90,82 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 
 	private function mockMessage(array $test_recipients = []): MockInterface
 	{
-	    $recipients = array_merge([
-            'to' => [(object) [
-                'mail'  => 'to@example.com',
-                'personal' => 'Name To'
-            ]],
-            'cc' => [(object) [
-                'mail' => 'cc@example.com',
-                'personal' => 'Name Cc'
-            ]],
-            'from' => [(object) [
-                'mail'  => 'to@example.com',
-                'personal' => 'Name To'
-            ]],
-        ], $test_recipients);
+		$recipients = array_merge(
+			[
+				'to' => [
+					(object) [
+						'mail' => 'to@example.com',
+						'personal' => 'Name To',
+					],
+				],
+				'cc' => [
+					(object) [
+						'mail' => 'cc@example.com',
+						'personal' => 'Name Cc',
+					],
+				],
+				'from' => [
+					(object) [
+						'mail' => 'to@example.com',
+						'personal' => 'Name To',
+					],
+				],
+			],
+			$test_recipients,
+		);
 		return $this->mock(Message::class, function (MockInterface $mock) use ($recipients) {
-			$mock->shouldReceive('getTo')
-				->andReturn($recipients['to']);
-			$mock->shouldReceive('getCc')
-				->andReturn($recipients['cc']);
-			$mock->shouldReceive('getFrom')
-				->andReturn($recipients['from']);
-			$mock->shouldReceive('getSubject')
-				->andReturn('A Test Subject');
-			$mock->shouldReceive('getTextBody')
-				->andReturn('Hello');
-			$mock->shouldReceive('getHTMLBody')
-				->andReturn('<html>Hello</html>');
-			$mock->shouldReceive('getAttachments')
-				->andReturn([]);
+			$mock->shouldReceive('getTo')->andReturn($recipients['to']);
+			$mock->shouldReceive('getCc')->andReturn($recipients['cc']);
+			$mock->shouldReceive('getFrom')->andReturn($recipients['from']);
+			$mock->shouldReceive('getSubject')->andReturn('A Test Subject');
+			$mock->shouldReceive('getTextBody')->andReturn('Hello');
+			$mock->shouldReceive('getHTMLBody')->andReturn('<html>Hello</html>');
+			$mock->shouldReceive('getAttachments')->andReturn([]);
 		});
 	}
 
-	public function recipientProvider(){
-	    return [
-	        'single to' => [
-	            'recipient_type' => 'to',
-	            'count' => 1,
-                'recipients' => [
-                    (object) ['personal' => 'Name To', 'mail' => 'to@example.com'],
-                ],
-            ],
-            'multiple to' => [
-                'recipient_type' => 'to',
-                'count' => 2,
-                'recipients' => [
-                    (object) ['personal' => 'Name To 1', 'mail' => 'to_1@example.com'],
-                    (object) ['personal' => 'Name To 2', 'mail' => 'to_2@example.com'],
-                ],
-            ],
-            'single cc' => [
-                'recipient_type' => 'cc',
-                'count' => 1,
-                'recipients' => [
-                    (object) ['personal' => 'Name Cc', 'mail' => 'cc@example.com'],
-                ],
-            ],
-            'multiple cc' => [
-                'recipient_type' => 'cc',
-                'count' => 2,
-                'recipients' => [
-                    (object) ['personal' => 'Name Cc 1', 'mail' => 'cc_1@example.com'],
-                    (object) ['personal' => 'Name Cc 2', 'mail' => 'cc_2@example.com'],
-                ],
-            ],
-            'single from' => [
-                'recipient_type' => 'from',
-                'count' => 1,
-                'recipients' => [
-                    (object) ['personal' => 'Name From', 'mail' => 'from@example.com'],
-                ],
-            ],
-            'multiple from' => [
-                'recipient_type' => 'from',
-                'count' => 2,
-                'recipients' => [
-                    (object) ['personal' => 'Name From 1', 'mail' => 'from_1@example.com'],
-                    (object) ['personal' => 'Name From 2', 'mail' => 'from_2@example.com'],
-                ],
-            ],
-        ];
-    }
+	public function recipientProvider()
+	{
+		return [
+			'single to' => [
+				'recipient_type' => 'to',
+				'count' => 1,
+				'recipients' => [(object) ['personal' => 'Name To', 'mail' => 'to@example.com']],
+			],
+			'multiple to' => [
+				'recipient_type' => 'to',
+				'count' => 2,
+				'recipients' => [
+					(object) ['personal' => 'Name To 1', 'mail' => 'to_1@example.com'],
+					(object) ['personal' => 'Name To 2', 'mail' => 'to_2@example.com'],
+				],
+			],
+			'single cc' => [
+				'recipient_type' => 'cc',
+				'count' => 1,
+				'recipients' => [(object) ['personal' => 'Name Cc', 'mail' => 'cc@example.com']],
+			],
+			'multiple cc' => [
+				'recipient_type' => 'cc',
+				'count' => 2,
+				'recipients' => [
+					(object) ['personal' => 'Name Cc 1', 'mail' => 'cc_1@example.com'],
+					(object) ['personal' => 'Name Cc 2', 'mail' => 'cc_2@example.com'],
+				],
+			],
+			'single from' => [
+				'recipient_type' => 'from',
+				'count' => 1,
+				'recipients' => [(object) ['personal' => 'Name From', 'mail' => 'from@example.com']],
+			],
+			'multiple from' => [
+				'recipient_type' => 'from',
+				'count' => 2,
+				'recipients' => [
+					(object) ['personal' => 'Name From 1', 'mail' => 'from_1@example.com'],
+					(object) ['personal' => 'Name From 2', 'mail' => 'from_2@example.com'],
+				],
+			],
+		];
+	}
 }

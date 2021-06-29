@@ -29,21 +29,22 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class SongStatus extends Model
 {
-    use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
+	use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
 
-    public const STATUS_COLOURS = [
-        'Pending' => 'danger',
-        'Learning' => 'warning',
-        'Active' => 'success',
-        'Archived' => 'tertiary',
-    ];
+	public const STATUS_COLOURS = [
+		'Pending' => 'danger',
+		'Learning' => 'warning',
+		'Active' => 'success',
+		'Archived' => 'tertiary',
+	];
 
-    public function songs(): HasMany
-    {
-        return $this->hasMany(Song::class, 'status_id');
-    }
+	public function songs(): HasMany
+	{
+		return $this->hasMany(Song::class, 'status_id');
+	}
 
-    public function getColourAttribute(): string {
-        return self::STATUS_COLOURS[$this->title];
-    }
+	public function getColourAttribute(): string
+	{
+		return self::STATUS_COLOURS[$this->title];
+	}
 }

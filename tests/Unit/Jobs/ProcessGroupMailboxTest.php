@@ -24,9 +24,8 @@ class ProcessGroupMailboxTest extends TestCase
 		// Arrange
 		$message = $this->spy(IncomingMessage::class);
 
-		$this->mock(IncomingMailbox::class, function(MockInterface $mock) use ($message) {
-			$mock->shouldReceive('getMessages')
-				->andReturn(collect([$message]));
+		$this->mock(IncomingMailbox::class, function (MockInterface $mock) use ($message) {
+			$mock->shouldReceive('getMessages')->andReturn(collect([$message]));
 		});
 
 		// Act

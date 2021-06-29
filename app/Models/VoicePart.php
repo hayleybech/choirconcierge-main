@@ -32,20 +32,17 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class VoicePart extends Model
 {
-    use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
+	use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
-    protected $fillable = [
-        'title',
-        'colour',
-    ];
+	protected $fillable = ['title', 'colour'];
 
-    public function singers(): HasMany
-    {
-        return $this->hasMany( Singer::class );
-    }
+	public function singers(): HasMany
+	{
+		return $this->hasMany(Singer::class);
+	}
 
-    public function users(): HasManyThrough
-    {
-        return $this->hasManyThrough(User::class, Singer::class);
-    }
+	public function users(): HasManyThrough
+	{
+		return $this->hasManyThrough(User::class, Singer::class);
+	}
 }

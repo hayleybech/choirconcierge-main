@@ -13,26 +13,26 @@ use Tests\TestCase;
  */
 class CompleteSingerTaskControllerTest extends TestCase
 {
-    use RefreshDatabase;
+	use RefreshDatabase;
 
-    /**
-     * @test
-     */
-    public function invoke_returns_an_ok_response(): void
-    {
-	    $this->actingAs($this->createUserWithRole('Membership Team'));
+	/**
+	 * @test
+	 */
+	public function invoke_returns_an_ok_response(): void
+	{
+		$this->actingAs($this->createUserWithRole('Membership Team'));
 
-	    $task = Task::factory()->create();
-	    $singer = Singer::factory()->create(['onboarding_enabled' => true]);
+		$task = Task::factory()->create();
+		$singer = Singer::factory()->create(['onboarding_enabled' => true]);
 
-        $response = $this->get(the_tenant_route('task.complete', [$singer, $task]));
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect(the_tenant_route('singers.index'));
+		$response = $this->get(the_tenant_route('task.complete', [$singer, $task]));
+		$response->assertSessionHasNoErrors();
+		$response->assertRedirect(the_tenant_route('singers.index'));
 
-        $this->assertDatabaseHas('singers_tasks',[
-        	'singer_id' => $singer->id,
-	        'task_id'   => $task->id,
-	        'completed' => true,
-        ]);
-    }
+		$this->assertDatabaseHas('singers_tasks', [
+			'singer_id' => $singer->id,
+			'task_id' => $task->id,
+			'completed' => true,
+		]);
+	}
 }

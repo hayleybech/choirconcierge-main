@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Models\Filters;
-
 
 use Form;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,82 +22,86 @@ use Illuminate\View\View;
  */
 abstract class Filter
 {
-    protected string $name;
+	protected string $name;
 
-    protected string $label;
+	protected string $label;
 
-    protected string $default_option;
+	protected string $default_option;
 
-    protected string|array $current_option;
+	protected string|array $current_option;
 
-    protected array|Collection $options = [];
+	protected array|Collection $options = [];
 
-    public function __construct() {
-        $this->current_option = request()->input($this->name, $this->default_option);
-        $this->initOptions();
-    }
+	public function __construct()
+	{
+		$this->current_option = request()->input($this->name, $this->default_option);
+		$this->initOptions();
+	}
 
-    /**
-     * Set up the options array (as label => value)
-     */
-    abstract protected function initOptions(): void;
+	/**
+	 * Set up the options array (as label => value)
+	 */
+	abstract protected function initOptions(): void;
 
-    public function render(): void
-    {
-        $field_class = $this->isDefault() ? '' : 'border-primary';
-        echo Form::select($this->name,
-            $this->options,
-            $this->current_option,
-            ['class' => 'custom-select form-control-sm ' . $field_class]
-        );
-    }
+	public function render(): void
+	{
+		$field_class = $this->isDefault() ? '' : 'border-primary';
+		echo Form::select($this->name, $this->options, $this->current_option, [
+			'class' => 'custom-select form-control-sm ' . $field_class,
+		]);
+	}
 
-    /**
-     * The actual query occurs here
-     * @param Builder $query
-     * @return Builder
-     */
-    abstract protected function run( Builder $query ): Builder;
+	/**
+	 * The actual query occurs here
+	 * @param Builder $query
+	 * @return Builder
+	 */
+	abstract protected function run(Builder $query): Builder;
 
-    public function __get( $name ) {
-        return $this->$name;
-    }
+	public function __get($name)
+	{
+		return $this->$name;
+	}
 
-    /**
-     * The main entry point for models to apply their filters
-     * This method prepares and call run().
-     *
-     * @param Builder  $query
-     *
-     * @return Builder
-     */
-    public function apply( Builder $query ): Builder
-    {
-        if( $this->current_option !== 'any' ) {
-            return $this->run( $query );
-        }
-        return $query;
-    }
+	/**
+	 * The main entry point for models to apply their filters
+	 * This method prepares and call run().
+	 *
+	 * @param Builder  $query
+	 *
+	 * @return Builder
+	 */
+	public function apply(Builder $query): Builder
+	{
+		if ($this->current_option !== 'any') {
+			return $this->run($query);
+		}
+		return $query;
+	}
 
-    public function isDefault(): bool {
-        return $this->current_option === $this->default_option;
-    }
+	public function isDefault(): bool
+	{
+		return $this->current_option === $this->default_option;
+	}
 
-    /**
-     * Generates the "selected" attribute for an option tag
-     * @param string $this_value The value of the tag we're generating
-     * @param string $selected_value The value selected by the user, to compare.
-     * @return string
-     */
-    private static function selected( string $this_value, string $selected_value ): string {
-        return $this_value === $selected_value ? 'selected' : '';
-    }
+	/**
+	 * Generates the "selected" attribute for an option tag
+	 * @param string $this_value The value of the tag we're generating
+	 * @param string $selected_value The value selected by the user, to compare.
+	 * @return string
+	 */
+	private static function selected(string $this_value, string $selected_value): string
+	{
+		return $this_value === $selected_value ? 'selected' : '';
+	}
 
-    public function getName(): string {
-        return $this->name;
-    }
+	public function getName(): string
+	{
+		return $this->name;
+	}
 
-    public function getCurrentOption(): string {
-        return $this->current_option;
-    }
+	public function getCurrentOption(): string
+	{
+		return $this->current_option;
+	}
 }

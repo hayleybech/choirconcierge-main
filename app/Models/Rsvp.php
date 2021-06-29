@@ -27,33 +27,31 @@ use Illuminate\Support\Carbon;
  */
 class Rsvp extends Model
 {
-    use TenantTimezoneDates, HasFactory;
+	use TenantTimezoneDates, HasFactory;
 
-    protected $fillable = [
-        'singer_id',
-        'response',
-        'event_id',
-    ];
+	protected $fillable = ['singer_id', 'response', 'event_id'];
 
-    public function singer(): BelongsTo
-    {
-        return $this->belongsTo(Singer::class);
-    }
-    public function event(): BelongsTo
-    {
-        return $this->belongsTo(Event::class);
-    }
+	public function singer(): BelongsTo
+	{
+		return $this->belongsTo(Singer::class);
+	}
+	public function event(): BelongsTo
+	{
+		return $this->belongsTo(Event::class);
+	}
 
-    public function getResponseStringAttribute(){
-        return ucfirst($this->response);
-    }
+	public function getResponseStringAttribute()
+	{
+		return ucfirst($this->response);
+	}
 
-    public function getResponseLabelAttribute(){
-    	$labels = [
-    		'yes'   => 'Going',
-		    'maybe' => 'Maybe',
-		    'no'    => 'Not Going',
-	    ];
-    	return $labels[$this->response];
-    }
+	public function getResponseLabelAttribute()
+	{
+		$labels = [
+			'yes' => 'Going',
+			'maybe' => 'Maybe',
+			'no' => 'Not Going',
+		];
+		return $labels[$this->response];
+	}
 }

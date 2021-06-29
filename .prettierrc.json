@@ -1,0 +1,15 @@
+{
+  "printWidth": 120,
+  "trailingComma": "es5",
+  "tabWidth": 4,
+  "useTabs": true,
+  "semi": true,
+  "singleQuote": true,
+  "quoteProps": "consistent",
+  "bracketSpacing": true,
+  "phpVersion": "8.0",
+  "trailingCommaPHP": true,
+  "plugins": [
+    "@prettier/plugin-php"
+  ]
+}

@@ -8,8 +8,10 @@ use Carbon\Carbon;
 
 class DummyUserGroupSeeder extends Seeder
 {
-    public function run()
-    {
-        UserGroup::factory()->count(10)->create();
-    }
+	public function run()
+	{
+		UserGroup::factory()
+			->count(10)
+			->create();
+	}
 }

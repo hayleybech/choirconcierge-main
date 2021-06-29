@@ -26,10 +26,10 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class EventType extends Model
 {
-    use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
+	use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
 
-    public function events(): HasMany
-    {
-        return $this->hasMany(Event::class, 'type_id');
-    }
+	public function events(): HasMany
+	{
+		return $this->hasMany(Event::class, 'type_id');
+	}
 }
