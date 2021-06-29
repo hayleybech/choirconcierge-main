@@ -99,6 +99,9 @@ export default {
 			return !!this.$slots['description'];
 		},
 	},
+  created() {
+    this.constrain();
+  },
 	methods: {
 		/*
 		 * Merge dates and times on edit
