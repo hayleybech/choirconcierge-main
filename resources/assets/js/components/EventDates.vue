@@ -11,6 +11,32 @@
 					@change="changeStartDate"
 				/>
 			</div>
+      <div class="col-md-3">
+        <datetime-input
+            label="Onstage Time"
+            type="time"
+            input-name="start_date_input"
+            output-name="start_date"
+            v-model="startDate"
+            :default-value="defaultStartDate"
+            :disabled-time="disabledStartTime"
+            @change="changeStartTime"
+        />
+      </div>
+      <div class="col-md-3">
+        <datetime-input
+            label="Call Time"
+            type="time"
+            input-name="call_time_input"
+            output-name="call_time"
+            v-model="callTime"
+            @change="changeCallTime"
+        />
+      </div>
+
+		</div>
+
+		<div class="row mb-2">
       <div class="col-md-6">
         <date-input
             label="End Date"
@@ -21,31 +47,6 @@
             @change="changeEndDate"
         />
       </div>
-		</div>
-
-		<div class="row mb-2">
-			<div class="col-md-6">
-				<datetime-input
-					label="Call Time"
-					type="time"
-					input-name="call_time_input"
-					output-name="call_time"
-					v-model="callTime"
-					@change="changeCallTime"
-				/>
-			</div>
-			<div class="col-md-3">
-				<datetime-input
-					label="Onstage Time"
-					type="time"
-					input-name="start_date_input"
-					output-name="start_date"
-					v-model="startDate"
-					:default-value="defaultStartDate"
-					:disabled-time="disabledStartTime"
-					@change="changeStartTime"
-				/>
-			</div>
 			<div class="col-md-3">
 				<datetime-input
 					label="End Time"
