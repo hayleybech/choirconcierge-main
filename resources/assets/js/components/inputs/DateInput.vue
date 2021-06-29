@@ -2,16 +2,18 @@
 	<div>
 		<label :for="inputName">{{ label }}</label>
 
-		<date-picker
-      v-bind:value="value"
-      v-on:input="onInput"
-      v-on:change="onChange"
-			type="date"
-			:format="displayFormat"
-			:input-attr="{ name: inputName }"
-			:input-class="inputClass"
-			style="width:100%"
-		/>
+    <click-to-edit-field :enabled="clickToEdit" :value="displayTime">
+      <date-picker
+          v-bind:value="value"
+          v-on:input="onInput"
+          v-on:change="onChange"
+          type="date"
+          :format="displayFormat"
+          :input-attr="{ name: inputName }"
+          :input-class="inputClass"
+          style="width:100%"
+      />
+    </click-to-edit-field>
 
 		<input type="hidden" :name="outputName" :value="outputTime" />
 
@@ -27,8 +29,9 @@
 import moment from 'moment';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import ClickToEditField from "../ClickToEditField";
 export default {
-	components: { DatePicker },
+	components: {ClickToEditField, DatePicker },
 	name: 'DateInput',
 	props: {
 		label: {
@@ -44,6 +47,10 @@ export default {
 			type: Date,
 		},
 		small: Boolean,
+    clickToEdit: {
+		  type: Boolean,
+      default: false,
+    },
 	},
 	data() {
 		return {
@@ -55,6 +62,9 @@ export default {
 		outputTime() {
 			return moment(this.value).format(this.rawFormat);
 		},
+    displayTime() {
+      return moment(this.value).format(this.displayFormat);
+    },
 		hasHelpText() {
 			return !!this.$slots['helpText'];
 		},

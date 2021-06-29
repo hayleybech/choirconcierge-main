@@ -3,13 +3,13 @@
     <div class="row mb-2">
       <div class="col-md-6">
         <date-input
-					label="Start Date"
-					type="date"
-					input-name="start_date"
-          output-name="range_start_date"
-					v-model="startDate"
-					@change="changeStartDate"
-				/>
+            label="Start Date"
+            type="date"
+            input-name="start_date"
+            output-name="range_start_date"
+            v-model="startDate"
+            @change="changeStartDate"
+        />
 			</div>
       <div class="col-md-3">
         <datetime-input
@@ -31,6 +31,7 @@
             output-name="call_time"
             v-model="callTime"
             @change="changeCallTime"
+            :click-to-edit="true"
         />
       </div>
 
@@ -45,6 +46,7 @@
             output-name="range_end_date"
             v-model="endDate"
             @change="changeEndDate"
+            :click-to-edit="true"
         />
       </div>
 			<div class="col-md-3">
@@ -57,6 +59,7 @@
 					:default-value="defaultEndDate"
 					:disabled-time="disabledEndTime"
 					@change="changeEndTime"
+          :click-to-edit="true"
 				/>
 			</div>
 		</div>
