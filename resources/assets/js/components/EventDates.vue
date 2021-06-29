@@ -1,17 +1,26 @@
 <template>
 	<div>
-		<div class="row mb-2">
-			<div class="col-md-12">
-				<datetime-range-input
-					label="Event Date"
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <date-input
+					label="Start Date"
 					type="date"
-					input-name="date_range"
-					start-name="range_start_date"
-					end-name="range_end_date"
-					v-model="range"
-					@change="changeDates"
-				></datetime-range-input>
+					input-name="start_date"
+          output-name="range_start_date"
+					v-model="startDate"
+					@change="changeStartDate"
+				/>
 			</div>
+      <div class="col-md-6">
+        <date-input
+            label="End Date"
+            type="date"
+            input-name="end_date"
+            output-name="range_end_date"
+            v-model="endDate"
+            @change="changeEndDate"
+        />
+      </div>
 		</div>
 
 		<div class="row mb-2">
@@ -23,7 +32,7 @@
 					output-name="call_time"
 					v-model="callTime"
 					@change="changeCallTime"
-				></datetime-input>
+				/>
 			</div>
 			<div class="col-md-3">
 				<datetime-input
@@ -35,7 +44,7 @@
 					:default-value="defaultStartDate"
 					:disabled-time="disabledStartTime"
 					@change="changeStartTime"
-				></datetime-input>
+				/>
 			</div>
 			<div class="col-md-3">
 				<datetime-input
@@ -47,13 +56,13 @@
 					:default-value="defaultEndDate"
 					:disabled-time="disabledEndTime"
 					@change="changeEndTime"
-				></datetime-input>
+				/>
 			</div>
 		</div>
 
 		<p v-if="hasDescription">
 			<small class="text-muted">
-				<slot name="description"></slot>
+				<slot name="description" />
 			</small>
 		</p>
 	</div>
@@ -71,10 +80,6 @@ export default {
 	},
 	data() {
 		return {
-			range: [
-				this.initStartDate ? new Date(this.initStartDate) : new Date(),
-				this.initEndDate ? new Date(this.initEndDate) : new Date(),
-			],
 			startDate: this.initStartDate ? new Date(this.initStartDate) : new Date(),
 			endDate: this.initEndDate ? new Date(this.initEndDate) : new Date(),
 			callTime: this.initEndDate ? new Date(this.initCallTime) : new Date(),
@@ -89,42 +94,45 @@ export default {
 		},
 	},
 	methods: {
-		/**
+		/*
 		 * Merge dates and times on edit
 		 * Since we've opted for separate date and time controls,
 		 * we need to copy the changes in both directions.
-		 * @param dates the incoming dates
 		 */
-		changeDates(dates) {
-			const newStartDate = moment(dates[0]);
-			const newEndDate = moment(dates[1]);
+    changeStartDate(date) {
+      const newStartDate = moment(date);
 
-			this.startDate = moment(this.startDate)
-				.set({
-					year: newStartDate.year(),
-					month: newStartDate.month(),
-					date: newStartDate.date(),
-				})
-				.toDate();
+      this.startDate = moment(this.startDate)
+          .set({
+            year: newStartDate.year(),
+            month: newStartDate.month(),
+            date: newStartDate.date(),
+          })
+          .toDate();
 
-			this.endDate = moment(this.endDate)
-				.set({
-					year: newEndDate.year(),
-					month: newEndDate.month(),
-					date: newEndDate.date(),
-				})
-				.toDate();
+      this.callTime = moment(this.callTime)
+          .set({
+            year: newStartDate.year(),
+            month: newStartDate.month(),
+            date: newStartDate.date(),
+          })
+          .toDate();
 
-			this.callTime = moment(this.callTime)
-				.set({
-					year: newStartDate.year(),
-					month: newStartDate.month(),
-					date: newStartDate.date(),
-				})
-				.toDate();
+      this.updateDefaults();
+    },
+    changeEndDate(date) {
+      const newEndDate = moment(date);
 
-			this.updateDefaults();
-		},
+      this.endDate = moment(this.endDate)
+          .set({
+            year: newEndDate.year(),
+            month: newEndDate.month(),
+            date: newEndDate.date(),
+          })
+          .toDate();
+
+      this.updateDefaults();
+    },
 		changeStartTime(date) {
 			const newStartDate = moment(date);
 			this.startDate = moment(this.startDate)
