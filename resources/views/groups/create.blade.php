@@ -15,13 +15,13 @@
 
                 <div class="card-body">
                     <div class="form-group">
-                        <x-inputs.text label="Title" id="title" name="title"></x-inputs.text>
+                        <x-inputs.text label="Title" id="title" name="title" value="{{ old('title') }}" />
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('slug', 'Address') }}
                         <div class="input-group mb-3">
-                            {{ Form::text('slug', '', ['class' => 'form-control']) }}
+                            {{ Form::text('slug', old('slug'), ['class' => 'form-control']) }}
                             <div class="input-group-append">
                                 <span class="input-group-text" id="basic-addon2">{{ '@'.Request::gethost() }}</span>
                             </div>
@@ -33,10 +33,20 @@
 
                         <div id="list_type" class="btn-group-vertical btn-group-toggle d-flex bg-white" data-toggle="buttons">
 
-                            <label for="list_type_public" class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center active">
+                            <label
+                                for="list_type_public"
+                                class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center {{ radio_old('list_type', 'public', 'public') ? 'active' : '' }}"
+                            >
                                 <i class="fa fa-fw fa-envelope-open-text fa-2x mr-3"></i>
                                 <span>
-                                    <input id="list_type_public" name="list_type" value="public" type="radio" autocomplete="off" checked>
+                                    <input
+                                        id="list_type_public"
+                                        name="list_type"
+                                        value="public"
+                                        type="radio"
+                                        autocomplete="off"
+                                        {{ radio_old('list_type', 'public', 'public') ? 'checked' : '' }}
+                                    >
                                     <span class="h5">Public</span>
                                     <span class="form-text">
                                         <strong>Best for: </strong> General Enquiries.<br>
@@ -46,10 +56,20 @@
                                 </span>
                             </label>
 
-                            <label for="list_type_chat" class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center">
+                            <label
+                                for="list_type_chat"
+                                class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center {{ radio_old('list_type', 'chat', 'public') ? 'active' : '' }}"
+                            >
                                 <i class="fa fa-fw fa-comments fa-2x mr-3"></i>
                                 <span>
-                                    <input id="list_type_chat" name="list_type" value="chat" type="radio" autocomplete="off">
+                                    <input
+                                        id="list_type_chat"
+                                        name="list_type"
+                                        value="chat"
+                                        type="radio"
+                                        autocomplete="off"
+                                        {{ radio_old('list_type', 'chat', 'public') ? 'checked' : '' }}
+                                    >
                                     <span class="h5">Chat</span>
                                     <span class="form-text">
                                         <strong>Best for: </strong> Internal communication for teams/groups.<br>
@@ -59,10 +79,20 @@
                                 </span>
                             </label>
 
-                            <label for="list_type_distribution" class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center">
+                            <label
+                                for="list_type_distribution"
+                                class="btn btn-outline-dark btn-radio py-3 px-3 text-left d-flex align-items-center {{ radio_old('list_type', 'distribution', 'public') ? 'active' : '' }}"
+                            >
                                 <i class="fa fa-fw fa-paper-plane fa-2x mr-3"></i>
                                 <span>
-                                    <input id="list_type_distribution" name="list_type" value="distribution" type="radio" autocomplete="off">
+                                    <input
+                                        id="list_type_distribution"
+                                        name="list_type"
+                                        value="distribution"
+                                        type="radio"
+                                        autocomplete="off"
+                                        {{ radio_old('list_type', 'distribution', 'public') ? 'checked' : '' }}
+                                    >
                                     <span class="h5">Mailout</span>
                                     <span class="form-text">
                                         <strong>Best for: </strong>Notifications, newsletters, reminders, etc.<br>
