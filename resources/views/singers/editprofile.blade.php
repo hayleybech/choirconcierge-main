@@ -17,7 +17,7 @@
 
 				<div class="card-body">
 					<div class="form-group">
-						<date-input label="Date of Birth" input-name="dob_input" output-name="dob" value="{{ old('dob', $profile->dob) }}" />
+						<single-date-input label="Date of Birth" input-name="dob_input" output-name="dob" init-value="{{ old('dob', $profile->dob) }}" />
 					</div>
 
 					<fieldset>

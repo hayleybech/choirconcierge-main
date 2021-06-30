@@ -54,7 +54,12 @@
 
                     @if(Auth::user()->can('create', \App\Models\Profile::class))
                         <div class="form-group">
-                            <date-input label="Joined" input-name="joined_at_input" output-name="joined_at" value="{{ old('joined_at', $singer->joined_at) }}" />
+                            <single-date-input
+                                label="Joined"
+                                input-name="joined_at_input"
+                                output-name="joined_at"
+                                init-value="{{ old('joined_at', $singer->joined_at) }}"
+                            />
                         </div>
 
                         <fieldset class="form-group">
