@@ -57,11 +57,11 @@
 					<fieldset id="existing_singer_details" style="padding: 15px; border: 1px solid rgb(221, 221, 221); border-radius: 10px; margin-bottom: 10px;">
 
 						<div class="form-group">
-							<date-input
+							<single-date-input
 								label="Joined"
 								input-name="joined_at_input"
 								output-name="joined_at"
-								value="{{ old('joined_at') }}"
+								init-value="{{ old('joined_at') }}"
 							/>
 						</div>
 
