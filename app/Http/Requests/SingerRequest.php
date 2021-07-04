@@ -36,9 +36,9 @@ class SingerRequest extends FormRequest
 			'last_name' => ['required', 'max:127'],
 			'email' => [
 				'required',
-				Rule::unique('singers')
+				Rule::unique('users')
 					->where('tenant_id', tenant('id'))
-					->ignore($singer->id ?? ''),
+					->ignore($singer->user->id ?? ''),
 			],
 			'joined_at' => ['date', 'before_or_equal:today'],
 			'onboarding_enabled' => ['boolean'],

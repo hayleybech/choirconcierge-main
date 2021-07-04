@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Mail\Welcome;
 use App\Models\Singer;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
@@ -119,20 +120,22 @@ class SingerControllerTest extends TestCase
 		$response = $this->post(the_tenant_route('singers.store'), $data);
 
 		$response->assertSessionHasNoErrors();
-		$this->assertDatabaseHas('singers', [
-			'first_name' => $data['first_name'],
-			'last_name' => $data['last_name'],
-			'email' => $data['email'],
-			'onboarding_enabled' => $data['onboarding_enabled'],
-		]);
+        $this->assertDatabaseHas('users', [
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+        ]);
+        $this->assertDatabaseHas('singers', [
+            'onboarding_enabled' => $data['onboarding_enabled'],
+        ]);
 
-		$singer = Singer::firstWhere('email', $data['email']);
+		$user = User::firstWhere('email', $data['email']);
 		$this->assertDatabaseMissing('singers_tasks', [
-			'singer_id' => $singer->id,
+			'singer_id' => $user->singer->id,
 			'task_id' => $task->id,
 		]);
 
-		$response->assertRedirect(the_tenant_route('singers.show', [$singer]));
+		$response->assertRedirect(the_tenant_route('singers.show', [$user->singer]));
 		$mail->assertSent(Welcome::class);
 	}
 
@@ -151,13 +154,13 @@ class SingerControllerTest extends TestCase
 		$data['onboarding_enabled'] = true;
 		$response = $this->post(the_tenant_route('singers.store'), $data);
 
-		$singer = Singer::firstWhere('email', $data['email']);
+		$user = User::firstWhere('email', $data['email']);
 		$this->assertDatabaseHas('singers_tasks', [
-			'singer_id' => $singer->id,
+			'singer_id' => $user->singer->id,
 			'task_id' => $task->id,
 		]);
 
-		$response->assertRedirect(the_tenant_route('singers.show', [$singer]));
+		$response->assertRedirect(the_tenant_route('singers.show', [$user->singer]));
 		$mail->assertSent(Welcome::class);
 	}
 
@@ -175,12 +178,14 @@ class SingerControllerTest extends TestCase
 		$response = $this->put(the_tenant_route('singers.update', [$singer]), $data);
 
 		$response->assertSessionHasNoErrors();
-		$this->assertDatabaseHas('singers', [
+		$this->assertDatabaseHas('users', [
 			'first_name' => $data['first_name'],
 			'last_name' => $data['last_name'],
 			'email' => $data['email'],
-			'onboarding_enabled' => $data['onboarding_enabled'],
 		]);
+        $this->assertDatabaseHas('singers', [
+            'onboarding_enabled' => $data['onboarding_enabled'],
+        ]);
 		$response->assertRedirect(the_tenant_route('singers.show', [$singer]));
 	}
 

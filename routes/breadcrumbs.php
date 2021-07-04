@@ -50,7 +50,7 @@ Breadcrumbs::for('singers.index', static function ($trail) {
 // Singers > [Singer]
 Breadcrumbs::for('singers.show', static function ($trail, $singer) {
     $trail->parent('singers.index');
-    $trail->push($singer->name, route('singers.show', $singer));
+    $trail->push($singer->user->name, route('singers.show', $singer));
 });
 
 // Singers > [Singer] > Edit

@@ -93,10 +93,10 @@ class NotificationTemplate extends Model
 	public function generateBody(Singer $singer, User $user = null): string
 	{
 		$replacements = [
-			'%%singer.name%%' => $singer->name,
-			'%%singer.fname%%' => $singer->first_name,
-			'%%singer.lname%%' => $singer->last_name,
-			'%%singer.email%%' => $singer->email,
+			'%%singer.name%%' => $singer->user->name,
+			'%%singer.fname%%' => $singer->user->first_name,
+			'%%singer.lname%%' => $singer->user->last_name,
+			'%%singer.email%%' => $singer->user->email,
 			'%%placement.create%%' => '', //route( 'placement.create', $singer, $this->task ),
 			'%%choir.name%%' => tenant('choir_name') ?? 'Choir Name',
 		];
@@ -115,8 +115,8 @@ class NotificationTemplate extends Model
 		if ($user) {
 			$user_replacements = [
 				'%%user.name%%' => $user->name,
-				'%%user.fname%%' => $user->singer->first_name,
-				'%%user.lname%%' => $user->singer->last_name,
+				'%%user.fname%%' => $user->first_name,
+				'%%user.lname%%' => $user->last_name,
 			];
 			$replacements = array_merge($replacements, $user_replacements);
 		}

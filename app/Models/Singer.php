@@ -26,9 +26,6 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Columns
  * @property int $id
- * @property string $first_name
- * @property string $last_name
- * @property string $email
  * @property boolean $onboarding_enabled
  * @property string $reason_for_joining
  * @property string $referrer
@@ -66,9 +63,6 @@ class Singer extends Model
 	use Notifiable, Filterable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
 	protected $fillable = [
-	    'first_name',
-        'last_name',
-        'email',
         'onboarding_enabled',
         'reason_for_joining',
         'referrer',
@@ -91,37 +85,6 @@ class Singer extends Model
 	protected $appends = ['user_avatar_thumb_url', 'name'];
 
 	public $notify_channels = ['mail'];
-
-	protected static function booted()
-	{
-		static::created(static function (Singer $singer) {
-			$singer->initOnboarding();
-		});
-	}
-
-	public static function create(array $attributes = [])
-	{
-		/** @var Singer $singer */
-		$singer = static::query()->create($attributes);
-
-		// Add matching user
-		$user = new User();
-		$user->name = $singer->name;
-		$user->email = $singer->email;
-		$user->setPassword($attributes['password']);
-		$user->save();
-
-		// Sync roles
-		$user_roles = $attributes['user_roles'] ?? [];
-		$user_roles[] = Role::firstWhere('name', 'User')->id;
-		$user->roles()->sync($user_roles);
-		$user->save();
-
-		$singer->user()->associate($user);
-		$singer->save();
-
-		return $singer;
-	}
 
 	public function update(array $attributes = [], array $options = [])
 	{
@@ -215,11 +178,6 @@ class Singer extends Model
     {
         return $this->hasManyThrough(Role::class, User::class);
     }*/
-
-	public function getNameAttribute(): string
-	{
-		return $this->first_name . ' ' . $this->last_name;
-	}
 
 	public function getAge(): int
 	{

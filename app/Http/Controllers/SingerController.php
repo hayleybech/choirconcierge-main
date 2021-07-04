@@ -75,8 +75,18 @@ class SingerController extends Controller
 	{
 		$this->authorize('create', Singer::class);
 
-		$singer = Singer::create($request->validated());
-		User::sendWelcomeEmail($singer->user);
+        $user = User::create($request->except([
+            'onboarding_enabled',
+            'voice_part_id',
+        ]));
+        $singer = $user->singer()->create($request->only([
+            'onboarding_enabled',
+            'voice_part_id',
+        ]));
+        $singer->initOnboarding();
+        $singer->save();
+
+		User::sendWelcomeEmail($user);
 
 		return redirect()
 			->route('singers.show', [$singer])

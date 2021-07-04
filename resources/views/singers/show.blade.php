@@ -1,6 +1,6 @@
 @extends('layouts.page-blank')
 
-@section('title', $singer->name . ' - Singers')
+@section('title', $singer->user->name . ' - Singers')
 
 @section('page-content')
 
@@ -13,13 +13,13 @@
 					<div class="row">
 
 						<div class="col-xl-6 col-lg-5">
-							<img src="{{ $singer->user->getAvatarUrl('profile') }}" alt="{{ $singer->name }}" class="mb-4 mr-2 mw-100 img-rounded">
+							<img src="{{ $singer->user->getAvatarUrl('profile') }}" alt="{{ $singer->user->name }}" class="mb-4 mr-2 mw-100 img-rounded">
 						</div>
 
 						<div class="col-xl-6 col-lg-7">
 
 							<div class="d-flex justify-content-between align-items-center mb-2">
-								<h1 class="h4 mb-0">{{ $singer->name }}</h1>
+								<h1 class="h4 mb-0">{{ $singer->user->name }}</h1>
 								@can('update', $singer)
 									<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
 								@endcan
@@ -145,7 +145,7 @@
 							<div class="profile-other">
 								<h3 class="h4">Other Info</h3>
 								<div class="profile-item">
-										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->user->dob->format(config('app.formats.date_md')) ?? '?' }}
+										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->user->dob?->format(config('app.formats.date_md')) ?? '?' }}
 									</div>
 
 								<div class="mb-1">

@@ -32,7 +32,7 @@
                     </div>
 
                     <p>
-                        <x-inputs.text label="Email Address" id="email" name="email" type="email" :value="old('email', $singer->email)" />
+                        <x-inputs.text label="Email Address" id="email" name="email" type="email" :value="old('email', $singer->user->email)" />
                     </p>
 
                     <p>
