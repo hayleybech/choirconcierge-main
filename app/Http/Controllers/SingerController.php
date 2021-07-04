@@ -121,7 +121,14 @@ class SingerController extends Controller
 	{
 		$this->authorize('update', $singer);
 
-		$singer->update($request->validated());
+        $singer->user->update($request->except([
+            'onboarding_enabled',
+            'voice_part_id',
+        ]));
+        $singer->update($request->only([
+            'onboarding_enabled',
+            'voice_part_id',
+        ]));
 
 		return redirect()
 			->route('singers.show', [$singer])

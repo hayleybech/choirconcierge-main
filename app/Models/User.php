@@ -107,6 +107,8 @@ class User extends Authenticatable implements HasMedia
 
 	public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
 
+    protected $appends = ['name'];
+
 	public $notify_channels = ['database', 'mail'];
 
     public static function create(array $attributes = [])
@@ -123,6 +125,28 @@ class User extends Authenticatable implements HasMedia
         $user->save();
 
         return $user;
+    }
+
+    public function update(array $attributes = [], array $options = [])
+    {
+        if (!$attributes['password']) {
+            unset($attributes['password']);
+        }
+
+        parent::update($attributes, $options);
+
+        if (isset($attributes['avatar'])) {
+            $this->addMediaFromRequest('avatar')->toMediaCollection('avatar');
+        }
+
+        // Sync roles
+        if (isset($attributes['user_roles'])) {
+            $user_roles = $attributes['user_roles'] ?? [];
+            $this->roles()->sync($user_roles);
+        }
+        $this->save();
+
+        return true;
     }
 
 	/**

@@ -82,38 +82,9 @@ class Singer extends Model
 
 	public $dates = ['updated_at', 'created_at', 'joined_at'];
 
-	protected $appends = ['user_avatar_thumb_url', 'name'];
+	protected $appends = ['user_avatar_thumb_url'];
 
 	public $notify_channels = ['mail'];
-
-	public function update(array $attributes = [], array $options = [])
-	{
-		parent::update($attributes, $options);
-
-		// Update user
-		if (isset($attributes['email'])) {
-			$this->user->email = $attributes['email'];
-		}
-		if (isset($attributes['first_name']) || isset($attributes['last_name'])) {
-			$this->user->name = $this->name;
-		}
-		if (isset($attributes['password'])) {
-			$this->user->setPassword($attributes['password']);
-		}
-		if (isset($attributes['avatar'])) {
-			$this->user->addMediaFromRequest('avatar')->toMediaCollection('avatar');
-		}
-		$this->user->save();
-
-		// Sync roles
-		if (isset($attributes['user_roles'])) {
-			$user_roles = $attributes['user_roles'] ?? [];
-			$this->user->roles()->sync($user_roles);
-		}
-		$this->save();
-
-		return true;
-	}
 
 	public function initOnboarding(): void
 	{

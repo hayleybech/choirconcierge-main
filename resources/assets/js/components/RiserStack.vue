@@ -298,10 +298,12 @@ export default {
 		getSinger(coords) {
 			const nullSinger = {
 				id: 0,
-				name: '',
-				email: '',
 				part: 0,
-			};
+        user: {
+          name: '',
+          email: '',
+        },
+      };
 			return (
 				this.singers.find(item => item.position.row === coords.row && item.position.column === coords.column) ||
 				nullSinger
