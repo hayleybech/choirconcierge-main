@@ -52,7 +52,7 @@
                         />
                     </div>
 
-                    @if(Auth::user()->can('create', \App\Models\Profile::class))
+                    @if(Auth::user()->can('create', \App\Models\Singer::class))
                         <div class="form-group">
                             <single-date-input
                                 label="Joined"
