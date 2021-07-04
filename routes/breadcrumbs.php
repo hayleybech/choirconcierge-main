@@ -66,9 +66,9 @@ Breadcrumbs::for('singers.profiles.create', static function ($trail, $singer) {
 });
 
 // Singers > [Singer] > [Member Profile] > Edit
-Breadcrumbs::for('singers.profiles.edit', static function ($trail, $singer, $profile) {
+Breadcrumbs::for('singers.profiles.edit', static function ($trail, $singer) {
     $trail->parent('singers.show', $singer);
-    $trail->push('Edit Member Profile', route('singers.profiles.edit', [$singer, $profile]));
+    $trail->push('Edit Member Profile', route('singers.profiles.edit', [$singer]));
 });
 
 

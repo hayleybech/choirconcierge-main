@@ -39,6 +39,7 @@ class ProfileRequest extends FormRequest
 			'skills' => ['max:255'],
 			'height' => ['nullable', 'numeric', 'between:0,300'],
 			'membership_details' => ['max:255'],
+			'bha_id' => ['nullable', 'numeric'],
 		];
 	}
 }

@@ -17,39 +17,36 @@ class SingerProfileController extends Controller
 
 	public function __construct()
 	{
-		$this->authorizeResource(Profile::class, 'profile');
+		$this->authorizeResource(Singer::class, 'singer');
 	}
 
-	public function create(Singer $singer): View
+	public function edit(Singer $singer, Request $request): View
 	{
-		return view('singers.createprofile', compact('singer'));
+		return view('singers.editprofile', ['singer' => $singer, 'user' => $singer->user]);
 	}
 
-	public function store(Singer $singer, ProfileRequest $request): RedirectResponse
+	public function update(ProfileRequest $request, Singer $singer): RedirectResponse
 	{
-		$singer->profile()->create($request->validated()); // refer to whitelist in model
-
-		if ($singer->onboarding_enabled) {
-			// Mark matching task completed
-			//$task = $singer->tasks()->where('name', 'Member Profile')->get();
-			$singer->tasks()->updateExistingPivot(self::PROFILE_TASK_ID, ['completed' => true]);
-
-			event(new TaskCompleted(Task::find(self::PROFILE_TASK_ID), $singer));
-		}
-
-		return redirect()
-			->route('singers.show', $singer)
-			->with(['status' => 'Member Profile created. ']);
-	}
-
-	public function edit(Singer $singer, Profile $profile, Request $request): View
-	{
-		return view('singers.editprofile', compact('singer', 'profile'));
-	}
-
-	public function update(ProfileRequest $request, Singer $singer, Profile $profile): RedirectResponse
-	{
-		$profile->update($request->validated());
+	    $singer->update($request->only([
+	        'referrer',
+            'reason_for_joining',
+            'membership_details',
+        ]));
+	    $singer->user->update($request->only([
+            'dob',
+            'phone',
+            'ice_name',
+            'ice_phone',
+            'address_street_1',
+            'address_street_2',
+            'address_suburb',
+            'address_state',
+            'address_postcode',
+            'profession',
+            'skills',
+            'height',
+            'bha_id',
+        ]));
 
 		return redirect()
 			->route('singers.show', $singer)
