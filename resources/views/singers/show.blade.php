@@ -107,8 +107,8 @@
 			<div class="card">
 				<div class="card-header d-flex justify-content-between align-items-center">
 					<h2 class="h4">Member Profile</h2>
-					@can('update', $singer->profile)
-						<a href="{{ route( 'singers.profiles.edit', ['singer' => $singer, 'profile' => $singer->profile->id] ) }}" class="btn btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
+					@can('update', $singer)
+						<a href="{{ route( 'singers.profiles.edit', ['singer' => $singer] ) }}" class="btn btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
 					@elsecan('create', \App\Models\Profile::class)
 						<a href="{{ route('singers.profiles.create', ['singer' => $singer, 'task' => 1]) }}" class="btn btn-sm btn-secondary"><i class="fa fa-fw fa-plus"></i> Create</a>
 					@endcan
@@ -121,63 +121,63 @@
 							<div class="profile-contact">
 								<h3 class="h4">Contact</h3>
 								<p class="mb-1">
-									<i class="fas fa-fw fa-envelope mr-2"></i>{{ $singer->email }}
+									<i class="fas fa-fw fa-envelope mr-2"></i>{{ $singer->user->email }}
 								</p>
 								<div class="mb-1">
-									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->profile->phone ?? '?' }}
+									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->user->phone ?? '?' }}
 								</div>
 
 								<h4 class="h5 mt-4">Emergency Contact</h4>
 								<div class="mb-1">
-									<i class="fas fa-fw fa-user mr-2"></i>{{ $singer->profile->ice_name ?? '?' }}
+									<i class="fas fa-fw fa-user mr-2"></i>{{ $singer->user->ice_name ?? '?' }}
 								</div>
 								<div class="mb-1">
-									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->profile->ice_phone ?? '?' }}
+									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->user->ice_phone ?? '?' }}
 								</div>
 
 								<h3 class="h4 mt-4">Address</h3>
 								<p>
-									{{ $singer->profile->address_street_1 ?? 'No address' }}<br>
-									@if( isset($singer->profile->address_street_2) && $singer->profile->address_street_2 !== ''){{ $singer->profile->address_street_2 ?? 'No address' }}<br>@endif
-									{{ optional($singer->profile)->address_suburb ? optional($singer->profile)->address_suburb . ', ' : '' }}{{ $singer->profile->address_state ?? '' }} {{ $singer->profile->address_postcode ?? '' }}
+									{{ $singer->user->address_street_1 ?? 'No address' }}<br>
+									@if( isset($singer->user->address_street_2) && $singer->user->address_street_2 !== ''){{ $singer->user->address_street_2 ?? 'No address' }}<br>@endif
+									{{ $singer->user->address_suburb ? $singer->user->address_suburb . ', ' : '' }}{{ $singer->user->address_state ?? '' }} {{ $singer->user->address_postcode ?? '' }}
 								</p>
 							</div>
 						</div>
 						<div class="col-md-7">
 							<div class="profile-other">
 								<h3 class="h4">Other Info</h3>
-								@if( $singer->profile )
 								<div class="profile-item">
-										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->profile->dob->format(config('app.formats.date_md')) ?? '?' }}
+										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->user->dob->format(config('app.formats.date_md')) ?? '?' }}
 									</div>
 
 								<div class="mb-1">
-									<i class="fas fa-fw fa-ruler-vertical mr-2"></i>{{ round( $singer->profile->height, 2) }} cm
+									<i class="fas fa-fw fa-ruler-vertical mr-2"></i>{{ round( $singer->user->height, 2) }} cm
 								</div>
 
 								<div class="mb-1">
 									<strong>Reason for joining</strong><br>
-									{{ $singer->profile->reason_for_joining ?? '' }}
+									{{ $singer->reason_for_joining ?? '' }}
 								</div>
 								<div class="mb-1">
 									<strong>Referred by</strong><br>
-									{{ $singer->profile->referrer ?? '' }}
+									{{ $singer->referrer ?? '' }}
 								</div>
 								<div class="mb-1">
 									<strong>Profession</strong><br>
-									{{ $singer->profile->profession ?? '' }}
+									{{ $singer->user->profession ?? '' }}
 								</div>
 								<div class="mb-1">
 									<strong>Other Skills</strong><br>
-									{{ $singer->profile->skills ?? '' }}
+									{{ $singer->user->skills ?? '' }}
 								</div>
 								<div class="mb-1">
-									<strong>Society Membership Details</strong><br>
-									{{ $singer->profile->membership_details ?? '' }}
+									<strong>Choir Membership Details</strong><br>
+									{{ $singer->membership_details ?? '' }}
 								</div>
-								@else
-								<p>No Member Profile yet. @can('create', \App\Models\Profile::class)<a href="{{ route('singers.profiles.create', ['singer' => $singer, 'task' => 1]) }}">Create one now. </a>@endcan</p>
-								@endif
+								<div class="mb-1">
+									<strong>BHA Member ID</strong><br>
+									{{ $singer->user->bha_id > 0 ? $singer->user->bha_id : '' }}
+								</div>
 							</div>
 						</div>
 

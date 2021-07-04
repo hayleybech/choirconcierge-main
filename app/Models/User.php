@@ -37,9 +37,25 @@ use UnexpectedValueException;
  * @property string $email
  * @property string $password
  * @property string $remember_token
+ * @property Carbon $dob
+ * @property string $phone
+ * @property string $ice_name
+ * @property string $ice_phone
+ * @property string $address_street_1
+ * @property string $address_street_2
+ * @property string $address_suburb
+ * @property string $address_state
+ * @property string $address_postcode
+ * @property string $profession
+ * @property string $skills
+ * @property float $height
+ * @property int $bha_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $last_login
+ *
+ * Attributes
+ * @property Carbon $birthday
  *
  * Relationships
  * @property Collection<Role> $roles
@@ -57,7 +73,24 @@ class User extends Authenticatable implements HasMedia
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'email', 'password'];
+	protected $fillable = [
+	    'name',
+        'email',
+        'password',
+        'dob',
+        'phone',
+        'ice_name',
+        'ice_phone',
+        'address_street_1',
+        'address_street_2',
+        'address_suburb',
+        'address_state',
+        'address_postcode',
+        'profession',
+        'skills',
+        'height',
+        'bha_id',
+    ];
 
 	/**
 	 * The attributes that should be hidden for arrays.
@@ -68,7 +101,7 @@ class User extends Authenticatable implements HasMedia
 
 	protected $with = ['media'];
 
-	public $dates = ['updated_at', 'created_at', 'last_login'];
+	public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
 
 	public $notify_channels = ['database', 'mail'];
 
@@ -180,6 +213,11 @@ class User extends Authenticatable implements HasMedia
 	{
 		return $this->hasOne(Singer::class);
 	}
+
+    public function getBirthdayAttribute(): Carbon
+    {
+        return $this->dob->copy()->year(now()->year);
+    }
 
 	public function registerMediaCollections(): void
 	{

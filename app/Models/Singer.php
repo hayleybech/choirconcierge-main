@@ -30,6 +30,9 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string $last_name
  * @property string $email
  * @property boolean $onboarding_enabled
+ * @property string $reason_for_joining
+ * @property string $referrer
+ * @property string $membership_details
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
@@ -63,7 +66,17 @@ class Singer extends Model
 {
 	use Notifiable, Filterable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
-	protected $fillable = ['first_name', 'last_name', 'email', 'onboarding_enabled', 'voice_part_id', 'joined_at'];
+	protected $fillable = [
+	    'first_name',
+        'last_name',
+        'email',
+        'onboarding_enabled',
+        'reason_for_joining',
+        'referrer',
+        'membership_details',
+        'voice_part_id',
+        'joined_at',
+    ];
 
 	protected static $filters = [
 		Singer_CategoryFilter::class,
