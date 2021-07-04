@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\Profile;
 use App\Models\Singer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

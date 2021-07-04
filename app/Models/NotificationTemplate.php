@@ -50,7 +50,6 @@ class NotificationTemplate extends Model
 			'%%singer.fname%%' => '<code>%%singer.fname%%</code>',
 			'%%singer.lname%%' => '<code>%%singer.lname%%</code>',
 			'%%singer.email%%' => '<code>%%singer.email%%</code>',
-			'%%profile.create%%' => '<code>%%profile.create%%</code>',
 			'%%placement.create%%' => '<code>%%placement.create%%</code>',
 			'%%choir.name%%' => '<code>%%choir.name%%</code>',
 			'%%singer.dob%%' => '<code>%%singer.dob%%</code>',
@@ -98,18 +97,15 @@ class NotificationTemplate extends Model
 			'%%singer.fname%%' => $singer->first_name,
 			'%%singer.lname%%' => $singer->last_name,
 			'%%singer.email%%' => $singer->email,
-			'%%profile.create%%' => '', //route( 'profile.create', $singer, $this->task ),
 			'%%placement.create%%' => '', //route( 'placement.create', $singer, $this->task ),
 			'%%choir.name%%' => tenant('choir_name') ?? 'Choir Name',
 		];
-		if ($singer->profile) {
-			$profile_replacements = [
-				'%%singer.dob%%' => $singer->profile->dob,
-				'%%singer.age%%' => $singer->getAge(),
-				'%%singer.phone%%' => $singer->profile->phone,
-			];
-			$replacements = array_merge($replacements, $profile_replacements);
-		}
+        $profile_replacements = [
+            '%%singer.dob%%' => $singer->user->dob,
+            '%%singer.age%%' => $singer->getAge(),
+            '%%singer.phone%%' => $singer->user->phone,
+        ];
+        $replacements = array_merge($replacements, $profile_replacements);
 		if ($singer->placement) {
 			$placement_replacements = [
 				'%%singer.section%%' => $singer->placement->voice_part,

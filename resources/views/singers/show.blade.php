@@ -109,8 +109,6 @@
 					<h2 class="h4">Member Profile</h2>
 					@can('update', $singer)
 						<a href="{{ route( 'singers.profiles.edit', ['singer' => $singer] ) }}" class="btn btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
-					@elsecan('create', \App\Models\Profile::class)
-						<a href="{{ route('singers.profiles.create', ['singer' => $singer, 'task' => 1]) }}" class="btn btn-sm btn-secondary"><i class="fa fa-fw fa-plus"></i> Create</a>
 					@endcan
 				</div>
 				<div class="card-body">
