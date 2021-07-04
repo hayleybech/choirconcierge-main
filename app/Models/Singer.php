@@ -44,7 +44,6 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property Collection<Task> $tasks
- * @property Profile $profile
  * @property Placement $placement
  * @property SingerCategory $category
  * @property User $user
@@ -175,11 +174,6 @@ class Singer extends Model
 			->withTimestamps();
 	}
 
-	public function profile(): HasOne
-	{
-		return $this->hasOne(Profile::class);
-	}
-
 	public function placement(): HasOne
 	{
 		return $this->hasOne(Placement::class);
@@ -229,8 +223,8 @@ class Singer extends Model
 
 	public function getAge(): int
 	{
-		if (isset($this->profile->dob)) {
-			return date_diff(date_create($this->profile->dob), date_create('now'))->y;
+		if (isset($this->user->dob)) {
+			return date_diff(date_create($this->user->dob), date_create('now'))->y;
 		}
 		return 0;
 	}
@@ -247,7 +241,7 @@ class Singer extends Model
 
 	public function scopeBirthdays(Builder $query): Builder
 	{
-		return $query->whereHas('profile', static function (Builder $query) {
+		return $query->whereHas('user', static function (Builder $query) {
 			return $query->whereMonth('dob', '>=', now())->whereMonth('dob', '<=', now()->addMonth());
 		});
 	}
@@ -258,10 +252,9 @@ class Singer extends Model
 			->whereHas('category', static function (Builder $query) {
 				return $query->whereIn('name', ['Members', 'Prospects']);
 			})
-			->whereHas('profile', static function (Builder $query) {
+			->whereHas('user', static function (Builder $query) {
 				return $query->whereNull('dob');
-			})
-			->orWhereDoesntHave('profile');
+			});
 	}
 
 	public function scopeMemberversaries(Builder $query): Builder

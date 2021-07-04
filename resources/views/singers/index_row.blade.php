@@ -16,7 +16,7 @@
 			{{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
 			@endcan
 			<small class="text-muted">{{ $singer->email }}</small>
-			<small class="text-muted">{{ ( isset($singer->profile->phone) && $singer->profile->phone !== '' ) ? $singer->profile->phone : 'No phone' }}</small>
+			<small class="text-muted">{{ ( isset($singer->user->phone) && $singer->user->phone !== '' ) ? $singer->user->phone : 'No phone' }}</small>
 		</div>
 	</td>
 	<td class="col--part">
