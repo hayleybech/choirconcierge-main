@@ -36,8 +36,8 @@ class DummyUserSeeder extends Seeder
 				// Attach random singer category
 				DummyUserSeeder::attachRandomSingerCategory($user->singer, $singer_categories);
 
-				// Generate profile and placement for singer
-				// @todo Seed singer profile and voice placement
+				// Generate placement for singer
+				// @todo Seed voice placement
 
 				// Generate tasks
 				// @todo Generate tasks for dummy singers

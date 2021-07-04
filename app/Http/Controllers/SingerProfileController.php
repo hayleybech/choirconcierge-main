@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\TaskCompleted;
 use App\Http\Requests\ProfileRequest;
-use App\Models\Profile;
 use App\Models\Singer;
-use App\Models\Task;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
