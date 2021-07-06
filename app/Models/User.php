@@ -129,7 +129,7 @@ class User extends Authenticatable implements HasMedia
 
     public function update(array $attributes = [], array $options = [])
     {
-        if (!$attributes['password']) {
+        if (isset($attributes['password']) && $attributes['password'] === '') {
             unset($attributes['password']);
         }
 

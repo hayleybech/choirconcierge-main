@@ -42,6 +42,8 @@ class SingerProfileControllerTest extends TestCase
 	 */
 	public function update_redirects_to_singer($getData): void
 	{
+	    $this->withoutExceptionHandling();
+	    
 		$this->actingAs($this->createUserWithRole('Membership Team'));
 
 		$singer = Singer::factory()

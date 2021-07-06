@@ -29,20 +29,10 @@ class SingerProfileController extends Controller
             'reason_for_joining',
             'membership_details',
         ]));
-	    $singer->user->update($request->only([
-            'dob',
-            'phone',
-            'ice_name',
-            'ice_phone',
-            'address_street_1',
-            'address_street_2',
-            'address_suburb',
-            'address_state',
-            'address_postcode',
-            'profession',
-            'skills',
-            'height',
-            'bha_id',
+	    $singer->user->update($request->except([
+            'referrer',
+            'reason_for_joining',
+            'membership_details',
         ]));
 
 		return redirect()
