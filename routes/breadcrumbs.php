@@ -38,6 +38,15 @@ Breadcrumbs::for('dash', static function($trail){
 });
 
 /**
+ * ACCOUNT SETTINGS
+ */
+// Edit Account Settings
+Breadcrumbs::for('accounts.edit', static function ($trail) {
+    $trail->parent('dash');
+    $trail->push('Edit Account Settings', route('accounts.edit'));
+});
+
+/**
  * SINGERS
  */
 
@@ -58,19 +67,6 @@ Breadcrumbs::for('singers.edit', static function ($trail, $singer) {
     $trail->parent('singers.show', $singer);
     $trail->push('Edit', route('singers.edit', $singer));
 });
-
-// Singers > [Singer] > Create Member Profile
-Breadcrumbs::for('singers.profiles.create', static function ($trail, $singer) {
-    $trail->parent('singers.show', $singer);
-    $trail->push('Create Member Profile', route('singers.profiles.create', $singer));
-});
-
-// Singers > [Singer] > [Member Profile] > Edit
-Breadcrumbs::for('singers.profiles.edit', static function ($trail, $singer) {
-    $trail->parent('singers.show', $singer);
-    $trail->push('Edit Member Profile', route('singers.profiles.edit', [$singer]));
-});
-
 
 // Singers > [Singer] > Create Voice Placement
 Breadcrumbs::for('singers.placements.create', static function ($trail, $singer) {

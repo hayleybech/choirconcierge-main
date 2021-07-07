@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceReportController;
 use App\Http\Controllers\CompleteSingerTaskController;
@@ -56,6 +57,10 @@ Route::middleware([
 
     // Dashboard
     Route::get('/', [DashController::class, 'index'])->name('dash');
+
+    // Account Settings
+    Route::get('account/edit', [AccountController::class, 'edit'])->name('accounts.edit');
+    Route::put('account', [AccountController::class, 'update'])->name('accounts.update');
 
     // Singers module
     Route::resource('singers', SingerController::class)->middleware('auth');
