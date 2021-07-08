@@ -1,7 +1,7 @@
 @extends('layouts.page')
 
-@section('title', 'Edit Account Settings - ' . $user->name)
-@section('page-title', 'Account Settings')
+@section('title', 'Edit Profile - ' . $user->name)
+@section('page-title', 'Edit Profile')
 
 @section('page-content')
 
