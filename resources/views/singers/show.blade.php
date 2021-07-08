@@ -62,23 +62,10 @@
 							</div>
 
 							<div class="mb-1">
-								<strong>Added</strong><br>
-								<span class="text-muted">{{ $singer->created_at->format(config('app.formats.timestamp_lg')) }}</span><br>
-							</div>
-							<div class="mb-1">
-								<strong>Joined</strong><br>
-								<span class="text-muted">{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->format(config('app.formats.date_lg')) }})</span><br>
-							</div>
-							<div class="mb-1">
-								<strong>Last Login</strong><br>
-								<span class="text-muted">
-									@if( ! $singer->user->last_login )
-									Never
-									@else
-									{{ $singer->user->last_login->diffForHumans() }} ({{ $singer->user->last_login->format(config('app.formats.timestamp_md')) }})
-									@endif
-								</span>
-								<br>
+								<strong>Roles</strong><br>
+								@foreach($singer->user->roles as $role)
+									<span class="badge badge-dark">{{$role->name}}</span>
+								@endforeach
 							</div>
 
 							<div class="mb-1">
@@ -90,11 +77,21 @@
 									@endif
 								</strong>
 							</div>
-							<div class="mb-1">
-								<strong>Roles</strong><br>
-								@foreach($singer->user->roles as $role)
-									<span class="badge badge-dark">{{$role->name}}</span>
-								@endforeach
+
+							<div class="mb-1 text-xs text-muted">
+								<small>
+
+									<strong>Member Since: </strong> <span>{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->format(config('app.formats.date_lg')) }})</span> <br />
+									<strong>Added: </strong> <span>{{ $singer->created_at->diffForHumans() }}</span> |
+									<strong>Last Login: </strong>
+									<span>
+									@if( ! $singer->user->last_login )
+											Never
+										@else
+											{{ $singer->user->last_login->diffForHumans() }}
+										@endif
+								</span>
+								</small>
 							</div>
 
 						</div>
