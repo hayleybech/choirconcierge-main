@@ -8,7 +8,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use App\Models\User;
 use App\Models\Role;
 
@@ -59,7 +58,7 @@ class UserController extends Controller
 		}
 
 		$formatted_results = [];
-		$users = User::where('name', 'like', "%$term%")
+		$users = User::whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%$term%'")
 			->with('roles:id,name')
 			->limit(5)
 			->get();
