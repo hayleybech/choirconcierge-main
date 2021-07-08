@@ -1,7 +1,7 @@
 @extends('layouts.page')
 
-@section('title', 'Edit - ' . $singer->name)
-@section('page-title', $singer->name)
+@section('title', 'Edit - ' . $singer->user->name)
+@section('page-title', $singer->user->name)
 
 @section('page-content')
 
