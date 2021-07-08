@@ -14,32 +14,13 @@
                 <div class="card-header"><h3 class="h4">Edit Singer</h3></div>
 
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <x-inputs.text label="First Name" id="first_name" name="first_name" :value="old('first_name', $singer->first_name)" />
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <x-inputs.text label="Last Name" id="last_name" name="last_name" :value="old('last_name', $singer->last_name)" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <x-inputs.file label="Profile Picture" id="avatar" name="avatar" />
-                    </div>
 
                     <p>
-                        <x-inputs.text label="Email Address" id="email" name="email" type="email" :value="old('email', $singer->user->email)" />
+                        <x-inputs.text label="Why are you joining?" id="reason_for_joining" name="reason_for_joining" :value="old('reason_for_joining', $singer->reason_for_joining)" />
                     </p>
 
                     <p>
-                        <x-inputs.text label="Change Password" id="password" name="password" type="password" />
-                    </p>
-                    <p>
-                        <x-inputs.text label="Confirm Password" id="password_confirmation" name="password_confirmation" type="password" />
+                        <x-inputs.text label="Where did you hear about us?" id="referrer" name="referrer" :value="old('referrer', $singer->referrer)" />
                     </p>
 
                     <div class="form-group">

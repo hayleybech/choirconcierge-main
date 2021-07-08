@@ -196,6 +196,8 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a href="{{ route('singers.show', ['singer' => Auth::user()->singer] ) }}" class="dropdown-item"><i class="fal fa-fw fa-user"></i> View Profile</a>
 
+                                    <a href="{{ route('accounts.edit') }}" class="dropdown-item"><i class="fal fa-fw fa-user"></i> Account Settings</a>
+
                                     <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="dropdown-item d-md-none"><i class="fal fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
 
                                     @if( Auth::user()->hasRole('Admin') && ! session()->has('impersonation:active') )

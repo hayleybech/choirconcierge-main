@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
 use App\Http\Requests\SingerRequest;
+use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use App\Models\SingerCategory;
 use App\Models\User;
@@ -13,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Singer;
 use App\Models\Task;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
 class SingerController extends Controller
@@ -71,16 +73,25 @@ class SingerController extends Controller
 		return view('singers.create', compact('voice_parts', 'roles'));
 	}
 
-	public function store(SingerRequest $request): RedirectResponse
+	public function store(UserRequest $request): RedirectResponse
 	{
 		$this->authorize('create', Singer::class);
 
-        $user = User::create($request->except([
+        $user = User::create(Arr::except($request->validated(), [
             'onboarding_enabled',
+            'reason_for_joining',
+            'referrer',
+            'membership_details',
+            'joined_at',
             'voice_part_id',
+            'password_confirmation',
         ]));
-        $singer = $user->singer()->create($request->only([
+        $singer = $user->singer()->create(Arr::only($request->validated(), [
             'onboarding_enabled',
+            'reason_for_joining',
+            'referrer',
+            'membership_details',
+            'joined_at',
             'voice_part_id',
         ]));
         $singer->initOnboarding();
@@ -121,13 +132,16 @@ class SingerController extends Controller
 	{
 		$this->authorize('update', $singer);
 
-        $singer->user->update($request->except([
+        $singer->update(Arr::only($request->validated(), [
+            'reason_for_joining',
+            'referrer',
+            'membership_details',
+            'joined_at',
             'onboarding_enabled',
             'voice_part_id',
         ]));
-        $singer->update($request->only([
-            'onboarding_enabled',
-            'voice_part_id',
+        $singer->user->update(Arr::only($request->validated(), [
+            'user_roles'
         ]));
 
 		return redirect()

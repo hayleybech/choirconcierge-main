@@ -11,7 +11,7 @@
 	<div class="col-md-6">
 
 		<div class="card">
-			<div class="card-header"><h3 class="h4">Singer Details</h3></div>
+			<div class="card-header"><h3 class="h4">User Details</h3></div>
 
 			<div class="card-body">
 				<div class="row">
@@ -38,6 +38,14 @@
 					<x-inputs.text label="Confirm Password" id="password_confirmation" name="password_confirmation" type="password" />
 				</p>
 
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-header"><h3 class="h4">Singer Details</h3></div>
+
+			<div class="card-body">
+
 				<div class="form-group">
 					<x-inputs.select
 						label="Voice Part"
@@ -47,6 +55,14 @@
 						:selected="(int) old('voice_part_id')"
 					/>
 				</div>
+
+				<p>
+					<x-inputs.text label="Why are you joining?" id="reason_for_joining" name="reason_for_joining" :value="old('reason_for_joining')" />
+				</p>
+
+				<p>
+					<x-inputs.text label="Where did you hear about us?" id="referrer" name="referrer" :value="old('referrer')" />
+				</p>
 
 				<toggleable-input
 					label="I'm adding a current member"

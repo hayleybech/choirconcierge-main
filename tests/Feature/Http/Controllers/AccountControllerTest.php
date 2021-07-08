@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -43,7 +44,9 @@ class AccountControllerTest extends TestCase
 		$response = $this->put(the_tenant_route('accounts.update'), $data);
 
 		$response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('users', $data);
+        $this->assertDatabaseHas('users', Arr::except($data, [
+            'password_confirmation',
+        ]));
 		$response->assertRedirect(the_tenant_route('accounts.edit'));
 	}
 
@@ -53,7 +56,13 @@ class AccountControllerTest extends TestCase
 			[
 				function () {
 					$this->setUpFaker();
+                    $password = Str::random(8);
 					return [
+                        'first_name' => $this->faker->firstName(),
+                        'last_name' => $this->faker->lastName(),
+                        'email' => $this->faker->email(),
+                        'password' => $password,
+                        'password_confirmation' => $password,
 						'dob' => Carbon::instance($this->faker->dateTimeBetween('-100 years', '-5 years'))->format(
 							'Y-m-d',
 						),

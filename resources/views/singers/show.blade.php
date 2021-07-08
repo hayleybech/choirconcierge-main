@@ -107,9 +107,6 @@
 			<div class="card">
 				<div class="card-header d-flex justify-content-between align-items-center">
 					<h2 class="h4">Member Profile</h2>
-					@can('update', $singer)
-						<a href="{{ route( 'singers.profiles.edit', ['singer' => $singer] ) }}" class="btn btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
-					@endcan
 				</div>
 				<div class="card-body">
 
