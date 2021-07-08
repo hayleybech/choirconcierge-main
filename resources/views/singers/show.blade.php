@@ -78,9 +78,21 @@
 								</strong>
 							</div>
 
+							<div class="mb-1">
+								<strong>Reason for joining</strong><br>
+								{{ $singer->reason_for_joining ?? '' }}
+							</div>
+							<div class="mb-1">
+								<strong>Referred by</strong><br>
+								{{ $singer->referrer ?? '' }}
+							</div>
+							<div class="mb-1">
+								<strong>Choir Membership Details</strong><br>
+								{{ $singer->membership_details ?? '' }}
+							</div>
+
 							<div class="mb-1 text-xs text-muted">
 								<small>
-
 									<strong>Member Since: </strong> <span>{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->format(config('app.formats.date_lg')) }})</span> <br />
 									<strong>Added: </strong> <span>{{ $singer->created_at->diffForHumans() }}</span> |
 									<strong>Last Login: </strong>
@@ -149,24 +161,12 @@
 								</div>
 
 								<div class="mb-1">
-									<strong>Reason for joining</strong><br>
-									{{ $singer->reason_for_joining ?? '' }}
-								</div>
-								<div class="mb-1">
-									<strong>Referred by</strong><br>
-									{{ $singer->referrer ?? '' }}
-								</div>
-								<div class="mb-1">
 									<strong>Profession</strong><br>
 									{{ $singer->user->profession ?? '' }}
 								</div>
 								<div class="mb-1">
 									<strong>Other Skills</strong><br>
 									{{ $singer->user->skills ?? '' }}
-								</div>
-								<div class="mb-1">
-									<strong>Choir Membership Details</strong><br>
-									{{ $singer->membership_details ?? '' }}
 								</div>
 								<div class="mb-1">
 									<strong>BHA Member ID</strong><br>
