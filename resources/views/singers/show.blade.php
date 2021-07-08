@@ -138,12 +138,14 @@
 						<div class="col-md-7">
 							<div class="profile-other">
 								<h3 class="h4">Other Info</h3>
-								<div class="profile-item">
-										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->user->dob?->format(config('app.formats.date_md')) ?? '?' }}
-									</div>
+								<div class="mb-1">
+									<strong>Date of Birth: </strong>
+									{{ $singer->user->dob?->format(config('app.formats.date_md')) ?? '?' }}
+								</div>
 
 								<div class="mb-1">
-									<i class="fas fa-fw fa-ruler-vertical mr-2"></i>{{ round( $singer->user->height, 2) }} cm
+									<strong>Height: </strong>
+									{{ round( $singer->user->height, 2) }} cm
 								</div>
 
 								<div class="mb-1">
