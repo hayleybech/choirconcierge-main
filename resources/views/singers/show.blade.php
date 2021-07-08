@@ -12,11 +12,11 @@
 
 					<div class="row">
 
-						<div class="col-xl-6 col-lg-5">
+						<div class="col-xl-5 col-lg-5">
 							<img src="{{ $singer->user->getAvatarUrl('profile') }}" alt="{{ $singer->user->name }}" class="mb-4 mr-2 mw-100 img-rounded">
 						</div>
 
-						<div class="col-xl-6 col-lg-7">
+						<div class="col-xl-7 col-lg-7">
 
 							<div class="d-flex justify-content-between align-items-center mb-2">
 								<h1 class="h4 mb-0">{{ $singer->user->name }}</h1>
