@@ -19,7 +19,7 @@
 						<div class="col-xl-7 col-lg-7">
 
 							<div class="d-flex justify-content-between align-items-center mb-2">
-								<h1 class="h4 mb-0">{{ $singer->user->name }}</h1>
+								<h1 class="h3 mb-0">{{ $singer->user->name }}</h1>
 								@can('update', $singer)
 									<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
 								@endcan
