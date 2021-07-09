@@ -2,19 +2,25 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Singer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProfileRequest extends FormRequest
+class UserRequest extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
 	 *
 	 * @return bool
 	 */
-	public function authorize(): bool
+	public function authorize()
 	{
 		return true;
+	}
+
+	public function prepareForValidation()
+	{
+		$this->whenHas('onboarding_disabled', fn() => $this->merge(['onboarding_enabled' => false]));
 	}
 
 	/**
@@ -22,19 +28,21 @@ class ProfileRequest extends FormRequest
 	 *
 	 * @return array<array>
 	 */
-	public function rules(): array
+	public function rules()
 	{
+		$singer = $this->route('singer');
 		return [
+		    // User
             'first_name' => ['required', 'max:127'],
             'last_name' => ['required', 'max:127'],
             'email' => [
                 'required',
                 Rule::unique('users')
                     ->where('tenant_id', tenant('id'))
-                    ->ignore(auth()->user()->id),
+                    ->ignore($singer->user->id ?? ''),
             ],
             'password' => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
-            'avatar' => ['sometimes', 'nullable', 'file', 'mimetypes:image/jpeg,image/png', 'max:10240'],
+            'avatar' => ['file', 'mimetypes:image/jpeg,image/png', 'max:10240'],
             'dob' => ['date', 'before:today'],
             'phone' => ['max:255'],
             'ice_name' => ['max:255'],
@@ -48,6 +56,15 @@ class ProfileRequest extends FormRequest
             'skills' => ['max:255'],
             'height' => ['nullable', 'numeric', 'between:0,300'],
             'bha_id' => ['nullable', 'numeric'],
+
+            // Singer
+            'reason_for_joining' => ['max:255'],
+            'referrer' => ['max:255'],
+            'membership_details' => ['max:255'],
+            'joined_at' => ['date', 'before_or_equal:today'],
+            'onboarding_enabled' => ['boolean'],
+            'voice_part_id' => [],
+            'user_roles' => ['array', 'exists:roles,id'],
 		];
 	}
 }

@@ -1,7 +1,7 @@
 <template>
 	<div class="riser-face">
-		<img :src="singer.user_avatar_thumb_url" :alt="singer.name" />
-		<div class="singer-name">{{ singer.name }}</div>
+		<img :src="singer.user_avatar_thumb_url" :alt="singer.user.name" />
+		<div class="singer-name">{{ singer.user.name }}</div>
 	</div>
 </template>
 
@@ -11,11 +11,13 @@ export default {
 	props: {
 		singer: {
 			id: 0,
-			name: '',
-			email: '',
 			part: '',
-			user_avatar_thumb_url: '',
-		},
+      user_avatar_thumb_url: '',
+      user: {
+        name: '',
+        email: '',
+      }
+    },
 	},
 };
 </script>

@@ -24,11 +24,11 @@ class SingerFactory extends Factory
 	public function definition()
 	{
 		return [
-			'first_name' => $this->faker->firstName(),
-			'last_name' => $this->faker->lastName(),
-			'email' => $this->faker->safeEmail(),
 			'user_id' => User::factory(),
 			'singer_category_id' => SingerCategory::where('name', 'Members')->value('id'),
+            'reason_for_joining' => $this->faker->sentence(),
+            'referrer' => $this->faker->sentence(),
+            'membership_details' => $this->faker->sentence(),
 			'onboarding_enabled' => false,
 			'joined_at' => $this->faker->dateTimeBetween(),
 			'created_at' => now(),

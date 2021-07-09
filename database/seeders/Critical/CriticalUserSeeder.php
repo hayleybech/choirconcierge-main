@@ -309,7 +309,8 @@ class CriticalUserSeeder extends Seeder
 		 * STEP 2 - Insert Admin
 		 */
 		$user = User::create([
-			'name' => 'Hayden Bech',
+			'first_name' => 'Hayden',
+			'last_name' => 'Bech',
 			'email' => 'haydenbech@gmail.com',
 			'password' => bcrypt('*tokra1#'),
 		]);
@@ -320,9 +321,6 @@ class CriticalUserSeeder extends Seeder
 
 		// Create matching singer for admin
 		$user->singer()->create([
-			'first_name' => 'Hayden',
-			'last_name' => 'Bech',
-			'email' => $user->email,
 			'onboarding_enabled' => 0,
 		]);
 

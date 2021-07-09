@@ -5,15 +5,15 @@
     <div class="list-group list-group-flush">
         @forelse($birthdays as $singer)
         <div class="list-group-item">
-            @if($singer->profile->birthday->isToday())
+            @if($singer->user->birthday->isToday())
                 <i class="fas fa-fw fa-birthday-cake"></i> <strong>Today!</strong>
-            @elseif($singer->profile->birthday->isTomorrow())
+            @elseif($singer->user->birthday->isTomorrow())
                 <strong>Tomorrow!</strong>
-            @elseif($singer->profile->birthday->isSameWeek())
+            @elseif($singer->user->birthday->isSameWeek())
                 <strong>This week!</strong>
             @endif
 
-            {{ $singer->profile->birthday->format('D, '.config('app.formats.date_md')) }} - {{ $singer->name }}
+            {{ $singer->user->birthday->format('D, '.config('app.formats.date_md')) }} - {{ $singer->name }}
         </div>
         @empty
         <div class="list-group-item">No birthdays this month.</div>

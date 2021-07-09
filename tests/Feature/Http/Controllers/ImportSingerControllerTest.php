@@ -11,6 +11,8 @@ use Tests\TestCase;
  */
 class ImportSingerControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
 	/**
 	 * @test
 	 */

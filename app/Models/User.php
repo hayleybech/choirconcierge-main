@@ -4,9 +4,9 @@ namespace App\Models;
 
 use App\Mail\Welcome;
 use App\Models\Traits\TenantTimezoneDates;
-use Hash;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -16,8 +16,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Mail;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -33,13 +34,31 @@ use UnexpectedValueException;
  *
  * Columns
  * @property int $id
- * @property string $name
+ * @property string $first_name
+ * @property string $last_name
  * @property string $email
  * @property string $password
  * @property string $remember_token
+ * @property Carbon $dob
+ * @property string $phone
+ * @property string $ice_name
+ * @property string $ice_phone
+ * @property string $address_street_1
+ * @property string $address_street_2
+ * @property string $address_suburb
+ * @property string $address_state
+ * @property string $address_postcode
+ * @property string $profession
+ * @property string $skills
+ * @property float $height
+ * @property int $bha_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $last_login
+ *
+ * Attributes
+ * @property Carbon $birthday
+ * @property string $name
  *
  * Relationships
  * @property Collection<Role> $roles
@@ -57,7 +76,25 @@ class User extends Authenticatable implements HasMedia
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'email', 'password'];
+	protected $fillable = [
+	    'first_name',
+        'last_name',
+        'email',
+        'password',
+        'dob',
+        'phone',
+        'ice_name',
+        'ice_phone',
+        'address_street_1',
+        'address_street_2',
+        'address_suburb',
+        'address_state',
+        'address_postcode',
+        'profession',
+        'skills',
+        'height',
+        'bha_id',
+    ];
 
 	/**
 	 * The attributes that should be hidden for arrays.
@@ -68,9 +105,49 @@ class User extends Authenticatable implements HasMedia
 
 	protected $with = ['media'];
 
-	public $dates = ['updated_at', 'created_at', 'last_login'];
+	public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
+
+    protected $appends = ['name'];
 
 	public $notify_channels = ['database', 'mail'];
+
+    public static function create(array $attributes = [])
+    {
+        $attributes['password'] = self::setInitialPassword($attributes['password']);
+
+        /** @var User $user */
+        $user = static::query()->create($attributes);
+
+        // Sync roles
+        $user_roles = $attributes['user_roles'] ?? [];
+        $user_roles[] = Role::firstWhere('name', 'User')->id;
+        $user->roles()->sync($user_roles);
+        $user->save();
+
+        return $user;
+    }
+
+    public function update(array $attributes = [], array $options = [])
+    {
+        if (array_key_exists('password', $attributes) && ! $attributes['password']) {
+            unset($attributes['password']);
+        }
+
+        parent::update($attributes, $options);
+
+        if (isset($attributes['avatar'])) {
+            $this->addMediaFromRequest('avatar')->toMediaCollection('avatar');
+        }
+
+        // Sync roles
+        if (isset($attributes['user_roles'])) {
+            $user_roles = $attributes['user_roles'] ?? [];
+            $this->roles()->sync($user_roles);
+        }
+        $this->save();
+
+        return true;
+    }
 
 	/**
 	 * Get the roles a user has
@@ -129,14 +206,13 @@ class User extends Authenticatable implements HasMedia
 		$this->roles()->detach($id);
 	}
 
-	public function setPassword(string $password = null): void
+	public static function setInitialPassword(string $password = null): string
 	{
-		if (!empty($password)) {
-			$this->password = Hash::make($password);
-		} else {
-			$this->password = Str::random(10);
-		}
-	}
+		if (empty($password)) {
+			return Str::random(10);
+        }
+        return Hash::make($password);
+    }
 
 	/**
 	 * Add capabilities to user
@@ -180,6 +256,16 @@ class User extends Authenticatable implements HasMedia
 	{
 		return $this->hasOne(Singer::class);
 	}
+
+    public function getBirthdayAttribute(): Carbon
+    {
+        return $this->dob->copy()->year(now()->year);
+    }
+
+    public function getNameAttribute(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
 
 	public function registerMediaCollections(): void
 	{

@@ -55,23 +55,6 @@
 					</tr>
 					<tr>
 						<th>
-							<x-inputs.checkbox label="Singer Profiles" id="singer_profiles_all" name="singer_profiles_all" value="true" class="check-all"></x-inputs.checkbox>
-						</th>
-						<td>
-							<x-inputs.checkbox label="View" id="singer_profiles_view" name="abilities[]" value="singer_profiles_view"></x-inputs.checkbox>
-						</td>
-						<td>
-							<x-inputs.checkbox label="Create" id="singer_profiles_create" name="abilities[]" value="singer_profiles_create"></x-inputs.checkbox>
-						</td>
-						<td>
-							<x-inputs.checkbox label="Update" id="singer_profiles_update" name="abilities[]" value="singer_profiles_update"></x-inputs.checkbox>
-						</td>
-						<td>
-							&nbsp;
-						</td>
-					</tr>
-					<tr>
-						<th>
 							<x-inputs.checkbox label="Singer Placements" id="singer_placements_all" name="singer_placements_all" value="true" class="check-all"></x-inputs.checkbox>
 						</th>
 						<td>

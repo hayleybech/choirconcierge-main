@@ -64,38 +64,6 @@
             </tr>
             <tr>
                 <th>
-                    Singer Profiles
-                </th>
-                <td>
-                    @if( in_array('singer_profiles_view', $role->abilities, true) )
-                        <i class="far fa-fw fa-check mr-2"></i>
-                    @else
-                        <i class="far fa-fw fa-times mr-2"></i>
-                    @endif
-                    View
-                </td>
-                <td>
-                    @if( in_array('singer_profiles_create', $role->abilities, true) )
-                        <i class="far fa-fw fa-check mr-2"></i>
-                    @else
-                        <i class="far fa-fw fa-times mr-2"></i>
-                    @endif
-                    Create
-                </td>
-                <td>
-                    @if( in_array('singer_profiles_update', $role->abilities, true) )
-                        <i class="far fa-fw fa-check mr-2"></i>
-                    @else
-                        <i class="far fa-fw fa-times mr-2"></i>
-                    @endif
-                    Update
-                </td>
-                <td>
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <th>
                     Singer Placements
                 </th>
                 <td>

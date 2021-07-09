@@ -50,7 +50,6 @@ class NotificationTemplate extends Model
 			'%%singer.fname%%' => '<code>%%singer.fname%%</code>',
 			'%%singer.lname%%' => '<code>%%singer.lname%%</code>',
 			'%%singer.email%%' => '<code>%%singer.email%%</code>',
-			'%%profile.create%%' => '<code>%%profile.create%%</code>',
 			'%%placement.create%%' => '<code>%%placement.create%%</code>',
 			'%%choir.name%%' => '<code>%%choir.name%%</code>',
 			'%%singer.dob%%' => '<code>%%singer.dob%%</code>',
@@ -94,22 +93,19 @@ class NotificationTemplate extends Model
 	public function generateBody(Singer $singer, User $user = null): string
 	{
 		$replacements = [
-			'%%singer.name%%' => $singer->name,
-			'%%singer.fname%%' => $singer->first_name,
-			'%%singer.lname%%' => $singer->last_name,
-			'%%singer.email%%' => $singer->email,
-			'%%profile.create%%' => '', //route( 'profile.create', $singer, $this->task ),
+			'%%singer.name%%' => $singer->user->name,
+			'%%singer.fname%%' => $singer->user->first_name,
+			'%%singer.lname%%' => $singer->user->last_name,
+			'%%singer.email%%' => $singer->user->email,
 			'%%placement.create%%' => '', //route( 'placement.create', $singer, $this->task ),
 			'%%choir.name%%' => tenant('choir_name') ?? 'Choir Name',
 		];
-		if ($singer->profile) {
-			$profile_replacements = [
-				'%%singer.dob%%' => $singer->profile->dob,
-				'%%singer.age%%' => $singer->getAge(),
-				'%%singer.phone%%' => $singer->profile->phone,
-			];
-			$replacements = array_merge($replacements, $profile_replacements);
-		}
+        $profile_replacements = [
+            '%%singer.dob%%' => $singer->user->dob,
+            '%%singer.age%%' => $singer->getAge(),
+            '%%singer.phone%%' => $singer->user->phone,
+        ];
+        $replacements = array_merge($replacements, $profile_replacements);
 		if ($singer->placement) {
 			$placement_replacements = [
 				'%%singer.section%%' => $singer->placement->voice_part,
@@ -119,8 +115,8 @@ class NotificationTemplate extends Model
 		if ($user) {
 			$user_replacements = [
 				'%%user.name%%' => $user->name,
-				'%%user.fname%%' => $user->singer->first_name,
-				'%%user.lname%%' => $user->singer->last_name,
+				'%%user.fname%%' => $user->first_name,
+				'%%user.lname%%' => $user->last_name,
 			];
 			$replacements = array_merge($replacements, $user_replacements);
 		}

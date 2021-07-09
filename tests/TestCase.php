@@ -5,6 +5,7 @@ namespace Tests;
 use App\Models\Role;
 use App\Models\Singer;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use JMac\Testing\Traits\AdditionalAssertions;
 use App\Models\Tenant;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -18,6 +19,8 @@ abstract class TestCase extends BaseTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
+
+//        RefreshDatabaseState::$migrated = false;
 
 		if ($this->tenancy) {
 			$this->initializeTenancy();
