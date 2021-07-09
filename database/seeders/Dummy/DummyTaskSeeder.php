@@ -24,8 +24,8 @@ class DummyTaskSeeder extends Seeder
 				'tenant_id' => tenant('id'),
 				'name' => 'Member Profile',
 				'role_id' => $member_role[0],
-				'type' => 'form',
-				'route' => 'singers.profiles.create',
+				'type' => 'manual',
+				'route' => 'singers.index',
 			],
 			[
 				'tenant_id' => tenant('id'),

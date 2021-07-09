@@ -13,7 +13,7 @@
                 <strong>This week!</strong>
             @endif
 
-            {{ $singer->user->birthday->format('D, '.config('app.formats.date_md')) }} - {{ $singer->name }}
+            {{ $singer->user->birthday->format('D, '.config('app.formats.date_md')) }} - {{ $singer->user->name }}
         </div>
         @empty
         <div class="list-group-item">No birthdays this month.</div>
