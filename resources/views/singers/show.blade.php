@@ -21,7 +21,7 @@
 							<div class="d-flex justify-content-between align-items-center mb-2">
 								<h1 class="h3 mb-0">{{ $singer->user->name }}</h1>
 								@can('update', $singer)
-									<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
+									<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit Membership</a>
 								@endcan
 							</div>
 
@@ -115,7 +115,10 @@
 
 			<div class="card">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<h2 class="h4">Member Profile</h2>
+					<h2 class="h4">User Profile</h2>
+					@if(auth()->user()->is($singer->user))
+						<a href="{{ route( 'accounts.edit') }}" class="btn btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit Profile</a>
+					@endif
 				</div>
 				<div class="card-body">
 
