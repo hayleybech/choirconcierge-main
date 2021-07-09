@@ -69,11 +69,11 @@ class RemoveProfileTable extends Migration
                         ->explode(' ')[0]
                     ),
             ]);
-
-            Schema::drop('profiles');
-
+            
             return true;
         });
+
+        Schema::drop('profiles');
     }
 
     /**
