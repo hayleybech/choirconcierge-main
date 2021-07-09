@@ -24,6 +24,8 @@ class CompleteSingerTaskControllerTest extends TestCase
 
 		$task = Task::factory()->create();
 		$singer = Singer::factory()->create(['onboarding_enabled' => true]);
+        $singer->initOnboarding();
+        $singer->save();
 
 		$response = $this->get(the_tenant_route('task.complete', [$singer, $task]));
 		$response->assertSessionHasNoErrors();

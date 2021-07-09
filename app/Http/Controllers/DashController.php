@@ -30,15 +30,14 @@ class DashController extends Controller
 	{
 		$birthdays = Singer::query()
 			->birthdays()
-			->with('profile')
 			->get()
 			->sort(static function (Singer $singer1, Singer $singer2): int {
 				// Sort by birthday
 
-				if ($singer1->profile->birthday->equalTo($singer2->profile->birthday)) {
+				if ($singer1->user->birthday->equalTo($singer2->user->birthday)) {
 					return 0;
 				}
-				return $singer1->profile->birthday < $singer2->profile->birthday ? -1 : 1;
+				return $singer1->user->birthday < $singer2->user->birthday ? -1 : 1;
 			});
 
 		$memberversaries = Singer::query()

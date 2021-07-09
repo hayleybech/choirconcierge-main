@@ -1,7 +1,7 @@
 @extends('layouts.page')
 
-@section('title', 'Add Voice Placement - ' . $singer->name)
-@section('page-title', $singer->name)
+@section('title', 'Add Voice Placement - ' . $singer->user->name)
+@section('page-title', $singer->user->name)
 
 @section('page-content')
 

@@ -48,6 +48,8 @@ class RiserStackControllerTest extends TestCase
 	 */
 	public function edit_returns_an_ok_response(): void
 	{
+	    $this->withoutExceptionHandling();
+
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
 		$stack = RiserStack::factory()->create();

@@ -12,12 +12,12 @@
 					:cx="coords.centre.x"
 					:cy="coords.centre.y"
 					:r="coords.radius"
-					:data-singer="singer.name"
+					:data-singer="singer.user.name"
 					class="riser-spot"
 					:style="style"
 				></circle>
 				<rect
-					v-if="singer.name !== ''"
+					v-if="singer.user.name !== ''"
 					:x="labelPosition.x"
 					:y="labelPosition.y"
 					:width="labelPosition.width"
@@ -25,7 +25,7 @@
 					class="riser-label"
 				></rect>
 				<text
-					v-if="singer.name !== ''"
+					v-if="singer.user.name !== ''"
 					:x="namePosition.x"
 					:y="namePosition.y"
 					text-anchor="middle"
@@ -40,7 +40,7 @@
 						:cx="coords.radius"
 						:cy="coords.radius"
 						:r="coords.radius"
-						:data-singer="singer.name"
+						:data-singer="singer.user.name"
 						class="riser-spot"
 						:style="style"
 					></circle>
@@ -72,10 +72,12 @@ export default {
 			type: Object,
 			default: {
 				id: 0,
-				name: '',
-				email: '',
-				part: 0,
-			},
+        part: 0,
+        user: {
+				  email: '',
+          name: '',
+        }
+      },
 		},
 		colour: {
 			type: String,
@@ -100,7 +102,7 @@ export default {
 			};
 		},
 		fill() {
-			if (this.singer.email === '') {
+			if (this.singer.user.email === '') {
 				return '#ccc';
 			}
 			return 'url(#img_' + this.singer.id + ')';
@@ -113,7 +115,7 @@ export default {
 			return this.singer.user_avatar_thumb_url;
 		},
 		singerInitials() {
-			return this.singer.name
+			return this.singer.user.name
 				.split(' ')
 				.map(name => name.charAt(0).toUpperCase())
 				.join('');

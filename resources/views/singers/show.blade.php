@@ -1,6 +1,6 @@
 @extends('layouts.page-blank')
 
-@section('title', $singer->name . ' - Singers')
+@section('title', $singer->user->name . ' - Singers')
 
 @section('page-content')
 
@@ -12,16 +12,16 @@
 
 					<div class="row">
 
-						<div class="col-xl-6 col-lg-5">
-							<img src="{{ $singer->user->getAvatarUrl('profile') }}" alt="{{ $singer->name }}" class="mb-4 mr-2 mw-100 img-rounded">
+						<div class="col-xl-5 col-lg-5">
+							<img src="{{ $singer->user->getAvatarUrl('profile') }}" alt="{{ $singer->user->name }}" class="mb-4 mr-2 mw-100 img-rounded">
 						</div>
 
-						<div class="col-xl-6 col-lg-7">
+						<div class="col-xl-7 col-lg-7">
 
 							<div class="d-flex justify-content-between align-items-center mb-2">
-								<h1 class="h4 mb-0">{{ $singer->name }}</h1>
+								<h1 class="h3 mb-0">{{ $singer->user->name }}</h1>
 								@can('update', $singer)
-									<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit</a>
+									<a href="{{route( 'singers.edit', ['singer' => $singer] )}}" class="btn btn-add btn-sm btn-primary"><i class="fa fa-fw fa-edit"></i> Edit Membership</a>
 								@endcan
 							</div>
 
@@ -62,23 +62,10 @@
 							</div>
 
 							<div class="mb-1">
-								<strong>Added</strong><br>
-								<span class="text-muted">{{ $singer->created_at->format(config('app.formats.timestamp_lg')) }}</span><br>
-							</div>
-							<div class="mb-1">
-								<strong>Joined</strong><br>
-								<span class="text-muted">{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->format(config('app.formats.date_lg')) }})</span><br>
-							</div>
-							<div class="mb-1">
-								<strong>Last Login</strong><br>
-								<span class="text-muted">
-									@if( ! $singer->user->last_login )
-									Never
-									@else
-									{{ $singer->user->last_login->diffForHumans() }} ({{ $singer->user->last_login->format(config('app.formats.timestamp_md')) }})
-									@endif
-								</span>
-								<br>
+								<strong>Roles</strong><br>
+								@foreach($singer->user->roles as $role)
+									<span class="badge badge-dark">{{$role->name}}</span>
+								@endforeach
 							</div>
 
 							<div class="mb-1">
@@ -90,11 +77,33 @@
 									@endif
 								</strong>
 							</div>
+
 							<div class="mb-1">
-								<strong>Roles</strong><br>
-								@foreach($singer->user->roles as $role)
-									<span class="badge badge-dark">{{$role->name}}</span>
-								@endforeach
+								<strong>Reason for joining</strong><br>
+								{{ $singer->reason_for_joining ?? '' }}
+							</div>
+							<div class="mb-1">
+								<strong>Referred by</strong><br>
+								{{ $singer->referrer ?? '' }}
+							</div>
+							<div class="mb-1">
+								<strong>Notes / Membership Details</strong><br>
+								{{ $singer->membership_details ?? '' }}
+							</div>
+
+							<div class="mb-1 text-xs text-muted">
+								<small>
+									<strong>Member Since: </strong> <span>{{ $singer->joined_at->diffForHumans() }} ({{ $singer->joined_at->format(config('app.formats.date_lg')) }})</span> <br />
+									<strong>Added: </strong> <span>{{ $singer->created_at->diffForHumans() }}</span> |
+									<strong>Last Login: </strong>
+									<span>
+									@if( ! $singer->user->last_login )
+											Never
+										@else
+											{{ $singer->user->last_login->diffForHumans() }}
+										@endif
+								</span>
+								</small>
 							</div>
 
 						</div>
@@ -106,12 +115,10 @@
 
 			<div class="card">
 				<div class="card-header d-flex justify-content-between align-items-center">
-					<h2 class="h4">Member Profile</h2>
-					@can('update', $singer->profile)
-						<a href="{{ route( 'singers.profiles.edit', ['singer' => $singer, 'profile' => $singer->profile->id] ) }}" class="btn btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit</a>
-					@elsecan('create', \App\Models\Profile::class)
-						<a href="{{ route('singers.profiles.create', ['singer' => $singer, 'task' => 1]) }}" class="btn btn-sm btn-secondary"><i class="fa fa-fw fa-plus"></i> Create</a>
-					@endcan
+					<h2 class="h4">User Profile</h2>
+					@if(auth()->user()->is($singer->user))
+						<a href="{{ route( 'accounts.edit') }}" class="btn btn-sm btn-secondary ml-2"><i class="fa fa-fw fa-edit"></i> Edit Profile</a>
+					@endif
 				</div>
 				<div class="card-body">
 
@@ -121,63 +128,53 @@
 							<div class="profile-contact">
 								<h3 class="h4">Contact</h3>
 								<p class="mb-1">
-									<i class="fas fa-fw fa-envelope mr-2"></i>{{ $singer->email }}
+									<i class="fas fa-fw fa-envelope mr-2"></i>{{ $singer->user->email }}
 								</p>
 								<div class="mb-1">
-									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->profile->phone ?? '?' }}
+									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->user->phone ?? '?' }}
 								</div>
 
 								<h4 class="h5 mt-4">Emergency Contact</h4>
 								<div class="mb-1">
-									<i class="fas fa-fw fa-user mr-2"></i>{{ $singer->profile->ice_name ?? '?' }}
+									<i class="fas fa-fw fa-user mr-2"></i>{{ $singer->user->ice_name ?? '?' }}
 								</div>
 								<div class="mb-1">
-									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->profile->ice_phone ?? '?' }}
+									<i class="fas fa-fw fa-phone mr-2"></i>{{ $singer->user->ice_phone ?? '?' }}
 								</div>
 
 								<h3 class="h4 mt-4">Address</h3>
 								<p>
-									{{ $singer->profile->address_street_1 ?? 'No address' }}<br>
-									@if( isset($singer->profile->address_street_2) && $singer->profile->address_street_2 !== ''){{ $singer->profile->address_street_2 ?? 'No address' }}<br>@endif
-									{{ optional($singer->profile)->address_suburb ? optional($singer->profile)->address_suburb . ', ' : '' }}{{ $singer->profile->address_state ?? '' }} {{ $singer->profile->address_postcode ?? '' }}
+									{{ $singer->user->address_street_1 ?? 'No address' }}<br>
+									@if( isset($singer->user->address_street_2) && $singer->user->address_street_2 !== ''){{ $singer->user->address_street_2 ?? 'No address' }}<br>@endif
+									{{ $singer->user->address_suburb ? $singer->user->address_suburb . ', ' : '' }}{{ $singer->user->address_state ?? '' }} {{ $singer->user->address_postcode ?? '' }}
 								</p>
 							</div>
 						</div>
 						<div class="col-md-7">
 							<div class="profile-other">
 								<h3 class="h4">Other Info</h3>
-								@if( $singer->profile )
-								<div class="profile-item">
-										<i class="fas fa-fw fa-birthday-cake mr-2"></i>{{ $singer->profile->dob->format(config('app.formats.date_md')) ?? '?' }}
-									</div>
-
 								<div class="mb-1">
-									<i class="fas fa-fw fa-ruler-vertical mr-2"></i>{{ round( $singer->profile->height, 2) }} cm
+									<strong>Date of Birth: </strong>
+									{{ $singer->user->dob?->format(config('app.formats.date_md')) ?? '?' }}
 								</div>
 
 								<div class="mb-1">
-									<strong>Reason for joining</strong><br>
-									{{ $singer->profile->reason_for_joining ?? '' }}
+									<strong>Height: </strong>
+									{{ round( $singer->user->height, 2) }} cm
 								</div>
-								<div class="mb-1">
-									<strong>Referred by</strong><br>
-									{{ $singer->profile->referrer ?? '' }}
-								</div>
+
 								<div class="mb-1">
 									<strong>Profession</strong><br>
-									{{ $singer->profile->profession ?? '' }}
+									{{ $singer->user->profession ?? '' }}
 								</div>
 								<div class="mb-1">
 									<strong>Other Skills</strong><br>
-									{{ $singer->profile->skills ?? '' }}
+									{{ $singer->user->skills ?? '' }}
 								</div>
 								<div class="mb-1">
-									<strong>Society Membership Details</strong><br>
-									{{ $singer->profile->membership_details ?? '' }}
+									<strong>BHA Member ID</strong><br>
+									{{ $singer->user->bha_id > 0 ? $singer->user->bha_id : '' }}
 								</div>
-								@else
-								<p>No Member Profile yet. @can('create', \App\Models\Profile::class)<a href="{{ route('singers.profiles.create', ['singer' => $singer, 'task' => 1]) }}">Create one now. </a>@endcan</p>
-								@endif
 							</div>
 						</div>
 

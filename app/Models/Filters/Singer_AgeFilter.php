@@ -33,13 +33,13 @@ class Singer_AgeFilter extends Filter
 	{
 		// Adult
 		if ($this->current_option === 'adult') {
-			return $query->whereHas('profile', static function (Builder $query) {
+			return $query->whereHas('user', static function (Builder $query) {
 				$query->where('dob', '<=', date('Y-m-d', strtotime('-' . self::ADULT_AGE . ' years')));
 			});
 		}
 		// Child
 		if ($this->current_option === 'child') {
-			return $query->whereHas('profile', static function (Builder $query) {
+			return $query->whereHas('user', static function (Builder $query) {
 				$query->where('dob', '>', date('Y-m-d', strtotime('-' . self::ADULT_AGE . ' years')));
 			});
 		}

@@ -26,10 +26,10 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Columns
  * @property int $id
- * @property string $first_name
- * @property string $last_name
- * @property string $email
  * @property boolean $onboarding_enabled
+ * @property string $reason_for_joining
+ * @property string $referrer
+ * @property string $membership_details
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
@@ -41,7 +41,6 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property Collection<Task> $tasks
- * @property Profile $profile
  * @property Placement $placement
  * @property SingerCategory $category
  * @property User $user
@@ -63,7 +62,14 @@ class Singer extends Model
 {
 	use Notifiable, Filterable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
-	protected $fillable = ['first_name', 'last_name', 'email', 'onboarding_enabled', 'voice_part_id', 'joined_at'];
+	protected $fillable = [
+        'onboarding_enabled',
+        'reason_for_joining',
+        'referrer',
+        'membership_details',
+        'voice_part_id',
+        'joined_at',
+    ];
 
 	protected static $filters = [
 		Singer_CategoryFilter::class,
@@ -76,69 +82,9 @@ class Singer extends Model
 
 	public $dates = ['updated_at', 'created_at', 'joined_at'];
 
-	protected $appends = ['user_avatar_thumb_url', 'name'];
+	protected $appends = ['user_avatar_thumb_url'];
 
 	public $notify_channels = ['mail'];
-
-	protected static function booted()
-	{
-		static::created(static function (Singer $singer) {
-			$singer->initOnboarding();
-		});
-	}
-
-	public static function create(array $attributes = [])
-	{
-		/** @var Singer $singer */
-		$singer = static::query()->create($attributes);
-
-		// Add matching user
-		$user = new User();
-		$user->name = $singer->name;
-		$user->email = $singer->email;
-		$user->setPassword($attributes['password']);
-		$user->save();
-
-		// Sync roles
-		$user_roles = $attributes['user_roles'] ?? [];
-		$user_roles[] = Role::firstWhere('name', 'User')->id;
-		$user->roles()->sync($user_roles);
-		$user->save();
-
-		$singer->user()->associate($user);
-		$singer->save();
-
-		return $singer;
-	}
-
-	public function update(array $attributes = [], array $options = [])
-	{
-		parent::update($attributes, $options);
-
-		// Update user
-		if (isset($attributes['email'])) {
-			$this->user->email = $attributes['email'];
-		}
-		if (isset($attributes['first_name']) || isset($attributes['last_name'])) {
-			$this->user->name = $this->name;
-		}
-		if (isset($attributes['password'])) {
-			$this->user->setPassword($attributes['password']);
-		}
-		if (isset($attributes['avatar'])) {
-			$this->user->addMediaFromRequest('avatar')->toMediaCollection('avatar');
-		}
-		$this->user->save();
-
-		// Sync roles
-		if (isset($attributes['user_roles'])) {
-			$user_roles = $attributes['user_roles'] ?? [];
-			$this->user->roles()->sync($user_roles);
-		}
-		$this->save();
-
-		return true;
-	}
 
 	public function initOnboarding(): void
 	{
@@ -160,11 +106,6 @@ class Singer extends Model
 		return $this->belongsToMany(Task::class, 'singers_tasks')
 			->withPivot('completed')
 			->withTimestamps();
-	}
-
-	public function profile(): HasOne
-	{
-		return $this->hasOne(Profile::class);
 	}
 
 	public function placement(): HasOne
@@ -209,15 +150,10 @@ class Singer extends Model
         return $this->hasManyThrough(Role::class, User::class);
     }*/
 
-	public function getNameAttribute(): string
-	{
-		return $this->first_name . ' ' . $this->last_name;
-	}
-
 	public function getAge(): int
 	{
-		if (isset($this->profile->dob)) {
-			return date_diff(date_create($this->profile->dob), date_create('now'))->y;
+		if (isset($this->user->dob)) {
+			return date_diff(date_create($this->user->dob), date_create('now'))->y;
 		}
 		return 0;
 	}
@@ -234,7 +170,7 @@ class Singer extends Model
 
 	public function scopeBirthdays(Builder $query): Builder
 	{
-		return $query->whereHas('profile', static function (Builder $query) {
+		return $query->whereHas('user', static function (Builder $query) {
 			return $query->whereMonth('dob', '>=', now())->whereMonth('dob', '<=', now()->addMonth());
 		});
 	}
@@ -245,10 +181,9 @@ class Singer extends Model
 			->whereHas('category', static function (Builder $query) {
 				return $query->whereIn('name', ['Members', 'Prospects']);
 			})
-			->whereHas('profile', static function (Builder $query) {
+			->whereHas('user', static function (Builder $query) {
 				return $query->whereNull('dob');
-			})
-			->orWhereDoesntHave('profile');
+			});
 	}
 
 	public function scopeMemberversaries(Builder $query): Builder
