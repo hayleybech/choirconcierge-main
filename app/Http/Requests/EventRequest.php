@@ -20,6 +20,7 @@ class EventRequest extends FormRequest
 	{
 		$this->merge([
 			'is_repeating' => $this->has('is_repeating'),
+			'send_notification' => $this->has('send_notification'),
 		]);
 	}
 
