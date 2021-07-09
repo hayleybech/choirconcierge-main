@@ -7,7 +7,7 @@
             type="date"
             input-name="start_date"
             output-name="range_start_date"
-            v-model="startDate"
+            :value="startDate"
             @change="changeStartDate"
         />
 			</div>
@@ -17,7 +17,7 @@
             type="time"
             input-name="start_date_input"
             output-name="start_date"
-            v-model="startDate"
+            :value="startDate"
             :default-value="defaultStartDate"
             @change="changeStartTime"
         />
@@ -28,7 +28,7 @@
             type="time"
             input-name="call_time_input"
             output-name="call_time"
-            v-model="callTime"
+            :value="callTime"
             :default-value="defaultCallTime"
             :disabled-time="disabledCallTime"
             @change="changeCallTime"
@@ -45,7 +45,7 @@
             type="date"
             input-name="end_date"
             output-name="range_end_date"
-            v-model="endDate"
+            :value="endDate"
             @change="changeEndDate"
             :click-to-edit="true"
         />
@@ -56,7 +56,7 @@
 					type="time"
 					input-name="end_date_input"
 					output-name="end_date"
-					v-model="endDate"
+					:value="endDate"
 					:default-value="defaultEndDate"
 					:disabled-time="disabledEndTime"
 					@change="changeEndTime"
@@ -109,6 +109,9 @@ export default {
 		 * we need to copy the changes in both directions.
 		 */
     changeStartDate(newStartDate) {
+      console.log('ready?');
+      console.log('current: ' + this.startDate);
+      console.log('new: ' + newStartDate);
       this.startDate = this.setDate(newStartDate, this.startDate);
       this.callTime =  this.setDate(newStartDate, this.callTime);
       this.constrain();
@@ -182,13 +185,20 @@ export default {
     setDate(source, target)
     {
       const sourceMoment = moment(source);
-      return moment(target)
+      const oldDate = moment(target).clone();
+      console.log('source: ' + sourceMoment);
+      console.log('old: ' + oldDate);
+      const newDate = moment(target)
           .set({
             year: sourceMoment.year(),
             month: sourceMoment.month(),
             date: sourceMoment.date(),
+            hours: oldDate.hours(),
+            minutes: oldDate.minutes(),
           })
           .toDate();
+      console.log(newDate);
+      return newDate;
     }
 	},
 };
