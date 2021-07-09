@@ -64,6 +64,10 @@
 					<x-inputs.text label="Where did you hear about us?" id="referrer" name="referrer" :value="old('referrer')" />
 				</p>
 
+				<p>
+					<x-inputs.text label="Notes / Membership Details" id="membership_details" name="membership_details" :value="old('membership_details')" />
+				</p>
+
 				<toggleable-input
 					label="I'm adding a current member"
 					name="onboarding_disabled"

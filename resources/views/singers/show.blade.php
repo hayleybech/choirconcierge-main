@@ -87,7 +87,7 @@
 								{{ $singer->referrer ?? '' }}
 							</div>
 							<div class="mb-1">
-								<strong>Choir Membership Details</strong><br>
+								<strong>Notes / Membership Details</strong><br>
 								{{ $singer->membership_details ?? '' }}
 							</div>
 

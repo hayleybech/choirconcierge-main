@@ -23,6 +23,10 @@
                         <x-inputs.text label="Where did you hear about us?" id="referrer" name="referrer" :value="old('referrer', $singer->referrer)" />
                     </p>
 
+                    <p>
+                        <x-inputs.text label="Notes / Membership Details" id="membership_details" name="membership_details" :value="old('membership_details', $singer->membership_details)" />
+                    </p>
+
                     <div class="form-group">
                         <x-inputs.select
                             label="Voice Part"
