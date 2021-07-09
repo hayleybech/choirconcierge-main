@@ -27,7 +27,6 @@ class MoveUserFieldsFromSingersTable extends Migration
 
         Schema::table('singers', function(Blueprint $table) {
             $table->dropForeign('singers_tenant_id_foreign');
-            $table->dropUnique('singers_tenant_id_email_unique');
             $table->foreign('tenant_id')->references('id')->on('tenants')->cascadeOnDelete()->cascadeOnUpdate();
             $table->dropColumn([
                 'first_name',
