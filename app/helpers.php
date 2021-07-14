@@ -6,7 +6,7 @@ if (!function_exists('the_tenant_route')) {
 	// Allows tenant_route to auto-fetch the domain
 	function the_tenant_route($route, $parameters = [], $absolute = true)
 	{
-		if (app()->environment('testing')) {
+		if (! app()->environment(['production', 'local'])) {
 			return tenant_route(tenant()->host, $route, $parameters, $absolute);
 		}
 		return tenant_route(tenant()->primary_domain, $route, $parameters, $absolute);
