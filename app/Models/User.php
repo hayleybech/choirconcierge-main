@@ -214,36 +214,6 @@ class User extends Authenticatable implements HasMedia
         return Hash::make($password);
     }
 
-	/**
-	 * Add capabilities to user
-	 */
-	/*
-    public function addCap($title)
-    {
-        $assigned_roles = [];
-
-        $roles = array_fetch(Role::all()->toArray(), 'name');
- 
-        switch ($title) {
-            case 'admin':
-                $assigned_roles[] = $this->getIdInArray($roles, 'edit_user');
-                $assigned_roles[] = $this->getIdInArray($roles, 'delete_user');
-            case 'music_team':
-                $assigned_roles[] = $this->getIdInArray($roles, 'create_voice_placement');
-                $assigned_roles[] = $this->getIdInArray($roles, 'edit_voice_placement');
-            case 'membership_team':
-                $assigned_roles[] = $this->getIdInArray($roles, 'create_member_profile');
-                $assigned_roles[] = $this->getIdInArray($roles, 'edit_member_profile');
-			case 'accounts_team':
-                $assigned_roles[] = $this->getIdInArray($roles, 'add_payment');
-                break;
-            default:
-                throw new \Exception("The role entered does not exist");
-        }
-
-        $this->roles()->attach($assigned_roles);
-    }*/
-
 	/*
 	 * Get all groups this is a member of.
 	 */
