@@ -222,6 +222,13 @@ class Singer extends Model
 			->whereMonth('joined_at', '<=', now()->addMonth());
 	}
 
+	public function scopeActive(Builder $query): Builder
+	{
+		return $query->whereHas('category', static function (Builder $query) {
+			$query->where('name', '=', 'Members');
+		});
+	}
+
 	public function hasAbility(string $ability): bool
 	{
 		foreach ($this->roles as $role) {

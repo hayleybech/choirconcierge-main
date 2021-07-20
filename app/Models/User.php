@@ -131,15 +131,6 @@ class User extends Authenticatable implements HasMedia
         return true;
     }
 
-    // @todo move to singer
-//	/**
-//	 * Get the roles a user has
-//	 */
-//	public function roles(): BelongsToMany
-//	{
-//		return $this->belongsToMany(Role::class, 'users_roles');
-//	}
-
 	public static function setInitialPassword(string $password = null): string
 	{
 		if (empty($password)) {
@@ -200,16 +191,6 @@ class User extends Authenticatable implements HasMedia
 			return $this->getFirstMediaUrl('avatar', $conversion);
 		}
 		return $this->getFirstMediaUrl('avatar');
-	}
-
-	// @todo move to singer
-	public function scopeActive(Builder $query): Builder
-	{
-		return $query->whereHas('singer', static function (Builder $query) {
-			$query->whereHas('category', static function (Builder $query) {
-				$query->where('name', '=', 'Members');
-			});
-		});
 	}
 
 	// @todo make separate user vs singer welcome email

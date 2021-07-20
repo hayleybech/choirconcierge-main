@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\TaskCompleted;
 use App\Http\Requests\SingerRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Role;
@@ -13,9 +12,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Singer;
-use App\Models\Task;
 use Illuminate\Support\Arr;
-use Illuminate\Validation\Rule;
 
 class SingerController extends Controller
 {
