@@ -204,7 +204,7 @@ class SingerControllerTest extends TestCase
      * @test
      * @dataProvider singerProvider
      */
-    public function update_saves_the_user_roles($getData): void
+    public function update_saves_the_singer_roles($getData): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -218,12 +218,12 @@ class SingerControllerTest extends TestCase
         ]));
 
         $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('users_roles', [
-            'user_id' => $singer->user->id,
+        $this->assertDatabaseHas('singers_roles', [
+            'singer_id' => $singer->id,
             'role_id' => $roles[0],
         ]);
-        $this->assertDatabaseHas('users_roles', [
-            'user_id' => $singer->user->id,
+        $this->assertDatabaseHas('singers_roles', [
+            'singer_id' => $singer->id,
             'role_id' => $roles[1],
         ]);
     }

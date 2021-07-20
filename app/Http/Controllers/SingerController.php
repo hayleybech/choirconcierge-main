@@ -140,7 +140,7 @@ class SingerController extends Controller
             'onboarding_enabled',
             'voice_part_id',
         ]));
-        $singer->user->update(Arr::only($request->validated(), [
+        $singer->update(Arr::only($request->validated(), [
             'user_roles'
         ]));
 

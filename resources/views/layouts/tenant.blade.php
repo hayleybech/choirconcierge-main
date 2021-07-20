@@ -200,7 +200,7 @@
 
                                     <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="dropdown-item d-md-none"><i class="fal fa-fw fa-code"></i> <span class="link-text">Updates </span><span class="headway-badge"></span></a>
 
-                                    @if( Auth::user()->hasRole('Admin') && ! session()->has('impersonation:active') )
+                                    @if( Auth::user()->singer->hasRole('Admin') && ! session()->has('impersonation:active') )
                                         <!-- Impersonate User modal trigger button -->
                                         <a href="#" class="dropdown-item" data-toggle="modal" data-target="#impersonateUserModal"><i class="fal fa-user-unlock"></i> Impersonate User</a>
                                     @endif

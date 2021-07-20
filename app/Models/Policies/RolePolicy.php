@@ -19,7 +19,7 @@ class RolePolicy
 	 */
 	public function viewAny(User $user)
 	{
-		return $user->hasAbility('roles_view');
+		return $user->singer->hasAbility('roles_view');
 	}
 
 	/**
@@ -32,7 +32,7 @@ class RolePolicy
 	 */
 	public function view(User $user, Role $role)
 	{
-		return $user->hasAbility('roles_view');
+		return $user->singer->hasAbility('roles_view');
 	}
 
 	/**
@@ -44,7 +44,7 @@ class RolePolicy
 	 */
 	public function create(User $user)
 	{
-		return $user->hasAbility('roles_create');
+		return $user->singer->hasAbility('roles_create');
 	}
 
 	/**
@@ -60,7 +60,7 @@ class RolePolicy
 		if ($role->name === 'Admin') {
 			return false;
 		}
-		return $user->hasAbility('roles_update');
+		return $user->singer->hasAbility('roles_update');
 	}
 
 	/**
@@ -76,7 +76,7 @@ class RolePolicy
 		if ($role->name === 'Admin' || $role->name === 'User') {
 			return false;
 		}
-		return $user->hasAbility('roles_delete');
+		return $user->singer->hasAbility('roles_delete');
 	}
 
 	/**

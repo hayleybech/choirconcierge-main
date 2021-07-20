@@ -6,7 +6,6 @@ use App\Mail\Welcome;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -14,7 +13,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -24,7 +22,6 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
-use UnexpectedValueException;
 
 // http://alexsears.com/article/adding-roles-to-laravel-users/
 // https://medium.com/@ezp127/laravel-5-4-native-user-authentication-role-authorization-3dbae4049c8a
@@ -115,16 +112,7 @@ class User extends Authenticatable implements HasMedia
     {
         $attributes['password'] = self::setInitialPassword($attributes['password']);
 
-        /** @var User $user */
-        $user = static::query()->create($attributes);
-
-        // Sync roles
-        $user_roles = $attributes['user_roles'] ?? [];
-        $user_roles[] = Role::firstWhere('name', 'User')->id;
-        $user->roles()->sync($user_roles);
-        $user->save();
-
-        return $user;
+	    return static::query()->create($attributes);
     }
 
     public function update(array $attributes = [], array $options = [])
@@ -138,47 +126,19 @@ class User extends Authenticatable implements HasMedia
         if (isset($attributes['avatar'])) {
             $this->addMediaFromRequest('avatar')->toMediaCollection('avatar');
         }
-
-        // Sync roles
-        if (isset($attributes['user_roles'])) {
-            $user_roles = $attributes['user_roles'] ?? [];
-            $this->roles()->sync($user_roles);
-        }
         $this->save();
 
         return true;
     }
 
-	/**
-	 * Get the roles a user has
-	 */
-	public function roles(): BelongsToMany
-	{
-		return $this->belongsToMany(Role::class, 'users_roles');
-	}
-
-	/**
-	 * Find out if User is an employee, based on if has any roles
-	 *
-	 * @return boolean
-	 */
-	public function isEmployee(): bool
-	{
-		$roles = $this->roles->toArray();
-		return !empty($roles);
-	}
-
-	/**
-	 * Find out if user has a specific role
-	 *
-	 * @param string $check
-	 *
-	 * @return bool
-	 */
-	public function hasRole($check): bool
-	{
-		return in_array($check, Arr::pluck($this->roles->toArray(), 'name'));
-	}
+    // @todo move to singer
+//	/**
+//	 * Get the roles a user has
+//	 */
+//	public function roles(): BelongsToMany
+//	{
+//		return $this->belongsToMany(Role::class, 'users_roles');
+//	}
 
 	public static function setInitialPassword(string $password = null): string
 	{
@@ -188,6 +148,7 @@ class User extends Authenticatable implements HasMedia
         return Hash::make($password);
     }
 
+    // @todo MAYBE move to singer
 	/*
 	 * Get all groups this is a member of.
 	 */
@@ -241,6 +202,7 @@ class User extends Authenticatable implements HasMedia
 		return $this->getFirstMediaUrl('avatar');
 	}
 
+	// @todo move to singer
 	public function scopeActive(Builder $query): Builder
 	{
 		return $query->whereHas('singer', static function (Builder $query) {
@@ -250,6 +212,7 @@ class User extends Authenticatable implements HasMedia
 		});
 	}
 
+	// @todo make separate user vs singer welcome email
 	public static function sendWelcomeEmail($user): void
 	{
 		// Generate a new reset password token
@@ -257,15 +220,5 @@ class User extends Authenticatable implements HasMedia
 
 		// Send email
 		Mail::send(new Welcome($user, $token));
-	}
-
-	public function hasAbility(string $ability): bool
-	{
-		foreach ($this->roles as $role) {
-			if (in_array($ability, $role->abilities)) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

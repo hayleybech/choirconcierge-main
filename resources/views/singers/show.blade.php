@@ -63,7 +63,7 @@
 
 							<div class="mb-1">
 								<strong>Roles</strong><br>
-								@foreach($singer->user->roles as $role)
+								@foreach($singer->roles as $role)
 									<span class="badge badge-dark">{{$role->name}}</span>
 								@endforeach
 							</div>
@@ -277,7 +277,7 @@
 									</div>
 								</span>
 							@else
-								@if(Auth::user()->hasRole($task->role->name))
+								@if(Auth::user()->singer->hasRole($task->role->name))
 									<link-confirm href="{{ route($task->route, ['singer' => $singer, 'task' => $task]) }}" description="{{ $task->name }}" class="mb-1 d-flex justify-content-between align-items-center">
 										<div class="d-flex w-100 justify-content-between">
 											<span><i class="far fa-fw fa-square"></i> {{ $task->name }}</span>

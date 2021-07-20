@@ -68,7 +68,7 @@
 
 	</div>
 
-	@if(Auth::user()->hasRole('Admin'))
+	@if(Auth::user()->singer->hasRole('Admin'))
 	{{ Form::open( [ 'route' => 'singers.import', 'method' => 'post', 'files' => 'true', 'class' => 'form-inline mb-4' ] ) }}
 
 		<div class="input-group input-group-sm">

@@ -314,15 +314,15 @@ class CriticalUserSeeder extends Seeder
 			'email' => 'haydenbech@gmail.com',
 			'password' => bcrypt('*tokra1#'),
 		]);
-		$roles = Role::all()
-			->pluck('id')
-			->toArray();
-		$user->roles()->attach($roles);
 
 		// Create matching singer for admin
 		$user->singer()->create([
 			'onboarding_enabled' => 0,
 		]);
+		$roles = Role::all()
+			->pluck('id')
+			->toArray();
+		$user->singer->roles()->attach($roles);
 
 		// Attach admin to member category
 		$cat_member = $singer_categories->firstWhere('name', '=', 'Members');
