@@ -180,22 +180,7 @@ class User extends Authenticatable implements HasMedia
 		return in_array($check, Arr::pluck($this->roles->toArray(), 'name'));
 	}
 
-	/**
-	 * Get key in array with corresponding value
-	 *
-	 * @return int
-	 */
-	private function getIdInArray($array, $term)
-	{
-		foreach ($array as $key => $value) {
-			if ($value === $term) {
-				return $key;
-			}
-		}
-
-		throw new UnexpectedValueException();
-	}
-
+	// @todo move to singer
 	public function addRoles($ids): void
 	{
 		$this->roles()->attach($ids);
