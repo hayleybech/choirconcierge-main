@@ -180,17 +180,6 @@ class User extends Authenticatable implements HasMedia
 		return in_array($check, Arr::pluck($this->roles->toArray(), 'name'));
 	}
 
-	// @todo move to singer
-	public function addRoles($ids): void
-	{
-		$this->roles()->attach($ids);
-	}
-
-	public function detachRole($id): void
-	{
-		$this->roles()->detach($id);
-	}
-
 	public static function setInitialPassword(string $password = null): string
 	{
 		if (empty($password)) {
