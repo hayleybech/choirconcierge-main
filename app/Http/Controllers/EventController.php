@@ -73,7 +73,6 @@ class EventController extends Controller
 
 		$event = Event::create(
 			collect($request->validated())
-				->except('send_notification')
 				->toArray(),
 		);
 

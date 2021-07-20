@@ -67,7 +67,7 @@ if (!function_exists('checkbox_group_old')) {
 		if (empty(old())) {
 			return in_array($this_value, $saved_values, false);
 		}
-		return in_array($this_value, old($input_name), false);
+		return in_array($this_value, old($input_name) ?? [], false);
 	}
 }
 

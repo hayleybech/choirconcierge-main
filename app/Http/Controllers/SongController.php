@@ -97,9 +97,9 @@ class SongController extends Controller
 	{
 		$this->authorize('create', Song::class);
 
+
 		$song = Song::create(
 			collect($request->validated())
-				->except('send_notification')
 				->toArray(),
 		);
 
