@@ -231,15 +231,9 @@ class Singer extends Model
 
 	public function hasAbility(string $ability): bool
 	{
-		foreach ($this->roles as $role) {
-			if (in_array($ability, $role->abilities)) {
-				return true;
-			}
-		}
-		return false;
+		return $this->roles->contains(fn(Role $role) => collect($role->abilities)->contains($ability));
 	}
 
-	// @todo refactor to use Arr methods
 	/**
 	 * Find out if the Singer a specific role
 	 *
@@ -248,7 +242,7 @@ class Singer extends Model
 	 */
 	public function hasRole(string $check): bool
 	{
-		return in_array($check, Arr::pluck($this->roles->toArray(), 'name'));
+		return $this->roles->pluck( 'name')->contains($check);
 	}
 
 	/**
@@ -258,7 +252,6 @@ class Singer extends Model
 	 */
 	public function isEmployee(): bool
 	{
-		$roles = $this->roles->toArray();
-		return !empty($roles);
+		return $this->roles->isNotEmpty();
 	}
 }
