@@ -22,7 +22,7 @@ class PlacementPolicy
 
 	public function before(User $user, string $ability)
 	{
-		if ($user->hasRole('Admin')) {
+		if ($user->singer->hasRole('Admin')) {
 			return true;
 		}
 	}
@@ -40,7 +40,7 @@ class PlacementPolicy
 		if ($user->singer->is($placement->singer)) {
 			return false;
 		}
-		return $user->hasAbility('singer_placements_view');
+		return $user->singer->hasAbility('singer_placements_view');
 	}
 
 	/**
@@ -52,7 +52,7 @@ class PlacementPolicy
 	 */
 	public function create(User $user)
 	{
-		return $user->hasAbility('singer_placements_create');
+		return $user->singer->hasAbility('singer_placements_create');
 	}
 
 	/**
@@ -68,6 +68,6 @@ class PlacementPolicy
 		if ($user->singer->is($placement->singer)) {
 			return false;
 		}
-		return $user->hasAbility('singer_placements_update');
+		return $user->singer->hasAbility('singer_placements_update');
 	}
 }

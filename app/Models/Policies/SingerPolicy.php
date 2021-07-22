@@ -12,7 +12,7 @@ class SingerPolicy
 
 	public function before(User $user, string $ability)
 	{
-		if ($user->hasRole('Admin')) {
+		if ($user->singer->hasRole('Admin')) {
 			return true;
 		}
 	}
@@ -26,7 +26,7 @@ class SingerPolicy
 	 */
 	public function viewAny(User $user)
 	{
-		return $user->hasAbility('singers_view');
+		return $user->singer->hasAbility('singers_view');
 	}
 
 	/**
@@ -39,7 +39,7 @@ class SingerPolicy
 	 */
 	public function view(User $user, Singer $singer)
 	{
-		return $user->singer->is($singer) || $user->hasAbility('singers_view');
+		return $user->singer->is($singer) || $user->singer->hasAbility('singers_view');
 	}
 
 	/**
@@ -51,7 +51,7 @@ class SingerPolicy
 	 */
 	public function create(User $user)
 	{
-		return $user->hasAbility('singers_create');
+		return $user->singer->hasAbility('singers_create');
 	}
 
 	/**
@@ -64,7 +64,7 @@ class SingerPolicy
 	 */
 	public function update(User $user, Singer $singer)
 	{
-		return $user->singer->is($singer) || $user->hasAbility('singers_update');
+		return $user->singer->is($singer) || $user->singer->hasAbility('singers_update');
 	}
 
 	/**
@@ -77,7 +77,7 @@ class SingerPolicy
 	 */
 	public function delete(User $user, Singer $singer)
 	{
-		return $user->hasAbility('singers_delete');
+		return $user->singer->hasAbility('singers_delete');
 	}
 
 	/**

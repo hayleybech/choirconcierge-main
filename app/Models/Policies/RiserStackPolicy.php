@@ -12,7 +12,7 @@ class RiserStackPolicy
 
 	public function before(User $user, string $ability)
 	{
-		if ($user->hasRole('Admin')) {
+		if ($user->singer->hasRole('Admin')) {
 			return true;
 		}
 	}
@@ -26,7 +26,7 @@ class RiserStackPolicy
 	 */
 	public function viewAny(User $user)
 	{
-		return $user->hasAbility('riser_stacks_view');
+		return $user->singer->hasAbility('riser_stacks_view');
 	}
 
 	/**
@@ -39,7 +39,7 @@ class RiserStackPolicy
 	 */
 	public function view(User $user, RiserStack $riserStack)
 	{
-		return $user->hasAbility('riser_stacks_view');
+		return $user->singer->hasAbility('riser_stacks_view');
 	}
 
 	/**
@@ -51,7 +51,7 @@ class RiserStackPolicy
 	 */
 	public function create(User $user)
 	{
-		return $user->hasAbility('riser_stacks_create');
+		return $user->singer->hasAbility('riser_stacks_create');
 	}
 
 	/**
@@ -64,7 +64,7 @@ class RiserStackPolicy
 	 */
 	public function update(User $user, RiserStack $riserStack)
 	{
-		return $user->hasAbility('riser_stacks_update');
+		return $user->singer->hasAbility('riser_stacks_update');
 	}
 
 	/**
@@ -77,7 +77,7 @@ class RiserStackPolicy
 	 */
 	public function delete(User $user, RiserStack $riserStack)
 	{
-		return $user->hasAbility('riser_stacks_delete');
+		return $user->singer->hasAbility('riser_stacks_delete');
 	}
 
 	/**

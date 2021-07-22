@@ -64,7 +64,7 @@ class UserController extends Controller
 			->get();
 
 		foreach ($users as $user) {
-			$role_string = $user->roles->count() ? ' [' . $user->roles->implode('name', ', ') . ']' : '';
+			$role_string = $user->singer->roles->count() ? ' [' . $user->singer->roles->implode('name', ', ') . ']' : '';
 			$formatted_results[] = [
 				'id' => $user->id,
 				'text' => $user->name . $role_string,
