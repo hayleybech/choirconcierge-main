@@ -105,7 +105,7 @@ class SongController extends Controller
 
 		$request->whenHas(
 			'send_notification',
-			fn() => Notification::send(Singer::active()->get()->user, new SongUploaded($song)),
+			fn() => Notification::send(Singer::active()->get()->pluck('user'), new SongUploaded($song)),
 		);
 
 		return redirect()
@@ -150,7 +150,7 @@ class SongController extends Controller
 
 		$request->whenHas(
 			'send_notification',
-			fn() => Notification::send(Singer::active()->get()->user, new SongUpdated($song)),
+			fn() => Notification::send(Singer::active()->get()->pluck('user'), new SongUpdated($song)),
 		);
 
 		return redirect()
