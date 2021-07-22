@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SongRequest;
+use App\Models\Singer;
 use App\Models\Song;
 use App\Models\SongAttachmentCategory;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
-use App\Models\User;
 use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
 use Illuminate\Contracts\View\View;
@@ -97,15 +97,15 @@ class SongController extends Controller
 	{
 		$this->authorize('create', Song::class);
 
+
 		$song = Song::create(
 			collect($request->validated())
-				->except('send_notification')
 				->toArray(),
 		);
 
 		$request->whenHas(
 			'send_notification',
-			fn() => Notification::send(User::active()->get(), new SongUploaded($song)),
+			fn() => Notification::send(Singer::active()->get()->user, new SongUploaded($song)),
 		);
 
 		return redirect()
@@ -150,7 +150,7 @@ class SongController extends Controller
 
 		$request->whenHas(
 			'send_notification',
-			fn() => Notification::send(User::active()->get(), new SongUpdated($song)),
+			fn() => Notification::send(Singer::active()->get()->user, new SongUpdated($song)),
 		);
 
 		return redirect()

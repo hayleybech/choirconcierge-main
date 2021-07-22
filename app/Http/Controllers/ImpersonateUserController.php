@@ -18,13 +18,13 @@ class ImpersonateUserController extends Controller
     public function start(Request $request, User $user): RedirectResponse
     {
         // abort if guest or not allowed
-        abort_if(auth()->guest() || ! auth()->user()->hasRole('Admin'), 405, 'Not allowed or not logged in. ');
+        abort_if(auth()->guest() || ! auth()->user()->singer?->hasRole('Admin'), 405, 'Not allowed or not logged in. ');
 
         // abort if target is self
         abort_if($user->is( auth()->user() ), 405, 'You can\'t impersonate yourself!');
 
         // abort if the target user is an admin
-        abort_if($user->hasRole('Admin'), 405, 'Sorry, currently it\'s not possible to impersonate other administrators.');
+        abort_if($user->singer?->hasRole('Admin'), 405, 'Sorry, currently it\'s not possible to impersonate other administrators.');
 
         // abort if impersonation is already active
         abort_if(session()->has('impersonation:active'), 405, 'You are already impersonating a user. Switch to your own account then try again.');

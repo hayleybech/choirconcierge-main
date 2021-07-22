@@ -93,7 +93,7 @@
                                         :id="'user_roles_'.$role->id"
                                         name="user_roles[]"
                                         :value="$role->id"
-                                        :checked="checkbox_group_old('user_roles', (string) $role->id, $singer->user->roles->pluck('id')->all())"
+                                        :checked="checkbox_group_old('user_roles', (string) $role->id, $singer->roles->pluck('id')->all())"
                                     />
                                 </div>
                             @endforeach

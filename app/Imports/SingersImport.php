@@ -78,7 +78,7 @@ class SingersImport implements OnEachRow, WithHeadingRow
 		if (in_array('Event Admin', $roles_list, true)) {
 			$roles_to_add[] = Role::where('name', 'Events Team')->first()->id;
 		}
-		$singer->user->roles()->syncWithoutDetaching($roles_to_add);
+		$singer->roles()->syncWithoutDetaching($roles_to_add);
 
 		// Add SingerCategory
 		if (in_array('Inactive Member', $roles_list, true)) {

@@ -12,7 +12,7 @@ class FolderPolicy
 
 	public function before(User $user, string $ability)
 	{
-		if ($user->hasRole('Admin')) {
+		if ($user->singer->hasRole('Admin')) {
 			return true;
 		}
 	}
@@ -26,7 +26,7 @@ class FolderPolicy
 	 */
 	public function viewAny(User $user)
 	{
-		return $user->hasAbility('folders_view');
+		return $user->singer->hasAbility('folders_view');
 	}
 
 	/**
@@ -39,7 +39,7 @@ class FolderPolicy
 	 */
 	public function view(User $user, Folder $folder)
 	{
-		return $user->hasAbility('folders_view');
+		return $user->singer->hasAbility('folders_view');
 	}
 
 	/**
@@ -51,7 +51,7 @@ class FolderPolicy
 	 */
 	public function create(User $user)
 	{
-		return $user->hasAbility('folders_create');
+		return $user->singer->hasAbility('folders_create');
 	}
 
 	/**
@@ -64,7 +64,7 @@ class FolderPolicy
 	 */
 	public function update(User $user, Folder $folder)
 	{
-		return $user->hasAbility('folders_update');
+		return $user->singer->hasAbility('folders_update');
 	}
 
 	/**
@@ -77,7 +77,7 @@ class FolderPolicy
 	 */
 	public function delete(User $user, Folder $folder)
 	{
-		return $user->hasAbility('folders_delete');
+		return $user->singer->hasAbility('folders_delete');
 	}
 
 	/**

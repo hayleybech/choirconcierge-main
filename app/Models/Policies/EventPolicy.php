@@ -12,7 +12,7 @@ class EventPolicy
 
 	public function before(User $user, string $ability)
 	{
-		if ($user->hasRole('Admin')) {
+		if ($user->singer->hasRole('Admin')) {
 			return true;
 		}
 	}
@@ -26,7 +26,7 @@ class EventPolicy
 	 */
 	public function viewAny(User $user)
 	{
-		return $user->hasAbility('events_view');
+		return $user->singer->hasAbility('events_view');
 	}
 
 	/**
@@ -39,7 +39,7 @@ class EventPolicy
 	 */
 	public function view(User $user, Event $event)
 	{
-		return $user->hasAbility('events_view');
+		return $user->singer->hasAbility('events_view');
 	}
 
 	/**
@@ -51,7 +51,7 @@ class EventPolicy
 	 */
 	public function create(User $user)
 	{
-		return $user->hasAbility('events_create');
+		return $user->singer->hasAbility('events_create');
 	}
 
 	/**
@@ -64,7 +64,7 @@ class EventPolicy
 	 */
 	public function update(User $user, Event $event)
 	{
-		return $user->hasAbility('events_update');
+		return $user->singer->hasAbility('events_update');
 	}
 
 	/**
@@ -77,7 +77,7 @@ class EventPolicy
 	 */
 	public function delete(User $user, Event $event)
 	{
-		return $user->hasAbility('events_delete');
+		return $user->singer->hasAbility('events_delete');
 	}
 
 	/**

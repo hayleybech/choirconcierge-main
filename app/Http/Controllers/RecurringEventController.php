@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EventRequest;
 use App\Models\Event;
-use App\Models\User;
+use App\Models\Singer;
 use App\Notifications\EventUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -52,7 +52,7 @@ class RecurringEventController extends Controller
 
 		$request->whenHas(
 			'send_notification',
-			fn() => Notification::send(User::active()->get(), new EventUpdated($event)),
+			fn() => Notification::send(Singer::active()->get()->user, new EventUpdated($event)),
 		);
 
 		return redirect()

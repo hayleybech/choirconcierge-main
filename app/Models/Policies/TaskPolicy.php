@@ -12,7 +12,7 @@ class TaskPolicy
 
 	public function before(User $user, string $ability)
 	{
-		if ($user->hasRole('Admin')) {
+		if ($user->singer->hasRole('Admin')) {
 			return true;
 		}
 	}
@@ -24,7 +24,7 @@ class TaskPolicy
 	 */
 	public function viewAny(User $user): bool
 	{
-		return $user->hasAbility('tasks_view');
+		return $user->singer->hasAbility('tasks_view');
 	}
 
 	/**
@@ -35,7 +35,7 @@ class TaskPolicy
 	 */
 	public function view(User $user, Task $task): bool
 	{
-		return $user->hasAbility('tasks_view');
+		return $user->singer->hasAbility('tasks_view');
 	}
 
 	/**
@@ -45,7 +45,7 @@ class TaskPolicy
 	 */
 	public function create(User $user): bool
 	{
-		return $user->hasAbility('tasks_create');
+		return $user->singer->hasAbility('tasks_create');
 	}
 
 	/**
@@ -56,7 +56,7 @@ class TaskPolicy
 	 */
 	public function update(User $user, Task $task): bool
 	{
-		return $user->hasAbility('tasks_update');
+		return $user->singer->hasAbility('tasks_update');
 	}
 
 	/**
@@ -67,7 +67,7 @@ class TaskPolicy
 	 */
 	public function delete(User $user, Task $task): bool
 	{
-		return $user->hasAbility('tasks_delete');
+		return $user->singer->hasAbility('tasks_delete');
 	}
 
 	/**

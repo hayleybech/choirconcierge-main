@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
@@ -48,6 +49,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<RiserStack> $riser_stacks
  * @property Collection<Rsvp> $rsvps
  * @property Collection<Attendance> $attendances
+ * @property Collection<Role> $roles
  *
  * Attributes
  * @property Carbon memberversary
@@ -85,6 +87,33 @@ class Singer extends Model
 	protected $appends = ['user_avatar_thumb_url'];
 
 	public $notify_channels = ['mail'];
+
+	public static function create(array $attributes = [])
+	{
+		/** @var Singer $singer */
+		$singer = static::query()->create($attributes);
+
+		// Sync roles
+		$singer_roles = $attributes['user_roles'] ?? [];
+		$singer_roles[] = Role::firstWhere('name', 'Singer')->id;
+		$singer->roles()->sync($singer_roles);
+		$singer->save();
+
+		return $singer;
+	}
+
+	public function update(array $attributes = [], array $options = [])
+	{
+		parent::update($attributes, $options);
+
+		// Sync roles
+		if (isset($attributes['user_roles'])) {
+			$this->roles()->sync($attributes['user_roles'] ?? []);
+		}
+		$this->save();
+
+		return true;
+	}
 
 	public function initOnboarding(): void
 	{
@@ -144,11 +173,10 @@ class Singer extends Model
 		return $this->hasMany(Attendance::class);
 	}
 
-	/*
-    public function roles(): HasManyThrough
-    {
-        return $this->hasManyThrough(Role::class, User::class);
-    }*/
+	public function roles(): BelongsToMany
+	{
+		return $this->belongsToMany(Role::class, 'singers_roles');
+	}
 
 	public function getAge(): int
 	{
@@ -192,5 +220,38 @@ class Singer extends Model
 			->whereYear('joined_at', '<', now())
 			->whereMonth('joined_at', '>=', now())
 			->whereMonth('joined_at', '<=', now()->addMonth());
+	}
+
+	public function scopeActive(Builder $query): Builder
+	{
+		return $query->whereHas('category', static function (Builder $query) {
+			$query->where('name', '=', 'Members');
+		});
+	}
+
+	public function hasAbility(string $ability): bool
+	{
+		return $this->roles->contains(fn(Role $role) => collect($role->abilities)->contains($ability));
+	}
+
+	/**
+	 * Find out if the Singer a specific role
+	 *
+	 * @param string $check
+	 * @return bool
+	 */
+	public function hasRole(string $check): bool
+	{
+		return $this->roles->pluck( 'name')->contains($check);
+	}
+
+	/**
+	 * Find out if the Singer is an employee (if they have any roles)
+	 *
+	 * @return boolean
+	 */
+	public function isEmployee(): bool
+	{
+		return $this->roles->isNotEmpty();
 	}
 }
