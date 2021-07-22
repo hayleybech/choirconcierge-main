@@ -18,13 +18,6 @@ class MoveRolesToSingers extends Migration
 	    	$table->id();
 	    	$table->unsignedInteger('singer_id');
 	    	$table->unsignedInteger('role_id');
-
-	    	$table->foreign('singer_id')->references('id')->on('singers')
-		        ->cascadeOnUpdate()
-		        ->cascadeOnDelete();
-		    $table->foreign('role_id')->references('id')->on('roles')
-			    ->cascadeOnUpdate()
-			    ->cascadeOnDelete();
 	    });
 
 	    // Insert singer role data
