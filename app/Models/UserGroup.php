@@ -149,8 +149,10 @@ class UserGroup extends Model
 			->pluck('id')
 			->toArray();
 		$part_users = User::query()
-			->whereHas('singer', function ($singer_query) use ($voice_part_ids) {
-				$singer_query->whereIn('voice_part_id', $voice_part_ids);
+			->whereHas('singers', function ($singer_query) use ($voice_part_ids) {
+				$singer_query
+					->where('tenant_id', $this->tenant_id)
+					->whereIn('voice_part_id', $voice_part_ids);
 			})
 			->get();
 		$users = $users->merge($part_users);
@@ -160,8 +162,10 @@ class UserGroup extends Model
 			->get()
 			->pluck('id');
 		$category_users = User::query()
-			->whereHas('singer', function ($singer_query) use ($cat_ids) {
-				$singer_query->whereIn('singer_category_id', $cat_ids);
+			->whereHas('singers', function ($singer_query) use ($cat_ids) {
+				$singer_query
+					->where('tenant_id', $this->tenant_id)
+					->whereIn('singer_category_id', $cat_ids);
 			})
 			->get();
 		$users = $users->merge($category_users);
@@ -218,8 +222,10 @@ class UserGroup extends Model
 			->pluck('id')
 			->toArray();
 		$part_users = User::query()
-			->whereHas('singer', function ($singer_query) use ($voice_part_ids) {
-				$singer_query->whereIn('voice_part_id', $voice_part_ids);
+			->whereHas('singers', function ($singer_query) use ($voice_part_ids) {
+				$singer_query
+					->where('tenant_id', $this->tenant_id)
+					->whereIn('voice_part_id', $voice_part_ids);
 			})
 			->get();
 		$users = $users->merge($part_users);
@@ -229,8 +235,10 @@ class UserGroup extends Model
 			->get()
 			->pluck('id');
 		$category_users = User::query()
-			->whereHas('singer', function ($singer_query) use ($cat_ids) {
-				$singer_query->whereIn('singer_category_id', $cat_ids);
+			->whereHas('singers', function ($singer_query) use ($cat_ids) {
+				$singer_query
+					->where('tenant_id', $this->tenant_id)
+					->whereIn('singer_category_id', $cat_ids);
 			})
 			->get();
 		$users = $users->merge($category_users);
