@@ -43,7 +43,7 @@ class IncomingMessageTest extends TestCase
 		$group_expected->recipient_users()->attach([$user1->id]);
 
 		$message = (new IncomingMessage())
-			->to('music-team@tenant1.choirconcierge.test')
+			->to('music-team@tenant1.'.central_domain())
 			->from('permitted@example.com')
 			->subject('Just a test');
 
@@ -55,7 +55,7 @@ class IncomingMessageTest extends TestCase
 		Mail::assertSent(IncomingMessage::class, 1);
 		Mail::assertSent(IncomingMessage::class, static function ($mail) {
 			$mail->build();
-			return $mail->hasFrom('music-team@tenant1.choirconcierge.test') &&
+			return $mail->hasFrom('music-team@tenant1.'.central_domain()) &&
 				$mail->hasReplyTo('permitted@example.com') &&
 				$mail->hasTo('permitted@example.com');
 		});
@@ -93,7 +93,7 @@ class IncomingMessageTest extends TestCase
 		$group_expected->recipient_users()->attach($users->pluck('id'));
 
 		$message = (new IncomingMessage())
-			->to('music-team@tenant1.choirconcierge.test')
+			->to('music-team@tenant1.'.central_domain())
 			->from('permitted@example.com')
 			->subject('Just a test');
 
@@ -145,7 +145,7 @@ class IncomingMessageTest extends TestCase
 		$group_expected_2->recipient_users()->attach([$sender_user->id, $recipient_user_2->id]);
 
 		$message = (new IncomingMessage())
-			->to(['music-team@test-tenant.choirconcierge.test', 'membership-team@test-tenant.choirconcierge.test'])
+			->to(['music-team@test-tenant.'.central_domain(), 'membership-team@test-tenant.'.central_domain()])
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -157,13 +157,13 @@ class IncomingMessageTest extends TestCase
 		Mail::assertSent(IncomingMessage::class, 4);
 		Mail::assertSent(IncomingMessage::class, static function ($mail) {
 			$mail->build();
-			return $mail->hasFrom('music-team@test-tenant.choirconcierge.test') &&
+			return $mail->hasFrom('music-team@test-tenant.'.central_domain()) &&
 				$mail->hasReplyTo('sender@example.com') &&
 				$mail->hasTo(['sender@example.com', 'recipient-1@example.com']);
 		});
 		Mail::assertSent(IncomingMessage::class, static function ($mail) {
 			$mail->build();
-			return $mail->hasFrom('membership-team@test-tenant.choirconcierge.test') &&
+			return $mail->hasFrom('membership-team@test-tenant.'.central_domain()) &&
 				$mail->hasReplyTo('sender@example.com') &&
 				$mail->hasTo(['sender@example.com', 'recipient-2@example.com']);
 		});
@@ -212,7 +212,7 @@ class IncomingMessageTest extends TestCase
 		});
 
 		$message = (new IncomingMessage())
-			->to(['music-team@test-tenant-1.choirconcierge.test', 'membership-team@test-tenant-2.choirconcierge.test'])
+			->to(['music-team@test-tenant-1.'.central_domain(), 'membership-team@test-tenant-2.'.central_domain()])
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -224,13 +224,13 @@ class IncomingMessageTest extends TestCase
 		Mail::assertSent(IncomingMessage::class, 4);
 		Mail::assertSent(IncomingMessage::class, static function ($mail) {
 			$mail->build();
-			return $mail->hasFrom('music-team@test-tenant-1.choirconcierge.test') &&
+			return $mail->hasFrom('music-team@test-tenant-1.'.central_domain()) &&
 				$mail->hasReplyTo('sender@example.com') &&
 				$mail->hasTo(['sender@example.com', 'recipient-1@example.com']);
 		});
 		Mail::assertSent(IncomingMessage::class, static function ($mail) {
 			$mail->build();
-			return $mail->hasFrom('membership-team@test-tenant-2.choirconcierge.test') &&
+			return $mail->hasFrom('membership-team@test-tenant-2.'.central_domain()) &&
 				$mail->hasReplyTo('sender@example.com') &&
 				$mail->hasTo(['sender@example.com', 'recipient-2@example.com']);
 		});
@@ -251,7 +251,7 @@ class IncomingMessageTest extends TestCase
 		);
 
 		$message = (new IncomingMessage())
-			->to('test-group@test-tenant.choirconcierge.test')
+			->to('test-group@test-tenant.'.central_domain())
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -282,7 +282,7 @@ class IncomingMessageTest extends TestCase
 		});
 
 		$message = (new IncomingMessage())
-			->to(['test-group-1@test-tenant.choirconcierge.test', 'test-group-2@test-tenant.choirconcierge.test'])
+			->to(['test-group-1@test-tenant.'.central_domain(), 'test-group-2@test-tenant.'.central_domain()])
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -318,9 +318,9 @@ class IncomingMessageTest extends TestCase
 		});
 
 		$message = (new IncomingMessage())
-			->to('test-group-1@test-tenant.choirconcierge.test')
-			->cc('test-group-2@test-tenant.choirconcierge.test')
-			->bcc('test-group-3@test-tenant.choirconcierge.test')
+			->to('test-group-1@test-tenant.'.central_domain())
+			->cc('test-group-2@test-tenant.'.central_domain())
+			->bcc('test-group-3@test-tenant.'.central_domain())
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -356,9 +356,9 @@ class IncomingMessageTest extends TestCase
 		});
 
 		$message = (new IncomingMessage())
-			->to(['dummy@example.com', 'test-group-1@test-tenant.choirconcierge.test'])
-			->cc(['dummy@example.com', 'test-group-2@test-tenant.choirconcierge.test'])
-			->bcc(['dummy@example.com', 'test-group-3@test-tenant.choirconcierge.test'])
+			->to(['dummy@example.com', 'test-group-1@test-tenant.'.central_domain()])
+			->cc(['dummy@example.com', 'test-group-2@test-tenant.'.central_domain()])
+			->bcc(['dummy@example.com', 'test-group-3@test-tenant.'.central_domain()])
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -392,7 +392,7 @@ class IncomingMessageTest extends TestCase
 		});
 
 		$message = (new IncomingMessage())
-			->to(['test-group-1@test-tenant-1.choirconcierge.test', 'test-group-2@test-tenant-2.choirconcierge.test'])
+			->to(['test-group-1@test-tenant-1.'.central_domain(), 'test-group-2@test-tenant-2.'.central_domain()])
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -424,7 +424,7 @@ class IncomingMessageTest extends TestCase
 		$tenant->domains()->create(['domain' => 'test-tenant']);
 
 		$message = (new IncomingMessage())
-			->to(['test-group-1@test-tenant@choirconcierge.test', 'test-group-2@dummy-tenant.choirconcierge.test'])
+			->to(['test-group-1@test-tenant.'.central_domain(), 'test-group-2@dummy-tenant.'.central_domain()])
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -451,8 +451,8 @@ class IncomingMessageTest extends TestCase
 
 		$message = (new IncomingMessage())
 			->to('dummy@example.com')
-			->cc('test-group@test-tenant.choirconcierge.test')
-			->from('test-group@test-tenant.choirconcierge.test')
+			->cc('test-group@test-tenant.'.central_domain())
+			->from('test-group@test-tenant.'.central_domain())
 			->subject('Just a test');
 
 		// Act
