@@ -25,12 +25,12 @@ class DummyUserSeeder extends Seeder
 				$faker = Faker::create();
 
 				// Create matching singer
-				$user->singer()->create([
+				$singer = $user->singers()->create([
 					'onboarding_enabled' => $faker->boolean(30),
 				]);
 
 				// Attach random singer category
-				DummyUserSeeder::attachRandomSingerCategory($user->singer, $singer_categories);
+				DummyUserSeeder::attachRandomSingerCategory($singer, $singer_categories);
 
 				// Generate placement for singer
 				// @todo Seed voice placement

@@ -316,21 +316,21 @@ class CriticalUserSeeder extends Seeder
 		]);
 
 		// Create matching singer for admin
-		$user->singer()->create([
+		$singer = $user->singers()->create([
 			'onboarding_enabled' => 0,
 		]);
 		$roles = Role::all()
 			->pluck('id')
 			->toArray();
-		$user->singer->roles()->attach($roles);
+		$singer->roles()->attach($roles);
 
 		// Attach admin to member category
 		$cat_member = $singer_categories->firstWhere('name', '=', 'Members');
-		$user->singer->category()->associate($cat_member);
+		$singer->category()->associate($cat_member);
 
 		// Attach admin to a voice part
 		$part = VoicePart::firstWhere('title', '=', 'Tenor');
-		$user->singer->voice_part_id = $part->id;
-		$user->singer->save();
+		$singer->voice_part_id = $part->id;
+		$singer->save();
 	}
 }
