@@ -4,10 +4,8 @@ namespace App\Models;
 
 use App\Mail\Welcome;
 use App\Models\Traits\TenantTimezoneDates;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -60,6 +58,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Relationships
  * @property Collection<Role> $roles
  * @property Collection<GroupMember> $memberships
+ * @property Collection<Singer> $singers
  * @property Singer $singer
  *
  * @package App\Models
@@ -148,9 +147,17 @@ class User extends Authenticatable implements HasMedia
 		return $this->morphMany(GroupMember::class, 'memberable');
 	}
 
-	public function singer(): HasOne
+	public function singers(): HasMany
 	{
-		return $this->hasOne(Singer::class);
+		return $this->hasMany(Singer::class);
+	}
+
+	public function getSingerAttribute(): ?Singer
+	{
+		if(! tenancy()->initialized) {
+			return null;
+		}
+		return $this->singers()->firstWhere('tenant_id', '=', tenancy()->tenant->id);
 	}
 
     public function getBirthdayAttribute(): Carbon

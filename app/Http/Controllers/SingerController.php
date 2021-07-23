@@ -83,7 +83,7 @@ class SingerController extends Controller
             'voice_part_id',
             'password_confirmation',
         ]));
-        $singer = $user->singer()->create(Arr::only($request->validated(), [
+        $singer = $user->singers()->create(Arr::only($request->validated(), [
             'onboarding_enabled',
             'reason_for_joining',
             'referrer',

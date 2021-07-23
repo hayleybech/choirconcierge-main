@@ -95,7 +95,7 @@ class Singer extends Model
 
 		// Sync roles
 		$singer_roles = $attributes['user_roles'] ?? [];
-		$singer_roles[] = Role::firstWhere('name', 'Singer')->id;
+		$singer_roles[] = Role::firstWhere('name', 'User')->id;
 		$singer->roles()->sync($singer_roles);
 		$singer->save();
 
