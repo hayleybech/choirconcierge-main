@@ -99,7 +99,7 @@ Route::middleware([
         // AJAX Search
         Route::get('/find', [UserController::class, 'findUsers'])->name('findUsers');
         Route::get('/roles/find', [UserController::class, 'findRoles'])->name('findRoles');
-        Route::get('/voice-parts/find', [UserController::class, 'findVoiceParts']);
+        Route::get('/voice-parts/find', [UserController::class, 'findVoiceParts'])->name('findVoiceParts');
         Route::get('/singer-categories/find', [UserController::class, 'findSingerCategories'])->name('findSingerCategories');
 
         // Attach/Detach role from a user

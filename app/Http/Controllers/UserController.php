@@ -106,7 +106,7 @@ class UserController extends Controller
 		$term = trim($request->q);
 
 		if (empty($term)) {
-			return \Response::json([]);
+			return Response::json([]);
 		}
 
 		$formatted_results = [];
@@ -121,7 +121,7 @@ class UserController extends Controller
 			];
 		}
 
-		return \Response::json($formatted_results);
+		return Response::json($formatted_results);
 	}
 
 	public function findSingerCategories(Request $request): JsonResponse
