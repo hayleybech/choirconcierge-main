@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
@@ -54,7 +55,7 @@ class UserController extends Controller
 		$term = trim($request->q);
 
 		if (empty($term)) {
-			return \Response::json([]);
+			return Response::json([]);
 		}
 
 		$formatted_results = [];
@@ -74,7 +75,7 @@ class UserController extends Controller
 			];
 		}
 
-		return \Response::json($formatted_results);
+		return Response::json($formatted_results);
 	}
 
 	public function findRoles(Request $request): JsonResponse
@@ -82,7 +83,7 @@ class UserController extends Controller
 		$term = trim($request->q);
 
 		if (empty($term)) {
-			return \Response::json([]);
+			return Response::json([]);
 		}
 
 		$formatted_results = [];
@@ -97,7 +98,7 @@ class UserController extends Controller
 			];
 		}
 
-		return \Response::json($formatted_results);
+		return Response::json($formatted_results);
 	}
 
 	public function findVoiceParts(Request $request): JsonResponse
@@ -128,7 +129,7 @@ class UserController extends Controller
 		$term = trim($request->q);
 
 		if (empty($term)) {
-			return \Response::json([]);
+			return Response::json([]);
 		}
 
 		$formatted_results = [];
@@ -143,6 +144,6 @@ class UserController extends Controller
 			];
 		}
 
-		return \Response::json($formatted_results);
+		return Response::json($formatted_results);
 	}
 }
