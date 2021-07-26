@@ -59,15 +59,18 @@ class UserController extends Controller
 
 		$formatted_results = [];
 		$users = User::whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%$term%'")
-			->with('roles:id,name')
 			->limit(5)
 			->get();
 
 		foreach ($users as $user) {
-			$role_string = $user->singer->roles->count() ? ' [' . $user->singer->roles->implode('name', ', ') . ']' : '';
+			$role_string = '';
+			if($user->singer){
+				$role_string = $user->singer->roles->count() ? ' [' . $user->singer->roles->implode('name', ', ') . ']' : '';
+			}
+
 			$formatted_results[] = [
 				'id' => $user->id,
-				'text' => $user->name . $role_string,
+				'text' => $user->name . ' ('.$user->email.')'. $role_string,
 			];
 		}
 

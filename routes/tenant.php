@@ -97,7 +97,7 @@ Route::middleware([
         Route::get('/', [UserController::class, 'index'])->name('users.index');
 
         // AJAX Search
-        Route::get('/find', [UserController::class, 'findUsers']);
+        Route::get('/find', [UserController::class, 'findUsers'])->name('findUsers');
         Route::get('/roles/find', [UserController::class, 'findRoles']);
         Route::get('/voice-parts/find', [UserController::class, 'findVoiceParts']);
         Route::get('/singer-categories/find', [UserController::class, 'findSingerCategories']);
