@@ -842,9 +842,9 @@
   "version" "0.5.2"
 
 "@googlemaps/js-api-loader@^1.11.3":
-  "integrity" "sha512-MUX04/b5dBIqi2jl2/89FS48gWPm5cgUwO4dDffIoylKv/e7HP9gJvpKqk1/JMIYPX2y/qO2TqFteRAWmNU1BA=="
-  "resolved" "https://registry.npmjs.org/@googlemaps/js-api-loader/-/js-api-loader-1.11.3.tgz"
-  "version" "1.11.3"
+  "integrity" "sha512-Nmk7pKn/819zIC0QTE5eA+kNmYpODQXyoCdk17nWiqx42gcb6NQEwssAuH/Aa+HeF0+ICYf5khIxDyY5njWJdg=="
+  "resolved" "https://registry.npmjs.org/@googlemaps/js-api-loader/-/js-api-loader-1.12.1.tgz"
+  "version" "1.12.1"
   dependencies:
     "fast-deep-equal" "^3.1.3"
 
