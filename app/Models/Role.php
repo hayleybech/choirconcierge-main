@@ -113,6 +113,11 @@ class Role extends Model
 		return $this->belongsToMany(User::class, 'users_roles');
 	}
 
+	public function singers(): BelongsToMany
+    {
+        return $this->belongsToMany(Singer::class, 'singers_roles');
+    }
+
 	/**
 	 * Get tasks matching a certain role
 	 */
@@ -128,10 +133,4 @@ class Role extends Model
 	{
 		return $this->morphMany(GroupMember::class, 'memberable');
 	}
-
-	/*
-    public function singers(): HasManyThrough
-    {
-        return $this->hasManyThrough(Singer::class, User::class);
-    }*/
 }
