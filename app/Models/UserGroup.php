@@ -207,14 +207,14 @@ class UserGroup extends Model
 	 */
 	public function get_all_senders(): Collection
 	{
-		// @todo use queries instead
+        // Get directly-assigned users
+        $users = $this->sender_users()->get();
 
-		// Get directly-assigned users
-		$users = $this->sender_users()->get();
-		foreach ($this->sender_roles as $role) {
-			$role_users = $role->users()->get();
-			$users = $users->merge($role_users);
-		}
+        // Get users from roles
+        // @todo use queries instead
+        $users = $users->merge($this->sender_roles
+            ->flatMap(fn($role) => $role->singers()->get()
+                ->map(fn($singer) => $singer->user)));
 
 		// Get users from voice parts
 		$voice_part_ids = $this->sender_voice_parts()
