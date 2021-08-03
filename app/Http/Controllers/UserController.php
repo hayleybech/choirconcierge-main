@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
@@ -54,24 +55,27 @@ class UserController extends Controller
 		$term = trim($request->q);
 
 		if (empty($term)) {
-			return \Response::json([]);
+			return Response::json([]);
 		}
 
 		$formatted_results = [];
 		$users = User::whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%$term%'")
-			->with('roles:id,name')
 			->limit(5)
 			->get();
 
 		foreach ($users as $user) {
-			$role_string = $user->singer->roles->count() ? ' [' . $user->singer->roles->implode('name', ', ') . ']' : '';
+			$role_string = '';
+			if($user->singer){
+				$role_string = $user->singer->roles->count() ? ' [' . $user->singer->roles->implode('name', ', ') . ']' : '';
+			}
+
 			$formatted_results[] = [
 				'id' => $user->id,
-				'text' => $user->name . $role_string,
+				'text' => $user->name . ' ('.$user->email.')'. $role_string,
 			];
 		}
 
-		return \Response::json($formatted_results);
+		return Response::json($formatted_results);
 	}
 
 	public function findRoles(Request $request): JsonResponse
@@ -79,7 +83,7 @@ class UserController extends Controller
 		$term = trim($request->q);
 
 		if (empty($term)) {
-			return \Response::json([]);
+			return Response::json([]);
 		}
 
 		$formatted_results = [];
@@ -94,7 +98,7 @@ class UserController extends Controller
 			];
 		}
 
-		return \Response::json($formatted_results);
+		return Response::json($formatted_results);
 	}
 
 	public function findVoiceParts(Request $request): JsonResponse
@@ -102,7 +106,7 @@ class UserController extends Controller
 		$term = trim($request->q);
 
 		if (empty($term)) {
-			return \Response::json([]);
+			return Response::json([]);
 		}
 
 		$formatted_results = [];
@@ -117,7 +121,7 @@ class UserController extends Controller
 			];
 		}
 
-		return \Response::json($formatted_results);
+		return Response::json($formatted_results);
 	}
 
 	public function findSingerCategories(Request $request): JsonResponse
@@ -125,7 +129,7 @@ class UserController extends Controller
 		$term = trim($request->q);
 
 		if (empty($term)) {
-			return \Response::json([]);
+			return Response::json([]);
 		}
 
 		$formatted_results = [];
@@ -140,6 +144,6 @@ class UserController extends Controller
 			];
 		}
 
-		return \Response::json($formatted_results);
+		return Response::json($formatted_results);
 	}
 }

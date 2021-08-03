@@ -29,3 +29,5 @@ queue.pid
 .phpunit.result.cache
 
 public/js/test.js
+
+.env.testing

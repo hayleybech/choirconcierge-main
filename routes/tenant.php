@@ -7,9 +7,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceReportController;
 use App\Http\Controllers\CompleteSingerTaskController;
 use App\Http\Controllers\DashController;
-use App\Http\Controllers\DeleteRecurringEventController;
 use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\EditRecurringEventController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
@@ -22,7 +20,6 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RsvpController;
 use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SingerPlacementController;
-use App\Http\Controllers\SingerProfileController;
 use App\Http\Controllers\SongAttachmentController;
 use App\Http\Controllers\SongController;
 use App\Http\Controllers\TaskController;
@@ -31,6 +28,7 @@ use App\Http\Controllers\UpdateSingerCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\VoicePartController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -97,10 +95,10 @@ Route::middleware([
         Route::get('/', [UserController::class, 'index'])->name('users.index');
 
         // AJAX Search
-        Route::get('/find', [UserController::class, 'findUsers']);
-        Route::get('/roles/find', [UserController::class, 'findRoles']);
-        Route::get('/voice-parts/find', [UserController::class, 'findVoiceParts']);
-        Route::get('/singer-categories/find', [UserController::class, 'findSingerCategories']);
+        Route::get('/find', [UserController::class, 'findUsers'])->name('findUsers');
+        Route::get('/roles/find', [UserController::class, 'findRoles'])->name('findRoles');
+        Route::get('/voice-parts/find', [UserController::class, 'findVoiceParts'])->name('findVoiceParts');
+        Route::get('/singer-categories/find', [UserController::class, 'findSingerCategories'])->name('findSingerCategories');
 
         // Attach/Detach role from a user
         Route::get('{user}/roles/{role}/detach', [UserController::class, 'detachRole'])->name('users.detachrole');
