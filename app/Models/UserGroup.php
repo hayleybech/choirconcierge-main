@@ -138,8 +138,11 @@ class UserGroup extends Model
 
 		// Get directly-assigned users
 		$users = $this->recipient_users()->get();
+
+		// Get users from roles
 		foreach ($this->recipient_roles as $role) {
-			$role_users = $role->users()->get();
+			$role_users = $role->singers()->get()
+                ->map(fn($singer) => $singer->user);
 			$users = $users->merge($role_users);
 		}
 
