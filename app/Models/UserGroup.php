@@ -134,17 +134,14 @@ class UserGroup extends Model
 	 */
 	public function get_all_recipients(): Collection
 	{
-		/* @todo use queries instead */
-
 		// Get directly-assigned users
 		$users = $this->recipient_users()->get();
 
 		// Get users from roles
-		foreach ($this->recipient_roles as $role) {
-			$role_users = $role->singers()->get()
-                ->map(fn($singer) => $singer->user);
-			$users = $users->merge($role_users);
-		}
+        // @todo use queries instead
+        $users = $users->merge($this->recipient_roles
+            ->flatMap(fn($role) => $role->singers()->get()
+                ->map(fn($singer) => $singer->user)));
 
 		// Get users from voice parts
 		$voice_part_ids = $this->recipient_voice_parts()
