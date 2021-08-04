@@ -15,13 +15,15 @@ class AttendanceController extends Controller
 	{
 		$this->authorize('viewAny', Attendance::class);
 
-		$singers = Singer::all();
-		foreach ($singers as $singer) {
-			$singer->attendance = $event
-				->attendances()
-				->where('singer_id', '=', $singer->id)
-				->first();
-		}
+		$singers = Singer::with([
+                'user',
+                'voice_part',
+                'attendances' => function ($query) use ($event) {
+                    $query->where('event_id', '=', $event->id);
+                },
+            ])
+            ->get()
+            ->each(fn($singer) => $singer->attendance = $singer->attendances->first());
 
 		return view('events.attendances.index', [
 			'event' => $event,

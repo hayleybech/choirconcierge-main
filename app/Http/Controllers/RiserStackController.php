@@ -27,7 +27,8 @@ class RiserStackController extends Controller
 	{
 		$this->authorize('create', RiserStack::class);
 
-		$voice_parts = VoicePart::with(['singers'])->get();
+		$voice_parts = VoicePart::with(['singers.user'])->get();
+		$voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
 		return view('stacks.create', compact('voice_parts'));
 	}
@@ -50,9 +51,11 @@ class RiserStackController extends Controller
 	{
 		$this->authorize('view', $stack);
 
-		$stack->load('singers');
+		$stack->load('singers.user');
+        $stack->singers->each->append('user_avatar_thumb_url');
 
-		$voice_parts = VoicePart::all();
+		$voice_parts = VoicePart::with(['singers.user'])->get();
+        $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
 		return view('stacks.show', compact('stack', 'voice_parts'));
 	}
@@ -62,7 +65,8 @@ class RiserStackController extends Controller
 		$this->authorize('update', $stack);
 
 		// Get singers that are already on the riser stack.
-		$stack->load('singers');
+        $stack->load('singers.user');
+        $stack->singers->each->append('user_avatar_thumb_url');
 
 		// Get singers (by voice part) who are not already on the riser stack.
 		$voice_parts = VoicePart::with([
@@ -71,7 +75,9 @@ class RiserStackController extends Controller
 					$query->where('riser_stack_id', '=', $stack->id);
 				});
 			},
+            'singers.user',
 		])->get();
+        $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
 		return view('stacks.edit', compact('stack', 'voice_parts'));
 	}

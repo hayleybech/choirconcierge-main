@@ -19,11 +19,12 @@ class AttendanceReportController extends Controller
 			->filter()
 			->get();
 
-		$voice_parts = VoicePart::with(['singers', 'singers.attendances'])->get();
+		$voice_parts = VoicePart::with(['singers.user', 'singers.attendances'])->get();
 		$no_part = new VoicePart();
 		$no_part->title = 'No Part';
-		$no_part->singers = Singer::whereDoesntHave('voice_part')->get();
+		$no_part->singers = Singer::whereDoesntHave('voice_part')->with(['user', 'attendances'])->get();
 		$voice_parts[] = $no_part;
+        $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
 		$avg_singers_per_event = round(
 			$all_events->reduce(static function ($carry, $event) {

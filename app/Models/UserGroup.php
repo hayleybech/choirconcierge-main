@@ -140,7 +140,7 @@ class UserGroup extends Model
 		// Get users from roles
         // @todo use queries instead
         $users = $users->merge($this->recipient_roles
-            ->flatMap(fn($role) => $role->singers()->get()
+            ->flatMap(fn($role) => $role->singers()->with('user')->get()
                 ->map(fn($singer) => $singer->user)));
 
 		// Get users from voice parts
@@ -213,7 +213,7 @@ class UserGroup extends Model
         // Get users from roles
         // @todo use queries instead
         $users = $users->merge($this->sender_roles
-            ->flatMap(fn($role) => $role->singers()->get()
+            ->flatMap(fn($role) => $role->singers()->with('user')->get()
                 ->map(fn($singer) => $singer->user)));
 
 		// Get users from voice parts
