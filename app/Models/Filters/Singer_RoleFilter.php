@@ -29,11 +29,9 @@ class Singer_RoleFilter extends Filter
 	{
 		// Role
 		if ($this->current_option !== '0') {
-			return $query->whereHas('user', function (Builder $subquery1) {
-				$subquery1->whereHas('roles', function (Builder $subquery2) {
-					$subquery2->where('id', '=', $this->current_option);
-				});
-			});
+            $query->whereHas('roles', function (Builder $subquery) {
+                $subquery->where('roles.id', '=', $this->current_option);
+            });
 		}
 
 		// Any
