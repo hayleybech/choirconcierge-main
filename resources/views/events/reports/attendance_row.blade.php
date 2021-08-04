@@ -3,18 +3,18 @@
         <div class="d-flex align-items-center">
             @can('view', $singer)
                 <a href="{{route('singers.show', ['singer' => $singer])}}">
-                    <img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->name }}" class="user-avatar" width="30" height="30">
+                    <img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->user->name }}" class="user-avatar" width="30" height="30">
                 </a>
             @else
-                <img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->name }}" class="user-avatar" width="30" height="30">
+                <img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->user->name }}" class="user-avatar" width="30" height="30">
             @endcan
             <div class="item-title-wrapper">
                 @can('view', $singer)
                     <a href="{{ route('singers.show', ['singer' => $singer]) }}">
-                        {{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
+                        {{ ( isset($singer->user->name) ) ? $singer->user->name : 'Name Unknown' }}
                     </a>
             @else
-                {{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
+                {{ ( isset($singer->user->name) ) ? $singer->user->name : 'Name Unknown' }}
             @endcan
             </div>
         </div>

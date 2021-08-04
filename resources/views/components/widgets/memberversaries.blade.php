@@ -13,7 +13,7 @@
                 <strong>This week!</strong>
             @endif
 
-            {{ $singer->joined_at->longAbsoluteDiffForHumans() }} - {{ $singer->name }}
+            {{ $singer->joined_at->longAbsoluteDiffForHumans() }} - {{ $singer->user->name }}
         </div>
         @empty
         <div class="list-group-item">No memberversaries this month.</div>
