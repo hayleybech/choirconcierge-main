@@ -3,10 +3,10 @@
 namespace App\Providers;
 
 use App\Http\View\Composers\SingerCategoryComposer;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Contracts\Auth\Guard;
 use Stancl\Tenancy\Controllers\TenantAssetsController;
@@ -20,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot(Guard $auth)
 	{
+        Model::preventLazyLoading($this->app->environment(['local', 'testing']));
+
 		Schema::defaultStringLength(191);
 
 		// Get Notifications for current user, show on all pages
