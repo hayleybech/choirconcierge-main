@@ -16,14 +16,6 @@
             @else
                 {{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
             @endcan
-            <!--
-            <div>
-                <span class="badge badge-pill badge-secondary" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>
-                    <span class="d-md-none">{{ substr( $singer->voice_part->title ?? 'None', 0, 5 ) }}</span>
-                    <span class="d-none d-md-inline">{{ ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? $singer->voice_part->title : 'No part' }}</span>
-		        </span>
-            </div>
-            -->
             </div>
         </div>
     </td>
