@@ -105,14 +105,6 @@ class Role extends Model
 		'notifications_delete',
 	];
 
-	/**
-	 * Get users with a certain role
-	 */
-	public function users(): BelongsToMany
-	{
-		return $this->belongsToMany(User::class, 'users_roles');
-	}
-
 	public function singers(): BelongsToMany
     {
         return $this->belongsToMany(Singer::class, 'singers_roles');

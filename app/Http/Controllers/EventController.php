@@ -76,7 +76,7 @@ class EventController extends Controller
 
 		$request->whenHas(
 			'send_notification',
-			fn() => Notification::send(Singer::active()->get()->pluck('user'), new EventCreated($event)),
+			fn() => Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventCreated($event)),
 		);
 
 		return redirect()
@@ -130,7 +130,7 @@ class EventController extends Controller
 
 		$request->whenHas(
 			'send_notification',
-			fn() => Notification::send(Singer::active()->get()->pluck('user'), new EventUpdated($event)),
+			fn() => Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventUpdated($event)),
 		);
 
 		return redirect()

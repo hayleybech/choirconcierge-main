@@ -418,16 +418,12 @@ class Event extends Model
 	}
 	public function voice_parts_rsvp_response_count(string $response)
 	{
-		$parts = VoicePart::all();
-		foreach ($parts as $part) {
-			$part->response_count = $part
-				->singers()
-				->whereHas('rsvps', function (Builder $query) use ($response) {
-					$query->where('event_id', '=', $this->id)->where('response', '=', $response);
-				})
-				->count();
-		}
-		return $parts;
+		return VoicePart::withCount(['singers' => function ($query) use ($response) {
+		    $query->whereHas('rsvps', function (Builder $query) use ($response) {
+                $query->where('event_id', '=', $this->id)
+                    ->where('response', '=', $response);
+            });
+        }]);
 	}
 
 	public function singers_rsvp_missing(): Builder
@@ -451,16 +447,12 @@ class Event extends Model
 	}
 	public function voice_parts_attendance_count(string $response)
 	{
-		$parts = VoicePart::all();
-		foreach ($parts as $part) {
-			$part->response_count = $part
-				->singers()
-				->whereHas('attendances', function (Builder $query) use ($response) {
-					$query->where('event_id', '=', $this->id)->where('response', '=', $response);
-				})
-				->count();
-		}
-		return $parts;
+		return VoicePart::withCount(['singers' => function ($query) use ($response) {
+		    $query->whereHas('attendances', function (Builder $query) use ($response) {
+                $query->where('event_id', '=', $this->id)
+                    ->where('response', '=', $response);
+            });
+        }]);
 	}
 
 	public function getStartDateAttribute(?string $value): ?Carbon

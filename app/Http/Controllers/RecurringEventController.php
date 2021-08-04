@@ -52,7 +52,7 @@ class RecurringEventController extends Controller
 
 		$request->whenHas(
 			'send_notification',
-			fn() => Notification::send(Singer::active()->get()->user, new EventUpdated($event)),
+			fn() => Notification::send(Singer::active()->with('user')->get()->user, new EventUpdated($event)),
 		);
 
 		return redirect()

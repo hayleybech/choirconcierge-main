@@ -2,18 +2,18 @@
     <td class="col--title">
         @can('view', $singer)
         <a href="{{route('singers.show', ['singer' => $singer])}}">
-            <img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->name }}" class="user-avatar" width="50" height="50">
+            <img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->user->name }}" class="user-avatar" width="50" height="50">
         </a>
         @else
-        <img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->name }}" class="user-avatar" width="50" height="50">
+        <img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->user->name }}" class="user-avatar" width="50" height="50">
         @endcan
         <div class="item-title-wrapper">
             @can('view', $singer)
             <a href="{{ route('singers.show', ['singer' => $singer]) }}">
-                {{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
+                {{ ( isset($singer->user->name) ) ? $singer->user->name : 'Name Unknown' }}
             </a>
             @else
-            {{ ( isset($singer->name) ) ? $singer->name : 'Name Unknown' }}
+            {{ ( isset($singer->user->name) ) ? $singer->user->name : 'Name Unknown' }}
             @endcan
             <div>
                 <span class="badge badge-pill badge-light" {!! ( isset($singer->voice_part) && $singer->voice_part !== '' ) ? 'style="background-color: '.$singer->voice_part->colour.';"' : '' !!}>

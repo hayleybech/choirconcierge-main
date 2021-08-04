@@ -328,7 +328,9 @@ class RecurringEventControllerTest extends TestCase
 		$parent = Event::factory()
 			->repeating()
 			->create();
+		$parent->load('repeat_children');
 		$target = $parent->repeat_children[round($parent->repeat_children->count() / 2)];
+		$target->load('repeat_children');
 		$prev_sibling = $target->prevRepeat();
 		$next_sibling = $target->nextRepeat();
 		$last_sibling = $parent->repeat_children->last();
