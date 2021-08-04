@@ -6,9 +6,7 @@
 		</label>
 
 		<date-picker
-			v-bind:value="value"
-			v-on:input="onInput"
-			v-on:change="onChange"
+			v-model="value"
 			range
 			:type="type"
 			:use12h="true"
@@ -68,8 +66,9 @@ export default {
 			type: String,
 			required: true,
 		},
-		value: {
+		initValue: {
 			type: Array, // Array<Date>
+      required: true,
 		},
 		showShortcuts: {
 			type: Boolean,
@@ -81,6 +80,7 @@ export default {
 	data() {
 		return {
 			rawFormat: 'YYYY-MM-DD HH:mm:ss',
+      value: [...this.initValue],
 		};
 	},
 	computed: {

@@ -102,6 +102,6 @@ abstract class Filter
 
 	public function getCurrentOption(): string
 	{
-		return $this->current_option;
+		return is_string($this->current_option) ? $this->current_option : http_build_query($this->current_option);
 	}
 }
