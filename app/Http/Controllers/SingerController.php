@@ -31,7 +31,7 @@ class SingerController extends Controller
 		$this->authorize('viewAny', Singer::class);
 
 		// Base query
-		$all_singers = Singer::with(['tasks', 'category', 'voice_part'])
+		$all_singers = Singer::with(['tasks', 'category', 'voice_part', 'user'])
 			->filter()
 			->get();
 

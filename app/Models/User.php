@@ -4,8 +4,10 @@ namespace App\Models;
 
 use App\Mail\Welcome;
 use App\Models\Traits\TenantTimezoneDates;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -99,7 +101,7 @@ class User extends Authenticatable implements HasMedia
 	 */
 	protected $hidden = ['password', 'remember_token'];
 
-	protected $with = ['media'];
+	protected $with = ['media', 'singer.roles'];
 
 	public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
 
@@ -152,13 +154,18 @@ class User extends Authenticatable implements HasMedia
 		return $this->hasMany(Singer::class);
 	}
 
-	public function getSingerAttribute(): ?Singer
-	{
-		if(! tenancy()->initialized) {
-			return null;
-		}
-		return $this->singers()->firstWhere('tenant_id', '=', tenancy()->tenant->id);
-	}
+    public function singer(): HasOne
+    {
+        return $this->hasOne(Singer::class)
+            ->ofMany(['id' => 'max'], function($query) {
+                $query->where('tenant_id', '=', tenancy()?->tenant?->id ?? null);
+            });
+    }
+
+    public function scopeBirthdays(Builder $query): Builder
+    {
+        return $query->whereMonth('dob', '>=', now())->whereMonth('dob', '<=', now()->addMonth());
+    }
 
     public function getBirthdayAttribute(): Carbon
     {

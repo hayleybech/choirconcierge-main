@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
@@ -80,11 +79,11 @@ class Singer extends Model
 		Singer_RoleFilter::class,
 	];
 
-	protected $with = ['user'];
+	protected $with = [];
 
 	public $dates = ['updated_at', 'created_at', 'joined_at'];
 
-	protected $appends = ['user_avatar_thumb_url'];
+	protected $appends = [];
 
 	public $notify_channels = ['mail'];
 
@@ -194,13 +193,6 @@ class Singer extends Model
 	public function getMemberversaryAttribute(): Carbon
 	{
 		return $this->joined_at->copy()->year(now()->year);
-	}
-
-	public function scopeBirthdays(Builder $query): Builder
-	{
-		return $query->whereHas('user', static function (Builder $query) {
-			return $query->whereMonth('dob', '>=', now())->whereMonth('dob', '<=', now()->addMonth());
-		});
 	}
 
 	public function scopeEmptyDobs(Builder $query): Builder

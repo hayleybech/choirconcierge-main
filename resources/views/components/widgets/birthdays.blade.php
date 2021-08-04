@@ -1,19 +1,19 @@
 @props(['birthdays', 'emptyDobs'])
-@php use App\Models\Singer; /* @var Singer $singer */ @endphp
+@php use App\Models\User; /* @var User $user */ @endphp
 <div class="card">
     <div class="card-header"><h3 class="h4">Birthdays</h3></div>
     <div class="list-group list-group-flush">
-        @forelse($birthdays as $singer)
+        @forelse($birthdays as $user)
         <div class="list-group-item">
-            @if($singer->user->birthday->isToday())
+            @if($user->birthday->isToday())
                 <i class="fas fa-fw fa-birthday-cake"></i> <strong>Today!</strong>
-            @elseif($singer->user->birthday->isTomorrow())
+            @elseif($user->birthday->isTomorrow())
                 <strong>Tomorrow!</strong>
-            @elseif($singer->user->birthday->isSameWeek())
+            @elseif($user->birthday->isSameWeek())
                 <strong>This week!</strong>
             @endif
 
-            {{ $singer->user->birthday->format('D, '.config('app.formats.date_md')) }} - {{ $singer->user->name }}
+            {{ $user->birthday->format('D, '.config('app.formats.date_md')) }} - {{ $user->name }}
         </div>
         @empty
         <div class="list-group-item">No birthdays this month.</div>
