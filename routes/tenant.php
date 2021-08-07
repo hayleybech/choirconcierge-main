@@ -24,6 +24,7 @@ use App\Http\Controllers\SongAttachmentController;
 use App\Http\Controllers\SongController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskNotificationTemplateController;
+use App\Http\Controllers\UpdateMyLearningStatusController;
 use App\Http\Controllers\UpdateSingerCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
@@ -71,6 +72,7 @@ Route::middleware([
     // Songs module
     Route::resource('songs', SongController::class);
     Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'destroy'])->middleware('employee');
+    Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
 
     // Events module
     Route::resource('events', EventController::class);

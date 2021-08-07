@@ -38,7 +38,16 @@
                     </div>
 
                     <h4>My Learning Status</h4>
-                    {{ $song->my_learning->status_name }}
+                    <span class="mr-2">
+                        {{ $song->my_learning->status_name }}
+                    </span>
+
+                    @if($song->my_learning->status === 'not-started')
+                        <form action="{{ route('songs.my-learning.update', $song) }}" method="post" class="d-inline-block">
+                            @csrf
+                            <button type="submit" class="btn btn-link text-success btn-sm"><i class="far fa-fw fa-check"></i> I'm Assessment Ready</button>
+                        </form>
+                    @endif
                 </div>
             </div>
 

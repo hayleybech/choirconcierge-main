@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $updated_at
  *
  * Relationships
- * @property User $user
+ * @property Singer $singer
  * @property Song $song
  *
  * Attributes
