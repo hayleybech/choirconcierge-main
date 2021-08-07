@@ -44,7 +44,12 @@ class LearningStatus extends Pivot
 
     public function getStatusIconAttribute(): string
     {
-        return match ($this->status) {
+        return self::statusIcon($this->status);
+    }
+
+    public static function statusIcon(string $status): string
+    {
+        return match ($status) {
             'not-started' => 'fa-clock',
             'assessment-ready' => 'fa-check',
             'performance-ready' => 'fa-check-double',

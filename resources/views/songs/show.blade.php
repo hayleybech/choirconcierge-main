@@ -70,15 +70,29 @@
 
                             <div class="row text-center mb-4">
                                 <div class="col-6 col-md-4">
-                                    <strong class="text-success">Performance Ready</strong><br>
+                                    <strong class="text-success">
+                                        <i class="fas fa-fw {{ \App\Models\LearningStatus::statusIcon('performance-ready') }}"></i>
+                                        <br>
+                                        Performance Ready
+                                    </strong>
+                                    <br>
                                     {{ $singers_performance_ready_count }}
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <strong class="text-warning">Assessment Ready</strong><br>
+                                    <strong class="text-warning">
+                                        <i class="fas fa-fw {{ \App\Models\LearningStatus::statusIcon('assessment-ready') }}"></i>
+                                        <br>
+                                        Assessment Ready
+                                    </strong>
+                                    <br>
                                     {{ $singers_assessment_ready_count }}
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <strong class="text-danger">Learning</strong><br>
+                                    <strong class="text-danger">
+                                        <i class="fas fa-fw {{ \App\Models\LearningStatus::statusIcon('not-started') }}"></i>
+                                        <br>Learning
+                                    </strong>
+                                    <br>
                                     {{ $singers_learning_count }}
                                 </div>
                             </div>
@@ -92,12 +106,19 @@
                                 <a href="{{ route('songs.singers.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
                             </div>
 
+                            <div class="mb-2 text-center">
+                                <strong class="text-success">
+                                    <i class="fas fa-fw {{ \App\Models\LearningStatus::statusIcon('performance-ready') }} mr-2"></i>
+                                    Performance Ready
+                                </strong>
+                            </div>
+
                             <div class="row text-center mb-4">
                                 @foreach($voice_parts_performance_ready_count as $voice_part)
                                     <div class="col-6 col-md-3">
                                         <strong>{{ $voice_part->title }}</strong><br>
                                         {{ $voice_part->performance_ready_count }} / {{ $voice_part->singers_count }}<br>
-                                        <small class="text-success">Performance Ready</small>
+{{--                                        <small class="text-success">Performance Ready</small>--}}
                                     </div>
                                 @endforeach
                             </div>
