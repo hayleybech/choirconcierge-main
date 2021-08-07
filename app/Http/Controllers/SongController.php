@@ -8,11 +8,14 @@ use App\Models\Song;
 use App\Models\SongAttachmentCategory;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
+use App\Models\VoicePart;
 use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 
 class SongController extends Controller
@@ -124,7 +127,27 @@ class SongController extends Controller
 			return [$item['id'] => $item['title']];
 		});
 
-		return view('songs.show', compact('song', 'categories_keyed'));
+		$assessment_ready_count = $song->singers()->wherePivot('status', 'assessment-ready')->count();
+		$performance_ready_count = $song->singers()->wherePivot('status', 'performance-ready')->count();
+
+		$voice_parts_performance_ready_count = VoicePart::withCount([
+		    'singers',
+            'singers as performance_ready_count' => function (Builder $query) use ($song) {
+                    $query->with('songs')->whereHas('songs', function (Builder $query) use ($song) {
+                        $query->where('songs.id', $song->id)
+                            ->where('singer_song.status', 'assessment-ready');
+                    });
+                }
+            ])->get();
+
+		return view('songs.show', [
+		    'song' => $song,
+            'categories_keyed' => $categories_keyed,
+            'singers_learning_count' => Singer::count() - $assessment_ready_count - $performance_ready_count,
+            'singers_assessment_ready_count' => $assessment_ready_count,
+            'singers_performance_ready_count' => $performance_ready_count,
+            'voice_parts_performance_ready_count' => $voice_parts_performance_ready_count,
+        ]);
 	}
 
 	public function edit(Song $song): View

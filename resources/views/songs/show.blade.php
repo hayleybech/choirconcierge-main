@@ -38,19 +38,67 @@
                     </div>
 
                     <h4>My Learning Status</h4>
-                    <span class="mr-2">
+                    <span class="mr-2 font-weight-bold text-{{ $song->my_learning->status_colour }}">
                         {{ $song->my_learning->status_name }}
                     </span>
 
                     @if($song->my_learning->status === 'not-started')
                         <form action="{{ route('songs.my-learning.update', $song) }}" method="post" class="d-inline-block">
                             @csrf
-                            <button type="submit" class="btn btn-link text-success btn-sm"><i class="far fa-fw fa-check"></i> I'm Assessment Ready</button>
+                            <button type="submit" class="btn btn-link text-warning"><i class="far fa-fw fa-check"></i> I'm Assessment Ready</button>
                         </form>
                     @endif
                 </div>
             </div>
 
+            @can('update', $song)
+            <div class="card">
+                <div class="card-tabs nav nav-tabs">
+                    <a href="#pane-status" class="card-tab nav-link active" id="tab-status" data-toggle="tab">By Status</a>
+                    <a href="#pane-part" class="card-tab nav-link" id="tab-part" data-toggle="tab">By Voice Part</a>
+                </div>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="pane-status" role="tabpanel" aria-labelledby="tab-status">
+
+                        <div class="card-body">
+                            <h4 class="mb-3">Learning Summary</h4>
+
+                            <div class="row text-center mb-4">
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-success">Performance Ready</strong><br>
+                                    {{ $singers_performance_ready_count }}
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-warning">Assessment Ready</strong><br>
+                                    {{ $singers_assessment_ready_count }}
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-danger">Learning</strong><br>
+                                    {{ $singers_learning_count }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="pane-part" role="tabpanel" aria-labelledby="tab-part">
+
+                        <div class="card-body">
+                            <h4 class="mb-3">Learning Summary</h4>
+
+                            <div class="row text-center mb-4">
+                                @foreach($voice_parts_performance_ready_count as $voice_part)
+                                    <div class="col-6 col-md-3">
+                                        <strong>{{ $voice_part->title }}</strong><br>
+                                        {{ $voice_part->performance_ready_count }} / {{ $voice_part->singers_count }}<br>
+                                        <small class="text-success">Performance Ready</small>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endcan
 
             <div class="card">
                 <h4 class="card-header">Attachments</h4>
