@@ -64,7 +64,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <h4>Learning Summary</h4>
-                                <a href="{{ route('songs.learning.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
+                                <a href="{{ route('songs.singers.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
                             </div>
 
                             <div class="row text-center mb-4">
@@ -88,7 +88,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <h4>Learning Summary</h4>
-                                <a href="{{ route('songs.learning.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
+                                <a href="{{ route('songs.singers.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
                             </div>
 
                             <div class="row text-center mb-4">

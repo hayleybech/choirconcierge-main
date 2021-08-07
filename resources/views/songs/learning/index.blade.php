@@ -18,6 +18,7 @@
                         <tr class="row--singer">
                             <th class="col--title">Singer</th>
                             <th class="col--attendance">Status</th>
+                            <th class="col--attendance">Mark As</th>
                         </tr>
                     </thead>
                     <tbody>

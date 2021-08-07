@@ -107,9 +107,9 @@ Breadcrumbs::for('songs.edit', static function ($trail, $song) {
 });
 
 // Songs > [Song] > Learning
-Breadcrumbs::for('songs.learning.index', static function ($trail, $song) {
+Breadcrumbs::for('songs.singers.index', static function ($trail, $song) {
     $trail->parent('songs.show', $song);
-    $trail->push('Learning', route('songs.learning.index', $song));
+    $trail->push('Learning', route('songs.singers.index', $song));
 });
 
 // Songs > Create
