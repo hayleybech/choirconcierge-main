@@ -38,7 +38,7 @@
                     </div>
 
                     <h4>My Learning Status</h4>
-                    <span class="mr-2 font-weight-bold text-{{ $song->my_learning->status_colour }}">
+                    <span class="mr-4 font-weight-bold text-{{ $song->my_learning->status_colour }}">
                         <i class="fas fa-fw {{ $song->my_learning->status_icon }} mr-2"></i>
                         {{ $song->my_learning->status_name }}
                     </span>
@@ -46,7 +46,7 @@
                     @if($song->my_learning->status === 'not-started')
                         <form action="{{ route('songs.my-learning.update', $song) }}" method="post" class="d-inline-block">
                             @csrf
-                            <button type="submit" class="btn btn-link text-warning"><i class="far fa-fw fa-check"></i> I'm Assessment Ready</button>
+                            <button type="submit" class="btn btn-warning btn-sm"><i class="far fa-fw fa-check"></i> I'm Assessment Ready</button>
                         </form>
                     @endif
                 </div>
