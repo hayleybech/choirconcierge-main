@@ -27,7 +27,7 @@ class LearningStatus extends Pivot
     public function getStatusNameAttribute(): string
     {
         return match ($this->status) {
-            'not-started' => 'Not Started',
+            'not-started' => 'Learning',
             'assessment-ready' => 'Assessment Ready',
         };
     }
