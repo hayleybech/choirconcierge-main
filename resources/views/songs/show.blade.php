@@ -62,7 +62,10 @@
                     <div class="tab-pane active" id="pane-status" role="tabpanel" aria-labelledby="tab-status">
 
                         <div class="card-body">
-                            <h4 class="mb-3">Learning Summary</h4>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h4>Learning Summary</h4>
+                                <a href="{{ route('songs.learning.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
+                            </div>
 
                             <div class="row text-center mb-4">
                                 <div class="col-6 col-md-4">
@@ -83,7 +86,10 @@
                     <div class="tab-pane" id="pane-part" role="tabpanel" aria-labelledby="tab-part">
 
                         <div class="card-body">
-                            <h4 class="mb-3">Learning Summary</h4>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h4>Learning Summary</h4>
+                                <a href="{{ route('songs.learning.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
+                            </div>
 
                             <div class="row text-center mb-4">
                                 @foreach($voice_parts_performance_ready_count as $voice_part)
