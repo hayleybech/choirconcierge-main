@@ -36,6 +36,9 @@
                             @endforeach
                         </div>
                     </div>
+
+                    <h4>My Learning Status</h4>
+                    {{ $song->my_learning->status_name }}
                 </div>
             </div>
 

@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Carbon;
+
+/**
+ * Class LearningStatus
+ *
+ * Columns
+ * @property string $status
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
+ * Relationships
+ * @property User $user
+ * @property Song $song
+ *
+ * Attributes
+ * @property string $status_name
+ */
+class LearningStatus extends Pivot
+{
+    protected $guarded = [];
+
+    public function getStatusNameAttribute(): string
+    {
+        return match ($this->status) {
+            'not-started' => 'Not Started',
+            'assessment-ready' => 'Assessment Ready',
+        };
+    }
+
+    public static function getNullLearningStatus(): self
+    {
+        $nullStatus = new LearningStatus();
+        $nullStatus->status = 'not-started';
+        return $nullStatus;
+    }
+}

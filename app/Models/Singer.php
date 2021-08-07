@@ -49,6 +49,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Rsvp> $rsvps
  * @property Collection<Attendance> $attendances
  * @property Collection<Role> $roles
+ * @property Collection<Song> $songs
  *
  * Attributes
  * @property Carbon memberversary
@@ -176,6 +177,15 @@ class Singer extends Model
 	{
 		return $this->belongsToMany(Role::class, 'singers_roles');
 	}
+
+	public function songs(): BelongsToMany
+    {
+        return $this->belongsToMany(Song::class)
+            ->withPivot(['status'])
+            ->using(LearningStatus::class)
+            ->as('learning')
+            ->withTimestamps();
+    }
 
 	public function getAge(): int
 	{
