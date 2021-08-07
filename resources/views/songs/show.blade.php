@@ -39,6 +39,7 @@
 
                     <h4>My Learning Status</h4>
                     <span class="mr-2 font-weight-bold text-{{ $song->my_learning->status_colour }}">
+                        <i class="fas fa-fw {{ $song->my_learning->status_icon }} mr-2"></i>
                         {{ $song->my_learning->status_name }}
                     </span>
 
