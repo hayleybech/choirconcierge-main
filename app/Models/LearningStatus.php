@@ -32,6 +32,14 @@ class LearningStatus extends Pivot
         };
     }
 
+    public function getStatusColourAttribute(): string
+    {
+        return match ($this->status) {
+            'not-started' => 'danger',
+            'assessment-ready' => 'warning',
+        };
+    }
+
     public static function getNullLearningStatus(): self
     {
         $nullStatus = new LearningStatus();
