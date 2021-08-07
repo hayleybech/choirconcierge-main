@@ -16,20 +16,26 @@
                 </div>
 
                 <div class="card-body">
-                    <div class="mb-2 text-{{ $song->status->colour }} font-weight-bold">
-                        @if('Pending' === $song->status->title)
-                            <i class="fas fa-fw fa-lock mr-2"></i>
-                        @else
-                            <i class="fas fa-fw fa-circle mr-2"></i>
-                        @endif
-                        {{ $song->status->title }}
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <div class="mr-2 mb-4">
+                            <pitch-button note="{{ explode('/',$song->pitch)[0] }}"></pitch-button>
+                        </div>
+
+                        <div class="mr-2 mb-4 text-{{ $song->status->colour }} font-weight-bold">
+                            @if('Pending' === $song->status->title)
+                                <i class="fas fa-fw fa-lock mr-2"></i>
+                            @else
+                                <i class="fas fa-fw fa-circle mr-2"></i>
+                            @endif
+                            {{ $song->status->title }}
+                        </div>
+
+                        <div class="mb-4">
+                            @foreach( $song->categories as $cat )
+                                <span class="song-category badge badge-pill badge-secondary">{{ $cat->title }}</span>
+                            @endforeach
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        @foreach( $song->categories as $cat )
-                            <span class="song-category badge badge-pill badge-secondary">{{ $cat->title }}</span>
-                        @endforeach
-                    </div>
-                    <pitch-button note="{{ explode('/',$song->pitch)[0] }}"></pitch-button>
                 </div>
             </div>
 
