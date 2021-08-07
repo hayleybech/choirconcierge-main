@@ -52,21 +52,47 @@
             </div>
 
             <div class="card">
-                <h4 class="card-header">Learning Summary</h4>
+                <div class="card-tabs nav nav-tabs">
+                    <a href="#pane-status" class="card-tab nav-link active" id="tab-status" data-toggle="tab">By Status</a>
+                    <a href="#pane-part" class="card-tab nav-link" id="tab-part" data-toggle="tab">By Voice Part</a>
+                </div>
 
-                <div class="card-body">
-                    <div class="row text-center mb-4">
-                        <div class="col-6 col-md-4">
-                            <strong class="text-success">Performance Ready</strong><br>
-                            {{ $singers_performance_ready_count }}
+                <div class="tab-content">
+                    <div class="tab-pane active" id="pane-status" role="tabpanel" aria-labelledby="tab-status">
+
+                        <div class="card-body">
+                            <h4 class="mb-3">Learning Summary</h4>
+
+                            <div class="row text-center mb-4">
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-success">Performance Ready</strong><br>
+                                    {{ $singers_performance_ready_count }}
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-warning">Assessment Ready</strong><br>
+                                    {{ $singers_assessment_ready_count }}
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-danger">Learning</strong><br>
+                                    {{ $singers_learning_count }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-6 col-md-4">
-                            <strong class="text-warning">Assessment Ready</strong><br>
-                            {{ $singers_assessment_ready_count }}
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <strong class="text-danger">Learning</strong><br>
-                            {{ $singers_learning_count }}
+                    </div>
+                    <div class="tab-pane" id="pane-part" role="tabpanel" aria-labelledby="tab-part">
+
+                        <div class="card-body">
+                            <h4 class="mb-3">Learning Summary</h4>
+
+                            <div class="row text-center mb-4">
+                                @foreach($voice_parts_performance_ready_count as $voice_part)
+                                    <div class="col-6 col-md-3">
+                                        <strong>{{ $voice_part->title }}</strong><br>
+                                        {{ $voice_part->performance_ready_count }} / {{ $voice_part->singers_count }}<br>
+                                        <small class="text-success">Performance Ready</small>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
