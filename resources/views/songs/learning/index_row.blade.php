@@ -25,13 +25,7 @@
     </td>
     <td class="col--attendance">
         <span class="mr-2 font-weight-bold text-{{ $singer->learning->status_colour }}">
-            @if($singer->learning->status === 'performance-ready')
-            <i class="fas fa-fw fa-check-double mr-2"></i>
-            @elseif($singer->learning->status === 'assessment-ready')
-                <i class="fas fa-fw fa-check mr-2"></i>
-            @else
-                <i class="fas fa-fw fa-clock mr-2"></i>
-            @endif
+            <i class="fas fa-fw {{ $singer->learning->status_icon }} mr-2"></i>
             {{ $singer->learning->status_name }}
         </span>
     </td>

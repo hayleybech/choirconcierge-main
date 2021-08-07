@@ -42,6 +42,15 @@ class LearningStatus extends Pivot
         };
     }
 
+    public function getStatusIconAttribute(): string
+    {
+        return match ($this->status) {
+            'not-started' => 'fa-clock',
+            'assessment-ready' => 'fa-check',
+            'performance-ready' => 'fa-check-double',
+        };
+    }
+
     public static function getNullLearningStatus(): self
     {
         $nullStatus = new LearningStatus();
