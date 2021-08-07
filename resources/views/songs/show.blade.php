@@ -51,6 +51,26 @@
                 </div>
             </div>
 
+            <div class="card">
+                <h4 class="card-header">Learning Summary</h4>
+
+                <div class="card-body">
+                    <div class="row text-center mb-4">
+                        <div class="col-6 col-md-4">
+                            <strong class="text-success">Performance Ready</strong><br>
+                            {{ $singers_performance_ready_count }}
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <strong class="text-warning">Assessment Ready</strong><br>
+                            {{ $singers_assessment_ready_count }}
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <strong class="text-danger">Learning</strong><br>
+                            {{ $singers_learning_count }}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="card">
                 <h4 class="card-header">Attachments</h4>

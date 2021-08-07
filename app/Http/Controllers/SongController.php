@@ -124,7 +124,16 @@ class SongController extends Controller
 			return [$item['id'] => $item['title']];
 		});
 
-		return view('songs.show', compact('song', 'categories_keyed'));
+		$assessment_ready_count = $song->singers()->wherePivot('status', 'assessment-ready')->count();
+		$performance_ready_count = $song->singers()->wherePivot('status', 'performance-ready')->count();
+
+		return view('songs.show', [
+		    'song' => $song,
+            'categories_keyed' => $categories_keyed,
+            'singers_learning_count' => Singer::count() - $assessment_ready_count - $performance_ready_count,
+            'singers_assessment_ready_count' => $assessment_ready_count,
+            'singers_performance_ready_count' => $performance_ready_count
+        ]);
 	}
 
 	public function edit(Song $song): View

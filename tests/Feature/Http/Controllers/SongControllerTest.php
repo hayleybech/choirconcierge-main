@@ -110,8 +110,8 @@ class SongControllerTest extends TestCase
 		$response->assertViewHas('categories_keyed');
 	}
 
-	/** @test */
-	public function show_returns_the_learning_status_for_the_user(): void
+    /** @test */
+    public function show_returns_the_learning_status_for_the_user(): void
     {
         $song = Song::factory()->create();
         $user = User::factory()
@@ -128,6 +128,27 @@ class SongControllerTest extends TestCase
         $this->get(the_tenant_route('songs.show', $song))
             ->assertOk()
             ->assertViewHas('song.my_learning.status_name', 'Assessment Ready');
+    }
+
+    /** @test */
+    public function show_returns_the_learning_summary(): void
+    {
+        $song = Song::factory()->create();
+        User::factory()
+            ->count(3)
+            ->has(Singer::factory()
+                ->hasAttached(
+                    $song,
+                    ['status' => 'assessment-ready']
+                ))
+            ->create();
+
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        $this->get(the_tenant_route('songs.show', $song))
+            ->assertOk()
+            ->assertViewHas('song.singers')
+            ->assertViewHas('singers_assessment_ready_count', 3);
     }
 
 	/**
