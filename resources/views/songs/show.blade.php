@@ -51,6 +51,7 @@
                 </div>
             </div>
 
+            @can('update', $song)
             <div class="card">
                 <div class="card-tabs nav nav-tabs">
                     <a href="#pane-status" class="card-tab nav-link active" id="tab-status" data-toggle="tab">By Status</a>
@@ -97,6 +98,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
 
             <div class="card">
                 <h4 class="card-header">Attachments</h4>
