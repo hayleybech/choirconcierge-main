@@ -17,7 +17,6 @@ class UpdateMyLearningStatusControllerTest extends TestCase
     /** @test */
     public function a_singer_can_update_their_learning_status_for_a_song(): void
     {
-        $this->withoutExceptionHandling();
         $song = Song::factory()->create();
         $user = User::factory()
             ->has(Singer::factory())
