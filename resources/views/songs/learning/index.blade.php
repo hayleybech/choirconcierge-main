@@ -29,11 +29,6 @@
                         @each('songs.learning.index_row', $voice_part->singers, 'singer', 'partials.noresults-table')
                     @endforeach
                     </tbody>
-                    <tfoot>
-                    <tr>
-                        <td colspan="100">{{ $singers->count() }} singers</td>
-                    </tr>
-                    </tfoot>
                 </table>
 
             </div>

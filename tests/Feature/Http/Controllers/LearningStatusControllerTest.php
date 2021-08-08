@@ -28,7 +28,7 @@ class LearningStatusControllerTest extends TestCase
 
         $this->get(the_tenant_route('songs.singers.index', $song))
             ->assertOk()
-            ->assertViewHas('singers');
+            ->assertViewHas('voice_parts');
     }
 
     /** @test */
