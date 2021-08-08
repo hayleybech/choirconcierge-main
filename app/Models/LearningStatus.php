@@ -29,6 +29,7 @@ class LearningStatus extends Pivot
         return match ($this->status) {
             'not-started' => 'Learning',
             'assessment-ready' => 'Assessment Ready',
+            'performance-ready' => 'Performance Ready',
         };
     }
 
@@ -37,6 +38,21 @@ class LearningStatus extends Pivot
         return match ($this->status) {
             'not-started' => 'danger',
             'assessment-ready' => 'warning',
+            'performance-ready' => 'success',
+        };
+    }
+
+    public function getStatusIconAttribute(): string
+    {
+        return self::statusIcon($this->status);
+    }
+
+    public static function statusIcon(string $status): string
+    {
+        return match ($status) {
+            'not-started' => 'fa-clock',
+            'assessment-ready' => 'fa-check',
+            'performance-ready' => 'fa-check-double',
         };
     }
 

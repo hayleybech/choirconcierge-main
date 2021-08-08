@@ -38,14 +38,15 @@
                     </div>
 
                     <h4>My Learning Status</h4>
-                    <span class="mr-2 font-weight-bold text-{{ $song->my_learning->status_colour }}">
+                    <span class="mr-4 font-weight-bold text-{{ $song->my_learning->status_colour }}">
+                        <i class="fas fa-fw {{ $song->my_learning->status_icon }} mr-2"></i>
                         {{ $song->my_learning->status_name }}
                     </span>
 
                     @if($song->my_learning->status === 'not-started')
                         <form action="{{ route('songs.my-learning.update', $song) }}" method="post" class="d-inline-block">
                             @csrf
-                            <button type="submit" class="btn btn-link text-warning"><i class="far fa-fw fa-check"></i> I'm Assessment Ready</button>
+                            <button type="submit" class="btn btn-warning btn-sm"><i class="far fa-fw fa-check"></i> I'm Assessment Ready</button>
                         </form>
                     @endif
                 </div>
@@ -62,19 +63,36 @@
                     <div class="tab-pane active" id="pane-status" role="tabpanel" aria-labelledby="tab-status">
 
                         <div class="card-body">
-                            <h4 class="mb-3">Learning Summary</h4>
+                            <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
+                                <h4>Learning Summary</h4>
+                                <a href="{{ route('songs.singers.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
+                            </div>
 
                             <div class="row text-center mb-4">
                                 <div class="col-6 col-md-4">
-                                    <strong class="text-success">Performance Ready</strong><br>
+                                    <strong class="text-success">
+                                        <i class="fas fa-fw {{ \App\Models\LearningStatus::statusIcon('performance-ready') }}"></i>
+                                        <br>
+                                        Performance Ready
+                                    </strong>
+                                    <br>
                                     {{ $singers_performance_ready_count }}
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <strong class="text-warning">Assessment Ready</strong><br>
+                                    <strong class="text-warning">
+                                        <i class="fas fa-fw {{ \App\Models\LearningStatus::statusIcon('assessment-ready') }}"></i>
+                                        <br>
+                                        Assessment Ready
+                                    </strong>
+                                    <br>
                                     {{ $singers_assessment_ready_count }}
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <strong class="text-danger">Learning</strong><br>
+                                    <strong class="text-danger">
+                                        <i class="fas fa-fw {{ \App\Models\LearningStatus::statusIcon('not-started') }}"></i>
+                                        <br>Learning
+                                    </strong>
+                                    <br>
                                     {{ $singers_learning_count }}
                                 </div>
                             </div>
@@ -83,14 +101,24 @@
                     <div class="tab-pane" id="pane-part" role="tabpanel" aria-labelledby="tab-part">
 
                         <div class="card-body">
-                            <h4 class="mb-3">Learning Summary</h4>
+                            <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
+                                <h4>Learning Summary</h4>
+                                <a href="{{ route('songs.singers.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
+                            </div>
+
+                            <div class="mb-2 text-center">
+                                <strong class="text-success">
+                                    <i class="fas fa-fw {{ \App\Models\LearningStatus::statusIcon('performance-ready') }} mr-2"></i>
+                                    Performance Ready
+                                </strong>
+                            </div>
 
                             <div class="row text-center mb-4">
                                 @foreach($voice_parts_performance_ready_count as $voice_part)
                                     <div class="col-6 col-md-3">
                                         <strong>{{ $voice_part->title }}</strong><br>
                                         {{ $voice_part->performance_ready_count }} / {{ $voice_part->singers_count }}<br>
-                                        <small class="text-success">Performance Ready</small>
+{{--                                        <small class="text-success">Performance Ready</small>--}}
                                     </div>
                                 @endforeach
                             </div>

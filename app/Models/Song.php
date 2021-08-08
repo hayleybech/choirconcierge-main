@@ -173,4 +173,14 @@ class Song extends Model
 		}
 		return $all_pitches;
 	}
+
+	public function createMissingLearningRecords(): void
+    {
+        $this->singers()->attach(
+            Singer::whereDoesntHave('songs', function ($query) {
+                $query->where('songs.id', $this->id);
+            })->pluck('id'),
+            ['status' => 'not-started']
+        );
+    }
 }

@@ -13,6 +13,7 @@ use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
 use App\Http\Controllers\ImpersonateUserController;
 use App\Http\Controllers\ImportSingerController;
+use App\Http\Controllers\LearningStatusController;
 use App\Http\Controllers\MailboxController;
 use App\Http\Controllers\RecurringEventController;
 use App\Http\Controllers\RiserStackController;
@@ -73,6 +74,7 @@ Route::middleware([
     Route::resource('songs', SongController::class);
     Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'destroy'])->middleware('employee');
     Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
+    Route::resource('songs.singers', LearningStatusController::class)->only(['index', 'update']);
 
     // Events module
     Route::resource('events', EventController::class);
