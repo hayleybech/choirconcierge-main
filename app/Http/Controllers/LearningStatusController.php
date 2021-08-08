@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Singer;
 use App\Models\Song;
+use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -17,9 +18,19 @@ class LearningStatusController extends Controller
 
         $song->load('singers');
 
+        $voice_parts = $song->singers()->with(['user', 'voice_part'])->get()
+            ->sortBy('user.first_name')
+            ->groupBy('voice_part.id')
+            ->map(function($singers) {
+                $part = $singers->first()->voice_part ?? VoicePart::getNullVoicePart();
+                $part->singers = $singers;
+                return $part;
+            });
+        $voice_parts = $this->moveNoPartToEnd($voice_parts);
+
         return view('songs.learning.index', [
             'song' => $song,
-            'singers' => $song->singers()->with(['user', 'voice_part'])->get(),
+            'voice_parts' => $voice_parts,
         ]);
     }
 
@@ -30,5 +41,15 @@ class LearningStatusController extends Controller
         $song->singers()->updateExistingPivot($singer->id, ['status' => $request->input('status')]);
 
         return redirect()->route('songs.singers.index', $song);
+    }
+
+    private function moveNoPartToEnd($collection){
+        return $collection->reject(function($value){
+            return $value->title === 'No Part';
+        })
+        ->merge($collection->filter(function($value){
+                return $value->title === 'No Part';
+            })
+        );
     }
 }

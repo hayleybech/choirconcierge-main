@@ -22,7 +22,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @each('songs.learning.index_row', $singers, 'singer', 'partials.noresults-table')
+                    @foreach($voice_parts as $voice_part)
+                        <tr>
+                            <th colspan="100000" style="background-color: #ddd; border-bottom: 1px solid #ccc;">{{ $voice_part->title }}</th>
+                        </tr>
+                        @each('songs.learning.index_row', $voice_part->singers, 'singer', 'partials.noresults-table')
+                    @endforeach
                     </tbody>
                     <tfoot>
                     <tr>
