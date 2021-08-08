@@ -45,4 +45,11 @@ class VoicePart extends Model
 	{
 		return $this->hasManyThrough(User::class, Singer::class);
 	}
+
+	public static function getNullVoicePart(): VoicePart
+    {
+        $nullPart = new self();
+        $nullPart->title = 'No Part';
+        return $nullPart;
+    }
 }
