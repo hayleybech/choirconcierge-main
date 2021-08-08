@@ -63,7 +63,7 @@
                     <div class="tab-pane active" id="pane-status" role="tabpanel" aria-labelledby="tab-status">
 
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
                                 <h4>Learning Summary</h4>
                                 <a href="{{ route('songs.singers.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
                             </div>
@@ -101,7 +101,7 @@
                     <div class="tab-pane" id="pane-part" role="tabpanel" aria-labelledby="tab-part">
 
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
                                 <h4>Learning Summary</h4>
                                 <a href="{{ route('songs.singers.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
                             </div>
