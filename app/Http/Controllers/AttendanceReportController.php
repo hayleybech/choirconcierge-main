@@ -19,11 +19,15 @@ class AttendanceReportController extends Controller
 			->filter()
 			->get();
 
-		$voice_parts = VoicePart::with(['singers.user', 'singers.attendances'])->get();
-		$no_part = VoicePart::getNullVoicePart();
-		$no_part->singers = Singer::whereDoesntHave('voice_part')->with(['user', 'attendances'])->get();
-		$voice_parts[] = $no_part;
-        $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
+        $voice_parts = Singer::with(['user', 'voice_part', 'attendances'])->get()
+            ->sortBy('user.first_name')
+            ->groupBy('voice_part.id')
+            ->map(function($singers) {
+                $part = $singers->first()->voice_part ?? VoicePart::getNullVoicePart();
+                $part->singers = $singers;
+                return $part;
+            });
+        $voice_parts = $this->moveNoPartToEnd($voice_parts);
 
 		$avg_singers_per_event = round(
 			$all_events->reduce(static function ($carry, $event) {
@@ -33,15 +37,16 @@ class AttendanceReportController extends Controller
 		);
 
 		$avg_events_per_singer = round(
-			Singer::all()->reduce(static function ($carry, $singer) {
-				return $carry +
-					$singer
-						->attendances()
-						->where('response', 'present')
-						->count();
-			}, 0) / Singer::all()->count(),
-			2,
-		);
+			Singer::with(['attendances'])->get()
+                ->reduce(static function ($carry, $singer) {
+                    return $carry +
+                        $singer
+                            ->attendances()
+                            ->where('response', 'present')
+                            ->count();
+                }, 0) / Singer::all()->count(),
+            2,
+        );
 
 		return view('events.reports.attendance', [
 			'voice_parts' => $voice_parts,
@@ -51,4 +56,14 @@ class AttendanceReportController extends Controller
 			'avg_events_per_singer' => $avg_events_per_singer,
 		]);
 	}
+
+    private function moveNoPartToEnd($collection){
+        return $collection->reject(function($value){
+            return $value->title === 'No Part';
+        })
+            ->merge($collection->filter(function($value){
+                return $value->title === 'No Part';
+            })
+            );
+    }
 }
