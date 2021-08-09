@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Role;
+use App\Models\Singer;
 use App\Models\Song;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
+use App\Models\User;
 use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -106,6 +109,47 @@ class SongControllerTest extends TestCase
 		$response->assertViewHas('song');
 		$response->assertViewHas('categories_keyed');
 	}
+
+    /** @test */
+    public function show_returns_the_learning_status_for_the_user(): void
+    {
+        $song = Song::factory()->create();
+        $user = User::factory()
+            ->has(Singer::factory()
+                ->hasAttached(
+                    $song,
+                    ['status' => 'assessment-ready']
+                ))
+            ->create();
+        $user->singer->roles()->attach([Role::where('name', 'User')->value('id')]);
+
+        $this->actingAs($user);
+
+        $this->get(the_tenant_route('songs.show', $song))
+            ->assertOk()
+            ->assertViewHas('song.my_learning.status_name', 'Assessment Ready');
+    }
+
+    /** @test */
+    public function show_returns_the_learning_summary(): void
+    {
+        $song = Song::factory()->create();
+        User::factory()
+            ->count(3)
+            ->has(Singer::factory()
+                ->hasAttached(
+                    $song,
+                    ['status' => 'assessment-ready']
+                ))
+            ->create();
+
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        $this->get(the_tenant_route('songs.show', $song))
+            ->assertOk()
+            ->assertViewHas('song.singers')
+            ->assertViewHas('singers_assessment_ready_count', 3);
+    }
 
 	/**
 	 * @test

@@ -6,19 +6,17 @@ use App\Models\Filters\Filterable;
 use App\Models\Filters\Song_CategoryFilter;
 use App\Models\Filters\Song_StatusFilter;
 use App\Models\Traits\TenantTimezoneDates;
-use App\Notifications\SongUpdated;
-use App\Notifications\SongUploaded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -38,9 +36,11 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property SongStatus $status
  * @property Collection<SongCategory> $categories
  * @property Collection<SongAttachment> $attachments
+ * @property Collection<Singer> $singers
  *
  * Dynamic
  * @property string $pitch
+ * @property LearningStatus $my_learning
  *
  * @package App\Models
  */
@@ -142,6 +142,24 @@ class Song extends Model
 		return $this->hasMany(SongAttachment::class);
 	}
 
+	public function singers(): BelongsToMany
+    {
+        return $this->belongsToMany(Singer::class)
+            ->withPivot(['status'])
+            ->using(LearningStatus::class)
+            ->as('learning')
+            ->withTimestamps();
+    }
+
+    public function getMyLearningAttribute(): LearningStatus
+    {
+        return $this->singers()
+            ->where('singers.id', '=', auth()->user()->singer->id)
+            ->first()
+            ?->learning
+            ?? LearningStatus::getNullLearningStatus();
+    }
+
 	public function getPitchAttribute(): string
 	{
 		return self::getAllPitches()[$this->pitch_blown];
@@ -155,4 +173,14 @@ class Song extends Model
 		}
 		return $all_pitches;
 	}
+
+	public function createMissingLearningRecords(): void
+    {
+        $this->singers()->attach(
+            Singer::whereDoesntHave('songs', function ($query) {
+                $query->where('songs.id', $this->id);
+            })->pluck('id'),
+            ['status' => 'not-started']
+        );
+    }
 }
