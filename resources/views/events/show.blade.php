@@ -186,17 +186,31 @@
                     <h5 class="text-center">Summary</h5>
                     <div class="row text-center mb-4">
                         <div class="col-6 col-md-4">
-                            <strong>Present</strong><br>
+                            <strong class="text-success">
+                                <i class="fas fa-fw fa-check"></i>
+                                <br>
+                                Present
+                            </strong><br>
                             {{ $singers_attendance_present }}
                         </div>
                         <div class="col-6 col-md-4">
-                            <strong>Absent</strong><br>
-                            {{ $singers_attendance_absent + $singers_attendance_absent_apology }}<br>
-                            <small class="text-muted">({{ $singers_attendance_absent_apology }} With Apology)</small><br>
+                            <strong class="text-warning">
+                                <i class="fas fa-fw fa-question"></i>
+                                <br>
+                                Not recorded
+                            </strong>
+                            <br>
+                            {{ $singers_attendance_missing }}
                         </div>
                         <div class="col-6 col-md-4">
-                            Not recorded<br>
-                            {{ $singers_attendance_missing }}
+                            <strong class="text-danger">
+                                <i class="fas fa-fw fa-times"></i>
+                                <br>
+                                Absent
+                            </strong>
+                            <br>
+                            {{ $singers_attendance_absent + $singers_attendance_absent_apology }}<br>
+                            <small class="text-muted">({{ $singers_attendance_absent_apology }} With Apology)</small><br>
                         </div>
                     </div>
                     <h5 class="text-center">Voice Parts</h5>
