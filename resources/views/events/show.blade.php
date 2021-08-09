@@ -129,6 +129,7 @@
 
             @can ('viewAny', \App\Models\Rsvp::class)
             <div class="card">
+
                 <div class="card-tabs nav nav-tabs">
                     <a href="#pane-rsvp-response" class="card-tab nav-link active" id="tab-rsvp-response" data-toggle="tab">By Response</a>
                     <a href="#pane-rsvp-part" class="card-tab nav-link" id="tab-rsvp-part" data-toggle="tab">By Voice Part</a>
@@ -177,7 +178,7 @@
                                 @foreach($voice_parts_rsvp_yes_count as $voice_part)
                                     <div class="col-6 col-md-3">
                                         {{ $voice_part->title }}<br>
-                                        {{ $voice_part->response_count }}<br>
+                                        {{ $voice_part->singers_count }}<br>
                                         <small>confirmed</small>
                                     </div>
                                 @endforeach
@@ -252,7 +253,7 @@
                                 @foreach($voice_parts_attendance as $voice_part)
                                     <div class="col-6 col-md-3">
                                         {{ $voice_part->title }}<br>
-                                        {{ $voice_part->response_count }}<br>
+                                        {{ $voice_part->singers_count }}<br>
                                         <small>present</small>
                                     </div>
                                 @endforeach
