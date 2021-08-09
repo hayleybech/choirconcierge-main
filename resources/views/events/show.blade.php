@@ -136,15 +136,27 @@
                     <h5 class="text-center">Summary</h5>
                     <div class="row text-center mb-4">
                         <div class="col-6 col-md-4">
-                            <strong>Going</strong><br>
+                            <strong class="text-success">
+                                <i class="fas fa-fw fa-check"></i><br>
+                                Going
+                            </strong>
+                            <br>
                             {{ $singers_rsvp_yes_count }}
                         </div>
                         <div class="col-6 col-md-4">
-                            <strong>Unknown</strong><br>
+                            <strong class="text-warning">
+                                <i class="fas fa-fw fa-question"></i><br>
+                                Unknown
+                            </strong>
+                            <br>
                             {{ $singers_rsvp_missing_count }}
                         </div>
                         <div class="col-6 col-md-4">
-                            Not going<br>
+                            <strong class="text-danger">
+                                <i class="fas fa-fw fa-times"></i><br>
+                                Not going
+                            </strong>
+                            <br>
                             {{ $singers_rsvp_no_count }}
                         </div>
                     </div>
