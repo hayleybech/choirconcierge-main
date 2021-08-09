@@ -129,75 +129,151 @@
 
             @can ('viewAny', \App\Models\Rsvp::class)
             <div class="card">
-                <div class="card-header">
-                    <h4>RSVP Report</h4>
+
+                <div class="card-tabs nav nav-tabs">
+                    <a href="#pane-rsvp-response" class="card-tab nav-link active" id="tab-rsvp-response" data-toggle="tab">By Response</a>
+                    <a href="#pane-rsvp-part" class="card-tab nav-link" id="tab-rsvp-part" data-toggle="tab">By Voice Part</a>
                 </div>
-                <div class="card-body">
-                    <h5 class="text-center">Summary</h5>
-                    <div class="row text-center mb-4">
-                        <div class="col-6 col-md-4">
-                            <strong>Going</strong><br>
-                            {{ $singers_rsvp_yes_count }}
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <strong>Unknown</strong><br>
-                            {{ $singers_rsvp_missing_count }}
-                        </div>
-                        <div class="col-6 col-md-4">
-                            Not going<br>
-                            {{ $singers_rsvp_no_count }}
+
+                <div class="tab-content">
+
+                    <div class="tab-pane active" id="pane-rsvp-response" role="tabpanel" aria-labelledby="tab-rsvp-response">
+                        <div class="card-body">
+                            <h4>RSVP Summary</h4>
+
+                            <div class="row text-center mb-4">
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-success">
+                                        <i class="fas fa-fw fa-check"></i><br>
+                                        Going
+                                    </strong>
+                                    <br>
+                                    {{ $singers_rsvp_yes_count }}
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-warning">
+                                        <i class="fas fa-fw fa-question"></i><br>
+                                        Unknown
+                                    </strong>
+                                    <br>
+                                    {{ $singers_rsvp_missing_count }}
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-danger">
+                                        <i class="fas fa-fw fa-times"></i><br>
+                                        Not going
+                                    </strong>
+                                    <br>
+                                    {{ $singers_rsvp_no_count }}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <h5 class="text-center">Voice Parts</h5>
-                    <div class="row text-center mb-4">
-                        @foreach($voice_parts_rsvp_yes_count as $voice_part)
-                        <div class="col-6 col-md-3">
-                            {{ $voice_part->title }}<br>
-                            {{ $voice_part->response_count }}<br>
-                            <small>confirmed</small>
+
+                    <div class="tab-pane" id="pane-rsvp-part" role="tabpanel" aria-labelledby="tab-rsvp-part">
+                        <div class="card-body">
+                            <h4>RSVP Summary</h4>
+
+                            <div class="mb-2 text-center">
+                                <strong class="text-success">
+                                    <i class="fas fa-fw fa-check mr-2"></i> Going
+                                </strong>
+                            </div>
+
+                            <div class="row text-center mb-4">
+                                @foreach($voice_parts_rsvp_yes_count as $voice_part)
+                                    <div class="col-6 col-md-3">
+                                        <strong>{{ $voice_part->title }}</strong><br>
+                                        {{ $voice_part->singers_going_count }} / {{ $voice_part->singers_count }}<br>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
-                        @endforeach
                     </div>
+
                 </div>
             </div>
             @endcan
 
             @can('viewAny', \App\Models\Attendance::class)
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-start">
-                    <h4>Attendance Report</h4>
-                    @can('create', \App\Models\Attendance::class)
-                    <a href="{{ route('events.attendances.index', ['event' => $event]) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Attendance</a>
-                    @endcan
+                <div class="card-tabs nav nav-tabs">
+                    <a href="#pane-attendance-response" class="card-tab nav-link active" id="tab-attendance-response" data-toggle="tab">By Response</a>
+                    <a href="#pane-attendance-part" class="card-tab nav-link" id="tab-attendance-part" data-toggle="tab">By Voice Part</a>
                 </div>
-                <div class="card-body">
-                    <h5 class="text-center">Summary</h5>
-                    <div class="row text-center mb-4">
-                        <div class="col-6 col-md-4">
-                            <strong>Present</strong><br>
-                            {{ $singers_attendance_present }}
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <strong>Absent</strong><br>
-                            {{ $singers_attendance_absent + $singers_attendance_absent_apology }}<br>
-                            <small class="text-muted">({{ $singers_attendance_absent_apology }} With Apology)</small><br>
-                        </div>
-                        <div class="col-6 col-md-4">
-                            Not recorded<br>
-                            {{ $singers_attendance_missing }}
-                        </div>
-                    </div>
-                    <h5 class="text-center">Voice Parts</h5>
-                    <div class="row text-center mb-4">
-                        @foreach($voice_parts_attendance as $voice_part)
-                            <div class="col-6 col-md-3">
-                                {{ $voice_part->title }}<br>
-                                {{ $voice_part->response_count }}<br>
-                                <small>present</small>
+
+                <div class="tab-content">
+
+                    <div class="tab-pane active" id="pane-attendance-response" role="tabpanel" aria-labelledby="tab-attendance-response">
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
+                                <h4>Attendance Summary</h4>
+                                @can('create', \App\Models\Attendance::class)
+                                    <a href="{{ route('events.attendances.index', ['event' => $event]) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Attendance</a>
+                                @endcan
                             </div>
-                        @endforeach
+
+                            <div class="row text-center mb-4">
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-success">
+                                        <i class="fas fa-fw fa-check"></i>
+                                        <br>
+                                        Present
+                                    </strong><br>
+                                    {{ $singers_attendance_present }}
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-warning">
+                                        <i class="fas fa-fw fa-question"></i>
+                                        <br>
+                                        Not recorded
+                                    </strong>
+                                    <br>
+                                    {{ $singers_attendance_missing }}
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-danger">
+                                        <i class="fas fa-fw fa-times"></i>
+                                        <br>
+                                        Absent
+                                    </strong>
+                                    <br>
+                                    {{ $singers_attendance_absent + $singers_attendance_absent_apology }}<br>
+                                    <small class="text-muted">({{ $singers_attendance_absent_apology }} With Apology)</small><br>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="tab-pane" id="pane-attendance-part" role="tabpanel" aria-labelledby="tab-attendance-part">
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
+                                <h4>Attendance Summary</h4>
+                                @can('create', \App\Models\Attendance::class)
+                                    <a href="{{ route('events.attendances.index', ['event' => $event]) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Attendance</a>
+                                @endcan
+                            </div>
+
+                            <div class="mb-2 text-center">
+                                <strong class="text-success">
+                                    <i class="fas fa-fw fa-check mr-2"></i> Present
+                                </strong>
+                            </div>
+
+                            <div class="row text-center mb-4">
+                                @foreach($voice_parts_attendance as $voice_part)
+                                    <div class="col-6 col-md-3">
+                                        <strong>{{ $voice_part->title }}</strong><br>
+                                        {{ $voice_part->singers_present_count }} / {{ $voice_part->singers_count }}<br>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
             @endcan
         </div>
