@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Singer;
+use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,9 +14,9 @@ class AttendanceController extends Controller
 {
 	public function index(Event $event): View
 	{
-		$this->authorize('viewAny', Attendance::class);
+        $this->authorize('viewAny', Attendance::class);
 
-		$singers = Singer::with([
+        $voice_parts = Singer::with([
                 'user',
                 'voice_part',
                 'attendances' => function ($query) use ($event) {
@@ -23,11 +24,19 @@ class AttendanceController extends Controller
                 },
             ])
             ->get()
-            ->each(fn($singer) => $singer->attendance = $singer->attendances->first());
+            ->sortBy('user.first_name')
+            ->each(fn($singer) => $singer->attendance = $singer->attendances->first())
+            ->groupBy('voice_part.id')
+            ->map(function($singers) {
+                $part = $singers->first()->voice_part ?? VoicePart::getNullVoicePart();
+                $part->singers = $singers;
+                return $part;
+            });
+        $voice_parts = $this->moveNoPartToEnd($voice_parts);
 
-		return view('events.attendances.index', [
+        return view('events.attendances.index', [
 			'event' => $event,
-			'singers' => $singers,
+			'voice_parts' => $voice_parts,
 		]);
 	}
 
@@ -51,4 +60,14 @@ class AttendanceController extends Controller
 			->route('events.show', ['event' => $event])
 			->with(['status' => 'Attendance recorded.']);
 	}
+
+    private function moveNoPartToEnd($collection){
+        return $collection->reject(function($value){
+            return $value->title === 'No Part';
+        })
+            ->merge($collection->filter(function($value){
+                return $value->title === 'No Part';
+            })
+            );
+    }
 }
