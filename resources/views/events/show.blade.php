@@ -129,47 +129,62 @@
 
             @can ('viewAny', \App\Models\Rsvp::class)
             <div class="card">
-                <div class="card-header">
-                    <h4>RSVP Report</h4>
+                <div class="card-tabs nav nav-tabs">
+                    <a href="#pane-response" class="card-tab nav-link active" id="tab-response" data-toggle="tab">By Response</a>
+                    <a href="#pane-part" class="card-tab nav-link" id="tab-part" data-toggle="tab">By Voice Part</a>
                 </div>
-                <div class="card-body">
-                    <h5 class="text-center">Summary</h5>
-                    <div class="row text-center mb-4">
-                        <div class="col-6 col-md-4">
-                            <strong class="text-success">
-                                <i class="fas fa-fw fa-check"></i><br>
-                                Going
-                            </strong>
-                            <br>
-                            {{ $singers_rsvp_yes_count }}
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <strong class="text-warning">
-                                <i class="fas fa-fw fa-question"></i><br>
-                                Unknown
-                            </strong>
-                            <br>
-                            {{ $singers_rsvp_missing_count }}
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <strong class="text-danger">
-                                <i class="fas fa-fw fa-times"></i><br>
-                                Not going
-                            </strong>
-                            <br>
-                            {{ $singers_rsvp_no_count }}
+
+                <div class="tab-content">
+
+                    <div class="tab-pane active" id="pane-response" role="tabpanel" aria-labelledby="tab-response">
+                        <div class="card-body">
+                            <h4>RSVP Summary</h4>
+
+                            <div class="row text-center mb-4">
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-success">
+                                        <i class="fas fa-fw fa-check"></i><br>
+                                        Going
+                                    </strong>
+                                    <br>
+                                    {{ $singers_rsvp_yes_count }}
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-warning">
+                                        <i class="fas fa-fw fa-question"></i><br>
+                                        Unknown
+                                    </strong>
+                                    <br>
+                                    {{ $singers_rsvp_missing_count }}
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <strong class="text-danger">
+                                        <i class="fas fa-fw fa-times"></i><br>
+                                        Not going
+                                    </strong>
+                                    <br>
+                                    {{ $singers_rsvp_no_count }}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <h5 class="text-center">Voice Parts</h5>
-                    <div class="row text-center mb-4">
-                        @foreach($voice_parts_rsvp_yes_count as $voice_part)
-                        <div class="col-6 col-md-3">
-                            {{ $voice_part->title }}<br>
-                            {{ $voice_part->response_count }}<br>
-                            <small>confirmed</small>
+
+                    <div class="tab-pane" id="pane-part" role="tabpanel" aria-labelledby="tab-part">
+                        <div class="card-body">
+                            <h4>RSVP Summary</h4>
+
+                            <div class="row text-center mb-4">
+                                @foreach($voice_parts_rsvp_yes_count as $voice_part)
+                                    <div class="col-6 col-md-3">
+                                        {{ $voice_part->title }}<br>
+                                        {{ $voice_part->response_count }}<br>
+                                        <small>confirmed</small>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
-                        @endforeach
                     </div>
+
                 </div>
             </div>
             @endcan
