@@ -418,11 +418,13 @@ class Event extends Model
 	}
 	public function voice_parts_rsvp_response_count(string $response)
 	{
-		return VoicePart::withCount(['singers' => function ($query) use ($response) {
-		    $query->whereHas('rsvps', function (Builder $query) use ($response) {
-                $query->where('event_id', '=', $this->id)
-                    ->where('response', '=', $response);
-            });
+		return VoicePart::withCount([
+		    'singers',
+		    'singers as singers_going_count' => function ($query) use ($response) {
+                $query->whereHas('rsvps', function (Builder $query) use ($response) {
+                    $query->where('event_id', '=', $this->id)
+                        ->where('response', '=', $response);
+                });
         }]);
 	}
 
@@ -447,11 +449,13 @@ class Event extends Model
 	}
 	public function voice_parts_attendance_count(string $response)
 	{
-		return VoicePart::withCount(['singers' => function ($query) use ($response) {
-		    $query->whereHas('attendances', function (Builder $query) use ($response) {
-                $query->where('event_id', '=', $this->id)
-                    ->where('response', '=', $response);
-            });
+		return VoicePart::withCount([
+		    'singers',
+            'singers as singers_present_count' => function ($query) use ($response) {
+                $query->whereHas('attendances', function (Builder $query) use ($response) {
+                    $query->where('event_id', '=', $this->id)
+                        ->where('response', '=', $response);
+                });
         }]);
 	}
 

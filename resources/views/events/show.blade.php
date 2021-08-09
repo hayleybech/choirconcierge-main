@@ -174,12 +174,17 @@
                         <div class="card-body">
                             <h4>RSVP Summary</h4>
 
+                            <div class="mb-2 text-center">
+                                <strong class="text-success">
+                                    <i class="fas fa-fw fa-check mr-2"></i> Going
+                                </strong>
+                            </div>
+
                             <div class="row text-center mb-4">
                                 @foreach($voice_parts_rsvp_yes_count as $voice_part)
                                     <div class="col-6 col-md-3">
-                                        {{ $voice_part->title }}<br>
-                                        {{ $voice_part->singers_count }}<br>
-                                        <small>confirmed</small>
+                                        <strong>{{ $voice_part->title }}</strong><br>
+                                        {{ $voice_part->singers_going_count }} / {{ $voice_part->singers_count }}<br>
                                     </div>
                                 @endforeach
                             </div>
@@ -249,12 +254,17 @@
                                 @endcan
                             </div>
 
+                            <div class="mb-2 text-center">
+                                <strong class="text-success">
+                                    <i class="fas fa-fw fa-check mr-2"></i> Present
+                                </strong>
+                            </div>
+
                             <div class="row text-center mb-4">
                                 @foreach($voice_parts_attendance as $voice_part)
                                     <div class="col-6 col-md-3">
-                                        {{ $voice_part->title }}<br>
-                                        {{ $voice_part->singers_count }}<br>
-                                        <small>present</small>
+                                        <strong>{{ $voice_part->title }}</strong><br>
+                                        {{ $voice_part->singers_present_count }} / {{ $voice_part->singers_count }}<br>
                                     </div>
                                 @endforeach
                             </div>
