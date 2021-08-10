@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\LearningStatus;
 use App\Models\Singer;
 use App\Models\Song;
-use App\Models\User;
+use App\Models\User;;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -63,7 +64,13 @@ class DashController extends Controller
 				return $query->where('title', 'Learning');
 			})
 				->orderBy('title')
-				->get(),
+                ->get()
+                ->groupBy('my_learning.status')
+                ->map(function($songs) {
+                    $learning = $songs->first()->my_learning ?? LearningStatus::getNullLearningStatus();
+                    $learning->songs = $songs;
+                    return $learning;
+                }),
 			'events' => Event::query()
 				->with(['my_rsvp'])
 				->where('call_time', '>', today())
