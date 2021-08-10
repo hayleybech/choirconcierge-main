@@ -139,7 +139,7 @@
 
                     <div class="tab-pane active" id="pane-rsvp-response" role="tabpanel" aria-labelledby="tab-rsvp-response">
                         <div class="card-body">
-                            <h4>RSVP Summary</h4>
+                            <h4>RSVPs</h4>
 
                             <div class="row text-center mb-4">
                                 <div class="col-6 col-md-4">
@@ -172,7 +172,7 @@
 
                     <div class="tab-pane" id="pane-rsvp-part" role="tabpanel" aria-labelledby="tab-rsvp-part">
                         <div class="card-body">
-                            <h4>RSVP Summary</h4>
+                            <h4>RSVPs</h4>
 
                             <div class="mb-2 text-center">
                                 <strong class="text-success">
@@ -207,7 +207,7 @@
                     <div class="tab-pane active" id="pane-attendance-response" role="tabpanel" aria-labelledby="tab-attendance-response">
                         <div class="card-body">
                             <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
-                                <h4>Attendance Summary</h4>
+                                <h4>Attendance</h4>
                                 @can('create', \App\Models\Attendance::class)
                                     <a href="{{ route('events.attendances.index', ['event' => $event]) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Attendance</a>
                                 @endcan
@@ -248,7 +248,7 @@
                     <div class="tab-pane" id="pane-attendance-part" role="tabpanel" aria-labelledby="tab-attendance-part">
                         <div class="card-body">
                             <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
-                                <h4>Attendance Summary</h4>
+                                <h4>Attendance</h4>
                                 @can('create', \App\Models\Attendance::class)
                                     <a href="{{ route('events.attendances.index', ['event' => $event]) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Attendance</a>
                                 @endcan
