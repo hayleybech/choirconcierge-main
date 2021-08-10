@@ -29,7 +29,7 @@ class AttendanceControllerTest extends TestCase
 		$response->assertOk();
 		$response->assertViewIs('events.attendances.index');
 		$response->assertViewHas('event');
-		$response->assertViewHas('singers');
+		$response->assertViewHas('voice_parts');
 	}
 
 	/**

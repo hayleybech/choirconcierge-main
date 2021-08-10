@@ -24,13 +24,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @each('events.attendances.index_row', $singers, 'singer', 'partials.noresults-table')
+                    @foreach($voice_parts as $voice_part)
+                        <tr>
+                            <th colspan="100000" class="d-block d-sm-table-cell" style="background-color: #ddd; border-bottom: 1px solid #ccc;">{{ $voice_part->title }}</th>
+                        </tr>
+                        @each('events.attendances.index_row', $voice_part->singers, 'singer', 'partials.noresults-table')
+                    @endforeach
                     </tbody>
-                    <tfoot>
-                    <tr>
-                        <td colspan="100">{{ $singers->count() }} singers</td>
-                    </tr>
-                    </tfoot>
                 </table>
 
                 <div class="card-footer">

@@ -64,7 +64,7 @@
 
                         <div class="card-body">
                             <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
-                                <h4>Learning Summary</h4>
+                                <h4>Learning</h4>
                                 <a href="{{ route('songs.singers.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
                             </div>
 
@@ -102,7 +102,7 @@
 
                         <div class="card-body">
                             <div class="d-flex flex-wrap justify-content-between align-items-start mb-3">
-                                <h4>Learning Summary</h4>
+                                <h4>Learning</h4>
                                 <a href="{{ route('songs.singers.index', $song) }}" class="btn btn-secondary btn-sm"><i class="fas fa-fw fa-edit"></i> Record Learning</a>
                             </div>
 
