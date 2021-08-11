@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from "@inertiajs/inertia-react";
 
 const TenantLayout = ({children}) =>  (
     <div>
@@ -7,6 +8,7 @@ const TenantLayout = ({children}) =>  (
                 <img src="/img/logo.svg" alt="Choir Concierge" />
             </a>
             <div className="text-red-500">testasg</div>
+            <Link  href={route('singers.index')}>singers</Link>
         </div>
 
         <div>{children}</div>

@@ -25,6 +25,8 @@
 
 </head>
 <body>
+    @routes(nonce: 'your-nonce-here')
+
     @inertia
 
     <!-- Scripts -->
