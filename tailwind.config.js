@@ -9,9 +9,16 @@ module.exports = {
       'sans': 'Lato, Arial, Helvetica, sans-serif'
     },
     colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      white: colors.white,
       gray: colors.coolGray,
       indigo: colors.indigo,
       purple: colors.purple,
+      red: colors.red,
+      yellow: colors.amber,
+      green: colors.emerald,
+      pink: colors.pink,
     },
     extend: {
       colors: {
