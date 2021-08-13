@@ -9,7 +9,7 @@ module.exports = {
       'sans': 'Lato, Arial, Helvetica, sans-serif'
     },
     colors: {
-      gray: colors.blueGray,
+      gray: colors.coolGray,
       indigo: colors.indigo,
       purple: colors.purple,
     },
