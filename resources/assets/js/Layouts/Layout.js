@@ -179,7 +179,7 @@ export default function Example() {
                                                 href={route(item.route)}
                                                 className={classNames(
                                                     item.current ? 'bg-indigo-50 text-brand-purple-dark' : 'text-indigo-200 hover:bg-purple-800 hover:text-purple-100',
-                                                    'group flex items-center px-2 py-2 text-lg font-semibold uppercase rounded-md'
+                                                    'group flex items-center px-2 py-2 text-lg font-black uppercase rounded-md'
                                                 )}
                                             >
                                                 <i className={"fas fa-fw mr-4 " + item.icon} aria-hidden="true" />
@@ -188,7 +188,7 @@ export default function Example() {
                                             {item.current && (
                                                 <div className="flex flex-col mt-1 mb-3">
                                                     {item.items.map((child) => (
-                                                        <Link href={route(child.route)} className="px-6 py-1.5 rounded-md text-base text-indigo-200 hover:bg-purple-800 hover:text-purple-100">
+                                                        <Link href={route(child.route)} className="px-6 py-1.5 rounded-md text-light text-indigo-50 hover:bg-purple-800 hover:text-purple-50">
                                                             <i className={"far fa-fw mr-3 " + child.icon} /> {child.name}
                                                         </Link>
                                                     ))}
@@ -227,7 +227,7 @@ export default function Example() {
                                             href={route(item.route)}
                                             className={classNames(
                                                 item.current ? 'bg-indigo-50 text-brand-purple-dark' : 'text-indigo-200 hover:bg-purple-800 hover:text-purple-100',
-                                                'group flex items-center px-2 py-2 text-base uppercase font-semibold rounded-md'
+                                                'group flex items-center px-2 py-2 text-base uppercase font-black rounded-md'
                                             )}
                                         >
                                             <i className={"fas fa-fw mr-4 " + item.icon} aria-hidden="true" />
@@ -236,8 +236,8 @@ export default function Example() {
                                         {item.current && (
                                         <div className="flex flex-col mt-1 mb-3">
                                             {item.items.map((child) => (
-                                                <Link href={route(child.route)} className="px-6 py-1.5 rounded-md text-base text-indigo-200 hover:bg-purple-800 hover:text-purple-100">
-                                                    <i className={"far fa-fw mr-3 " + child.icon} /> {child.name}
+                                                <Link href={route(child.route)} className="px-6 py-1.5 rounded-md text-base font-light text-indigo-50 hover:bg-purple-800 hover:text-purple-50">
+                                                    <i className={"far fa-fw mr-3 text-indigo-200 " + child.icon} /> {child.name}
                                                 </Link>
                                             ))}
                                         </div>
