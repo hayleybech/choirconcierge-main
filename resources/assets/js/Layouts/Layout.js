@@ -201,13 +201,13 @@ export default function Example() {
                     {/* Sidebar component, swap this element with another sidebar if you like */}
                     <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto">
                         <Link href={route('dash')} className="flex pb-6 px-8">
-                            <img src="/img/logo.svg" alt="Choir Concierge" />
+                            <img src="/img/logo.svg" alt="Choir Concierge" className="h-12 w-auto" />
                         </Link>
 
                         <Link href={route('dash')} className="flex justify-center mb-4 py-4 px-6 bg-gray-50">
                             <img src="/img/choir-logo.png" className="h-12 w-auto" />
                         </Link>
-                        <div className="mt-2 flex-1 flex flex-col">
+                        <div className="mt-4 flex-1 flex flex-col">
                             <nav className="flex-1 px-4 space-y-1">
                                 {navigation.map((item) => (
                                     <div>
