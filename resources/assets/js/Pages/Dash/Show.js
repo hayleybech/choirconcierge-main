@@ -1,5 +1,5 @@
 import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
+import Layout from "../../Layouts/Layout";
 
 const Show = () => (
     <>
@@ -7,6 +7,6 @@ const Show = () => (
     </>
 );
 
-Show.layout = page => <TenantLayout children={page} title="Dashboard" />
+Show.layout = page => <Layout children={page} title="Dashboard" />
 
 export default Show;
