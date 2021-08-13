@@ -179,7 +179,7 @@ export default function Example() {
                                                 href={route(item.route)}
                                                 className={classNames(
                                                     item.current ? 'bg-indigo-50 text-brand-purple-dark' : 'text-indigo-200 hover:bg-purple-800 hover:text-purple-100',
-                                                    'group flex items-center px-2 py-2 text-base font-semibold uppercase rounded-md'
+                                                    'group flex items-center px-2 py-2 text-lg font-semibold uppercase rounded-md'
                                                 )}
                                             >
                                                 <i className={"fas fa-fw mr-4 " + item.icon} aria-hidden="true" />
