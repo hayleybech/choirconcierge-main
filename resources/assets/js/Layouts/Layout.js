@@ -138,7 +138,7 @@ export default function Example() {
                         leaveFrom="translate-x-0"
                         leaveTo="-translate-x-full"
                     >
-                        <div className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-gray-700">
+                        <div className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-brand-purple-dark">
                             <Transition.Child
                                 as={Fragment}
                                 enter="ease-in-out duration-300"
@@ -171,19 +171,30 @@ export default function Example() {
                             </div>
 
                             <div className="mt-5 flex-1 h-0 overflow-y-auto">
-                                <nav className="px-2 space-y-1">
+                                <nav className="px-4 space-y-1">
                                     {navigation.map((item) => (
-                                        <a
-                                            key={item.name}
-                                            href={route(item.route)}
-                                            className={classNames(
-                                                item.current ? 'bg-gray-800 text-white' : 'text-gray-100 hover:bg-gray-600',
-                                                'group flex items-center px-2 py-2 text-base font-medium rounded-md'
+                                        <div>
+                                            <a
+                                                key={item.name}
+                                                href={route(item.route)}
+                                                className={classNames(
+                                                    item.current ? 'bg-indigo-50 text-brand-purple-dark' : 'text-indigo-200 hover:bg-purple-800 hover:text-purple-100',
+                                                    'group flex items-center px-2 py-2 text-base font-semibold uppercase rounded-md'
+                                                )}
+                                            >
+                                                <i className={"fas fa-fw mr-4 " + item.icon} aria-hidden="true" />
+                                                {item.name}
+                                            </a>
+                                            {item.current && (
+                                                <div className="flex flex-col mt-1 mb-3">
+                                                    {item.items.map((child) => (
+                                                        <Link href={route(child.route)} className="px-6 py-1.5 rounded-md text-base text-indigo-200 hover:bg-purple-800 hover:text-purple-100">
+                                                            <i className={"far fa-fw mr-3 " + child.icon} /> {child.name}
+                                                        </Link>
+                                                    ))}
+                                                </div>
                                             )}
-                                        >
-                                            <i className={"far fa-fw mr-4 text-white opacity-75 " + item.icon} aria-hidden="true" />
-                                            {item.name}
-                                        </a>
+                                        </div>
                                     ))}
                                 </nav>
                             </div>
