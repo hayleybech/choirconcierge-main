@@ -20,6 +20,12 @@ if(rebuild === 'true') {
 			require('tailwindcss')
 		])
 		.react();
+
+	const path = require('path');
+	mix.alias({
+		ziggy: path.resolve('vendor/tightenco/ziggy/dist'),
+	});
+
 } else {
 	console.log('Mixing Vue');
 
