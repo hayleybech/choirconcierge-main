@@ -4,9 +4,10 @@ const navigation = [
         name: 'Singers',
         route: 'singers.index',
         icon: 'fa-users',
+        can: 'list_singer',
         showAsActiveForRoutes: ['singers.*', 'voice-parts.*', 'roles.*'],
         items: [
-            { name: 'All Singers', route: 'singers.index', icon: 'fa-list', showAsActiveForRoutes: ['singers.index'] },
+            // { name: 'All Singers', route: 'singers.index', icon: 'fa-list', showAsActiveForRoutes: ['singers.index'] },
             { name: 'Add New', route: 'singers.create', icon: 'fa-plus-square', showAsActiveForRoutes: ['singers.create'], },
             { name: 'Voice Parts', route: 'voice-parts.index', icon: 'fa-users-class', showAsActiveForRoutes: ['voice-parts.*'], },
             { name: 'Roles', route: 'roles.index', icon: 'fa-user-tag', showAsActiveForRoutes: ['roles.*'], }
@@ -16,6 +17,7 @@ const navigation = [
         name: 'Songs',
         route: 'songs.index',
         icon: 'fa-list-music',
+        can: 'list_song',
         showAsActiveForRoutes: ['songs.*'],
         items: [
             { name: 'All Songs', route: 'songs.index', icon: 'fa-list', showAsActiveForRoutes: ['singers.index'], },

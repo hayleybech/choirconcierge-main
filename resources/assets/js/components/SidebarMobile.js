@@ -4,8 +4,9 @@ import {XIcon} from "@heroicons/react/outline";
 import {Link} from "@inertiajs/inertia-react";
 import route from "ziggy-js";
 import classNames from "../classnames";
+import MainNavigation from "./MainNavigation";
 
-const MainMenuMobile = ({navigation, open, setOpen}) => (
+const SidebarMobile = ({navigation, open, setOpen}) => (
     <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="fixed inset-0 flex z-40 md:hidden" onClose={setOpen}>
             <Transition.Child
@@ -61,38 +62,7 @@ const MainMenuMobile = ({navigation, open, setOpen}) => (
                     </div>
 
                     <div className="mt-5 flex-1 h-0 overflow-y-auto">
-                        <nav className="px-4 space-y-1">
-                            {navigation.map((item) => (
-                                <div key={item.name}>
-                                    <Link
-                                        href={route(item.route)}
-                                        className={classNames(
-                                            item.active ? 'bg-indigo-50 text-brand-purple-dark' : 'text-indigo-200 hover:bg-purple-800 hover:text-purple-100',
-                                            'group flex items-center px-2 py-2 text-lg font-black uppercase rounded-md'
-                                        )}
-                                    >
-                                        <i className={"fas fa-fw mr-4 " + item.icon} aria-hidden="true" />
-                                        {item.name}
-                                    </Link>
-                                    {item.active && item.items.length > 0 && (
-                                        <div className="flex flex-col mt-1 mb-3">
-                                            {item.items.map((child) => (
-                                                <Link
-                                                    key={child.name}
-                                                    href={route(child.route)}
-                                                    className={classNames(
-                                                        child.active ? 'font-semibold bg-indigo-50 bg-opacity-10' : 'font-light hover:bg-purple-800 hover:text-purple-50',
-                                                        'px-6 py-1.5 rounded-md text-indigo-50'
-                                                    )}
-                                                >
-                                                    <i className={"far fa-fw mr-3 " + child.icon} /> {child.name}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </nav>
+                        <MainNavigation navigation={navigation} />
                     </div>
                 </div>
             </Transition.Child>
@@ -102,4 +72,4 @@ const MainMenuMobile = ({navigation, open, setOpen}) => (
         </Dialog>
     </Transition.Root>
 )
-export default MainMenuMobile;
+export default SidebarMobile;

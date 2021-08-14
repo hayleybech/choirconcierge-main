@@ -7,8 +7,8 @@ import {
 } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
 import route from 'ziggy-js';
-import MainMenuDesktop from "../components/MainMenuDesktop";
-import MainMenuMobile from "../components/MainMenuMobile";
+import SidebarDesktop from "../components/SidebarDesktop";
+import SidebarMobile from "../components/SidebarMobile";
 import navigation from "./navigation";
 import classNames from "../classnames";
 
@@ -32,14 +32,14 @@ export default function Layout({children}) {
 
     return (
         <div className="h-screen flex overflow-hidden bg-gray-100">
-            <MainMenuMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
+            <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
 
             {/* Static sidebar for desktop */}
             <div className="hidden md:flex md:flex-shrink-0">
-                <MainMenuDesktop navigation={navFiltered} />
+                <SidebarDesktop navigation={navFiltered} />
             </div>
             <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                <div className="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
+                <div className="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-300">
                     <button
                         type="button"
                         className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"

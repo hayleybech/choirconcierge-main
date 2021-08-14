@@ -73,7 +73,7 @@ class SingerController extends Controller
 		]);
 	}
 
-	public function create(): View
+	public function create(): View|Response
 	{
 		$this->authorize('create', Singer::class);
 
@@ -83,6 +83,15 @@ class SingerController extends Controller
 				->pluck('title', 'id')
 				->toArray();
 		$roles = Role::all();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Singers/Create', [
+                'voice_parts' => $voice_parts,
+                'roles' => $roles,
+            ]);
+        }
 
 		return view('singers.create', compact('voice_parts', 'roles'));
 	}
