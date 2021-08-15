@@ -1,9 +1,8 @@
 import React, { Fragment, useState } from 'react'
-import { Dialog, Menu, Transition } from '@headlessui/react'
+import { Menu, Transition } from '@headlessui/react'
 import {
     BellIcon,
     MenuAlt2Icon,
-    XIcon,
 } from '@heroicons/react/outline'
 import { SearchIcon } from '@heroicons/react/solid'
 import route from 'ziggy-js';
@@ -11,6 +10,7 @@ import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import navigation from "./navigation";
 import classNames from "../classnames";
+import { usePage } from '@inertiajs/inertia-react';
 
 const userNavigation = [
     { name: 'Your Profile', href: '#' },
@@ -20,15 +20,18 @@ const userNavigation = [
 
 export default function Layout({children}) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { can } = usePage().props
 
-    const navFiltered = navigation.map((item) => {
-        item.active = item.showAsActiveForRoutes.some((routeName) => route().current(routeName));
-        item.items.map((subItem) => {
-            subItem.active = subItem.showAsActiveForRoutes.some((routeName) => route().current(routeName));
-            return subItem;
-        })
-        return item;
-    });
+    const navFiltered = navigation
+        .filter((item) => can[item.can])
+        .map((item) => {
+            item.active = item.showAsActiveForRoutes.some((routeName) => route().current(routeName));
+            item.items.map((subItem) => {
+                subItem.active = subItem.showAsActiveForRoutes.some((routeName) => route().current(routeName));
+                return subItem;
+            })
+            return item;
+        });
 
     return (
         <div className="h-screen flex overflow-hidden bg-gray-100">

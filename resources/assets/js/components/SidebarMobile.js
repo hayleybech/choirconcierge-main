@@ -3,7 +3,6 @@ import React, {Fragment} from "react";
 import {XIcon} from "@heroicons/react/outline";
 import {Link} from "@inertiajs/inertia-react";
 import route from "ziggy-js";
-import classNames from "../classnames";
 import MainNavigation from "./MainNavigation";
 
 const SidebarMobile = ({navigation, open, setOpen}) => (
