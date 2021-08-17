@@ -4,46 +4,6 @@ import SingerPageHeader from "./SingerPageHeader";
 import {Link} from "@inertiajs/inertia-react";
 import {ChevronRightIcon} from "@heroicons/react/solid";
 
-const people = [
-    {
-        name: 'Jane Cooper',
-        title: 'Regional Paradigm Technician',
-        department: 'Optimization',
-        role: 'Admin',
-        email: 'jane.cooper@example.com',
-        image:
-            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-    },
-    {
-        name: 'Jane Cooper',
-        title: 'Regional Paradigm Technician',
-        department: 'Optimization',
-        role: 'Admin',
-        email: 'jane.cooper@example.com',
-        image:
-            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-    },
-    {
-        name: 'Jane Cooper',
-        title: 'Regional Paradigm Technician',
-        department: 'Optimization',
-        role: 'Admin',
-        email: 'jane.cooper@example.com',
-        image:
-            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-    },
-    {
-        name: 'Jane Cooper',
-        title: 'Regional Paradigm Technician',
-        department: 'Optimization',
-        role: 'Admin',
-        email: 'jane.cooper@example.com',
-        image:
-            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-    },
-    // More people...
-]
-
 const Index = ({all_singers}) => (
     <>
         <div className="py-6 bg-white border-b border-gray-300">
@@ -84,7 +44,7 @@ const Index = ({all_singers}) => (
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    Title
+                                    Voice Part
                                 </th>
                                 <th
                                     scope="col"
@@ -96,7 +56,7 @@ const Index = ({all_singers}) => (
                                     scope="col"
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    Role
+                                    Email
                                 </th>
                                 <th scope="col" className="relative px-6 py-3">
                                     <span className="sr-only">Edit</span>
@@ -104,29 +64,45 @@ const Index = ({all_singers}) => (
                             </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                            {people.map((person) => (
-                                <tr key={person.email}>
+                            {all_singers.map((singer) => (
+                                <tr key={singer.id}>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
                                             <div className="flex-shrink-0 h-10 w-10">
-                                                <img className="h-10 w-10 rounded-md" src={person.image} alt="" />
+                                                <img className="h-10 w-10 rounded-md" src={singer.user.avatar_url} alt="" />
                                             </div>
                                             <div className="ml-4">
-                                                <div className="text-sm font-medium text-gray-900">{person.name}</div>
-                                                <div className="text-sm text-gray-500">{person.email}</div>
+                                                <Link href={route('singers.show', singer.id)} className="text-sm font-medium text-purple-800">{singer.user.name}</Link>
+                                                <div className="text-sm text-gray-500"><i className="fas fa-fw fa-phone mr-1.5" /> {singer.user.phone ?? 'No phone'}</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">{person.title}</div>
-                                        <div className="text-sm text-gray-500">{person.department}</div>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {/* Badge */}
+                                        {/* @todo Use tailwind colours for voice parts */}
+                                        {/* span: bg-indigo-100 text-indigo-800 */}
+                                        {/*svg: text-indigo-400 */}
+                                        {singer.voice_part && (
+                                            <span
+                                                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200"
+                                                style={{ textColor: singer.voice_part.colour ?? '#1F2937'}}>
+                                                    <svg className="-ml-0.5 mr-1.5 h-2 w-2" fill="currentColor" viewBox="0 0 8 8" style={{ textColor: singer.voice_part.colour ?? '#9CA3AF', }}>>
+                                                      <circle cx={4} cy={4} r={3} />
+                                                    </svg>
+                                                { singer.voice_part.title }
+                                                </span>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        Active
-                      </span>
+                                        <i className={"fas fa-fw fa-circle mr-1.5 text-sm text-"+singer.category.colour} />
+                                        <span className="text-sm font-medium text-gray-500 truncate">{singer.category.name}</span>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{person.role}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-gray-500">
+                                            <i className="fas fa-fw fa-envelope mr-1.5" />
+                                            <span>{singer.user.email}</span>
+                                        </div>
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <a href="#" className="text-indigo-600 hover:text-indigo-900">
                                             Edit
