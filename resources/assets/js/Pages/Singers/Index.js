@@ -19,7 +19,9 @@ const Index = ({all_singers}) => (
                 </Link>
             ]}
             actions={[
-
+                { label: 'Add New', icon: 'user-plus', route: 'singers.create'},
+                { label: 'Voice Parts', icon: 'users-class', route: 'voice-parts.index'},
+                { label: 'Filter', icon: 'filter', route: 'voice-parts.index'},
             ]}
         />
 

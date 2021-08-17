@@ -8,12 +8,13 @@ import {
 } from '@heroicons/react/solid'
 import { Menu, Transition } from '@headlessui/react'
 import Breadcrumbs from "../../components/Breadcrumbs";
+import {Link} from "@inertiajs/inertia-react";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-const SingerPageHeader = ({title, icon, meta, breadcrumbs}) => (
+const SingerPageHeader = ({title, icon, meta, breadcrumbs, actions = []}) => (
     <div className="py-6 bg-white border-b border-gray-300">
         <div className=" px-4 sm:px-6 md:px-8">
             <div className="lg:flex lg:items-center lg:justify-between">
@@ -24,36 +25,27 @@ const SingerPageHeader = ({title, icon, meta, breadcrumbs}) => (
                         {meta}
                     </div>
                 </div>
-                <div className="mt-5 flex lg:mt-0 lg:ml-4">
-                    <span className="hidden sm:block">
-                      <button
-                          type="button"
-                          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      >
-                        <PencilIcon className="-ml-1 mr-2 h-5 w-5 text-gray-500" aria-hidden="true" />
-                        Edit
-                      </button>
-                    </span>
-
-                    <span className="hidden sm:block ml-3">
-                      <button
-                          type="button"
-                          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      >
-                        <LinkIcon className="-ml-1 mr-2 h-5 w-5 text-gray-500" aria-hidden="true" />
-                        View
-                      </button>
-                    </span>
-
-                    <span className="sm:ml-3">
-                      <button
-                          type="button"
-                          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                      >
-                        <CheckIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-                        Publish
-                      </button>
-                    </span>
+                <div className="mt-5 flex sm:flex-row-reverse lg:mt-0 lg:ml-4">
+                    {actions.map((action, key) => key === 0
+                        ?   <span className="sm:ml-3" key={key}>
+                              <Link
+                                  href={route(action.route)}
+                                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                              >
+                                  <i className={"fa fa-fw -ml-1 mr-2 fa-"+action.icon} />
+                                  {action.label}
+                              </Link>
+                            </span>
+                        :   <span className="hidden sm:block ml-3" key={key}>
+                              <Link
+                                  href={route(action.route)}
+                                  className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              >
+                                  <i className={"fa fa-fw -ml-1 mr-2 text-gray-500 fa-"+action.icon} />
+                                  {action.label}
+                              </Link>
+                            </span>
+                    )}
 
                     {/* Dropdown */}
                     <Menu as="span" className="ml-3 relative sm:hidden">
