@@ -4,6 +4,7 @@ import SingerPageHeader from "./SingerPageHeader";
 import {Link} from "@inertiajs/inertia-react";
 import {ChevronRightIcon} from "@heroicons/react/solid";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
+import VoicePartTag from "../../components/VoicePartTag";
 
 const Index = ({all_singers}) => (
     <>
@@ -79,20 +80,7 @@ const Index = ({all_singers}) => (
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {/* Badge */}
-                                        {/* @todo Use tailwind colours for voice parts */}
-                                        {/* span: bg-indigo-100 text-indigo-800 */}
-                                        {/*svg: text-indigo-400 */}
-                                        {singer.voice_part && (
-                                            <span
-                                                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200"
-                                                style={{ textColor: singer.voice_part.colour ?? '#1F2937'}}>
-                                                    <svg className="-ml-0.5 mr-1.5 h-2 w-2" fill="currentColor" viewBox="0 0 8 8" style={{ textColor: singer.voice_part.colour ?? '#9CA3AF', }}>>
-                                                      <circle cx={4} cy={4} r={3} />
-                                                    </svg>
-                                                { singer.voice_part.title }
-                                                </span>
-                                        )}
+                                        {singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} withLabel />
@@ -135,20 +123,7 @@ const Index = ({all_singers}) => (
                                                     <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} />
                                                     <span className="text-sm font-medium text-indigo-600 truncate">{singer.user.name}</span>
                                                 </p>
-                                                {/* Badge */}
-                                                {/* @todo Use tailwind colours for voice parts */}
-                                                {/* span: bg-indigo-100 text-indigo-800 */}
-                                                {/*svg: text-indigo-400 */}
-                                                {singer.voice_part && (
-                                                <span
-                                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200"
-                                                    style={{ textColor: singer.voice_part.colour ?? '#1F2937'}}>
-                                                    <svg className="-ml-0.5 mr-1.5 h-2 w-2" fill="currentColor" viewBox="0 0 8 8" style={{ textColor: singer.voice_part.colour ?? '#9CA3AF', }}>>
-                                                      <circle cx={4} cy={4} r={3} />
-                                                    </svg>
-                                                    { singer.voice_part.title }
-                                                </span>
-                                                )}
+                                                {singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}
                                             </div>
                                             <div className="flex items-center justify-between">
                                                 <p className="mt-2 flex items-center text-sm text-gray-500 min-w-0">
