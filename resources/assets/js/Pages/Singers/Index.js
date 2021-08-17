@@ -3,6 +3,7 @@ import Layout from "../../Layouts/Layout";
 import SingerPageHeader from "./SingerPageHeader";
 import {Link} from "@inertiajs/inertia-react";
 import {ChevronRightIcon} from "@heroicons/react/solid";
+import SingerCategoryTag from "../../components/SingerCategoryTag";
 
 const Index = ({all_singers}) => (
     <>
@@ -94,8 +95,7 @@ const Index = ({all_singers}) => (
                                         )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <i className={"fas fa-fw fa-circle mr-1.5 text-sm text-"+singer.category.colour} />
-                                        <span className="text-sm font-medium text-gray-500 truncate">{singer.category.name}</span>
+                                        <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} withLabel />
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm text-gray-500">
@@ -132,7 +132,7 @@ const Index = ({all_singers}) => (
                                         <div>
                                             <div className="flex items-center justify-between">
                                                 <p className="flex items-center min-w-0 mr-1.5">
-                                                    <i className={"fas fa-fw fa-circle mr-1.5 text-"+singer.category.colour} />
+                                                    <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} />
                                                     <span className="text-sm font-medium text-indigo-600 truncate">{singer.user.name}</span>
                                                 </p>
                                                 {/* Badge */}
