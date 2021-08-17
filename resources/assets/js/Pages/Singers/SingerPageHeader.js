@@ -13,12 +13,12 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function SingerPageHeader({title, meta, breadcrumbs}) {
+export default function SingerPageHeader({title, icon, meta, breadcrumbs}) {
     return (
         <div className="lg:flex lg:items-center lg:justify-between">
             <div className="flex-1 min-w-0">
                 <Breadcrumbs breadcrumbs={breadcrumbs} />
-                <h2 className="mt-2 text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">{title}</h2>
+                <h2 className="mt-2 text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate"><i className={'fas fa-fw mr-2 '+icon} /> {title}</h2>
                 <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
                     {meta}
                 </div>

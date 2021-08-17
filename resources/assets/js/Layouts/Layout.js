@@ -38,14 +38,14 @@ export default function Layout({children}) {
             <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
 
             {/* Static sidebar for desktop */}
-            <div className="hidden md:flex md:flex-shrink-0">
+            <div className="hidden lg:flex lg:flex-shrink-0">
                 <SidebarDesktop navigation={navFiltered} />
             </div>
             <div className="flex flex-col w-0 flex-1 overflow-hidden">
                 <div className="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-300">
                     <button
                         type="button"
-                        className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+                        className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 lg:hidden"
                         onClick={() => setSidebarOpen(true)}
                     >
                         <span className="sr-only">Open sidebar</span>
@@ -53,7 +53,7 @@ export default function Layout({children}) {
                     </button>
                     <div className="flex-1 px-4 flex justify-between">
                         <div className="flex-1 flex">
-                            {/*<form className="w-full flex md:ml-0" action="#" method="GET">*/}
+                            {/*<form className="w-full flex lg:ml-0" action="#" method="GET">*/}
                             {/*    <label htmlFor="search-field" className="sr-only">*/}
                             {/*        Search*/}
                             {/*    </label>*/}
@@ -71,7 +71,7 @@ export default function Layout({children}) {
                             {/*    </div>*/}
                             {/*</form>*/}
                         </div>
-                        <div className="ml-4 flex items-center md:ml-6">
+                        <div className="ml-4 flex items-center lg:ml-6">
                             <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                                 <span className="sr-only">View notifications</span>
                                 <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -83,7 +83,7 @@ export default function Layout({children}) {
                                     <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                                         <span className="sr-only">Open user menu</span>
                                         <img
-                                            className="h-8 w-8 rounded-full"
+                                            className="h-8 w-8 rounded-lg"
                                             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                                             alt=""
                                         />

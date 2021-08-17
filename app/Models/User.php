@@ -105,7 +105,7 @@ class User extends Authenticatable implements HasMedia
 
 	public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
 
-    protected $appends = ['name'];
+    protected $appends = ['name', 'avatar_url'];
 
 	public $notify_channels = ['database', 'mail'];
 
@@ -206,6 +206,11 @@ class User extends Authenticatable implements HasMedia
 		}
 		return $this->getFirstMediaUrl('avatar');
 	}
+
+	public function getAvatarUrlAttribute(): string
+    {
+        return $this->getFirstMediaUrl('avatar', 'thumb');
+    }
 
 	// @todo make separate user vs singer welcome email
 	public static function sendWelcomeEmail($user): void
