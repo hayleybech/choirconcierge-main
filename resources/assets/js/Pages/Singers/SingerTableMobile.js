@@ -2,7 +2,6 @@ import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
 import VoicePartTag from "../../components/VoicePartTag";
-import {ChevronRightIcon} from "@heroicons/react/solid";
 
 const SingerTableMobile = ({ singers }) => (
     <ul className="divide-y divide-gray-200">
@@ -49,7 +48,7 @@ const SingerTableMobile = ({ singers }) => (
                             </div>
                         </div>
                         <div>
-                            <ChevronRightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            <i className="fa fa-fw fa-chevron-right text-gray-400" />
                         </div>
                     </div>
                 </Link>
