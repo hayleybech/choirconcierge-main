@@ -7,25 +7,21 @@ import SingerTableMobile from "./SingerTableMobile";
 
 const Index = ({all_singers}) => (
     <>
-        <div className="py-6 bg-white border-b border-gray-300">
-            <div className=" px-4 sm:px-6 md:px-8">
-                <SingerPageHeader
-                    title="Singers"
-                    icon="fa-users"
-                    breadcrumbs={[
-                        <Link href={route('dash')} className="text-sm font-medium text-gray-500 hover:text-gray-700">
-                            Dashboard
-                        </Link>,
-                        <Link href={route('singers.index')} className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">
-                            Singers
-                        </Link>
-                    ]}
-                    actions={[
+        <SingerPageHeader
+            title="Singers"
+            icon="fa-users"
+            breadcrumbs={[
+                <Link href={route('dash')} className="text-sm font-medium text-gray-500 hover:text-gray-700">
+                    Dashboard
+                </Link>,
+                <Link href={route('singers.index')} className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">
+                    Singers
+                </Link>
+            ]}
+            actions={[
 
-                    ]}
-                />
-            </div>
-        </div>
+            ]}
+        />
 
         {/* Desktop Table */}
         <div className="hidden lg:flex flex-col">
