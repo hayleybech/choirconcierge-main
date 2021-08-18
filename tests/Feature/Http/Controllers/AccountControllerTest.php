@@ -38,7 +38,7 @@ class AccountControllerTest extends TestCase
 	 */
 	public function update_saves_the_user_details($getData): void
 	{
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->has(Singer::factory())->create());
 
 		$data = $getData();
 		$response = $this->put(the_tenant_route('accounts.update'), $data);

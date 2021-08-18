@@ -131,4 +131,14 @@ Route::middleware([
 
     // Public calendar feed
     Route::get('/events-ical', [ICalController::class, 'index'])->name('events.feed');
+
+    // Feature Flag
+    Route::get('/rebuild-on', function() {
+        Session::put('rebuild', 'on');
+        return redirect()->back();
+    });
+    Route::get('/rebuild-off', function() {
+        Session::put('rebuild', 'off');
+        return redirect()->back();
+    });
 });

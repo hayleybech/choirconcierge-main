@@ -1,20 +1,16 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
 import Vue from 'vue';
+import ReadMore from 'vue-read-more';
+import * as Sentry from '@sentry/vue';
+import { Integrations as TracingIntegrations } from '@sentry/tracing';
 
-const VERSION = 'choir-concierge@2021-08-10a';
+const VERSION = 'choir-concierge@2021-08-18a';
 
+console.log('test');
 require('./bootstrap');
 require('select2');
 
-import ReadMore from 'vue-read-more';
 Vue.use(ReadMore);
 
-import * as Sentry from '@sentry/vue';
-import { Integrations as TracingIntegrations } from '@sentry/tracing';
 Sentry.init({
 	Vue: Vue,
 	dsn: process.env.MIX_SENTRY_DSN,
@@ -79,6 +75,3 @@ const app = new Vue({
 		this.loading = false;
 	},
 });
-
-//const helloWorld = require('./test').test();
-//console.log(helloWorld);
