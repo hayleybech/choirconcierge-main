@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\SetFeatureFlags;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -44,6 +45,8 @@ class Kernel extends HttpKernel
 			\Illuminate\View\Middleware\ShareErrorsFromSession::class,
 			\App\Http\Middleware\VerifyCsrfToken::class,
 			\Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\HandleInertiaRequests::class,
+            SetFeatureFlags::class,
 		],
 
 		'api' => ['throttle:60,1', 'bindings'],
@@ -66,5 +69,6 @@ class Kernel extends HttpKernel
 		'role' => \App\Http\Middleware\CheckRole::class,
 		'role_or_self' => \App\Http\Middleware\CheckRoleOrSameUser::class,
 		'employee' => \App\Http\Middleware\CheckAnyRole::class,
+
 	];
 }

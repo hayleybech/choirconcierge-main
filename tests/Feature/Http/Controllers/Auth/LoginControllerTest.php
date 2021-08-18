@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Auth;
 
+use App\Models\Singer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -47,7 +48,7 @@ class LoginControllerTest extends TestCase
 	public function logout_deauthenticates_and_redirects_user(): void
 	{
 		// login
-		$user = User::factory()->create();
+		$user = User::factory()->has(Singer::factory())->create();
 
 		$this->post(the_tenant_route('login'), [
 			'email' => $user->email,
