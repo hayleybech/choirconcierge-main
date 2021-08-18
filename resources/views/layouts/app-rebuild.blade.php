@@ -30,7 +30,7 @@
     @inertia
 
     <!-- Scripts -->
-    <script src="{{ mix('/js/app.js') }}"></script>
+    <script src="{{ mix('/js/app-rebuild.js') }}"></script>
 
 {{--	<script>--}}
 {{--	  var HW_config = {--}}

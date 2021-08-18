@@ -12,28 +12,46 @@ const mix = require('laravel-mix');
  */
 const rebuild = process.env.MIX_FEATURE_REBUILD;
 
-if(rebuild === 'true') {
-	console.log('Mixing React');
+console.log('Mixing both React and Vue');
 
-	mix.js('resources/assets/js/app-rebuild.js', 'public/js/app.js')
-		.postCss('resources/assets/app.css', 'public/css/app-rebuild.css', [
-			require('tailwindcss')
-		])
-		.react();
+mix.js('resources/assets/js/app-rebuild.js', 'public/js/app-rebuild.js')
+	.postCss('resources/assets/app.css', 'public/css/app-rebuild.css', [
+		require('tailwindcss')
+	])
+	.react()
 
-	const path = require('path');
-	mix.alias({
-		ziggy: path.resolve('vendor/tightenco/ziggy/dist'),
-	});
+	.js('resources/assets/js/app.js', 'public/js')
+	.ts('resources/assets/js/test.ts', 'public/js')
+	.sass('resources/assets/sass/app.scss', 'public/css')
+	.vue();
 
-} else {
-	console.log('Mixing Vue');
+const path = require('path');
+mix.alias({
+	ziggy: path.resolve('vendor/tightenco/ziggy/dist'),
+});
 
-	mix.js('resources/assets/js/app.js', 'public/js')
-		.ts('resources/assets/js/test.ts', 'public/js')
-		.sass('resources/assets/sass/app.scss', 'public/css')
-		.vue();
-}
+// if(rebuild === 'true') {
+// 	console.log('Mixing React');
+//
+// 	mix.js('resources/assets/js/app-rebuild.js', 'public/js/app-rebuild.js')
+// 		.postCss('resources/assets/app.css', 'public/css/app-rebuild.css', [
+// 			require('tailwindcss')
+// 		])
+// 		.react();
+//
+// 	const path = require('path');
+// 	mix.alias({
+// 		ziggy: path.resolve('vendor/tightenco/ziggy/dist'),
+// 	});
+//
+// } else {
+// 	console.log('Mixing Vue');
+//
+// 	mix.js('resources/assets/js/app.js', 'public/js')
+// 		.ts('resources/assets/js/test.ts', 'public/js')
+// 		.sass('resources/assets/sass/app.scss', 'public/css')
+// 		.vue();
+// }
 
 if (mix.inProduction()) {
 	mix.version();
