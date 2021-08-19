@@ -15,9 +15,9 @@ const rebuild = process.env.MIX_FEATURE_REBUILD;
 console.log('Mixing both React and Vue');
 
 mix.js('resources/assets/js/app-rebuild.js', 'public/js/app-rebuild.js')
-	.postCss('resources/assets/app.css', 'public/css/app-rebuild.css', [
-		require('tailwindcss')
-	])
+	// .postCss('resources/assets/app.css', 'public/css/app-rebuild.css', [
+	// 	require('tailwindcss')
+	// ])
 	.react()
 
 	.js('resources/assets/js/app.js', 'public/js')
