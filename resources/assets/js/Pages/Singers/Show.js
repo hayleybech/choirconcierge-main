@@ -1,8 +1,10 @@
 import React from 'react'
 import Layout from "../../Layouts/Layout";
 import SingerPageHeader from "./SingerPageHeader";
-import {BriefcaseIcon, CalendarIcon, CurrencyDollarIcon, LocationMarkerIcon} from "@heroicons/react/solid";
 import {Link} from "@inertiajs/inertia-react";
+import VoicePartTag from "../../components/VoicePartTag";
+import SingerCategoryTag from "../../components/SingerCategoryTag";
+import moment from "moment";
 
 const Show = ({singer}) => (
     <>
@@ -12,20 +14,14 @@ const Show = ({singer}) => (
             meta={(
             <>
                 <div className="mt-2 flex items-center text-sm text-gray-500">
-                    <BriefcaseIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
-                    Full-time
+                    {singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}
                 </div>
                 <div className="mt-2 flex items-center text-sm text-gray-500">
-                    <LocationMarkerIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
-                    Remote
+                    <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} withLabel />
                 </div>
                 <div className="mt-2 flex items-center text-sm text-gray-500">
-                    <CurrencyDollarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
-                    $120k &ndash; $140k
-                </div>
-                <div className="mt-2 flex items-center text-sm text-gray-500">
-                    <CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
-                    Closing on January 9, 2020
+                    <i className="far fa-fw fa-calendar-day mr-1.5 text-gray-400 text-md" />
+                    Joined {moment(singer.joined_at).format('MMMM D, YYYY')}
                 </div>
             </>)}
             breadcrumbs={[
