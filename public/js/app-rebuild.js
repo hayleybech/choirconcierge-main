@@ -25862,19 +25862,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/assets/app.css":
-/*!**********************************!*\
-  !*** ./resources/assets/app.css ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
-
-/***/ }),
-
 /***/ "./node_modules/nprogress/nprogress.js":
 /*!*********************************************!*\
   !*** ./node_modules/nprogress/nprogress.js ***!
@@ -57704,7 +57691,6 @@ webpackContext.id = "./resources/assets/js/Pages sync recursive ^\\.\\/.*$";
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			"/js/app-rebuild": 0,
-/******/ 			"css/app-rebuild": 0,
 /******/ 			"css/app": 0
 /******/ 		};
 /******/ 		
@@ -57753,9 +57739,8 @@ webpackContext.id = "./resources/assets/js/Pages sync recursive ^\\.\\/.*$";
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/app-rebuild","css/app"], () => (__webpack_require__("./resources/assets/js/app-rebuild.js")))
-/******/ 	__webpack_require__.O(undefined, ["css/app-rebuild","css/app"], () => (__webpack_require__("./resources/assets/sass/app.scss")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app-rebuild","css/app"], () => (__webpack_require__("./resources/assets/app.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/assets/js/app-rebuild.js")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/assets/sass/app.scss")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

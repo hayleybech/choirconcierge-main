@@ -136,9 +136,10 @@ Route::middleware([
     Route::get('/rebuild-on', function() {
         Session::put('rebuild', 'on');
         return redirect()->back();
-    });
+    })->name('rebuild.on');
+
     Route::get('/rebuild-off', function() {
         Session::put('rebuild', 'off');
         return redirect()->back();
-    });
+    })->name('rebuild.off');
 });

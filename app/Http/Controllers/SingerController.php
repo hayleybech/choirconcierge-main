@@ -51,13 +51,6 @@ class SingerController extends Controller
 
             return Inertia::render('Singers/Index', [
                 'all_singers' => $all_singers,
-                'active_singers' => $all_singers->whereIn('category.name', ['Members', 'Prospects']),
-                'member_singers' => $all_singers->whereIn('category.name', ['Members']),
-                'prospect_singers' => $all_singers->whereIn('category.name', ['Prospects']),
-                'archived_singers' => $all_singers->whereIn('category.name', ['Archived Members', 'Archived Prospects']),
-                'filters' => Singer::getFilters(),
-                'sorts' => ($sorts = $this->getSorts($request)),
-                'categories' => SingerCategory::all(),
             ]);
         }
 

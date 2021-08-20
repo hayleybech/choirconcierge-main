@@ -10,7 +10,7 @@
     <title>@yield('title') | {{ config('app.name', 'Choir Concierge') }}</title>
 
     <!-- Styles -->
-    <link href="{{ mix('/css/app-rebuild.css') }}" rel="stylesheet">
+    <link href="{{ global_asset('/css/app-rebuild.css') }}" rel="stylesheet">
 
 {{--    <link href="{{ global_asset('/css/style.css') }}" rel="stylesheet">--}}
     <link href="{{ global_asset('/vendor/fontawesome-pro/css/all.min.css') }}" rel="stylesheet">
