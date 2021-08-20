@@ -8,7 +8,7 @@ const Show = ({singer}) => (
     <>
         <SingerPageHeader
             title={singer.user.name}
-            icon="fa-users"
+            image={singer.user.avatar_url}
             meta={(
             <>
                 <div className="mt-2 flex items-center text-sm text-gray-500">
