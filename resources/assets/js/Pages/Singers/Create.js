@@ -11,6 +11,7 @@ import Date from "../../components/inputs/Date";
 import Help from "../../components/inputs/Help";
 import FormSection from "../../components/FormSection";
 import Button from "../../components/inputs/Button";
+import ButtonLink from "../../components/inputs/ButtonLink";
 
 const Create = ({voice_parts, roles}) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -203,7 +204,7 @@ const Create = ({voice_parts, roles}) => {
 
                         <div className="pt-5">
                             <div className="flex justify-end">
-                                <Button>Cancel</Button>
+                                <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
                                 <Button primary type="submit">Save</Button>
                             </div>
                         </div>
