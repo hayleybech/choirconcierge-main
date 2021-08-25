@@ -27,7 +27,7 @@ const Create = ({voice_parts, roles}) => {
         membership_details: '',
 
         existing_member: false,
-        joined_at: '',
+        joined_at: undefined,
         user_roles: [],
     });
 
@@ -162,7 +162,12 @@ const Create = ({voice_parts, roles}) => {
                             <FormSection title="Existing Member Details">
                                 <div className="sm:col-span-6">
                                     <Label label="Joined" forInput="joined_at" />
-                                    <Date name="joined_at" placeholder="26/09/1991" hasErrors={ !! errors['joined_at'] } {...syncInput('joined_at')} />
+                                    <Date
+                                        name="joined_at"
+                                        hasErrors={ !! errors.joined_at }
+                                        value={data.joined_at}
+                                        onChange={ day => setData('joined_at', day)}
+                                    />
                                     {errors.joined_at && <Error>{errors.joined_at}</Error>}
                                 </div>
 
