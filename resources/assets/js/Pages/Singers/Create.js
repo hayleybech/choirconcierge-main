@@ -33,7 +33,6 @@ const Create = ({voice_parts, roles}) => {
 
     function submit(e) {
         e.preventDefault();
-        console.log(data);
         post(route('singers.store'));
     }
 

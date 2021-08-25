@@ -38154,7 +38154,6 @@ var Create = function Create(_ref) {
 
   function submit(e) {
     e.preventDefault();
-    console.log(data);
     post(route('singers.store'));
   }
 
