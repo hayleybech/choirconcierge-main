@@ -37698,7 +37698,6 @@ var Create = function Create(_ref) {
               className: "flex justify-end",
               children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__.default, {
                 href: route('singers.index'),
-                disabled: true,
                 children: "Cancel"
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Button__WEBPACK_IMPORTED_MODULE_12__.default, {
                 primary: true,
