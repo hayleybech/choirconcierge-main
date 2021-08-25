@@ -37698,11 +37698,13 @@ var Create = function Create(_ref) {
               className: "flex justify-end",
               children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__.default, {
                 href: route('singers.index'),
+                disabled: true,
                 children: "Cancel"
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Button__WEBPACK_IMPORTED_MODULE_12__.default, {
                 primary: true,
                 type: "submit",
                 className: "ml-3",
+                disabled: processing,
                 children: "Save"
               })]
             })
@@ -38831,6 +38833,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _buttonStyles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./buttonStyles */ "./resources/assets/js/components/inputs/buttonStyles.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+var _excluded = ["primary", "className", "children", "disabled"];
+
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
 
@@ -38884,6 +38888,42 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
 
 
 
@@ -38892,9 +38932,12 @@ var Button = function Button(_ref) {
   var primary = _ref.primary,
       className = _ref.className,
       children = _ref.children,
-      otherProps = _ref.otherProps;
+      disabled = _ref.disabled,
+      otherProps = _objectWithoutProperties(_ref, _excluded);
+
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", _objectSpread(_objectSpread({
-    className: (0,_buttonStyles__WEBPACK_IMPORTED_MODULE_1__.default)(primary, className)
+    className: (0,_buttonStyles__WEBPACK_IMPORTED_MODULE_1__.default)(primary, disabled, className),
+    disabled: disabled
   }, otherProps), {}, {
     children: children
   }));
@@ -38919,6 +38962,97 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
 /* harmony import */ var _buttonStyles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./buttonStyles */ "./resources/assets/js/components/inputs/buttonStyles.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+var _excluded = ["href", "primary", "className", "children", "disabled"];
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+
+    if (enumerableOnly) {
+      symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+    }
+
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
 
 
 
@@ -38928,12 +39062,16 @@ var ButtonLink = function ButtonLink(_ref) {
   var href = _ref.href,
       primary = _ref.primary,
       className = _ref.className,
-      children = _ref.children;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, {
+      children = _ref.children,
+      disabled = _ref.disabled,
+      otherProps = _objectWithoutProperties(_ref, _excluded);
+
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, _objectSpread(_objectSpread({
     href: href,
-    className: (0,_buttonStyles__WEBPACK_IMPORTED_MODULE_2__.default)(primary, className),
+    className: (0,_buttonStyles__WEBPACK_IMPORTED_MODULE_2__.default)(primary, disabled, className)
+  }, otherProps), {}, {
     children: children
-  });
+  }));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ButtonLink);
@@ -39276,8 +39414,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classNames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../classNames */ "./resources/assets/js/classNames.js");
 
 
-var buttonStyles = function buttonStyles(primary, extra) {
-  return (0,_classNames__WEBPACK_IMPORTED_MODULE_0__.default)('inline-flex justify-center py-2 px-4 border shadow-sm text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500', primary ? 'bg-purple-600 border-transparent text-white hover:bg-purple-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50', extra);
+var buttonStyles = function buttonStyles(primary, disabled, extra) {
+  return (0,_classNames__WEBPACK_IMPORTED_MODULE_0__.default)('inline-flex justify-center py-2 px-4 border shadow-sm text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500', primary ? 'bg-purple-600 border-transparent text-white hover:bg-purple-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50', disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : '', extra);
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (buttonStyles);
