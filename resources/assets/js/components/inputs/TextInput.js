@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from '../../classnames';
+import classNames from '../../classNames';
 
 const TextInput = ({name, type = 'text', value, onChange, hasErrors, otherProps}) => (
     <div className="mt-1">

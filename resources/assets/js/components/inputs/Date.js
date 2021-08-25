@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from '../../classnames';
+import classNames from '../../classNames';
 
 const Date = ({ name, placeholder, hasErrors }) => (
     <div className="mt-1 relative rounded-md shadow-sm">

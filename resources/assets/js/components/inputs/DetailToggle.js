@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch } from '@headlessui/react'
-import classNames from '../../classnames';
+import classNames from '../../classNames';
 
 const DetailToggle = ({label, description, checked, onChange}) => (
     <Switch.Group as="div" className="flex items-center justify-between">

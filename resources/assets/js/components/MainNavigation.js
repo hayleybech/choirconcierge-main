@@ -1,6 +1,6 @@
 import {Link} from "@inertiajs/inertia-react";
 import route from "ziggy-js";
-import classNames from "../classnames";
+import classNames from "../classNames";
 import React from "react";
 
 const MainNavigation = ({navigation}) => (

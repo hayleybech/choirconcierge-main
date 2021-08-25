@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from '../../classnames';
+import classNames from '../../classNames';
 
 const Select = ({ name, options, hasErrors }) => (
     <select

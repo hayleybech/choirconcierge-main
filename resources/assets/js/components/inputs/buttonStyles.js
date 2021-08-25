@@ -1,10 +1,11 @@
-import classNames from '../../classnames';
+import classNames from '../../classNames';
 
-const buttonStyles = (primary) => classNames(
-    'ml-3 inline-flex justify-center py-2 px-4 border shadow-sm text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500',
+const buttonStyles = (primary, extra) => classNames(
+    'inline-flex justify-center py-2 px-4 border shadow-sm text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500',
     primary
         ? 'bg-purple-600 border-transparent text-white hover:bg-purple-700'
-        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50',
+    extra
 );
 
 export default buttonStyles;
