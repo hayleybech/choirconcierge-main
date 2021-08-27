@@ -1,7 +1,7 @@
 import React from 'react'
 import Layout from "../../Layouts/Layout";
 import SingerPageHeader from "./SingerPageHeader";
-import {Link, useForm} from "@inertiajs/inertia-react";
+import {useForm} from "@inertiajs/inertia-react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import DetailToggle from "../../components/inputs/DetailToggle";
@@ -71,15 +71,9 @@ const Create = ({voice_parts, roles}) => {
                 title={'Create Singer'}
                 icon="fa-users"
                 breadcrumbs={[
-                    <Link href={route('dash')} className="text-sm font-medium text-gray-500 hover:text-gray-700">
-                        Dashboard
-                    </Link>,
-                    <Link href={route('singers.index')} className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">
-                        Singers
-                    </Link>,
-                    <Link href={route('singers.create')} className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">
-                        Create
-                    </Link>
+                    { name: 'Dashboard', url: route('dash')},
+                    { name: 'Singers', url: route('singers.index')},
+                    { name: 'Create', url: route('singers.create')},
                 ]}
             />
 

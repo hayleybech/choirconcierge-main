@@ -1,7 +1,6 @@
 import React from 'react'
 import Layout from "../../Layouts/Layout";
 import SingerPageHeader from "./SingerPageHeader";
-import {Link} from "@inertiajs/inertia-react";
 import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
 import moment from "moment";
@@ -25,15 +24,9 @@ const Show = ({singer}) => (
                 </div>
             </>)}
             breadcrumbs={[
-                <Link href={route('dash')} className="text-sm font-medium text-gray-500 hover:text-gray-700">
-                    Dashboard
-                </Link>,
-                <Link href={route('singers.index')} className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">
-                    Singers
-                </Link>,
-                <Link href={route('singers.show', singer.id)} className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">
-                    {singer.user.name}
-                </Link>
+                { name: 'Dashboard', url: route('dash')},
+                { name: 'Singers', url: route('singers.index')},
+                { name: singer.user.name, url: route('singers.show', singer) },
             ]}
         />
     </>
