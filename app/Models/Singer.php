@@ -90,10 +90,10 @@ class Singer extends Model
 
 	public static function create(array $attributes = [])
 	{
-		/** @var Singer $singer */
-		$singer = static::query()->create($attributes);
+        /** @var Singer $singer */
+        $singer = static::query()->create($attributes);
 
-		// Sync roles
+        // Sync roles
 		$singer_roles = $attributes['user_roles'] ?? [];
 		$singer_roles[] = Role::firstWhere('name', 'User')->id;
 		$singer->roles()->sync($singer_roles);
@@ -108,7 +108,9 @@ class Singer extends Model
 
 		// Sync roles
 		if (isset($attributes['user_roles'])) {
-			$this->roles()->sync($attributes['user_roles'] ?? []);
+            $singer_roles = $attributes['user_roles'] ?? [];
+            $singer_roles[] = Role::firstWhere('name', 'User')->id;
+			$this->roles()->sync($singer_roles);
 		}
 		$this->save();
 

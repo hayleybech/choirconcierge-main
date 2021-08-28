@@ -75,7 +75,7 @@ class SingerController extends Controller
 			VoicePart::all()
 				->pluck('title', 'id')
 				->toArray();
-		$roles = Role::all();
+		$roles = Role::where('name', '!=', 'User')->get();
 
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');
@@ -102,14 +102,16 @@ class SingerController extends Controller
             'voice_part_id',
             'password_confirmation',
         ]));
-        $singer = $user->singers()->create(Arr::only($request->validated(), [
+        $singer = Singer::create(Arr::only($request->validated(), [
             'onboarding_enabled',
             'reason_for_joining',
             'referrer',
             'membership_details',
             'joined_at',
             'voice_part_id',
+            'user_roles',
         ]));
+        $singer->user_id = $user->id;
         $singer->initOnboarding();
         $singer->save();
 
@@ -151,7 +153,7 @@ class SingerController extends Controller
 				->pluck('title', 'id')
 				->toArray();
 
-		$roles = Role::all();
+		$roles = Role::where('name', '!=', 'User')->get();
 
 		return view('singers.edit', compact('singer', 'voice_parts', 'roles'));
 	}
