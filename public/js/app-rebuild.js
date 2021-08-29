@@ -38179,15 +38179,6 @@ var Create = function Create(_ref) {
     };
   }
 
-  function syncSwitch(inputName) {
-    return {
-      checked: data[inputName],
-      onChange: function onChange(checked) {
-        return setData(inputName, checked);
-      }
-    };
-  }
-
   function arrUnique(array) {
     console.log(array);
     return _toConsumableArray(new Set(array));
@@ -38340,10 +38331,14 @@ var Create = function Create(_ref) {
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
                 className: "sm:col-span-6",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, _objectSpread({
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, {
                   label: "Is this an existing member?",
-                  description: "Onboarding will be disabled when adding an existing singer."
-                }, syncSwitch('existing_member')))
+                  description: "Onboarding will be disabled when adding an existing singer.",
+                  value: data.existing_member,
+                  updateFn: function updateFn(value) {
+                    return setData('existing_member', value);
+                  }
+                })
               })]
             }), data.existing_member && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
               title: "Existing Member Details",

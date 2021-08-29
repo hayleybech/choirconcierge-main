@@ -54,12 +54,6 @@ const Create = ({voice_parts, roles}) => {
             )
         };
     }
-    function syncSwitch(inputName){
-        return {
-            checked: data[inputName],
-            onChange: checked => setData(inputName, checked),
-        };
-    }
 
     function arrUnique(array){
         console.log(array);
@@ -147,7 +141,8 @@ const Create = ({voice_parts, roles}) => {
                                     <DetailToggle
                                         label="Is this an existing member?"
                                         description="Onboarding will be disabled when adding an existing singer."
-                                        {...syncSwitch('existing_member')}
+                                        value={data.existing_member}
+                                        updateFn={(value) => setData('existing_member',  value)}
                                     />
                                 </div>
                             </FormSection>
