@@ -38056,7 +38056,7 @@ var Create = function Create(_ref) {
     reason_for_joining: '',
     referrer: '',
     membership_details: '',
-    existing_member: false,
+    onboarding_disabled: false,
     joined_at: undefined,
     user_roles: []
   }),
@@ -38249,13 +38249,13 @@ var Create = function Create(_ref) {
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, {
                   label: "Is this an existing member?",
                   description: "Onboarding will be disabled when adding an existing singer.",
-                  value: data.existing_member,
+                  value: data.onboarding_disabled,
                   updateFn: function updateFn(value) {
-                    return setData('existing_member', value);
+                    return setData('onboarding_disabled', value);
                   }
                 })
               })]
-            }), data.existing_member && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
+            }), data.onboarding_disabled && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
               title: "Existing Member Details",
               children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-6",
@@ -38376,7 +38376,7 @@ var Edit = function Edit(_ref) {
     reason_for_joining: singer.reason_for_joining,
     referrer: singer.referrer,
     membership_details: singer.membership_details,
-    existing_member: singer.onboarding_enabled,
+    onboarding_enabled: singer.onboarding_enabled,
     joined_at: singer.joined_at,
     user_roles: singer.roles.map(function (role) {
       return role.id;
@@ -38487,9 +38487,9 @@ var Edit = function Edit(_ref) {
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, {
                   label: "Enable onboarding?",
                   description: "Enable this only for new/prospective singers.",
-                  value: data.existing_member,
+                  value: data.onboarding_enabled,
                   updateFn: function updateFn(value) {
-                    return setData('existing_member', value);
+                    return setData('onboarding_enabled', value);
                   }
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {

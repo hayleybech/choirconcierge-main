@@ -20,7 +20,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
         referrer: singer.referrer,
         membership_details: singer.membership_details,
 
-        existing_member: singer.onboarding_enabled,
+        onboarding_enabled: singer.onboarding_enabled,
         joined_at: singer.joined_at,
         user_roles: singer.roles.map(role => role.id),
     });
@@ -79,8 +79,8 @@ const Edit = ({ voice_parts, roles, singer }) => {
                                     <DetailToggle
                                         label="Enable onboarding?"
                                         description="Enable this only for new/prospective singers."
-                                        value={data.existing_member}
-                                        updateFn={value => setData('existing_member',  value)}
+                                        value={data.onboarding_enabled}
+                                        updateFn={value => setData('onboarding_enabled',  value)}
                                     />
                                 </div>
 

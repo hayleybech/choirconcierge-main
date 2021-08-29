@@ -27,7 +27,7 @@ const Create = ({voice_parts, roles}) => {
         referrer: '',
         membership_details: '',
 
-        existing_member: false,
+        onboarding_disabled: false,
         joined_at: undefined,
         user_roles: [],
     });
@@ -118,13 +118,13 @@ const Create = ({voice_parts, roles}) => {
                                     <DetailToggle
                                         label="Is this an existing member?"
                                         description="Onboarding will be disabled when adding an existing singer."
-                                        value={data.existing_member}
-                                        updateFn={value => setData('existing_member',  value)}
+                                        value={data.onboarding_disabled}
+                                        updateFn={value => setData('onboarding_disabled',  value)}
                                     />
                                 </div>
                             </FormSection>
 
-                            {data.existing_member && (
+                            {data.onboarding_disabled && (
                             <FormSection title="Existing Member Details">
                                 <div className="sm:col-span-6">
                                     <Label label="Joined" forInput="joined_at" />
