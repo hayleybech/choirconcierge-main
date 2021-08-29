@@ -38023,41 +38023,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/inputs/ButtonLink */ "./resources/assets/js/components/inputs/ButtonLink.js");
 /* harmony import */ var _components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/inputs/CheckboxGroup */ "./resources/assets/js/components/inputs/CheckboxGroup.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
 
 
 
@@ -38104,22 +38069,6 @@ var Create = function Create(_ref) {
   function submit(e) {
     e.preventDefault();
     post(route('singers.store'));
-  }
-
-  function syncCheckboxes(groupName, inputValue) {
-    return {
-      value: data[groupName].includes(inputValue),
-      onChange: function onChange(e) {
-        return setData(groupName, e.target.checked ? arrUnique([].concat(_toConsumableArray(data[groupName]), [inputValue])) : data[groupName].filter(function (item) {
-          return item !== inputValue;
-        }));
-      }
-    };
-  }
-
-  function arrUnique(array) {
-    console.log(array);
-    return _toConsumableArray(new Set(array));
   }
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.Fragment, {
@@ -38331,7 +38280,10 @@ var Create = function Create(_ref) {
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_14__.default, {
                   name: "user_roles",
                   options: roles,
-                  syncFn: syncCheckboxes
+                  value: data.user_roles,
+                  updateFn: function updateFn(value) {
+                    return setData('user_roles', value);
+                  }
                 }), errors.user_roles && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.user_roles
                 })]
@@ -38391,48 +38343,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../components/inputs/Error */ "./resources/assets/js/components/inputs/Error.js");
 /* harmony import */ var _components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/inputs/Select */ "./resources/assets/js/components/inputs/Select.js");
 /* harmony import */ var _components_inputs_Date__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../components/inputs/Date */ "./resources/assets/js/components/inputs/Date.js");
-/* harmony import */ var _components_inputs_Help__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../components/inputs/Help */ "./resources/assets/js/components/inputs/Help.js");
-/* harmony import */ var _components_FormSection__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../components/FormSection */ "./resources/assets/js/components/FormSection.js");
-/* harmony import */ var _components_inputs_Button__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../components/inputs/Button */ "./resources/assets/js/components/inputs/Button.js");
-/* harmony import */ var _components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/inputs/ButtonLink */ "./resources/assets/js/components/inputs/ButtonLink.js");
-/* harmony import */ var _components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/inputs/CheckboxGroup */ "./resources/assets/js/components/inputs/CheckboxGroup.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
-
+/* harmony import */ var _components_FormSection__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../components/FormSection */ "./resources/assets/js/components/FormSection.js");
+/* harmony import */ var _components_inputs_Button__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../components/inputs/Button */ "./resources/assets/js/components/inputs/Button.js");
+/* harmony import */ var _components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../components/inputs/ButtonLink */ "./resources/assets/js/components/inputs/ButtonLink.js");
+/* harmony import */ var _components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/inputs/CheckboxGroup */ "./resources/assets/js/components/inputs/CheckboxGroup.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 
 
 
@@ -38478,23 +38393,8 @@ var Edit = function Edit(_ref) {
     put(route('singers.update', singer));
   }
 
-  function syncCheckboxes(groupName, inputValue) {
-    return {
-      checked: data[groupName].includes(inputValue),
-      onChange: function onChange(e) {
-        return setData(groupName, e.target.checked ? arrUnique([].concat(_toConsumableArray(data[groupName]), [inputValue])) : data[groupName].filter(function (item) {
-          return item !== inputValue;
-        }));
-      }
-    };
-  }
-
-  function arrUnique(array) {
-    return _toConsumableArray(new Set(array));
-  }
-
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__.default, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__.default, {
       title: 'Edit Singer',
       icon: "fa-users",
       breadcrumbs: [{
@@ -38510,81 +38410,81 @@ var Edit = function Edit(_ref) {
         name: 'Edit',
         url: route('singers.edit', singer)
       }]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
       className: "bg-gray-50",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
         className: "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("form", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("form", {
           className: "space-y-8 divide-y divide-gray-200",
           onSubmit: submit,
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
             className: "space-y-8 divide-y divide-gray-200",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_10__.default, {
               title: "Singer Details",
               description: "Start adding information about the singer's membership.",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
                 className: "sm:col-span-3",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Voice part",
                   forInput: "voice_part_id"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__.default, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__.default, {
                   name: "voice_part_id",
                   options: voice_parts,
                   value: data.voice_part_id,
                   updateFn: function updateFn(value) {
                     return setData('voice_part_id', value);
                   }
-                }), errors.voice_part_id && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.voice_part_id && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.voice_part_id
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
                 className: "sm:col-span-6",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Why are you joining?",
                   forInput: "reason_for_joining"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
                   name: "reason_for_joining",
                   value: data.reason_for_joining,
                   updateFn: function updateFn(value) {
                     return setData('reason_for_joining', value);
                   },
                   hasErrors: !!errors['reason_for_joining']
-                }), errors.reason_for_joining && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.reason_for_joining && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.reason_for_joining
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
                 className: "sm:col-span-6",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Where did you hear about us?",
                   forInput: "referrer"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
                   name: "referrer",
                   value: data.referrer,
                   updateFn: function updateFn(value) {
                     return setData('referrer', value);
                   },
                   hasErrors: !!errors['referrer']
-                }), errors.referrer && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.referrer && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.referrer
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
                 className: "sm:col-span-6",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Notes / Membership Details",
                   forInput: "membership_details"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
                   name: "membership_details",
                   value: data.membership_details,
                   updateFn: function updateFn(value) {
                     return setData('membership_details', value);
                   },
                   hasErrors: !!errors['membership_details']
-                }), errors.membership_details && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.membership_details && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.membership_details
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
                 className: "sm:col-span-6",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, {
                   label: "Enable onboarding?",
                   description: "Enable this only for new/prospective singers.",
                   value: data.existing_member,
@@ -38592,43 +38492,46 @@ var Edit = function Edit(_ref) {
                     return setData('existing_member', value);
                   }
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
                 className: "sm:col-span-6",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Joined",
                   forInput: "joined_at"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Date__WEBPACK_IMPORTED_MODULE_9__.default, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Date__WEBPACK_IMPORTED_MODULE_9__.default, {
                   name: "joined_at",
                   hasErrors: !!errors.joined_at,
                   value: data.joined_at,
                   updateFn: function updateFn(value) {
                     return setData('joined_at', value);
                   }
-                }), errors.joined_at && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.joined_at && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.joined_at
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("fieldset", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("fieldset", {
                 className: "mt-6 sm:col-span-6",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("legend", {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("legend", {
                   className: "text-base font-medium text-gray-900",
                   children: "Roles"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_14__.default, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_13__.default, {
                   name: "user_roles",
                   options: roles,
-                  syncFn: syncCheckboxes
-                }), errors.user_roles && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                  value: data.user_roles,
+                  updateFn: function updateFn(value) {
+                    return setData('user_roles', value);
+                  }
+                }), errors.user_roles && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.user_roles
                 })]
               })]
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
             className: "pt-5",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
               className: "flex justify-end",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__.default, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_12__.default, {
                 href: route('singers.index'),
                 children: "Cancel"
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Button__WEBPACK_IMPORTED_MODULE_12__.default, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Button__WEBPACK_IMPORTED_MODULE_11__.default, {
                 primary: true,
                 type: "submit",
                 className: "ml-3",
@@ -38644,7 +38547,7 @@ var Edit = function Edit(_ref) {
 };
 
 Edit.layout = function (page) {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__.default, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__.default, {
     children: page,
     title: "Singers"
   });
@@ -40016,57 +39919,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-
-    if (enumerableOnly) {
-      symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-    }
-
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
 
-function _objectSpread(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
   }
 
-  return obj;
+  return arr2;
 }
 
 
@@ -40076,7 +39961,8 @@ function _defineProperty(obj, key, value) {
 var CheckboxGroup = function CheckboxGroup(_ref) {
   var name = _ref.name,
       options = _ref.options,
-      syncFn = _ref.syncFn;
+      value = _ref.value,
+      updateFn = _ref.updateFn;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
     className: "mt-4 grid grid-cols-2 md:flex md:flex-wrap",
     children: options.map(function (option, key) {
@@ -40085,13 +39971,17 @@ var CheckboxGroup = function CheckboxGroup(_ref) {
           className: "relative flex items-start mr-8 mb-4",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
             className: "flex items-center h-5",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", _objectSpread({
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
               type: "checkbox",
               id: "".concat(name, "_").concat(option.id),
               name: "".concat(name, "[]"),
               value: option.id,
-              className: "focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300 rounded"
-            }, syncFn(name, option.id)))
+              className: "focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300 rounded",
+              checked: value.includes(option.id),
+              onChange: function onChange(e) {
+                return updateFn(e.target.checked ? _toConsumableArray(new Set(value).add(option.id)) : _toConsumableArray(new Set(value)["delete"](option.id)));
+              }
+            })
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
             className: "ml-3 text-sm",
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {

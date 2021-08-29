@@ -8,7 +8,6 @@ import DetailToggle from "../../components/inputs/DetailToggle";
 import Error from "../../components/inputs/Error";
 import Select from "../../components/inputs/Select";
 import DateInput from "../../components/inputs/Date";
-import Help from "../../components/inputs/Help";
 import FormSection from "../../components/FormSection";
 import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
@@ -29,22 +28,6 @@ const Edit = ({ voice_parts, roles, singer }) => {
     function submit(e) {
         e.preventDefault();
         put(route('singers.update', singer));
-    }
-
-    function syncCheckboxes(groupName, inputValue){
-        return {
-            checked: data[groupName].includes(inputValue),
-            onChange: e => setData(
-                groupName,
-                e.target.checked
-                    ? arrUnique([...data[groupName], inputValue])
-                    : data[groupName].filter(item => item !== inputValue)
-            )
-        };
-    }
-
-    function arrUnique(array){
-        return [...new Set(array)];
     }
 
     return (
@@ -114,7 +97,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
 
                                 <fieldset className="mt-6 sm:col-span-6">
                                     <legend className="text-base font-medium text-gray-900">Roles</legend>
-                                    <CheckboxGroup name={"user_roles"} options={roles} syncFn={syncCheckboxes} />
+                                    <CheckboxGroup name={"user_roles"} options={roles} value={data.user_roles} updateFn={value => setData('user_roles', value)} />
                                     {errors.user_roles && <Error>{errors.user_roles}</Error>}
                                 </fieldset>
                             </FormSection>

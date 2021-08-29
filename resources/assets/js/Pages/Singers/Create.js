@@ -37,23 +37,6 @@ const Create = ({voice_parts, roles}) => {
         post(route('singers.store'));
     }
 
-    function syncCheckboxes(groupName, inputValue){
-        return {
-            value: data[groupName].includes(inputValue),
-            onChange: e => setData(
-                groupName,
-                e.target.checked
-                    ? arrUnique([...data[groupName], inputValue])
-                    : data[groupName].filter(item => item !== inputValue)
-            )
-        };
-    }
-
-    function arrUnique(array){
-        console.log(array);
-        return [...new Set(array)];
-    }
-
     return (
         <>
             <SingerPageHeader
@@ -156,7 +139,7 @@ const Create = ({voice_parts, roles}) => {
 
                                 <fieldset className="mt-6 sm:col-span-6">
                                     <legend className="text-base font-medium text-gray-900">Roles</legend>
-                                    <CheckboxGroup name={"user_roles"} options={roles} syncFn={syncCheckboxes} />
+                                    <CheckboxGroup name={"user_roles"} options={roles} value={data.user_roles} updateFn={value => setData('user_roles', value)} />
                                     {errors.user_roles && <Error>{errors.user_roles}</Error>}
                                 </fieldset>
                             </FormSection>
