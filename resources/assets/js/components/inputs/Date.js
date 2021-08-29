@@ -15,7 +15,7 @@ const DateInput = ({ name, value, onChange, hasErrors }) => (
                 id={name}
                 name={name}
                 type="text"
-                defaultValue={value ? DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_MED) : ''}
+                value={value ? DateTime.fromJSDate(new Date(value)).toLocaleString(DateTime.DATE_MED) : ''}
                 disabled
                 className={classNames('' +
                     'shadow-sm focus:outline-none block w-full sm:text-sm rounded-md pl-10',

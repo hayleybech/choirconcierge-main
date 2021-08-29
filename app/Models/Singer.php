@@ -156,7 +156,7 @@ class Singer extends Model
 
 	public function voice_part(): BelongsTo
 	{
-		return $this->belongsTo(VoicePart::class);
+		return $this->belongsTo(VoicePart::class)->withDefault(['title' => 'No Part', 'colour' => '#ccc']);
 	}
 	public function riser_stacks(): BelongsToMany
 	{

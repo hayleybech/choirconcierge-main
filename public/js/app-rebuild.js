@@ -38021,7 +38021,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_FormSection__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../components/FormSection */ "./resources/assets/js/components/FormSection.js");
 /* harmony import */ var _components_inputs_Button__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../components/inputs/Button */ "./resources/assets/js/components/inputs/Button.js");
 /* harmony import */ var _components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/inputs/ButtonLink */ "./resources/assets/js/components/inputs/ButtonLink.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/inputs/CheckboxGroup */ "./resources/assets/js/components/inputs/CheckboxGroup.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
 
@@ -38128,6 +38129,7 @@ function _arrayLikeToArray(arr, len) {
 
 
 
+
 var Create = function Create(_ref) {
   var voice_parts = _ref.voice_parts,
       roles = _ref.roles;
@@ -38191,227 +38193,197 @@ var Create = function Create(_ref) {
     return _toConsumableArray(new Set(array));
   }
 
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__.default, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__.default, {
       title: 'Create Singer',
       icon: "fa-users",
-      breadcrumbs: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Link, {
-        href: route('dash'),
-        className: "text-sm font-medium text-gray-500 hover:text-gray-700",
-        children: "Dashboard"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Link, {
-        href: route('singers.index'),
-        className: "ml-4 text-sm font-medium text-gray-500 hover:text-gray-700",
-        children: "Singers"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Link, {
-        href: route('singers.create'),
-        className: "ml-4 text-sm font-medium text-gray-500 hover:text-gray-700",
-        children: "Create"
-      })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
+      breadcrumbs: [{
+        name: 'Dashboard',
+        url: route('dash')
+      }, {
+        name: 'Singers',
+        url: route('singers.index')
+      }, {
+        name: 'Create',
+        url: route('singers.create')
+      }]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
       className: "bg-gray-50",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
         className: "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("form", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("form", {
           className: "space-y-8 divide-y divide-gray-200",
           onSubmit: submit,
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
             className: "space-y-8 divide-y divide-gray-200",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
               title: "User Details",
               description: "Create an account for the singer.",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-3",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "First name",
                   forInput: "first_name"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
                   name: "first_name",
                   autoComplete: "given-name"
                 }, syncInput('first_name')), {}, {
                   hasErrors: !!errors['first_name']
-                })), errors.first_name && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                })), errors.first_name && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.first_name
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-3",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Last name",
                   forInput: "last_name"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
                   name: "last_name",
                   autoComplete: "family-name"
                 }, syncInput('last_name')), {}, {
                   hasErrors: !!errors['last_name']
-                })), errors.last_name && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                })), errors.last_name && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.last_name
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-4",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Email address",
                   forInput: "email"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
                   name: "email",
                   type: "email",
                   autoComplete: "email"
                 }, syncInput('email')), {}, {
                   hasErrors: !!errors['email']
-                })), errors.email && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                })), errors.email && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.email
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-3",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Password",
                   forInput: "password"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
                   type: "password",
                   name: "password"
                 }, syncInput('password')), {}, {
                   hasErrors: !!errors['password']
-                })), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Help__WEBPACK_IMPORTED_MODULE_10__.default, {
+                })), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Help__WEBPACK_IMPORTED_MODULE_10__.default, {
                   children: "You may leave this blank and update it later."
-                }), errors.password && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.password && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.password
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-3",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Confirm password",
                   forInput: "password_confirmation"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
                   type: "password",
                   name: "password_confirmation"
                 }, syncInput('password_confirmation')), {}, {
                   hasErrors: !!errors['password_confirmation']
-                })), errors.password_confirmation && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                })), errors.password_confirmation && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.password_confirmation
                 })]
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
               title: "Singer Details",
               description: "Start adding information about the singer's membership.",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-3",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Voice part",
                   forInput: "voice_part"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__.default, _objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__.default, _objectSpread({
                   name: "voice_part",
                   options: voice_parts
-                }, syncInput('voice_part'))), errors.voice_part && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }, syncInput('voice_part'))), errors.voice_part && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.voice_part
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-6",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Why are you joining?",
                   forInput: "reason_for_joining"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
                   name: "reason_for_joining"
                 }, syncInput('reason_for_joining')), {}, {
                   hasErrors: !!errors['reason_for_joining']
-                })), errors.reason_for_joining && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                })), errors.reason_for_joining && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.reason_for_joining
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-6",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Where did you hear about us?",
                   forInput: "referrer"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
                   name: "referrer"
                 }, syncInput('referrer')), {}, {
                   hasErrors: !!errors['referrer']
-                })), errors.referrer && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                })), errors.referrer && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.referrer
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-6",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Notes / Membership Details",
                   forInput: "membership_details"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
                   name: "membership_details"
                 }, syncInput('membership_details')), {}, {
                   hasErrors: !!errors['membership_details']
-                })), errors.membership_details && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                })), errors.membership_details && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.membership_details
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
                 className: "sm:col-span-6",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, _objectSpread({
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, _objectSpread({
                   label: "Is this an existing member?",
                   description: "Onboarding will be disabled when adding an existing singer."
                 }, syncSwitch('existing_member')))
               })]
-            }), data.existing_member && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
+            }), data.existing_member && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
               title: "Existing Member Details",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-6",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Joined",
                   forInput: "joined_at"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Date__WEBPACK_IMPORTED_MODULE_9__.default, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Date__WEBPACK_IMPORTED_MODULE_9__.default, {
                   name: "joined_at",
                   hasErrors: !!errors.joined_at,
                   value: data.joined_at,
                   onChange: function onChange(day) {
                     return setData('joined_at', day);
                   }
-                }), errors.joined_at && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.joined_at && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.joined_at
                 })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("fieldset", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("fieldset", {
                 className: "mt-6 sm:col-span-6",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("legend", {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("legend", {
                   className: "text-base font-medium text-gray-900",
                   children: "Roles"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
-                  className: "mt-4 grid grid-cols-2 md:flex md:flex-wrap",
-                  children: roles.map(function (role, key) {
-                    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-                      children: role.name === 'User' ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("input", {
-                        type: "hidden",
-                        name: "user_roles[]",
-                        id: 'user_roles_' + role.id,
-                        value: role.id
-                      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
-                        className: "relative flex items-start mr-8 mb-4",
-                        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
-                          className: "flex items-center h-5",
-                          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("input", _objectSpread({
-                            type: "checkbox",
-                            id: 'user_roles_' + role.id,
-                            name: "user_roles[]",
-                            value: role.id,
-                            className: "focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300 rounded"
-                          }, syncCheckboxes('user_roles', role.id)))
-                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
-                          className: "ml-3 text-sm",
-                          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("label", {
-                            htmlFor: 'user_roles_' + role.id,
-                            className: "font-medium text-gray-700",
-                            children: role.name
-                          })
-                        })]
-                      })
-                    }, key);
-                  })
-                }), errors.user_roles && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_14__.default, {
+                  name: "user_roles",
+                  options: roles,
+                  syncFn: syncCheckboxes
+                }), errors.user_roles && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.user_roles
                 })]
               })]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
             className: "pt-5",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsxs)("div", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
               className: "flex justify-end",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__.default, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__.default, {
                 href: route('singers.index'),
                 children: "Cancel"
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_components_inputs_Button__WEBPACK_IMPORTED_MODULE_12__.default, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Button__WEBPACK_IMPORTED_MODULE_12__.default, {
                 primary: true,
                 type: "submit",
                 className: "ml-3",
@@ -38427,13 +38399,351 @@ var Create = function Create(_ref) {
 };
 
 Create.layout = function (page) {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_14__.jsx)(_Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__.default, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__.default, {
     children: page,
     title: "Singers"
   });
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Create);
+
+/***/ }),
+
+/***/ "./resources/assets/js/Pages/Singers/Edit.js":
+/*!***************************************************!*\
+  !*** ./resources/assets/js/Pages/Singers/Edit.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Layouts/Layout */ "./resources/assets/js/Layouts/Layout.js");
+/* harmony import */ var _SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SingerPageHeader */ "./resources/assets/js/Pages/Singers/SingerPageHeader.js");
+/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+/* harmony import */ var _components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/inputs/Label */ "./resources/assets/js/components/inputs/Label.js");
+/* harmony import */ var _components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/inputs/TextInput */ "./resources/assets/js/components/inputs/TextInput.js");
+/* harmony import */ var _components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/inputs/DetailToggle */ "./resources/assets/js/components/inputs/DetailToggle.js");
+/* harmony import */ var _components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../components/inputs/Error */ "./resources/assets/js/components/inputs/Error.js");
+/* harmony import */ var _components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/inputs/Select */ "./resources/assets/js/components/inputs/Select.js");
+/* harmony import */ var _components_inputs_Date__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../components/inputs/Date */ "./resources/assets/js/components/inputs/Date.js");
+/* harmony import */ var _components_inputs_Help__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../components/inputs/Help */ "./resources/assets/js/components/inputs/Help.js");
+/* harmony import */ var _components_FormSection__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../components/FormSection */ "./resources/assets/js/components/FormSection.js");
+/* harmony import */ var _components_inputs_Button__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../components/inputs/Button */ "./resources/assets/js/components/inputs/Button.js");
+/* harmony import */ var _components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/inputs/ButtonLink */ "./resources/assets/js/components/inputs/ButtonLink.js");
+/* harmony import */ var _components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/inputs/CheckboxGroup */ "./resources/assets/js/components/inputs/CheckboxGroup.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+
+    if (enumerableOnly) {
+      symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+    }
+
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var Edit = function Edit(_ref) {
+  var voice_parts = _ref.voice_parts,
+      roles = _ref.roles,
+      singer = _ref.singer;
+
+  var _useForm = (0,_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.useForm)({
+    voice_part_id: singer.voice_part.id,
+    reason_for_joining: singer.reason_for_joining,
+    referrer: singer.referrer,
+    membership_details: singer.membership_details,
+    existing_member: singer.onboarding_enabled,
+    joined_at: singer.joined_at,
+    user_roles: singer.roles.map(function (role) {
+      return role.id;
+    })
+  }),
+      data = _useForm.data,
+      setData = _useForm.setData,
+      put = _useForm.put,
+      processing = _useForm.processing,
+      errors = _useForm.errors;
+
+  function submit(e) {
+    e.preventDefault();
+    put(route('singers.update', singer));
+  }
+
+  function syncInput(inputName) {
+    return {
+      value: data[inputName],
+      onChange: function onChange(e) {
+        return setData(inputName, e.target.value);
+      }
+    };
+  }
+
+  function syncCheckboxes(groupName, inputValue) {
+    return {
+      checked: data[groupName].includes(inputValue),
+      onChange: function onChange(e) {
+        return setData(groupName, e.target.checked ? arrUnique([].concat(_toConsumableArray(data[groupName]), [inputValue])) : data[groupName].filter(function (item) {
+          return item !== inputValue;
+        }));
+      }
+    };
+  }
+
+  function syncSwitch(inputName) {
+    return {
+      checked: data[inputName],
+      onChange: function onChange(checked) {
+        return setData(inputName, checked);
+      }
+    };
+  }
+
+  function arrUnique(array) {
+    return _toConsumableArray(new Set(array));
+  }
+
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__.default, {
+      title: 'Edit Singer',
+      icon: "fa-users",
+      breadcrumbs: [{
+        name: 'Dashboard',
+        url: route('dash')
+      }, {
+        name: 'Singers',
+        url: route('singers.index')
+      }, {
+        name: singer.user.name,
+        url: route('singers.show', singer)
+      }, {
+        name: 'Edit',
+        url: route('singers.edit', singer)
+      }]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
+      className: "bg-gray-50",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
+        className: "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("form", {
+          className: "space-y-8 divide-y divide-gray-200",
+          onSubmit: submit,
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
+            className: "space-y-8 divide-y divide-gray-200",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)(_components_FormSection__WEBPACK_IMPORTED_MODULE_11__.default, {
+              title: "Singer Details",
+              description: "Start adding information about the singer's membership.",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+                className: "sm:col-span-3",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                  label: "Voice part",
+                  forInput: "voice_part_id"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__.default, _objectSpread({
+                  name: "voice_part_id",
+                  options: voice_parts
+                }, syncInput('voice_part_id'))), errors.voice_part_id && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                  children: errors.voice_part_id
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+                className: "sm:col-span-6",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                  label: "Why are you joining?",
+                  forInput: "reason_for_joining"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                  name: "reason_for_joining"
+                }, syncInput('reason_for_joining')), {}, {
+                  hasErrors: !!errors['reason_for_joining']
+                })), errors.reason_for_joining && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                  children: errors.reason_for_joining
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+                className: "sm:col-span-6",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                  label: "Where did you hear about us?",
+                  forInput: "referrer"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                  name: "referrer"
+                }, syncInput('referrer')), {}, {
+                  hasErrors: !!errors['referrer']
+                })), errors.referrer && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                  children: errors.referrer
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+                className: "sm:col-span-6",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                  label: "Notes / Membership Details",
+                  forInput: "membership_details"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                  name: "membership_details"
+                }, syncInput('membership_details')), {}, {
+                  hasErrors: !!errors['membership_details']
+                })), errors.membership_details && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                  children: errors.membership_details
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
+                className: "sm:col-span-6",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, _objectSpread({
+                  label: "Enable onboarding?",
+                  description: "Enable this only for new/prospective singers."
+                }, syncSwitch('existing_member')))
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+                className: "sm:col-span-6",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
+                  label: "Joined",
+                  forInput: "joined_at"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Date__WEBPACK_IMPORTED_MODULE_9__.default, {
+                  name: "joined_at",
+                  hasErrors: !!errors.joined_at,
+                  value: data.joined_at,
+                  onChange: function onChange(day) {
+                    return setData('joined_at', day);
+                  }
+                }), errors.joined_at && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                  children: errors.joined_at
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("fieldset", {
+                className: "mt-6 sm:col-span-6",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("legend", {
+                  className: "text-base font-medium text-gray-900",
+                  children: "Roles"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_14__.default, {
+                  name: "user_roles",
+                  options: roles,
+                  syncFn: syncCheckboxes
+                }), errors.user_roles && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                  children: errors.user_roles
+                })]
+              })]
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
+            className: "pt-5",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
+              className: "flex justify-end",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__.default, {
+                href: route('singers.index'),
+                children: "Cancel"
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Button__WEBPACK_IMPORTED_MODULE_12__.default, {
+                primary: true,
+                type: "submit",
+                className: "ml-3",
+                disabled: processing,
+                children: "Save"
+              })]
+            })
+          })]
+        })
+      })
+    })]
+  });
+};
+
+Edit.layout = function (page) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__.default, {
+    children: page,
+    title: "Singers"
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Edit);
 
 /***/ }),
 
@@ -38451,11 +38761,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Layouts/Layout */ "./resources/assets/js/Layouts/Layout.js");
 /* harmony import */ var _SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SingerPageHeader */ "./resources/assets/js/Pages/Singers/SingerPageHeader.js");
-/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
-/* harmony import */ var _SingerTableDesktop__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SingerTableDesktop */ "./resources/assets/js/Pages/Singers/SingerTableDesktop.js");
-/* harmony import */ var _SingerTableMobile__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SingerTableMobile */ "./resources/assets/js/Pages/Singers/SingerTableMobile.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-
+/* harmony import */ var _SingerTableDesktop__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SingerTableDesktop */ "./resources/assets/js/Pages/Singers/SingerTableDesktop.js");
+/* harmony import */ var _SingerTableMobile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SingerTableMobile */ "./resources/assets/js/Pages/Singers/SingerTableMobile.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 
 
 
@@ -38467,19 +38775,17 @@ __webpack_require__.r(__webpack_exports__);
 
 var Index = function Index(_ref) {
   var all_singers = _ref.all_singers;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__.default, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__.default, {
       title: "Singers",
       icon: "fa-users",
-      breadcrumbs: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Link, {
-        href: route('dash'),
-        className: "text-sm font-medium text-gray-500 hover:text-gray-700",
-        children: "Dashboard"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Link, {
-        href: route('singers.index'),
-        className: "ml-4 text-sm font-medium text-gray-500 hover:text-gray-700",
-        children: "Singers"
-      })],
+      breadcrumbs: [{
+        name: 'Dashboard',
+        url: route('dash')
+      }, {
+        name: 'Singers',
+        url: route('singers.index')
+      }],
       actions: [{
         label: 'Add New',
         icon: 'user-plus',
@@ -38493,14 +38799,14 @@ var Index = function Index(_ref) {
         icon: 'filter',
         route: 'voice-parts.index'
       }]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       className: "hidden lg:flex flex-col",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_SingerTableDesktop__WEBPACK_IMPORTED_MODULE_4__.default, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_SingerTableDesktop__WEBPACK_IMPORTED_MODULE_3__.default, {
         singers: all_singers
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       className: "bg-white shadow overflow-hidden block lg:hidden",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_SingerTableMobile__WEBPACK_IMPORTED_MODULE_5__.default, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_SingerTableMobile__WEBPACK_IMPORTED_MODULE_4__.default, {
         singers: all_singers
       })
     })]
@@ -38508,7 +38814,7 @@ var Index = function Index(_ref) {
 };
 
 Index.layout = function (page) {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__.default, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__.default, {
     children: page,
     title: "Singers"
   });
@@ -38532,13 +38838,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Layouts/Layout */ "./resources/assets/js/Layouts/Layout.js");
 /* harmony import */ var _SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SingerPageHeader */ "./resources/assets/js/Pages/Singers/SingerPageHeader.js");
-/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
-/* harmony import */ var _components_VoicePartTag__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/VoicePartTag */ "./resources/assets/js/components/VoicePartTag.js");
-/* harmony import */ var _components_SingerCategoryTag__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/SingerCategoryTag */ "./resources/assets/js/components/SingerCategoryTag.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-
+/* harmony import */ var _components_VoicePartTag__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/VoicePartTag */ "./resources/assets/js/components/VoicePartTag.js");
+/* harmony import */ var _components_SingerCategoryTag__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/SingerCategoryTag */ "./resources/assets/js/components/SingerCategoryTag.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 
 
 
@@ -38551,50 +38855,47 @@ __webpack_require__.r(__webpack_exports__);
 
 var Show = function Show(_ref) {
   var singer = _ref.singer;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__.default, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__.default, {
       title: singer.user.name,
       image: singer.user.avatar_url,
-      meta: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+      meta: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
           className: "mt-2 flex items-center text-sm text-gray-500",
-          children: singer.voice_part && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components_VoicePartTag__WEBPACK_IMPORTED_MODULE_4__.default, {
+          children: singer.voice_part && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_VoicePartTag__WEBPACK_IMPORTED_MODULE_3__.default, {
             title: singer.voice_part.title,
             colour: singer.voice_part.colour
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
           className: "mt-2 flex items-center text-sm text-gray-500",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components_SingerCategoryTag__WEBPACK_IMPORTED_MODULE_5__.default, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_SingerCategoryTag__WEBPACK_IMPORTED_MODULE_4__.default, {
             name: singer.category.name,
             colour: singer.category.colour,
             withLabel: true
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
           className: "mt-2 flex items-center text-sm text-gray-500",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("i", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("i", {
             className: "far fa-fw fa-calendar-day mr-1.5 text-gray-400 text-md"
-          }), "Joined ", moment__WEBPACK_IMPORTED_MODULE_6___default()(singer.joined_at).format('MMMM D, YYYY')]
+          }), "Joined ", moment__WEBPACK_IMPORTED_MODULE_5___default()(singer.joined_at).format('MMMM D, YYYY')]
         })]
       }),
-      breadcrumbs: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Link, {
-        href: route('dash'),
-        className: "text-sm font-medium text-gray-500 hover:text-gray-700",
-        children: "Dashboard"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Link, {
-        href: route('singers.index'),
-        className: "ml-4 text-sm font-medium text-gray-500 hover:text-gray-700",
-        children: "Singers"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.Link, {
-        href: route('singers.show', singer.id),
-        className: "ml-4 text-sm font-medium text-gray-500 hover:text-gray-700",
-        children: singer.user.name
-      })]
+      breadcrumbs: [{
+        name: 'Dashboard',
+        url: route('dash')
+      }, {
+        name: 'Singers',
+        url: route('singers.index')
+      }, {
+        name: singer.user.name,
+        url: route('singers.show', singer)
+      }]
     })
   });
 };
 
 Show.layout = function (page) {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__.default, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Layouts_Layout__WEBPACK_IMPORTED_MODULE_1__.default, {
     children: page,
     title: "Singers"
   });
@@ -39142,14 +39443,20 @@ var Breadcrumbs = function Breadcrumbs(_ref) {
       "aria-label": "Breadcrumb",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("ol", {
         className: "flex items-center space-x-4",
-        children: breadcrumbs.map(function (crumb, index) {
+        children: breadcrumbs.map(function (_ref2, index) {
+          var name = _ref2.name,
+              url = _ref2.url;
           return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
               className: "flex items-center",
               children: [index > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_heroicons_react_solid__WEBPACK_IMPORTED_MODULE_1__.ChevronRightIcon, {
-                className: "flex-shrink-0 h-5 w-5 text-gray-400",
+                className: "flex-shrink-0 h-5 w-5 text-gray-400 mr-4",
                 "aria-hidden": "true"
-              }), crumb]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_2__.Link, {
+                href: url,
+                className: "text-sm font-medium text-gray-500 hover:text-gray-700",
+                children: name
+              })]
             })
           }, index);
         })
@@ -39789,6 +40096,113 @@ var ButtonLink = function ButtonLink(_ref) {
 
 /***/ }),
 
+/***/ "./resources/assets/js/components/inputs/CheckboxGroup.js":
+/*!****************************************************************!*\
+  !*** ./resources/assets/js/components/inputs/CheckboxGroup.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+
+    if (enumerableOnly) {
+      symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+    }
+
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+
+
+
+
+var CheckboxGroup = function CheckboxGroup(_ref) {
+  var name = _ref.name,
+      options = _ref.options,
+      syncFn = _ref.syncFn;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    className: "mt-4 grid grid-cols-2 md:flex md:flex-wrap",
+    children: options.map(function (option, key) {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+          className: "relative flex items-start mr-8 mb-4",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+            className: "flex items-center h-5",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", _objectSpread({
+              type: "checkbox",
+              id: "".concat(name, "_").concat(option.id),
+              name: "".concat(name, "[]"),
+              value: option.id,
+              className: "focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300 rounded"
+            }, syncFn(name, option.id)))
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+            className: "ml-3 text-sm",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
+              htmlFor: "".concat(name, "_").concat(option.id),
+              className: "font-medium text-gray-700",
+              children: option.name
+            })
+          })]
+        })
+      }, key);
+    })
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CheckboxGroup);
+
+/***/ }),
+
 /***/ "./resources/assets/js/components/inputs/Date.js":
 /*!*******************************************************!*\
   !*** ./resources/assets/js/components/inputs/Date.js ***!
@@ -39838,7 +40252,7 @@ var DateInput = function DateInput(_ref) {
         id: name,
         name: name,
         type: "text",
-        defaultValue: value ? luxon__WEBPACK_IMPORTED_MODULE_6__.DateTime.fromJSDate(value).toLocaleString(luxon__WEBPACK_IMPORTED_MODULE_6__.DateTime.DATE_MED) : '',
+        value: value ? luxon__WEBPACK_IMPORTED_MODULE_6__.DateTime.fromJSDate(new Date(value)).toLocaleString(luxon__WEBPACK_IMPORTED_MODULE_6__.DateTime.DATE_MED) : '',
         disabled: true,
         className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)('' + 'shadow-sm focus:outline-none block w-full sm:text-sm rounded-md pl-10', hasErrors ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-purple-500 focus:border-purple-500')
       })]
@@ -40032,11 +40446,15 @@ __webpack_require__.r(__webpack_exports__);
 var Select = function Select(_ref) {
   var name = _ref.name,
       options = _ref.options,
-      hasErrors = _ref.hasErrors;
+      hasErrors = _ref.hasErrors,
+      value = _ref.value,
+      onChange = _ref.onChange;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("select", {
     id: name,
     name: name,
     className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)('' + 'shadow-sm focus:outline-none block w-full sm:text-sm rounded-md', hasErrors ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-purple-500 focus:border-purple-500'),
+    value: value,
+    onChange: onChange,
     children: options.map(function (label, value) {
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("option", {
         value: value,
@@ -104888,6 +105306,8 @@ var map = {
 	"./Dash/Show.js": "./resources/assets/js/Pages/Dash/Show.js",
 	"./Singers/Create": "./resources/assets/js/Pages/Singers/Create.js",
 	"./Singers/Create.js": "./resources/assets/js/Pages/Singers/Create.js",
+	"./Singers/Edit": "./resources/assets/js/Pages/Singers/Edit.js",
+	"./Singers/Edit.js": "./resources/assets/js/Pages/Singers/Edit.js",
 	"./Singers/Index": "./resources/assets/js/Pages/Singers/Index.js",
 	"./Singers/Index.js": "./resources/assets/js/Pages/Singers/Index.js",
 	"./Singers/Show": "./resources/assets/js/Pages/Singers/Show.js",

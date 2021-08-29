@@ -143,9 +143,11 @@ class SingerController extends Controller
 		]);
 	}
 
-	public function edit(Singer $singer): View
+	public function edit(Singer $singer): View|Response
 	{
 		$this->authorize('update', $singer);
+
+        $singer->load('user', 'voice_part', 'category', 'roles');
 
 		$voice_parts =
 			[0 => 'None'] +
@@ -154,6 +156,16 @@ class SingerController extends Controller
 				->toArray();
 
 		$roles = Role::where('name', '!=', 'User')->get();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Singers/Edit', [
+                'voice_parts' => $voice_parts,
+                'roles' => $roles,
+                'singer' => $singer,
+            ]);
+        }
 
 		return view('singers.edit', compact('singer', 'voice_parts', 'roles'));
 	}
