@@ -31,12 +31,6 @@ const Edit = ({ voice_parts, roles, singer }) => {
         put(route('singers.update', singer));
     }
 
-    function syncInput(inputName){
-        return {
-            value: data[inputName],
-            onChange: e => setData(inputName, e.target.value),
-        };
-    }
     function syncCheckboxes(groupName, inputValue){
         return {
             checked: data[groupName].includes(inputValue),
@@ -76,25 +70,25 @@ const Edit = ({ voice_parts, roles, singer }) => {
                             <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
                                 <div className="sm:col-span-3">
                                     <Label label="Voice part" forInput="voice_part_id" />
-                                    <Select name="voice_part_id" options={voice_parts} {...syncInput('voice_part_id')} />
+                                    <Select name="voice_part_id" options={voice_parts} value={data.voice_part_id} updateFn={(value) => setData('voice_part_id', value)} />
                                     {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-6">
                                     <Label label="Why are you joining?" forInput="reason_for_joining" />
-                                    <TextInput name="reason_for_joining" {...syncInput('reason_for_joining')} hasErrors={ !! errors['reason_for_joining'] } />
+                                    <TextInput name="reason_for_joining" value={data.reason_for_joining} updateFn={(value) => setData('reason_for_joining', value)} hasErrors={ !! errors['reason_for_joining'] } />
                                     {errors.reason_for_joining && <Error>{errors.reason_for_joining}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-6">
                                     <Label label="Where did you hear about us?" forInput="referrer" />
-                                    <TextInput name="referrer" {...syncInput('referrer')} hasErrors={ !! errors['referrer'] } />
+                                    <TextInput name="referrer" value={data.referrer} updateFn={(value) => setData('referrer', value)} hasErrors={ !! errors['referrer'] } />
                                     {errors.referrer && <Error>{errors.referrer}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-6">
                                     <Label label="Notes / Membership Details" forInput="membership_details" />
-                                    <TextInput name="membership_details" {...syncInput('membership_details')} hasErrors={ !! errors['membership_details'] } />
+                                    <TextInput name="membership_details" value={data.membership_details} updateFn={(value) => setData('membership_details', value)} hasErrors={ !! errors['membership_details'] } />
                                     {errors.membership_details && <Error>{errors.membership_details}</Error>}
                                 </div>
 

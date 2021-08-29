@@ -38023,59 +38023,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/inputs/ButtonLink */ "./resources/assets/js/components/inputs/ButtonLink.js");
 /* harmony import */ var _components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/inputs/CheckboxGroup */ "./resources/assets/js/components/inputs/CheckboxGroup.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-
-    if (enumerableOnly) {
-      symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-    }
-
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
 function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
@@ -38140,7 +38087,7 @@ var Create = function Create(_ref) {
     email: '',
     password: '',
     password_confirmation: '',
-    voice_part: 0,
+    voice_part_id: 0,
     reason_for_joining: '',
     referrer: '',
     membership_details: '',
@@ -38157,15 +38104,6 @@ var Create = function Create(_ref) {
   function submit(e) {
     e.preventDefault();
     post(route('singers.store'));
-  }
-
-  function syncInput(inputName) {
-    return {
-      value: data[inputName],
-      onChange: function onChange(e) {
-        return setData(inputName, e.target.value);
-      }
-    };
   }
 
   function syncCheckboxes(groupName, inputValue) {
@@ -38215,12 +38153,15 @@ var Create = function Create(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "First name",
                   forInput: "first_name"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
                   name: "first_name",
-                  autoComplete: "given-name"
-                }, syncInput('first_name')), {}, {
+                  autoComplete: "given-name",
+                  value: data.first_name,
+                  updateFn: function updateFn(value) {
+                    return setData('first_name', value);
+                  },
                   hasErrors: !!errors['first_name']
-                })), errors.first_name && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.first_name && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.first_name
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
@@ -38228,12 +38169,15 @@ var Create = function Create(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Last name",
                   forInput: "last_name"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
                   name: "last_name",
-                  autoComplete: "family-name"
-                }, syncInput('last_name')), {}, {
+                  autoComplete: "family-name",
+                  value: data.last_name,
+                  updateFn: function updateFn(value) {
+                    return setData('last_name', value);
+                  },
                   hasErrors: !!errors['last_name']
-                })), errors.last_name && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.last_name && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.last_name
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
@@ -38241,13 +38185,16 @@ var Create = function Create(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Email address",
                   forInput: "email"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
                   name: "email",
                   type: "email",
-                  autoComplete: "email"
-                }, syncInput('email')), {}, {
+                  autoComplete: "email",
+                  value: data.email,
+                  updateFn: function updateFn(value) {
+                    return setData('email', value);
+                  },
                   hasErrors: !!errors['email']
-                })), errors.email && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.email && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.email
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
@@ -38255,12 +38202,15 @@ var Create = function Create(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Password",
                   forInput: "password"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
                   type: "password",
-                  name: "password"
-                }, syncInput('password')), {}, {
+                  name: "password",
+                  value: data.password,
+                  updateFn: function updateFn(value) {
+                    return setData('password', value);
+                  },
                   hasErrors: !!errors['password']
-                })), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Help__WEBPACK_IMPORTED_MODULE_10__.default, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Help__WEBPACK_IMPORTED_MODULE_10__.default, {
                   children: "You may leave this blank and update it later."
                 }), errors.password && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.password
@@ -38270,12 +38220,15 @@ var Create = function Create(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Confirm password",
                   forInput: "password_confirmation"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
                   type: "password",
-                  name: "password_confirmation"
-                }, syncInput('password_confirmation')), {}, {
+                  name: "password_confirmation",
+                  value: data.password_confirmation,
+                  updateFn: function updateFn(value) {
+                    return setData('password_confirmation', value);
+                  },
                   hasErrors: !!errors['password_confirmation']
-                })), errors.password_confirmation && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.password_confirmation && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.password_confirmation
                 })]
               })]
@@ -38286,23 +38239,30 @@ var Create = function Create(_ref) {
                 className: "sm:col-span-3",
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Voice part",
-                  forInput: "voice_part"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__.default, _objectSpread({
-                  name: "voice_part",
-                  options: voice_parts
-                }, syncInput('voice_part'))), errors.voice_part && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
-                  children: errors.voice_part
+                  forInput: "voice_part_id"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__.default, {
+                  name: "voice_part_id",
+                  options: voice_parts,
+                  value: data.voice_part_id,
+                  updateFn: function updateFn(value) {
+                    return setData('voice_part_id', value);
+                  }
+                }), errors.voice_part_id && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                  children: errors.voice_part_id
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-6",
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Why are you joining?",
                   forInput: "reason_for_joining"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
-                  name: "reason_for_joining"
-                }, syncInput('reason_for_joining')), {}, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
+                  name: "reason_for_joining",
+                  value: data.reason_for_joining,
+                  updateFn: function updateFn(value) {
+                    return setData('reason_for_joining', value);
+                  },
                   hasErrors: !!errors['reason_for_joining']
-                })), errors.reason_for_joining && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.reason_for_joining && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.reason_for_joining
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
@@ -38310,11 +38270,14 @@ var Create = function Create(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Where did you hear about us?",
                   forInput: "referrer"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
-                  name: "referrer"
-                }, syncInput('referrer')), {}, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
+                  name: "referrer",
+                  value: data.referrer,
+                  updateFn: function updateFn(value) {
+                    return setData('referrer', value);
+                  },
                   hasErrors: !!errors['referrer']
-                })), errors.referrer && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.referrer && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.referrer
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
@@ -38322,11 +38285,14 @@ var Create = function Create(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Notes / Membership Details",
                   forInput: "membership_details"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
-                  name: "membership_details"
-                }, syncInput('membership_details')), {}, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
+                  name: "membership_details",
+                  value: data.membership_details,
+                  updateFn: function updateFn(value) {
+                    return setData('membership_details', value);
+                  },
                   hasErrors: !!errors['membership_details']
-                })), errors.membership_details && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.membership_details && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.membership_details
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
@@ -38431,59 +38397,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/inputs/ButtonLink */ "./resources/assets/js/components/inputs/ButtonLink.js");
 /* harmony import */ var _components_inputs_CheckboxGroup__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/inputs/CheckboxGroup */ "./resources/assets/js/components/inputs/CheckboxGroup.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-
-    if (enumerableOnly) {
-      symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-    }
-
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
 function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
@@ -38565,15 +38478,6 @@ var Edit = function Edit(_ref) {
     put(route('singers.update', singer));
   }
 
-  function syncInput(inputName) {
-    return {
-      value: data[inputName],
-      onChange: function onChange(e) {
-        return setData(inputName, e.target.value);
-      }
-    };
-  }
-
   function syncCheckboxes(groupName, inputValue) {
     return {
       checked: data[groupName].includes(inputValue),
@@ -38623,10 +38527,14 @@ var Edit = function Edit(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Voice part",
                   forInput: "voice_part_id"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__.default, _objectSpread({
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Select__WEBPACK_IMPORTED_MODULE_8__.default, {
                   name: "voice_part_id",
-                  options: voice_parts
-                }, syncInput('voice_part_id'))), errors.voice_part_id && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                  options: voice_parts,
+                  value: data.voice_part_id,
+                  updateFn: function updateFn(value) {
+                    return setData('voice_part_id', value);
+                  }
+                }), errors.voice_part_id && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.voice_part_id
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
@@ -38634,11 +38542,14 @@ var Edit = function Edit(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Why are you joining?",
                   forInput: "reason_for_joining"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
-                  name: "reason_for_joining"
-                }, syncInput('reason_for_joining')), {}, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
+                  name: "reason_for_joining",
+                  value: data.reason_for_joining,
+                  updateFn: function updateFn(value) {
+                    return setData('reason_for_joining', value);
+                  },
                   hasErrors: !!errors['reason_for_joining']
-                })), errors.reason_for_joining && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.reason_for_joining && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.reason_for_joining
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
@@ -38646,11 +38557,14 @@ var Edit = function Edit(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Where did you hear about us?",
                   forInput: "referrer"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
-                  name: "referrer"
-                }, syncInput('referrer')), {}, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
+                  name: "referrer",
+                  value: data.referrer,
+                  updateFn: function updateFn(value) {
+                    return setData('referrer', value);
+                  },
                   hasErrors: !!errors['referrer']
-                })), errors.referrer && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.referrer && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.referrer
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
@@ -38658,11 +38572,14 @@ var Edit = function Edit(_ref) {
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
                   label: "Notes / Membership Details",
                   forInput: "membership_details"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, _objectSpread(_objectSpread({
-                  name: "membership_details"
-                }, syncInput('membership_details')), {}, {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_TextInput__WEBPACK_IMPORTED_MODULE_5__.default, {
+                  name: "membership_details",
+                  value: data.membership_details,
+                  updateFn: function updateFn(value) {
+                    return setData('membership_details', value);
+                  },
                   hasErrors: !!errors['membership_details']
-                })), errors.membership_details && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
+                }), errors.membership_details && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.membership_details
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
@@ -40440,13 +40357,15 @@ var Select = function Select(_ref) {
       options = _ref.options,
       hasErrors = _ref.hasErrors,
       value = _ref.value,
-      onChange = _ref.onChange;
+      updateFn = _ref.updateFn;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("select", {
     id: name,
     name: name,
     className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)('' + 'shadow-sm focus:outline-none block w-full sm:text-sm rounded-md', hasErrors ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-purple-500 focus:border-purple-500'),
     value: value,
-    onChange: onChange,
+    onChange: function onChange(e) {
+      return updateFn(e.target.value);
+    },
     children: options.map(function (label, value) {
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("option", {
         value: value,
@@ -40536,7 +40455,7 @@ var TextInput = function TextInput(_ref) {
       _ref$type = _ref.type,
       type = _ref$type === void 0 ? 'text' : _ref$type,
       value = _ref.value,
-      onChange = _ref.onChange,
+      updateFn = _ref.updateFn,
       hasErrors = _ref.hasErrors,
       otherProps = _ref.otherProps;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
@@ -40547,7 +40466,9 @@ var TextInput = function TextInput(_ref) {
       id: name,
       className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)('' + 'shadow-sm focus:outline-none block w-full sm:text-sm rounded-md', hasErrors ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-purple-500 focus:border-purple-500'),
       value: value,
-      onChange: onChange
+      onChange: function onChange(e) {
+        return updateFn(e.target.value);
+      }
     }, otherProps))
   });
 };

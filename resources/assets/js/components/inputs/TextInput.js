@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from '../../classNames';
 
-const TextInput = ({name, type = 'text', value, onChange, hasErrors, otherProps}) => (
+const TextInput = ({name, type = 'text', value, updateFn, hasErrors, otherProps}) => (
     <div className="mt-1">
         <input
             type={type}
@@ -14,7 +14,7 @@ const TextInput = ({name, type = 'text', value, onChange, hasErrors, otherProps}
                     : 'border-gray-300 focus:ring-purple-500 focus:border-purple-500'
             )}
             value={value}
-            onChange={onChange}
+            onChange={e => updateFn(e.target.value)}
             {...otherProps}
         />
     </div>

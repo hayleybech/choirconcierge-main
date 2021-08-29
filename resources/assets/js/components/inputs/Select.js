@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from '../../classNames';
 
-const Select = ({ name, options, hasErrors, value, onChange }) => (
+const Select = ({ name, options, hasErrors, value, updateFn }) => (
     <select
         id={name}
         name={name}
@@ -12,7 +12,7 @@ const Select = ({ name, options, hasErrors, value, onChange }) => (
                 : 'border-gray-300 focus:ring-purple-500 focus:border-purple-500'
         )}
         value={value}
-        onChange={onChange}
+        onChange={e => updateFn(e.target.value)}
     >
         {options.map((label, value) => (
             <option value={value} key={value}>{label}</option>
