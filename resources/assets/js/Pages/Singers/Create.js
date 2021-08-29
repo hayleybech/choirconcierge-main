@@ -36,7 +36,7 @@ const Create = ({voice_parts, roles}) => {
         e.preventDefault();
         post(route('singers.store'));
     }
-    
+
     function syncCheckboxes(groupName, inputValue){
         return {
             value: data[groupName].includes(inputValue),
@@ -76,32 +76,32 @@ const Create = ({voice_parts, roles}) => {
                             <FormSection title="User Details" description="Create an account for the singer.">
                                 <div className="sm:col-span-3">
                                     <Label label="First name" forInput="first_name" />
-                                    <TextInput name="first_name" autoComplete="given-name" value={data.first_name} updateFn={(value) => setData('first_name', value)} hasErrors={ !! errors['first_name'] } />
+                                    <TextInput name="first_name" autoComplete="given-name" value={data.first_name} updateFn={value => setData('first_name', value)} hasErrors={ !! errors['first_name'] } />
                                     {errors.first_name && <Error>{errors.first_name}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-3">
                                     <Label label="Last name" forInput="last_name" />
-                                    <TextInput name="last_name" autoComplete="family-name" value={data.last_name} updateFn={(value) => setData('last_name', value)} hasErrors={ !! errors['last_name'] } />
+                                    <TextInput name="last_name" autoComplete="family-name" value={data.last_name} updateFn={value => setData('last_name', value)} hasErrors={ !! errors['last_name'] } />
                                     {errors.last_name && <Error>{errors.last_name}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-4">
                                     <Label label="Email address" forInput="email" />
-                                    <TextInput name="email" type="email" autoComplete="email" value={data.email} updateFn={(value) => setData('email', value)} hasErrors={ !! errors['email'] } />
+                                    <TextInput name="email" type="email" autoComplete="email" value={data.email} updateFn={value => setData('email', value)} hasErrors={ !! errors['email'] } />
                                     {errors.email && <Error>{errors.email}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-3">
                                     <Label label="Password" forInput="password" />
-                                    <TextInput type="password" name="password" value={data.password} updateFn={(value) => setData('password', value)} hasErrors={ !! errors['password'] } />
+                                    <TextInput type="password" name="password" value={data.password} updateFn={value => setData('password', value)} hasErrors={ !! errors['password'] } />
                                     <Help>You may leave this blank and update it later.</Help>
                                     {errors.password && <Error>{errors.password}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-3">
                                     <Label label="Confirm password" forInput="password_confirmation" />
-                                    <TextInput type="password" name="password_confirmation" value={data.password_confirmation} updateFn={(value) => setData('password_confirmation', value)} hasErrors={ !! errors['password_confirmation'] } />
+                                    <TextInput type="password" name="password_confirmation" value={data.password_confirmation} updateFn={value => setData('password_confirmation', value)} hasErrors={ !! errors['password_confirmation'] } />
                                     {errors.password_confirmation && <Error>{errors.password_confirmation}</Error>}
                                 </div>
                             </FormSection>
@@ -109,25 +109,25 @@ const Create = ({voice_parts, roles}) => {
                             <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
                                 <div className="sm:col-span-3">
                                     <Label label="Voice part" forInput="voice_part_id" />
-                                    <Select name="voice_part_id" options={voice_parts} value={data.voice_part_id} updateFn={(value) => setData('voice_part_id', value)} />
+                                    <Select name="voice_part_id" options={voice_parts} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
                                     {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-6">
                                     <Label label="Why are you joining?" forInput="reason_for_joining" />
-                                    <TextInput name="reason_for_joining" value={data.reason_for_joining} updateFn={(value) => setData('reason_for_joining', value)} hasErrors={ !! errors['reason_for_joining'] } />
+                                    <TextInput name="reason_for_joining" value={data.reason_for_joining} updateFn={value => setData('reason_for_joining', value)} hasErrors={ !! errors['reason_for_joining'] } />
                                     {errors.reason_for_joining && <Error>{errors.reason_for_joining}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-6">
                                     <Label label="Where did you hear about us?" forInput="referrer" />
-                                    <TextInput name="referrer" value={data.referrer} updateFn={(value) => setData('referrer', value)} hasErrors={ !! errors['referrer'] } />
+                                    <TextInput name="referrer" value={data.referrer} updateFn={value => setData('referrer', value)} hasErrors={ !! errors['referrer'] } />
                                     {errors.referrer && <Error>{errors.referrer}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-6">
                                     <Label label="Notes / Membership Details" forInput="membership_details" />
-                                    <TextInput name="membership_details" value={data.membership_details} updateFn={(value) => setData('membership_details', value)} hasErrors={ !! errors['membership_details'] } />
+                                    <TextInput name="membership_details" value={data.membership_details} updateFn={value => setData('membership_details', value)} hasErrors={ !! errors['membership_details'] } />
                                     {errors.membership_details && <Error>{errors.membership_details}</Error>}
                                 </div>
 
@@ -136,7 +136,7 @@ const Create = ({voice_parts, roles}) => {
                                         label="Is this an existing member?"
                                         description="Onboarding will be disabled when adding an existing singer."
                                         value={data.existing_member}
-                                        updateFn={(value) => setData('existing_member',  value)}
+                                        updateFn={value => setData('existing_member',  value)}
                                     />
                                 </div>
                             </FormSection>
@@ -149,7 +149,7 @@ const Create = ({voice_parts, roles}) => {
                                         name="joined_at"
                                         hasErrors={ !! errors.joined_at }
                                         value={data.joined_at}
-                                        onChange={ day => setData('joined_at', day)}
+                                        updateFn={value => setData('joined_at', value)}
                                     />
                                     {errors.joined_at && <Error>{errors.joined_at}</Error>}
                                 </div>

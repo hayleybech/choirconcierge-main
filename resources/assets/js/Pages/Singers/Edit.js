@@ -70,25 +70,25 @@ const Edit = ({ voice_parts, roles, singer }) => {
                             <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
                                 <div className="sm:col-span-3">
                                     <Label label="Voice part" forInput="voice_part_id" />
-                                    <Select name="voice_part_id" options={voice_parts} value={data.voice_part_id} updateFn={(value) => setData('voice_part_id', value)} />
+                                    <Select name="voice_part_id" options={voice_parts} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
                                     {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-6">
                                     <Label label="Why are you joining?" forInput="reason_for_joining" />
-                                    <TextInput name="reason_for_joining" value={data.reason_for_joining} updateFn={(value) => setData('reason_for_joining', value)} hasErrors={ !! errors['reason_for_joining'] } />
+                                    <TextInput name="reason_for_joining" value={data.reason_for_joining} updateFn={value => setData('reason_for_joining', value)} hasErrors={ !! errors['reason_for_joining'] } />
                                     {errors.reason_for_joining && <Error>{errors.reason_for_joining}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-6">
                                     <Label label="Where did you hear about us?" forInput="referrer" />
-                                    <TextInput name="referrer" value={data.referrer} updateFn={(value) => setData('referrer', value)} hasErrors={ !! errors['referrer'] } />
+                                    <TextInput name="referrer" value={data.referrer} updateFn={value => setData('referrer', value)} hasErrors={ !! errors['referrer'] } />
                                     {errors.referrer && <Error>{errors.referrer}</Error>}
                                 </div>
 
                                 <div className="sm:col-span-6">
                                     <Label label="Notes / Membership Details" forInput="membership_details" />
-                                    <TextInput name="membership_details" value={data.membership_details} updateFn={(value) => setData('membership_details', value)} hasErrors={ !! errors['membership_details'] } />
+                                    <TextInput name="membership_details" value={data.membership_details} updateFn={value => setData('membership_details', value)} hasErrors={ !! errors['membership_details'] } />
                                     {errors.membership_details && <Error>{errors.membership_details}</Error>}
                                 </div>
 
@@ -97,7 +97,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
                                         label="Enable onboarding?"
                                         description="Enable this only for new/prospective singers."
                                         value={data.existing_member}
-                                        updateFn={(value) => setData('existing_member',  value)}
+                                        updateFn={value => setData('existing_member',  value)}
                                     />
                                 </div>
 
@@ -107,7 +107,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
                                         name="joined_at"
                                         hasErrors={ !! errors.joined_at }
                                         value={data.joined_at}
-                                        onChange={ day => setData('joined_at', day)}
+                                        updateFn={value => setData('joined_at', value)}
                                     />
                                     {errors.joined_at && <Error>{errors.joined_at}</Error>}
                                 </div>

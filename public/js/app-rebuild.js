@@ -38317,8 +38317,8 @@ var Create = function Create(_ref) {
                   name: "joined_at",
                   hasErrors: !!errors.joined_at,
                   value: data.joined_at,
-                  onChange: function onChange(day) {
-                    return setData('joined_at', day);
+                  updateFn: function updateFn(value) {
+                    return setData('joined_at', value);
                   }
                 }), errors.joined_at && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.joined_at
@@ -38601,8 +38601,8 @@ var Edit = function Edit(_ref) {
                   name: "joined_at",
                   hasErrors: !!errors.joined_at,
                   value: data.joined_at,
-                  onChange: function onChange(day) {
-                    return setData('joined_at', day);
+                  updateFn: function updateFn(value) {
+                    return setData('joined_at', value);
                   }
                 }), errors.joined_at && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Error__WEBPACK_IMPORTED_MODULE_7__.default, {
                   children: errors.joined_at
@@ -40142,7 +40142,7 @@ __webpack_require__.r(__webpack_exports__);
 var DateInput = function DateInput(_ref) {
   var name = _ref.name,
       value = _ref.value,
-      onChange = _ref.onChange,
+      updateFn = _ref.updateFn,
       hasErrors = _ref.hasErrors;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_5__.Popover, {
     as: "div",
@@ -40173,7 +40173,9 @@ var DateInput = function DateInput(_ref) {
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_5__.Popover.Panel, {
         className: "absolute mt-2 bg-white overflow-hidden shadow-lg rounded-lg z-10 border border-gray-300",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)((react_day_picker__WEBPACK_IMPORTED_MODULE_2___default()), {
-          onDayClick: onChange,
+          onDayClick: function onDayClick(day) {
+            return updateFn(day);
+          },
           style: {
             day: {
               color: 'blue'

@@ -5,7 +5,7 @@ import { Popover, Transition } from "@headlessui/react";
 import 'react-day-picker/lib/style.css';
 import {DateTime} from "luxon";
 
-const DateInput = ({ name, value, onChange, hasErrors }) => (
+const DateInput = ({ name, value, updateFn, hasErrors }) => (
     <Popover as="div" className="mt-1 relative">
         <Popover.Button as="div" className="relative rounded-md shadow-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -34,7 +34,7 @@ const DateInput = ({ name, value, onChange, hasErrors }) => (
             leaveTo="transform scale-95 opacity-0"
         >
             <Popover.Panel className="absolute mt-2 bg-white overflow-hidden shadow-lg rounded-lg z-10 border border-gray-300">
-                <DayPicker onDayClick={onChange} style={{ day: { color: 'blue' } }} />
+                <DayPicker onDayClick={day => updateFn(day)} style={{ day: { color: 'blue' } }} />
             </Popover.Panel>
         </Transition>
     </Popover>
