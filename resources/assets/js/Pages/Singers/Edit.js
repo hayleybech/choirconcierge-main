@@ -48,12 +48,6 @@ const Edit = ({ voice_parts, roles, singer }) => {
             )
         };
     }
-    function syncSwitch(inputName){
-        return {
-            checked: data[inputName],
-            onChange: checked => setData(inputName, checked),
-        };
-    }
 
     function arrUnique(array){
         return [...new Set(array)];
@@ -108,7 +102,8 @@ const Edit = ({ voice_parts, roles, singer }) => {
                                     <DetailToggle
                                         label="Enable onboarding?"
                                         description="Enable this only for new/prospective singers."
-                                        {...syncSwitch('existing_member')}
+                                        value={data.existing_member}
+                                        updateFn={(value) => setData('existing_member',  value)}
                                     />
                                 </div>
 

@@ -38590,15 +38590,6 @@ var Edit = function Edit(_ref) {
     };
   }
 
-  function syncSwitch(inputName) {
-    return {
-      checked: data[inputName],
-      onChange: function onChange(checked) {
-        return setData(inputName, checked);
-      }
-    };
-  }
-
   function arrUnique(array) {
     return _toConsumableArray(new Set(array));
   }
@@ -38681,10 +38672,14 @@ var Edit = function Edit(_ref) {
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)("div", {
                 className: "sm:col-span-6",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, _objectSpread({
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_DetailToggle__WEBPACK_IMPORTED_MODULE_6__.default, {
                   label: "Enable onboarding?",
-                  description: "Enable this only for new/prospective singers."
-                }, syncSwitch('existing_member')))
+                  description: "Enable this only for new/prospective singers.",
+                  value: data.existing_member,
+                  updateFn: function updateFn(value) {
+                    return setData('existing_member', value);
+                  }
+                })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsxs)("div", {
                 className: "sm:col-span-6",
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_15__.jsx)(_components_inputs_Label__WEBPACK_IMPORTED_MODULE_4__.default, {
@@ -40306,8 +40301,8 @@ __webpack_require__.r(__webpack_exports__);
 var DetailToggle = function DetailToggle(_ref) {
   var label = _ref.label,
       description = _ref.description,
-      checked = _ref.checked,
-      onChange = _ref.onChange;
+      value = _ref.value,
+      updateFn = _ref.updateFn;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Switch.Group, {
     as: "div",
     className: "flex items-center justify-between",
@@ -40324,12 +40319,14 @@ var DetailToggle = function DetailToggle(_ref) {
         children: description
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.Switch, {
-      checked: checked,
-      onChange: onChange,
-      className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)(checked ? 'bg-purple-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500'),
+      checked: value,
+      onChange: function onChange(checked) {
+        return updateFn(checked);
+      },
+      className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)(value ? 'bg-purple-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500'),
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
         "aria-hidden": "true",
-        className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)(checked ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200')
+        className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)(value ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200')
       })
     })]
   });
