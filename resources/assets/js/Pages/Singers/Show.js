@@ -5,6 +5,7 @@ import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import {DateTime} from "luxon";
+import classNames from "../../classNames";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -36,6 +37,21 @@ const Range = ({ value, min, max, minLabel, maxLabel }) => (
         {maxLabel}
     </div>
 );
+
+const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
+    <dl className={classNames("grid grid-cols-1 gap-x-4 gap-y-8", gridCols)}>
+        {items.map(({ label, value, colClass = "sm:col-span-1" }) => (
+            <div className={colClass}>
+                <dt className="text-sm font-medium text-gray-500">
+                    {label}
+                </dt>
+                <dd className="mt-1 text-sm text-gray-900">
+                    {value}
+                </dd>
+            </div>
+        ))}
+    </dl>
+)
 
 const Show = ({singer}) => (
     <>
@@ -74,53 +90,33 @@ const Show = ({singer}) => (
 
                         <h2 className="text-xl leading-6 font-semibold text-gray-900 mb-4">Personal Details</h2>
 
-                        <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-4">
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Contact Details
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
+                        <DetailList items={[
+                            {
+                                label: 'Contact Details',
+                                value: <>
                                     <p>
                                         <i className="far fa-fw fa-envelope text-gray-500 mr-2" />{singer.user.email}
                                     </p>
                                     <p>
                                         <i className="far fa-fw fa-phone text-gray-500 mr-2" />{singer.user.phone ?? 'No phone'}
                                     </p>
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Date of Birth
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
-                                    {DateTime.fromJSDate(new Date(singer.user.dob)).toLocaleString(DateTime.DATE_MED) ?? 'No date of birth'}
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Height
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
-                                    {singer.user.height ? `${Math.round(singer.user.height)} cm` : 'Unknown'}
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    BHA Member ID
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
-                                    {singer.user.bha_id ?? 'Unknown'}
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Address
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
+                                </>,
+                            },
+                            {
+                                label: 'Date of Birth',
+                                value: DateTime.fromJSDate(new Date(singer.user.dob)).toLocaleString(DateTime.DATE_MED) ?? 'No date of birth',
+                            },
+                            {
+                                label: 'Height',
+                                value: singer.user.height ? `${Math.round(singer.user.height)} cm` : 'Unknown',
+                            },
+                            {
+                                label: 'BHA Member ID',
+                                value: singer.user.bha_id ?? 'Unknown',
+                            },
+                            {
+                                label: 'Address',
+                                value: <>
                                     {singer.user.address_street_1
                                         ? (<>
                                             {singer.user.address_street_1}<br />
@@ -129,111 +125,73 @@ const Show = ({singer}) => (
                                         </>)
                                         : 'No address'
                                     }
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Profession
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
-                                    {singer.user.profession ?? 'None listed'}
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Other Skills
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
-                                    {singer.user.skills ?? 'None listed'}
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Emergency Contact
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
+                                </>,
+                            },
+                            {
+                                label: 'Profession',
+                                value: singer.user.profession ?? 'None listed',
+                            },
+                            {
+                                label: 'Other Skills',
+                                value: singer.user.skills ?? 'None listed',
+                            },
+                            {
+                                label: 'Emergency Contact',
+                                value: <>
                                     <p>
                                         <i className="far fa-fw fa-user text-gray-500 mr-2" />{singer.user.ice_name ?? 'No emergency contact'}
                                     </p>
                                     <p>
                                         <i className="far fa-fw fa-phone text-gray-500 mr-2" />{singer.user.ice_phone ?? 'No phone'}
                                     </p>
-                                </dd>
-                            </div>
-
-                        </dl>
+                                </>,
+                            },
+                        ]}/>
                     </div>
 
                     <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
                         <h2 className="text-xl leading-6 font-semibold text-gray-900 mb-4">Membership Details</h2>
 
-                        <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-4">
-                            <div className="sm:col-span-2">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Roles
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
+                        <DetailList items={[
+                            {
+                                label: 'Roles',
+                                value: <>
                                     {singer.roles.map(role => (
                                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-800 mr-1.5 mb-1.5">
                                             {role.name.split(' ')[0]}
                                         </span>
                                     ))}
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Reason for joining
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
-                                    {singer.reason_for_joining ?? 'Unknown'}
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Referred by
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
-                                    {singer.referrer ?? 'Unknown'}
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-2">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Notes / Membership Details
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
-                                    {singer.membership_details ?? 'N/A'}
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Member Since
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
+                                </>,
+                                colClass: 'sm:col-span-2',
+                            },
+                            {
+                                label: 'Reason for Joining',
+                                value: singer.reason_for_joining ?? 'Unknown',
+                            },
+                            {
+                                label: 'Referred by',
+                                value: singer.referrer ?? 'Unknown',
+                            },
+                            {
+                                label: 'Notes / Membership Details',
+                                value: singer.membership_details ?? 'N/A',
+                                colClass: 'sm:col-span-2',
+                            },
+                            {
+                                label: 'Member Since',
+                                value: <>
                                     {DateTime.fromJSDate(new Date(singer.joined_at)).toLocaleString(DateTime.DATE_MED)}<br />
                                     <span className="text-sm text-gray-500 italic">
                                         Added {DateTime.fromJSDate(new Date(singer.created_at)).toLocaleString(DateTime.DATE_MED)}
                                     </span>
-                                </dd>
-                            </div>
-
-                            <div className="sm:col-span-1">
-                                <dt className="text-sm font-medium text-gray-500">
-                                    Last Login
-                                </dt>
-                                <dd className="mt-1 text-sm text-gray-900">
-                                    {DateTime.fromJSDate(new Date(singer.user.last_login)).toLocaleString(DateTime.DATE_MED)}
-                                </dd>
-                            </div>
-
-                        </dl>
+                                </>,
+                            },
+                            {
+                                label: 'Last Login',
+                                value: DateTime.fromJSDate(new Date(singer.user.last_login)).toLocaleString(DateTime.DATE_MED),
+                            },
+                        ]} />
                     </div>
                 </div>
 
@@ -250,86 +208,47 @@ const Show = ({singer}) => (
                         {singer.placement 
                             ? <>
                                 <h2 className="text-xl leading-6 font-semibold text-gray-900 mb-4">Voice Placement</h2>
-        
-                                <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-                                    <div className="sm:col-span-1">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                            Voice Part
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900">
-                                            <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />
-                                        </dd>
-                                    </div>
 
-                                    <div className="sm:col-span-1">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                            Voice Tone
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900">
-                                            <Range
-                                                min={1}
-                                                max={3}
-                                                minLabel={<i className="fas fa-fw fa-flute" />}
-                                                maxLabel={<i className="fas fa-fw fa-trumpet fa-lg" />}
-                                                value={singer.placement.voice_tone}
-                                            />
-                                        </dd>
-                                    </div>
-
-                                    <div className="sm:col-span-1">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                            Pitch Skill
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900">
-                                            <Progress value={singer.placement.skill_pitch} min={1} max={5} />
-                                        </dd>
-                                    </div>
-
-                                    <div className="sm:col-span-1">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                            Harmony Skill
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900">
-                                            <Progress value={singer.placement.skill_harmony} min={1} max={5} />
-                                        </dd>
-                                    </div>
-
-                                    <div className="sm:col-span-1">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                            Performance Skill
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900">
-                                            <Progress value={singer.placement.skill_performance} min={1} max={5} />
-                                        </dd>
-                                    </div>
-
-                                    <div className="sm:col-span-1">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                            Sight Reading Skill
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900">
-                                            <Progress value={singer.placement.skill_sightreading} min={1} max={5} />
-                                        </dd>
-                                    </div>
-
-                                    <div className="sm:col-span-2">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                            Experience
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900">
-                                            {singer.placement.experience ?? 'None listed'}
-                                        </dd>
-                                    </div>
-
-                                    <div className="sm:col-span-2">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                            Instruments
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900">
-                                            {singer.placement.instruments ?? 'None listed'}
-                                        </dd>
-                                    </div>
-                                </dl>
+                                <DetailList gridCols="sm:grid-cols-2" items={[
+                                    {
+                                        label: 'Voice Part',
+                                        value: <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />,
+                                    },
+                                    {
+                                        label: 'Voice Tone',
+                                        value: <Range
+                                            min={1}
+                                            max={3}
+                                            minLabel={<i className="fas fa-fw fa-flute" />}
+                                            maxLabel={<i className="fas fa-fw fa-trumpet fa-lg" />}
+                                            value={singer.placement.voice_tone}
+                                        />,
+                                    },
+                                    {
+                                        label: 'Pitch Skill',
+                                        value: <Progress value={singer.placement.skill_pitch} min={1} max={5} />,
+                                    },
+                                    {
+                                        label: 'Harmony Skill',
+                                        value: <Progress value={singer.placement.skill_harmony} min={1} max={5} />,
+                                    },
+                                    {
+                                        label: 'Performance Skill',
+                                        value: <Progress value={singer.placement.skill_performance} min={1} max={5} />,
+                                    },
+                                    {
+                                        label: 'Sight Reading Skill',
+                                        value: <Progress value={singer.placement.skill_sightreading} min={1} max={5} />,
+                                    },
+                                    {
+                                        label: 'Experience',
+                                        value: singer.placement.experience ?? 'None listed',
+                                    },
+                                    {
+                                        label: 'Instruments',
+                                        value: singer.placement.instruments ?? 'None listed',
+                                    },
+                                ]} />
                             </>
                             :
                             <>
