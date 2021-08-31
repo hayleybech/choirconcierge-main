@@ -1,9 +1,9 @@
 import React from 'react';
 import buttonStyles from "./buttonStyles";
 
-const Button = ({ primary, className, children, disabled, ...otherProps }) => (
+const Button = ({ variant = 'secondary', className, children, disabled, ...otherProps }) => (
     <button
-        className={buttonStyles(primary, disabled, className)}
+        className={buttonStyles(variant, disabled, className)}
         disabled={disabled}
         {...otherProps}
     >

@@ -126,7 +126,7 @@ class SingerController extends Controller
 	{
 		$this->authorize('view', $singer);
 
-		$singer->load('user', 'voice_part', 'category');
+		$singer->load('user', 'voice_part', 'category', 'roles', 'placement');
 
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');

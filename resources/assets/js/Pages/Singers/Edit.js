@@ -107,7 +107,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
                         <div className="pt-5">
                             <div className="flex justify-end">
                                 <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
-                                <Button primary type="submit" className="ml-3" disabled={processing}>Save</Button>
+                                <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                             </div>
                         </div>
                     </form>

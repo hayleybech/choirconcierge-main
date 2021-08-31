@@ -25,14 +25,14 @@ const SingerPageHeader = ({title, image, icon, meta, breadcrumbs, actions = []})
                 <div className="mt-5 flex sm:flex-row-reverse lg:mt-0 lg:ml-4">
                     {actions.map((action, key) => key === 0
                         ?   <span className="sm:ml-3" key={key}>
-                                <ButtonLink href={route(action.route)} primary>
+                                <ButtonLink href={action.url} variant="primary">
                                   <i className={"fa fa-fw -ml-1 mr-2 fa-"+action.icon} />
                                   {action.label}
                                 </ButtonLink>
                             </span>
                         :   <span className="hidden sm:block ml-3" key={key}>
-                              <ButtonLink href={route(action.route)}>
-                                  <i className={"fa fa-fw -ml-1 mr-2 text-gray-500 fa-"+action.icon} />
+                              <ButtonLink href={action.url} variant={action.variant}>
+                                  <i className={"fa fa-fw -ml-1 mr-2 fa-"+action.icon} />
                                   {action.label}
                               </ButtonLink>
                             </span>
