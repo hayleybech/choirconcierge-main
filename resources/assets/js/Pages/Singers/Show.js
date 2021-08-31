@@ -202,6 +202,37 @@ const Show = ({singer}) => (
                             <h2 className="ml-2 mt-2 text-xl leading-6 font-semibold text-gray-900 mb-4">Onboarding</h2>
                             <p className="ml-2 mt-1 text-md text-gray-500 truncate">{singer.onboarding_enabled ? 'Enabled' : 'Disabled'}</p>
                         </div>
+                        
+                        <div className="py-6 px-4 sm:px-3 lg:px-4">
+                            <nav className="flex" aria-label="Progress">
+                                <ol role="list" className="space-y-6">
+                                    {singer.tasks.map((task, index, tasks) => (
+                                    <li key={index}>
+                                        <span className="flex items-center">
+                                            <span className="flex-shrink-0 h-5 w-5 relative flex items-center justify-center" aria-hidden="true">
+                                                {task.pivot.completed
+                                                    && <i className="fas fa-fw fa-check-circle text-purple-600 text-sm" />
+                                                    || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
+                                                            <span className="absolute h-4 w-4 rounded-full bg-purple-200" />
+                                                            <span className="relative block w-2 h-2 bg-purple-600 rounded-full" />
+                                                        </>
+                                                    || <div className="h-2 w-2 bg-gray-300 rounded-full group-hover:bg-gray-400" />
+                                                }
+                                            </span>
+                                            {task.pivot.completed
+                                                && <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
+                                                || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
+                                                    <span className="ml-3 text-sm font-medium text-purple-600">{task.name}</span>
+                                                    <ButtonLink href={route(task.route, [singer.id, task.id])} size="sm" className="ml-3">Complete</ButtonLink>
+                                                </>
+                                                || <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
+                                            }
+                                        </span>
+                                    </li>
+                                    ))}
+                                </ol>
+                            </nav>
+                        </div>
                     </div>
 
                     <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

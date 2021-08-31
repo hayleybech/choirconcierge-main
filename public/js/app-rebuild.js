@@ -38920,55 +38920,39 @@ var Show = function Show(_ref5) {
                   className: "space-y-6",
                   children: singer.tasks.map(function (task, index, tasks) {
                     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("li", {
-                      children: task.pivot.completed ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("a", {
-                        href: route(task.route, [singer, tasks]),
-                        className: "group",
-                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("span", {
-                          className: "flex items-start",
-                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
-                            className: "flex-shrink-0 relative h-5 w-5 flex items-center justify-center",
-                            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("i", {
-                              className: "fas fa-fw fa-check-circle text-purple-600 text-sm"
-                            })
-                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
-                            className: "ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900",
-                            children: task.name
-                          })]
-                        })
-                      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
-                        children: !tasks[index - 1] || tasks[index - 1].pivot.completed ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("a", {
-                          href: route(task.route, [singer, tasks]),
-                          className: "flex items-start",
-                          "aria-current": "step",
-                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("span", {
-                            className: "flex-shrink-0 h-5 w-5 relative flex items-center justify-center",
-                            "aria-hidden": "true",
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("span", {
+                        className: "flex items-center",
+                        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+                          className: "flex-shrink-0 h-5 w-5 relative flex items-center justify-center",
+                          "aria-hidden": "true",
+                          children: task.pivot.completed && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("i", {
+                            className: "fas fa-fw fa-check-circle text-purple-600 text-sm"
+                          }) || (!tasks[index - 1] || tasks[index - 1].pivot.completed) && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
                             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
                               className: "absolute h-4 w-4 rounded-full bg-purple-200"
                             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
                               className: "relative block w-2 h-2 bg-purple-600 rounded-full"
                             })]
-                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+                          }) || /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+                            className: "h-2 w-2 bg-gray-300 rounded-full group-hover:bg-gray-400"
+                          })
+                        }), task.pivot.completed && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+                          className: "ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900",
+                          children: task.name
+                        }) || (!tasks[index - 1] || tasks[index - 1].pivot.completed) && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
+                          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
                             className: "ml-3 text-sm font-medium text-purple-600",
                             children: task.name
+                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_5__.default, {
+                            href: route(task.route, [singer.id, task.id]),
+                            size: "sm",
+                            className: "ml-3",
+                            children: "Complete"
                           })]
-                        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("a", {
-                          href: route(task.route, [singer, tasks]),
-                          className: "group",
-                          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
-                            className: "flex items-start",
-                            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
-                              className: "flex-shrink-0 h-5 w-5 relative flex items-center justify-center",
-                              "aria-hidden": "true",
-                              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
-                                className: "h-2 w-2 bg-gray-300 rounded-full group-hover:bg-gray-400"
-                              })
-                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("p", {
-                              className: "ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900",
-                              children: task.name
-                            })]
-                          })
-                        })
+                        }) || /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+                          className: "ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900",
+                          children: task.name
+                        })]
                       })
                     }, index);
                   })
@@ -40029,7 +40013,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _buttonStyles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./buttonStyles */ "./resources/assets/js/components/inputs/buttonStyles.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-var _excluded = ["variant", "className", "children", "disabled"];
+var _excluded = ["variant", "size", "className", "children", "disabled"];
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -40127,13 +40111,15 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 var Button = function Button(_ref) {
   var _ref$variant = _ref.variant,
       variant = _ref$variant === void 0 ? 'secondary' : _ref$variant,
+      _ref$size = _ref.size,
+      size = _ref$size === void 0 ? 'md' : _ref$size,
       className = _ref.className,
       children = _ref.children,
       disabled = _ref.disabled,
       otherProps = _objectWithoutProperties(_ref, _excluded);
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", _objectSpread(_objectSpread({
-    className: (0,_buttonStyles__WEBPACK_IMPORTED_MODULE_1__.default)(variant, disabled, className),
+    className: (0,_buttonStyles__WEBPACK_IMPORTED_MODULE_1__.default)(variant, size, disabled, className),
     disabled: disabled
   }, otherProps), {}, {
     children: children
@@ -40159,7 +40145,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
 /* harmony import */ var _buttonStyles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./buttonStyles */ "./resources/assets/js/components/inputs/buttonStyles.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-var _excluded = ["href", "variant", "className", "children", "disabled"];
+var _excluded = ["href", "variant", "size", "className", "children", "disabled"];
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -40259,6 +40245,8 @@ var ButtonLink = function ButtonLink(_ref) {
   var href = _ref.href,
       _ref$variant = _ref.variant,
       variant = _ref$variant === void 0 ? 'secondary' : _ref$variant,
+      _ref$size = _ref.size,
+      size = _ref$size === void 0 ? 'md' : _ref$size,
       className = _ref.className,
       children = _ref.children,
       disabled = _ref.disabled,
@@ -40266,7 +40254,7 @@ var ButtonLink = function ButtonLink(_ref) {
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, _objectSpread(_objectSpread({
     href: href,
-    className: (0,_buttonStyles__WEBPACK_IMPORTED_MODULE_2__.default)(variant, disabled, className)
+    className: (0,_buttonStyles__WEBPACK_IMPORTED_MODULE_2__.default)(variant, size, disabled, className)
   }, otherProps), {}, {
     children: children
   }));
@@ -40755,9 +40743,10 @@ __webpack_require__.r(__webpack_exports__);
 
 var buttonStyles = function buttonStyles() {
   var variant = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'secondary';
-  var disabled = arguments.length > 1 ? arguments[1] : undefined;
-  var extra = arguments.length > 2 ? arguments[2] : undefined;
-  return (0,_classNames__WEBPACK_IMPORTED_MODULE_0__.default)('inline-flex justify-center items-center py-2 px-4 border shadow-sm text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500', variant === 'primary' ? 'bg-purple-600 border-transparent text-white hover:bg-purple-700' : '', variant === 'secondary' ? 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100' : '', variant === 'danger' ? 'bg-white border-red-300 text-red-500 hover:bg-red-100' : '', disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : '', extra);
+  var size = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'md';
+  var disabled = arguments.length > 2 ? arguments[2] : undefined;
+  var extra = arguments.length > 3 ? arguments[3] : undefined;
+  return (0,_classNames__WEBPACK_IMPORTED_MODULE_0__.default)('inline-flex justify-center items-center border shadow-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500', variant === 'primary' ? 'bg-purple-600 border-transparent text-white hover:bg-purple-700' : '', variant === 'secondary' ? 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100' : '', variant === 'danger' ? 'bg-white border-red-300 text-red-500 hover:bg-red-100' : '', disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : '', size === 'md' ? 'py-2 px-4 text-sm' : '', size === 'sm' ? 'py-1 px-2 text-xs' : '', extra);
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (buttonStyles);
