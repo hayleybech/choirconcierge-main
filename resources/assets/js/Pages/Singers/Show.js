@@ -223,7 +223,7 @@ const Show = ({singer}) => (
                                                 && <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
                                                 || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
                                                     <span className="ml-3 text-sm font-medium text-purple-600">{task.name}</span>
-                                                    <ButtonLink href={route(task.route, [singer.id, task.id])} size="sm" className="ml-3">Complete</ButtonLink>
+                                                    <ButtonLink href={route(task.route, [singer.id, task.id])} size="xs" className="ml-3">Complete</ButtonLink>
                                                 </>
                                                 || <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
                                             }
@@ -238,7 +238,19 @@ const Show = ({singer}) => (
                     <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                         {singer.placement 
                             ? <>
-                                <h2 className="text-xl leading-6 font-semibold text-gray-900 mb-4">Voice Placement</h2>
+                                <div className="pb-5 sm:flex sm:items-center sm:justify-between mb-4">
+                                    <h2 className="text-xl leading-6 font-semibold text-gray-900">Voice Placement</h2>
+                                    <div className="mt-3 sm:mt-0 sm:ml-4">
+                                        <ButtonLink
+                                            variant="primary"
+                                            size="sm"
+                                            href={route('singers.placements.edit', [singer.id, singer.placement.id])}
+                                        >
+                                            <i className="fas fa-fw fa-edit mr-2" />
+                                            Edit
+                                        </ButtonLink>
+                                    </div>
+                                </div>
 
                                 <DetailList gridCols="sm:grid-cols-2" items={[
                                     {

@@ -38945,7 +38945,7 @@ var Show = function Show(_ref5) {
                             children: task.name
                           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_5__.default, {
                             href: route(task.route, [singer.id, task.id]),
-                            size: "sm",
+                            size: "xs",
                             className: "ml-3",
                             children: "Complete"
                           })]
@@ -38962,9 +38962,22 @@ var Show = function Show(_ref5) {
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
             className: "py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8",
             children: singer.placement ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h2", {
-                className: "text-xl leading-6 font-semibold text-gray-900 mb-4",
-                children: "Voice Placement"
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+                className: "pb-5 sm:flex sm:items-center sm:justify-between mb-4",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h2", {
+                  className: "text-xl leading-6 font-semibold text-gray-900",
+                  children: "Voice Placement"
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+                  className: "mt-3 sm:mt-0 sm:ml-4",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_5__.default, {
+                    variant: "primary",
+                    size: "sm",
+                    href: route('singers.placements.edit', [singer.id, singer.placement.id]),
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("i", {
+                      className: "fas fa-fw fa-edit mr-2"
+                    }), "Edit"]
+                  })
+                })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(DetailList, {
                 gridCols: "sm:grid-cols-2",
                 items: [{
@@ -40746,7 +40759,7 @@ var buttonStyles = function buttonStyles() {
   var size = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'md';
   var disabled = arguments.length > 2 ? arguments[2] : undefined;
   var extra = arguments.length > 3 ? arguments[3] : undefined;
-  return (0,_classNames__WEBPACK_IMPORTED_MODULE_0__.default)('inline-flex justify-center items-center border shadow-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500', variant === 'primary' ? 'bg-purple-600 border-transparent text-white hover:bg-purple-700' : '', variant === 'secondary' ? 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100' : '', variant === 'danger' ? 'bg-white border-red-300 text-red-500 hover:bg-red-100' : '', disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : '', size === 'md' ? 'py-2 px-4 text-sm' : '', size === 'sm' ? 'py-1 px-2 text-xs' : '', extra);
+  return (0,_classNames__WEBPACK_IMPORTED_MODULE_0__.default)('inline-flex justify-center items-center border shadow-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500', variant === 'primary' ? 'bg-purple-600 border-transparent text-white hover:bg-purple-700' : '', variant === 'secondary' ? 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100' : '', variant === 'danger' ? 'bg-white border-red-300 text-red-500 hover:bg-red-100' : '', disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : '', size === 'md' ? 'py-2 px-4 text-md' : '', size === 'sm' ? 'py-1.5 px-3 text-sm' : '', size === 'xs' ? 'py-1 px-2 text-xs' : '', extra);
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (buttonStyles);
