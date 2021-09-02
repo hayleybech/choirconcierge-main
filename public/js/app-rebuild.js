@@ -40190,15 +40190,15 @@ var VoicePartTag = function VoicePartTag(_ref) {
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("span", {
     className: "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-opacity-75",
     style: {
-      color: colour ? 'white' : '#1F2937',
-      backgroundColor: colour !== null && colour !== void 0 ? colour : '#E5E7EB'
+      color: 'white',
+      backgroundColor: colour !== null && colour !== void 0 ? colour : '#9095a0'
     },
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("svg", {
       className: "-ml-0.5 mr-1.5 h-2 w-2",
       fill: "currentColor",
       viewBox: "0 0 8 8",
       style: {
-        color: colour ? 'white' : '#9CA3AF'
+        color: 'white'
       },
       children: [">", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
         cx: 4,
