@@ -8,6 +8,7 @@ import {DateTime} from "luxon";
 import classNames from "../../classNames";
 import Dialog from "../../components/Dialog";
 import RadioGroup from "../../components/inputs/RadioGroup";
+import {usePage} from "@inertiajs/inertia-react";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -105,6 +106,7 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
 const Show = ({ singer, categories }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
+    const { can } = usePage().props;
 
     return (
         <>
@@ -257,6 +259,7 @@ const Show = ({ singer, categories }) => {
 
                     <div className="sm:col-span-1 sm:border-l sm:border-l-gray-300">
 
+                        {can['list_tasks'] && (
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
 
                             <div className="-ml-2 -mt-2 flex flex-wrap items-baseline">
@@ -295,6 +298,7 @@ const Show = ({ singer, categories }) => {
                                 </nav>
                             </div>
                         </div>
+                        )}
 
                         { singer.can['create_placement'] && (
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
