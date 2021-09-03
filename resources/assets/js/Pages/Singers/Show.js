@@ -287,7 +287,9 @@ const Show = ({ singer, categories }) => {
                                             && <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
                                             || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
                                                 <span className="ml-3 text-sm font-medium text-purple-600">{task.name}</span>
-                                                <ButtonLink href={route(task.route, [singer.id, task.id])} size="xs" className="ml-3">Complete</ButtonLink>
+                                                {task.can['complete'] && (
+                                                    <ButtonLink href={route(task.route, [singer.id, task.id])} size="xs" className="ml-3">Complete</ButtonLink>
+                                                )}
                                             </>
                                             || <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
                                             }

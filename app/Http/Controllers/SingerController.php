@@ -132,6 +132,7 @@ class SingerController extends Controller
 		$singer->can = [
 		    'create_placement' => auth()->user()?->can('create', [Placement::class, $singer]),
         ];
+		$singer->tasks->each(fn($task) => $task->can = ['complete' => auth()->user()?->can('complete', $task)]);
 
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');

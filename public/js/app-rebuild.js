@@ -39566,7 +39566,7 @@ var Show = function Show(_ref7) {
                           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("span", {
                             className: "ml-3 text-sm font-medium text-purple-600",
                             children: task.name
-                          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_5__.default, {
+                          }), task.can['complete'] && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_components_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_5__.default, {
                             href: route(task.route, [singer.id, task.id]),
                             size: "xs",
                             className: "ml-3",
