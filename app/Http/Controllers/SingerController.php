@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SingerRequest;
 use App\Http\Requests\UserRequest;
+use App\Models\Placement;
 use App\Models\Role;
 use App\Models\SingerCategory;
 use App\Models\User;
@@ -127,6 +128,10 @@ class SingerController extends Controller
 		$this->authorize('view', $singer);
 
 		$singer->load('user', 'voice_part', 'category', 'roles', 'placement', 'tasks');
+
+		$singer->can = [
+		    'create_placement' => auth()->user()?->can('create', [Placement::class, $singer]),
+        ];
 
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');

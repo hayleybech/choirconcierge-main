@@ -256,6 +256,7 @@ const Show = ({ singer, categories }) => {
                     </div>
 
                     <div className="sm:col-span-1 sm:border-l sm:border-l-gray-300">
+
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
 
                             <div className="-ml-2 -mt-2 flex flex-wrap items-baseline">
@@ -295,6 +296,7 @@ const Show = ({ singer, categories }) => {
                             </div>
                         </div>
 
+                        { singer.can['create_placement'] && (
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                             {singer.placement
                                 ? <>
@@ -373,6 +375,8 @@ const Show = ({ singer, categories }) => {
                                 </>
                             }
                         </div>
+                        )}
+
                     </div>
 
                 </div>

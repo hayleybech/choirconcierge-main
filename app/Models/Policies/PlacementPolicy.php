@@ -3,6 +3,7 @@
 namespace App\Models\Policies;
 
 use App\Models\Placement;
+use App\Models\Singer;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -50,8 +51,11 @@ class PlacementPolicy
 	 *
 	 * @return mixed
 	 */
-	public function create(User $user)
+	public function create(User $user, Singer $singer)
 	{
+	    if($user->singer->is($singer)) {
+	        return false;
+        }
 		return $user->singer->hasAbility('singer_placements_create');
 	}
 
