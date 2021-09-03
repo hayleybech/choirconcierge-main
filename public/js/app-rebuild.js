@@ -39016,7 +39016,8 @@ var Index = function Index(_ref) {
       actions: [{
         label: 'Add New',
         icon: 'user-plus',
-        url: 'singers.create'
+        url: 'singers.create',
+        variant: 'primary'
       }, {
         label: 'Voice Parts',
         icon: 'users-class',
@@ -39389,21 +39390,27 @@ var Show = function Show(_ref7) {
       actions: [{
         label: 'Edit Membership',
         icon: 'edit',
-        url: route('singers.edit', singer)
+        url: route('singers.edit', singer),
+        can: 'update_singer',
+        variant: 'primary'
       }, {
         label: 'Move',
         icon: 'arrow-circle-right',
         onClick: function onClick() {
           return setMoveDialogIsOpen(true);
-        }
+        },
+        can: 'update_singer'
       }, {
         label: 'Delete',
         icon: 'trash',
         onClick: function onClick() {
           return setDeleteDialogIsOpen(true);
         },
-        variant: 'danger-outline'
-      }]
+        variant: 'danger-outline',
+        can: 'delete_singer'
+      }].filter(function (action) {
+        return singer.can[action.can];
+      })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(DeleteSingerDialog, {
       isOpen: deleteDialogIsOpen,
       setIsOpen: setDeleteDialogIsOpen,
@@ -39776,7 +39783,7 @@ var SingerPageHeader = function SingerPageHeader(_ref) {
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_components_inputs_Button__WEBPACK_IMPORTED_MODULE_6__.default, {
                 href: action.url,
                 onClick: action.onClick,
-                variant: key === 0 ? 'primary' : action.variant,
+                variant: action.variant,
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("i", {
                   className: "fa fa-fw -ml-1 mr-2 fa-" + action.icon
                 }), action.label]

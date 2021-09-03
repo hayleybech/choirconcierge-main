@@ -132,10 +132,10 @@ const Show = ({ singer, categories }) => {
                     { name: singer.user.name, url: route('singers.show', singer) },
                 ]}
                 actions={[
-                    { label: 'Edit Membership', icon: 'edit', url: route('singers.edit', singer)},
-                    { label: 'Move', icon: 'arrow-circle-right', onClick: () => setMoveDialogIsOpen(true)},
-                    { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline'},
-                ]}
+                    { label: 'Edit Membership', icon: 'edit', url: route('singers.edit', singer), can: 'update_singer', variant: 'primary' },
+                    { label: 'Move', icon: 'arrow-circle-right', onClick: () => setMoveDialogIsOpen(true), can: 'update_singer' },
+                    { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_singer' },
+                ].filter(action => singer.can[action.can])}
             />
 
             <DeleteSingerDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} singer={singer} />
