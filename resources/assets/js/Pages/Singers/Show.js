@@ -7,7 +7,7 @@ import ButtonLink from "../../components/inputs/ButtonLink";
 import {DateTime} from "luxon";
 import classNames from "../../classNames";
 import Dialog from "../../components/Dialog";
-import Button from "../../components/inputs/Button";
+import RadioGroup from "../../components/inputs/RadioGroup";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -53,10 +53,58 @@ const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
             </div>
         ))}
     </dl>
-)
+);
 
-const Show = ({singer}) => {
+const DeleteSingerDialog = ({ isOpen, setIsOpen, singer }) => (
+    <Dialog
+        title="Delete Singer"
+        okLabel="Delete"
+        okUrl={route('singers.destroy', singer)}
+        okVariant="danger-solid"
+        okMethod="delete"
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+    >
+        <p>
+            Are you sure you want to deactivate this singer?
+            All of their data will be permanently removed from our servers forever.
+            This action cannot be undone.
+        </p>
+    </Dialog>
+);
+
+const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
+    const [selectedCategory, setSelectedCategory] = useState(singer.category.id ?? 0);
+
+    return (
+        <Dialog
+            title="Move Singer"
+            okLabel="Move"
+            okUrl={route('singers.categories.update', singer)}
+            okVariant="primary"
+            okMethod="get"
+            data={{ move_category: selectedCategory }}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+        >
+            <p className="mb-2">
+                Are you sure you want to move this singer?
+                This will move them to the selected stage of your onboarding process.
+                This can be undone, however, it may trigger some onboarding emails, which cannot be undone.
+            </p>
+            <RadioGroup
+                label="Select a new category"
+                options={categories.map(category => ({ ...category, icon: 'circle'}))}
+                selected={selectedCategory}
+                setSelected={setSelectedCategory}
+            />
+        </Dialog>
+    );
+}
+
+const Show = ({ singer, categories }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
+    const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
 
     return (
         <>
@@ -83,20 +131,15 @@ const Show = ({singer}) => {
                 ]}
                 actions={[
                     { label: 'Edit Membership', icon: 'edit', url: route('singers.edit', singer)},
-                    { label: 'Move', icon: 'chevron-down', url: '#'},
+                    { label: 'Move', icon: 'arrow-circle-right', onClick: () => setMoveDialogIsOpen(true)},
                     { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline'},
                 ]}
             />
-            <Dialog
-                title="Delete Singer"
-                content="Are you sure you want to deactivate this singer?
-                All of their data will be permanently removed from our servers forever.
-                This action cannot be undone."
-                okLabel="Delete"
-                okUrl={route('singers.destroy', singer)}
-                isOpen={deleteDialogIsOpen}
-                setIsOpen={setDeleteDialogIsOpen}
-            />
+
+            <DeleteSingerDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} singer={singer} />
+
+            <MoveSingerDialog isOpen={moveDialogIsOpen} setIsOpen={setMoveDialogIsOpen} singer={singer} categories={categories} />
+
             <div className="bg-gray-50">
                 <div className="grid grid-cols-1 sm:grid-cols-4">
 

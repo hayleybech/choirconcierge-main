@@ -2180,6 +2180,368 @@ Portal.Group = Group;
 
 /***/ }),
 
+/***/ "./node_modules/@headlessui/react/dist/components/radio-group/radio-group.esm.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/@headlessui/react/dist/components/radio-group/radio-group.esm.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RadioGroup": () => (/* binding */ RadioGroup)
+/* harmony export */ });
+/* harmony import */ var _virtual_rollupPluginBabelHelpers_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../_virtual/_rollupPluginBabelHelpers.js */ "./node_modules/@headlessui/react/dist/_virtual/_rollupPluginBabelHelpers.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _utils_match_esm_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/match.esm.js */ "./node_modules/@headlessui/react/dist/utils/match.esm.js");
+/* harmony import */ var _utils_render_esm_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../utils/render.esm.js */ "./node_modules/@headlessui/react/dist/utils/render.esm.js");
+/* harmony import */ var _keyboard_esm_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../keyboard.esm.js */ "./node_modules/@headlessui/react/dist/components/keyboard.esm.js");
+/* harmony import */ var _hooks_use_iso_morphic_effect_esm_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../hooks/use-iso-morphic-effect.esm.js */ "./node_modules/@headlessui/react/dist/hooks/use-iso-morphic-effect.esm.js");
+/* harmony import */ var _hooks_use_id_esm_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../hooks/use-id.esm.js */ "./node_modules/@headlessui/react/dist/hooks/use-id.esm.js");
+/* harmony import */ var _utils_focus_management_esm_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../utils/focus-management.esm.js */ "./node_modules/@headlessui/react/dist/utils/focus-management.esm.js");
+/* harmony import */ var _description_description_esm_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../description/description.esm.js */ "./node_modules/@headlessui/react/dist/components/description/description.esm.js");
+/* harmony import */ var _hooks_use_tree_walker_esm_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../hooks/use-tree-walker.esm.js */ "./node_modules/@headlessui/react/dist/hooks/use-tree-walker.esm.js");
+/* harmony import */ var _hooks_use_flags_esm_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../hooks/use-flags.esm.js */ "./node_modules/@headlessui/react/dist/hooks/use-flags.esm.js");
+/* harmony import */ var _label_label_esm_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../label/label.esm.js */ "./node_modules/@headlessui/react/dist/components/label/label.esm.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _reducers;
+var ActionTypes;
+
+(function (ActionTypes) {
+  ActionTypes[ActionTypes["RegisterOption"] = 0] = "RegisterOption";
+  ActionTypes[ActionTypes["UnregisterOption"] = 1] = "UnregisterOption";
+})(ActionTypes || (ActionTypes = {}));
+
+var reducers = (_reducers = {}, _reducers[ActionTypes.RegisterOption] = function (state, action) {
+  return (0,_virtual_rollupPluginBabelHelpers_js__WEBPACK_IMPORTED_MODULE_1__.extends)({}, state, {
+    options: [].concat(state.options, [{
+      id: action.id,
+      element: action.element,
+      propsRef: action.propsRef
+    }])
+  });
+}, _reducers[ActionTypes.UnregisterOption] = function (state, action) {
+  var options = state.options.slice();
+  var idx = state.options.findIndex(function (radio) {
+    return radio.id === action.id;
+  });
+  if (idx === -1) return state;
+  options.splice(idx, 1);
+  return (0,_virtual_rollupPluginBabelHelpers_js__WEBPACK_IMPORTED_MODULE_1__.extends)({}, state, {
+    options: options
+  });
+}, _reducers);
+var RadioGroupContext = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)(null);
+RadioGroupContext.displayName = 'RadioGroupContext';
+
+function useRadioGroupContext(component) {
+  var context = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(RadioGroupContext);
+
+  if (context === null) {
+    var err = new Error("<" + component + " /> is missing a parent <" + RadioGroup.name + " /> component.");
+    if (Error.captureStackTrace) Error.captureStackTrace(err, useRadioGroupContext);
+    throw err;
+  }
+
+  return context;
+}
+
+function stateReducer(state, action) {
+  return (0,_utils_match_esm_js__WEBPACK_IMPORTED_MODULE_2__.match)(action.type, reducers, state, action);
+} // ---
+
+
+var DEFAULT_RADIO_GROUP_TAG = 'div';
+function RadioGroup(props) {
+  var value = props.value,
+      onChange = props.onChange,
+      _props$disabled = props.disabled,
+      disabled = _props$disabled === void 0 ? false : _props$disabled,
+      passThroughProps = (0,_virtual_rollupPluginBabelHelpers_js__WEBPACK_IMPORTED_MODULE_1__.objectWithoutPropertiesLoose)(props, ["value", "onChange", "disabled"]);
+
+  var _useReducer = (0,react__WEBPACK_IMPORTED_MODULE_0__.useReducer)(stateReducer, {
+    options: []
+  }),
+      options = _useReducer[0].options,
+      dispatch = _useReducer[1];
+
+  var _useLabels = (0,_label_label_esm_js__WEBPACK_IMPORTED_MODULE_3__.useLabels)(),
+      labelledby = _useLabels[0],
+      LabelProvider = _useLabels[1];
+
+  var _useDescriptions = (0,_description_description_esm_js__WEBPACK_IMPORTED_MODULE_4__.useDescriptions)(),
+      describedby = _useDescriptions[0],
+      DescriptionProvider = _useDescriptions[1];
+
+  var id = "headlessui-radiogroup-" + (0,_hooks_use_id_esm_js__WEBPACK_IMPORTED_MODULE_5__.useId)();
+  var radioGroupRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var firstOption = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return options.find(function (option) {
+      if (option.propsRef.current.disabled) return false;
+      return true;
+    });
+  }, [options]);
+  var containsCheckedOption = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return options.some(function (option) {
+      return option.propsRef.current.value === value;
+    });
+  }, [options, value]);
+  var triggerChange = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (nextValue) {
+    var _options$find;
+
+    if (disabled) return false;
+    if (nextValue === value) return false;
+    var nextOption = (_options$find = options.find(function (option) {
+      return option.propsRef.current.value === nextValue;
+    })) == null ? void 0 : _options$find.propsRef.current;
+    if (nextOption == null ? void 0 : nextOption.disabled) return false;
+    onChange(nextValue);
+    return true;
+  }, [onChange, value, disabled, options]);
+  (0,_hooks_use_tree_walker_esm_js__WEBPACK_IMPORTED_MODULE_6__.useTreeWalker)({
+    container: radioGroupRef.current,
+    accept: function accept(node) {
+      if (node.getAttribute('role') === 'radio') return NodeFilter.FILTER_REJECT;
+      if (node.hasAttribute('role')) return NodeFilter.FILTER_SKIP;
+      return NodeFilter.FILTER_ACCEPT;
+    },
+    walk: function walk(node) {
+      node.setAttribute('role', 'none');
+    }
+  });
+  var handleKeyDown = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (event) {
+    var container = radioGroupRef.current;
+    if (!container) return;
+    var all = options.filter(function (option) {
+      return option.propsRef.current.disabled === false;
+    }).map(function (radio) {
+      return radio.element.current;
+    });
+
+    switch (event.key) {
+      case _keyboard_esm_js__WEBPACK_IMPORTED_MODULE_7__.Keys.ArrowLeft:
+      case _keyboard_esm_js__WEBPACK_IMPORTED_MODULE_7__.Keys.ArrowUp:
+        {
+          event.preventDefault();
+          event.stopPropagation();
+          var result = (0,_utils_focus_management_esm_js__WEBPACK_IMPORTED_MODULE_8__.focusIn)(all, _utils_focus_management_esm_js__WEBPACK_IMPORTED_MODULE_8__.Focus.Previous | _utils_focus_management_esm_js__WEBPACK_IMPORTED_MODULE_8__.Focus.WrapAround);
+
+          if (result === _utils_focus_management_esm_js__WEBPACK_IMPORTED_MODULE_8__.FocusResult.Success) {
+            var activeOption = options.find(function (option) {
+              return option.element.current === document.activeElement;
+            });
+            if (activeOption) triggerChange(activeOption.propsRef.current.value);
+          }
+        }
+        break;
+
+      case _keyboard_esm_js__WEBPACK_IMPORTED_MODULE_7__.Keys.ArrowRight:
+      case _keyboard_esm_js__WEBPACK_IMPORTED_MODULE_7__.Keys.ArrowDown:
+        {
+          event.preventDefault();
+          event.stopPropagation();
+
+          var _result = (0,_utils_focus_management_esm_js__WEBPACK_IMPORTED_MODULE_8__.focusIn)(all, _utils_focus_management_esm_js__WEBPACK_IMPORTED_MODULE_8__.Focus.Next | _utils_focus_management_esm_js__WEBPACK_IMPORTED_MODULE_8__.Focus.WrapAround);
+
+          if (_result === _utils_focus_management_esm_js__WEBPACK_IMPORTED_MODULE_8__.FocusResult.Success) {
+            var _activeOption = options.find(function (option) {
+              return option.element.current === document.activeElement;
+            });
+
+            if (_activeOption) triggerChange(_activeOption.propsRef.current.value);
+          }
+        }
+        break;
+
+      case _keyboard_esm_js__WEBPACK_IMPORTED_MODULE_7__.Keys.Space:
+        {
+          event.preventDefault();
+          event.stopPropagation();
+
+          var _activeOption2 = options.find(function (option) {
+            return option.element.current === document.activeElement;
+          });
+
+          if (_activeOption2) triggerChange(_activeOption2.propsRef.current.value);
+        }
+        break;
+    }
+  }, [radioGroupRef, options, triggerChange]);
+  var registerOption = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (option) {
+    dispatch((0,_virtual_rollupPluginBabelHelpers_js__WEBPACK_IMPORTED_MODULE_1__.extends)({
+      type: ActionTypes.RegisterOption
+    }, option));
+    return function () {
+      return dispatch({
+        type: ActionTypes.UnregisterOption,
+        id: option.id
+      });
+    };
+  }, [dispatch]);
+  var api = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return {
+      registerOption: registerOption,
+      firstOption: firstOption,
+      containsCheckedOption: containsCheckedOption,
+      change: triggerChange,
+      disabled: disabled,
+      value: value
+    };
+  }, [registerOption, firstOption, containsCheckedOption, triggerChange, disabled, value]);
+  var propsWeControl = {
+    ref: radioGroupRef,
+    id: id,
+    role: 'radiogroup',
+    'aria-labelledby': labelledby,
+    'aria-describedby': describedby,
+    onKeyDown: handleKeyDown
+  };
+  return react__WEBPACK_IMPORTED_MODULE_0__.createElement(DescriptionProvider, {
+    name: "RadioGroup.Description"
+  }, react__WEBPACK_IMPORTED_MODULE_0__.createElement(LabelProvider, {
+    name: "RadioGroup.Label"
+  }, react__WEBPACK_IMPORTED_MODULE_0__.createElement(RadioGroupContext.Provider, {
+    value: api
+  }, (0,_utils_render_esm_js__WEBPACK_IMPORTED_MODULE_9__.render)({
+    props: (0,_virtual_rollupPluginBabelHelpers_js__WEBPACK_IMPORTED_MODULE_1__.extends)({}, passThroughProps, propsWeControl),
+    defaultTag: DEFAULT_RADIO_GROUP_TAG,
+    name: 'RadioGroup'
+  }))));
+} // ---
+
+var OptionState;
+
+(function (OptionState) {
+  OptionState[OptionState["Empty"] = 1] = "Empty";
+  OptionState[OptionState["Active"] = 2] = "Active";
+})(OptionState || (OptionState = {}));
+
+var DEFAULT_OPTION_TAG = 'div';
+
+function Option(props) {
+  var optionRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var id = "headlessui-radiogroup-option-" + (0,_hooks_use_id_esm_js__WEBPACK_IMPORTED_MODULE_5__.useId)();
+
+  var _useLabels2 = (0,_label_label_esm_js__WEBPACK_IMPORTED_MODULE_3__.useLabels)(),
+      labelledby = _useLabels2[0],
+      LabelProvider = _useLabels2[1];
+
+  var _useDescriptions2 = (0,_description_description_esm_js__WEBPACK_IMPORTED_MODULE_4__.useDescriptions)(),
+      describedby = _useDescriptions2[0],
+      DescriptionProvider = _useDescriptions2[1];
+
+  var _useFlags = (0,_hooks_use_flags_esm_js__WEBPACK_IMPORTED_MODULE_10__.useFlags)(OptionState.Empty),
+      addFlag = _useFlags.addFlag,
+      removeFlag = _useFlags.removeFlag,
+      hasFlag = _useFlags.hasFlag;
+
+  var value = props.value,
+      _props$disabled2 = props.disabled,
+      disabled = _props$disabled2 === void 0 ? false : _props$disabled2,
+      passThroughProps = (0,_virtual_rollupPluginBabelHelpers_js__WEBPACK_IMPORTED_MODULE_1__.objectWithoutPropertiesLoose)(props, ["value", "disabled"]);
+
+  var propsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)({
+    value: value,
+    disabled: disabled
+  });
+  (0,_hooks_use_iso_morphic_effect_esm_js__WEBPACK_IMPORTED_MODULE_11__.useIsoMorphicEffect)(function () {
+    propsRef.current.value = value;
+  }, [value, propsRef]);
+  (0,_hooks_use_iso_morphic_effect_esm_js__WEBPACK_IMPORTED_MODULE_11__.useIsoMorphicEffect)(function () {
+    propsRef.current.disabled = disabled;
+  }, [disabled, propsRef]);
+
+  var _useRadioGroupContext = useRadioGroupContext([RadioGroup.name, Option.name].join('.')),
+      registerOption = _useRadioGroupContext.registerOption,
+      radioGroupDisabled = _useRadioGroupContext.disabled,
+      change = _useRadioGroupContext.change,
+      firstOption = _useRadioGroupContext.firstOption,
+      containsCheckedOption = _useRadioGroupContext.containsCheckedOption,
+      radioGroupValue = _useRadioGroupContext.value;
+
+  (0,_hooks_use_iso_morphic_effect_esm_js__WEBPACK_IMPORTED_MODULE_11__.useIsoMorphicEffect)(function () {
+    return registerOption({
+      id: id,
+      element: optionRef,
+      propsRef: propsRef
+    });
+  }, [id, registerOption, optionRef, props]);
+  var handleClick = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
+    var _optionRef$current;
+
+    if (!change(value)) return;
+    addFlag(OptionState.Active);
+    (_optionRef$current = optionRef.current) == null ? void 0 : _optionRef$current.focus();
+  }, [addFlag, change, value]);
+  var handleFocus = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
+    return addFlag(OptionState.Active);
+  }, [addFlag]);
+  var handleBlur = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
+    return removeFlag(OptionState.Active);
+  }, [removeFlag]);
+  var isFirstOption = (firstOption == null ? void 0 : firstOption.id) === id;
+  var isDisabled = radioGroupDisabled || disabled;
+  var checked = radioGroupValue === value;
+  var propsWeControl = {
+    ref: optionRef,
+    id: id,
+    role: 'radio',
+    'aria-checked': checked ? 'true' : 'false',
+    'aria-labelledby': labelledby,
+    'aria-describedby': describedby,
+    'aria-disabled': isDisabled ? true : undefined,
+    tabIndex: function () {
+      if (isDisabled) return -1;
+      if (checked) return 0;
+      if (!containsCheckedOption && isFirstOption) return 0;
+      return -1;
+    }(),
+    onClick: isDisabled ? undefined : handleClick,
+    onFocus: isDisabled ? undefined : handleFocus,
+    onBlur: isDisabled ? undefined : handleBlur
+  };
+  var slot = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return {
+      checked: checked,
+      disabled: isDisabled,
+      active: hasFlag(OptionState.Active)
+    };
+  }, [checked, isDisabled, hasFlag]);
+  return react__WEBPACK_IMPORTED_MODULE_0__.createElement(DescriptionProvider, {
+    name: "RadioGroup.Description"
+  }, react__WEBPACK_IMPORTED_MODULE_0__.createElement(LabelProvider, {
+    name: "RadioGroup.Label"
+  }, (0,_utils_render_esm_js__WEBPACK_IMPORTED_MODULE_9__.render)({
+    props: (0,_virtual_rollupPluginBabelHelpers_js__WEBPACK_IMPORTED_MODULE_1__.extends)({}, passThroughProps, propsWeControl),
+    slot: slot,
+    defaultTag: DEFAULT_OPTION_TAG,
+    name: 'RadioGroup.Option'
+  })));
+} // ---
+
+
+RadioGroup.Option = Option;
+RadioGroup.Label = _label_label_esm_js__WEBPACK_IMPORTED_MODULE_3__.Label;
+RadioGroup.Description = _description_description_esm_js__WEBPACK_IMPORTED_MODULE_4__.Description;
+
+
+//# sourceMappingURL=radio-group.esm.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/@headlessui/react/dist/components/switch/switch.esm.js":
 /*!*****************************************************************************!*\
   !*** ./node_modules/@headlessui/react/dist/components/switch/switch.esm.js ***!
@@ -2852,6 +3214,61 @@ function useDisposables() {
 
 
 //# sourceMappingURL=use-disposables.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@headlessui/react/dist/hooks/use-flags.esm.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@headlessui/react/dist/hooks/use-flags.esm.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "useFlags": () => (/* binding */ useFlags)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+function useFlags(initialFlags) {
+  if (initialFlags === void 0) {
+    initialFlags = 0;
+  }
+
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialFlags),
+      flags = _useState[0],
+      setFlags = _useState[1];
+
+  var addFlag = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (flag) {
+    return setFlags(function (flags) {
+      return flags | flag;
+    });
+  }, [setFlags]);
+  var hasFlag = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (flag) {
+    return Boolean(flags & flag);
+  }, [flags]);
+  var removeFlag = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (flag) {
+    return setFlags(function (flags) {
+      return flags & ~flag;
+    });
+  }, [setFlags]);
+  var toggleFlag = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (flag) {
+    return setFlags(function (flags) {
+      return flags ^ flag;
+    });
+  }, [setFlags]);
+  return {
+    addFlag: addFlag,
+    hasFlag: hasFlag,
+    removeFlag: removeFlag,
+    toggleFlag: toggleFlag
+  };
+}
+
+
+//# sourceMappingURL=use-flags.esm.js.map
 
 
 /***/ }),
@@ -38654,8 +39071,61 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var luxon__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! luxon */ "./node_modules/luxon/build/cjs-browser/luxon.js");
 /* harmony import */ var _classNames__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../classNames */ "./resources/assets/js/classNames.js");
 /* harmony import */ var _components_Dialog__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../components/Dialog */ "./resources/assets/js/components/Dialog.js");
-/* harmony import */ var _components_inputs_Button__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/inputs/Button */ "./resources/assets/js/components/inputs/Button.js");
+/* harmony import */ var _components_inputs_RadioGroup__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/inputs/RadioGroup */ "./resources/assets/js/components/inputs/RadioGroup.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+
+    if (enumerableOnly) {
+      symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+    }
+
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
 function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
@@ -38804,15 +39274,79 @@ var DetailList = function DetailList(_ref3) {
   });
 };
 
-var Show = function Show(_ref5) {
+var DeleteSingerDialog = function DeleteSingerDialog(_ref5) {
+  var isOpen = _ref5.isOpen,
+      setIsOpen = _ref5.setIsOpen,
+      singer = _ref5.singer;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_components_Dialog__WEBPACK_IMPORTED_MODULE_7__.default, {
+    title: "Delete Singer",
+    okLabel: "Delete",
+    okUrl: route('singers.destroy', singer),
+    okVariant: "danger-solid",
+    okMethod: "delete",
+    isOpen: isOpen,
+    setIsOpen: setIsOpen,
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("p", {
+      children: "Are you sure you want to deactivate this singer? All of their data will be permanently removed from our servers forever. This action cannot be undone."
+    })
+  });
+};
+
+var MoveSingerDialog = function MoveSingerDialog(_ref6) {
+  var _singer$category$id;
+
+  var isOpen = _ref6.isOpen,
+      setIsOpen = _ref6.setIsOpen,
+      singer = _ref6.singer,
+      categories = _ref6.categories;
+
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)((_singer$category$id = singer.category.id) !== null && _singer$category$id !== void 0 ? _singer$category$id : 0),
+      _useState2 = _slicedToArray(_useState, 2),
+      selectedCategory = _useState2[0],
+      setSelectedCategory = _useState2[1];
+
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(_components_Dialog__WEBPACK_IMPORTED_MODULE_7__.default, {
+    title: "Move Singer",
+    okLabel: "Move",
+    okUrl: route('singers.categories.update', singer),
+    okVariant: "primary",
+    okMethod: "get",
+    data: {
+      move_category: selectedCategory
+    },
+    isOpen: isOpen,
+    setIsOpen: setIsOpen,
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("p", {
+      className: "mb-2",
+      children: "Are you sure you want to move this singer? This will move them to the selected stage of your onboarding process. This can be undone, however, it may trigger some onboarding emails, which cannot be undone."
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_components_inputs_RadioGroup__WEBPACK_IMPORTED_MODULE_8__.default, {
+      label: "Select a new category",
+      options: categories.map(function (category) {
+        return _objectSpread(_objectSpread({}, category), {}, {
+          icon: 'circle'
+        });
+      }),
+      selected: selectedCategory,
+      setSelected: setSelectedCategory
+    })]
+  });
+};
+
+var Show = function Show(_ref7) {
   var _singer$user$phone, _DateTime$fromJSDate$, _singer$user$bha_id, _singer$user$professi, _singer$user$skills, _singer$user$ice_name, _singer$user$ice_phon, _singer$reason_for_jo, _singer$referrer, _singer$membership_de, _singer$placement$exp, _singer$placement$ins;
 
-  var singer = _ref5.singer;
+  var singer = _ref7.singer,
+      categories = _ref7.categories;
 
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-      _useState2 = _slicedToArray(_useState, 2),
-      deleteDialogIsOpen = _useState2[0],
-      setDeleteDialogIsOpen = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      deleteDialogIsOpen = _useState4[0],
+      setDeleteDialogIsOpen = _useState4[1];
+
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      moveDialogIsOpen = _useState6[0],
+      setMoveDialogIsOpen = _useState6[1];
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_SingerPageHeader__WEBPACK_IMPORTED_MODULE_2__.default, {
@@ -38855,8 +39389,10 @@ var Show = function Show(_ref5) {
         url: route('singers.edit', singer)
       }, {
         label: 'Move',
-        icon: 'chevron-down',
-        url: '#'
+        icon: 'arrow-circle-right',
+        onClick: function onClick() {
+          return setMoveDialogIsOpen(true);
+        }
       }, {
         label: 'Delete',
         icon: 'trash',
@@ -38865,13 +39401,15 @@ var Show = function Show(_ref5) {
         },
         variant: 'danger-outline'
       }]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_components_Dialog__WEBPACK_IMPORTED_MODULE_7__.default, {
-      title: "Delete Singer",
-      content: "Are you sure you want to deactivate this singer? All of their data will be permanently removed from our servers forever. This action cannot be undone.",
-      okLabel: "Delete",
-      okUrl: route('singers.destroy', singer),
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(DeleteSingerDialog, {
       isOpen: deleteDialogIsOpen,
-      setIsOpen: setDeleteDialogIsOpen
+      setIsOpen: setDeleteDialogIsOpen,
+      singer: singer
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(MoveSingerDialog, {
+      isOpen: moveDialogIsOpen,
+      setIsOpen: setMoveDialogIsOpen,
+      singer: singer,
+      categories: categories
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
       className: "bg-gray-50",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
@@ -39244,7 +39782,7 @@ var SingerPageHeader = function SingerPageHeader(_ref) {
             className: "ml-3 relative sm:hidden",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_8__.Menu.Button, {
               className: (0,_components_inputs_buttonStyles__WEBPACK_IMPORTED_MODULE_5__.default)(),
-              children: ["More", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_heroicons_react_solid__WEBPACK_IMPORTED_MODULE_1__.ChevronDownIcon, {
+              children: ["Options", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_heroicons_react_solid__WEBPACK_IMPORTED_MODULE_1__.ChevronDownIcon, {
                 className: "-mr-1 ml-2 h-5 w-5 text-gray-500",
                 "aria-hidden": "true"
               })]
@@ -39740,9 +40278,12 @@ __webpack_require__.r(__webpack_exports__);
 
 var Dialog = function Dialog(_ref) {
   var title = _ref.title,
-      content = _ref.content,
+      children = _ref.children,
       okLabel = _ref.okLabel,
       okUrl = _ref.okUrl,
+      okVariant = _ref.okVariant,
+      okMethod = _ref.okMethod,
+      data = _ref.data,
       isOpen = _ref.isOpen,
       setIsOpen = _ref.setIsOpen;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_4__.Transition.Root, {
@@ -39811,17 +40352,18 @@ var Dialog = function Dialog(_ref) {
                   className: "mt-2",
                   children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("p", {
                     className: "text-sm text-gray-500",
-                    children: content
+                    children: children
                   })
                 })]
               })]
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
               className: "mt-5 sm:mt-4 sm:flex sm:flex-row-reverse",
               children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_inputs_ButtonLink__WEBPACK_IMPORTED_MODULE_1__.default, {
-                variant: "danger-solid",
+                variant: okVariant,
                 size: "sm",
-                url: okUrl,
-                method: "delete",
+                href: okUrl,
+                method: okMethod,
+                data: data,
                 as: "button",
                 className: "sm:ml-3 w-full",
                 children: okLabel
@@ -40806,6 +41348,83 @@ var Label = function Label(_ref) {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Label);
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/inputs/RadioGroup.js":
+/*!*************************************************************!*\
+  !*** ./resources/assets/js/components/inputs/RadioGroup.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _headlessui_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @headlessui/react */ "./node_modules/@headlessui/react/dist/components/radio-group/radio-group.esm.js");
+/* harmony import */ var _classNames__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../classNames */ "./resources/assets/js/classNames.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+
+
+
+
+
+
+var RadioGroup = function RadioGroup(_ref) {
+  var label = _ref.label,
+      options = _ref.options,
+      selected = _ref.selected,
+      setSelected = _ref.setSelected;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.RadioGroup, {
+    value: selected,
+    onChange: setSelected,
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.RadioGroup.Label, {
+      children: label
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      className: "bg-white rounded-md -space-y-px",
+      children: options.map(function (option, index) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.RadioGroup.Option, {
+          value: option.id,
+          className: function className(_ref2) {
+            var checked = _ref2.checked;
+            return (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)(index === 0 ? 'rounded-tl-md rounded-tr-md' : '', index === options.length - 1 ? 'rounded-bl-md rounded-br-md' : '', checked ? 'bg-purple-100 border-purple-300 z-10' : 'border-gray-200', 'relative border p-4 flex cursor-pointer focus:outline-none');
+          },
+          children: function children(_ref3) {
+            var active = _ref3.active,
+                checked = _ref3.checked;
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+                className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)(checked ? 'bg-purple-600 border-transparent' : 'bg-white border-gray-300', active ? 'ring-2 ring-offset-2 ring-purple-500' : '', 'h-4 w-4 mt-0.5 cursor-pointer rounded-full border flex items-center justify-center'),
+                "aria-hidden": "true",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+                  className: "rounded-full bg-white w-1.5 h-1.5"
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+                className: "ml-3 flex flex-col",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.RadioGroup.Label, {
+                  as: "span",
+                  className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)(checked ? 'text-purple-900' : 'text-gray-900', 'block text-sm font-medium'),
+                  children: [option.icon && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("i", {
+                    className: "fas fa-fw fa-".concat(option.icon, " mr-1.5 text-sm text-").concat(option.colour)
+                  }), option.name]
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_headlessui_react__WEBPACK_IMPORTED_MODULE_3__.RadioGroup.Description, {
+                  as: "span",
+                  className: (0,_classNames__WEBPACK_IMPORTED_MODULE_1__.default)(checked ? 'text-purple-700' : 'text-gray-500', 'block text-sm'),
+                  children: option.description
+                })]
+              })]
+            });
+          }
+        }, option.name);
+      })
+    })]
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RadioGroup);
 
 /***/ }),
 
