@@ -39413,9 +39413,9 @@ var Show = function Show(_ref7) {
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
       className: "bg-gray-50",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
-        className: "grid grid-cols-1 sm:grid-cols-4",
+        className: "grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4",
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
-          className: "sm:col-span-3",
+          className: "sm:col-span-2 xl:col-span-3",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
             className: "py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("h2", {
@@ -39434,7 +39434,8 @@ var Show = function Show(_ref7) {
                       className: "far fa-fw fa-phone text-gray-500 mr-2"
                     }), (_singer$user$phone = singer.user.phone) !== null && _singer$user$phone !== void 0 ? _singer$user$phone : 'No phone']
                   })]
-                })
+                }),
+                colClass: 'sm:col-span-2 xl:col-span-1'
               }, {
                 label: 'Date of Birth',
                 value: (_DateTime$fromJSDate$ = luxon__WEBPACK_IMPORTED_MODULE_10__.DateTime.fromJSDate(new Date(singer.user.dob)).toLocaleString(luxon__WEBPACK_IMPORTED_MODULE_10__.DateTime.DATE_MED)) !== null && _DateTime$fromJSDate$ !== void 0 ? _DateTime$fromJSDate$ : 'No date of birth'
@@ -39471,7 +39472,8 @@ var Show = function Show(_ref7) {
                       className: "far fa-fw fa-phone text-gray-500 mr-2"
                     }), (_singer$user$ice_phon = singer.user.ice_phone) !== null && _singer$user$ice_phon !== void 0 ? _singer$user$ice_phon : 'No phone']
                   })]
-                })
+                }),
+                colClass: 'sm:col-span-2 xl:col-span-1'
               }]
             })]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {

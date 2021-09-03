@@ -141,9 +141,9 @@ const Show = ({ singer, categories }) => {
             <MoveSingerDialog isOpen={moveDialogIsOpen} setIsOpen={setMoveDialogIsOpen} singer={singer} categories={categories} />
 
             <div className="bg-gray-50">
-                <div className="grid grid-cols-1 sm:grid-cols-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4">
 
-                    <div className="sm:col-span-3">
+                    <div className="sm:col-span-2 xl:col-span-3">
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
 
                             <h2 className="text-xl leading-6 font-semibold text-gray-900 mb-4">Personal Details</h2>
@@ -159,6 +159,7 @@ const Show = ({ singer, categories }) => {
                                             <i className="far fa-fw fa-phone text-gray-500 mr-2" />{singer.user.phone ?? 'No phone'}
                                         </p>
                                     </>,
+                                    colClass: 'sm:col-span-2 xl:col-span-1',
                                 },
                                 {
                                     label: 'Date of Birth',
@@ -203,6 +204,7 @@ const Show = ({ singer, categories }) => {
                                             <i className="far fa-fw fa-phone text-gray-500 mr-2" />{singer.user.ice_phone ?? 'No phone'}
                                         </p>
                                     </>,
+                                    colClass: 'sm:col-span-2 xl:col-span-1',
                                 },
                             ]}/>
                         </div>
