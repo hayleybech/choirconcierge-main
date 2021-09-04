@@ -16,13 +16,10 @@ class SingerPlacementController extends Controller
 {
 	const PLACEMENT_TASK_ID = 2;
 
-	public function __construct()
-	{
-		$this->authorizeResource(Placement::class, 'placement');
-	}
-
 	public function create(Singer $singer): View
 	{
+	    $this->authorize('create', [Placement::class, $singer]);
+
 		$voice_parts =
 			[0 => 'None'] +
 			VoicePart::all()
@@ -34,6 +31,8 @@ class SingerPlacementController extends Controller
 
 	public function store(Singer $singer, PlacementRequest $request): RedirectResponse
 	{
+        $this->authorize('create', [Placement::class, $singer]);
+
 		$singer->placement()->create($request->validated()); // refer to whitelist in model
 
 		if ($singer->onboarding_enabled) {
@@ -55,6 +54,8 @@ class SingerPlacementController extends Controller
 
 	public function edit(Singer $singer, Placement $placement, Request $request): View
 	{
+        $this->authorize('update', $placement);
+
 		$voice_parts =
 			[0 => 'None'] +
 			VoicePart::all()
@@ -65,6 +66,8 @@ class SingerPlacementController extends Controller
 
 	public function update(PlacementRequest $request, Singer $singer, Placement $placement): RedirectResponse
 	{
+        $this->authorize('update', $placement);
+
 		$placement->update($request->validated());
 
 		$singer->update([

@@ -256,7 +256,7 @@
 
 					</div>
 				</div>
-			@elsecan('create', \App\Models\Placement::class)
+			@elsecan('create', [\App\Models\Placement::class, $singer])
 			<div class="card">
 				<h3 class="card-header h4 d-flex justify-content-between align-items-center">Voice Placement</h3>
 				<div class="card-body">
