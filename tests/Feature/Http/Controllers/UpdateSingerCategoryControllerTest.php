@@ -33,7 +33,7 @@ class UpdateSingerCategoryControllerTest extends TestCase
 		);
 
 		$response->assertSessionHasNoErrors();
-		$response->assertRedirect(the_tenant_route('singers.index'));
+		$response->assertRedirect();
 		$this->assertDatabaseHas('singers', [
 			'id' => $singer->id,
 			'singer_category_id' => $new_category_id,

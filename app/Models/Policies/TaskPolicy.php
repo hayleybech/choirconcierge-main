@@ -59,6 +59,17 @@ class TaskPolicy
 		return $user->singer->hasAbility('tasks_update');
 	}
 
+    /**
+     * Determine whether the user can mark the task as complete.
+     * @param User $user
+     * @param Task $task
+     * @return bool
+     */
+	public function complete(User $user, Task $task): bool
+    {
+        return $user->singer->hasRole($task->role->name);
+    }
+
 	/**
 	 * Determine whether the user can delete the model.
 	 * @param User $user

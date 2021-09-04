@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SingerRequest;
 use App\Http\Requests\UserRequest;
+use App\Models\Placement;
 use App\Models\Role;
 use App\Models\SingerCategory;
 use App\Models\User;
@@ -75,7 +76,7 @@ class SingerController extends Controller
 			VoicePart::all()
 				->pluck('title', 'id')
 				->toArray();
-		$roles = Role::all();
+		$roles = Role::where('name', '!=', 'User')->get();
 
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');
@@ -102,14 +103,16 @@ class SingerController extends Controller
             'voice_part_id',
             'password_confirmation',
         ]));
-        $singer = $user->singers()->create(Arr::only($request->validated(), [
+        $singer = Singer::create(Arr::only($request->validated(), [
             'onboarding_enabled',
             'reason_for_joining',
             'referrer',
             'membership_details',
             'joined_at',
             'voice_part_id',
+            'user_roles',
         ]));
+        $singer->user_id = $user->id;
         $singer->initOnboarding();
         $singer->save();
 
@@ -124,7 +127,14 @@ class SingerController extends Controller
 	{
 		$this->authorize('view', $singer);
 
-		$singer->load('user', 'voice_part', 'category');
+		$singer->load('user', 'voice_part', 'category', 'roles', 'placement', 'tasks');
+
+		$singer->can = [
+            'update_singer' => auth()->user()?->can('update', $singer),
+            'delete_singer' => auth()->user()?->can('delete', $singer),
+		    'create_placement' => auth()->user()?->can('create', [Placement::class, $singer]),
+        ];
+		$singer->tasks->each(fn($task) => $task->can = ['complete' => auth()->user()?->can('complete', $task)]);
 
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');
@@ -141,9 +151,11 @@ class SingerController extends Controller
 		]);
 	}
 
-	public function edit(Singer $singer): View
+	public function edit(Singer $singer): View|Response
 	{
 		$this->authorize('update', $singer);
+
+        $singer->load('user', 'voice_part', 'category', 'roles');
 
 		$voice_parts =
 			[0 => 'None'] +
@@ -151,7 +163,17 @@ class SingerController extends Controller
 				->pluck('title', 'id')
 				->toArray();
 
-		$roles = Role::all();
+		$roles = Role::where('name', '!=', 'User')->get();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Singers/Edit', [
+                'voice_parts' => $voice_parts,
+                'roles' => $roles,
+                'singer' => $singer,
+            ]);
+        }
 
 		return view('singers.edit', compact('singer', 'voice_parts', 'roles'));
 	}

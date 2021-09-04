@@ -7,45 +7,39 @@ import TextInput from "../../components/inputs/TextInput";
 import DetailToggle from "../../components/inputs/DetailToggle";
 import Error from "../../components/inputs/Error";
 import Select from "../../components/inputs/Select";
-import Date from "../../components/inputs/Date";
-import Help from "../../components/inputs/Help";
+import DateInput from "../../components/inputs/Date";
 import FormSection from "../../components/FormSection";
 import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 
-const Create = ({voice_parts, roles}) => {
-    const { data, setData, post, processing, errors } = useForm({
-        first_name: '',
-        last_name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
+const Edit = ({ voice_parts, roles, singer }) => {
+    const { data, setData, put, processing, errors } = useForm({
+        voice_part_id: singer.voice_part.id,
+        reason_for_joining: singer.reason_for_joining,
+        referrer: singer.referrer,
+        membership_details: singer.membership_details,
 
-        voice_part_id: 0,
-        reason_for_joining: '',
-        referrer: '',
-        membership_details: '',
-
-        onboarding_disabled: false,
-        joined_at: undefined,
-        user_roles: [],
+        onboarding_enabled: singer.onboarding_enabled,
+        joined_at: singer.joined_at,
+        user_roles: singer.roles.map(role => role.id),
     });
 
     function submit(e) {
         e.preventDefault();
-        post(route('singers.store'));
+        put(route('singers.update', singer));
     }
 
     return (
         <>
             <SingerPageHeader
-                title={'Create Singer'}
+                title={'Edit Singer'}
                 icon="fa-users"
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Singers', url: route('singers.index')},
-                    { name: 'Create', url: route('singers.create')},
+                    { name: singer.user.name, url: route('singers.show', singer)},
+                    { name: 'Edit', url: route('singers.edit', singer)},
                 ]}
             />
 
@@ -55,39 +49,6 @@ const Create = ({voice_parts, roles}) => {
                     <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
 
                         <div className="space-y-8 divide-y divide-gray-200">
-
-                            <FormSection title="User Details" description="Create an account for the singer.">
-                                <div className="sm:col-span-3">
-                                    <Label label="First name" forInput="first_name" />
-                                    <TextInput name="first_name" autoComplete="given-name" value={data.first_name} updateFn={value => setData('first_name', value)} hasErrors={ !! errors['first_name'] } />
-                                    {errors.first_name && <Error>{errors.first_name}</Error>}
-                                </div>
-
-                                <div className="sm:col-span-3">
-                                    <Label label="Last name" forInput="last_name" />
-                                    <TextInput name="last_name" autoComplete="family-name" value={data.last_name} updateFn={value => setData('last_name', value)} hasErrors={ !! errors['last_name'] } />
-                                    {errors.last_name && <Error>{errors.last_name}</Error>}
-                                </div>
-
-                                <div className="sm:col-span-4">
-                                    <Label label="Email address" forInput="email" />
-                                    <TextInput name="email" type="email" autoComplete="email" value={data.email} updateFn={value => setData('email', value)} hasErrors={ !! errors['email'] } />
-                                    {errors.email && <Error>{errors.email}</Error>}
-                                </div>
-
-                                <div className="sm:col-span-3">
-                                    <Label label="Password" forInput="password" />
-                                    <TextInput type="password" name="password" value={data.password} updateFn={value => setData('password', value)} hasErrors={ !! errors['password'] } />
-                                    <Help>You may leave this blank and update it later.</Help>
-                                    {errors.password && <Error>{errors.password}</Error>}
-                                </div>
-
-                                <div className="sm:col-span-3">
-                                    <Label label="Confirm password" forInput="password_confirmation" />
-                                    <TextInput type="password" name="password_confirmation" value={data.password_confirmation} updateFn={value => setData('password_confirmation', value)} hasErrors={ !! errors['password_confirmation'] } />
-                                    {errors.password_confirmation && <Error>{errors.password_confirmation}</Error>}
-                                </div>
-                            </FormSection>
 
                             <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
                                 <div className="sm:col-span-3">
@@ -116,19 +77,16 @@ const Create = ({voice_parts, roles}) => {
 
                                 <div className="sm:col-span-6">
                                     <DetailToggle
-                                        label="Is this an existing member?"
-                                        description="Onboarding will be disabled when adding an existing singer."
-                                        value={data.onboarding_disabled}
-                                        updateFn={value => setData('onboarding_disabled',  value)}
+                                        label="Enable onboarding?"
+                                        description="Enable this only for new/prospective singers."
+                                        value={data.onboarding_enabled}
+                                        updateFn={value => setData('onboarding_enabled',  value)}
                                     />
                                 </div>
-                            </FormSection>
 
-                            {data.onboarding_disabled && (
-                            <FormSection title="Existing Member Details">
                                 <div className="sm:col-span-6">
                                     <Label label="Joined" forInput="joined_at" />
-                                    <Date
+                                    <DateInput
                                         name="joined_at"
                                         hasErrors={ !! errors.joined_at }
                                         value={data.joined_at}
@@ -143,7 +101,6 @@ const Create = ({voice_parts, roles}) => {
                                     {errors.user_roles && <Error>{errors.user_roles}</Error>}
                                 </fieldset>
                             </FormSection>
-                            )}
 
                         </div>
 
@@ -160,6 +117,6 @@ const Create = ({voice_parts, roles}) => {
     );
 }
 
-Create.layout = page => <Layout children={page} title="Singers" />
+Edit.layout = page => <Layout children={page} title="Singers" />
 
-export default Create;
+export default Edit;

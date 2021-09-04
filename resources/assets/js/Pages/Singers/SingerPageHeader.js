@@ -6,6 +6,7 @@ import Breadcrumbs from "../../components/Breadcrumbs";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import classNames from '../../classNames';
 import buttonStyles from "../../components/inputs/buttonStyles";
+import Button from "../../components/inputs/Button";
 
 const SingerPageHeader = ({title, image, icon, meta, breadcrumbs, actions = []}) => (
     <div className="py-6 bg-white border-b border-gray-300">
@@ -23,25 +24,19 @@ const SingerPageHeader = ({title, image, icon, meta, breadcrumbs, actions = []})
                     </div>
                 </div>
                 <div className="mt-5 flex sm:flex-row-reverse lg:mt-0 lg:ml-4">
-                    {actions.map((action, key) => key === 0
-                        ?   <span className="sm:ml-3" key={key}>
-                                <ButtonLink href={route(action.route)} primary>
-                                  <i className={"fa fa-fw -ml-1 mr-2 fa-"+action.icon} />
-                                  {action.label}
-                                </ButtonLink>
-                            </span>
-                        :   <span className="hidden sm:block ml-3" key={key}>
-                              <ButtonLink href={route(action.route)}>
-                                  <i className={"fa fa-fw -ml-1 mr-2 text-gray-500 fa-"+action.icon} />
-                                  {action.label}
-                              </ButtonLink>
-                            </span>
-                    )}
+                    {actions.map((action, key) => (
+                        <span className={key === 0 ? 'sm:ml-3' : 'hidden sm:block ml-3'} key={key}>
+                            <Button href={action.url} onClick={action.onClick} variant={action.variant}>
+                              <i className={"fa fa-fw -ml-1 mr-2 fa-"+action.icon} />
+                              {action.label}
+                            </Button>
+                        </span>
+                    ))}
 
                     {/* Dropdown */}
                     <Menu as="span" className="ml-3 relative sm:hidden">
                         <Menu.Button className={buttonStyles()}>
-                            More
+                            Options
                             <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-gray-500" aria-hidden="true" />
                         </Menu.Button>
 
@@ -55,26 +50,25 @@ const SingerPageHeader = ({title, image, icon, meta, breadcrumbs, actions = []})
                             leaveTo="transform opacity-0 scale-95"
                         >
                             <Menu.Items className="origin-top-right absolute right-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <a
-                                            href="#"
-                                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                                        >
-                                            Edit
-                                        </a>
-                                    )}
-                                </Menu.Item>
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <a
-                                            href="#"
-                                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                                        >
-                                            View
-                                        </a>
-                                    )}
-                                </Menu.Item>
+                                {actions.map((action, key) =>
+                                    key > 0 && (
+                                    <Menu.Item>
+                                        {({ active }) => (
+                                            <button
+                                                onClick={action.onClick}
+                                                className={classNames(
+                                                    'block w-full text-left px-4 py-2 text-sm',
+                                                    active ? 'bg-gray-100' : '',
+                                                    action.variant === 'danger-outline' ? 'text-red-500' : 'text-gray-700'
+                                                )}
+                                            >
+                                                <i className={"fa fa-fw -ml-1 mr-2 fa-"+action.icon} />
+                                                {action.label}
+                                            </button>
+                                        )}
+                                    </Menu.Item>
+                                    )
+                                )}
                             </Menu.Items>
                         </Transition>
                     </Menu>
