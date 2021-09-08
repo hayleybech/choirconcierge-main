@@ -12,11 +12,8 @@ use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Row;
 
-class SingersImport implements OnEachRow, WithHeadingRow
+class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
 {
-	/*
-	 * Groupanizer format import
-	 */
 	public function onRow(Row $row): void
 	{
 		$rowArr = array_map(static function ($item) {

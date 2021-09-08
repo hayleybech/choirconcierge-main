@@ -120,4 +120,82 @@ class ImportSingerControllerTest extends TestCase
     {
         $this->markTestIncomplete();
     }
+
+    /** @test */
+    public function harmonysite_import_creates_users(): void
+    {
+        $file = new UploadedFile(
+            base_path('tests/files/harmonysite-singers.csv'),
+            'harmonysite-singers.csv',
+            'text/csv',
+            null,
+            true
+        );
+
+        $this->actingAs(
+            $this->createUserWithRole('Admin')
+        )
+            ->post(the_tenant_route('singers.import'), [
+                'import_csv' => $file,
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('users', [
+            'first_name' => 'Nick',
+            'last_name' => 'Schurmann',
+            'email' => 'nick.s@internode.on.net',
+            'dob' => '1991-07-08',
+            'phone' => '0432 837 215',
+            'address_street_1' => '8 Scaddan Street',
+            'address_street_2' => null,
+            'address_suburb' => 'Wembley',
+            'address_state' => 'WA',
+            'address_postcode' => '6014',
+            'height' => '0.00',
+            'ice_name' => null,
+            'profession' => null,
+        ]);
+    }
+
+    /** @test */
+    public function harmonysite_import_creates_singers_for_users(): void
+    {
+        $file = new UploadedFile(
+            base_path('tests/files/harmonysite-singers.csv'),
+            'groupanizer-singers.csv',
+            'text/csv',
+            null,
+            true
+        );
+
+        $this->actingAs(
+            $this->createUserWithRole('Admin')
+        )
+            ->post(the_tenant_route('singers.import'), [
+                'import_csv' => $file,
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('singers', [
+            'user_id' => User::firstWhere('email', 'nick.s@internode.on.net')->id,
+            'onboarding_enabled' => false,
+            'joined_at' => '2015-07-17 00:00:00',
+            'singer_category_id' => SingerCategory::firstWhere('name', 'Members')->id,
+            'voice_part_id' => VoicePart::firstWhere('title', 'Bass')->id,
+        ]);
+    }
+
+    /** @test */
+    public function harmonysite_import_assigns_roles_to_singers(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    /** @test */
+    public function harmonysite_import_updates_existing_users(): void
+    {
+        $this->markTestIncomplete();
+    }
 }
