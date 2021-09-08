@@ -20,9 +20,9 @@ class ImportSingerController extends Controller
 			'import_csv' => 'required|file',
 		]);
 
-        $headings = (new HeadingRowImport)->toArray(request()->file('import_csv'));
+        $headings = (new HeadingRowImport)->toArray(request()->file('import_csv'))[0][0];
 
-        if(array_key_exists('User ID', $headings)){
+        if(in_array('user_id', $headings, true)){
             Excel::import(new GroupanizerSingersImport(), request()->file('import_csv'));
         } else {
             Excel::import(new HarmonysiteSingersImport(), request()->file('import_csv'));
