@@ -1,6 +1,6 @@
 import React from 'react'
 import Layout from "../../Layouts/Layout";
-import SingerPageHeader from "./SingerPageHeader";
+import PageHeader from "../../components/PageHeader";
 import {useForm} from "@inertiajs/inertia-react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
@@ -32,7 +32,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
 
     return (
         <>
-            <SingerPageHeader
+            <PageHeader
                 title={'Edit Singer'}
                 icon="fa-users"
                 breadcrumbs={[

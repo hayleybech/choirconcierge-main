@@ -2,13 +2,13 @@ import React from 'react';
 import { Fragment } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import { Menu, Transition } from '@headlessui/react'
-import Breadcrumbs from "../../components/Breadcrumbs";
-import ButtonLink from "../../components/inputs/ButtonLink";
-import classNames from '../../classNames';
-import buttonStyles from "../../components/inputs/buttonStyles";
-import Button from "../../components/inputs/Button";
+import Breadcrumbs from "./Breadcrumbs";
+import ButtonLink from "./inputs/ButtonLink";
+import classNames from '../classNames';
+import buttonStyles from "./inputs/buttonStyles";
+import Button from "./inputs/Button";
 
-const SingerPageHeader = ({title, image, icon, meta, breadcrumbs, actions = []}) => (
+const PageHeader = ({title, image, icon, meta, breadcrumbs, actions = []}) => (
     <div className="py-6 bg-white border-b border-gray-300">
         <div className=" px-4 sm:px-6 md:px-8">
             <div className="lg:flex lg:items-center lg:justify-between">
@@ -78,4 +78,4 @@ const SingerPageHeader = ({title, image, icon, meta, breadcrumbs, actions = []})
     </div>
 );
 
-export default SingerPageHeader;
+export default PageHeader;

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
-import SingerPageHeader from "./SingerPageHeader";
+import PageHeader from "../../components/PageHeader";
 import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
 import ButtonLink from "../../components/inputs/ButtonLink";
@@ -110,7 +110,7 @@ const Show = ({ singer, categories }) => {
 
     return (
         <>
-            <SingerPageHeader
+            <PageHeader
                 title={singer.user.name}
                 image={singer.user.avatar_url}
                 meta={(
