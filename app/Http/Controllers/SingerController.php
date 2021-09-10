@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\Singer;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
-use Inertia\Response;
+use Inertia\Response as InertiaResponse;
 
 class SingerController extends Controller
 {
@@ -29,7 +29,7 @@ class SingerController extends Controller
 		//
 	}
 
-	public function index(Request $request): View|Response
+	public function index(Request $request): View|InertiaResponse
 	{
 		$this->authorize('viewAny', Singer::class);
 
@@ -51,7 +51,7 @@ class SingerController extends Controller
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Singers/Index', [
-                'all_singers' => $all_singers,
+                'all_singers' => $all_singers->values(),
             ]);
         }
 
@@ -67,7 +67,7 @@ class SingerController extends Controller
 		]);
 	}
 
-	public function create(): View|Response
+	public function create(): View|InertiaResponse
 	{
 		$this->authorize('create', Singer::class);
 
@@ -123,7 +123,7 @@ class SingerController extends Controller
 			->with(['status' => 'Singer created. ']);
 	}
 
-	public function show(Singer $singer): View|Response
+	public function show(Singer $singer): View|InertiaResponse
 	{
 		$this->authorize('view', $singer);
 
@@ -151,7 +151,7 @@ class SingerController extends Controller
 		]);
 	}
 
-	public function edit(Singer $singer): View|Response
+	public function edit(Singer $singer): View|InertiaResponse
 	{
 		$this->authorize('update', $singer);
 
