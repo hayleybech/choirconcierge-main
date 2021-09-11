@@ -15,13 +15,14 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class SongController extends Controller
 {
-	public function index(Request $request): View
-	{
+	public function index(Request $request): InertiaResponse|View
+    {
 		$this->authorize('viewAny', Song::class);
 
 		// Base query
@@ -43,6 +44,14 @@ class SongController extends Controller
 		} else {
 			$songs = $songs->sortByDesc($sort_by);
 		}
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Songs/Index', [
+                'songs' => $songs->values(),
+            ]);
+        }
 
 		return view('songs.index', [
 			'all_songs' => $songs,

@@ -1,6 +1,5 @@
 import React from 'react'
 import Layout from "../../Layouts/Layout";
-import SingerPageHeader from "./SingerPageHeader";
 import {useForm} from "@inertiajs/inertia-react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
@@ -13,6 +12,7 @@ import FormSection from "../../components/FormSection";
 import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
+import PageHeader from "../../components/PageHeader";
 
 const Create = ({voice_parts, roles}) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -39,7 +39,7 @@ const Create = ({voice_parts, roles}) => {
 
     return (
         <>
-            <SingerPageHeader
+            <PageHeader
                 title={'Create Singer'}
                 icon="fa-users"
                 breadcrumbs={[

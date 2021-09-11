@@ -1,12 +1,12 @@
 import React from 'react'
 import Layout from "../../Layouts/Layout";
-import SingerPageHeader from "./SingerPageHeader";
+import PageHeader from "../../components/PageHeader";
 import SingerTableDesktop from "./SingerTableDesktop";
 import SingerTableMobile from "./SingerTableMobile";
 
 const Index = ({all_singers}) => (
     <>
-        <SingerPageHeader
+        <PageHeader
             title="Singers"
             icon="fa-users"
             breadcrumbs={[
