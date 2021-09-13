@@ -10,7 +10,7 @@
     <title>@yield('title') | {{ config('app.name', 'Choir Concierge') }}</title>
 
     <!-- Styles -->
-    <link href="{{ mix('/css/app-rebuild.css') }}" rel="stylesheet">
+    <link href="{{ global_asset('/css/app-rebuild.css') }}" rel="stylesheet">
 
 {{--    <link href="{{ global_asset('/css/style.css') }}" rel="stylesheet">--}}
     <link href="{{ global_asset('/vendor/fontawesome-pro/css/all.min.css') }}" rel="stylesheet">
@@ -32,13 +32,13 @@
     <!-- Scripts -->
     <script src="{{ mix('/js/app-rebuild.js') }}"></script>
 
-{{--	<script>--}}
-{{--	  var HW_config = {--}}
-{{--		selector: ".headway-badge", // CSS selector where to inject the badge--}}
-{{--		account:  "7L6Rky"--}}
-{{--	  }--}}
-{{--	</script>--}}
-{{--	<script async src="//cdn.headwayapp.co/widget.js"></script>--}}
+	<script>
+	  var HW_config = {
+		selector: ".headway-badge", // CSS selector where to inject the badge
+		account:  "7L6Rky"
+	  }
+	</script>
+	<script async src="//cdn.headwayapp.co/widget.js"></script>
 
 	@stack('scripts-footer-bottom')
 

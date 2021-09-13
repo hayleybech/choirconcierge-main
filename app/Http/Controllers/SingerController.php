@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SingerRequest;
 use App\Http\Requests\UserRequest;
+use App\Models\Placement;
 use App\Models\Role;
 use App\Models\SingerCategory;
 use App\Models\User;
@@ -14,7 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\Singer;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
-use Inertia\Response;
+use Inertia\Response as InertiaResponse;
 
 class SingerController extends Controller
 {
@@ -28,7 +29,7 @@ class SingerController extends Controller
 		//
 	}
 
-	public function index(Request $request): View|Response
+	public function index(Request $request): View|InertiaResponse
 	{
 		$this->authorize('viewAny', Singer::class);
 
@@ -50,14 +51,7 @@ class SingerController extends Controller
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Singers/Index', [
-                'all_singers' => $all_singers,
-                'active_singers' => $all_singers->whereIn('category.name', ['Members', 'Prospects']),
-                'member_singers' => $all_singers->whereIn('category.name', ['Members']),
-                'prospect_singers' => $all_singers->whereIn('category.name', ['Prospects']),
-                'archived_singers' => $all_singers->whereIn('category.name', ['Archived Members', 'Archived Prospects']),
-                'filters' => Singer::getFilters(),
-                'sorts' => ($sorts = $this->getSorts($request)),
-                'categories' => SingerCategory::all(),
+                'all_singers' => $all_singers->values(),
             ]);
         }
 
@@ -73,7 +67,7 @@ class SingerController extends Controller
 		]);
 	}
 
-	public function create(): View|Response
+	public function create(): View|InertiaResponse
 	{
 		$this->authorize('create', Singer::class);
 
@@ -82,7 +76,7 @@ class SingerController extends Controller
 			VoicePart::all()
 				->pluck('title', 'id')
 				->toArray();
-		$roles = Role::all();
+		$roles = Role::where('name', '!=', 'User')->get();
 
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');
@@ -109,14 +103,16 @@ class SingerController extends Controller
             'voice_part_id',
             'password_confirmation',
         ]));
-        $singer = $user->singers()->create(Arr::only($request->validated(), [
+        $singer = Singer::create(Arr::only($request->validated(), [
             'onboarding_enabled',
             'reason_for_joining',
             'referrer',
             'membership_details',
             'joined_at',
             'voice_part_id',
+            'user_roles',
         ]));
+        $singer->user_id = $user->id;
         $singer->initOnboarding();
         $singer->save();
 
@@ -127,11 +123,18 @@ class SingerController extends Controller
 			->with(['status' => 'Singer created. ']);
 	}
 
-	public function show(Singer $singer): View|Response
+	public function show(Singer $singer): View|InertiaResponse
 	{
 		$this->authorize('view', $singer);
 
-		$singer->load('user');
+		$singer->load('user', 'voice_part', 'category', 'roles', 'placement', 'tasks');
+
+		$singer->can = [
+            'update_singer' => auth()->user()?->can('update', $singer),
+            'delete_singer' => auth()->user()?->can('delete', $singer),
+		    'create_placement' => auth()->user()?->can('create', [Placement::class, $singer]),
+        ];
+		$singer->tasks->each(fn($task) => $task->can = ['complete' => auth()->user()?->can('complete', $task)]);
 
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');
@@ -148,9 +151,11 @@ class SingerController extends Controller
 		]);
 	}
 
-	public function edit(Singer $singer): View
+	public function edit(Singer $singer): View|InertiaResponse
 	{
 		$this->authorize('update', $singer);
+
+        $singer->load('user', 'voice_part', 'category', 'roles');
 
 		$voice_parts =
 			[0 => 'None'] +
@@ -158,7 +163,17 @@ class SingerController extends Controller
 				->pluck('title', 'id')
 				->toArray();
 
-		$roles = Role::all();
+		$roles = Role::where('name', '!=', 'User')->get();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Singers/Edit', [
+                'voice_parts' => $voice_parts,
+                'roles' => $roles,
+                'singer' => $singer,
+            ]);
+        }
 
 		return view('singers.edit', compact('singer', 'voice_parts', 'roles'));
 	}

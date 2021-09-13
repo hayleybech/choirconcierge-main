@@ -3,7 +3,7 @@ import ReadMore from 'vue-read-more';
 import * as Sentry from '@sentry/vue';
 import { Integrations as TracingIntegrations } from '@sentry/tracing';
 
-const VERSION = 'choir-concierge@2021-08-18a';
+const VERSION = 'choir-concierge@2021-09-13a';
 
 console.log('test');
 require('./bootstrap');

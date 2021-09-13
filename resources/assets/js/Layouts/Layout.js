@@ -4,12 +4,11 @@ import {
     BellIcon,
     MenuAlt2Icon,
 } from '@heroicons/react/outline'
-import { SearchIcon } from '@heroicons/react/solid'
 import route from 'ziggy-js';
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import navigation from "./navigation";
-import classNames from "../classnames";
+import classNames from "../classNames";
 import { usePage } from '@inertiajs/inertia-react';
 
 const userNavigation = [

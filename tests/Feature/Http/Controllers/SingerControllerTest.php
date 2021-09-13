@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -91,6 +92,22 @@ class SingerControllerTest extends TestCase
 		$response->assertViewHas('sorts');
 		$response->assertViewHas('categories');
 	}
+
+    /**
+     * @test
+     */
+    public function index_returns_singers(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $this->get(the_tenant_route('rebuild.on'));
+
+        $response = $this->get(the_tenant_route('singers.index'));
+
+        $response->assertInertia(fn(Assert $page) => $page
+            ->component('Singers/Index')
+            ->has('all_singers'));
+    }
 
 	/**
 	 * @test

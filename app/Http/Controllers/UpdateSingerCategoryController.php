@@ -25,7 +25,7 @@ class UpdateSingerCategoryController extends Controller
 		$singer->save();
 
 		return redirect()
-			->route('singers.index')
+			->back()
 			->with(['status' => 'The singer was moved. ']);
 	}
 }
