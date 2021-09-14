@@ -32,7 +32,7 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
             'first_name' => $rowArr['first_name'],
             'last_name' => $rowArr['surname'],
             'password' => random_int(0, 100000),
-            'dob' => DateTime::createFromFormat('d/m/Y', $rowArr['date_of_birth'] ?? null),
+            'dob' => isset($rowArr['date_of_birth']) ? DateTime::createFromFormat('d/m/Y', $rowArr['date_of_birth']) : null,
             'phone' => $rowArr['mobile_phone'],
             'address_street_1' => $rowArr['street_address'],
             'address_street_2' => $rowArr['street_address_line_2'],
