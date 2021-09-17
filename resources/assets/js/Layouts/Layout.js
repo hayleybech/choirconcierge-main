@@ -10,6 +10,9 @@ import SidebarMobile from "../components/SidebarMobile";
 import navigation from "./navigation";
 import classNames from "../classNames";
 import { usePage } from '@inertiajs/inertia-react';
+import GlobalTrackPlayer from "../components/Audio/GlobalTrackPlayer";
+import { PlayerContext } from '../contexts/player-context';
+import { AudioPlayerProvider } from "react-use-audio-player"
 
 const userNavigation = [
     { name: 'Your Profile', href: '#' },
@@ -19,7 +22,23 @@ const userNavigation = [
 
 export default function Layout({children}) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [player, setPlayer] = useState({
+        songTitle: null,
+        fileName: null,
+        src: null,
+        play: play,
+    });
+
     const { can } = usePage().props
+
+    function play(attachment) {
+        setPlayer({
+            ...player,
+            songTitle: attachment.song.title,
+            fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
+            src: attachment.download_url,
+        });
+    }
 
     const navFiltered = navigation
         .filter((item) => can[item.can])
@@ -33,94 +52,100 @@ export default function Layout({children}) {
         });
 
     return (
-        <div className="h-screen flex overflow-hidden bg-gray-100">
-            <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
+        <PlayerContext.Provider value={player}>
+            <div className="h-screen flex overflow-hidden bg-gray-100">
+                <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
 
-            {/* Static sidebar for desktop */}
-            <div className="hidden lg:flex lg:flex-shrink-0">
-                <SidebarDesktop navigation={navFiltered} />
-            </div>
-            <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                <div className="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-300">
-                    <button
-                        type="button"
-                        className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 lg:hidden"
-                        onClick={() => setSidebarOpen(true)}
-                    >
-                        <span className="sr-only">Open sidebar</span>
-                        <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-                    <div className="flex-1 px-4 flex justify-between">
-                        <div className="flex-1 flex">
-                            {/*<form className="w-full flex lg:ml-0" action="#" method="GET">*/}
-                            {/*    <label htmlFor="search-field" className="sr-only">*/}
-                            {/*        Search*/}
-                            {/*    </label>*/}
-                            {/*    <div className="relative w-full text-gray-400 focus-within:text-gray-600">*/}
-                            {/*        <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">*/}
-                            {/*            <SearchIcon className="h-5 w-5" aria-hidden="true" />*/}
-                            {/*        </div>*/}
-                            {/*        <input*/}
-                            {/*            id="search-field"*/}
-                            {/*            className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"*/}
-                            {/*            placeholder="Search"*/}
-                            {/*            type="search"*/}
-                            {/*            name="search"*/}
-                            {/*        />*/}
-                            {/*    </div>*/}
-                            {/*</form>*/}
-                        </div>
-                        <div className="ml-4 flex items-center lg:ml-6">
-                            <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                <span className="sr-only">View notifications</span>
-                                <BellIcon className="h-6 w-6" aria-hidden="true" />
-                            </button>
+                {/* Static sidebar for desktop */}
+                <div className="hidden lg:flex lg:flex-shrink-0">
+                    <SidebarDesktop navigation={navFiltered} />
+                </div>
+                <div className="flex flex-col w-0 flex-1 overflow-hidden">
+                    <div className="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-300">
+                        <button
+                            type="button"
+                            className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 lg:hidden"
+                            onClick={() => setSidebarOpen(true)}
+                        >
+                            <span className="sr-only">Open sidebar</span>
+                            <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
+                        </button>
+                        <div className="flex-1 px-4 flex justify-between">
+                            <div className="flex-1 flex">
+                                {/*<form className="w-full flex lg:ml-0" action="#" method="GET">*/}
+                                {/*    <label htmlFor="search-field" className="sr-only">*/}
+                                {/*        Search*/}
+                                {/*    </label>*/}
+                                {/*    <div className="relative w-full text-gray-400 focus-within:text-gray-600">*/}
+                                {/*        <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">*/}
+                                {/*            <SearchIcon className="h-5 w-5" aria-hidden="true" />*/}
+                                {/*        </div>*/}
+                                {/*        <input*/}
+                                {/*            id="search-field"*/}
+                                {/*            className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"*/}
+                                {/*            placeholder="Search"*/}
+                                {/*            type="search"*/}
+                                {/*            name="search"*/}
+                                {/*        />*/}
+                                {/*    </div>*/}
+                                {/*</form>*/}
+                            </div>
+                            <div className="ml-4 flex items-center lg:ml-6">
+                                <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                    <span className="sr-only">View notifications</span>
+                                    <BellIcon className="h-6 w-6" aria-hidden="true" />
+                                </button>
 
-                            {/* Profile dropdown */}
-                            <Menu as="div" className="ml-3 relative">
-                                <div>
-                                    <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                        <span className="sr-only">Open user menu</span>
-                                        <img
-                                            className="h-8 w-8 rounded-lg"
-                                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                            alt=""
-                                        />
-                                    </Menu.Button>
-                                </div>
-                                <Transition
-                                    as={Fragment}
-                                    enter="transition ease-out duration-100"
-                                    enterFrom="transform opacity-0 scale-95"
-                                    enterTo="transform opacity-100 scale-100"
-                                    leave="transition ease-in duration-75"
-                                    leaveFrom="transform opacity-100 scale-100"
-                                    leaveTo="transform opacity-0 scale-95"
-                                >
-                                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        {userNavigation.map((item) => (
-                                            <Menu.Item key={item.name}>
-                                                {({ active }) => (
-                                                    <a
-                                                        href={item.href}
-                                                        className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                                                    >
-                                                        {item.name}
-                                                    </a>
-                                                )}
-                                            </Menu.Item>
-                                        ))}
-                                    </Menu.Items>
-                                </Transition>
-                            </Menu>
+                                {/* Profile dropdown */}
+                                <Menu as="div" className="ml-3 relative">
+                                    <div>
+                                        <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                            <span className="sr-only">Open user menu</span>
+                                            <img
+                                                className="h-8 w-8 rounded-lg"
+                                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                                alt=""
+                                            />
+                                        </Menu.Button>
+                                    </div>
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
+                                    >
+                                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                            {userNavigation.map((item) => (
+                                                <Menu.Item key={item.name}>
+                                                    {({ active }) => (
+                                                        <a
+                                                            href={item.href}
+                                                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                                                        >
+                                                            {item.name}
+                                                        </a>
+                                                    )}
+                                                </Menu.Item>
+                                            ))}
+                                        </Menu.Items>
+                                    </Transition>
+                                </Menu>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <main className="flex-1 relative overflow-y-auto focus:outline-none">
-                    {children}
-                </main>
+                    <AudioPlayerProvider>
+                        <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none">
+                            {children}
+                        </main>
+
+                        {player.fileName && <GlobalTrackPlayer songTitle={player.songTitle} fileName={player.fileName} />}
+                    </AudioPlayerProvider>
+                </div>
             </div>
-        </div>
+        </PlayerContext.Provider>
     )
 }

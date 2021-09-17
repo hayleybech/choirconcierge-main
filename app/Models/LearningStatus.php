@@ -24,6 +24,8 @@ class LearningStatus extends Pivot
 {
     protected $guarded = [];
 
+    protected $appends = ['status_name', 'status_colour', 'status_icon'];
+
     public function getStatusNameAttribute(): string
     {
         return match ($this->status) {
@@ -35,6 +37,13 @@ class LearningStatus extends Pivot
 
     public function getStatusColourAttribute(): string
     {
+        if(config('features.rebuild')){
+            return match ($this->status) {
+                'not-started' => 'red-500',
+                'assessment-ready' => 'yellow-500',
+                'performance-ready' => 'green-500',
+            };
+        }
         return match ($this->status) {
             'not-started' => 'danger',
             'assessment-ready' => 'warning',

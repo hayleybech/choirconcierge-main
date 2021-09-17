@@ -1,4 +1,5 @@
 import React from 'react';
+import CheckboxInput from "./CheckboxInput";
 
 const CheckboxGroup = ({name, options, value, updateFn}) => (
     <div className="mt-4 grid grid-cols-2 md:flex md:flex-wrap">
@@ -6,16 +7,15 @@ const CheckboxGroup = ({name, options, value, updateFn}) => (
             <React.Fragment key={key}>
                 <div className="relative flex items-start mr-8 mb-4">
                     <div className="flex items-center h-5">
-                        <input type="checkbox"
+                        <CheckboxInput
                            id={`${name}_${option.id}`}
                            name={`${name}[]`}
                            value={option.id}
-                           className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300 rounded"
-                            checked={value.includes(option.id)}
+                           checked={value.includes(option.id)}
                            onChange={e => updateFn(
                                e.target.checked
-                                   ? [...new Set(value).add(option.id)]
-                                   : [...new Set(value).delete(option.id)]
+                                   ? addToArray(option.id, value)
+                                   : deleteFromArray(option.id, value)
                            )}
                         />
                     </div>
@@ -31,3 +31,13 @@ const CheckboxGroup = ({name, options, value, updateFn}) => (
 );
 
 export default CheckboxGroup;
+
+function addToArray(item, array) {
+    return [...new Set(array).add(item)];
+}
+
+function deleteFromArray(item, array) {
+    let set = new Set(array);
+    set.delete(item);
+    return [...set];
+}

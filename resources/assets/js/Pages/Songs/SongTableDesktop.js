@@ -43,7 +43,7 @@ const SongTableDesktop = ({ songs }) => (
                             <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="flex items-center">
                                     <div>
-                                        <PitchButton note={song.pitch.split('/')[0]} />
+                                        <PitchButton note={song.pitch.split('/')[0]} size="sm" />
                                     </div>
                                     <div className="ml-4">
                                         <Link href={route('songs.show', song.id)} className="text-sm font-medium text-purple-800">{song.title}</Link>
