@@ -3,22 +3,23 @@ import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import SongForm from "./SongForm";
 
-const Create = ({ categories, statuses, pitches }) => (
+const Edit = ({ categories, statuses, pitches, song }) => (
     <>
         <PageHeader
-            title="Create Song"
+            title="Edit Song"
             icon="fa-list-music"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Songs', url: route('songs.index')},
-                { name: 'Create', url: route('songs.create')},
+                { name: song.title, url: route('songs.show', song)},
+                { name: 'Edit', url: route('songs.edit', song)},
             ]}
         />
 
-        <SongForm categories={categories} statuses={statuses} pitches={pitches} />
+        <SongForm categories={categories} statuses={statuses} pitches={pitches} song={song} />
     </>
 );
 
-Create.layout = page => <Layout children={page} title="Songs" />
+Edit.layout = page => <Layout children={page} title="Songs" />
 
-export default Create;
+export default Edit;
