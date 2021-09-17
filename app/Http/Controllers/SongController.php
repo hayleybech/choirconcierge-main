@@ -203,13 +203,24 @@ class SongController extends Controller
         ]);
 	}
 
-	public function edit(Song $song): View
+	public function edit(Song $song): View|InertiaResponse
 	{
 		$this->authorize('update', $song);
 
 		$categories = SongCategory::all();
 		$statuses = SongStatus::all();
 		$pitches = Song::KEYS;
+
+        if(config('features.rebuild')) {
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Songs/Edit', [
+                'categories' => $categories->values(),
+                'statuses' => $statuses->values(),
+                'pitches' => Song::PITCHES,
+                'song' => $song,
+            ]);
+        }
 
 		return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
 	}
