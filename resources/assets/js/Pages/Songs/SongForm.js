@@ -98,7 +98,7 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
 
                     <div className="pt-5">
                         <div className="flex justify-end">
-                            <ButtonLink href={route('songs.index')}>Cancel</ButtonLink>
+                            <ButtonLink href={song ? route('songs.show', song) : route('songs.index')}>Cancel</ButtonLink>
                             <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                         </div>
                     </div>
