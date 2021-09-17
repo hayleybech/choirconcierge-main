@@ -14,8 +14,8 @@ const Index = ({ songs }) => (
                 { name: 'Songs', url: route('songs.index')},
             ]}
             actions={[
-                { label: 'Add New', icon: 'plus', url: ('songs.create'), variant: 'primary'},
-                { label: 'Filter', icon: 'filter', url: route('voice-parts.index')},
+                { label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary'},
+                { label: 'Filter', icon: 'filter', url: '#'},
             ]}
         />
 

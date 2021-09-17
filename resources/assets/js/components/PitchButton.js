@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Button from "./inputs/Button";
 import {start, Synth} from "tone";
 
-const PitchButton = ({ note, octave = 4}) => {
+const PitchButton = ({ note, octave = 4, size = "md"}) => {
     const [synth] = useState(new Synth().toDestination());
     const [pitch] = useState(note + octave.toString());
 
@@ -26,7 +26,7 @@ const PitchButton = ({ note, octave = 4}) => {
     }
 
     return (
-        <Button onMouseDown={play} onMouseUp={stop} variant="primary" size="sm">
+        <Button onMouseDown={play} onMouseUp={stop} variant="primary" size={size}>
             <i className="fa fa-play mr-1" />
             <span className="key w-4">{note}</span>
         </Button>

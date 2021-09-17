@@ -11183,7 +11183,14 @@
     "use-composed-ref" "^1.0.0"
     "use-latest" "^1.0.0"
 
-"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^0.14.0 || ^15.0.0-0 || ^16.0.0 || ^17.0.0", "react@^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1", "react@^16 || ^17 || ^18", "react@^16.13.1 || ^17.0.0", "react@^16.14.0", "react@^16.6.0 || ^17.0.0", "react@^16.8.0 || ^17", "react@^16.8.0 || ^17.0.0", "react@^16.8.4 || ^17.0.0", "react@^16.9.0 || ^17.0.0", "react@>= 0.14.0", "react@>= 16", "react@>=16.12.0", "react@>=16.3.0", "react@>=16.8.0", "react@~0.13.x || ~0.14.x || ^15.0.0 || ^16.0.0 || ^17.0.0", "react@15.x || 16.x || 16.4.0-alpha.0911da3", "react@15.x || 16.x || 17.x", "react@16.14.0":
+"react-use-audio-player@^1.2.4":
+  "integrity" "sha512-J1Ho2xXtD2R2k2+/By5g/JCoe/X0u554t0aqSwGmuQlLEyL4AVWPKm40O451TU1ATeRAeZWG7DSlhXhG0kJN4g=="
+  "resolved" "https://registry.npmjs.org/react-use-audio-player/-/react-use-audio-player-1.2.4.tgz"
+  "version" "1.2.4"
+  dependencies:
+    "howler" "^2.2.1"
+
+"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^0.14.0 || ^15.0.0-0 || ^16.0.0 || ^17.0.0", "react@^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1", "react@^16 || ^17 || ^18", "react@^16.13.1 || ^17.0.0", "react@^16.14.0", "react@^16.6.0 || ^17.0.0", "react@^16.8.0 || ^17", "react@^16.8.0 || ^17.0.0", "react@^16.8.4 || ^17.0.0", "react@^16.9.0 || ^17.0.0", "react@>= 0.14.0", "react@>= 16", "react@>=16.12.0", "react@>=16.3.0", "react@>=16.8", "react@>=16.8.0", "react@~0.13.x || ~0.14.x || ^15.0.0 || ^16.0.0 || ^17.0.0", "react@15.x || 16.x || 16.4.0-alpha.0911da3", "react@15.x || 16.x || 17.x", "react@16.14.0":
   "integrity" "sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.14.0.tgz"
   "version" "16.14.0"

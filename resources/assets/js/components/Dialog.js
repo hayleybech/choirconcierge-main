@@ -60,7 +60,7 @@ const Dialog = ({ title, children, okLabel, okUrl, okVariant, okMethod, data, is
                             </div>
                         </div>
                         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                            <ButtonLink variant={okVariant} size="sm" href={okUrl} method={okMethod} data={data} as="button" className="sm:ml-3 w-full">{okLabel}</ButtonLink>
+                            <ButtonLink variant={okVariant} size="sm" href={okUrl} method={okMethod} data={data} as="button" className="sm:ml-3 w-full" onClick={() => setIsOpen(false)} >{okLabel}</ButtonLink>
                             <Button size="sm" onClick={() => setIsOpen(false)} className="w-full mt-3 sm:mt-0">Cancel</Button>
                         </div>
                     </div>

@@ -94,13 +94,23 @@ class SongController extends Controller
 		return view('songs.learning', compact('songs', 'filters', 'sorts'));
 	}
 
-	public function create(): View
+	public function create(): View|InertiaResponse
 	{
 		$this->authorize('create', Song::class);
 
 		$categories = SongCategory::all();
 		$statuses = SongStatus::all();
 		$pitches = Song::KEYS;
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Songs/Create', [
+                'categories' => $categories->values(),
+                'statuses' => $statuses->values(),
+                'pitches' => Song::PITCHES,
+            ]);
+        }
 
 		return view('songs.create', compact('categories', 'statuses', 'pitches'));
 	}
@@ -125,7 +135,7 @@ class SongController extends Controller
 			->with(['status' => 'Song created. ']);
 	}
 
-	public function show(Song $song): View
+	public function show(Song $song): View|InertiaResponse
 	{
 		$this->authorize('view', $song);
 
@@ -148,6 +158,40 @@ class SongController extends Controller
                     });
                 }
             ])->get();
+
+        $song->can = [
+            'update_song' => auth()->user()?->can('update', $song),
+            'delete_song' => auth()->user()?->can('delete', $song),
+        ];
+
+        $song->append('my_learning');
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Songs/Show', [
+                'song' => $song,
+                'all_attachment_categories' => $attachment_categories,
+                'attachment_categories' => $song->attachments->mapToGroups(function($attachment) {
+                    return [$attachment->category->title => $attachment];
+                })->sortBy(function($attachments, $category_title) {
+                    return match ($category_title) {
+                        'Sheet Music' => 0,
+                        'Full Mix (Demo)' => 1,
+                        'Learning Tracks' => 2,
+                        'Other' => 3,
+                    };
+                }),
+                'status_count' => [
+                    'performance_ready' => $performance_ready_count,
+                    'assessment_ready' => $assessment_ready_count,
+                    'learning' => Singer::count() - $assessment_ready_count - $performance_ready_count,
+                ],
+                'voice_parts_count' => [
+                    'performance_ready' => $voice_parts_performance_ready_count,
+                ],
+            ]);
+        }
 
 		return view('songs.show', [
 		    'song' => $song,

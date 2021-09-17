@@ -98,6 +98,7 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
                 options={categories.map(category => ({ ...category, icon: 'circle'}))}
                 selected={selectedCategory}
                 setSelected={setSelectedCategory}
+                vertical
             />
         </Dialog>
     );
