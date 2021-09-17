@@ -50,6 +50,7 @@ class VoicePart extends Model
     {
         $nullPart = new self();
         $nullPart->title = 'No Part';
+        $nullPart->id = null;
         return $nullPart;
     }
 }
