@@ -170,7 +170,11 @@ class SingerController extends Controller
             ]);
         }
 
-		return view('singers.edit', compact('singer', 'voice_parts', 'roles'));
+		return view('singers.edit', [
+		    'singer' => $singer,
+            'voice_parts' => $voice_parts->pluck('title', 'id')->toArray(),
+            'roles' => $roles,
+        ]);
 	}
 	public function update(Singer $singer, SingerRequest $request): RedirectResponse
 	{
