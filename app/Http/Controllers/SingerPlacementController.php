@@ -11,6 +11,8 @@ use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class SingerPlacementController extends Controller
 {
@@ -52,15 +54,24 @@ class SingerPlacementController extends Controller
 			->with(['status' => 'Voice Placement created. ']);
 	}
 
-	public function edit(Singer $singer, Placement $placement, Request $request): View
+	public function edit(Singer $singer, Placement $placement, Request $request): View|Response
 	{
         $this->authorize('update', $placement);
 
-		$voice_parts =
-			[0 => 'None'] +
-			VoicePart::all()
-				->pluck('title', 'id')
-				->toArray();
+        $singer->load('user');
+
+        $voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
+
+        if(config('features.rebuild')) {
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Singers/Placements/Edit', [
+                'singer' => $singer,
+                'placement' => $placement,
+                'voice_parts' => $voice_parts->values(),
+            ]);
+        }
+
 		return view('singers.editplacement', compact('singer', 'placement', 'voice_parts'));
 	}
 

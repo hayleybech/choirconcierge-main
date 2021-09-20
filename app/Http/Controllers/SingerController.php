@@ -156,12 +156,7 @@ class SingerController extends Controller
 
         $singer->load('user', 'voice_part', 'category', 'roles');
 
-		$voice_parts =
-			[0 => 'None'] +
-			VoicePart::all()
-				->pluck('title', 'id')
-                ->values()
-                ->toArray();
+        $voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
 
 		$roles = Role::where('name', '!=', 'User')->get();
 
@@ -169,7 +164,7 @@ class SingerController extends Controller
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Singers/Edit', [
-                'voice_parts' => $voice_parts,
+                'voice_parts' => $voice_parts->values(),
                 'roles' => $roles->values(),
                 'singer' => $singer,
             ]);
