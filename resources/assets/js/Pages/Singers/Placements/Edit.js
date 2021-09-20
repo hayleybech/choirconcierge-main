@@ -2,9 +2,11 @@ import PageHeader from "../../../components/PageHeader";
 import Layout from "../../../Layouts/Layout";
 import React from "react";
 import PlacementForm from "./PlacementForm";
+import AppHead from "../../../components/AppHead";
 
 const Edit = ({ singer, placement, voice_parts }) => (
     <>
+        <AppHead title={`Edit Voice Placement - ${singer.user.name}`} />
         <PageHeader
             title="Edit Placement"
             breadcrumbs={[
@@ -19,6 +21,6 @@ const Edit = ({ singer, placement, voice_parts }) => (
     </>
 );
 
-Edit.layout = page => <Layout children={page} title="Voice Placements" />
+Edit.layout = page => <Layout children={page} />
 
 export default Edit;

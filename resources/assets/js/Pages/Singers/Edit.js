@@ -12,6 +12,7 @@ import FormSection from "../../components/FormSection";
 import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
+import AppHead from "../../components/AppHead";
 
 const Edit = ({ voice_parts, roles, singer }) => {
     const { data, setData, put, processing, errors } = useForm({
@@ -32,6 +33,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
 
     return (
         <>
+            <AppHead title={`Edit - ${singer.user.name}`} />
             <PageHeader
                 title={'Edit Singer'}
                 icon="fa-users"
@@ -117,6 +119,6 @@ const Edit = ({ voice_parts, roles, singer }) => {
     );
 }
 
-Edit.layout = page => <Layout children={page} title="Singers" />
+Edit.layout = page => <Layout children={page} />
 
 export default Edit;

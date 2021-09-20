@@ -10,12 +10,14 @@ import SongAttachmentForm from "../../components/SongAttachment/SongAttachmentFo
 import LearningSummary from "../../components/Song/LearningSummary";
 import MyLearningStatus from "../../components/Song/MyLearningStatus";
 import SongCategoryTag from "../../components/Song/SongCategoryTag";
+import AppHead from "../../components/AppHead";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
     return (
         <>
+            <AppHead title={`${song.title} - Songs`} />
             <PageHeader
                 title={song.title}
                 meta={(
@@ -71,7 +73,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
     );
 }
 
-Show.layout = page => <Layout children={page} title="Songs" />
+Show.layout = page => <Layout children={page} />
 
 export default Show;
 

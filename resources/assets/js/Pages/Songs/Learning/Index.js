@@ -3,9 +3,11 @@ import PageHeader from "../../../components/PageHeader";
 import Layout from "../../../Layouts/Layout";
 import LearningStatusTag from "../../../components/Song/LearningStatusTag";
 import Button from "../../../components/inputs/Button";
+import AppHead from "../../../components/AppHead";
 
 const Index = ({song, voice_parts}) => (
     <>
+        <AppHead title={`Learning Summary - ${song.title}`} />
         <PageHeader
             title="Learning Status Report"
             icon="fa-list-music"
@@ -77,6 +79,6 @@ const Index = ({song, voice_parts}) => (
     </>
 );
 
-Index.layout = page => <Layout children={page} title="Songs"/>
+Index.layout = page => <Layout children={page} />
 
 export default Index;

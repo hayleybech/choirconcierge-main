@@ -2,9 +2,11 @@ import PageHeader from "../../../components/PageHeader";
 import Layout from "../../../Layouts/Layout";
 import React from "react";
 import PlacementForm from "./PlacementForm";
+import AppHead from "../../../components/AppHead";
 
 const Create = ({ singer, voice_parts }) => (
     <>
+        <AppHead title={`Add Voice Placement - ${singer.user.name}`} />
         <PageHeader
             title="Create Placement"
             breadcrumbs={[
@@ -19,6 +21,6 @@ const Create = ({ singer, voice_parts }) => (
     </>
 );
 
-Create.layout = page => <Layout children={page} title="Voice Placements" />
+Create.layout = page => <Layout children={page} />
 
 export default Create;

@@ -13,6 +13,7 @@ import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import PageHeader from "../../components/PageHeader";
+import AppHead from "../../components/AppHead";
 
 const Create = ({voice_parts, roles}) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -39,6 +40,7 @@ const Create = ({voice_parts, roles}) => {
 
     return (
         <>
+            <AppHead title="Add Singer" />
             <PageHeader
                 title={'Create Singer'}
                 icon="fa-users"
@@ -160,6 +162,6 @@ const Create = ({voice_parts, roles}) => {
     );
 }
 
-Create.layout = page => <Layout children={page} title="Singers" />
+Create.layout = page => <Layout children={page} />
 
 export default Create;

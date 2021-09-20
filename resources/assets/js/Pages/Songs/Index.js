@@ -3,9 +3,11 @@ import Layout from "../../Layouts/Layout";
 import SongTableDesktop from "./SongTableDesktop";
 import SongTableMobile from "./SongTableMobile";
 import PageHeader from "../../components/PageHeader";
+import AppHead from "../../components/AppHead";
 
 const Index = ({ songs }) => (
     <>
+        <AppHead title="Songs" />
         <PageHeader
             title="Songs"
             icon="fa-list-music"
@@ -31,6 +33,6 @@ const Index = ({ songs }) => (
     </>
 );
 
-Index.layout = page => <Layout children={page} title="Songs" />
+Index.layout = page => <Layout children={page} />
 
 export default Index;

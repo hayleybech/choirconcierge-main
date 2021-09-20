@@ -3,9 +3,11 @@ import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import SingerTableDesktop from "./SingerTableDesktop";
 import SingerTableMobile from "./SingerTableMobile";
+import AppHead from "../../components/AppHead";
 
 const Index = ({all_singers}) => (
     <>
+        <AppHead title="Singers" />
         <PageHeader
             title="Singers"
             icon="fa-users"
@@ -32,6 +34,6 @@ const Index = ({all_singers}) => (
     </>
 );
 
-Index.layout = page => <Layout children={page} title="Singers" />
+Index.layout = page => <Layout children={page} />
 
 export default Index;

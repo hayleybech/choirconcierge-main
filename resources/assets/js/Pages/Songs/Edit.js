@@ -2,9 +2,11 @@ import React from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import SongForm from "./SongForm";
+import AppHead from "../../components/AppHead";
 
 const Edit = ({ categories, statuses, pitches, song }) => (
     <>
+        <AppHead title={`Edit - ${song.title}`} />
         <PageHeader
             title="Edit Song"
             icon="fa-list-music"
