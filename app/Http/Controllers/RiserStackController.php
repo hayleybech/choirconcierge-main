@@ -10,15 +10,25 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class RiserStackController extends Controller
 {
-	public function index(Request $request): View
+	public function index(Request $request): View|Response
 	{
 		$this->authorize('viewAny', RiserStack::class);
 
 		// Base query
 		$stacks = RiserStack::all();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('RiserStacks/Index', [
+                'stacks' => $stacks->values(),
+            ]);
+        }
 
 		return view('stacks.index', compact('stacks'));
 	}
