@@ -37,7 +37,7 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
                         <FormSection title="Song Details">
                             <div className="sm:col-span-6">
                                 <Label label="Song Title" forInput="title" />
-                                <TextInput name="title" autoComplete="given-name" value={data.title} updateFn={value => setData('title', value)} hasErrors={ !! errors['title'] } />
+                                <TextInput name="title" value={data.title} updateFn={value => setData('title', value)} hasErrors={ !! errors['title'] } />
                                 {errors.title && <Error>{errors.title}</Error>}
                             </div>
 

@@ -22,6 +22,6 @@ const Edit = ({ categories, statuses, pitches, song }) => (
     </>
 );
 
-Edit.layout = page => <Layout children={page} title="Songs" />
+Edit.layout = page => <Layout children={page} />
 
 export default Edit;
