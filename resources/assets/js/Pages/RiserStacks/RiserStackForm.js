@@ -74,7 +74,7 @@ const RiserStackForm = ({ stack }) => {
                                     </div>
 
                                     <div className="sm:col-span-2">
-                                        <Label label="Front Row" forInput="front_row_length" />
+                                        <Label label="Front Row Singers" forInput="front_row_length" />
                                         <TextInput
                                             name="front_row_length"
                                             type="number"
@@ -99,7 +99,14 @@ const RiserStackForm = ({ stack }) => {
                             </div>
 
                             <div className="w-2/3">
-                                <RiserStackEditor rows={data.rows} columns={data.columns} width={1000} height={500} frontRowOnFloor={data.front_row_on_floor} />
+                                <RiserStackEditor
+                                    rows={parseInt(data.rows)}
+                                    columns={parseInt(data.columns)}
+                                    width={1000}
+                                    height={500}
+                                    frontRowOnFloor={data.front_row_on_floor}
+                                    spotsOnFrontRow={parseInt(data.front_row_length)}
+                                />
                             </div>
                         </div>
 

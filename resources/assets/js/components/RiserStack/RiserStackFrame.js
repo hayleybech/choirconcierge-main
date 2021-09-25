@@ -1,28 +1,25 @@
 import React, {useMemo} from 'react';
 import {Arc} from "../../risers/Arc";
 import {ArcMath} from "../../risers/ArcMath";
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from '../../../../../tailwind.config'
 
-const RiserStackFrame = ({ width, height, columns, rows, frontRowOnFloor }) => {
-    const originModifier = {
-        x: 0.5,
-        y: 1.55,
-    };
-    const origin = useMemo(() => ({
-        x: width * originModifier.x,
-        y: height * originModifier.y,
-    }), [width, height]);
-
-    const totalAngularWidth = 85;
-    const frameStartAngle = 0 - totalAngularWidth / 2;
-    const frameStartRadius = useMemo(() => height * 1.05, [height]);
-    const frameEndRadius = useMemo(() => height * 0.4, [height]);
-
-    // Distance (along radius) between rows
-    const rowHeight = useMemo(() => frameEndRadius / rows, [frameEndRadius, rows]);
+const RiserStackFrame = ({
+    columns,
+    rows,
+    frontRowOnFloor,
+    origin,
+    totalAngularWidth,
+    frameStartAngle,
+    frameStartRadius,
+    frameEndRadius,
+    rowHeightAlongRadius,
+}) => {
+    const fullConfig = resolveConfig(tailwindConfig);
     const columnAngularWidth = useMemo(() => totalAngularWidth / columns, [columns]);
 
-    const arcs = useMemo(() => createArcs(), [height, rows, columns, frontRowOnFloor]);
-    const edges = useMemo(() => createEdges(), [height, columns, frontRowOnFloor]);
+    const arcs = useMemo(() => createArcs(), [rows, columns, frontRowOnFloor]);
+    const edges = useMemo(() => createEdges(), [columns, frontRowOnFloor]);
     
     function createArcs() {
         let arcs = [];
@@ -39,7 +36,7 @@ const RiserStackFrame = ({ width, height, columns, rows, frontRowOnFloor }) => {
 
     function createArc(row, column) {
         // Start point (radius) for current row's arcs
-        const rowStartRadius = frameStartRadius + row * rowHeight;
+        const rowStartRadius = frameStartRadius + row * rowHeightAlongRadius;
 
         // Start angle for current arc
         const columnStartAngle = frameStartAngle + columnAngularWidth * column;
@@ -52,32 +49,32 @@ const RiserStackFrame = ({ width, height, columns, rows, frontRowOnFloor }) => {
     function createEdges() {
         let edges = [];
 
-        let edge_start_radius = frameStartRadius;
-        let edge_end_radius = frameStartRadius + frameEndRadius;
+        let edgeStartRadius = frameStartRadius;
+        let edgeEndRadius = frameStartRadius + frameEndRadius;
 
         // Support front row on floor (invisible first row)
         if (frontRowOnFloor) {
-            edge_start_radius += rowHeight;
+            edgeStartRadius += rowHeightAlongRadius;
         }
 
         for (let column = 0; column <= columns; column++) {
             const angle = frameStartAngle + columnAngularWidth * column;
 
-            const xy_start = ArcMath.polarToCartesian(origin, edge_start_radius, angle);
-            const xy_end = ArcMath.polarToCartesian(origin, edge_end_radius, angle);
+            const xyStart = ArcMath.polarToCartesian(origin, edgeStartRadius, angle);
+            const xyEnd = ArcMath.polarToCartesian(origin, edgeEndRadius, angle);
             edges.push({
-                start: xy_start,
-                end: xy_end,
+                start: xyStart,
+                end: xyEnd,
             });
         }
         return edges;
     }
 
     return (
-        <svg width={width} height={height}>
+        <g>
             <g>
             {arcs.map((arc, key) => (
-                <path key={key} d={arc} style={{ fill: 'none', stroke: '#777', strokeWidth: 1 }} />
+                <path key={key} d={arc} style={{ fill: 'none', stroke: fullConfig.theme.colors.gray[500], strokeWidth: 1 }} />
             ))}
             </g>
 
@@ -89,11 +86,11 @@ const RiserStackFrame = ({ width, height, columns, rows, frontRowOnFloor }) => {
                         y1={edge.start.y}
                         x2={edge.end.x}
                         y2={edge.end.y}
-                        style={{ fill: 'none', stroke: '#777', strokeWidth: 1 }}
+                        style={{ fill: 'none', stroke: fullConfig.theme.colors.gray[500], strokeWidth: 1 }}
                     />
                 ))}
             </g>
-        </svg>
+        </g>
     );
 }
 
