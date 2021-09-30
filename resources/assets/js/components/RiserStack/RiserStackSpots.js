@@ -1,11 +1,12 @@
 import React, {useMemo} from 'react';
 import {ArcMath} from "../../risers/ArcMath";
-import resolveConfig from 'tailwindcss/resolveConfig'
-import tailwindConfig from '../../../../../tailwind.config'
+import RiserStackSpot from "./RiserStackSpot";
+import RiserStackSinger from "./RiserStackSinger";
 
-const RiserStackSpots = ({ rows, spotsOnFrontRow, totalAngularWidth, risersStartRadius, rowHeightAlongRadius, origin }) => {
-    const fullConfig = resolveConfig(tailwindConfig);
-    const spots = useMemo(() => createSpots(rows), [rows, spotsOnFrontRow, totalAngularWidth, risersStartRadius, rowHeightAlongRadius, origin]);
+const RiserStackSpots = ({ rows, spotsOnFrontRow, totalAngularWidth, risersStartRadius, rowHeightAlongRadius, origin, singers }) => {
+    const spots = useMemo(() =>
+        createSpots(rows), [rows, spotsOnFrontRow, totalAngularWidth, risersStartRadius, rowHeightAlongRadius, origin]
+    );
 
     function createSpots(rows) {
         let spots = [];
@@ -58,33 +59,35 @@ const RiserStackSpots = ({ rows, spotsOnFrontRow, totalAngularWidth, risersStart
     }
 
     function createSpotAtPosition(positionRadius, positionAngle, row, column) {
-        const pos = ArcMath.polarToCartesian(origin, positionRadius, positionAngle);
-        const radius = (0.8 * rowHeightAlongRadius) / 2;
-        // const singer = this.$parent.getSinger({ row: row, column: column });
         return {
-            centre: pos,
-            radius: radius,
+            centre: ArcMath.polarToCartesian(origin, positionRadius, positionAngle),
+            radius: (0.8 * rowHeightAlongRadius) / 2,
             row: row,
             column: column,
-            // singer: singer,
+            singer: getSinger({row: row, column: column}),
         };
+    }
+
+    function getSinger(coords) {
+        return singers.find(
+            	item => item.position.row === coords.row
+                && item.position.column === coords.column
+        ) || null;
     }
 
     return (
         <g>
             {spots.map((spot, key) => (
-                <svg key={key}>
-                    <circle
-                        cx={spot.centre.x}
-                        cy={spot.centre.y}
-                        r={spot.radius}
-                        style={{
-                            fill: fullConfig.theme.colors.purple[400],
-                            stroke: 'transparent',
-                            strokeWidth: '1px',
-                        }}
-                    />
-                </svg>
+                <RiserStackSpot key={key} cx={spot.centre.x} cy={spot.centre.y} radius={spot.radius}>
+                    {spot.singer &&
+                        <RiserStackSinger
+                            singerId={spot.singer.id}
+                            name={spot.singer.user.name}
+                            imageUrl={spot.singer.user_avatar_thumb_url}
+                            radius={spot.radius}
+                        />
+                    }
+               </RiserStackSpot>
             ))}
         </g>
     );

@@ -23,7 +23,7 @@ const RiserStackForm = ({ stack }) => {
         columns: stack?.cols ?? 4,
         front_row_length: stack?.front_row_length ?? 1,
         front_row_on_floor: stack?.front_row_on_floor ?? false,
-        singer_positions: stack?.singer_positions ??  [],
+        singer_positions: stack?.singers ??  [],
     });
 
     function submit(e) {
@@ -106,6 +106,7 @@ const RiserStackForm = ({ stack }) => {
                                     height={500}
                                     frontRowOnFloor={data.front_row_on_floor}
                                     spotsOnFrontRow={parseInt(data.front_row_length)}
+                                    singers={data.singer_positions}
                                 />
                             </div>
                         </div>

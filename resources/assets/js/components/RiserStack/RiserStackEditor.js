@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import RiserStackFrame from "./RiserStackFrame";
 import RiserStackSpots from "./RiserStackSpots";
 
-const RiserStackEditor = ({ width, height, rows, columns, spotsOnFrontRow, frontRowOnFloor}) => {
+const RiserStackEditor = ({ width, height, rows, columns, spotsOnFrontRow, frontRowOnFloor, singers }) => {
     const originModifier = {
         x: 0.5,
         y: 1.55,
@@ -42,6 +42,7 @@ const RiserStackEditor = ({ width, height, rows, columns, spotsOnFrontRow, front
                     risersStartRadius={frameStartRadius}
                     rowHeightAlongRadius={rowHeightAlongRadius}
                     totalAngularWidth={totalAngularWidth}
+                    singers={singers}
                 />
 
             </svg>
