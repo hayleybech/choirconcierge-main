@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import RiserStackForm from "./RiserStackForm";
 
-const Edit = ({ stack }) => (
+const Edit = ({ stack, voice_parts }) => (
     <>
         <AppHead title={`Edit - ${stack.title}`} />
         <PageHeader
@@ -18,7 +18,7 @@ const Edit = ({ stack }) => (
             ]}
         />
 
-        <RiserStackForm stack={stack} />
+        <RiserStackForm stack={stack} voiceParts={voice_parts} />
     </>
 );
 
