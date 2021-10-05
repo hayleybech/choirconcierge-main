@@ -2,7 +2,9 @@ import React, {useMemo, useState} from 'react';
 import RiserStackFrame from "./RiserStackFrame";
 import RiserStackSpots from "./RiserStackSpots";
 
-const RiserStackEditor = ({ width, height, rows, columns, spotsOnFrontRow, frontRowOnFloor, singers, voiceParts, setPositions }) => {
+const RiserStackEditor = ({
+    width, height, rows, columns, spotsOnFrontRow, frontRowOnFloor, singerPositions, setPositions, selectedSinger, setSelectedSinger, removeSingerFromHoldingArea
+}) => {
     const originModifier = {
         x: 0.5,
         y: 1.55,
@@ -19,16 +21,18 @@ const RiserStackEditor = ({ width, height, rows, columns, spotsOnFrontRow, front
 
     const rowHeightAlongRadius = useMemo(() => frameEndRadius / rows, [frameEndRadius, rows]);
 
-    const [selectedSinger, setSelectedSinger] = useState(null);
-
     function moveSingerToStack(coords, singer) {
-        voiceParts.map(part => part.filter(partSinger => partSinger.id !== singer.id));
+        removeSingerFromHoldingArea(singer);
 
         singer.position = {
             row: coords.row,
             column: coords.column,
         };
-        singers.push(singer);
+
+        singerPositions.push(singer);
+        setPositions(singerPositions);
+
+        setSelectedSinger(null);
     }
 
     return(
@@ -54,7 +58,10 @@ const RiserStackEditor = ({ width, height, rows, columns, spotsOnFrontRow, front
                     risersStartRadius={frameStartRadius}
                     rowHeightAlongRadius={rowHeightAlongRadius}
                     totalAngularWidth={totalAngularWidth}
-                    singers={singers}
+                    singers={singerPositions}
+                    selectedSinger={selectedSinger}
+                    setSelectedSinger={setSelectedSinger}
+                    moveSelectedSingerTo={(coords) => moveSingerToStack(coords, selectedSinger)}
                 />
 
             </svg>

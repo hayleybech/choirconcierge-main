@@ -1,6 +1,9 @@
 import React, {useMemo} from "react";
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig from "../../../../../tailwind.config";
 
-const RiserStackSinger = ({ singerId, name, imageUrl, radius }) => {
+const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelected }) => {
+	const fullConfig = resolveConfig(tailwindConfig);
 	const labelHeight = 15;
 	const labelWidth = 35;
 	const nameOffsetY = 15;
@@ -30,11 +33,18 @@ const RiserStackSinger = ({ singerId, name, imageUrl, radius }) => {
 				cx={radius}
 				cy={radius}
 				r={radius}
-				style={{
-					fill: `url(#img_${singerId})`,
-					stroke: 'transparent',
-					strokeWidth: '1px',
-				}}
+				style={
+					isSelected ? {
+						fill: `url(#img_${singerId})`,
+						stroke: fullConfig.theme.colors.purple[500],
+						strokeWidth: '2px',
+					} : {
+						fill: `url(#img_${singerId})`,
+						stroke: 'transparent',
+						strokeWidth: '2px',
+					}
+				}
+				onClick={onClick}
 			/>
 			<rect
 				x={labelPosition.x}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useForm} from "@inertiajs/inertia-react";
 import FormSection from "../../components/FormSection";
 import Label from "../../components/inputs/Label";
@@ -23,6 +23,35 @@ const RiserStackForm = ({ stack, voiceParts }) => {
     function submit(e) {
         e.preventDefault();
         stack ? put(route('stacks.update', stack)) : post(route('stacks.store'));
+    }
+
+    const [selectedSinger, setSelectedSinger] = useState(null);
+    const [holdingAreaSingers, setHoldingAreaSingers] = useState(voiceParts);
+
+    function removeSingerFromHoldingArea(singer){
+        setHoldingAreaSingers(
+            holdingAreaSingers.map(part => {
+                part.singers = part.singers.filter(partSinger => partSinger.id !== singer.id);
+                return part;
+            })
+        );
+    }
+
+    function moveSingerToHoldingArea(singer){
+        removeSingerFromStack(singer);
+
+        setHoldingAreaSingers(
+            holdingAreaSingers.map(part => {
+                if(part.id === singer.voice_part_id) {
+                    part.singers.push(singer);
+                }
+                return part;
+            })
+        );
+    }
+
+    function removeSingerFromStack(singer){
+        setData('singer_positions', data.singer_positions.filter(stackSinger => stackSinger.id !== singer.id));
     }
 
     return (
@@ -93,7 +122,12 @@ const RiserStackForm = ({ stack, voiceParts }) => {
 
                         <div className="flex">
                             <div className="w-1/3 border-r border-gray-200">
-                                <RiserStackHoldingArea voiceParts={voiceParts} />
+                                <RiserStackHoldingArea
+                                    singersByVoicePart={holdingAreaSingers}
+                                    setSelectedSinger={setSelectedSinger}
+                                    selectedSinger={selectedSinger}
+                                    moveSelectedSingerToHoldingArea={() => { moveSingerToHoldingArea(selectedSinger); setSelectedSinger(null); }}
+                                />
                             </div>
 
                             <div className="w-2/3">
@@ -104,13 +138,14 @@ const RiserStackForm = ({ stack, voiceParts }) => {
                                     height={500}
                                     frontRowOnFloor={data.front_row_on_floor}
                                     spotsOnFrontRow={parseInt(data.front_row_length)}
-                                    singers={data.singer_positions}
-                                    voiceParts={voiceParts}
+                                    singerPositions={data.singer_positions}
                                     setPositions={value => setData('singer_positions', value)}
+                                    setSelectedSinger={setSelectedSinger}
+                                    selectedSinger={selectedSinger}
+                                    removeSingerFromHoldingArea={removeSingerFromHoldingArea}
                                 />
                             </div>
                         </div>
-
 
                     </div>
 
