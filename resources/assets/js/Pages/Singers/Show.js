@@ -9,6 +9,7 @@ import classNames from "../../classNames";
 import Dialog from "../../components/Dialog";
 import RadioGroup from "../../components/inputs/RadioGroup";
 import {usePage} from "@inertiajs/inertia-react";
+import AppHead from "../../components/AppHead";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -98,6 +99,7 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
                 options={categories.map(category => ({ ...category, icon: 'circle'}))}
                 selected={selectedCategory}
                 setSelected={setSelectedCategory}
+                vertical
             />
         </Dialog>
     );
@@ -110,6 +112,7 @@ const Show = ({ singer, categories }) => {
 
     return (
         <>
+            <AppHead title={`${singer.user.name} - Singers`} />
             <PageHeader
                 title={singer.user.name}
                 image={singer.user.avatar_url}
@@ -391,6 +394,6 @@ const Show = ({ singer, categories }) => {
     );
 }
 
-Show.layout = page => <Layout children={page} title="Singers" />
+Show.layout = page => <Layout children={page} />
 
 export default Show;

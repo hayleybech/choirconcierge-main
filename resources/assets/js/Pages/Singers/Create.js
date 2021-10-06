@@ -13,6 +13,7 @@ import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import PageHeader from "../../components/PageHeader";
+import AppHead from "../../components/AppHead";
 
 const Create = ({voice_parts, roles}) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -39,6 +40,7 @@ const Create = ({voice_parts, roles}) => {
 
     return (
         <>
+            <AppHead title="Add Singer" />
             <PageHeader
                 title={'Create Singer'}
                 icon="fa-users"
@@ -92,7 +94,7 @@ const Create = ({voice_parts, roles}) => {
                             <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
                                 <div className="sm:col-span-3">
                                     <Label label="Voice part" forInput="voice_part_id" />
-                                    <Select name="voice_part_id" options={voice_parts} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
+                                    <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
                                     {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
                                 </div>
 
@@ -160,6 +162,6 @@ const Create = ({voice_parts, roles}) => {
     );
 }
 
-Create.layout = page => <Layout children={page} title="Singers" />
+Create.layout = page => <Layout children={page} />
 
 export default Create;

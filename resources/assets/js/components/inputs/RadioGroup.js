@@ -2,12 +2,12 @@ import React from 'react';
 import { RadioGroup as BaseRadioGroup } from '@headlessui/react'
 import classNames from "../../classNames";
 
-const RadioGroup = ({ label, options, selected, setSelected }) => {
+const RadioGroup = ({ label, options, selected, setSelected, vertical }) => {
 
     return (
         <BaseRadioGroup value={selected} onChange={setSelected}>
             <BaseRadioGroup.Label>{label}</BaseRadioGroup.Label>
-            <div className="bg-white rounded-md -space-y-px">
+            <div className={classNames('mt-1 bg-white rounded-md -space-y-px flex', vertical ? 'flex-col' : 'flex-col md:flex-row' )}>
                 {options.map((option, index) => (
                     <BaseRadioGroup.Option
                         key={option.name}
@@ -17,7 +17,7 @@ const RadioGroup = ({ label, options, selected, setSelected }) => {
                                 index === 0 ? 'rounded-tl-md rounded-tr-md' : '',
                                 index === options.length - 1 ? 'rounded-bl-md rounded-br-md' : '',
                                 checked ? 'bg-purple-100 border-purple-300 z-10' : 'border-gray-200',
-                                'relative border p-4 flex cursor-pointer focus:outline-none'
+                                'relative border p-4 flex cursor-pointer focus:outline-none flex-grow'
                             )
                         }
                     >
@@ -31,7 +31,7 @@ const RadioGroup = ({ label, options, selected, setSelected }) => {
                                     )}
                                     aria-hidden="true"
                                 >
-                                  <span className="rounded-full bg-white w-1.5 h-1.5" />
+                                  <span className="rounded-full bg-white w-1.5 h-1.5 flex-shrink-0" />
                                 </span>
                                 <div className="ml-3 flex flex-col">
                                     <BaseRadioGroup.Label

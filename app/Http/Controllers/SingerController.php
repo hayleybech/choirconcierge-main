@@ -71,23 +71,22 @@ class SingerController extends Controller
 	{
 		$this->authorize('create', Singer::class);
 
-		$voice_parts =
-			[0 => 'None'] +
-			VoicePart::all()
-				->pluck('title', 'id')
-				->toArray();
+		$voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
 		$roles = Role::where('name', '!=', 'User')->get();
 
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Singers/Create', [
-                'voice_parts' => $voice_parts,
-                'roles' => $roles,
+                'voice_parts' => $voice_parts->values(),
+                'roles' => $roles->values(),
             ]);
         }
 
-		return view('singers.create', compact('voice_parts', 'roles'));
+		return view('singers.create', [
+		    'voice_parts' => $voice_parts->pluck('title', 'id')->toArray(),
+            'roles' => $roles,
+        ]);
 	}
 
 	public function store(UserRequest $request): RedirectResponse
@@ -157,11 +156,7 @@ class SingerController extends Controller
 
         $singer->load('user', 'voice_part', 'category', 'roles');
 
-		$voice_parts =
-			[0 => 'None'] +
-			VoicePart::all()
-				->pluck('title', 'id')
-				->toArray();
+        $voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
 
 		$roles = Role::where('name', '!=', 'User')->get();
 
@@ -169,13 +164,17 @@ class SingerController extends Controller
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Singers/Edit', [
-                'voice_parts' => $voice_parts,
-                'roles' => $roles,
+                'voice_parts' => $voice_parts->values(),
+                'roles' => $roles->values(),
                 'singer' => $singer,
             ]);
         }
 
-		return view('singers.edit', compact('singer', 'voice_parts', 'roles'));
+		return view('singers.edit', [
+		    'singer' => $singer,
+            'voice_parts' => $voice_parts->pluck('title', 'id')->toArray(),
+            'roles' => $roles,
+        ]);
 	}
 	public function update(Singer $singer, SingerRequest $request): RedirectResponse
 	{

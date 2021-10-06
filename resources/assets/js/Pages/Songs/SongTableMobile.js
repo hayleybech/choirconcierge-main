@@ -14,7 +14,7 @@ const SongTableMobile = ({ songs }) => (
                     <div className="flex items-center px-4 py-4 sm:px-6">
                         <div className="min-w-0 flex-1 flex items-center">
                             <div className="flex-shrink-0">
-                                <PitchButton note={song.pitch.split('/')[0]} />
+                                <PitchButton note={song.pitch.split('/')[0]} size="sm" />
                             </div>
                             <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
                                 <div>

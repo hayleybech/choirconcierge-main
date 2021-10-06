@@ -7,8 +7,6 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title') | {{ config('app.name', 'Choir Concierge') }}</title>
-
     <!-- Styles -->
     <link href="{{ global_asset('/css/app-rebuild.css') }}" rel="stylesheet">
 

@@ -3,9 +3,11 @@ import Layout from "../../Layouts/Layout";
 import SongTableDesktop from "./SongTableDesktop";
 import SongTableMobile from "./SongTableMobile";
 import PageHeader from "../../components/PageHeader";
+import AppHead from "../../components/AppHead";
 
 const Index = ({ songs }) => (
     <>
+        <AppHead title="Songs" />
         <PageHeader
             title="Songs"
             icon="fa-list-music"
@@ -14,8 +16,8 @@ const Index = ({ songs }) => (
                 { name: 'Songs', url: route('songs.index')},
             ]}
             actions={[
-                { label: 'Add New', icon: 'plus', url: ('songs.create'), variant: 'primary'},
-                { label: 'Filter', icon: 'filter', url: route('voice-parts.index')},
+                { label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary'},
+                { label: 'Filter', icon: 'filter', url: '#'},
             ]}
         />
 
@@ -31,6 +33,6 @@ const Index = ({ songs }) => (
     </>
 );
 
-Index.layout = page => <Layout children={page} title="Songs" />
+Index.layout = page => <Layout children={page} />
 
 export default Index;

@@ -47,10 +47,10 @@ const navigation = [
         name: 'Riser Stacks',
         route: 'stacks.index',
         icon: 'fa-people-arrows',
-        can: 'list_riser_stacks',
+        can: 'list_stacks',
         showAsActiveForRoutes: ['stacks'],
         items: [
-            { name: 'Add New', route: 'stacks.create', icon: 'fa-plus-square', can: 'create_riser_stack', showAsActiveForRoutes: ['stacks.create'], },
+            { name: 'Add New', route: 'stacks.create', icon: 'fa-plus-square', can: 'create_stack', showAsActiveForRoutes: ['stacks.create'], },
         ]
     },
     {

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Folder;
+use App\Models\RiserStack;
 use App\Models\Role;
 use App\Models\Singer;
 use App\Models\Song;
@@ -13,7 +14,6 @@ use App\Models\UserGroup;
 use App\Models\VoicePart;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-use PhpOffice\PhpSpreadsheet\Calculation\Token\Stack;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -60,8 +60,8 @@ class HandleInertiaRequests extends Middleware
                 'list_attendances' => auth()->user()?->can('viewAny', Attendance::class),
                 'list_folders' => auth()->user()?->can('viewAny', Folder::class),
                 'create_folder' => auth()->user()?->can('create', Folder::class),
-                'list_stacks' => auth()->user()?->can('viewAny', Stack::class),
-                'create_stack' => auth()->user()?->can('create', Stack::class),
+                'list_stacks' => auth()->user()?->can('viewAny', RiserStack::class),
+                'create_stack' => auth()->user()?->can('create', RiserStack::class),
                 'list_groups' => auth()->user()?->can('viewAny', UserGroup::class),
                 'create_group' => auth()->user()?->can('create', UserGroup::class),
                 'list_tasks' => auth()->user()?->can('viewAny', Task::class),

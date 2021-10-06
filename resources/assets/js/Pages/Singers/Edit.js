@@ -12,6 +12,7 @@ import FormSection from "../../components/FormSection";
 import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
+import AppHead from "../../components/AppHead";
 
 const Edit = ({ voice_parts, roles, singer }) => {
     const { data, setData, put, processing, errors } = useForm({
@@ -32,6 +33,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
 
     return (
         <>
+            <AppHead title={`Edit - ${singer.user.name}`} />
             <PageHeader
                 title={'Edit Singer'}
                 icon="fa-users"
@@ -53,7 +55,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
                             <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
                                 <div className="sm:col-span-3">
                                     <Label label="Voice part" forInput="voice_part_id" />
-                                    <Select name="voice_part_id" options={voice_parts} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
+                                    <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
                                     {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
                                 </div>
 
@@ -117,6 +119,6 @@ const Edit = ({ voice_parts, roles, singer }) => {
     );
 }
 
-Edit.layout = page => <Layout children={page} title="Singers" />
+Edit.layout = page => <Layout children={page} />
 
 export default Edit;

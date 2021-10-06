@@ -11,22 +11,34 @@ use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class SingerPlacementController extends Controller
 {
 	const PLACEMENT_TASK_ID = 2;
 
-	public function create(Singer $singer): View
+	public function create(Singer $singer): View|Response
 	{
 	    $this->authorize('create', [Placement::class, $singer]);
+	    
+        $singer->load('user');
 
-		$voice_parts =
-			[0 => 'None'] +
-			VoicePart::all()
-				->pluck('title', 'id')
-				->toArray();
+		$voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
 
-		return view('singers.createplacement', compact('singer', 'voice_parts'));
+        if(config('features.rebuild')) {
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Singers/Placements/Create', [
+                'singer' => $singer,
+                'voice_parts' => $voice_parts->values(),
+            ]);
+        }
+
+		return view('singers.createplacement', [
+		    'singer' => $singer,
+            'voice_parts' => $voice_parts->pluck('title', 'id')->toArray(),
+        ]);
 	}
 
 	public function store(Singer $singer, PlacementRequest $request): RedirectResponse
@@ -52,16 +64,29 @@ class SingerPlacementController extends Controller
 			->with(['status' => 'Voice Placement created. ']);
 	}
 
-	public function edit(Singer $singer, Placement $placement, Request $request): View
+	public function edit(Singer $singer, Placement $placement, Request $request): View|Response
 	{
         $this->authorize('update', $placement);
 
-		$voice_parts =
-			[0 => 'None'] +
-			VoicePart::all()
-				->pluck('title', 'id')
-				->toArray();
-		return view('singers.editplacement', compact('singer', 'placement', 'voice_parts'));
+        $singer->load('user');
+
+        $voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
+
+        if(config('features.rebuild')) {
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Singers/Placements/Edit', [
+                'singer' => $singer,
+                'placement' => $placement,
+                'voice_parts' => $voice_parts->values(),
+            ]);
+        }
+
+		return view('singers.editplacement', [
+		    'singer' => $singer,
+            'placement' => $placement,
+            'voice_parts' => $voice_parts->pluck('title', 'id')->toArray(),
+        ]);
 	}
 
 	public function update(PlacementRequest $request, Singer $singer, Placement $placement): RedirectResponse

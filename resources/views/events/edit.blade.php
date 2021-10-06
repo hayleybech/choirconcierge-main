@@ -101,11 +101,11 @@
                             </div>
 
                             <div class="form-group">
-                                <date-input
+                                <single-date-input
                                     label="Repeat until"
                                     input-name="repeat_until_input"
                                     output-name="repeat_until"
-                                    :value="'{{ old('repeat_until_input', $event->repeat_until) }}'"
+                                    init-value="'{{ old('repeat_until_input', $event->repeat_until) }}' ? new Date('{{ old('repeat_until_input', $event->repeat_until) }}') : null"
                                 />
                             </div>
 

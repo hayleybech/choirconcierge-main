@@ -10,15 +10,25 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class RiserStackController extends Controller
 {
-	public function index(Request $request): View
+	public function index(Request $request): View|Response
 	{
 		$this->authorize('viewAny', RiserStack::class);
 
 		// Base query
 		$stacks = RiserStack::all();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('RiserStacks/Index', [
+                'stacks' => $stacks->values(),
+            ]);
+        }
 
 		return view('stacks.index', compact('stacks'));
 	}
@@ -60,7 +70,7 @@ class RiserStackController extends Controller
 		return view('stacks.show', compact('stack', 'voice_parts'));
 	}
 
-	public function edit(RiserStack $stack): View
+	public function edit(RiserStack $stack): View|Response
 	{
 		$this->authorize('update', $stack);
 
@@ -78,6 +88,15 @@ class RiserStackController extends Controller
             'singers.user',
 		])->get();
         $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('RiserStacks/Edit', [
+                'stack' => $stack,
+                'voice_parts' => $voice_parts->values(),
+            ]);
+        }
 
 		return view('stacks.edit', compact('stack', 'voice_parts'));
 	}
