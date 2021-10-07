@@ -52,8 +52,15 @@ class VoicePartController extends Controller
 		return view('voice-parts.show')->with(compact('voice_part'));
 	}
 
-	public function edit(VoicePart $voice_part): View
+	public function edit(VoicePart $voice_part): View|Response
 	{
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('VoiceParts/Edit', [
+                'voice_part' => $voice_part,
+            ]);
+        }
 		return view('voice-parts.edit')->with(compact('voice_part'));
 	}
 	public function update(Request $request, VoicePart $voice_part): RedirectResponse
@@ -65,7 +72,7 @@ class VoicePartController extends Controller
 		$voice_part->update($data);
 
 		return redirect()
-			->route('voice-parts.show', $voice_part)
+			->route('voice-parts.index', $voice_part)
 			->with(['status' => 'Voice part saved.']);
 	}
 

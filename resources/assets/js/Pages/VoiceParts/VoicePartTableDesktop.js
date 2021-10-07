@@ -41,7 +41,7 @@ const VoicePartTableDesktop = ({ voiceParts }) => (
                                         <Swatch colour={voicePart.colour} />
                                     </div>
                                     <div className="ml-4">
-                                        <Link href={route('voice-parts.show', voicePart.id)} className="text-sm font-medium text-purple-800">{voicePart.title}</Link>
+                                        <Link href={route('voice-parts.edit', voicePart.id)} className="text-sm font-medium text-purple-800">{voicePart.title}</Link>
                                     </div>
                                 </div>
                             </td>

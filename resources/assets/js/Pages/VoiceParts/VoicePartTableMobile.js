@@ -6,7 +6,7 @@ const VoicePartTableMobile = ({ voiceParts }) => (
     <ul className="divide-y divide-gray-200">
         {voiceParts.map((voicePart) => (
             <li key={voicePart.id}>
-                <Link href={route('voice-parts.show', voicePart.id)} className="block hover:bg-gray-50">
+                <Link href={route('voice-parts.edit', voicePart.id)} className="block hover:bg-gray-50">
                     <div className="flex items-center px-4 py-4 sm:px-6">
                         <div className="min-w-0 flex-1 flex items-center">
                             <div className="flex-shrink-0">
