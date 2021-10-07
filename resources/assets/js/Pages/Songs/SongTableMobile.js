@@ -1,16 +1,13 @@
 import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
-import SingerCategoryTag from "../../components/SingerCategoryTag";
-import VoicePartTag from "../../components/VoicePartTag";
 import PitchButton from "../../components/PitchButton";
 import SongStatusTag from "../../components/SongStatusTag";
-import {DateTime} from "luxon";
 
 const SongTableMobile = ({ songs }) => (
     <ul className="divide-y divide-gray-200">
         {songs.map((song) => (
             <li key={song.id}>
-                <Link href={route('singers.show', song.id)} className="block hover:bg-gray-50">
+                <Link href={route('songs.show', song.id)} className="block hover:bg-gray-50">
                     <div className="flex items-center px-4 py-4 sm:px-6">
                         <div className="min-w-0 flex-1 flex items-center">
                             <div className="flex-shrink-0">
