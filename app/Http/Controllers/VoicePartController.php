@@ -6,6 +6,8 @@ use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class VoicePartController extends Controller
 {
@@ -14,9 +16,17 @@ class VoicePartController extends Controller
 		$this->authorizeResource(VoicePart::class, 'voice_part');
 	}
 
-	public function index(): View
+	public function index(): View|Response
 	{
-		$parts = VoicePart::all();
+		$parts = VoicePart::withCount('singers')->get();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('VoiceParts/Index', [
+                'parts' => $parts->values(),
+            ]);
+        }
 		return view('voice-parts.index')->with(compact('parts'));
 	}
 
