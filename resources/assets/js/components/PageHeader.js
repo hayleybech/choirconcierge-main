@@ -58,7 +58,7 @@ const PageHeader = ({title, image, icon, meta, breadcrumbs, actions = []}) => (
                                 <Menu.Items className="origin-top-right absolute right-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     {actions.map((action, key) =>
                                         key > 0 && (
-                                        <Menu.Item>
+                                        <Menu.Item key={key}>
                                             {({ active }) => (
                                                 <button
                                                     onClick={action.onClick}

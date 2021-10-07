@@ -45,7 +45,7 @@ const Range = ({ value, min, max, minLabel, maxLabel }) => (
 const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
     <dl className={classNames("grid grid-cols-1 gap-x-4 gap-y-8", gridCols)}>
         {items.map(({ label, value, colClass = "sm:col-span-1" }) => (
-            <div className={colClass}>
+            <div key={label} className={colClass}>
                 <dt className="text-sm font-medium text-gray-500">
                     {label}
                 </dt>
@@ -223,7 +223,7 @@ const Show = ({ singer, categories }) => {
                                     label: 'Roles',
                                     value: <>
                                         {singer.roles.map(role => (
-                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-800 mr-1.5 mb-1.5">
+                                            <span key={role.name} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-800 mr-1.5 mb-1.5">
                                             {role.name.split(' ')[0]}
                                         </span>
                                         ))}
@@ -275,28 +275,28 @@ const Show = ({ singer, categories }) => {
                                     <ol role="list" className="space-y-6">
                                         {singer.tasks.map((task, index, tasks) => (
                                             <li key={index}>
-                                        <span className="flex items-center">
-                                            <span className="flex-shrink-0 h-5 w-5 relative flex items-center justify-center" aria-hidden="true">
-                                                {task.pivot.completed
-                                                && <i className="fas fa-fw fa-check-circle text-purple-600 text-sm" />
-                                                || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
-                                                    <span className="absolute h-4 w-4 rounded-full bg-purple-200" />
-                                                    <span className="relative block w-2 h-2 bg-purple-600 rounded-full" />
-                                                </>
-                                                || <div className="h-2 w-2 bg-gray-300 rounded-full group-hover:bg-gray-400" />
-                                                }
-                                            </span>
-                                            {task.pivot.completed
-                                            && <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
-                                            || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
-                                                <span className="ml-3 text-sm font-medium text-purple-600">{task.name}</span>
-                                                {task.can['complete'] && (
-                                                    <ButtonLink href={route(task.route, [singer.id, task.id])} size="xs" className="ml-3">Complete</ButtonLink>
-                                                )}
-                                            </>
-                                            || <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
-                                            }
-                                        </span>
+                                                <span className="flex items-center">
+                                                    <span className="flex-shrink-0 h-5 w-5 relative flex items-center justify-center" aria-hidden="true">
+                                                        {task.pivot.completed
+                                                        && <i className="fas fa-fw fa-check-circle text-purple-600 text-sm" />
+                                                        || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
+                                                            <span className="absolute h-4 w-4 rounded-full bg-purple-200" />
+                                                            <span className="relative block w-2 h-2 bg-purple-600 rounded-full" />
+                                                        </>
+                                                        || <div className="h-2 w-2 bg-gray-300 rounded-full group-hover:bg-gray-400" />
+                                                        }
+                                                    </span>
+                                                    {task.pivot.completed
+                                                    && <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
+                                                    || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
+                                                        <span className="ml-3 text-sm font-medium text-purple-600">{task.name}</span>
+                                                        {task.can['complete'] && (
+                                                            <ButtonLink href={route(task.route, [singer.id, task.id])} size="xs" className="ml-3">Complete</ButtonLink>
+                                                        )}
+                                                    </>
+                                                    || <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
+                                                    }
+                                                </span>
                                             </li>
                                         ))}
                                     </ol>
