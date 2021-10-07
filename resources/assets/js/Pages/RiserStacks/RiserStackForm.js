@@ -132,6 +132,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
 
                             <div className="w-2/3">
                                 <RiserStackEditor
+                                    editing
                                     rows={parseInt(data.rows)}
                                     columns={parseInt(data.columns)}
                                     width={1000}

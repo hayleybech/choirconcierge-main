@@ -57,15 +57,28 @@ class RiserStackController extends Controller
 			->with(['status' => 'Riser stack created. ']);
 	}
 
-	public function show(RiserStack $stack): View
+	public function show(RiserStack $stack): View|Response
 	{
 		$this->authorize('view', $stack);
 
 		$stack->load('singers.user');
         $stack->singers->each->append('user_avatar_thumb_url');
 
+        $stack->can = [
+            'update_stack' => auth()->user()?->can('update', $stack),
+            'delete_stack' => auth()->user()?->can('delete', $stack),
+        ];
+
 		$voice_parts = VoicePart::with(['singers.user'])->get();
         $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('RiserStacks/Show', [
+                'stack' => $stack,
+            ]);
+        }
 
 		return view('stacks.show', compact('stack', 'voice_parts'));
 	}

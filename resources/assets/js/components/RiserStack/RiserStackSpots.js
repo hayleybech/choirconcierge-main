@@ -4,7 +4,7 @@ import RiserStackSpot from "./RiserStackSpot";
 import RiserStackSinger from "./RiserStackSinger";
 
 const RiserStackSpots = ({
-    rows, spotsOnFrontRow, totalAngularWidth, risersStartRadius, rowHeightAlongRadius, origin, singers, selectedSinger, setSelectedSinger, moveSelectedSingerTo
+    editing, rows, spotsOnFrontRow, totalAngularWidth, risersStartRadius, rowHeightAlongRadius, origin, singers, selectedSinger, setSelectedSinger, moveSelectedSingerTo
 }) => {
     const spots = createSpots(rows);
 
@@ -83,8 +83,9 @@ const RiserStackSpots = ({
                     cx={spot.centre.x}
                     cy={spot.centre.y}
                     radius={spot.radius}
+                    editing={editing}
                     enableTarget={!!selectedSinger}
-                    onClick={selectedSinger ? () => moveSelectedSingerTo({ row: spot.row, column: spot.column }) : null
+                    onClick={editing && selectedSinger ? () => moveSelectedSingerTo({ row: spot.row, column: spot.column }) : null
                     }
                 >
                     {spot.singer &&
@@ -93,7 +94,7 @@ const RiserStackSpots = ({
                             name={spot.singer.user.name}
                             imageUrl={spot.singer.user_avatar_thumb_url}
                             radius={spot.radius}
-                            onClick={!selectedSinger ? () => {console.log('set selected'); setSelectedSinger(spot.singer)} : null}
+                            onClick={editing && !selectedSinger ? () => {console.log('set selected'); setSelectedSinger(spot.singer)} : null}
                             isSelected={selectedSinger?.id === spot.singer.id}
                         />
                     }
