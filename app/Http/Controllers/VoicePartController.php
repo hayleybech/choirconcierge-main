@@ -30,8 +30,13 @@ class VoicePartController extends Controller
 		return view('voice-parts.index')->with(compact('parts'));
 	}
 
-	public function create(): View
+	public function create(): View|Response
 	{
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('VoiceParts/Create');
+        }
 		return view('voice-parts.create');
 	}
 

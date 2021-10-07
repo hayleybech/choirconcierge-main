@@ -10,7 +10,7 @@ const Index = ({ parts }) => (
         <AppHead title="Voice Parts" />
         <PageHeader
             title="Voice Parts"
-            icon="fa-list-music"
+            icon="fa-users-class"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Voice Parts', url: route('voice-parts.index')},

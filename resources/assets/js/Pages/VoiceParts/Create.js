@@ -4,24 +4,23 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import VoicePartForm from "./VoicePartForm";
 
-const Edit = ({ voice_part: voicePart }) => (
+const Create = () => (
     <>
-        <AppHead title={`Edit - ${voicePart.title}`} />
+        <AppHead title="Create Voice Part" />
         <PageHeader
-            title="Edit Voice Part"
+            title="Create Voice Part"
             icon="fa-users-class"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Voice Parts', url: route('voice-parts.index')},
-                { name: voicePart.title, url: '#'},
-                { name: 'Edit', url: route('voice-parts.edit', voicePart)},
+                { name: 'Create', url: route('voice-parts.create')},
             ]}
         />
 
-        <VoicePartForm voicePart={voicePart} />
+        <VoicePartForm />
     </>
 );
 
-Edit.layout = page => <Layout children={page} />
+Create.layout = page => <Layout children={page} />
 
-export default Edit;
+export default Create;
