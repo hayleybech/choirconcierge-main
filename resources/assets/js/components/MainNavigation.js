@@ -3,7 +3,7 @@ import route from "ziggy-js";
 import classNames from "../classNames";
 import React from "react";
 
-const MainNavigation = ({navigation}) => (
+const MainNavigation = ({ navigation, closeSidebar }) => (
     <nav className="flex-1 px-4 space-y-1">
         {navigation.map((item) => (
             <div key={item.name}>
@@ -13,6 +13,7 @@ const MainNavigation = ({navigation}) => (
                         item.active ? 'bg-purple-800 text-white' : 'text-white text-opacity-80 hover:bg-white hover:bg-opacity-90 hover:text-brand-purple-dark',
                         'group flex items-center px-2 py-2 text-base uppercase font-bold rounded-md'
                     )}
+                    onClick={closeSidebar}
                 >
                     <i className={"fas fa-fw mr-4 " + item.icon} aria-hidden="true" />
                     {item.name}
@@ -29,6 +30,7 @@ const MainNavigation = ({navigation}) => (
                                         : 'text-opacity-90 font-light hover:bg-white hover:bg-opacity-90 hover:text-brand-purple-dark',
                                     'px-6 py-1.5 rounded-md text-base text-white'
                                 )}
+                                onClick={closeSidebar}
                             >
                                 <i className={"far fa-fw mr-3 " + child.icon} /> {child.name}
                             </Link>

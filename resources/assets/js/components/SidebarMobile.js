@@ -61,7 +61,7 @@ const SidebarMobile = ({navigation, open, setOpen}) => (
                     </div>
 
                     <div className="mt-5 flex-1 h-0 overflow-y-auto">
-                        <MainNavigation navigation={navigation} />
+                        <MainNavigation navigation={navigation} closeSidebar={() => setOpen(false)} />
                     </div>
                 </div>
             </Transition.Child>
