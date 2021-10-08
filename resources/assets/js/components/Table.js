@@ -22,7 +22,7 @@ const Table = ({ headings, body }) => (
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
-                            {headings.map((heading) => (<TableHeading>{heading}</TableHeading>))}
+                            {headings.map((heading) => (<TableHeading key={heading}>{heading}</TableHeading>))}
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
