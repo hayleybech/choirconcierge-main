@@ -16,7 +16,10 @@ const SingerTableDesktop = ({ singers }) => (
                         </div>
                         <div className="ml-4">
                             <Link href={route('singers.show', singer.id)} className="text-sm font-medium text-purple-800">{singer.user.name}</Link>
-                            <div><i className="fas fa-fw fa-phone mr-1.5" /> {singer.user.phone ?? 'No phone'}</div>
+                            <div>
+                                <i className="fas fa-fw fa-phone mr-1.5" />
+                                {singer.user.phone ? <a href={`tel:${singer.user.phone}`}>{singer.user.phone}</a> : 'No phone'}
+                            </div>
                         </div>
                     </div>
                 </TableCell>

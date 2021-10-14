@@ -10,6 +10,7 @@ import Dialog from "../../components/Dialog";
 import RadioGroup from "../../components/inputs/RadioGroup";
 import {usePage} from "@inertiajs/inertia-react";
 import AppHead from "../../components/AppHead";
+import Badge from "../../components/Badge";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -161,7 +162,8 @@ const Show = ({ singer, categories }) => {
                                             <i className="far fa-fw fa-envelope text-gray-500 mr-2" />{singer.user.email}
                                         </p>
                                         <p>
-                                            <i className="far fa-fw fa-phone text-gray-500 mr-2" />{singer.user.phone ?? 'No phone'}
+                                            <i className="far fa-fw fa-phone text-gray-500 mr-2" />
+                                            {singer.user.phone ? <a href={`tel:${singer.user.phone}`}>{singer.user.phone}</a> : 'No phone'}
                                         </p>
                                     </>,
                                     colClass: 'sm:col-span-2 xl:col-span-1',
@@ -206,7 +208,8 @@ const Show = ({ singer, categories }) => {
                                             <i className="far fa-fw fa-user text-gray-500 mr-2" />{singer.user.ice_name ?? 'No emergency contact'}
                                         </p>
                                         <p>
-                                            <i className="far fa-fw fa-phone text-gray-500 mr-2" />{singer.user.ice_phone ?? 'No phone'}
+                                            <i className="far fa-fw fa-phone text-gray-500 mr-2" />
+                                            {singer.user.ice_phone ? <a href={`tel:${singer.user.ice_phone}`}>{singer.user.ice_phone}</a> : 'No phone'}
                                         </p>
                                     </>,
                                     colClass: 'sm:col-span-2 xl:col-span-1',
@@ -221,13 +224,11 @@ const Show = ({ singer, categories }) => {
                             <DetailList items={[
                                 {
                                     label: 'Roles',
-                                    value: <>
-                                        {singer.roles.map(role => (
-                                            <span key={role.name} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-800 mr-1.5 mb-1.5">
-                                            {role.name.split(' ')[0]}
-                                        </span>
-                                        ))}
-                                    </>,
+                                    value: (
+                                        <div className="space-x-1.5 space-y-1.5">
+                                            {singer.roles.map(role => <Badge key={role.name}>{role.name.split(' ')[0]}</Badge>)}
+                                        </div>
+                                    ),
                                     colClass: 'sm:col-span-2',
                                 },
                                 {

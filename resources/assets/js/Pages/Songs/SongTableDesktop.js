@@ -4,6 +4,7 @@ import SongStatusTag from "../../components/SongStatusTag";
 import PitchButton from "../../components/PitchButton";
 import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
+import Badge from "../../components/Badge";
 
 const SongTableDesktop = ({ songs }) => (
     <Table
@@ -24,14 +25,9 @@ const SongTableDesktop = ({ songs }) => (
                     <SongStatusTag name={song.status.title} colour={song.status.colour} withLabel />
                 </TableCell>
                 <TableCell>
-                    {song.categories.map(category => (
-                        <span
-                            key={category.id}
-                            className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-800 mr-1.5 mb-1.5"
-                        >
-                            {category.title}
-                        </span>
-                    ))}
+                    <div className="space-x-1.5 space-y-1.5">
+                        {song.categories.map(category => (<Badge key={category.id}>{category.title}</Badge>))}
+                    </div>
                 </TableCell>
                 <TableCell>
                     {DateTime.fromJSDate(new Date(song.created_at)).toLocaleString(DateTime.DATE_MED)}
