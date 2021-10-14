@@ -15,6 +15,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class UserGroupController extends Controller
 {
@@ -25,10 +27,19 @@ class UserGroupController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 */
-	public function index(): View
+	public function index(): View|Response
 	{
-		$groups = UserGroup::all()->sortBy('title');
+		$groups = UserGroup::with('tenant')->orderBy('title')->get();
 		$filters = [];
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('MailingLists/Index', [
+                'lists' => $groups->values(),
+            ]);
+        }
+
 		return view('groups.index', compact('groups', 'filters'));
 	}
 

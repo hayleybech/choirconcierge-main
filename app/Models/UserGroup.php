@@ -54,6 +54,8 @@ class UserGroup extends Model
 	 */
 	protected $fillable = ['title', 'slug', 'list_type'];
 
+    protected $appends = ['email', 'type_icon'];
+
 	public static function create(array $attributes = [])
 	{
 		/** @var UserGroup $group */
@@ -201,6 +203,15 @@ class UserGroup extends Model
 	{
 		return $this->slug . '@' . $this->tenant->host;
 	}
+
+	public function getTypeIconAttribute(): string
+    {
+        return match($this->list_type) {
+            'public' => 'fa-envelope-open-text',
+            'chat' => 'fa-comments',
+            'distribution' => 'fa-paper-plane',
+        };
+    }
 
 	/**
 	 * @return Collection<User>
