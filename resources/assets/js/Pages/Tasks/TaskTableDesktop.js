@@ -6,24 +6,25 @@ import Badge from "../../components/Badge";
 
 const MailingListTableDesktop = ({ tasks }) => (
     <Table
-        headings={['Title', 'Type', 'Address', 'Created']}
-        body={tasks.map((list) => (
-            <tr key={list.id}>
+        headings={['Title', 'Role', 'Type', 'Created']}
+        body={tasks.map((task) => (
+            <tr key={task.id}>
                 <TableCell>
                     <div className="flex items-center">
                         <div className="ml-4">
-                            <Link href={route('groups.show', list.id)} className="text-sm font-medium text-purple-800">{list.title}</Link>
+                            <Link href={route('groups.show', task.id)} className="text-sm font-medium text-purple-800">{task.name}</Link>
                         </div>
                     </div>
                 </TableCell>
                 <TableCell>
-                    <i className={`fas fa-fw mr-1.5 ${list.type_icon}`} />{list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}
+                    {task.role.name}
                 </TableCell>
                 <TableCell>
-                    <strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span>
+                    {task.type[0].toUpperCase() + task.type.slice(1)}
+                    {task.type === 'form' && <span className="text-xs ml-1.5">({task.route})</span>}
                 </TableCell>
                 <TableCell>
-                    {DateTime.fromJSDate(new Date(list.created_at)).toLocaleString(DateTime.DATE_MED)}
+                    {DateTime.fromJSDate(new Date(task.created_at)).toLocaleString(DateTime.DATE_MED)}
                 </TableCell>
             </tr>
         ))}

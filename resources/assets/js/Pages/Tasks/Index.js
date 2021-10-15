@@ -2,31 +2,31 @@ import React from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
-import EventTableDesktop from "./EventTableDesktop";
-import EventTableMobile from "./EventTableMobile";
+import TaskTableDesktop from "./TaskTableDesktop";
+import TaskTableMobile from "./TaskTableMobile";
 
-const Index = ({ events }) => (
+const Index = ({ tasks }) => (
     <>
-        <AppHead title="Events" />
+        <AppHead title="Onboarding" />
         <PageHeader
-            title="Events"
-            icon="fa-calendar-alt"
+            title="Onboarding Tasks"
+            icon="fa-tasks"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
-                { name: 'Events', url: route('events.index')},
+                { name: 'Tasks', url: route('tasks.index')},
             ]}
             actions={[
-                { label: 'Add New', icon: 'calendar-plus', url: route('events.create'), variant: 'primary'},
+                { label: 'Add New', icon: 'plus', url: route('tasks.create'), variant: 'primary'},
                 { label: 'Filter', icon: 'filter', url: '#'},
             ]}
         />
 
         <div className="hidden lg:flex flex-col">
-            <EventTableDesktop events={events} />
+            <TaskTableDesktop tasks={tasks} />
         </div>
 
         <div className="bg-white shadow overflow-hidden block lg:hidden">
-            <EventTableMobile events={events} />
+            <TaskTableMobile tasks={tasks} />
         </div>
     </>
 );

@@ -22,7 +22,7 @@ const Index = ({ lists }) => (
         />
 
         <div className="hidden lg:flex flex-col">
-            <MailingListTableDesktop lists={lists} />
+            <MailingListTableDesktop tasks={lists} />
         </div>
 
         <div className="bg-white shadow overflow-hidden block lg:hidden">
