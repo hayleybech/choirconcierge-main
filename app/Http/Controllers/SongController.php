@@ -159,7 +159,7 @@ class SongController extends Controller
                         ->with('songs')
                         ->whereHas('songs', function (Builder $query) use ($song) {
                             $query->where('songs.id', $song->id)
-                                ->where('singer_song.status', 'assessment-ready');
+                                ->where('singer_song.status', 'performance-ready');
                         });
                 }
             ])->get();
