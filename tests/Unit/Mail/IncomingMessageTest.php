@@ -241,6 +241,7 @@ class IncomingMessageTest extends TestCase
 	{
 		// Arrange
 		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
+        $tenant->domains()->create(['domain' => 'test-tenant']);
 
 		$tenant->run(
 			fn() => UserGroup::create([
@@ -267,6 +268,7 @@ class IncomingMessageTest extends TestCase
 	{
 		// Arrange
 		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
+        $tenant->domains()->create(['domain' => 'test-tenant']);
 
 		$tenant->run(function () {
 			UserGroup::create([
@@ -298,6 +300,7 @@ class IncomingMessageTest extends TestCase
 	{
 		// Arrange
 		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
+        $tenant->domains()->create(['domain' => 'test-tenant']);
 
 		$tenant->run(function () {
 			UserGroup::create([
@@ -336,6 +339,7 @@ class IncomingMessageTest extends TestCase
 	{
 		// Arrange
 		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
+        $tenant->domains()->create(['domain' => 'test-tenant']);
 
 		$tenant->run(function () {
 			UserGroup::create([
@@ -374,7 +378,9 @@ class IncomingMessageTest extends TestCase
 	{
 		// Arrange
 		$tenant_1 = Tenant::create('test-tenant-1', 'Test Tenant 1', 'Australia/Perth');
+        $tenant_1->domains()->create(['domain' => 'test-tenant-1']);
 		$tenant_2 = Tenant::create('test-tenant-2', 'Test Tenant 2', 'Australia/Perth');
+        $tenant_2->domains()->create(['domain' => 'test-tenant-2']);
 
 		$tenant_1->run(function () {
 			UserGroup::create([
@@ -408,6 +414,7 @@ class IncomingMessageTest extends TestCase
 	{
 		// Arrange
 		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
+        $tenant->domains()->create(['domain' => 'test-tenant']);
 
 		$tenant->run(function () {
 			UserGroup::create([
@@ -421,7 +428,6 @@ class IncomingMessageTest extends TestCase
 				'list_type' => 'chat',
 			]);
 		});
-		$tenant->domains()->create(['domain' => 'test-tenant']);
 
 		$message = (new IncomingMessage())
 			->to(['test-group-1@test-tenant.'.central_domain(), 'test-group-2@dummy-tenant.'.central_domain()])
@@ -440,6 +446,7 @@ class IncomingMessageTest extends TestCase
 	{
 		// Arrange
 		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
+        $tenant->domains()->create(['domain' => 'test-tenant']);
 
 		$tenant->run(function () {
 			UserGroup::create([
