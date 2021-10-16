@@ -7,6 +7,8 @@ use App\Models\Folder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class FolderController extends Controller
 {
@@ -15,12 +17,7 @@ class FolderController extends Controller
 		$this->authorizeResource(Folder::class, 'folder');
 	}
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return View
-	 */
-	public function index(): View
+	public function index(): View|Response
 	{
 		$folders = Folder::with([
 			'documents' => static function ($query) {
@@ -29,6 +26,14 @@ class FolderController extends Controller
 		])
 			->orderBy('title')
 			->get(); // folders by folder title
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Folders/Index', [
+                'folders' => $folders->values(),
+            ]);
+        }
 
 		return view('folders.index', compact('folders'));
 	}

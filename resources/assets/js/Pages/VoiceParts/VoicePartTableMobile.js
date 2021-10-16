@@ -13,7 +13,7 @@ const VoicePartTableMobile = ({ voiceParts }) => (
                     <div>
                         <div className="flex items-center justify-between">
                             <p className="flex items-center min-w-0 mr-1.5">
-                                <span className="text-sm font-medium text-indigo-600 truncate">{voicePart.title}</span>
+                                <span className="text-sm font-medium text-purple-600 truncate">{voicePart.title}</span>
                             </p>
                             <p className="flex items-center min-w-0 mr-1.5">
                                 <span className="text-sm font-medium text-sm text-gray-500">

@@ -15,7 +15,7 @@ const SongTableMobile = ({ songs }) => (
                         <div className="flex items-center justify-between">
                             <p className="flex items-center min-w-0 mr-1.5">
                                 <SongStatusTag name={song.status.title} colour={song.status.colour} />
-                                <span className="text-sm font-medium text-indigo-600 truncate">{song.title}</span>
+                                <span className="text-sm font-medium text-purple-600 truncate">{song.title}</span>
                             </p>
                         </div>
                     </div>

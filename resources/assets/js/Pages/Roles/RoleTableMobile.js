@@ -6,7 +6,7 @@ const RoleTableMobile = ({ roles }) => (
         {roles.map((role) => (
             <TableMobileItem key={role.id} url={route('roles.edit', role.id)}>
                 <p className="flex items-center min-w-0 mr-1.5">
-                    <span className="text-sm font-medium text-indigo-600 truncate">{role.name}</span>
+                    <span className="text-sm font-medium text-purple-600 truncate">{role.name}</span>
                 </p>
                 <p className="flex items-center min-w-0 mr-1.5">
                     <span className="text-sm font-medium text-sm text-gray-500">

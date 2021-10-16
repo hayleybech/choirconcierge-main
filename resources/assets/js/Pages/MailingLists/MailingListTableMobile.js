@@ -10,7 +10,7 @@ const MailingListTableMobile = ({ lists }) => (
                 <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
                     <div className="flex items-center justify-between">
                         <p className="flex items-center min-w-0 mr-1.5">
-                            <span className="text-sm font-medium text-indigo-600 truncate">{list.title}</span>
+                            <span className="text-sm font-medium text-purple-600 truncate">{list.title}</span>
                         </p>
                         <div className="text-xs text-gray-500 flex-shrink-0">
                             <i className={`fas fa-fw mr-1.5 ${list.type_icon}`} />{list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}

@@ -15,7 +15,7 @@ const SingerTableMobile = ({ singers }) => (
                         <div className="flex items-center justify-between">
                             <p className="flex items-center min-w-0 mr-1.5">
                                 <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} />
-                                <span className="text-sm font-medium text-indigo-600 truncate">{singer.user.name}</span>
+                                <span className="text-sm font-medium text-purple-600 truncate">{singer.user.name}</span>
                             </p>
                             {singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}
                         </div>

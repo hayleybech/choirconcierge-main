@@ -9,7 +9,7 @@ const RiserStackTableMobile = ({ stacks }) => (
                     <div>
                         <div className="flex items-center justify-between">
                             <p className="flex items-center min-w-0 mr-1.5">
-                                <span className="text-sm font-medium text-indigo-600 truncate">{stack.title}</span>
+                                <span className="text-sm font-medium text-purple-600 truncate">{stack.title}</span>
                             </p>
                         </div>
                     </div>

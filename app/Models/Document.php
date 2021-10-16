@@ -23,8 +23,9 @@ use Illuminate\Support\Str;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * Dynamic
+ * Attributes
  * @property string $path
+ * @property string $icon
  *
  * @package App\Models
  */
@@ -36,6 +37,8 @@ class Document extends Model
 	 * The attributes that are mass assignable.
 	 */
 	protected $fillable = ['document_upload'];
+
+	protected $appends = ['download_url', 'icon'];
 
 	public function folder(): BelongsTo
 	{
@@ -72,6 +75,11 @@ class Document extends Model
 	{
 		return Storage::disk('public')->path($this->getPath());
 	}
+
+	public function getIconAttribute(): string
+    {
+        return $this->getFileIcon();
+    }
 
 	public function getPath(): string
 	{
