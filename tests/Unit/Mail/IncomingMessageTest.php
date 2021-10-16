@@ -8,6 +8,7 @@ use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -27,8 +28,7 @@ class IncomingMessageTest extends TestCase
 		// Arrange
 		Mail::fake();
 
-		$tenant = Tenant::create('tenant1', 'Tenant One', 'Australia/Perth');
-		$tenant->domains()->create(['domain' => 'tenant1']);
+		list($tenant) = $this->createTestTenants();
 
 		$group_expected = UserGroup::create([
 			'title' => 'Music Team',
@@ -43,7 +43,7 @@ class IncomingMessageTest extends TestCase
 		$group_expected->recipient_users()->attach([$user1->id]);
 
 		$message = (new IncomingMessage())
-			->to('music-team@tenant1.'.central_domain())
+			->to('music-team@test-tenant-1.'.central_domain())
 			->from('permitted@example.com')
 			->subject('Just a test');
 
@@ -55,7 +55,7 @@ class IncomingMessageTest extends TestCase
 		Mail::assertSent(IncomingMessage::class, 1);
 		Mail::assertSent(IncomingMessage::class, static function ($mail) {
 			$mail->build();
-			return $mail->hasFrom('music-team@tenant1.'.central_domain()) &&
+			return $mail->hasFrom('music-team@test-tenant-1.'.central_domain()) &&
 				$mail->hasReplyTo('permitted@example.com') &&
 				$mail->hasTo('permitted@example.com');
 		});
@@ -67,8 +67,7 @@ class IncomingMessageTest extends TestCase
 		// Arrange
 		Mail::fake();
 
-		$tenant = Tenant::create('tenant1', 'Tenant One', 'Australia/Perth');
-		$tenant->domains()->create(['domain' => 'tenant1']);
+        list($tenant) = $this->createTestTenants();
 
 		$group_expected = UserGroup::create([
 			'title' => 'Music Team',
@@ -93,7 +92,7 @@ class IncomingMessageTest extends TestCase
 		$group_expected->recipient_users()->attach($users->pluck('id'));
 
 		$message = (new IncomingMessage())
-			->to('music-team@tenant1.'.central_domain())
+			->to('music-team@test-tenant-1.'.central_domain())
 			->from('permitted@example.com')
 			->subject('Just a test');
 
@@ -113,8 +112,7 @@ class IncomingMessageTest extends TestCase
 		// Arrange
 		Mail::fake();
 
-		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
-		$tenant->domains()->create(['domain' => 'test-tenant']);
+        list($tenant) = $this->createTestTenants();
 
 		$sender_user = User::factory()->create([
 			'email' => 'sender@example.com',
@@ -145,7 +143,7 @@ class IncomingMessageTest extends TestCase
 		$group_expected_2->recipient_users()->attach([$sender_user->id, $recipient_user_2->id]);
 
 		$message = (new IncomingMessage())
-			->to(['music-team@test-tenant.'.central_domain(), 'membership-team@test-tenant.'.central_domain()])
+			->to(['music-team@test-tenant-1.'.central_domain(), 'membership-team@test-tenant-1.'.central_domain()])
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -157,13 +155,13 @@ class IncomingMessageTest extends TestCase
 		Mail::assertSent(IncomingMessage::class, 4);
 		Mail::assertSent(IncomingMessage::class, static function ($mail) {
 			$mail->build();
-			return $mail->hasFrom('music-team@test-tenant.'.central_domain()) &&
+			return $mail->hasFrom('music-team@test-tenant-1.'.central_domain()) &&
 				$mail->hasReplyTo('sender@example.com') &&
 				$mail->hasTo(['sender@example.com', 'recipient-1@example.com']);
 		});
 		Mail::assertSent(IncomingMessage::class, static function ($mail) {
 			$mail->build();
-			return $mail->hasFrom('membership-team@test-tenant.'.central_domain()) &&
+			return $mail->hasFrom('membership-team@test-tenant-1.'.central_domain()) &&
 				$mail->hasReplyTo('sender@example.com') &&
 				$mail->hasTo(['sender@example.com', 'recipient-2@example.com']);
 		});
@@ -175,11 +173,8 @@ class IncomingMessageTest extends TestCase
 		// Arrange
 		Mail::fake();
 
-		$tenant_1 = Tenant::create('test-tenant-1', 'Test Tenant 1', 'Australia/Perth');
-		$tenant_1->domains()->create(['domain' => 'test-tenant-1']);
-		$tenant_2 = Tenant::create('test-tenant-2', 'Test Tenant 2', 'Australia/Perth');
-		$tenant_2->domains()->create(['domain' => 'test-tenant-2']);
-		tenancy()->end();
+        list($tenant_1, $tenant_2) = $this->createTestTenants(2);
+        tenancy()->end();
 
 		$tenant_1->run(function () {
 			$group_expected_1 = UserGroup::create([
@@ -240,8 +235,7 @@ class IncomingMessageTest extends TestCase
 	public function getMatchingGroups_matches_one_group(): void
 	{
 		// Arrange
-		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
-        $tenant->domains()->create(['domain' => 'test-tenant']);
+        list($tenant) = $this->createTestTenants();
 
 		$tenant->run(
 			fn() => UserGroup::create([
@@ -252,7 +246,7 @@ class IncomingMessageTest extends TestCase
 		);
 
 		$message = (new IncomingMessage())
-			->to('test-group@test-tenant.'.central_domain())
+			->to('test-group@test-tenant-1.'.central_domain())
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -267,8 +261,7 @@ class IncomingMessageTest extends TestCase
 	public function getMatchingGroups_matches_groups_from_the_same_tenant(): void
 	{
 		// Arrange
-		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
-        $tenant->domains()->create(['domain' => 'test-tenant']);
+        list($tenant) = $this->createTestTenants();
 
 		$tenant->run(function () {
 			UserGroup::create([
@@ -284,7 +277,7 @@ class IncomingMessageTest extends TestCase
 		});
 
 		$message = (new IncomingMessage())
-			->to(['test-group-1@test-tenant.'.central_domain(), 'test-group-2@test-tenant.'.central_domain()])
+			->to(['test-group-1@test-tenant-1.'.central_domain(), 'test-group-2@test-tenant-1.'.central_domain()])
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -299,8 +292,7 @@ class IncomingMessageTest extends TestCase
 	public function getMatchingGroups_matches_groups_in_any_recipient_field(): void
 	{
 		// Arrange
-		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
-        $tenant->domains()->create(['domain' => 'test-tenant']);
+        list($tenant) = $this->createTestTenants();
 
 		$tenant->run(function () {
 			UserGroup::create([
@@ -321,9 +313,9 @@ class IncomingMessageTest extends TestCase
 		});
 
 		$message = (new IncomingMessage())
-			->to('test-group-1@test-tenant.'.central_domain())
-			->cc('test-group-2@test-tenant.'.central_domain())
-			->bcc('test-group-3@test-tenant.'.central_domain())
+			->to('test-group-1@test-tenant-1.'.central_domain())
+			->cc('test-group-2@test-tenant-1.'.central_domain())
+			->bcc('test-group-3@test-tenant-1.'.central_domain())
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -338,8 +330,7 @@ class IncomingMessageTest extends TestCase
 	public function getMatchingGroups_matches_groups_in_any_position_in_the_recipient_field(): void
 	{
 		// Arrange
-		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
-        $tenant->domains()->create(['domain' => 'test-tenant']);
+        list($tenant) = $this->createTestTenants();
 
 		$tenant->run(function () {
 			UserGroup::create([
@@ -360,9 +351,9 @@ class IncomingMessageTest extends TestCase
 		});
 
 		$message = (new IncomingMessage())
-			->to(['dummy@example.com', 'test-group-1@test-tenant.'.central_domain()])
-			->cc(['dummy@example.com', 'test-group-2@test-tenant.'.central_domain()])
-			->bcc(['dummy@example.com', 'test-group-3@test-tenant.'.central_domain()])
+			->to(['dummy@example.com', 'test-group-1@test-tenant-1.'.central_domain()])
+			->cc(['dummy@example.com', 'test-group-2@test-tenant-1.'.central_domain()])
+			->bcc(['dummy@example.com', 'test-group-3@test-tenant-1.'.central_domain()])
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -377,10 +368,7 @@ class IncomingMessageTest extends TestCase
 	public function getMatchingGroups_matches_groups_from_any_tenant(): void
 	{
 		// Arrange
-		$tenant_1 = Tenant::create('test-tenant-1', 'Test Tenant 1', 'Australia/Perth');
-        $tenant_1->domains()->create(['domain' => 'test-tenant-1']);
-		$tenant_2 = Tenant::create('test-tenant-2', 'Test Tenant 2', 'Australia/Perth');
-        $tenant_2->domains()->create(['domain' => 'test-tenant-2']);
+        list($tenant_1, $tenant_2) = $this->createTestTenants(2);
 
 		$tenant_1->run(function () {
 			UserGroup::create([
@@ -413,8 +401,7 @@ class IncomingMessageTest extends TestCase
 	public function getMatchingGroups_checks_the_tenant_slug_before_matching(): void
 	{
 		// Arrange
-		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
-        $tenant->domains()->create(['domain' => 'test-tenant']);
+        list($tenant) = $this->createTestTenants();
 
 		$tenant->run(function () {
 			UserGroup::create([
@@ -430,7 +417,7 @@ class IncomingMessageTest extends TestCase
 		});
 
 		$message = (new IncomingMessage())
-			->to(['test-group-1@test-tenant.'.central_domain(), 'test-group-2@dummy-tenant.'.central_domain()])
+			->to(['test-group-1@test-tenant-1.'.central_domain(), 'test-group-2@dummy-tenant.'.central_domain()])
 			->from('sender@example.com')
 			->subject('Just a test');
 
@@ -445,8 +432,7 @@ class IncomingMessageTest extends TestCase
 	public function getMatchingGroups_rejects_groups_that_are_in_both_the_cc_and_from(): void
 	{
 		// Arrange
-		$tenant = Tenant::create('test-tenant', 'Test Tenant', 'Australia/Perth');
-        $tenant->domains()->create(['domain' => 'test-tenant']);
+        list($tenant) = $this->createTestTenants();
 
 		$tenant->run(function () {
 			UserGroup::create([
@@ -458,8 +444,8 @@ class IncomingMessageTest extends TestCase
 
 		$message = (new IncomingMessage())
 			->to('dummy@example.com')
-			->cc('test-group@test-tenant.'.central_domain())
-			->from('test-group@test-tenant.'.central_domain())
+			->cc('test-group@test-tenant-1.'.central_domain())
+			->from('test-group@test-tenant-1.'.central_domain())
 			->subject('Just a test');
 
 		// Act
@@ -468,4 +454,24 @@ class IncomingMessageTest extends TestCase
 		// Assert
 		self::assertCount(0, $groups_found);
 	}
+
+    /**
+     * @param int $numTenants
+     * @return Collection<Tenant>
+     */
+    private function createTestTenants(int $numTenants = 1): Collection
+    {
+        return Collection::times($numTenants, function($index) {
+                return [
+                    'test-tenant-'.$index,
+                    'Test Tenant '.$index,
+                    'Australia/Perth'
+                ];
+            })
+            ->map(function($data) {
+                $tenant = Tenant::create(...$data);
+                $tenant->domains()->create(['domain' => $tenant->id]);
+                return $tenant;
+            });
+    }
 }
