@@ -77,7 +77,7 @@ class VoicePartController extends Controller
 		$voice_part->update($data);
 
 		return redirect()
-			->route('voice-parts.index', $voice_part)
+			->route('voice-parts.index')
 			->with(['status' => 'Voice part saved.']);
 	}
 
