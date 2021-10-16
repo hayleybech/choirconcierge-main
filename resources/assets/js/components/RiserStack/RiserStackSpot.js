@@ -3,11 +3,11 @@ import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../../../../../tailwind.config";
 import classNames from "../../classNames";
 
-const RiserStackSpot = ({ cx, cy, radius, enableTarget, onClick, children }) => {
+const RiserStackSpot = ({ cx, cy, radius, enableTarget, onClick, editing, children }) => {
 	const fullConfig = resolveConfig(tailwindConfig);
 
 	return (
-		<svg x={cx - radius} y={cy - radius} className={classNames('overflow-visible', (enableTarget || children) && 'cursor-pointer')}>
+		<svg x={cx - radius} y={cy - radius} className={classNames('overflow-visible', editing && (enableTarget || children) ? 'cursor-pointer' : '')}>
 		{children ||
 			<circle
 				cx={radius}

@@ -62,8 +62,8 @@
                 @foreach($events as $event)
                 <td>
                     <small>
-                        {{ floor($event->singers_attendance('present')->get()->count() / \App\Models\Singer::all()->count() * 100) }}%<br>
-                        ({{ $event->singers_attendance('present')->get()->count() }}/{{ \App\Models\Singer::all()->count() }})
+                        {{ floor($event->singers_attendance('present')->active()->get()->count() / \App\Models\Singer::active()->count() * 100) }}%<br>
+                        ({{ $event->singers_attendance('present')->active()->get()->count() }}/{{ \App\Models\Singer::active()->count() }})
                     </small>
                 </td>
                 @endforeach

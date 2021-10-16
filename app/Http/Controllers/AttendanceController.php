@@ -16,7 +16,8 @@ class AttendanceController extends Controller
 	{
         $this->authorize('viewAny', Attendance::class);
 
-        $voice_parts = Singer::with([
+        $voice_parts = Singer::active()
+            ->with([
                 'user',
                 'voice_part',
                 'attendances' => function ($query) use ($event) {

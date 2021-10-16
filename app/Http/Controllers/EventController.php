@@ -12,10 +12,12 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class EventController extends Controller
 {
-	public function index(Request $request): View
+	public function index(Request $request): View|Response
 	{
 		$this->authorize('viewAny', Event::class);
 
@@ -46,6 +48,14 @@ class EventController extends Controller
 		} else {
 			$all_events = $all_events->sortByDesc($sort_by);
 		}
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Events/Index', [
+                'events' => $all_events->values(),
+            ]);
+        }
 
 		return view('events.index', [
 			'all_events' => $all_events,

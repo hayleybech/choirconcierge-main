@@ -7,7 +7,7 @@ import MainNavigation from "./MainNavigation";
 
 const SidebarMobile = ({navigation, open, setOpen}) => (
     <Transition.Root show={open} as={Fragment}>
-        <Dialog as="div" className="fixed inset-0 flex z-40 lg:hidden" onClose={setOpen}>
+        <Dialog as="div" className="fixed inset-0 flex z-40 xl:hidden" onClose={setOpen}>
             <Transition.Child
                 as={Fragment}
                 enter="transition-opacity ease-linear duration-300"
@@ -61,7 +61,7 @@ const SidebarMobile = ({navigation, open, setOpen}) => (
                     </div>
 
                     <div className="mt-5 flex-1 h-0 overflow-y-auto">
-                        <MainNavigation navigation={navigation} />
+                        <MainNavigation navigation={navigation} closeSidebar={() => setOpen(false)} />
                     </div>
                 </div>
             </Transition.Child>

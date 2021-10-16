@@ -26,7 +26,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                             <SongStatusTag name={song.status.title} colour={song.status.colour} withLabel />
                         </div>
                         <div className="mt-2 flex items-center text-sm text-gray-500 space-x-1.5">
-                            {song.categories.map(category => <SongCategoryTag category={category} />)}
+                            {song.categories.map(category => <React.Fragment key={category.id}><SongCategoryTag category={category} /></React.Fragment>)}
                         </div>
                         <div className="mt-2 flex items-center text-sm text-gray-500">
                             <i className="far fa-fw fa-calendar-day mr-1.5 text-gray-400 text-md" />

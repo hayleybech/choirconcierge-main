@@ -19,7 +19,8 @@ class AttendanceReportController extends Controller
 			->filter()
 			->get();
 
-        $voice_parts = Singer::with(['user', 'voice_part', 'attendances'])->get()
+        $voice_parts = Singer::active()
+            ->with(['user', 'voice_part', 'attendances'])->get()
             ->sortBy('user.first_name')
             ->groupBy('voice_part.id')
             ->map(function($singers) {
@@ -37,7 +38,9 @@ class AttendanceReportController extends Controller
 		);
 
 		$avg_events_per_singer = round(
-			Singer::with(['attendances'])->get()
+			Singer::active()
+                ->with(['attendances'])
+                ->get()
                 ->reduce(static function ($carry, $singer) {
                     return $carry +
                         $singer

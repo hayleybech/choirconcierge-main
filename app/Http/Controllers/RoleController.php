@@ -6,6 +6,8 @@ use App\Models\Role;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class RoleController extends Controller
 {
@@ -14,9 +16,17 @@ class RoleController extends Controller
 		$this->authorizeResource(Role::class, 'role');
 	}
 
-	public function index(): View
+	public function index(): View|Response
 	{
-		$roles = Role::all();
+		$roles = Role::withCount('singers')->get();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Roles/Index', [
+                'roles' => $roles->values(),
+            ]);
+        }
 
 		return view('roles.index', [
 			'roles' => $roles,

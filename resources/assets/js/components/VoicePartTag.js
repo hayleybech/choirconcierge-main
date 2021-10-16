@@ -2,8 +2,8 @@ import React from 'react';
 
  // Badge
  // @todo Use tailwind colours for voice parts
- // span: bg-indigo-100 text-indigo-800
- // svg: text-indigo-400
+ // span: bg-purple-100 text-purple-800
+ // svg: text-purple-400
 const VoicePartTag = ({ title, colour }) => (
     <span
         className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-opacity-75"

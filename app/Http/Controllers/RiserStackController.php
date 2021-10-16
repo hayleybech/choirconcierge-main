@@ -37,7 +37,9 @@ class RiserStackController extends Controller
 	{
 		$this->authorize('create', RiserStack::class);
 
-		$voice_parts = VoicePart::with(['singers.user'])->get();
+		$voice_parts = VoicePart::with(['singers' => function($query) {
+		    $query->active()->with('user');
+        }])->get();
 		$voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
 		return view('stacks.create', compact('voice_parts'));
@@ -57,15 +59,28 @@ class RiserStackController extends Controller
 			->with(['status' => 'Riser stack created. ']);
 	}
 
-	public function show(RiserStack $stack): View
+	public function show(RiserStack $stack): View|Response
 	{
 		$this->authorize('view', $stack);
 
 		$stack->load('singers.user');
         $stack->singers->each->append('user_avatar_thumb_url');
 
+        $stack->can = [
+            'update_stack' => auth()->user()?->can('update', $stack),
+            'delete_stack' => auth()->user()?->can('delete', $stack),
+        ];
+
 		$voice_parts = VoicePart::with(['singers.user'])->get();
         $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('RiserStacks/Show', [
+                'stack' => $stack,
+            ]);
+        }
 
 		return view('stacks.show', compact('stack', 'voice_parts'));
 	}
@@ -75,13 +90,15 @@ class RiserStackController extends Controller
 		$this->authorize('update', $stack);
 
 		// Get singers that are already on the riser stack.
-        $stack->load('singers.user');
+        $stack->load(['singers' => function($query) {
+            $query->active()->with('user');
+        }]);
         $stack->singers->each->append('user_avatar_thumb_url');
 
 		// Get singers (by voice part) who are not already on the riser stack.
 		$voice_parts = VoicePart::with([
 			'singers' => static function ($query) use ($stack) {
-				$query->whereDoesntHave('riser_stacks', static function ($query) use ($stack) {
+				$query->active()->whereDoesntHave('riser_stacks', static function ($query) use ($stack) {
 					$query->where('riser_stack_id', '=', $stack->id);
 				});
 			},
