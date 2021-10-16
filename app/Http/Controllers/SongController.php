@@ -146,16 +146,21 @@ class SongController extends Controller
 			return [$item['id'] => $item['title']];
 		});
 
-		$assessment_ready_count = $song->singers()->wherePivot('status', 'assessment-ready')->count();
-		$performance_ready_count = $song->singers()->wherePivot('status', 'performance-ready')->count();
+		$assessment_ready_count = $song->singers()->active()->wherePivot('status', 'assessment-ready')->count();
+		$performance_ready_count = $song->singers()->active()->wherePivot('status', 'performance-ready')->count();
 
 		$voice_parts_performance_ready_count = VoicePart::withCount([
-		    'singers',
+		    'singers' => function (Builder $query) use ($song) {
+                $query->active();
+            },
             'singers as performance_ready_count' => function (Builder $query) use ($song) {
-                    $query->with('songs')->whereHas('songs', function (Builder $query) use ($song) {
-                        $query->where('songs.id', $song->id)
-                            ->where('singer_song.status', 'assessment-ready');
-                    });
+                    $query
+                        ->active()
+                        ->with('songs')
+                        ->whereHas('songs', function (Builder $query) use ($song) {
+                            $query->where('songs.id', $song->id)
+                                ->where('singer_song.status', 'assessment-ready');
+                        });
                 }
             ])->get();
 
@@ -185,7 +190,7 @@ class SongController extends Controller
                 'status_count' => [
                     'performance_ready' => $performance_ready_count,
                     'assessment_ready' => $assessment_ready_count,
-                    'learning' => Singer::count() - $assessment_ready_count - $performance_ready_count,
+                    'learning' => Singer::active()->count() - $assessment_ready_count - $performance_ready_count,
                 ],
                 'voice_parts_count' => [
                     'performance_ready' => $voice_parts_performance_ready_count,
@@ -196,7 +201,7 @@ class SongController extends Controller
 		return view('songs.show', [
 		    'song' => $song,
             'categories_keyed' => $categories_keyed,
-            'singers_learning_count' => Singer::count() - $assessment_ready_count - $performance_ready_count,
+            'singers_learning_count' => Singer::active()->count() - $assessment_ready_count - $performance_ready_count,
             'singers_assessment_ready_count' => $assessment_ready_count,
             'singers_performance_ready_count' => $performance_ready_count,
             'voice_parts_performance_ready_count' => $voice_parts_performance_ready_count,

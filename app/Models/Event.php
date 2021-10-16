@@ -412,16 +412,18 @@ class Event extends Model
 
 	public function singers_rsvp_response(string $response): Builder
 	{
-		return Singer::whereHas('rsvps', function (Builder $query) use ($response) {
+		return Singer::active()->whereHas('rsvps', function (Builder $query) use ($response) {
 			$query->where('event_id', '=', $this->id)->where('response', '=', $response);
 		});
 	}
 	public function voice_parts_rsvp_response_count(string $response)
 	{
 		return VoicePart::withCount([
-		    'singers',
+		    'singers' => function ($query) {
+                $query->active();
+            },
 		    'singers as singers_going_count' => function ($query) use ($response) {
-                $query->whereHas('rsvps', function (Builder $query) use ($response) {
+                $query->active()->whereHas('rsvps', function (Builder $query) use ($response) {
                     $query->where('event_id', '=', $this->id)
                         ->where('response', '=', $response);
                 });
@@ -430,29 +432,31 @@ class Event extends Model
 
 	public function singers_rsvp_missing(): Builder
 	{
-		return Singer::whereDoesntHave('rsvps', function (Builder $query) {
+		return Singer::active()->whereDoesntHave('rsvps', function (Builder $query) {
 			$query->where('event_id', '=', $this->id);
 		});
 	}
 
 	public function singers_attendance(string $response): Builder
 	{
-		return Singer::whereHas('attendances', function (Builder $query) use ($response) {
+		return Singer::active()->whereHas('attendances', function (Builder $query) use ($response) {
 			$query->where('event_id', '=', $this->id)->where('response', '=', $response);
 		});
 	}
 	public function singers_attendance_missing(): Builder
 	{
-		return Singer::whereDoesntHave('attendances', function (Builder $query) {
+		return Singer::active()->whereDoesntHave('attendances', function (Builder $query) {
 			$query->where('event_id', '=', $this->id);
 		});
 	}
 	public function voice_parts_attendance_count(string $response)
 	{
 		return VoicePart::withCount([
-		    'singers',
+		    'singers' => function ($query) use ($response) {
+                $query->active();
+            },
             'singers as singers_present_count' => function ($query) use ($response) {
-                $query->whereHas('attendances', function (Builder $query) use ($response) {
+                $query->active()->whereHas('attendances', function (Builder $query) use ($response) {
                     $query->where('event_id', '=', $this->id)
                         ->where('response', '=', $response);
                 });

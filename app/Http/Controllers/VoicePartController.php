@@ -48,7 +48,7 @@ class VoicePartController extends Controller
 		]);
 		$part = VoicePart::create($data);
 		return redirect()
-			->route('voice-parts.index', $part)
+			->route('voice-parts.index')
 			->with(['status' => 'Voice part created.']);
 	}
 
