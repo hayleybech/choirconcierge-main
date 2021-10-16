@@ -103,7 +103,7 @@ class VoicePartControllerTest extends TestCase
 		$this->assertDatabaseHas('voice_parts', $data);
 
 		$voice_part = VoicePart::firstWhere('title', $data['title']);
-		$response->assertRedirect(the_tenant_route('voice-parts.show', $voice_part));
+		$response->assertRedirect(the_tenant_route('voice-parts.index'));
 	}
 
 	/**
