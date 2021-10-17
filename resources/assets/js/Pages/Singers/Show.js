@@ -11,6 +11,7 @@ import RadioGroup from "../../components/inputs/RadioGroup";
 import {usePage} from "@inertiajs/inertia-react";
 import AppHead from "../../components/AppHead";
 import Badge from "../../components/Badge";
+import SectionHeading from "../../SectionHeading";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -147,7 +148,7 @@ const Show = ({ singer, categories }) => {
                     <div className="sm:col-span-2 xl:col-span-3">
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
 
-                            <h2 className="text-xl leading-6 font-semibold text-gray-900 mb-4">Personal Details</h2>
+                            <SectionHeading>Personal Details</SectionHeading>
 
                             <DetailList items={[
                                 {
@@ -214,7 +215,7 @@ const Show = ({ singer, categories }) => {
 
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                            <h2 className="text-xl leading-6 font-semibold text-gray-900 mb-4">Membership Details</h2>
+                            <SectionHeading>Membership Details</SectionHeading>
 
                             <DetailList items={[
                                 {
@@ -261,9 +262,9 @@ const Show = ({ singer, categories }) => {
                         {can['list_tasks'] && (
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
 
-                            <div className="-ml-2 -mt-2 flex flex-wrap items-baseline">
-                                <h2 className="ml-2 mt-2 text-xl leading-6 font-semibold text-gray-900 mb-4">Onboarding</h2>
-                                <p className="ml-2 mt-1 text-md text-gray-500 truncate">{singer.onboarding_enabled ? 'Enabled' : 'Disabled'}</p>
+                            <div className="flex flex-wrap items-baseline">
+                                <SectionHeading>Onboarding</SectionHeading>
+                                <p className="ml-2 text-md text-gray-500 truncate">{singer.onboarding_enabled ? 'Enabled' : 'Disabled'}</p>
                             </div>
 
                             <div className="py-6 px-4 sm:px-3 lg:px-4">
@@ -306,7 +307,7 @@ const Show = ({ singer, categories }) => {
                             {singer.placement
                                 ? <>
                                     <div className="pb-5 sm:flex sm:items-center sm:justify-between mb-4">
-                                        <h2 className="text-xl leading-6 font-semibold text-gray-900">Voice Placement</h2>
+                                        <SectionHeading>Voice Placement</SectionHeading>
                                         <div className="mt-3 sm:mt-0 sm:ml-4">
                                             <ButtonLink
                                                 variant="primary"

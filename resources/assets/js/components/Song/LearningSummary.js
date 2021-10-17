@@ -3,14 +3,16 @@ import {Tab} from "@headlessui/react";
 import classNames from "../../classNames";
 import VoicePartTag from "../VoicePartTag";
 import ButtonLink from "../inputs/ButtonLink";
+import SectionHeading from "../../SectionHeading";
 
 const LearningSummary = ({ status_count, voice_parts_count, song }) => (
     <div className="py-6">
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="pb-5 sm:flex sm:items-center sm:justify-between mb-4">
-                <h2 className="text-xl leading-6 font-semibold text-gray-900">Learning Summary</h2>
-                <div className="mt-3 sm:mt-0 sm:ml-4">
+            <div className="pb-5 sm:flex sm:items-center sm:justify-between">
+                <SectionHeading>Learning Summary</SectionHeading>
+
+                <div className="mt-3 sm:mt-0 sm:ml-4 mb-4">
                     <ButtonLink
                         variant="primary"
                         size="sm"

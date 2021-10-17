@@ -1,13 +1,12 @@
 import React from 'react';
 import Button from "../inputs/Button";
 import LearningStatusTag from "./LearningStatusTag";
+import SectionHeading from "../../SectionHeading";
 
 const MyLearningStatus = ({ song }) => (
     <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="-ml-2 -mt-2 flex flex-wrap items-baseline">
-            <h2 className="ml-2 mt-2 text-xl leading-6 font-semibold text-gray-900 mb-4">My Learning Status</h2>
-        </div>
+        <SectionHeading>My Learning Status</SectionHeading>
 
         <LearningStatusTag name={song.my_learning.status_name} colour={song.my_learning.status_colour} icon={song.my_learning.status_icon} />
 
