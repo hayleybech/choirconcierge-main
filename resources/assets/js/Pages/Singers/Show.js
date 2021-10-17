@@ -117,19 +117,14 @@ const Show = ({ singer, categories }) => {
             <PageHeader
                 title={singer.user.name}
                 image={singer.user.avatar_url}
-                meta={(
+                meta={[
+                    <>{singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}</>,
+                    <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} withLabel />,
                     <>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                            {singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}
-                        </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                            <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} withLabel />
-                        </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                            <i className="far fa-fw fa-calendar-day mr-1.5 text-gray-400 text-md" />
-                            Joined {DateTime.fromJSDate(new Date(singer.joined_at)).toLocaleString(DateTime.DATE_MED)}
-                        </div>
-                    </>)}
+                        <i className="far fa-fw fa-calendar-day mr-1.5 text-gray-400 text-md" />
+                        Joined {DateTime.fromJSDate(new Date(singer.joined_at)).toLocaleString(DateTime.DATE_MED)}
+                    </>,
+                ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Singers', url: route('singers.index')},
