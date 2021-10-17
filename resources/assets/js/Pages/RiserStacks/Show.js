@@ -6,6 +6,7 @@ import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import RiserStackEditor from "../../components/RiserStack/RiserStackEditor";
 import Icon from "../../components/Icon";
+import DateTag from "../../components/DateTag";
 
 const Show = ({ stack }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -20,10 +21,7 @@ const Show = ({ stack }) => {
                     <>Columns: {stack.columns}</>,
                     <>Singers on front row: {stack.front_row_length}</>,
                     <>Front row on floor: {stack.front_row_on_floor ? 'Yes' : 'No'}</>,
-                    <>
-                        <Icon icon="calendar-day" type="regular" mr className="text-gray-400" />
-                        Created {DateTime.fromJSDate(new Date(stack.created_at)).toLocaleString(DateTime.DATE_MED)}
-                    </>,
+                    <DateTag date={stack.created_at} label="Created" />,
                 ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},

@@ -2,9 +2,9 @@ import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
 import SongStatusTag from "../../components/SongStatusTag";
 import PitchButton from "../../components/PitchButton";
-import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
 import Badge from "../../components/Badge";
+import DateTag from "../../components/DateTag";
 
 const SongTableDesktop = ({ songs }) => (
     <Table
@@ -30,7 +30,7 @@ const SongTableDesktop = ({ songs }) => (
                     </div>
                 </TableCell>
                 <TableCell>
-                    {DateTime.fromJSDate(new Date(song.created_at)).toLocaleString(DateTime.DATE_MED)}
+                    <DateTag date={song.created_at} />
                 </TableCell>
             </tr>
         ))}

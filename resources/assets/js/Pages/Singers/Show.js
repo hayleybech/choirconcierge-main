@@ -13,6 +13,7 @@ import AppHead from "../../components/AppHead";
 import Badge from "../../components/Badge";
 import SectionHeading from "../../SectionHeading";
 import Icon from "../../components/Icon";
+import DateTag from "../../components/DateTag";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -122,10 +123,7 @@ const Show = ({ singer, categories }) => {
                 meta={[
                     <>{singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}</>,
                     <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} withLabel />,
-                    <>
-                        <Icon icon="calendar-day" type="regular" mr className="text-gray-400" />
-                        Joined {DateTime.fromJSDate(new Date(singer.joined_at)).toLocaleString(DateTime.DATE_MED)}
-                    </>,
+                    <DateTag date={singer.joined_at} label="Joined" />,
                 ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
@@ -168,7 +166,7 @@ const Show = ({ singer, categories }) => {
                                 },
                                 {
                                     label: 'Date of Birth',
-                                    value: DateTime.fromJSDate(new Date(singer.user.dob)).toLocaleString(DateTime.DATE_MED) ?? 'No date of birth',
+                                    value: <>{singer.user.dob ? <DateTag date={singer.user.dob} /> : 'No date of birth'}</>,
                                 },
                                 {
                                     label: 'Height',
@@ -246,15 +244,15 @@ const Show = ({ singer, categories }) => {
                                 {
                                     label: 'Member Since',
                                     value: <>
-                                        {DateTime.fromJSDate(new Date(singer.joined_at)).toLocaleString(DateTime.DATE_MED)}<br />
+                                        <DateTag date={singer.joined_at} /><br />
                                         <span className="text-sm text-gray-500 italic">
-                                        Added {DateTime.fromJSDate(new Date(singer.created_at)).toLocaleString(DateTime.DATE_MED)}
-                                    </span>
+                                            <DateTag date={singer.created_at} label="Added" />
+                                        </span>
                                     </>,
                                 },
                                 {
                                     label: 'Last Login',
-                                    value: DateTime.fromJSDate(new Date(singer.user.last_login)).toLocaleString(DateTime.DATE_MED),
+                                    value: <DateTag date={singer.user.last_login} />,
                                 },
                             ]} />
                         </div>

@@ -3,6 +3,7 @@ import {Link} from "@inertiajs/inertia-react";
 import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
 import Icon from "../../components/Icon";
+import DateTag from "../../components/DateTag";
 
 const MailingListTableDesktop = ({ tasks }) => (
     <Table
@@ -23,7 +24,7 @@ const MailingListTableDesktop = ({ tasks }) => (
                     <strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span>
                 </TableCell>
                 <TableCell>
-                    {DateTime.fromJSDate(new Date(list.created_at)).toLocaleString(DateTime.DATE_MED)}
+                    <DateTag date={list.created_at} />
                 </TableCell>
             </tr>
         ))}

@@ -1,13 +1,13 @@
 import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
-import {DateTime} from "luxon";
 import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import Icon from "../../components/Icon";
 import SectionHeading from "../../SectionHeading";
 import {Link} from "@inertiajs/inertia-react";
 import ButtonLink from "../../components/inputs/ButtonLink";
+import DateTag from "../../components/DateTag";
 
 const Show = ({ task }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -23,10 +23,7 @@ const Show = ({ task }) => {
                         {task.type[0].toUpperCase() + task.type.slice(1)}
                         {task.type === 'form' && <span className="text-xs ml-1.5">({task.route})</span>}
                     </>,
-                    <>
-                        <Icon icon="calendar-day" type="regular" mr className="text-gray-400" />
-                        Created {DateTime.fromJSDate(new Date(task.created_at)).toLocaleString(DateTime.DATE_MED)}
-                    </>,
+                    <DateTag date={task.created_at} label="Created" />,
                 ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},

@@ -3,6 +3,7 @@ import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 import Badge from "../../components/Badge";
 import {DateTime} from "luxon";
 import Icon from "../../components/Icon";
+import DateTag from "../../components/DateTag";
 
 const EventTableMobile = ({ events }) => (
     <TableMobile>
@@ -22,8 +23,7 @@ const EventTableMobile = ({ events }) => (
                     </div>
                     <div className="flex items-center justify-between">
                         <p className="mt-1.5 flex items-center text-xs text-gray-500 min-w-0">
-                            <Icon icon="calendar-day" mr className="text-gray-400" />
-                            {DateTime.fromJSDate(new Date(event.call_time)).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}
+                            <DateTag date={event.call_time} format="DATETIME_MED_WITH_WEEKDAY" />
                         </p>
 
                         <p className="mt-2 flex items-center text-sm text-gray-500 min-w-0">

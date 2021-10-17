@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
-import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
+import DateTag from "../../components/DateTag";
 
 const MailingListTableDesktop = ({ tasks }) => (
     <Table
@@ -23,7 +23,7 @@ const MailingListTableDesktop = ({ tasks }) => (
                     {task.type === 'form' && <span className="text-xs ml-1.5">({task.route})</span>}
                 </TableCell>
                 <TableCell>
-                    {DateTime.fromJSDate(new Date(task.created_at)).toLocaleString(DateTime.DATE_MED)}
+                    <DateTag date={task.created_at} />
                 </TableCell>
             </tr>
         ))}

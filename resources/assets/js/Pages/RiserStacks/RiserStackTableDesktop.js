@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
-import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
+import DateTag from "../../components/DateTag";
 
 const RiserStackTableDesktop = ({ stacks }) => (
     <Table
@@ -16,7 +16,7 @@ const RiserStackTableDesktop = ({ stacks }) => (
                     </div>
                 </TableCell>
                 <TableCell>
-                    {DateTime.fromJSDate(new Date(stack.created_at)).toLocaleString(DateTime.DATE_MED)}
+                    <DateTag date={stack.created_at} />
                 </TableCell>
             </tr>
         ))}

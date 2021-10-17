@@ -3,6 +3,7 @@ import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
 import FolderIcon from "../../components/FolderIcon";
 import Icon from "../../components/Icon";
+import DateTag from "../../components/DateTag";
 
 const FolderTableDesktop = ({ folders }) => {
     const [openFolder, setOpenFolder] = useState(0);
@@ -28,7 +29,7 @@ const FolderTableDesktop = ({ folders }) => {
                             </div>
                         </TableCell>
                         <TableCell>
-                            {DateTime.fromJSDate(new Date(folder.created_at)).toLocaleString(DateTime.DATE_MED)}
+                            <DateTag date={folder.created_at} />
                         </TableCell>
                     </tr>
                     {folder.id === openFolder && folder.documents.map((document) => (
@@ -45,7 +46,7 @@ const FolderTableDesktop = ({ folders }) => {
                                 </div>
                             </TableCell>
                             <TableCell>
-                                {DateTime.fromJSDate(new Date(document.created_at)).toLocaleString(DateTime.DATE_MED)}
+                                <DateTag date={document.created_at} />
                             </TableCell>
                         </tr>
                     ))}
