@@ -1,73 +1,74 @@
 import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
+import Icon from "../components/Icon";
 
 const nav = [
-    { label: 'Dashboard', route: 'dash', icon: 'fa-chart-line', items: [],  },
+    { label: 'Dashboard', route: 'dash', icon: 'chart-line', items: [],  },
     {
         label: 'Singers',
         route: 'singers.index',
-        icon: 'fa-users',
+        icon: 'users',
         on: true,
         items: [
-            { label: 'All Singers', route: 'singers.index', icon: 'fa-list' },
-            { label: 'Add New', route: 'singers.create', icon: 'fa-plus-square' },
-            { label: 'Voice Parts', route: 'voice-parts.index', icon: 'fa-users-class' },
-            { label: 'Roles', route: 'roles.index', icon: 'fa-user-tag' }
+            { label: 'All Singers', route: 'singers.index', icon: 'list' },
+            { label: 'Add New', route: 'singers.create', icon: 'plus-square' },
+            { label: 'Voice Parts', route: 'voice-parts.index', icon: 'users-class' },
+            { label: 'Roles', route: 'roles.index', icon: 'user-tag' }
         ]
     },
     {
         label: 'Songs',
         route: 'songs.index',
-        icon: 'fa-list-music',
+        icon: 'list-music',
         items: [
-            { label: 'All Songs', route: 'songs.index', icon: 'fa-list' },
-            { label: 'Add New', route: 'songs.create', icon: 'fa-plus-square' },
+            { label: 'All Songs', route: 'songs.index', icon: 'list' },
+            { label: 'Add New', route: 'songs.create', icon: 'plus-square' },
         ]
     },
     {
         label: 'Events',
         route: 'events.index',
-        icon: 'fa-calendar-alt',
+        icon: 'calendar-alt',
         items: [
-            { label: 'All Events', route: 'events.index', icon: 'fa-list' },
-            { label: 'Add New', route: 'events.create', icon: 'fa-plus-square' },
-            { label: 'Attendance Report', route: 'events.reports.attendance', icon: 'fa-analytics' },
+            { label: 'All Events', route: 'events.index', icon: 'list' },
+            { label: 'Add New', route: 'events.create', icon: 'plus-square' },
+            { label: 'Attendance Report', route: 'events.reports.attendance', icon: 'analytics' },
         ]
     },
     {
         label: 'Documents',
         route: 'folders.index',
-        icon: 'fa-folders',
+        icon: 'folders',
         items: [
-            { label: 'All Folders', route: 'folders.index', icon: 'fa-list' },
-            { label: 'Add Folder', route: 'folders.create', icon: 'fa-plus-square' },
+            { label: 'All Folders', route: 'folders.index', icon: 'list' },
+            { label: 'Add Folder', route: 'folders.create', icon: 'plus-square' },
         ]
     },
     {
         label: 'Riser Stacks',
         route: 'stacks.index',
-        icon: 'fa-people-arrows',
+        icon: 'people-arrows',
         items: [
-            { label: 'All Stacks', route: 'stacks.index', icon: 'fa-list' },
-            { label: 'Add New', route: 'stacks.create', icon: 'fa-plus-square' },
+            { label: 'All Stacks', route: 'stacks.index', icon: 'list' },
+            { label: 'Add New', route: 'stacks.create', icon: 'plus-square' },
         ]
     },
     {
         label: 'Mailing Lists',
         route: 'groups.index',
-        icon: 'fa-mail-bulk',
+        icon: 'mail-bulk',
         items: [
-            { label: 'All Lists', route: 'groups.index', icon: 'fa-list' },
-            { label: 'Add New', route: 'groups.create', icon: 'fa-plus-square' },
+            { label: 'All Lists', route: 'groups.index', icon: 'list' },
+            { label: 'Add New', route: 'groups.create', icon: 'plus-square' },
         ]
     },
     {
         label: 'Onboarding',
         route: 'tasks.index',
-        icon: 'fa-tasks',
+        icon: 'tasks',
         items: [
-            { label: 'All Tasks', route: 'tasks.index', icon: 'fa-list' },
-            { label: 'Add New', route: 'tasks.create', icon: 'fa-plus-square' },
+            { label: 'All Tasks', route: 'tasks.index', icon: 'list' },
+            { label: 'Add New', route: 'tasks.create', icon: 'plus-square' },
         ]
     },
 ];
@@ -90,12 +91,14 @@ const TenantLayout = ({children}) =>  (
                     {item.on ? (
                         <div className="bg-brand-light-pink ml-3 my-2 py-4 px-6 flex flex-col rounded-l-3xl text-brand-purple-dark">
                             <Link href={route(item.route)} className="uppercase font-semibold hover:opacity-75 mb-1">
-                                <i className={"fal fa-fw fa-chart-line mr-3 " + item.icon} /> {item.label}
+                                <Icon icon={item.icon} type="light" className="mr-3" />
+                                {item.label}
                             </Link>
                             <>
                                 {item.items.map((child) => (
                                     <Link href={route(child.route)} className="py-1 text-sm hover:opacity-75">
-                                        <i className={"fal fa-fw mr-3 " + child.icon} /> {child.label}
+                                        <Icon icon={child.icon} type="light" className="mr-3" />
+                                        {child.label}
                                     </Link>
                                 ))}
                             </>
@@ -103,7 +106,8 @@ const TenantLayout = ({children}) =>  (
                     ): (
                         <div className="ml-3 py-3 px-6 flex flex-col">
                             <Link href={route(item.route)} className="text-white opacity-75 uppercase font-semibold hover:opacity-50">
-                                <i className={"fal fa-fw mr-3 " + item.icon} /> {item.label}
+                                <Icon icon={item.icon} type="light" className="mr-3" />
+                                {item.label}
                             </Link>
                         </div>
                     )}

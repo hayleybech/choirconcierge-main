@@ -7,6 +7,7 @@ import RangeInput from "../../../components/inputs/RangeInput";
 import Button from "../../../components/inputs/Button";
 import Error from "../../../components/inputs/Error";
 import Select from "../../../components/inputs/Select";
+import Icon from "../../../components/Icon";
 
 const PlacementForm = ({ singer, placement, voice_parts }) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -102,12 +103,12 @@ const PlacementForm = ({ singer, placement, voice_parts }) => {
                                 <Label label="Voice Tone" forInput="voice_tone" />
                                 <div className="mt-1 flex space-x-4 items-center text-sm text-gray-500">
                                     <div className="text-center">
-                                        <i className="fas fa-fw fa-flute" />
+                                        <Icon icon="flute" className="text-gray-600 fa-lg" />
                                         <p className="text-xs">Fluty</p>
                                     </div>
                                     <RangeInput min={1} max={3} step={1} updateFn={value => setData('voice_tone', value[0])} values={[data.voice_tone]} />
                                     <div className="text-center">
-                                        <i className="fas fa-fw fa-trumpet" />
+                                        <Icon icon="trumpet" className="text-gray-600 fa-lg" />
                                         <p className="text-xs">Brassy</p>
                                     </div>
                                 </div>

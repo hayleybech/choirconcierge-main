@@ -11,6 +11,7 @@ import LearningSummary from "../../components/Song/LearningSummary";
 import MyLearningStatus from "../../components/Song/MyLearningStatus";
 import SongCategoryTag from "../../components/Song/SongCategoryTag";
 import AppHead from "../../components/AppHead";
+import Icon from "../../components/Icon";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -26,7 +27,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                         {song.categories.map(category => <React.Fragment key={category.id}><SongCategoryTag category={category} /></React.Fragment>)}
                     </div>,
                     <>
-                        <i className="far fa-fw fa-calendar-day mr-1.5 text-gray-400 text-md" />
+                        <Icon icon="calendar-day" type="regular" mr className="text-gray-400" />
                         Created {DateTime.fromJSDate(new Date(song.created_at)).toLocaleString(DateTime.DATE_MED)}
                     </>
                 ]}

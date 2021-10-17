@@ -12,6 +12,7 @@ import {usePage} from "@inertiajs/inertia-react";
 import AppHead from "../../components/AppHead";
 import Badge from "../../components/Badge";
 import SectionHeading from "../../SectionHeading";
+import Icon from "../../components/Icon";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -122,7 +123,7 @@ const Show = ({ singer, categories }) => {
                     <>{singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}</>,
                     <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} withLabel />,
                     <>
-                        <i className="far fa-fw fa-calendar-day mr-1.5 text-gray-400 text-md" />
+                        <Icon icon="calendar-day" type="regular" mr className="text-gray-400" />
                         Joined {DateTime.fromJSDate(new Date(singer.joined_at)).toLocaleString(DateTime.DATE_MED)}
                     </>,
                 ]}
@@ -155,10 +156,11 @@ const Show = ({ singer, categories }) => {
                                     label: 'Contact Details',
                                     value: <>
                                         <p>
-                                            <i className="far fa-fw fa-envelope text-gray-500 mr-2" />{singer.user.email}
+                                            <Icon icon="envelope" mr type="regular" className="text-gray-400" />
+                                            {singer.user.email}
                                         </p>
                                         <p>
-                                            <i className="far fa-fw fa-phone text-gray-500 mr-2" />
+                                            <Icon icon="phone" mr type="regular" className="text-gray-400" />
                                             {singer.user.phone ? <a href={`tel:${singer.user.phone}`}>{singer.user.phone}</a> : 'No phone'}
                                         </p>
                                     </>,
@@ -201,10 +203,11 @@ const Show = ({ singer, categories }) => {
                                     label: 'Emergency Contact',
                                     value: <>
                                         <p>
-                                            <i className="far fa-fw fa-user text-gray-500 mr-2" />{singer.user.ice_name ?? 'No emergency contact'}
+                                            <Icon icon="user" mr type="regular" className="text-gray-400" />
+                                            {singer.user.ice_name ?? 'No emergency contact'}
                                         </p>
                                         <p>
-                                            <i className="far fa-fw fa-phone text-gray-500 mr-2" />
+                                            <Icon icon="phone" mr type="regular" className="text-gray-400" />
                                             {singer.user.ice_phone ? <a href={`tel:${singer.user.ice_phone}`}>{singer.user.ice_phone}</a> : 'No phone'}
                                         </p>
                                     </>,
@@ -275,7 +278,7 @@ const Show = ({ singer, categories }) => {
                                                 <span className="flex items-center">
                                                     <span className="flex-shrink-0 h-5 w-5 relative flex items-center justify-center" aria-hidden="true">
                                                         {task.pivot.completed
-                                                        && <i className="fas fa-fw fa-check-circle text-purple-600 text-sm" />
+                                                        && <Icon icon="check-circle" className="text-purple-500 text-sm" />
                                                         || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
                                                             <span className="absolute h-4 w-4 rounded-full bg-purple-200" />
                                                             <span className="relative block w-2 h-2 bg-purple-600 rounded-full" />
@@ -314,7 +317,7 @@ const Show = ({ singer, categories }) => {
                                                 size="sm"
                                                 href={route('singers.placements.edit', [singer.id, singer.placement.id])}
                                             >
-                                                <i className="fas fa-fw fa-edit mr-2" />
+                                                <Icon icon="edit" mr />
                                                 Edit
                                             </ButtonLink>
                                         </div>
@@ -330,8 +333,8 @@ const Show = ({ singer, categories }) => {
                                             value: <Range
                                                 min={1}
                                                 max={3}
-                                                minLabel={<i className="fas fa-fw fa-flute" />}
-                                                maxLabel={<i className="fas fa-fw fa-trumpet fa-lg" />}
+                                                minLabel={<Icon icon="flute" className="text-gray-600 fa-lg" />}
+                                                maxLabel={<Icon icon="trumpet" className="text-gray-600 fa-lg" />}
                                                 value={singer.placement.voice_tone}
                                             />,
                                         },
@@ -366,14 +369,14 @@ const Show = ({ singer, categories }) => {
                                     <h2 className="text-xl leading-6 font-semibold text-gray-900 mb-4">Voice Placement</h2>
 
                                     <div className="text-center py-4 px-2">
-                                        <i className="fal fa-fw fa-user-music text-gray-400 text-4xl mb-2" />
+                                        <Icon icon="user-music" type="light" className="text-gray-400 text-4xl mb-2" />
                                         <h3 className="mt-2 text-sm font-medium text-gray-900">No Voice Placement</h3>
                                         <p className="mt-1 text-sm text-gray-500">
                                             Get this singer started on their journey by creating their Voice Placement.
                                         </p>
                                         <div className="mt-6">
                                             <ButtonLink href={route('singers.placements.create', singer)} variant="primary">
-                                                <i className="far fa-fw fa-plus mr-2" />
+                                                <Icon icon="plus" mr />
                                                 Create Placement
                                             </ButtonLink>
                                         </div>

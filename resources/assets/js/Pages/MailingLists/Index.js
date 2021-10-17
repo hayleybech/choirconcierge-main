@@ -10,7 +10,7 @@ const Index = ({ lists }) => (
         <AppHead title="Mailing Lists" />
         <PageHeader
             title="Mailing Lists"
-            icon="fa-mail-bulk"
+            icon="mail-bulk"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Mailing Lists', url: route('groups.index')},

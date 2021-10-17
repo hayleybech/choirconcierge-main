@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
-import classNames from "../../classNames";
 import FolderIcon from "../../components/FolderIcon";
+import Icon from "../../components/Icon";
 
 const FolderTableDesktop = ({ folders }) => {
     const [openFolder, setOpenFolder] = useState(0);
@@ -18,13 +18,10 @@ const FolderTableDesktop = ({ folders }) => {
                                 <div className="ml-4">
                                     <a
                                         href="#"
-                                        className="text-purple-800"
+                                        className="text-purple-600"
                                         onClick={() => setOpenFolder(folder.id === openFolder ? 0 : folder.id)}
                                     >
-                                        <i className={classNames(
-                                            'fas fa-fw mr-1.5',
-                                            folder.id === openFolder ? 'fa-folder-open' : 'fa-folder'
-                                        )}/>
+                                        <Icon icon={folder.id === openFolder ? 'folder-open' : 'folder'} mr className="text-purple-500" />
                                         {folder.title}
                                     </a>
                                 </div>
@@ -39,8 +36,8 @@ const FolderTableDesktop = ({ folders }) => {
                             <TableCell>
                                 <div className="flex items-center">
                                     <div className="ml-4">
-                                        <a href={document.download_url} download={document.title} className="text-purple-800">
-                                            <i className="fas fa-fw fa-level-up-alt fa-rotate-90 mr-1.5" />
+                                        <a href={document.download_url} download={document.title} className="text-purple-600">
+                                            <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" />
                                             <FolderIcon icon={document.icon} />
                                             {document.title}
                                         </a>

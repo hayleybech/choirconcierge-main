@@ -3,6 +3,7 @@ import {PlayerContext} from "../../contexts/player-context";
 import Button from "../inputs/Button";
 import React, {useState} from "react";
 import Dialog from "../Dialog";
+import Icon from "../Icon";
 
 const SongAttachmentList = ({ attachment_categories, song }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -34,7 +35,7 @@ const SongAttachmentList = ({ attachment_categories, song }) => {
                                                 <div className="flex-shrink-0">
                                                     {isPlayable(attachment) && (
                                                         <Button variant="clear" onClick={() => play(attachment, player)} size="sm" disabled={isCurrent(attachment, player)}>
-                                                            <i className={'fas fa-fw ' + (isCurrent(attachment, player) ? 'fa-waveform' : 'fa-play')} />
+                                                            <Icon icon={isCurrent(attachment, player) ? 'waveform' : 'play'} />
                                                         </Button>
                                                     )}
                                                 </div>
@@ -48,12 +49,12 @@ const SongAttachmentList = ({ attachment_categories, song }) => {
                                                         onClick={() => {setDeletingAttachmentId(attachment.id);
                                                         setDeleteDialogIsOpen(true)}}
                                                     >
-                                                        <i className="fas fa-fw fa-trash"/>
+                                                        <Icon icon="trash" />
                                                     </Button>
                                                 }
                                                 <>
                                                     <a href={attachment.download_url} download={attachment.filepath} className="text-purple-500">
-                                                        <i className="fas fa-fw fa-download" />
+                                                        <Icon icon="download" />
                                                     </a>
                                                 </>
                                             </div>

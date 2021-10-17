@@ -2,6 +2,7 @@ import React from 'react';
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 import Badge from "../../components/Badge";
 import {DateTime} from "luxon";
+import Icon from "../../components/Icon";
 
 const EventTableMobile = ({ events }) => (
     <TableMobile>
@@ -21,7 +22,7 @@ const EventTableMobile = ({ events }) => (
                     </div>
                     <div className="flex items-center justify-between">
                         <p className="mt-1.5 flex items-center text-xs text-gray-500 min-w-0">
-                            <i className="fas fa-fw fa-calendar-day mr-1.5" />
+                            <Icon icon="calendar-day" mr className="text-gray-400" />
                             {DateTime.fromJSDate(new Date(event.call_time)).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}
                         </p>
 
@@ -31,7 +32,7 @@ const EventTableMobile = ({ events }) => (
                     </div>
                     {event.location_name &&(
                     <p className="mt-1.5 flex items-center text-xs text-gray-500 min-w-0">
-                        <i className="fas fa-fw fa-map-marker-alt mr-1.5" />
+                        <Icon icon="map-marker-alt" mr className="text-gray-400" />
                         <span className="truncate">{event.location_name}</span>
                     </p>
                     )}

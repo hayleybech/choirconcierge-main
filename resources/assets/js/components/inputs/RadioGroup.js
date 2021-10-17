@@ -1,6 +1,7 @@
 import React from 'react';
 import { RadioGroup as BaseRadioGroup } from '@headlessui/react'
 import classNames from "../../classNames";
+import Icon from "../Icon";
 
 const RadioGroup = ({ label, options, selected, setSelected, vertical }) => {
 
@@ -38,7 +39,7 @@ const RadioGroup = ({ label, options, selected, setSelected, vertical }) => {
                                         as="span"
                                         className={classNames(checked ? 'text-purple-900' : 'text-gray-900', 'block text-sm font-medium')}
                                     >
-                                        {option.icon && <i className={`fas fa-fw fa-${option.icon} mr-1.5 text-sm text-${option.colour}`} />}
+                                        {option.icon && <Icon icon={option.icon} mr className={`text-sm text-${option.colour}`} />}
                                         {option.name}
                                     </BaseRadioGroup.Label>
                                     <BaseRadioGroup.Description

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import Button from "./inputs/Button";
 import {start, Synth} from "tone";
+import Icon from "./Icon";
 
 const PitchButton = ({ note, octave = 4, size = "md"}) => {
     const [synth] = useState(new Synth().toDestination());
@@ -27,7 +28,7 @@ const PitchButton = ({ note, octave = 4, size = "md"}) => {
 
     return (
         <Button onMouseDown={play} onMouseUp={stop} variant="primary" size={size}>
-            <i className="fa fa-play mr-1" />
+            <Icon icon="play" mr />
             <span className="key w-4">{note}</span>
         </Button>
     );

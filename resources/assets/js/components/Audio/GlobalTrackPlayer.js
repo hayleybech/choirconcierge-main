@@ -4,9 +4,10 @@ import { useAudioPlayer } from "react-use-audio-player"
 import {AudioTimeLabel} from "./AudioTimeLabel";
 import {AudioSeekBar} from "./AudioSeekBar";
 import {AudioVolumeButton} from "./AudioVolumeButton";
+import Icon from "../Icon";
 
 const LoadingSpinner = () => (
-    <i className="fad fa-spinner fa-pulse text-xl text-purple-500" />
+    <Icon icon="spinner" type="duotone" pulse className="text-purple-400" />
 );
 
 const GlobalTrackPlayer = ({ songTitle, fileName }) => {
@@ -21,7 +22,7 @@ const GlobalTrackPlayer = ({ songTitle, fileName }) => {
             <div className="flex items-center space-x-2 flex-grow w-full sm:w-auto">
                 {loading && <LoadingSpinner />}
                 <Button variant="clear" size="xs" onClick={togglePlayPause} disabled={!ready}>
-                    {playing ? <i className="fas fa-fw fa-pause" /> : <i className="fas fa-fw fa-play" />}
+                    {playing ? <Icon icon="pause" /> : <Icon icon="play" />}
                 </Button>
                 <div className="flex items-center space-x-1.5 flex-grow">
                     <AudioTimeLabel show="elapsed" />

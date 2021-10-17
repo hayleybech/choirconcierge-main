@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import { Dialog as BaseDialog, Transition } from '@headlessui/react';
 import ButtonLink from "./inputs/ButtonLink";
 import Button from "./inputs/Button";
+import Icon from "./Icon";
 
 const Dialog = ({ title, children, okLabel, okUrl, okVariant, okMethod, data, isOpen, setIsOpen}) => (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -41,12 +42,12 @@ const Dialog = ({ title, children, okLabel, okUrl, okVariant, okMethod, data, is
                                 onClick={() => setIsOpen(false)}
                             >
                                 <span className="sr-only">Close</span>
-                                <i className="fal fa-fw fa-times text-xl" />
+                                <Icon icon="times" type="light" className="text-xl" />
                             </button>
                         </div>
                         <div className="sm:flex sm:items-start">
                             <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <i className="far fa-fw fa-exclamation-triangle text-red-600 text-xl" />
+                                <Icon icon="exclamation-triangle" type="regular" className="text-red-600 text-xl" />
                             </div>
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                 <BaseDialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">

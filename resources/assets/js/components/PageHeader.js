@@ -6,8 +6,9 @@ import Breadcrumbs from "./Breadcrumbs";
 import classNames from '../classNames';
 import buttonStyles from "./inputs/buttonStyles";
 import Button from "./inputs/Button";
+import Icon from "./Icon";
 
-const PageHeader = ({title, image, icon, meta, breadcrumbs, actions = []}) => (
+const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) => (
     <div className="py-6 bg-white border-b border-gray-300">
         <div className=" px-4 sm:px-6 md:px-8">
             <div className="lg:flex lg:items-center lg:justify-between">
@@ -15,7 +16,7 @@ const PageHeader = ({title, image, icon, meta, breadcrumbs, actions = []}) => (
                 <div className="flex-1 min-w-0">
                     <Breadcrumbs breadcrumbs={breadcrumbs} />
                     <h2 className="mt-2 text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
-                        {icon && <i className={'fas fa-fw mr-2 '+icon} />}
+                        {icon && <Icon icon={icon} type="solid" className="mr-2" />}
                         <span>{title}</span>
                     </h2>
                     <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
@@ -32,8 +33,7 @@ const PageHeader = ({title, image, icon, meta, breadcrumbs, actions = []}) => (
                             {action.label
                                 ? (
                                     <Button href={action.url} onClick={action.onClick} variant={action.variant}>
-                                      <i className={"fa fa-fw -ml-1 mr-2 fa-"+action.icon} />
-                                      {action.label}
+                                        <Icon icon={action.icon} mr />{action.label}
                                     </Button>
                                 ): (
                                     action
@@ -72,7 +72,7 @@ const PageHeader = ({title, image, icon, meta, breadcrumbs, actions = []}) => (
                                                         action.variant === 'danger-outline' ? 'text-red-500' : 'text-gray-700'
                                                     )}
                                                 >
-                                                    <i className={"fa fa-fw -ml-1 mr-2 fa-"+action.icon} />
+                                                    <Icon icon={action.icon} mr />
                                                     {action.label}
                                                 </button>
                                             )}

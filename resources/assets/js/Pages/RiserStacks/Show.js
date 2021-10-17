@@ -5,6 +5,7 @@ import {DateTime} from "luxon";
 import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import RiserStackEditor from "../../components/RiserStack/RiserStackEditor";
+import Icon from "../../components/Icon";
 
 const Show = ({ stack }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -16,7 +17,7 @@ const Show = ({ stack }) => {
                 title={stack.title}
                 meta={[
                     <>
-                        <i className="far fa-fw fa-calendar-day mr-1.5 text-gray-400 text-md" />
+                        <Icon icon="calendar-day" type="regular" mr className="text-gray-400" />
                         Created {DateTime.fromJSDate(new Date(stack.created_at)).toLocaleString(DateTime.DATE_MED)}
                     </>,
                     <>Rows: {stack.rows}</>,

@@ -1,7 +1,6 @@
 import React from 'react';
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
-import Badge from "../../components/Badge";
-import {DateTime} from "luxon";
+import Icon from "../../components/Icon";
 
 const MailingListTableMobile = ({ lists }) => (
     <TableMobile>
@@ -13,12 +12,13 @@ const MailingListTableMobile = ({ lists }) => (
                             <span className="text-sm font-medium text-purple-600 truncate">{list.title}</span>
                         </p>
                         <div className="text-xs text-gray-500 flex-shrink-0">
-                            <i className={`fas fa-fw mr-1.5 ${list.type_icon}`} />{list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}
+                            <Icon icon={list.type_icon} mr className="text-gray-400" />
+                            {list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}
                         </div>
                     </div>
                     <div className="flex items-center justify-between">
                         <p className="mt-1.5 flex items-center text-xs text-gray-500 min-w-0">
-                            <i className="fas fa-fw fa-envelope mr-1.5" />
+                            <Icon icon="envelope" mr className="text-gray-400" />
                             <strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500 hidden sm:flex">{ list.email.split('@')[1] }</span>
                         </p>
                     </div>

@@ -10,7 +10,7 @@ const Index = ({ events }) => (
         <AppHead title="Events" />
         <PageHeader
             title="Events"
-            icon="fa-calendar-alt"
+            icon="calendar-alt"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Events', url: route('events.index')},

@@ -6,6 +6,7 @@ import FileInput from "../inputs/FileInput";
 import Error from "../inputs/Error";
 import Select from "../inputs/Select";
 import Button from "../inputs/Button";
+import Icon from "../Icon";
 
 const SongAttachmentForm = ({ categories, song }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -43,7 +44,7 @@ const SongAttachmentForm = ({ categories, song }) => {
                     {errors.category && <Error>{errors.category}</Error>}
                 </div>
                 <div className="">
-                    <Button onClick={submit} variant="primary" size="sm" disabled={processing}><i className="fas fa-fw fa-check mr-2" />Save</Button>
+                    <Button onClick={submit} variant="primary" size="sm" disabled={processing}><Icon icon="check" mr />Save</Button>
                 </div>
             </FormSection>
         </div>

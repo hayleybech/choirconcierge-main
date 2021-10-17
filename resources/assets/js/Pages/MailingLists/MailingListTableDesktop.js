@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
 import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
-import Badge from "../../components/Badge";
+import Icon from "../../components/Icon";
 
 const MailingListTableDesktop = ({ tasks }) => (
     <Table
@@ -17,7 +17,7 @@ const MailingListTableDesktop = ({ tasks }) => (
                     </div>
                 </TableCell>
                 <TableCell>
-                    <i className={`fas fa-fw mr-1.5 ${list.type_icon}`} />{list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}
+                    <Icon icon={list.type_icon} mr className="text-gray-400" />{list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}
                 </TableCell>
                 <TableCell>
                     <strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span>
