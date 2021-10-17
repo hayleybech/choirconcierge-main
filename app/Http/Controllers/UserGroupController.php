@@ -72,8 +72,23 @@ class UserGroupController extends Controller
 	 * @param UserGroup $group
 	 * @return View
 	 */
-	public function show(UserGroup $group): View
+	public function show(UserGroup $group): View|Response
 	{
+	    $group->load('members.memberable', 'senders.sender');
+
+        $group->can = [
+            'update_group' => auth()->user()?->can('update', $group),
+            'delete_group' => auth()->user()?->can('delete', $group),
+        ];
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('MailingLists/Show', [
+                'list' => $group,
+            ]);
+        }
+
 		return view('groups.show', compact('group'));
 	}
 
