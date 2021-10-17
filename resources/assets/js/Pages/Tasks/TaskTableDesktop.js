@@ -2,7 +2,6 @@ import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
 import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
-import Badge from "../../components/Badge";
 
 const MailingListTableDesktop = ({ tasks }) => (
     <Table
@@ -12,7 +11,7 @@ const MailingListTableDesktop = ({ tasks }) => (
                 <TableCell>
                     <div className="flex items-center">
                         <div className="ml-4">
-                            <Link href={route('groups.show', task.id)} className="text-sm font-medium text-purple-800">{task.name}</Link>
+                            <Link href={route('tasks.show', task.id)} className="text-sm font-medium text-purple-800">{task.name}</Link>
                         </div>
                     </div>
                 </TableCell>

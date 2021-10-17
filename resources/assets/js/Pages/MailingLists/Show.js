@@ -21,7 +21,10 @@ const Show = ({ list }) => {
                         {list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}
                     </>,
                     <><strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span></>,
-                    <>Created {DateTime.fromJSDate(new Date(list.created_at)).toLocaleString(DateTime.DATE_MED)}</>,
+                    <>
+                        <Icon icon="calendar-day" type="regular" mr className="text-gray-400" />
+                        Created {DateTime.fromJSDate(new Date(list.created_at)).toLocaleString(DateTime.DATE_MED)}
+                    </>,
                 ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},

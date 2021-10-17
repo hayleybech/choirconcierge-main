@@ -16,14 +16,14 @@ const Show = ({ stack }) => {
             <PageHeader
                 title={stack.title}
                 meta={[
-                    <>
-                        <Icon icon="calendar-day" type="regular" mr className="text-gray-400" />
-                        Created {DateTime.fromJSDate(new Date(stack.created_at)).toLocaleString(DateTime.DATE_MED)}
-                    </>,
                     <>Rows: {stack.rows}</>,
                     <>Columns: {stack.columns}</>,
                     <>Singers on front row: {stack.front_row_length}</>,
                     <>Front row on floor: {stack.front_row_on_floor ? 'Yes' : 'No'}</>,
+                    <>
+                        <Icon icon="calendar-day" type="regular" mr className="text-gray-400" />
+                        Created {DateTime.fromJSDate(new Date(stack.created_at)).toLocaleString(DateTime.DATE_MED)}
+                    </>,
                 ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},

@@ -49,9 +49,22 @@ class TaskController extends Controller
 			->with(['status' => 'Task created.']);
 	}
 
-	public function show(Task $task): View
+	public function show(Task $task): View|Response
 	{
 		$task->load('notification_templates');
+
+        $task->can = [
+            'delete_task' => auth()->user()?->can('delete', $task),
+        ];
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Tasks/Show', [
+                'task' => $task,
+            ]);
+        }
+
 		return view('tasks.show', compact('task'));
 	}
 
