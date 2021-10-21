@@ -2,6 +2,7 @@ import React from 'react';
 import SingerCategoryTag from "../../components/SingerCategoryTag";
 import VoicePartTag from "../../components/VoicePartTag";
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
+import Icon from "../../components/Icon";
 
 const SingerTableMobile = ({ singers }) => (
     <TableMobile>
@@ -21,12 +22,12 @@ const SingerTableMobile = ({ singers }) => (
                         </div>
                         <div className="flex items-center justify-between">
                             <p className="mt-2 flex items-center text-sm text-gray-500 min-w-0">
-                                <i className="fas fa-fw fa-phone mr-1.5" />
+                                <Icon icon="phone" mr className="text-gray-400" />
                                 <span className="truncate">{singer.user.phone ?? 'No phone'}</span>
                             </p>
 
                             <p className="mt-2 hidden sm:flex items-center text-sm text-gray-500 min-w-0">
-                                <i className="fas fa-fw fa-envelope mr-1.5" />
+                                <Icon icon="envelope" mr className="text-gray-400" />
                                 <span className="truncate">{singer.user.email}</span>
                             </p>
                         </div>

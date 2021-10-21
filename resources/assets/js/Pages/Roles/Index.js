@@ -10,7 +10,7 @@ const Index = ({ roles }) => (
         <AppHead title="Roles" />
         <PageHeader
             title="Singer Roles"
-            icon="fa-user-tag"
+            icon="user-tag"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Roles', url: route('roles.index')},

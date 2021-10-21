@@ -10,6 +10,17 @@ class RolePolicy
 {
 	use HandlesAuthorization;
 
+    public function before(User $user, string $ability)
+    {
+        if(! $user->singer) {
+            return false;
+        }
+
+        if ($user->singer->hasRole('Admin')) {
+            return true;
+        }
+    }
+
 	/**
 	 * Determine whether the user can view any models.
 	 *

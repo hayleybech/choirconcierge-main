@@ -3,6 +3,7 @@ import {Link} from "@inertiajs/inertia-react";
 import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
 import Table, {TableCell} from "../../components/Table";
+import Icon from "../../components/Icon";
 
 const SingerTableDesktop = ({ singers }) => (
     <Table
@@ -17,7 +18,7 @@ const SingerTableDesktop = ({ singers }) => (
                         <div className="ml-4">
                             <Link href={route('singers.show', singer.id)} className="text-sm font-medium text-purple-800">{singer.user.name}</Link>
                             <div>
-                                <i className="fas fa-fw fa-phone mr-1.5" />
+                                <Icon icon="phone" mr className="text-gray-400" />
                                 {singer.user.phone ? <a href={`tel:${singer.user.phone}`}>{singer.user.phone}</a> : 'No phone'}
                             </div>
                         </div>
@@ -30,7 +31,7 @@ const SingerTableDesktop = ({ singers }) => (
                     <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} withLabel />
                 </TableCell>
                 <TableCell>
-                    <i className="fas fa-fw fa-envelope mr-1.5" />
+                    <Icon icon="envelope" mr className="text-gray-400" />
                     <span>{singer.user.email}</span>
                 </TableCell>
             </tr>

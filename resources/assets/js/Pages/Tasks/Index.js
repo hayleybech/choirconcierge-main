@@ -10,7 +10,7 @@ const Index = ({ tasks }) => (
         <AppHead title="Onboarding" />
         <PageHeader
             title="Onboarding Tasks"
-            icon="fa-tasks"
+            icon="tasks"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Tasks', url: route('tasks.index')},

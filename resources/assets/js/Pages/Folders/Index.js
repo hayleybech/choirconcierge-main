@@ -10,7 +10,7 @@ const Index = ({ folders }) => (
         <AppHead title="Documents" />
         <PageHeader
             title="Documents"
-            icon="fa-folders"
+            icon="folders"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Documents', url: route('folders.index')},

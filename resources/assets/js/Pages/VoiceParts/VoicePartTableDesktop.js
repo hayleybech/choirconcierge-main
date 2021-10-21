@@ -3,6 +3,7 @@ import {Link} from "@inertiajs/inertia-react";
 import {DateTime} from "luxon";
 import Swatch from "../../components/Swatch";
 import Table, {TableCell} from "../../components/Table";
+import DateTag from "../../components/DateTag";
 
 const VoicePartTableDesktop = ({ voiceParts }) => (
     <Table
@@ -23,7 +24,7 @@ const VoicePartTableDesktop = ({ voiceParts }) => (
                     {voicePart.singers_count}
                 </TableCell>
                 <TableCell>
-                    {DateTime.fromJSDate(new Date(voicePart.created_at)).toLocaleString(DateTime.DATE_MED)}
+                    <DateTag date={voicePart.created_at} />
                 </TableCell>
             </tr>
         ))}

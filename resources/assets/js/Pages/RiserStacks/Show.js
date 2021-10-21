@@ -3,15 +3,10 @@ import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import {DateTime} from "luxon";
 import Dialog from "../../components/Dialog";
-import SongStatusTag from "../../components/SongStatusTag";
-import PitchButton from "../../components/PitchButton";
-import SongAttachmentList from "../../components/SongAttachment/SongAttachmentList";
-import SongAttachmentForm from "../../components/SongAttachment/SongAttachmentForm";
-import LearningSummary from "../../components/Song/LearningSummary";
-import MyLearningStatus from "../../components/Song/MyLearningStatus";
-import SongCategoryTag from "../../components/Song/SongCategoryTag";
 import AppHead from "../../components/AppHead";
 import RiserStackEditor from "../../components/RiserStack/RiserStackEditor";
+import Icon from "../../components/Icon";
+import DateTag from "../../components/DateTag";
 
 const Show = ({ stack }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -21,25 +16,13 @@ const Show = ({ stack }) => {
             <AppHead title={`${stack.title} - Riser Stacks`} />
             <PageHeader
                 title={stack.title}
-                meta={(
-                    <>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                            <i className="far fa-fw fa-calendar-day mr-1.5 text-gray-400 text-md" />
-                            Created {DateTime.fromJSDate(new Date(stack.created_at)).toLocaleString(DateTime.DATE_MED)}
-                        </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                            Rows: {stack.rows}
-                        </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                            Columns: {stack.columns}
-                        </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                            Singers on front row: {stack.front_row_length}
-                        </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                            Front row on floor: {stack.front_row_on_floor ? 'Yes' : 'No'}
-                        </div>
-                    </>)}
+                meta={[
+                    <>Rows: {stack.rows}</>,
+                    <>Columns: {stack.columns}</>,
+                    <>Singers on front row: {stack.front_row_length}</>,
+                    <>Front row on floor: {stack.front_row_on_floor ? 'Yes' : 'No'}</>,
+                    <DateTag date={stack.created_at} label="Created" />,
+                ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Riser Stacks', url: route('stacks.index')},

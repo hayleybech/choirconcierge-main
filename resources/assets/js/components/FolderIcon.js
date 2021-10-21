@@ -1,55 +1,56 @@
 import React from 'react';
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../../../../tailwind.config";
+import Icon from "./Icon";
 
 const FolderIcon = ({ icon }) => {
     const fullConfig = resolveConfig(tailwindConfig);
     const colourStyles = {
         'fa-file-word': {
             '--fa-primary-color': fullConfig.theme.colors.blue[200],
-            '--fa-secondary-color': fullConfig.theme.colors.blue[600],
+            '--fa-secondary-color': fullConfig.theme.colors.blue[500],
         },
         'fa-file-excel': {
             '--fa-primary-color': fullConfig.theme.colors.green[200],
-            '--fa-secondary-color': fullConfig.theme.colors.green[600],
+            '--fa-secondary-color': fullConfig.theme.colors.green[500],
         },
         'fa-file-csv': {
             '--fa-primary-color': fullConfig.theme.colors.green[200],
-            '--fa-secondary-color': fullConfig.theme.colors.green[600],
+            '--fa-secondary-color': fullConfig.theme.colors.green[500],
         },
         'fa-file-powerpoint': {
             '--fa-primary-color': fullConfig.theme.colors.yellow[200],
-            '--fa-secondary-color': fullConfig.theme.colors.yellow[600],
+            '--fa-secondary-color': fullConfig.theme.colors.yellow[500],
         },
         'fa-file-pdf': {
             '--fa-primary-color': fullConfig.theme.colors.red[200],
-            '--fa-secondary-color': fullConfig.theme.colors.red[600],
+            '--fa-secondary-color': fullConfig.theme.colors.red[500],
         },
         'fa-file-image': {
             '--fa-primary-color': fullConfig.theme.colors.green[200],
-            '--fa-secondary-color': fullConfig.theme.colors.green[600],
+            '--fa-secondary-color': fullConfig.theme.colors.green[500],
         },
         'fa-file-video': {
             '--fa-primary-color': fullConfig.theme.colors.purple[200],
-            '--fa-secondary-color': fullConfig.theme.colors.purple[600],
+            '--fa-secondary-color': fullConfig.theme.colors.purple[500],
         },
         'fa-file-audio': {
             '--fa-primary-color': fullConfig.theme.colors.pink[200],
-            '--fa-secondary-color': fullConfig.theme.colors.pink[600],
+            '--fa-secondary-color': fullConfig.theme.colors.pink[500],
         },
         'fa-file': {
             '--fa-primary-color': fullConfig.theme.colors.gray[200],
-            '--fa-secondary-color': fullConfig.theme.colors.gray[600],
+            '--fa-secondary-color': fullConfig.theme.colors.gray[500],
         },
         'fa-file-alt': {
             '--fa-primary-color': fullConfig.theme.colors.gray[200],
-            '--fa-secondary-color': fullConfig.theme.colors.gray[600],
+            '--fa-secondary-color': fullConfig.theme.colors.gray[500],
         },
     };
     const style = colourStyles[icon];
 
     return (
-        <i className={`fad fa-fw fa-swap-opacity mr-1.5 text-lg ${icon}`} style={style} />
+        <Icon icon={icon} mr type="duotone" className="fa-swap-opacity text-lg" style={style} />
     );
 }
 

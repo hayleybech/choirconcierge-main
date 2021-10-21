@@ -4,12 +4,13 @@ import DayPicker from "react-day-picker";
 import { Popover, Transition } from "@headlessui/react";
 import 'react-day-picker/lib/style.css';
 import {DateTime} from "luxon";
+import Icon from "../Icon";
 
 const DateInput = ({ name, value, updateFn, hasErrors }) => (
     <Popover as="div" className="mt-1 relative">
         <Popover.Button as="div" className="relative rounded-md shadow-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i className="far fa-fw fa-calendar-day text-gray-400" />
+                <Icon icon="calendar-day" type="regular" className="text-gray-400" />
             </div>
             <input
                 id={name}

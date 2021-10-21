@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
+import Icon from "./Icon";
 
 export const TableMobileItem = ({ url, children }) => (
     <li>
@@ -9,7 +10,7 @@ export const TableMobileItem = ({ url, children }) => (
                     {children}
                 </div>
                 <div>
-                    <i className="fa fa-fw fa-chevron-right text-gray-400" />
+                    <Icon icon="chevron-right" mr className="text-gray-400" />
                 </div>
             </div>
         </Link>

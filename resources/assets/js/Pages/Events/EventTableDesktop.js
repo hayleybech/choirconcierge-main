@@ -3,6 +3,7 @@ import {Link} from "@inertiajs/inertia-react";
 import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
 import Badge from "../../components/Badge";
+import DateTag from "../../components/DateTag";
 
 const EventTableDesktop = ({ events }) => (
     <Table
@@ -20,7 +21,7 @@ const EventTableDesktop = ({ events }) => (
                     <Badge>{event.type.title}</Badge>
                 </TableCell>
                 <TableCell>
-                    {DateTime.fromJSDate(new Date(event.call_time)).toLocaleString(DateTime.DATE_MED)}
+                    <DateTag date={event.call_time} />
                 </TableCell>
                 <TableCell>
                     {event.location_name}
@@ -32,7 +33,7 @@ const EventTableDesktop = ({ events }) => (
                     }
                 </TableCell>
                 <TableCell>
-                    {DateTime.fromJSDate(new Date(event.created_at)).toLocaleString(DateTime.DATE_MED)}
+                    <DateTag date={event.created_at} />
                 </TableCell>
             </tr>
         ))}

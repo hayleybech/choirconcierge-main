@@ -10,7 +10,7 @@ const Index = ({ stacks }) => (
         <AppHead title="Riser Stacks" />
         <PageHeader
             title="Riser Stacks"
-            icon="fa-people-arrows"
+            icon="people-arrows"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Riser Stacks', url: route('stacks.index')},

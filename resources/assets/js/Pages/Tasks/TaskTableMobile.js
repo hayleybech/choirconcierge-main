@@ -1,7 +1,5 @@
 import React from 'react';
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
-import Badge from "../../components/Badge";
-import {DateTime} from "luxon";
 
 const TaskTableMobile = ({ tasks }) => (
     <TableMobile>

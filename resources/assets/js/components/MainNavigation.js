@@ -2,6 +2,7 @@ import {Link} from "@inertiajs/inertia-react";
 import route from "ziggy-js";
 import classNames from "../classNames";
 import React from "react";
+import Icon from "./Icon";
 
 const MainNavigation = ({ navigation, closeSidebar }) => (
     <nav className="flex-1 px-4 space-y-1">
@@ -15,7 +16,7 @@ const MainNavigation = ({ navigation, closeSidebar }) => (
                     )}
                     onClick={closeSidebar}
                 >
-                    <i className={"fas fa-fw mr-4 " + item.icon} aria-hidden="true" />
+                    <Icon icon={item.icon} className="mr-4" />
                     {item.name}
                 </Link>
                 {item.active && item.items.length > 0 && (
@@ -32,7 +33,8 @@ const MainNavigation = ({ navigation, closeSidebar }) => (
                                 )}
                                 onClick={closeSidebar}
                             >
-                                <i className={"far fa-fw mr-3 " + child.icon} /> {child.name}
+                                <Icon icon={child.icon} type="regular" className="mr-3" />
+                                {child.name}
                             </Link>
                         ))}
                     </div>

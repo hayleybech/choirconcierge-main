@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
-import {DateTime} from "luxon";
 import Dialog from "../../components/Dialog";
 import SongStatusTag from "../../components/SongStatusTag";
 import PitchButton from "../../components/PitchButton";
@@ -11,6 +10,7 @@ import LearningSummary from "../../components/Song/LearningSummary";
 import MyLearningStatus from "../../components/Song/MyLearningStatus";
 import SongCategoryTag from "../../components/Song/SongCategoryTag";
 import AppHead from "../../components/AppHead";
+import DateTag from "../../components/DateTag";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -20,19 +20,13 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
             <AppHead title={`${song.title} - Songs`} />
             <PageHeader
                 title={song.title}
-                meta={(
-                    <>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                            <SongStatusTag name={song.status.title} colour={song.status.colour} withLabel />
-                        </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500 space-x-1.5">
-                            {song.categories.map(category => <React.Fragment key={category.id}><SongCategoryTag category={category} /></React.Fragment>)}
-                        </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                            <i className="far fa-fw fa-calendar-day mr-1.5 text-gray-400 text-md" />
-                            Created {DateTime.fromJSDate(new Date(song.created_at)).toLocaleString(DateTime.DATE_MED)}
-                        </div>
-                    </>)}
+                meta={[
+                    <SongStatusTag name={song.status.title} colour={song.status.colour} withLabel />,
+                    <div className="space-x-1 5">
+                        {song.categories.map(category => <React.Fragment key={category.id}><SongCategoryTag category={category} /></React.Fragment>)}
+                    </div>,
+                    <DateTag date={song.created_at} label="Created" />,
+                ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Songs', url: route('songs.index')},

@@ -10,7 +10,7 @@ const Index = ({ songs }) => (
         <AppHead title="Songs" />
         <PageHeader
             title="Songs"
-            icon="fa-list-music"
+            icon="list-music"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Songs', url: route('songs.index')},
