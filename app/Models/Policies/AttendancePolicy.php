@@ -14,6 +14,7 @@ class AttendancePolicy
         if(! $user->singer) {
             return false;
         }
+
 		if ($user->singer->hasRole('Admin')) {
 			return true;
 		}
