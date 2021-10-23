@@ -7,17 +7,17 @@ import SectionTitle from "../SectionTitle";
 import Icon from "../Icon";
 import SectionHeader from "../SectionHeader";
 
-const LearningSummary = ({ status_count, voice_parts_count, song }) => (
+const AttendanceSummary = ({ event, attendanceCount, voicePartsAttendanceCount }) => (
     <div className="py-6">
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeader>
-                <SectionTitle>Learning Summary</SectionTitle>
+                <SectionTitle>Attendance Summary</SectionTitle>
 
                 <ButtonLink
                     variant="primary"
                     size="sm"
-                    href={route('songs.singers.index', song)}
+                    href={route('events.attendances.index', [event])}
                 >
                     <Icon icon="edit" mr />
                     Edit
@@ -47,9 +47,9 @@ const LearningSummary = ({ status_count, voice_parts_count, song }) => (
                 <Tab.Panel className="py-6 px-4">
                     <div className="flex">
                         {[
-                            { label: 'Performing', colour: 'green-500', icon: 'check-double', count: status_count.performance_ready },
-                            { label: 'Assessing', colour: 'yellow-500', icon: 'check', count: status_count.assessment_ready },
-                            { label: 'Learning', colour: 'red-500', icon: 'clock', count: status_count.learning },
+                            { label: 'Present', colour: 'green-500', icon: 'check', count: attendanceCount.present },
+                            { label: 'Not recorded', colour: 'yellow-500', icon: 'question', count: attendanceCount.unknown },
+                            { label: 'Absent', colour: 'red-500', icon: 'times', count: attendanceCount.absent + attendanceCount.absent_apology },
                         ].map(({ label, colour, icon, count}) => (
                             <div className="w-1/3 text-center" key={label}>
                                 <Icon icon={icon} className={`text-${colour}`} />
@@ -58,19 +58,20 @@ const LearningSummary = ({ status_count, voice_parts_count, song }) => (
                             </div>
                         ))}
                     </div>
+                    <p className="text-gray-500 text-sm text-center mt-2">{attendanceCount.absent_apology} absent with apology.</p>
                 </Tab.Panel>
                 <Tab.Panel className="py-6 px-4">
                     <p className="text-green-500 font-semibold mb-4">
-                        <Icon icon="check-double" mr />
-                        Performance Ready
+                        <Icon icon="check" mr />
+                        Present
                     </p>
                     <div className="flex">
-                        {voice_parts_count.performance_ready.map(voice_part => (
+                        {voicePartsAttendanceCount.present.map(voice_part => (
                             <div className="w-1/2 text-center" key={voice_part.id}>
                                 <p className="mb-2">
                                     <VoicePartTag title={voice_part.title} colour={voice_part.colour} />
                                 </p>
-                                {voice_part.performance_ready_count} / {voice_part.singers_count}
+                                {voice_part.singers_present_count} / {voice_part.singers_count}
                             </div>
                         ))}
                     </div>
@@ -81,4 +82,4 @@ const LearningSummary = ({ status_count, voice_parts_count, song }) => (
     </div>
 );
 
-export default LearningSummary;
+export default AttendanceSummary;

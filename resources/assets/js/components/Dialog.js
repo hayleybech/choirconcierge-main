@@ -53,10 +53,8 @@ const Dialog = ({ title, children, okLabel, okUrl, okVariant, okMethod, data, is
                                 <BaseDialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
                                     {title}
                                 </BaseDialog.Title>
-                                <div className="mt-2">
-                                    <p className="text-sm text-gray-500">
-                                        {children}
-                                    </p>
+                                <div className="mt-2 text-sm text-gray-500">
+                                    {children}
                                 </div>
                             </div>
                         </div>

@@ -94,11 +94,46 @@ class EventController extends Controller
 			->with(['status' => 'Event created. ']);
 	}
 
-	public function show(Event $event): View
+	public function show(Event $event): View|Response
 	{
 		$this->authorize('view', $event);
 
-		$event->load('repeat_parent:id,call_time');
+		$event->load('repeat_parent:id,call_time', 'my_rsvp', 'my_attendance');
+
+        $event->can = [
+            'update_event' => auth()->user()?->can('update', $event),
+            'delete_event' => auth()->user()?->can('delete', $event),
+        ];
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Events/Show', [
+                'event' => $event,
+                'rsvpCount' => [
+                    'yes' => $event->singers_rsvp_response('yes')->count(),
+                    'no' => $event->singers_rsvp_response('no')->count(),
+                    'unknown' => $event->singers_rsvp_missing()->count(),
+                ],
+                'voicePartsRsvpCount' => [
+                    'yes' => $event->voice_parts_rsvp_response_count('yes')->get(),
+                ],
+                'attendanceCount' => [
+                    'present' => $event->singers_attendance('present')->count(),
+                    'absent' => $event->singers_attendance('absent')->count(),
+                    'absent_apology' => $event->singers_attendance('absent_apology')->count(),
+                    'unknown' => $event->singers_attendance_missing()->count(),
+                ],
+                'voicePartsAttendanceCount' => [
+                    'present' => $event->voice_parts_attendance_count('present')->get(),
+                ],
+                'addToCalendarLinks' => [
+                    'google' => $event->add_to_calendar_link?->google(),
+                    'webOutlook' => $event->add_to_calendar_link?->webOutlook(),
+                    'ics' => $event->add_to_calendar_link?->ics(),
+                ]
+            ]);
+        }
 
 		return view('events.show', [
 			'event' => $event,

@@ -4,10 +4,11 @@ import PageHeader from "../../components/PageHeader";
 import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import Icon from "../../components/Icon";
-import SectionHeading from "../../SectionHeading";
+import SectionTitle from "../../components/SectionTitle";
 import {Link} from "@inertiajs/inertia-react";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import DateTag from "../../components/DateTag";
+import SectionHeader from "../../components/SectionHeader";
 
 const Show = ({ task }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -40,19 +41,17 @@ const Show = ({ task }) => {
             <div className="bg-gray-50 flex-grow">
                 <div className="py-6 px-4 sm:px-6 lg:px-8">
 
-                    <div className="pb-5 sm:flex sm:items-center sm:justify-between">
-                        <SectionHeading>Notifications</SectionHeading>
+                    <SectionHeader>
+                        <SectionTitle>Notifications</SectionTitle>
 
-                        <div className="mt-3 sm:mt-0 sm:ml-4 mb-4">
-                            <ButtonLink
-                                variant="primary"
-                                size="sm"
-                                href={route('tasks.notifications.create', task)}
-                            >
-                                <Icon icon="edit" mr />Add Notification
-                            </ButtonLink>
-                        </div>
-                    </div>
+                        <ButtonLink
+                            variant="primary"
+                            size="sm"
+                            href={route('tasks.notifications.create', task)}
+                        >
+                            <Icon icon="edit" mr />Add Notification
+                        </ButtonLink>
+                    </SectionHeader>
 
                 </div>
                 <div className="h-full overflow-y-auto relative">

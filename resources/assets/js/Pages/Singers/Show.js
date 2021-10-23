@@ -4,16 +4,16 @@ import PageHeader from "../../components/PageHeader";
 import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
 import ButtonLink from "../../components/inputs/ButtonLink";
-import {DateTime} from "luxon";
 import classNames from "../../classNames";
 import Dialog from "../../components/Dialog";
 import RadioGroup from "../../components/inputs/RadioGroup";
 import {usePage} from "@inertiajs/inertia-react";
 import AppHead from "../../components/AppHead";
 import Badge from "../../components/Badge";
-import SectionHeading from "../../SectionHeading";
+import SectionTitle from "../../components/SectionTitle";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
+import SectionHeader from "../../components/SectionHeader";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -147,7 +147,9 @@ const Show = ({ singer, categories }) => {
                     <div className="sm:col-span-2 xl:col-span-3">
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
 
-                            <SectionHeading>Personal Details</SectionHeading>
+                            <SectionHeader>
+                                <SectionTitle>Personal Details</SectionTitle>
+                            </SectionHeader>
 
                             <DetailList items={[
                                 {
@@ -216,7 +218,9 @@ const Show = ({ singer, categories }) => {
 
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                            <SectionHeading>Membership Details</SectionHeading>
+                            <SectionHeader>
+                                <SectionTitle>Membership Details</SectionTitle>
+                            </SectionHeader>
 
                             <DetailList items={[
                                 {
@@ -263,10 +267,12 @@ const Show = ({ singer, categories }) => {
                         {can['list_tasks'] && (
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
 
-                            <div className="flex flex-wrap items-baseline">
-                                <SectionHeading>Onboarding</SectionHeading>
-                                <p className="ml-2 text-md text-gray-500 truncate">{singer.onboarding_enabled ? 'Enabled' : 'Disabled'}</p>
-                            </div>
+                            <SectionHeader>
+                                <div className="flex flex-wrap items-baseline">
+                                    <SectionTitle>Onboarding</SectionTitle>
+                                    <p className="ml-2 text-md text-gray-500 truncate">{singer.onboarding_enabled ? 'Enabled' : 'Disabled'}</p>
+                                </div>
+                            </SectionHeader>
 
                             <div className="py-6 px-4 sm:px-3 lg:px-4">
                                 <nav className="flex" aria-label="Progress">
@@ -307,19 +313,18 @@ const Show = ({ singer, categories }) => {
                         <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                             {singer.placement
                                 ? <>
-                                    <div className="pb-5 sm:flex sm:items-center sm:justify-between mb-4">
-                                        <SectionHeading>Voice Placement</SectionHeading>
-                                        <div className="mt-3 sm:mt-0 sm:ml-4">
-                                            <ButtonLink
-                                                variant="primary"
-                                                size="sm"
-                                                href={route('singers.placements.edit', [singer.id, singer.placement.id])}
-                                            >
-                                                <Icon icon="edit" mr />
-                                                Edit
-                                            </ButtonLink>
-                                        </div>
-                                    </div>
+                                    <SectionHeader>
+                                        <SectionTitle>Voice Placement</SectionTitle>
+
+                                        <ButtonLink
+                                            variant="primary"
+                                            size="sm"
+                                            href={route('singers.placements.edit', [singer.id, singer.placement.id])}
+                                        >
+                                            <Icon icon="edit" mr />
+                                            Edit
+                                        </ButtonLink>
+                                    </SectionHeader>
 
                                     <DetailList gridCols="sm:grid-cols-2" items={[
                                         {

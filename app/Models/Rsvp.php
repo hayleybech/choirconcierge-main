@@ -23,6 +23,11 @@ use Illuminate\Support\Carbon;
  * @property Singer $singer
  * @property Event $event
  *
+ * Attributes
+ * @property string $label
+ * @property string $colour
+ * @property string $icon
+ *
  * @package App\Models
  */
 class Rsvp extends Model
@@ -30,6 +35,8 @@ class Rsvp extends Model
 	use TenantTimezoneDates, HasFactory;
 
 	protected $fillable = ['singer_id', 'response', 'event_id'];
+
+	protected $appends = ['label', 'colour', 'icon'];
 
 	public function singer(): BelongsTo
 	{
@@ -45,13 +52,36 @@ class Rsvp extends Model
 		return ucfirst($this->response);
 	}
 
-	public function getResponseLabelAttribute()
-	{
+	public function getLabelAttribute(): string
+    {
 		$labels = [
 			'yes' => 'Going',
 			'maybe' => 'Maybe',
+            'unknown' => 'Not responded',
 			'no' => 'Not Going',
 		];
 		return $labels[$this->response];
 	}
+
+    public function getColourAttribute(): string
+    {
+        $colours = [
+            'yes' => 'green',
+            'maybe' => 'yellow',
+            'unknown' => 'yellow',
+            'no' => 'red',
+        ];
+        return $colours[$this->response];
+    }
+
+    public function getIconAttribute(): string
+    {
+        $icons = [
+            'yes' => 'check',
+            'maybe' => 'question',
+            'unknown' => 'question',
+            'no' => 'times',
+        ];
+        return $icons[$this->response];
+    }
 }

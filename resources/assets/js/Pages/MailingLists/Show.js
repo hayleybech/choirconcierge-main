@@ -5,7 +5,7 @@ import {DateTime} from "luxon";
 import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import Icon from "../../components/Icon";
-import SectionHeading from "../../SectionHeading";
+import SectionTitle from "../../components/SectionTitle";
 import DateTag from "../../components/DateTag";
 
 const Show = ({ list }) => {
@@ -42,7 +42,7 @@ const Show = ({ list }) => {
 
                     <div className="sm:col-span-1">
                         <div className="py-6 px-4 sm:px-6 lg:px-8">
-                            <SectionHeading>Recipients</SectionHeading>
+                            <SectionTitle>Recipients</SectionTitle>
                         </div>
                         <div className="h-full overflow-y-auto relative">
                             <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
@@ -67,7 +67,7 @@ const Show = ({ list }) => {
 
                     <div className="sm:col-span-1">
                         <div className="py-6 px-4 sm:px-6 lg:px-8">
-                            <SectionHeading>Senders</SectionHeading>
+                            <SectionTitle>Senders</SectionTitle>
                         </div>
                         <div className="h-full overflow-y-auto relative">
                             <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">

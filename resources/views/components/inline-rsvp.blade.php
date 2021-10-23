@@ -5,13 +5,13 @@
      * @var Event $event
      **/
 @endphp
-@if($event->my_rsvp)
+@if($event->my_rsvp->id)
     @if(! $compact)
     Your RSVP response:
     @endif
     @if($event->in_future)
         <!-- Edit RSVP -->
-        <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $event->my_rsvp]) }}" value="{{ $event->my_rsvp->response_label }}" csrf="{{ csrf_token() }}" edit-label="Change response" :small-buttons="true">
+        <inline-edit-field action="{{ route('events.rsvps.update', ['event' => $event, 'rsvp' => $event->my_rsvp]) }}" value="{{ $event->my_rsvp->label }}" csrf="{{ csrf_token() }}" edit-label="Change response" :small-buttons="true">
             @if(! $compact)
             <label for="rsvp_response" class="d-block">Will you attend?</label>
             @endif
@@ -26,7 +26,7 @@
             </div>
         </inline-edit-field>
     @else
-        {{ $event->my_rsvp->response_label }}
+        {{ $event->my_rsvp->label }}
     @endif
 @elseif($event->in_future)
     <!-- Create RSVP -->
