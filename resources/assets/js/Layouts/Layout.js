@@ -24,6 +24,7 @@ export default function Layout({children}) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [player, setPlayer] = useState({
         songTitle: null,
+        songId: 0,
         fileName: null,
         src: null,
         play: play,
@@ -35,6 +36,7 @@ export default function Layout({children}) {
         setPlayer({
             ...player,
             songTitle: attachment.song.title,
+            songId: attachment.song.id,
             fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
             src: attachment.download_url,
         });
@@ -142,7 +144,7 @@ export default function Layout({children}) {
                             {children}
                         </main>
 
-                        {player.fileName && <GlobalTrackPlayer songTitle={player.songTitle} fileName={player.fileName} />}
+                        {player.fileName && <GlobalTrackPlayer songTitle={player.songTitle} songId={player.songId} fileName={player.fileName} />}
                     </AudioPlayerProvider>
                 </div>
             </div>
