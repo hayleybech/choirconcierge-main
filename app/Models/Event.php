@@ -104,8 +104,6 @@ class Event extends Model
 		'is_repeating' => 'boolean',
 	];
 
-    protected $appends = ['in_future', 'is_repeat_parent', 'parent_in_past'];
-
 	private Link $_add_to_calendar_link;
 
 	protected static function booted(): void

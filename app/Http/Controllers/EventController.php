@@ -98,7 +98,8 @@ class EventController extends Controller
 	{
 		$this->authorize('view', $event);
 
-		$event->load('repeat_parent:id,call_time', 'my_rsvp', 'my_attendance');
+		$event->load('repeat_parent:id,call_time', 'my_rsvp', 'my_attendance')
+            ->append(['in_future', 'is_repeat_parent', 'parent_in_past']);
 
         $event->can = [
             'update_event' => auth()->user()?->can('update', $event),
