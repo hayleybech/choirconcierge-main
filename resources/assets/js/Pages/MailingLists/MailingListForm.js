@@ -135,7 +135,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                                     multiple
                                     defaultValue={list?.recipient_users.map(user => ({
                                         value: user.id,
-                                        label: `${user.name} (${user.email}) [${user.singer.roles.map(role => role.name).join(', ')}]`,
+                                        label: user.name,
                                         name: user.name,
                                         avatarUrl: user.avatar_url,
                                         email: user.email,
@@ -190,8 +190,11 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                                         multiple
                                         defaultValue={list?.sender_users.map(user => ({
                                             value: user.id,
-                                            label: `${user.name} (${user.email}) [${user.singer.roles.map(role => role.name).join(', ')}]`,
+                                            label: user.name,
                                             name: user.name,
+                                            avatarUrl: user.avatar_url,
+                                            email: user.email,
+                                            roles: user.singer.roles,
                                         })) ?? null}
                                         updateFn={value => setData('sender_users', value)}
                                     />
