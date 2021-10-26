@@ -53,7 +53,7 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
 
                             <div className="sm:col-span-6">
                                 <RadioGroup
-                                    label="Select a song status"
+                                    label={<Label label="Song Status" />}
                                     options={statuses.map(status => ({ ...status, name: status.title, icon: 'circle'}))}
                                     selected={data.status}
                                     setSelected={value => setData('status', value)}

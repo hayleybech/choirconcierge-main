@@ -68,7 +68,7 @@ class HandleInertiaRequests extends Middleware
                 'create_task' => auth()->user()?->can('create', Task::class),
             ],
             'googleApiKey' => config('services.google.key'),
-            'tenant_timezone' => (tenancy()?->tenant->timezone->toRegionName().' '.tenancy()?->tenant->timezone->toOffsetName()) ?? '',
+            'tenant' => tenancy()?->tenant,
         ]);
     }
 }

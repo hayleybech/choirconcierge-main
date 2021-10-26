@@ -19,6 +19,7 @@ use App\Http\Controllers\RecurringEventController;
 use App\Http\Controllers\RiserStackController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RsvpController;
+use App\Http\Controllers\Search\FindSingerController;
 use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SingerPlacementController;
 use App\Http\Controllers\SongAttachmentController;
@@ -111,6 +112,11 @@ Route::middleware([
         // User Impersonation
         Route::get('{user}/impersonate', [ImpersonateUserController::class, 'start'])->name('users.impersonate');
         Route::get('/impersonation/stop', [ImpersonateUserController::class, 'stop'])->name('impersonation.stop');
+    });
+
+    // Search APIs
+    Route::prefix('find')->middleware(['auth'])->group(function() {
+        Route::get('/singers', FindSingerController::class)->name('find.singers');
     });
 
     // Mailing Lists (User Groups) module

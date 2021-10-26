@@ -17,7 +17,7 @@ const RadioGroup = ({ label, options, selected, setSelected, vertical }) => (
                     disabled={option.disabled ?? false}
                     className={({ checked }) =>
                         classNames(
-                            'relative border p-4 flex cursor-pointer focus:outline-none flex-grow',
+                            'relative border p-4 flex cursor-pointer focus:outline-none flex-grow items-center',
                             (vertical && index === 0) && 'rounded-tl-md rounded-tr-md',
                             (vertical && index === options.length - 1) && 'rounded-bl-md rounded-br-md',
                             (!vertical && index === 0) && 'rounded-tl-md rounded-bl-md',
@@ -38,6 +38,15 @@ const RadioGroup = ({ label, options, selected, setSelected, vertical }) => (
                             >
                               <span className="rounded-full bg-white w-1.5 h-1.5 flex-shrink-0" />
                             </span>
+
+                            {option.icon && <Icon icon={option.icon} mr className={classNames(
+                                'text-lg ml-3',
+                                option.colour && `text-${option.colour}`,
+                                (checked && !option.colour) && 'text-purple-700',
+                                (!checked && !option.colour) && 'text-gray-900',
+                                option.disabled && 'text-opacity-50',
+                            )} />}
+
                             <div className="ml-3 flex flex-col">
                                 <BaseRadioGroup.Label
                                     as="span"
@@ -47,7 +56,6 @@ const RadioGroup = ({ label, options, selected, setSelected, vertical }) => (
                                         option.disabled && 'text-opacity-50',
                                     )}
                                 >
-                                    {option.icon && <Icon icon={option.icon} mr className={`text-sm text-${option.colour}`} />}
                                     {option.name}
                                 </BaseRadioGroup.Label>
                                 {option.description && (

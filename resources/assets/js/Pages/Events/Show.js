@@ -74,7 +74,7 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
                                 {event.description}
                             </div>
 
-                            <p className="text-sm text-gray-500 my-2">Choir's Timezone: {pageProps.tenant_timezone}</p>
+                            <p className="text-sm text-gray-500 my-2">Choir's Timezone: {pageProps.tenant.timezone_label}</p>
                         </div>
 
                     </div>
