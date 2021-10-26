@@ -33,6 +33,9 @@ class FindSingerController extends Controller
                     'value' => $singer->user->id,
                     'label' => $singer->user->name . ' ('.$singer->user->email.')'. $role_string,
                     'name' => $singer->user->name,
+                    'avatarUrl' => $singer->user->avatar_url,
+                    'email' => $singer->user->email,
+                    'roles' => $singer->roles,
                 ];
             });
 

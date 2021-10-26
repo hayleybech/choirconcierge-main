@@ -137,6 +137,9 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                                         value: user.id,
                                         label: `${user.name} (${user.email}) [${user.singer.roles.map(role => role.name).join(', ')}]`,
                                         name: user.name,
+                                        avatarUrl: user.avatar_url,
+                                        email: user.email,
+                                        roles: user.singer.roles,
                                     })) ?? null}
                                     updateFn={value => setData('recipient_users', value)}
                                 />
