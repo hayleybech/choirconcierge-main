@@ -46,10 +46,21 @@ class UserGroupController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 */
-	public function create(): View
+	public function create(): View|Response
 	{
 		$voice_parts = VoicePart::all();
 		$singer_categories = SingerCategory::all();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('MailingLists/Create', [
+                'roles' => Role::where('name', '!=', 'User')->get()->values(),
+                'voiceParts' => $voice_parts->values(),
+                'singerCategories' => $singer_categories->values(),
+            ]);
+        }
+
 		return view('groups.create', compact('voice_parts', 'singer_categories'));
 	}
 
