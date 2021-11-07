@@ -151,11 +151,20 @@ class EventController extends Controller
 		]);
 	}
 
-	public function edit(Event $event): View
+	public function edit(Event $event): View|Response
 	{
 		$this->authorize('update', $event);
 
 		$types = EventType::all();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Events/Edit', [
+                'event' => $event,
+                'types' => $types->values(),
+            ]);
+        }
 
 		return view('events.edit', compact('event', 'types'));
 	}

@@ -22,7 +22,7 @@ const RadioGroup = ({ label, options, selected, setSelected, vertical }) => (
                             (vertical && index === options.length - 1) && 'rounded-bl-md rounded-br-md',
                             (!vertical && index === 0) && 'rounded-tl-md rounded-bl-md',
                             (!vertical && index === options.length - 1) && 'rounded-tr-md rounded-br-md',
-                            checked ? 'bg-purple-100 border-purple-300 z-10' : 'border-gray-200',
+                            checked ? 'bg-purple-100 border-purple-300 z-10' : 'border-gray-300',
                         )
                     }
                 >
