@@ -32,6 +32,7 @@ class DashController extends Controller
 		$birthdays = User::query()
             ->birthdays()
 			->get()
+            ->each->append('birthday')
 			->sort(static function (User $user1, User $user2): int {
 				// Sort by birthday
 
@@ -76,11 +77,11 @@ class DashController extends Controller
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Dash/Show', [
-//                'birthdays' => $birthdays,
-//                'memberversaries' => $memberversaries,
-//                'empty_dobs' => $empty_dobs,
                 'events' => $events->values(),
                 'songs' => $songs->values(),
+                'birthdays' => $birthdays->values(),
+                'emptyDobs' => $empty_dobs,
+//                'memberversaries' => $memberversaries,
             ]);
         }
 

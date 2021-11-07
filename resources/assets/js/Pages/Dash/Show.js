@@ -3,8 +3,9 @@ import Layout from "../../Layouts/Layout";
 import AppHead from "../../components/AppHead";
 import UpcomingEventsWidget from "./UpcomingEventsWidget";
 import SongsToLearnWidget from "./SongsToLearnWidget";
+import BirthdaysWidget from "./BirthdaysWidget";
 
-const Show = ({ events, songs }) => (
+const Show = ({ events, songs, birthdays, emptyDobs }) => (
     <>
         <AppHead title="Dashboard" />
         <div className="py-6">
@@ -18,6 +19,10 @@ const Show = ({ events, songs }) => (
 
                     <div className="sm:col-span-2">
                         <SongsToLearnWidget songs={songs} />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                        <BirthdaysWidget birthdays={birthdays} emptyDobs={emptyDobs} />
                     </div>
                 </div>
             </div>
