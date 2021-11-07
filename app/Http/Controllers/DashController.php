@@ -80,14 +80,13 @@ class DashController extends Controller
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');
 
-            return Inertia::render('Dash/Show');
-//            return Inertia::render('Dash/Show', [
+            return Inertia::render('Dash/Show', [
 //                'birthdays' => $birthdays,
 //                'memberversaries' => $memberversaries,
 //                'empty_dobs' => $empty_dobs,
 //                'songs' => $songs,
-//                'events' => $events,
-//            ]);
+                'events' => $events,
+            ]);
         }
 
         return view('dash', [

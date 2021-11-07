@@ -58,6 +58,7 @@ class HandleInertiaRequests extends Middleware
                 'list_events' => auth()->user()?->can('viewAny', Event::class),
                 'create_event' => auth()->user()?->can('create', Event::class),
                 'list_attendances' => auth()->user()?->can('viewAny', Attendance::class),
+                'create_attendance' => auth()->user()?->can('create', Attendance::class),
                 'list_folders' => auth()->user()?->can('viewAny', Folder::class),
                 'create_folder' => auth()->user()?->can('create', Folder::class),
                 'list_stacks' => auth()->user()?->can('viewAny', RiserStack::class),

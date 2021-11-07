@@ -1,0 +1,70 @@
+import React from 'react';
+import Panel from "../../components/Panel";
+import SectionTitle from "../../components/SectionTitle";
+import TableMobile, {TableMobileItem} from "../../components/TableMobile";
+import DateTag from "../../components/DateTag";
+import {DateTime} from "luxon";
+import GoogleMap from "../../components/GoogleMap";
+import ButtonLink from "../../components/inputs/ButtonLink";
+import Icon from "../../components/Icon";
+import {usePage} from "@inertiajs/inertia-react";
+import RsvpTag from "../../components/Event/RsvpTag";
+import Button from "../../components/inputs/Button";
+import MyRsvpButtons from "../../components/Event/MyRsvpButtons";
+
+const UpcomingEventsWidget = ({ events }) => {
+    const { can } = usePage().props;
+
+    return (
+        <Panel header={<SectionTitle>Upcoming Events</SectionTitle>} noPadding>
+            <TableMobile>
+                {events.length > 0 && events.map((event) => (
+                    <TableMobileItem url={route('events.show', event)}>
+                        <div className="flex-1 flex flex-col mr-4">
+                            <div className="flex-1 flex items-center justify-between">
+                                <div className="flex">
+                                    {isToday(event) && (
+                                        <div className="text-sm font-bold mr-2">Today</div>
+                                    )}
+                                    <div className="text-sm font-medium text-purple-800">{event.title}</div>
+                                </div>
+                                <div className="text-sm">
+                                    <DateTag date={event.call_time} format={isToday(event) ? 'TIME_24_SIMPLE' : 'DATE_MED'} />
+                                </div>
+                            </div>
+                            {isToday(event) && can['create_attendance'] && (
+                                <ButtonLink href={route('events.attendances.index', event)} variant="primary" size="sm" className="mt-2">
+                                    <Icon icon="edit" mr />
+                                    Record Attendance
+                                </ButtonLink>
+                            )}
+                            {isToday(event) && (
+                                <div className="mt-2">
+                                    <p className="text-sm text-gray-500 font-bold">{event.location_name}</p>
+                                    <p className="text-sm text-gray-500">{event.location_address}</p>
+                                    {event.location_place_id && <GoogleMap placeId={event.location_place_id} />}
+                                </div>
+                            )}
+                            {! isToday(event) && (
+                                <div className="flex items-center justify-between mt-2">
+                                    <RsvpTag label={event.my_rsvp.label} icon={event.my_rsvp.icon} colour={event.my_rsvp.colour} />
+
+                                    <MyRsvpButtons event={event} size="xs" />
+                                </div>
+                            )}
+                        </div>
+                    </TableMobileItem>
+                ))}
+                {events.length === 0 && (
+                    <p className="px-4 py-4 sm:px-6">No events this month.</p>
+                )}
+            </TableMobile>
+        </Panel>
+    );
+}
+
+export default UpcomingEventsWidget;
+
+function isToday(event) {
+    return DateTime.fromISO(event.call_time).hasSame(DateTime.now(), 'day');
+}
