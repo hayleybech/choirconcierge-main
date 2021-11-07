@@ -9,7 +9,6 @@ import ButtonLink from "../../components/inputs/ButtonLink";
 import Icon from "../../components/Icon";
 import {usePage} from "@inertiajs/inertia-react";
 import RsvpTag from "../../components/Event/RsvpTag";
-import Button from "../../components/inputs/Button";
 import MyRsvpButtons from "../../components/Event/MyRsvpButtons";
 
 const UpcomingEventsWidget = ({ events }) => {
@@ -21,23 +20,24 @@ const UpcomingEventsWidget = ({ events }) => {
                 {events.length > 0 && events.map((event) => (
                     <TableMobileItem url={route('events.show', event)}>
                         <div className="flex-1 flex flex-col mr-4">
-                            <div className="flex-1 flex items-center justify-between">
-                                <div className="flex">
-                                    {isToday(event) && (
-                                        <div className="text-sm font-bold mr-2">Today</div>
-                                    )}
-                                    <div className="text-sm font-medium text-purple-800">{event.title}</div>
-                                </div>
+                            {isToday(event) && (
+                            <div className="flex items-center justify-between mb-3">
+                                <div className="text-md font-bold mr-2">Today</div>
+
+                                {can['create_attendance'] && (
+                                    <ButtonLink href={route('events.attendances.index', event)} variant="primary" size="xs" className="mt-2">
+                                        <Icon icon="edit" mr />
+                                        Record Attendance
+                                    </ButtonLink>
+                                )}
+                            </div>
+                            )}
+                            <div className="flex items-center justify-between">
+                                <div className="text-sm font-medium text-purple-800">{event.title}</div>
                                 <div className="text-sm">
                                     <DateTag date={event.call_time} format={isToday(event) ? 'TIME_24_SIMPLE' : 'DATE_MED'} />
                                 </div>
                             </div>
-                            {isToday(event) && can['create_attendance'] && (
-                                <ButtonLink href={route('events.attendances.index', event)} variant="primary" size="sm" className="mt-2">
-                                    <Icon icon="edit" mr />
-                                    Record Attendance
-                                </ButtonLink>
-                            )}
                             {isToday(event) && (
                                 <div className="mt-2">
                                     <p className="text-sm text-gray-500 font-bold">{event.location_name}</p>
