@@ -20,7 +20,11 @@ class SingerRequest extends FormRequest
 
 	public function prepareForValidation()
 	{
-		$this->whenHas('onboarding_disabled', fn() => $this->merge(['onboarding_enabled' => false]));
+        if(config('features.rebuild')) {
+            $this->merge(['onboarding_enabled' => ! $this->input('onboarding_disabled')]);
+        } else {
+		    $this->whenHas('onboarding_disabled', fn() => $this->merge(['onboarding_enabled' => false]));
+        }
 	}
 
 	/**

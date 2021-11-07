@@ -66,11 +66,19 @@ class EventController extends Controller
 		]);
 	}
 
-	public function create(): View
+	public function create(): View|Response
 	{
 		$this->authorize('create', Event::class);
 
 		$types = EventType::all();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Events/Create', [
+                'types' => $types->values(),
+            ]);
+        }
 
 		return view('events.create', compact('types'));
 	}
@@ -84,12 +92,11 @@ class EventController extends Controller
 				->toArray(),
 		);
 
-		$request->whenHas(
-			'send_notification',
-			fn() => Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventCreated($event)),
-		);
+        if($request->input('send_notification')) {
+            Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventCreated($event));
+        }
 
-		return redirect()
+        return redirect()
 			->route('events.show', [$event])
 			->with(['status' => 'Event created. ']);
 	}
@@ -183,10 +190,9 @@ class EventController extends Controller
 				->toArray(),
 		);
 
-		$request->whenHas(
-			'send_notification',
-			fn() => Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventUpdated($event)),
-		);
+        if($request->input('send_notification')) {
+            Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventUpdated($event));
+        }
 
 		return redirect()
 			->route('events.show', [$event])

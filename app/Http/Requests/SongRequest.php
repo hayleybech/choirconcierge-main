@@ -19,6 +19,15 @@ class SongRequest extends FormRequest
 		return true;
 	}
 
+    public function prepareForValidation()
+    {
+        if(! config('features.rebuild')) {
+            $this->merge([
+                'send_notification' => $this->has('send_notification'),
+            ]);
+        }
+    }
+
 	/**
 	 * Get the validation rules that apply to the request.
 	 *
@@ -33,6 +42,7 @@ class SongRequest extends FormRequest
 			'status' => ['required', 'exists:song_statuses,id'],
 			'pitch_blown' => ['required'],
 			'song' => [],
+            'send_notification' => ['boolean'],
 		];
 	}
 }
