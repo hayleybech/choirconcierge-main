@@ -81,7 +81,7 @@ class DashController extends Controller
                 'songs' => $songs->values(),
                 'birthdays' => $birthdays->values(),
                 'emptyDobs' => $empty_dobs,
-//                'memberversaries' => $memberversaries,
+                'memberversaries' => $memberversaries->values(),
             ]);
         }
 
