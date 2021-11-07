@@ -14,7 +14,7 @@ const MyLearningStatus = ({ song }) => (
         <LearningStatusTag name={song.my_learning.status_name} colour={song.my_learning.status_colour} icon={song.my_learning.status_icon} />
 
         {song.my_learning.status === 'not-started' && (
-            <Button href={route('songs.my-learning.update', song)} method="post" size="sm">I'm Assessment Ready</Button>
+            <Button href={route('songs.my-learning.update', song)} method="post" size="sm" className="mt-2">I'm Assessment Ready</Button>
         )}
     </div>
 );

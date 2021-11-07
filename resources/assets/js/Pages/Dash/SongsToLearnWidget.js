@@ -1,0 +1,26 @@
+import React from 'react';
+import SectionTitle from "../../components/SectionTitle";
+import Panel from "../../components/Panel";
+import TableMobile, {TableMobileItem} from "../../components/TableMobile";
+import LearningStatusTag from "../../components/Song/LearningStatusTag";
+
+const SongsToLearnWidget = ({ songs }) => (
+    <Panel header={<SectionTitle>Songs to Learn</SectionTitle>} noPadding>
+        {songs.length > 0 ? (
+            <TableMobile>
+                {songs.map((song) => (
+                    <TableMobileItem url={route('songs.show', song)}>
+                        <div className="text-sm font-medium text-purple-800 shrink-1">{song.title}</div>
+                        <div className="text-sm">
+                            <LearningStatusTag name={song.my_learning.status_name} colour={song.my_learning.status_colour} icon={song.my_learning.status_icon} />
+                        </div>
+                    </TableMobileItem>
+                ))}
+            </TableMobile>
+        ) : (
+            <p className="px-4 py-4 sm:px-6">No new songs to learn.</p>
+        )}
+    </Panel>
+);
+
+export default SongsToLearnWidget;

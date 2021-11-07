@@ -16,8 +16,9 @@ const UpcomingEventsWidget = ({ events }) => {
 
     return (
         <Panel header={<SectionTitle>Upcoming Events</SectionTitle>} noPadding>
+            {events.length > 0 ? (
             <TableMobile>
-                {events.length > 0 && events.map((event) => (
+                {events.map((event) => (
                     <TableMobileItem url={route('events.show', event)}>
                         <div className="flex-1 flex flex-col mr-4">
                             {isToday(event) && (
@@ -55,10 +56,10 @@ const UpcomingEventsWidget = ({ events }) => {
                         </div>
                     </TableMobileItem>
                 ))}
-                {events.length === 0 && (
-                    <p className="px-4 py-4 sm:px-6">No events this month.</p>
-                )}
             </TableMobile>
+            ) : (
+                <p className="px-4 py-4 sm:px-6">No events this month.</p>
+            )}
         </Panel>
     );
 }

@@ -2,8 +2,9 @@ import React from 'react'
 import Layout from "../../Layouts/Layout";
 import AppHead from "../../components/AppHead";
 import UpcomingEventsWidget from "./UpcomingEventsWidget";
+import SongsToLearnWidget from "./SongsToLearnWidget";
 
-const Show = ({ events }) => (
+const Show = ({ events, songs }) => (
     <>
         <AppHead title="Dashboard" />
         <div className="py-6">
@@ -13,6 +14,10 @@ const Show = ({ events }) => (
                 <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-2">
                         <UpcomingEventsWidget events={events} />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                        <SongsToLearnWidget songs={songs} />
                     </div>
                 </div>
             </div>

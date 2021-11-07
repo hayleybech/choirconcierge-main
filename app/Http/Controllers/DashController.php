@@ -58,18 +58,6 @@ class DashController extends Controller
             ->emptyDobs()
             ->count();
 
-        $songs = Song::whereHas('status', static function (Builder $query) {
-                return $query->where('title', 'Learning');
-            })
-            ->orderBy('title')
-            ->get()
-            ->groupBy('my_learning.status')
-            ->map(function ($songs) {
-                $learning = $songs->first()->my_learning ?? LearningStatus::getNullLearningStatus();
-                $learning->songs = $songs;
-                return $learning;
-            });
-
         $events = Event::query()
             ->with(['my_rsvp'])
             ->where('call_time', '>', today())
@@ -78,16 +66,35 @@ class DashController extends Controller
             ->get();
 
         if(config('features.rebuild')){
+            $songs = Song::whereHas('status', static function (Builder $query) {
+                    return $query->where('title', 'Learning');
+                })
+                ->orderBy('title')
+                ->get()
+                ->each->append('my_learning');
+
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Dash/Show', [
 //                'birthdays' => $birthdays,
 //                'memberversaries' => $memberversaries,
 //                'empty_dobs' => $empty_dobs,
-//                'songs' => $songs,
-                'events' => $events,
+                'events' => $events->values(),
+                'songs' => $songs->values(),
             ]);
         }
+
+        $songs = Song::whereHas('status', static function (Builder $query) {
+            return $query->where('title', 'Learning');
+        })
+            ->orderBy('title')
+            ->get()
+            ->groupBy('my_learning.status')
+            ->map(function ($songs) {
+                $learning = $songs->first()->my_learning ?? LearningStatus::getNullLearningStatus();
+                $learning->songs = $songs;
+                return $learning;
+            });
 
         return view('dash', [
             'birthdays' => $birthdays,
