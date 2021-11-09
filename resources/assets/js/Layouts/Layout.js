@@ -15,6 +15,7 @@ import { PlayerContext } from '../contexts/player-context';
 import { AudioPlayerProvider } from "react-use-audio-player"
 import Icon from "../components/Icon";
 import HeadwayWidget from '@headwayapp/react-widget';
+import ImpersonateUserModal from "../components/ImpersonateUserModal";
 
 export default function Layout({children}) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,13 +26,16 @@ export default function Layout({children}) {
         src: null,
         play: play,
     });
+    const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 
-    const { can, user } = usePage().props
+    const { can, user, impersonationActive } = usePage().props
 
     const userNavigation = [
         { name: 'Your Profile', href: route('singers.show', user.singer), icon: 'user' },
         { name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit' },
-        { name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' },
+        { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
+        { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
+        { name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' }
     ]
 
     function play(attachment) {
@@ -112,7 +116,12 @@ export default function Layout({children}) {
                                 {/* Profile dropdown */}
                                 <Menu as="div" className="ml-3 relative">
                                     <div>
-                                        <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                        <Menu.Button
+                                            className={classNames(
+                                                'max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500',
+                                                impersonationActive ? 'border-2 border-red-500' : '',
+                                            )}
+                                        >
                                             <span className="sr-only">Open user menu</span>
                                             <img
                                                 className="h-8 w-8 rounded-lg"
@@ -134,14 +143,31 @@ export default function Layout({children}) {
                                             {userNavigation.map((item) => (
                                                 <Menu.Item key={item.name}>
                                                     {({ active }) => (
-                                                        <Link
-                                                            href={item.href}
-                                                            method={item.method}
-                                                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                                                        >
-                                                            <Icon icon={item.icon} mr />
-                                                            {item.name}
-                                                        </Link>
+                                                        <>
+                                                        {item.hide || (
+                                                            <>
+                                                            {item.href ? (
+                                                                <Link
+                                                                    href={item.href}
+                                                                    method={item.method}
+                                                                    className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                                                                >
+                                                                    <Icon icon={item.icon} mr />
+                                                                    {item.name}
+                                                                </Link>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={item.action}
+                                                                    type="button"
+                                                                    className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                                                                >
+                                                                    <Icon icon={item.icon} mr />
+                                                                    {item.name}
+                                                                </button>
+                                                            )}
+                                                            </>
+                                                        )}
+                                                        </>
                                                     )}
                                                 </Menu.Item>
                                             ))}
@@ -160,6 +186,8 @@ export default function Layout({children}) {
                         {player.fileName && <GlobalTrackPlayer songTitle={player.songTitle} songId={player.songId} fileName={player.fileName} />}
                     </AudioPlayerProvider>
                 </div>
+
+                <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
             </div>
         </PlayerContext.Provider>
     )
