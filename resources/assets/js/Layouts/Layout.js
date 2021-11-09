@@ -14,6 +14,7 @@ import GlobalTrackPlayer from "../components/Audio/GlobalTrackPlayer";
 import { PlayerContext } from '../contexts/player-context';
 import { AudioPlayerProvider } from "react-use-audio-player"
 import Icon from "../components/Icon";
+import HeadwayWidget from '@headwayapp/react-widget';
 
 export default function Layout({children}) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -98,6 +99,15 @@ export default function Layout({children}) {
                                     <span className="sr-only">View notifications</span>
                                     <BellIcon className="h-6 w-6" aria-hidden="true" />
                                 </button>
+
+                                <div className="text-gray-500 text-sm mx-2">
+                                    <HeadwayWidget account="7L6Rky" badgePosition="top-right">
+                                        <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank">
+                                            <Icon icon="code" mr />
+                                            Updates
+                                        </a>
+                                    </HeadwayWidget>
+                                </div>
 
                                 {/* Profile dropdown */}
                                 <Menu as="div" className="ml-3 relative">
