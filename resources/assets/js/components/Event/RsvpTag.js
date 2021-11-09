@@ -1,8 +1,8 @@
 import React from 'react';
 import Icon from "../Icon";
 
-const RsvpTag = ({ label, colour, icon }) => (
-    <span className={`text-sm mr-6 text-${colour}-500`}>
+const RsvpTag = ({ label, colour, icon, size = 'sm', className }) => (
+    <span className={`text-${size} text-${colour}-500 ${className}`}>
         <Icon icon={icon} mr/>
         {label}
     </span>

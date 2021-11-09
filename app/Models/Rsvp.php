@@ -57,7 +57,7 @@ class Rsvp extends Model
 		$labels = [
 			'yes' => 'Going',
 			'maybe' => 'Maybe',
-            'unknown' => 'Not responded',
+            'unknown' => 'No response',
 			'no' => 'Not Going',
 		];
 		return $labels[$this->response];

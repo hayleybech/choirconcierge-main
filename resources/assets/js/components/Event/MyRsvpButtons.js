@@ -14,7 +14,7 @@ const MyRsvpButtons = ({ event, size = 'sm' }) => (
                 data={{rsvp_response: 'yes'}}
             >
                 <Icon icon="check" mr/>
-                I'm Going
+                Going
             </Button>
         )}
         {event.my_rsvp?.response !== 'no' && (
@@ -26,7 +26,7 @@ const MyRsvpButtons = ({ event, size = 'sm' }) => (
                 data={{rsvp_response: 'no'}}
             >
                 <Icon icon="times" mr/>
-                I'm Not Going
+                Not Going
             </Button>
         )}
     </div>

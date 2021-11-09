@@ -20,7 +20,7 @@ const UpcomingEventsWidget = ({ events }) => {
             <TableMobile>
                 {events.map((event) => (
                     <TableMobileItem url={route('events.show', event)}>
-                        <div className="flex-1 flex flex-col mr-4">
+                        <div className="flex-1 flex flex-col mr-2 sm:mr-4">
                             {isToday(event) && (
                             <div className="flex items-center justify-between mb-3">
                                 <div className="text-md font-bold mr-2">Today</div>
@@ -48,7 +48,7 @@ const UpcomingEventsWidget = ({ events }) => {
                             )}
                             {! isToday(event) && (
                                 <div className="flex items-center justify-between mt-2">
-                                    <RsvpTag label={event.my_rsvp.label} icon={event.my_rsvp.icon} colour={event.my_rsvp.colour} />
+                                    <RsvpTag label={event.my_rsvp.label} icon={event.my_rsvp.icon} colour={event.my_rsvp.colour} size="xs" className="mr-3" />
 
                                     <MyRsvpButtons event={event} size="xs" />
                                 </div>
