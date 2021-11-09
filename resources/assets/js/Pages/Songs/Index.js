@@ -27,7 +27,7 @@ const Index = ({ songs }) => (
         </div>
 
         {/* Mobile Table */}
-        <div className="bg-white shadow overflow-hidden block lg:hidden">
+        <div className="bg-white shadow block lg:hidden">
             <SongTableMobile songs={songs} />
         </div>
     </>

@@ -4,7 +4,7 @@ import {Link} from "@inertiajs/inertia-react";
 
 const Breadcrumbs = ({ breadcrumbs }) => {
     const parentCrumb = breadcrumbs[breadcrumbs.length - 2] ?? breadcrumbs[0];
-    
+
     return (
         <div>
             <nav className="sm:hidden" aria-label="Back">

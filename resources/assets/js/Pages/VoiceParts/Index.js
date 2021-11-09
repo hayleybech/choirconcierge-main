@@ -27,7 +27,7 @@ const Index = ({ parts }) => (
         </div>
 
         {/* Mobile Table */}
-        <div className="bg-white shadow overflow-hidden block lg:hidden">
+        <div className="bg-white shadow block lg:hidden">
             <VoicePartTableMobile voiceParts={parts} />
         </div>
     </>

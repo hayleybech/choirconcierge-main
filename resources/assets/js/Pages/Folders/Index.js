@@ -25,7 +25,7 @@ const Index = ({ folders }) => (
             <FolderTableDesktop folders={folders} />
         </div>
 
-        <div className="bg-white shadow overflow-hidden block lg:hidden">
+        <div className="bg-white shadow block lg:hidden">
             <FolderTableMobile folders={folders} />
         </div>
     </>
