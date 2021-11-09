@@ -70,6 +70,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'googleApiKey' => config('services.google.key'),
             'tenant' => tenancy()?->tenant,
+            'user' => auth()->user(),
         ]);
     }
 }
