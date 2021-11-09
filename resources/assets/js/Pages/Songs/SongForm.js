@@ -72,26 +72,25 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
                                 />
                             </div>
 
-                            <fieldset className="mt-6 sm:col-span-6">
-                                <legend className="text-base font-medium text-gray-900">Notifications</legend>
-                                <div className="relative flex items-start mr-8 mb-4">
-                                    <div className="flex items-center h-5">
-                                        <CheckboxInput
-                                            id="send_notification"
-                                            name="send_notification"
-                                            value={true}
-                                            checked={data.send_notification}
-                                            onChange={e => setData('send_notification', e.target.checked)}
-                                        />
-                                    </div>
-                                    <div className="ml-3 text-sm">
-                                        <label htmlFor="send_notification" className="font-medium text-gray-700">
-                                            Send "New Song" notification to singers?
-                                        </label>
-                                    </div>
-                                </div>
-                            </fieldset>
+                        </FormSection>
 
+                        <FormSection title="Notifications">
+                            <div className="relative flex items-start mr-8 mb-4 sm:col-span-6">
+                                <div className="flex items-center h-5">
+                                    <CheckboxInput
+                                        id="send_notification"
+                                        name="send_notification"
+                                        value={true}
+                                        checked={data.send_notification}
+                                        onChange={e => setData('send_notification', e.target.checked)}
+                                    />
+                                </div>
+                                <div className="ml-3 text-sm">
+                                    <label htmlFor="send_notification" className="font-medium text-gray-700">
+                                        Send {song ? '"Song Updated"' : '"New Song"'} notification to singers?
+                                    </label>
+                                </div>
+                            </div>
                         </FormSection>
 
                     </div>
