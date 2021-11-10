@@ -25,8 +25,11 @@ const ImpersonateUserModal = ({ isOpen, setIsOpen }) => {
                 You can return to your account at anytime by opening the account menu then clicking "Stop Impersonating".
             </p>
 
-            <Label label="Singers" />
-            <SingerSelect updateFn={(value) => setSelectedSinger(value)} />
+            <div className="mb-6">
+                <Label label="Singers" />
+                <SingerSelect updateFn={(value) => setSelectedSinger(value)} />
+            </div>
+
         </Dialog>
     );
 }
