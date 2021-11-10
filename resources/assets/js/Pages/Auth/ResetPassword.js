@@ -7,23 +7,24 @@ import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import CheckboxInput from "../../components/inputs/CheckboxInput";
 
-const Login = ({  }) => {
+const Login = ({ email, token }) => {
     const { tenant } = usePage().props;
     const { data, setData, post, processing, errors } = useForm({
-        email: '',
+        email: email,
         password: '',
-        remember: false,
+        password_confirmation: '',
+        token: token,
     });
 
     function submit(e) {
         e.preventDefault();
 
-        post(route('login'));
+        post(route('password.request'));
     }
 
     return (
         <>
-            <AppHead title="Login" />
+            <AppHead title="Reset Password" />
 
             <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-100">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -32,7 +33,7 @@ const Login = ({  }) => {
 
                     {tenant && <img src="/tenancy/assets/choir-logo.png" alt={tenant.choir_name} className="h-12 w-auto mx-auto mt-6" />}
 
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Set your password</h2>
 
                 </div>
 
@@ -63,32 +64,20 @@ const Login = ({  }) => {
                                 {errors.password && <Error>{errors.password}</Error>}
                             </div>
 
-                            <div className="flex items-center justify-between">
-                                <div className="relative flex items-start mr-8 mb-4 sm:col-span-6">
-                                    <div className="flex items-center h-5">
-                                        <CheckboxInput
-                                            id="remember"
-                                            name="remember"
-                                            checked={data.remember}
-                                            onChange={e => setData('remember', e.target.checked)}
-                                        />
-                                    </div>
-                                    <div className="ml-3 text-sm">
-                                        <label htmlFor="remember" className="font-medium text-gray-700">
-                                            Remember me
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div className="text-sm">
-                                    <Link href={route('password.request')} className="font-medium text-purple-600 hover:text-purple-500">
-                                        Forgot your password?
-                                    </Link>
-                                </div>
+                            <div>
+                                <Label label="Confirm Password" forInput="password_confirmation" />
+                                <TextInput
+                                    name="password_confirmation"
+                                    type="password"
+                                    value={data.password_confirmation}
+                                    updateFn={value => setData('password_confirmation', value)}
+                                    hasErrors={ !! errors['password_confirmation'] }
+                                />
+                                {errors.password_confirmation && <Error>{errors.password_confirmation}</Error>}
                             </div>
 
                             <div>
-                                <Button variant="primary" type="submit" size="sm" className="w-full" disabled={processing}>Sign in</Button>
+                                <Button variant="primary" type="submit" size="sm" className="w-full" disabled={processing}>Set password</Button>
                             </div>
                         </form>
 
