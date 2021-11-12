@@ -13,6 +13,8 @@ import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import AppHead from "../../components/AppHead";
+import Form from "../../components/Form";
+import FormFooter from "../../components/FormFooter";
 
 const Edit = ({ voice_parts, roles, singer }) => {
     const { data, setData, put, processing, errors } = useForm({
@@ -46,7 +48,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
             />
 
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
+                <Form onSubmit={submit}>
 
                     <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
                         <div className="sm:col-span-3">
@@ -100,12 +102,12 @@ const Edit = ({ voice_parts, roles, singer }) => {
                         </fieldset>
                     </FormSection>
 
-                    <div className="pt-5 flex justify-end">
+                    <FormFooter>
                         <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
                         <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                    </div>
+                    </FormFooter>
 
-                </form>
+                </Form>
             </div>
         </>
     );

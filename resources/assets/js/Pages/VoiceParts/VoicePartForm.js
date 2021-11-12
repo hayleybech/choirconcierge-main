@@ -6,6 +6,8 @@ import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import Button from "../../components/inputs/Button";
+import Form from "../../components/Form";
+import FormFooter from "../../components/FormFooter";
 
 const VoicePartForm = ({ voicePart }) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -20,7 +22,7 @@ const VoicePartForm = ({ voicePart }) => {
 
     return (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
+            <Form onSubmit={submit}>
 
                 <FormSection title="Voice Part Details">
                     <div className="sm:col-span-6">
@@ -37,11 +39,11 @@ const VoicePartForm = ({ voicePart }) => {
 
                 </FormSection>
 
-                <div className="pt-5 flex justify-end">
+                <FormFooter>
                     <ButtonLink href={route('voice-parts.index')}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                </div>
-            </form>
+                </FormFooter>
+            </Form>
         </div>
     );
 }

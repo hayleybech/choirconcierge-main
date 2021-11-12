@@ -14,6 +14,8 @@ import ButtonLink from "../../components/inputs/ButtonLink";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
+import Form from "../../components/Form";
+import FormFooter from "../../components/FormFooter";
 
 const Create = ({voice_parts, roles}) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -52,7 +54,7 @@ const Create = ({voice_parts, roles}) => {
             />
 
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
+                <Form onSubmit={submit}>
 
                     <FormSection title="User Details" description="Create an account for the singer.">
                         <div className="sm:col-span-3">
@@ -143,11 +145,11 @@ const Create = ({voice_parts, roles}) => {
                     </FormSection>
                     )}
 
-                    <div className="pt-5 flex justify-end">
+                    <FormFooter>
                         <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
                         <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                    </div>
-                </form>
+                    </FormFooter>
+                </Form>
             </div>
         </>
     );

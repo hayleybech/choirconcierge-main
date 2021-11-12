@@ -10,6 +10,8 @@ import ButtonLink from "../../components/inputs/ButtonLink";
 import Button from "../../components/inputs/Button";
 import EmailSlugInput from "../../components/inputs/EmailSlugInput";
 import SingerSelect from "../../components/inputs/SingerSelect";
+import FormFooter from "../../components/FormFooter";
+import Form from "../../components/Form";
 
 const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
     const { props: pageProps } = usePage();
@@ -81,7 +83,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
 
     return (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
+            <Form onSubmit={submit}>
 
                 <FormSection title="Mailing List Details" description="Start setting up your mailing list.">
                     <div className="sm:col-span-6">
@@ -230,11 +232,11 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                     </FormSection>
                 )}
 
-                <div className="pt-5 flex justify-end">
+                <FormFooter>
                     <ButtonLink href={list ? route('songs.show', list) : route('songs.index')}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                </div>
-            </form>
+                </FormFooter>
+            </Form>
         </div>
     );
 }

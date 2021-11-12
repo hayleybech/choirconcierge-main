@@ -16,6 +16,8 @@ import TimeInput from "../../components/inputs/Time";
 import DetailToggle from "../../components/inputs/DetailToggle";
 import {DateTime} from "luxon";
 import {TIME_24_SIMPLE} from "luxon/src/impl/formats";
+import FormFooter from "../../components/FormFooter";
+import Form from "../../components/Form";
 
 const EventForm = ({ event, types }) => {
     const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
@@ -143,7 +145,7 @@ const EventForm = ({ event, types }) => {
 
     return (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
+            <Form onSubmit={submit}>
 
                 <FormSection title="Event Details">
                     <div className="sm:col-span-6">
@@ -304,11 +306,11 @@ const EventForm = ({ event, types }) => {
                     </div>
                 </FormSection>
 
-                <div className="pt-5 flex justify-end">
+                <FormFooter>
                     <ButtonLink href={event ? route('songs.show', event) : route('songs.index')}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                </div>
-            </form>
+                </FormFooter>
+            </Form>
         </div>
     );
 }

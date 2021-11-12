@@ -9,6 +9,8 @@ import Button from "../../components/inputs/Button";
 import RiserStackEditor from "../../components/RiserStack/RiserStackEditor";
 import DetailToggle from "../../components/inputs/DetailToggle";
 import RiserStackHoldingArea from "../../components/RiserStack/RiserStackHoldingArea";
+import FormFooter from "../../components/FormFooter";
+import Form from "../../components/Form";
 
 const RiserStackForm = ({ stack, voiceParts }) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -55,7 +57,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
     }
 
     return (
-        <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
+        <Form onSubmit={submit}>
 
             <div className="px-8">
                 <FormSection>
@@ -144,11 +146,11 @@ const RiserStackForm = ({ stack, voiceParts }) => {
                 </div>
             </div>
 
-            <div className="py-5 px-8 flex justify-end">
+            <FormFooter>
                 <ButtonLink href={stack ? route('stacks.show', stack) : route('stacks.index')}>Cancel</ButtonLink>
                 <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-            </div>
-        </form>
+            </FormFooter>
+        </Form>
     );
 }
 

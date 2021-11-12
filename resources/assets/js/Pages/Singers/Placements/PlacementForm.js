@@ -8,6 +8,8 @@ import Button from "../../../components/inputs/Button";
 import Error from "../../../components/inputs/Error";
 import Select from "../../../components/inputs/Select";
 import Icon from "../../../components/Icon";
+import FormFooter from "../../../components/FormFooter";
+import Form from "../../../components/Form";
 
 const PlacementForm = ({ singer, placement, voice_parts }) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -28,7 +30,7 @@ const PlacementForm = ({ singer, placement, voice_parts }) => {
 
     return (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
+            <Form onSubmit={submit}>
 
                 <FormSection title="Placement Details">
                     <div className="sm:col-span-6">
@@ -119,11 +121,11 @@ const PlacementForm = ({ singer, placement, voice_parts }) => {
 
                 </FormSection>
 
-                <div className="pt-5 flex justify-end">
+                <FormFooter>
                     <Button href={route('singers.show', [singer])}>Cancel</Button>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                </div>
-            </form>
+                </FormFooter>
+            </Form>
         </div>
     );
 }
