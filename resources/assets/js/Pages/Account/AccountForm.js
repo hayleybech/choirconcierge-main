@@ -16,7 +16,7 @@ const AccountForm = ({ }) => {
     const { data, setData, put, processing, errors } = useForm({
         first_name: user.first_name,
         last_name: user.last_name,
-        avatar: user.avatar_url,
+        avatar: null,
         email: user.email,
         phone: user.phone,
         password: '',
@@ -190,7 +190,7 @@ const AccountForm = ({ }) => {
                             <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                         </div>
                     </div>
-                    
+
                 </form>
             </div>
         </div>
