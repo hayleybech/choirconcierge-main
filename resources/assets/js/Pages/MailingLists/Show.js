@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
-import {DateTime} from "luxon";
 import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import Icon from "../../components/Icon";
@@ -37,60 +36,58 @@ const Show = ({ list }) => {
 
             <DeleteMailingListDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} list={list} />
 
-            <div className="bg-gray-50 flex-grow">
-                <div className="grid grid-cols-1 sm:grid-cols-2 h-full sm:divide-x sm:divide-x-gray-300">
+            <div className="grid grid-cols-1 sm:grid-cols-2 h-full sm:divide-x sm:divide-x-gray-300">
 
-                    <div className="sm:col-span-1">
-                        <div className="py-6 px-4 sm:px-6 lg:px-8">
-                            <SectionTitle>Recipients</SectionTitle>
-                        </div>
-                        <div className="h-full overflow-y-auto relative">
-                            <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
-                                <h3>Recipients</h3>
-                            </div>
-                            <ul role="list" className="relative z-0 divide-y divide-gray-200">
-                                {list.members.map((member) => (
-                                    <li key={member.id} >
-                                        <div className="relative px-6 py-5 flex items-center space-x-3">
-                                            <div className="flex items-center justify-between px-4">
-                                                <span className="text-sm font-medium truncate">
-                                                    {`${getTypeName(member.memberable_type)}: `}
-                                                    {member.memberable.name ?? member.memberable.title}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                <div className="sm:col-span-1">
+                    <div className="py-6 px-4 sm:px-6 lg:px-8">
+                        <SectionTitle>Recipients</SectionTitle>
                     </div>
-
-                    <div className="sm:col-span-1">
-                        <div className="py-6 px-4 sm:px-6 lg:px-8">
-                            <SectionTitle>Senders</SectionTitle>
+                    <div className="h-full overflow-y-auto relative">
+                        <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
+                            <h3>Recipients</h3>
                         </div>
-                        <div className="h-full overflow-y-auto relative">
-                            <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
-                                <h3>Senders</h3>
-                            </div>
-                            <ul role="list" className="relative z-0 divide-y divide-gray-200">
-                                {list.senders.map((sender) => (
-                                    <li key={sender.id} >
-                                        <div className="relative px-6 py-5 flex items-center space-x-3">
-                                            <div className="flex items-center justify-between px-4">
-                                                <span className="text-sm font-medium truncate">
-                                                    {`${getTypeName(sender.sender_type)}: `}
-                                                    {sender.sender.name ?? sender.sender.title}
-                                                </span>
-                                            </div>
+                        <ul role="list" className="relative z-0 divide-y divide-gray-200">
+                            {list.members.map((member) => (
+                                <li key={member.id} >
+                                    <div className="relative px-6 py-5 flex items-center space-x-3">
+                                        <div className="flex items-center justify-between px-4">
+                                            <span className="text-sm font-medium truncate">
+                                                {`${getTypeName(member.memberable_type)}: `}
+                                                {member.memberable.name ?? member.memberable.title}
+                                            </span>
                                         </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
-
                 </div>
+
+                <div className="sm:col-span-1">
+                    <div className="py-6 px-4 sm:px-6 lg:px-8">
+                        <SectionTitle>Senders</SectionTitle>
+                    </div>
+                    <div className="h-full overflow-y-auto relative">
+                        <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
+                            <h3>Senders</h3>
+                        </div>
+                        <ul role="list" className="relative z-0 divide-y divide-gray-200">
+                            {list.senders.map((sender) => (
+                                <li key={sender.id} >
+                                    <div className="relative px-6 py-5 flex items-center space-x-3">
+                                        <div className="flex items-center justify-between px-4">
+                                            <span className="text-sm font-medium truncate">
+                                                {`${getTypeName(sender.sender_type)}: `}
+                                                {sender.sender.name ?? sender.sender.title}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </>
     );

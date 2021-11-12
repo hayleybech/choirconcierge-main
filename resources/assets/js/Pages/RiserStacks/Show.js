@@ -1,11 +1,9 @@
 import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
-import {DateTime} from "luxon";
 import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import RiserStackEditor from "../../components/RiserStack/RiserStackEditor";
-import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 
 const Show = ({ stack }) => {
@@ -36,27 +34,19 @@ const Show = ({ stack }) => {
 
             <DeleteStackDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} stack={stack} />
 
-            <div className="bg-gray-50 flex-grow">
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 h-full">
-
-                    <div className="sm:col-span-2">
-                        <RiserStackEditor
-                            rows={parseInt(stack.rows)}
-                            columns={parseInt(stack.columns)}
-                            spotsOnFrontRow={parseInt(stack.front_row_length)}
-                            frontRowOnFloor={stack.front_row_on_floor}
-                            singerPositions={stack.singers}
-                            width={1000}
-                            height={500}
-                            setSelectedSinger={() => {}}
-                            removeSingerFromHoldingArea={() => {}}
-                            selectedSinger={null}
-                            setPositions={() => {}}
-                        />
-                    </div>
-
-                </div>
-            </div>
+            <RiserStackEditor
+                rows={parseInt(stack.rows)}
+                columns={parseInt(stack.columns)}
+                spotsOnFrontRow={parseInt(stack.front_row_length)}
+                frontRowOnFloor={stack.front_row_on_floor}
+                singerPositions={stack.singers}
+                width={1000}
+                height={500}
+                setSelectedSinger={() => {}}
+                removeSingerFromHoldingArea={() => {}}
+                selectedSinger={null}
+                setPositions={() => {}}
+            />
         </>
     );
 }
