@@ -184,11 +184,9 @@ const AccountForm = ({ }) => {
 
                     </FormSection>
 
-                    <div className="pt-5">
-                        <div className="flex justify-end">
-                            <ButtonLink href={route('singers.show', user.singer)}>Cancel</ButtonLink>
-                            <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                        </div>
+                    <div className="pt-5 flex justify-end">
+                        <ButtonLink href={route('singers.show', user.singer)}>Cancel</ButtonLink>
+                        <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                     </div>
 
                 </form>
