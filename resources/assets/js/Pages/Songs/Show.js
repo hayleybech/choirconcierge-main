@@ -41,27 +41,25 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
 
             <DeleteSongDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} song={song} />
 
-            <div className="bg-gray-50 flex-grow">
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 h-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 h-full">
 
-                    <div className="sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch">
-                        <SongAttachmentList attachment_categories={attachment_categories} song={song} />
-                        { song.can['update_song'] && <SongAttachmentForm categories={all_attachment_categories} song={song} />}
-                    </div>
+                <div className="sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch">
+                    <SongAttachmentList attachment_categories={attachment_categories} song={song} />
+                    { song.can['update_song'] && <SongAttachmentForm categories={all_attachment_categories} song={song} />}
+                </div>
 
-                    <div className="sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2">
-                        {/* PDF Viewer goes here */}
-                    </div>
+                <div className="sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2">
+                    {/* PDF Viewer goes here */}
+                </div>
 
-                    <div className="sm:col-span-1 sm:order-2 xl:order-3 sm:border-l sm:border-l-gray-300 sm:divide-y sm:divide-y-gray-300">
+                <div className="sm:col-span-1 sm:order-2 xl:order-3 sm:border-l sm:border-l-gray-300 sm:divide-y sm:divide-y-gray-300">
 
-                        <MyLearningStatus song={song} />
+                    <MyLearningStatus song={song} />
 
-                        { song.can['update_song'] && <LearningSummary status_count={status_count} voice_parts_count={voice_parts_count} song={song} />}
-
-                    </div>
+                    { song.can['update_song'] && <LearningSummary status_count={status_count} voice_parts_count={voice_parts_count} song={song} />}
 
                 </div>
+
             </div>
         </>
     );

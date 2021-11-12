@@ -51,46 +51,44 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
             <DeleteEventDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} event={event} />
             <EditRepeatingEventDialog isOpen={editDialogIsOpen} setIsOpen={setEditDialogIsOpen} event={event} />
 
-            <div className="bg-gray-50 flex-grow">
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 h-full sm:divide-x sm:divide-x-gray-300">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 h-full sm:divide-x sm:divide-x-gray-300">
 
-                    <div className="sm:col-span-1 xl:col-span-3 flex flex-col justify-stretch divide-y divide-y-gray-300">
+                <div className="sm:col-span-1 xl:col-span-3 flex flex-col justify-stretch divide-y divide-y-gray-300">
 
-                        <div className="py-6 px-4 sm:px-6 lg:px-8">
-                            <SectionHeader>
-                                <SectionTitle>Event Location</SectionTitle>
-                            </SectionHeader>
-                            <p><strong>{event.location_name}</strong></p>
-                            <p className="mb-8">{event.location_address}</p>
+                    <div className="py-6 px-4 sm:px-6 lg:px-8">
+                        <SectionHeader>
+                            <SectionTitle>Event Location</SectionTitle>
+                        </SectionHeader>
+                        <p><strong>{event.location_name}</strong></p>
+                        <p className="mb-8">{event.location_address}</p>
 
-                            <GoogleMap placeId={event.location_place_id} />
-                        </div>
-
-                        <div className="py-6 px-4 sm:px-6 lg:px-8">
-                            <SectionHeader>
-                                <SectionTitle>Event Description</SectionTitle>
-                            </SectionHeader>
-                            <div className="mb-8">
-                                {event.description}
-                            </div>
-
-                            <p className="text-sm text-gray-500 my-2">Choir's Timezone: {pageProps.tenant.timezone_label}</p>
-                        </div>
-
+                        <GoogleMap placeId={event.location_place_id} />
                     </div>
 
-                    <div className="sm:col-span-1 sm:divide-y sm:divide-y-gray-300">
+                    <div className="py-6 px-4 sm:px-6 lg:px-8">
+                        <SectionHeader>
+                            <SectionTitle>Event Description</SectionTitle>
+                        </SectionHeader>
+                        <div className="mb-8">
+                            {event.description}
+                        </div>
 
-                        <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />
-
-                        {event.can['update_event'] && <>
-                            <RsvpSummary event={event} rsvpCount={rsvpCount} voicePartsRsvpCount={voicePartsRsvpCount} />
-                            <AttendanceSummary event={event} attendanceCount={attendanceCount} voicePartsAttendanceCount={voicePartsAttendanceCount}/>
-                        </>}
-
+                        <p className="text-sm text-gray-500 my-2">Choir's Timezone: {pageProps.tenant.timezone_label}</p>
                     </div>
 
                 </div>
+
+                <div className="sm:col-span-1 sm:divide-y sm:divide-y-gray-300">
+
+                    <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />
+
+                    {event.can['update_event'] && <>
+                        <RsvpSummary event={event} rsvpCount={rsvpCount} voicePartsRsvpCount={voicePartsRsvpCount} />
+                        <AttendanceSummary event={event} attendanceCount={attendanceCount} voicePartsAttendanceCount={voicePartsAttendanceCount}/>
+                    </>}
+
+                </div>
+
             </div>
         </>
     );

@@ -80,55 +80,108 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
     ];
 
     return (
-        <div className="bg-gray-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
+                <FormSection title="Mailing List Details" description="Start setting up your mailing list.">
+                    <div className="sm:col-span-6">
+                        <Label label="Title" forInput="title" />
+                        <TextInput
+                            name="title"
+                            value={data.title}
+                            updateFn={value => setData({ ...data, title: value, slug: toSlug(value) })}
+                            hasErrors={ !! errors['title'] }
+                        />
+                        {errors.title && <Error>{errors.title}</Error>}
+                    </div>
 
-                    <FormSection title="Mailing List Details" description="Start setting up your mailing list.">
-                        <div className="sm:col-span-6">
-                            <Label label="Title" forInput="title" />
-                            <TextInput
-                                name="title"
-                                value={data.title}
-                                updateFn={value => setData({ ...data, title: value, slug: toSlug(value) })}
-                                hasErrors={ !! errors['title'] }
-                            />
-                            {errors.title && <Error>{errors.title}</Error>}
-                        </div>
+                    <div className="sm:col-span-6">
+                        <Label label="Address" forInput="slug" />
+                        <EmailSlugInput
+                            name="slug"
+                            value={data.slug}
+                            host={pageProps.tenant.host}
+                            updateFn={value => setData('slug', value)}
+                            hasErrors={ !! errors['slug'] }
+                        />
+                        {errors.slug && <Error>{errors.slug}</Error>}
+                    </div>
 
-                        <div className="sm:col-span-6">
-                            <Label label="Address" forInput="slug" />
-                            <EmailSlugInput
-                                name="slug"
-                                value={data.slug}
-                                host={pageProps.tenant.host}
-                                updateFn={value => setData('slug', value)}
-                                hasErrors={ !! errors['slug'] }
-                            />
-                            {errors.slug && <Error>{errors.slug}</Error>}
-                        </div>
+                    <div className="sm:col-span-6">
+                        <RadioGroup
+                            label={<Label label="List Type" />}
+                            options={listTypes}
+                            selected={data.list_type}
+                            setSelected={value => setData('list_type', value)}
+                            vertical
+                        />
+                        {errors.list_type && <Error>{errors.list_type}</Error>}
+                    </div>
 
-                        <div className="sm:col-span-6">
-                            <RadioGroup
-                                label={<Label label="List Type" />}
-                                options={listTypes}
-                                selected={data.list_type}
-                                setSelected={value => setData('list_type', value)}
-                                vertical
-                            />
-                            {errors.list_type && <Error>{errors.list_type}</Error>}
-                        </div>
+                </FormSection>
 
-                    </FormSection>
+                <FormSection title="Recipients" description="Decide who can receive emails from this address. For chat lists, these people can also send.">
 
-                    <FormSection title="Recipients" description="Decide who can receive emails from this address. For chat lists, these people can also send.">
+                    <div className="sm:col-span-6">
+                        <Label label="Singers" />
+                        <SingerSelect
+                            multiple
+                            defaultValue={list?.recipient_users.map(user => ({
+                                value: user.id,
+                                label: user.name,
+                                name: user.name,
+                                avatarUrl: user.avatar_url,
+                                email: user.email,
+                                roles: user.singer.roles,
+                            })) ?? null}
+                            updateFn={value => setData('recipient_users', value)}
+                        />
+                        {errors.recipient_users && <Error>{errors.recipient_users}</Error>}
+                    </div>
 
+
+                    <fieldset className="sm:col-span-6">
+                        <legend className="text-base font-medium text-gray-900">Roles</legend>
+                        <CheckboxGroup
+                            name="recipient_roles"
+                            options={roles}
+                            value={data.recipient_roles}
+                            updateFn={value => setData('recipient_roles', value)}
+                        />
+                        {errors.recipient_roles && <Error>{errors.recipient_roles}</Error>}
+                    </fieldset>
+
+                    <fieldset className="sm:col-span-6">
+                        <legend className="text-base font-medium text-gray-900">Voice Parts</legend>
+                        <CheckboxGroup
+                            name="recipient_voice_parts"
+                            options={voiceParts.map(part => ({ id: part.id, name: part.title }))}
+                            value={data.recipient_voice_parts}
+                            updateFn={value => setData('recipient_voice_parts', value)}
+                        />
+                        {errors.recipient_voice_parts && <Error>{errors.recipient_voice_parts}</Error>}
+                    </fieldset>
+
+                    <fieldset className="sm:col-span-6">
+                        <legend className="text-base font-medium text-gray-900">Singer Categories</legend>
+                        <CheckboxGroup
+                            name="recipient_singer_categories"
+                            options={singerCategories}
+                            value={data.recipient_singer_categories}
+                            updateFn={value => setData('recipient_singer_categories', value)}
+                        />
+                        {errors.recipient_singer_categories && <Error>{errors.recipient_singer_categories}</Error>}
+                    </fieldset>
+
+                </FormSection>
+
+                {data.list_type === 'distribution' && (
+                    <FormSection title="Senders" description="Add people who can send emails to this address. ">
                         <div className="sm:col-span-6">
                             <Label label="Singers" />
                             <SingerSelect
                                 multiple
-                                defaultValue={list?.recipient_users.map(user => ({
+                                defaultValue={list?.sender_users.map(user => ({
                                     value: user.id,
                                     label: user.name,
                                     name: user.name,
@@ -136,108 +189,52 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                                     email: user.email,
                                     roles: user.singer.roles,
                                 })) ?? null}
-                                updateFn={value => setData('recipient_users', value)}
+                                updateFn={value => setData('sender_users', value)}
                             />
-                            {errors.recipient_users && <Error>{errors.recipient_users}</Error>}
+                            {errors.sender_users && <Error>{errors.sender_users}</Error>}
                         </div>
 
 
                         <fieldset className="sm:col-span-6">
                             <legend className="text-base font-medium text-gray-900">Roles</legend>
                             <CheckboxGroup
-                                name="recipient_roles"
+                                name="sender_roles"
                                 options={roles}
-                                value={data.recipient_roles}
-                                updateFn={value => setData('recipient_roles', value)}
+                                value={data.sender_roles}
+                                updateFn={value => setData('sender_roles', value)}
                             />
-                            {errors.recipient_roles && <Error>{errors.recipient_roles}</Error>}
+                            {errors.sender_roles && <Error>{errors.sender_roles}</Error>}
                         </fieldset>
 
                         <fieldset className="sm:col-span-6">
                             <legend className="text-base font-medium text-gray-900">Voice Parts</legend>
                             <CheckboxGroup
-                                name="recipient_voice_parts"
+                                name="sender_voice_parts"
                                 options={voiceParts.map(part => ({ id: part.id, name: part.title }))}
-                                value={data.recipient_voice_parts}
-                                updateFn={value => setData('recipient_voice_parts', value)}
+                                value={data.sender_voice_parts}
+                                updateFn={value => setData('sender_voice_parts', value)}
                             />
-                            {errors.recipient_voice_parts && <Error>{errors.recipient_voice_parts}</Error>}
+                            {errors.sender_voice_parts && <Error>{errors.sender_voice_parts}</Error>}
                         </fieldset>
 
                         <fieldset className="sm:col-span-6">
                             <legend className="text-base font-medium text-gray-900">Singer Categories</legend>
                             <CheckboxGroup
-                                name="recipient_singer_categories"
+                                name="sender_singer_categories"
                                 options={singerCategories}
-                                value={data.recipient_singer_categories}
-                                updateFn={value => setData('recipient_singer_categories', value)}
+                                value={data.sender_singer_categories}
+                                updateFn={value => setData('sender_singer_categories', value)}
                             />
-                            {errors.recipient_singer_categories && <Error>{errors.recipient_singer_categories}</Error>}
+                            {errors.sender_singer_categories && <Error>{errors.sender_singer_categories}</Error>}
                         </fieldset>
-
                     </FormSection>
+                )}
 
-                    {data.list_type === 'distribution' && (
-                        <FormSection title="Senders" description="Add people who can send emails to this address. ">
-                            <div className="sm:col-span-6">
-                                <Label label="Singers" />
-                                <SingerSelect
-                                    multiple
-                                    defaultValue={list?.sender_users.map(user => ({
-                                        value: user.id,
-                                        label: user.name,
-                                        name: user.name,
-                                        avatarUrl: user.avatar_url,
-                                        email: user.email,
-                                        roles: user.singer.roles,
-                                    })) ?? null}
-                                    updateFn={value => setData('sender_users', value)}
-                                />
-                                {errors.sender_users && <Error>{errors.sender_users}</Error>}
-                            </div>
-
-
-                            <fieldset className="sm:col-span-6">
-                                <legend className="text-base font-medium text-gray-900">Roles</legend>
-                                <CheckboxGroup
-                                    name="sender_roles"
-                                    options={roles}
-                                    value={data.sender_roles}
-                                    updateFn={value => setData('sender_roles', value)}
-                                />
-                                {errors.sender_roles && <Error>{errors.sender_roles}</Error>}
-                            </fieldset>
-
-                            <fieldset className="sm:col-span-6">
-                                <legend className="text-base font-medium text-gray-900">Voice Parts</legend>
-                                <CheckboxGroup
-                                    name="sender_voice_parts"
-                                    options={voiceParts.map(part => ({ id: part.id, name: part.title }))}
-                                    value={data.sender_voice_parts}
-                                    updateFn={value => setData('sender_voice_parts', value)}
-                                />
-                                {errors.sender_voice_parts && <Error>{errors.sender_voice_parts}</Error>}
-                            </fieldset>
-
-                            <fieldset className="sm:col-span-6">
-                                <legend className="text-base font-medium text-gray-900">Singer Categories</legend>
-                                <CheckboxGroup
-                                    name="sender_singer_categories"
-                                    options={singerCategories}
-                                    value={data.sender_singer_categories}
-                                    updateFn={value => setData('sender_singer_categories', value)}
-                                />
-                                {errors.sender_singer_categories && <Error>{errors.sender_singer_categories}</Error>}
-                            </fieldset>
-                        </FormSection>
-                    )}
-
-                    <div className="pt-5 flex justify-end">
-                        <ButtonLink href={list ? route('songs.show', list) : route('songs.index')}>Cancel</ButtonLink>
-                        <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                    </div>
-                </form>
-            </div>
+                <div className="pt-5 flex justify-end">
+                    <ButtonLink href={list ? route('songs.show', list) : route('songs.index')}>Cancel</ButtonLink>
+                    <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
+                </div>
+            </form>
         </div>
     );
 }
