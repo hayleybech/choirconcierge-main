@@ -50,10 +50,12 @@ class RecurringEventController extends Controller
 			default => abort(500, 'The server failed to determine the edit mode on the repeating event.')
 		};
 
-		$request->whenHas(
-			'send_notification',
-			fn() => Notification::send(Singer::active()->with('user')->get()->user, new EventUpdated($event)),
-		);
+        if($request->input('send_notification')){
+			Notification::send(
+			    Singer::active()->with('user')->get()->map(fn($singer) => $singer->user),
+                new EventUpdated($event)
+            );
+		};
 
 		return redirect()
 			->route('events.show', [$event])
