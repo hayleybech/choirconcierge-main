@@ -51,20 +51,19 @@ const AccountForm = ({ }) => {
 
                 <FormSection title="User Details">
 
-                    <div className="sm:col-span-3">
+                    <div className="sm:col-span-2">
+                        <Label label="Profile Picture" forInput="avatar" />
+                        <AvatarUpload currentImage={user.avatar_url} />
+                    </div>
+                    <div className="sm:col-span-2">
                         <Label label="First Name" forInput="first_name" />
                         <TextInput name="first_name" value={data.first_name} updateFn={value => setData('first_name', value)} hasErrors={ !! errors['first_name'] } />
                         {errors.first_name && <Error>{errors.first_name}</Error>}
                     </div>
-                    <div className="sm:col-span-3">
+                    <div className="sm:col-span-2">
                         <Label label="Last Name" forInput="last_name" />
                         <TextInput name="last_name" value={data.last_name} updateFn={value => setData('last_name', value)} hasErrors={ !! errors['last_name'] } />
                         {errors.last_name && <Error>{errors.last_name}</Error>}
-                    </div>
-
-                    <div className="sm:col-span-6">
-                        <Label label="Profile Picture" forInput="avatar" />
-                        <AvatarUpload currentImage={user.avatar_url} />
                     </div>
 
                     <div className="sm:col-span-3">
