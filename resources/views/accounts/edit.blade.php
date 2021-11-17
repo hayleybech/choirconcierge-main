@@ -5,7 +5,7 @@
 
 @section('page-content')
 
-	{{ Form::open( [ 'route' => ['accounts.update'], 'method' => 'put' ] ) }}
+	{{ Form::open( [ 'route' => ['accounts.update'], 'method' => 'post', 'files' => true ] ) }}
 
 	<div class="row">
 		<div class="col-md-6">

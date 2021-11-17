@@ -61,7 +61,7 @@ Route::middleware([
 
     // Account Settings
     Route::get('account/edit', [AccountController::class, 'edit'])->name('accounts.edit');
-    Route::put('account', [AccountController::class, 'update'])->name('accounts.update');
+    Route::post('account', [AccountController::class, 'update'])->name('accounts.update');
 
     // Singers module
     Route::resource('singers', SingerController::class)->middleware('auth');

@@ -15,34 +15,34 @@ import FormFooter from "../../components/FormFooter";
 
 const AccountForm = ({ }) => {
     const { user } = usePage().props;
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         first_name: user.first_name,
         last_name: user.last_name,
         avatar: null,
         email: user.email,
-        phone: user.phone,
+        phone: user.phone ?? '',
         password: '',
 
         password_confirmation: '',
         dob: user.dob,
-        height: user.height,
-        profession: user.profession,
-        skills: user.skills,
+        height: user.height ?? '',
+        profession: user.profession ?? '',
+        skills: user.skills ?? '',
 	    
-        bha_id: user.bha_id,
-	    ice_name: user.ice_name,
-	    ice_phone: user.ice_phone,
+        bha_id: user.bha_id ?? '',
+	    ice_name: user.ice_name ?? '',
+	    ice_phone: user.ice_phone ?? '',
 	    
-	    address_street_1: user.address_street_1,
-	    address_street_2: user.address_street_2,
-	    address_suburb: user.address_suburb,
-	    address_state: user.address_state,
-	    address_postcode: user.address_postcode,
+	    address_street_1: user.address_street_1 ?? '',
+	    address_street_2: user.address_street_2 ?? '',
+	    address_suburb: user.address_suburb ?? '',
+	    address_state: user.address_state ?? '',
+	    address_postcode: user.address_postcode ?? '',
     });
 
     function submit(e) {
         e.preventDefault();
-        put(route('accounts.update'));
+        post(route('accounts.update'));
     }
 
     return (
@@ -53,7 +53,7 @@ const AccountForm = ({ }) => {
 
                     <div className="sm:col-span-2">
                         <Label label="Profile Picture" forInput="avatar" />
-                        <AvatarUpload currentImage={user.avatar_url} />
+                        <AvatarUpload currentImage={data.avatar ? URL.createObjectURL(data.avatar) : user.avatar_url} updateFn={value => setData('avatar', value)} />
                     </div>
                     <div className="sm:col-span-2">
                         <Label label="First Name" forInput="first_name" />
