@@ -8,11 +8,11 @@ import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import RadioGroup from "../../components/inputs/RadioGroup";
 import Help from "../../components/inputs/Help";
 import Select from "../../components/inputs/Select";
-import CheckboxInput from "../../components/inputs/CheckboxInput";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import Button from "../../components/inputs/Button";
 import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
+import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 
 const SongForm = ({ categories, statuses, pitches, song}) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -73,22 +73,15 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
                 </FormSection>
 
                 <FormSection title="Notifications">
-                    <div className="relative flex items-start mr-8 mb-4 sm:col-span-6">
-                        <div className="flex items-center h-5">
-                            <CheckboxInput
-                                id="send_notification"
-                                name="send_notification"
-                                value={true}
-                                checked={data.send_notification}
-                                onChange={e => setData('send_notification', e.target.checked)}
-                            />
-                        </div>
-                        <div className="ml-3 text-sm">
-                            <label htmlFor="send_notification" className="font-medium text-gray-700">
-                                Send {song ? '"Song Updated"' : '"New Song"'} notification to singers?
-                            </label>
-                        </div>
-                    </div>
+                    <CheckboxWithLabel
+                        label={`Send ${song ? '"Song Updated"' : '"New Song"'} notification to singers?`}
+                        id="send_notification"
+                        name="send_notification"
+                        value={true}
+                        checked={data.send_notification}
+                        onChange={e => setData('send_notification', e.target.checked)}
+                        className="mr-8 mb-4"
+                    />
                 </FormSection>
 
                 <FormFooter>

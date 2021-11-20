@@ -5,7 +5,7 @@ import Label from "../../components/inputs/Label";
 import Button from "../../components/inputs/Button";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
-import CheckboxInput from "../../components/inputs/CheckboxInput";
+import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 
 const Login = ({  }) => {
     const { tenant } = usePage().props;
@@ -64,21 +64,14 @@ const Login = ({  }) => {
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <div className="relative flex items-start mr-8 mb-4 sm:col-span-6">
-                                    <div className="flex items-center h-5">
-                                        <CheckboxInput
-                                            id="remember"
-                                            name="remember"
-                                            checked={data.remember}
-                                            onChange={e => setData('remember', e.target.checked)}
-                                        />
-                                    </div>
-                                    <div className="ml-3 text-sm">
-                                        <label htmlFor="remember" className="font-medium text-gray-700">
-                                            Remember me
-                                        </label>
-                                    </div>
-                                </div>
+                                <CheckboxWithLabel
+                                    label="Remember me"
+                                    id="remember"
+                                    name="remember"
+                                    checked={data.remember}
+                                    onChange={e => setData('remember', e.target.checked)}
+                                    className="mr-8 mb-4"
+                                />
 
                                 <div className="text-sm">
                                     <Link href={route('password.request')} className="font-medium text-purple-600 hover:text-purple-500">

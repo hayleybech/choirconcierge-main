@@ -5,7 +5,6 @@ import Label from "../../components/inputs/Label";
 import Button from "../../components/inputs/Button";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
-import CheckboxInput from "../../components/inputs/CheckboxInput";
 import Icon from "../../components/Icon";
 
 const ForgotPassword = ({  }) => {

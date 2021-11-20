@@ -6,7 +6,6 @@ import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import RadioGroup from "../../components/inputs/RadioGroup";
 import Help from "../../components/inputs/Help";
-import CheckboxInput from "../../components/inputs/CheckboxInput";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import Button from "../../components/inputs/Button";
 import TextareaInput from "../../components/inputs/TextareaInput";
@@ -18,6 +17,7 @@ import {DateTime} from "luxon";
 import {TIME_24_SIMPLE} from "luxon/src/impl/formats";
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
+import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 
 const EventForm = ({ event, types }) => {
     const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
@@ -288,22 +288,15 @@ const EventForm = ({ event, types }) => {
                 )}
 
                 <FormSection title="Notifications">
-                    <div className="relative flex items-start mr-8 mb-4 sm:col-span-6">
-                        <div className="flex items-center h-5">
-                            <CheckboxInput
-                                id="send_notification"
-                                name="send_notification"
-                                value={true}
-                                checked={data.send_notification}
-                                onChange={e => setData('send_notification', e.target.checked)}
-                            />
-                        </div>
-                        <div className="ml-3 text-sm">
-                            <label htmlFor="send_notification" className="font-medium text-gray-700">
-                                Send "{event ? 'Event Updated' : 'Event Created'}" notification to singers?
-                            </label>
-                        </div>
-                    </div>
+                    <CheckboxWithLabel
+                        label={`Send ${event ? '"Event Updated"' : '"Event Created"'} notification to singers?`}
+                        id="send_notification"
+                        name="send_notification"
+                        value={true}
+                        checked={data.send_notification}
+                        onChange={e => setData('send_notification', e.target.checked)}
+                        className="mr-8 mb-4"
+                    />
                 </FormSection>
 
                 <FormFooter>

@@ -1,11 +1,10 @@
 import React from 'react'
 import AppHead from "../../components/AppHead";
-import {Link, useForm, usePage} from "@inertiajs/inertia-react";
+import {useForm, usePage} from "@inertiajs/inertia-react";
 import Label from "../../components/inputs/Label";
 import Button from "../../components/inputs/Button";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
-import CheckboxInput from "../../components/inputs/CheckboxInput";
 
 const Login = ({ email, token }) => {
     const { tenant } = usePage().props;
