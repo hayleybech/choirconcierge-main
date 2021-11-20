@@ -77,8 +77,17 @@ class TaskNotificationTemplateController extends Controller
 	 *
 	 * @return View
 	 */
-	public function edit(Task $task, NotificationTemplate $notification): View
+	public function edit(Task $task, NotificationTemplate $notification): View|Response
 	{
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Tasks/Notifications/Edit', [
+                'task' => $task,
+                'notification' => $notification,
+            ]);
+        }
+
 		return view('tasks.notifications.edit')->with(compact('task', 'notification'));
 	}
 
