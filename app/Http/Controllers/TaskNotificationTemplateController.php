@@ -21,8 +21,16 @@ class TaskNotificationTemplateController extends Controller
 	 *
 	 * @return View
 	 */
-	public function create(Task $task): View
+	public function create(Task $task): View|Response
 	{
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Tasks/Notifications/Create', [
+                'task' => $task,
+            ]);
+        }
+
 		return view('tasks.notifications.create')->with(compact('task'));
 	}
 

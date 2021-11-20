@@ -83,7 +83,7 @@ const TaskNotificationForm = ({ task, notification }) => {
 
                 <FormFooter>
                     <ButtonLink
-                        href={notification ? route('tasks.notifications.show', [task, notification]) : route('tasks.notifications.index', task)}
+                        href={notification ? route('tasks.notifications.show', [task, notification]) : route('tasks.show', task)}
                     >
                         Cancel
                     </ButtonLink>

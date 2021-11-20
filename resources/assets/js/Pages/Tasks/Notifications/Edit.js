@@ -9,7 +9,6 @@ const Edit = ({ task, notification }) => (
         <AppHead title={`Edit - ${notification.subject}`} />
         <PageHeader
             title="Edit Notification"
-            icon="task"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Tasks', url: route('tasks.index')},
