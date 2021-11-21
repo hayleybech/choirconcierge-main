@@ -52,8 +52,19 @@ class RoleController extends Controller
 			->with(['status' => 'Role created.']);
 	}
 
-	public function show(Role $role): View
+	public function show(Role $role): View|Response
 	{
+	    $role->can = [
+            'update_role' => auth()->user()?->can('update', $role),
+            'delete_role' => auth()->user()?->can('delete', $role),
+        ];
+	    
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Roles/Show', ['role' => $role]);
+        }
+        
 		return view('roles.show', ['role' => $role]);
 	}
 

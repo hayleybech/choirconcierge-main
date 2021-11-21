@@ -13,7 +13,8 @@ const Edit = ({ role }) => (
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Roles', url: route('roles.index')},
-                { name: `Edit - ${role.name}`, url: route('roles.edit', role)},
+                { name: role.name, url: route('roles.show', role) },
+                { name: 'Edit', url: route('roles.edit', role)},
             ]}
         />
 
