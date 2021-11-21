@@ -23,18 +23,20 @@ class RoleController extends Controller
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');
 
-            return Inertia::render('Roles/Index', [
-                'roles' => $roles->values(),
-            ]);
+            return Inertia::render('Roles/Index', ['roles' => $roles->values()]);
         }
 
-		return view('roles.index', [
-			'roles' => $roles,
-		]);
+		return view('roles.index', ['roles' => $roles]);
 	}
 
-	public function create(): View
+	public function create(): View|Response
 	{
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Roles/Create');
+        }
+
 		return view('roles.create');
 	}
 
@@ -52,9 +54,7 @@ class RoleController extends Controller
 
 	public function show(Role $role): View
 	{
-		return view('roles.show', [
-			'role' => $role,
-		]);
+		return view('roles.show', ['role' => $role]);
 	}
 
 	public function edit(Role $role): View|Response
