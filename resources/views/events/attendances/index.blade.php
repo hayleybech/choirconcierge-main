@@ -28,7 +28,9 @@
                         <tr>
                             <th colspan="100000" class="d-block d-sm-table-cell" style="background-color: #ddd; border-bottom: 1px solid #ccc;">{{ $voice_part->title }}</th>
                         </tr>
-                        @each('events.attendances.index_row', $voice_part->singers, 'singer', 'partials.noresults-table')
+                        @foreach($voice_part->singers as $attendance)
+                            @include('events.attendances.index_row', ['attendance' => $attendance, '$voice_part' => $voice_part])
+                        @endforeach
                     @endforeach
                     </tbody>
                 </table>
