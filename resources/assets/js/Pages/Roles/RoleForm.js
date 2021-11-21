@@ -1,0 +1,198 @@
+import React from 'react';
+import {useForm} from "@inertiajs/inertia-react";
+import FormSection from "../../components/FormSection";
+import Label from "../../components/inputs/Label";
+import TextInput from "../../components/inputs/TextInput";
+import Error from "../../components/inputs/Error";
+import ButtonLink from "../../components/inputs/ButtonLink";
+import Button from "../../components/inputs/Button";
+import Form from "../../components/Form";
+import FormFooter from "../../components/FormFooter";
+import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
+
+const modelsAndAbilities = {
+    singers: {
+        label: 'Singers',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
+    singer_placements: {
+        label: 'Singer Placements',
+        abilities: ['view', 'create', 'update'],
+    },
+    voice_parts: {
+        label: 'Voice Parts',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
+    roles: {
+        label: 'Roles',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
+    songs: {
+        label: 'Songs',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
+    events: {
+        label: 'Events',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
+    attendances: {
+        label: 'Attendances',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
+    rsvps: {
+        label: 'RSVPs',
+        abilities: ['view'],
+    },
+    folders: {
+        label: 'Folders',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
+    documents: {
+        label: 'Documents',
+        abilities: ['view', 'create', 'delete'],
+    },
+    riser_stacks: {
+        label: 'Riser Stacks',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
+    mailing_lists: {
+        label: 'Mailing Lists',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
+    tasks: {
+        label: 'Tasks',
+        abilities: ['view', 'create', 'delete'],
+    },
+    notifications: {
+        label: 'Task Notifications',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
+};
+const RoleForm = ({ role }) => {
+    const { data, setData, post, put, processing, errors } = useForm({
+        name: role?.name ?? '',
+        abilities: role?.abilities ?? [],
+    });
+
+    function submit(e) {
+        e.preventDefault();
+        role ? put(route('roles.update', role)) : post(route('roles.store'));
+    }
+
+    function toggleAllAbilitiesForModel(modelKey, value) {
+        return toggleArrayValues(
+            modelsAndAbilities[modelKey].abilities.map((abilityKey) => `${modelKey}_${abilityKey}`),
+            data.abilities,
+            value
+        );
+    }
+
+    function allAbilitiesForModelChecked(modelKey) {
+        return modelsAndAbilities[modelKey].abilities
+            .map((abilityKey) => `${modelKey}_${abilityKey}`)
+            .every((modelAbilityKey) => data.abilities.includes(modelAbilityKey));
+    }
+
+    return (
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            <Form onSubmit={submit}>
+
+                <FormSection title="Role Details">
+                    <div className="sm:col-span-6">
+                        <Label label="Role Name" forInput="name" />
+                        <TextInput name="name" value={data.name} updateFn={value => setData('name', value)} hasErrors={ !! errors['name'] } />
+                        {errors.name && <Error>{errors.name}</Error>}
+                    </div>
+
+                    <table className="sm:col-span-6">
+                        <thead>
+                        <tr className="text-left">
+                            <th className="py-4">Model</th>
+                            <th className="py-4">View</th>
+                            <th className="py-4">Create</th>
+                            <th className="py-4">Update</th>
+                            <th className="py-4">Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {objectMap(modelsAndAbilities, (modelKey, { label: modelName, abilities }) => (
+                            <tr key={modelKey}>
+                                <th className="py-4">
+                                    <CheckboxWithLabel
+                                        label={modelName}
+                                        id={`${modelName}_all`}
+                                        name={`${modelName}_all`}
+                                        value="true"
+                                        className="font-bold"
+                                        onChange={(e) => setData('abilities', toggleAllAbilitiesForModel(modelKey, e.target.checked))}
+                                        checked={allAbilitiesForModelChecked(modelKey)}
+                                    />
+                                </th>
+                                {(abilities.map((abilityKey) => (
+                                <td className="py-4" key={`${modelKey}_${abilityKey}`}>
+                                    <CheckboxWithLabel
+                                        label={abilityKey[0].toUpperCase() + abilityKey.substring(1)}
+                                        id={`${modelKey}_${abilityKey}`}
+                                        name="abilities[]"
+                                        value={`${modelKey}_${abilityKey}`}
+                                        checked={data.abilities.includes(`${modelKey}_${abilityKey}`)}
+                                        onChange={(e) => setData(
+                                            'abilities',
+                                            toggleArrayValue(`${modelKey}_${abilityKey}`, data.abilities, e.target.checked)
+                                        )}
+                                    />
+                                </td>
+                                )))}
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+
+                </FormSection>
+
+                <FormFooter>
+                    <ButtonLink href={role ? route('roles.show', role) : route('roles.index')}>Cancel</ButtonLink>
+                    <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
+                </FormFooter>
+            </Form>
+        </div>
+    );
+}
+
+export default RoleForm;
+
+function toggleArrayValues(keys, array, on) {
+    let newArray = array;
+    keys.forEach((key) => newArray = toggleArrayValue(key, newArray, on));
+    return newArray;
+}
+
+function toggleArrayValue(key, array, on) {
+    if(on) {
+        return addToArrayOnce(key, array);
+    }
+
+    return deleteFromArray(key, array);
+}
+
+function addToArrayOnce(item, array) {
+    if(array.includes(item)) {
+        return array;
+    }
+
+    return addToArray(item, array);
+}
+
+function addToArray(item, array) {
+    return [...new Set(array).add(item)];
+}
+
+function deleteFromArray(item, array) {
+    let set = new Set(array);
+    set.delete(item);
+    return [...set];
+}
+
+function objectMap(object, fn) {
+    return Object.keys(object).map((key) => fn(key, object[key]));
+}

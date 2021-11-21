@@ -57,8 +57,14 @@ class RoleController extends Controller
 		]);
 	}
 
-	public function edit(Role $role): View
+	public function edit(Role $role): View|Response
 	{
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Roles/Edit', ['role' => $role]);
+        }
+
 		return view('roles.edit')->with(['role' => $role]);
 	}
 
