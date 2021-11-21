@@ -5,17 +5,17 @@ import LearningStatusTag from "../../../components/Song/LearningStatusTag";
 import Button from "../../../components/inputs/Button";
 import AppHead from "../../../components/AppHead";
 
-const Index = ({song, voice_parts}) => (
+const Index = ({ song, voice_parts }) => (
     <>
         <AppHead title={`Learning Summary - ${song.title}`} />
         <PageHeader
             title="Learning Status Report"
             icon="fa-list-music"
             breadcrumbs={[
-                {name: 'Dashboard', url: route('dash')},
-                {name: 'Songs', url: route('songs.index')},
-                {name: song.title, url: route('songs.show', song)},
-                {name: 'Learning Status', url: route('songs.singers.index', song)},
+                { name: 'Dashboard', url: route('dash') },
+                { name: 'Songs', url: route('songs.index') },
+                { name: song.title, url: route('songs.show', song) },
+                { name: 'Learning Status', url: route('songs.singers.index', song) },
             ]}
         />
 

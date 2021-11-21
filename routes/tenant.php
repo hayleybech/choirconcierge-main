@@ -84,6 +84,7 @@ Route::middleware([
     Route::get('events/{event}/recurring/edit/{mode}', [RecurringEventController::class, 'edit'])->name('events.edit-recurring');
     Route::put('events/{event}/recurring/{mode}', [RecurringEventController::class, 'update'])->name('events.update-recurring');
     Route::get('events/{event}/recurring/delete/{mode}', [RecurringEventController::class, 'destroy'])->name('events.delete-recurring');
+    Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
     Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
     Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
 

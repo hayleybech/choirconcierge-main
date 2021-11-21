@@ -550,4 +550,14 @@ class Event extends Model
 			'repeat_frequency_amount',
 		]);
 	}
+
+    public function createMissingAttendanceRecords(): void
+    {
+        $this->attendances()->createMany(
+            Singer::active()
+                ->whereDoesntHave('attendances', fn($query) => $query->where('attendances.event_id', $this->id))
+                ->pluck('id')
+                ->map(fn($singerId) => ['singer_id' => $singerId, 'response' => 'unknown'])
+        );
+    }
 }
