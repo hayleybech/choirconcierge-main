@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
-import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import DateTag from "../../components/DateTag";
 import Badge from "../../components/Badge";
@@ -14,6 +13,7 @@ import SectionHeader from "../../components/SectionHeader";
 import {usePage} from "@inertiajs/inertia-react";
 import Icon from "../../components/Icon";
 import EditRepeatingEventDialog from "../../components/Event/EditRepeatingEventDialog";
+import DeleteDialog from "../../components/DeleteDialog";
 
 const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePartsAttendanceCount, addToCalendarLinks }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -48,7 +48,10 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
                 ].filter(action => action.can ? event.can[action.can] : true)}
             />
 
-            <DeleteEventDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} event={event} />
+            <DeleteDialog title="Delete Event" url={route('events.destroy', event)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+                Are you sure you want to delete this event? This action cannot be undone.
+            </DeleteDialog>
+
             <EditRepeatingEventDialog isOpen={editDialogIsOpen} setIsOpen={setEditDialogIsOpen} event={event} />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 h-full sm:divide-x sm:divide-x-gray-300">
@@ -97,19 +100,3 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
 Show.layout = page => <Layout children={page} />
 
 export default Show;
-
-const DeleteEventDialog = ({ isOpen, setIsOpen, event }) => (
-    <Dialog
-        title="Delete Event"
-        okLabel="Delete"
-        okUrl={route('events.destroy', event)}
-        okVariant="danger-solid"
-        okMethod="delete"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-    >
-        <p>
-            Are you sure you want to delete this event? This action cannot be undone.
-        </p>
-    </Dialog>
-);

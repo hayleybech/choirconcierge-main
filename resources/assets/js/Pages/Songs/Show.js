@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
-import Dialog from "../../components/Dialog";
 import SongStatusTag from "../../components/SongStatusTag";
 import PitchButton from "../../components/PitchButton";
 import SongAttachmentList from "../../components/SongAttachment/SongAttachmentList";
@@ -11,6 +10,7 @@ import MyLearningStatus from "../../components/Song/MyLearningStatus";
 import SongCategoryTag from "../../components/Song/SongCategoryTag";
 import AppHead from "../../components/AppHead";
 import DateTag from "../../components/DateTag";
+import DeleteDialog from "../../components/DeleteDialog";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -39,7 +39,11 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                 ].filter(action => action.can ? song.can[action.can] : true)}
             />
 
-            <DeleteSongDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} song={song} />
+            <DeleteDialog title="Delete Song" url={route('songs.destroy', song)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+                Are you sure you want to delete this song?
+                All of its attachments will be permanently removed from our servers forever.
+                This action cannot be undone.
+            </DeleteDialog>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 h-full">
 
@@ -68,21 +72,3 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
 Show.layout = page => <Layout children={page} />
 
 export default Show;
-
-const DeleteSongDialog = ({ isOpen, setIsOpen, song }) => (
-    <Dialog
-        title="Delete Song"
-        okLabel="Delete"
-        okUrl={route('songs.destroy', song)}
-        okVariant="danger-solid"
-        okMethod="delete"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-    >
-        <p>
-            Are you sure you want to delete this song?
-            All of its attachments will be permanently removed from our servers forever.
-            This action cannot be undone.
-        </p>
-    </Dialog>
-);

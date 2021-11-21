@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
-import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import RiserStackEditor from "../../components/RiserStack/RiserStackEditor";
 import DateTag from "../../components/DateTag";
+import DeleteDialog from "../../components/DeleteDialog";
 
 const Show = ({ stack }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -32,7 +32,9 @@ const Show = ({ stack }) => {
                 ].filter(action => action.can ? stack.can[action.can] : true)}
             />
 
-            <DeleteStackDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} stack={stack} />
+            <DeleteDialog title="Delete Riser Stack" url={route('stacks.destroy', stack)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+                Are you sure you want to delete this riser stack? This action cannot be undone.
+            </DeleteDialog>
 
             <RiserStackEditor
                 rows={parseInt(stack.rows)}
@@ -54,20 +56,3 @@ const Show = ({ stack }) => {
 Show.layout = page => <Layout children={page} />
 
 export default Show;
-
-const DeleteStackDialog = ({ isOpen, setIsOpen, stack }) => (
-    <Dialog
-        title="Delete Riser Stack"
-        okLabel="Delete"
-        okUrl={route('stacks.destroy', stack)}
-        okVariant="danger-solid"
-        okMethod="delete"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-    >
-        <p>
-            Are you sure you want to delete this riser stack?
-            This action cannot be undone.
-        </p>
-    </Dialog>
-);

@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
-import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import Icon from "../../components/Icon";
 import SectionTitle from "../../components/SectionTitle";
@@ -9,6 +8,7 @@ import {Link} from "@inertiajs/inertia-react";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import DateTag from "../../components/DateTag";
 import SectionHeader from "../../components/SectionHeader";
+import DeleteDialog from "../../components/DeleteDialog";
 
 const Show = ({ task }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -36,7 +36,9 @@ const Show = ({ task }) => {
                 ].filter(action => action.can ? task.can[action.can] : true)}
             />
 
-            <DeleteTaskDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} task={task} />
+            <DeleteDialog title="Delete Task" url={route('tasks.destroy', task)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+                Are you sure you want to delete this task? This may break your onboarding process! This action cannot be undone.
+            </DeleteDialog>
 
             <div className="py-6 px-4 sm:px-6 lg:px-8">
 
@@ -86,19 +88,3 @@ const Show = ({ task }) => {
 Show.layout = page => <Layout children={page} />
 
 export default Show;
-
-const DeleteTaskDialog = ({ isOpen, setIsOpen, task }) => (
-    <Dialog
-        title="Delete Task"
-        okLabel="Delete"
-        okUrl={route('tasks.destroy', task)}
-        okVariant="danger-solid"
-        okMethod="delete"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-    >
-        <p>
-            Are you sure you want to delete this task? This may break your onboarding process! This action cannot be undone.
-        </p>
-    </Dialog>
-);

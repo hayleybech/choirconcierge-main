@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
-import Dialog from "../../components/Dialog";
 import AppHead from "../../components/AppHead";
 import Icon from "../../components/Icon";
 import SectionTitle from "../../components/SectionTitle";
 import DateTag from "../../components/DateTag";
+import DeleteDialog from "../../components/DeleteDialog";
 
 const Show = ({ list }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -34,7 +34,9 @@ const Show = ({ list }) => {
                 ].filter(action => action.can ? list.can[action.can] : true)}
             />
 
-            <DeleteMailingListDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} list={list} />
+            <DeleteDialog title="Delete Mailing Lists" url={route('groups.destroy', list)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+                Are you sure you want to delete this mailing list? This action cannot be undone.
+            </DeleteDialog>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 h-full sm:divide-x sm:divide-x-gray-300">
 
@@ -106,19 +108,3 @@ const getTypeName = (type) => {
     };
     return typeNames[type];
 };
-
-const DeleteMailingListDialog = ({ isOpen, setIsOpen, list }) => (
-    <Dialog
-        title="Delete Mailing List"
-        okLabel="Delete"
-        okUrl={route('groups.destroy', list)}
-        okVariant="danger-solid"
-        okMethod="delete"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-    >
-        <p>
-            Are you sure you want to delete this mailing list? This action cannot be undone.
-        </p>
-    </Dialog>
-);

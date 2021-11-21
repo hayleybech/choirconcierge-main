@@ -14,6 +14,7 @@ import SectionTitle from "../../components/SectionTitle";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import SectionHeader from "../../components/SectionHeader";
+import DeleteDialog from "../../components/DeleteDialog";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -59,24 +60,6 @@ const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
             </div>
         ))}
     </dl>
-);
-
-const DeleteSingerDialog = ({ isOpen, setIsOpen, singer }) => (
-    <Dialog
-        title="Delete Singer"
-        okLabel="Delete"
-        okUrl={route('singers.destroy', singer)}
-        okVariant="danger-solid"
-        okMethod="delete"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-    >
-        <p>
-            Are you sure you want to deactivate this singer?
-            All of their data will be permanently removed from our servers forever.
-            This action cannot be undone.
-        </p>
-    </Dialog>
 );
 
 const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
@@ -137,7 +120,11 @@ const Show = ({ singer, categories }) => {
                 ].filter(action => singer.can[action.can])}
             />
 
-            <DeleteSingerDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} singer={singer} />
+            <DeleteDialog title="Delete Singer" url={route('singers.destroy', singer)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+                Are you sure you want to deactivate this singer?
+                All of their data will be permanently removed from our servers forever.
+                This action cannot be undone.
+            </DeleteDialog>
 
             <MoveSingerDialog isOpen={moveDialogIsOpen} setIsOpen={setMoveDialogIsOpen} singer={singer} categories={categories} />
 

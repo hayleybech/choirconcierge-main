@@ -4,8 +4,8 @@ import PageHeader from "../../../components/PageHeader";
 import DateTag from "../../../components/DateTag";
 import SectionHeader from "../../../components/SectionHeader";
 import SectionTitle from "../../../components/SectionTitle";
-import Dialog from "../../../components/Dialog";
 import Layout from "../../../Layouts/Layout";
+import DeleteDialog from "../../../components/DeleteDialog";
 
 const Show = ({ task, notification }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -33,7 +33,14 @@ const Show = ({ task, notification }) => {
                 ].filter(action => action.can ? task.can[action.can] : true)}
             />
 
-            <DeleteNotificationDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} task={task} notification={notification} />
+            <DeleteDialog
+                title="Delete Notifications"
+                url={route('tasks.notifications.destroy', [task, notification])}
+                isOpen={deleteDialogIsOpen}
+                setIsOpen={setDeleteDialogIsOpen}
+            >
+                Are you sure you want to delete this task notification? This may break your onboarding process! This action cannot be undone.
+            </DeleteDialog>
 
             <div className="py-6 px-4 sm:px-6 lg:px-8">
 
@@ -50,19 +57,3 @@ const Show = ({ task, notification }) => {
 Show.layout = page => <Layout children={page} />
 
 export default Show;
-
-const DeleteNotificationDialog = ({ isOpen, setIsOpen, task, notification }) => (
-    <Dialog
-        title="Delete Notification"
-        okLabel="Delete"
-        okUrl={route('tasks.destroy', [task, notification])}
-        okVariant="danger-solid"
-        okMethod="delete"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-    >
-        <p>
-            Are you sure you want to delete this task notification? This may break your onboarding process! This action cannot be undone.
-        </p>
-    </Dialog>
-);
