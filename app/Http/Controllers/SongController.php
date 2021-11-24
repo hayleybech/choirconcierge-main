@@ -125,10 +125,9 @@ class SongController extends Controller
 				->toArray(),
 		);
 
-		$request->whenHas(
-			'send_notification',
-			fn() => Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUploaded($song)),
-		);
+		if($request->input('send_notification')) {
+			Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUploaded($song));
+        }
 
 		return redirect()
 			->route('songs.show', [$song])
@@ -240,10 +239,9 @@ class SongController extends Controller
 				->toArray(),
 		);
 
-		$request->whenHas(
-			'send_notification',
-			fn() => Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUpdated($song)),
-		);
+        if($request->input('send_notification')) {
+            Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUpdated($song));
+        }
 
 		return redirect()
 			->route('songs.show', [$song])

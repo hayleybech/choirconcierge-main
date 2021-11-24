@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
@@ -36,4 +37,15 @@ class LoginController extends Controller
 	{
 		$this->middleware('guest')->except('logout');
 	}
+
+	public function showLoginForm()
+    {
+        if(config('features.rebuild')) {
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Auth/Login');
+        }
+
+        return view('auth.login');
+    }
 }

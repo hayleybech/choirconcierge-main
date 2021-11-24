@@ -5,7 +5,7 @@ import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 const VoicePartTableMobile = ({ voiceParts }) => (
     <TableMobile>
         {voiceParts.map((voicePart) => (
-            <TableMobileItem key={voicePart.id} url={route('stacks.show', voicePart.id)}>
+            <TableMobileItem key={voicePart.id} url={route('voice-parts.edit', voicePart.id)}>
                 <div className="flex-shrink-0">
                     <Swatch colour={voicePart.colour} />
                 </div>

@@ -28,13 +28,22 @@ class TaskController extends Controller
 		return view('tasks.index', compact('tasks'));
 	}
 
-	public function create(): View
+	public function create(): View|Response
 	{
-		$roles = Role::all();
-		$roles_keyed = $roles->mapWithKeys(static function ($role) {
-			return [$role['id'] => $role['name']];
-		});
-		return view('tasks.create')->with(compact('roles_keyed'));
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Tasks/Create', [
+                'roles' => Role::where('name', '!=', 'User')->get()->values(),
+            ]);
+        }
+
+        $roles = Role::all();
+        $roles_keyed = $roles->mapWithKeys(static function ($role) {
+            return [$role['id'] => $role['name']];
+        });
+
+        return view('tasks.create')->with(compact('roles_keyed'));
 	}
 
 	public function store(TaskRequest $request): RedirectResponse

@@ -164,7 +164,8 @@ class User extends Authenticatable implements HasMedia
 
     public function scopeBirthdays(Builder $query): Builder
     {
-        return $query->whereMonth('dob', '>=', now())->whereMonth('dob', '<=', now()->addMonth());
+        return $query->whereMonth('dob', '>=', now())
+            ->whereMonth('dob', '<=', now()->addMonth());
     }
 
     public function getBirthdayAttribute(): Carbon

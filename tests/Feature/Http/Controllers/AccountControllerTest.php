@@ -41,7 +41,7 @@ class AccountControllerTest extends TestCase
         $this->actingAs(User::factory()->has(Singer::factory())->create());
 
 		$data = $getData();
-		$response = $this->put(the_tenant_route('accounts.update'), $data);
+		$response = $this->post(the_tenant_route('accounts.update'), $data);
 
 		$response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('users', Arr::except($data, [

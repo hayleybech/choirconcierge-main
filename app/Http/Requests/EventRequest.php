@@ -18,9 +18,12 @@ class EventRequest extends FormRequest
 
 	public function prepareForValidation()
 	{
-		$this->merge([
-			'is_repeating' => $this->has('is_repeating'),
-		]);
+        if(! config('features.rebuild')) {
+            $this->merge([
+                'is_repeating' => $this->has('is_repeating'),
+                'send_notification' => $this->has('send_notification'),
+            ]);
+        }
 	}
 
 	/**
@@ -50,6 +53,7 @@ class EventRequest extends FormRequest
 				'date_format:Y-m-d H:i:s',
 				'after:start_date',
 			],
+            'send_notification' => ['boolean'],
 		];
 	}
 }

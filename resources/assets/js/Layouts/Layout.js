@@ -9,32 +9,40 @@ import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import navigation from "./navigation";
 import classNames from "../classNames";
-import { usePage } from '@inertiajs/inertia-react';
+import {Link, usePage} from '@inertiajs/inertia-react';
 import GlobalTrackPlayer from "../components/Audio/GlobalTrackPlayer";
 import { PlayerContext } from '../contexts/player-context';
 import { AudioPlayerProvider } from "react-use-audio-player"
-
-const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
-]
+import Icon from "../components/Icon";
+import HeadwayWidget from '@headwayapp/react-widget';
+import ImpersonateUserModal from "../components/ImpersonateUserModal";
 
 export default function Layout({children}) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [player, setPlayer] = useState({
         songTitle: null,
+        songId: 0,
         fileName: null,
         src: null,
         play: play,
     });
+    const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 
-    const { can } = usePage().props
+    const { can, user, impersonationActive } = usePage().props
+
+    const userNavigation = [
+        { name: 'Your Profile', href: route('singers.show', user.singer), icon: 'user' },
+        { name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit' },
+        { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
+        { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
+        { name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' }
+    ]
 
     function play(attachment) {
         setPlayer({
             ...player,
             songTitle: attachment.song.title,
+            songId: attachment.song.id,
             fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
             src: attachment.download_url,
         });
@@ -96,15 +104,29 @@ export default function Layout({children}) {
                                     <BellIcon className="h-6 w-6" aria-hidden="true" />
                                 </button>
 
+                                <div className="text-gray-500 text-sm mx-2">
+                                    <HeadwayWidget account="7L6Rky" badgePosition="top-right">
+                                        <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank">
+                                            <Icon icon="code" mr />
+                                            Updates
+                                        </a>
+                                    </HeadwayWidget>
+                                </div>
+
                                 {/* Profile dropdown */}
                                 <Menu as="div" className="ml-3 relative">
                                     <div>
-                                        <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                        <Menu.Button
+                                            className={classNames(
+                                                'max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500',
+                                                impersonationActive ? 'border-2 border-red-500' : '',
+                                            )}
+                                        >
                                             <span className="sr-only">Open user menu</span>
                                             <img
                                                 className="h-8 w-8 rounded-lg"
-                                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                                alt=""
+                                                src={user.avatar_url}
+                                                alt={user.name}
                                             />
                                         </Menu.Button>
                                     </div>
@@ -121,12 +143,31 @@ export default function Layout({children}) {
                                             {userNavigation.map((item) => (
                                                 <Menu.Item key={item.name}>
                                                     {({ active }) => (
-                                                        <a
-                                                            href={item.href}
-                                                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                                                        >
-                                                            {item.name}
-                                                        </a>
+                                                        <>
+                                                        {item.hide || (
+                                                            <>
+                                                            {item.href ? (
+                                                                <Link
+                                                                    href={item.href}
+                                                                    method={item.method}
+                                                                    className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                                                                >
+                                                                    <Icon icon={item.icon} mr />
+                                                                    {item.name}
+                                                                </Link>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={item.action}
+                                                                    type="button"
+                                                                    className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                                                                >
+                                                                    <Icon icon={item.icon} mr />
+                                                                    {item.name}
+                                                                </button>
+                                                            )}
+                                                            </>
+                                                        )}
+                                                        </>
                                                     )}
                                                 </Menu.Item>
                                             ))}
@@ -142,9 +183,11 @@ export default function Layout({children}) {
                             {children}
                         </main>
 
-                        {player.fileName && <GlobalTrackPlayer songTitle={player.songTitle} fileName={player.fileName} />}
+                        {player.fileName && <GlobalTrackPlayer songTitle={player.songTitle} songId={player.songId} fileName={player.fileName} />}
                     </AudioPlayerProvider>
                 </div>
+
+                <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
             </div>
         </PlayerContext.Provider>
     )

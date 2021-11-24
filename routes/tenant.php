@@ -19,6 +19,7 @@ use App\Http\Controllers\RecurringEventController;
 use App\Http\Controllers\RiserStackController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RsvpController;
+use App\Http\Controllers\Search\FindSingerController;
 use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SingerPlacementController;
 use App\Http\Controllers\SongAttachmentController;
@@ -60,7 +61,7 @@ Route::middleware([
 
     // Account Settings
     Route::get('account/edit', [AccountController::class, 'edit'])->name('accounts.edit');
-    Route::put('account', [AccountController::class, 'update'])->name('accounts.update');
+    Route::post('account', [AccountController::class, 'update'])->name('accounts.update');
 
     // Singers module
     Route::resource('singers', SingerController::class)->middleware('auth');
@@ -83,6 +84,7 @@ Route::middleware([
     Route::get('events/{event}/recurring/edit/{mode}', [RecurringEventController::class, 'edit'])->name('events.edit-recurring');
     Route::put('events/{event}/recurring/{mode}', [RecurringEventController::class, 'update'])->name('events.update-recurring');
     Route::get('events/{event}/recurring/delete/{mode}', [RecurringEventController::class, 'destroy'])->name('events.delete-recurring');
+    Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
     Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
     Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
 
@@ -111,6 +113,11 @@ Route::middleware([
         // User Impersonation
         Route::get('{user}/impersonate', [ImpersonateUserController::class, 'start'])->name('users.impersonate');
         Route::get('/impersonation/stop', [ImpersonateUserController::class, 'stop'])->name('impersonation.stop');
+    });
+
+    // Search APIs
+    Route::prefix('find')->middleware(['auth'])->group(function() {
+        Route::get('/singers', FindSingerController::class)->name('find.singers');
     });
 
     // Mailing Lists (User Groups) module

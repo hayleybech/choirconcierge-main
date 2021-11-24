@@ -25,7 +25,7 @@ const Index = ({ lists }) => (
             <MailingListTableDesktop tasks={lists} />
         </div>
 
-        <div className="bg-white shadow overflow-hidden block lg:hidden">
+        <div className="bg-white shadow block lg:hidden">
             <MailingListTableMobile lists={lists} />
         </div>
     </>

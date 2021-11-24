@@ -25,7 +25,7 @@ const Index = ({ events }) => (
             <EventTableDesktop events={events} />
         </div>
 
-        <div className="bg-white shadow overflow-hidden block lg:hidden">
+        <div className="bg-white shadow block lg:hidden">
             <EventTableMobile events={events} />
         </div>
     </>

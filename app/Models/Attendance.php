@@ -23,6 +23,11 @@ use Illuminate\Support\Carbon;
  * @property Singer $singer
  * @property Event $event
  *
+ * Attributes
+ * @property string $label
+ * @property string $colour
+ * @property string $icon
+ *
  * @package App\Models
  */
 class Attendance extends Model
@@ -30,6 +35,8 @@ class Attendance extends Model
 	use TenantTimezoneDates;
 
 	protected $fillable = ['singer_id', 'response', 'absent_reason', 'event_id'];
+
+	protected $appends = ['response_string', 'label', 'colour', 'icon'];
 
 	public function singer(): BelongsTo
 	{
@@ -44,4 +51,38 @@ class Attendance extends Model
 	{
 		return $this->response === 'absent_apology' ? 'Absent (With Apology)' : ucfirst($this->response);
 	}
+
+    public function getLabelAttribute(): string
+    {
+        $labels = [
+            'present' => 'Present',
+            'unknown' => 'Not recorded',
+            'absent' => 'Absent',
+            'absent_apology' => 'Absent (With Apology)',
+        ];
+        return $labels[$this->response];
+    }
+
+    public function getColourAttribute(): string
+    {
+        $colours = [
+            'present' => 'green',
+            'unknown' => 'yellow',
+            'absent' => 'red',
+            'absent_apology' => 'red',
+        ];
+        return $colours[$this->response];
+    }
+
+    public function getIconAttribute(): string
+    {
+        $icons = [
+            'present' => 'check',
+            'maybe' => 'question',
+            'unknown' => 'question',
+            'absent' => 'times',
+            'absent_apology' => 'times',
+        ];
+        return $icons[$this->response];
+    }
 }

@@ -25,7 +25,7 @@ const Index = ({ stacks }) => (
             <RiserStackTableDesktop stacks={stacks} />
         </div>
 
-        <div className="bg-white shadow overflow-hidden block lg:hidden">
+        <div className="bg-white shadow block lg:hidden">
             <RiserStackTableMobile stacks={stacks} />
         </div>
     </>

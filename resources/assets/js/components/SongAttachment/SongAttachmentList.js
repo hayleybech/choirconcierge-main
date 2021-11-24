@@ -2,8 +2,8 @@ import {useAudioPlayer} from "react-use-audio-player";
 import {PlayerContext} from "../../contexts/player-context";
 import Button from "../inputs/Button";
 import React, {useState} from "react";
-import Dialog from "../Dialog";
 import Icon from "../Icon";
+import DeleteDialog from "../DeleteDialog";
 
 const SongAttachmentList = ({ attachment_categories, song }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -66,12 +66,16 @@ const SongAttachmentList = ({ attachment_categories, song }) => {
                     </nav>
                 )}
             </PlayerContext.Consumer>
-            <DeleteSongAttachmentDialog
-                song={song}
-                attachment={deletingAttachmentId}
+            <DeleteDialog
+                title="Delete Song Attachment"
+                url={route('songs.attachments.destroy', [song, deletingAttachmentId])}
                 isOpen={deleteDialogIsOpen}
                 setIsOpen={setDeleteDialogIsOpen}
-            />
+            >
+                Are you sure you want to delete this attachment?
+                It will be permanently removed from our servers forever.
+                This action cannot be undone.
+            </DeleteDialog>
         </>
     );
 }
@@ -88,22 +92,3 @@ function isPlayable(attachment) {
 function isCurrent(attachment, player) {
     return player.src === attachment.download_url;
 }
-
-const DeleteSongAttachmentDialog = ({ isOpen, setIsOpen, song, attachment }) => (
-    <Dialog
-        title="Delete Attachment"
-        okLabel="Delete"
-        okUrl={route('songs.attachments.destroy', {song: song, attachment: attachment})}
-        okVariant="danger-solid"
-        okMethod="delete"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-    >
-        <p>
-
-        Are you sure you want to delete this attachment?
-        It will be permanently removed from our servers forever.
-        This action cannot be undone.
-        </p>
-    </Dialog>
-);
