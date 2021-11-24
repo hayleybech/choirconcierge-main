@@ -22,9 +22,11 @@ class AttendanceController extends Controller
         $event->createMissingAttendanceRecords();
 
         $event->load(['attendances' => function($query) {
-            return $query->whereHas('singer', fn($query) => $query->active())
-                ->with('singer.user');
+            return $query->with('singer.user')
+                ->whereHas('singer', fn($query) => $query->active());
         }]);
+
+        $event->attendances->each(fn ($attendance) => $attendance->singer->user->append('avatar_url'));
 
         $voice_parts = VoicePart::all()
             ->push(VoicePart::getNullVoicePart())
@@ -34,6 +36,8 @@ class AttendanceController extends Controller
                     ->values();
                 return $part;
             });
+
+//        dd($voice_parts);
 
         if(config('features.rebuild')) {
             Inertia::setRootView('layouts/app-rebuild');

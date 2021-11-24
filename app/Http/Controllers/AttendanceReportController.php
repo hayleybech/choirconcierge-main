@@ -7,10 +7,12 @@ use App\Models\Event;
 use App\Models\Singer;
 use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AttendanceReportController extends Controller
 {
-	public function __invoke(): View
+	public function __invoke(): View|Response
 	{
 		$this->authorize('viewAny', Attendance::class);
 
@@ -19,16 +21,31 @@ class AttendanceReportController extends Controller
 			->filter()
 			->get();
 
-        $voice_parts = Singer::active()
-            ->with(['user', 'voice_part', 'attendances'])->get()
-            ->sortBy('user.first_name')
-            ->groupBy('voice_part.id')
-            ->map(function($singers) {
-                $part = $singers->first()->voice_part ?? VoicePart::getNullVoicePart();
-                $part->singers = $singers;
+//        $voice_parts = Singer::active()
+////            ->with(['user', 'voice_part', 'attendances'])
+//            ->get()
+////            ->sortBy('user.first_name')
+//            ->groupBy('voice_part.id')
+//            ->map(function($singers) {
+//                $part = $singers->first()->voice_part ?? VoicePart::getNullVoicePart();
+//                $part->singers = $singers;
+//                return $part;
+//            });
+//        $voice_parts = $this->moveNoPartToEnd($voice_parts);
+
+        $singers = Singer::with(['user', 'attendances'])
+            ->get()
+            ->each
+            ->append('user_avatar_thumb_url');
+
+        $voice_parts = VoicePart::all()
+            ->push(VoicePart::getNullVoicePart())
+            ->map(function($part) use ($singers) {
+                $part->singers = $singers
+                    ->filter(fn($singer) => $singer->voice_part_id === $part->id)
+                    ->values();
                 return $part;
             });
-        $voice_parts = $this->moveNoPartToEnd($voice_parts);
 
 		$avg_singers_per_event = round(
 			$all_events->reduce(static function ($carry, $event) {
@@ -50,6 +67,17 @@ class AttendanceReportController extends Controller
                 }, 0) / Singer::all()->count(),
             2,
         );
+
+        if(config('features.rebuild')) {
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Events/AttendanceReport', [
+                'voice_parts' => $voice_parts->values(),
+                'events' => $all_events->where('start_date', '<', now())->values(),
+                'avg_singers_per_event' => $avg_singers_per_event,
+                'avg_events_per_singer' => $avg_events_per_singer,
+            ]);
+        }
 
 		return view('events.reports.attendance', [
 			'voice_parts' => $voice_parts,

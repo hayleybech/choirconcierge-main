@@ -14,7 +14,7 @@ const Index = ({ event, voice_parts }) => {
         <>
             <AppHead title={`Attendance Summary - ${event.title}`} />
             <PageHeader
-                title="Attendance Report"
+                title="Attendance Summary"
                 icon="calendar-alt"
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash') },
