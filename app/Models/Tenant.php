@@ -63,7 +63,7 @@ class Tenant extends BaseTenant
 
 	public function getMailFromAddressAttribute(): string
 	{
-		return 'hello@' . \Request::getHost();
+		return 'hello@' . $this->host;
 	}
 
 	// @todo create a way to assign the primary domain in the database
