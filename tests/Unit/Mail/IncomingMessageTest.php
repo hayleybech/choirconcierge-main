@@ -62,6 +62,39 @@ class IncomingMessageTest extends TestCase
 	}
 
 	/** @test */
+	public function resendToGroups_sends_rejection_email_when_not_permitted(): void
+	{
+		// Arrange
+		Mail::fake();
+
+		$this->createTestTenants()[0]
+			->run(function() {
+				UserGroup::create([
+					'title' => 'Music Team',
+					'slug' => 'music-team',
+					'list_type' => 'chat',
+				]);
+			});
+
+		$message = (new IncomingMessage())
+			->to('music-team@test-tenant-1.'.central_domain())
+			->from('not-permitted@example.com')
+			->subject('Just a test');
+
+		// Act
+		$message->resendToGroups();
+
+		// Assert
+		Mail::assertNotSent(IncomingMessage::class);
+		Mail::assertSent(NotPermittedSenderMessage::class, 1);
+		Mail::assertSent(NotPermittedSenderMessage::class, static function ($mail) {
+			$mail->build();
+			return $mail->hasFrom('hello@test-tenant-1.'.central_domain()) &&
+				$mail->hasTo('not-permitted@example.com');
+		});
+	}
+
+	/** @test */
 	public function resendToGroups_with_one_group_resends_to_group_members(): void
 	{
 		// Arrange
