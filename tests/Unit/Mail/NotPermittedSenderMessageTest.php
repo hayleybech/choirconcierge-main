@@ -34,7 +34,27 @@ class NotPermittedSenderMessageTest extends TestCase
 			$mailable->assertSeeInHtml('Music Team');
 			$mailable->assertSeeInText('Test Tenant 1');
 		});
+	}
 
+	/** @test */
+	public function it_uses_the_correct_from_address()
+	{
+		$tenant = $this->createTestTenants(2)[0];
+
+		$tenant->run(function() {
+			$group = UserGroup::create([
+				'title' => 'Music Team',
+				'slug' => 'music-team',
+				'list_type' => 'chat',
+				'tenant_id' => 'test-tenant-1',
+			]);
+
+			$mailable = new NotPermittedSenderMessage($group);
+
+			$mailable->build();
+
+			$this->assertEquals('hello@test-tenant-1.'.central_domain(), $mailable->from[0]['address']);
+		});
 	}
 
 	/**
