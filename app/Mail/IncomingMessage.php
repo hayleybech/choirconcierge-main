@@ -97,9 +97,7 @@ class IncomingMessage extends Mailable
 			return true;
 		}
 
-		$group->tenant->run(function($group) {
-			Mail::to($this->original_sender['address'])->send(new NotPermittedSenderMessage($group));
-		});
+		Mail::to($this->original_sender['address'])->send(new NotPermittedSenderMessage($group));
 
 		return false;
 	}
