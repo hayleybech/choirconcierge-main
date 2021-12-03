@@ -447,39 +447,6 @@ class IncomingMessageTest extends TestCase
 	}
 
 	/** @test */
-	public function getMatchingGroups_rejects_false_positives(): void
-	{
-		// Arrange
-		list($tenant_1, $tenant_2) = $this->createTestTenants(2);
-
-		$tenant_1->run(function () {
-			UserGroup::create([
-				'title' => 'Members',
-				'slug' => 'members',
-				'list_type' => 'chat',
-			]);
-		});
-		$tenant_2->run(function () {
-			UserGroup::create([
-				'title' => 'All Members',
-				'slug' => 'all-members',
-				'list_type' => 'chat',
-			]);
-		});
-
-		$message = (new IncomingMessage())
-			->to(['executive@test-tenant-1.'.central_domain()], 'al.and.aves@blenders.choirconcierge.com')
-			->from('al.and.aves@gmail.com', 'Averil Martin')
-			->subject('Just a test');
-
-		// Act
-		$groups_found = $message->getMatchingGroups()->flatten(1);
-
-		// Assert
-		self::assertCount(1, $groups_found);
-	}
-
-	/** @test */
 	public function getMatchingGroups_checks_the_tenant_slug_before_matching(): void
 	{
 		// Arrange
