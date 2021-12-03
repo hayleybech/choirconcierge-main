@@ -62,6 +62,39 @@ class IncomingMessageTest extends TestCase
 	}
 
 	/** @test */
+	public function resendToGroups_sends_rejection_email_when_not_permitted(): void
+	{
+		// Arrange
+		Mail::fake();
+
+		$this->createTestTenants()[0]
+			->run(function() {
+				UserGroup::create([
+					'title' => 'Music Team',
+					'slug' => 'music-team',
+					'list_type' => 'chat',
+				]);
+			});
+
+		$message = (new IncomingMessage())
+			->to('music-team@test-tenant-1.'.central_domain())
+			->from('not-permitted@example.com')
+			->subject('Just a test');
+
+		// Act
+		$message->resendToGroups();
+
+		// Assert
+		Mail::assertNotSent(IncomingMessage::class);
+		Mail::assertSent(NotPermittedSenderMessage::class, 1);
+		Mail::assertSent(NotPermittedSenderMessage::class, static function ($mail) {
+			$mail->build();
+			return $mail->hasFrom('hello@test-tenant-1.'.central_domain()) &&
+				$mail->hasTo('not-permitted@example.com');
+		});
+	}
+
+	/** @test */
 	public function resendToGroups_with_one_group_resends_to_group_members(): void
 	{
 		// Arrange
@@ -386,6 +419,64 @@ class IncomingMessageTest extends TestCase
 
 		// Assert
 		self::assertCount(2, $groups_found);
+	}
+
+	/** @test */
+	public function getMatchingGroups_only_returns_exact_matches(): void
+	{
+		// Arrange
+		$this->createTestTenants()[0]
+			->run(function () {
+				UserGroup::create([
+					'title' => 'All Members',
+					'slug' => 'all-members',
+					'list_type' => 'chat',
+				]);
+			});
+
+		$message = (new IncomingMessage())
+			->to(['al@test-tenant-1.'.central_domain()])
+			->from('sender@example.com')
+			->subject('Just a test');
+
+		// Act
+		$groups_found = $message->getMatchingGroups()->flatten(0);
+
+		// Assert
+		self::assertCount(1, $groups_found);
+	}
+
+	/** @test */
+	public function getMatchingGroups_rejects_false_positives(): void
+	{
+		// Arrange
+		list($tenant_1, $tenant_2) = $this->createTestTenants(2);
+
+		$tenant_1->run(function () {
+			UserGroup::create([
+				'title' => 'Members',
+				'slug' => 'members',
+				'list_type' => 'chat',
+			]);
+		});
+		$tenant_2->run(function () {
+			UserGroup::create([
+				'title' => 'All Members',
+				'slug' => 'all-members',
+				'list_type' => 'chat',
+			]);
+		});
+
+		$message = (new IncomingMessage())
+			->to(['executive@test-tenant-1.'.central_domain()], 'al.and.aves@blenders.choirconcierge.com')
+			->from('al.and.aves@gmail.com', 'Averil Martin')
+			->subject('Just a test');
+
+		// Act
+		$groups_found = $message->getMatchingGroups()->flatten(1);
+
+		// Assert
+		self::assertCount(1, $groups_found);
 	}
 
 	/** @test */
