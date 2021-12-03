@@ -443,7 +443,7 @@ class IncomingMessageTest extends TestCase
 		$groups_found = $message->getMatchingGroups()->flatten(0);
 
 		// Assert
-		self::assertCount(1, $groups_found);
+		self::assertCount(0, $groups_found);
 	}
 
 	/** @test */
