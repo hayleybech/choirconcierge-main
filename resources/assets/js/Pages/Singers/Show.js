@@ -4,16 +4,17 @@ import PageHeader from "../../components/PageHeader";
 import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
 import ButtonLink from "../../components/inputs/ButtonLink";
-import {DateTime} from "luxon";
 import classNames from "../../classNames";
 import Dialog from "../../components/Dialog";
 import RadioGroup from "../../components/inputs/RadioGroup";
 import {usePage} from "@inertiajs/inertia-react";
 import AppHead from "../../components/AppHead";
 import Badge from "../../components/Badge";
-import SectionHeading from "../../SectionHeading";
+import SectionTitle from "../../components/SectionTitle";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
+import SectionHeader from "../../components/SectionHeader";
+import DeleteDialog from "../../components/DeleteDialog";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -59,24 +60,6 @@ const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
             </div>
         ))}
     </dl>
-);
-
-const DeleteSingerDialog = ({ isOpen, setIsOpen, singer }) => (
-    <Dialog
-        title="Delete Singer"
-        okLabel="Delete"
-        okUrl={route('singers.destroy', singer)}
-        okVariant="danger-solid"
-        okMethod="delete"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-    >
-        <p>
-            Are you sure you want to deactivate this singer?
-            All of their data will be permanently removed from our servers forever.
-            This action cannot be undone.
-        </p>
-    </Dialog>
 );
 
 const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
@@ -137,256 +120,263 @@ const Show = ({ singer, categories }) => {
                 ].filter(action => singer.can[action.can])}
             />
 
-            <DeleteSingerDialog isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen} singer={singer} />
+            <DeleteDialog title="Delete Singer" url={route('singers.destroy', singer)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+                Are you sure you want to deactivate this singer?
+                All of their data will be permanently removed from our servers forever.
+                This action cannot be undone.
+            </DeleteDialog>
 
             <MoveSingerDialog isOpen={moveDialogIsOpen} setIsOpen={setMoveDialogIsOpen} singer={singer} categories={categories} />
 
-            <div className="bg-gray-50">
-                <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4">
 
-                    <div className="sm:col-span-2 xl:col-span-3">
-                        <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
+                <div className="sm:col-span-2 xl:col-span-3">
+                    <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
 
-                            <SectionHeading>Personal Details</SectionHeading>
+                        <SectionHeader>
+                            <SectionTitle>Personal Details</SectionTitle>
+                        </SectionHeader>
 
-                            <DetailList items={[
-                                {
-                                    label: 'Contact Details',
-                                    value: <>
-                                        <p>
-                                            <Icon icon="envelope" mr type="regular" className="text-gray-400" />
-                                            {singer.user.email}
-                                        </p>
-                                        <p>
-                                            <Icon icon="phone" mr type="regular" className="text-gray-400" />
-                                            {singer.user.phone ? <a href={`tel:${singer.user.phone}`}>{singer.user.phone}</a> : 'No phone'}
-                                        </p>
-                                    </>,
-                                    colClass: 'sm:col-span-2 xl:col-span-1',
-                                },
-                                {
-                                    label: 'Date of Birth',
-                                    value: <>{singer.user.dob ? <DateTag date={singer.user.dob} /> : 'No date of birth'}</>,
-                                },
-                                {
-                                    label: 'Height',
-                                    value: singer.user.height ? `${Math.round(singer.user.height)} cm` : 'Unknown',
-                                },
-                                {
-                                    label: 'BHA Member ID',
-                                    value: singer.user.bha_id ?? 'Unknown',
-                                },
-                                {
-                                    label: 'Address',
-                                    value: <>
-                                        {singer.user.address_street_1
-                                            ? (<>
-                                                {singer.user.address_street_1}<br />
-                                                {singer.user.address_street_2 && (<>{singer.user.address_street_2}<br /></>)}
-                                                {`${singer.user.address_suburb}, ${singer.user.address_state} ${singer.user.address_postcode}`}
-                                            </>)
-                                            : 'No address'
-                                        }
-                                    </>,
-                                },
-                                {
-                                    label: 'Profession',
-                                    value: singer.user.profession ?? 'None listed',
-                                },
-                                {
-                                    label: 'Other Skills',
-                                    value: singer.user.skills ?? 'None listed',
-                                },
-                                {
-                                    label: 'Emergency Contact',
-                                    value: <>
-                                        <p>
-                                            <Icon icon="user" mr type="regular" className="text-gray-400" />
-                                            {singer.user.ice_name ?? 'No emergency contact'}
-                                        </p>
-                                        <p>
-                                            <Icon icon="phone" mr type="regular" className="text-gray-400" />
-                                            {singer.user.ice_phone ? <a href={`tel:${singer.user.ice_phone}`}>{singer.user.ice_phone}</a> : 'No phone'}
-                                        </p>
-                                    </>,
-                                    colClass: 'sm:col-span-2 xl:col-span-1',
-                                },
-                            ]}/>
-                        </div>
-
-                        <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
-                            <SectionHeading>Membership Details</SectionHeading>
-
-                            <DetailList items={[
-                                {
-                                    label: 'Roles',
-                                    value: (
-                                        <div className="space-x-1.5 space-y-1.5">
-                                            {singer.roles.map(role => <Badge key={role.name}>{role.name.split(' ')[0]}</Badge>)}
-                                        </div>
-                                    ),
-                                    colClass: 'sm:col-span-2',
-                                },
-                                {
-                                    label: 'Reason for Joining',
-                                    value: singer.reason_for_joining ?? 'Unknown',
-                                },
-                                {
-                                    label: 'Referred by',
-                                    value: singer.referrer ?? 'Unknown',
-                                },
-                                {
-                                    label: 'Notes / Membership Details',
-                                    value: singer.membership_details ?? 'N/A',
-                                    colClass: 'sm:col-span-2',
-                                },
-                                {
-                                    label: 'Member Since',
-                                    value: <>
-                                        <DateTag date={singer.joined_at} /><br />
-                                        <span className="text-sm text-gray-500 italic">
-                                            <DateTag date={singer.created_at} label="Added" />
-                                        </span>
-                                    </>,
-                                },
-                                {
-                                    label: 'Last Login',
-                                    value: <DateTag date={singer.user.last_login} />,
-                                },
-                            ]} />
-                        </div>
+                        <DetailList items={[
+                            {
+                                label: 'Contact Details',
+                                value: <>
+                                    <p>
+                                        <Icon icon="envelope" mr type="regular" className="text-gray-400" />
+                                        {singer.user.email}
+                                    </p>
+                                    <p>
+                                        <Icon icon="phone" mr type="regular" className="text-gray-400" />
+                                        {singer.user.phone ? <a href={`tel:${singer.user.phone}`}>{singer.user.phone}</a> : 'No phone'}
+                                    </p>
+                                </>,
+                                colClass: 'sm:col-span-2 xl:col-span-1',
+                            },
+                            {
+                                label: 'Date of Birth',
+                                value: <>{singer.user.dob ? <DateTag date={singer.user.dob} /> : 'No date of birth'}</>,
+                            },
+                            {
+                                label: 'Height',
+                                value: singer.user.height ? `${Math.round(singer.user.height)} cm` : 'Unknown',
+                            },
+                            {
+                                label: 'BHA Member ID',
+                                value: singer.user.bha_id ?? 'Unknown',
+                            },
+                            {
+                                label: 'Address',
+                                value: <>
+                                    {singer.user.address_street_1
+                                        ? (<>
+                                            {singer.user.address_street_1}<br />
+                                            {singer.user.address_street_2 && (<>{singer.user.address_street_2}<br /></>)}
+                                            {`${singer.user.address_suburb}, ${singer.user.address_state} ${singer.user.address_postcode}`}
+                                        </>)
+                                        : 'No address'
+                                    }
+                                </>,
+                            },
+                            {
+                                label: 'Profession',
+                                value: singer.user.profession ?? 'None listed',
+                            },
+                            {
+                                label: 'Other Skills',
+                                value: singer.user.skills ?? 'None listed',
+                            },
+                            {
+                                label: 'Emergency Contact',
+                                value: <>
+                                    <p>
+                                        <Icon icon="user" mr type="regular" className="text-gray-400" />
+                                        {singer.user.ice_name ?? 'No emergency contact'}
+                                    </p>
+                                    <p>
+                                        <Icon icon="phone" mr type="regular" className="text-gray-400" />
+                                        {singer.user.ice_phone ? <a href={`tel:${singer.user.ice_phone}`}>{singer.user.ice_phone}</a> : 'No phone'}
+                                    </p>
+                                </>,
+                                colClass: 'sm:col-span-2 xl:col-span-1',
+                            },
+                        ]}/>
                     </div>
 
-                    <div className="sm:col-span-1 sm:border-l sm:border-l-gray-300">
+                    <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                        {can['list_tasks'] && (
-                        <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
+                        <SectionHeader>
+                            <SectionTitle>Membership Details</SectionTitle>
+                        </SectionHeader>
 
+                        <DetailList items={[
+                            {
+                                label: 'Roles',
+                                value: (
+                                    <div className="space-x-1.5 space-y-1.5">
+                                        {singer.roles.map(role => <Badge key={role.name}>{role.name.split(' ')[0]}</Badge>)}
+                                    </div>
+                                ),
+                                colClass: 'sm:col-span-2',
+                            },
+                            {
+                                label: 'Reason for Joining',
+                                value: singer.reason_for_joining ?? 'Unknown',
+                            },
+                            {
+                                label: 'Referred by',
+                                value: singer.referrer ?? 'Unknown',
+                            },
+                            {
+                                label: 'Notes / Membership Details',
+                                value: singer.membership_details ?? 'N/A',
+                                colClass: 'sm:col-span-2',
+                            },
+                            {
+                                label: 'Member Since',
+                                value: <>
+                                    <DateTag date={singer.joined_at} /><br />
+                                    <span className="text-sm text-gray-500 italic">
+                                        <DateTag date={singer.created_at} label="Added" />
+                                    </span>
+                                </>,
+                            },
+                            {
+                                label: 'Last Login',
+                                value: <DateTag date={singer.user.last_login} />,
+                            },
+                        ]} />
+                    </div>
+                </div>
+
+                <div className="sm:col-span-1 sm:border-l sm:border-l-gray-300">
+
+                    {can['list_tasks'] && (
+                    <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 sm:border-b sm:border-b-gray-300">
+
+                        <SectionHeader>
                             <div className="flex flex-wrap items-baseline">
-                                <SectionHeading>Onboarding</SectionHeading>
+                                <SectionTitle>Onboarding</SectionTitle>
                                 <p className="ml-2 text-md text-gray-500 truncate">{singer.onboarding_enabled ? 'Enabled' : 'Disabled'}</p>
                             </div>
+                        </SectionHeader>
 
-                            <div className="py-6 px-4 sm:px-3 lg:px-4">
-                                <nav className="flex" aria-label="Progress">
-                                    <ol role="list" className="space-y-6">
-                                        {singer.tasks.map((task, index, tasks) => (
-                                            <li key={index}>
-                                                <span className="flex items-center">
-                                                    <span className="flex-shrink-0 h-5 w-5 relative flex items-center justify-center" aria-hidden="true">
-                                                        {task.pivot.completed
-                                                        && <Icon icon="check-circle" className="text-purple-500 text-sm" />
-                                                        || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
-                                                            <span className="absolute h-4 w-4 rounded-full bg-purple-200" />
-                                                            <span className="relative block w-2 h-2 bg-purple-600 rounded-full" />
-                                                        </>
-                                                        || <div className="h-2 w-2 bg-gray-300 rounded-full group-hover:bg-gray-400" />
-                                                        }
-                                                    </span>
+                        <div className="py-6 px-4 sm:px-3 lg:px-4">
+                            <nav className="flex" aria-label="Progress">
+                                <ol role="list" className="space-y-6">
+                                    {singer.tasks.map((task, index, tasks) => (
+                                        <li key={index}>
+                                            <span className="flex items-center">
+                                                <span className="flex-shrink-0 h-5 w-5 relative flex items-center justify-center" aria-hidden="true">
                                                     {task.pivot.completed
-                                                    && <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
+                                                    && <Icon icon="check-circle" className="text-purple-500 text-sm" />
                                                     || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
-                                                        <span className="ml-3 text-sm font-medium text-purple-600">{task.name}</span>
-                                                        {task.can['complete'] && (
-                                                            <ButtonLink href={route(task.route, [singer.id, task.id])} size="xs" className="ml-3">Complete</ButtonLink>
-                                                        )}
+                                                        <span className="absolute h-4 w-4 rounded-full bg-purple-200" />
+                                                        <span className="relative block w-2 h-2 bg-purple-600 rounded-full" />
                                                     </>
-                                                    || <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
+                                                    || <div className="h-2 w-2 bg-gray-300 rounded-full group-hover:bg-gray-400" />
                                                     }
                                                 </span>
-                                            </li>
-                                        ))}
-                                    </ol>
-                                </nav>
-                            </div>
+                                                {task.pivot.completed
+                                                && <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
+                                                || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
+                                                    <span className="ml-3 text-sm font-medium text-purple-600">{task.name}</span>
+                                                    {task.can['complete'] && (
+                                                        <ButtonLink href={route(task.route, [singer.id, task.id])} size="xs" className="ml-3">Complete</ButtonLink>
+                                                    )}
+                                                </>
+                                                || <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
+                                                }
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ol>
+                            </nav>
                         </div>
-                        )}
-
-                        { singer.can['create_placement'] && (
-                        <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                            {singer.placement
-                                ? <>
-                                    <div className="pb-5 sm:flex sm:items-center sm:justify-between mb-4">
-                                        <SectionHeading>Voice Placement</SectionHeading>
-                                        <div className="mt-3 sm:mt-0 sm:ml-4">
-                                            <ButtonLink
-                                                variant="primary"
-                                                size="sm"
-                                                href={route('singers.placements.edit', [singer.id, singer.placement.id])}
-                                            >
-                                                <Icon icon="edit" mr />
-                                                Edit
-                                            </ButtonLink>
-                                        </div>
-                                    </div>
-
-                                    <DetailList gridCols="sm:grid-cols-2" items={[
-                                        {
-                                            label: 'Voice Part',
-                                            value: <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />,
-                                        },
-                                        {
-                                            label: 'Voice Tone',
-                                            value: <Range
-                                                min={1}
-                                                max={3}
-                                                minLabel={<Icon icon="flute" className="text-gray-600 fa-lg" />}
-                                                maxLabel={<Icon icon="trumpet" className="text-gray-600 fa-lg" />}
-                                                value={singer.placement.voice_tone}
-                                            />,
-                                        },
-                                        {
-                                            label: 'Pitch Skill',
-                                            value: <Progress value={singer.placement.skill_pitch} min={1} max={5} />,
-                                        },
-                                        {
-                                            label: 'Harmony Skill',
-                                            value: <Progress value={singer.placement.skill_harmony} min={1} max={5} />,
-                                        },
-                                        {
-                                            label: 'Performance Skill',
-                                            value: <Progress value={singer.placement.skill_performance} min={1} max={5} />,
-                                        },
-                                        {
-                                            label: 'Sight Reading Skill',
-                                            value: <Progress value={singer.placement.skill_sightreading} min={1} max={5} />,
-                                        },
-                                        {
-                                            label: 'Experience',
-                                            value: singer.placement.experience ?? 'None listed',
-                                        },
-                                        {
-                                            label: 'Instruments',
-                                            value: singer.placement.instruments ?? 'None listed',
-                                        },
-                                    ]} />
-                                </>
-                                :
-                                <>
-                                    <h2 className="text-xl leading-6 font-semibold text-gray-900 mb-4">Voice Placement</h2>
-
-                                    <div className="text-center py-4 px-2">
-                                        <Icon icon="user-music" type="light" className="text-gray-400 text-4xl mb-2" />
-                                        <h3 className="mt-2 text-sm font-medium text-gray-900">No Voice Placement</h3>
-                                        <p className="mt-1 text-sm text-gray-500">
-                                            Get this singer started on their journey by creating their Voice Placement.
-                                        </p>
-                                        <div className="mt-6">
-                                            <ButtonLink href={route('singers.placements.create', singer)} variant="primary">
-                                                <Icon icon="plus" mr />
-                                                Create Placement
-                                            </ButtonLink>
-                                        </div>
-                                    </div>
-                                </>
-                            }
-                        </div>
-                        )}
-
                     </div>
+                    )}
+
+                    { singer.can['create_placement'] && (
+                    <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                        {singer.placement
+                            ? <>
+                                <SectionHeader>
+                                    <SectionTitle>Voice Placement</SectionTitle>
+
+                                    <ButtonLink
+                                        variant="primary"
+                                        size="sm"
+                                        href={route('singers.placements.edit', [singer.id, singer.placement.id])}
+                                    >
+                                        <Icon icon="edit" mr />
+                                        Edit
+                                    </ButtonLink>
+                                </SectionHeader>
+
+                                <DetailList gridCols="sm:grid-cols-2" items={[
+                                    {
+                                        label: 'Voice Part',
+                                        value: <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />,
+                                    },
+                                    {
+                                        label: 'Voice Tone',
+                                        value: <Range
+                                            min={1}
+                                            max={3}
+                                            minLabel={<Icon icon="flute" className="text-gray-600 fa-lg" />}
+                                            maxLabel={<Icon icon="trumpet" className="text-gray-600 fa-lg" />}
+                                            value={singer.placement.voice_tone}
+                                        />,
+                                    },
+                                    {
+                                        label: 'Pitch Skill',
+                                        value: <Progress value={singer.placement.skill_pitch} min={1} max={5} />,
+                                    },
+                                    {
+                                        label: 'Harmony Skill',
+                                        value: <Progress value={singer.placement.skill_harmony} min={1} max={5} />,
+                                    },
+                                    {
+                                        label: 'Performance Skill',
+                                        value: <Progress value={singer.placement.skill_performance} min={1} max={5} />,
+                                    },
+                                    {
+                                        label: 'Sight Reading Skill',
+                                        value: <Progress value={singer.placement.skill_sightreading} min={1} max={5} />,
+                                    },
+                                    {
+                                        label: 'Experience',
+                                        value: singer.placement.experience ?? 'None listed',
+                                    },
+                                    {
+                                        label: 'Instruments',
+                                        value: singer.placement.instruments ?? 'None listed',
+                                    },
+                                ]} />
+                            </>
+                            :
+                            <>
+                                <h2 className="text-xl leading-6 font-semibold text-gray-900 mb-4">Voice Placement</h2>
+
+                                <div className="text-center py-4 px-2">
+                                    <Icon icon="user-music" type="light" className="text-gray-400 text-4xl mb-2" />
+                                    <h3 className="mt-2 text-sm font-medium text-gray-900">No Voice Placement</h3>
+                                    <p className="mt-1 text-sm text-gray-500">
+                                        Get this singer started on their journey by creating their Voice Placement.
+                                    </p>
+                                    <div className="mt-6">
+                                        <ButtonLink href={route('singers.placements.create', singer)} variant="primary">
+                                            <Icon icon="plus" mr />
+                                            Create Placement
+                                        </ButtonLink>
+                                    </div>
+                                </div>
+                            </>
+                        }
+                    </div>
+                    )}
 
                 </div>
+
             </div>
         </>
     );

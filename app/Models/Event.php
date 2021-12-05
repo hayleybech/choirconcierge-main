@@ -52,11 +52,13 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property bool $in_past
  * @property bool $in_future
  * @property bool $is_repeat_parent
+ * @property bool $parent_in_past
  *
  * Relationships
  * @property EventType $type
  * @property Collection<Rsvp> $rsvps
  * @property Rsvp $my_rsvp
+ * @property Attendance $my_attendance
  * @property Collection<Attendance> $attendances
  *
  * Relationships - Repeating Events
@@ -351,15 +353,17 @@ class Event extends Model
 		return $this->hasMany(Rsvp::class);
 	}
 
-	public function my_rsvp(): ?HasOne
+	public function my_rsvp(): HasOne
 	{
-		return $this->hasOne(Rsvp::class)->where(
-			'singer_id',
-			'=',
-			DB::table('singers')
-				->where('user_id', auth()->id())
-				->value('id'),
-		);
+		return $this->hasOne(Rsvp::class)
+            ->where(
+                'singer_id',
+                '=',
+                DB::table('singers')
+                    ->where('user_id', auth()->id())
+                    ->value('id')
+            )
+            ->withDefault(['response' => 'unknown']);
 	}
 
 	public function attendances(): HasMany
@@ -403,11 +407,15 @@ class Event extends Model
 			->first();
 	}
 
-	public function my_attendance()
+	public function my_attendance(): HasOne
 	{
-		return $this->attendances()
-			->where('singer_id', '=', \Auth::user()->singer->id)
-			->first();
+        return $this->hasOne(Attendance::class)
+            ->where(
+                'singer_id',
+                '=',
+                auth()->user()->singer->id,
+            )
+            ->withDefault(['response' => 'unknown']);
 	}
 
 	public function singers_rsvp_response(string $response): Builder
@@ -513,6 +521,11 @@ class Event extends Model
 		return $this->repeat_parent_id === $this->id;
 	}
 
+	public function getParentInPastAttribute(): ?bool
+    {
+        return $this->repeat_parent?->in_past ?? null;
+    }
+
 	public function getAddToCalendarLinkAttribute(): Link
 	{
 		if (!isset($this->_add_to_calendar_link)) {
@@ -537,4 +550,14 @@ class Event extends Model
 			'repeat_frequency_amount',
 		]);
 	}
+
+    public function createMissingAttendanceRecords(): void
+    {
+        $this->attendances()->createMany(
+            Singer::active()
+                ->whereDoesntHave('attendances', fn($query) => $query->where('attendances.event_id', $this->id))
+                ->pluck('id')
+                ->map(fn($singerId) => ['singer_id' => $singerId, 'response' => 'unknown'])
+        );
+    }
 }

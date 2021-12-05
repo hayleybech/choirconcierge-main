@@ -28,6 +28,8 @@ class Tenant extends BaseTenant
 {
 	use HasDomains, TenantTimezoneDates;
 
+	protected $appends = ['host', 'timezone_label'];
+
 	public static function create(
 		string $id,
 		string $choir_name,
@@ -49,6 +51,11 @@ class Tenant extends BaseTenant
 		return new CarbonTimeZone($value);
 	}
 
+	public function getTimezoneLabelAttribute(): string
+    {
+        return $this->timezone->toRegionName().' '.$this->timezone->toOffsetName();
+    }
+
 	public function getMailFromNameAttribute(): string
 	{
 		return $this->choir_name . ' via Choir Concierge';
@@ -56,7 +63,7 @@ class Tenant extends BaseTenant
 
 	public function getMailFromAddressAttribute(): string
 	{
-		return 'hello@' . \Request::getHost();
+		return 'hello@' . $this->host;
 	}
 
 	// @todo create a way to assign the primary domain in the database

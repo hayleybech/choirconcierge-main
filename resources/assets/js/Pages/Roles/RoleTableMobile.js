@@ -4,7 +4,7 @@ import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 const RoleTableMobile = ({ roles }) => (
     <TableMobile>
         {roles.map((role) => (
-            <TableMobileItem key={role.id} url={route('roles.edit', role.id)}>
+            <TableMobileItem key={role.id} url={route('roles.show', role.id)}>
                 <p className="flex items-center min-w-0 mr-1.5">
                     <span className="text-sm font-medium text-purple-600 truncate">{role.name}</span>
                 </p>

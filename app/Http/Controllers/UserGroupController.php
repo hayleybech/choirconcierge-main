@@ -46,10 +46,21 @@ class UserGroupController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 */
-	public function create(): View
+	public function create(): View|Response
 	{
 		$voice_parts = VoicePart::all();
 		$singer_categories = SingerCategory::all();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('MailingLists/Create', [
+                'roles' => Role::where('name', '!=', 'User')->get()->values(),
+                'voiceParts' => $voice_parts->values(),
+                'singerCategories' => $singer_categories->values(),
+            ]);
+        }
+
 		return view('groups.create', compact('voice_parts', 'singer_categories'));
 	}
 
@@ -92,16 +103,27 @@ class UserGroupController extends Controller
 		return view('groups.show', compact('group'));
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  UserGroup  $group
-	 * @return View
-	 */
-	public function edit(UserGroup $group): View
+	public function edit(UserGroup $group): View|Response
 	{
+        $group->load([
+            'recipient_roles', 'recipient_voice_parts', 'recipient_singer_categories', 'recipient_users',
+            'sender_roles', 'sender_voice_parts', 'sender_singer_categories', 'sender_users',
+        ]);
+
 		$voice_parts = VoicePart::all();
 		$singer_categories = SingerCategory::all();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('MailingLists/Edit', [
+                'list' => $group,
+                'roles' => Role::where('name', '!=', 'User')->get()->values(),
+                'voiceParts' => $voice_parts->values(),
+                'singerCategories' => $singer_categories->values(),
+            ]);
+        }
+
 		return view('groups.edit', compact('group', 'voice_parts', 'singer_categories'));
 	}
 

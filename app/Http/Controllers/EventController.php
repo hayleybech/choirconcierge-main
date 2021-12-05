@@ -66,11 +66,19 @@ class EventController extends Controller
 		]);
 	}
 
-	public function create(): View
+	public function create(): View|Response
 	{
 		$this->authorize('create', Event::class);
 
 		$types = EventType::all();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Events/Create', [
+                'types' => $types->values(),
+            ]);
+        }
 
 		return view('events.create', compact('types'));
 	}
@@ -84,21 +92,56 @@ class EventController extends Controller
 				->toArray(),
 		);
 
-		$request->whenHas(
-			'send_notification',
-			fn() => Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventCreated($event)),
-		);
+        if($request->input('send_notification')) {
+            Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventCreated($event));
+        }
 
-		return redirect()
+        return redirect()
 			->route('events.show', [$event])
 			->with(['status' => 'Event created. ']);
 	}
 
-	public function show(Event $event): View
+	public function show(Event $event): View|Response
 	{
 		$this->authorize('view', $event);
 
-		$event->load('repeat_parent:id,call_time');
+		$event->load('repeat_parent:id,call_time', 'my_rsvp', 'my_attendance')
+            ->append(['in_future', 'is_repeat_parent', 'parent_in_past']);
+
+        $event->can = [
+            'update_event' => auth()->user()?->can('update', $event),
+            'delete_event' => auth()->user()?->can('delete', $event),
+        ];
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Events/Show', [
+                'event' => $event,
+                'rsvpCount' => [
+                    'yes' => $event->singers_rsvp_response('yes')->count(),
+                    'no' => $event->singers_rsvp_response('no')->count(),
+                    'unknown' => $event->singers_rsvp_missing()->count(),
+                ],
+                'voicePartsRsvpCount' => [
+                    'yes' => $event->voice_parts_rsvp_response_count('yes')->get(),
+                ],
+                'attendanceCount' => [
+                    'present' => $event->singers_attendance('present')->count(),
+                    'absent' => $event->singers_attendance('absent')->count(),
+                    'absent_apology' => $event->singers_attendance('absent_apology')->count(),
+                    'unknown' => $event->singers_attendance_missing()->count(),
+                ],
+                'voicePartsAttendanceCount' => [
+                    'present' => $event->voice_parts_attendance_count('present')->get(),
+                ],
+                'addToCalendarLinks' => [
+                    'google' => $event->add_to_calendar_link?->google(),
+                    'webOutlook' => $event->add_to_calendar_link?->webOutlook(),
+                    'ics' => $event->add_to_calendar_link?->ics(),
+                ]
+            ]);
+        }
 
 		return view('events.show', [
 			'event' => $event,
@@ -115,11 +158,20 @@ class EventController extends Controller
 		]);
 	}
 
-	public function edit(Event $event): View
+	public function edit(Event $event): View|Response
 	{
 		$this->authorize('update', $event);
 
 		$types = EventType::all();
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Events/Edit', [
+                'event' => $event,
+                'types' => $types->values(),
+            ]);
+        }
 
 		return view('events.edit', compact('event', 'types'));
 	}
@@ -138,10 +190,9 @@ class EventController extends Controller
 				->toArray(),
 		);
 
-		$request->whenHas(
-			'send_notification',
-			fn() => Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventUpdated($event)),
-		);
+        if($request->input('send_notification')) {
+            Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventUpdated($event));
+        }
 
 		return redirect()
 			->route('events.show', [$event])

@@ -3,10 +3,10 @@
         <div class="d-flex align-items-center">
             @can('view', $singer)
                 <a href="{{route('singers.show', ['singer' => $singer])}}">
-                    <img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->user->name }}" class="user-avatar" width="30" height="30">
+                    <img src="{{ $singer->user_avatar_thumb_url }}" alt="{{ $singer->user->name }}" class="user-avatar" width="30" height="30">
                 </a>
             @else
-                <img src="{{ $singer->user->getAvatarUrl('thumb') }}" alt="{{ $singer->user->name }}" class="user-avatar" width="30" height="30">
+                <img src="{{ $singer->user_avatar_thumb_url }}" alt="{{ $singer->user->name }}" class="user-avatar" width="30" height="30">
             @endcan
             <div class="item-title-wrapper">
                 @can('view', $singer)

@@ -58,6 +58,7 @@ class HandleInertiaRequests extends Middleware
                 'list_events' => auth()->user()?->can('viewAny', Event::class),
                 'create_event' => auth()->user()?->can('create', Event::class),
                 'list_attendances' => auth()->user()?->can('viewAny', Attendance::class),
+                'create_attendance' => auth()->user()?->can('create', Attendance::class),
                 'list_folders' => auth()->user()?->can('viewAny', Folder::class),
                 'create_folder' => auth()->user()?->can('create', Folder::class),
                 'list_stacks' => auth()->user()?->can('viewAny', RiserStack::class),
@@ -66,7 +67,12 @@ class HandleInertiaRequests extends Middleware
                 'create_group' => auth()->user()?->can('create', UserGroup::class),
                 'list_tasks' => auth()->user()?->can('viewAny', Task::class),
                 'create_task' => auth()->user()?->can('create', Task::class),
-            ]
+                'impersonate' => auth()->user()?->singer?->hasRole('Admin'),
+            ],
+            'googleApiKey' => config('services.google.key'),
+            'tenant' => tenancy()?->tenant,
+            'user' => auth()->user(),
+            'impersonationActive' => session()->has('impersonation:active'),
         ]);
     }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from "../classNames";
 
-const Icon = ({ icon, type = 'solid', mr = false, pulse = false, className = '', style = {} }) => {
+const Icon = ({ icon, type = 'solid', mr = false, ml = false, pulse = false, className = '', style = {} }) => {
     const types = {
         solid: 'fas',
         regular: 'far',
@@ -19,6 +19,7 @@ const Icon = ({ icon, type = 'solid', mr = false, pulse = false, className = '',
                 typeClass,
                 iconClass,
                 mr ? 'mr-1.5' : '',
+                ml ? 'ml-1.5' : '',
                 pulse ? 'fa-pulse' : '',
                 className,
             )}

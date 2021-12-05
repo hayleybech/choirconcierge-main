@@ -10,7 +10,7 @@ const RoleTableDesktop = ({ roles }) => (
                 <TableCell>
                     <div className="flex items-center">
                         <div className="ml-4">
-                            <Link href={route('roles.edit', role.id)} className="text-sm font-medium text-purple-800">{role.name}</Link>
+                            <Link href={route('roles.show', role.id)} className="text-sm font-medium text-purple-800">{role.name}</Link>
                         </div>
                     </div>
                 </TableCell>

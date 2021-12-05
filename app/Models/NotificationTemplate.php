@@ -46,19 +46,19 @@ class NotificationTemplate extends Model
 	public function getBodyWithHighlightsAttribute()
 	{
 		$replacements = [
-			'%%singer.name%%' => '<code>%%singer.name%%</code>',
-			'%%singer.fname%%' => '<code>%%singer.fname%%</code>',
-			'%%singer.lname%%' => '<code>%%singer.lname%%</code>',
-			'%%singer.email%%' => '<code>%%singer.email%%</code>',
-			'%%placement.create%%' => '<code>%%placement.create%%</code>',
-			'%%choir.name%%' => '<code>%%choir.name%%</code>',
-			'%%singer.dob%%' => '<code>%%singer.dob%%</code>',
-			'%%singer.age%%' => '<code>%%singer.age%%</code>',
-			'%%singer.phone%%' => '<code>%%singer.phone%%</code>',
-			'%%singer.section%%' => '<code>%%singer.section%%</code>',
-			'%%user.name%%' => '<code>%%user.name%%</code>',
-			'%%user.fname%%' => '<code>%%user.fname%%</code>',
-			'%%user.lname%%' => '<code>%%user.lname%%</code>',
+			'%%singer.name%%' => '<code class="text-brand-blue">%%singer.name%%</code>',
+			'%%singer.fname%%' => '<code class="text-brand-blue">%%singer.fname%%</code>',
+			'%%singer.lname%%' => '<code class="text-brand-blue">%%singer.lname%%</code>',
+			'%%singer.email%%' => '<code class="text-brand-blue">%%singer.email%%</code>',
+			'%%placement.create%%' => '<code class="text-brand-blue">%%placement.create%%</code>',
+			'%%choir.name%%' => '<code class="text-brand-blue">%%choir.name%%</code>',
+			'%%singer.dob%%' => '<code class="text-brand-blue">%%singer.dob%%</code>',
+			'%%singer.age%%' => '<code class="text-brand-blue">%%singer.age%%</code>',
+			'%%singer.phone%%' => '<code class="text-brand-blue">%%singer.phone%%</code>',
+			'%%singer.section%%' => '<code class="text-brand-blue">%%singer.section%%</code>',
+			'%%user.name%%' => '<code class="text-brand-blue">%%user.name%%</code>',
+			'%%user.fname%%' => '<code class="text-brand-blue">%%user.fname%%</code>',
+			'%%user.lname%%' => '<code class="text-brand-blue">%%user.lname%%</code>',
 		];
 		return str_replace(array_keys($replacements), $replacements, nl2br(e($this->body)));
 	}

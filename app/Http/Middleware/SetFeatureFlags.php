@@ -15,7 +15,9 @@ class SetFeatureFlags
     {
         if(Session::get('rebuild') === 'on') {
             config(['features.rebuild' => true]);
-        } else {
+        }
+
+        if(Session::get('rebuild') === 'off') {
             config(['features.rebuild' => false]);
         }
 

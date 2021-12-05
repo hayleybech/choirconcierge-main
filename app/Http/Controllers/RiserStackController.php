@@ -33,7 +33,7 @@ class RiserStackController extends Controller
 		return view('stacks.index', compact('stacks'));
 	}
 
-	public function create(): View
+	public function create(): View|Response
 	{
 		$this->authorize('create', RiserStack::class);
 
@@ -41,6 +41,14 @@ class RiserStackController extends Controller
 		    $query->active()->with('user');
         }])->get();
 		$voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
+
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('RiserStacks/Create', [
+                'voice_parts' => $voice_parts->values(),
+            ]);
+        }
 
 		return view('stacks.create', compact('voice_parts'));
 	}
@@ -155,14 +163,19 @@ class RiserStackController extends Controller
 	 */
 	private function prepPositions(RiserStackRequest $request): array
 	{
-		$position_data = json_decode($request->validated()['singer_positions']);
-		$positions = [];
-		foreach ($position_data as $item) {
-			$positions[$item->id] = [
-				'row' => $item->position->row,
-				'column' => $item->position->column,
-			];
-		}
-		return $positions;
+        if(config('features.rebuild')){
+		    $position_data = $request->validated()['singer_positions'];
+        } else {
+		    $position_data = json_decode($request->validated()['singer_positions'], true);
+        }
+
+		return collect($position_data)
+            ->mapWithKeys(fn($item) => [
+                $item['id'] => [
+                    'row' => $item['position']['row'],
+                    'column' => $item['position']['column'],
+                ]
+            ])
+            ->all();
 	}
 }

@@ -13,6 +13,8 @@ import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import AppHead from "../../components/AppHead";
+import Form from "../../components/Form";
+import FormFooter from "../../components/FormFooter";
 
 const Edit = ({ voice_parts, roles, singer }) => {
     const { data, setData, put, processing, errors } = useForm({
@@ -45,75 +47,67 @@ const Edit = ({ voice_parts, roles, singer }) => {
                 ]}
             />
 
-            <div className="bg-gray-50">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <Form onSubmit={submit}>
 
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <form className="space-y-8 divide-y divide-gray-200" onSubmit={submit}>
-
-                        <div className="space-y-8 divide-y divide-gray-200">
-
-                            <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
-                                <div className="sm:col-span-3">
-                                    <Label label="Voice part" forInput="voice_part_id" />
-                                    <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
-                                    {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
-                                </div>
-
-                                <div className="sm:col-span-6">
-                                    <Label label="Why are you joining?" forInput="reason_for_joining" />
-                                    <TextInput name="reason_for_joining" value={data.reason_for_joining} updateFn={value => setData('reason_for_joining', value)} hasErrors={ !! errors['reason_for_joining'] } />
-                                    {errors.reason_for_joining && <Error>{errors.reason_for_joining}</Error>}
-                                </div>
-
-                                <div className="sm:col-span-6">
-                                    <Label label="Where did you hear about us?" forInput="referrer" />
-                                    <TextInput name="referrer" value={data.referrer} updateFn={value => setData('referrer', value)} hasErrors={ !! errors['referrer'] } />
-                                    {errors.referrer && <Error>{errors.referrer}</Error>}
-                                </div>
-
-                                <div className="sm:col-span-6">
-                                    <Label label="Notes / Membership Details" forInput="membership_details" />
-                                    <TextInput name="membership_details" value={data.membership_details} updateFn={value => setData('membership_details', value)} hasErrors={ !! errors['membership_details'] } />
-                                    {errors.membership_details && <Error>{errors.membership_details}</Error>}
-                                </div>
-
-                                <div className="sm:col-span-6">
-                                    <DetailToggle
-                                        label="Enable onboarding?"
-                                        description="Enable this only for new/prospective singers."
-                                        value={data.onboarding_enabled}
-                                        updateFn={value => setData('onboarding_enabled',  value)}
-                                    />
-                                </div>
-
-                                <div className="sm:col-span-6">
-                                    <Label label="Joined" forInput="joined_at" />
-                                    <DateInput
-                                        name="joined_at"
-                                        hasErrors={ !! errors.joined_at }
-                                        value={data.joined_at}
-                                        updateFn={value => setData('joined_at', value)}
-                                    />
-                                    {errors.joined_at && <Error>{errors.joined_at}</Error>}
-                                </div>
-
-                                <fieldset className="mt-6 sm:col-span-6">
-                                    <legend className="text-base font-medium text-gray-900">Roles</legend>
-                                    <CheckboxGroup name={"user_roles"} options={roles} value={data.user_roles} updateFn={value => setData('user_roles', value)} />
-                                    {errors.user_roles && <Error>{errors.user_roles}</Error>}
-                                </fieldset>
-                            </FormSection>
-
+                    <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
+                        <div className="sm:col-span-3">
+                            <Label label="Voice part" forInput="voice_part_id" />
+                            <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
+                            {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
                         </div>
 
-                        <div className="pt-5">
-                            <div className="flex justify-end">
-                                <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
-                                <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                            </div>
+                        <div className="sm:col-span-6">
+                            <Label label="Why are you joining?" forInput="reason_for_joining" />
+                            <TextInput name="reason_for_joining" value={data.reason_for_joining} updateFn={value => setData('reason_for_joining', value)} hasErrors={ !! errors['reason_for_joining'] } />
+                            {errors.reason_for_joining && <Error>{errors.reason_for_joining}</Error>}
                         </div>
-                    </form>
-                </div>
+
+                        <div className="sm:col-span-6">
+                            <Label label="Where did you hear about us?" forInput="referrer" />
+                            <TextInput name="referrer" value={data.referrer} updateFn={value => setData('referrer', value)} hasErrors={ !! errors['referrer'] } />
+                            {errors.referrer && <Error>{errors.referrer}</Error>}
+                        </div>
+
+                        <div className="sm:col-span-6">
+                            <Label label="Notes / Membership Details" forInput="membership_details" />
+                            <TextInput name="membership_details" value={data.membership_details} updateFn={value => setData('membership_details', value)} hasErrors={ !! errors['membership_details'] } />
+                            {errors.membership_details && <Error>{errors.membership_details}</Error>}
+                        </div>
+
+                        <div className="sm:col-span-6">
+                            <DetailToggle
+                                label="Enable onboarding?"
+                                description="Enable this only for new/prospective singers."
+                                value={data.onboarding_enabled}
+                                updateFn={value => setData('onboarding_enabled',  value)}
+                            />
+                        </div>
+
+                        <div className="sm:col-span-6">
+                            <Label label="Joined" forInput="joined_at" />
+                            <DateInput
+                                name="joined_at"
+                                hasErrors={ !! errors.joined_at }
+                                value={data.joined_at}
+                                updateFn={value => setData('joined_at', value)}
+                            />
+                            {errors.joined_at && <Error>{errors.joined_at}</Error>}
+                        </div>
+
+                        <fieldset className="mt-6 sm:col-span-6">
+                            <legend className="text-base font-medium text-gray-900">Roles</legend>
+                            <CheckboxGroup name={"user_roles"} options={roles} value={data.user_roles} updateFn={value => setData('user_roles', value)} />
+                            {errors.user_roles && <Error>{errors.user_roles}</Error>}
+                        </fieldset>
+                    </FormSection>
+
+                    <FormFooter>
+                        <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
+                        <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
+                    </FormFooter>
+
+                </Form>
             </div>
         </>
     );

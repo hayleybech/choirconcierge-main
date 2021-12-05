@@ -35,7 +35,7 @@ class EventIcalFeed
 		foreach ($events as $event) {
 			$ical_event = Event::create($event->title)
 				->description($event->description ?? '')
-				->createdAt($event->created_at)
+				->createdAt($event->created_at ?? now())
 				->startsAt($event->call_time)
 				->endsAt($event->end_date)
 				->addressName($event->location_name ?? '')

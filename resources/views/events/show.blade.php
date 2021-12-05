@@ -113,7 +113,7 @@
 
                     @if( ! $event->in_future )
                         <!-- Attendance -->
-                        @if($my_attendance)
+                        @if($my_attendance->id)
                             <p>
                                 You were {{ strtolower($my_attendance->response_string) }} for this event.<br>
                                 @if($my_attendance->absent_reason)

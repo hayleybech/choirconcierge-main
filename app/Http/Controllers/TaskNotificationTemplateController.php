@@ -8,6 +8,8 @@ use App\Models\Task;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 use League\CommonMark\CommonMarkConverter;
 
 class TaskNotificationTemplateController extends Controller
@@ -19,8 +21,16 @@ class TaskNotificationTemplateController extends Controller
 	 *
 	 * @return View
 	 */
-	public function create(Task $task): View
+	public function create(Task $task): View|Response
 	{
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Tasks/Notifications/Create', [
+                'task' => $task,
+            ]);
+        }
+
 		return view('tasks.notifications.create')->with(compact('task'));
 	}
 
@@ -49,8 +59,21 @@ class TaskNotificationTemplateController extends Controller
 	 *
 	 * @return View
 	 */
-	public function show(Task $task, NotificationTemplate $notification): View
+	public function show(Task $task, NotificationTemplate $notification): View|Response
 	{
+        $task->can = [
+            'update_task' => auth()->user()?->can('update', $task),
+            'delete_task' => auth()->user()?->can('delete', $task),
+        ];
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Tasks/Notifications/Show', [
+                'task' => $task,
+                'notification' => $notification->append('body_with_highlights'),
+            ]);
+        }
+
 		return view('tasks.notifications.show')->with(compact('task', 'notification'));
 	}
 
@@ -62,8 +85,17 @@ class TaskNotificationTemplateController extends Controller
 	 *
 	 * @return View
 	 */
-	public function edit(Task $task, NotificationTemplate $notification): View
+	public function edit(Task $task, NotificationTemplate $notification): View|Response
 	{
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Tasks/Notifications/Edit', [
+                'task' => $task,
+                'notification' => $notification,
+            ]);
+        }
+
 		return view('tasks.notifications.edit')->with(compact('task', 'notification'));
 	}
 
