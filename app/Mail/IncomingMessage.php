@@ -88,7 +88,7 @@ class IncomingMessage extends Mailable
 	{
 		if (
 			$group->authoriseSender(
-				User::firstWhere([
+				User::withoutTenancy()->firstWhere([
 					['tenant_id', '=', $group->tenant_id],
 					['email', '=', $this->original_sender['address']],
 				]),
