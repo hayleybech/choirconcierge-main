@@ -36,7 +36,16 @@ class AttendanceReportController extends Controller
         $singers = Singer::with(['user', 'attendances'])
             ->get()
             ->each
-            ->append('user_avatar_thumb_url');
+            ->append('user_avatar_thumb_url')
+            ->each(function ($singer) use ($all_events) {
+                $singer->timesPresent = $singer->attendances->where('response', 'present')->count();
+                $singer->percentPresent = floor($singer->timesPresent / $all_events->count() * 100 );
+            });
+
+        $all_events->each(function ($event) use ($singers) {
+            $event->singersPresent = $event->singers_attendance('present')->active()->get()->count();
+            $event->percentPresent = floor($event->singersPresent / $singers->count() * 100);
+        });
 
         $voice_parts = VoicePart::all()
             ->push(VoicePart::getNullVoicePart())
@@ -72,10 +81,11 @@ class AttendanceReportController extends Controller
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Events/AttendanceReport', [
-                'voice_parts' => $voice_parts->values(),
+                'voiceParts' => $voice_parts->values(),
                 'events' => $all_events->where('start_date', '<', now())->values(),
-                'avg_singers_per_event' => $avg_singers_per_event,
-                'avg_events_per_singer' => $avg_events_per_singer,
+                'numSingers' => $singers->count(),
+                'avgSingersPerEvent' => $avg_singers_per_event,
+                'avgEventsPerSinger' => $avg_events_per_singer,
             ]);
         }
 
