@@ -21,18 +21,6 @@ class AttendanceReportController extends Controller
 			->filter()
 			->get();
 
-//        $voice_parts = Singer::active()
-////            ->with(['user', 'voice_part', 'attendances'])
-//            ->get()
-////            ->sortBy('user.first_name')
-//            ->groupBy('voice_part.id')
-//            ->map(function($singers) {
-//                $part = $singers->first()->voice_part ?? VoicePart::getNullVoicePart();
-//                $part->singers = $singers;
-//                return $part;
-//            });
-//        $voice_parts = $this->moveNoPartToEnd($voice_parts);
-
         $singers = Singer::with(['user', 'attendances'])
             ->get()
             ->each
@@ -99,12 +87,7 @@ class AttendanceReportController extends Controller
 	}
 
     private function moveNoPartToEnd($collection){
-        return $collection->reject(function($value){
-            return $value->title === 'No Part';
-        })
-            ->merge($collection->filter(function($value){
-                return $value->title === 'No Part';
-            })
-            );
+        return $collection->reject(fn($value) => $value->title === 'No Part')
+            ->merge($collection->filter(fn($value) => $value->title === 'No Part'));
     }
 }
