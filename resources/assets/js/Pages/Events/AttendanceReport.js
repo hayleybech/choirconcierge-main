@@ -28,25 +28,19 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                     <tr>
                         <th />
                         {events.map((event) => (
-                        <th key={event.id} className="relative p-5 h-72 -translate-x-2 border border-gray-300">
-                            <div className="
-                                absolute w-72 overflow-ellipsis overflow-hidden bottom-0 left-0
-                                transform -translate-x-24 -translate-y-40
-                                -rotate-90
-                                text-sm text-left
-                            ">
-                                {event.title}
-                            </div>
-                        </th>
+                            <th key={event.id} className="p-5 border border-gray-300 align-bottom">
+                                <div className="flex justify-center transform rotate-180">
+                                    <div className="overflow-ellipsis overflow-hidden text-sm text-left" style={{ writingMode: 'vertical-lr' }}>
+                                        {event.title}
+                                    </div>
+                                </div>
+                            </th>
                         ))}
-                        <th className="relative p-5 h-72 -translate-x-2 whitespace-nowrap border border-gray-300">
-                            <div className="
-                                absolute w-72 overflow-ellipsis overflow-hidden bottom-0 left-0
-                                transform -translate-x-24 -translate-y-40
-                                -rotate-90
-                                text-sm text-left
-                            ">
-                                Events Present
+                        <th className="p-5 border border-gray-300 align-bottom">
+                            <div className="flex justify-center transform rotate-180">
+                                <div className="overflow-ellipsis overflow-hidden text-sm text-left" style={{ writingMode: 'vertical-lr' }}>
+                                    Events Present
+                                </div>
                             </div>
                         </th>
                     </tr>
