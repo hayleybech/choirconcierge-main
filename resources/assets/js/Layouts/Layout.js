@@ -28,7 +28,7 @@ export default function Layout({children}) {
     });
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 
-    const { can, user, impersonationActive } = usePage().props
+    const { can, user, impersonationActive } = usePage().props;
 
     const userNavigation = [
         { name: 'Your Profile', href: route('singers.show', user.singer), icon: 'user' },

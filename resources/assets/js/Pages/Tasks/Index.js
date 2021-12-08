@@ -4,32 +4,37 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import TaskTableDesktop from "./TaskTableDesktop";
 import TaskTableMobile from "./TaskTableMobile";
+import {usePage} from "@inertiajs/inertia-react";
 
-const Index = ({ tasks }) => (
-    <>
-        <AppHead title="Onboarding" />
-        <PageHeader
-            title="Onboarding Tasks"
-            icon="tasks"
-            breadcrumbs={[
-                { name: 'Dashboard', url: route('dash')},
-                { name: 'Tasks', url: route('tasks.index')},
-            ]}
-            actions={[
-                { label: 'Add New', icon: 'plus', url: route('tasks.create'), variant: 'primary'},
-                { label: 'Filter', icon: 'filter', url: '#'},
-            ]}
-        />
+const Index = ({ tasks }) => {
+    const { can } = usePage().props;
 
-        <div className="hidden lg:flex flex-col">
-            <TaskTableDesktop tasks={tasks} />
-        </div>
+    return (
+        <>
+            <AppHead title="Onboarding" />
+            <PageHeader
+                title="Onboarding Tasks"
+                icon="tasks"
+                breadcrumbs={[
+                    { name: 'Dashboard', url: route('dash')},
+                    { name: 'Tasks', url: route('tasks.index')},
+                ]}
+                actions={[
+                    { label: 'Add New', icon: 'plus', url: route('tasks.create'), variant: 'primary', can: 'create_task' },
+                    { label: 'Filter', icon: 'filter', url: '#' },
+                ].filter(action => action.can ? can[action.can] : true)}
+            />
 
-        <div className="bg-white shadow block lg:hidden">
-            <TaskTableMobile tasks={tasks} />
-        </div>
-    </>
-);
+            <div className="hidden lg:flex flex-col">
+                <TaskTableDesktop tasks={tasks} />
+            </div>
+
+            <div className="bg-white shadow block lg:hidden">
+                <TaskTableMobile tasks={tasks} />
+            </div>
+        </>
+    );
+}
 
 Index.layout = page => <Layout children={page} />
 

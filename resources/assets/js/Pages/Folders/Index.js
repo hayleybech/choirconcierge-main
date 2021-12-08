@@ -4,32 +4,37 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import FolderTableDesktop from "./FolderTableDesktop";
 import FolderTableMobile from "./FolderTableMobile";
+import {usePage} from "@inertiajs/inertia-react";
 
-const Index = ({ folders }) => (
-    <>
-        <AppHead title="Documents" />
-        <PageHeader
-            title="Documents"
-            icon="folders"
-            breadcrumbs={[
-                { name: 'Dashboard', url: route('dash')},
-                { name: 'Documents', url: route('folders.index')},
-            ]}
-            actions={[
-                { label: 'Add Folder', icon: 'folder-plus', url: route('folders.create'), variant: 'primary'},
-                { label: 'Filter', icon: 'filter', url: '#'},
-            ]}
-        />
+const Index = ({ folders }) => {
+    const { can } = usePage().props;
 
-        <div className="hidden lg:flex flex-col">
-            <FolderTableDesktop folders={folders} />
-        </div>
+    return (
+        <>
+            <AppHead title="Documents" />
+            <PageHeader
+                title="Documents"
+                icon="folders"
+                breadcrumbs={[
+                    { name: 'Dashboard', url: route('dash')},
+                    { name: 'Documents', url: route('folders.index')},
+                ]}
+                actions={[
+                    { label: 'Add Folder', icon: 'folder-plus', url: route('folders.create'), variant: 'primary', can: 'create_folder' },
+                    { label: 'Filter', icon: 'filter', url: '#' },
+                ].filter(action => action.can ? can[action.can] : true)}
+            />
 
-        <div className="bg-white shadow block lg:hidden">
-            <FolderTableMobile folders={folders} />
-        </div>
-    </>
-);
+            <div className="hidden lg:flex flex-col">
+                <FolderTableDesktop folders={folders} />
+            </div>
+
+            <div className="bg-white shadow block lg:hidden">
+                <FolderTableMobile folders={folders} />
+            </div>
+        </>
+    );
+}
 
 Index.layout = page => <Layout children={page} />
 
