@@ -30,6 +30,7 @@ const SongAttachmentForm = ({ categories, song }) => {
                         updateFn={value => setData('attachment_uploads', value)}
                         hasErrors={ !! errors['attachment_uploads'] }
                         multiple
+                        vertical
                     />
                     {errors.attachment_uploads && <Error>{errors.attachment_uploads}</Error>}
                 </div>
