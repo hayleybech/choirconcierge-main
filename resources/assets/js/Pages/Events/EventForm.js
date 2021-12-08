@@ -300,7 +300,7 @@ const EventForm = ({ event, types }) => {
                 </FormSection>
 
                 <FormFooter>
-                    <ButtonLink href={event ? route('songs.show', event) : route('songs.index')}>Cancel</ButtonLink>
+                    <ButtonLink href={event ? route('events.show', event) : route('events.index')}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>

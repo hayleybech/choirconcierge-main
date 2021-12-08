@@ -9,7 +9,7 @@ const Create = ({ roles, voiceParts, singerCategories }) => (
         <AppHead title="Create Mailing List" />
         <PageHeader
             title="Create Mailing List"
-            icon="fa-mail-bulk"
+            icon="mail-bulk"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Mailing Lists', url: route('groups.index')},
