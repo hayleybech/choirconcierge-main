@@ -1,9 +1,15 @@
 @component('mail::layout')
     {{-- Header --}}
     @slot('header')
-        @component('mail::header', ['url' => config('app.url')])
-            {{ config('app.name') }}
-        @endcomponent
+        @if(tenant())
+            @component('mail::header', ['url' => '//'.tenant('host')])
+                {{ tenant('choir_name') }}
+            @endcomponent
+        @else
+            @component('mail::header', ['url' => config('app.url')])
+                {{ config('app.name') }}
+            @endcomponent
+        @endif
     @endslot
 
     {{-- Body --}}

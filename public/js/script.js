@@ -90,10 +90,12 @@ $(document).ready(function() {
 	const $type_distribution = $('#list_type_distribution');
 
 	// Check initial state on page load
-	if (!$type_distribution[0]?.checked) {
-		$senders.hide();
-	} else {
-		$senders.show();
+	if($type_distribution.length > 0) {
+		if (!$type_distribution[0].checked) {
+			$senders.hide();
+		} else {
+			$senders.show();
+		}
 	}
 
 	// Set enable event handler

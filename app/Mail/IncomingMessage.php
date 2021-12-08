@@ -80,7 +80,7 @@ class IncomingMessage extends Mailable
 		[$slug, $host] = explode('@', $email);
 		return UserGroup::withoutTenancy()->firstWhere([
 			['tenant_id', '=', explode('.', $host)[0]],
-			['slug', 'LIKE', $slug],
+			['slug', '=', $slug],
 		]);
 	}
 
@@ -88,7 +88,7 @@ class IncomingMessage extends Mailable
 	{
 		if (
 			$group->authoriseSender(
-				User::firstWhere([
+				User::withoutTenancy()->firstWhere([
 					['tenant_id', '=', $group->tenant_id],
 					['email', '=', $this->original_sender['address']],
 				]),
@@ -98,6 +98,7 @@ class IncomingMessage extends Mailable
 		}
 
 		Mail::to($this->original_sender['address'])->send(new NotPermittedSenderMessage($group));
+
 		return false;
 	}
 

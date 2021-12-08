@@ -5,6 +5,7 @@ namespace Tests\Unit\Models;
 use App\Models\Role;
 use App\Models\Singer;
 use App\Models\SingerCategory;
+use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UserGroup;
 use App\Models\VoicePart;
@@ -129,5 +130,39 @@ class UserGroupTest extends TestCase
         $group->sender_singer_categories()->attach($categories->pluck('id'));
 
         $this->assertCount(6, $group->get_all_senders());
+    }
+
+    /** @test */
+    public function get_all_recipients_works_for_the_correct_tenant(): void
+    {
+        $group = UserGroup::factory()->create();
+
+        $users = User::factory()
+            ->count(3)
+            ->create();
+        $group->recipient_users()->attach($users->pluck('id'));
+
+        $tenant = Tenant::create('test-tenant-1', 'Test Tenant 1', 'Australia/Perth');
+        $tenant->domains()->create(['domain' => $tenant->id]);
+        tenancy()->initialize($tenant);
+
+        $this->assertCount(3, $group->get_all_recipients());
+    }
+
+    /** @test */
+    public function get_all_senders_works_for_the_correct_tenant(): void
+    {
+        $group = UserGroup::factory()->create();
+
+        $users = User::factory()
+            ->count(3)
+            ->create();
+        $group->sender_users()->attach($users->pluck('id'));
+
+        $tenant = Tenant::create('test-tenant-1', 'Test Tenant 1', 'Australia/Perth');
+        $tenant->domains()->create(['domain' => $tenant->id]);
+        tenancy()->initialize($tenant);
+
+        $this->assertCount(3, $group->get_all_senders());
     }
 }

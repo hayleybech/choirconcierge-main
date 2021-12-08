@@ -31,6 +31,8 @@ class NotPermittedSenderMessage extends Mailable
 	 */
 	public function build()
 	{
+		tenancy()->initialize($this->group->tenant);
+
 		return $this->subject('Not a permitted sender')
 			->from(tenant('mail_from_address'), tenant('mail_from_name'))
 			->markdown('emails.not_permitted_sender');

@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -136,6 +136,8 @@ class UserGroup extends Model
 	 */
 	public function get_all_recipients(): Collection
 	{
+	    tenancy()->initialize($this->tenant);
+
 		// Get directly-assigned users
 		$users = $this->recipient_users()->get();
 
@@ -152,9 +154,7 @@ class UserGroup extends Model
 			->toArray();
 		$part_users = User::query()
 			->whereHas('singers', function ($singer_query) use ($voice_part_ids) {
-				$singer_query
-					->where('tenant_id', $this->tenant_id)
-					->whereIn('voice_part_id', $voice_part_ids);
+				$singer_query->whereIn('voice_part_id', $voice_part_ids);
 			})
 			->get();
 		$users = $users->merge($part_users);
@@ -165,12 +165,11 @@ class UserGroup extends Model
 			->pluck('id');
 		$category_users = User::query()
 			->whereHas('singers', function ($singer_query) use ($cat_ids) {
-				$singer_query
-					->where('tenant_id', $this->tenant_id)
-					->whereIn('singer_category_id', $cat_ids);
+				$singer_query->whereIn('singer_category_id', $cat_ids);
 			})
 			->get();
 		$users = $users->merge($category_users);
+
 		return $users->unique();
 	}
 
@@ -218,6 +217,8 @@ class UserGroup extends Model
 	 */
 	public function get_all_senders(): Collection
 	{
+        tenancy()->initialize($this->tenant);
+
         // Get directly-assigned users
         $users = $this->sender_users()->get();
 
@@ -234,9 +235,7 @@ class UserGroup extends Model
 			->toArray();
 		$part_users = User::query()
 			->whereHas('singers', function ($singer_query) use ($voice_part_ids) {
-				$singer_query
-					->where('tenant_id', $this->tenant_id)
-					->whereIn('voice_part_id', $voice_part_ids);
+				$singer_query->whereIn('voice_part_id', $voice_part_ids);
 			})
 			->get();
 		$users = $users->merge($part_users);
@@ -247,9 +246,7 @@ class UserGroup extends Model
 			->pluck('id');
 		$category_users = User::query()
 			->whereHas('singers', function ($singer_query) use ($cat_ids) {
-				$singer_query
-					->where('tenant_id', $this->tenant_id)
-					->whereIn('singer_category_id', $cat_ids);
+				$singer_query->whereIn('singer_category_id', $cat_ids);
 			})
 			->get();
 		$users = $users->merge($category_users);
