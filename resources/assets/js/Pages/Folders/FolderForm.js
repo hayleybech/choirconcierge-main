@@ -9,7 +9,7 @@ import Button from "../../components/inputs/Button";
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 
-const Folder = () => {
+const FolderForm = () => {
     const { data, setData, post, processing, errors } = useForm({
         title: '',
     });
@@ -45,4 +45,4 @@ const Folder = () => {
     );
 }
 
-export default Folder;
+export default FolderForm;
