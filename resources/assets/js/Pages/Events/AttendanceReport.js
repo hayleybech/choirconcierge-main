@@ -36,7 +36,7 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                                 </div>
                             </th>
                         ))}
-                        <th className="p-5 border border-gray-300 align-bottom">
+                        <th className="p-5 border border-gray-300 align-bottom bg-gray-100">
                             <div className="flex justify-center transform rotate-180">
                                 <div className="overflow-ellipsis overflow-hidden text-sm text-left" style={{ writingMode: 'vertical-lr' }}>
                                     Events Present
@@ -52,6 +52,9 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                             {DateTime.fromISO(event.start_date).toFormat('MM-dd')}<br />
                         </th>
                         ))}
+                        <td className="border border-gray-300 bg-gray-100">
+                            &nbsp;
+                        </td>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,7 +81,7 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                                     }
                                 </td>
                             ))}
-                            <td className="border border-gray-300 text-gray-500 text-center px-5">
+                            <td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-5">
                                 <div>{singer.percentPresent}%</div>
                                 <div className="text-xs">{singer.timesPresent}&nbsp;/&nbsp;{events.length}</div>
                             </td>
@@ -87,9 +90,9 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                 </>))}
                 </tbody>
                 <tfoot>
-                    <th className="border border-gray-300 text-left p-5">Singers Present</th>
+                    <th className="border border-gray-300 bg-gray-100 text-left p-5">Singers Present</th>
                     {events.map((event) => (
-                        <td className="border border-gray-300 text-gray-500 text-center px-5">
+                        <td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-5">
                             <div>{event.percentPresent}%</div>
                             <div className="text-xs">{event.singersPresent} / {numSingers}</div>
                         </td>
