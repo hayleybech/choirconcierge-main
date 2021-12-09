@@ -5,8 +5,9 @@ import AppHead from "../../components/AppHead";
 import EventTableDesktop from "./EventTableDesktop";
 import EventTableMobile from "./EventTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
+import EventFilters from "../../components/Event/EventFilters";
 
-const Index = ({ events }) => {
+const Index = ({ events, eventTypes }) => {
     const { can } = usePage().props;
 
     return (
@@ -26,13 +27,22 @@ const Index = ({ events }) => {
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
-            <div className="hidden lg:flex flex-col">
-                <EventTableDesktop events={events} />
+            <div className="flex flex-col lg:flex-row">
+                <div className="lg:w-1/5 xl:w-1/6 border-b lg:border-r border-gray-300 z-10">
+                    <EventFilters eventTypes={eventTypes} />
+                </div>
+
+                <div className="flex-grow lg:overflow-x-auto">
+                    <div className="hidden lg:flex flex-col overflow-y-hidden">
+                        <EventTableDesktop events={events} />
+                    </div>
+
+                    <div className="bg-white shadow block lg:hidden">
+                        <EventTableMobile events={events} />
+                    </div>
+                </div>
             </div>
 
-            <div className="bg-white shadow block lg:hidden">
-                <EventTableMobile events={events} />
-            </div>
         </>
     );
 }
