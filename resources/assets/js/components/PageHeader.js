@@ -44,7 +44,7 @@ const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) 
 
                     {/* Dropdown */}
                     {actions.length > 0 && (
-                        <Menu as="span" className="ml-3 relative sm:hidden">
+                        <Menu as="span" className="ml-3 relative sm:hidden z-20">
                             <Menu.Button className={buttonStyles()}>
                                 Options
                                 <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-gray-500" aria-hidden="true" />

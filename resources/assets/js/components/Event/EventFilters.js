@@ -7,8 +7,10 @@ import Button from "../inputs/Button";
 import CheckboxGroup from "../inputs/CheckboxGroup";
 import RadioGroup from "../inputs/RadioGroup";
 import SectionTitle from "../SectionTitle";
+import SectionHeader from "../SectionHeader";
+import Icon from "../Icon";
 
-const EventFilters = ({ eventTypes }) => {
+const EventFilters = ({ eventTypes, onClose }) => {
     const params = new URLSearchParams(location.search);
 
     const { data, setData, get, processing, errors, transform } = useForm({
@@ -32,9 +34,13 @@ const EventFilters = ({ eventTypes }) => {
 
     return (
         <form onSubmit={submit}>
-            {/*<div className="bg-white p-5 flex flex-col sm:flex-row items-stretch sm:items-end space-y-4 sm:space-y-0 sm:space-x-4 border-b border-gray-300">*/}
             <div className="bg-white p-5 flex flex-col items-stretch space-y-4 border-b border-gray-300">
-                <SectionTitle>Filter</SectionTitle>
+                <SectionHeader>
+                    <SectionTitle>Filter</SectionTitle>
+
+                    <Button onClick={onClose} variant="clear" size="sm"><Icon icon="times" /></Button>
+                </SectionHeader>
+
                 <div className="">
                     <Label label="Title" forInput="title" />
                     <TextInput name="title" value={data.title} updateFn={value => setData('title', value)} hasErrors={ !! errors['title'] } />
@@ -59,8 +65,6 @@ const EventFilters = ({ eventTypes }) => {
                             { id: 'all', name: 'All' },
                             { id: 'upcoming', name: 'Upcoming' },
                             { id: 'past', name: 'Past' },
-                            // { id: 'before', name: 'Before' },
-                            // { id: 'after', name: 'After' },
                         ]}
                         selected={data.date}
                         setSelected={value => setData('date', value)}
