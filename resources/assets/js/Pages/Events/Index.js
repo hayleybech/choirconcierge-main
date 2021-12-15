@@ -31,9 +31,9 @@ const Index = ({ events, eventTypes }) => {
 
             <IndexContainer
                 showFilters={showFilters}
-                Filters={<EventFilters eventTypes={eventTypes} onClose={() => setShowFilters(false)} />}
-                TableMobile={<EventTableDesktop events={events} />}
-                TableDesktop={<EventTableMobile events={events} />}
+                filters={<EventFilters eventTypes={eventTypes} onClose={() => setShowFilters(false)} />}
+                tableMobile={<EventTableMobile events={events} />}
+                tableDesktop={<EventTableDesktop events={events} />}
             />
         </>
     );

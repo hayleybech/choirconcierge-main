@@ -31,9 +31,9 @@ const Index = ({ songs, statuses, categories }) => {
 
             <IndexContainer
                 showFilters={showFilters}
-                Filters={<SongFilters statuses={statuses} categories={categories} onClose={() => setShowFilters(false)} />}
-                TableMobile={<SongTableMobile songs={songs} />}
-                TableDesktop={<SongTableDesktop songs={songs} />}
+                filters={<SongFilters statuses={statuses} categories={categories} onClose={() => setShowFilters(false)} />}
+                tableMobile={<SongTableMobile songs={songs} />}
+                tableDesktop={<SongTableDesktop songs={songs} />}
             />
         </>
     );
