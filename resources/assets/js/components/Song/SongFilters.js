@@ -20,7 +20,7 @@ const SongFilters = ({ statuses, categories, onClose }) => (
             </div>
 
             <fieldset>
-                <legend className="text-sm font-medium text-gray-700">Type</legend>
+                <legend className="text-sm font-medium text-gray-700">Status</legend>
                 <CheckboxGroup
                     name="status.id"
                     options={statuses.map((status) => ({ id: status.id, name: status.title }))}

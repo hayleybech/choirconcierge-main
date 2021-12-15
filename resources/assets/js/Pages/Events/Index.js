@@ -6,6 +6,7 @@ import EventTableDesktop from "./EventTableDesktop";
 import EventTableMobile from "./EventTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
 import EventFilters from "../../components/Event/EventFilters";
+import IndexContainer from "../../components/IndexContainer";
 
 const Index = ({ events, eventTypes }) => {
     const [showFilters, setShowFilters] = useState(false);
@@ -28,24 +29,12 @@ const Index = ({ events, eventTypes }) => {
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
-            <div className="flex flex-col lg:flex-row">
-                {showFilters && (
-                <div className="lg:w-1/5 xl:w-1/6 border-b lg:border-r border-gray-300 lg:z-10">
-                    <EventFilters eventTypes={eventTypes} onClose={() => setShowFilters(false)} />
-                </div>
-                )}
-
-                <div className="flex-grow lg:overflow-x-auto">
-                    <div className="hidden lg:flex flex-col overflow-y-hidden">
-                        <EventTableDesktop events={events} />
-                    </div>
-
-                    <div className="bg-white shadow block lg:hidden">
-                        <EventTableMobile events={events} />
-                    </div>
-                </div>
-            </div>
-
+            <IndexContainer
+                showFilters={showFilters}
+                Filters={<EventFilters eventTypes={eventTypes} onClose={() => setShowFilters(false)} />}
+                TableMobile={<EventTableDesktop events={events} />}
+                TableDesktop={<EventTableMobile events={events} />}
+            />
         </>
     );
 }

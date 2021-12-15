@@ -6,6 +6,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import {usePage} from "@inertiajs/inertia-react";
 import SongFilters from "../../components/Song/SongFilters";
+import IndexContainer from "../../components/IndexContainer";
 
 const Index = ({ songs, statuses, categories }) => {
     const [showFilters, setShowFilters] = useState(false);
@@ -28,22 +29,12 @@ const Index = ({ songs, statuses, categories }) => {
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
-            <div className="flex flex-col lg:flex-row">
-                {showFilters && (
-                    <div className="lg:w-1/5 xl:w-1/6 border-b lg:border-r border-gray-300 lg:z-10">
-                        <SongFilters statuses={statuses} categories={categories} onClose={() => setShowFilters(false)} />
-                    </div>
-                )}
-                <div className="flex-grow lg:overflow-x-auto">
-                    <div className="hidden lg:flex flex-col overflow-y-hidden">
-                        <SongTableDesktop songs={songs} />
-                    </div>
-
-                    <div className="bg-white shadow block lg:hidden">
-                        <SongTableMobile songs={songs} />
-                    </div>
-                </div>
-            </div>
+            <IndexContainer
+                showFilters={showFilters}
+                Filters={<SongFilters statuses={statuses} categories={categories} onClose={() => setShowFilters(false)} />}
+                TableMobile={<SongTableMobile songs={songs} />}
+                TableDesktop={<SongTableDesktop songs={songs} />}
+            />
         </>
     );
 }
