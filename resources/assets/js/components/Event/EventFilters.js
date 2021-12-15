@@ -73,7 +73,16 @@ const EventFilters = ({ eventTypes, onClose }) => {
                     {errors.date && <Error>{errors.date}</Error>}
                 </div>
 
-                <Button variant="primary" type="submit" size="sm" disabled={processing}>Filter</Button>
+                <div className="flex gap-x-2">
+                    <Button variant="primary" type="submit" size="sm" disabled={processing} className="flex-grow">
+                        <Icon icon="check" />
+                        Filter
+                    </Button>
+                    <Button variant="danger-outline" href={route('events.index')} size="sm">
+                        <Icon icon="times" />
+                        Clear
+                    </Button>
+                </div>
             </div>
         </form>
     );

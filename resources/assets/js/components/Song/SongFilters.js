@@ -5,7 +5,6 @@ import {useForm} from "@inertiajs/inertia-react";
 import Error from "../inputs/Error";
 import Button from "../inputs/Button";
 import CheckboxGroup from "../inputs/CheckboxGroup";
-import RadioGroup from "../inputs/RadioGroup";
 import SectionTitle from "../SectionTitle";
 import SectionHeader from "../SectionHeader";
 import Icon from "../Icon";
@@ -69,7 +68,16 @@ const SongFilters = ({ statuses, categories, onClose }) => {
                     {errors['categories.id'] && <Error>{errors['categories.id']}</Error>}
                 </fieldset>
 
-                <Button variant="primary" type="submit" size="sm" disabled={processing}>Filter</Button>
+                <div className="flex gap-x-2">
+                    <Button variant="primary" type="submit" size="sm" disabled={processing} className="flex-grow">
+                        <Icon icon="check" />
+                        Filter
+                    </Button>
+                    <Button variant="danger-outline" href={route('songs.index')} size="sm">
+                        <Icon icon="times" />
+                        Clear
+                    </Button>
+                </div>
             </div>
         </form>
     );

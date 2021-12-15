@@ -19,7 +19,7 @@ const AttendanceSummary = ({ event, attendanceCount, voicePartsAttendanceCount }
                     size="sm"
                     href={route('events.attendances.index', [event])}
                 >
-                    <Icon icon="edit" mr />
+                    <Icon icon="edit" />
                     Edit
                 </ButtonLink>
             </SectionHeader>

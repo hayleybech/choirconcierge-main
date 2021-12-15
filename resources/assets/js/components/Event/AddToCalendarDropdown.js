@@ -7,9 +7,9 @@ import classNames from "../../classNames";
 const AddToCalendarDropdown = ({ urls }) => (
     <Menu as="div" className="relative inline-block overflow-visible">
         <Menu.Button className={buttonStyles('secondary', 'sm')}>
-            <Icon icon="calendar-plus" mr />
+            <Icon icon="calendar-plus" />
             Add To Calendar
-            <Icon icon="chevron-down" ml />
+            <Icon icon="chevron-down" />
         </Menu.Button>
 
         <Transition

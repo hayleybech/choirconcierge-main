@@ -27,7 +27,7 @@ const UpcomingEventsWidget = ({ events }) => {
 
                                 {can['create_attendance'] && (
                                     <ButtonLink href={route('events.attendances.index', event)} variant="primary" size="xs" className="mt-2">
-                                        <Icon icon="edit" mr />
+                                        <Icon icon="edit" />
                                         Record Attendance
                                     </ButtonLink>
                                 )}
