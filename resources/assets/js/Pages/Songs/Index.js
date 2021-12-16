@@ -8,7 +8,7 @@ import {usePage} from "@inertiajs/inertia-react";
 import SongFilters from "../../components/Song/SongFilters";
 import IndexContainer from "../../components/IndexContainer";
 
-const Index = ({ songs, statuses, categories }) => {
+const Index = ({ songs, statuses, defaultStatuses, categories }) => {
     const [showFilters, setShowFilters] = useState(false);
 
     const { can } = usePage().props;
@@ -31,7 +31,7 @@ const Index = ({ songs, statuses, categories }) => {
 
             <IndexContainer
                 showFilters={showFilters}
-                filters={<SongFilters statuses={statuses} categories={categories} onClose={() => setShowFilters(false)} />}
+                filters={<SongFilters statuses={statuses} defaultStatuses={defaultStatuses} categories={categories} onClose={() => setShowFilters(false)} />}
                 tableMobile={<SongTableMobile songs={songs} />}
                 tableDesktop={<SongTableDesktop songs={songs} />}
             />

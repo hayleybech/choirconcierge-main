@@ -37,7 +37,10 @@ class SingerController extends Controller
 		$this->authorize('viewAny', Singer::class);
 
         if(config('features.rebuild')){
-            $all_singers = QueryBuilder::for(Singer::class)
+            $statuses = SingerCategory::all();
+            $defaultStatus = $statuses->firstWhere('name', 'Members')->id;
+
+            $allSingers = QueryBuilder::for(Singer::class)
                 ->with(['tasks', 'category', 'voice_part', 'user'])
                 ->allowedFilters([
                     AllowedFilter::callback('user.name', fn (Builder $query, $value) => $query
@@ -45,7 +48,7 @@ class SingerController extends Controller
                             ->whereRaw('CONCAT(first_name, ?, last_name) LIKE ?', [' ', "%$value%"])
                     )),
                     AllowedFilter::exact('category.id')
-                        ->default(SingerCategory::where('name', 'Members')->pluck('id')->toArray()),
+                        ->default([$defaultStatus]),
                     AllowedFilter::exact('voice_part.id'),
                     AllowedFilter::exact('roles.id')
                 ])
@@ -54,8 +57,9 @@ class SingerController extends Controller
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Singers/Index', [
-                'allSingers' => $all_singers->values(),
-                'statuses' => SingerCategory::all()->values(),
+                'allSingers' => $allSingers->values(),
+                'statuses' => $statuses->values(),
+                'defaultStatus' => $defaultStatus,
                 'voiceParts' => VoicePart::all()->values(),
                 'roles' => Role::all()->values(),
             ]);

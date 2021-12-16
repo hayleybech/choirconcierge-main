@@ -4,13 +4,15 @@ import TextInput from "../inputs/TextInput";
 import CheckboxGroup from "../inputs/CheckboxGroup";
 import Filters from "../Filters";
 
-const SongFilters = ({ statuses, categories, onClose }) => (
+const SongFilters = ({ statuses, defaultStatuses, categories, onClose }) => (
     <Filters
         routeName="songs.index"
         fields={(params) => ({
             title: params.get('filter[title]') ?? '',
-            'status.id': params.getAll('filter[status.id][]').map(value => parseInt(value)) ?? [],
-            'categories.id': params.getAll('filter[categories.id][]').map(value => parseInt(value)) ?? [],
+            'status.id': params.has('filter[status.id][]')
+                ? params.getAll('filter[status.id][]').map(value => parseInt(value))
+                : defaultStatuses,
+            'categories.id': params.getAll('filter[categories.id][]').map(value => parseInt(value)),
         })}
         onClose={onClose}
         render={(data, setData) => (<>

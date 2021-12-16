@@ -29,13 +29,17 @@ class SongController extends Controller
 
         if(config('features.rebuild')){
             $includePending = auth()->user()?->singer?->hasAbility('songs_update');
+            $statuses = SongStatus::query()
+                ->when(! $includePending, fn($query) => $query->where('title', '!=', 'Pending'))
+                ->get();
+            $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
 
             $songs = QueryBuilder::for(Song::class)
                 ->allowedFilters([
                     'title',
                     AllowedFilter::exact('status.id')
                         ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
-                        ->default(SongStatus::where('title', '!=', 'Archived')->pluck('id')->toArray()),
+                        ->default($defaultStatuses),
                     AllowedFilter::exact('categories.id'),
                 ])
                 ->get();
@@ -48,6 +52,7 @@ class SongController extends Controller
                     ->when(! $includePending, fn($query) => $query->where('title', '!=', 'Pending'))
                     ->get()
                     ->values(),
+                'defaultStatuses' => $defaultStatuses,
                 'categories' => SongCategory::all()->values(),
             ]);
         }

@@ -8,7 +8,7 @@ import {usePage} from "@inertiajs/inertia-react";
 import IndexContainer from "../../components/IndexContainer";
 import SingerFilters from "../../components/SingerFilters";
 
-const Index = ({ allSingers, statuses, voiceParts, roles }) => {
+const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     const [showFilters, setShowFilters] = useState(false);
     const { can } = usePage().props;
 
@@ -32,7 +32,7 @@ const Index = ({ allSingers, statuses, voiceParts, roles }) => {
 
             <IndexContainer
                 showFilters={showFilters}
-                filters={<SingerFilters statuses={statuses} voiceParts={voiceParts} roles={roles} onClose={() => setShowFilters(false)} />}
+                filters={<SingerFilters statuses={statuses} defaultStatus={defaultStatus} voiceParts={voiceParts} roles={roles} onClose={() => setShowFilters(false)} />}
                 tableMobile={<SingerTableMobile singers={allSingers} />}
                 tableDesktop={<SingerTableDesktop singers={allSingers} />}
             />
