@@ -106,7 +106,7 @@ class SingerControllerTest extends TestCase
 
         $response->assertInertia(fn(Assert $page) => $page
             ->component('Singers/Index')
-            ->has('all_singers'));
+            ->has('allSingers'));
     }
 
 	/**
