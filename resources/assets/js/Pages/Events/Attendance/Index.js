@@ -62,7 +62,7 @@ const Index = ({ event, voice_parts }) => {
                                                     size="sm"
                                                     variant={variant}
                                                 >
-                                                    <Icon icon={icon} mr />
+                                                    <Icon icon={icon} />
                                                     Mark as {label}
                                                 </Button>
                                             )}

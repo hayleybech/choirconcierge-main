@@ -560,4 +560,15 @@ class Event extends Model
                 ->map(fn($singerId) => ['singer_id' => $singerId, 'response' => 'unknown'])
         );
     }
+
+    public function scopeDate(Builder $query, string $mode = 'upcoming', Carbon $date = null, Carbon $date2 = null): Builder
+    {
+        return match($mode) {
+            'after' => $query->where('call_time', '>=', $date),
+            'upcoming' => $query->where('call_time', '>=', Carbon::today()),
+            'before' => $query->where('call_time', '<=', $date),
+            'past' => $query->where('call_time', '<=', Carbon::today()),
+            'between' => $query->where('call_time', '>=', $date)->where('call_time', '<=', $date2)
+        };
+    }
 }

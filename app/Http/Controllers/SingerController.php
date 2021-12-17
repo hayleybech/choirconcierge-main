@@ -10,12 +10,15 @@ use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Singer;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class SingerController extends Controller
 {
@@ -33,26 +36,47 @@ class SingerController extends Controller
 	{
 		$this->authorize('viewAny', Singer::class);
 
-		// Base query
-		$all_singers = Singer::with(['tasks', 'category', 'voice_part', 'user'])
-			->filter()
-			->get();
-
-		// Sort
-		$sort_by = $request->input('sort_by', 'name');
-		$sort_dir = $request->input('sort_dir', 'asc');
-		if ($sort_dir === 'asc') {
-			$all_singers = $all_singers->sortBy($sort_by);
-		} else {
-			$all_singers = $all_singers->sortByDesc($sort_by);
-		}
-
         if(config('features.rebuild')){
+            $statuses = SingerCategory::all();
+            $defaultStatus = $statuses->firstWhere('name', 'Members')->id;
+
+            $allSingers = QueryBuilder::for(Singer::class)
+                ->with(['tasks', 'category', 'voice_part', 'user'])
+                ->allowedFilters([
+                    AllowedFilter::callback('user.name', fn (Builder $query, $value) => $query
+                        ->whereHas('user', fn(Builder $query) => $query
+                            ->whereRaw('CONCAT(first_name, ?, last_name) LIKE ?', [' ', "%$value%"])
+                    )),
+                    AllowedFilter::exact('category.id')
+                        ->default([$defaultStatus]),
+                    AllowedFilter::exact('voice_part.id'),
+                    AllowedFilter::exact('roles.id')
+                ])
+                ->get();
+
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Singers/Index', [
-                'all_singers' => $all_singers->values(),
+                'allSingers' => $allSingers->values(),
+                'statuses' => $statuses->values(),
+                'defaultStatus' => $defaultStatus,
+                'voiceParts' => VoicePart::all()->values(),
+                'roles' => Role::all()->values(),
             ]);
+        }
+
+        // Base query
+        $all_singers = Singer::with(['tasks', 'category', 'voice_part', 'user'])
+            ->filter()
+            ->get();
+
+        // Sort
+        $sort_by = $request->input('sort_by', 'name');
+        $sort_dir = $request->input('sort_dir', 'asc');
+        if ($sort_dir === 'asc') {
+            $all_singers = $all_singers->sortBy($sort_by);
+        } else {
+            $all_singers = $all_singers->sortByDesc($sort_by);
         }
 
 		return view('singers.index', [

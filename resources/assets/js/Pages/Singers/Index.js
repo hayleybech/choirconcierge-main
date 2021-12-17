@@ -1,12 +1,15 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import SingerTableDesktop from "./SingerTableDesktop";
 import SingerTableMobile from "./SingerTableMobile";
 import AppHead from "../../components/AppHead";
 import {usePage} from "@inertiajs/inertia-react";
+import IndexContainer from "../../components/IndexContainer";
+import SingerFilters from "../../components/SingerFilters";
 
-const Index = ({ all_singers }) => {
+const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
+    const [showFilters, setShowFilters] = useState(false);
     const { can } = usePage().props;
 
     return (
@@ -23,19 +26,16 @@ const Index = ({ all_singers }) => {
                     { label: 'Add New', icon: 'user-plus', url: route('singers.create'), variant: 'primary', can: 'create_singer' },
                     { label: 'Voice Parts', icon: 'users-class', url: route('voice-parts.index'), can: 'list_voice_parts' },
                     { label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
-                    { label: 'Filter', icon: 'filter', url: '#' },
+                    { label: 'Filter', icon: 'filter', onClick: () => setShowFilters(! showFilters) },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
-            {/* Desktop Table */}
-            <div className="hidden lg:flex flex-col">
-                <SingerTableDesktop singers={all_singers} />
-            </div>
-
-            {/* Mobile Table */}
-            <div className="bg-white shadow block lg:hidden">
-                <SingerTableMobile singers={all_singers} />
-            </div>
+            <IndexContainer
+                showFilters={showFilters}
+                filters={<SingerFilters statuses={statuses} defaultStatus={defaultStatus} voiceParts={voiceParts} roles={roles} onClose={() => setShowFilters(false)} />}
+                tableMobile={<SingerTableMobile singers={allSingers} />}
+                tableDesktop={<SingerTableDesktop singers={allSingers} />}
+            />
         </>
     );
 }

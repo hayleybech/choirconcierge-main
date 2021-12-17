@@ -45,7 +45,7 @@ const SongAttachmentForm = ({ categories, song }) => {
                     {errors.category && <Error>{errors.category}</Error>}
                 </div>
                 <div className="">
-                    <Button onClick={submit} variant="primary" size="sm" disabled={processing}><Icon icon="check" mr />Save</Button>
+                    <Button onClick={submit} variant="primary" size="sm" disabled={processing}><Icon icon="check" />Save</Button>
                 </div>
             </FormSection>
         </div>

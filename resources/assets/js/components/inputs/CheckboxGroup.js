@@ -1,7 +1,7 @@
 import React from 'react';
 import CheckboxWithLabel from "./CheckboxWithLabel";
 
-const CheckboxGroup = ({name, options, value, updateFn}) => (
+const CheckboxGroup = ({ name, options, value, updateFn }) => (
     <div className="mt-4 grid grid-cols-2 md:flex md:flex-wrap">
         {options.map((option, key) => (
             <React.Fragment key={key}>
