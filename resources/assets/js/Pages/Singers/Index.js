@@ -9,6 +9,7 @@ import IndexContainer from "../../components/IndexContainer";
 import SingerFilters from "../../components/SingerFilters";
 import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
+import SingerSorts from "../../components/SingerSorts";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     const [showFilters, setShowFilters] = useFilterPane();
@@ -37,6 +38,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                 showFilters={showFilters}
                 filterPane={
                     <FilterSortPane
+                        sorts={<SingerSorts />}
                         filters={<SingerFilters statuses={statuses} defaultStatus={defaultStatus} voiceParts={voiceParts} roles={roles} onClose={() => setShowFilters(false)} />}
                         closeFn={() => setShowFilters(false)}
                     />

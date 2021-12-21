@@ -2,11 +2,11 @@
 
 namespace App\CustomSorts;
 
-use App\Models\SongStatus;
+use App\Models\SingerCategory;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\Sorts\Sort;
 
-class SongStatusSort implements Sort
+class SingerStatusSort implements Sort
 {
 
     public function __invoke(Builder $query, bool $descending, string $property)
@@ -15,8 +15,8 @@ class SongStatusSort implements Sort
         return $query
             ->addSubSelect(
                 'status_title',
-                SongStatus::select('title')
-                    ->whereRaw("`${prefix}songs`.`status_id` = `${prefix}song_statuses`.`id`")
+                SingerCategory::select('name')
+                    ->whereRaw("`${prefix}singers`.`singer_category_id` = `${prefix}singer_categories`.`id`")
             )
             ->orderBy('status_title', $descending ? 'desc' : 'asc');
     }
