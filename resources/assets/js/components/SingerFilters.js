@@ -4,7 +4,7 @@ import Label from "./inputs/Label";
 import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
 
-const SingerFilters = ({ statuses, defaultStatus, voiceParts, roles, onClose }) => (
+const SingerFilters = ({ statuses, defaultStatus, voiceParts, roles}) => (
     <Filters
         routeName="singers.index"
         fields={(params) => ({
@@ -15,7 +15,6 @@ const SingerFilters = ({ statuses, defaultStatus, voiceParts, roles, onClose }) 
             'voice_part.id': params.getAll('filter[voice_part.id][]').map(value => parseInt(value)),
             'roles.id': params.getAll('filter[roles.id][]').map(value => parseInt(value)),
         })}
-        onClose={onClose}
         render={(data, setData) => (<>
             <div>
                 <Label label="Name" forInput="user.name" />

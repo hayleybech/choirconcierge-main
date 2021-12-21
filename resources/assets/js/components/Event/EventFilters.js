@@ -5,10 +5,9 @@ import CheckboxGroup from "../inputs/CheckboxGroup";
 import RadioGroup from "../inputs/RadioGroup";
 import Filters from "../Filters";
 
-const EventFilters = ({ eventTypes, onClose }) => (
+const EventFilters = ({ eventTypes }) => (
     <Filters
         routeName="events.index"
-        onClose={onClose}
         fields={(params) => ({
             title: params.get('filter[title]') ?? '',
             'type.id': params.getAll('filter[type.id][]').map(value => parseInt(value)) ?? [],

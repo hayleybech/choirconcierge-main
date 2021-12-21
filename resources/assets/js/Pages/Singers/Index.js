@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import SingerTableDesktop from "./SingerTableDesktop";
@@ -7,9 +7,11 @@ import AppHead from "../../components/AppHead";
 import {usePage} from "@inertiajs/inertia-react";
 import IndexContainer from "../../components/IndexContainer";
 import SingerFilters from "../../components/SingerFilters";
+import useFilterPane from "../../hooks/useFilterPane";
+import FilterSortPane from "../../components/FilterSortPane";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
-    const [showFilters, setShowFilters] = useState(false);
+    const [showFilters, setShowFilters] = useFilterPane();
     const { can } = usePage().props;
 
     return (
@@ -30,9 +32,15 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
+
             <IndexContainer
                 showFilters={showFilters}
-                filters={<SingerFilters statuses={statuses} defaultStatus={defaultStatus} voiceParts={voiceParts} roles={roles} onClose={() => setShowFilters(false)} />}
+                filterPane={
+                    <FilterSortPane
+                        filters={<SingerFilters statuses={statuses} defaultStatus={defaultStatus} voiceParts={voiceParts} roles={roles} onClose={() => setShowFilters(false)} />}
+                        closeFn={() => setShowFilters(false)}
+                    />
+                }
                 tableMobile={<SingerTableMobile singers={allSingers} />}
                 tableDesktop={<SingerTableDesktop singers={allSingers} />}
             />

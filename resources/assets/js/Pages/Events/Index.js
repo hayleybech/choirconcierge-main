@@ -7,9 +7,11 @@ import EventTableMobile from "./EventTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
 import EventFilters from "../../components/Event/EventFilters";
 import IndexContainer from "../../components/IndexContainer";
+import FilterSortPane from "../../components/FilterSortPane";
+import useFilterPane from "../../hooks/useFilterPane";
 
 const Index = ({ events, eventTypes }) => {
-    const [showFilters, setShowFilters] = useState(false);
+    const [showFilters, setShowFilters] = useFilterPane();
     const { can } = usePage().props;
 
     return (
@@ -25,13 +27,18 @@ const Index = ({ events, eventTypes }) => {
                 actions={[
                     { label: 'Add New', icon: 'calendar-plus', url: route('events.create'), variant: 'primary', can: 'create_event' },
                     { label: 'Attendance Report', icon: 'analytics', url: route('events.reports.attendance'), can: 'list_attendances' },
-                    { label: 'Filter', icon: 'filter', onClick: () => setShowFilters(! showFilters) },
+                    { label: 'Filter/Sort', icon: 'filter', onClick: () => setShowFilters(! showFilters) },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
             <IndexContainer
                 showFilters={showFilters}
-                filters={<EventFilters eventTypes={eventTypes} onClose={() => setShowFilters(false)} />}
+                filterPane={
+                    <FilterSortPane
+                        filters={<EventFilters eventTypes={eventTypes} />}
+                        closeFn={() => setShowFilters(false)}
+                    />
+                }
                 tableMobile={<EventTableMobile events={events} />}
                 tableDesktop={<EventTableDesktop events={events} />}
             />
