@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
@@ -9,6 +9,7 @@ import EventFilters from "../../components/Event/EventFilters";
 import IndexContainer from "../../components/IndexContainer";
 import FilterSortPane from "../../components/FilterSortPane";
 import useFilterPane from "../../hooks/useFilterPane";
+import EventSorts from "../../components/Event/EventSorts";
 
 const Index = ({ events, eventTypes }) => {
     const [showFilters, setShowFilters] = useFilterPane();
@@ -35,6 +36,7 @@ const Index = ({ events, eventTypes }) => {
                 showFilters={showFilters}
                 filterPane={
                     <FilterSortPane
+                        sorts={<EventSorts />}
                         filters={<EventFilters eventTypes={eventTypes} />}
                         closeFn={() => setShowFilters(false)}
                     />

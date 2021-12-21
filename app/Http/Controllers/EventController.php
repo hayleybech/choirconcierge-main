@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomSorts\EventTypeSort;
 use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\EventType;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class EventController extends Controller
@@ -39,6 +41,13 @@ class EventController extends Controller
 					$query->where('response', '=', 'present');
 				},
 			])
+            ->allowedSorts([
+                'title',
+                'start_date',
+                AllowedSort::custom('type-title', new EventTypeSort(), 'type'),
+                'created_at'
+            ])
+            ->defaultSort('-start_date')
 			->get();
 
         if(config('features.rebuild')){
