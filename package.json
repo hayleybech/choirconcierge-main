@@ -58,6 +58,7 @@
     "@tailwindcss/forms": "^0.3.3",
     "@ttskch/select2-bootstrap4-theme": "^1.5.2",
     "@types/snapsvg": "^0.5.0",
+    "collect.js": "^4.29.3",
     "howler": "^2.2.1",
     "luxon": "^2.0.2",
     "moment": "^2.29.1",

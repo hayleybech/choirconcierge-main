@@ -1,10 +1,10 @@
 import React from 'react';
 
-const IndexContainer = ({ tableDesktop, tableMobile, filters, showFilters }) => (
-    <div className="flex flex-col lg:flex-row">
+const IndexContainer = ({ tableDesktop, tableMobile, filterPane, showFilters }) => (
+    <div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300">
         {showFilters && (
-            <div className="lg:w-1/5 xl:w-1/6 border-b lg:border-r border-gray-300 lg:z-10">
-                {filters}
+            <div className="lg:w-1/5 xl:w-1/6 lg:z-10">
+                {filterPane}
             </div>
         )}
         <div className="flex-grow lg:overflow-x-auto">

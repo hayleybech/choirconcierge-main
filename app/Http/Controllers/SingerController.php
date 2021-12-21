@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomSorts\SingerNameSort;
+use App\CustomSorts\SingerStatusSort;
+use App\CustomSorts\SingerVoicePartSort;
 use App\Http\Requests\SingerRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Placement;
@@ -18,6 +21,7 @@ use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class SingerController extends Controller
@@ -36,6 +40,8 @@ class SingerController extends Controller
 	{
 		$this->authorize('viewAny', Singer::class);
 
+        $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
+
         if(config('features.rebuild')){
             $statuses = SingerCategory::all();
             $defaultStatus = $statuses->firstWhere('name', 'Members')->id;
@@ -52,6 +58,12 @@ class SingerController extends Controller
                     AllowedFilter::exact('voice_part.id'),
                     AllowedFilter::exact('roles.id')
                 ])
+                ->allowedSorts([
+                    $nameSort,
+                    AllowedSort::custom('status-title', new SingerStatusSort(), 'status'),
+                    AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),
+                ])
+                ->defaultSort($nameSort)
                 ->get();
 
             Inertia::setRootView('layouts/app-rebuild');

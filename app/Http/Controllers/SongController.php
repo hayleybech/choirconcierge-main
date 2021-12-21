@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomSorts\SongStatusSort;
 use App\Http\Requests\SongRequest;
 use App\Models\Singer;
 use App\Models\Song;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class SongController extends Controller
@@ -41,6 +43,12 @@ class SongController extends Controller
                         ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
                         ->default($defaultStatuses),
                     AllowedFilter::exact('categories.id'),
+                ])
+                ->defaultSort('title')
+                ->allowedSorts([
+                    'title',
+                    'created_at',
+                    AllowedSort::custom('status-title', new SongStatusSort(), 'title'),
                 ])
                 ->get();
 
