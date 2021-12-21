@@ -16,6 +16,7 @@ const Filters = ({ routeName, fields, transforms = () => {}, render }) => {
     }
 
     transform((data) => ({
+        sort: params.has('sort') ? params.get('sort') : null,
         filter: {
             ...data,
             ...transforms(data),

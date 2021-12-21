@@ -7,6 +7,7 @@ import Icon from "./Icon";
 import RadioGroup from "./inputs/RadioGroup";
 import Label from "./inputs/Label";
 import SectionSubtitle from "./SectionSubtitle";
+import collect from "collect.js";
 
 const Sorts = ({ routeName, options }) => {
     const params = new URLSearchParams(location.search);
@@ -34,8 +35,27 @@ const Sorts = ({ routeName, options }) => {
         submit();
     }, [data])
 
+    const filters = () => {
+        const urlFilters = {};
+        collect(Array.from(params.keys()))
+            .unique()
+            .filter(key => key.includes('filter'))
+            .each(key => {
+                const cleanKey = key.slice(
+                    key.indexOf('[') + 1,
+                    key.indexOf(']'),
+                );
+
+                urlFilters[cleanKey] = params.getAll(key);
+            });
+        return urlFilters;
+    };
+
     transform((data) => ({
         sort: data.sortDir === 'desc' ? `-${data.sort}` : data.sort,
+        filter: {
+            ...filters(),
+        }
     }));
 
     return (
