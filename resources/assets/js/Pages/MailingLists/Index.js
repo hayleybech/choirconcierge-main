@@ -21,7 +21,6 @@ const Index = ({ lists }) => {
                 ]}
                 actions={[
                     { label: 'Add New', icon: 'plus', url: route('groups.create'), variant: 'primary', can: 'create_group' },
-                    { label: 'Filter', icon: 'filter', url: '#' },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 

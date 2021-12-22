@@ -21,7 +21,6 @@ const Index = ({ tasks }) => {
                 ]}
                 actions={[
                     { label: 'Add New', icon: 'plus', url: route('tasks.create'), variant: 'primary', can: 'create_task' },
-                    { label: 'Filter', icon: 'filter', url: '#' },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 

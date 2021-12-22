@@ -21,7 +21,6 @@ const Index = ({ folders }) => {
                 ]}
                 actions={[
                     { label: 'Add Folder', icon: 'folder-plus', url: route('folders.create'), variant: 'primary', can: 'create_folder' },
-                    { label: 'Filter', icon: 'filter', url: '#' },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 

@@ -21,7 +21,6 @@ const Index = ({ stacks }) => {
                 ]}
                 actions={[
                     { label: 'Add New', icon: 'plus', url: route('stacks.create'), variant: 'primary', can: 'create_stack' },
-                    { label: 'Filter', icon: 'filter', url: '#'},
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
