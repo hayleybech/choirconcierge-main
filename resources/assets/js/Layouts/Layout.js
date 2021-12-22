@@ -99,10 +99,6 @@ export default function Layout({children}) {
                                 {/*</form>*/}
                             </div>
                             <div className="ml-4 flex items-center lg:ml-6">
-                                <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                    <span className="sr-only">View notifications</span>
-                                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                </button>
 
                                 <div className="text-gray-500 text-sm mx-2">
                                     <HeadwayWidget account="7L6Rky" badgePosition="top-right">
