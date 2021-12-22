@@ -1,9 +1,5 @@
 import React, { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import {
-    BellIcon,
-    MenuAlt2Icon,
-} from '@heroicons/react/outline'
 import route from 'ziggy-js';
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
@@ -76,7 +72,7 @@ export default function Layout({children}) {
                             onClick={() => setSidebarOpen(true)}
                         >
                             <span className="sr-only">Open sidebar</span>
-                            <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
+                            <Icon icon="bars" />
                         </button>
                         <div className="flex-1 px-4 flex justify-between">
                             <div className="flex-1 flex">

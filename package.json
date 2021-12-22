@@ -48,7 +48,6 @@
     "@googlemaps/js-api-loader": "^1.11.3",
     "@headlessui/react": "^1.4.0",
     "@headwayapp/react-widget": "^0.0.4",
-    "@heroicons/react": "^1.0.3",
     "@inertiajs/inertia": "^0.10.1",
     "@inertiajs/inertia-react": "^0.7.1",
     "@inertiajs/progress": "^0.2.6",

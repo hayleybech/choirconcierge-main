@@ -1,9 +1,9 @@
 import {Dialog, Transition} from "@headlessui/react";
 import React, {Fragment} from "react";
-import {XIcon} from "@heroicons/react/outline";
 import {Link} from "@inertiajs/inertia-react";
 import route from "ziggy-js";
 import MainNavigation from "./MainNavigation";
+import Icon from "./Icon";
 
 const SidebarMobile = ({navigation, open, setOpen}) => (
     <Transition.Root show={open} as={Fragment}>
@@ -45,7 +45,7 @@ const SidebarMobile = ({navigation, open, setOpen}) => (
                                 onClick={() => setOpen(false)}
                             >
                                 <span className="sr-only">Close sidebar</span>
-                                <XIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                                <Icon icon="times" type="light" className="text-white text-lg" />
                             </button>
                         </div>
                     </Transition.Child>
