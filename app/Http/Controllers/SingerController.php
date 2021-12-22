@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\CustomSorts\SingerNameSort;
 use App\CustomSorts\SingerStatusSort;
 use App\CustomSorts\SingerVoicePartSort;
-use App\Http\Requests\SingerRequest;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\CreateSingerRequest;
+use App\Http\Requests\EditSingerRequest;
 use App\Models\Placement;
 use App\Models\Role;
 use App\Models\SingerCategory;
@@ -125,7 +125,7 @@ class SingerController extends Controller
         ]);
 	}
 
-	public function store(UserRequest $request): RedirectResponse
+	public function store(CreateSingerRequest $request): RedirectResponse
 	{
 		$this->authorize('create', Singer::class);
 
@@ -212,7 +212,7 @@ class SingerController extends Controller
             'roles' => $roles,
         ]);
 	}
-	public function update(Singer $singer, SingerRequest $request): RedirectResponse
+	public function update(Singer $singer, EditSingerRequest $request): RedirectResponse
 	{
 		$this->authorize('update', $singer);
 

@@ -6,7 +6,7 @@ use App\Models\Singer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UserRequest extends FormRequest
+class CreateSingerRequest extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -46,20 +46,6 @@ class UserRequest extends FormRequest
                     ->ignore($singer->user->id ?? ''),
             ],
             'password' => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
-            'avatar' => ['file', 'mimetypes:image/jpeg,image/png', 'max:10240'],
-            'dob' => ['date', 'before:today'],
-            'phone' => ['max:255'],
-            'ice_name' => ['max:255'],
-            'ice_phone' => ['max:255'],
-            'address_street_1' => ['max:255'],
-            'address_street_2' => ['max:255'],
-            'address_suburb' => ['max:255'],
-            'address_state' => ['max:3'],
-            'address_postcode' => ['max:4'],
-            'profession' => ['max:255'],
-            'skills' => ['max:255'],
-            'height' => ['nullable', 'numeric', 'between:0,300'],
-            'bha_id' => ['nullable', 'numeric'],
 
             // Singer
             'reason_for_joining' => ['max:255'],
