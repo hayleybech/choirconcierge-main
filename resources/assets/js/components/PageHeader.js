@@ -43,7 +43,8 @@ const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) 
                     ))}
 
                     {/* Dropdown */}
-                    {actions.length > 0 && (
+                    {actions.length > 2
+                        ? (
                         <Menu as="span" className="ml-3 relative sm:hidden z-20">
                             <Menu.Button className={buttonStyles()}>
                                 Options
@@ -82,7 +83,13 @@ const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) 
                                 </Menu.Items>
                             </Transition>
                         </Menu>
-                    )}
+                        )
+                        : actions.length === 2 && (
+                            <Button href={actions[1].url} onClick={actions[1].onClick} variant={actions[1].variant} className="ml-3">
+                                <Icon icon={actions[1].icon} mr />{actions[1].label}
+                            </Button>
+                        )
+                    }
                 </div>
             </div>
         </div>
