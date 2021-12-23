@@ -14,6 +14,18 @@ const LocationInput = ({ value, hasErrors, updateFn }) => {
             styles: customSelectStyles,
             components: { Control },
             value: value,
+            onFocus: e => updateFn({
+                address: null,
+                place_id: null,
+                name: null,
+                icon: '',
+            }),
+            onKeyDown: e => console.log(e.key, e.target) && updateFn({
+                address: e.target.value,
+                place_id: null,
+                name: null,
+                icon: '',
+            }),
             onChange: newValue => updateFn({
                 place_id: newValue.value.place_id,
                 name: newValue.value.structured_formatting.main_text,
@@ -30,7 +42,7 @@ export default LocationInput;
 const Control = ({ innerRef, innerProps, selectProps, children }) => (
     <div
         className={classNames('' +
-            'shadow-sm focus:outline-none block w-full sm:text-sm rounded-md border',
+            'shadow-sm focus:outline-none block w-full sm:text-sm rounded-md border bg-white',
             selectProps.hasErrors
                 ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'
                 : 'border-gray-300 focus:ring-purple-500 focus:border-purple-500',
