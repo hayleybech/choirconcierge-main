@@ -6,7 +6,7 @@ use App\Models\Singer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UserRequest extends FormRequest
+class CreateSingerRequest extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -35,33 +35,37 @@ class UserRequest extends FormRequest
 	public function rules()
 	{
 		$singer = $this->route('singer');
-		return [
-		    // User
-            'first_name' => ['required', 'max:127'],
-            'last_name' => ['required', 'max:127'],
+
+        $userRules = [
             'email' => [
                 'required',
                 Rule::unique('users')
                     ->where('tenant_id', tenant('id'))
                     ->ignore($singer->user->id ?? ''),
             ],
+            'first_name' => ['required', 'max:127'],
+            'last_name' => ['required', 'max:127'],
             'password' => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
-            'avatar' => ['file', 'mimetypes:image/jpeg,image/png', 'max:10240'],
-            'dob' => ['date', 'before:today'],
-            'phone' => ['max:255'],
-            'ice_name' => ['max:255'],
-            'ice_phone' => ['max:255'],
-            'address_street_1' => ['max:255'],
-            'address_street_2' => ['max:255'],
-            'address_suburb' => ['max:255'],
-            'address_state' => ['max:3'],
-            'address_postcode' => ['max:4'],
-            'profession' => ['max:255'],
-            'skills' => ['max:255'],
-            'height' => ['nullable', 'numeric', 'between:0,300'],
-            'bha_id' => ['nullable', 'numeric'],
+        ];
 
-            // Singer
+		if(config('features.user_search_in_create_singer')) {
+		    $userRules = [
+		        'user_id' => [
+		            'sometimes',
+                    Rule::exists('users', 'id'),
+                ],
+                'email' => [
+                    'required_without:user_id',
+                    Rule::unique('users')
+                        ->ignore($singer->user->id ?? ''),
+                ],
+                'first_name' => ['exclude_without:email', 'required', 'max:127'],
+                'last_name' => ['exclude_without:email', 'required', 'max:127'],
+                'password' => ['exclude_without:email', 'sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
+            ];
+        }
+
+		return array_merge($userRules, [
             'reason_for_joining' => ['max:255'],
             'referrer' => ['max:255'],
             'membership_details' => ['max:255'],
@@ -69,6 +73,6 @@ class UserRequest extends FormRequest
             'onboarding_enabled' => ['boolean'],
             'voice_part_id' => [],
             'user_roles' => ['array', 'exists:roles,id'],
-		];
+		]);
 	}
 }

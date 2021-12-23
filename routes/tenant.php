@@ -20,6 +20,7 @@ use App\Http\Controllers\RiserStackController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RsvpController;
 use App\Http\Controllers\Search\FindSingerController;
+use App\Http\Controllers\Search\GlobalFindUserController;
 use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SingerPlacementController;
 use App\Http\Controllers\SongAttachmentController;
@@ -118,6 +119,11 @@ Route::middleware([
     // Search APIs
     Route::prefix('find')->middleware(['auth'])->group(function() {
         Route::get('/singers', FindSingerController::class)->name('find.singers');
+    });
+
+    // Global Search APIs
+    Route::prefix('find')->middleware(['auth'])->group(function() {
+        Route::get('/users', GlobalFindUserController::class)->name('global-find.users');
     });
 
     // Mailing Lists (User Groups) module
