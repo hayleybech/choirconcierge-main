@@ -129,27 +129,34 @@ class SingerController extends Controller
 	{
 		$this->authorize('create', Singer::class);
 
-        $user = User::create(Arr::except($request->validated(), [
-            'onboarding_enabled',
-            'reason_for_joining',
-            'referrer',
-            'membership_details',
-            'joined_at',
-            'voice_part_id',
-            'password_confirmation',
-        ]));
-        $singer = Singer::create(Arr::only($request->validated(), [
-            'onboarding_enabled',
-            'reason_for_joining',
-            'referrer',
-            'membership_details',
-            'joined_at',
-            'voice_part_id',
-            'user_roles',
-        ]));
-        $singer->user_id = $user->id;
+		if($request->has('user_id')) {
+		    $user = User::find($request->input('user_id'));
+        } else {
+            $user = User::create(Arr::except($request->validated(), [
+                'onboarding_enabled',
+                'reason_for_joining',
+                'referrer',
+                'membership_details',
+                'joined_at',
+                'voice_part_id',
+                'password_confirmation',
+            ]));
+        }
+        $singer = Singer::create(array_merge(
+            ['user_id' => $user->id],
+            $request->only([
+                'onboarding_enabled',
+                'reason_for_joining',
+                'referrer',
+                'membership_details',
+                'joined_at',
+                'voice_part_id',
+                'user_roles',
+            ])
+        ));
         $singer->initOnboarding();
         $singer->save();
+
 
 		User::sendWelcomeEmail($user);
 

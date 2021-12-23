@@ -132,7 +132,7 @@ class SingerControllerTest extends TestCase
 	 */
 	public function store_inserts_the_singer($getData): void
 	{
-		$task = Task::factory()->create();
+        $task = Task::factory()->create();
 		$mail = Mail::fake();
 
 		$this->actingAs($this->createUserWithRole('Membership Team'));
@@ -141,14 +141,10 @@ class SingerControllerTest extends TestCase
 		$response = $this->post(the_tenant_route('singers.store'), $data);
 
         $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('users', Arr::except($data, [
-            'onboarding_enabled',
-            'joined_at',
-            'reason_for_joining',
-            'referrer',
-            'membership_details',
-            'password',
-            'password_confirmation',
+        $this->assertDatabaseHas('users', Arr::only($data, [
+            'first_name',
+            'last_name',
+            'email',
         ]));
         $this->assertDatabaseHas('singers', Arr::only($data, [
             'onboarding_enabled',
@@ -168,12 +164,88 @@ class SingerControllerTest extends TestCase
 		$mail->assertSent(Welcome::class);
 	}
 
+    /**
+     * @test
+     * @dataProvider singerProvider
+     */
+    public function store_creates_a_user_when_user_search_flag_is_on($getData): void
+    {
+        config()->set('features.rebuild', true);
+        config()->set('features.user_search_in_create_singer', true);
+
+        $mail = Mail::fake();
+
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $data = $getData();
+        $response = $this->post(the_tenant_route('singers.store'), $data)
+            ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('users', Arr::only($data, [
+            'first_name',
+            'last_name',
+            'email',
+        ]));
+        $this->assertDatabaseHas('singers', Arr::only($data, [
+            'onboarding_enabled',
+            'joined_at',
+            'reason_for_joining',
+            'referrer',
+            'membership_details',
+        ]));
+
+        $user = User::firstWhere('email', $data['email']);
+
+        $response->assertRedirect(the_tenant_route('singers.show', [$user->singer]));
+        $mail->assertSent(Welcome::class);
+    }
+
+    /**
+     * @test
+     * @dataProvider singerProvider
+     */
+    public function store_assigns_an_existing_user_when_user_search_flag_is_on($getData): void
+    {
+        config()->set('features.rebuild', true);
+        config()->set('features.user_search_in_create_singer', true);
+
+        $mail = Mail::fake();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $data = $getData();
+        $data['email'] = null;
+        $data['user_id'] = $user->id;
+        $response = $this->post(the_tenant_route('singers.store'), $data)
+            ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('singers', array_merge(
+            ['user_id' => $user->id],
+            Arr::only($data, [
+                'onboarding_enabled',
+                'joined_at',
+                'reason_for_joining',
+                'referrer',
+                'membership_details',
+            ])
+        ));
+
+        $user->refresh();
+
+        $response->assertRedirect(the_tenant_route('singers.show', [$user->singer]));
+        $mail->assertSent(Welcome::class);
+    }
+
 	/**
 	 * @test
 	 * @dataProvider singerProvider
 	 */
 	public function store_inserts_tasks_for_prospects($getData): void
 	{
+	    config()->set('features.rebuild', true);
+
 		$task = Task::factory()->create();
 		$mail = Mail::fake();
 
@@ -181,6 +253,7 @@ class SingerControllerTest extends TestCase
 
 		$data = $getData();
 		$data['onboarding_enabled'] = true;
+		$data['onboarding_disabled'] = false;
 		$response = $this->post(the_tenant_route('singers.store'), $data);
 
 		$user = User::firstWhere('email', $data['email']);
@@ -279,6 +352,7 @@ class SingerControllerTest extends TestCase
 					return [
 					    // Singer
                         'onboarding_enabled' => false,
+                        'onboarding_disabled' => true,
                         'reason_for_joining' => $this->faker->sentence(),
                         'referrer' => $this->faker->sentence(),
                         'membership_details' => $this->faker->sentence(),

@@ -35,19 +35,37 @@ class CreateSingerRequest extends FormRequest
 	public function rules()
 	{
 		$singer = $this->route('singer');
-		return [
-		    // User
-            'first_name' => ['required', 'max:127'],
-            'last_name' => ['required', 'max:127'],
+
+        $userRules = [
             'email' => [
                 'required',
                 Rule::unique('users')
                     ->where('tenant_id', tenant('id'))
                     ->ignore($singer->user->id ?? ''),
             ],
+            'first_name' => ['required', 'max:127'],
+            'last_name' => ['required', 'max:127'],
             'password' => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
+        ];
 
-            // Singer
+		if(config('features.user_search_in_create_singer')) {
+		    $userRules = [
+		        'user_id' => [
+		            'sometimes',
+                    Rule::exists('users', 'id'),
+                ],
+                'email' => [
+                    'required_without:user_id',
+                    Rule::unique('users')
+                        ->ignore($singer->user->id ?? ''),
+                ],
+                'first_name' => ['exclude_without:email', 'required', 'max:127'],
+                'last_name' => ['exclude_without:email', 'required', 'max:127'],
+                'password' => ['exclude_without:email', 'sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
+            ];
+        }
+
+		return array_merge($userRules, [
             'reason_for_joining' => ['max:255'],
             'referrer' => ['max:255'],
             'membership_details' => ['max:255'],
@@ -55,6 +73,6 @@ class CreateSingerRequest extends FormRequest
             'onboarding_enabled' => ['boolean'],
             'voice_part_id' => [],
             'user_roles' => ['array', 'exists:roles,id'],
-		];
+		]);
 	}
 }
