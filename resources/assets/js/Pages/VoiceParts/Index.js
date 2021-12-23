@@ -17,7 +17,6 @@ const Index = ({ parts }) => (
             ]}
             actions={[
                 { label: 'Add New', icon: 'plus', url: route('voice-parts.create'), variant: 'primary'},
-                { label: 'Filter', icon: 'filter', url: '#'},
             ]}
         />
 

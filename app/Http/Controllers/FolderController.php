@@ -38,13 +38,13 @@ class FolderController extends Controller
 		return view('folders.index', compact('folders'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return View
-	 */
-	public function create(): View
+	public function create(): View|Response
 	{
+        if(config('features.rebuild')){
+            Inertia::setRootView('layouts/app-rebuild');
+
+            return Inertia::render('Folders/Create');
+        }
 		return view('folders.create');
 	}
 

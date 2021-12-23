@@ -233,7 +233,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                 )}
 
                 <FormFooter>
-                    <ButtonLink href={list ? route('songs.show', list) : route('songs.index')}>Cancel</ButtonLink>
+                    <ButtonLink href={list ? route('groups.show', list) : route('groups.index')}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>

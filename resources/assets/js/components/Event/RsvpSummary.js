@@ -2,7 +2,6 @@ import React from 'react';
 import {Tab} from "@headlessui/react";
 import classNames from "../../classNames";
 import VoicePartTag from "../VoicePartTag";
-import ButtonLink from "../inputs/ButtonLink";
 import SectionTitle from "../SectionTitle";
 import Icon from "../Icon";
 import SectionHeader from "../SectionHeader";

@@ -4,32 +4,36 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import RiserStackTableDesktop from "./RiserStackTableDesktop";
 import RiserStackTableMobile from "./RiserStackTableMobile";
+import {usePage} from "@inertiajs/inertia-react";
 
-const Index = ({ stacks }) => (
-    <>
-        <AppHead title="Riser Stacks" />
-        <PageHeader
-            title="Riser Stacks"
-            icon="people-arrows"
-            breadcrumbs={[
-                { name: 'Dashboard', url: route('dash')},
-                { name: 'Riser Stacks', url: route('stacks.index')},
-            ]}
-            actions={[
-                { label: 'Add New', icon: 'plus', url: route('stacks.create'), variant: 'primary'},
-                { label: 'Filter', icon: 'filter', url: '#'},
-            ]}
-        />
+const Index = ({ stacks }) => {
+    const { can } = usePage().props;
 
-        <div className="hidden lg:flex flex-col">
-            <RiserStackTableDesktop stacks={stacks} />
-        </div>
+    return (
+        <>
+            <AppHead title="Riser Stacks" />
+            <PageHeader
+                title="Riser Stacks"
+                icon="people-arrows"
+                breadcrumbs={[
+                    { name: 'Dashboard', url: route('dash')},
+                    { name: 'Riser Stacks', url: route('stacks.index')},
+                ]}
+                actions={[
+                    { label: 'Add New', icon: 'plus', url: route('stacks.create'), variant: 'primary', can: 'create_stack' },
+                ].filter(action => action.can ? can[action.can] : true)}
+            />
 
-        <div className="bg-white shadow block lg:hidden">
-            <RiserStackTableMobile stacks={stacks} />
-        </div>
-    </>
-);
+            <div className="hidden lg:flex flex-col">
+                <RiserStackTableDesktop stacks={stacks} />
+            </div>
+
+            <div className="bg-white shadow block lg:hidden">
+                <RiserStackTableMobile stacks={stacks} />
+            </div>
+        </>
+    );
+}
 
 Index.layout = page => <Layout children={page} />
 

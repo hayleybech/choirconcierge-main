@@ -19,7 +19,7 @@ const LearningSummary = ({ status_count, voice_parts_count, song }) => (
                     size="sm"
                     href={route('songs.singers.index', song)}
                 >
-                    <Icon icon="edit" mr />
+                    <Icon icon="edit" />
                     Edit
                 </ButtonLink>
             </SectionHeader>

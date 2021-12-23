@@ -13,7 +13,7 @@ const MyRsvpButtons = ({ event, size = 'sm' }) => (
                 className="mr-2"
                 data={{rsvp_response: 'yes'}}
             >
-                <Icon icon="check" mr/>
+                <Icon icon="check" />
                 Going
             </Button>
         )}
@@ -25,7 +25,7 @@ const MyRsvpButtons = ({ event, size = 'sm' }) => (
                 variant="danger-outline"
                 data={{rsvp_response: 'no'}}
             >
-                <Icon icon="times" mr/>
+                <Icon icon="times" />
                 Not Going
             </Button>
         )}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomSorts\SongStatusSort;
 use App\Http\Requests\SongRequest;
 use App\Models\Singer;
 use App\Models\Song;
@@ -18,6 +19,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class SongController extends Controller
 {
@@ -25,32 +29,60 @@ class SongController extends Controller
     {
 		$this->authorize('viewAny', Song::class);
 
-		// Base query
-		$songs = Song::withCount(['attachments'])
-			->filter()
-			->get();
-
-		// Sort
-		$sort_by = $request->input('sort_by', 'title');
-		$sort_dir = $request->input('sort_dir', 'asc');
-
-		// Flip direction for date (so we sort by smallest age not smallest timestamp)
-		if ($sort_by === 'created_at') {
-			$sort_dir = $sort_dir === 'asc' ? 'desc' : 'asc';
-		}
-
-		if ($sort_dir === 'asc') {
-			$songs = $songs->sortBy($sort_by);
-		} else {
-			$songs = $songs->sortByDesc($sort_by);
-		}
-
         if(config('features.rebuild')){
+            $includePending = auth()->user()?->singer?->hasAbility('songs_update');
+            $statuses = SongStatus::query()
+                ->when(! $includePending, fn($query) => $query->where('title', '!=', 'Pending'))
+                ->get();
+            $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
+
+            $songs = QueryBuilder::for(Song::class)
+                ->allowedFilters([
+                    'title',
+                    AllowedFilter::exact('status.id')
+                        ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
+                        ->default($defaultStatuses),
+                    AllowedFilter::exact('categories.id'),
+                ])
+                ->defaultSort('title')
+                ->allowedSorts([
+                    'title',
+                    'created_at',
+                    AllowedSort::custom('status-title', new SongStatusSort(), 'title'),
+                ])
+                ->get();
+
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Songs/Index', [
                 'songs' => $songs->values(),
+                'statuses' => SongStatus::query()
+                    ->when(! $includePending, fn($query) => $query->where('title', '!=', 'Pending'))
+                    ->get()
+                    ->values(),
+                'defaultStatuses' => $defaultStatuses,
+                'categories' => SongCategory::all()->values(),
             ]);
+        }
+
+        // Base query
+        $songs = Song::withCount(['attachments'])
+            ->filter()
+            ->get();
+
+        // Sort
+        $sort_by = $request->input('sort_by', 'title');
+        $sort_dir = $request->input('sort_dir', 'asc');
+
+        // Flip direction for date (so we sort by smallest age not smallest timestamp)
+        if ($sort_by === 'created_at') {
+            $sort_dir = $sort_dir === 'asc' ? 'desc' : 'asc';
+        }
+
+        if ($sort_dir === 'asc') {
+            $songs = $songs->sortBy($sort_by);
+        } else {
+            $songs = $songs->sortByDesc($sort_by);
         }
 
 		return view('songs.index', [

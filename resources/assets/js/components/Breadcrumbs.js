@@ -1,6 +1,6 @@
 import React from 'react';
-import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/react/solid";
 import {Link} from "@inertiajs/inertia-react";
+import Icon from "./Icon";
 
 const Breadcrumbs = ({ breadcrumbs }) => {
     const parentCrumb = breadcrumbs[breadcrumbs.length - 2] ?? breadcrumbs[0];
@@ -12,7 +12,7 @@ const Breadcrumbs = ({ breadcrumbs }) => {
                     href={parentCrumb.url}
                     className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
                 >
-                    <ChevronLeftIcon className="flex-shrink-0 -ml-1 mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                    <Icon icon="chevron-left" className="text-gray-400 text-xs -ml-1 mr-1" />
                     {parentCrumb.name}
                 </Link>
             </nav>
@@ -22,7 +22,7 @@ const Breadcrumbs = ({ breadcrumbs }) => {
                         <li key={index}>
                             <div className="flex items-center">
                                 {index > 0 && (
-                                    <ChevronRightIcon className="flex-shrink-0 h-5 w-5 text-gray-400 mr-4" aria-hidden="true" />
+                                    <Icon icon="chevron-right" className="text-gray-400 text-xs mr-4" />
                                 )}
                                 <Link href={url} className="text-sm font-medium text-gray-500 hover:text-gray-700">
                                     {name}

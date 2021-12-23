@@ -307,7 +307,7 @@ const Show = ({ singer, categories }) => {
                                         size="sm"
                                         href={route('singers.placements.edit', [singer.id, singer.placement.id])}
                                     >
-                                        <Icon icon="edit" mr />
+                                        <Icon icon="edit" />
                                         Edit
                                     </ButtonLink>
                                 </SectionHeader>
@@ -365,7 +365,7 @@ const Show = ({ singer, categories }) => {
                                     </p>
                                     <div className="mt-6">
                                         <ButtonLink href={route('singers.placements.create', singer)} variant="primary">
-                                            <Icon icon="plus" mr />
+                                            <Icon icon="plus" />
                                             Create Placement
                                         </ButtonLink>
                                     </div>

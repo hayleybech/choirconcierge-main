@@ -1,7 +1,8 @@
 import React, {useRef, useEffect, useState} from 'react';
 import Button from "./Button";
+import classNames from "../../classNames";
 
-const FileInput = ({name, type = 'text', value, updateFn, hasErrors, multiple, otherProps}) => {
+const FileInput = ({ name, type = 'text', value, updateFn, hasErrors, multiple, vertical = false, otherProps }) => {
     const inputRef = useRef(null);
     const [filename, setFilename] = useState('');
 
@@ -14,16 +15,23 @@ const FileInput = ({name, type = 'text', value, updateFn, hasErrors, multiple, o
     return (
         <div className="mt-1">
 
-            <Button
-                size="sm"
-                onClick={() => inputRef.current.click()}
-                className="w-full"
-                variant={hasErrors ? 'danger-outline' : 'secondary'}
+            <div className={classNames('flex flex-wrap',
+                vertical ? 'flex-col-reverse items-stretch text-center' : 'items-center space-x-4')}
             >
-                Browse...
-            </Button>
+                <div className={classNames('text-sm text-gray-500', vertical ? 'mt-2' : '')}>
+                    {filename || 'No file selected.'}
+                </div>
 
-            <p className="text-sm text-gray-500">{filename}</p>
+                <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => inputRef.current.click()}
+                    className="flex-grow"
+                    variant={hasErrors ? 'danger-outline' : 'secondary'}
+                >
+                    Browse...
+                </Button>
+            </div>
 
             <input
                 type="file"

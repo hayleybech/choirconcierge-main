@@ -30,6 +30,7 @@ const SongAttachmentForm = ({ categories, song }) => {
                         updateFn={value => setData('attachment_uploads', value)}
                         hasErrors={ !! errors['attachment_uploads'] }
                         multiple
+                        vertical
                     />
                     {errors.attachment_uploads && <Error>{errors.attachment_uploads}</Error>}
                 </div>
@@ -44,7 +45,7 @@ const SongAttachmentForm = ({ categories, song }) => {
                     {errors.category && <Error>{errors.category}</Error>}
                 </div>
                 <div className="">
-                    <Button onClick={submit} variant="primary" size="sm" disabled={processing}><Icon icon="check" mr />Save</Button>
+                    <Button onClick={submit} variant="primary" size="sm" disabled={processing}><Icon icon="check" />Save</Button>
                 </div>
             </FormSection>
         </div>

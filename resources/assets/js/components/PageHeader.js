@@ -1,6 +1,5 @@
 import React from 'react';
 import { Fragment } from 'react'
-import { ChevronDownIcon } from '@heroicons/react/solid'
 import { Menu, Transition } from '@headlessui/react'
 import Breadcrumbs from "./Breadcrumbs";
 import classNames from '../classNames';
@@ -43,11 +42,12 @@ const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) 
                     ))}
 
                     {/* Dropdown */}
-                    {actions.length > 0 && (
-                        <Menu as="span" className="ml-3 relative sm:hidden">
+                    {actions.length > 2
+                        ? (
+                        <Menu as="span" className="ml-3 relative sm:hidden z-20">
                             <Menu.Button className={buttonStyles()}>
                                 Options
-                                <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5 text-gray-500" aria-hidden="true" />
+                                <Icon icon="chevron-down" type="light" ml className="-mr-1 text-gray-500 text-sm" />
                             </Menu.Button>
 
                             <Transition
@@ -82,7 +82,13 @@ const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) 
                                 </Menu.Items>
                             </Transition>
                         </Menu>
-                    )}
+                        )
+                        : actions.length === 2 && (
+                            <Button href={actions[1].url} onClick={actions[1].onClick} variant={actions[1].variant} className="ml-3">
+                                <Icon icon={actions[1].icon} mr />{actions[1].label}
+                            </Button>
+                        )
+                    }
                 </div>
             </div>
         </div>

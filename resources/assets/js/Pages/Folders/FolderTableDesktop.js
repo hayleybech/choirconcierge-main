@@ -4,6 +4,7 @@ import Table, {TableCell} from "../../components/Table";
 import FolderIcon from "../../components/FolderIcon";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
+import DocumentForm from "./DocumentForm";
 
 const FolderTableDesktop = ({ folders }) => {
     const [openFolder, setOpenFolder] = useState(0);
@@ -50,6 +51,15 @@ const FolderTableDesktop = ({ folders }) => {
                             </TableCell>
                         </tr>
                     ))}
+                    {folder.id === openFolder && (
+                    <tr>
+                        <TableCell colSpan={2}>
+                            <div className="ml-4">
+                                <DocumentForm folder={folder} />
+                            </div>
+                        </TableCell>
+                    </tr>
+                    )}
                 </React.Fragment>
             ))}
         />

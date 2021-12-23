@@ -17,7 +17,6 @@ const Index = ({ roles }) => (
             ]}
             actions={[
                 { label: 'Add New', icon: 'plus', url: route('roles.create'), variant: 'primary'},
-                { label: 'Filter', icon: 'filter', url: '#'},
             ]}
         />
 

@@ -21,22 +21,19 @@ class AttendanceReportController extends Controller
 			->filter()
 			->get();
 
-//        $voice_parts = Singer::active()
-////            ->with(['user', 'voice_part', 'attendances'])
-//            ->get()
-////            ->sortBy('user.first_name')
-//            ->groupBy('voice_part.id')
-//            ->map(function($singers) {
-//                $part = $singers->first()->voice_part ?? VoicePart::getNullVoicePart();
-//                $part->singers = $singers;
-//                return $part;
-//            });
-//        $voice_parts = $this->moveNoPartToEnd($voice_parts);
-
         $singers = Singer::with(['user', 'attendances'])
             ->get()
             ->each
-            ->append('user_avatar_thumb_url');
+            ->append('user_avatar_thumb_url')
+            ->each(function ($singer) use ($all_events) {
+                $singer->timesPresent = $singer->attendances->where('response', 'present')->count();
+                $singer->percentPresent = floor($singer->timesPresent / $all_events->count() * 100 );
+            });
+
+        $all_events->each(function ($event) use ($singers) {
+            $event->singersPresent = $event->singers_attendance('present')->active()->get()->count();
+            $event->percentPresent = floor($event->singersPresent / $singers->count() * 100);
+        });
 
         $voice_parts = VoicePart::all()
             ->push(VoicePart::getNullVoicePart())
@@ -72,10 +69,11 @@ class AttendanceReportController extends Controller
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Events/AttendanceReport', [
-                'voice_parts' => $voice_parts->values(),
+                'voiceParts' => $voice_parts->values(),
                 'events' => $all_events->where('start_date', '<', now())->values(),
-                'avg_singers_per_event' => $avg_singers_per_event,
-                'avg_events_per_singer' => $avg_events_per_singer,
+                'numSingers' => $singers->count(),
+                'avgSingersPerEvent' => $avg_singers_per_event,
+                'avgEventsPerSinger' => $avg_events_per_singer,
             ]);
         }
 
@@ -89,12 +87,7 @@ class AttendanceReportController extends Controller
 	}
 
     private function moveNoPartToEnd($collection){
-        return $collection->reject(function($value){
-            return $value->title === 'No Part';
-        })
-            ->merge($collection->filter(function($value){
-                return $value->title === 'No Part';
-            })
-            );
+        return $collection->reject(fn($value) => $value->title === 'No Part')
+            ->merge($collection->filter(fn($value) => $value->title === 'No Part'));
     }
 }

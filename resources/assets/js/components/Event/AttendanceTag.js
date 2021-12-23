@@ -2,8 +2,8 @@ import React from 'react';
 import Icon from "../Icon";
 
 const AttendanceTag = ({ label, colour, icon }) => (
-    <span className={`text-sm mr-6 text-${colour}-500`}>
-        <Icon icon={icon} mr/>
+    <span className={`text-sm text-${colour}-500`}>
+        <Icon icon={icon} mr={!!label} />
         {label}
     </span>
 );

@@ -1,7 +1,7 @@
 import React from 'react';
 
 const SectionHeader = ({children}) => (
-    <div className="mb-5 sm:flex sm:items-center sm:justify-between space-y-3 sm:space-y-0 sm:space-x-4">
+    <div className="mb-2 flex flex-wrap items-center justify-between space-x-4">
         {children}
     </div>
 );

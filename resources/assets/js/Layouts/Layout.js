@@ -1,9 +1,5 @@
 import React, { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import {
-    BellIcon,
-    MenuAlt2Icon,
-} from '@heroicons/react/outline'
 import route from 'ziggy-js';
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
@@ -28,7 +24,7 @@ export default function Layout({children}) {
     });
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 
-    const { can, user, impersonationActive } = usePage().props
+    const { can, user, impersonationActive } = usePage().props;
 
     const userNavigation = [
         { name: 'Your Profile', href: route('singers.show', user.singer), icon: 'user' },
@@ -76,7 +72,7 @@ export default function Layout({children}) {
                             onClick={() => setSidebarOpen(true)}
                         >
                             <span className="sr-only">Open sidebar</span>
-                            <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
+                            <Icon icon="bars" />
                         </button>
                         <div className="flex-1 px-4 flex justify-between">
                             <div className="flex-1 flex">
@@ -99,10 +95,6 @@ export default function Layout({children}) {
                                 {/*</form>*/}
                             </div>
                             <div className="ml-4 flex items-center lg:ml-6">
-                                <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                    <span className="sr-only">View notifications</span>
-                                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                </button>
 
                                 <div className="text-gray-500 text-sm mx-2">
                                     <HeadwayWidget account="7L6Rky" badgePosition="top-right">

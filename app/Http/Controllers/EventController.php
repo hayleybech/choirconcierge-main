@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomSorts\EventTypeSort;
 use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\EventType;
@@ -11,9 +12,13 @@ use App\Notifications\EventUpdated;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class EventController extends Controller
 {
@@ -21,8 +26,13 @@ class EventController extends Controller
 	{
 		$this->authorize('viewAny', Event::class);
 
-		// Base query
-		$all_events = Event::with(['repeat_parent:id,call_time'])
+        $all_events = QueryBuilder::for(Event::class)
+            ->allowedFilters([
+                'title',
+                AllowedFilter::exact('type.id'),
+                AllowedFilter::scope('date')->default(['upcoming'])
+            ])
+		    ->with(['repeat_parent:id,call_time'])
 			->withCount([
 				'rsvps as going_count' => function ($query) {
 					$query->where('response', '=', 'yes');
@@ -31,30 +41,49 @@ class EventController extends Controller
 					$query->where('response', '=', 'present');
 				},
 			])
-			->filter()
+            ->allowedSorts([
+                'title',
+                'start_date',
+                AllowedSort::custom('type-title', new EventTypeSort(), 'type'),
+                'created_at'
+            ])
+            ->defaultSort('-start_date')
 			->get();
-
-		// Sort
-		$sort_by = $request->input('sort_by', 'call_time');
-		$sort_dir = $request->input('sort_dir', 'asc');
-
-		// Flip direction for date (so we sort by smallest age not smallest timestamp)
-		if ($sort_by === 'created_at') {
-			$sort_dir = $sort_dir === 'asc' ? 'desc' : 'asc';
-		}
-
-		if ($sort_dir === 'asc') {
-			$all_events = $all_events->sortBy($sort_by);
-		} else {
-			$all_events = $all_events->sortByDesc($sort_by);
-		}
 
         if(config('features.rebuild')){
             Inertia::setRootView('layouts/app-rebuild');
 
             return Inertia::render('Events/Index', [
                 'events' => $all_events->values(),
+                'eventTypes' => EventType::all()->values(),
             ]);
+        }
+
+        $all_events = Event::with(['repeat_parent:id,call_time'])
+            ->withCount([
+                'rsvps as going_count' => function ($query) {
+                    $query->where('response', '=', 'yes');
+                },
+                'attendances as present_count' => function ($query) {
+                    $query->where('response', '=', 'present');
+                },
+            ])
+            ->filter()
+            ->get();
+
+        // Sort
+        $sort_by = $request->input('sort_by', 'call_time');
+        $sort_dir = $request->input('sort_dir', 'asc');
+
+        // Flip direction for date (so we sort by smallest age not smallest timestamp)
+        if ($sort_by === 'created_at') {
+            $sort_dir = $sort_dir === 'asc' ? 'desc' : 'asc';
+        }
+
+        if ($sort_dir === 'asc') {
+            $all_events = $all_events->sortBy($sort_by);
+        } else {
+            $all_events = $all_events->sortByDesc($sort_by);
         }
 
 		return view('events.index', [

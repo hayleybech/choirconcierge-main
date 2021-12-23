@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import TableMobile from "../../components/TableMobile";
 import FolderIcon from "../../components/FolderIcon";
 import Icon from "../../components/Icon";
+import {TableCell} from "../../components/Table";
+import DocumentForm from "./DocumentForm";
 
 const FolderTableMobile = ({ folders }) => {
     const [openFolder, setOpenFolder] = useState(0);
@@ -38,6 +40,13 @@ const FolderTableMobile = ({ folders }) => {
                             </div>
                         </a>
                     ))}
+                    {folder.id === openFolder && (
+                        <div className="flex items-center px-4 py-4 sm:px-6 ml">
+                            <div className="px-4 w-full">
+                                <DocumentForm folder={folder} />
+                            </div>
+                        </div>
+                    )}
                     </TableMobile>
                 </li>
             ))}
