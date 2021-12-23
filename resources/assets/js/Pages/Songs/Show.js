@@ -11,9 +11,12 @@ import SongCategoryTag from "../../components/Song/SongCategoryTag";
 import AppHead from "../../components/AppHead";
 import DateTag from "../../components/DateTag";
 import DeleteDialog from "../../components/DeleteDialog";
+import Pdf from "../../components/Song/Pdf";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
+
+    console.log(attachment_categories['Sheet Music'][0])
 
     return (
         <>
@@ -53,7 +56,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                 </div>
 
                 <div className="sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2">
-                    {/* PDF Viewer goes here */}
+                    <Pdf filename={attachment_categories['Sheet Music'][0].download_url} />
                 </div>
 
                 <div className="sm:col-span-1 sm:order-2 xl:order-3 sm:border-l sm:border-l-gray-300 sm:divide-y sm:divide-y-gray-300">
