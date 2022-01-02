@@ -171,7 +171,9 @@ const EventForm = ({ event, types }) => {
                         <LocationInput
                             name="location"
                             value={{
-                                label: data.location_place_id ? data.location_name : data.location_address,
+                                label: data.location_place_id
+                                    ? `${data.location_name} (${data.location_address})`
+                                    : data.location_address,
                                 value: {
                                     place_id: data.location_place_id,
                                 }
@@ -179,7 +181,6 @@ const EventForm = ({ event, types }) => {
                             updateFn={setLocation}
                             hasErrors={ !! errors['location'] }
                         />
-                        {data.location_address}
                         {errors.location_place_id && <Error>{errors.location_place_id}</Error>}
                         {errors.location_name && <Error>{errors.location_name}</Error>}
                         {errors.location_icon && <Error>{errors.location_icon}</Error>}

@@ -2,36 +2,60 @@ import React from 'react';
 import classNames from "../../classNames";
 import {usePage} from "@inertiajs/inertia-react";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import { components } from 'react-select';
+import Icon from "../Icon";
 
 const LocationInput = ({ value, hasErrors, updateFn }) => {
     const { googleApiKey } = usePage().props;
 
     const customSelectStyles = { control: () => ({}) };
 
+    const clear = () => {
+        if(! value.value.place_id) {
+            return;
+        }
+        updateFn({
+            address: null,
+            place_id: null,
+            name: null,
+            icon: '',
+        });
+    };
+
+    const saveManualAddress = (newValue) => {
+        if(! newValue) {
+            return false;
+        }
+        updateFn({
+            address: newValue,
+            place_id: null,
+            name: null,
+            icon: '',
+        })
+    };
+
+    const savePlace = (newValue) => {
+        if(! newValue?.value?.place_id) {
+            return;
+        }
+        updateFn({
+            place_id: newValue.value.place_id,
+            name: newValue.value.structured_formatting.main_text,
+            icon: '',
+            address: newValue.value.description,
+        });
+    }
+
     return <GooglePlacesAutocomplete
         apiKey={googleApiKey}
         selectProps={{
             styles: customSelectStyles,
-            components: { Control },
+            components: { Control, DropdownIndicator, SingleValue },
             value: value,
-            onFocus: e => updateFn({
-                address: null,
-                place_id: null,
-                name: null,
-                icon: '',
-            }),
-            onKeyDown: e => console.log(e.key, e.target) && updateFn({
-                address: e.target.value,
-                place_id: null,
-                name: null,
-                icon: '',
-            }),
-            onChange: newValue => updateFn({
-                place_id: newValue.value.place_id,
-                name: newValue.value.structured_formatting.main_text,
-                icon: '',
-                address: newValue.value.description,
-            }),
+            onFocus: clear,
+            onInputChange: saveManualAddress,
+            onChange: savePlace,
+            escapeClearsValue: false,
             hasErrors
         }}
     />;
@@ -53,4 +77,20 @@ const Control = ({ innerRef, innerProps, selectProps, children }) => (
     >
         {children}
     </div>
+);
+
+const DropdownIndicator = (props) => (
+    <components.DropdownIndicator {...props}>
+        {props.selectProps.menuIsOpen
+         ? <div className="text-purple-800 hover:text-purple-600 cursor-pointer">Use manually-entered address</div>
+         : <Icon icon="chevron-down" className="cursor-pointer" />
+        }
+    </components.DropdownIndicator>
+);
+
+const SingleValue = ({ children, ...props }) => (
+    <components.SingleValue {...props}>
+        {props.selectProps?.value?.value?.place_id && <Icon icon="map-marker-check" type="regular" mr />}
+        {children}
+    </components.SingleValue>
 );
