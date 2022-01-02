@@ -182,6 +182,9 @@
                     {{ Breadcrumbs::render() }}
 
                     <ul class="navbar-nav ml-auto">
+                        <li>
+                            <a href="{{ route('rebuild.on') }}" class="nav-link">Switch to new site</a>
+                        </li>
                         <li class="d-none d-md-inline">
                             <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank" id="changelog-link" class="nav-link">
                                 <i class="fal fa-fw fa-code mr-2"></i><span class="link-text">Updates </span><span class="headway-badge"></span>
