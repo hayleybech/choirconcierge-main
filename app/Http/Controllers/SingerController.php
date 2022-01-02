@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\CustomSorts\SingerNameSort;
 use App\CustomSorts\SingerStatusSort;
 use App\CustomSorts\SingerVoicePartSort;
-use App\Http\Requests\SingerRequest;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\CreateSingerRequest;
+use App\Http\Requests\EditSingerRequest;
 use App\Models\Placement;
 use App\Models\Role;
 use App\Models\SingerCategory;
@@ -125,31 +125,38 @@ class SingerController extends Controller
         ]);
 	}
 
-	public function store(UserRequest $request): RedirectResponse
+	public function store(CreateSingerRequest $request): RedirectResponse
 	{
 		$this->authorize('create', Singer::class);
 
-        $user = User::create(Arr::except($request->validated(), [
-            'onboarding_enabled',
-            'reason_for_joining',
-            'referrer',
-            'membership_details',
-            'joined_at',
-            'voice_part_id',
-            'password_confirmation',
-        ]));
-        $singer = Singer::create(Arr::only($request->validated(), [
-            'onboarding_enabled',
-            'reason_for_joining',
-            'referrer',
-            'membership_details',
-            'joined_at',
-            'voice_part_id',
-            'user_roles',
-        ]));
-        $singer->user_id = $user->id;
+		if($request->has('user_id')) {
+		    $user = User::find($request->input('user_id'));
+        } else {
+            $user = User::create(Arr::except($request->validated(), [
+                'onboarding_enabled',
+                'reason_for_joining',
+                'referrer',
+                'membership_details',
+                'joined_at',
+                'voice_part_id',
+                'password_confirmation',
+            ]));
+        }
+        $singer = Singer::create(array_merge(
+            ['user_id' => $user->id],
+            $request->only([
+                'onboarding_enabled',
+                'reason_for_joining',
+                'referrer',
+                'membership_details',
+                'joined_at',
+                'voice_part_id',
+                'user_roles',
+            ])
+        ));
         $singer->initOnboarding();
         $singer->save();
+
 
 		User::sendWelcomeEmail($user);
 
@@ -212,7 +219,7 @@ class SingerController extends Controller
             'roles' => $roles,
         ]);
 	}
-	public function update(Singer $singer, SingerRequest $request): RedirectResponse
+	public function update(Singer $singer, EditSingerRequest $request): RedirectResponse
 	{
 		$this->authorize('update', $singer);
 

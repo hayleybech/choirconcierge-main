@@ -65,6 +65,7 @@ class Singer extends Model
 	use Notifiable, Filterable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
 	protected $fillable = [
+	    'user_id',
         'onboarding_enabled',
         'reason_for_joining',
         'referrer',
