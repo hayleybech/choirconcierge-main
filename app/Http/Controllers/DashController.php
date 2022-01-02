@@ -30,6 +30,7 @@ class DashController extends Controller
 	public function index(): \Inertia\Response|View
     {
 		$birthdays = User::query()
+            ->whereHas('singers', fn ($query) => $query->active())
             ->birthdays()
 			->get()
             ->each->append('birthday')
@@ -44,6 +45,7 @@ class DashController extends Controller
 
 		$memberversaries = Singer::query()
             ->with('user')
+            ->active()
 			->memberversaries()
 			->get()
 			->sort(static function (Singer $singer1, Singer $singer2): int {
