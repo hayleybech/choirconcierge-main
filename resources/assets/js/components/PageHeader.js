@@ -84,7 +84,7 @@ const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) 
                         </Menu>
                         )
                         : actions.length === 2 && (
-                            <Button href={actions[1].url} onClick={actions[1].onClick} variant={actions[1].variant} className="ml-3">
+                            <Button href={actions[1].url} onClick={actions[1].onClick} variant={actions[1].variant} className="ml-3 sm:hidden">
                                 <Icon icon={actions[1].icon} mr />{actions[1].label}
                             </Button>
                         )
