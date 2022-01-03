@@ -20,7 +20,7 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
         categories: song?.categories.map(category => category.id) ?? [],
         status: song?.status.id ?? null,
         pitch_blown: song?.pitch_blown ?? 0,
-        send_notification: true,
+        send_notification: !song,
     });
 
     function submit(e) {
