@@ -7,6 +7,7 @@ use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
 use DateTime;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -14,6 +15,20 @@ use Maatwebsite\Excel\Row;
 
 class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
 {
+    private SingerCategory $activeCategory;
+    private SingerCategory $archivedCategory;
+
+    /** @var Collection<Role> */
+    private Collection $roles;
+
+    public function __construct()
+    {
+        $this->activeCategory = SingerCategory::firstWhere('name', 'Members');
+        $this->archivedCategory = SingerCategory::firstWhere('name', 'Archived Members');
+
+        $this->roles = Role::all();
+    }
+
 	public function onRow(Row $row): void
 	{
 		$rowArr = array_map(static function ($item) {
@@ -46,7 +61,7 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
 
         $singer = $user->singers()->updateOrCreate(['user_id' => $user->id], [
             'onboarding_enabled' => false,
-            'voice_part_id' => VoicePart::where('title', $rowArr['voice_part'])->first()->id ?? null,
+            'voice_part_id' => VoicePart::firstWhere('title', $rowArr['voice_part'])->id ?? null,
             'joined_at' => $this->make_valid_mysql_datetime($rowArr['member_since']),
             'membership_details' => $rowArr['member_id'],
         ]);
@@ -54,26 +69,26 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
 		// Add Roles
 		$roles_list = explode(',', $rowArr['roles']);
 
-		$roles_to_add = [];
+		$roles_to_add = [$this->roles->firstWhere('name', 'User')->id];
         if (in_array('Site Admin', $roles_list, true)) {
-            $roles_to_add[] = Role::where('name', 'Admin')->first()->id;
+            $roles_to_add[] = $this->roles->firstWhere('name', 'Admin')->id;
         }
 		if (in_array('Music Team', $roles_list, true)) {
-			$roles_to_add[] = Role::where('name', 'Music Team')->first()->id;
+			$roles_to_add[] = $this->roles->firstWhere('name', 'Music Team')->id;
 		}
 		if (in_array('User Admin', $roles_list, true)) {
-			$roles_to_add[] = Role::where('name', 'Membership Team')->first()->id;
+			$roles_to_add[] = $this->roles->firstWhere('name', 'Membership Team')->id;
 		}
 		if (in_array('Event Admin', $roles_list, true)) {
-			$roles_to_add[] = Role::where('name', 'Events Team')->first()->id;
+			$roles_to_add[] = $this->roles->firstWhere('name', 'Events Team')->id;
 		}
 		$singer->roles()->syncWithoutDetaching($roles_to_add);
 
 		// Add SingerCategory
 		if (in_array('Inactive Member', $roles_list, true)) {
-			$category = SingerCategory::where('name', 'Archived Members')->first();
+			$category = $this->archivedCategory;
 		} else {
-			$category = SingerCategory::where('name', 'Members')->first();
+			$category = $this->activeCategory;
 		}
 		$singer->category()->associate($category);
 

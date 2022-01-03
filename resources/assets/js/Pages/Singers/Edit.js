@@ -7,7 +7,6 @@ import TextInput from "../../components/inputs/TextInput";
 import DetailToggle from "../../components/inputs/DetailToggle";
 import Error from "../../components/inputs/Error";
 import Select from "../../components/inputs/Select";
-import DateInput from "../../components/inputs/Date";
 import FormSection from "../../components/FormSection";
 import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
@@ -15,6 +14,8 @@ import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import AppHead from "../../components/AppHead";
 import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
+import {DateTime} from "luxon";
+import DayInput from "../../components/inputs/Day";
 
 const Edit = ({ voice_parts, roles, singer }) => {
     const { data, setData, put, processing, errors } = useForm({
@@ -24,7 +25,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
         membership_details: singer.membership_details,
 
         onboarding_enabled: singer.onboarding_enabled,
-        joined_at: singer.joined_at,
+        joined_at: singer.joined_at ? DateTime.fromJSDate(new Date(singer.joined_at)).toISODate() : null,
         user_roles: singer.roles.map(role => role.id),
     });
 
@@ -86,11 +87,12 @@ const Edit = ({ voice_parts, roles, singer }) => {
 
                         <div className="sm:col-span-6">
                             <Label label="Joined" forInput="joined_at" />
-                            <DateInput
+                            <DayInput
                                 name="joined_at"
                                 hasErrors={ !! errors.joined_at }
                                 value={data.joined_at}
                                 updateFn={value => setData('joined_at', value)}
+                                max={DateTime.now().toISODate()}
                             />
                             {errors.joined_at && <Error>{errors.joined_at}</Error>}
                         </div>

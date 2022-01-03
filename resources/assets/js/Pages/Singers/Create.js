@@ -6,7 +6,6 @@ import TextInput from "../../components/inputs/TextInput";
 import DetailToggle from "../../components/inputs/DetailToggle";
 import Error from "../../components/inputs/Error";
 import Select from "../../components/inputs/Select";
-import Date from "../../components/inputs/Date";
 import Help from "../../components/inputs/Help";
 import FormSection from "../../components/FormSection";
 import Button from "../../components/inputs/Button";
@@ -17,6 +16,8 @@ import AppHead from "../../components/AppHead";
 import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
 import GlobalUserSelect from "../../components/inputs/GlobalUserSelect";
+import DayInput from "../../components/inputs/Day";
+import {DateTime} from "luxon";
 
 const Create = ({voice_parts, roles}) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -193,11 +194,12 @@ const Create = ({voice_parts, roles}) => {
                     <FormSection title="Existing Member Details">
                         <div className="sm:col-span-6">
                             <Label label="Joined" forInput="joined_at" />
-                            <Date
+                            <DayInput
                                 name="joined_at"
                                 hasErrors={ !! errors.joined_at }
                                 value={data.joined_at}
                                 updateFn={value => setData('joined_at', value)}
+                                max={DateTime.now().toISODate()}
                             />
                             {errors.joined_at && <Error>{errors.joined_at}</Error>}
                         </div>

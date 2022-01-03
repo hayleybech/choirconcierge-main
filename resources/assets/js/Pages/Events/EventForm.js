@@ -30,7 +30,7 @@ const EventForm = ({ event, types }) => {
         location_icon: event?.location_icon ?? '',
         location_address: event?.location_address ?? '',
         description: event?.description ?? '',
-        send_notification: true,
+        send_notification: !event,
         is_repeating: event?.is_repeating ?? false,
         repeat_frequency_unit: event?.repeat_frequency_unit ?? null,
 

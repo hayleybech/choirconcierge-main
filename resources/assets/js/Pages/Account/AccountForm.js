@@ -7,11 +7,12 @@ import Error from "../../components/inputs/Error";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import Button from "../../components/inputs/Button";
 import AvatarUpload from "../../components/AvatarUpload";
-import DateInput from "../../components/inputs/Date";
 import Help from "../../components/inputs/Help";
 import Select from "../../components/inputs/Select";
 import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
+import DayInput from "../../components/inputs/Day";
+import {DateTime} from "luxon";
 
 const AccountForm = ({ }) => {
     const { user } = usePage().props;
@@ -24,7 +25,7 @@ const AccountForm = ({ }) => {
         password: '',
 
         password_confirmation: '',
-        dob: user.dob,
+        dob: user.dob ? DateTime.fromJSDate(new Date(user.dob)).toISODate() : null,
         height: user.height ?? '',
         profession: user.profession ?? '',
         skills: user.skills ?? '',
@@ -94,7 +95,13 @@ const AccountForm = ({ }) => {
 
                     <div className="sm:col-span-2">
                         <Label label="Date of Birth" forInput="dob" />
-                        <DateInput name="dob" hasErrors={ !! errors.dob } value={data.dob} updateFn={value => setData('dob', value)} />
+                        <DayInput
+                            name="dob"
+                            hasErrors={ !! errors.dob }
+                            value={data.dob}
+                            updateFn={value => setData('dob', value)}
+                            max={DateTime.now().toISODate()}
+                        />
                         {errors.dob && <Error>{errors.dob}</Error>}
                     </div>
 
