@@ -183,7 +183,7 @@ class User extends Authenticatable implements HasMedia
 		$this->addMediaCollection('avatar')
 			->singleFile()
 			->acceptsMimeTypes(['image/jpeg', 'image/png'])
-			->useFallbackUrl('https://avatars.dicebear.com/api/human/' . $this->id . '.svg?mood[]=happy')
+			->useFallbackUrl('https://avatars.dicebear.com/api/initials/' . $this->name . '.svg?backgroundColors[]=grey&backgroundColorLevel=500&fontSize=40')
 			->registerMediaConversions(function (Media $media) {
 				$this->addMediaConversion('thumb')
 					->width(50)
