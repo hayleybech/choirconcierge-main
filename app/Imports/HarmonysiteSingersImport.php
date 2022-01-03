@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Role;
 use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
@@ -13,7 +14,20 @@ use Maatwebsite\Excel\Row;
 
 class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
 {
-	public function onRow(Row $row): void
+    private SingerCategory $activeCategory;
+    private SingerCategory $archivedCategory;
+
+    private Role $userRole;
+
+    public function __construct()
+    {
+        $this->activeCategory = SingerCategory::firstWhere('name', 'Members');
+        $this->archivedCategory = SingerCategory::firstWhere('name', 'Archived Members');
+
+        $this->userRole = Role::firstWhere('name', 'User');
+    }
+
+    public function onRow(Row $row): void
 	{
 		$rowArr = array_map(static function ($item) {
 			if (is_string($item)) {
@@ -46,17 +60,20 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
 
         $singer = $user->singers()->updateOrCreate(['user_id' => $user->id], [
             'onboarding_enabled' => false,
-            'voice_part_id' => VoicePart::where('title', $this->convert_voice_part($rowArr['section']))->first()->id ?? null,
+            'voice_part_id' => VoicePart::firstWhere('title', $this->convert_voice_part($rowArr['section']))->id ?? null,
             'joined_at' => $this->make_valid_mysql_datetime($rowArr['registration_date']),
         ]);
 
 		// Add SingerCategory
 		if (explode(' ', $rowArr['status'])[0] === 'Active') {
-			$category = SingerCategory::where('name', 'Members')->first();
+			$category = $this->activeCategory;
 		} else {
-			$category = SingerCategory::where('name', 'Archived Members')->first();
+			$category = $this->archivedCategory;
 		}
 		$singer->category()->associate($category);
+
+		// Add User Role
+        $singer->roles()->attach($this->userRole);
 
 		$singer->save();
 	}
