@@ -33,7 +33,7 @@ const Index = ({ folders }) => {
             </div>
 
             <div className="bg-white shadow block lg:hidden">
-                <FolderTableMobile folders={folders} />
+                <FolderTableMobile folders={folders} setDeletingFolder={setDeletingFolder} setDeletingDocument={setDeletingDocument} />
             </div>
 
             <DeleteDialog title="Delete Folder" url={deletingFolder ? route('folders.destroy', deletingFolder) : '#'} isOpen={!!deletingFolder} setIsOpen={setDeletingFolder}>

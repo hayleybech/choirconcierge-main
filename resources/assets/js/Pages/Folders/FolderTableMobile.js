@@ -4,8 +4,9 @@ import FolderIcon from "../../components/FolderIcon";
 import Icon from "../../components/Icon";
 import {TableCell} from "../../components/Table";
 import DocumentForm from "./DocumentForm";
+import Button from "../../components/inputs/Button";
 
-const FolderTableMobile = ({ folders }) => {
+const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument }) => {
     const [openFolder, setOpenFolder] = useState(0);
 
     return (
@@ -20,6 +21,10 @@ const FolderTableMobile = ({ folders }) => {
                                         <Icon icon={folder.id === openFolder ? 'folder-open' : 'folder'} mr className="text-purple-500" />
                                         <span className="text-sm font-medium text-purple-600 truncate">{folder.title}</span>
                                     </p>
+
+                                    <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline" size="sm">
+                                        <Icon icon="times" />
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -35,6 +40,10 @@ const FolderTableMobile = ({ folders }) => {
                                             <FolderIcon icon={document.icon} />
                                             <span className="text-sm font-medium text-purple-600 truncate">{document.title}</span>
                                         </p>
+
+                                        <Button onClick={() => setDeletingDocument(document)} variant="danger-outline" size="sm">
+                                            <Icon icon="times" />
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
