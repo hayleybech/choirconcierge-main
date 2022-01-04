@@ -27,6 +27,7 @@ class ProfileRequest extends FormRequest
 		return [
             'first_name' => ['required', 'max:127'],
             'last_name' => ['required', 'max:127'],
+            'pronouns' => ['max:127'],
             'email' => [
                 'required',
                 Rule::unique('users')

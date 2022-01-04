@@ -67,7 +67,7 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen }) => {
                         <div>
                             <Menu.Button
                                 className={classNames(
-                                    'max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500',
+                                    'max-w-xs bg-white flex items-center text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500',
                                     impersonationActive ? 'border-2 border-red-500' : '',
                                 )}
                             >

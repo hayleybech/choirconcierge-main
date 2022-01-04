@@ -33,6 +33,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property int $id
  * @property string $first_name
  * @property string $last_name
+ * @property string $pronouns
  * @property string $email
  * @property string $password
  * @property string $remember_token
@@ -77,6 +78,7 @@ class User extends Authenticatable implements HasMedia
 	protected $fillable = [
 	    'first_name',
         'last_name',
+        'pronouns',
         'email',
         'password',
         'dob',

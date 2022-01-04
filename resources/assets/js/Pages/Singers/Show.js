@@ -15,6 +15,7 @@ import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import SectionHeader from "../../components/SectionHeader";
 import DeleteDialog from "../../components/DeleteDialog";
+import Pronouns from "../../components/Pronouns";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -101,7 +102,7 @@ const Show = ({ singer, categories }) => {
         <>
             <AppHead title={`${singer.user.name} - Singers`} />
             <PageHeader
-                title={singer.user.name}
+                title={<>{singer.user.name} {singer.user.pronouns && <Pronouns pronouns={singer.user.pronouns} />}</>}
                 image={singer.user.avatar_url}
                 meta={[
                     <>{singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}</>,
