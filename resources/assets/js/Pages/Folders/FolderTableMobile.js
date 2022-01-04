@@ -23,7 +23,7 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument }) 
                                     </p>
 
                                     <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline" size="sm">
-                                        <Icon icon="times" />
+                                        <Icon icon="trash" />
                                     </Button>
                                 </div>
                             </div>
@@ -42,7 +42,7 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument }) 
                                         </p>
 
                                         <Button onClick={() => setDeletingDocument(document)} variant="danger-outline" size="sm">
-                                            <Icon icon="times" />
+                                            <Icon icon="trash" />
                                         </Button>
                                     </div>
                                 </div>
