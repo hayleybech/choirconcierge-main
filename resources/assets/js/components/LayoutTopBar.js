@@ -50,14 +50,14 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen }) => {
                 <div className="ml-4 flex items-center lg:ml-6">
 
                     <div className="mx-2">
-                        <a href={route('rebuild.off')} className="text-purple-800 hover:text-purple-600">Switch to old site</a>
+                        <a href={route('rebuild.off')} className="text-purple-800 hover:text-purple-600">Use old site</a>
                     </div>
 
                     <div className="text-gray-500 text-sm mx-2">
                         <HeadwayWidget account="7L6Rky" badgePosition="top-right">
                             <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank">
                                 <Icon icon="code" mr />
-                                Updates
+                                <span className="hidden sm-inline">Updates</span>
                             </a>
                         </HeadwayWidget>
                     </div>
