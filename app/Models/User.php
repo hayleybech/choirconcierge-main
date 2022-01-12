@@ -33,6 +33,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property int $id
  * @property string $first_name
  * @property string $last_name
+ * @property string $pronouns
  * @property string $email
  * @property string $password
  * @property string $remember_token
@@ -77,6 +78,7 @@ class User extends Authenticatable implements HasMedia
 	protected $fillable = [
 	    'first_name',
         'last_name',
+        'pronouns',
         'email',
         'password',
         'dob',
@@ -183,7 +185,7 @@ class User extends Authenticatable implements HasMedia
 		$this->addMediaCollection('avatar')
 			->singleFile()
 			->acceptsMimeTypes(['image/jpeg', 'image/png'])
-			->useFallbackUrl('https://avatars.dicebear.com/api/human/' . $this->id . '.svg?mood[]=happy')
+			->useFallbackUrl('https://avatars.dicebear.com/api/initials/' . $this->name . '.svg?backgroundColors[]=grey&backgroundColorLevel=500&fontSize=40')
 			->registerMediaConversions(function (Media $media) {
 				$this->addMediaConversion('thumb')
 					->width(50)

@@ -12,7 +12,7 @@ const SidebarDesktop = ({navigation}) => (
             </Link>
 
             <Link href={route('dash')} className="flex justify-center mb-4 py-4 px-6 bg-white border-l border-r border-gray-300">
-                <img src="/tenancy/assets/choir-logo.png" className="h-12 w-auto" />
+                <img src="/tenancy/assets/choir-logo.png" className="max-h-12 w-auto" />
             </Link>
             <div className="mt-4 flex-1 flex flex-col">
                 <MainNavigation navigation={navigation} />

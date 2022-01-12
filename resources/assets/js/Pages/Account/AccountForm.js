@@ -23,6 +23,7 @@ const AccountForm = ({ }) => {
         email: user.email,
         phone: user.phone ?? '',
         password: '',
+        pronouns: user.pronouns ?? '',
 
         password_confirmation: '',
         dob: user.dob ? DateTime.fromJSDate(new Date(user.dob)).toISODate() : null,
@@ -52,10 +53,11 @@ const AccountForm = ({ }) => {
 
                 <FormSection title="User Details">
 
-                    <div className="sm:col-span-2">
+                    <div className="sm:col-span-6">
                         <Label label="Profile Picture" forInput="avatar" />
                         <AvatarUpload currentImage={data.avatar ? URL.createObjectURL(data.avatar) : user.avatar_url} updateFn={value => setData('avatar', value)} />
                     </div>
+                    
                     <div className="sm:col-span-2">
                         <Label label="First Name" forInput="first_name" />
                         <TextInput name="first_name" value={data.first_name} updateFn={value => setData('first_name', value)} hasErrors={ !! errors['first_name'] } />
@@ -65,6 +67,11 @@ const AccountForm = ({ }) => {
                         <Label label="Last Name" forInput="last_name" />
                         <TextInput name="last_name" value={data.last_name} updateFn={value => setData('last_name', value)} hasErrors={ !! errors['last_name'] } />
                         {errors.last_name && <Error>{errors.last_name}</Error>}
+                    </div>
+                    <div className="sm:col-span-2">
+                        <Label label="Preferred Pronouns" forInput="pronouns" />
+                        <TextInput name="pronouns" value={data.pronouns} placeholder="she/they/he" updateFn={value => setData('pronouns', value)} hasErrors={ !! errors['pronouns'] } />
+                        {errors.pronouns && <Error>{errors.pronouns}</Error>}
                     </div>
 
                     <div className="sm:col-span-3">

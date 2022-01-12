@@ -27,7 +27,7 @@ const PitchButton = ({ note, octave = 4, size = "md"}) => {
     }
 
     return (
-        <Button onMouseDown={play} onMouseUp={stop} variant="primary" size={size}>
+        <Button onMouseDown={play} onMouseUp={stop} onTouchStart={play} onTouchEnd={stop} variant="primary" size={size}>
             <Icon icon="play" mr />
             <span className="key w-4">{note}</span>
         </Button>

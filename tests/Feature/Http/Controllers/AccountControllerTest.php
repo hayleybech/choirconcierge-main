@@ -60,6 +60,7 @@ class AccountControllerTest extends TestCase
 					return [
                         'first_name' => $this->faker->firstName(),
                         'last_name' => $this->faker->lastName(),
+                        'pronouns' => $this->faker->sentence(),
                         'email' => $this->faker->email(),
                         'password' => $password,
                         'password_confirmation' => $password,

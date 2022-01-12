@@ -6,6 +6,7 @@ import classNames from '../classNames';
 import buttonStyles from "./inputs/buttonStyles";
 import Button from "./inputs/Button";
 import Icon from "./Icon";
+import {Link} from "@inertiajs/inertia-react";
 
 const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) => (
     <div className="py-6 bg-white border-b border-gray-300">
@@ -63,19 +64,33 @@ const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) 
                                     {actions.map((action, key) =>
                                         key > 0 && (
                                         <Menu.Item key={key}>
-                                            {({ active }) => (
-                                                <button
-                                                    onClick={action.onClick}
-                                                    className={classNames(
-                                                        'block w-full text-left px-4 py-2 text-sm',
-                                                        active ? 'bg-gray-100' : '',
-                                                        action.variant === 'danger-outline' ? 'text-red-500' : 'text-gray-700'
-                                                    )}
-                                                >
-                                                    <Icon icon={action.icon} mr />
-                                                    {action.label}
-                                                </button>
-                                            )}
+                                            {({ active }) => action.url
+                                                ? (
+                                                    <Link
+                                                        href={action.url}
+                                                        className={classNames(
+                                                            'block w-full text-left px-4 py-2 text-sm',
+                                                            active ? 'bg-gray-100' : '',
+                                                            action.variant === 'danger-outline' ? 'text-red-500' : 'text-gray-700'
+                                                        )}
+                                                    >
+                                                        <Icon icon={action.icon} mr/>
+                                                        {action.label}
+                                                    </Link>
+                                                ) : (
+                                                    <button
+                                                        onClick={action.onClick}
+                                                        className={classNames(
+                                                            'block w-full text-left px-4 py-2 text-sm',
+                                                            active ? 'bg-gray-100' : '',
+                                                            action.variant === 'danger-outline' ? 'text-red-500' : 'text-gray-700'
+                                                        )}
+                                                    >
+                                                        <Icon icon={action.icon} mr/>
+                                                        {action.label}
+                                                    </button>
+                                                )
+                                            }
                                         </Menu.Item>
                                         )
                                     )}

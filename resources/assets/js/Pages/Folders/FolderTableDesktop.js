@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
-import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
 import FolderIcon from "../../components/FolderIcon";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import DocumentForm from "./DocumentForm";
+import Button from "../../components/inputs/Button";
 
-const FolderTableDesktop = ({ folders }) => {
+const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument }) => {
     const [openFolder, setOpenFolder] = useState(0);
 
     return (
         <Table
-            headings={['Title', 'Created']}
+            headings={['Title', 'Created', 'Delete']}
             body={folders.map((folder) => (
                 <React.Fragment key={folder.id}>
                     <tr>
@@ -32,6 +32,11 @@ const FolderTableDesktop = ({ folders }) => {
                         <TableCell>
                             <DateTag date={folder.created_at} />
                         </TableCell>
+                        <TableCell>
+                            <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline">
+                                <Icon icon="times" />
+                            </Button>
+                        </TableCell>
                     </tr>
                     {folder.id === openFolder && folder.documents.map((document) => (
                         <tr key={document.id}>
@@ -49,11 +54,16 @@ const FolderTableDesktop = ({ folders }) => {
                             <TableCell>
                                 <DateTag date={document.created_at} />
                             </TableCell>
+                            <TableCell>
+                                <Button onClick={() => setDeletingDocument(document)} variant="danger-outline">
+                                    <Icon icon="times" />
+                                </Button>
+                            </TableCell>
                         </tr>
                     ))}
                     {folder.id === openFolder && (
                     <tr>
-                        <TableCell colSpan={2}>
+                        <TableCell colSpan={3}>
                             <div className="ml-4">
                                 <DocumentForm folder={folder} />
                             </div>
