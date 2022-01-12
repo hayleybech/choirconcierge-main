@@ -14,7 +14,7 @@ const buttonStyles = (variant = 'secondary', size = 'md', disabled, extra) => cl
     disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : '',
     size === 'md' ? 'py-2 px-4 text-md rounded-md' : '',
     size === 'sm' ? 'py-1.5 px-3 text-sm rounded' : '',
-    size === 'xs' ? 'py-1 px-2 text-xs rounded-sm' : '',
+    size === 'xs' ? 'py-1 px-1.5 text-xs rounded-sm' : '',
     extra
 );
 

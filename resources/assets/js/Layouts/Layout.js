@@ -61,7 +61,20 @@ export default function Layout({children}) {
                             {children}
                         </main>
 
-                        {player.fileName && <GlobalTrackPlayer songTitle={player.songTitle} songId={player.songId} fileName={player.fileName} />}
+                        {player.fileName &&
+                            <GlobalTrackPlayer
+                                songTitle={player.songTitle}
+                                songId={player.songId}
+                                fileName={player.fileName}
+                                close={() => setPlayer({
+                                    ...player,
+                                    songTitle: null,
+                                    songId: 0,
+                                    fileName: null,
+                                    src: null,
+                                })}
+                            />
+                        }
                     </AudioPlayerProvider>
                 </div>
 
