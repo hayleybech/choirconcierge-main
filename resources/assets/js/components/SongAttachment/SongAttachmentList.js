@@ -40,7 +40,7 @@ const SongAttachmentList = ({ attachment_categories, song }) => {
                                                     )}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-medium text-gray-900 truncate">{attachment.title !== '' ? attachment.title : attachment.filepath}</p>
+                                                    <p className="text-sm font-medium text-gray-900">{attachment.title !== '' ? attachment.title : attachment.filepath}</p>
                                                 </div>
                                                 { song.can['update_song'] &&
                                                     <Button
