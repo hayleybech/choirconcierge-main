@@ -19,7 +19,7 @@ const SingerTableDesktop = ({ singers }) => (
                             <Link href={route('singers.show', singer.id)} className="text-sm font-medium text-purple-800">{singer.user.name}</Link>
                             <div>
                                 <Icon icon="phone" mr className="text-gray-400" />
-                                {singer.user.phone ? <a href={`tel:${singer.user.phone}`}>{singer.user.phone}</a> : 'No phone'}
+                                {singer.user.phone ? <a href={`tel:${singer.user.phone}`} target="_blank">{singer.user.phone}</a> : 'No phone'}
                             </div>
                         </div>
                     </div>
@@ -32,7 +32,7 @@ const SingerTableDesktop = ({ singers }) => (
                 </TableCell>
                 <TableCell>
                     <Icon icon="envelope" mr className="text-gray-400" />
-                    <span>{singer.user.email}</span>
+                    <a href={`mailto:${singer.user.email}`} target="_blank">{singer.user.email}</a>
                 </TableCell>
             </tr>
         ))}

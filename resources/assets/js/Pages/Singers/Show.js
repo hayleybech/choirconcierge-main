@@ -144,11 +144,11 @@ const Show = ({ singer, categories }) => {
                                 value: <>
                                     <p>
                                         <Icon icon="envelope" mr type="regular" className="text-gray-400" />
-                                        {singer.user.email}
+                                        <a href={`mailto:${singer.user.email}`} target="_blank">{singer.user.email}</a>
                                     </p>
                                     <p>
                                         <Icon icon="phone" mr type="regular" className="text-gray-400" />
-                                        {singer.user.phone ? <a href={`tel:${singer.user.phone}`}>{singer.user.phone}</a> : 'No phone'}
+                                        {singer.user.phone ? <a href={`tel:${singer.user.phone}`} target="_blank">{singer.user.phone}</a> : 'No phone'}
                                     </p>
                                 </>,
                                 colClass: 'sm:col-span-2 xl:col-span-1',
@@ -195,7 +195,7 @@ const Show = ({ singer, categories }) => {
                                     </p>
                                     <p>
                                         <Icon icon="phone" mr type="regular" className="text-gray-400" />
-                                        {singer.user.ice_phone ? <a href={`tel:${singer.user.ice_phone}`}>{singer.user.ice_phone}</a> : 'No phone'}
+                                        {singer.user.ice_phone ? <a href={`tel:${singer.user.ice_phone}`} target="_blank">{singer.user.ice_phone}</a> : 'No phone'}
                                     </p>
                                 </>,
                                 colClass: 'sm:col-span-2 xl:col-span-1',
