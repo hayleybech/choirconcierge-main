@@ -144,7 +144,7 @@ class UserGroup extends Model
 		// Get users from roles
         // @todo use queries instead
         $users = $users->merge($this->recipient_roles
-            ->flatMap(fn($role) => $role->singers()->with('user')->get()
+            ->flatMap(fn($role) => $role->singers()->with('user')->active()->get()
                 ->map(fn($singer) => $singer->user)));
 
 		// Get users from voice parts
@@ -154,7 +154,9 @@ class UserGroup extends Model
 			->toArray();
 		$part_users = User::query()
 			->whereHas('singers', function ($singer_query) use ($voice_part_ids) {
-				$singer_query->whereIn('voice_part_id', $voice_part_ids);
+				$singer_query
+                    ->active()
+                    ->whereIn('voice_part_id', $voice_part_ids);
 			})
 			->get();
 		$users = $users->merge($part_users);
@@ -225,7 +227,7 @@ class UserGroup extends Model
         // Get users from roles
         // @todo use queries instead
         $users = $users->merge($this->sender_roles
-            ->flatMap(fn($role) => $role->singers()->with('user')->get()
+            ->flatMap(fn($role) => $role->singers()->with('user')->active()->get()
                 ->map(fn($singer) => $singer->user)));
 
 		// Get users from voice parts
@@ -235,7 +237,8 @@ class UserGroup extends Model
 			->toArray();
 		$part_users = User::query()
 			->whereHas('singers', function ($singer_query) use ($voice_part_ids) {
-				$singer_query->whereIn('voice_part_id', $voice_part_ids);
+				$singer_query->active()
+                    ->whereIn('voice_part_id', $voice_part_ids);
 			})
 			->get();
 		$users = $users->merge($part_users);
