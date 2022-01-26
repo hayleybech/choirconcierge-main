@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\Singer;
 use App\Models\Song;
 use App\Models\Task;
+use App\Models\Tenant;
 use App\Models\UserGroup;
 use App\Models\VoicePart;
 use Illuminate\Http\Request;
@@ -73,6 +74,12 @@ class HandleInertiaRequests extends Middleware
             'tenant' => tenancy()?->tenant,
             'user' => auth()->user(),
             'impersonationActive' => session()->has('impersonation:active'),
+            'userChoirs' => auth()->user()
+                ->singers()
+                ->withoutTenancy()
+                ->with('tenant.domains')
+                ->get()
+                ->map(fn($singer) => $singer->tenant),
         ]);
     }
 }

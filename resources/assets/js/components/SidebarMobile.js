@@ -5,7 +5,7 @@ import route from "ziggy-js";
 import MainNavigation from "./MainNavigation";
 import Icon from "./Icon";
 
-const SidebarMobile = ({navigation, open, setOpen}) => (
+const SidebarMobile = ({ navigation, open, setOpen, switchChoirButton }) => (
     <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="fixed inset-0 flex z-40 xl:hidden" onClose={setOpen}>
             <Transition.Child
@@ -54,11 +54,13 @@ const SidebarMobile = ({navigation, open, setOpen}) => (
                         <img src="/img/logo.svg" alt="Choir Concierge" className="h-10 w-auto" />
                     </Link>
 
-                    <div className="flex-shrink-0 flex justify-center items-center px-4 bg-gray-50">
+                    <div className="flex-shrink-0 flex justify-center items-center px-4 bg-gray-50 mb-4">
                         <Link href={route('dash')} className="flex justify-center py-4 px-6 bg-gray-50">
                             <img src="/tenancy/assets/choir-logo.png" className="max-h-12 w-auto" />
                         </Link>
                     </div>
+
+                    {switchChoirButton}
 
                     <div className="mt-5 flex-1 h-0 overflow-y-auto">
                         <MainNavigation navigation={navigation} closeSidebar={() => setOpen(false)} />
@@ -68,7 +70,10 @@ const SidebarMobile = ({navigation, open, setOpen}) => (
             <div className="flex-shrink-0 w-14" aria-hidden="true">
                 {/* Dummy element to force sidebar to shrink to fit close icon */}
             </div>
+
         </Dialog>
+
     </Transition.Root>
-)
+);
+
 export default SidebarMobile;

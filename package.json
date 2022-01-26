@@ -37,6 +37,7 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.16.7",
     "@googlemaps/js-api-loader": "^1.11.3",
     "@headlessui/react": "^1.4.0",
     "@headwayapp/react-widget": "^0.0.4",
