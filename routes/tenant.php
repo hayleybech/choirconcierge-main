@@ -149,15 +149,4 @@ Route::middleware([
     // Switch choir
     Route::get('/switch-choir/{tenant}', [SwitchTenantController::class, 'start'])->name('tenants.switch.start');
     Route::get('/switch-choir/login/{token}', [SwitchTenantController::class, 'loginWithToken'])->name('tenants.switch.login');
-
-    // Feature Flag
-    Route::get('/rebuild-on', function() {
-        Session::put('rebuild', 'on');
-        return redirect()->back();
-    })->name('rebuild.on');
-
-    Route::get('/rebuild-off', function() {
-        Session::put('rebuild', 'off');
-        return redirect()->back();
-    })->name('rebuild.off');
 });
