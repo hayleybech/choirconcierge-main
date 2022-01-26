@@ -7,6 +7,7 @@ use App\Models\Singer;
 use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -25,12 +26,13 @@ class SingerPlacementControllerTest extends TestCase
 
 		$singer = Singer::factory()->create();
 
-		$response = $this->get(the_tenant_route('singers.placements.create', [$singer]));
-
-		$response->assertOk();
-		$response->assertViewIs('singers.createplacement');
-		$response->assertViewHas('singer');
-		$response->assertViewHas('voice_parts');
+		$this->get(the_tenant_route('singers.placements.create', [$singer]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Singers/Placements/Create')
+                ->has('singer')
+                ->has('voice_parts')
+            );
 	}
 
 	/**
@@ -44,13 +46,14 @@ class SingerPlacementControllerTest extends TestCase
 			->has(Placement::factory())
 			->create();
 
-		$response = $this->get(the_tenant_route('singers.placements.edit', [$singer, $singer->placement]));
-
-		$response->assertOk();
-		$response->assertViewIs('singers.editplacement');
-		$response->assertViewHas('singer');
-		$response->assertViewHas('placement');
-		$response->assertViewHas('voice_parts');
+		$this->get(the_tenant_route('singers.placements.edit', [$singer, $singer->placement]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Singers/Placements/Edit')
+                ->has('singer')
+                ->has('placement')
+                ->has('voice_parts')
+            );
 	}
 
 	/**
@@ -65,9 +68,9 @@ class SingerPlacementControllerTest extends TestCase
 
 		$data = $getData();
 		$this->withoutExceptionHandling();
-		$response = $this->post(the_tenant_route('singers.placements.store', [$singer]), $data);
+		$response = $this->post(the_tenant_route('singers.placements.store', [$singer]), $data)
+            ->assertSessionHasNoErrors();
 
-		$response->assertSessionHasNoErrors();
 		unset($data['voice_part_id']);
 		$this->assertDatabaseHas('placements', $data);
 		$response->assertRedirect(the_tenant_route('singers.show', $singer));
@@ -86,9 +89,9 @@ class SingerPlacementControllerTest extends TestCase
 			->create();
 
 		$data = $getData();
-		$response = $this->put(the_tenant_route('singers.placements.update', [$singer, $singer->placement]), $data);
+		$response = $this->put(the_tenant_route('singers.placements.update', [$singer, $singer->placement]), $data)
+            ->assertSessionHasNoErrors();
 
-		$response->assertSessionHasNoErrors();
 		unset($data['voice_part_id']);
 		$this->assertDatabaseHas('placements', $data);
 		$response->assertRedirect(the_tenant_route('singers.show', $singer));

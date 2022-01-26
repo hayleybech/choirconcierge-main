@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\Singer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -24,12 +25,12 @@ class AttendanceControllerTest extends TestCase
 
 		$event = Event::factory()->create();
 
-		$response = $this->get(the_tenant_route('events.attendances.index', [$event]));
-
-		$response->assertOk();
-		$response->assertViewIs('events.attendances.index');
-		$response->assertViewHas('event');
-		$response->assertViewHas('voice_parts');
+		$this->get(the_tenant_route('events.attendances.index', [$event]))
+		    ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Events/Attendance/Index')
+                ->has('event')
+                ->has('voice_parts'));
 	}
 
 	/**

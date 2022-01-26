@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -21,12 +22,14 @@ class UserGroupControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Admin'));
 
-		$response = $this->get(the_tenant_route('groups.create'));
-
-		$response->assertOk();
-		$response->assertViewIs('groups.create');
-		$response->assertViewHas('voice_parts');
-		$response->assertViewHas('singer_categories');
+		$this->get(the_tenant_route('groups.create'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('MailingLists/Create')
+                ->has('roles')
+                ->has('voiceParts')
+                ->has('singerCategories')
+            );
 	}
 
 	/**
@@ -38,10 +41,10 @@ class UserGroupControllerTest extends TestCase
 
 		$group = UserGroup::factory()->create();
 
-		$response = $this->delete(the_tenant_route('groups.destroy', ['group' => $group]));
+		$this->delete(the_tenant_route('groups.destroy', ['group' => $group]))
+            ->assertRedirect(the_tenant_route('groups.index'));
 
 		$this->assertSoftDeleted($group);
-		$response->assertRedirect(the_tenant_route('groups.index'));
 	}
 
 	/**
@@ -53,13 +56,15 @@ class UserGroupControllerTest extends TestCase
 
 		$group = UserGroup::factory()->create();
 
-		$response = $this->get(the_tenant_route('groups.edit', ['group' => $group]));
-
-		$response->assertOk();
-		$response->assertViewIs('groups.edit');
-		$response->assertViewHas('group');
-		$response->assertViewHas('voice_parts');
-		$response->assertViewHas('singer_categories');
+		$response = $this->get(the_tenant_route('groups.edit', ['group' => $group]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('MailingLists/Edit')
+                ->has('list')
+                ->has('roles')
+                ->has('voiceParts')
+                ->has('singerCategories')
+            );
 	}
 
 	/**
@@ -69,12 +74,12 @@ class UserGroupControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Admin'));
 
-		$response = $this->get(the_tenant_route('groups.index'));
-
-		$response->assertOk();
-		$response->assertViewIs('groups.index');
-		$response->assertViewHas('groups');
-		$response->assertViewHas('filters');
+		$response = $this->get(the_tenant_route('groups.index'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('MailingLists/Index')
+                ->has('lists')
+            );
 	}
 
 	/**
@@ -86,11 +91,12 @@ class UserGroupControllerTest extends TestCase
 
 		$group = UserGroup::factory()->create();
 
-		$response = $this->get(the_tenant_route('groups.show', ['group' => $group]));
-
-		$response->assertOk();
-		$response->assertViewIs('groups.show');
-		$response->assertViewHas('group');
+		$this->get(the_tenant_route('groups.show', ['group' => $group]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('MailingLists/Show')
+                ->has('list')
+            );
 	}
 
 	/**

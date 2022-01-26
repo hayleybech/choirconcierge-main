@@ -31,12 +31,13 @@ class SingerControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Membership Team'));
 
-		$response = $this->get(the_tenant_route('singers.create'));
-
-		$response->assertOk();
-		$response->assertViewIs('singers.create');
-		$response->assertViewHas('voice_parts');
-		$response->assertViewHas('roles');
+		$this->get(the_tenant_route('singers.create'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Singers/Create')
+                ->has('voice_parts')
+                ->has('roles')
+            );
 	}
 
 	/**
@@ -48,9 +49,9 @@ class SingerControllerTest extends TestCase
 
 		$singer = Singer::factory()->create();
 
-		$response = $this->delete(the_tenant_route('singers.destroy', [$singer]));
+		$this->delete(the_tenant_route('singers.destroy', [$singer]))
+            ->assertRedirect(route('singers.index'));
 
-		$response->assertRedirect(route('singers.index'));
 		$this->assertSoftDeleted($singer);
 	}
 
@@ -63,51 +64,34 @@ class SingerControllerTest extends TestCase
 
 		$singer = Singer::factory()->create();
 
-		$response = $this->get(the_tenant_route('singers.edit', [$singer]));
-
-		$response->assertOk();
-		$response->assertViewIs('singers.edit');
-		$response->assertViewHas('singer');
-		$response->assertViewHas('voice_parts');
-		$response->assertViewHas('roles');
+		$this->get(the_tenant_route('singers.edit', [$singer]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Singers/Edit')
+                ->has('singer')
+                ->has('voice_parts')
+                ->has('roles')
+            );
 	}
 
 	/**
 	 * @test
 	 */
-	public function index_returns_an_ok_response(): void
+	public function index_returns_singers(): void
 	{
 		$this->actingAs($this->createUserWithRole('Membership Team'));
 
-		$response = $this->get(the_tenant_route('singers.index'));
-
-		$response->assertOk();
-		$response->assertViewIs('singers.index');
-		$response->assertViewHas('all_singers');
-		$response->assertViewHas('active_singers');
-		$response->assertViewHas('member_singers');
-		$response->assertViewHas('prospect_singers');
-		$response->assertViewHas('archived_singers');
-		$response->assertViewHas('filters');
-		$response->assertViewHas('sorts');
-		$response->assertViewHas('categories');
+		$this->get(the_tenant_route('singers.index'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Singers/Index')
+                ->has('allSingers')
+                ->has('statuses')
+                ->has('defaultStatus')
+                ->has('voiceParts')
+                ->has('roles')
+            );
 	}
-
-    /**
-     * @test
-     */
-    public function index_returns_singers(): void
-    {
-        $this->actingAs($this->createUserWithRole('Membership Team'));
-
-        $this->get(the_tenant_route('rebuild.on'));
-
-        $response = $this->get(the_tenant_route('singers.index'));
-
-        $response->assertInertia(fn(Assert $page) => $page
-            ->component('Singers/Index')
-            ->has('allSingers'));
-    }
 
 	/**
 	 * @test
@@ -118,12 +102,13 @@ class SingerControllerTest extends TestCase
 
 		$singer = Singer::factory()->create();
 
-		$response = $this->get(the_tenant_route('singers.show', [$singer]));
-
-		$response->assertOk();
-		$response->assertViewIs('singers.show');
-		$response->assertViewHas('singer');
-		$response->assertViewHas('categories');
+		$this->get(the_tenant_route('singers.show', [$singer]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Singers/Show')
+                ->has('singer')
+                ->has('categories')
+            );
 	}
 
 	/**
@@ -138,9 +123,9 @@ class SingerControllerTest extends TestCase
 		$this->actingAs($this->createUserWithRole('Membership Team'));
 
 		$data = $getData();
-		$response = $this->post(the_tenant_route('singers.store'), $data);
+		$response = $this->post(the_tenant_route('singers.store'), $data)
+            ->assertSessionHasNoErrors();
 
-        $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('users', Arr::only($data, [
             'first_name',
             'last_name',
@@ -277,9 +262,9 @@ class SingerControllerTest extends TestCase
 		$singer = Singer::factory()->create();
 
 		$data = $getData();
-		$response = $this->put(the_tenant_route('singers.update', [$singer]), $data);
+		$response = $this->put(the_tenant_route('singers.update', [$singer]), $data)
+            ->assertSessionHasNoErrors();
 
-		$response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('singers', Arr::only($data, [
             'reason_for_joining',
             'referrer',

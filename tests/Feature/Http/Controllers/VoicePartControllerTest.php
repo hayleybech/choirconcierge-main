@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -21,10 +22,11 @@ class VoicePartControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Admin'));
 
-		$response = $this->get(the_tenant_route('voice-parts.create'));
-
-		$response->assertOk();
-		$response->assertViewIs('voice-parts.create');
+		$this->get(the_tenant_route('voice-parts.create'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('VoiceParts/Create')
+            );
 	}
 
 	/**
@@ -36,9 +38,9 @@ class VoicePartControllerTest extends TestCase
 
 		$voice_part = VoicePart::factory()->create();
 
-		$response = $this->delete(the_tenant_route('voice-parts.destroy', [$voice_part]));
+		$this->delete(the_tenant_route('voice-parts.destroy', [$voice_part]))
+            ->assertRedirect(the_tenant_route('voice-parts.index'));
 
-		$response->assertRedirect(the_tenant_route('voice-parts.index'));
 		$this->assertSoftDeleted($voice_part);
 	}
 
@@ -51,11 +53,12 @@ class VoicePartControllerTest extends TestCase
 
 		$voice_part = VoicePart::factory()->create();
 
-		$response = $this->get(the_tenant_route('voice-parts.edit', [$voice_part]));
-
-		$response->assertOk();
-		$response->assertViewIs('voice-parts.edit');
-		$response->assertViewHas('voice_part');
+		$this->get(the_tenant_route('voice-parts.edit', [$voice_part]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('VoiceParts/Edit')
+                ->has('voice_part')
+            );
 	}
 
 	/**
@@ -65,27 +68,12 @@ class VoicePartControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
-		$response = $this->get(the_tenant_route('voice-parts.index'));
-
-		$response->assertOk();
-		$response->assertViewIs('voice-parts.index');
-		$response->assertViewHas('parts');
-	}
-
-	/**
-	 * @test
-	 */
-	public function show_returns_an_ok_response(): void
-	{
-		$this->actingAs($this->createUserWithRole('Music Team'));
-
-		$voice_part = VoicePart::factory()->create();
-
-		$response = $this->get(the_tenant_route('voice-parts.show', [$voice_part]));
-
-		$response->assertOk();
-		$response->assertViewIs('voice-parts.show');
-		$response->assertViewHas('voice_part');
+		$this->get(the_tenant_route('voice-parts.index'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('VoiceParts/Index')
+                ->has('parts')
+            );
 	}
 
 	/**
@@ -99,11 +87,11 @@ class VoicePartControllerTest extends TestCase
 		$data = $getData();
 		$response = $this->post(the_tenant_route('voice-parts.store'), $data);
 
-		$response->assertSessionHasNoErrors();
+		$response->assertSessionHasNoErrors()
+            ->assertRedirect(the_tenant_route('voice-parts.index'));
+
 		$this->assertDatabaseHas('voice_parts', $data);
 
-		$voice_part = VoicePart::firstWhere('title', $data['title']);
-		$response->assertRedirect(the_tenant_route('voice-parts.index'));
 	}
 
 	/**
@@ -117,11 +105,11 @@ class VoicePartControllerTest extends TestCase
 		$voice_part = VoicePart::factory()->create();
 
 		$data = $getData();
-		$response = $this->put(the_tenant_route('voice-parts.update', [$voice_part]), $data);
+		$this->put(the_tenant_route('voice-parts.update', [$voice_part]), $data)
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(the_tenant_route('voice-parts.index'));
 
-		$response->assertSessionHasNoErrors();
 		$this->assertDatabaseHas('voice_parts', $data);
-		$response->assertRedirect(the_tenant_route('voice-parts.index'));
 	}
 
 	public function voicePartProvider(): array

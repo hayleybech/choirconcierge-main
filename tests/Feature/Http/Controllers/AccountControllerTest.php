@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -25,11 +26,11 @@ class AccountControllerTest extends TestCase
 	{
 		$this->actingAs(User::factory()->has(Singer::factory())->create());
 
-		$response = $this->get(the_tenant_route('accounts.edit'));
-
-		$response->assertOk();
-		$response->assertViewIs('accounts.edit');
-		$response->assertViewHas('user');
+		$this->get(the_tenant_route('accounts.edit'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Account/Edit')
+                ->has('user'));
 	}
 
 	/**

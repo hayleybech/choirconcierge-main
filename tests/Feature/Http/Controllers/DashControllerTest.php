@@ -6,6 +6,7 @@ use App\Models\Role;
 use Database\Seeders\Dummy\DummyUserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -20,13 +21,16 @@ class DashControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Membership Team')); // Any role is fine
 
-		$response = $this->get(the_tenant_route('dash'));
+		$this->get(the_tenant_route('dash'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Dash/Show')
+                ->has('events')
+                ->has('songs')
+                ->has('birthdays')
+                ->has('emptyDobs')
+                ->has('memberversaries')
+            );
 
-		$response->assertOk();
-		$response->assertViewIs('dash');
-		$response->assertViewHas('birthdays');
-		$response->assertViewHas('empty_dobs');
-		$response->assertViewHas('songs');
-		$response->assertViewHas('events');
 	}
 }

@@ -20,6 +20,8 @@ abstract class TestCase extends BaseTestCase
 	{
 		parent::setUp();
 
+        config()->set('features.rebuild', true);
+
 //        RefreshDatabaseState::$migrated = false;
 
 		if ($this->tenancy) {
