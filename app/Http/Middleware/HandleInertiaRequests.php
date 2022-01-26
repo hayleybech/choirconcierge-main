@@ -74,8 +74,8 @@ class HandleInertiaRequests extends Middleware
             'tenant' => tenancy()?->tenant,
             'user' => auth()->user(),
             'impersonationActive' => session()->has('impersonation:active'),
-            'userChoirs' => auth()?->user()
-                ->singers()
+            'userChoirs' => auth()->user()
+                ?->singers()
                 ->withoutTenancy()
                 ->with('tenant.domains')
                 ->get()
