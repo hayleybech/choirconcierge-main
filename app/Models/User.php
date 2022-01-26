@@ -68,7 +68,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class User extends Authenticatable implements HasMedia
 {
-	use Notifiable, InteractsWithMedia, BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
+	use Notifiable, InteractsWithMedia, SoftDeletes, HasFactory, TenantTimezoneDates;
 
 	/**
 	 * The attributes that are mass assignable.
