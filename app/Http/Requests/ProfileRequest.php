@@ -31,7 +31,6 @@ class ProfileRequest extends FormRequest
             'email' => [
                 'required',
                 Rule::unique('users')
-                    ->where('tenant_id', tenant('id'))
                     ->ignore(auth()->user()->id),
             ],
             'password' => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],

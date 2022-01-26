@@ -308,10 +308,11 @@ class CriticalUserSeeder extends Seeder
 		/*
 		 * STEP 2 - Insert Admin
 		 */
-		$user = User::create([
+		$user = User::firstOrCreate([
+            'email' => 'haydenbech@gmail.com',
+        ], [
 			'first_name' => 'Hayden',
 			'last_name' => 'Bech',
-			'email' => 'haydenbech@gmail.com',
 			'password' => bcrypt('*tokra1#'),
 		]);
 

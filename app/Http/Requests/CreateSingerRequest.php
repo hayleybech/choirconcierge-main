@@ -40,7 +40,6 @@ class CreateSingerRequest extends FormRequest
             'email' => [
                 'required',
                 Rule::unique('users')
-                    ->where('tenant_id', tenant('id'))
                     ->ignore($singer->user->id ?? ''),
             ],
             'first_name' => ['required', 'max:127'],
