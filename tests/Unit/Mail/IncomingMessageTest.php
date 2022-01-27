@@ -102,6 +102,19 @@ class IncomingMessageTest extends TestCase
 
 		$users = collect([]);
 
+        $users->push(
+        // @todo merge these create statements
+            User::factory()->create([
+                'email' => 'permitted@example.com',
+            ]),
+            User::factory()->create([
+                'email' => 'recipient_1@example.com',
+            ]),
+            User::factory()->create([
+                'email' => 'recipient_2@example.com',
+            ]),
+        );
+
 		$this->createTestTenants()[0]
 			->run(function() use ($users) {
 				$group_expected = UserGroup::create([
@@ -109,18 +122,7 @@ class IncomingMessageTest extends TestCase
 					'slug' => 'music-team',
 					'list_type' => 'chat',
 				]);
-				$users->push(
-					// @todo merge these create statements
-					User::factory()->create([
-						'email' => 'permitted@example.com',
-					]),
-					User::factory()->create([
-						'email' => 'recipient_1@example.com',
-					]),
-					User::factory()->create([
-						'email' => 'recipient_2@example.com',
-					]),
-				);
+
 				$group_expected->recipient_users()->attach($users->pluck('id'));
 			});
 
@@ -204,32 +206,31 @@ class IncomingMessageTest extends TestCase
 
         list($tenant_1, $tenant_2) = $this->createTestTenants(2);
 
-		$tenant_1->run(function () {
+        $sender_user = User::factory()->create([
+            'email' => 'sender@example.com',
+        ]);
+        $recipient_user_1 = User::factory()->create([
+            'email' => 'recipient-1@example.com',
+        ]);
+        $recipient_user_2 = User::factory()->create([
+            'email' => 'recipient-2@example.com',
+        ]);
+
+		$tenant_1->run(function () use ($recipient_user_1, $sender_user) {
 			$group_expected_1 = UserGroup::create([
 				'title' => 'Music Team',
 				'slug' => 'music-team',
 				'list_type' => 'chat',
 			]);
-			$sender_user = User::factory()->create([
-				'email' => 'sender@example.com',
-			]);
-			$recipient_user_1 = User::factory()->create([
-				'email' => 'recipient-1@example.com',
-			]);
+
 			$group_expected_1->recipient_users()->attach([$sender_user->id, $recipient_user_1->id]);
 		});
 
-		$tenant_2->run(function () {
+		$tenant_2->run(function () use ($recipient_user_2, $sender_user) {
 			$group_expected_2 = UserGroup::create([
 				'title' => 'Membership Team',
 				'slug' => 'membership-team',
 				'list_type' => 'chat',
-			]);
-			$sender_user = User::factory()->create([
-				'email' => 'sender@example.com',
-			]);
-			$recipient_user_2 = User::factory()->create([
-				'email' => 'recipient-2@example.com',
 			]);
 			$group_expected_2->recipient_users()->attach([$sender_user->id, $recipient_user_2->id]);
 		});

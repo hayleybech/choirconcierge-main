@@ -67,13 +67,13 @@ class Tenant extends BaseTenant
 	}
 
 	// @todo create a way to assign the primary domain in the database
-	public function getPrimaryDomainAttribute(): string
+	public function getPrimaryDomainAttribute(): ?string
 	{
-		return $this->domains->last()->domain;
+		return $this->domains->last()->domain ?? null;
 	}
 
 	public function getHostAttribute(): string
 	{
-		return $this->primary_domain . '.' . central_domain();
+		return $this->primary_domain . '.' . central_domain() ?? '';
 	}
 }

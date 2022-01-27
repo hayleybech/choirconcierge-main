@@ -350,6 +350,7 @@ class RecurringEventControllerTest extends TestCase
 		$target->refresh();
 		$this->assertSoftDeleted($next_sibling);
 		$this->assertSoftDeleted($last_sibling);
+		$this->assertSoftDeleted($last_sibling);
 		$this->assertDatabaseHas('events', ['repeat_parent_id' => $target->id]);
 		self::assertGreaterThan(0, $target->repeat_children->count());
 

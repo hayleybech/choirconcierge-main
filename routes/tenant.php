@@ -25,6 +25,7 @@ use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SingerPlacementController;
 use App\Http\Controllers\SongAttachmentController;
 use App\Http\Controllers\SongController;
+use App\Http\Controllers\SwitchTenantController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskNotificationTemplateController;
 use App\Http\Controllers\UpdateMyLearningStatusController;
@@ -145,14 +146,7 @@ Route::middleware([
     // Public calendar feed
     Route::get('/events-ical', [ICalController::class, 'index'])->name('events.feed');
 
-    // Feature Flag
-    Route::get('/rebuild-on', function() {
-        Session::put('rebuild', 'on');
-        return redirect()->back();
-    })->name('rebuild.on');
-
-    Route::get('/rebuild-off', function() {
-        Session::put('rebuild', 'off');
-        return redirect()->back();
-    })->name('rebuild.off');
+    // Switch choir
+    Route::get('/switch-choir/{tenant}', [SwitchTenantController::class, 'start'])->name('tenants.switch.start');
+    Route::get('/switch-choir/login/{token}', [SwitchTenantController::class, 'loginWithToken'])->name('tenants.switch.login');
 });

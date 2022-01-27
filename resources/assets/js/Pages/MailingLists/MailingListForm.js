@@ -12,6 +12,7 @@ import EmailSlugInput from "../../components/inputs/EmailSlugInput";
 import SingerSelect from "../../components/inputs/SingerSelect";
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
+import Help from "../../components/inputs/Help";
 
 const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
     const { props: pageProps } = usePage();
@@ -144,6 +145,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
 
                     <fieldset className="sm:col-span-6">
                         <legend className="text-base font-medium text-gray-900">Roles</legend>
+                        <Help>Active Members only</Help>
                         <CheckboxGroup
                             name="recipient_roles"
                             options={roles}
@@ -155,6 +157,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
 
                     <fieldset className="sm:col-span-6">
                         <legend className="text-base font-medium text-gray-900">Voice Parts</legend>
+                        <Help>Active Members only</Help>
                         <CheckboxGroup
                             name="recipient_voice_parts"
                             options={voiceParts.map(part => ({ id: part.id, name: part.title }))}
@@ -199,6 +202,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
 
                         <fieldset className="sm:col-span-6">
                             <legend className="text-base font-medium text-gray-900">Roles</legend>
+                            <Help>Active Members only</Help>
                             <CheckboxGroup
                                 name="sender_roles"
                                 options={roles}
@@ -210,6 +214,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
 
                         <fieldset className="sm:col-span-6">
                             <legend className="text-base font-medium text-gray-900">Voice Parts</legend>
+                            <Help>Active Members only</Help>
                             <CheckboxGroup
                                 name="sender_voice_parts"
                                 options={voiceParts.map(part => ({ id: part.id, name: part.title }))}

@@ -6,6 +6,7 @@ use App\Models\NotificationTemplate;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -24,11 +25,12 @@ class TaskNotificationTemplateControllerTest extends TestCase
 
 		$task = Task::factory()->create();
 
-		$response = $this->get(the_tenant_route('tasks.notifications.create', [$task]));
-
-		$response->assertOk();
-		$response->assertViewIs('tasks.notifications.create');
-		$response->assertViewHas('task');
+		$this->get(the_tenant_route('tasks.notifications.create', [$task]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Tasks/Notifications/Create')
+                ->has('task')
+            );
 	}
 
 	/**
@@ -42,14 +44,12 @@ class TaskNotificationTemplateControllerTest extends TestCase
 			->has(NotificationTemplate::factory(), 'notification_templates')
 			->create();
 
-		$response = $this->delete(
-			the_tenant_route('tasks.notifications.destroy', [
-				$task,
-				'notification' => $task->notification_templates->first(),
-			]),
-		);
+		$this->delete(the_tenant_route('tasks.notifications.destroy', [
+                $task,
+                'notification' => $task->notification_templates->first(),
+            ]))
+            ->assertRedirect(the_tenant_route('tasks.show', $task));
 
-		$response->assertRedirect(the_tenant_route('tasks.show', $task));
 		$this->assertSoftDeleted($task->notification_templates->first());
 	}
 
@@ -64,17 +64,17 @@ class TaskNotificationTemplateControllerTest extends TestCase
 			->has(NotificationTemplate::factory(), 'notification_templates')
 			->create();
 
-		$response = $this->get(
+		$this->get(
 			the_tenant_route('tasks.notifications.edit', [
 				$task,
 				'notification' => $task->notification_templates->first(),
 			]),
-		);
-
-		$response->assertOk();
-		$response->assertViewIs('tasks.notifications.edit');
-		$response->assertViewHas('task');
-		$response->assertViewHas('notification');
+		)->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Tasks/Notifications/Edit')
+                ->has('task')
+                ->has('notification')
+            );
 	}
 
 	/**
@@ -88,17 +88,17 @@ class TaskNotificationTemplateControllerTest extends TestCase
 			->has(NotificationTemplate::factory(), 'notification_templates')
 			->create();
 
-		$response = $this->get(
+		$this->get(
 			the_tenant_route('tasks.notifications.show', [
 				$task,
 				'notification' => $task->notification_templates->first(),
 			]),
-		);
-
-		$response->assertOk();
-		$response->assertViewIs('tasks.notifications.show');
-		$response->assertViewHas('task');
-		$response->assertViewHas('notification');
+		)->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Tasks/Notifications/Show')
+                ->has('task')
+                ->has('notification')
+            );
 	}
 
 	/**
@@ -119,9 +119,9 @@ class TaskNotificationTemplateControllerTest extends TestCase
 				' ' .
 				$this->faker->randomElement(['seconds', 'minutes', 'hours', 'days', 'weeks', 'months']),
 		];
-		$response = $this->post(the_tenant_route('tasks.notifications.store', [$task]), $data);
+		$response = $this->post(the_tenant_route('tasks.notifications.store', [$task]), $data)
+            ->assertSessionHasNoErrors();
 
-		$response->assertSessionHasNoErrors();
 		$this->assertDatabaseHas(
 			'notification_templates',
 			array_merge($data, [

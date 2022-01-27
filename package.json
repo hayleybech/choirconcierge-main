@@ -9,19 +9,11 @@
     "prod": "npm run production",
     "production": "mix --production",
     "prettier": "prettier",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
     "test": "jest"
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",
     "@prettier/plugin-php": "^0.17.1",
-    "@storybook/addon-actions": "^6.3.6",
-    "@storybook/addon-essentials": "^6.3.6",
-    "@storybook/addon-links": "^6.3.6",
-    "@storybook/builder-webpack5": "^6.3.6",
-    "@storybook/manager-webpack5": "^6.3.6",
-    "@storybook/vue": "^6.3.6",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
     "axios": "^0.21",
@@ -45,6 +37,7 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.16.7",
     "@googlemaps/js-api-loader": "^1.11.3",
     "@headlessui/react": "^1.4.0",
     "@headwayapp/react-widget": "^0.0.4",

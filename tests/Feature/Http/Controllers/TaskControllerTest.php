@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -22,11 +23,12 @@ class TaskControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Admin'));
 
-		$response = $this->get(the_tenant_route('tasks.create'));
-
-		$response->assertOk();
-		$response->assertViewIs('tasks.create');
-		$response->assertViewHas('roles_keyed');
+		$this->get(the_tenant_route('tasks.create'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Tasks/Create')
+                ->has('roles')
+            );
 	}
 
 	/**
@@ -38,10 +40,10 @@ class TaskControllerTest extends TestCase
 
 		$task = Task::factory()->create();
 
-		$response = $this->delete(the_tenant_route('tasks.destroy', [$task]));
+		$this->delete(the_tenant_route('tasks.destroy', [$task]))
+            ->assertRedirect(the_tenant_route('tasks.index'));
 
 		$this->assertSoftDeleted($task);
-		$response->assertRedirect(the_tenant_route('tasks.index'));
 	}
 
 	/**
@@ -51,11 +53,12 @@ class TaskControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Admin'));
 
-		$response = $this->get(the_tenant_route('tasks.index'));
-
-		$response->assertOk();
-		$response->assertViewIs('tasks.index');
-		$response->assertViewHas('tasks');
+		$this->get(the_tenant_route('tasks.index'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Tasks/Index')
+                ->has('tasks')
+            );
 	}
 
 	/**
@@ -67,11 +70,12 @@ class TaskControllerTest extends TestCase
 
 		$task = Task::factory()->create();
 
-		$response = $this->get(the_tenant_route('tasks.show', [$task]));
-
-		$response->assertOk();
-		$response->assertViewIs('tasks.show');
-		$response->assertViewHas('task');
+		$this->get(the_tenant_route('tasks.show', [$task]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Tasks/Show')
+                ->has('task')
+            );
 	}
 
 	/**
@@ -83,9 +87,9 @@ class TaskControllerTest extends TestCase
 		$this->actingAs($this->createUserWithRole('Admin'));
 
 		$data = $getData();
-		$response = $this->post(the_tenant_route('tasks.store'), $data);
+		$response = $this->post(the_tenant_route('tasks.store'), $data)
+            ->assertSessionHasNoErrors();
 
-		$response->assertSessionHasNoErrors();
 		$this->assertDatabaseHas('tasks', $data);
 
 		$task = Task::firstWhere('name', $data['name']);

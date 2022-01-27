@@ -9,8 +9,11 @@ import { PlayerContext } from '../contexts/player-context';
 import { AudioPlayerProvider } from "react-use-audio-player"
 import ImpersonateUserModal from "../components/ImpersonateUserModal";
 import LayoutTopBar from "../components/LayoutTopBar";
+import SwitchChoirModal from "../components/SwitchChoirModal";
+import Button from "../components/inputs/Button";
+import Icon from "../components/Icon";
 
-export default function Layout({children}) {
+export default function Layout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [player, setPlayer] = useState({
         songTitle: null,
@@ -20,8 +23,9 @@ export default function Layout({children}) {
         play: play,
     });
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
+    const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
 
-    const { can } = usePage().props;
+    const { can, userChoirs } = usePage().props;
 
     function play(attachment) {
         setPlayer({
@@ -47,11 +51,19 @@ export default function Layout({children}) {
     return (
         <PlayerContext.Provider value={player}>
             <div className="h-screen flex overflow-hidden bg-gray-100">
-                <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
+                <SidebarMobile
+                    navigation={navFiltered}
+                    open={sidebarOpen}
+                    setOpen={setSidebarOpen}
+                    switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => { setSidebarOpen(false); setShowSwitchChoirModal(true); }} />}
+                />
 
                 {/* Static sidebar for desktop */}
                 <div className="hidden xl:flex xl:flex-shrink-0">
-                    <SidebarDesktop navigation={navFiltered} />
+                    <SidebarDesktop
+                        navigation={navFiltered}
+                        switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
+                    />
                 </div>
                 <div className="flex flex-col w-0 flex-1 overflow-hidden">
                     <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />
@@ -79,7 +91,15 @@ export default function Layout({children}) {
                 </div>
 
                 <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
+                <SwitchChoirModal setIsOpen={setShowSwitchChoirModal} isOpen={showSwitchChoirModal} choirs={userChoirs} />
             </div>
         </PlayerContext.Provider>
     )
 }
+
+const SwitchChoirButton = ({ onClick }) => (
+    <Button variant="secondary" size="xs" className="mx-4" onClick={onClick}>
+        <Icon icon="exchange" mr />
+        Switch Choir
+    </Button>
+);

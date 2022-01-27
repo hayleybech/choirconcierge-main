@@ -13,6 +13,7 @@ use App\Notifications\SongUploaded;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Notification;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -29,13 +30,14 @@ class SongControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
-		$response = $this->get(the_tenant_route('songs.create'));
-
-		$response->assertOk();
-		$response->assertViewIs('songs.create');
-		$response->assertViewHas('categories');
-		$response->assertViewHas('statuses');
-		$response->assertViewHas('pitches');
+		$this->get(the_tenant_route('songs.create'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Songs/Create')
+                ->has('categories')
+                ->has('statuses')
+                ->has('pitches')
+            );
 	}
 
 	/**
@@ -47,10 +49,10 @@ class SongControllerTest extends TestCase
 
 		$song = Song::factory()->create();
 
-		$response = $this->delete(the_tenant_route('songs.destroy', [$song]));
+		$this->delete(the_tenant_route('songs.destroy', [$song]))
+            ->assertRedirect(the_tenant_route('songs.index'));
 
-		$this->assertSoftDeleted($song);
-		$response->assertRedirect(the_tenant_route('songs.index'));
+        $this->assertSoftDeleted($song);
 	}
 
 	/**
@@ -61,16 +63,16 @@ class SongControllerTest extends TestCase
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
 		$song = Song::factory()->create();
-
-		$this->withoutExceptionHandling();
-		$response = $this->get(the_tenant_route('songs.edit', [$song]));
-
-		$response->assertOk();
-		$response->assertViewIs('songs.edit');
-		$response->assertViewHas('song');
-		$response->assertViewHas('categories');
-		$response->assertViewHas('statuses');
-		$response->assertViewHas('pitches');
+		
+		$this->get(the_tenant_route('songs.edit', [$song]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Songs/Edit')
+                ->has('song')
+                ->has('categories')
+                ->has('statuses')
+                ->has('pitches')
+            );
 	}
 
 	/**
@@ -80,17 +82,15 @@ class SongControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
-		$response = $this->get(the_tenant_route('songs.index'));
-
-		$response->assertOk();
-		$response->assertViewIs('songs.index');
-		$response->assertViewHas('all_songs');
-		$response->assertViewHas('active_songs');
-		$response->assertViewHas('learning_songs');
-		$response->assertViewHas('pending_songs');
-		$response->assertViewHas('archived_songs');
-		$response->assertViewHas('filters');
-		$response->assertViewHas('sorts');
+		$this->get(the_tenant_route('songs.index'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Songs/Index')
+                ->has('songs')
+                ->has('statuses')
+                ->has('defaultStatuses')
+                ->has('categories')
+            );
 	}
 
 	/**
@@ -102,12 +102,16 @@ class SongControllerTest extends TestCase
 
 		$song = Song::factory()->create();
 
-		$response = $this->get(the_tenant_route('songs.show', [$song]));
-
-		$response->assertOk();
-		$response->assertViewIs('songs.show');
-		$response->assertViewHas('song');
-		$response->assertViewHas('categories_keyed');
+		$this->get(the_tenant_route('songs.show', [$song]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Songs/Show')
+                ->has('song')
+                ->has('all_attachment_categories')
+                ->has('attachment_categories')
+                ->has('status_count')
+                ->has('voice_parts_count')
+            );
 	}
 
     /** @test */
@@ -127,7 +131,10 @@ class SongControllerTest extends TestCase
 
         $this->get(the_tenant_route('songs.show', $song))
             ->assertOk()
-            ->assertViewHas('song.my_learning.status_name', 'Assessment Ready');
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Songs/Show')
+                ->where('song.my_learning.status_name', 'Assessment Ready')
+            );
     }
 
     /** @test */
@@ -147,8 +154,11 @@ class SongControllerTest extends TestCase
 
         $this->get(the_tenant_route('songs.show', $song))
             ->assertOk()
-            ->assertViewHas('song.singers')
-            ->assertViewHas('singers_assessment_ready_count', 3);
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Songs/Show')
+                ->where('status_count.assessment_ready', 3)
+            );
+
     }
 
 	/**
@@ -161,9 +171,9 @@ class SongControllerTest extends TestCase
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
 		$data = $getData();
-		$response = $this->post(the_tenant_route('songs.store'), $data);
+		$response = $this->post(the_tenant_route('songs.store'), $data)
+            ->assertSessionHasNoErrors();
 
-		$response->assertSessionHasNoErrors();
 		$this->assertDatabaseHas('songs', [
 			'title' => $data['title'],
 			'pitch_blown' => $data['pitch_blown'],
@@ -186,9 +196,9 @@ class SongControllerTest extends TestCase
 
 		$data = $getData();
 		$data['send_notification'] = true;
-		$response = $this->post(the_tenant_route('songs.store'), $data);
+		$this->post(the_tenant_route('songs.store'), $data)
+            ->assertSessionHasNoErrors();
 
-		$response->assertSessionHasNoErrors();
 		$this->assertDatabaseHas('songs', ['title' => $data['title']]);
 
 		Notification::assertSentTo(auth()->user(), SongUploaded::class);
@@ -206,9 +216,9 @@ class SongControllerTest extends TestCase
 		$song = Song::factory()->create();
 
 		$data = $getData();
-		$response = $this->put(the_tenant_route('songs.update', [$song]), $data);
+		$response = $this->put(the_tenant_route('songs.update', [$song]), $data)
+            ->assertSessionHasNoErrors();
 
-		$response->assertSessionHasNoErrors();
 		$this->assertDatabaseHas('songs', [
 			'title' => $data['title'],
 			'pitch_blown' => $data['pitch_blown'],
@@ -231,9 +241,9 @@ class SongControllerTest extends TestCase
 
 		$data = $getData();
 		$data['send_notification'] = true;
-		$response = $this->put(the_tenant_route('songs.update', [$song]), $data);
+		$this->put(the_tenant_route('songs.update', [$song]), $data)
+            ->assertSessionHasNoErrors();
 
-		$response->assertSessionHasNoErrors();
 		$this->assertDatabaseHas('songs', ['title' => $data['title']]);
 		Notification::assertSentTo(auth()->user(), SongUpdated::class);
 	}

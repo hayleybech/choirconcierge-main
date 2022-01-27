@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Folder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -21,10 +22,11 @@ class FolderControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
-		$response = $this->get(the_tenant_route('folders.create'));
-
-		$response->assertOk();
-		$response->assertViewIs('folders.create');
+		$this->get(the_tenant_route('folders.create'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Folders/Create')
+            );
 	}
 
 	/**
@@ -36,10 +38,10 @@ class FolderControllerTest extends TestCase
 
 		$folder = Folder::factory()->create();
 
-		$response = $this->delete(the_tenant_route('folders.destroy', [$folder]));
+		$this->delete(the_tenant_route('folders.destroy', [$folder]))
+            ->assertRedirect(the_tenant_route('folders.index'));
 
 		$this->assertSoftDeleted($folder);
-		$response->assertRedirect(the_tenant_route('folders.index'));
 	}
 
 	/**
@@ -49,11 +51,12 @@ class FolderControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
-		$response = $this->get(the_tenant_route('folders.index'));
-
-		$response->assertOk();
-		$response->assertViewIs('folders.index');
-		$response->assertViewHas('folders');
+		$this->get(the_tenant_route('folders.index'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Folders/Index')
+                ->has('folders')
+            );
 	}
 
 	/**
@@ -65,11 +68,11 @@ class FolderControllerTest extends TestCase
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
 		$data = $getData();
-		$response = $this->post(the_tenant_route('folders.store'), $data);
+		$this->post(the_tenant_route('folders.store'), $data)
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(the_tenant_route('folders.index'));
 
-		$response->assertSessionHasNoErrors();
 		$this->assertDatabaseHas('folders', $data);
-		$response->assertRedirect(the_tenant_route('folders.index'));
 	}
 
 	/**
@@ -83,11 +86,11 @@ class FolderControllerTest extends TestCase
 		$folder = Folder::factory()->create();
 
 		$data = $getData();
-		$response = $this->put(the_tenant_route('folders.update', [$folder]), $data);
+		$this->put(the_tenant_route('folders.update', [$folder]), $data)
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(the_tenant_route('folders.index'));
 
-		$response->assertSessionHasNoErrors();
 		$this->assertDatabaseHas('folders', $data);
-		$response->assertRedirect(the_tenant_route('folders.index'));
 	}
 
 	public function folderProvider(): array

@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\RiserStack;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -21,11 +22,12 @@ class RiserStackControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
-		$response = $this->get(the_tenant_route('stacks.create'));
-
-		$response->assertOk();
-		$response->assertViewIs('stacks.create');
-		$response->assertViewHas('voice_parts');
+		$this->get(the_tenant_route('stacks.create'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('RiserStacks/Create')
+                ->has('voice_parts')
+            );
 	}
 
 	/**
@@ -37,10 +39,10 @@ class RiserStackControllerTest extends TestCase
 
 		$stack = RiserStack::factory()->create();
 
-		$response = $this->delete(the_tenant_route('stacks.destroy', ['stack' => $stack]));
+		$this->delete(the_tenant_route('stacks.destroy', ['stack' => $stack]))
+		    ->assertRedirect(the_tenant_route('stacks.index'));
 
 		$this->assertSoftDeleted($stack);
-		$response->assertRedirect(the_tenant_route('stacks.index'));
 	}
 
 	/**
@@ -48,18 +50,17 @@ class RiserStackControllerTest extends TestCase
 	 */
 	public function edit_returns_an_ok_response(): void
 	{
-	    $this->withoutExceptionHandling();
-
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
 		$stack = RiserStack::factory()->create();
 
-		$response = $this->get(the_tenant_route('stacks.edit', ['stack' => $stack]));
-
-		$response->assertOk();
-		$response->assertViewIs('stacks.edit');
-		$response->assertViewHas('stack');
-		$response->assertViewHas('voice_parts');
+		$this->get(the_tenant_route('stacks.edit', ['stack' => $stack]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('RiserStacks/Edit')
+                ->has('stack')
+                ->has('voice_parts')
+            );
 	}
 
 	/**
@@ -69,11 +70,12 @@ class RiserStackControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
-		$response = $this->get(the_tenant_route('stacks.index'));
-
-		$response->assertOk();
-		$response->assertViewIs('stacks.index');
-		$response->assertViewHas('stacks');
+		$this->get(the_tenant_route('stacks.index'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('RiserStacks/Index')
+                ->has('stacks')
+            );
 	}
 
 	/**
@@ -85,12 +87,12 @@ class RiserStackControllerTest extends TestCase
 
 		$stack = RiserStack::factory()->create();
 
-		$response = $this->get(the_tenant_route('stacks.show', ['stack' => $stack]));
-
-		$response->assertOk();
-		$response->assertViewIs('stacks.show');
-		$response->assertViewHas('stack');
-		$response->assertViewHas('voice_parts');
+		$this->get(the_tenant_route('stacks.show', ['stack' => $stack]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('RiserStacks/Show')
+                ->has('stack')
+            );
 	}
 
 	/**
@@ -98,7 +100,7 @@ class RiserStackControllerTest extends TestCase
 	 * @dataProvider stackProvider
 	 */
 	public function store_redirects_to_show($getData): void
-	{
+    {
 		$this->actingAs($this->createUserWithRole('Music Team'));
 
 		$data = $getData();
@@ -164,7 +166,15 @@ class RiserStackControllerTest extends TestCase
 						'columns' => $this->faker->numberBetween(1, 8),
 						'front_row_length' => $this->faker->numberBetween(1, 10),
 						'front_row_on_floor' => $this->faker->boolean(),
-						'singer_positions' => json_encode([]),
+						'singer_positions' => [
+						    [
+						        'id' => 0,
+                                'position' => [
+                                    'row' => 1,
+                                    'column' => 1,
+                                ]
+                            ]
+                        ],
 					];
 				},
 			],

@@ -41,3 +41,7 @@ public/js/risers.js
 coverage/
 
 public/js/app-rebuild.js
+
+public/js/manifest.js
+
+public/js/vendor.js

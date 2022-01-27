@@ -11,10 +11,10 @@ CREATE TABLE `dev_attendances` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `singer_id` int unsigned NOT NULL,
   `event_id` int unsigned NOT NULL,
-  `response` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `response` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `absent_reason` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `absent_reason` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -23,8 +23,8 @@ DROP TABLE IF EXISTS `dev_documents`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_documents` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `filepath` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `filepath` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `folder_id` bigint unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -36,8 +36,8 @@ DROP TABLE IF EXISTS `dev_domains`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_domains` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `domain` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `domain` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -51,10 +51,10 @@ DROP TABLE IF EXISTS `dev_event_types`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_event_types` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `event_types_tenant_id_foreign` (`tenant_id`),
@@ -66,23 +66,23 @@ DROP TABLE IF EXISTS `dev_events`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_events` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `type_id` int DEFAULT NULL,
   `call_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `end_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `location_place_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `location_icon` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `location_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `location_address` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `location_place_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `location_icon` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `location_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `location_address` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `description` varchar(6000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   `is_repeating` tinyint(1) NOT NULL DEFAULT '0',
   `repeat_frequency_amount` int NOT NULL DEFAULT '1',
-  `repeat_frequency_unit` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `repeat_frequency_unit` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `repeat_until` timestamp NULL DEFAULT NULL,
   `repeat_parent_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -97,10 +97,10 @@ DROP TABLE IF EXISTS `dev_failed_jobs`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_failed_jobs` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -110,10 +110,10 @@ DROP TABLE IF EXISTS `dev_folders`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_folders` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `folders_tenant_id_foreign` (`tenant_id`),
@@ -126,7 +126,7 @@ DROP TABLE IF EXISTS `dev_group_members`;
 CREATE TABLE `dev_group_members` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `group_id` bigint unsigned NOT NULL,
-  `memberable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `memberable_type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `memberable_id` bigint unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -142,7 +142,7 @@ DROP TABLE IF EXISTS `dev_group_senders`;
 CREATE TABLE `dev_group_senders` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `group_id` bigint unsigned NOT NULL,
-  `sender_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sender_type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `sender_id` bigint unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -157,8 +157,8 @@ DROP TABLE IF EXISTS `dev_jobs`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_jobs` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `queue` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `attempts` tinyint unsigned NOT NULL,
   `reserved_at` int unsigned DEFAULT NULL,
   `available_at` int unsigned NOT NULL,
@@ -172,15 +172,15 @@ DROP TABLE IF EXISTS `dev_media`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_media` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model_type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `model_id` bigint unsigned NOT NULL,
-  `uuid` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `collection_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `file_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `mime_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `disk` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `conversions_disk` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `uuid` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `collection_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `file_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mime_type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `disk` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `conversions_disk` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `size` bigint unsigned NOT NULL,
   `manipulations` json NOT NULL,
   `custom_properties` json NOT NULL,
@@ -198,7 +198,7 @@ DROP TABLE IF EXISTS `dev_migrations`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_migrations` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -209,10 +209,10 @@ DROP TABLE IF EXISTS `dev_notification_templates`;
 CREATE TABLE `dev_notification_templates` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `task_id` int NOT NULL,
-  `recipients` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subject` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `body` varchar(2000) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `delay` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `recipients` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `body` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `delay` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -223,11 +223,11 @@ DROP TABLE IF EXISTS `dev_notifications`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_notifications` (
-  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `notifiable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notifiable_type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `notifiable_id` bigint unsigned NOT NULL,
-  `data` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `read_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -239,8 +239,8 @@ DROP TABLE IF EXISTS `dev_password_resets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_password_resets` (
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   KEY `password_resets_email_index` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -263,32 +263,6 @@ CREATE TABLE `dev_placements` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `dev_profiles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `dev_profiles` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `singer_id` int NOT NULL,
-  `dob` date DEFAULT NULL,
-  `phone` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ice_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ice_phone` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `reason_for_joining` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `referrer` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `profession` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `skills` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `address_street_1` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address_suburb` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address_state` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address_postcode` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address_street_2` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `height` decimal(5,2) unsigned DEFAULT NULL,
-  `membership_details` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `dev_riser_stack_singer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -306,13 +280,13 @@ DROP TABLE IF EXISTS `dev_riser_stacks`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_riser_stacks` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `rows` tinyint unsigned NOT NULL,
   `columns` tinyint unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `front_row_length` tinyint DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   `front_row_on_floor` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
@@ -325,8 +299,8 @@ DROP TABLE IF EXISTS `dev_roles`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_roles` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   `abilities` json NOT NULL,
   PRIMARY KEY (`id`),
@@ -341,7 +315,7 @@ CREATE TABLE `dev_rsvps` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `singer_id` int unsigned NOT NULL,
   `event_id` int unsigned NOT NULL,
-  `response` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `response` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -352,14 +326,27 @@ DROP TABLE IF EXISTS `dev_singer_categories`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_singer_categories` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `singer_categories_tenant_id_foreign` (`tenant_id`),
   CONSTRAINT `singer_categories_tenant_id_foreign` FOREIGN KEY (`tenant_id`) REFERENCES `dev_tenants` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `dev_singer_song`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `dev_singer_song` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `singer_id` int unsigned NOT NULL,
+  `song_id` int unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `dev_singers`;
@@ -367,20 +354,31 @@ DROP TABLE IF EXISTS `dev_singers`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_singers` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `singer_category_id` int unsigned DEFAULT NULL,
   `onboarding_enabled` tinyint(1) NOT NULL DEFAULT '1',
   `user_id` int unsigned DEFAULT NULL,
   `voice_part_id` bigint unsigned DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `first_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `joined_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `reason_for_joining` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `referrer` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `membership_details` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
+  KEY `singers_tenant_id_foreign` (`tenant_id`),
   CONSTRAINT `singers_tenant_id_foreign` FOREIGN KEY (`tenant_id`) REFERENCES `dev_tenants` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `dev_singers_roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `dev_singers_roles` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `singer_id` int unsigned NOT NULL,
+  `role_id` int unsigned NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `dev_singers_tasks`;
@@ -400,8 +398,8 @@ DROP TABLE IF EXISTS `dev_song_attachment_categories`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_song_attachment_categories` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `song_attachment_categories_tenant_id_foreign` (`tenant_id`),
@@ -413,8 +411,8 @@ DROP TABLE IF EXISTS `dev_song_attachments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_song_attachments` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `filepath` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `filepath` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `song_id` int unsigned NOT NULL,
   `category_id` int unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -431,10 +429,10 @@ DROP TABLE IF EXISTS `dev_song_categories`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_song_categories` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `song_categories_tenant_id_foreign` (`tenant_id`),
@@ -446,10 +444,10 @@ DROP TABLE IF EXISTS `dev_song_statuses`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_song_statuses` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `song_statuses_tenant_id_foreign` (`tenant_id`),
@@ -461,12 +459,12 @@ DROP TABLE IF EXISTS `dev_songs`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_songs` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pitch_blown` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pitch_blown` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `status_id` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `songs_tenant_id_foreign` (`tenant_id`),
@@ -490,14 +488,14 @@ DROP TABLE IF EXISTS `dev_tasks`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_tasks` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `role_id` int NOT NULL,
-  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `route` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `route` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   PRIMARY KEY (`id`),
   KEY `tasks_tenant_id_foreign` (`tenant_id`),
   CONSTRAINT `tasks_tenant_id_foreign` FOREIGN KEY (`tenant_id`) REFERENCES `dev_tenants` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -508,12 +506,12 @@ DROP TABLE IF EXISTS `dev_telescope_entries`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_telescope_entries` (
   `sequence` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `family_hash` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `uuid` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `family_hash` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `should_display_on_index` tinyint(1) NOT NULL DEFAULT '1',
-  `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`sequence`),
   UNIQUE KEY `telescope_entries_uuid_unique` (`uuid`),
@@ -527,8 +525,8 @@ DROP TABLE IF EXISTS `dev_telescope_entries_tags`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_telescope_entries_tags` (
-  `entry_uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tag` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `entry_uuid` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tag` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   KEY `telescope_entries_tags_entry_uuid_tag_index` (`entry_uuid`,`tag`),
   KEY `telescope_entries_tags_tag_index` (`tag`),
   CONSTRAINT `telescope_entries_tags_entry_uuid_foreign` FOREIGN KEY (`entry_uuid`) REFERENCES `dev_telescope_entries` (`uuid`) ON DELETE CASCADE
@@ -538,18 +536,18 @@ DROP TABLE IF EXISTS `dev_telescope_monitoring`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_telescope_monitoring` (
-  `tag` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
+  `tag` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `dev_tenant_user_impersonation_tokens`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_tenant_user_impersonation_tokens` (
-  `token` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `auth_guard` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `redirect_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `auth_guard` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `redirect_url` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL,
   PRIMARY KEY (`token`),
   KEY `tenant_user_impersonation_tokens_tenant_id_foreign` (`tenant_id`),
@@ -560,7 +558,7 @@ DROP TABLE IF EXISTS `dev_tenants`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_tenants` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `data` json DEFAULT NULL,
@@ -572,12 +570,12 @@ DROP TABLE IF EXISTS `dev_user_groups`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_user_groups` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `list_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `list_type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_groups_tenant_id_slug_unique` (`tenant_id`,`slug`),
@@ -589,26 +587,31 @@ DROP TABLE IF EXISTS `dev_users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_users` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   `last_login` timestamp NULL DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `phone` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ice_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ice_phone` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `profession` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `skills` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address_street_1` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address_street_2` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address_suburb` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address_state` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address_postcode` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `height` decimal(5,2) DEFAULT NULL,
+  `bha_id` int unsigned DEFAULT NULL,
+  `first_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `last_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pronouns` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `users_tenant_id_email_unique` (`tenant_id`,`email`),
-  CONSTRAINT `users_tenant_id_foreign` FOREIGN KEY (`tenant_id`) REFERENCES `dev_tenants` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `dev_users_roles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `dev_users_roles` (
-  `user_id` int NOT NULL,
-  `role_id` int NOT NULL
+  UNIQUE KEY `users_email_unique` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `dev_voice_parts`;
@@ -616,11 +619,11 @@ DROP TABLE IF EXISTS `dev_voice_parts`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dev_voice_parts` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `colour` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tenant_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
+  `colour` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tenant_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'choirconcierge',
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `voice_parts_tenant_id_foreign` (`tenant_id`),
@@ -697,3 +700,9 @@ INSERT INTO `dev_migrations` VALUES (60,'2021_02_18_062054_add_repeat_fields_to_
 INSERT INTO `dev_migrations` VALUES (61,'2021_03_07_085147_add_front_row_floor_to_riser_stacks',1);
 INSERT INTO `dev_migrations` VALUES (62,'2021_03_19_063959_convert_timezones_in_events',1);
 INSERT INTO `dev_migrations` VALUES (63,'2021_04_24_081011_add_last_login_to_users',1);
+INSERT INTO `dev_migrations` VALUES (64,'2021_07_04_032251_remove_profile_table',2);
+INSERT INTO `dev_migrations` VALUES (65,'2021_07_04_063110_move_user_fields_from_singers_table',2);
+INSERT INTO `dev_migrations` VALUES (66,'2021_07_12_093846_move_roles_to_singers',2);
+INSERT INTO `dev_migrations` VALUES (67,'2021_08_07_003541_create_singer_song_table',2);
+INSERT INTO `dev_migrations` VALUES (68,'2022_01_04_032212_add_pronouns_column_to_users_table',3);
+INSERT INTO `dev_migrations` VALUES (69,'2022_01_26_041517_merge_users',4);

@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\Assert;
 use Tests\TestCase;
 
 /**
@@ -21,10 +22,11 @@ class RoleControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Admin'));
 
-		$response = $this->get(the_tenant_route('roles.create'));
-
-		$response->assertOk();
-		$response->assertViewIs('roles.create');
+		$this->get(the_tenant_route('roles.create'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Roles/Create')
+            );
 	}
 
 	/**
@@ -37,9 +39,9 @@ class RoleControllerTest extends TestCase
 		$this->withoutExceptionHandling();
 		$role = Role::factory()->create();
 
-		$response = $this->delete(the_tenant_route('roles.destroy', [$role]));
+		$this->delete(the_tenant_route('roles.destroy', [$role]))
+		    ->assertRedirect(the_tenant_route('roles.index'));
 
-		$response->assertRedirect(the_tenant_route('roles.index'));
 		$this->assertSoftDeleted($role);
 	}
 
@@ -52,11 +54,12 @@ class RoleControllerTest extends TestCase
 
 		$role = Role::factory()->create();
 
-		$response = $this->get(the_tenant_route('roles.edit', [$role]));
-
-		$response->assertOk();
-		$response->assertViewIs('roles.edit');
-		$response->assertViewHas('role');
+		$this->get(the_tenant_route('roles.edit', [$role]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Roles/Edit')
+                ->has('role')
+            );
 	}
 
 	/**
@@ -66,11 +69,12 @@ class RoleControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Admin'));
 
-		$response = $this->get(the_tenant_route('roles.index'));
-
-		$response->assertOk();
-		$response->assertViewIs('roles.index');
-		$response->assertViewHas('roles');
+		$this->get(the_tenant_route('roles.index'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Roles/Index')
+                ->has('roles')
+            );
 	}
 
 	/**
@@ -82,11 +86,12 @@ class RoleControllerTest extends TestCase
 
 		$role = Role::factory()->create();
 
-		$response = $this->get(the_tenant_route('roles.show', [$role]));
-
-		$response->assertOk();
-		$response->assertViewIs('roles.show');
-		$response->assertViewHas('role');
+		$this->get(the_tenant_route('roles.show', [$role]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Roles/Show')
+                ->has('role')
+            );
 	}
 
 	/**
@@ -98,9 +103,8 @@ class RoleControllerTest extends TestCase
 		$this->actingAs($this->createUserWithRole('Admin'));
 
 		$data = $getData();
-		$response = $this->post(the_tenant_route('roles.store'), $data);
-
-		$response->assertSessionHasNoErrors();
+		$response = $this->post(the_tenant_route('roles.store'), $data)
+            ->assertSessionHasNoErrors();
 
 		$role = Role::firstWhere('name', $data['name']);
 		$response->assertRedirect(the_tenant_route('roles.show', $role));
@@ -117,9 +121,8 @@ class RoleControllerTest extends TestCase
 		$role = Role::factory()->create();
 
 		$data = $getData();
-		$response = $this->put(the_tenant_route('roles.update', [$role]), $data);
-
-		$response->assertSessionHasNoErrors();
+		$response = $this->put(the_tenant_route('roles.update', [$role]), $data)
+		    ->assertSessionHasNoErrors();
 
 		// assertDatabaseHas didn't work for the json abilities
 		$updated_role = Role::find($role->id);

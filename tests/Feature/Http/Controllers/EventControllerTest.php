@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
+use Inertia\Testing\Assert;
 use Notification;
 use Tests\TestCase;
 
@@ -28,11 +29,12 @@ class EventControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Events Team'));
 
-		$response = $this->get(the_tenant_route('events.create'));
-
-		$response->assertOk();
-		$response->assertViewIs('events.create');
-		$response->assertViewHas('types');
+		$this->get(the_tenant_route('events.create'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Events/Create')
+                ->has('types')
+            );
 	}
 
 	/**
@@ -44,10 +46,10 @@ class EventControllerTest extends TestCase
 
 		$event = Event::factory()->create();
 
-		$response = $this->delete(the_tenant_route('events.destroy', [$event]));
+		$this->delete(the_tenant_route('events.destroy', [$event]))
+            ->assertRedirect(the_tenant_route('events.index'));
 
 		$this->assertSoftDeleted($event);
-		$response->assertRedirect(the_tenant_route('events.index'));
 	}
 
 	/**
@@ -59,12 +61,13 @@ class EventControllerTest extends TestCase
 
 		$event = Event::factory()->create();
 
-		$response = $this->get(the_tenant_route('events.edit', [$event]));
-
-		$response->assertOk();
-		$response->assertViewIs('events.edit');
-		$response->assertViewHas('event');
-		$response->assertViewHas('types');
+		$this->get(the_tenant_route('events.edit', [$event]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Events/Edit')
+                ->has('event')
+                ->has('types')
+            );
 	}
 
 	/**
@@ -74,15 +77,13 @@ class EventControllerTest extends TestCase
 	{
 		$this->actingAs($this->createUserWithRole('Events Team'));
 
-		$response = $this->get(the_tenant_route('events.index'));
-
-		$response->assertOk();
-		$response->assertViewIs('events.index');
-		$response->assertViewHas('all_events');
-		$response->assertViewHas('upcoming_events');
-		$response->assertViewHas('past_events');
-		$response->assertViewHas('filters');
-		$response->assertViewHas('sorts');
+		$this->get(the_tenant_route('events.index'))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Events/Index')
+                ->has('events')
+                ->has('eventTypes')
+            );
 	}
 
 	/**
@@ -94,21 +95,17 @@ class EventControllerTest extends TestCase
 
 		$event = Event::factory()->create();
 
-		$response = $this->get(the_tenant_route('events.show', [$event]));
-
-		$response->assertOk();
-		$response->assertViewIs('events.show');
-		$response->assertViewHas('event');
-		$response->assertViewHas('my_attendance');
-		$response->assertViewHas('singers_rsvp_yes_count');
-		$response->assertViewHas('singers_rsvp_no_count');
-		$response->assertViewHas('singers_rsvp_missing_count');
-		$response->assertViewHas('voice_parts_rsvp_yes_count');
-		$response->assertViewHas('singers_attendance_present');
-		$response->assertViewHas('singers_attendance_absent');
-		$response->assertViewHas('singers_attendance_absent_apology');
-		$response->assertViewHas('singers_attendance_missing');
-		$response->assertViewHas('voice_parts_attendance');
+		$this->get(the_tenant_route('events.show', [$event]))
+            ->assertOk()
+            ->assertInertia(fn(Assert $page) => $page
+                ->component('Events/Show')
+                ->has('event')
+                ->has('rsvpCount')
+                ->has('voicePartsRsvpCount')
+                ->has('attendanceCount')
+                ->has('voicePartsAttendanceCount')
+                ->has('addToCalendarLinks')
+            );
 	}
 
 	/**

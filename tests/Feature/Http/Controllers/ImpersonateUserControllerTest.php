@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\ImpersonateUserController
+ * @see \App\Http\Controllers\SwitchTenantController
  */
 class ImpersonateUserControllerTest extends TestCase
 {
