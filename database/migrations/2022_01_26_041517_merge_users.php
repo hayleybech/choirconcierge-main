@@ -31,9 +31,11 @@ class MergeUsers extends Migration
         );
 
         Schema::table('users', function(Blueprint $table) {
-            $table->dropForeign('users_tenant_id_foreign');
-            $table->dropUnique('users_tenant_id_email_unique');
-            $table->dropColumn('tenant_id');
+            if(Schema::hasColumn('users', 'tenant_id')) {
+                $table->dropForeign('users_tenant_id_foreign');
+                $table->dropUnique('users_tenant_id_email_unique');
+                $table->dropColumn('tenant_id');
+            }
             $table->unique('email');
         });
     }
