@@ -129,17 +129,14 @@ class SingerController extends Controller
 	{
 		$this->authorize('create', Singer::class);
 
-		if($request->has('user_id')) {
+		if($request->has('user_id') && !empty($request->input('user_id'))) {
 		    $user = User::find($request->input('user_id'));
         } else {
-            $user = User::create(Arr::except($request->validated(), [
-                'onboarding_enabled',
-                'reason_for_joining',
-                'referrer',
-                'membership_details',
-                'joined_at',
-                'voice_part_id',
-                'password_confirmation',
+            $user = User::create(Arr::only($request->validated(), [
+                'email',
+                'first_name',
+                'last_name',
+                'password',
             ]));
         }
         $singer = Singer::create(array_merge(
