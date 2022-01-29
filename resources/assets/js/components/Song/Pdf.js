@@ -5,10 +5,11 @@ import Icon from "../Icon";
 
 const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
     const CONTAINER_PADDING = 0;
-    const PAGE_MAX_HEIGHT = 600;
+    const ZOOM_INTERVAL = 0.25;
 
     const [allPageNumbers, setAllPageNumbers] = useState([]);
     const [outerWidth, setOuterWidth] = useState(0);
+    const [scale, setScale] = useState(1.0);
 
     const containerRef = useRef();
 
@@ -23,31 +24,40 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
     }
 
     return (
-        <div>
+        <div className="flex flex-col overflow-hidden h-full">
 
-            <div className="p-2 space-x-2">
-                {/*<Button onClick={() => setPageNumber((prevPage) => prevPage - 1)} disabled={pageNumber <= 1}>*/}
-                {/*    <Icon icon="arrow-alt-left" />*/}
-                {/*</Button>*/}
-                {/*<Button onClick={() => setPageNumber((prevPage) => prevPage + 1)} disabled={pageNumber >= numPages}>*/}
-                {/*    <Icon icon="arrow-alt-right" />*/}
-                {/*</Button>*/}
+            <div className="p-2 space-x-2 border-b border-gray-300">
+                <Button onClick={() => setScale((prevScale) => prevScale + ZOOM_INTERVAL)}>
+                    <Icon icon="search-plus" />
+                </Button>
+                <Button onClick={() => setScale((prevScale) => prevScale - ZOOM_INTERVAL)}>
+                    <Icon icon="search-minus" />
+                </Button>
                 <Button variant="secondary" onClick={isFullscreen ? closeFullscreen : openFullscreen}>
                     <Icon icon={isFullscreen ? 'compress' : 'expand'} />
                 </Button>
             </div>
+            
+            <div className="flex-grow-0 h-full overflow-hidden">
+                <div className="flex h-full w-full" style={{ padding: `${CONTAINER_PADDING}px`}} ref={containerRef}>
 
-            <div className="flex w-full" style={{ padding: `${CONTAINER_PADDING}px`}} ref={containerRef}>
+                    <Document file={filename} onLoadSuccess={onDocumentLoadSuccess} className="w-full">
+                        <div className="w-full h-full overflow-scroll">
+                            {allPageNumbers.map((pageNumber) => (
+                                <Page
+                                    key={pageNumber}
+                                    pageNumber={pageNumber}
+                                    width={outerWidth - CONTAINER_PADDING * 2}
+                                    scale={scale}
+                                    renderTextLayer={false}
+                                />
+                            ))}
+                        </div>
+                    </Document>
 
-                <Document file={filename} onLoadSuccess={onDocumentLoadSuccess}>
-                    <div className="overflow-x-hidden overflow-y-auto h-full">
-                        {allPageNumbers.map((pageNumber) => (
-                            <Page key={pageNumber} pageNumber={pageNumber} width={outerWidth - CONTAINER_PADDING * 2} />
-                        ))}
-                    </div>
-                </Document>
-
+                </div>
             </div>
+
 
         </div>
     );
