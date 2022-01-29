@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 
-const SongAttachmentList = ({ attachment_categories, song, showPdf }) => {
+const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurrentPdf }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [deletingAttachmentId, setDeletingAttachmentId] = useState(0);
     const { load } = useAudioPlayer();
@@ -18,7 +18,11 @@ const SongAttachmentList = ({ attachment_categories, song, showPdf }) => {
         player.play(attachment);
     }
 
-    return (
+    function isCurrentPdf(attachment) {
+        return currentPdf && attachment.id === currentPdf.id;
+    }
+
+        return (
         <>
             <PlayerContext.Consumer>
                 {player => (
@@ -34,18 +38,18 @@ const SongAttachmentList = ({ attachment_categories, song, showPdf }) => {
                                             <div className="px-6 py-5 flex items-center space-x-3 hover:bg-gray-50">
                                                 <div className="flex-shrink-0">
                                                     {isPlayable(attachment) && (
-                                                        <Button variant="clear" onClick={() => play(attachment, player)} size="sm" disabled={isCurrent(attachment, player)}>
-                                                            <Icon icon={isCurrent(attachment, player) ? 'waveform' : 'play'} />
+                                                        <Button variant="clear" onClick={() => play(attachment, player)} size="sm" disabled={isCurrentTrack(attachment, player)}>
+                                                            <Icon icon={isCurrentTrack(attachment, player) ? 'waveform' : 'play'} />
                                                         </Button>
                                                     )}
                                                     {isPdf(attachment) && (
-                                                        <Button variant="clear" onClick={showPdf} size="sm">
-                                                            <Icon icon="book" />
+                                                        <Button variant="clear" onClick={() => setCurrentPdf(attachment)} size="sm" disabled={isCurrentPdf(attachment)}>
+                                                            <Icon icon={isCurrentPdf(attachment) ? 'book-open' : 'book'} />
                                                         </Button>
                                                     )}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-medium text-gray-900">{attachment.title !== '' ? attachment.title : attachment.filepath}</p>
+                                                    <p className="text-sm font-medium text-gray-900 break-all">{attachment.title !== '' ? attachment.title : attachment.filepath}</p>
                                                 </div>
                                                 { song.can['update_song'] &&
                                                     <Button
@@ -94,7 +98,7 @@ function isPlayable(attachment) {
     ].includes(attachment.category.title);
 }
 
-function isCurrent(attachment, player) {
+function isCurrentTrack(attachment, player) {
     return player.src === attachment.download_url;
 }
 
