@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Singer;
+use App\Rules\UserUniqueForChoir;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -50,13 +51,17 @@ class CreateSingerRequest extends FormRequest
 		if(config('features.user_search_in_create_singer')) {
 		    $userRules = [
 		        'user_id' => [
-		            'sometimes',
-                    Rule::exists('users', 'id'),
+                    Rule::when(!empty($this->input('user_id')), [
+                        Rule::exists('users', 'id'),
+                        new UserUniqueForChoir,
+                    ]),
                 ],
                 'email' => [
-                    'required_without:user_id',
-                    Rule::unique('users')
-                        ->ignore($singer->user->id ?? ''),
+                    Rule::when(empty($this->input('user_id')), [
+                        'required',
+                        Rule::unique('users')
+                            ->ignore($singer->user->id ?? ''),
+                    ]),
                 ],
                 'first_name' => ['exclude_without:email', 'required', 'max:127'],
                 'last_name' => ['exclude_without:email', 'required', 'max:127'],
