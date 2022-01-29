@@ -11,60 +11,100 @@ import SongCategoryTag from "../../components/Song/SongCategoryTag";
 import AppHead from "../../components/AppHead";
 import DateTag from "../../components/DateTag";
 import DeleteDialog from "../../components/DeleteDialog";
+import Pdf from "../../components/Song/Pdf";
+import {useMediaQuery} from "react-responsive";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
+    const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
+    const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
+
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
+    const [showFullscreenPdf, setShowFullscreenPdf] = useState(false);
+    const [currentPdf, setCurrentPdf] = useState(isMobile ? null : attachment_categories['Sheet Music'][0]);
+
+    const showPdf = (attachment) => {
+        setCurrentPdf(attachment);
+
+        if(isMobile) {
+            setShowFullscreenPdf(true);
+        }
+    };
+
+    const closeFullscreen = () => {
+        setShowFullscreenPdf(false);
+
+        if(isMobile) {
+            setCurrentPdf(null);
+        }
+    };
 
     return (
         <>
             <AppHead title={`${song.title} - Songs`} />
-            <PageHeader
-                title={song.title}
-                meta={[
-                    <SongStatusTag name={song.status.title} colour={song.status.colour} withLabel />,
-                    <div className="space-x-1 5">
-                        {song.categories.map(category => <React.Fragment key={category.id}><SongCategoryTag category={category} /></React.Fragment>)}
-                    </div>,
-                    <DateTag date={song.created_at} label="Created" />,
-                ]}
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Songs', url: route('songs.index')},
-                    { name: song.title, url: route('songs.show', song) },
-                ]}
-                actions={[
-                    <PitchButton note={song.pitch.split('/')[0]} />,
-                    { label: 'Edit', icon: 'edit', url: route('songs.edit', song), can: 'update_song' },
-                    { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_song' },
-                ].filter(action => action.can ? song.can[action.can] : true)}
-            />
 
-            <DeleteDialog title="Delete Song" url={route('songs.destroy', song)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
-                Are you sure you want to delete this song?
-                All of its attachments will be permanently removed from our servers forever.
-                This action cannot be undone.
-            </DeleteDialog>
+            {showFullscreenPdf ? (
+                <Pdf
+                    filename={currentPdf?.download_url}
+                    isFullscreen={showFullscreenPdf}
+                    openFullscreen={() => setShowFullscreenPdf(true)}
+                    closeFullscreen={closeFullscreen}
+                />
+            ) : <>
+                <PageHeader
+                    title={song.title}
+                    meta={[
+                        <SongStatusTag name={song.status.title} colour={song.status.colour} withLabel />,
+                        <div className="space-x-1 5">
+                            {song.categories.map(category => <React.Fragment key={category.id}><SongCategoryTag category={category} /></React.Fragment>)}
+                        </div>,
+                        <DateTag date={song.created_at} label="Created" />,
+                    ]}
+                    breadcrumbs={[
+                        { name: 'Dashboard', url: route('dash')},
+                        { name: 'Songs', url: route('songs.index')},
+                        { name: song.title, url: route('songs.show', song) },
+                    ]}
+                    actions={[
+                        <PitchButton note={song.pitch.split('/')[0]} />,
+                        { label: 'Edit', icon: 'edit', url: route('songs.edit', song), can: 'update_song' },
+                        { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_song' },
+                    ].filter(action => action.can ? song.can[action.can] : true)}
+                />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 h-full">
+                <DeleteDialog title="Delete Song" url={route('songs.destroy', song)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+                    Are you sure you want to delete this song?
+                    All of its attachments will be permanently removed from our servers forever.
+                    This action cannot be undone.
+                </DeleteDialog>
 
-                <div className="sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch">
-                    <SongAttachmentList attachment_categories={attachment_categories} song={song} />
-                    { song.can['update_song'] && <SongAttachmentForm categories={all_attachment_categories} song={song} />}
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 lg:overflow-y-auto">
+
+                    <div className="sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch">
+                        <SongAttachmentList attachment_categories={attachment_categories} song={song} currentPdf={currentPdf} setCurrentPdf={showPdf} />
+                        { song.can['update_song'] && <SongAttachmentForm categories={all_attachment_categories} song={song} />}
+                    </div>
+
+                    {isDesktop && currentPdf && ! showFullscreenPdf && (
+                    <div className="hidden md:block sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-hidden">
+                        <Pdf
+                            filename={currentPdf?.download_url}
+                            isFullscreen={showFullscreenPdf}
+                            openFullscreen={() => setShowFullscreenPdf(true)}
+                            closeFullscreen={() => setShowFullscreenPdf(false)}
+                        />
+                    </div>
+                    )}
+
+                    <div className="sm:col-span-1 sm:order-2 xl:order-3 sm:border-l sm:border-l-gray-300 sm:divide-y sm:divide-y-gray-300">
+
+                        <MyLearningStatus song={song} />
+
+                        { song.can['update_song'] && <LearningSummary status_count={status_count} voice_parts_count={voice_parts_count} song={song} />}
+
+                    </div>
+
                 </div>
-
-                <div className="sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2">
-                    {/* PDF Viewer goes here */}
-                </div>
-
-                <div className="sm:col-span-1 sm:order-2 xl:order-3 sm:border-l sm:border-l-gray-300 sm:divide-y sm:divide-y-gray-300">
-
-                    <MyLearningStatus song={song} />
-
-                    { song.can['update_song'] && <LearningSummary status_count={status_count} voice_parts_count={voice_parts_count} song={song} />}
-
-                </div>
-
-            </div>
+            </>}
         </>
     );
 }
