@@ -6,10 +6,7 @@ import {AudioSeekBar} from "./AudioSeekBar";
 import {AudioVolumeButton} from "./AudioVolumeButton";
 import Icon from "../Icon";
 import {Link} from "@inertiajs/inertia-react";
-
-const LoadingSpinner = () => (
-    <Icon icon="spinner" type="duotone" pulse className="text-purple-400" />
-);
+import LoadingSpinner from "../LoadingSpinner";
 
 const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
     const { togglePlayPause, ready, loading, playing, stop } = useAudioPlayer();

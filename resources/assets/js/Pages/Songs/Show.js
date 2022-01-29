@@ -12,6 +12,7 @@ import AppHead from "../../components/AppHead";
 import DateTag from "../../components/DateTag";
 import DeleteDialog from "../../components/DeleteDialog";
 import Pdf from "../../components/Song/Pdf";
+import MediaQuery from "react-responsive";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -63,14 +64,18 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                         { song.can['update_song'] && <SongAttachmentForm categories={all_attachment_categories} song={song} />}
                     </div>
 
-                    <div className="hidden sm:block sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-hidden">
-                        <Pdf
-                            filename={attachment_categories['Sheet Music'][0].download_url}
-                            isFullscreen={showFullscreenPdf}
-                            openFullscreen={() => setShowFullscreenPdf(true)}
-                            closeFullscreen={() => setShowFullscreenPdf(false)}
-                        />
-                    </div>
+                    <MediaQuery minWidth={1024}>
+                        {! showFullscreenPdf && (
+                        <div className="hidden md:block sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-hidden">
+                            <Pdf
+                                filename={attachment_categories['Sheet Music'][0].download_url}
+                                isFullscreen={showFullscreenPdf}
+                                openFullscreen={() => setShowFullscreenPdf(true)}
+                                closeFullscreen={() => setShowFullscreenPdf(false)}
+                            />
+                        </div>
+                        )}
+                    </MediaQuery>
 
                     <div className="sm:col-span-1 sm:order-2 xl:order-3 sm:border-l sm:border-l-gray-300 sm:divide-y sm:divide-y-gray-300">
 

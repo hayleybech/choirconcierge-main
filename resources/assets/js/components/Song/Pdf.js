@@ -2,6 +2,7 @@ import React, {useRef, useState} from 'react';
 import {Document, Page} from 'react-pdf/dist/esm/entry.webpack';
 import Button from "../inputs/Button";
 import Icon from "../Icon";
+import LoadingSpinner from "../LoadingSpinner";
 
 const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
     const CONTAINER_PADDING = 0;
@@ -41,7 +42,12 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
             <div className="flex-grow-0 h-full overflow-hidden">
                 <div className="flex h-full w-full" style={{ padding: `${CONTAINER_PADDING}px`}} ref={containerRef}>
 
-                    <Document file={filename} onLoadSuccess={onDocumentLoadSuccess} className="w-full">
+                    <Document
+                        file={filename}
+                        onLoadSuccess={onDocumentLoadSuccess}
+                        className="w-full"
+                        loading={<div className="m-8 text-xl"><LoadingSpinner /></div>}
+                    >
                         <div className="w-full h-full overflow-scroll">
                             {allPageNumbers.map((pageNumber) => (
                                 <Page
@@ -50,6 +56,7 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
                                     width={outerWidth - CONTAINER_PADDING * 2}
                                     scale={scale}
                                     renderTextLayer={false}
+                                    loading={null}
                                 />
                             ))}
                         </div>
