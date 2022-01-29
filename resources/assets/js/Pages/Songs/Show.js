@@ -46,15 +46,19 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                 This action cannot be undone.
             </DeleteDialog>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 h-full">
+            {/*<main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none">*/}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 overflow-y-auto">
 
                 <div className="sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch">
                     <SongAttachmentList attachment_categories={attachment_categories} song={song} />
                     { song.can['update_song'] && <SongAttachmentForm categories={all_attachment_categories} song={song} />}
                 </div>
 
-                <div className="sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2">
-                    <Pdf filename={attachment_categories['Sheet Music'][0].download_url} />
+                <div className="sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-y-auto overflow-x-hidden">
+                    <div className="max-h-screen">
+                        <Pdf filename={attachment_categories['Sheet Music'][0].download_url} />
+                    </div>
                 </div>
 
                 <div className="sm:col-span-1 sm:order-2 xl:order-3 sm:border-l sm:border-l-gray-300 sm:divide-y sm:divide-y-gray-300">

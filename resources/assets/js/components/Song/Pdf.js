@@ -1,32 +1,51 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Document, Page} from 'react-pdf/dist/esm/entry.webpack';
 import Button from "../inputs/Button";
 import Icon from "../Icon";
 
 const Pdf = ({ filename }) => {
-    const [numPages, setNumPages] = useState(null);
-    const [pageNumber, setPageNumber] = useState(1);
+    const CONTAINER_PADDING = 0;
+    const PAGE_MAX_HEIGHT = 600;
+
+    const [allPageNumbers, setAllPageNumbers] = useState([]);
+    const [outerWidth, setOuterWidth] = useState(0);
+
+    const containerRef = useRef();
 
     function onDocumentLoadSuccess({ numPages }) {
-        setNumPages(numPages);
+        const allPageNumbers = [];
+        for (let p = 1; p < numPages + 1; p++) {
+            allPageNumbers.push(p);
+        }
+        setAllPageNumbers(allPageNumbers);
+
+        setOuterWidth(containerRef.current.offsetWidth);
     }
 
     return (
         <div>
-            <Document
-                file={filename}
-                onLoadSuccess={onDocumentLoadSuccess}
-            >
-                <Page pageNumber={pageNumber} />
-            </Document>
-            <p>Page {pageNumber} of {numPages}</p>
-            
-            <Button onClick={() => setPageNumber((prevPage) => prevPage - 1)} disabled={pageNumber <= 1}>
-                <Icon icon="arrow-alt-left" />
-            </Button>
-            <Button onClick={() => setPageNumber((prevPage) => prevPage + 1)} disabled={pageNumber >= numPages}>
-                <Icon icon="arrow-alt-right" />
-            </Button>
+
+            <div className="flex w-full" style={{ padding: `${CONTAINER_PADDING}px`}} ref={containerRef}>
+
+                <Document file={filename} onLoadSuccess={onDocumentLoadSuccess}>
+                    <div className="overflow-x-hidden overflow-y-auto h-full">
+                        {allPageNumbers.map((pageNumber) => (
+                            <Page key={pageNumber} pageNumber={pageNumber} width={outerWidth - CONTAINER_PADDING * 2} />
+                        ))}
+                    </div>
+                </Document>
+
+            </div>
+
+            <div className="p-2 space-x-2">
+                {/*<Button onClick={() => setPageNumber((prevPage) => prevPage - 1)} disabled={pageNumber <= 1}>*/}
+                {/*    <Icon icon="arrow-alt-left" />*/}
+                {/*</Button>*/}
+                {/*<Button onClick={() => setPageNumber((prevPage) => prevPage + 1)} disabled={pageNumber >= numPages}>*/}
+                {/*    <Icon icon="arrow-alt-right" />*/}
+                {/*</Button>*/}
+            </div>
+
         </div>
     );
 };
