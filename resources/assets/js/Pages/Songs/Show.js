@@ -15,15 +15,19 @@ import Pdf from "../../components/Song/Pdf";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
-    const [showFullScreenPdf, setShowFullScreenPdf] = useState(false);
+    const [showFullscreenPdf, setShowFullscreenPdf] = useState(false);
 
     return (
         <>
             <AppHead title={`${song.title} - Songs`} />
 
-            {showFullScreenPdf ? (
+            {showFullscreenPdf ? (
                 <div className="">
-                    <Pdf filename={attachment_categories['Sheet Music'][0].download_url} />
+                    <Pdf
+                        filename={attachment_categories['Sheet Music'][0].download_url}
+                        isFullscreen={showFullscreenPdf}
+                        openFullscreen={() => setShowFullscreenPdf(true)}
+                        closeFullscreen={() => setShowFullscreenPdf(false)}/>
                 </div>
             ) : <>
                 <PageHeader
@@ -56,13 +60,18 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 overflow-y-auto">
 
                     <div className="sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch">
-                        <SongAttachmentList attachment_categories={attachment_categories} song={song} showPdf={() => setShowFullScreenPdf(true)} />
+                        <SongAttachmentList attachment_categories={attachment_categories} song={song} showPdf={() => setShowFullscreenPdf(true)} />
                         { song.can['update_song'] && <SongAttachmentForm categories={all_attachment_categories} song={song} />}
                     </div>
 
                     <div className="sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-y-auto overflow-x-hidden">
                         <div className="max-h-screen">
-                            <Pdf filename={attachment_categories['Sheet Music'][0].download_url} />
+                            <Pdf
+                                filename={attachment_categories['Sheet Music'][0].download_url}
+                                isFullscreen={showFullscreenPdf}
+                                openFullscreen={() => setShowFullscreenPdf(true)}
+                                closeFullscreen={() => setShowFullscreenPdf(false)}
+                            />
                         </div>
                     </div>
 
