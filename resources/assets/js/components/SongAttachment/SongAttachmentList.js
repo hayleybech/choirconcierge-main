@@ -10,19 +10,21 @@ const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurren
     const [deletingAttachmentId, setDeletingAttachmentId] = useState(0);
     const { load } = useAudioPlayer();
 
-    function play(attachment, player) {
+    const play = (attachment, player) => {
         load({
             src: attachment.download_url,
             autoplay: true,
         });
         player.play(attachment);
-    }
+    };
 
-    function isCurrentPdf(attachment) {
-        return currentPdf && attachment.id === currentPdf.id;
-    }
+    const isPlayable = (attachment) => ['Learning Tracks', 'Full Mix (Demo)'].includes(attachment.category.title);
+    const isCurrentTrack = (attachment, player) => player.src === attachment.download_url;
 
-        return (
+    const isPdf = (attachment) => ['Sheet Music'].includes(attachment.category.title);
+    const isCurrentPdf = (attachment) => currentPdf && attachment.id === currentPdf.id;
+
+    return (
         <>
             <PlayerContext.Consumer>
                 {player => (
@@ -90,18 +92,3 @@ const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurren
 }
 
 export default SongAttachmentList;
-
-function isPlayable(attachment) {
-    return [
-        'Learning Tracks',
-        'Full Mix (Demo)'
-    ].includes(attachment.category.title);
-}
-
-function isCurrentTrack(attachment, player) {
-    return player.src === attachment.download_url;
-}
-
-function isPdf(attachment) {
-    return ['Sheet Music'].includes(attachment.category.title);
-}

@@ -40,7 +40,7 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
             </div>
             
             <div className="flex-grow-0 h-full overflow-hidden">
-                <div className="flex h-full w-full" style={{ padding: `${CONTAINER_PADDING}px`}} ref={containerRef}>
+                <div className="flex h-full w-full" style={{ padding: `${CONTAINER_PADDING}px` }} ref={containerRef}>
 
                     <Document
                         file={filename}
@@ -64,7 +64,6 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
 
                 </div>
             </div>
-
 
         </div>
     );
