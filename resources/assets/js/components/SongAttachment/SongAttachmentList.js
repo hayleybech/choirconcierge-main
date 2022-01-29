@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 
-const SongAttachmentList = ({ attachment_categories, song }) => {
+const SongAttachmentList = ({ attachment_categories, song, showPdf }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [deletingAttachmentId, setDeletingAttachmentId] = useState(0);
     const { load } = useAudioPlayer();
@@ -36,6 +36,11 @@ const SongAttachmentList = ({ attachment_categories, song }) => {
                                                     {isPlayable(attachment) && (
                                                         <Button variant="clear" onClick={() => play(attachment, player)} size="sm" disabled={isCurrent(attachment, player)}>
                                                             <Icon icon={isCurrent(attachment, player) ? 'waveform' : 'play'} />
+                                                        </Button>
+                                                    )}
+                                                    {isPdf(attachment) && (
+                                                        <Button variant="clear" onClick={showPdf} size="sm">
+                                                            <Icon icon="book" />
                                                         </Button>
                                                     )}
                                                 </div>
@@ -91,4 +96,8 @@ function isPlayable(attachment) {
 
 function isCurrent(attachment, player) {
     return player.src === attachment.download_url;
+}
+
+function isPdf(attachment) {
+    return ['Sheet Music'].includes(attachment.category.title);
 }
