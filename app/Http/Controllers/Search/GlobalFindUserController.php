@@ -19,7 +19,6 @@ class GlobalFindUserController extends Controller
         }
 
         $formatted_results = User::query()
-            ->withoutTenancy()
             ->whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%$term%' OR email LIKE '%$term%'")
             ->limit(5)
             ->get()
