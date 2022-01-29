@@ -59,6 +59,7 @@
     "react-day-picker": "^7.4.10",
     "react-dom": "^16.14.0",
     "react-google-places-autocomplete": "^3.3.2",
+    "react-pdf": "^5.7.0",
     "react-range": "^1.8.11",
     "react-select": "^5.1.0",
     "react-use-audio-player": "^1.2.4",
