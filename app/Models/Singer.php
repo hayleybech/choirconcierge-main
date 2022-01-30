@@ -1,12 +1,6 @@
 <?php
-
 namespace App\Models;
 
-use App\Models\Filters\Filterable;
-use App\Models\Filters\Singer_AgeFilter;
-use App\Models\Filters\Singer_CategoryFilter;
-use App\Models\Filters\Singer_RoleFilter;
-use App\Models\Filters\Singer_VoicePartFilter;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -62,7 +56,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Singer extends Model
 {
-	use Notifiable, Filterable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
+	use Notifiable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
 	protected $fillable = [
 	    'user_id',
@@ -73,13 +67,6 @@ class Singer extends Model
         'voice_part_id',
         'joined_at',
     ];
-
-	protected static $filters = [
-		Singer_CategoryFilter::class,
-		Singer_AgeFilter::class,
-		Singer_VoicePartFilter::class,
-		Singer_RoleFilter::class,
-	];
 
 	protected $with = [];
 
