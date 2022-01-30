@@ -40,8 +40,6 @@ class AttendanceController extends Controller
 //        dd($voice_parts);
 
         if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Events/Attendance/Index', [
                 'event' => $event,
                 'voice_parts' => $voice_parts->values(),

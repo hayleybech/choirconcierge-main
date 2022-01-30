@@ -23,8 +23,6 @@ class RiserStackController extends Controller
 		$stacks = RiserStack::all();
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('RiserStacks/Index', [
                 'stacks' => $stacks->values(),
             ]);
@@ -43,8 +41,6 @@ class RiserStackController extends Controller
 		$voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('RiserStacks/Create', [
                 'voice_parts' => $voice_parts->values(),
             ]);
@@ -83,8 +79,6 @@ class RiserStackController extends Controller
         $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('RiserStacks/Show', [
                 'stack' => $stack,
             ]);
@@ -115,8 +109,6 @@ class RiserStackController extends Controller
         $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('RiserStacks/Edit', [
                 'stack' => $stack,
                 'voice_parts' => $voice_parts->values(),

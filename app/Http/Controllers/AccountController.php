@@ -15,8 +15,6 @@ class AccountController extends Controller
 	public function edit(): View|Response
 	{
         if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Account/Edit');
         }
 

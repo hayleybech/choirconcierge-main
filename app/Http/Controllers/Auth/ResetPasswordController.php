@@ -44,8 +44,6 @@ class ResetPasswordController extends Controller
         $token = $request->route()->parameter('token');
 
         if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Auth/ResetPassword', ['token' => $token, 'email' => $request->email]);
         }
 

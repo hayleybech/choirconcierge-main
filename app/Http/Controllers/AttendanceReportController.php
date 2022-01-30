@@ -66,8 +66,6 @@ class AttendanceReportController extends Controller
         );
 
         if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Events/AttendanceReport', [
                 'voiceParts' => $voice_parts->values(),
                 'events' => $all_events->where('start_date', '<', now())->values(),

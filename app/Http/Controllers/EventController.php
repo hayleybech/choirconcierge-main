@@ -51,8 +51,6 @@ class EventController extends Controller
 			->get();
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Events/Index', [
                 'events' => $all_events->values(),
                 'eventTypes' => EventType::all()->values(),
@@ -102,8 +100,6 @@ class EventController extends Controller
 		$types = EventType::all();
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Events/Create', [
                 'types' => $types->values(),
             ]);
@@ -143,8 +139,6 @@ class EventController extends Controller
         ];
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Events/Show', [
                 'event' => $event,
                 'rsvpCount' => [
@@ -194,8 +188,6 @@ class EventController extends Controller
 		$types = EventType::all();
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Events/Edit', [
                 'event' => $event,
                 'types' => $types->values(),

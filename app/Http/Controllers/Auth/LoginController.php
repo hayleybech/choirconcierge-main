@@ -41,8 +41,6 @@ class LoginController extends Controller
 	public function showLoginForm()
     {
         if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Auth/Login');
         }
 

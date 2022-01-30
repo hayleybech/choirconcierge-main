@@ -76,8 +76,6 @@ class DashController extends Controller
                 ->get()
                 ->each->append('my_learning');
 
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Dash/Show', [
                 'events' => $events->values(),
                 'songs' => $songs->values(),

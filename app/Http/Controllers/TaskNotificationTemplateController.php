@@ -24,8 +24,6 @@ class TaskNotificationTemplateController extends Controller
 	public function create(Task $task): View|Response
 	{
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Tasks/Notifications/Create', [
                 'task' => $task,
             ]);
@@ -66,8 +64,6 @@ class TaskNotificationTemplateController extends Controller
             'delete_task' => auth()->user()?->can('delete', $task),
         ];
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Tasks/Notifications/Show', [
                 'task' => $task,
                 'notification' => $notification->append('body_with_highlights'),
@@ -88,8 +84,6 @@ class TaskNotificationTemplateController extends Controller
 	public function edit(Task $task, NotificationTemplate $notification): View|Response
 	{
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Tasks/Notifications/Edit', [
                 'task' => $task,
                 'notification' => $notification,

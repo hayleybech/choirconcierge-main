@@ -52,8 +52,6 @@ class SongController extends Controller
                 ])
                 ->get();
 
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Songs/Index', [
                 'songs' => $songs->values(),
                 'statuses' => SongStatus::query()
@@ -135,8 +133,6 @@ class SongController extends Controller
 		$pitches = Song::KEYS;
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Songs/Create', [
                 'categories' => $categories->values(),
                 'statuses' => $statuses->values(),
@@ -203,8 +199,6 @@ class SongController extends Controller
         $song->append('my_learning');
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Songs/Show', [
                 'song' => $song,
                 'all_attachment_categories' => $attachment_categories,
@@ -248,8 +242,6 @@ class SongController extends Controller
 		$pitches = Song::KEYS;
 
         if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Songs/Edit', [
                 'categories' => $categories->values(),
                 'statuses' => $statuses->values(),

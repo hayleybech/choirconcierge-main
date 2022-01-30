@@ -66,8 +66,6 @@ class SingerController extends Controller
                 ->defaultSort($nameSort)
                 ->get();
 
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Singers/Index', [
                 'allSingers' => $allSingers->values(),
                 'statuses' => $statuses->values(),
@@ -111,8 +109,6 @@ class SingerController extends Controller
 		$roles = Role::where('name', '!=', 'User')->get();
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Singers/Create', [
                 'voice_parts' => $voice_parts->values(),
                 'roles' => $roles->values(),
@@ -176,8 +172,6 @@ class SingerController extends Controller
 		$singer->tasks->each(fn($task) => $task->can = ['complete' => auth()->user()?->can('complete', $task)]);
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Singers/Show', [
                 'singer' => $singer,
                 'categories' => SingerCategory::all(),
@@ -201,8 +195,6 @@ class SingerController extends Controller
 		$roles = Role::where('name', '!=', 'User')->get();
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Singers/Edit', [
                 'voice_parts' => $voice_parts->values(),
                 'roles' => $roles->values(),

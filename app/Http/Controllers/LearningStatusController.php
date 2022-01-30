@@ -30,8 +30,6 @@ class LearningStatusController extends Controller
             });
 
         if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Songs/Learning/Index', [
                 'song' => $song,
                 'voice_parts' => $voice_parts->values(),

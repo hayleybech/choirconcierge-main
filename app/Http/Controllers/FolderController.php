@@ -28,8 +28,6 @@ class FolderController extends Controller
 			->get(); // folders by folder title
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Folders/Index', [
                 'folders' => $folders->values(),
             ]);
@@ -41,8 +39,6 @@ class FolderController extends Controller
 	public function create(): View|Response
 	{
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Folders/Create');
         }
 		return view('folders.create');

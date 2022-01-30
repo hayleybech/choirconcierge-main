@@ -33,8 +33,6 @@ class UserGroupController extends Controller
 		$filters = [];
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('MailingLists/Index', [
                 'lists' => $groups->values(),
             ]);
@@ -52,8 +50,6 @@ class UserGroupController extends Controller
 		$singer_categories = SingerCategory::all();
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('MailingLists/Create', [
                 'roles' => Role::where('name', '!=', 'User')->get()->values(),
                 'voiceParts' => $voice_parts->values(),
@@ -93,8 +89,6 @@ class UserGroupController extends Controller
         ];
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('MailingLists/Show', [
                 'list' => $group,
             ]);
@@ -114,8 +108,6 @@ class UserGroupController extends Controller
 		$singer_categories = SingerCategory::all();
 
         if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('MailingLists/Edit', [
                 'list' => $group,
                 'roles' => Role::where('name', '!=', 'User')->get()->values(),

@@ -27,8 +27,6 @@ class SingerPlacementController extends Controller
 		$voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
 
         if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Singers/Placements/Create', [
                 'singer' => $singer,
                 'voice_parts' => $voice_parts->values(),
@@ -73,8 +71,6 @@ class SingerPlacementController extends Controller
         $voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
 
         if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
             return Inertia::render('Singers/Placements/Edit', [
                 'singer' => $singer,
                 'placement' => $placement,
