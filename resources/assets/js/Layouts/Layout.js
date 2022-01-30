@@ -20,32 +20,31 @@ export default function Layout({ children }) {
         songId: 0,
         fileName: null,
         src: null,
-        play: play,
-
-        showFullscreen: false,
-        setShowFullscreen: setFullscreen,
-    });
-    const [showImpersonateModal, setShowImpersonateModal] = useState(false);
-    const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
-
-    const { can, userChoirs } = usePage().props;
-
-    function play(attachment) {
-        setPlayer(oldState => ({
+        play: (attachment) => setPlayer(oldState => ({
             ...oldState,
             songTitle: attachment.song.title,
             songId: attachment.song.id,
             fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
             src: attachment.download_url,
-        }));
-    }
+        })),
+        stop: () => setPlayer({
+            ...player,
+            songTitle: null,
+            songId: 0,
+            fileName: null,
+            src: null,
+        }),
 
-    function setFullscreen(value) {
-        setPlayer(oldState => ({
+        showFullscreen: false,
+        setShowFullscreen: (value) => setPlayer(oldState => ({
             ...oldState,
             showFullscreen: value,
-        }));
-    }
+        })),
+    });
+    const [showImpersonateModal, setShowImpersonateModal] = useState(false);
+    const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
+
+    const { can, userChoirs } = usePage().props;
 
     const navFiltered = navigation
         .filter((item) => can[item.can])
@@ -84,18 +83,7 @@ export default function Layout({ children }) {
                         </main>
 
                         {player.fileName &&
-                            <GlobalTrackPlayer
-                                songTitle={player.songTitle}
-                                songId={player.songId}
-                                fileName={player.fileName}
-                                close={() => setPlayer({
-                                    ...player,
-                                    songTitle: null,
-                                    songId: 0,
-                                    fileName: null,
-                                    src: null,
-                                })}
-                            />
+                            <GlobalTrackPlayer songTitle={player.songTitle} songId={player.songId} fileName={player.fileName} close={player.stop} />
                         }
                     </AudioPlayerProvider>
                 </div>
