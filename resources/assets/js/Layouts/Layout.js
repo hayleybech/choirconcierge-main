@@ -21,6 +21,9 @@ export default function Layout({ children }) {
         fileName: null,
         src: null,
         play: play,
+
+        showFullscreen: false,
+        setShowFullscreen: setFullscreen,
     });
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
     const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
@@ -28,13 +31,20 @@ export default function Layout({ children }) {
     const { can, userChoirs } = usePage().props;
 
     function play(attachment) {
-        setPlayer({
-            ...player,
+        setPlayer(oldState => ({
+            ...oldState,
             songTitle: attachment.song.title,
             songId: attachment.song.id,
             fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
             src: attachment.download_url,
-        });
+        }));
+    }
+
+    function setFullscreen(value) {
+        setPlayer(oldState => ({
+            ...oldState,
+            showFullscreen: value,
+        }));
     }
 
     const navFiltered = navigation
@@ -66,7 +76,7 @@ export default function Layout({ children }) {
                     />
                 </div>
                 <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                    <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />
+                    {player.showFullscreen || <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />}
 
                     <AudioPlayerProvider>
                         <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none">

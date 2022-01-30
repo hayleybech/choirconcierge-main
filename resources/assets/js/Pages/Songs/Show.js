@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import SongStatusTag from "../../components/SongStatusTag";
@@ -13,25 +13,29 @@ import DateTag from "../../components/DateTag";
 import DeleteDialog from "../../components/DeleteDialog";
 import Pdf from "../../components/Song/Pdf";
 import {useMediaQuery} from "react-responsive";
+import {PlayerContext} from "../../contexts/player-context";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
+    const player = useContext(PlayerContext);
+
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
     const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
-    const [showFullscreenPdf, setShowFullscreenPdf] = useState(false);
     const [currentPdf, setCurrentPdf] = useState(isMobile ? null : attachment_categories['Sheet Music'][0]);
 
     const showPdf = (attachment) => {
         setCurrentPdf(attachment);
 
         if(isMobile) {
-            setShowFullscreenPdf(true);
+            player.setShowFullscreen(true);
         }
     };
 
-    const closeFullscreen = () => {
-        setShowFullscreenPdf(false);
+    const openFullscreen = () => player.setShowFullscreen(true);
+    const closeFullscreen = () => player.setShowFullscreen(false);
+    const closeFullscreenMobile = () => {
+        player.setShowFullscreen(false);
 
         if(isMobile) {
             setCurrentPdf(null);
@@ -42,12 +46,12 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
         <>
             <AppHead title={`${song.title} - Songs`} />
 
-            {showFullscreenPdf ? (
+            {player.showFullscreen ? (
                 <Pdf
                     filename={currentPdf?.download_url}
-                    isFullscreen={showFullscreenPdf}
-                    openFullscreen={() => setShowFullscreenPdf(true)}
-                    closeFullscreen={closeFullscreen}
+                    isFullscreen={player.showFullscreen}
+                    openFullscreen={openFullscreen}
+                    closeFullscreen={closeFullscreenMobile}
                 />
             ) : <>
                 <PageHeader
@@ -80,17 +84,17 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 lg:overflow-y-auto">
 
                     <div className="sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch">
-                        <SongAttachmentList attachment_categories={attachment_categories} song={song} currentPdf={currentPdf} setCurrentPdf={showPdf} />
+                        <SongAttachmentList attachment_categories={attachment_categories} song={song} currentPdf={currentPdf} setCurrentPdf={showPdf} player={player} />
                         { song.can['update_song'] && <SongAttachmentForm categories={all_attachment_categories} song={song} />}
                     </div>
 
-                    {isDesktop && currentPdf && ! showFullscreenPdf && (
+                    {isDesktop && currentPdf && ! player.showFullscreen && (
                     <div className="hidden md:block sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-hidden">
                         <Pdf
                             filename={currentPdf?.download_url}
-                            isFullscreen={showFullscreenPdf}
-                            openFullscreen={() => setShowFullscreenPdf(true)}
-                            closeFullscreen={() => setShowFullscreenPdf(false)}
+                            isFullscreen={player.showFullscreen}
+                            openFullscreen={openFullscreen}
+                            closeFullscreen={closeFullscreen}
                         />
                     </div>
                     )}
