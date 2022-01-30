@@ -12,7 +12,7 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
     const { togglePlayPause, ready, loading, playing, stop } = useAudioPlayer();
 
     return (
-        <div className="relative z-10 flex-shrink-0 flex h-auto sm:h-12 bg-white border-t border-gray-300 flex flex-col sm:flex-row items-center justify-between py-2 px-2 sm:pl-6">
+        <div className="relative z-10 shrink-0 flex h-auto sm:h-12 bg-white border-t border-gray-300 flex flex-col sm:flex-row items-center justify-between py-2 px-2 sm:pl-6">
             <div className="flex flex-row items-start">
                 <Button variant="clear" size="xs" disabled className="invisible sm:hidden">
                     <Icon icon="times" />
@@ -27,12 +27,12 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
                     <Icon icon="times" />
                 </Button>
             </div>
-            <div className="flex items-center space-x-2 flex-grow w-full sm:w-auto">
+            <div className="flex items-center space-x-2 grow w-full sm:w-auto">
                 {loading && <LoadingSpinner />}
                 <Button variant="clear" size="xs" onClick={togglePlayPause} disabled={!ready}>
                     {playing ? <Icon icon="pause" /> : <Icon icon="play" />}
                 </Button>
-                <div className="flex items-center space-x-1.5 flex-grow">
+                <div className="flex items-center space-x-1.5 grow">
                     <AudioTimeLabel show="elapsed" />
                     <AudioSeekBar />
                     <AudioTimeLabel show="length" />

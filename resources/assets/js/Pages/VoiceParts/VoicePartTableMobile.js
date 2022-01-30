@@ -6,7 +6,7 @@ const VoicePartTableMobile = ({ voiceParts }) => (
     <TableMobile>
         {voiceParts.map((voicePart) => (
             <TableMobileItem key={voicePart.id} url={route('voice-parts.edit', voicePart.id)}>
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                     <Swatch colour={voicePart.colour} />
                 </div>
                 <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">

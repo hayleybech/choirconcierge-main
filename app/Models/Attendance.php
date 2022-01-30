@@ -66,8 +66,8 @@ class Attendance extends Model
     public function getColourAttribute(): string
     {
         $colours = [
-            'present' => 'green',
-            'unknown' => 'yellow',
+            'present' => 'emerald',
+            'unknown' => 'amber',
             'absent' => 'red',
             'absent_apology' => 'red',
         ];

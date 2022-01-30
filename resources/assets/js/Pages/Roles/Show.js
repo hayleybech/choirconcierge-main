@@ -54,7 +54,7 @@ const Show = ({ role }) => {
                                 <td
                                     key={`${modelKey}_${abilityKey}`}
                                     className={classNames('py-4',
-                                        role.abilities.includes(`${modelKey}_${abilityKey}`) ? 'text-green-500' : 'text-gray-500',
+                                        role.abilities.includes(`${modelKey}_${abilityKey}`) ? 'text-emerald-500' : 'text-gray-500',
                                     )}
                                 >
                                     <Icon icon={role.abilities.includes(`${modelKey}_${abilityKey}`) ? 'check' : 'times'} mr />

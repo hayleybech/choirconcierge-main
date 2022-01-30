@@ -35,7 +35,7 @@ const Index = ({ event, voice_parts }) => {
                                 <li key={attendance.singer.id} className="bg-white">
                                     <div className="relative px-6 py-5 flex flex-col sm:flex-row items-center space-y-3 sm:space-x-3 hover:bg-gray-50 justify-between items-stretch sm:items-center">
                                         <div className="flex space-x-2">
-                                            <div className="flex-shrink-0">
+                                            <div className="shrink-0">
                                                 <img className="h-12 w-12 rounded-lg" src={attendance.singer.user.avatar_url} alt={attendance.singer.user.name}/>
                                             </div>
                                             <div className="flex-1 min-w-0">
@@ -48,7 +48,7 @@ const Index = ({ event, voice_parts }) => {
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="flex-shrink-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 items:stretch sm:items-center">
+                                        <div className="shrink-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 items:stretch sm:items-center">
                                             {[
                                                 { response: 'present', label: 'Present', icon: 'check', variant: 'success-outline' },
                                                 { response: 'absent', label: 'Absent', icon: 'times', variant: 'danger-outline' },

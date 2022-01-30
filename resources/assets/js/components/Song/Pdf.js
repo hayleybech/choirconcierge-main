@@ -39,7 +39,7 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
                 </Button>
             </div>
             
-            <div className="flex-grow-0 h-full overflow-hidden">
+            <div className="grow-0 h-full overflow-hidden">
                 <div className="flex h-full w-full" style={{ padding: `${CONTAINER_PADDING}px` }} ref={containerRef}>
 
                     <Document
