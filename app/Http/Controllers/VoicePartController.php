@@ -18,35 +18,23 @@ class VoicePartController extends Controller
 
 	public function index(): View|Response
 	{
-		$parts = VoicePart::withCount('singers')->get();
-
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('VoiceParts/Index', [
-                'parts' => $parts->values(),
-            ]);
-        }
-		return view('voice-parts.index')->with(compact('parts'));
+        return Inertia::render('VoiceParts/Index', [
+            'parts' => VoicePart::withCount('singers')->get()->values(),
+        ]);
 	}
 
 	public function create(): View|Response
 	{
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('VoiceParts/Create');
-        }
-		return view('voice-parts.create');
+        return Inertia::render('VoiceParts/Create');
 	}
 
 	public function store(Request $request): RedirectResponse
 	{
-		$data = $request->validate([
-			'title' => 'required|max:255',
-			'colour' => 'required|max:255',
-		]);
-		$part = VoicePart::create($data);
+        VoicePart::create($request->validate([
+            'title' => 'required|max:255',
+            'colour' => 'required|max:255',
+        ]));
+
 		return redirect()
 			->route('voice-parts.index')
 			->with(['status' => 'Voice part created.']);
@@ -59,14 +47,9 @@ class VoicePartController extends Controller
 
 	public function edit(VoicePart $voice_part): View|Response
 	{
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('VoiceParts/Edit', [
-                'voice_part' => $voice_part,
-            ]);
-        }
-		return view('voice-parts.edit')->with(compact('voice_part'));
+        return Inertia::render('VoiceParts/Edit', [
+            'voice_part' => $voice_part,
+        ]);
 	}
 	public function update(Request $request, VoicePart $voice_part): RedirectResponse
 	{

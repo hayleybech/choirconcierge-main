@@ -2,10 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Singer;
 use App\Models\Song;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class SongRequest extends FormRequest
 {
@@ -18,15 +16,6 @@ class SongRequest extends FormRequest
 	{
 		return true;
 	}
-
-    public function prepareForValidation()
-    {
-        if(! config('features.rebuild')) {
-            $this->merge([
-                'send_notification' => $this->has('send_notification'),
-            ]);
-        }
-    }
 
 	/**
 	 * Get the validation rules that apply to the request.

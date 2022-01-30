@@ -41,14 +41,6 @@ class ResetPasswordController extends Controller
 
     public function showResetForm(Request $request)
     {
-        $token = $request->route()->parameter('token');
-
-        if(config('features.rebuild')) {
-            return Inertia::render('Auth/ResetPassword', ['token' => $token, 'email' => $request->email]);
-        }
-
-        return view('auth.passwords.reset')->with(
-            ['token' => $token, 'email' => $request->email]
-        );
+        return Inertia::render('Auth/ResetPassword', ['token' => $request->route()->parameter('token'), 'email' => $request->email]);
     }
 }

@@ -42,63 +42,36 @@ class SingerController extends Controller
 
         $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
 
-        if(config('features.rebuild')){
-            $statuses = SingerCategory::all();
-            $defaultStatus = $statuses->firstWhere('name', 'Members')->id;
+        $statuses = SingerCategory::all();
+        $defaultStatus = $statuses->firstWhere('name', 'Members')->id;
 
-            $allSingers = QueryBuilder::for(Singer::class)
-                ->with(['tasks', 'category', 'voice_part', 'user'])
-                ->allowedFilters([
-                    AllowedFilter::callback('user.name', fn (Builder $query, $value) => $query
-                        ->whereHas('user', fn(Builder $query) => $query
-                            ->whereRaw('CONCAT(first_name, ?, last_name) LIKE ?', [' ', "%$value%"])
-                    )),
-                    AllowedFilter::exact('category.id')
-                        ->default([$defaultStatus]),
-                    AllowedFilter::exact('voice_part.id'),
-                    AllowedFilter::exact('roles.id')
-                ])
-                ->allowedSorts([
-                    $nameSort,
-                    AllowedSort::custom('status-title', new SingerStatusSort(), 'status'),
-                    AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),
-                ])
-                ->defaultSort($nameSort)
-                ->get();
-
-            return Inertia::render('Singers/Index', [
-                'allSingers' => $allSingers->values(),
-                'statuses' => $statuses->values(),
-                'defaultStatus' => $defaultStatus,
-                'voiceParts' => VoicePart::all()->values(),
-                'roles' => Role::all()->values(),
-            ]);
-        }
-
-        // Base query
-        $all_singers = Singer::with(['tasks', 'category', 'voice_part', 'user'])
-            ->filter()
+        $allSingers = QueryBuilder::for(Singer::class)
+            ->with(['tasks', 'category', 'voice_part', 'user'])
+            ->allowedFilters([
+                AllowedFilter::callback('user.name', fn (Builder $query, $value) => $query
+                    ->whereHas('user', fn(Builder $query) => $query
+                        ->whereRaw('CONCAT(first_name, ?, last_name) LIKE ?', [' ', "%$value%"])
+                )),
+                AllowedFilter::exact('category.id')
+                    ->default([$defaultStatus]),
+                AllowedFilter::exact('voice_part.id'),
+                AllowedFilter::exact('roles.id')
+            ])
+            ->allowedSorts([
+                $nameSort,
+                AllowedSort::custom('status-title', new SingerStatusSort(), 'status'),
+                AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),
+            ])
+            ->defaultSort($nameSort)
             ->get();
 
-        // Sort
-        $sort_by = $request->input('sort_by', 'name');
-        $sort_dir = $request->input('sort_dir', 'asc');
-        if ($sort_dir === 'asc') {
-            $all_singers = $all_singers->sortBy($sort_by);
-        } else {
-            $all_singers = $all_singers->sortByDesc($sort_by);
-        }
-
-		return view('singers.index', [
-			'all_singers' => $all_singers,
-			'active_singers' => $all_singers->whereIn('category.name', ['Members', 'Prospects']),
-			'member_singers' => $all_singers->whereIn('category.name', ['Members']),
-			'prospect_singers' => $all_singers->whereIn('category.name', ['Prospects']),
-			'archived_singers' => $all_singers->whereIn('category.name', ['Archived Members', 'Archived Prospects']),
-			'filters' => Singer::getFilters(),
-			'sorts' => ($sorts = $this->getSorts($request)),
-			'categories' => SingerCategory::all(),
-		]);
+        return Inertia::render('Singers/Index', [
+            'allSingers' => $allSingers->values(),
+            'statuses' => $statuses->values(),
+            'defaultStatus' => $defaultStatus,
+            'voiceParts' => VoicePart::all()->values(),
+            'roles' => Role::all()->values(),
+        ]);
 	}
 
 	public function create(): View|InertiaResponse
@@ -108,16 +81,9 @@ class SingerController extends Controller
 		$voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
 		$roles = Role::where('name', '!=', 'User')->get();
 
-        if(config('features.rebuild')){
-            return Inertia::render('Singers/Create', [
-                'voice_parts' => $voice_parts->values(),
-                'roles' => $roles->values(),
-            ]);
-        }
-
-		return view('singers.create', [
-		    'voice_parts' => $voice_parts->pluck('title', 'id')->toArray(),
-            'roles' => $roles,
+        return Inertia::render('Singers/Create', [
+            'voice_parts' => $voice_parts->values(),
+            'roles' => $roles->values(),
         ]);
 	}
 
@@ -171,17 +137,10 @@ class SingerController extends Controller
         ];
 		$singer->tasks->each(fn($task) => $task->can = ['complete' => auth()->user()?->can('complete', $task)]);
 
-        if(config('features.rebuild')){
-            return Inertia::render('Singers/Show', [
-                'singer' => $singer,
-                'categories' => SingerCategory::all(),
-            ]);
-        }
-
-        return view('singers.show', [
-			'singer' => $singer,
-			'categories' => SingerCategory::all(),
-		]);
+        return Inertia::render('Singers/Show', [
+            'singer' => $singer,
+            'categories' => SingerCategory::all(),
+        ]);
 	}
 
 	public function edit(Singer $singer): View|InertiaResponse
@@ -194,18 +153,10 @@ class SingerController extends Controller
 
 		$roles = Role::where('name', '!=', 'User')->get();
 
-        if(config('features.rebuild')){
-            return Inertia::render('Singers/Edit', [
-                'voice_parts' => $voice_parts->values(),
-                'roles' => $roles->values(),
-                'singer' => $singer,
-            ]);
-        }
-
-		return view('singers.edit', [
-		    'singer' => $singer,
-            'voice_parts' => $voice_parts->pluck('title', 'id')->toArray(),
-            'roles' => $roles,
+        return Inertia::render('Singers/Edit', [
+            'voice_parts' => $voice_parts->values(),
+            'roles' => $roles->values(),
+            'singer' => $singer,
         ]);
 	}
 	public function update(Singer $singer, EditSingerRequest $request): RedirectResponse

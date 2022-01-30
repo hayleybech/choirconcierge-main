@@ -24,18 +24,9 @@ class SingerPlacementController extends Controller
 	    
         $singer->load('user');
 
-		$voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
-
-        if(config('features.rebuild')) {
-            return Inertia::render('Singers/Placements/Create', [
-                'singer' => $singer,
-                'voice_parts' => $voice_parts->values(),
-            ]);
-        }
-
-		return view('singers.createplacement', [
-		    'singer' => $singer,
-            'voice_parts' => $voice_parts->pluck('title', 'id')->toArray(),
+        return Inertia::render('Singers/Placements/Create', [
+            'singer' => $singer,
+            'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
         ]);
 	}
 
@@ -68,20 +59,10 @@ class SingerPlacementController extends Controller
 
         $singer->load('user');
 
-        $voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
-
-        if(config('features.rebuild')) {
-            return Inertia::render('Singers/Placements/Edit', [
-                'singer' => $singer,
-                'placement' => $placement,
-                'voice_parts' => $voice_parts->values(),
-            ]);
-        }
-
-		return view('singers.editplacement', [
-		    'singer' => $singer,
+        return Inertia::render('Singers/Placements/Edit', [
+            'singer' => $singer,
             'placement' => $placement,
-            'voice_parts' => $voice_parts->pluck('title', 'id')->toArray(),
+            'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
         ]);
 	}
 

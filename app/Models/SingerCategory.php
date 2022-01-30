@@ -34,14 +34,7 @@ class SingerCategory extends Model
 
 	protected $appends = ['colour'];
 
-    public const CATEGORY_COLOURS = [
-        'Members' => 'success',
-        'Prospects' => 'warning',
-        'Archived Prospects' => 'dark',
-        'Archived Members' => 'tertiary',
-    ];
-
-	public const CATEGORY_COLOURS_REBUILD = [
+	public const CATEGORY_COLOURS = [
 		'Members' => 'green-500',
 		'Prospects' => 'yellow-500',
 		'Archived Prospects' => 'yellow-700',
@@ -55,9 +48,6 @@ class SingerCategory extends Model
 
 	public function getColourAttribute(): string
 	{
-        if(config('features.rebuild')){
-            return self::CATEGORY_COLOURS_REBUILD[$this->name];
-        }
         return self::CATEGORY_COLOURS[$this->name];
     }
 }

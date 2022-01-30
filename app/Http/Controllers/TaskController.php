@@ -6,7 +6,6 @@ use App\Http\Requests\TaskRequest;
 use App\Models\Role;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use App\Models\Task;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -15,35 +14,16 @@ class TaskController extends Controller
 {
 	public function index(): View|Response
 	{
-		$tasks = Task::all();
-
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Tasks/Index', [
-                'tasks' => $tasks->values(),
-            ]);
-        }
-
-		return view('tasks.index', compact('tasks'));
+        return Inertia::render('Tasks/Index', [
+            'tasks' => Task::all()->values(),
+        ]);
 	}
 
 	public function create(): View|Response
 	{
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Tasks/Create', [
-                'roles' => Role::where('name', '!=', 'User')->get()->values(),
-            ]);
-        }
-
-        $roles = Role::all();
-        $roles_keyed = $roles->mapWithKeys(static function ($role) {
-            return [$role['id'] => $role['name']];
-        });
-
-        return view('tasks.create')->with(compact('roles_keyed'));
+        return Inertia::render('Tasks/Create', [
+            'roles' => Role::where('name', '!=', 'User')->get()->values(),
+        ]);
 	}
 
 	public function store(TaskRequest $request): RedirectResponse
@@ -66,15 +46,9 @@ class TaskController extends Controller
             'delete_task' => auth()->user()?->can('delete', $task),
         ];
 
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Tasks/Show', [
-                'task' => $task,
-            ]);
-        }
-
-		return view('tasks.show', compact('task'));
+        return Inertia::render('Tasks/Show', [
+            'task' => $task,
+        ]);
 	}
 
 	public function destroy(Task $task): RedirectResponse

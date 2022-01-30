@@ -33,14 +33,7 @@ class SongStatus extends Model
 
     protected $appends = ['colour'];
 
-	public const STATUS_COLOURS = [
-		'Pending' => 'danger',
-		'Learning' => 'warning',
-		'Active' => 'success',
-		'Archived' => 'tertiary',
-	];
-
-    public const STATUS_COLOURS_REBUILD = [
+    public const STATUS_COLOURS = [
         'Pending' => 'red-500',
         'Learning' => 'yellow-500',
         'Active' => 'green-500',
@@ -54,9 +47,6 @@ class SongStatus extends Model
 
     public function getColourAttribute(): string
 	{
-        if(config('features.rebuild')){
-            return self::STATUS_COLOURS_REBUILD[$this->title];
-        }
-		return self::STATUS_COLOURS[$this->title];
+        return self::STATUS_COLOURS[$this->title];
 	}
 }

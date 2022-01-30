@@ -37,17 +37,10 @@ class LearningStatus extends Pivot
 
     public function getStatusColourAttribute(): string
     {
-        if(config('features.rebuild')){
-            return match ($this->status) {
-                'not-started' => 'red-500',
-                'assessment-ready' => 'yellow-500',
-                'performance-ready' => 'green-500',
-            };
-        }
         return match ($this->status) {
-            'not-started' => 'danger',
-            'assessment-ready' => 'warning',
-            'performance-ready' => 'success',
+            'not-started' => 'red-500',
+            'assessment-ready' => 'yellow-500',
+            'performance-ready' => 'green-500',
         };
     }
 

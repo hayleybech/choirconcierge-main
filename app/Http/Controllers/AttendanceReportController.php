@@ -65,27 +65,12 @@ class AttendanceReportController extends Controller
             2,
         );
 
-        if(config('features.rebuild')) {
-            return Inertia::render('Events/AttendanceReport', [
-                'voiceParts' => $voice_parts->values(),
-                'events' => $all_events->where('start_date', '<', now())->values(),
-                'numSingers' => $singers->count(),
-                'avgSingersPerEvent' => $avg_singers_per_event,
-                'avgEventsPerSinger' => $avg_events_per_singer,
-            ]);
-        }
-
-		return view('events.reports.attendance', [
-			'voice_parts' => $voice_parts,
-			'events' => $all_events->where('start_date', '<', now()),
-			'filters' => Event::getFilters(),
-			'avg_singers_per_event' => $avg_singers_per_event,
-			'avg_events_per_singer' => $avg_events_per_singer,
-		]);
+        return Inertia::render('Events/AttendanceReport', [
+            'voiceParts' => $voice_parts->values(),
+            'events' => $all_events->where('start_date', '<', now())->values(),
+            'numSingers' => $singers->count(),
+            'avgSingersPerEvent' => $avg_singers_per_event,
+            'avgEventsPerSinger' => $avg_events_per_singer,
+        ]);
 	}
-
-    private function moveNoPartToEnd($collection){
-        return $collection->reject(fn($value) => $value->title === 'No Part')
-            ->merge($collection->filter(fn($value) => $value->title === 'No Part'));
-    }
 }

@@ -40,10 +40,6 @@ class LoginController extends Controller
 
 	public function showLoginForm()
     {
-        if(config('features.rebuild')) {
-            return Inertia::render('Auth/Login');
-        }
-
-        return view('auth.login');
+        return Inertia::render('Auth/Login');
     }
 }

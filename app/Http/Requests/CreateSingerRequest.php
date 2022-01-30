@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Singer;
 use App\Rules\UserUniqueForChoir;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -21,11 +20,7 @@ class CreateSingerRequest extends FormRequest
 
 	public function prepareForValidation()
 	{
-        if(config('features.rebuild')) {
-            $this->merge(['onboarding_enabled' => ! $this->input('onboarding_disabled')]);
-        } else {
-            $this->whenHas('onboarding_disabled', fn() => $this->merge(['onboarding_enabled' => false]));
-        }
+        $this->merge(['onboarding_enabled' => ! $this->input('onboarding_disabled')]);
 	}
 
 	/**
@@ -38,36 +33,23 @@ class CreateSingerRequest extends FormRequest
 		$singer = $this->route('singer');
 
         $userRules = [
-            'email' => [
-                'required',
-                Rule::unique('users')
-                    ->ignore($singer->user->id ?? ''),
+            'user_id' => [
+                Rule::when(!empty($this->input('user_id')), [
+                    Rule::exists('users', 'id'),
+                    new UserUniqueForChoir,
+                ]),
             ],
-            'first_name' => ['required', 'max:127'],
-            'last_name' => ['required', 'max:127'],
-            'password' => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
+            'email' => [
+                Rule::when(empty($this->input('user_id')), [
+                    'required',
+                    Rule::unique('users')
+                        ->ignore($singer->user->id ?? ''),
+                ]),
+            ],
+            'first_name' => ['exclude_without:email', 'required', 'max:127'],
+            'last_name' => ['exclude_without:email', 'required', 'max:127'],
+            'password' => ['exclude_without:email', 'sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
         ];
-
-		if(config('features.user_search_in_create_singer')) {
-		    $userRules = [
-		        'user_id' => [
-                    Rule::when(!empty($this->input('user_id')), [
-                        Rule::exists('users', 'id'),
-                        new UserUniqueForChoir,
-                    ]),
-                ],
-                'email' => [
-                    Rule::when(empty($this->input('user_id')), [
-                        'required',
-                        Rule::unique('users')
-                            ->ignore($singer->user->id ?? ''),
-                    ]),
-                ],
-                'first_name' => ['exclude_without:email', 'required', 'max:127'],
-                'last_name' => ['exclude_without:email', 'required', 'max:127'],
-                'password' => ['exclude_without:email', 'sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
-            ];
-        }
 
 		return array_merge($userRules, [
             'reason_for_joining' => ['max:255'],

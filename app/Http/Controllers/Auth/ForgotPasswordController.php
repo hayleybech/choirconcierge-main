@@ -33,10 +33,6 @@ class ForgotPasswordController extends Controller
 
     public function showLinkRequestForm()
     {
-        if(config('features.rebuild')) {
-            return Inertia::render('Auth/ForgotPassword');
-        }
-
-        return view('auth.passwords.email');
+        return Inertia::render('Auth/ForgotPassword');
     }
 }

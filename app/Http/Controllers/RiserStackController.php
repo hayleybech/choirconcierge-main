@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RiserStackRequest;
 use App\Models\RiserStack;
-use App\Models\Singer;
 use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -19,16 +17,9 @@ class RiserStackController extends Controller
 	{
 		$this->authorize('viewAny', RiserStack::class);
 
-		// Base query
-		$stacks = RiserStack::all();
-
-        if(config('features.rebuild')){
-            return Inertia::render('RiserStacks/Index', [
-                'stacks' => $stacks->values(),
-            ]);
-        }
-
-		return view('stacks.index', compact('stacks'));
+        return Inertia::render('RiserStacks/Index', [
+            'stacks' => RiserStack::all()->values(),
+        ]);
 	}
 
 	public function create(): View|Response
@@ -40,13 +31,9 @@ class RiserStackController extends Controller
         }])->get();
 		$voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
-        if(config('features.rebuild')){
-            return Inertia::render('RiserStacks/Create', [
-                'voice_parts' => $voice_parts->values(),
-            ]);
-        }
-
-		return view('stacks.create', compact('voice_parts'));
+        return Inertia::render('RiserStacks/Create', [
+            'voice_parts' => $voice_parts->values(),
+        ]);
 	}
 
 	public function store(RiserStackRequest $request): RedirectResponse
@@ -78,13 +65,9 @@ class RiserStackController extends Controller
 		$voice_parts = VoicePart::with(['singers.user'])->get();
         $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
-        if(config('features.rebuild')){
-            return Inertia::render('RiserStacks/Show', [
-                'stack' => $stack,
-            ]);
-        }
-
-		return view('stacks.show', compact('stack', 'voice_parts'));
+        return Inertia::render('RiserStacks/Show', [
+            'stack' => $stack,
+        ]);
 	}
 
 	public function edit(RiserStack $stack): View|Response
@@ -108,14 +91,10 @@ class RiserStackController extends Controller
 		])->get();
         $voice_parts->each(fn($part) => $part->singers->each->append('user_avatar_thumb_url'));
 
-        if(config('features.rebuild')){
-            return Inertia::render('RiserStacks/Edit', [
-                'stack' => $stack,
-                'voice_parts' => $voice_parts->values(),
-            ]);
-        }
-
-		return view('stacks.edit', compact('stack', 'voice_parts'));
+        return Inertia::render('RiserStacks/Edit', [
+            'stack' => $stack,
+            'voice_parts' => $voice_parts->values(),
+        ]);
 	}
 
 	public function update(RiserStack $stack, RiserStackRequest $request): RedirectResponse
@@ -144,10 +123,10 @@ class RiserStackController extends Controller
 	}
 
 	/**
-	 * Takes the crappy array format I sent the controller from Vue,
+	 * Takes the crappy array format I sent the controller from React,
 	 * and turns it into a format compatible with sync().
 	 *
-	 * @todo Convert the riser position data within the Vue component.
+	 * @todo Convert the riser position data within the React component.
 	 *
 	 * @param RiserStackRequest $request
 	 *
@@ -155,11 +134,7 @@ class RiserStackController extends Controller
 	 */
 	private function prepPositions(RiserStackRequest $request): array
 	{
-        if(config('features.rebuild')){
-		    $position_data = $request->validated()['singer_positions'];
-        } else {
-		    $position_data = json_decode($request->validated()['singer_positions'], true);
-        }
+        $position_data = $request->validated()['singer_positions'];
 
 		return collect($position_data)
             ->mapWithKeys(fn($item) => [

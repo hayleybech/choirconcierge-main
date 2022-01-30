@@ -29,16 +29,9 @@ class LearningStatusController extends Controller
                 return $part;
             });
 
-        if(config('features.rebuild')) {
-            return Inertia::render('Songs/Learning/Index', [
-                'song' => $song,
-                'voice_parts' => $voice_parts->values(),
-            ]);
-        }
-
-        return view('songs.learning.index', [
+        return Inertia::render('Songs/Learning/Index', [
             'song' => $song,
-            'voice_parts' => $voice_parts,
+            'voice_parts' => $voice_parts->values(),
         ]);
     }
 
@@ -49,15 +42,5 @@ class LearningStatusController extends Controller
         $song->singers()->updateExistingPivot($singer->id, ['status' => $request->input('status')]);
 
         return redirect()->route('songs.singers.index', $song);
-    }
-
-    private function moveNoPartToEnd($collection){
-        return $collection->reject(function($value){
-            return $value->title === 'No Part';
-        })
-        ->merge($collection->filter(function($value){
-                return $value->title === 'No Part';
-            })
-        );
     }
 }
