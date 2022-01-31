@@ -70,7 +70,7 @@ class SingerPolicy
 	 */
 	public function update(User $user, Singer $singer)
 	{
-		return $user->singer->is($singer) || $user->singer->hasAbility('singers_update');
+		return $user->singer->hasAbility('singers_update');
 	}
 
 	/**
