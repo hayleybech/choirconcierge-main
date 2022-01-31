@@ -10,10 +10,8 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
-const rebuild = process.env.MIX_FEATURE_REBUILD;
-
-mix.js('resources/assets/js/app-rebuild.js', 'public/js/app-rebuild.js')
-	.postCss('resources/assets/app.css', 'public/css/app-rebuild.css', [
+mix.js('resources/assets/js/app.js', 'public/js/app.js')
+	.postCss('resources/assets/app.css', 'public/css/app.css', [
 		require('tailwindcss')
 	])
 	.extract()

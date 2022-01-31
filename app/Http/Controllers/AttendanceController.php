@@ -7,7 +7,6 @@ use App\Models\Event;
 use App\Models\Singer;
 use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -37,21 +36,10 @@ class AttendanceController extends Controller
                 return $part;
             });
 
-//        dd($voice_parts);
-
-        if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Events/Attendance/Index', [
-                'event' => $event,
-                'voice_parts' => $voice_parts->values(),
-            ]);
-        }
-
-        return view('events.attendances.index', [
-			'event' => $event,
-			'voice_parts' => $voice_parts,
-		]);
+        return Inertia::render('Events/Attendance/Index', [
+            'event' => $event,
+            'voice_parts' => $voice_parts->values(),
+        ]);
 	}
 
 	public function update(Event $event, Singer $singer, Request $request): RedirectResponse {
@@ -91,14 +79,4 @@ class AttendanceController extends Controller
 			->route('events.show', ['event' => $event])
 			->with(['status' => 'Attendance recorded.']);
 	}
-
-    private function moveNoPartToEnd($collection){
-        return $collection->reject(function($value){
-            return $value->title === 'No Part';
-        })
-            ->merge($collection->filter(function($value){
-                return $value->title === 'No Part';
-            })
-            );
-    }
 }

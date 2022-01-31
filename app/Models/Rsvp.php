@@ -66,9 +66,9 @@ class Rsvp extends Model
     public function getColourAttribute(): string
     {
         $colours = [
-            'yes' => 'green',
-            'maybe' => 'yellow',
-            'unknown' => 'yellow',
+            'yes' => 'emerald',
+            'maybe' => 'amber',
+            'unknown' => 'amber',
             'no' => 'red',
         ];
         return $colours[$this->response];

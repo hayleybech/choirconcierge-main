@@ -12,6 +12,7 @@ const Create = () => (
             icon="fa-users-class"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
+                { name: 'Singers', url: route('singers.index')},
                 { name: 'Voice Parts', url: route('voice-parts.index')},
                 { name: 'Create', url: route('voice-parts.create')},
             ]}

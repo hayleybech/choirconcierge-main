@@ -16,16 +16,6 @@ class EventRequest extends FormRequest
 		return true;
 	}
 
-	public function prepareForValidation()
-	{
-        if(! config('features.rebuild')) {
-            $this->merge([
-                'is_repeating' => $this->has('is_repeating'),
-                'send_notification' => $this->has('send_notification'),
-            ]);
-        }
-	}
-
 	/**
 	 * Get the validation rules that apply to the request.
 	 *

@@ -11,8 +11,7 @@ use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Illuminate\Http\Request;;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -50,66 +49,19 @@ class EventController extends Controller
             ->defaultSort('-start_date')
 			->get();
 
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Events/Index', [
-                'events' => $all_events->values(),
-                'eventTypes' => EventType::all()->values(),
-            ]);
-        }
-
-        $all_events = Event::with(['repeat_parent:id,call_time'])
-            ->withCount([
-                'rsvps as going_count' => function ($query) {
-                    $query->where('response', '=', 'yes');
-                },
-                'attendances as present_count' => function ($query) {
-                    $query->where('response', '=', 'present');
-                },
-            ])
-            ->filter()
-            ->get();
-
-        // Sort
-        $sort_by = $request->input('sort_by', 'call_time');
-        $sort_dir = $request->input('sort_dir', 'asc');
-
-        // Flip direction for date (so we sort by smallest age not smallest timestamp)
-        if ($sort_by === 'created_at') {
-            $sort_dir = $sort_dir === 'asc' ? 'desc' : 'asc';
-        }
-
-        if ($sort_dir === 'asc') {
-            $all_events = $all_events->sortBy($sort_by);
-        } else {
-            $all_events = $all_events->sortByDesc($sort_by);
-        }
-
-		return view('events.index', [
-			'all_events' => $all_events,
-			'upcoming_events' => $all_events->where('call_time', '>', now()),
-			'past_events' => $all_events->where('call_time', '<', now()),
-			'filters' => Event::getFilters(),
-			'sorts' => ($sorts = $this->getSorts($request)),
-		]);
+        return Inertia::render('Events/Index', [
+            'events' => $all_events->values(),
+            'eventTypes' => EventType::all()->values(),
+        ]);
 	}
 
 	public function create(): View|Response
 	{
 		$this->authorize('create', Event::class);
 
-		$types = EventType::all();
-
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Events/Create', [
-                'types' => $types->values(),
-            ]);
-        }
-
-		return view('events.create', compact('types'));
+        return Inertia::render('Events/Create', [
+            'types' => EventType::all()->values(),
+        ]);
 	}
 
 	public function store(EventRequest $request): RedirectResponse
@@ -142,67 +94,41 @@ class EventController extends Controller
             'delete_event' => auth()->user()?->can('delete', $event),
         ];
 
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Events/Show', [
-                'event' => $event,
-                'rsvpCount' => [
-                    'yes' => $event->singers_rsvp_response('yes')->count(),
-                    'no' => $event->singers_rsvp_response('no')->count(),
-                    'unknown' => $event->singers_rsvp_missing()->count(),
-                ],
-                'voicePartsRsvpCount' => [
-                    'yes' => $event->voice_parts_rsvp_response_count('yes')->get(),
-                ],
-                'attendanceCount' => [
-                    'present' => $event->singers_attendance('present')->count(),
-                    'absent' => $event->singers_attendance('absent')->count(),
-                    'absent_apology' => $event->singers_attendance('absent_apology')->count(),
-                    'unknown' => $event->singers_attendance_missing()->count(),
-                ],
-                'voicePartsAttendanceCount' => [
-                    'present' => $event->voice_parts_attendance_count('present')->get(),
-                ],
-                'addToCalendarLinks' => [
-                    'google' => $event->add_to_calendar_link?->google(),
-                    'webOutlook' => $event->add_to_calendar_link?->webOutlook(),
-                    'ics' => $event->add_to_calendar_link?->ics(),
-                ]
-            ]);
-        }
-
-		return view('events.show', [
-			'event' => $event,
-			'my_attendance' => $event->my_attendance(),
-			'singers_rsvp_yes_count' => $event->singers_rsvp_response('yes')->count(),
-			'singers_rsvp_no_count' => $event->singers_rsvp_response('no')->count(),
-			'singers_rsvp_missing_count' => $event->singers_rsvp_missing()->count(),
-			'voice_parts_rsvp_yes_count' => $event->voice_parts_rsvp_response_count('yes')->get(),
-			'singers_attendance_present' => $event->singers_attendance('present')->count(),
-			'singers_attendance_absent' => $event->singers_attendance('absent')->count(),
-			'singers_attendance_absent_apology' => $event->singers_attendance('absent_apology')->count(),
-			'singers_attendance_missing' => $event->singers_attendance_missing()->count(),
-			'voice_parts_attendance' => $event->voice_parts_attendance_count('present')->get(),
-		]);
+        return Inertia::render('Events/Show', [
+            'event' => $event,
+            'rsvpCount' => [
+                'yes' => $event->singers_rsvp_response('yes')->count(),
+                'no' => $event->singers_rsvp_response('no')->count(),
+                'unknown' => $event->singers_rsvp_missing()->count(),
+            ],
+            'voicePartsRsvpCount' => [
+                'yes' => $event->voice_parts_rsvp_response_count('yes')->get(),
+            ],
+            'attendanceCount' => [
+                'present' => $event->singers_attendance('present')->count(),
+                'absent' => $event->singers_attendance('absent')->count(),
+                'absent_apology' => $event->singers_attendance('absent_apology')->count(),
+                'unknown' => $event->singers_attendance_missing()->count(),
+            ],
+            'voicePartsAttendanceCount' => [
+                'present' => $event->voice_parts_attendance_count('present')->get(),
+            ],
+            'addToCalendarLinks' => [
+                'google' => $event->add_to_calendar_link?->google(),
+                'webOutlook' => $event->add_to_calendar_link?->webOutlook(),
+                'ics' => $event->add_to_calendar_link?->ics(),
+            ]
+        ]);
 	}
 
 	public function edit(Event $event): View|Response
 	{
 		$this->authorize('update', $event);
 
-		$types = EventType::all();
-
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Events/Edit', [
-                'event' => $event,
-                'types' => $types->values(),
-            ]);
-        }
-
-		return view('events.edit', compact('event', 'types'));
+        return Inertia::render('Events/Edit', [
+            'event' => $event,
+            'types' => EventType::all()->values(),
+        ]);
 	}
 
 	public function update(Event $event, EventRequest $request): RedirectResponse
@@ -237,35 +163,5 @@ class EventController extends Controller
 		return redirect()
 			->route('events.index')
 			->with(['status' => 'Event deleted. ']);
-	}
-
-	public function getSorts(Request $request): array
-	{
-		$sort_cols = ['title', 'type.title', 'created_at', 'call_time'];
-
-		// Merge filters with sort query string
-		$url = $request->url() . '?' . Event::getFilterQueryString();
-
-		$current_sort = $request->input('sort_by', 'call_time');
-		$current_dir = $request->input('sort_dir', 'asc');
-
-		$sorts = [];
-		foreach ($sort_cols as $col) {
-			// If current sort
-			if ($col === $current_sort) {
-				// Create link for opposite sort direction
-				$current = true;
-				$dir = 'asc' === $current_dir ? 'desc' : 'asc';
-			} else {
-				$current = false;
-				$dir = 'asc';
-			}
-			$sorts[$col] = [
-				'url' => $url . "&sort_by=$col&sort_dir=$dir",
-				'dir' => $current_dir,
-				'current' => $current,
-			];
-		}
-		return $sorts;
 	}
 }

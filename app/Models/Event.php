@@ -2,12 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Filters\Event_DateFilter;
-use App\Models\Filters\Event_TypeFilter;
-use App\Models\Filters\Filterable;
 use App\Models\Traits\TenantTimezoneDates;
-use App\Notifications\EventCreated;
-use App\Notifications\EventUpdated;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,9 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 use Spatie\CalendarLinks\Link;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
@@ -69,7 +62,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Event extends Model
 {
-	use Filterable, BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
+	use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
 
 	/**
 	 * The attributes that are mass assignable.
@@ -93,8 +86,6 @@ class Event extends Model
 		'repeat_frequency_amount',
 		'repeat_frequency_unit',
 	];
-
-	protected static $filters = [Event_TypeFilter::class, Event_DateFilter::class];
 
 	protected $with = ['type'];
 

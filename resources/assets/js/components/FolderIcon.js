@@ -11,24 +11,24 @@ const FolderIcon = ({ icon }) => {
             '--fa-secondary-color': fullConfig.theme.colors.blue[500],
         },
         'fa-file-excel': {
-            '--fa-primary-color': fullConfig.theme.colors.green[200],
-            '--fa-secondary-color': fullConfig.theme.colors.green[500],
+            '--fa-primary-color': fullConfig.theme.colors.emerald[200],
+            '--fa-secondary-color': fullConfig.theme.colors.emerald[500],
         },
         'fa-file-csv': {
-            '--fa-primary-color': fullConfig.theme.colors.green[200],
-            '--fa-secondary-color': fullConfig.theme.colors.green[500],
+            '--fa-primary-color': fullConfig.theme.colors.emerald[200],
+            '--fa-secondary-color': fullConfig.theme.colors.emerald[500],
         },
         'fa-file-powerpoint': {
-            '--fa-primary-color': fullConfig.theme.colors.yellow[200],
-            '--fa-secondary-color': fullConfig.theme.colors.yellow[500],
+            '--fa-primary-color': fullConfig.theme.colors.amber[200],
+            '--fa-secondary-color': fullConfig.theme.colors.amber[500],
         },
         'fa-file-pdf': {
             '--fa-primary-color': fullConfig.theme.colors.red[200],
             '--fa-secondary-color': fullConfig.theme.colors.red[500],
         },
         'fa-file-image': {
-            '--fa-primary-color': fullConfig.theme.colors.green[200],
-            '--fa-secondary-color': fullConfig.theme.colors.green[500],
+            '--fa-primary-color': fullConfig.theme.colors.emerald[200],
+            '--fa-secondary-color': fullConfig.theme.colors.emerald[500],
         },
         'fa-file-video': {
             '--fa-primary-color': fullConfig.theme.colors.purple[200],

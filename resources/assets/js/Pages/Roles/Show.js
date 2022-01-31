@@ -17,6 +17,7 @@ const Show = ({ role }) => {
                 title={role.name}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
+                    { name: 'Singers', url: route('singers.index')},
                     { name: 'Roles', url: route('roles.index')},
                     { name: role.name, url: route('roles.show', role) },
                 ]}
@@ -54,7 +55,7 @@ const Show = ({ role }) => {
                                 <td
                                     key={`${modelKey}_${abilityKey}`}
                                     className={classNames('py-4',
-                                        role.abilities.includes(`${modelKey}_${abilityKey}`) ? 'text-green-500' : 'text-gray-500',
+                                        role.abilities.includes(`${modelKey}_${abilityKey}`) ? 'text-emerald-500' : 'text-gray-500',
                                     )}
                                 >
                                     <Icon icon={role.abilities.includes(`${modelKey}_${abilityKey}`) ? 'check' : 'times'} mr />

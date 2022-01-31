@@ -35,7 +35,7 @@ export const AudioSeekBar = ({ className }) => {
 
     return (
         <div
-            className={`bg-gray-800 cursor-pointer overflow-hidden flex-grow sm:w-64 h-4 rounded ${className}`}
+            className={`bg-gray-800 cursor-pointer overflow-hidden grow sm:w-64 h-4 rounded ${className}`}
             ref={seekBarElem}
             onClick={goTo}
         >

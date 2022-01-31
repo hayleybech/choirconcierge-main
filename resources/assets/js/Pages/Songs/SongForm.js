@@ -13,6 +13,7 @@ import Button from "../../components/inputs/Button";
 import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
+import SongStatus from "../../SongStatus";
 
 const SongForm = ({ categories, statuses, pitches, song}) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -29,7 +30,7 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
             <Form onSubmit={submit}>
 
                 <FormSection title="Song Details">
@@ -52,7 +53,12 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
                     <div className="sm:col-span-6">
                         <RadioGroup
                             label={<Label label="Song Status" />}
-                            options={statuses.map(status => ({ ...status, name: status.title, icon: 'circle'}))}
+                            options={statuses.map(status => ({
+                                id: status.id,
+                                name: SongStatus.statuses[status.slug].title,
+                                textColour: SongStatus.statuses[status.slug].textColour,
+                                icon: SongStatus.statuses[status.slug].icon,
+                            }))}
                             selected={data.status}
                             setSelected={value => setData('status', value)}
                         />

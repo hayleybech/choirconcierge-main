@@ -8,9 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Styles -->
-    <link href="{{ global_asset('/css/app-rebuild.css') }}" rel="stylesheet">
-
-{{--    <link href="{{ global_asset('/css/style.css') }}" rel="stylesheet">--}}
+    <link href="{{ global_asset('/css/app.css') }}" rel="stylesheet">
     <link href="{{ global_asset('/vendor/fontawesome-pro/css/all.min.css') }}" rel="stylesheet">
 	<link rel="shortcut icon" href="{{ global_asset( '/img/favicon.png' ) }}">
 
@@ -30,7 +28,7 @@
     <!-- Scripts -->
     <script src="{{ mix('/js/manifest.js') }}"></script>
     <script src="{{ mix('/js/vendor.js') }}"></script>
-    <script src="{{ mix('/js/app-rebuild.js') }}"></script>
+    <script src="{{ mix('/js/app.js') }}"></script>
 
 	<script>
 	  var HW_config = {

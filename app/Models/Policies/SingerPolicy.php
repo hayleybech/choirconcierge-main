@@ -10,15 +10,17 @@ class SingerPolicy
 {
 	use HandlesAuthorization;
 
-	public function before(User $user, string $ability)
-	{
+	public function before(User $user, string $ability): ?bool
+    {
 	    if(! $user->singer) {
 	        return false;
         }
 
-		if ($user->singer->hasRole('Admin')) {
-			return true;
-		}
+        if ($ability !== 'delete' && $user->singer->hasRole('Admin')) {
+            return true;
+        }
+
+        return null;
 	}
 
 	/**
@@ -68,7 +70,7 @@ class SingerPolicy
 	 */
 	public function update(User $user, Singer $singer)
 	{
-		return $user->singer->is($singer) || $user->singer->hasAbility('singers_update');
+		return $user->singer->hasAbility('singers_update');
 	}
 
 	/**
@@ -81,6 +83,9 @@ class SingerPolicy
 	 */
 	public function delete(User $user, Singer $singer)
 	{
+        if($user->singer->is($singer)) {
+            return false;
+        }
 		return $user->singer->hasAbility('singers_delete');
 	}
 

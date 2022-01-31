@@ -29,122 +29,48 @@ class SongController extends Controller
     {
 		$this->authorize('viewAny', Song::class);
 
-        if(config('features.rebuild')){
-            $includePending = auth()->user()?->singer?->hasAbility('songs_update');
-            $statuses = SongStatus::query()
-                ->when(! $includePending, fn($query) => $query->where('title', '!=', 'Pending'))
-                ->get();
-            $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
+        $includePending = auth()->user()?->singer?->hasAbility('songs_update');
+        $statuses = SongStatus::query()
+            ->when(! $includePending, fn($query) => $query->where('title', '!=', 'Pending'))
+            ->get();
+        $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
 
-            $songs = QueryBuilder::for(Song::class)
-                ->allowedFilters([
-                    'title',
-                    AllowedFilter::exact('status.id')
-                        ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
-                        ->default($defaultStatuses),
-                    AllowedFilter::exact('categories.id'),
-                ])
-                ->defaultSort('title')
-                ->allowedSorts([
-                    'title',
-                    'created_at',
-                    AllowedSort::custom('status-title', new SongStatusSort(), 'title'),
-                ])
-                ->get();
-
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Songs/Index', [
-                'songs' => $songs->values(),
-                'statuses' => SongStatus::query()
-                    ->when(! $includePending, fn($query) => $query->where('title', '!=', 'Pending'))
-                    ->get()
-                    ->values(),
-                'defaultStatuses' => $defaultStatuses,
-                'categories' => SongCategory::all()->values(),
-            ]);
-        }
-
-        // Base query
-        $songs = Song::withCount(['attachments'])
-            ->filter()
+        $songs = QueryBuilder::for(Song::class)
+            ->allowedFilters([
+                'title',
+                AllowedFilter::exact('status.id')
+                    ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
+                    ->default($defaultStatuses),
+                AllowedFilter::exact('categories.id'),
+            ])
+            ->defaultSort('title')
+            ->allowedSorts([
+                'title',
+                'created_at',
+                AllowedSort::custom('status-title', new SongStatusSort(), 'title'),
+            ])
             ->get();
 
-        // Sort
-        $sort_by = $request->input('sort_by', 'title');
-        $sort_dir = $request->input('sort_dir', 'asc');
-
-        // Flip direction for date (so we sort by smallest age not smallest timestamp)
-        if ($sort_by === 'created_at') {
-            $sort_dir = $sort_dir === 'asc' ? 'desc' : 'asc';
-        }
-
-        if ($sort_dir === 'asc') {
-            $songs = $songs->sortBy($sort_by);
-        } else {
-            $songs = $songs->sortByDesc($sort_by);
-        }
-
-		return view('songs.index', [
-			'all_songs' => $songs,
-			'active_songs' => $songs->where('status.title', '=', 'Active'),
-			'learning_songs' => $songs->where('status.title', '=', 'Learning'),
-			'pending_songs' => $songs->where('status.title', '=', 'Pending'),
-			'archived_songs' => $songs->where('status.title', '=', 'Archived'),
-			'filters' => Song::getFilters(),
-			'sorts' => $this->getSorts($request),
-		]);
-	}
-
-	public function learning(Request $request): View
-	{
-		$this->authorize('viewAny', Song::class);
-
-		// Base query
-		$songs = Song::with(['attachments'])
-			->filter()
-			->get();
-
-		// Sort
-		$sort_by = $request->input('sort_by', 'name');
-		$sort_dir = $request->input('sort_dir', 'asc');
-
-		// Flip direction for date (so we sort by smallest age not smallest timestamp)
-		if ($sort_by === 'created_at') {
-			$sort_dir = $sort_dir === 'asc' ? 'desc' : 'asc';
-		}
-
-		if ($sort_dir === 'asc') {
-			$songs = $songs->sortBy($sort_by);
-		} else {
-			$songs = $songs->sortByDesc($sort_by);
-		}
-
-		$sorts = $this->getSorts($request);
-
-		$filters = Song::getFilters();
-		return view('songs.learning', compact('songs', 'filters', 'sorts'));
+        return Inertia::render('Songs/Index', [
+            'songs' => $songs->values(),
+            'statuses' => SongStatus::query()
+                ->when(! $includePending, fn($query) => $query->where('title', '!=', 'Pending'))
+                ->get()
+                ->values(),
+            'defaultStatuses' => $defaultStatuses,
+            'categories' => SongCategory::all()->values(),
+        ]);
 	}
 
 	public function create(): View|InertiaResponse
 	{
 		$this->authorize('create', Song::class);
 
-		$categories = SongCategory::all();
-		$statuses = SongStatus::all();
-		$pitches = Song::KEYS;
-
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Songs/Create', [
-                'categories' => $categories->values(),
-                'statuses' => $statuses->values(),
-                'pitches' => Song::PITCHES,
-            ]);
-        }
-
-		return view('songs.create', compact('categories', 'statuses', 'pitches'));
+        return Inertia::render('Songs/Create', [
+            'categories' => SongCategory::all()->values(),
+            'statuses' => SongStatus::all()->values(),
+            'pitches' => Song::PITCHES,
+        ]);
 	}
 
 	public function store(SongRequest $request): RedirectResponse
@@ -172,12 +98,7 @@ class SongController extends Controller
 
 		$song->load('attachments.category');
 
-		$attachment_categories = SongAttachmentCategory::all();
-		$categories_keyed = $attachment_categories->mapWithKeys(function ($item) {
-			return [$item['id'] => $item['title']];
-		});
-
-		$assessment_ready_count = $song->singers()->active()->wherePivot('status', 'assessment-ready')->count();
+        $assessment_ready_count = $song->singers()->active()->wherePivot('status', 'assessment-ready')->count();
 		$performance_ready_count = $song->singers()->active()->wherePivot('status', 'performance-ready')->count();
 
 		$voice_parts_performance_ready_count = VoicePart::withCount([
@@ -202,40 +123,27 @@ class SongController extends Controller
 
         $song->append('my_learning');
 
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Songs/Show', [
-                'song' => $song,
-                'all_attachment_categories' => $attachment_categories,
-                'attachment_categories' => $song->attachments->mapToGroups(function($attachment) {
-                    return [$attachment->category->title => $attachment];
-                })->sortBy(function($attachments, $category_title) {
-                    return match ($category_title) {
-                        'Sheet Music' => 0,
-                        'Full Mix (Demo)' => 1,
-                        'Learning Tracks' => 2,
-                        'Other' => 3,
-                    };
-                }),
-                'status_count' => [
-                    'performance_ready' => $performance_ready_count,
-                    'assessment_ready' => $assessment_ready_count,
-                    'learning' => Singer::active()->count() - $assessment_ready_count - $performance_ready_count,
-                ],
-                'voice_parts_count' => [
-                    'performance_ready' => $voice_parts_performance_ready_count,
-                ],
-            ]);
-        }
-
-		return view('songs.show', [
-		    'song' => $song,
-            'categories_keyed' => $categories_keyed,
-            'singers_learning_count' => Singer::active()->count() - $assessment_ready_count - $performance_ready_count,
-            'singers_assessment_ready_count' => $assessment_ready_count,
-            'singers_performance_ready_count' => $performance_ready_count,
-            'voice_parts_performance_ready_count' => $voice_parts_performance_ready_count,
+        return Inertia::render('Songs/Show', [
+            'song' => $song,
+            'all_attachment_categories' => SongAttachmentCategory::all(),
+            'attachment_categories' => $song->attachments->mapToGroups(function($attachment) {
+                return [$attachment->category->title => $attachment];
+            })->sortBy(function($attachments, $category_title) {
+                return match ($category_title) {
+                    'Sheet Music' => 0,
+                    'Full Mix (Demo)' => 1,
+                    'Learning Tracks' => 2,
+                    'Other' => 3,
+                };
+            }),
+            'status_count' => [
+                'performance_ready' => $performance_ready_count,
+                'assessment_ready' => $assessment_ready_count,
+                'learning' => Singer::active()->count() - $assessment_ready_count - $performance_ready_count,
+            ],
+            'voice_parts_count' => [
+                'performance_ready' => $voice_parts_performance_ready_count,
+            ],
         ]);
 	}
 
@@ -243,22 +151,12 @@ class SongController extends Controller
 	{
 		$this->authorize('update', $song);
 
-		$categories = SongCategory::all();
-		$statuses = SongStatus::all();
-		$pitches = Song::KEYS;
-
-        if(config('features.rebuild')) {
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Songs/Edit', [
-                'categories' => $categories->values(),
-                'statuses' => $statuses->values(),
-                'pitches' => Song::PITCHES,
-                'song' => $song,
-            ]);
-        }
-
-		return view('songs.edit', compact('song', 'categories', 'statuses', 'pitches'));
+        return Inertia::render('Songs/Edit', [
+            'categories' => SongCategory::all()->values(),
+            'statuses' => SongStatus::all()->values(),
+            'pitches' => Song::PITCHES,
+            'song' => $song,
+        ]);
 	}
 
 	public function update(SongRequest $request, Song $song): RedirectResponse
@@ -289,35 +187,5 @@ class SongController extends Controller
 		return redirect()
 			->route('songs.index')
 			->with(['status' => 'Song deleted. ']);
-	}
-
-	public function getSorts(Request $request): array
-	{
-		$sort_cols = ['title', 'status.title', 'created_at'];
-
-		// Merge filters with sort query string
-		$url = $request->url() . '?' . Song::getFilterQueryString();
-
-		$current_sort = $request->input('sort_by', 'title');
-		$current_dir = $request->input('sort_dir', 'asc');
-
-		$sorts = [];
-		foreach ($sort_cols as $col) {
-			// If current sort
-			if ($col === $current_sort) {
-				// Create link for opposite sort direction
-				$current = true;
-				$dir = 'asc' === $current_dir ? 'desc' : 'asc';
-			} else {
-				$current = false;
-				$dir = 'asc';
-			}
-			$sorts[$col] = [
-				'url' => $url . "&sort_by=$col&sort_dir=$dir",
-				'dir' => $current_dir,
-				'current' => $current,
-			];
-		}
-		return $sorts;
 	}
 }

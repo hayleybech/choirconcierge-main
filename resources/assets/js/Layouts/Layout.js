@@ -20,33 +20,45 @@ export default function Layout({ children }) {
         songId: 0,
         fileName: null,
         src: null,
-        play: play,
+        play: (attachment) => setPlayer(oldState => ({
+            ...oldState,
+            songTitle: attachment.song.title,
+            songId: attachment.song.id,
+            fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
+            src: attachment.download_url,
+        })),
+        stop: () => setPlayer({
+            ...player,
+            songTitle: null,
+            songId: 0,
+            fileName: null,
+            src: null,
+        }),
+
+        showFullscreen: false,
+        setShowFullscreen: (value) => setPlayer(oldState => ({
+            ...oldState,
+            showFullscreen: value,
+        })),
     });
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
     const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
 
     const { can, userChoirs } = usePage().props;
 
-    function play(attachment) {
-        setPlayer({
-            ...player,
-            songTitle: attachment.song.title,
-            songId: attachment.song.id,
-            fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
-            src: attachment.download_url,
-        });
-    }
-
     const navFiltered = navigation
         .filter((item) => can[item.can])
         .map((item) => {
             item.active = item.showAsActiveForRoutes.some((routeName) => route().current(routeName));
-            item.items.map((subItem) => {
-                subItem.active = subItem.showAsActiveForRoutes.some((routeName) => route().current(routeName));
-                return subItem;
-            })
+            item.items = item.items
+                .filter((subItem) => can[subItem.can])
+                .map((subItem) => {
+                    subItem.active = subItem.showAsActiveForRoutes.some((routeName) => route().current(routeName));
+                    return subItem;
+                });
             return item;
         });
+    console.log(navFiltered);
 
     return (
         <PlayerContext.Provider value={player}>
@@ -59,14 +71,14 @@ export default function Layout({ children }) {
                 />
 
                 {/* Static sidebar for desktop */}
-                <div className="hidden xl:flex xl:flex-shrink-0">
+                <div className="hidden xl:flex xl:shrink-0">
                     <SidebarDesktop
                         navigation={navFiltered}
                         switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
                     />
                 </div>
                 <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                    <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />
+                    {player.showFullscreen || <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />}
 
                     <AudioPlayerProvider>
                         <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none">
@@ -74,18 +86,7 @@ export default function Layout({ children }) {
                         </main>
 
                         {player.fileName &&
-                            <GlobalTrackPlayer
-                                songTitle={player.songTitle}
-                                songId={player.songId}
-                                fileName={player.fileName}
-                                close={() => setPlayer({
-                                    ...player,
-                                    songTitle: null,
-                                    songId: 0,
-                                    fileName: null,
-                                    src: null,
-                                })}
-                            />
+                            <GlobalTrackPlayer songTitle={player.songTitle} songId={player.songId} fileName={player.fileName} close={player.stop} />
                         }
                     </AudioPlayerProvider>
                 </div>

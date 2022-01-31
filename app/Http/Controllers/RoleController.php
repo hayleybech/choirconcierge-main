@@ -18,26 +18,12 @@ class RoleController extends Controller
 
 	public function index(): View|Response
 	{
-		$roles = Role::withCount('singers')->get();
-
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Roles/Index', ['roles' => $roles->values()]);
-        }
-
-		return view('roles.index', ['roles' => $roles]);
+        return Inertia::render('Roles/Index', ['roles' => Role::withCount('singers')->get()->values()]);
 	}
 
 	public function create(): View|Response
 	{
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Roles/Create');
-        }
-
-		return view('roles.create');
+        return Inertia::render('Roles/Create');
 	}
 
 	public function store(Request $request): RedirectResponse
@@ -58,25 +44,13 @@ class RoleController extends Controller
             'update_role' => auth()->user()?->can('update', $role),
             'delete_role' => auth()->user()?->can('delete', $role),
         ];
-	    
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
 
-            return Inertia::render('Roles/Show', ['role' => $role]);
-        }
-        
-		return view('roles.show', ['role' => $role]);
+        return Inertia::render('Roles/Show', ['role' => $role]);
 	}
 
 	public function edit(Role $role): View|Response
 	{
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Roles/Edit', ['role' => $role]);
-        }
-
-		return view('roles.edit')->with(['role' => $role]);
+        return Inertia::render('Roles/Edit', ['role' => $role]);
 	}
 
 	public function update(Request $request, Role $role): RedirectResponse

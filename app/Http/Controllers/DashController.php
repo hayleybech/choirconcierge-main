@@ -68,43 +68,19 @@ class DashController extends Controller
             ->orderBy('call_time')
             ->get();
 
-        if(config('features.rebuild')){
-            $songs = Song::whereHas('status', static function (Builder $query) {
-                    return $query->where('title', 'Learning');
-                })
-                ->orderBy('title')
-                ->get()
-                ->each->append('my_learning');
-
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Dash/Show', [
-                'events' => $events->values(),
-                'songs' => $songs->values(),
-                'birthdays' => $birthdays->values(),
-                'emptyDobs' => $empty_dobs,
-                'memberversaries' => $memberversaries->values(),
-            ]);
-        }
-
         $songs = Song::whereHas('status', static function (Builder $query) {
-            return $query->where('title', 'Learning');
-        })
+                return $query->where('title', 'Learning');
+            })
             ->orderBy('title')
             ->get()
-            ->groupBy('my_learning.status')
-            ->map(function ($songs) {
-                $learning = $songs->first()->my_learning ?? LearningStatus::getNullLearningStatus();
-                $learning->songs = $songs;
-                return $learning;
-            });
+            ->each->append('my_learning');
 
-        return view('dash', [
-            'birthdays' => $birthdays,
-            'memberversaries' => $memberversaries,
-            'empty_dobs' => $empty_dobs,
-            'songs' => $songs,
-            'events' => $events,
+        return Inertia::render('Dash/Show', [
+            'events' => $events->values(),
+            'songs' => $songs->values(),
+            'birthdays' => $birthdays->values(),
+            'emptyDobs' => $empty_dobs,
+            'memberversaries' => $memberversaries->values(),
         ]);
 	}
 }

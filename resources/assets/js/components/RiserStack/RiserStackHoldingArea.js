@@ -31,7 +31,7 @@ const RiserStackHoldingArea = ({ singersByVoicePart, setSelectedSinger, selected
 									'relative px-6 py-5 flex items-center space-x-3',
 									selectedSinger?.id === singer.id ? 'bg-purple-400 ring-2 ring-inset ring-purple-500' : 'bg-white hover:bg-purple-300'
 								)}>
-									<div className="flex-shrink-0">
+									<div className="shrink-0">
 										<img className="h-8 w-8 rounded-lg" src={singer.user.avatar_url} alt={singer.user.name} />
 									</div>
 									<div className="flex items-center justify-between px-4">

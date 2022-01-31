@@ -31,32 +31,15 @@ class SongStatus extends Model
 {
 	use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
 
-    protected $appends = ['colour'];
-
-	public const STATUS_COLOURS = [
-		'Pending' => 'danger',
-		'Learning' => 'warning',
-		'Active' => 'success',
-		'Archived' => 'tertiary',
-	];
-
-    public const STATUS_COLOURS_REBUILD = [
-        'Pending' => 'red-500',
-        'Learning' => 'yellow-500',
-        'Active' => 'green-500',
-        'Archived' => 'blue-500',
-    ];
+    protected $appends = ['slug'];
 
     public function songs(): HasMany
 	{
 		return $this->hasMany(Song::class, 'status_id');
 	}
 
-    public function getColourAttribute(): string
-	{
-        if(config('features.rebuild')){
-            return self::STATUS_COLOURS_REBUILD[$this->title];
-        }
-		return self::STATUS_COLOURS[$this->title];
-	}
+    public function getSlugAttribute(): string
+    {
+        return strtolower($this->title);
+    }
 }

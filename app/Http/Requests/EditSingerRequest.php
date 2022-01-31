@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Singer;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class EditSingerRequest extends FormRequest
 {
@@ -20,11 +18,7 @@ class EditSingerRequest extends FormRequest
 
 	public function prepareForValidation()
 	{
-        if(config('features.rebuild')) {
-            $this->merge(['onboarding_enabled' => ! $this->input('onboarding_disabled')]);
-        } else {
-		    $this->whenHas('onboarding_disabled', fn() => $this->merge(['onboarding_enabled' => false]));
-        }
+        $this->merge(['onboarding_enabled' => ! $this->input('onboarding_disabled')]);
 	}
 
 	/**

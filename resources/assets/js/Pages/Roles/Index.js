@@ -13,6 +13,7 @@ const Index = ({ roles }) => (
             icon="user-tag"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
+                { name: 'Singers', url: route('singers.index')},
                 { name: 'Roles', url: route('roles.index')},
             ]}
             actions={[

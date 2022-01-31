@@ -1,10 +1,10 @@
 import React from 'react';
 import Icon from "../Icon";
 
-const LearningStatusTag = ({ name, icon, colour }) => (
-    <div className={`flex items-center mr-4 font-weight-bold text-${colour}`}>
-        <Icon icon={icon} mr />
-        {name}
+const LearningStatusTag = ({ status }) => (
+    <div className={`flex items-center mr-4 font-bold ${status.textColour}`}>
+        <Icon icon={status.icon} mr />
+        {status.title}
     </div>
 );
 

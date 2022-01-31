@@ -26,7 +26,7 @@ const FileInput = ({ name, type = 'text', value, updateFn, hasErrors, multiple, 
                     type="button"
                     size="sm"
                     onClick={() => inputRef.current.click()}
-                    className="flex-grow"
+                    className="grow"
                     variant={hasErrors ? 'danger-outline' : 'secondary'}
                 >
                     Browse...

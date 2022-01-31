@@ -6,7 +6,6 @@ use App\Http\Requests\FolderRequest;
 use App\Models\Folder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,25 +26,14 @@ class FolderController extends Controller
 			->orderBy('title')
 			->get(); // folders by folder title
 
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Folders/Index', [
-                'folders' => $folders->values(),
-            ]);
-        }
-
-		return view('folders.index', compact('folders'));
+        return Inertia::render('Folders/Index', [
+            'folders' => $folders->values(),
+        ]);
 	}
 
 	public function create(): View|Response
 	{
-        if(config('features.rebuild')){
-            Inertia::setRootView('layouts/app-rebuild');
-
-            return Inertia::render('Folders/Create');
-        }
-		return view('folders.create');
+        return Inertia::render('Folders/Create');
 	}
 
 	/**
@@ -56,7 +44,7 @@ class FolderController extends Controller
 	 */
 	public function store(FolderRequest $request): RedirectResponse
 	{
-		$folder = Folder::create($request->validated());
+		 Folder::create($request->validated());
 
 		return redirect()
 			->route('folders.index')

@@ -11,7 +11,7 @@ const MailingListTableMobile = ({ lists }) => (
                         <p className="flex items-center min-w-0 mr-1.5">
                             <span className="text-sm font-medium text-purple-600 truncate">{list.title}</span>
                         </p>
-                        <div className="text-xs text-gray-500 flex-shrink-0">
+                        <div className="text-xs text-gray-500 shrink-0">
                             <Icon icon={list.type_icon} mr className="text-gray-400" />
                             {list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}
                         </div>

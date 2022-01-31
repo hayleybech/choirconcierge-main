@@ -10,7 +10,7 @@ const TaskTableMobile = ({ tasks }) => (
                         <p className="flex items-center min-w-0 mr-1.5">
                             <span className="text-sm font-medium text-purple-600 truncate">{task.name}</span>
                         </p>
-                        <div className="text-xs text-gray-500 flex-shrink-0">
+                        <div className="text-xs text-gray-500 shrink-0">
                             {task.type[0].toUpperCase() + task.type.slice(1)}
                         </div>
                     </div>

@@ -1,18 +1,13 @@
-import Vue from 'vue';
-import ReadMore from 'vue-read-more';
-import * as Sentry from '@sentry/vue';
-import { Integrations as TracingIntegrations } from '@sentry/tracing';
+import React from 'react'
+import { render } from 'react-dom'
+import { createInertiaApp } from '@inertiajs/inertia-react'
+import { InertiaProgress } from '@inertiajs/progress'
+import * as Sentry from '@sentry/react';
+import {Integrations as TracingIntegrations} from "@sentry/tracing";
 
-const VERSION = 'choir-concierge@2022-01-29a';
-
-console.log('test');
-require('./bootstrap');
-require('select2');
-
-Vue.use(ReadMore);
+const VERSION = 'choir-concierge@2022-01-31a';
 
 Sentry.init({
-	Vue: Vue,
 	dsn: process.env.MIX_SENTRY_DSN,
 	logErrors: true,
 	integrations: [new TracingIntegrations.BrowserTracing()],
@@ -21,57 +16,13 @@ Sentry.init({
 		trackComponents: true,
 	},
 	release: process.env.MIX_APP_ENV === 'production' ? VERSION : VERSION + ':dev',
-});
+})
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
-
-const files = require.context('./', true, /\.vue$/i);
-files.keys().map(key =>
-	Vue.component(
-		key
-			.split('/')
-			.pop()
-			.split('.')[0],
-		files(key).default
-	)
-);
-
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-// Allow binding select2 fields (add v-select attribute to select element to enable)
-// https://stackoverflow.com/a/51260727/563974
-Vue.directive('select2', {
-	inserted(el) {
-		$(el).on('select2:select', () => {
-			const event = new Event('change', { bubbles: true, cancelable: true });
-			el.dispatchEvent(event);
-		});
-
-		$(el).on('select2:unselect', () => {
-			const event = new Event('change', { bubbles: true, cancelable: true });
-			el.dispatchEvent(event);
-		});
+createInertiaApp({
+	resolve: name => require(`./Pages/${name}`),
+	setup({ el, App, props }) {
+		render(<App {...props} />, el)
 	},
 });
 
-const app = new Vue({
-	el: '#app',
-	data() {
-		return {
-			loading: true,
-		};
-	},
-	created() {
-		this.loading = false;
-	},
-});
+InertiaProgress.init();

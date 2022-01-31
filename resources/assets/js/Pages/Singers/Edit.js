@@ -36,19 +36,19 @@ const Edit = ({ voice_parts, roles, singer }) => {
 
     return (
         <>
-            <AppHead title={`Edit - ${singer.user.name}`} />
+            <AppHead title={`Edit Membership - ${singer.user.name}`} />
             <PageHeader
-                title={'Edit Singer'}
+                title={'Edit Membership'}
                 icon="fa-users"
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Singers', url: route('singers.index')},
                     { name: singer.user.name, url: route('singers.show', singer)},
-                    { name: 'Edit', url: route('singers.edit', singer)},
+                    { name: 'Edit Membership', url: route('singers.edit', singer)},
                 ]}
             />
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
                 <Form onSubmit={submit}>
 
                     <FormSection title="Singer Details" description="Start adding information about the singer's membership.">

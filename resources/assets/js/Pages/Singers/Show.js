@@ -16,11 +16,12 @@ import DateTag from "../../components/DateTag";
 import SectionHeader from "../../components/SectionHeader";
 import DeleteDialog from "../../components/DeleteDialog";
 import Pronouns from "../../components/Pronouns";
+import SingerStatus from "../../SingerStatus";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
         {min}
-        <div className="flex-grow mx-2">
+        <div className="grow mx-2">
             <div className="h-5 bg-purple-100 border border-purple-300 rounded-sm overflow-hidden">
                 <div className="bg-purple-600 h-full flex justify-center items-center text-white" style={{ width: `${value / max * 100}%`}}>
                     {value}
@@ -34,7 +35,7 @@ const Progress = ({ value, max, min }) => (
 const Range = ({ value, min, max, minLabel, maxLabel }) => (
     <div className="flex items-center text-xs">
         {minLabel}
-        <div className="flex-grow mx-2">
+        <div className="grow mx-2">
             <div className="h-1 bg-gray-200 rounded-sm flex items-center pr-3">
                 <div className="w-full relative">
                     <div
@@ -84,7 +85,12 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
             </p>
             <RadioGroup
                 label="Select a new category"
-                options={categories.map(category => ({ ...category, icon: 'circle'}))}
+                options={categories.map(category => ({
+                    id: category,
+                    name: SingerStatus.statuses[category.slug].title,
+                    textColour: SingerStatus.statuses[category.slug].textColour,
+                    icon: SingerStatus.statuses[category.slug].icon,
+                }))}
                 selected={selectedCategory}
                 setSelected={setSelectedCategory}
                 vertical
@@ -106,7 +112,7 @@ const Show = ({ singer, categories }) => {
                 image={singer.user.avatar_url}
                 meta={[
                     <>{singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}</>,
-                    <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} withLabel />,
+                    <SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />,
                     <DateTag date={singer.joined_at} label="Joined" />,
                 ]}
                 breadcrumbs={[
@@ -267,7 +273,7 @@ const Show = ({ singer, categories }) => {
                                     {singer.tasks.map((task, index, tasks) => (
                                         <li key={index}>
                                             <span className="flex items-center">
-                                                <span className="flex-shrink-0 h-5 w-5 relative flex items-center justify-center" aria-hidden="true">
+                                                <span className="shrink-0 h-5 w-5 relative flex items-center justify-center" aria-hidden="true">
                                                     {task.pivot.completed
                                                     && <Icon icon="check-circle" className="text-purple-500 text-sm" />
                                                     || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>

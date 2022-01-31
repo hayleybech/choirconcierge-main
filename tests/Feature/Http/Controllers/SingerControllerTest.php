@@ -11,7 +11,6 @@ use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Inertia\Testing\Assert;
@@ -153,11 +152,8 @@ class SingerControllerTest extends TestCase
      * @test
      * @dataProvider singerProvider
      */
-    public function store_creates_a_user_when_user_search_flag_is_on($getData): void
+    public function store_creates_a_user_when_given_an_email($getData): void
     {
-        config()->set('features.rebuild', true);
-        config()->set('features.user_search_in_create_singer', true);
-
         $mail = Mail::fake();
 
         $this->actingAs($this->createUserWithRole('Membership Team'));
@@ -189,11 +185,8 @@ class SingerControllerTest extends TestCase
      * @test
      * @dataProvider singerProvider
      */
-    public function store_assigns_an_existing_user_when_user_search_flag_is_on($getData): void
+    public function store_assigns_an_existing_user_when_given_a_user_id($getData): void
     {
-        config()->set('features.rebuild', true);
-        config()->set('features.user_search_in_create_singer', true);
-
         $mail = Mail::fake();
 
         $user = User::factory()->create();
@@ -229,8 +222,6 @@ class SingerControllerTest extends TestCase
 	 */
 	public function store_inserts_tasks_for_prospects($getData): void
 	{
-	    config()->set('features.rebuild', true);
-
 		$task = Task::factory()->create();
 		$mail = Mail::fake();
 

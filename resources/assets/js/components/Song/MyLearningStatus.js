@@ -3,6 +3,7 @@ import Button from "../inputs/Button";
 import LearningStatusTag from "./LearningStatusTag";
 import SectionTitle from "../SectionTitle";
 import SectionHeader from "../SectionHeader";
+import LearningStatus from "../../LearningStatus";
 
 const MyLearningStatus = ({ song }) => (
     <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,7 +12,7 @@ const MyLearningStatus = ({ song }) => (
             <SectionTitle>My Learning Status</SectionTitle>
         </SectionHeader>
 
-        <LearningStatusTag name={song.my_learning.status_name} colour={song.my_learning.status_colour} icon={song.my_learning.status_icon} />
+        <LearningStatusTag status={new LearningStatus(song.my_learning.status)} />
 
         {song.my_learning.status === 'not-started' && (
             <Button href={route('songs.my-learning.update', song)} method="post" size="sm" className="mt-2">I'm Assessment Ready</Button>

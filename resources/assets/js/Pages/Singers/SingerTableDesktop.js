@@ -4,6 +4,7 @@ import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
 import Table, {TableCell} from "../../components/Table";
 import Icon from "../../components/Icon";
+import SingerStatus from "../../SingerStatus";
 
 const SingerTableDesktop = ({ singers }) => (
     <Table
@@ -12,7 +13,7 @@ const SingerTableDesktop = ({ singers }) => (
             <tr key={singer.id}>
                 <TableCell>
                     <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10">
+                        <div className="shrink-0 h-10 w-10">
                             <img className="h-10 w-10 rounded-md" src={singer.user.avatar_url} alt={singer.user.name} />
                         </div>
                         <div className="ml-4">
@@ -28,7 +29,7 @@ const SingerTableDesktop = ({ singers }) => (
                     {singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}
                 </TableCell>
                 <TableCell>
-                    <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} withLabel />
+                    <SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />
                 </TableCell>
                 <TableCell>
                     <Icon icon="envelope" mr className="text-gray-400" />

@@ -7,7 +7,7 @@ const IndexContainer = ({ tableDesktop, tableMobile, filterPane, showFilters }) 
                 {filterPane}
             </div>
         )}
-        <div className="flex-grow lg:overflow-x-auto">
+        <div className="grow lg:overflow-x-auto">
             <div className="hidden lg:flex flex-col overflow-y-hidden">
                 {tableDesktop}
             </div>
