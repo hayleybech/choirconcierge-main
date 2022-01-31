@@ -6,6 +6,8 @@ import ButtonLink from "../inputs/ButtonLink";
 import SectionTitle from "../SectionTitle";
 import Icon from "../Icon";
 import SectionHeader from "../SectionHeader";
+import LearningStatus from "../../LearningStatus";
+import LearningStatusTag from "./LearningStatusTag";
 
 const LearningSummary = ({ status_count, voice_parts_count, song }) => (
     <div className="py-6">
@@ -47,24 +49,21 @@ const LearningSummary = ({ status_count, voice_parts_count, song }) => (
                 <Tab.Panel className="py-6 px-4">
                     <div className="flex">
                         {[
-                            { label: 'Performing', colour: 'green-500', icon: 'check-double', count: status_count.performance_ready },
-                            { label: 'Assessing', colour: 'yellow-500', icon: 'check', count: status_count.assessment_ready },
-                            { label: 'Learning', colour: 'red-500', icon: 'clock', count: status_count.learning },
-                        ].map(({ label, colour, icon, count}) => (
-                            <div className="w-1/3 text-center" key={label}>
-                                <Icon icon={icon} className={`text-${colour}`} />
-                                <p className={`font-semibold text-${colour}`}>{label}</p>
+                            { status: new LearningStatus('performance-ready'), count: status_count.performance_ready },
+                            { status: new LearningStatus('assessment-ready'), count: status_count.assessment_ready },
+                            { status: new LearningStatus('not-started'), count: status_count.learning },
+                        ].map(({ status, count }) => (
+                            <div className="w-1/3 text-center" key={status.slug}>
+                                <Icon icon={status.icon} className={status.textColour} />
+                                <p className={`font-semibold ${status.textColour}`}>{status.shortTitle}</p>
                                 {count}
                             </div>
                         ))}
                     </div>
                 </Tab.Panel>
                 <Tab.Panel className="py-6 px-4">
-                    <p className="text-green-500 font-semibold mb-4">
-                        <Icon icon="check-double" mr />
-                        Performance Ready
-                    </p>
-                    <div className="flex">
+                    <LearningStatusTag status={new LearningStatus('performance-ready')} />
+                    <div className="flex mt-4">
                         {voice_parts_count.performance_ready.map(voice_part => (
                             <div className="w-1/2 text-center" key={voice_part.id}>
                                 <p className="mb-2">

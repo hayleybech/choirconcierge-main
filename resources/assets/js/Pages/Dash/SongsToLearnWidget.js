@@ -3,6 +3,7 @@ import SectionTitle from "../../components/SectionTitle";
 import Panel from "../../components/Panel";
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 import LearningStatusTag from "../../components/Song/LearningStatusTag";
+import LearningStatus from "../../LearningStatus";
 
 const SongsToLearnWidget = ({ songs }) => (
     <Panel header={<SectionTitle>Songs to Learn</SectionTitle>} noPadding>
@@ -12,7 +13,7 @@ const SongsToLearnWidget = ({ songs }) => (
                     <TableMobileItem url={route('songs.show', song)}>
                         <div className="text-sm font-medium text-purple-800 shrink-1">{song.title}</div>
                         <div className="text-sm">
-                            <LearningStatusTag name={song.my_learning.status_name} colour={song.my_learning.status_colour} icon={song.my_learning.status_icon} />
+                            <LearningStatusTag status={new LearningStatus(song.my_learning.status)} />
                         </div>
                     </TableMobileItem>
                 ))}

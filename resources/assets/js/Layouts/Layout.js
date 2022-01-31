@@ -68,7 +68,7 @@ export default function Layout({ children }) {
                 />
 
                 {/* Static sidebar for desktop */}
-                <div className="hidden xl:flex xl:flex-shrink-0">
+                <div className="hidden xl:flex xl:shrink-0">
                     <SidebarDesktop
                         navigation={navFiltered}
                         switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}

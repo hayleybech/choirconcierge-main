@@ -47,8 +47,8 @@ const AttendanceSummary = ({ event, attendanceCount, voicePartsAttendanceCount }
                 <Tab.Panel className="py-6 px-4">
                     <div className="flex">
                         {[
-                            { label: 'Present', colour: 'green-500', icon: 'check', count: attendanceCount.present },
-                            { label: 'Not recorded', colour: 'yellow-500', icon: 'question', count: attendanceCount.unknown },
+                            { label: 'Present', colour: 'emerald-500', icon: 'check', count: attendanceCount.present },
+                            { label: 'Not recorded', colour: 'amber-500', icon: 'question', count: attendanceCount.unknown },
                             { label: 'Absent', colour: 'red-500', icon: 'times', count: attendanceCount.absent + attendanceCount.absent_apology },
                         ].map(({ label, colour, icon, count}) => (
                             <div className="w-1/3 text-center" key={label}>
@@ -61,7 +61,7 @@ const AttendanceSummary = ({ event, attendanceCount, voicePartsAttendanceCount }
                     <p className="text-gray-500 text-sm text-center mt-2">{attendanceCount.absent_apology} absent with apology.</p>
                 </Tab.Panel>
                 <Tab.Panel className="py-6 px-4">
-                    <p className="text-green-500 font-semibold mb-4">
+                    <p className="text-emerald-500 font-semibold mb-4">
                         <Icon icon="check" mr />
                         Present
                     </p>

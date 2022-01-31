@@ -14,6 +14,7 @@ import DeleteDialog from "../../components/DeleteDialog";
 import Pdf from "../../components/Song/Pdf";
 import {useMediaQuery} from "react-responsive";
 import {PlayerContext} from "../../contexts/player-context";
+import SongStatus from "../../SongStatus";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const player = useContext(PlayerContext);
@@ -57,7 +58,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                 <PageHeader
                     title={song.title}
                     meta={[
-                        <SongStatusTag name={song.status.title} colour={song.status.colour} withLabel />,
+                        <SongStatusTag status={new SongStatus(song.status.slug)} withLabel />,
                         <div className="space-x-1 5">
                             {song.categories.map(category => <React.Fragment key={category.id}><SongCategoryTag category={category} /></React.Fragment>)}
                         </div>,

@@ -5,6 +5,7 @@ import PitchButton from "../../components/PitchButton";
 import Table, {TableCell} from "../../components/Table";
 import Badge from "../../components/Badge";
 import DateTag from "../../components/DateTag";
+import SongStatus from "../../SongStatus";
 
 const SongTableDesktop = ({ songs }) => (
     <Table
@@ -22,7 +23,7 @@ const SongTableDesktop = ({ songs }) => (
                     </div>
                 </TableCell>
                 <TableCell>
-                    <SongStatusTag name={song.status.title} colour={song.status.colour} withLabel />
+                    <SongStatusTag status={new SongStatus(song.status.slug)} withLabel />
                 </TableCell>
                 <TableCell>
                     <div className="space-x-1.5 space-y-1.5">

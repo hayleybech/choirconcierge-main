@@ -32,13 +32,13 @@ class SingerCategory extends Model
 {
 	use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
-	protected $appends = ['colour'];
+	protected $appends = ['slug'];
 
 	public const CATEGORY_COLOURS = [
-		'Members' => 'green-500',
-		'Prospects' => 'yellow-500',
-		'Archived Prospects' => 'yellow-700',
-		'Archived Members' => 'green-700',
+		'Members' => 'emerald-500',
+		'Prospects' => 'amber-500',
+		'Archived Prospects' => 'amber-700',
+		'Archived Members' => 'emerald-700',
 	];
 
 	public function singers(): HasMany
@@ -46,8 +46,13 @@ class SingerCategory extends Model
 		return $this->hasMany(Singer::class);
 	}
 
-	public function getColourAttribute(): string
+	public function getSlugAttribute(): string
 	{
-        return self::CATEGORY_COLOURS[$this->name];
+        return match($this->name) {
+            'Members' => 'members',
+            'Prospects' => 'prospects',
+            'Archived Prospects' => 'archived-prospects',
+            'Archived Members' => 'archived-members'
+        };
     }
 }

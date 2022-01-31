@@ -35,7 +35,7 @@ const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurren
                             {Object.values(attachment_categories[category_title]).map(attachment => (
                                 <li key={attachment.id} className="bg-white">
                                     <div className="px-6 py-5 flex items-center space-x-3 hover:bg-gray-50">
-                                        <div className="flex-shrink-0">
+                                        <div className="shrink-0">
                                             {isPlayable(attachment) && (
                                                 <Button variant="clear" onClick={() => play(attachment)} size="sm" disabled={isCurrentTrack(attachment)}>
                                                     <Icon icon={isCurrentTrack(attachment) ? 'waveform' : 'play'} />
@@ -52,8 +52,7 @@ const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurren
                                         </div>
                                         { song.can['update_song'] &&
                                             <Button
-                                                variant="clear"
-                                                className="text-red-500"
+                                                variant="danger-clear"
                                                 onClick={() => {setDeletingAttachmentId(attachment.id);
                                                 setDeleteDialogIsOpen(true)}}
                                             >

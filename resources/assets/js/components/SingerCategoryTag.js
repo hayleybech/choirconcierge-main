@@ -1,10 +1,10 @@
 import React from 'react';
 import Icon from "./Icon";
 
-const SingerCategoryTag = ({name, colour, withLabel }) => (
+const SingerCategoryTag = ({ status, withLabel }) => (
     <>
-        <Icon icon="circle" mr className={`text-sm text-${colour}`} />
-        {withLabel && <span className="text-sm font-medium text-gray-500 truncate">{name}</span>}
+        <Icon icon={status.icon} mr className={`text-sm ${status.textColour}`} />
+        {withLabel && <span className="text-sm font-medium text-gray-500 truncate">{status.title}</span>}
     </>
 );
 

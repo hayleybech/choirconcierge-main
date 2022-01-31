@@ -30,7 +30,7 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                         {events.map((event) => (
                             <th key={event.id} className="p-5 border border-gray-300 align-bottom">
                                 <div className="flex justify-center transform rotate-180">
-                                    <div className="overflow-ellipsis overflow-hidden text-sm text-left" style={{ writingMode: 'vertical-lr' }}>
+                                    <div className="text-ellipsis overflow-hidden text-sm text-left" style={{ writingMode: 'vertical-lr' }}>
                                         {event.title}
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                         ))}
                         <th className="p-5 border border-gray-300 align-bottom bg-gray-100">
                             <div className="flex justify-center transform rotate-180">
-                                <div className="overflow-ellipsis overflow-hidden text-sm text-left" style={{ writingMode: 'vertical-lr' }}>
+                                <div className="text-ellipsis overflow-hidden text-sm text-left" style={{ writingMode: 'vertical-lr' }}>
                                     Events Present
                                 </div>
                             </div>
@@ -66,7 +66,7 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                         <tr key={singer.id}>
                             <th className="px-5 py-3 text-left whitespace-nowrap border border-gray-300">
                                 <div className="flex flex-nowrap items-center">
-                                    <div className="flex-shrink-0 h-10 w-10 mr-4">
+                                    <div className="shrink-0 h-10 w-10 mr-4">
                                         <img className="h-10 w-10 rounded-md" src={singer.user.avatar_url} alt={singer.user.name} />
                                     </div>
 
@@ -77,7 +77,7 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                                 <td className="border border-gray-300 text-center">
                                     {attendance
                                         ? <AttendanceTag icon={attendance.icon} colour={attendance.colour} />
-                                        : <AttendanceTag icon="question" colour="yellow" />
+                                        : <AttendanceTag icon="question" colour="amber" />
                                     }
                                 </td>
                             ))}

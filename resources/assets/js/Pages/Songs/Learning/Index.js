@@ -4,6 +4,7 @@ import Layout from "../../../Layouts/Layout";
 import LearningStatusTag from "../../../components/Song/LearningStatusTag";
 import Button from "../../../components/inputs/Button";
 import AppHead from "../../../components/AppHead";
+import LearningStatus from "../../../LearningStatus";
 
 const Index = ({ song, voice_parts }) => (
     <>
@@ -30,21 +31,17 @@ const Index = ({ song, voice_parts }) => (
                             <li key={singer.id} className="bg-white">
                                 <div className="relative px-6 py-5 flex flex-col sm:flex-row items-center space-y-3 sm:space-x-3 hover:bg-gray-50 justify-between items-stretch sm:items-center">
                                     <div className="flex space-x-2">
-                                        <div className="flex-shrink-0">
+                                        <div className="shrink-0">
                                             <img className="h-12 w-12 rounded-lg" src={singer.user.avatar_url} alt={singer.user.name}/>
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm font-medium text-gray-900">{singer.user.name}</p>
                                             <p className="text-sm">
-                                                <LearningStatusTag
-                                                    name={singer.learning.status_name}
-                                                    colour={singer.learning.status_colour}
-                                                    icon={singer.learning.status_icon}
-                                                />
+                                                <LearningStatusTag status={new LearningStatus(singer.learning.status)} />
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="flex-shrink-0 flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 items-stretch">
+                                    <div className="shrink-0 flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 items-stretch">
                                         {singer.learning.status !== 'performance-ready' &&
                                             <Button
                                                 href={route('songs.singers.update', [song, singer])}

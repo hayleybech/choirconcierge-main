@@ -1,26 +1,13 @@
-const colors = require('tailwindcss/colors')
 module.exports = {
-  purge: [
-    // './resources/**/*.js',
+  content: [
+    './resources/assets/js/components/**/*.js',
+    './resources/assets/js/Layouts/**/*.js',
+    './resources/assets/js/Pages/**/*.js',
+    './resources/assets/js/*.js',
   ],
-  darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
       'sans': 'Lato, Arial, Helvetica, sans-serif'
-    },
-    colors: {
-      transparent: 'transparent',
-      current: 'currentColor',
-      black: colors.black,
-      white: colors.white,
-      gray: colors.coolGray,
-      indigo: colors.indigo,
-      purple: colors.purple,
-      red: colors.red,
-      yellow: colors.amber,
-      green: colors.emerald,
-      blue: colors.blue,
-      pink: colors.pink,
     },
     extend: {
       colors: {
@@ -33,9 +20,6 @@ module.exports = {
         '250px': '250px',
       }
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [
     require('@tailwindcss/forms'),

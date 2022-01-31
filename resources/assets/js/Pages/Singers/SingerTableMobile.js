@@ -3,19 +3,20 @@ import SingerCategoryTag from "../../components/SingerCategoryTag";
 import VoicePartTag from "../../components/VoicePartTag";
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 import Icon from "../../components/Icon";
+import SingerStatus from "../../SingerStatus";
 
 const SingerTableMobile = ({ singers }) => (
     <TableMobile>
         {singers.map((singer) => (
             <TableMobileItem key={singer.id} url={route('singers.show', singer.id)}>
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                     <img className="h-12 w-12 rounded-lg" src={singer.user.avatar_url} alt={singer.user.name} />
                 </div>
                 <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
                     <div>
                         <div className="flex items-center justify-between">
                             <p className="flex items-center min-w-0 mr-1.5">
-                                <SingerCategoryTag name={singer.category.name} colour={singer.category.colour} />
+                                <SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
                                 <span className="text-sm font-medium text-purple-600 truncate">{singer.user.name}</span>
                             </p>
                             {singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}

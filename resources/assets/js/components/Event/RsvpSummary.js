@@ -36,8 +36,8 @@ const RsvpSummary = ({ rsvpCount, voicePartsRsvpCount }) => (
                 <Tab.Panel className="py-6 px-4">
                     <div className="flex">
                         {[
-                            { label: 'Going', colour: 'green-500', icon: 'check', count: rsvpCount.yes },
-                            { label: 'Unknown', colour: 'yellow-500', icon: 'question', count: rsvpCount.unknown },
+                            { label: 'Going', colour: 'emerald-500', icon: 'check', count: rsvpCount.yes },
+                            { label: 'Unknown', colour: 'amber-500', icon: 'question', count: rsvpCount.unknown },
                             { label: 'Not going', colour: 'red-500', icon: 'times', count: rsvpCount.no },
                         ].map(({ label, colour, icon, count}) => (
                             <div className="w-1/3 text-center" key={label}>
@@ -49,7 +49,7 @@ const RsvpSummary = ({ rsvpCount, voicePartsRsvpCount }) => (
                     </div>
                 </Tab.Panel>
                 <Tab.Panel className="py-6 px-4">
-                    <p className="text-green-500 font-semibold mb-4">
+                    <p className="text-emerald-500 font-semibold mb-4">
                         <Icon icon="check" mr />
                         Going
                     </p>
