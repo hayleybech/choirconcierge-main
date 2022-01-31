@@ -82,6 +82,7 @@ const Sorts = ({ routeName, options }) => {
                         ]}
                         selected={data.sortDir}
                         setSelected={value => setData('sortDir', value)}
+                        vertical
                     />
                 </div>
             </div>
