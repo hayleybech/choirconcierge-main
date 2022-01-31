@@ -11,7 +11,7 @@ import Icon from "../Icon";
 const SongAttachmentForm = ({ categories, song }) => {
     const { data, setData, post, processing, errors } = useForm({
         attachment_uploads: [],
-        category: '',
+        category: categories[0].id,
     });
 
     function submit(e) {
