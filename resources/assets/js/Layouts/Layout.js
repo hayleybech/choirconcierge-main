@@ -50,12 +50,15 @@ export default function Layout({ children }) {
         .filter((item) => can[item.can])
         .map((item) => {
             item.active = item.showAsActiveForRoutes.some((routeName) => route().current(routeName));
-            item.items.map((subItem) => {
-                subItem.active = subItem.showAsActiveForRoutes.some((routeName) => route().current(routeName));
-                return subItem;
-            })
+            item.items = item.items
+                .filter((subItem) => can[subItem.can])
+                .map((subItem) => {
+                    subItem.active = subItem.showAsActiveForRoutes.some((routeName) => route().current(routeName));
+                    return subItem;
+                });
             return item;
         });
+    console.log(navFiltered);
 
     return (
         <PlayerContext.Provider value={player}>
