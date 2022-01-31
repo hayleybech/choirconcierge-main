@@ -23,7 +23,15 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
     const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
-    const [currentPdf, setCurrentPdf] = useState(isMobile ? null : attachment_categories['Sheet Music'][0]);
+    const [currentPdf, setCurrentPdf] = useState(() => {
+        if(isMobile) {
+            return null;
+        }
+        if(! attachment_categories['Sheet Music']) {
+            return null;
+        }
+         return attachment_categories['Sheet Music'][0];
+    });
 
     const showPdf = (attachment) => {
         setCurrentPdf(attachment);
