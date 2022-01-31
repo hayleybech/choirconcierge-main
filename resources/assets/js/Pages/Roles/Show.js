@@ -17,6 +17,7 @@ const Show = ({ role }) => {
                 title={role.name}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
+                    { name: 'Singers', url: route('singers.index')},
                     { name: 'Roles', url: route('roles.index')},
                     { name: role.name, url: route('roles.show', role) },
                 ]}

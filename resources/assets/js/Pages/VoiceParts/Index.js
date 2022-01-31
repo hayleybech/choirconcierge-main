@@ -13,6 +13,7 @@ const Index = ({ parts }) => (
             icon="users-class"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
+                { name: 'Singers', url: route('singers.index')},
                 { name: 'Voice Parts', url: route('voice-parts.index')},
             ]}
             actions={[
