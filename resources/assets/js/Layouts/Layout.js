@@ -58,7 +58,6 @@ export default function Layout({ children }) {
                 });
             return item;
         });
-    console.log(navFiltered);
 
     return (
         <PlayerContext.Provider value={player}>
