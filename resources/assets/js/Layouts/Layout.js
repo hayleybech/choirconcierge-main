@@ -12,7 +12,7 @@ import LayoutTopBar from "../components/LayoutTopBar";
 import SwitchChoirModal from "../components/SwitchChoirModal";
 import Button from "../components/inputs/Button";
 import Icon from "../components/Icon";
-import Toast from "../components/Toast";
+import ToastSuccess from "../components/ToastSuccess";
 
 
 export default function Layout({ children }) {
@@ -94,13 +94,11 @@ export default function Layout({ children }) {
                     </AudioPlayerProvider>
                 </div>
 
-                <Toast
+                <ToastSuccess
                     show={showToast}
                     close={() => setShowToast(false)}
                     title="Successfully saved!"
                     body="Anyone with a link can now view this file."
-                    icon="check-circle"
-                    iconClass="text-green-400"
                 />
 
                 <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
