@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import route from 'ziggy-js';
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
@@ -12,6 +12,8 @@ import LayoutTopBar from "../components/LayoutTopBar";
 import SwitchChoirModal from "../components/SwitchChoirModal";
 import Button from "../components/inputs/Button";
 import Icon from "../components/Icon";
+import Toast from "../components/Toast";
+
 
 export default function Layout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -58,7 +60,8 @@ export default function Layout({ children }) {
                 });
             return item;
         });
-    console.log(navFiltered);
+
+    const [showToast, setShowToast] = useState(true);
 
     return (
         <PlayerContext.Provider value={player}>
@@ -90,6 +93,15 @@ export default function Layout({ children }) {
                         }
                     </AudioPlayerProvider>
                 </div>
+
+                <Toast
+                    show={showToast}
+                    close={() => setShowToast(false)}
+                    title="Successfully saved!"
+                    body="Anyone with a link can now view this file."
+                    icon="check-circle"
+                    iconClass="text-green-400"
+                />
 
                 <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
                 <SwitchChoirModal setIsOpen={setShowSwitchChoirModal} isOpen={showSwitchChoirModal} choirs={userChoirs} />
