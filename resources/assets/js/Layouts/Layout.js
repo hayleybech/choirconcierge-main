@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import route from 'ziggy-js';
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
@@ -12,6 +12,8 @@ import LayoutTopBar from "../components/LayoutTopBar";
 import SwitchChoirModal from "../components/SwitchChoirModal";
 import Button from "../components/inputs/Button";
 import Icon from "../components/Icon";
+import ToastFlash from "../components/ToastFlash";
+
 
 export default function Layout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -44,7 +46,7 @@ export default function Layout({ children }) {
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
     const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
 
-    const { can, userChoirs } = usePage().props;
+    const { can, userChoirs, errors, flash } = usePage().props;
 
     const navFiltered = navigation
         .filter((item) => can[item.can])
@@ -57,7 +59,7 @@ export default function Layout({ children }) {
                     return subItem;
                 });
             return item;
-        });
+        })
 
     return (
         <PlayerContext.Provider value={player}>
@@ -89,6 +91,8 @@ export default function Layout({ children }) {
                         }
                     </AudioPlayerProvider>
                 </div>
+
+                <ToastFlash errors={errors} flash={flash} />
 
                 <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
                 <SwitchChoirModal setIsOpen={setShowSwitchChoirModal} isOpen={showSwitchChoirModal} choirs={userChoirs} />
