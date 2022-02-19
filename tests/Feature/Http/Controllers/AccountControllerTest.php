@@ -39,7 +39,8 @@ class AccountControllerTest extends TestCase
 	 */
 	public function update_saves_the_user_details($getData): void
 	{
-        $this->actingAs(User::factory()->has(Singer::factory())->create());
+        $user = User::factory()->has(Singer::factory())->create();
+        $this->actingAs($user);
 
 		$data = $getData();
 		$response = $this->post(the_tenant_route('accounts.update'), $data);
@@ -48,7 +49,7 @@ class AccountControllerTest extends TestCase
         $this->assertDatabaseHas('users', Arr::except($data, [
             'password_confirmation',
         ]));
-		$response->assertRedirect(the_tenant_route('accounts.edit'));
+		$response->assertRedirect(the_tenant_route('singers.show', $user->singer));
 	}
 
 	public function profileProvider(): array
