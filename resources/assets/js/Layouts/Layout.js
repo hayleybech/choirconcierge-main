@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import route from 'ziggy-js';
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
@@ -12,7 +12,7 @@ import LayoutTopBar from "../components/LayoutTopBar";
 import SwitchChoirModal from "../components/SwitchChoirModal";
 import Button from "../components/inputs/Button";
 import Icon from "../components/Icon";
-import ToastSuccess from "../components/ToastSuccess";
+import ToastError from "../components/ToastError";
 
 
 export default function Layout({ children }) {
@@ -46,7 +46,7 @@ export default function Layout({ children }) {
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
     const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
 
-    const { can, userChoirs } = usePage().props;
+    const { can, userChoirs, errors } = usePage().props;
 
     const navFiltered = navigation
         .filter((item) => can[item.can])
@@ -61,7 +61,10 @@ export default function Layout({ children }) {
             return item;
         });
 
-    const [showToast, setShowToast] = useState(true);
+    const [showToast, setShowToast] = useState(Object.keys(errors).length > 0);
+    useEffect(() => {
+        setShowToast(Object.keys(errors).length > 0);
+    }, [errors]);
 
     return (
         <PlayerContext.Provider value={player}>
@@ -94,11 +97,19 @@ export default function Layout({ children }) {
                     </AudioPlayerProvider>
                 </div>
 
-                <ToastSuccess
+                {/*<ToastSuccess*/}
+                {/*    show={showToast}*/}
+                {/*    close={() => setShowToast(false)}*/}
+                {/*    title="Successfully saved!"*/}
+                {/*>*/}
+                {/*    Anyone with a link can now view this file.*/}
+                {/*</ToastSuccess>*/}
+
+                <ToastError
                     show={showToast}
                     close={() => setShowToast(false)}
-                    title="Successfully saved!"
-                    body="Anyone with a link can now view this file."
+                    title="Form validation errors"
+                    errors={errors}
                 />
 
                 <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
