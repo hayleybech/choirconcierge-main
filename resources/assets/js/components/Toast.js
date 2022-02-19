@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import {Transition} from "@headlessui/react";
 import Icon from "./Icon";
 
-const Toast = ({ show, close, title, icon, iconClass, children }) => (
+const Toast = ({ show, close, title, titleClass = 'text-gray-900 font-medium', icon, iconClass, children }) => (
 	<div
 		aria-live="assertive"
 		className="fixed inset-0 z-50 flex items-end px-4 py-6 pointer-events-none sm:p-6 sm:pt-20 sm:items-start"
@@ -25,7 +25,7 @@ const Toast = ({ show, close, title, icon, iconClass, children }) => (
 								<Icon icon={icon} className={`h-6 w-6 ${iconClass}`} aria-hidden="true" />
 							</div>
 							<div className="ml-3 w-0 flex-1 pt-0.5">
-								<p className="text-sm font-medium text-gray-900">{title}</p>
+								<p className={`text-sm ${titleClass}`}>{title}</p>
 								<p className="mt-1 text-sm text-gray-500">{children}</p>
 							</div>
 							<div className="ml-4 flex-shrink-0 flex">

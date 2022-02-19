@@ -48,6 +48,9 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         return array_merge(parent::share($request), [
+            'flash' => [
+                'message' => fn () => $request->session()->get('status'),
+            ],
             'can' => [
                 'view_dash' => true,
                 'list_singers' => auth()->user()?->can('viewAny', Singer::class),
