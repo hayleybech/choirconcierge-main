@@ -102,7 +102,7 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
 const Show = ({ singer, categories }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
-    const { can } = usePage().props;
+    const { can, user: authUser } = usePage().props;
 
     return (
         <>
@@ -121,10 +121,11 @@ const Show = ({ singer, categories }) => {
                     { name: singer.user.name, url: route('singers.show', singer) },
                 ]}
                 actions={[
+                    { label: 'Edit Profile', icon: 'user-edit', url: route('accounts.edit'), can: singer.user.id === authUser.id, variant: 'primary' },
                     { label: 'Edit Membership', icon: 'edit', url: route('singers.edit', singer), can: 'update_singer', variant: 'primary' },
                     { label: 'Move', icon: 'arrow-circle-right', onClick: () => setMoveDialogIsOpen(true), can: 'update_singer' },
                     { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_singer' },
-                ].filter(action => singer.can[action.can])}
+                ].filter(action => action.can === true || singer.can[action.can])}
             />
 
             <DeleteDialog title="Delete Singer" url={route('singers.destroy', singer)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>

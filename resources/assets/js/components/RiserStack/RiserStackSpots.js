@@ -94,7 +94,7 @@ const RiserStackSpots = ({
                             name={spot.singer.user.name}
                             imageUrl={spot.singer.user_avatar_thumb_url}
                             radius={spot.radius}
-                            onClick={editing && !selectedSinger ? () => {console.log('set selected'); setSelectedSinger(spot.singer)} : null}
+                            onClick={editing && !selectedSinger ? () => setSelectedSinger(spot.singer) : null}
                             isSelected={selectedSinger?.id === spot.singer.id}
                         />
                     }
