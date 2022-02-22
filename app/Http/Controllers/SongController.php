@@ -36,6 +36,7 @@ class SongController extends Controller
         $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
 
         $includeNonAuditionSongs = auth()->user()?->singer?->category->name === 'Members';
+        $showForProspectsDefault = $includeNonAuditionSongs ? [false, true] : [true];
 
         $songs = QueryBuilder::for(Song::class)
             ->allowedFilters([
@@ -43,9 +44,10 @@ class SongController extends Controller
                 AllowedFilter::exact('status.id')
                     ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
                     ->default($defaultStatuses),
-                AllowedFilter::exact('show_for_prospects')
-                    ->ignore($includeNonAuditionSongs ? [] : [false])
-                    ->default([false, true]),
+                AllowedFilter::callback('show_for_prospects', fn (Builder $query, $value) =>
+                        $query->whereIn('show_for_prospects', $includeNonAuditionSongs ? $value : [true])
+                    )
+                    ->default($showForProspectsDefault),
                 AllowedFilter::exact('categories.id'),
             ])
             ->defaultSort('title')
@@ -64,6 +66,7 @@ class SongController extends Controller
                 ->values(),
             'defaultStatuses' => $defaultStatuses,
             'categories' => SongCategory::all()->values(),
+            'showForProspectsDefault' => $showForProspectsDefault,
         ]);
 	}
 

@@ -4,7 +4,7 @@ import TextInput from "../inputs/TextInput";
 import CheckboxGroup from "../inputs/CheckboxGroup";
 import Filters from "../Filters";
 
-const SongFilters = ({ statuses, defaultStatuses, categories }) => (
+const SongFilters = ({ statuses, defaultStatuses, categories, showForProspectsDefault }) => (
     <Filters
         routeName="songs.index"
         fields={(params) => ({
@@ -13,6 +13,9 @@ const SongFilters = ({ statuses, defaultStatuses, categories }) => (
                 ? params.getAll('filter[status.id][]').map(value => parseInt(value))
                 : defaultStatuses,
             'categories.id': params.getAll('filter[categories.id][]').map(value => parseInt(value)),
+            show_for_prospects: params.has('filter[show_for_prospects][]')
+                ? params.getAll('filter[show_for_prospects][]').map(value => value === 'true')
+                : showForProspectsDefault,
         })}
         render={(data, setData) => (<>
             <div>
@@ -29,6 +32,18 @@ const SongFilters = ({ statuses, defaultStatuses, categories }) => (
                     updateFn={value => setData('status.id', value)}
                 />
             </fieldset>
+
+            {showForProspectsDefault.length > 1 && (
+                <fieldset>
+                    <legend className="text-sm font-medium text-gray-700">Audition Songs</legend>
+                    <CheckboxGroup
+                        name="show_for_prospects"
+                        options={[{ id: false, name: 'Non-Audition Songs' }, { id: true, name: 'Audition Songs' }]}
+                        value={data.show_for_prospects}
+                        updateFn={value => setData('show_for_prospects', value)}
+                    />
+                </fieldset>
+            )}
 
             <fieldset>
                 <legend className="text-sm font-medium text-gray-700">Category</legend>
