@@ -68,7 +68,7 @@ class Tenant extends BaseTenant
 
 	public function getPrimaryDomainAttribute(): ?string
 	{
-		return $this->domains->firstWhere('primary')->domain
+		return $this->domains->firstWhere('is_primary')->domain
             ?? $this->domains->last()->domain
             ?? null;
 	}
