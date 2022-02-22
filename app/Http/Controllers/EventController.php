@@ -106,12 +106,14 @@ class EventController extends Controller
             ],
             'attendanceCount' => [
                 'present' => $event->singers_attendance('present')->count(),
+                'late' => $event->singers_attendance('late')->count(),
                 'absent' => $event->singers_attendance('absent')->count(),
                 'absent_apology' => $event->singers_attendance('absent_apology')->count(),
                 'unknown' => $event->singers_attendance_missing()->count(),
             ],
             'voicePartsAttendanceCount' => [
                 'present' => $event->voice_parts_attendance_count('present')->get(),
+                'late' => $event->voice_parts_attendance_count('late')->get(),
             ],
             'addToCalendarLinks' => [
                 'google' => $event->add_to_calendar_link?->google(),
