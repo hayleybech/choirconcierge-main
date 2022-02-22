@@ -454,12 +454,13 @@ class Event extends Model
 		    'singers' => function ($query) use ($response) {
                 $query->active();
             },
-            'singers as singers_present_count' => function ($query) use ($response) {
+            'singers as singers_response_count' => function ($query) use ($response) {
                 $query->active()->whereHas('attendances', function (Builder $query) use ($response) {
                     $query->where('event_id', '=', $this->id)
                         ->where('response', '=', $response);
                 });
-        }]);
+            },
+        ]);
 	}
 
 	public function getStartDateAttribute(?string $value): ?Carbon

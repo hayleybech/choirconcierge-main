@@ -11,7 +11,7 @@ import SongSorts from "../../components/Song/SongSorts";
 import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
 
-const Index = ({ songs, statuses, defaultStatuses, categories }) => {
+const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault }) => {
     const [showFilters, setShowFilters] = useFilterPane();
 
     const { can } = usePage().props;
@@ -37,7 +37,7 @@ const Index = ({ songs, statuses, defaultStatuses, categories }) => {
                 filterPane={
                     <FilterSortPane
                         sorts={<SongSorts />}
-                        filters={<SongFilters statuses={statuses} defaultStatuses={defaultStatuses} categories={categories} />}
+                        filters={<SongFilters statuses={statuses} defaultStatuses={defaultStatuses} categories={categories} showForProspectsDefault={showForProspectsDefault} />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }

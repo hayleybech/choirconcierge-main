@@ -33,6 +33,7 @@ use App\Http\Controllers\UpdateSingerCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\VoicePartController;
+use App\Http\Middleware\RedirectToPrimaryTenantDomain;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
@@ -54,6 +55,7 @@ Route::middleware([
     'web',
     InitializeTenancyByDomainOrSubdomain::class,
     PreventAccessFromCentralDomains::class,
+    RedirectToPrimaryTenantDomain::class
 ])->group(function () {
 
     Auth::routes(['register' => false]);

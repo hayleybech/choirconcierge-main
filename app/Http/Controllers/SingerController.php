@@ -171,9 +171,12 @@ class SingerController extends Controller
             'onboarding_enabled',
             'voice_part_id',
         ]));
-        $singer->update(Arr::only($request->validated(), [
-            'user_roles'
-        ]));
+        $singer->update([
+            'user_roles' => array_merge(
+                $request->validated()['user_roles'] ?? [],
+                [Role::where('name', '=', 'User')->pluck('id')->first()]
+            ),
+        ]);
 
 		return redirect()
 			->route('singers.show', [$singer])

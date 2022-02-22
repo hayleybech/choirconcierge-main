@@ -45,13 +45,14 @@ const AttendanceSummary = ({ event, attendanceCount, voicePartsAttendanceCount }
             </div>
             <Tab.Panels>
                 <Tab.Panel className="py-6 px-4">
-                    <div className="flex">
+                    <div className="flex flex-wrap space-y-3">
                         {[
-                            { label: 'Present', colour: 'emerald-500', icon: 'check', count: attendanceCount.present },
-                            { label: 'Not recorded', colour: 'amber-500', icon: 'question', count: attendanceCount.unknown },
+                            { label: 'On Time', colour: 'emerald-500', icon: 'check', count: attendanceCount.present },
+                            { label: 'Late', colour: 'amber-500', icon: 'alarm-exclamation', count: attendanceCount.late },
                             { label: 'Absent', colour: 'red-500', icon: 'times', count: attendanceCount.absent + attendanceCount.absent_apology },
+                            { label: 'Not recorded', colour: 'gray-500', icon: 'question', count: attendanceCount.unknown },
                         ].map(({ label, colour, icon, count}) => (
-                            <div className="w-1/3 text-center" key={label}>
+                            <div className="grow w-1/2 text-center" key={label}>
                                 <Icon icon={icon} className={`text-${colour}`} />
                                 <p className={`font-semibold text-${colour}`}>{label}</p>
                                 {count}
@@ -61,9 +62,11 @@ const AttendanceSummary = ({ event, attendanceCount, voicePartsAttendanceCount }
                     <p className="text-gray-500 text-sm text-center mt-2">{attendanceCount.absent_apology} absent with apology.</p>
                 </Tab.Panel>
                 <Tab.Panel className="py-6 px-4">
-                    <p className="text-emerald-500 font-semibold mb-4">
-                        <Icon icon="check" mr />
-                        Present
+                    <p>
+                        <span className="text-emerald-500 font-semibold mb-4">
+                            <Icon icon="check" mr />
+                            On Time
+                        </span>
                     </p>
                     <div className="flex">
                         {voicePartsAttendanceCount.present.map(voice_part => (
@@ -71,7 +74,24 @@ const AttendanceSummary = ({ event, attendanceCount, voicePartsAttendanceCount }
                                 <p className="mb-2">
                                     <VoicePartTag title={voice_part.title} colour={voice_part.colour} />
                                 </p>
-                                {voice_part.singers_present_count} / {voice_part.singers_count}
+                                {voice_part.singers_response_count} / {voice_part.singers_count}
+                            </div>
+                        ))}
+                    </div>
+
+                    <p>
+                        <span className="text-amber-500 font-semibold mb-4">
+                            <Icon icon="alarm-exclamation" mr />
+                            Late
+                        </span>
+                    </p>
+                    <div className="flex">
+                        {voicePartsAttendanceCount.late.map(voice_part => (
+                            <div className="w-1/2 text-center" key={voice_part.id}>
+                                <p className="mb-2">
+                                    <VoicePartTag title={voice_part.title} colour={voice_part.colour} />
+                                </p>
+                                {voice_part.singers_response_count} / {voice_part.singers_count}
                             </div>
                         ))}
                     </div>

@@ -15,6 +15,7 @@ import Pdf from "../../components/Song/Pdf";
 import {useMediaQuery} from "react-responsive";
 import {PlayerContext} from "../../contexts/player-context";
 import SongStatus from "../../SongStatus";
+import Icon from "../../components/Icon";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const player = useContext(PlayerContext);
@@ -71,6 +72,12 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                             {song.categories.map(category => <React.Fragment key={category.id}><SongCategoryTag category={category} /></React.Fragment>)}
                         </div>,
                         <DateTag date={song.created_at} label="Created" />,
+                        !!song.show_for_prospects && (
+                            <div>
+                                <Icon icon="microphone-stand" mr className="text-sm text-emerald-500" />
+                                <span className="text-sm font-medium text-gray-500 truncate">Audition Song</span>
+                            </div>
+                        ),
                     ]}
                     breadcrumbs={[
                         { name: 'Dashboard', url: route('dash')},
