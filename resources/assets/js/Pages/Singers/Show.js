@@ -74,7 +74,7 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
             okUrl={route('singers.categories.update', singer)}
             okVariant="primary"
             okMethod="get"
-            data={{ move_category: selectedCategory }}
+            data={{ move_category: selectedCategory.id }}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
         >
