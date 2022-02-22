@@ -77,7 +77,7 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                                 <td className="border border-gray-300 text-center">
                                     {attendance
                                         ? <AttendanceTag icon={attendance.icon} colour={attendance.colour} />
-                                        : <AttendanceTag icon="question" colour="amber" />
+                                        : <AttendanceTag icon="question" colour="gray" />
                                     }
                                 </td>
                             ))}
