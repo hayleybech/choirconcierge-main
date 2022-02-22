@@ -27,6 +27,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
  * @property int $tenant_id
+ * @property boolean $show_for_prospects
  *
  * Relationships
  * @property SongStatus $status
@@ -49,7 +50,7 @@ class Song extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['title', 'pitch_blown', 'suppress_email'];
+	protected $fillable = ['title', 'pitch_blown', 'show_for_prospects', 'suppress_email'];
 
 	protected $with = ['categories', 'status'];
 
