@@ -55,7 +55,7 @@ class Attendance extends Model
     public function getLabelAttribute(): string
     {
         $labels = [
-            'present' => 'Present',
+            'present' => 'On Time',
             'late' => 'Late',
             'absent' => 'Absent',
             'absent_apology' => 'Absent (With Apology)',

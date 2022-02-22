@@ -47,7 +47,7 @@ const AttendanceSummary = ({ event, attendanceCount, voicePartsAttendanceCount }
                 <Tab.Panel className="py-6 px-4">
                     <div className="flex flex-wrap space-y-3">
                         {[
-                            { label: 'Present', colour: 'emerald-500', icon: 'check', count: attendanceCount.present },
+                            { label: 'On Time', colour: 'emerald-500', icon: 'check', count: attendanceCount.present },
                             { label: 'Late', colour: 'amber-500', icon: 'alarm-exclamation', count: attendanceCount.late },
                             { label: 'Absent', colour: 'red-500', icon: 'times', count: attendanceCount.absent + attendanceCount.absent_apology },
                             { label: 'Not recorded', colour: 'gray-500', icon: 'question', count: attendanceCount.unknown },
@@ -65,7 +65,7 @@ const AttendanceSummary = ({ event, attendanceCount, voicePartsAttendanceCount }
                     <p>
                         <span className="text-emerald-500 font-semibold mb-4">
                             <Icon icon="check" mr />
-                            Present
+                            On Time
                         </span>
                     </p>
                     <div className="flex">
