@@ -173,7 +173,7 @@ class SingerController extends Controller
         ]));
         $singer->update([
             'user_roles' => array_merge(
-                $request->validated()['user_roles'],
+                $request->validated()['user_roles'] ?? [],
                 [Role::where('name', '=', 'User')->pluck('id')->first()]
             ),
         ]);
