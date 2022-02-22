@@ -37,7 +37,7 @@ class EventController extends Controller
 					$query->where('response', '=', 'yes');
 				},
 				'attendances as present_count' => function ($query) {
-					$query->where('response', '=', 'present');
+					$query->whereIn('response', ['present', 'late']);
 				},
 			])
             ->allowedSorts([
