@@ -46,6 +46,9 @@ class SongPolicy
 		if ($song->status->title === 'Pending') {
 			return $user->singer->hasAbility('songs_update');
 		}
+        if(!$song->show_for_prospects) {
+            return $user->singer->category->name === 'Members';
+        }
 		return $user->singer->hasAbility('songs_view');
 	}
 
