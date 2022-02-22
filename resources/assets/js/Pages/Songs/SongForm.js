@@ -21,6 +21,7 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
         categories: song?.categories.map(category => category.id) ?? [],
         status: song?.status.id ?? null,
         pitch_blown: song?.pitch_blown ?? 0,
+        show_for_prospects: song?.show_for_prospects ?? false,
         send_notification: !song,
     });
 
@@ -65,6 +66,19 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
                         <Help>Songs are hidden from general members when they are "Pending".</Help>
                         {errors.status && <Error>{errors.status}</Error>}
                     </div>
+
+                    <div className="sm:col-span-6">
+                        <CheckboxWithLabel
+                            label="Audition Song (Show for prospects)"
+                            id="show_for_prospects"
+                            name="show_for_prospects"
+                            value={false}
+                            checked={data.show_for_prospects}
+                            onChange={e => setData('show_for_prospects', e.target.checked)}
+                            className="mr-8 mb-4"
+                        />
+                    </div>
+
 
                     <div className="sm:col-span-6">
                         <Label label="Pitch Blown" forInput="pitch_blown" />

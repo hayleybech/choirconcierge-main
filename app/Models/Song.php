@@ -50,7 +50,7 @@ class Song extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['title', 'pitch_blown', 'suppress_email'];
+	protected $fillable = ['title', 'pitch_blown', 'show_for_prospects', 'suppress_email'];
 
 	protected $with = ['categories', 'status'];
 

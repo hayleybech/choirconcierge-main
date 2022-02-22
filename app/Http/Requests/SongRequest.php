@@ -31,6 +31,7 @@ class SongRequest extends FormRequest
 			'status' => ['required', 'exists:song_statuses,id'],
 			'pitch_blown' => ['required'],
 			'song' => [],
+            'show_for_prospects' => ['boolean'],
             'send_notification' => ['boolean'],
 		];
 	}
