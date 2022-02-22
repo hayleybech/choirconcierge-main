@@ -18,7 +18,6 @@ class AttendanceReportController extends Controller
 
 		$all_events = Event::with([])
 			->orderBy('start_date')
-			->filter()
 			->get();
 
         $singers = Singer::with(['user', 'attendances'])

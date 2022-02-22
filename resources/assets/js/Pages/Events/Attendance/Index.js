@@ -50,7 +50,8 @@ const Index = ({ event, voice_parts }) => {
                                         </div>
                                         <div className="shrink-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 items:stretch sm:items-center">
                                             {[
-                                                { response: 'present', label: 'Present', icon: 'check', variant: 'success-outline' },
+                                                { response: 'present', label: 'On Time', icon: 'check', variant: 'success-outline' },
+                                                { response: 'late', label: 'Late', icon: 'alarm-exclamation', variant: 'warning-outline' },
                                                 { response: 'absent', label: 'Absent', icon: 'times', variant: 'danger-outline' },
                                                 { response: 'absent_apology', label: 'With Apology', icon: 'times', variant: 'danger-outline' },
                                             ].map(({ response, label, icon, variant }) =>

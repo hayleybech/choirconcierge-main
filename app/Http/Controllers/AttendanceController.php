@@ -45,6 +45,10 @@ class AttendanceController extends Controller
 	public function update(Event $event, Singer $singer, Request $request): RedirectResponse {
         $this->authorize('create', Attendance::class);
 
+        $request->validate([
+            'response' => ['in:unknown,absent,absent_apology,late,present'],
+        ]);
+
         $event->attendances()
             ->updateOrCreate(
                 ['singer_id' => $singer->id],

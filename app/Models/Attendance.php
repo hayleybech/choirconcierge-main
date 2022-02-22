@@ -55,10 +55,11 @@ class Attendance extends Model
     public function getLabelAttribute(): string
     {
         $labels = [
-            'present' => 'Present',
-            'unknown' => 'Not recorded',
+            'present' => 'On Time',
+            'late' => 'Late',
             'absent' => 'Absent',
             'absent_apology' => 'Absent (With Apology)',
+            'unknown' => 'Not recorded',
         ];
         return $labels[$this->response];
     }
@@ -67,9 +68,10 @@ class Attendance extends Model
     {
         $colours = [
             'present' => 'emerald',
-            'unknown' => 'amber',
+            'late' => 'amber',
             'absent' => 'red',
             'absent_apology' => 'red',
+            'unknown' => 'gray',
         ];
         return $colours[$this->response];
     }
@@ -78,10 +80,10 @@ class Attendance extends Model
     {
         $icons = [
             'present' => 'check',
-            'maybe' => 'question',
-            'unknown' => 'question',
+            'late' => 'alarm-exclamation',
             'absent' => 'times',
             'absent_apology' => 'times',
+            'unknown' => 'question',
         ];
         return $icons[$this->response];
     }
