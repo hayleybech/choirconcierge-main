@@ -59,6 +59,7 @@ class HandleInertiaRequests extends Middleware
                 'create_voice_part' => auth()->user()?->can('create', VoicePart::class),
                 'list_voice_parts' => auth()->user()?->can('viewAny', VoicePart::class),
                 'list_roles' => auth()->user()?->can('viewAny', Role::class),
+                'create_role' => auth()->user()?->can('create', Role::class),
                 'list_songs' => auth()->user()?->can('viewAny', Song::class),
                 'create_song' => auth()->user()?->can('create', Song::class),
                 'list_events' => auth()->user()?->can('viewAny', Event::class),
