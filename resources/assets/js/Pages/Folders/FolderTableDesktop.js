@@ -6,12 +6,16 @@ import DateTag from "../../components/DateTag";
 import DocumentForm from "./DocumentForm";
 import Button from "../../components/inputs/Button";
 
-const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument }) => {
+const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, permissions }) => {
     const [openFolder, setOpenFolder] = useState(0);
+
+    const headings = permissions['delete_folder'] || permissions['delete_document']
+        ? ['Title', 'Created', 'Delete']
+        : ['Title', 'Created'];
 
     return (
         <Table
-            headings={['Title', 'Created', 'Delete']}
+            headings={headings}
             body={folders.map((folder) => (
                 <React.Fragment key={folder.id}>
                     <tr>
@@ -33,9 +37,11 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument })
                             <DateTag date={folder.created_at} />
                         </TableCell>
                         <TableCell>
-                            <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline">
-                                <Icon icon="times" />
-                            </Button>
+                            {permissions['folders_delete'] && (
+                                <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline">
+                                    <Icon icon="times" />
+                                </Button>
+                            )}
                         </TableCell>
                     </tr>
                     {folder.id === openFolder && folder.documents.map((document) => (
@@ -55,9 +61,11 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument })
                                 <DateTag date={document.created_at} />
                             </TableCell>
                             <TableCell>
-                                <Button onClick={() => setDeletingDocument(document)} variant="danger-outline">
-                                    <Icon icon="times" />
-                                </Button>
+                                {permissions['documents_delete'] && (
+                                    <Button onClick={() => setDeletingDocument(document)} variant="danger-outline">
+                                        <Icon icon="times" />
+                                    </Button>
+                                )}
                             </TableCell>
                         </tr>
                     ))}

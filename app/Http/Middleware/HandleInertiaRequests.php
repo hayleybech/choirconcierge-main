@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Attendance;
+use App\Models\Document;
 use App\Models\Event;
 use App\Models\Folder;
 use App\Models\RiserStack;
@@ -65,6 +66,8 @@ class HandleInertiaRequests extends Middleware
                 'create_attendance' => auth()->user()?->can('create', Attendance::class),
                 'list_folders' => auth()->user()?->can('viewAny', Folder::class),
                 'create_folder' => auth()->user()?->can('create', Folder::class),
+                'delete_folder' => auth()->user()?->singer?->hasAbility('folders_delete'),
+                'delete_document' => auth()->user()?->singer?->hasAbility('documents_delete'),
                 'list_stacks' => auth()->user()?->can('viewAny', RiserStack::class),
                 'create_stack' => auth()->user()?->can('create', RiserStack::class),
                 'list_groups' => auth()->user()?->can('viewAny', UserGroup::class),
