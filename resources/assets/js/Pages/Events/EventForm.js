@@ -8,7 +8,6 @@ import RadioGroup from "../../components/inputs/RadioGroup";
 import Help from "../../components/inputs/Help";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import Button from "../../components/inputs/Button";
-import TextareaInput from "../../components/inputs/TextareaInput";
 import LocationInput from "../../components/inputs/LocationInput";
 import DateInput from "../../components/inputs/Date";
 import TimeInput from "../../components/inputs/Time";
@@ -18,6 +17,8 @@ import {TIME_24_SIMPLE} from "luxon/src/impl/formats";
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
 
 const EventForm = ({ event, types }) => {
     const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
@@ -189,12 +190,7 @@ const EventForm = ({ event, types }) => {
 
                     <div className="sm:col-span-6">
                         <Label label="Description" forInput="description" />
-                        <TextareaInput
-                            name="description"
-                            value={data.description}
-                            updateFn={value => setData('description', value)}
-                            hasErrors={ !! errors['description'] }
-                        />
+                        <ReactQuill value={data.description} onChange={value => setData('description', value)} theme="snow" />
                         {errors.description && <Error>{errors.description}</Error>}
                     </div>
 

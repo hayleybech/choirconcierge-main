@@ -72,9 +72,8 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
                         <SectionHeader>
                             <SectionTitle>Event Description</SectionTitle>
                         </SectionHeader>
-                        <div className="mb-8">
-                            {event.description}
-                        </div>
+
+                        <div className="mb-8 prose" dangerouslySetInnerHTML={{ __html: event.description }} />
 
                         <p className="text-sm text-gray-500 my-2">Choir's Timezone: {pageProps.tenant.timezone_label}</p>
                     </div>
