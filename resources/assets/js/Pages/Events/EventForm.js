@@ -17,8 +17,7 @@ import {TIME_24_SIMPLE} from "luxon/src/impl/formats";
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
-import ReactQuill from "react-quill";
-import 'react-quill/dist/quill.snow.css';
+import RichTextInput from "../../components/inputs/RichTextInput";
 
 const EventForm = ({ event, types }) => {
     const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
@@ -190,7 +189,7 @@ const EventForm = ({ event, types }) => {
 
                     <div className="sm:col-span-6">
                         <Label label="Description" forInput="description" />
-                        <ReactQuill value={data.description} onChange={value => setData('description', value)} theme="snow" />
+                        <RichTextInput value={data.description} updateFn={value => setData('description', value)} />
                         {errors.description && <Error>{errors.description}</Error>}
                     </div>
 
