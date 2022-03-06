@@ -10,15 +10,17 @@ class RolePolicy
 {
 	use HandlesAuthorization;
 
-    public function before(User $user, string $ability)
+    public function before(User $user, string $ability): ?bool
     {
         if(! $user->singer) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($ability !== 'delete' && $user->singer->hasRole('Admin')) {
             return true;
         }
+
+        return null;
     }
 
 	/**

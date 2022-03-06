@@ -10,7 +10,7 @@ class FolderPolicy
 {
 	use HandlesAuthorization;
 
-	public function before(User $user, string $ability)
+	public function before(User $user, string $ability): ?bool
 	{
         if(! $user->singer) {
             return false;
@@ -19,6 +19,8 @@ class FolderPolicy
 		if ($user->singer->hasRole('Admin')) {
 			return true;
 		}
+
+        return null;
 	}
 
 	/**

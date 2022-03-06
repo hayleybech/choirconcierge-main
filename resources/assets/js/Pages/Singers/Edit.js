@@ -1,7 +1,7 @@
 import React from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
-import {useForm} from "@inertiajs/inertia-react";
+import {useForm, usePage} from "@inertiajs/inertia-react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import DetailToggle from "../../components/inputs/DetailToggle";
@@ -18,6 +18,8 @@ import {DateTime} from "luxon";
 import DayInput from "../../components/inputs/Day";
 
 const Edit = ({ voice_parts, roles, singer }) => {
+    const { can } = usePage().props;
+
     const { data, setData, put, processing, errors } = useForm({
         voice_part_id: singer.voice_part.id,
         reason_for_joining: singer.reason_for_joining,
@@ -97,11 +99,13 @@ const Edit = ({ voice_parts, roles, singer }) => {
                             {errors.joined_at && <Error>{errors.joined_at}</Error>}
                         </div>
 
-                        <fieldset className="mt-6 sm:col-span-6">
-                            <legend className="text-base font-medium text-gray-900">Roles</legend>
-                            <CheckboxGroup name={"user_roles"} options={roles} value={data.user_roles} updateFn={value => setData('user_roles', value)} />
-                            {errors.user_roles && <Error>{errors.user_roles}</Error>}
-                        </fieldset>
+                        {can['create_role'] && (
+                            <fieldset className="mt-6 sm:col-span-6">
+                                <legend className="text-base font-medium text-gray-900">Roles</legend>
+                                <CheckboxGroup name={"user_roles"} options={roles} value={data.user_roles} updateFn={value => setData('user_roles', value)} />
+                                {errors.user_roles && <Error>{errors.user_roles}</Error>}
+                            </fieldset>
+                        )}
                     </FormSection>
 
                     <FormFooter>

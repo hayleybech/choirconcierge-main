@@ -7,11 +7,15 @@ use App\Models\Document;
 use App\Models\Folder;
 use Exception;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DocumentController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Document::class, 'document');
+    }
+
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -33,15 +37,16 @@ class DocumentController extends Controller
 			->with(['status' => 'Document added. ']);
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param Document $document
-	 *
-	 * @return BinaryFileResponse
-	 */
-	public function show(Folder $folder, Document $document)
-	{
+    /**
+     * Display the specified resource.
+     *
+     * @param Folder $folder
+     * @param Document $document
+     *
+     * @return BinaryFileResponse
+     */
+	public function show(Folder $folder, Document $document): BinaryFileResponse
+    {
 		return response()->download($document->path);
 	}
 

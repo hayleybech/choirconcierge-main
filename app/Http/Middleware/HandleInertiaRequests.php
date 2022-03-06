@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Attendance;
+use App\Models\Document;
 use App\Models\Event;
 use App\Models\Folder;
 use App\Models\RiserStack;
@@ -55,8 +56,10 @@ class HandleInertiaRequests extends Middleware
                 'view_dash' => true,
                 'list_singers' => auth()->user()?->can('viewAny', Singer::class),
                 'create_singer' => auth()->user()?->can('create', Singer::class),
+                'create_voice_part' => auth()->user()?->can('create', VoicePart::class),
                 'list_voice_parts' => auth()->user()?->can('viewAny', VoicePart::class),
                 'list_roles' => auth()->user()?->can('viewAny', Role::class),
+                'create_role' => auth()->user()?->can('create', Role::class),
                 'list_songs' => auth()->user()?->can('viewAny', Song::class),
                 'create_song' => auth()->user()?->can('create', Song::class),
                 'list_events' => auth()->user()?->can('viewAny', Event::class),
@@ -65,6 +68,8 @@ class HandleInertiaRequests extends Middleware
                 'create_attendance' => auth()->user()?->can('create', Attendance::class),
                 'list_folders' => auth()->user()?->can('viewAny', Folder::class),
                 'create_folder' => auth()->user()?->can('create', Folder::class),
+                'delete_folder' => auth()->user()?->singer?->hasAbility('folders_delete'),
+                'delete_document' => auth()->user()?->singer?->hasAbility('documents_delete'),
                 'list_stacks' => auth()->user()?->can('viewAny', RiserStack::class),
                 'create_stack' => auth()->user()?->can('create', RiserStack::class),
                 'list_groups' => auth()->user()?->can('viewAny', UserGroup::class),

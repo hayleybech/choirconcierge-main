@@ -35,7 +35,9 @@ class EditSingerRequest extends FormRequest
             'joined_at' => ['date', 'before_or_equal:today'],
             'onboarding_enabled' => ['boolean'],
 			'voice_part_id' => ['numeric', 'exists:voice_parts,id'],
-			'user_roles' => ['array', 'exists:roles,id'],
+			'user_roles' => auth()->user()->singer->hasAbility('roles_create')
+                ? ['array', 'exists:roles,id']
+                : ['prohibited'],
 		];
 	}
 }

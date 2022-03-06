@@ -29,11 +29,11 @@ const Index = ({ folders }) => {
             />
 
             <div className="hidden lg:flex flex-col">
-                <FolderTableDesktop folders={folders} setDeletingFolder={setDeletingFolder} setDeletingDocument={setDeletingDocument} />
+                <FolderTableDesktop folders={folders} setDeletingFolder={setDeletingFolder} setDeletingDocument={setDeletingDocument} permissions={can} />
             </div>
 
             <div className="bg-white shadow block lg:hidden">
-                <FolderTableMobile folders={folders} setDeletingFolder={setDeletingFolder} setDeletingDocument={setDeletingDocument} />
+                <FolderTableMobile folders={folders} setDeletingFolder={setDeletingFolder} setDeletingDocument={setDeletingDocument} permissions={can} />
             </div>
 
             <DeleteDialog title="Delete Folder" url={deletingFolder ? route('folders.destroy', deletingFolder) : '#'} isOpen={!!deletingFolder} setIsOpen={setDeletingFolder}>

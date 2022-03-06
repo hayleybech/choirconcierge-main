@@ -6,7 +6,7 @@ import {TableCell} from "../../components/Table";
 import DocumentForm from "./DocumentForm";
 import Button from "../../components/inputs/Button";
 
-const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument }) => {
+const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, permissions }) => {
     const [openFolder, setOpenFolder] = useState(0);
 
     return (
@@ -22,9 +22,11 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument }) 
                                         <span className="text-sm font-medium text-purple-600 truncate">{folder.title}</span>
                                     </p>
 
-                                    <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline" size="sm">
-                                        <Icon icon="trash" />
-                                    </Button>
+                                    {permissions['folders_delete'] && (
+                                        <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline" size="sm">
+                                            <Icon icon="trash" />
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -41,9 +43,11 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument }) 
                                             <span className="text-sm font-medium text-purple-600 truncate">{document.title}</span>
                                         </p>
 
-                                        <Button onClick={() => setDeletingDocument(document)} variant="danger-outline" size="sm">
-                                            <Icon icon="trash" />
-                                        </Button>
+                                        {permissions['documents_delete'] && (
+                                            <Button onClick={() => setDeletingDocument(document)} variant="danger-outline" size="sm">
+                                                <Icon icon="trash" />
+                                            </Button>
+                                        )}
                                     </div>
                                 </div>
                             </div>

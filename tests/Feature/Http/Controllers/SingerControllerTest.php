@@ -272,7 +272,7 @@ class SingerControllerTest extends TestCase
      */
     public function update_saves_the_singer_roles($getData): void
     {
-        $this->actingAs($this->createUserWithRole('Membership Team'));
+        $this->actingAs($this->createUserWithRole('Admin'));
 
         $singer = Singer::factory()->create();
 

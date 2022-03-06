@@ -14,6 +14,7 @@ import {usePage} from "@inertiajs/inertia-react";
 import Icon from "../../components/Icon";
 import EditRepeatingEventDialog from "../../components/Event/EditRepeatingEventDialog";
 import DeleteDialog from "../../components/DeleteDialog";
+import Prose from "../../components/Prose";
 
 const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePartsAttendanceCount, addToCalendarLinks }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -72,9 +73,8 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
                         <SectionHeader>
                             <SectionTitle>Event Description</SectionTitle>
                         </SectionHeader>
-                        <div className="mb-8">
-                            {event.description}
-                        </div>
+
+                        <Prose content={event.description} className="mb-8" />
 
                         <p className="text-sm text-gray-500 my-2">Choir's Timezone: {pageProps.tenant.timezone_label}</p>
                     </div>

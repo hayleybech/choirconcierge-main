@@ -9,8 +9,8 @@ import Help from "../../../components/inputs/Help";
 import FormFooter from "../../../components/FormFooter";
 import ButtonLink from "../../../components/inputs/ButtonLink";
 import Button from "../../../components/inputs/Button";
-import TextareaInput from "../../../components/inputs/TextareaInput";
 import SnippetTag from "../../../components/SnippetTag";
+import RichTextInput from "../../../components/inputs/RichTextInput";
 
 const TaskNotificationForm = ({ task, notification }) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -52,7 +52,7 @@ const TaskNotificationForm = ({ task, notification }) => {
 
                     <div className="sm:col-span-4">
                         <Label label="Body" forInput="body" />
-                        <TextareaInput name="body" value={data.body} updateFn={value => setData('body', value)} hasErrors={ !! errors['body'] } rows={20} />
+                        <RichTextInput value={data.body} updateFn={value => setData('body', value)} />
                         {errors.body && <Error>{errors.body}</Error>}
                     </div>
                     <div className="sm:col-span-2">
