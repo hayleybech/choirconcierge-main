@@ -6,6 +6,7 @@ import SectionHeader from "../../../components/SectionHeader";
 import SectionTitle from "../../../components/SectionTitle";
 import Layout from "../../../Layouts/Layout";
 import DeleteDialog from "../../../components/DeleteDialog";
+import Prose from "../../../components/Prose";
 
 const Show = ({ task, notification }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -48,7 +49,7 @@ const Show = ({ task, notification }) => {
                     <SectionTitle>Body</SectionTitle>
                 </SectionHeader>
 
-                <div dangerouslySetInnerHTML={{ __html: notification.body_with_highlights }} />
+                <Prose content={notification.body} className="mb-8" />
             </div>
         </>
     );

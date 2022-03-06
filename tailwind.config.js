@@ -18,10 +18,20 @@ module.exports = {
       },
       width: {
         '250px': '250px',
-      }
+      },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            a: {
+              color: theme('colors.purple.500')
+            }
+          }
+        }
+      }),
     },
   },
   plugins: [
     require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
   ],
 }
