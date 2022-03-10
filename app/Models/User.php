@@ -122,6 +122,8 @@ class User extends Authenticatable implements HasMedia
     {
         if (array_key_exists('password', $attributes) && ! $attributes['password']) {
             unset($attributes['password']);
+        } else {
+            $attributes['password'] = Hash::make($attributes['password']);
         }
 
         parent::update($attributes, $options);
