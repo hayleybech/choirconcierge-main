@@ -49,14 +49,10 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen }) => {
                 </div>
                 <div className="ml-4 flex items-center lg:ml-6">
 
-                    <div className="text-gray-500 text-sm mx-2">
-                        <HeadwayWidget account="7L6Rky" badgePosition="top-right">
-                            <a href="https://headwayapp.co/choir-concierge-updates?utm_medium=widget" target="_blank">
-                                <Icon icon="code" mr />
-                                <span className="hidden sm-inline">Updates</span>
-                            </a>
-                        </HeadwayWidget>
-                    </div>
+                    <a href="https://leanbe.ai/Choir%20Concierge/" target="_blank" className="text-gray-500 text-sm mx-2">
+                        <Icon icon="bullhorn" mr />
+                        What's New
+                    </a>
 
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-3 relative">
