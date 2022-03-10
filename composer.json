@@ -33,7 +33,8 @@
         "spatie/laravel-query-builder": "^4.0",
         "stancl/tenancy": "^3.1",
         "tightenco/ziggy": "^1.3",
-        "webklex/laravel-imap": "^1.4"
+        "webklex/laravel-imap": "^1.4",
+        "league/flysystem-aws-s3-v3": "^3.0"
     },
     "type": "project",
     "require-dev": {
