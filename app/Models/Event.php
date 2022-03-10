@@ -169,8 +169,7 @@ class Event extends Model
         // If this event was the parent, reset parent id on children to next child
         if ($this->is_repeat_parent && $this->repeat_children->count()) {
             $new_parent = $this->nextRepeat();
-            optional($new_parent)
-                ->repeat_children()
+            $new_parent?->repeat_children()
                 ->saveMany($this->repeat_children);
         }
 
