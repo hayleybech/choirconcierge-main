@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPronounsColumnToUsersTable extends Migration
+return new class extends Migration
 {
     public function up(): void
     {
@@ -19,4 +19,4 @@ class AddPronounsColumnToUsersTable extends Migration
             $table->dropColumn('pronouns');
         });
     }
-}
+};
