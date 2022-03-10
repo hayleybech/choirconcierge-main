@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentFactory extends Factory
 {
-    /** @var string */
-    protected $model = Document::class;
-
-    public function definition(): array
     {
         $folders = Folder::all();
 

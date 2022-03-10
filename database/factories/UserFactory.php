@@ -8,10 +8,6 @@ use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
-    /** @var string */
-    protected $model = User::class;
-
-    public function definition(): array
     {
         return [
             'first_name' => $this->faker->firstName(),

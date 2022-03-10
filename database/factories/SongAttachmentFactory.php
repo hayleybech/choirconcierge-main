@@ -9,10 +9,6 @@ use Illuminate\Http\UploadedFile;
 
 class SongAttachmentFactory extends Factory
 {
-    /** @var string */
-    protected $model = SongAttachment::class;
-
-    public function definition(): array
     {
         return [
             'title' => '',
