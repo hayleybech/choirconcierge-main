@@ -61,7 +61,7 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
             'height' =>  $this->make_valid_height($rowArr['height']),
         ]);
 
-        $singer = $user->singers()->updateOrCreate(['user_id' => $user->id], [
+        $singer = $user->singers()->updateOrCreate(['id' => $user->id], [
             'onboarding_enabled' => false,
             'voice_part_id' => VoicePart::firstWhere('title', $rowArr['voice_part'])->id ?? null,
             'joined_at' => $this->make_valid_mysql_datetime($rowArr['member_since']),
