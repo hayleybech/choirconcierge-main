@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\UserGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserGroupFactory extends Factory
 {
+    public function definition(): array
     {
         return [
             'title' => $this->faker->sentence(),

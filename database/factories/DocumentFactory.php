@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentFactory extends Factory
 {
-    {
+    public function definition(): array {
         $folders = Folder::all();
 
         $name = $this->faker->word().'.'.$this->faker->fileExtension();

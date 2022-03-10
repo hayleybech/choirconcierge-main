@@ -9,6 +9,7 @@ use Illuminate\Http\UploadedFile;
 
 class SongAttachmentFactory extends Factory
 {
+    public function definition(): array
     {
         return [
             'title' => '',

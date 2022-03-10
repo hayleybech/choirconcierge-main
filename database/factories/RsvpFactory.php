@@ -7,12 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RsvpFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
+    public function definition(): array
     {
         return [
             'response' => $this->faker->randomElement(['yes', 'no']),

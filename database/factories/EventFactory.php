@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EventFactory extends Factory
 {
+    public function definition(): array
     {
         $call_time = Carbon::instance($this->faker->dateTimeBetween('now', '+1 year'));
         $start_time = (clone $call_time)->addHour();
