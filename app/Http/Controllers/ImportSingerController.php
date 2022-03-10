@@ -12,24 +12,24 @@ use Maatwebsite\Excel\HeadingRowImport;
 
 class ImportSingerController extends Controller
 {
-	public function __invoke(Request $request): RedirectResponse
-	{
-		abort_if(! Auth::user()?->singer?->hasRole('Admin'), 403);
+    public function __invoke(Request $request): RedirectResponse
+    {
+        abort_if(! Auth::user()?->singer?->hasRole('Admin'), 403);
 
-		$request->validate([
-			'import_csv' => 'required|file',
-		]);
+        $request->validate([
+            'import_csv' => 'required|file',
+        ]);
 
         $headings = (new HeadingRowImport)->toArray(request()->file('import_csv'))[0][0];
 
-        if(in_array('user_id', $headings, true)){
+        if (in_array('user_id', $headings, true)) {
             Excel::import(new GroupanizerSingersImport(), request()->file('import_csv'));
         } else {
             Excel::import(new HarmonysiteSingersImport(), request()->file('import_csv'));
         }
 
-		return redirect()
-			->route('singers.index')
-			->with(['status' => 'Import completed. ']);
-	}
+        return redirect()
+            ->route('singers.index')
+            ->with(['status' => 'Import completed. ']);
+    }
 }

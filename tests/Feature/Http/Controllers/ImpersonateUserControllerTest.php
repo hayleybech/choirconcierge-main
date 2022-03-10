@@ -13,43 +13,43 @@ use Tests\TestCase;
  */
 class ImpersonateUserControllerTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
-	/**
-	 * @test
-	 */
-	public function start_authenticates_as_target(): void
-	{
-		$this->actingAs($this->createUserWithRole('Admin'));
+    /**
+     * @test
+     */
+    public function start_authenticates_as_target(): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
 
-		$user = User::factory()->create();
+        $user = User::factory()->create();
 
-		$response = $this->get(the_tenant_route('users.impersonate', [$user]));
-		$response->assertRedirect();
+        $response = $this->get(the_tenant_route('users.impersonate', [$user]));
+        $response->assertRedirect();
 
-		$this->assertAuthenticatedAs($user);
-	}
+        $this->assertAuthenticatedAs($user);
+    }
 
-	/**
-	 * @test
-	 */
-	public function stop_authenticates_as_original(): void
-	{
-		// Start
-		$user1 = $this->createUserWithRole('Admin');
-		$this->actingAs($user1);
+    /**
+     * @test
+     */
+    public function stop_authenticates_as_original(): void
+    {
+        // Start
+        $user1 = $this->createUserWithRole('Admin');
+        $this->actingAs($user1);
 
-		$user2 = User::factory()->has(Singer::factory())->create();
+        $user2 = User::factory()->has(Singer::factory())->create();
 
-		$response = $this->get(the_tenant_route('users.impersonate', [$user2]));
-		$response->assertRedirect();
+        $response = $this->get(the_tenant_route('users.impersonate', [$user2]));
+        $response->assertRedirect();
 
-		$this->assertAuthenticatedAs($user2);
+        $this->assertAuthenticatedAs($user2);
 
-		// Stop
-		$response = $this->get(the_tenant_route('impersonation.stop'));
-		$response->assertRedirect();
+        // Stop
+        $response = $this->get(the_tenant_route('impersonation.stop'));
+        $response->assertRedirect();
 
-		$this->assertAuthenticatedAs($user1);
-	}
+        $this->assertAuthenticatedAs($user1);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 return [
-//    'rebuild' => env('MIX_FEATURE_REBUILD', false),
+    //    'rebuild' => env('MIX_FEATURE_REBUILD', false),
 ];

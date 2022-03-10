@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Row;
 class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
 {
     private SingerCategory $activeCategory;
+
     private SingerCategory $archivedCategory;
 
     private Role $userRole;
@@ -28,18 +29,19 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
     }
 
     public function onRow(Row $row): void
-	{
-		$rowArr = array_map(static function ($item) {
-			if (is_string($item)) {
-				return trim($item);
-			}
-			return $item;
-		}, $row->toArray());
+    {
+        $rowArr = array_map(static function ($item) {
+            if (is_string($item)) {
+                return trim($item);
+            }
 
-		$user = User::firstWhere('email', $rowArr['email_address']);
-		if ($user) {
-		    return;
-		}
+            return $item;
+        }, $row->toArray());
+
+        $user = User::firstWhere('email', $rowArr['email_address']);
+        if ($user) {
+            return;
+        }
 
         $user = User::create([
             'email' => $rowArr['email_address'],
@@ -64,21 +66,21 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
             'joined_at' => $this->make_valid_mysql_datetime($rowArr['registration_date']),
         ]);
 
-		// Add SingerCategory
-		if (explode(' ', $rowArr['status'])[0] === 'Active') {
-			$category = $this->activeCategory;
-		} else {
-			$category = $this->archivedCategory;
-		}
-		$singer->category()->associate($category);
+        // Add SingerCategory
+        if (explode(' ', $rowArr['status'])[0] === 'Active') {
+            $category = $this->activeCategory;
+        } else {
+            $category = $this->archivedCategory;
+        }
+        $singer->category()->associate($category);
 
-		// Add User Role
+        // Add User Role
         $singer->roles()->attach($this->userRole);
 
-		$singer->save();
-	}
+        $singer->save();
+    }
 
-	private function make_valid_mysql_datetime(?string $datetime_raw): string
+    private function make_valid_mysql_datetime(?string $datetime_raw): string
     {
         $datetime_carbon = new Carbon(DateTime::createFromFormat('d/m/Y', $datetime_raw ?? null));
 
@@ -94,13 +96,13 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
      */
     private function make_valid_height(?string $height_raw): float
     {
-        $height_float = (float) preg_replace("/[^0-9.]/", "", $height_raw);
+        $height_float = (float) preg_replace('/[^0-9.]/', '', $height_raw);
 
-        if($height_float > 10_000) {
+        if ($height_float > 10_000) {
             return 0;
         }
 
-        return ($height_float < 1000) ? $height_float : $height_float  / 10;
+        return ($height_float < 1000) ? $height_float : $height_float / 10;
     }
 
     private function convert_voice_part(string $part_name): string

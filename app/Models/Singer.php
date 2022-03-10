@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
@@ -20,7 +21,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Columns
  * @property int $id
- * @property boolean $onboarding_enabled
+ * @property bool $onboarding_enabled
  * @property string $reason_for_joining
  * @property string $referrer
  * @property string $membership_details
@@ -51,15 +52,13 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Dynamic
  * @property string $name
  * @property int $age
- *
- * @package App\Models
  */
 class Singer extends Model
 {
-	use Notifiable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
+    use Notifiable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
-	protected $fillable = [
-	    'user_id',
+    protected $fillable = [
+        'user_id',
         'onboarding_enabled',
         'reason_for_joining',
         'referrer',
@@ -68,107 +67,108 @@ class Singer extends Model
         'joined_at',
     ];
 
-	protected $with = [];
+    protected $with = [];
 
-	public $dates = ['updated_at', 'created_at', 'joined_at'];
+    public $dates = ['updated_at', 'created_at', 'joined_at'];
 
-	protected $appends = [];
+    protected $appends = [];
 
-	public $notify_channels = ['mail'];
+    public $notify_channels = ['mail'];
 
-	public static function create(array $attributes = [])
-	{
+    public static function create(array $attributes = [])
+    {
         /** @var Singer $singer */
         $singer = static::query()->create($attributes);
 
         // Sync roles
-		$singer_roles = $attributes['user_roles'] ?? [];
-		$singer_roles[] = Role::firstWhere('name', 'User')->id;
-		$singer->roles()->sync($singer_roles);
-		$singer->save();
+        $singer_roles = $attributes['user_roles'] ?? [];
+        $singer_roles[] = Role::firstWhere('name', 'User')->id;
+        $singer->roles()->sync($singer_roles);
+        $singer->save();
 
-		return $singer;
-	}
+        return $singer;
+    }
 
-	public function update(array $attributes = [], array $options = [])
-	{
-		parent::update($attributes, $options);
+    public function update(array $attributes = [], array $options = [])
+    {
+        parent::update($attributes, $options);
 
-		// Sync roles
-		if (isset($attributes['user_roles'])) {
+        // Sync roles
+        if (isset($attributes['user_roles'])) {
             $singer_roles = $attributes['user_roles'] ?? [];
             $singer_roles[] = Role::firstWhere('name', 'User')->id;
-			$this->roles()->sync($singer_roles);
-		}
-		$this->save();
+            $this->roles()->sync($singer_roles);
+        }
+        $this->save();
 
-		return true;
-	}
+        return true;
+    }
 
-	public function initOnboarding(): void
-	{
-		$category_name = $this->onboarding_enabled ? 'Prospects' : 'Members';
-		$this->category()->associate(SingerCategory::firstWhere('name', '=', $category_name));
+    public function initOnboarding(): void
+    {
+        $category_name = $this->onboarding_enabled ? 'Prospects' : 'Members';
+        $this->category()->associate(SingerCategory::firstWhere('name', '=', $category_name));
 
-		if (!$this->onboarding_enabled) {
-			return;
-		}
-		$tasks = Task::all();
-		$this->tasks()->attach($tasks);
-	}
+        if (! $this->onboarding_enabled) {
+            return;
+        }
+        $tasks = Task::all();
+        $this->tasks()->attach($tasks);
+    }
 
-	/*
-	 * Get tasks for this singer
-	 */
-	public function tasks(): BelongsToMany
-	{
-		return $this->belongsToMany(Task::class, 'singers_tasks')
-			->withPivot('completed')
-			->withTimestamps();
-	}
+    /*
+     * Get tasks for this singer
+     */
+    public function tasks(): BelongsToMany
+    {
+        return $this->belongsToMany(Task::class, 'singers_tasks')
+            ->withPivot('completed')
+            ->withTimestamps();
+    }
 
-	public function placement(): HasOne
-	{
-		return $this->hasOne(Placement::class);
-	}
+    public function placement(): HasOne
+    {
+        return $this->hasOne(Placement::class);
+    }
 
-	public function category(): BelongsTo
-	{
-		return $this->belongsTo(SingerCategory::class, 'singer_category_id');
-	}
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(SingerCategory::class, 'singer_category_id');
+    }
 
-	public function user(): BelongsTo
-	{
-		return $this->belongsTo(User::class);
-	}
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
-	public function voice_part(): BelongsTo
-	{
-		return $this->belongsTo(VoicePart::class)->withDefault(['title' => 'No Part', 'colour' => '#9095a0']);
-	}
-	public function riser_stacks(): BelongsToMany
-	{
-		return $this->belongsToMany(RiserStack::class)
-			->as('position')
-			->withPivot('row', 'column');
-	}
+    public function voice_part(): BelongsTo
+    {
+        return $this->belongsTo(VoicePart::class)->withDefault(['title' => 'No Part', 'colour' => '#9095a0']);
+    }
 
-	public function rsvps(): HasMany
-	{
-		return $this->hasMany(Rsvp::class);
-	}
+    public function riser_stacks(): BelongsToMany
+    {
+        return $this->belongsToMany(RiserStack::class)
+            ->as('position')
+            ->withPivot('row', 'column');
+    }
 
-	public function attendances(): HasMany
-	{
-		return $this->hasMany(Attendance::class);
-	}
+    public function rsvps(): HasMany
+    {
+        return $this->hasMany(Rsvp::class);
+    }
 
-	public function roles(): BelongsToMany
-	{
-		return $this->belongsToMany(Role::class, 'singers_roles');
-	}
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
 
-	public function songs(): BelongsToMany
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'singers_roles');
+    }
+
+    public function songs(): BelongsToMany
     {
         return $this->belongsToMany(Song::class)
             ->withPivot(['status'])
@@ -177,73 +177,74 @@ class Singer extends Model
             ->withTimestamps();
     }
 
-	public function getAge(): int
-	{
-		if (isset($this->user->dob)) {
-			return date_diff(date_create($this->user->dob), date_create('now'))->y;
-		}
-		return 0;
-	}
+    public function getAge(): int
+    {
+        if (isset($this->user->dob)) {
+            return date_diff(date_create($this->user->dob), date_create('now'))->y;
+        }
 
-	public function getUserAvatarThumbUrlAttribute()
-	{
-		return $this->user->getFirstMediaUrl('avatar', 'thumb');
-	}
+        return 0;
+    }
 
-	public function getMemberversaryAttribute(): Carbon
-	{
-		return $this->joined_at->copy()->year(now()->year);
-	}
+    public function getUserAvatarThumbUrlAttribute()
+    {
+        return $this->user->getFirstMediaUrl('avatar', 'thumb');
+    }
 
-	public function scopeEmptyDobs(Builder $query): Builder
-	{
-		return $query
-			->whereHas('category', static function (Builder $query) {
-				return $query->whereIn('name', ['Members', 'Prospects']);
-			})
-			->whereHas('user', static function (Builder $query) {
-				return $query->whereNull('dob');
-			});
-	}
+    public function getMemberversaryAttribute(): Carbon
+    {
+        return $this->joined_at->copy()->year(now()->year);
+    }
 
-	public function scopeMemberversaries(Builder $query): Builder
-	{
-		return $query
-			->whereYear('joined_at', '<', now())
-			->whereMonth('joined_at', '>=', now())
-			->whereMonth('joined_at', '<=', now()->addMonth());
-	}
+    public function scopeEmptyDobs(Builder $query): Builder
+    {
+        return $query
+            ->whereHas('category', static function (Builder $query) {
+                return $query->whereIn('name', ['Members', 'Prospects']);
+            })
+            ->whereHas('user', static function (Builder $query) {
+                return $query->whereNull('dob');
+            });
+    }
 
-	public function scopeActive(Builder $query): Builder
-	{
-		return $query->whereHas('category', static function (Builder $query) {
-			$query->where('name', '=', 'Members');
-		});
-	}
+    public function scopeMemberversaries(Builder $query): Builder
+    {
+        return $query
+            ->whereYear('joined_at', '<', now())
+            ->whereMonth('joined_at', '>=', now())
+            ->whereMonth('joined_at', '<=', now()->addMonth());
+    }
 
-	public function hasAbility(string $ability): bool
-	{
-		return $this->roles->contains(fn(Role $role) => collect($role->abilities)->contains($ability));
-	}
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->whereHas('category', static function (Builder $query) {
+            $query->where('name', '=', 'Members');
+        });
+    }
 
-	/**
-	 * Find out if the Singer a specific role
-	 *
-	 * @param string $check
-	 * @return bool
-	 */
-	public function hasRole(string $check): bool
-	{
-		return $this->roles->pluck( 'name')->contains($check);
-	}
+    public function hasAbility(string $ability): bool
+    {
+        return $this->roles->contains(fn (Role $role) => collect($role->abilities)->contains($ability));
+    }
 
-	/**
-	 * Find out if the Singer is an employee (if they have any roles)
-	 *
-	 * @return boolean
-	 */
-	public function isEmployee(): bool
-	{
-		return $this->roles->isNotEmpty();
-	}
+    /**
+     * Find out if the Singer a specific role
+     *
+     * @param string $check
+     * @return bool
+     */
+    public function hasRole(string $check): bool
+    {
+        return $this->roles->pluck('name')->contains($check);
+    }
+
+    /**
+     * Find out if the Singer is an employee (if they have any roles)
+     *
+     * @return bool
+     */
+    public function isEmployee(): bool
+    {
+        return $this->roles->isNotEmpty();
+    }
 }

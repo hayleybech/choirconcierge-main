@@ -14,25 +14,26 @@ use Inertia\Response;
 
 class AttendanceController extends Controller
 {
-	public function index(Event $event): View|Response
-	{
+    public function index(Event $event): View|Response
+    {
         $this->authorize('viewAny', Attendance::class);
 
         $event->createMissingAttendanceRecords();
 
-        $event->load(['attendances' => function($query) {
+        $event->load(['attendances' => function ($query) {
             return $query->with('singer.user')
-                ->whereHas('singer', fn($query) => $query->active());
+                ->whereHas('singer', fn ($query) => $query->active());
         }]);
 
         $event->attendances->each(fn ($attendance) => $attendance->singer->user->append('avatar_url'));
 
         $voice_parts = VoicePart::all()
             ->push(VoicePart::getNullVoicePart())
-            ->map(function($part) use ($event) {
+            ->map(function ($part) use ($event) {
                 $part->singers = $event->attendances
-                    ->filter(fn($attendance) => $attendance->singer->voice_part_id === $part->id)
+                    ->filter(fn ($attendance) => $attendance->singer->voice_part_id === $part->id)
                     ->values();
+
                 return $part;
             });
 
@@ -40,9 +41,10 @@ class AttendanceController extends Controller
             'event' => $event,
             'voice_parts' => $voice_parts->values(),
         ]);
-	}
+    }
 
-	public function update(Event $event, Singer $singer, Request $request): RedirectResponse {
+    public function update(Event $event, Singer $singer, Request $request): RedirectResponse
+    {
         $this->authorize('create', Attendance::class);
 
         $request->validate([
@@ -63,24 +65,24 @@ class AttendanceController extends Controller
             ->with(['status' => 'Attendance recorded.']);
     }
 
-	public function updateAll(Event $event, Request $request): RedirectResponse
-	{
-		$this->authorize('create', Attendance::class);
+    public function updateAll(Event $event, Request $request): RedirectResponse
+    {
+        $this->authorize('create', Attendance::class);
 
-		$absent_reason = $request->input('absent_reason');
-		$responses = $request->input('attendance_response');
-		foreach ($responses as $singer_id => $response) {
-			$event->attendances()->updateOrCreate(
-				['singer_id' => $singer_id],
-				[
-					'response' => $response,
-					'absent_reason' => $absent_reason[$singer_id],
-				],
-			);
-		}
+        $absent_reason = $request->input('absent_reason');
+        $responses = $request->input('attendance_response');
+        foreach ($responses as $singer_id => $response) {
+            $event->attendances()->updateOrCreate(
+                ['singer_id' => $singer_id],
+                [
+                    'response' => $response,
+                    'absent_reason' => $absent_reason[$singer_id],
+                ],
+            );
+        }
 
-		return redirect()
-			->route('events.show', ['event' => $event])
-			->with(['status' => 'Attendance recorded.']);
-	}
+        return redirect()
+            ->route('events.show', ['event' => $event])
+            ->with(['status' => 'Attendance recorded.']);
+    }
 }

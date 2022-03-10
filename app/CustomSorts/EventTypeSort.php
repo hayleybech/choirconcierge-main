@@ -8,10 +8,10 @@ use Spatie\QueryBuilder\Sorts\Sort;
 
 class EventTypeSort implements Sort
 {
-
     public function __invoke(Builder $query, bool $descending, string $property)
     {
         $prefix = \DB::getTablePrefix();
+
         return $query
             ->addSubSelect(
                 'type_title',

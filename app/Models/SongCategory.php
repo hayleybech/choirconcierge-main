@@ -21,15 +21,13 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property Collection<Song> $songs
- *
- * @package App\Models
  */
 class SongCategory extends Model
 {
-	use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
+    use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
 
-	public function songs(): BelongsToMany
-	{
-		return $this->belongsToMany(Song::class, 'songs_song_categories', 'category_id', 'song_id');
-	}
+    public function songs(): BelongsToMany
+    {
+        return $this->belongsToMany(Song::class, 'songs_song_categories', 'category_id', 'song_id');
+    }
 }

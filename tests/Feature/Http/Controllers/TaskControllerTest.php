@@ -14,102 +14,103 @@ use Tests\TestCase;
  */
 class TaskControllerTest extends TestCase
 {
-	use WithFaker;
+    use WithFaker;
 
-	/**
-	 * @test
-	 */
-	public function create_returns_an_ok_response(): void
-	{
-		$this->actingAs($this->createUserWithRole('Admin'));
+    /**
+     * @test
+     */
+    public function create_returns_an_ok_response(): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
 
-		$this->get(the_tenant_route('tasks.create'))
+        $this->get(the_tenant_route('tasks.create'))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->component('Tasks/Create')
                 ->has('roles')
             );
-	}
+    }
 
-	/**
-	 * @test
-	 */
-	public function destroy_redirects_to_index(): void
-	{
-		$this->actingAs($this->createUserWithRole('Admin'));
+    /**
+     * @test
+     */
+    public function destroy_redirects_to_index(): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
 
-		$task = Task::factory()->create();
+        $task = Task::factory()->create();
 
-		$this->delete(the_tenant_route('tasks.destroy', [$task]))
+        $this->delete(the_tenant_route('tasks.destroy', [$task]))
             ->assertRedirect(the_tenant_route('tasks.index'));
 
-		$this->assertSoftDeleted($task);
-	}
+        $this->assertSoftDeleted($task);
+    }
 
-	/**
-	 * @test
-	 */
-	public function index_returns_an_ok_response(): void
-	{
-		$this->actingAs($this->createUserWithRole('Admin'));
+    /**
+     * @test
+     */
+    public function index_returns_an_ok_response(): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
 
-		$this->get(the_tenant_route('tasks.index'))
+        $this->get(the_tenant_route('tasks.index'))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->component('Tasks/Index')
                 ->has('tasks')
             );
-	}
+    }
 
-	/**
-	 * @test
-	 */
-	public function show_returns_an_ok_response(): void
-	{
-		$this->actingAs($this->createUserWithRole('Admin'));
+    /**
+     * @test
+     */
+    public function show_returns_an_ok_response(): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
 
-		$task = Task::factory()->create();
+        $task = Task::factory()->create();
 
-		$this->get(the_tenant_route('tasks.show', [$task]))
+        $this->get(the_tenant_route('tasks.show', [$task]))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->component('Tasks/Show')
                 ->has('task')
             );
-	}
+    }
 
-	/**
-	 * @test
-	 * @dataProvider eventProvider
-	 */
-	public function store_returns_an_ok_response($getData): void
-	{
-		$this->actingAs($this->createUserWithRole('Admin'));
+    /**
+     * @test
+     * @dataProvider eventProvider
+     */
+    public function store_returns_an_ok_response($getData): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
 
-		$data = $getData();
-		$response = $this->post(the_tenant_route('tasks.store'), $data)
+        $data = $getData();
+        $response = $this->post(the_tenant_route('tasks.store'), $data)
             ->assertSessionHasNoErrors();
 
-		$this->assertDatabaseHas('tasks', $data);
+        $this->assertDatabaseHas('tasks', $data);
 
-		$task = Task::firstWhere('name', $data['name']);
-		$response->assertRedirect(the_tenant_route('tasks.show', $task));
-	}
+        $task = Task::firstWhere('name', $data['name']);
+        $response->assertRedirect(the_tenant_route('tasks.show', $task));
+    }
 
-	public function eventProvider(): array
-	{
-		return [
-			[
-				function () {
-					$this->setUpFaker();
-					return [
-						'name' => $this->faker->sentence(3),
-						'role_id' => Role::where('name', 'Music Team')->value('id'),
-						'type' => 'manual',
-						'route' => 'task.complete',
-					];
-				},
-			],
-		];
-	}
+    public function eventProvider(): array
+    {
+        return [
+            [
+                function () {
+                    $this->setUpFaker();
+
+                    return [
+                        'name' => $this->faker->sentence(3),
+                        'role_id' => Role::where('name', 'Music Team')->value('id'),
+                        'type' => 'manual',
+                        'route' => 'task.complete',
+                    ];
+                },
+            ],
+        ];
+    }
 }

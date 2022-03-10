@@ -12,34 +12,36 @@ use Webklex\IMAP\Support\MessageCollection;
 
 class IncomingMailbox
 {
-	private const FOLDER_UNREAD = 'INBOX';
-	private const FOLDER_READ = 'INBOX.read';
-	private const BATCH_LIMIT = 10;
+    private const FOLDER_UNREAD = 'INBOX';
 
-	/**
-	 * @param bool $read
-	 * @return Collection<Mailable>
-	 */
-	public function getMessages(bool $read = false): Collection
-	{
-		$messages = new MessageCollection();
+    private const FOLDER_READ = 'INBOX.read';
 
-		$folder_name = $read ? self::FOLDER_READ : self::FOLDER_UNREAD;
-		$client = new Client();
-		try {
-			$client->connect();
+    private const BATCH_LIMIT = 10;
 
-			$folder = $client->getFolder($folder_name);
+    /**
+     * @param bool $read
+     * @return Collection<Mailable>
+     */
+    public function getMessages(bool $read = false): Collection
+    {
+        $messages = new MessageCollection();
 
-			$messages = $folder->getMessages('UNSEEN', null, true, true, true, self::BATCH_LIMIT);
+        $folder_name = $read ? self::FOLDER_READ : self::FOLDER_UNREAD;
+        $client = new Client();
+        try {
+            $client->connect();
 
-			echo count($messages) . ' message(s) found.' . PHP_EOL;
-		} catch (ConnectionFailedException | GetMessagesFailedException | InvalidWhereQueryCriteriaException $e) {
-			report($e);
-		} finally {
-			return $messages
-				->map(fn($message) => (new WebklexImapMessageMailableAdapter($message))->toMailable())
-				->toBase();
-		}
-	}
+            $folder = $client->getFolder($folder_name);
+
+            $messages = $folder->getMessages('UNSEEN', null, true, true, true, self::BATCH_LIMIT);
+
+            echo count($messages).' message(s) found.'.PHP_EOL;
+        } catch (ConnectionFailedException | GetMessagesFailedException | InvalidWhereQueryCriteriaException $e) {
+            report($e);
+        } finally {
+            return $messages
+                ->map(fn ($message) => (new WebklexImapMessageMailableAdapter($message))->toMailable())
+                ->toBase();
+        }
+    }
 }

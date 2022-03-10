@@ -9,21 +9,22 @@ use Session;
 
 class CheckRole
 {
-	/**
-	 * Handle an incoming request.
-	 *
-	 * @param Request $request
-	 * @param Closure $next
-	 * @param $role
-	 * @return mixed
-	 */
-	public function handle($request, Closure $next, $role)
-	{
-		if (!$request->user()->singer->hasRole($role)) {
-			Session::flash('message', "You don't have permission to do that. ");
-			return Redirect::to('/');
-		}
+    /**
+     * Handle an incoming request.
+     *
+     * @param Request $request
+     * @param Closure $next
+     * @param $role
+     * @return mixed
+     */
+    public function handle($request, Closure $next, $role)
+    {
+        if (! $request->user()->singer->hasRole($role)) {
+            Session::flash('message', "You don't have permission to do that. ");
 
-		return $next($request);
-	}
+            return Redirect::to('/');
+        }
+
+        return $next($request);
+    }
 }

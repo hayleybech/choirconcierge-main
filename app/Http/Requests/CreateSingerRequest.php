@@ -8,33 +8,33 @@ use Illuminate\Validation\Rule;
 
 class CreateSingerRequest extends FormRequest
 {
-	/**
-	 * Determine if the user is authorized to make this request.
-	 *
-	 * @return bool
-	 */
-	public function authorize()
-	{
-		return true;
-	}
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
 
-	public function prepareForValidation()
-	{
+    public function prepareForValidation()
+    {
         $this->merge(['onboarding_enabled' => ! $this->input('onboarding_disabled')]);
-	}
+    }
 
-	/**
-	 * Get the validation rules that apply to the request.
-	 *
-	 * @return array<array>
-	 */
-	public function rules()
-	{
-		$singer = $this->route('singer');
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<array>
+     */
+    public function rules()
+    {
+        $singer = $this->route('singer');
 
         $userRules = [
             'user_id' => [
-                Rule::when(!empty($this->input('user_id')), [
+                Rule::when(! empty($this->input('user_id')), [
                     Rule::exists('users', 'id'),
                     new UserUniqueForChoir,
                 ]),
@@ -51,7 +51,7 @@ class CreateSingerRequest extends FormRequest
             'password' => ['exclude_without:email', 'sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
         ];
 
-		return array_merge($userRules, [
+        return array_merge($userRules, [
             'reason_for_joining' => ['max:255'],
             'referrer' => ['max:255'],
             'membership_details' => ['max:255'],
@@ -59,6 +59,6 @@ class CreateSingerRequest extends FormRequest
             'onboarding_enabled' => ['boolean'],
             'voice_part_id' => [],
             'user_roles' => ['array', 'exists:roles,id'],
-		]);
-	}
+        ]);
+    }
 }

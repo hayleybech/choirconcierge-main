@@ -8,17 +8,17 @@ use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
-	/** @var string */
-	protected $model = User::class;
+    /** @var string */
+    protected $model = User::class;
 
-	public function definition(): array
-	{
-		return [
+    public function definition(): array
+    {
+        return [
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
-			'email' => $this->faker->unique()->safeEmail(),
-			'password' => bcrypt('password'),
-			'remember_token' => Str::random(10),
+            'email' => $this->faker->unique()->safeEmail(),
+            'password' => bcrypt('password'),
+            'remember_token' => Str::random(10),
             'dob' => $this->faker->dateTimeBetween('-100 years', '-5 years'),
             'phone' => $this->faker->phoneNumber(),
             'ice_name' => $this->faker->name(),
@@ -32,6 +32,6 @@ class UserFactory extends Factory
             'skills' => $this->faker->sentence(),
             'height' => $this->faker->randomFloat(2, 0, 300),
             'bha_id' => $this->faker->numerify('####'),
-		];
-	}
+        ];
+    }
 }

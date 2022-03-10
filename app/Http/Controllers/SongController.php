@@ -25,13 +25,13 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class SongController extends Controller
 {
-	public function index(Request $request): InertiaResponse|View
+    public function index(Request $request): InertiaResponse|View
     {
-		$this->authorize('viewAny', Song::class);
+        $this->authorize('viewAny', Song::class);
 
         $includePending = auth()->user()?->singer?->hasAbility('songs_update');
         $statuses = SongStatus::query()
-            ->when(! $includePending, fn($query) => $query->where('title', '!=', 'Pending'))
+            ->when(! $includePending, fn ($query) => $query->where('title', '!=', 'Pending'))
             ->get();
         $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
 
@@ -44,8 +44,7 @@ class SongController extends Controller
                 AllowedFilter::exact('status.id')
                     ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
                     ->default($defaultStatuses),
-                AllowedFilter::callback('show_for_prospects', fn (Builder $query, $value) =>
-                        $query->whereIn('show_for_prospects', $includeNonAuditionSongs ? $value : [true])
+                AllowedFilter::callback('show_for_prospects', fn (Builder $query, $value) => $query->whereIn('show_for_prospects', $includeNonAuditionSongs ? $value : [true])
                     )
                     ->default($showForProspectsDefault),
                 AllowedFilter::exact('categories.id'),
@@ -61,68 +60,67 @@ class SongController extends Controller
         return Inertia::render('Songs/Index', [
             'songs' => $songs->values(),
             'statuses' => SongStatus::query()
-                ->when(! $includePending, fn($query) => $query->where('title', '!=', 'Pending'))
+                ->when(! $includePending, fn ($query) => $query->where('title', '!=', 'Pending'))
                 ->get()
                 ->values(),
             'defaultStatuses' => $defaultStatuses,
             'categories' => SongCategory::all()->values(),
             'showForProspectsDefault' => $showForProspectsDefault,
         ]);
-	}
+    }
 
-	public function create(): View|InertiaResponse
-	{
-		$this->authorize('create', Song::class);
+    public function create(): View|InertiaResponse
+    {
+        $this->authorize('create', Song::class);
 
         return Inertia::render('Songs/Create', [
             'categories' => SongCategory::all()->values(),
             'statuses' => SongStatus::all()->values(),
             'pitches' => Song::PITCHES,
         ]);
-	}
+    }
 
-	public function store(SongRequest $request): RedirectResponse
-	{
-		$this->authorize('create', Song::class);
+    public function store(SongRequest $request): RedirectResponse
+    {
+        $this->authorize('create', Song::class);
 
+        $song = Song::create(
+            collect($request->validated())
+                ->toArray(),
+        );
 
-		$song = Song::create(
-			collect($request->validated())
-				->toArray(),
-		);
-
-		if($request->input('send_notification')) {
-			Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUploaded($song));
+        if ($request->input('send_notification')) {
+            Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUploaded($song));
         }
 
-		return redirect()
-			->route('songs.show', [$song])
-			->with(['status' => 'Song created. ']);
-	}
+        return redirect()
+            ->route('songs.show', [$song])
+            ->with(['status' => 'Song created. ']);
+    }
 
-	public function show(Song $song): View|InertiaResponse
-	{
-		$this->authorize('view', $song);
+    public function show(Song $song): View|InertiaResponse
+    {
+        $this->authorize('view', $song);
 
-		$song->load('attachments.category');
+        $song->load('attachments.category');
 
         $assessment_ready_count = $song->singers()->active()->wherePivot('status', 'assessment-ready')->count();
-		$performance_ready_count = $song->singers()->active()->wherePivot('status', 'performance-ready')->count();
+        $performance_ready_count = $song->singers()->active()->wherePivot('status', 'performance-ready')->count();
 
-		$voice_parts_performance_ready_count = VoicePart::withCount([
-		    'singers' => function (Builder $query) use ($song) {
+        $voice_parts_performance_ready_count = VoicePart::withCount([
+            'singers' => function (Builder $query) use ($song) {
                 $query->active();
             },
             'singers as performance_ready_count' => function (Builder $query) use ($song) {
-                    $query
+                $query
                         ->active()
                         ->with('songs')
                         ->whereHas('songs', function (Builder $query) use ($song) {
                             $query->where('songs.id', $song->id)
                                 ->where('singer_song.status', 'performance-ready');
                         });
-                }
-            ])->get();
+            },
+        ])->get();
 
         $song->can = [
             'update_song' => auth()->user()?->can('update', $song),
@@ -134,9 +132,9 @@ class SongController extends Controller
         return Inertia::render('Songs/Show', [
             'song' => $song,
             'all_attachment_categories' => SongAttachmentCategory::all(),
-            'attachment_categories' => $song->attachments->mapToGroups(function($attachment) {
+            'attachment_categories' => $song->attachments->mapToGroups(function ($attachment) {
                 return [$attachment->category->title => $attachment];
-            })->sortBy(function($attachments, $category_title) {
+            })->sortBy(function ($attachments, $category_title) {
                 return match ($category_title) {
                     'Sheet Music' => 0,
                     'Full Mix (Demo)' => 1,
@@ -153,11 +151,11 @@ class SongController extends Controller
                 'performance_ready' => $voice_parts_performance_ready_count,
             ],
         ]);
-	}
+    }
 
-	public function edit(Song $song): View|InertiaResponse
-	{
-		$this->authorize('update', $song);
+    public function edit(Song $song): View|InertiaResponse
+    {
+        $this->authorize('update', $song);
 
         return Inertia::render('Songs/Edit', [
             'categories' => SongCategory::all()->values(),
@@ -165,35 +163,35 @@ class SongController extends Controller
             'pitches' => Song::PITCHES,
             'song' => $song,
         ]);
-	}
+    }
 
-	public function update(SongRequest $request, Song $song): RedirectResponse
-	{
-		$this->authorize('update', $song);
+    public function update(SongRequest $request, Song $song): RedirectResponse
+    {
+        $this->authorize('update', $song);
 
-		$song->update(
-			collect($request->validated())
-				->except('send_notification')
-				->toArray(),
-		);
+        $song->update(
+            collect($request->validated())
+                ->except('send_notification')
+                ->toArray(),
+        );
 
-        if($request->input('send_notification')) {
+        if ($request->input('send_notification')) {
             Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUpdated($song));
         }
 
-		return redirect()
-			->route('songs.show', [$song])
-			->with(['status' => 'Song updated. ']);
-	}
+        return redirect()
+            ->route('songs.show', [$song])
+            ->with(['status' => 'Song updated. ']);
+    }
 
-	public function destroy(Song $song): RedirectResponse
-	{
-		$this->authorize('delete', $song);
+    public function destroy(Song $song): RedirectResponse
+    {
+        $this->authorize('delete', $song);
 
-		$song->delete();
+        $song->delete();
 
-		return redirect()
-			->route('songs.index')
-			->with(['status' => 'Song deleted. ']);
-	}
+        return redirect()
+            ->route('songs.index')
+            ->with(['status' => 'Song deleted. ']);
+    }
 }

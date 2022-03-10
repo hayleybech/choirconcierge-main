@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -63,20 +63,18 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<GroupMember> $memberships
  * @property Collection<Singer> $singers
  * @property Singer $singer
- *
- * @package App\Models
  */
 class User extends Authenticatable implements HasMedia
 {
-	use Notifiable, InteractsWithMedia, SoftDeletes, HasFactory, TenantTimezoneDates;
+    use Notifiable, InteractsWithMedia, SoftDeletes, HasFactory, TenantTimezoneDates;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
-	    'first_name',
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'first_name',
         'last_name',
         'pronouns',
         'email',
@@ -96,26 +94,26 @@ class User extends Authenticatable implements HasMedia
         'bha_id',
     ];
 
-	/**
-	 * The attributes that should be hidden for arrays.
-	 *
-	 * @var array
-	 */
-	protected $hidden = ['password', 'remember_token'];
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['password', 'remember_token'];
 
-	protected $with = ['media', 'singer.roles'];
+    protected $with = ['media', 'singer.roles'];
 
-	public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
+    public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
 
     protected $appends = ['name', 'avatar_url'];
 
-	public $notify_channels = ['database', 'mail'];
+    public $notify_channels = ['database', 'mail'];
 
     public static function create(array $attributes = [])
     {
         $attributes['password'] = self::setInitialPassword($attributes['password']);
 
-	    return static::query()->create($attributes);
+        return static::query()->create($attributes);
     }
 
     public function update(array $attributes = [], array $options = [])
@@ -136,32 +134,33 @@ class User extends Authenticatable implements HasMedia
         return true;
     }
 
-	public static function setInitialPassword(string $password = null): string
-	{
-		if (empty($password)) {
-			return Str::random(10);
+    public static function setInitialPassword(string $password = null): string
+    {
+        if (empty($password)) {
+            return Str::random(10);
         }
+
         return Hash::make($password);
     }
 
     // @todo MAYBE move to singer
-	/*
-	 * Get all groups this is a member of.
-	 */
-	public function memberships(): MorphMany
-	{
-		return $this->morphMany(GroupMember::class, 'memberable');
-	}
+    /*
+     * Get all groups this is a member of.
+     */
+    public function memberships(): MorphMany
+    {
+        return $this->morphMany(GroupMember::class, 'memberable');
+    }
 
-	public function singers(): HasMany
-	{
-		return $this->hasMany(Singer::class);
-	}
+    public function singers(): HasMany
+    {
+        return $this->hasMany(Singer::class);
+    }
 
     public function singer(): HasOne
     {
         return $this->hasOne(Singer::class)
-            ->ofMany(['id' => 'max'], function($query) {
+            ->ofMany(['id' => 'max'], function ($query) {
                 $query->where('tenant_id', '=', tenancy()?->tenant?->id ?? null);
             });
     }
@@ -179,51 +178,52 @@ class User extends Authenticatable implements HasMedia
 
     public function getNameAttribute(): string
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name.' '.$this->last_name;
     }
 
-	public function registerMediaCollections(): void
-	{
-		$this->addMediaCollection('avatar')
-			->singleFile()
-			->acceptsMimeTypes(['image/jpeg', 'image/png'])
-			->useFallbackUrl('https://avatars.dicebear.com/api/initials/' . $this->name . '.svg?backgroundColors[]=grey&backgroundColorLevel=500&fontSize=40')
-			->registerMediaConversions(function (Media $media) {
-				$this->addMediaConversion('thumb')
-					->width(50)
-					->height(50)
-					->crop(Manipulations::CROP_CENTER, 50, 50);
-				$this->addMediaConversion('profile')
-					->width(400)
-					->height(600)
-					->crop(Manipulations::CROP_CENTER, 400, 600);
-			});
-	}
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png'])
+            ->useFallbackUrl('https://avatars.dicebear.com/api/initials/'.$this->name.'.svg?backgroundColors[]=grey&backgroundColorLevel=500&fontSize=40')
+            ->registerMediaConversions(function (Media $media) {
+                $this->addMediaConversion('thumb')
+                    ->width(50)
+                    ->height(50)
+                    ->crop(Manipulations::CROP_CENTER, 50, 50);
+                $this->addMediaConversion('profile')
+                    ->width(400)
+                    ->height(600)
+                    ->crop(Manipulations::CROP_CENTER, 400, 600);
+            });
+    }
 
-	public function getAvatarUrl(string $conversion): string
-	{
-		if (!$this->hasMedia('avatar')) {
-			return $this->getFallbackMediaUrl('avatar');
-		}
+    public function getAvatarUrl(string $conversion): string
+    {
+        if (! $this->hasMedia('avatar')) {
+            return $this->getFallbackMediaUrl('avatar');
+        }
 
-		if ($this->getFirstMedia('avatar')->hasGeneratedConversion($conversion)) {
-			return $this->getFirstMediaUrl('avatar', $conversion);
-		}
-		return $this->getFirstMediaUrl('avatar');
-	}
+        if ($this->getFirstMedia('avatar')->hasGeneratedConversion($conversion)) {
+            return $this->getFirstMediaUrl('avatar', $conversion);
+        }
 
-	public function getAvatarUrlAttribute(): string
+        return $this->getFirstMediaUrl('avatar');
+    }
+
+    public function getAvatarUrlAttribute(): string
     {
         return $this->getFirstMediaUrl('avatar', 'thumb');
     }
 
-	// @todo make separate user vs singer welcome email
-	public static function sendWelcomeEmail($user): void
-	{
-		// Generate a new reset password token
-		$token = app('auth.password.broker')->createToken($user);
+    // @todo make separate user vs singer welcome email
+    public static function sendWelcomeEmail($user): void
+    {
+        // Generate a new reset password token
+        $token = app('auth.password.broker')->createToken($user);
 
-		// Send email
-		Mail::send(new Welcome($user, $token));
-	}
+        // Send email
+        Mail::send(new Welcome($user, $token));
+    }
 }

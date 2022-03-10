@@ -163,8 +163,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-		Maatwebsite\Excel\ExcelServiceProvider::class,
-		Collective\Html\HtmlServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -230,32 +230,31 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-		'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-		'Form' => 'Collective\Html\FormFacade',
-		'Html' => 'Collective\Html\HtmlFacade',
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Form' => 'Collective\Html\FormFacade',
+        'Html' => 'Collective\Html\HtmlFacade',
 
     ],
-	
-	
-	'member_profile_new' => 'https://docs.google.com/forms/d/e/1FAIpQLSf2auqMKw-seWTmcrnuUkwGtdG8adJ-wixC0HgsZmNVHdjWNA/viewform',
-	'member_profile_edit' => 'https://docs.google.com/forms/d/e/1FAIpQLSf2auqMKw-seWTmcrnuUkwGtdG8adJ-wixC0HgsZmNVHdjWNA/viewform?entry.1045781291=',
-	'voice_placement_new' => 'https://docs.google.com/forms/d/e/1FAIpQLSezSLKjE1FinoWdOXUp58zPj9N0cGJ3Qs7FzFIQpxNwtWHgQA/viewform',
-	'voice_placement_edit' => 'https://docs.google.com/forms/d/e/1FAIpQLSezSLKjE1FinoWdOXUp58zPj9N0cGJ3Qs7FzFIQpxNwtWHgQA/viewform?entry.758241671=',
 
-	'drip_token' 	=> 'nsef8o9sjpmfake3czoq',
-	'drip_account' 	=> '9922956',
+    'member_profile_new' => 'https://docs.google.com/forms/d/e/1FAIpQLSf2auqMKw-seWTmcrnuUkwGtdG8adJ-wixC0HgsZmNVHdjWNA/viewform',
+    'member_profile_edit' => 'https://docs.google.com/forms/d/e/1FAIpQLSf2auqMKw-seWTmcrnuUkwGtdG8adJ-wixC0HgsZmNVHdjWNA/viewform?entry.1045781291=',
+    'voice_placement_new' => 'https://docs.google.com/forms/d/e/1FAIpQLSezSLKjE1FinoWdOXUp58zPj9N0cGJ3Qs7FzFIQpxNwtWHgQA/viewform',
+    'voice_placement_edit' => 'https://docs.google.com/forms/d/e/1FAIpQLSezSLKjE1FinoWdOXUp58zPj9N0cGJ3Qs7FzFIQpxNwtWHgQA/viewform?entry.758241671=',
 
-	'formats' => [
-		'date_sm'      => 'Y-m-d',             // 2021-05-04 (ISO 8601)
-		'date_md'      => 'M d',               // May 4
-		'date_lg'      => 'M d, Y',            // May 4, 2021
+    'drip_token' 	=> 'nsef8o9sjpmfake3czoq',
+    'drip_account' 	=> '9922956',
 
-		'time'         => 'h:i a',             // e.g. 1:30 pm
+    'formats' => [
+        'date_sm'      => 'Y-m-d',             // 2021-05-04 (ISO 8601)
+        'date_md'      => 'M d',               // May 4
+        'date_lg'      => 'M d, Y',            // May 4, 2021
 
-		'timestamp_md' => 'M d, h:i a',        // May 4, 1:30 pm
-		'timestamp_lg' => 'M d, Y @ h:i a',    // May 4, 2021 @ 1:30 pm
+        'time'         => 'h:i a',             // e.g. 1:30 pm
 
-		'timezone'     => 'e P',               // e.g. Australia/Perth +08:00
-	],
-	
+        'timestamp_md' => 'M d, h:i a',        // May 4, 1:30 pm
+        'timestamp_lg' => 'M d, Y @ h:i a',    // May 4, 2021 @ 1:30 pm
+
+        'timezone'     => 'e P',               // e.g. Australia/Perth +08:00
+    ],
+
 ];

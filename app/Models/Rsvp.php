@@ -27,41 +27,41 @@ use Illuminate\Support\Carbon;
  * @property string $label
  * @property string $colour
  * @property string $icon
- *
- * @package App\Models
  */
 class Rsvp extends Model
 {
-	use TenantTimezoneDates, HasFactory;
+    use TenantTimezoneDates, HasFactory;
 
-	protected $fillable = ['singer_id', 'response', 'event_id'];
+    protected $fillable = ['singer_id', 'response', 'event_id'];
 
-	protected $appends = ['label', 'colour', 'icon'];
+    protected $appends = ['label', 'colour', 'icon'];
 
-	public function singer(): BelongsTo
-	{
-		return $this->belongsTo(Singer::class);
-	}
-	public function event(): BelongsTo
-	{
-		return $this->belongsTo(Event::class);
-	}
-
-	public function getResponseStringAttribute()
-	{
-		return ucfirst($this->response);
-	}
-
-	public function getLabelAttribute(): string
+    public function singer(): BelongsTo
     {
-		$labels = [
-			'yes' => 'Going',
-			'maybe' => 'Maybe',
+        return $this->belongsTo(Singer::class);
+    }
+
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class);
+    }
+
+    public function getResponseStringAttribute()
+    {
+        return ucfirst($this->response);
+    }
+
+    public function getLabelAttribute(): string
+    {
+        $labels = [
+            'yes' => 'Going',
+            'maybe' => 'Maybe',
             'unknown' => 'No response',
-			'no' => 'Not Going',
-		];
-		return $labels[$this->response];
-	}
+            'no' => 'Not Going',
+        ];
+
+        return $labels[$this->response];
+    }
 
     public function getColourAttribute(): string
     {
@@ -71,6 +71,7 @@ class Rsvp extends Model
             'unknown' => 'amber',
             'no' => 'red',
         ];
+
         return $colours[$this->response];
     }
 
@@ -82,6 +83,7 @@ class Rsvp extends Model
             'unknown' => 'question',
             'no' => 'times',
         ];
+
         return $icons[$this->response];
     }
 }

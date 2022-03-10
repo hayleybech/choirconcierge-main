@@ -10,20 +10,20 @@ use Illuminate\Http\Request;
 
 class CompleteSingerTaskController extends Controller
 {
-	public function __invoke(Singer $singer, Task $task): RedirectResponse
-	{
-		$this->authorize('update', $singer); // @todo Check user has the role needed to complete the task
+    public function __invoke(Singer $singer, Task $task): RedirectResponse
+    {
+        $this->authorize('update', $singer); // @todo Check user has the role needed to complete the task
 
-		event(new TaskCompleted($task, $singer));
+        event(new TaskCompleted($task, $singer));
 
-		if ($task->type !== 'manual') {
-			// Shouldn't get to this line. Forms tasks skip this entire function.
-			throw new \LogicException('This function should only be called for manual tasks.');
-		}
+        if ($task->type !== 'manual') {
+            // Shouldn't get to this line. Forms tasks skip this entire function.
+            throw new \LogicException('This function should only be called for manual tasks.');
+        }
 
-		// Simply mark as done.
-		$singer->tasks()->updateExistingPivot($task, ['completed' => true]);
+        // Simply mark as done.
+        $singer->tasks()->updateExistingPivot($task, ['completed' => true]);
 
-		return redirect('/singers')->with(['status' => 'Task updated. ']);
-	}
+        return redirect('/singers')->with(['status' => 'Task updated. ']);
+    }
 }

@@ -18,17 +18,15 @@ use Webklex\IMAP\Attachment;
  *
  * Relationships
  * @property Collection<Attachment> $attachments
- *
- * @package App\Models
  */
 class SongAttachmentCategory extends Model
 {
-	use BelongsToTenant, SoftDeletes;
+    use BelongsToTenant, SoftDeletes;
 
-	public $timestamps = false;
+    public $timestamps = false;
 
-	public function attachments(): HasMany
-	{
-		return $this->hasMany(SongAttachment::class, 'category_id');
-	}
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(SongAttachment::class, 'category_id');
+    }
 }

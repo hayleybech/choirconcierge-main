@@ -21,68 +21,68 @@ use Tests\TestCase;
  */
 class SingerControllerTest extends TestCase
 {
-	use RefreshDatabase, WithFaker;
+    use RefreshDatabase, WithFaker;
 
-	/**
-	 * @test
-	 */
-	public function create_returns_an_ok_response(): void
-	{
-		$this->actingAs($this->createUserWithRole('Membership Team'));
+    /**
+     * @test
+     */
+    public function create_returns_an_ok_response(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
 
-		$this->get(the_tenant_route('singers.create'))
+        $this->get(the_tenant_route('singers.create'))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->component('Singers/Create')
                 ->has('voice_parts')
                 ->has('roles')
             );
-	}
+    }
 
-	/**
-	 * @test
-	 */
-	public function destroy_redirects_to_index(): void
-	{
-		$this->actingAs($this->createUserWithRole('Membership Team'));
+    /**
+     * @test
+     */
+    public function destroy_redirects_to_index(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
 
-		$singer = Singer::factory()->create();
+        $singer = Singer::factory()->create();
 
-		$this->delete(the_tenant_route('singers.destroy', [$singer]))
+        $this->delete(the_tenant_route('singers.destroy', [$singer]))
             ->assertRedirect(route('singers.index'));
 
-		$this->assertSoftDeleted($singer);
-	}
+        $this->assertSoftDeleted($singer);
+    }
 
-	/**
-	 * @test
-	 */
-	public function edit_returns_an_ok_response(): void
-	{
-		$this->actingAs($this->createUserWithRole('Membership Team'));
+    /**
+     * @test
+     */
+    public function edit_returns_an_ok_response(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
 
-		$singer = Singer::factory()->create();
+        $singer = Singer::factory()->create();
 
-		$this->get(the_tenant_route('singers.edit', [$singer]))
+        $this->get(the_tenant_route('singers.edit', [$singer]))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->component('Singers/Edit')
                 ->has('singer')
                 ->has('voice_parts')
                 ->has('roles')
             );
-	}
+    }
 
-	/**
-	 * @test
-	 */
-	public function index_returns_singers(): void
-	{
-		$this->actingAs($this->createUserWithRole('Membership Team'));
+    /**
+     * @test
+     */
+    public function index_returns_singers(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
 
-		$this->get(the_tenant_route('singers.index'))
+        $this->get(the_tenant_route('singers.index'))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->component('Singers/Index')
                 ->has('allSingers')
                 ->has('statuses')
@@ -90,39 +90,39 @@ class SingerControllerTest extends TestCase
                 ->has('voiceParts')
                 ->has('roles')
             );
-	}
+    }
 
-	/**
-	 * @test
-	 */
-	public function show_returns_an_ok_response(): void
-	{
-		$this->actingAs($this->createUserWithRole('Membership Team'));
+    /**
+     * @test
+     */
+    public function show_returns_an_ok_response(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
 
-		$singer = Singer::factory()->create();
+        $singer = Singer::factory()->create();
 
-		$this->get(the_tenant_route('singers.show', [$singer]))
+        $this->get(the_tenant_route('singers.show', [$singer]))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->component('Singers/Show')
                 ->has('singer')
                 ->has('categories')
             );
-	}
+    }
 
-	/**
-	 * @test
-	 * @dataProvider singerProvider
-	 */
-	public function store_inserts_the_singer($getData): void
-	{
+    /**
+     * @test
+     * @dataProvider singerProvider
+     */
+    public function store_inserts_the_singer($getData): void
+    {
         $task = Task::factory()->create();
-		$mail = Mail::fake();
+        $mail = Mail::fake();
 
-		$this->actingAs($this->createUserWithRole('Membership Team'));
+        $this->actingAs($this->createUserWithRole('Membership Team'));
 
-		$data = $getData();
-		$response = $this->post(the_tenant_route('singers.store'), $data)
+        $data = $getData();
+        $response = $this->post(the_tenant_route('singers.store'), $data)
             ->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('users', Arr::only($data, [
@@ -139,14 +139,14 @@ class SingerControllerTest extends TestCase
         ]));
 
         $user = User::firstWhere('email', $data['email']);
-		$this->assertDatabaseMissing('singers_tasks', [
-			'singer_id' => $user->singer->id,
-			'task_id' => $task->id,
-		]);
+        $this->assertDatabaseMissing('singers_tasks', [
+            'singer_id' => $user->singer->id,
+            'task_id' => $task->id,
+        ]);
 
-		$response->assertRedirect(the_tenant_route('singers.show', [$user->singer]));
-		$mail->assertSent(Welcome::class);
-	}
+        $response->assertRedirect(the_tenant_route('singers.show', [$user->singer]));
+        $mail->assertSent(Welcome::class);
+    }
 
     /**
      * @test
@@ -216,44 +216,44 @@ class SingerControllerTest extends TestCase
         $mail->assertSent(Welcome::class);
     }
 
-	/**
-	 * @test
-	 * @dataProvider singerProvider
-	 */
-	public function store_inserts_tasks_for_prospects($getData): void
-	{
-		$task = Task::factory()->create();
-		$mail = Mail::fake();
+    /**
+     * @test
+     * @dataProvider singerProvider
+     */
+    public function store_inserts_tasks_for_prospects($getData): void
+    {
+        $task = Task::factory()->create();
+        $mail = Mail::fake();
 
-		$this->actingAs($this->createUserWithRole('Membership Team'));
+        $this->actingAs($this->createUserWithRole('Membership Team'));
 
-		$data = $getData();
-		$data['onboarding_enabled'] = true;
-		$data['onboarding_disabled'] = false;
-		$response = $this->post(the_tenant_route('singers.store'), $data);
+        $data = $getData();
+        $data['onboarding_enabled'] = true;
+        $data['onboarding_disabled'] = false;
+        $response = $this->post(the_tenant_route('singers.store'), $data);
 
-		$user = User::firstWhere('email', $data['email']);
-		$this->assertDatabaseHas('singers_tasks', [
-			'singer_id' => $user->singer->id,
-			'task_id' => $task->id,
-		]);
+        $user = User::firstWhere('email', $data['email']);
+        $this->assertDatabaseHas('singers_tasks', [
+            'singer_id' => $user->singer->id,
+            'task_id' => $task->id,
+        ]);
 
-		$response->assertRedirect(the_tenant_route('singers.show', [$user->singer]));
-		$mail->assertSent(Welcome::class);
-	}
+        $response->assertRedirect(the_tenant_route('singers.show', [$user->singer]));
+        $mail->assertSent(Welcome::class);
+    }
 
-	/**
-	 * @test
-	 * @dataProvider singerProvider
-	 */
-	public function update_saves_the_singer_fields($getData): void
-	{
-		$this->actingAs($this->createUserWithRole('Membership Team'));
+    /**
+     * @test
+     * @dataProvider singerProvider
+     */
+    public function update_saves_the_singer_fields($getData): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
 
-		$singer = Singer::factory()->create();
+        $singer = Singer::factory()->create();
 
-		$data = $getData();
-		$response = $this->put(the_tenant_route('singers.update', [$singer]), $data)
+        $data = $getData();
+        $response = $this->put(the_tenant_route('singers.update', [$singer]), $data)
             ->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('singers', Arr::only($data, [
@@ -263,8 +263,8 @@ class SingerControllerTest extends TestCase
             'joined_at',
             'onboarding_enabled',
         ]));
-		$response->assertRedirect(the_tenant_route('singers.show', [$singer]));
-	}
+        $response->assertRedirect(the_tenant_route('singers.show', [$singer]));
+    }
 
     /**
      * @test
@@ -318,15 +318,16 @@ class SingerControllerTest extends TestCase
         ]);
     }
 
-	public function singerProvider(): array
-	{
-		return [
-			[
-				function () {
-					$this->setUpFaker();
+    public function singerProvider(): array
+    {
+        return [
+            [
+                function () {
+                    $this->setUpFaker();
                     $password = Str::random(8);
-					return [
-					    // Singer
+
+                    return [
+                        // Singer
                         'onboarding_enabled' => false,
                         'onboarding_disabled' => true,
                         'reason_for_joining' => $this->faker->sentence(),
@@ -339,9 +340,9 @@ class SingerControllerTest extends TestCase
                         'email' => $this->faker->email(),
                         'password' => $password,
                         'password_confirmation' => $password,
-					];
-				},
-			],
-		];
-	}
+                    ];
+                },
+            ],
+        ];
+    }
 }

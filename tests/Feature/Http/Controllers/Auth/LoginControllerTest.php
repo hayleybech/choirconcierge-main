@@ -11,54 +11,54 @@ use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
-	/** @test */
-	public function login_displays_the_login_form(): void
-	{
-		$this->get(the_tenant_route('login'))
+    /** @test */
+    public function login_displays_the_login_form(): void
+    {
+        $this->get(the_tenant_route('login'))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
                 ->component('Auth/Login'));
-	}
+    }
 
-	/** @test */
-	public function invalid_login_displays_validation_errors(): void
-	{
-		$this->post(the_tenant_route('login'), [])
+    /** @test */
+    public function invalid_login_displays_validation_errors(): void
+    {
+        $this->post(the_tenant_route('login'), [])
             ->assertStatus(302)
             ->assertSessionHasErrors('email');
-	}
+    }
 
-	/** @test */
-	public function login_authenticates_and_redirects_user(): void
-	{
-		$user = User::factory()->create();
+    /** @test */
+    public function login_authenticates_and_redirects_user(): void
+    {
+        $user = User::factory()->create();
 
-		$this->post(the_tenant_route('login'), [
-                'email' => $user->email,
-                'password' => 'password',
-            ])
+        $this->post(the_tenant_route('login'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ])
             ->assertRedirect(the_tenant_route('dash'));
 
-		$this->assertAuthenticatedAs($user);
-	}
+        $this->assertAuthenticatedAs($user);
+    }
 
-	/** @test */
-	public function logout_deauthenticates_and_redirects_user(): void
-	{
-		// login
-		$user = User::factory()->has(Singer::factory())->create();
+    /** @test */
+    public function logout_deauthenticates_and_redirects_user(): void
+    {
+        // login
+        $user = User::factory()->has(Singer::factory())->create();
 
-		$this->post(the_tenant_route('login'), [
-			'email' => $user->email,
-			'password' => 'password',
-		]);
+        $this->post(the_tenant_route('login'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
 
-		// logout
-		$this->post(the_tenant_route('logout'))
+        // logout
+        $this->post(the_tenant_route('logout'))
             ->assertRedirect(the_tenant_route('dash'));
 
-		$this->assertGuest();
-	}
+        $this->assertGuest();
+    }
 }

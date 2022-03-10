@@ -130,12 +130,12 @@ return [
         ],
         'decoder' => [
             'message' => [
-                'subject' => 'utf-8' // mimeheader
+                'subject' => 'utf-8', // mimeheader
             ],
             'attachment' => [
-                'name' => 'utf-8' // mimeheader
-            ]
-        ]
+                'name' => 'utf-8', // mimeheader
+            ],
+        ],
     ],
 
     /*
@@ -153,6 +153,6 @@ return [
      */
     'masks' => [
         'message' => \Webklex\IMAP\Support\Masks\MessageMask::class,
-        'attachment' => \Webklex\IMAP\Support\Masks\AttachmentMask::class
-    ]
+        'attachment' => \Webklex\IMAP\Support\Masks\AttachmentMask::class,
+    ],
 ];

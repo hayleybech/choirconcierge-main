@@ -27,30 +27,29 @@ use Illuminate\Support\Carbon;
  * @property string $label
  * @property string $colour
  * @property string $icon
- *
- * @package App\Models
  */
 class Attendance extends Model
 {
-	use TenantTimezoneDates;
+    use TenantTimezoneDates;
 
-	protected $fillable = ['singer_id', 'response', 'absent_reason', 'event_id'];
+    protected $fillable = ['singer_id', 'response', 'absent_reason', 'event_id'];
 
-	protected $appends = ['response_string', 'label', 'colour', 'icon'];
+    protected $appends = ['response_string', 'label', 'colour', 'icon'];
 
-	public function singer(): BelongsTo
-	{
-		return $this->belongsTo(Singer::class);
-	}
-	public function event(): BelongsTo
-	{
-		return $this->belongsTo(Event::class);
-	}
+    public function singer(): BelongsTo
+    {
+        return $this->belongsTo(Singer::class);
+    }
 
-	public function getResponseStringAttribute()
-	{
-		return $this->response === 'absent_apology' ? 'Absent (With Apology)' : ucfirst($this->response);
-	}
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class);
+    }
+
+    public function getResponseStringAttribute()
+    {
+        return $this->response === 'absent_apology' ? 'Absent (With Apology)' : ucfirst($this->response);
+    }
 
     public function getLabelAttribute(): string
     {
@@ -61,6 +60,7 @@ class Attendance extends Model
             'absent_apology' => 'Absent (With Apology)',
             'unknown' => 'Not recorded',
         ];
+
         return $labels[$this->response];
     }
 
@@ -73,6 +73,7 @@ class Attendance extends Model
             'absent_apology' => 'red',
             'unknown' => 'gray',
         ];
+
         return $colours[$this->response];
     }
 
@@ -85,6 +86,7 @@ class Attendance extends Model
             'absent_apology' => 'times',
             'unknown' => 'question',
         ];
+
         return $icons[$this->response];
     }
 }

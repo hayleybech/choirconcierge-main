@@ -8,7 +8,7 @@ use Inertia\Inertia;
 
 class ForgotPasswordController extends Controller
 {
-	/*
+    /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
     |--------------------------------------------------------------------------
@@ -19,17 +19,17 @@ class ForgotPasswordController extends Controller
     |
     */
 
-	use SendsPasswordResetEmails;
+    use SendsPasswordResetEmails;
 
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		$this->middleware('guest');
-	}
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
 
     public function showLinkRequestForm()
     {

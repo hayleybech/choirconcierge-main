@@ -24,12 +24,12 @@ class GlobalFindUserController extends Controller
             ->get()
             ->map(fn ($user) => [
                 'value' => $user->id,
-                'label' => $user->name . ' ('.$user->email.')',
+                'label' => $user->name.' ('.$user->email.')',
                 'name' => $user->name,
                 'avatarUrl' => $user->avatar_url,
                 'email' => $user->email,
             ]);
 
-            return Response::json($formatted_results);
+        return Response::json($formatted_results);
     }
 }

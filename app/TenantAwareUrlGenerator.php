@@ -8,46 +8,46 @@ use Spatie\MediaLibrary\Support\UrlGenerator\BaseUrlGenerator;
 
 class TenantAwareUrlGenerator extends BaseUrlGenerator
 {
-	public function getUrl(): string
-	{
-		$url = asset($this->getPathRelativeToRoot());
+    public function getUrl(): string
+    {
+        $url = asset($this->getPathRelativeToRoot());
 
-		$url = $this->versionUrl($url);
+        $url = $this->versionUrl($url);
 
-		return $url;
-	}
+        return $url;
+    }
 
-	public function getTemporaryUrl(DateTimeInterface $expiration, array $options = []): string
-	{
-		return $this->getDisk()->temporaryUrl($this->getPathRelativeToRoot(), $expiration, $options);
-	}
+    public function getTemporaryUrl(DateTimeInterface $expiration, array $options = []): string
+    {
+        return $this->getDisk()->temporaryUrl($this->getPathRelativeToRoot(), $expiration, $options);
+    }
 
-	public function getBaseMediaDirectoryUrl()
-	{
-		return $this->getDisk()->url('/');
-	}
+    public function getBaseMediaDirectoryUrl()
+    {
+        return $this->getDisk()->url('/');
+    }
 
-	public function getPath(): string
-	{
-		$adapter = $this->getDisk()->getAdapter();
+    public function getPath(): string
+    {
+        $adapter = $this->getDisk()->getAdapter();
 
-		$cachedAdapter = '\League\Flysystem\Cached\CachedAdapter';
+        $cachedAdapter = '\League\Flysystem\Cached\CachedAdapter';
 
-		if ($adapter instanceof $cachedAdapter) {
-			$adapter = $adapter->getAdapter();
-		}
+        if ($adapter instanceof $cachedAdapter) {
+            $adapter = $adapter->getAdapter();
+        }
 
-		$pathPrefix = $adapter->getPathPrefix();
+        $pathPrefix = $adapter->getPathPrefix();
 
-		return $pathPrefix . $this->getPathRelativeToRoot();
-	}
+        return $pathPrefix.$this->getPathRelativeToRoot();
+    }
 
-	public function getResponsiveImagesDirectoryUrl(): string
-	{
-		$base = Str::finish($this->getBaseMediaDirectoryUrl(), '/');
+    public function getResponsiveImagesDirectoryUrl(): string
+    {
+        $base = Str::finish($this->getBaseMediaDirectoryUrl(), '/');
 
-		$path = $this->pathGenerator->getPathForResponsiveImages($this->media);
+        $path = $this->pathGenerator->getPathForResponsiveImages($this->media);
 
-		return Str::finish(url($base . $path), '/');
-	}
+        return Str::finish(url($base.$path), '/');
+    }
 }

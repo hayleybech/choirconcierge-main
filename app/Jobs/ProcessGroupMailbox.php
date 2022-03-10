@@ -16,27 +16,25 @@ use Illuminate\Queue\SerializesModels;
  * It then delegates to another job to process individual emails.
  *
  * @see ProcessGroupMessage
- *
- * @package App\Jobs
  */
 class ProcessGroupMailbox implements ShouldQueue
 {
-	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-	private IncomingMailbox $mailbox;
+    private IncomingMailbox $mailbox;
 
-	public function __construct(IncomingMailbox $mailbox)
-	{
-		$this->mailbox = $mailbox;
-	}
+    public function __construct(IncomingMailbox $mailbox)
+    {
+        $this->mailbox = $mailbox;
+    }
 
-	/**
-	 * Execute the job.
-	 *
-	 * @return void
-	 */
-	public function handle(): void
-	{
-		$this->mailbox->getMessages()->each(fn(IncomingMessage $message) => $message->resendToGroups());
-	}
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle(): void
+    {
+        $this->mailbox->getMessages()->each(fn (IncomingMessage $message) => $message->resendToGroups());
+    }
 }

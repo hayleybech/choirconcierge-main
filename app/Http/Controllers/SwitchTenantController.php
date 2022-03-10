@@ -26,7 +26,8 @@ class SwitchTenantController extends Controller
         return Inertia::location(tenant_route($tenant->host, 'tenants.switch.login', $token));
     }
 
-    public function loginWithToken(string $token): RedirectResponse {
+    public function loginWithToken(string $token): RedirectResponse
+    {
         return UserImpersonation::makeResponse($token);
     }
 }

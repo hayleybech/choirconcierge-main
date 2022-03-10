@@ -87,7 +87,7 @@ class HandleInertiaRequests extends Middleware
                 ->withoutTenancy()
                 ->with('tenant.domains')
                 ->get()
-                ->map(fn($singer) => $singer->tenant),
+                ->map(fn ($singer) => $singer->tenant),
         ]);
     }
 }

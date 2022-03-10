@@ -14,25 +14,25 @@ use Tests\TestCase;
  */
 class ProcessGroupMailboxTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
-	protected bool $tenancy = false;
+    protected bool $tenancy = false;
 
-	/** @test */
-	public function handle_resends_a_messages(): void
-	{
-		// Arrange
-		$message = $this->spy(IncomingMessage::class);
+    /** @test */
+    public function handle_resends_a_messages(): void
+    {
+        // Arrange
+        $message = $this->spy(IncomingMessage::class);
 
-		$this->mock(IncomingMailbox::class, function (MockInterface $mock) use ($message) {
-			$mock->shouldReceive('getMessages')->andReturn(collect([$message]));
-		});
+        $this->mock(IncomingMailbox::class, function (MockInterface $mock) use ($message) {
+            $mock->shouldReceive('getMessages')->andReturn(collect([$message]));
+        });
 
-		// Act
-		$processGroupMailbox = $this->app->make(ProcessGroupMailbox::class);
-		$processGroupMailbox->handle();
+        // Act
+        $processGroupMailbox = $this->app->make(ProcessGroupMailbox::class);
+        $processGroupMailbox->handle();
 
-		// Assert
-		$message->shouldHaveReceived('resendToGroups');
-	}
+        // Assert
+        $message->shouldHaveReceived('resendToGroups');
+    }
 }
