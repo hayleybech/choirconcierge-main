@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Singer;
 use App\Models\User;
+use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
@@ -46,11 +47,30 @@ class AccountControllerTest extends TestCase
 		$response = $this->post(the_tenant_route('accounts.update'), $data);
 
 		$response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('users', Arr::except($data, [
-            'password_confirmation',
-        ]));
+        $this->assertDatabaseHas('users', Arr::except($data, ['password_confirmation', 'password']));
 		$response->assertRedirect(the_tenant_route('singers.show', $user->singer));
 	}
+
+    /**
+     * @test
+     * @dataProvider profileProvider
+     */
+    public function update_saves_the_user_password($getData): void
+    {
+        $user = User::factory()->has(Singer::factory())->create();
+        $this->actingAs($user);
+
+        $data = $getData();
+        $response = $this->post(the_tenant_route('accounts.update'), $data);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('users', Arr::except($data, ['password_confirmation', 'password']));
+
+        $user->refresh();
+        $this->assertTrue(Hash::check($data['password'], $user->password));
+
+        $response->assertRedirect(the_tenant_route('singers.show', $user->singer));
+    }
 
 	public function profileProvider(): array
 	{
