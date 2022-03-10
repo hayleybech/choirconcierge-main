@@ -15,7 +15,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\TaskCompleted' => ['App\Listeners\CreateTaskNotification'],
+        \App\Events\TaskCompleted::class => [\App\Listeners\CreateTaskNotification::class],
         Login::class => [LogSuccessfulLogin::class],
     ];
 

@@ -24,6 +24,6 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer('folders.index', 'App\Http\View\Composers\DocumentComposer');
+        View::composer('folders.index', \App\Http\View\Composers\DocumentComposer::class);
     }
 }
