@@ -32,7 +32,7 @@ class RsvpControllerTest extends TestCase
         );
 
         $response->assertRedirect(the_tenant_route('events.show', $event));
-        $this->assertDeleted($event->rsvps->first());
+        $this->assertModelMissing($event->rsvps->first());
     }
 
     /**

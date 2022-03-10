@@ -36,7 +36,7 @@ class DocumentControllerTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $response->assertRedirect(the_tenant_route('folders.index'));
-        $this->assertDeleted($folder->documents->first());
+        $this->assertModelMissing($folder->documents->first());
     }
 
     /**

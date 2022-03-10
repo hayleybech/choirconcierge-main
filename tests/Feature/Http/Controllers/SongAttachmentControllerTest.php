@@ -35,7 +35,7 @@ class SongAttachmentControllerTest extends TestCase
         $response = $this->delete(the_tenant_route('songs.attachments.destroy', [$song, 'attachment' => $attachment]));
 
         $response->assertRedirect(the_tenant_route('songs.show', [$song]));
-        $this->assertDeleted($attachment);
+        $this->assertModelMissing($attachment);
         Storage::disk('public')->assertMissing($attachment->getPath());
     }
 
