@@ -37,9 +37,7 @@ class IncomingMailbox
 		} catch (ConnectionFailedException | GetMessagesFailedException | InvalidWhereQueryCriteriaException $e) {
 			report($e);
 		} finally {
-			return $messages
-				->map(fn($message) => (new WebklexImapMessageMailableAdapter($message))->toMailable())
-				->toBase();
+			return $messages->toBase();
 		}
 	}
 }
