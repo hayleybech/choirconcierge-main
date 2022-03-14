@@ -22,7 +22,6 @@
         "laravel/ui": "^3.4",
         "laravelcollective/html": "^6.3",
         "maatwebsite/excel": "~3.1",
-        "renatomarinho/laravel-page-speed": "^2.0",
         "sentry/sentry-laravel": "^2.11",
         "spatie/calendar-links": "^1.7",
         "spatie/flysystem-dropbox": "^2.0",
