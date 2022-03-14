@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -24,7 +24,7 @@ class RoleControllerTest extends TestCase
 
         $this->get(the_tenant_route('roles.create'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Roles/Create')
             );
     }
@@ -56,7 +56,7 @@ class RoleControllerTest extends TestCase
 
         $this->get(the_tenant_route('roles.edit', [$role]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Roles/Edit')
                 ->has('role')
             );
@@ -71,7 +71,7 @@ class RoleControllerTest extends TestCase
 
         $this->get(the_tenant_route('roles.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Roles/Index')
                 ->has('roles')
             );
@@ -88,7 +88,7 @@ class RoleControllerTest extends TestCase
 
         $this->get(the_tenant_route('roles.show', [$role]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Roles/Show')
                 ->has('role')
             );

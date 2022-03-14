@@ -4,9 +4,8 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\Task;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -25,7 +24,7 @@ class TaskControllerTest extends TestCase
 
         $this->get(the_tenant_route('tasks.create'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Tasks/Create')
                 ->has('roles')
             );
@@ -55,7 +54,7 @@ class TaskControllerTest extends TestCase
 
         $this->get(the_tenant_route('tasks.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Tasks/Index')
                 ->has('tasks')
             );
@@ -72,7 +71,7 @@ class TaskControllerTest extends TestCase
 
         $this->get(the_tenant_route('tasks.show', [$task]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Tasks/Show')
                 ->has('task')
             );

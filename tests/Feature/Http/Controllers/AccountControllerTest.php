@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -29,7 +29,7 @@ class AccountControllerTest extends TestCase
 
         $this->get(the_tenant_route('accounts.edit'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Account/Edit')
                 ->has('user'));
     }

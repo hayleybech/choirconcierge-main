@@ -6,7 +6,7 @@ use App\Models\Event;
 use App\Models\Singer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -27,7 +27,7 @@ class AttendanceControllerTest extends TestCase
 
         $this->get(the_tenant_route('events.attendances.index', [$event]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Events/Attendance/Index')
                 ->has('event')
                 ->has('voice_parts'));

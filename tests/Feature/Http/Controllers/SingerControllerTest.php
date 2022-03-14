@@ -13,7 +13,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -32,7 +32,7 @@ class SingerControllerTest extends TestCase
 
         $this->get(the_tenant_route('singers.create'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Create')
                 ->has('voice_parts')
                 ->has('roles')
@@ -65,7 +65,7 @@ class SingerControllerTest extends TestCase
 
         $this->get(the_tenant_route('singers.edit', [$singer]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Edit')
                 ->has('singer')
                 ->has('voice_parts')
@@ -82,7 +82,7 @@ class SingerControllerTest extends TestCase
 
         $this->get(the_tenant_route('singers.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Index')
                 ->has('allSingers')
                 ->has('statuses')
@@ -103,7 +103,7 @@ class SingerControllerTest extends TestCase
 
         $this->get(the_tenant_route('singers.show', [$singer]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Show')
                 ->has('singer')
                 ->has('categories')

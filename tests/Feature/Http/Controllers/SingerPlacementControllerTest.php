@@ -7,7 +7,7 @@ use App\Models\Singer;
 use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -28,7 +28,7 @@ class SingerPlacementControllerTest extends TestCase
 
         $this->get(the_tenant_route('singers.placements.create', [$singer]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Placements/Create')
                 ->has('singer')
                 ->has('voice_parts')
@@ -48,7 +48,7 @@ class SingerPlacementControllerTest extends TestCase
 
         $this->get(the_tenant_route('singers.placements.edit', [$singer, $singer->placement]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Placements/Edit')
                 ->has('singer')
                 ->has('placement')

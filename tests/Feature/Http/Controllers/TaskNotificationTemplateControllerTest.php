@@ -6,7 +6,7 @@ use App\Models\NotificationTemplate;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -27,7 +27,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
 
         $this->get(the_tenant_route('tasks.notifications.create', [$task]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Tasks/Notifications/Create')
                 ->has('task')
             );
@@ -70,7 +70,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
                 'notification' => $task->notification_templates->first(),
             ]),
         )->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Tasks/Notifications/Edit')
                 ->has('task')
                 ->has('notification')
@@ -94,7 +94,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
                 'notification' => $task->notification_templates->first(),
             ]),
         )->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Tasks/Notifications/Show')
                 ->has('task')
                 ->has('notification')

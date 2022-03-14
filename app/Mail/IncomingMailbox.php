@@ -4,11 +4,11 @@ namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Collection;
-use Webklex\IMAP\Client;
-use Webklex\IMAP\Exceptions\ConnectionFailedException;
-use Webklex\IMAP\Exceptions\GetMessagesFailedException;
-use Webklex\IMAP\Exceptions\InvalidWhereQueryCriteriaException;
-use Webklex\IMAP\Support\MessageCollection;
+use Webklex\PHPIMAP\Client;
+use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
+use Webklex\PHPIMAP\Exceptions\GetMessagesFailedException;
+use Webklex\PHPIMAP\Exceptions\InvalidWhereQueryCriteriaException;
+use Webklex\PHPIMAP\Support\MessageCollection;
 
 class IncomingMailbox
 {

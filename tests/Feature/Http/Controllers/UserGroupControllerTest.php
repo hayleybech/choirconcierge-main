@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -24,7 +24,7 @@ class UserGroupControllerTest extends TestCase
 
         $this->get(the_tenant_route('groups.create'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('MailingLists/Create')
                 ->has('roles')
                 ->has('voiceParts')
@@ -58,7 +58,7 @@ class UserGroupControllerTest extends TestCase
 
         $response = $this->get(the_tenant_route('groups.edit', ['group' => $group]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('MailingLists/Edit')
                 ->has('list')
                 ->has('roles')
@@ -76,7 +76,7 @@ class UserGroupControllerTest extends TestCase
 
         $response = $this->get(the_tenant_route('groups.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('MailingLists/Index')
                 ->has('lists')
             );
@@ -93,7 +93,7 @@ class UserGroupControllerTest extends TestCase
 
         $this->get(the_tenant_route('groups.show', ['group' => $group]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('MailingLists/Show')
                 ->has('list')
             );

@@ -2,11 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\Role;
-use Database\Seeders\Dummy\DummyUserSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -23,7 +19,7 @@ class DashControllerTest extends TestCase
 
         $this->get(the_tenant_route('dash'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Dash/Show')
                 ->has('events')
                 ->has('songs')

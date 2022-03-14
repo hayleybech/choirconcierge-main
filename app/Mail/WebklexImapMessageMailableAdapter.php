@@ -3,8 +3,8 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
-use Webklex\IMAP\Attachment;
-use Webklex\IMAP\Message;
+use Webklex\PHPIMAP\Attachment;
+use Webklex\PHPIMAP\Message;
 
 class WebklexImapMessageMailableAdapter implements MailableInterface
 {

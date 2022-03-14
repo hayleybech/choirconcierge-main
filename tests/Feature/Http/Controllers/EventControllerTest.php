@@ -4,14 +4,12 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\EventType;
-use App\Models\User;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Notification;
 use Tests\TestCase;
 
@@ -31,7 +29,7 @@ class EventControllerTest extends TestCase
 
         $this->get(the_tenant_route('events.create'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Events/Create')
                 ->has('types')
             );
@@ -63,7 +61,7 @@ class EventControllerTest extends TestCase
 
         $this->get(the_tenant_route('events.edit', [$event]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Events/Edit')
                 ->has('event')
                 ->has('types')
@@ -79,7 +77,7 @@ class EventControllerTest extends TestCase
 
         $this->get(the_tenant_route('events.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Events/Index')
                 ->has('events')
                 ->has('eventTypes')
@@ -97,7 +95,7 @@ class EventControllerTest extends TestCase
 
         $this->get(the_tenant_route('events.show', [$event]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Events/Show')
                 ->has('event')
                 ->has('rsvpCount')

@@ -13,7 +13,7 @@ use App\Notifications\SongUploaded;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Notification;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -32,7 +32,7 @@ class SongControllerTest extends TestCase
 
         $this->get(the_tenant_route('songs.create'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Create')
                 ->has('categories')
                 ->has('statuses')
@@ -66,7 +66,7 @@ class SongControllerTest extends TestCase
 
         $this->get(the_tenant_route('songs.edit', [$song]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Edit')
                 ->has('song')
                 ->has('categories')
@@ -84,7 +84,7 @@ class SongControllerTest extends TestCase
 
         $this->get(the_tenant_route('songs.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Index')
                 ->has('songs')
                 ->has('statuses')
@@ -104,7 +104,7 @@ class SongControllerTest extends TestCase
 
         $this->get(the_tenant_route('songs.show', [$song]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Show')
                 ->has('song')
                 ->has('all_attachment_categories')
@@ -131,7 +131,7 @@ class SongControllerTest extends TestCase
 
         $this->get(the_tenant_route('songs.show', $song))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Show')
                 ->where('song.my_learning.status_name', 'Assessment Ready')
             );
@@ -154,7 +154,7 @@ class SongControllerTest extends TestCase
 
         $this->get(the_tenant_route('songs.show', $song))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Show')
                 ->where('status_count.assessment_ready', 3)
             );

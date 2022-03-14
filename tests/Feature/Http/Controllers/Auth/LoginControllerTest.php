@@ -5,8 +5,7 @@ namespace Tests\Feature\Http\Controllers\Auth;
 use App\Models\Singer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
@@ -18,7 +17,7 @@ class LoginControllerTest extends TestCase
     {
         $this->get(the_tenant_route('login'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Auth/Login'));
     }
 

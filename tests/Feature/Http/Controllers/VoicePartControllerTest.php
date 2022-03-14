@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -24,7 +24,7 @@ class VoicePartControllerTest extends TestCase
 
         $this->get(the_tenant_route('voice-parts.create'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('VoiceParts/Create')
             );
     }
@@ -55,7 +55,7 @@ class VoicePartControllerTest extends TestCase
 
         $this->get(the_tenant_route('voice-parts.edit', [$voice_part]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('VoiceParts/Edit')
                 ->has('voice_part')
             );
@@ -70,7 +70,7 @@ class VoicePartControllerTest extends TestCase
 
         $this->get(the_tenant_route('voice-parts.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('VoiceParts/Index')
                 ->has('parts')
             );

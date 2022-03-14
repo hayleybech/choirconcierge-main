@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Folder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -24,7 +24,7 @@ class FolderControllerTest extends TestCase
 
         $this->get(the_tenant_route('folders.create'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Folders/Create')
             );
     }
@@ -53,7 +53,7 @@ class FolderControllerTest extends TestCase
 
         $this->get(the_tenant_route('folders.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Folders/Index')
                 ->has('folders')
             );

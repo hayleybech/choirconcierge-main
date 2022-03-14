@@ -5,7 +5,7 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\RiserStack;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -24,7 +24,7 @@ class RiserStackControllerTest extends TestCase
 
         $this->get(the_tenant_route('stacks.create'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('RiserStacks/Create')
                 ->has('voice_parts')
             );
@@ -56,7 +56,7 @@ class RiserStackControllerTest extends TestCase
 
         $this->get(the_tenant_route('stacks.edit', ['stack' => $stack]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('RiserStacks/Edit')
                 ->has('stack')
                 ->has('voice_parts')
@@ -72,7 +72,7 @@ class RiserStackControllerTest extends TestCase
 
         $this->get(the_tenant_route('stacks.index'))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('RiserStacks/Index')
                 ->has('stacks')
             );
@@ -89,7 +89,7 @@ class RiserStackControllerTest extends TestCase
 
         $this->get(the_tenant_route('stacks.show', ['stack' => $stack]))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('RiserStacks/Show')
                 ->has('stack')
             );
