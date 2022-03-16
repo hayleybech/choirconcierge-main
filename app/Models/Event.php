@@ -57,296 +57,293 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Relationships - Repeating Events
  * @property Event $repeat_parent
  * @property Collection<Event> $repeat_children
- *
- * @package App
  */
 class Event extends Model
 {
-	use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
+    use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
-		'title',
-		'start_date',
-		'end_date',
-		'call_time',
-		'location_place_id',
-		'location_name',
-		'location_address',
-		'description',
-		'type_id',
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+        'start_date',
+        'end_date',
+        'call_time',
+        'location_place_id',
+        'location_name',
+        'location_address',
+        'description',
+        'type_id',
 
-		'is_repeating',
-		'repeat_parent_id',
-		'repeat_until',
-		'repeat_frequency_amount',
-		'repeat_frequency_unit',
-	];
+        'is_repeating',
+        'repeat_parent_id',
+        'repeat_until',
+        'repeat_frequency_amount',
+        'repeat_frequency_unit',
+    ];
 
-	protected $with = ['type'];
+    protected $with = ['type'];
 
-	public $dates = ['updated_at', 'created_at', 'start_date', 'end_date', 'call_time', 'repeat_until', 'deleted_at'];
+    public $dates = ['updated_at', 'created_at', 'start_date', 'end_date', 'call_time', 'repeat_until', 'deleted_at'];
 
-	protected $casts = [
-		'is_repeating' => 'boolean',
-	];
+    protected $casts = [
+        'is_repeating' => 'boolean',
+    ];
 
-	private Link $_add_to_calendar_link;
+    private Link $_add_to_calendar_link;
 
-	protected static function booted(): void
-	{
-		static::created(static function (Event $event) {
-			$event->createRepeats();
-		});
-	}
+    protected static function booted(): void
+    {
+        static::created(static function (self $event) {
+            $event->createRepeats();
+        });
+    }
 
-	/**
-	 * Generates occurrences for a repeating event
-	 * - Starts at the date of the second occurrence
-	 * - Increments the date by the frequency
-	 * - Loops until date is after the repeat end date
-	 * - Doesn't yet support repeat_frequency_amount (always = 1 for now)
-	 * - Doesn't yet differentiate between e.g. "every month on the 18th" and "every month on the 3rd thursday" and "every 30 days"
-	 */
-	private function createRepeats(): void
-	{
-		if (!$this->is_repeating) {
-			return;
-		}
+    /**
+     * Generates occurrences for a repeating event
+     * - Starts at the date of the second occurrence
+     * - Increments the date by the frequency
+     * - Loops until date is after the repeat end date
+     * - Doesn't yet support repeat_frequency_amount (always = 1 for now)
+     * - Doesn't yet differentiate between e.g. "every month on the 18th" and "every month on the 3rd thursday" and "every 30 days"
+     */
+    private function createRepeats(): void
+    {
+        if (! $this->is_repeating) {
+            return;
+        }
 
-		$this->repeat_parent_id = $this->id;
+        $this->repeat_parent_id = $this->id;
 
-		// temporary fix? repeat_until shouldn't ask for hours/min
-		$this->repeat_until = $this->repeat_until->setHours($this->call_time->hour);
-		$this->repeat_until = $this->repeat_until->setMinutes($this->call_time->minute);
+        // temporary fix? repeat_until shouldn't ask for hours/min
+        $this->repeat_until = $this->repeat_until->setHours($this->call_time->hour);
+        $this->repeat_until = $this->repeat_until->setMinutes($this->call_time->minute);
 
-		$this->save();
+        $this->save();
 
-		$second_event_call_time = $this->call_time->copy()->add($this->repeat_frequency_unit, 1);
-		$second_event_start_date = $this->start_date->copy()->add($this->repeat_frequency_unit, 1);
-		$second_event_end_date = $this->end_date->copy()->add($this->repeat_frequency_unit, 1);
+        $second_event_call_time = $this->call_time->copy()->add($this->repeat_frequency_unit, 1);
+        $second_event_start_date = $this->start_date->copy()->add($this->repeat_frequency_unit, 1);
+        $second_event_end_date = $this->end_date->copy()->add($this->repeat_frequency_unit, 1);
 
-		$mysql_date_format = 'Y-m-d H:i:s';
+        $mysql_date_format = 'Y-m-d H:i:s';
 
-		$event_occurrences = [];
-		for (
-			$current_event_call_time = $second_event_call_time,
-			$current_start_date = $second_event_start_date,
-			$current_event_end_date = $second_event_end_date;
-			$current_event_call_time <= $this->repeat_until;
-			$current_event_call_time->add($this->repeat_frequency_unit, 1),
-			$current_start_date->add($this->repeat_frequency_unit, 1),
-			$current_event_end_date->add($this->repeat_frequency_unit, 1)
-		) {
-			$event_occurrences[] = $this->replicate()
-				->fill([
-					'start_date' => tz_from_tenant_to_utc($current_start_date->toString())->format($mysql_date_format),
-					'end_date' => tz_from_tenant_to_utc($current_event_end_date->toString())->format(
-						$mysql_date_format,
-					),
-					'call_time' => tz_from_tenant_to_utc($current_event_call_time->toString())->format(
-						$mysql_date_format,
-					),
-					'repeat_until' => tz_from_tenant_to_utc($this->repeat_until->toString())->format(
-						$mysql_date_format,
-					),
-					'created_at' => Carbon::now()->format($mysql_date_format),
-					'updated_at' => Carbon::now()->format($mysql_date_format),
-				])
-				->attributesToArray();
-		}
-		DB::table('events')->insert($event_occurrences);
-	}
+        $event_occurrences = [];
+        for (
+            $current_event_call_time = $second_event_call_time,
+            $current_start_date = $second_event_start_date,
+            $current_event_end_date = $second_event_end_date;
+            $current_event_call_time <= $this->repeat_until;
+            $current_event_call_time->add($this->repeat_frequency_unit, 1),
+            $current_start_date->add($this->repeat_frequency_unit, 1),
+            $current_event_end_date->add($this->repeat_frequency_unit, 1)
+        ) {
+            $event_occurrences[] = $this->replicate()
+                ->fill([
+                    'start_date' => tz_from_tenant_to_utc($current_start_date->toString())->format($mysql_date_format),
+                    'end_date' => tz_from_tenant_to_utc($current_event_end_date->toString())->format(
+                        $mysql_date_format,
+                    ),
+                    'call_time' => tz_from_tenant_to_utc($current_event_call_time->toString())->format(
+                        $mysql_date_format,
+                    ),
+                    'repeat_until' => tz_from_tenant_to_utc($this->repeat_until->toString())->format(
+                        $mysql_date_format,
+                    ),
+                    'created_at' => Carbon::now()->format($mysql_date_format),
+                    'updated_at' => Carbon::now()->format($mysql_date_format),
+                ])
+                ->attributesToArray();
+        }
+        DB::table('events')->insert($event_occurrences);
+    }
 
-	/**
-	 * Updates one event in a repeating series
-	 * For simplicity, it converts the event into regular single event.
-	 */
-	public function updateSingle(array $attributes): bool
-	{
-		// If this event was the parent, reset parent id on children to next child
-		if ($this->is_repeat_parent && $this->repeat_children->count()) {
-			$new_parent = $this->nextRepeat();
-			optional($new_parent)
-				->repeat_children()
-				->saveMany($this->repeat_children);
-		}
+    /**
+     * Updates one event in a repeating series
+     * For simplicity, it converts the event into regular single event.
+     */
+    public function updateSingle(array $attributes): bool
+    {
+        // If this event was the parent, reset parent id on children to next child
+        if ($this->is_repeat_parent && $this->repeat_children->count()) {
+            $new_parent = $this->nextRepeat();
+            $new_parent?->repeat_children()
+                ->saveMany($this->repeat_children);
+        }
 
-		$this->fill($attributes);
+        $this->fill($attributes);
 
-		// Reset parent id on this event
-		$this->repeat_parent_id = null;
-		// Convert to single
-		$this->is_repeating = false;
-		// @todo allow creating new repeating events when editing a single occurrence
+        // Reset parent id on this event
+        $this->repeat_parent_id = null;
+        // Convert to single
+        $this->is_repeating = false;
+        // @todo allow creating new repeating events when editing a single occurrence
 
-		return $this->save();
-	}
+        return $this->save();
+    }
 
-	/**
-	 * Updates ALL events in a repeating series
-	 * When the date or repeat details change, it deletes and regenerates the entire series.
-	 * As a result, existing RSVPs will be deleted, but as the dates may have changed this is ideal.
-	 */
-	public function updateAll(array $attributes): bool
-	{
-		// Only perform this on an event parent
-		abort_if(
-			!$this->is_repeat_parent,
-			500,
-			'The server attempted to update all repeats of an event without finding the parent event. ',
-		);
+    /**
+     * Updates ALL events in a repeating series
+     * When the date or repeat details change, it deletes and regenerates the entire series.
+     * As a result, existing RSVPs will be deleted, but as the dates may have changed this is ideal.
+     */
+    public function updateAll(array $attributes): bool
+    {
+        // Only perform this on an event parent
+        abort_if(
+            ! $this->is_repeat_parent,
+            500,
+            'The server attempted to update all repeats of an event without finding the parent event. ',
+        );
 
-		// Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-		abort_if(
-			$this->in_past,
-			405,
-			'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.',
-		);
+        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
+        abort_if(
+            $this->in_past,
+            405,
+            'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.',
+        );
 
-		$this->fill($attributes);
+        $this->fill($attributes);
 
-		// Update or regenerate children
-		if ($this->isRepeatDirty()) {
-			// Delete children
-			$this->repeat_children()->delete();
+        // Update or regenerate children
+        if ($this->isRepeatDirty()) {
+            // Delete children
+            $this->repeat_children()->delete();
 
-			// Re-create children
-			$this->createRepeats();
-		} else {
-			// Update attributes on children
-			$this->repeat_children()->update($this->getDirty());
-		}
+            // Re-create children
+            $this->createRepeats();
+        } else {
+            // Update attributes on children
+            $this->repeat_children()->update($this->getDirty());
+        }
 
-		return $this->save();
-	}
+        return $this->save();
+    }
 
-	/**
-	 * Updates the target event and all repeats after it.
-	 * Makes this event the event parent for following events.
-	 * If repeat data (including start date) has changed, then delete and regenerate the new children.
-	 * Also, update the older events that still exist in the old series with new repeat_until dates.
-	 */
-	public function updateFollowing(array $attributes): bool
-	{
-		// Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
-		abort_if(
-			$this->is_repeat_parent,
-			405,
-			'Cannot do "following" update method on a repeating event parent. Try "all" update method instead.',
-		);
+    /**
+     * Updates the target event and all repeats after it.
+     * Makes this event the event parent for following events.
+     * If repeat data (including start date) has changed, then delete and regenerate the new children.
+     * Also, update the older events that still exist in the old series with new repeat_until dates.
+     */
+    public function updateFollowing(array $attributes): bool
+    {
+        // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
+        abort_if(
+            $this->is_repeat_parent,
+            405,
+            'Cannot do "following" update method on a repeating event parent. Try "all" update method instead.',
+        );
 
-		// Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-		abort_if(
-			$this->in_past,
-			405,
-			'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.',
-		);
+        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
+        abort_if(
+            $this->in_past,
+            405,
+            'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.',
+        );
 
-		$this->reassignAsParentOfFollowing();
+        $this->reassignAsParentOfFollowing();
 
-		$this->fill($attributes);
+        $this->fill($attributes);
 
-		// Update or regenerate children
-		if ($this->isRepeatDirty()) {
-			// Delete all repeats following this one
-			$this->repeat_children()->delete();
+        // Update or regenerate children
+        if ($this->isRepeatDirty()) {
+            // Delete all repeats following this one
+            $this->repeat_children()->delete();
 
-			// Re-create events with this as the new parent
-			$this->createRepeats();
-		} else {
-			// Update attributes on following events and make them children
-			$this->repeat_children()->update($this->getDirty());
-		}
+            // Re-create events with this as the new parent
+            $this->createRepeats();
+        } else {
+            // Update attributes on following events and make them children
+            $this->repeat_children()->update($this->getDirty());
+        }
 
-		return $this->save();
-	}
+        return $this->save();
+    }
 
-	private function reassignAsParentOfFollowing(): void
-	{
-		// Update prev siblings with repeat_until dates that reflect their smaller scope.
-		$this->prevRepeats()->update(['repeat_until' => tz_from_tenant_to_utc($this->prevRepeat()->call_time)]);
+    private function reassignAsParentOfFollowing(): void
+    {
+        // Update prev siblings with repeat_until dates that reflect their smaller scope.
+        $this->prevRepeats()->update(['repeat_until' => tz_from_tenant_to_utc($this->prevRepeat()->call_time)]);
 
-		// Re-assign children
-		// @todo eliminate double save (first here, then again in updateFollowing())
-		$this->nextRepeats()->update(['repeat_parent_id' => $this->id]);
+        // Re-assign children
+        // @todo eliminate double save (first here, then again in updateFollowing())
+        $this->nextRepeats()->update(['repeat_parent_id' => $this->id]);
 
-		$this->repeat_parent_id = $this->id;
-	}
+        $this->repeat_parent_id = $this->id;
+    }
 
-	public function delete_single(): bool
-	{
-		// Re-assign parent to the next event
-		if ($this->is_repeat_parent && $this->nextRepeat()) {
-			$this->nextRepeats()->update(['repeat_parent_id' => $this->nextRepeat()->id]);
-		}
+    public function delete_single(): bool
+    {
+        // Re-assign parent to the next event
+        if ($this->is_repeat_parent && $this->nextRepeat()) {
+            $this->nextRepeats()->update(['repeat_parent_id' => $this->nextRepeat()->id]);
+        }
 
-		return $this->delete();
-	}
+        return $this->delete();
+    }
 
-	public function delete_with_following(): bool
-	{
-		// Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
-		abort_if(
-			$this->is_repeat_parent,
-			405,
-			'Cannot do "following" delete method on a repeating event parent. Try "all" delete method instead.',
-		);
+    public function delete_with_following(): bool
+    {
+        // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
+        abort_if(
+            $this->is_repeat_parent,
+            405,
+            'Cannot do "following" delete method on a repeating event parent. Try "all" delete method instead.',
+        );
 
-		// Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-		abort_if(
-			$this->in_past,
-			405,
-			'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.',
-		);
+        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
+        abort_if(
+            $this->in_past,
+            405,
+            'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.',
+        );
 
-		// Update prev siblings with repeat_until dates that reflect their smaller scope.
-		$this->prevRepeats()->update(['repeat_until' => tz_from_tenant_to_utc($this->prevRepeat()->call_time)]);
+        // Update prev siblings with repeat_until dates that reflect their smaller scope.
+        $this->prevRepeats()->update(['repeat_until' => tz_from_tenant_to_utc($this->prevRepeat()->call_time)]);
 
-		// Delete all repeats following this one
-		$this->nextRepeats()->delete();
+        // Delete all repeats following this one
+        $this->nextRepeats()->delete();
 
-		return $this->delete();
-	}
+        return $this->delete();
+    }
 
-	public function delete_with_all(): bool
-	{
-		// Only perform this on an event parent
-		abort_if(
-			!$this->is_repeat_parent,
-			500,
-			'The server attempted to delete all repeats of an event without finding the parent event. ',
-		);
+    public function delete_with_all(): bool
+    {
+        // Only perform this on an event parent
+        abort_if(
+            ! $this->is_repeat_parent,
+            500,
+            'The server attempted to delete all repeats of an event without finding the parent event. ',
+        );
 
-		// Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-		abort_if(
-			$this->in_past,
-			405,
-			'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.',
-		);
+        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
+        abort_if(
+            $this->in_past,
+            405,
+            'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.',
+        );
 
-		$this->repeat_children()->delete();
+        $this->repeat_children()->delete();
 
-		return $this->delete();
-	}
+        return $this->delete();
+    }
 
-	public function type(): BelongsTo
-	{
-		return $this->belongsTo(EventType::class, 'type_id');
-	}
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(EventType::class, 'type_id');
+    }
 
-	public function rsvps(): HasMany
-	{
-		return $this->hasMany(Rsvp::class);
-	}
+    public function rsvps(): HasMany
+    {
+        return $this->hasMany(Rsvp::class);
+    }
 
-	public function my_rsvp(): HasOne
-	{
-		return $this->hasOne(Rsvp::class)
+    public function my_rsvp(): HasOne
+    {
+        return $this->hasOne(Rsvp::class)
             ->where(
                 'singer_id',
                 '=',
@@ -355,51 +352,56 @@ class Event extends Model
                     ->value('id')
             )
             ->withDefault(['response' => 'unknown']);
-	}
+    }
 
-	public function attendances(): HasMany
-	{
-		return $this->hasMany(Attendance::class);
-	}
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
 
-	public function repeat_parent(): BelongsTo
-	{
-		return $this->belongsTo(__CLASS__, 'repeat_parent_id');
-	}
+    public function repeat_parent(): BelongsTo
+    {
+        return $this->belongsTo(__CLASS__, 'repeat_parent_id');
+    }
 
-	public function repeat_children(): HasMany
-	{
-		return $this->hasMany(__CLASS__, 'repeat_parent_id')->whereColumn('id', '!=', 'repeat_parent_id');
-	}
-	public function repeat_siblings(): Builder
-	{
-		return self::query()
-			->where('id', '!=', $this->id)
-			->where('repeat_parent_id', '=', $this->repeat_parent_id);
-	}
-	public function nextRepeats(): Builder
-	{
-		return $this->repeat_siblings()->whereDate('start_date', '>', $this->start_date);
-	}
-	public function nextRepeat(): Event|Model|null
-	{
-		return $this->nextRepeats()
-			->orderBy('start_date')
-			->first();
-	}
-	public function prevRepeats(): Builder
-	{
-		return $this->repeat_siblings()->whereDate('start_date', '<', $this->start_date);
-	}
-	public function prevRepeat(): Event|Model|null
-	{
-		return $this->prevRepeats()
-			->orderBy('start_date', 'desc')
-			->first();
-	}
+    public function repeat_children(): HasMany
+    {
+        return $this->hasMany(__CLASS__, 'repeat_parent_id')->whereColumn('id', '!=', 'repeat_parent_id');
+    }
 
-	public function my_attendance(): HasOne
-	{
+    public function repeat_siblings(): Builder
+    {
+        return self::query()
+            ->where('id', '!=', $this->id)
+            ->where('repeat_parent_id', '=', $this->repeat_parent_id);
+    }
+
+    public function nextRepeats(): Builder
+    {
+        return $this->repeat_siblings()->whereDate('start_date', '>', $this->start_date);
+    }
+
+    public function nextRepeat(): self|Model|null
+    {
+        return $this->nextRepeats()
+            ->orderBy('start_date')
+            ->first();
+    }
+
+    public function prevRepeats(): Builder
+    {
+        return $this->repeat_siblings()->whereDate('start_date', '<', $this->start_date);
+    }
+
+    public function prevRepeat(): self|Model|null
+    {
+        return $this->prevRepeats()
+            ->orderBy('start_date', 'desc')
+            ->first();
+    }
+
+    public function my_attendance(): HasOne
+    {
         return $this->hasOne(Attendance::class)
             ->where(
                 'singer_id',
@@ -407,51 +409,54 @@ class Event extends Model
                 auth()->user()->singer->id,
             )
             ->withDefault(['response' => 'unknown']);
-	}
+    }
 
-	public function singers_rsvp_response(string $response): Builder
-	{
-		return Singer::active()->whereHas('rsvps', function (Builder $query) use ($response) {
-			$query->where('event_id', '=', $this->id)->where('response', '=', $response);
-		});
-	}
-	public function voice_parts_rsvp_response_count(string $response)
-	{
-		return VoicePart::withCount([
-		    'singers' => function ($query) {
+    public function singers_rsvp_response(string $response): Builder
+    {
+        return Singer::active()->whereHas('rsvps', function (Builder $query) use ($response) {
+            $query->where('event_id', '=', $this->id)->where('response', '=', $response);
+        });
+    }
+
+    public function voice_parts_rsvp_response_count(string $response)
+    {
+        return VoicePart::withCount([
+            'singers' => function ($query) {
                 $query->active();
             },
-		    'singers as singers_going_count' => function ($query) use ($response) {
+            'singers as singers_going_count' => function ($query) use ($response) {
                 $query->active()->whereHas('rsvps', function (Builder $query) use ($response) {
                     $query->where('event_id', '=', $this->id)
                         ->where('response', '=', $response);
                 });
-        }]);
-	}
+            }, ]);
+    }
 
-	public function singers_rsvp_missing(): Builder
-	{
-		return Singer::active()->whereDoesntHave('rsvps', function (Builder $query) {
-			$query->where('event_id', '=', $this->id);
-		});
-	}
+    public function singers_rsvp_missing(): Builder
+    {
+        return Singer::active()->whereDoesntHave('rsvps', function (Builder $query) {
+            $query->where('event_id', '=', $this->id);
+        });
+    }
 
-	public function singers_attendance(string $response): Builder
-	{
-		return Singer::active()->whereHas('attendances', function (Builder $query) use ($response) {
-			$query->where('event_id', '=', $this->id)->where('response', '=', $response);
-		});
-	}
-	public function singers_attendance_missing(): Builder
-	{
-		return Singer::active()->whereDoesntHave('attendances', function (Builder $query) {
-			$query->where('event_id', '=', $this->id);
-		});
-	}
-	public function voice_parts_attendance_count(string $response)
-	{
-		return VoicePart::withCount([
-		    'singers' => function ($query) use ($response) {
+    public function singers_attendance(string $response): Builder
+    {
+        return Singer::active()->whereHas('attendances', function (Builder $query) use ($response) {
+            $query->where('event_id', '=', $this->id)->where('response', '=', $response);
+        });
+    }
+
+    public function singers_attendance_missing(): Builder
+    {
+        return Singer::active()->whereDoesntHave('attendances', function (Builder $query) {
+            $query->where('event_id', '=', $this->id);
+        });
+    }
+
+    public function voice_parts_attendance_count(string $response)
+    {
+        return VoicePart::withCount([
+            'singers' => function ($query) use ($response) {
                 $query->active();
             },
             'singers as singers_response_count' => function ($query) use ($response) {
@@ -461,101 +466,107 @@ class Event extends Model
                 });
             },
         ]);
-	}
+    }
 
-	public function getStartDateAttribute(?string $value): ?Carbon
-	{
-		return $value ? tz_from_utc_to_tenant($value) : null;
-	}
-	public function setStartDateAttribute(string $value): void
-	{
-		$this->attributes['start_date'] = tz_from_tenant_to_utc($value);
-	}
+    public function getStartDateAttribute(?string $value): ?Carbon
+    {
+        return $value ? tz_from_utc_to_tenant($value) : null;
+    }
 
-	public function getEndDateAttribute(?string $value): ?Carbon
-	{
-		return $value ? tz_from_utc_to_tenant($value) : null;
-	}
-	public function setEndDateAttribute(string $value): void
-	{
-		$this->attributes['end_date'] = tz_from_tenant_to_utc($value);
-	}
+    public function setStartDateAttribute(string $value): void
+    {
+        $this->attributes['start_date'] = tz_from_tenant_to_utc($value);
+    }
 
-	public function getCallTimeAttribute(?string $value): ?Carbon
-	{
-		return $value ? tz_from_utc_to_tenant($value) : null;
-	}
-	public function setCallTimeAttribute(string $value): void
-	{
-		$this->attributes['call_time'] = tz_from_tenant_to_utc($value);
-	}
-	public function getRepeatUntilAttribute(?string $value): ?Carbon
-	{
-		return $value ? tz_from_utc_to_tenant($value) : null;
-	}
-	public function setRepeatUntilAttribute(string $value): void
-	{
-		$this->attributes['repeat_until'] = tz_from_tenant_to_utc($value);
-	}
+    public function getEndDateAttribute(?string $value): ?Carbon
+    {
+        return $value ? tz_from_utc_to_tenant($value) : null;
+    }
 
-	public function getInPastAttribute(): bool
-	{
-		return $this->call_time < Carbon::now();
-	}
+    public function setEndDateAttribute(string $value): void
+    {
+        $this->attributes['end_date'] = tz_from_tenant_to_utc($value);
+    }
 
-	public function getInFutureAttribute(): bool
-	{
-		return $this->call_time > Carbon::now();
-	}
+    public function getCallTimeAttribute(?string $value): ?Carbon
+    {
+        return $value ? tz_from_utc_to_tenant($value) : null;
+    }
 
-	public function getIsRepeatParentAttribute(): bool
-	{
-		return $this->repeat_parent_id === $this->id;
-	}
+    public function setCallTimeAttribute(string $value): void
+    {
+        $this->attributes['call_time'] = tz_from_tenant_to_utc($value);
+    }
 
-	public function getParentInPastAttribute(): ?bool
+    public function getRepeatUntilAttribute(?string $value): ?Carbon
+    {
+        return $value ? tz_from_utc_to_tenant($value) : null;
+    }
+
+    public function setRepeatUntilAttribute(string $value): void
+    {
+        $this->attributes['repeat_until'] = tz_from_tenant_to_utc($value);
+    }
+
+    public function getInPastAttribute(): bool
+    {
+        return $this->call_time < Carbon::now();
+    }
+
+    public function getInFutureAttribute(): bool
+    {
+        return $this->call_time > Carbon::now();
+    }
+
+    public function getIsRepeatParentAttribute(): bool
+    {
+        return $this->repeat_parent_id === $this->id;
+    }
+
+    public function getParentInPastAttribute(): ?bool
     {
         return $this->repeat_parent?->in_past ?? null;
     }
 
-	public function getAddToCalendarLinkAttribute(): Link
-	{
-		if (!isset($this->_add_to_calendar_link)) {
-			$this->_add_to_calendar_link = Link::create($this->title, $this->call_time, $this->end_date)
-				->description($this->description ?? '')
-				->address($this->location_address ?? '');
-		}
-		return $this->_add_to_calendar_link;
-	}
+    public function getAddToCalendarLinkAttribute(): Link
+    {
+        if (! isset($this->_add_to_calendar_link)) {
+            $this->_add_to_calendar_link = Link::create($this->title, $this->call_time, $this->end_date)
+                ->description($this->description ?? '')
+                ->address($this->location_address ?? '');
+        }
 
-	/**
-	 * Checks if any of the repeat data has changed - including call/start time
-	 * @todo allow changing the time (not the date) without causing series regeneration
-	 */
-	public function isRepeatDirty(): bool
-	{
-		return $this->isDirty([
-			'call_time',
-			'start_date',
-			'repeat_until',
-			'repeat_frequency_unit',
-			'repeat_frequency_amount',
-		]);
-	}
+        return $this->_add_to_calendar_link;
+    }
+
+    /**
+     * Checks if any of the repeat data has changed - including call/start time
+     * @todo allow changing the time (not the date) without causing series regeneration
+     */
+    public function isRepeatDirty(): bool
+    {
+        return $this->isDirty([
+            'call_time',
+            'start_date',
+            'repeat_until',
+            'repeat_frequency_unit',
+            'repeat_frequency_amount',
+        ]);
+    }
 
     public function createMissingAttendanceRecords(): void
     {
         $this->attendances()->createMany(
             Singer::active()
-                ->whereDoesntHave('attendances', fn($query) => $query->where('attendances.event_id', $this->id))
+                ->whereDoesntHave('attendances', fn ($query) => $query->where('attendances.event_id', $this->id))
                 ->pluck('id')
-                ->map(fn($singerId) => ['singer_id' => $singerId, 'response' => 'unknown'])
+                ->map(fn ($singerId) => ['singer_id' => $singerId, 'response' => 'unknown'])
         );
     }
 
     public function scopeDate(Builder $query, string $mode = 'upcoming', Carbon $date = null, Carbon $date2 = null): Builder
     {
-        return match($mode) {
+        return match ($mode) {
             'after' => $query->where('call_time', '>=', $date),
             'upcoming' => $query->where('call_time', '>=', Carbon::today()),
             'before' => $query->where('call_time', '<=', $date),

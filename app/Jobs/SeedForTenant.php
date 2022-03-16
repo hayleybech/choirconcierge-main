@@ -12,34 +12,34 @@ use Stancl\Tenancy\Contracts\Tenant;
 
 class SeedForTenant implements ShouldQueue
 {
-	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-	protected $tenant;
+    protected $tenant;
 
-	/**
-	 * Create a new job instance.
-	 *
-	 * @return void
-	 */
-	public function __construct(Tenant $tenant)
-	{
-		$this->tenant = $tenant;
-		tenancy()->initialize($tenant);
-	}
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct(Tenant $tenant)
+    {
+        $this->tenant = $tenant;
+        tenancy()->initialize($tenant);
+    }
 
-	/**
-	 * Execute the job.
-	 *
-	 * @return void
-	 */
-	public function handle()
-	{
-		Artisan::call('db:seed', [
-			'--force' => true,
-			//'--tenants' => [$this->tenant->getTenantKey()],
-		]);
-		/*Artisan::call('tenants:seed', [
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        Artisan::call('db:seed', [
+            '--force' => true,
+            //'--tenants' => [$this->tenant->getTenantKey()],
+        ]);
+        /*Artisan::call('tenants:seed', [
             '--tenants' => [$this->tenant->getTenantKey()],
         ]);*/
-	}
+    }
 }

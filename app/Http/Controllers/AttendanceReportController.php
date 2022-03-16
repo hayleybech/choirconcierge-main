@@ -12,13 +12,13 @@ use Inertia\Response;
 
 class AttendanceReportController extends Controller
 {
-	public function __invoke(): View|Response
-	{
-		$this->authorize('viewAny', Attendance::class);
+    public function __invoke(): View|Response
+    {
+        $this->authorize('viewAny', Attendance::class);
 
-		$all_events = Event::with([])
-			->orderBy('start_date')
-			->get();
+        $all_events = Event::with([])
+            ->orderBy('start_date')
+            ->get();
 
         $singers = Singer::with(['user', 'attendances'])
             ->get()
@@ -26,7 +26,7 @@ class AttendanceReportController extends Controller
             ->append('user_avatar_thumb_url')
             ->each(function ($singer) use ($all_events) {
                 $singer->timesPresent = $singer->attendances->where('response', 'present')->count();
-                $singer->percentPresent = floor($singer->timesPresent / $all_events->count() * 100 );
+                $singer->percentPresent = floor($singer->timesPresent / $all_events->count() * 100);
             });
 
         $all_events->each(function ($event) use ($singers) {
@@ -36,22 +36,23 @@ class AttendanceReportController extends Controller
 
         $voice_parts = VoicePart::all()
             ->push(VoicePart::getNullVoicePart())
-            ->map(function($part) use ($singers) {
+            ->map(function ($part) use ($singers) {
                 $part->singers = $singers
-                    ->filter(fn($singer) => $singer->voice_part_id === $part->id)
+                    ->filter(fn ($singer) => $singer->voice_part_id === $part->id)
                     ->values();
+
                 return $part;
             });
 
-		$avg_singers_per_event = round(
-			$all_events->reduce(static function ($carry, $event) {
-				return $carry + $event->singers_attendance('present')->count();
-			}, 0) / $all_events->count(),
-			2,
-		);
+        $avg_singers_per_event = round(
+            $all_events->reduce(static function ($carry, $event) {
+                return $carry + $event->singers_attendance('present')->count();
+            }, 0) / $all_events->count(),
+            2,
+        );
 
-		$avg_events_per_singer = round(
-			Singer::active()
+        $avg_events_per_singer = round(
+            Singer::active()
                 ->with(['attendances'])
                 ->get()
                 ->reduce(static function ($carry, $singer) {
@@ -71,5 +72,5 @@ class AttendanceReportController extends Controller
             'avgSingersPerEvent' => $avg_singers_per_event,
             'avgEventsPerSinger' => $avg_events_per_singer,
         ]);
-	}
+    }
 }

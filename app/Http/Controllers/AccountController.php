@@ -10,17 +10,17 @@ use Inertia\Response;
 
 class AccountController extends Controller
 {
-	public function edit(): View|Response
-	{
+    public function edit(): View|Response
+    {
         return Inertia::render('Account/Edit');
-	}
+    }
 
-	public function update(ProfileRequest $request): RedirectResponse
-	{
-	    auth()->user()->update($request->validated());
+    public function update(ProfileRequest $request): RedirectResponse
+    {
+        auth()->user()->update($request->validated());
 
-		return redirect()
-			->route('singers.show', auth()->user()->singer)
-			->with(['status' => 'Account Settings updated.']);
-	}
+        return redirect()
+            ->route('singers.show', auth()->user()->singer)
+            ->with(['status' => 'Account Settings updated.']);
+    }
 }

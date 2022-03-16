@@ -7,51 +7,51 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AttendancePolicy
 {
-	use HandlesAuthorization;
+    use HandlesAuthorization;
 
-	public function before(User $user, string $ability)
-	{
-        if(! $user->singer) {
+    public function before(User $user, string $ability)
+    {
+        if (! $user->singer) {
             return false;
         }
 
-		if ($user->singer->hasRole('Admin')) {
-			return true;
-		}
-	}
+        if ($user->singer->hasRole('Admin')) {
+            return true;
+        }
+    }
 
-	public function viewAny(User $user): bool
-	{
-		return $user->singer->hasAbility('attendances_view');
-	}
+    public function viewAny(User $user): bool
+    {
+        return $user->singer->hasAbility('attendances_view');
+    }
 
-	public function view(User $user): bool
-	{
-		return $user->singer->hasAbility('attendances_view');
-	}
+    public function view(User $user): bool
+    {
+        return $user->singer->hasAbility('attendances_view');
+    }
 
-	public function create(User $user): bool
-	{
-		return $user->singer->hasAbility('attendances_create');
-	}
+    public function create(User $user): bool
+    {
+        return $user->singer->hasAbility('attendances_create');
+    }
 
-	public function update(User $user): bool
-	{
-		return $user->singer->hasAbility('attendances_update');
-	}
+    public function update(User $user): bool
+    {
+        return $user->singer->hasAbility('attendances_update');
+    }
 
-	public function delete(User $user): bool
-	{
-		return $user->singer->hasAbility('attendances_delete');
-	}
+    public function delete(User $user): bool
+    {
+        return $user->singer->hasAbility('attendances_delete');
+    }
 
-	public function restore(User $user): bool
-	{
-		return false;
-	}
+    public function restore(User $user): bool
+    {
+        return false;
+    }
 
-	public function forceDelete(User $user): bool
-	{
-		return false;
-	}
+    public function forceDelete(User $user): bool
+    {
+        return false;
+    }
 }

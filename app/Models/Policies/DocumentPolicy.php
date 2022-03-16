@@ -12,7 +12,7 @@ class DocumentPolicy
 
     public function before(User $user, string $ability): ?bool
     {
-        if(! $user->singer) {
+        if (! $user->singer) {
             return false;
         }
 

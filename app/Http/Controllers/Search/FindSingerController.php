@@ -21,17 +21,17 @@ class FindSingerController extends Controller
 
         $formatted_results = Singer::query()
             ->with(['roles', 'user'])
-            ->whereHas('user', function(Builder $query) use ($term) {
+            ->whereHas('user', function (Builder $query) use ($term) {
                 $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%$term%'");
             })
             ->limit(5)
             ->get()
-            ->map(function($singer) {
-                $role_string = $singer->roles->count() ? ' [' . $singer->roles->implode('name', ', ') . ']' : '';
+            ->map(function ($singer) {
+                $role_string = $singer->roles->count() ? ' ['.$singer->roles->implode('name', ', ').']' : '';
 
                 return [
                     'value' => $singer->user->id,
-                    'label' => $singer->user->name . ' ('.$singer->user->email.')'. $role_string,
+                    'label' => $singer->user->name.' ('.$singer->user->email.')'.$role_string,
                     'name' => $singer->user->name,
                     'avatarUrl' => $singer->user->avatar_url,
                     'email' => $singer->user->email,

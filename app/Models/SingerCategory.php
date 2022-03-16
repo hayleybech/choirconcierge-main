@@ -25,30 +25,28 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Attributes
  * @property string $colour
- *
- * @package App\Models
  */
 class SingerCategory extends Model
 {
-	use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
+    use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
-	protected $appends = ['slug'];
+    protected $appends = ['slug'];
 
-	public const CATEGORY_COLOURS = [
-		'Members' => 'emerald-500',
-		'Prospects' => 'amber-500',
-		'Archived Prospects' => 'amber-700',
-		'Archived Members' => 'emerald-700',
-	];
+    public const CATEGORY_COLOURS = [
+        'Members' => 'emerald-500',
+        'Prospects' => 'amber-500',
+        'Archived Prospects' => 'amber-700',
+        'Archived Members' => 'emerald-700',
+    ];
 
-	public function singers(): HasMany
-	{
-		return $this->hasMany(Singer::class);
-	}
+    public function singers(): HasMany
+    {
+        return $this->hasMany(Singer::class);
+    }
 
-	public function getSlugAttribute(): string
-	{
-        return match($this->name) {
+    public function getSlugAttribute(): string
+    {
+        return match ($this->name) {
             'Members' => 'members',
             'Prospects' => 'prospects',
             'Archived Prospects' => 'archived-prospects',

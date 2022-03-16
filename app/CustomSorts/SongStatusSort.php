@@ -8,10 +8,10 @@ use Spatie\QueryBuilder\Sorts\Sort;
 
 class SongStatusSort implements Sort
 {
-
     public function __invoke(Builder $query, bool $descending, string $property)
     {
         $prefix = \DB::getTablePrefix();
+
         return $query
             ->addSubSelect(
                 'status_title',

@@ -24,9 +24,6 @@ return [
     */
     'default' => env('IMAP_DEFAULT_ACCOUNT', 'default'),
 
-    // incoming emails will be addressed to this host, but processed by the host at IMAP_HOST
-    'host_display' => env('IMAP_HOST_DISPLAY', 'demo.choirconcierge.com'),
-
     /*
     |--------------------------------------------------------------------------
     | Default date format
@@ -57,6 +54,13 @@ return [
             'validate_cert' => env('IMAP_VALIDATE_CERT', true),
             'username' => env('IMAP_USERNAME', 'root@example.com'),
             'password' => env('IMAP_PASSWORD', ''),
+            'authentication' => env('IMAP_AUTHENTICATION', null),
+            'proxy' => [
+                'socket' => null,
+                'request_fulluri' => false,
+                'username' => null,
+                'password' => null,
+            ]
         ],
 
         /*
@@ -67,6 +71,7 @@ return [
             'validate_cert' => true,
             'username' => 'example@gmail.com',
             'password' => 'PASSWORD',
+            'authentication' => 'oauth',
         ],
 
         'another' => [ // account identifier
@@ -76,6 +81,7 @@ return [
             'validate_cert' => true,
             'username' => '',
             'password' => '',
+            'authentication' => null,
         ]
         */
     ],
@@ -90,11 +96,12 @@ return [
     |       This option is only used when calling $oClient->
     |       You can use any supported char such as ".", "/", (...)
     |   -Fetch option:
-    |       IMAP::FT_UID  - Message marked as read by fetching the message
-    |       IMAP::FT_PEEK - Fetch the message without setting the "read" flag
+    |       IMAP::FT_UID  - Message marked as read by fetching the message body
+    |       IMAP::FT_PEEK - Fetch the message without setting the "seen" flag
+    |   -Fetch sequence id:
+    |       IMAP::ST_UID  - Fetch message components using the message uid
+    |       IMAP::ST_MSGN - Fetch message components using the message number
     |   -Body download option
-    |       Default TRUE
-    |   -Attachment download option
     |       Default TRUE
     |   -Flag download option
     |       Default TRUE
@@ -103,9 +110,14 @@ return [
     |       'id'     - Use the MessageID as array key (default, might cause hickups with yahoo mail)
     |       'number' - Use the message number as array key (isn't always unique and can cause some interesting behavior)
     |       'list'   - Use the message list number as array key (incrementing integer (does not always start at 0 or 1)
+    |       'uid'    - Use the message uid as array key (isn't always unique and can cause some interesting behavior)
     |   -Fetch order
     |       'asc'  - Order all messages ascending (probably results in oldest first)
     |       'desc' - Order all messages descending (probably results in newest first)
+    |   -Disposition types potentially considered an attachment
+    |       Default ['attachment', 'inline']
+    |   -Common folders
+    |       Default folder locations and paths assumed if none is provided
     |   -Open IMAP options:
     |       DISABLE_AUTHENTICATOR - Disable authentication properties.
     |                               Use 'GSSAPI' if you encounter the following
@@ -119,23 +131,52 @@ return [
     */
     'options' => [
         'delimiter' => '/',
-        'fetch' => \Webklex\IMAP\IMAP::FT_UID,
+        'fetch' => \Webklex\PHPIMAP\IMAP::FT_PEEK,
+        'sequence' => \Webklex\PHPIMAP\IMAP::ST_MSGN,
         'fetch_body' => true,
-        'fetch_attachment' => true,
         'fetch_flags' => true,
-        'message_key' => 'id',
+        'message_key' => 'list',
         'fetch_order' => 'asc',
+        'dispositions' => ['attachment', 'inline'],
+        'common_folders' => [
+            "root" => "INBOX",
+            "junk" => "INBOX/Junk",
+            "draft" => "INBOX/Drafts",
+            "sent" => "INBOX/Sent",
+            "trash" => "INBOX/Trash",
+        ],
         'open' => [
             // 'DISABLE_AUTHENTICATOR' => 'GSSAPI'
         ],
         'decoder' => [
-            'message' => [
-                'subject' => 'utf-8' // mimeheader
-            ],
-            'attachment' => [
-                'name' => 'utf-8' // mimeheader
-            ]
+            'message' => 'utf-8', // mimeheader
+            'attachment' => 'utf-8' // mimeheader
         ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Available events
+    |--------------------------------------------------------------------------
+    |
+    */
+    'events' => [
+        "message" => [
+            'new' => \Webklex\IMAP\Events\MessageNewEvent::class,
+            'moved' => \Webklex\IMAP\Events\MessageMovedEvent::class,
+            'copied' => \Webklex\IMAP\Events\MessageCopiedEvent::class,
+            'deleted' => \Webklex\IMAP\Events\MessageDeletedEvent::class,
+            'restored' => \Webklex\IMAP\Events\MessageRestoredEvent::class,
+        ],
+        "folder" => [
+            'new' => \Webklex\IMAP\Events\FolderNewEvent::class,
+            'moved' => \Webklex\IMAP\Events\FolderMovedEvent::class,
+            'deleted' => \Webklex\IMAP\Events\FolderDeletedEvent::class,
+        ],
+        "flag" => [
+            'new' => \Webklex\IMAP\Events\FlagNewEvent::class,
+            'deleted' => \Webklex\IMAP\Events\FlagDeletedEvent::class,
+        ],
     ],
 
     /*
@@ -150,9 +191,9 @@ return [
     | for a quick start.
     |
     | The provided masks below are used as the default masks.
-     */
+    */
     'masks' => [
-        'message' => \Webklex\IMAP\Support\Masks\MessageMask::class,
-        'attachment' => \Webklex\IMAP\Support\Masks\AttachmentMask::class
+        'message' => \Webklex\PHPIMAP\Support\Masks\MessageMask::class,
+        'attachment' => \Webklex\PHPIMAP\Support\Masks\AttachmentMask::class
     ]
 ];

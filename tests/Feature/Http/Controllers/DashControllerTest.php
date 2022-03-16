@@ -2,11 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\Role;
-use Database\Seeders\Dummy\DummyUserSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -14,16 +10,16 @@ use Tests\TestCase;
  */
 class DashControllerTest extends TestCase
 {
-	/**
-	 * @test
-	 */
-	public function index_returns_an_ok_response(): void
-	{
-		$this->actingAs($this->createUserWithRole('Membership Team')); // Any role is fine
+    /**
+     * @test
+     */
+    public function index_returns_an_ok_response(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team')); // Any role is fine
 
-		$this->get(the_tenant_route('dash'))
+        $this->get(the_tenant_route('dash'))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Dash/Show')
                 ->has('events')
                 ->has('songs')
@@ -31,6 +27,5 @@ class DashControllerTest extends TestCase
                 ->has('emptyDobs')
                 ->has('memberversaries')
             );
-
-	}
+    }
 }

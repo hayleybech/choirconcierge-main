@@ -26,27 +26,25 @@ use Illuminate\Support\Carbon;
  *
  * Relationships
  * @property Singer $singer
- *
- * @package App\Models
  */
 class Placement extends Model
 {
-	use TenantTimezoneDates, HasFactory;
+    use TenantTimezoneDates, HasFactory;
 
-	protected $fillable = [
-		'experience',
-		'instruments',
-		'skill_pitch',
-		'skill_harmony',
-		'skill_performance',
-		'skill_sightreading',
-		'voice_tone',
-	];
+    protected $fillable = [
+        'experience',
+        'instruments',
+        'skill_pitch',
+        'skill_harmony',
+        'skill_performance',
+        'skill_sightreading',
+        'voice_tone',
+    ];
 
-	protected $touches = ['singer'];
+    protected $touches = ['singer'];
 
-	public function singer(): BelongsTo
-	{
-		return $this->belongsTo(Singer::class);
-	}
+    public function singer(): BelongsTo
+    {
+        return $this->belongsTo(Singer::class);
+    }
 }

@@ -7,7 +7,7 @@ use App\Models\Singer;
 use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /**
@@ -15,106 +15,107 @@ use Tests\TestCase;
  */
 class SingerPlacementControllerTest extends TestCase
 {
-	use RefreshDatabase, WithFaker;
+    use RefreshDatabase, WithFaker;
 
-	/**
-	 * @test
-	 */
-	public function create_returns_an_ok_response(): void
-	{
-		$this->actingAs($this->createUserWithRole('Music Team'));
+    /**
+     * @test
+     */
+    public function create_returns_an_ok_response(): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
 
-		$singer = Singer::factory()->create();
+        $singer = Singer::factory()->create();
 
-		$this->get(the_tenant_route('singers.placements.create', [$singer]))
+        $this->get(the_tenant_route('singers.placements.create', [$singer]))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Placements/Create')
                 ->has('singer')
                 ->has('voice_parts')
             );
-	}
+    }
 
-	/**
-	 * @test
-	 */
-	public function edit_returns_an_ok_response(): void
-	{
-		$this->actingAs($this->createUserWithRole('Music Team'));
+    /**
+     * @test
+     */
+    public function edit_returns_an_ok_response(): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
 
-		$singer = Singer::factory()
-			->has(Placement::factory())
-			->create();
+        $singer = Singer::factory()
+            ->has(Placement::factory())
+            ->create();
 
-		$this->get(the_tenant_route('singers.placements.edit', [$singer, $singer->placement]))
+        $this->get(the_tenant_route('singers.placements.edit', [$singer, $singer->placement]))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Placements/Edit')
                 ->has('singer')
                 ->has('placement')
                 ->has('voice_parts')
             );
-	}
+    }
 
-	/**
-	 * @test
-	 * @dataProvider placementProvider
-	 */
-	public function store_redirects_to_singer($getData): void
-	{
-		$this->actingAs($this->createUserWithRole('Music Team'));
+    /**
+     * @test
+     * @dataProvider placementProvider
+     */
+    public function store_redirects_to_singer($getData): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
 
-		$singer = Singer::factory()->create();
+        $singer = Singer::factory()->create();
 
-		$data = $getData();
-		$this->withoutExceptionHandling();
-		$response = $this->post(the_tenant_route('singers.placements.store', [$singer]), $data)
+        $data = $getData();
+        $this->withoutExceptionHandling();
+        $response = $this->post(the_tenant_route('singers.placements.store', [$singer]), $data)
             ->assertSessionHasNoErrors();
 
-		unset($data['voice_part_id']);
-		$this->assertDatabaseHas('placements', $data);
-		$response->assertRedirect(the_tenant_route('singers.show', $singer));
-	}
+        unset($data['voice_part_id']);
+        $this->assertDatabaseHas('placements', $data);
+        $response->assertRedirect(the_tenant_route('singers.show', $singer));
+    }
 
-	/**
-	 * @test
-	 * @dataProvider placementProvider
-	 */
-	public function update_redirects_to_singer($getData): void
-	{
-		$this->actingAs($this->createUserWithRole('Music Team'));
+    /**
+     * @test
+     * @dataProvider placementProvider
+     */
+    public function update_redirects_to_singer($getData): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
 
-		$singer = Singer::factory()
-			->has(Placement::factory())
-			->create();
+        $singer = Singer::factory()
+            ->has(Placement::factory())
+            ->create();
 
-		$data = $getData();
-		$response = $this->put(the_tenant_route('singers.placements.update', [$singer, $singer->placement]), $data)
+        $data = $getData();
+        $response = $this->put(the_tenant_route('singers.placements.update', [$singer, $singer->placement]), $data)
             ->assertSessionHasNoErrors();
 
-		unset($data['voice_part_id']);
-		$this->assertDatabaseHas('placements', $data);
-		$response->assertRedirect(the_tenant_route('singers.show', $singer));
-	}
+        unset($data['voice_part_id']);
+        $this->assertDatabaseHas('placements', $data);
+        $response->assertRedirect(the_tenant_route('singers.show', $singer));
+    }
 
-	public function placementProvider(): array
-	{
-		return [
-			[
-				function () {
-					$this->setUpFaker();
-					return [
-						'experience' => $this->faker->sentence(),
-						'instruments' => $this->faker->sentence(),
-						'skill_pitch' => $this->faker->numberBetween(1, 5),
-						'skill_harmony' => $this->faker->numberBetween(1, 5),
-						'skill_performance' => $this->faker->numberBetween(1, 5),
-						'skill_sightreading' => $this->faker->numberBetween(1, 5),
+    public function placementProvider(): array
+    {
+        return [
+            [
+                function () {
+                    $this->setUpFaker();
 
-						'voice_part_id' => VoicePart::inRandomOrder()->value('id'),
-					];
-				},
-			],
-		];
-	}
+                    return [
+                        'experience' => $this->faker->sentence(),
+                        'instruments' => $this->faker->sentence(),
+                        'skill_pitch' => $this->faker->numberBetween(1, 5),
+                        'skill_harmony' => $this->faker->numberBetween(1, 5),
+                        'skill_performance' => $this->faker->numberBetween(1, 5),
+                        'skill_sightreading' => $this->faker->numberBetween(1, 5),
+
+                        'voice_part_id' => VoicePart::inRandomOrder()->value('id'),
+                    ];
+                },
+            ],
+        ];
+    }
 }

@@ -24,30 +24,28 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property Collection<Document> $documents
- *
- * @package App\Models
  */
 class Folder extends Model
 {
-	use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
+    use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = ['title'];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['title'];
 
-	public static function create(array $attributes = [])
-	{
-		/** @var Folder $folder */
-		$folder = static::query()->create($attributes);
+    public static function create(array $attributes = [])
+    {
+        /** @var Folder $folder */
+        $folder = static::query()->create($attributes);
 
-		return $folder;
-	}
+        return $folder;
+    }
 
-	public function documents(): HasMany
-	{
-		return $this->hasMany(Document::class);
-	}
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
+    }
 }

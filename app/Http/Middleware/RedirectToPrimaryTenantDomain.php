@@ -12,7 +12,7 @@ class RedirectToPrimaryTenantDomain
      */
     public function handle(Request $request, Closure $next)
     {
-        if(tenancy()->initialized && $request->getHost() !== tenant('host')) {
+        if (tenancy()->initialized && $request->getHost() !== tenant('host')) {
             return redirect('//'.tenant('host'));
         }
 

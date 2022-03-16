@@ -9,15 +9,12 @@ use Illuminate\Http\UploadedFile;
 
 class SongAttachmentFactory extends Factory
 {
-	/** @var string */
-	protected $model = SongAttachment::class;
-
-	public function definition(): array
-	{
-		return [
-			'title' => '',
-			'file' => UploadedFile::fake()->create('random.mp3'),
-			'category_id' => SongAttachmentCategory::inRandomOrder()->value('id'),
-		];
-	}
+    public function definition(): array
+    {
+        return [
+            'title' => '',
+            'file' => UploadedFile::fake()->create('random.mp3'),
+            'category_id' => SongAttachmentCategory::inRandomOrder()->value('id'),
+        ];
+    }
 }

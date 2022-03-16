@@ -30,7 +30,6 @@ return [
      */
     'media_model' => Spatie\MediaLibrary\MediaCollections\Models\Media::class,
 
-
     /*
      * This is the class that is responsible for naming conversion files. By default,
      * it will use the filename of the original and concatenate the conversion name to it.
@@ -149,7 +148,6 @@ return [
         ],
     ],
 
-
     'responsive_images' => [
 
         /*
@@ -173,7 +171,6 @@ return [
          */
         'tiny_placeholder_generator' => Spatie\MediaLibrary\ResponsiveImages\TinyPlaceholderGenerator\Blurred::class,
     ],
-
 
     /*
      * When converting Media instances to response the medialibrary will add

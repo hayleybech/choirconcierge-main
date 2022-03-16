@@ -24,19 +24,17 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Attributes
  * @property string colour
- *
- * @package App\Models
  */
 class SongStatus extends Model
 {
-	use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
+    use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
 
     protected $appends = ['slug'];
 
     public function songs(): HasMany
-	{
-		return $this->hasMany(Song::class, 'status_id');
-	}
+    {
+        return $this->hasMany(Song::class, 'status_id');
+    }
 
     public function getSlugAttribute(): string
     {

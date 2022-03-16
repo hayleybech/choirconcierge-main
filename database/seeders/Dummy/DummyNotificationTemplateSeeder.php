@@ -3,20 +3,20 @@
 namespace Database\Seeders\Dummy;
 
 use App\Models\Task;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class DummyNotificationTemplateSeeder extends Seeder
 {
-	/**
-	 * Run the database seeds.
-	 *
-	 * @return void
-	 */
-	public function run()
-	{
-		$profile_reminder_body = <<<EOT
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $profile_reminder_body = <<<'EOT'
 		Hi %%user.fname%%,
 
 		A prospective member, %%singer.name%%, has completed a voice placement. Please complete the Member Profile to provide basic information and contact details for the singer.
@@ -28,7 +28,7 @@ class DummyNotificationTemplateSeeder extends Seeder
 		Choir Concierge
 		EOT;
 
-		$placement_reminder_body = <<<EOT
+        $placement_reminder_body = <<<'EOT'
 		Hi %%user.fname%%,
 
 		A prospective member, %%singer.name%%, is ready for voice placement. 
@@ -40,7 +40,7 @@ class DummyNotificationTemplateSeeder extends Seeder
 		Choir Concierge
 		EOT;
 
-		$details_completed_body = <<<EOT
+        $details_completed_body = <<<'EOT'
 		Hi %%user.fname%%,
 
 		A prospective member, %%singer.name%%, has completed a Voice Placement. The singer is in the %%singer.section%% section.
@@ -52,7 +52,7 @@ class DummyNotificationTemplateSeeder extends Seeder
 		Choir Concierge
 		EOT;
 
-		$welcome_body = <<<EOT
+        $welcome_body = <<<'EOT'
 		Hi %%singer.fname%%,
 
 		Welcome to the Blenders!
@@ -73,7 +73,7 @@ class DummyNotificationTemplateSeeder extends Seeder
 		- Get fitted for a uniform
 		- Download our entire repertoire and start singing!
 		EOT;
-		$audition_due_singer_body = <<<EOT
+        $audition_due_singer_body = <<<'EOT'
 		Hi %%singer.fname%%,
 
 		We hope you've had a fantastic few weeks at The Blenders. It's now time for your Vocal Assessment! After your initial four weeks with us, you must be assessed by one of our friendly music team.
@@ -87,7 +87,7 @@ class DummyNotificationTemplateSeeder extends Seeder
 		Membership Team - The Blenders
 		EOT;
 
-		$audition_due_team_body = <<<EOT
+        $audition_due_team_body = <<<'EOT'
 		Hi %%user.fname%%,
 
 		%%singer.name%% is due for vocal assessment.
@@ -97,7 +97,7 @@ class DummyNotificationTemplateSeeder extends Seeder
 		Choir Concierge
 		EOT;
 
-		$audition_completed_body = <<<EOT
+        $audition_completed_body = <<<'EOT'
 		Hi %%user.fname%%,
 
 		A new member, %%singer.name%%, has passed their audition. Please invoice them for their registration fees. Ensure you inform us when the fees have been paid. 
@@ -112,7 +112,7 @@ class DummyNotificationTemplateSeeder extends Seeder
 		Choir Concierge
 		EOT;
 
-		$audition_congrats_body = <<<EOT
+        $audition_congrats_body = <<<'EOT'
 		Hi %%singer.fname%%,
 
 		Congratulations on passing your audition! You are now eligible to become a full member of The Blenders! Below, you'll find a link to The Blenders' core repertoire, which you can start learning straight away.
@@ -140,7 +140,7 @@ class DummyNotificationTemplateSeeder extends Seeder
 		- Download our entire repertoire and start singing!
 		EOT;
 
-		$uniform_request_body = <<<EOT
+        $uniform_request_body = <<<'EOT'
 		Hi %%user.fname%%,
 
 		A new member, %%singer.name%%, has paid their fees.
@@ -152,7 +152,7 @@ class DummyNotificationTemplateSeeder extends Seeder
 		Choir Concierge
 		EOT;
 
-		$membership_welcome_body = <<<EOT
+        $membership_welcome_body = <<<'EOT'
 		Hi %%user.fname%%,
 
 		A new member, %%singer.name%%, has paid their fees.
@@ -167,7 +167,7 @@ class DummyNotificationTemplateSeeder extends Seeder
 		Choir Concierge
 		EOT;
 
-		$director_welcome_body = <<<EOT
+        $director_welcome_body = <<<'EOT'
 		Hi %%user.fname%%,
 
 		A new member, %%singer.name%%, has paid their fees.
@@ -183,10 +183,10 @@ class DummyNotificationTemplateSeeder extends Seeder
 		Choir Concierge
 		EOT;
 
-		$tasks = Task::all();
-		// Create some dummy templates
-		DB::table('notification_templates')->insert([
-			/*[
+        $tasks = Task::all();
+        // Create some dummy templates
+        DB::table('notification_templates')->insert([
+            /*[
                 'task_id'		=> $tasks->firstWhere('name', '=', 'Member Profile')->id,
                 'subject'		=> 'Singer ready for Voice Placement',
                 'recipients'	=> 'role:2',
@@ -204,87 +204,87 @@ class DummyNotificationTemplateSeeder extends Seeder
                 'created_at'        => Carbon::now(),
                 'updated_at'        => Carbon::now(),
             ],*/
-			[
-				'task_id' => $tasks->firstWhere('name', '=', 'Voice Placement')->id,
-				'subject' => 'Singer completed their details',
-				'recipients' => 'role:2',
-				'body' => $details_completed_body,
-				'delay' => '4 hours',
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now(),
-			],
-			[
-				'task_id' => $tasks->firstWhere('name', '=', 'Voice Placement')->id,
-				'subject' => 'Welcome to The Blenders!',
-				'recipients' => 'singer:0',
-				'body' => $welcome_body,
-				'delay' => '4 hours',
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now(),
-			],
-			[
-				'task_id' => $tasks->firstWhere('name', '=', 'Voice Placement')->id,
-				'subject' => 'Time for your Vocal Assessment!',
-				'recipients' => 'singer:0',
-				'body' => $audition_due_singer_body,
-				'delay' => '28 days',
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now(),
-			],
-			[
-				'task_id' => $tasks->firstWhere('name', '=', 'Voice Placement')->id,
-				'subject' => 'A singer is due for Vocal Assessment',
-				'recipients' => 'role:2',
-				'body' => $audition_due_team_body,
-				'delay' => '28 days',
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now(),
-			],
-			[
-				'task_id' => $tasks->firstWhere('name', '=', 'Pass Audition')->id,
-				'subject' => 'Congratulations! You passed your audition',
-				'recipients' => 'singer:0',
-				'body' => $audition_congrats_body,
-				'delay' => '1 second',
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now(),
-			],
-			[
-				'task_id' => $tasks->firstWhere('name', '=', 'Pass Audition')->id,
-				'subject' => 'Please invoice new member',
-				'recipients' => 'role:4',
-				'body' => $audition_completed_body,
-				'delay' => '1 second',
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now(),
-			],
-			[
-				'task_id' => $tasks->firstWhere('name', '=', 'Pay Fees')->id,
-				'subject' => 'Please provide uniform to new member',
-				'recipients' => 'role:5',
-				'body' => $uniform_request_body,
-				'delay' => '1 second',
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now(),
-			],
-			[
-				'task_id' => $tasks->firstWhere('name', '=', 'Pay Fees')->id,
-				'subject' => 'Please welcome new member',
-				'recipients' => 'role:3',
-				'body' => $membership_welcome_body,
-				'delay' => '1 second',
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now(),
-			],
-			[
-				'task_id' => $tasks->firstWhere('name', '=', 'Pay Fees')->id,
-				'subject' => 'Please welcome new member',
-				'recipients' => 'user:1',
-				'body' => $director_welcome_body,
-				'delay' => '1 second',
-				'created_at' => Carbon::now(),
-				'updated_at' => Carbon::now(),
-			],
-		]);
-	}
+            [
+                'task_id' => $tasks->firstWhere('name', '=', 'Voice Placement')->id,
+                'subject' => 'Singer completed their details',
+                'recipients' => 'role:2',
+                'body' => $details_completed_body,
+                'delay' => '4 hours',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'task_id' => $tasks->firstWhere('name', '=', 'Voice Placement')->id,
+                'subject' => 'Welcome to The Blenders!',
+                'recipients' => 'singer:0',
+                'body' => $welcome_body,
+                'delay' => '4 hours',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'task_id' => $tasks->firstWhere('name', '=', 'Voice Placement')->id,
+                'subject' => 'Time for your Vocal Assessment!',
+                'recipients' => 'singer:0',
+                'body' => $audition_due_singer_body,
+                'delay' => '28 days',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'task_id' => $tasks->firstWhere('name', '=', 'Voice Placement')->id,
+                'subject' => 'A singer is due for Vocal Assessment',
+                'recipients' => 'role:2',
+                'body' => $audition_due_team_body,
+                'delay' => '28 days',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'task_id' => $tasks->firstWhere('name', '=', 'Pass Audition')->id,
+                'subject' => 'Congratulations! You passed your audition',
+                'recipients' => 'singer:0',
+                'body' => $audition_congrats_body,
+                'delay' => '1 second',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'task_id' => $tasks->firstWhere('name', '=', 'Pass Audition')->id,
+                'subject' => 'Please invoice new member',
+                'recipients' => 'role:4',
+                'body' => $audition_completed_body,
+                'delay' => '1 second',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'task_id' => $tasks->firstWhere('name', '=', 'Pay Fees')->id,
+                'subject' => 'Please provide uniform to new member',
+                'recipients' => 'role:5',
+                'body' => $uniform_request_body,
+                'delay' => '1 second',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'task_id' => $tasks->firstWhere('name', '=', 'Pay Fees')->id,
+                'subject' => 'Please welcome new member',
+                'recipients' => 'role:3',
+                'body' => $membership_welcome_body,
+                'delay' => '1 second',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'task_id' => $tasks->firstWhere('name', '=', 'Pay Fees')->id,
+                'subject' => 'Please welcome new member',
+                'recipients' => 'user:1',
+                'body' => $director_welcome_body,
+                'delay' => '1 second',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ]);
+    }
 }
