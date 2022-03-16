@@ -8,27 +8,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaskFactory extends Factory
 {
-	/**
-	 * The name of the factory's corresponding model.
-	 *
-	 * @var string
-	 */
-	protected $model = Task::class;
-
-	/**
-	 * Define the model's default state.
-	 *
-	 * @return array
-	 */
-	public function definition()
-	{
-		return [
-			'name' => $this->faker->sentence(3),
-			'role_id' => Role::where('name', 'Music Team')->value('id'),
-			'type' => 'manual',
-			'route' => 'task.complete',
-			'created_at' => now(),
-			'updated_at' => now(),
-		];
-	}
+    public function definition(): array
+    {
+        return [
+            'name' => $this->faker->sentence(3),
+            'role_id' => Role::where('name', 'Music Team')->value('id'),
+            'type' => 'manual',
+            'route' => 'task.complete',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
 }

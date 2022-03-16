@@ -10,31 +10,31 @@ use Illuminate\Queue\SerializesModels;
 
 class NotPermittedSenderMessage extends Mailable
 {
-	use Queueable, SerializesModels;
+    use Queueable, SerializesModels;
 
-	public UserGroup $group;
+    public UserGroup $group;
 
-	/**
-	 * Create a new message instance.
-	 *
-	 * @return void
-	 */
-	public function __construct(UserGroup $group)
-	{
-		$this->group = $group;
-	}
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct(UserGroup $group)
+    {
+        $this->group = $group;
+    }
 
-	/**
-	 * Build the message.
-	 *
-	 * @return $this
-	 */
-	public function build()
-	{
-		tenancy()->initialize($this->group->tenant);
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        tenancy()->initialize($this->group->tenant);
 
-		return $this->subject('Not a permitted sender')
-			->from(tenant('mail_from_address'), tenant('mail_from_name'))
-			->markdown('emails.not_permitted_sender');
-	}
+        return $this->subject('Not a permitted sender')
+            ->from(tenant('mail_from_address'), tenant('mail_from_name'))
+            ->markdown('emails.not_permitted_sender');
+    }
 }

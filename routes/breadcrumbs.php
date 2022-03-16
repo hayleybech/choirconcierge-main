@@ -4,7 +4,7 @@
  * WELCOME
  */
 // Home
-Breadcrumbs::for('menu', static function($trail){
+Breadcrumbs::for('menu', static function ($trail) {
     $trail->push('Home', route('menu'));
 });
 
@@ -33,7 +33,7 @@ Breadcrumbs::for('password.reset', static function ($trail, $token) {
 /**
  * DASHBOARD
  */
-Breadcrumbs::for('dash', static function($trail){
+Breadcrumbs::for('dash', static function ($trail) {
     $trail->push('Dashboard', route('dash'));
 });
 
@@ -123,7 +123,6 @@ Breadcrumbs::for('songs.learning', static function ($trail) {
     $trail->push('Learning Mode', route('songs.learning'));
 });
 
-
 /**
  * EVENTS
  */
@@ -158,12 +157,11 @@ Breadcrumbs::for('events.attendances.index', static function ($trail, $event) {
 });
 
 // Events > Reports > Attendance
-Breadcrumbs::for('events.reports.attendance', static function($trail) {
+Breadcrumbs::for('events.reports.attendance', static function ($trail) {
     $trail->parent('events.index');
     $trail->push('Reports');
     $trail->push('Attendance', route('events.reports.attendance'));
 });
-
 
 /**
  * DOCUMENTS

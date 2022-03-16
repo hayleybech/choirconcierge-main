@@ -16,9 +16,9 @@ use Webklex\IMAP\Message;
  */
 class ProcessGroupMailboxTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
-	protected bool $tenancy = false;
+    protected bool $tenancy = false;
 
 	/** @test */
 	public function handle_resends_a_messages(): void

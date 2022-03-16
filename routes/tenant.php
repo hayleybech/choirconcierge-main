@@ -55,9 +55,8 @@ Route::middleware([
     'web',
     InitializeTenancyByDomainOrSubdomain::class,
     PreventAccessFromCentralDomains::class,
-    RedirectToPrimaryTenantDomain::class
+    RedirectToPrimaryTenantDomain::class,
 ])->group(function () {
-
     Auth::routes(['register' => false]);
 
     // Dashboard
@@ -73,7 +72,6 @@ Route::middleware([
     Route::post('singers/import', ImportSingerController::class)->name('singers.import');
     Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
     Route::get('singers/{singer}/tasks/{task}/complete', CompleteSingerTaskController::class)->name('task.complete');
-
 
     // Songs module
     Route::resource('songs', SongController::class);
@@ -120,12 +118,12 @@ Route::middleware([
     });
 
     // Search APIs
-    Route::prefix('find')->middleware(['auth'])->group(function() {
+    Route::prefix('find')->middleware(['auth'])->group(function () {
         Route::get('/singers', FindSingerController::class)->name('find.singers');
     });
 
     // Global Search APIs
-    Route::prefix('find')->middleware(['auth'])->group(function() {
+    Route::prefix('find')->middleware(['auth'])->group(function () {
         Route::get('/users', GlobalFindUserController::class)->name('global-find.users');
     });
 

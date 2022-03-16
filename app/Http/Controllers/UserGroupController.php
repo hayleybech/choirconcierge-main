@@ -14,54 +14,55 @@ use Inertia\Response;
 
 class UserGroupController extends Controller
 {
-	public function __construct()
-	{
-		$this->authorizeResource(UserGroup::class, 'group');
-	}
-	/**
-	 * Display a listing of the resource.
-	 */
-	public function index(): View|Response
-	{
+    public function __construct()
+    {
+        $this->authorizeResource(UserGroup::class, 'group');
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(): View|Response
+    {
         return Inertia::render('MailingLists/Index', [
             'lists' => UserGroup::with('tenant')->orderBy('title')->get()->values(),
         ]);
-	}
+    }
 
-	/**
-	 * Show the form for creating a new resource.
-	 */
-	public function create(): View|Response
-	{
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(): View|Response
+    {
         return Inertia::render('MailingLists/Create', [
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'voiceParts' => VoicePart::all()->values(),
             'singerCategories' => SingerCategory::all()->values(),
         ]);
-	}
+    }
 
-	/**
-	 * Store a newly created resource in storage.
-	 * @param UserGroupRequest $request
-	 * @return RedirectResponse
-	 */
-	public function store(UserGroupRequest $request): RedirectResponse
-	{
-		$group = UserGroup::create($request->validated());
+    /**
+     * Store a newly created resource in storage.
+     * @param UserGroupRequest $request
+     * @return RedirectResponse
+     */
+    public function store(UserGroupRequest $request): RedirectResponse
+    {
+        $group = UserGroup::create($request->validated());
 
-		return redirect()
-			->route('groups.show', [$group])
-			->with(['status' => 'Group created. ']);
-	}
+        return redirect()
+            ->route('groups.show', [$group])
+            ->with(['status' => 'Group created. ']);
+    }
 
-	/**
-	 * Display the specified resource.
-	 * @param UserGroup $group
-	 * @return View
-	 */
-	public function show(UserGroup $group): View|Response
-	{
-	    $group->load('members.memberable', 'senders.sender');
+    /**
+     * Display the specified resource.
+     * @param UserGroup $group
+     * @return View
+     */
+    public function show(UserGroup $group): View|Response
+    {
+        $group->load('members.memberable', 'senders.sender');
 
         $group->can = [
             'update_group' => auth()->user()?->can('update', $group),
@@ -71,10 +72,10 @@ class UserGroupController extends Controller
         return Inertia::render('MailingLists/Show', [
             'list' => $group,
         ]);
-	}
+    }
 
-	public function edit(UserGroup $group): View|Response
-	{
+    public function edit(UserGroup $group): View|Response
+    {
         $group->load([
             'recipient_roles', 'recipient_voice_parts', 'recipient_singer_categories', 'recipient_users',
             'sender_roles', 'sender_voice_parts', 'sender_singer_categories', 'sender_users',
@@ -86,43 +87,43 @@ class UserGroupController extends Controller
             'voiceParts' => VoicePart::all()->values(),
             'singerCategories' => SingerCategory::all()->values(),
         ]);
-	}
+    }
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param UserGroup $group
-	 * @param UserGroupRequest $request
-	 *
-	 * @return RedirectResponse
-	 */
-	public function update(UserGroup $group, UserGroupRequest $request): RedirectResponse
-	{
-		$group->update($request->validated());
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param UserGroup $group
+     * @param UserGroupRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function update(UserGroup $group, UserGroupRequest $request): RedirectResponse
+    {
+        $group->update($request->validated());
 
-		return redirect()
-			->route('groups.show', [$group])
-			->with(['status' => 'Group updated. ']);
-	}
+        return redirect()
+            ->route('groups.show', [$group])
+            ->with(['status' => 'Group updated. ']);
+    }
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param UserGroup $group
-	 * @return RedirectResponse
-	 */
-	public function destroy(UserGroup $group): RedirectResponse
-	{
-		try {
-			$group->delete();
-		} catch (\Exception $e) {
-			return redirect()
-				->route('groups.index')
-				->with(['status' => 'Group could not be deleted. Check that the group ID exists. ']);
-		}
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param UserGroup $group
+     * @return RedirectResponse
+     */
+    public function destroy(UserGroup $group): RedirectResponse
+    {
+        try {
+            $group->delete();
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('groups.index')
+                ->with(['status' => 'Group could not be deleted. Check that the group ID exists. ']);
+        }
 
-		return redirect()
-			->route('groups.index')
-			->with(['status' => 'Group deleted. ']);
-	}
+        return redirect()
+            ->route('groups.index')
+            ->with(['status' => 'Group deleted. ']);
+    }
 }

@@ -6,7 +6,7 @@ use App\Models\Singer;
 use App\Models\Song;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Testing\Assert;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 class LearningStatusControllerTest extends TestCase
@@ -29,12 +29,11 @@ class LearningStatusControllerTest extends TestCase
 
         $this->get(the_tenant_route('songs.singers.index', $song))
             ->assertOk()
-            ->assertInertia(fn(Assert $page) => $page
+            ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Learning/Index')
                 ->has('song')
                 ->has('voice_parts')
             );
-
     }
 
     /** @test */
@@ -51,8 +50,8 @@ class LearningStatusControllerTest extends TestCase
         $this->actingAs($this->createUserWithRole('Music Team'));
 
         $this->put(the_tenant_route('songs.singers.update', [$song, $user->singer]), [
-                'status' => 'performance-ready',
-            ])
+            'status' => 'performance-ready',
+        ])
             ->assertRedirect(the_tenant_route('songs.singers.index', $song));
 
         $this->assertDatabaseHas('singer_song', [

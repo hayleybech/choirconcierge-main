@@ -10,42 +10,42 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SongAttachmentController extends Controller
 {
-	public function show(Song $song, SongAttachment $attachment): BinaryFileResponse
-	{
-		$this->authorize('view', $song);
+    public function show(Song $song, SongAttachment $attachment): BinaryFileResponse
+    {
+        $this->authorize('view', $song);
 
-		return response()->download($attachment->path);
-	}
+        return response()->download($attachment->path);
+    }
 
-	public function store(Song $song, SongAttachmentRequest $request): RedirectResponse
-	{
-		$this->authorize('update', $song);
+    public function store(Song $song, SongAttachmentRequest $request): RedirectResponse
+    {
+        $this->authorize('update', $song);
 
-		$data = $request->validated();
+        $data = $request->validated();
 
-		$files = $request->file('attachment_uploads');
-		foreach ($files as $file) {
-			SongAttachment::create([
-				'title' => '',
-				'song_id' => $song->id,
-				'category_id' => $data['category'],
-				'file' => $file,
-			]);
-		}
+        $files = $request->file('attachment_uploads');
+        foreach ($files as $file) {
+            SongAttachment::create([
+                'title' => '',
+                'song_id' => $song->id,
+                'category_id' => $data['category'],
+                'file' => $file,
+            ]);
+        }
 
-		return redirect()
-			->route('songs.show', [$song])
-			->with(['status' => 'Attachment(s) added. ']);
-	}
+        return redirect()
+            ->route('songs.show', [$song])
+            ->with(['status' => 'Attachment(s) added. ']);
+    }
 
-	public function destroy(Song $song, SongAttachment $attachment): RedirectResponse
-	{
-		$this->authorize('update', $song);
+    public function destroy(Song $song, SongAttachment $attachment): RedirectResponse
+    {
+        $this->authorize('update', $song);
 
-		$attachment->delete();
+        $attachment->delete();
 
-		return redirect()
-			->route('songs.show', [$song])
-			->with(['status' => 'Attachment deleted. ']);
-	}
+        return redirect()
+            ->route('songs.show', [$song])
+            ->with(['status' => 'Attachment deleted. ']);
+    }
 }

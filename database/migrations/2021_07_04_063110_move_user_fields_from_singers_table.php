@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class MoveUserFieldsFromSingersTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -25,7 +24,7 @@ class MoveUserFieldsFromSingersTable extends Migration
             ]);
         });
 
-        Schema::table('singers', function(Blueprint $table) {
+        Schema::table('singers', function (Blueprint $table) {
             $table->dropForeign('singers_tenant_id_foreign');
             $table->foreign('tenant_id')->references('id')->on('tenants')->cascadeOnDelete()->cascadeOnUpdate();
             $table->dropColumn([
@@ -45,4 +44,4 @@ class MoveUserFieldsFromSingersTable extends Migration
             //
         });
     }
-}
+};

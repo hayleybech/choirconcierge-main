@@ -9,10 +9,10 @@ use Spatie\QueryBuilder\Sorts\Sort;
 
 class SingerVoicePartSort implements Sort
 {
-
     public function __invoke(Builder $query, bool $descending, string $property)
     {
         $prefix = \DB::getTablePrefix();
+
         return $query
             ->addSubSelect(
                 'part_title',

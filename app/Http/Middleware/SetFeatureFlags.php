@@ -13,11 +13,11 @@ class SetFeatureFlags
      */
     public function handle(Request $request, Closure $next): mixed
     {
-        if(Session::get('rebuild') === 'on') {
+        if (Session::get('rebuild') === 'on') {
             config(['features.rebuild' => true]);
         }
 
-        if(Session::get('rebuild') === 'off') {
+        if (Session::get('rebuild') === 'off') {
             config(['features.rebuild' => false]);
         }
 

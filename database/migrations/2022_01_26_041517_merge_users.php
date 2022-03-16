@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 
-class MergeUsers extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -19,7 +18,7 @@ class MergeUsers extends Migration
             ->get()
             ->groupBy('email');
 
-        $emails->each(fn(Collection $email_users) => $email_users
+        $emails->each(fn (Collection $email_users) => $email_users
             ->skip(1)
             ->each(function ($user) use ($email_users) {
                 DB::table('singers')
@@ -30,8 +29,8 @@ class MergeUsers extends Migration
             })
         );
 
-        Schema::table('users', function(Blueprint $table) {
-            if(Schema::hasColumn('users', 'tenant_id')) {
+        Schema::table('users', function (Blueprint $table) {
+            if (Schema::hasColumn('users', 'tenant_id')) {
                 $table->dropForeign('users_tenant_id_foreign');
                 $table->dropUnique('users_tenant_id_email_unique');
                 $table->dropColumn('tenant_id');
@@ -49,4 +48,4 @@ class MergeUsers extends Migration
     {
         //
     }
-}
+};

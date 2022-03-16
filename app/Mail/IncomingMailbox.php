@@ -4,34 +4,32 @@ namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Collection;
-use Webklex\IMAP\Client;
-use Webklex\IMAP\Exceptions\ConnectionFailedException;
-use Webklex\IMAP\Exceptions\GetMessagesFailedException;
-use Webklex\IMAP\Exceptions\InvalidWhereQueryCriteriaException;
-use Webklex\IMAP\Support\MessageCollection;
+use Webklex\PHPIMAP\Client;
+use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
+use Webklex\PHPIMAP\Exceptions\GetMessagesFailedException;
+use Webklex\PHPIMAP\Exceptions\InvalidWhereQueryCriteriaException;
+use Webklex\PHPIMAP\Support\MessageCollection;
 
 class IncomingMailbox
 {
-	private const FOLDER_UNREAD = 'INBOX';
-	private const FOLDER_READ = 'INBOX.read';
-	private const BATCH_LIMIT = 10;
+    private const FOLDER_UNREAD = 'INBOX';
 
-	/**
-	 * @param bool $read
-	 * @return Collection<Mailable>
-	 */
-	public function getMessages(bool $read = false): Collection
-	{
-		$messages = new MessageCollection();
+    private const FOLDER_READ = 'INBOX.read';
 
-		$folder_name = $read ? self::FOLDER_READ : self::FOLDER_UNREAD;
-		$client = new Client();
-		try {
-			$client->connect();
+    private const BATCH_LIMIT = 10;
 
-			$folder = $client->getFolder($folder_name);
+    /**
+     * @param bool $read
+     * @return Collection<Mailable>
+     */
+    public function getMessages(bool $read = false): Collection
+    {
+        $messages = new MessageCollection();
 
-			$messages = $folder->getMessages('UNSEEN', null, true, true, true, self::BATCH_LIMIT);
+        $folder_name = $read ? self::FOLDER_READ : self::FOLDER_UNREAD;
+        $client = new Client();
+        try {
+            $client->connect();
 
 			echo count($messages) . ' message(s) found.' . PHP_EOL;
 		} catch (ConnectionFailedException | GetMessagesFailedException | InvalidWhereQueryCriteriaException $e) {

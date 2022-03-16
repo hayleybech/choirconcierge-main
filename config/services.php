@@ -38,6 +38,6 @@ return [
 
     'google' => [
         'key' => env('API_GOOGLE_KEY'),
-    ]
+    ],
 
 ];

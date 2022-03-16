@@ -27,7 +27,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
  * @property int $tenant_id
- * @property boolean $show_for_prospects
+ * @property bool $show_for_prospects
  *
  * Relationships
  * @property SongStatus $status
@@ -38,106 +38,105 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Dynamic
  * @property string $pitch
  * @property LearningStatus $my_learning
- *
- * @package App\Models
  */
 class Song extends Model
 {
-	use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
+    use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = ['title', 'pitch_blown', 'show_for_prospects', 'suppress_email'];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['title', 'pitch_blown', 'show_for_prospects', 'suppress_email'];
 
-	protected $with = ['categories', 'status'];
+    protected $with = ['categories', 'status'];
 
-	public const PITCHES = [
-		0 => 'A',
-		1 => 'A#/Bb',
-		2 => 'B',
-		3 => 'C',
-		4 => 'C#/Db',
-		5 => 'D',
-		6 => 'D#/Eb',
-		7 => 'E',
-		8 => 'F',
-		9 => 'F#/Gb',
-		10 => 'G',
-		11 => 'G#/Ab',
-	];
-	public const KEYS = [
-		'Major' => self::PITCHES,
-		'Minor' => self::PITCHES,
-	];
+    public const PITCHES = [
+        0 => 'A',
+        1 => 'A#/Bb',
+        2 => 'B',
+        3 => 'C',
+        4 => 'C#/Db',
+        5 => 'D',
+        6 => 'D#/Eb',
+        7 => 'E',
+        8 => 'F',
+        9 => 'F#/Gb',
+        10 => 'G',
+        11 => 'G#/Ab',
+    ];
 
-	/**
-	 * The accessors to append to the model's array form.
-	 *
-	 * @var array
-	 */
-	protected $appends = ['pitch'];
+    public const KEYS = [
+        'Major' => self::PITCHES,
+        'Minor' => self::PITCHES,
+    ];
 
-	protected static function booted(): void
-	{
-		static::addGlobalScope('filterPending', static function (Builder $builder): void {
-			$builder->unless(Auth::user()?->singer?->hasAbility('songs_update'), function (Builder $query): Builder {
-				return $query->whereDoesntHave('status', static function (Builder $query): Builder {
-					return $query->where('title', '=', 'Pending');
-				});
-			});
-		});
-	}
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['pitch'];
 
-	public static function create(array $attributes = [])
-	{
-		/** @var Song $song */
-		$song = static::query()->create($attributes);
+    protected static function booted(): void
+    {
+        static::addGlobalScope('filterPending', static function (Builder $builder): void {
+            $builder->unless(Auth::user()?->singer?->hasAbility('songs_update'), function (Builder $query): Builder {
+                return $query->whereDoesntHave('status', static function (Builder $query): Builder {
+                    return $query->where('title', '=', 'Pending');
+                });
+            });
+        });
+    }
 
-		// Associate status
-		$status = SongStatus::find($attributes['status']);
-		$status->songs()->save($song);
+    public static function create(array $attributes = [])
+    {
+        /** @var Song $song */
+        $song = static::query()->create($attributes);
 
-		// Attach categories
-		$song->categories()->attach($attributes['categories']);
-		$song->save();
+        // Associate status
+        $status = SongStatus::find($attributes['status']);
+        $status->songs()->save($song);
 
-		return $song;
-	}
+        // Attach categories
+        $song->categories()->attach($attributes['categories']);
+        $song->save();
 
-	public function update(array $attributes = [], array $options = [])
-	{
-		parent::update($attributes, $options);
+        return $song;
+    }
 
-		// Associate status
-		$status = SongStatus::find($attributes['status']);
-		$status->songs()->save($this);
+    public function update(array $attributes = [], array $options = [])
+    {
+        parent::update($attributes, $options);
 
-		// Attach categories
-		$this->categories()->sync($attributes['categories']);
-		$this->save();
+        // Associate status
+        $status = SongStatus::find($attributes['status']);
+        $status->songs()->save($this);
 
-		return true;
-	}
+        // Attach categories
+        $this->categories()->sync($attributes['categories']);
+        $this->save();
 
-	public function status(): BelongsTo
-	{
-		return $this->belongsTo(SongStatus::class, 'status_id');
-	}
+        return true;
+    }
 
-	public function categories(): BelongsToMany
-	{
-		return $this->belongsToMany(SongCategory::class, 'songs_song_categories', 'song_id', 'category_id');
-	}
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(SongStatus::class, 'status_id');
+    }
 
-	public function attachments(): HasMany
-	{
-		return $this->hasMany(SongAttachment::class);
-	}
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(SongCategory::class, 'songs_song_categories', 'song_id', 'category_id');
+    }
 
-	public function singers(): BelongsToMany
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(SongAttachment::class);
+    }
+
+    public function singers(): BelongsToMany
     {
         return $this->belongsToMany(Singer::class)
             ->withPivot(['status'])
@@ -155,21 +154,22 @@ class Song extends Model
             ?? LearningStatus::getNullLearningStatus();
     }
 
-	public function getPitchAttribute(): string
-	{
-		return self::getAllPitches()[$this->pitch_blown];
-	}
+    public function getPitchAttribute(): string
+    {
+        return self::getAllPitches()[$this->pitch_blown];
+    }
 
-	public static function getAllPitches(): array
-	{
-		$all_pitches = [];
-		foreach (self::KEYS as $mode => $pitches) {
-			$all_pitches = array_merge($all_pitches, $pitches);
-		}
-		return $all_pitches;
-	}
+    public static function getAllPitches(): array
+    {
+        $all_pitches = [];
+        foreach (self::KEYS as $mode => $pitches) {
+            $all_pitches = array_merge($all_pitches, $pitches);
+        }
 
-	public function createMissingLearningRecords(): void
+        return $all_pitches;
+    }
+
+    public function createMissingLearningRecords(): void
     {
         $this->singers()->attach(
             Singer::whereDoesntHave('songs', function ($query) {

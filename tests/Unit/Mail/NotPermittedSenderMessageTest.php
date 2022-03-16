@@ -11,72 +11,72 @@ use Tests\TestCase;
 
 class NotPermittedSenderMessageTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
-	protected bool $tenancy = false;
+    protected bool $tenancy = false;
 
-	/** @test */
-	public function it_renders_the_correct_content()
-	{
-		$tenant = $this->createTestTenants(2)[0];
+    /** @test */
+    public function it_renders_the_correct_content()
+    {
+        $tenant = $this->createTestTenants(2)[0];
 
-		$tenant->run(function() {
-			$group = UserGroup::create([
-				'title' => 'Music Team',
-				'slug' => 'music-team',
-				'list_type' => 'chat',
-				'tenant_id' => 'test-tenant-1',
-			]);
+        $tenant->run(function () {
+            $group = UserGroup::create([
+                'title' => 'Music Team',
+                'slug' => 'music-team',
+                'list_type' => 'chat',
+                'tenant_id' => 'test-tenant-1',
+            ]);
 
-			$mailable = new NotPermittedSenderMessage($group);
+            $mailable = new NotPermittedSenderMessage($group);
 
-			$mailable->assertSeeInHtml('You are not a permitted sender');
-			$mailable->assertSeeInHtml('Music Team');
-			$mailable->assertSeeInText('Test Tenant 1');
-		});
-	}
+            $mailable->assertSeeInHtml('You are not a permitted sender');
+            $mailable->assertSeeInHtml('Music Team');
+            $mailable->assertSeeInText('Test Tenant 1');
+        });
+    }
 
-	/** @test */
-	public function it_uses_the_correct_from_address()
-	{
-		$tenant = $this->createTestTenants(2)[0];
+    /** @test */
+    public function it_uses_the_correct_from_address()
+    {
+        $tenant = $this->createTestTenants(2)[0];
 
-		$tenant->run(function() {
-			$group = UserGroup::create([
-				'title' => 'Music Team',
-				'slug' => 'music-team',
-				'list_type' => 'chat',
-				'tenant_id' => 'test-tenant-1',
-			]);
+        $tenant->run(function () {
+            $group = UserGroup::create([
+                'title' => 'Music Team',
+                'slug' => 'music-team',
+                'list_type' => 'chat',
+                'tenant_id' => 'test-tenant-1',
+            ]);
 
-			$mailable = new NotPermittedSenderMessage($group);
+            $mailable = new NotPermittedSenderMessage($group);
 
-			$mailable->build();
+            $mailable->build();
 
-			$this->assertEquals('hello@test-tenant-1.'.central_domain(), $mailable->from[0]['address']);
-		});
-	}
+            $this->assertEquals('hello@test-tenant-1.'.central_domain(), $mailable->from[0]['address']);
+        });
+    }
 
-	/**
-	 * @param int $numTenants
-	 * @return Collection<Tenant>
-	 */
-	private function createTestTenants(int $numTenants = 1): Collection
-	{
-		return Collection::times($numTenants, function($index) {
-			return [
-				'test-tenant-'.$index,
-				'Test Tenant '.$index,
-				'Australia/Perth'
-			];
-		})
-			->map(function($data) {
-				$tenant = Tenant::create(...$data);
-				$tenant->domains()->create(['domain' => $tenant->id]);
+    /**
+     * @param int $numTenants
+     * @return Collection<Tenant>
+     */
+    private function createTestTenants(int $numTenants = 1): Collection
+    {
+        return Collection::times($numTenants, function ($index) {
+            return [
+                'test-tenant-'.$index,
+                'Test Tenant '.$index,
+                'Australia/Perth',
+            ];
+        })
+            ->map(function ($data) {
+                $tenant = Tenant::create(...$data);
+                $tenant->domains()->create(['domain' => $tenant->id]);
 
-				tenancy()->end();
+                tenancy()->end();
 
-				return $tenant;
-			});
-	}
+                return $tenant;
+            });
+    }
 }

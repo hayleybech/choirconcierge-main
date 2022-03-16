@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
-class RemoveProfileTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::table('singers', function(Blueprint $table) {
+        Schema::table('singers', function (Blueprint $table) {
             $table->string('reason_for_joining')->nullable();
             $table->string('referrer')->nullable();
             $table->string('membership_details')->nullable();
         });
 
-        Schema::table('users', function(Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->date('dob')->nullable();
             $table->string('phone')->nullable();
             $table->string('ice_name')->nullable();
@@ -38,7 +37,7 @@ class RemoveProfileTable extends Migration
         DB::table('profiles')->get()->each(function ($profile) {
             $singer = DB::table('singers')->where('id', $profile->singer_id)->first();
 
-            if(! $singer) {
+            if (! $singer) {
                 return false;
             }
 
@@ -69,7 +68,7 @@ class RemoveProfileTable extends Migration
                         ->explode(' ')[0]
                     ),
             ]);
-            
+
             return true;
         });
 
@@ -81,6 +80,5 @@ class RemoveProfileTable extends Migration
      */
     public function down(): void
     {
-
     }
-}
+};

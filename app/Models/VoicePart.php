@@ -27,30 +27,29 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Relationships
  * @property Collection<Singer> $singers
  * @property Collection<User> $users
- *
- * @package App\Models
  */
 class VoicePart extends Model
 {
-	use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
+    use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
-	protected $fillable = ['title', 'colour'];
+    protected $fillable = ['title', 'colour'];
 
-	public function singers(): HasMany
-	{
-		return $this->hasMany(Singer::class);
-	}
+    public function singers(): HasMany
+    {
+        return $this->hasMany(Singer::class);
+    }
 
-	public function users(): HasManyThrough
-	{
-		return $this->hasManyThrough(User::class, Singer::class);
-	}
+    public function users(): HasManyThrough
+    {
+        return $this->hasManyThrough(User::class, Singer::class);
+    }
 
-	public static function getNullVoicePart(): VoicePart
+    public static function getNullVoicePart(): self
     {
         $nullPart = new self();
         $nullPart->title = 'No Part';
         $nullPart->id = null;
+
         return $nullPart;
     }
 }

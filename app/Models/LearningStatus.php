@@ -37,8 +37,9 @@ class LearningStatus extends Pivot
 
     public static function getNullLearningStatus(): self
     {
-        $nullStatus = new LearningStatus();
+        $nullStatus = new self();
         $nullStatus->status = 'not-started';
+
         return $nullStatus;
     }
 }

@@ -24,14 +24,14 @@ use Webklex\IMAP\Message;
  */
 class ProcessGroupMailbox implements ShouldQueue
 {
-	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-	private IncomingMailbox $mailbox;
+    private IncomingMailbox $mailbox;
 
-	public function __construct(IncomingMailbox $mailbox)
-	{
-		$this->mailbox = $mailbox;
-	}
+    public function __construct(IncomingMailbox $mailbox)
+    {
+        $this->mailbox = $mailbox;
+    }
 
 	public function handle(): void
 	{

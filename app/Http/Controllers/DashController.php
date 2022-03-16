@@ -14,47 +14,49 @@ use Inertia\Inertia;
 
 class DashController extends Controller
 {
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		$this->middleware('auth');
-	}
-
-	/**
-	 * Show the application dashboard.
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
      */
-	public function index(): \Inertia\Response|View
+    public function __construct()
     {
-		$birthdays = User::query()
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the application dashboard.
+     */
+    public function index(): \Inertia\Response|View
+    {
+        $birthdays = User::query()
             ->whereHas('singers', fn ($query) => $query->active())
             ->birthdays()
-			->get()
+            ->get()
             ->each->append('birthday')
-			->sort(static function (User $user1, User $user2): int {
-				// Sort by birthday
+            ->sort(static function (User $user1, User $user2): int {
+                // Sort by birthday
 
-				if ($user1->birthday->equalTo($user2->birthday)) {
-					return 0;
-				}
-				return $user1->birthday < $user2->birthday ? -1 : 1;
-			});
+                if ($user1->birthday->equalTo($user2->birthday)) {
+                    return 0;
+                }
 
-		$memberversaries = Singer::query()
+                return $user1->birthday < $user2->birthday ? -1 : 1;
+            });
+
+        $memberversaries = Singer::query()
             ->with('user')
             ->active()
-			->memberversaries()
-			->get()
-			->sort(static function (Singer $singer1, Singer $singer2): int {
-				// Sort by joined date
-				if ($singer1->joined_at->equalTo($singer2->joined_at)) {
-					return 0;
-				}
-				return $singer1->joined_at < $singer2->joined_at ? -1 : 1;
-			});
+            ->memberversaries()
+            ->get()
+            ->sort(static function (Singer $singer1, Singer $singer2): int {
+                // Sort by joined date
+                if ($singer1->joined_at->equalTo($singer2->joined_at)) {
+                    return 0;
+                }
+
+                return $singer1->joined_at < $singer2->joined_at ? -1 : 1;
+            });
 
         $empty_dobs = Singer::query()
             ->with('user')
@@ -69,8 +71,8 @@ class DashController extends Controller
             ->get();
 
         $songs = Song::whereHas('status', static function (Builder $query) {
-                return $query->where('title', 'Learning');
-            })
+            return $query->where('title', 'Learning');
+        })
             ->orderBy('title')
             ->get()
             ->each->append('my_learning');
@@ -82,5 +84,5 @@ class DashController extends Controller
             'emptyDobs' => $empty_dobs,
             'memberversaries' => $memberversaries->values(),
         ]);
-	}
+    }
 }

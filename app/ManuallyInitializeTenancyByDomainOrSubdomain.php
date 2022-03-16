@@ -11,22 +11,23 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
  */
 class ManuallyInitializeTenancyByDomainOrSubdomain
 {
-	/**
-	 * @throws TenantCouldNotBeIdentifiedById
-	 */
-	public function handle(string $hostname): void
-	{
-		if ($this->isSubdomain($hostname)) {
-			app(ManuallyInitializeTenancyBySubdomain::class)->handle($hostname);
-			return;
-		}
+    /**
+     * @throws TenantCouldNotBeIdentifiedById
+     */
+    public function handle(string $hostname): void
+    {
+        if ($this->isSubdomain($hostname)) {
+            app(ManuallyInitializeTenancyBySubdomain::class)->handle($hostname);
 
-		app(ManuallyInitializeTenancyByDomain::class)->handle($hostname);
-	}
+            return;
+        }
 
-	protected function isSubdomain(string $hostname): bool
-	{
-		return Str::endsWith($hostname, config('tenancy.central_domains')) &&
-			!Str::startsWith($hostname, config('tenancy.central_domains'));
-	}
+        app(ManuallyInitializeTenancyByDomain::class)->handle($hostname);
+    }
+
+    protected function isSubdomain(string $hostname): bool
+    {
+        return Str::endsWith($hostname, config('tenancy.central_domains')) &&
+            ! Str::startsWith($hostname, config('tenancy.central_domains'));
+    }
 }

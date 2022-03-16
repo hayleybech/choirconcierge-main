@@ -10,24 +10,20 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentFactory extends Factory
 {
-	/** @var string */
-	protected $model = Document::class;
+    public function definition(): array {
+        $folders = Folder::all();
 
-	public function definition(): array
-	{
-		$folders = Folder::all();
+        $name = $this->faker->word().'.'.$this->faker->fileExtension();
+        $file = UploadedFile::fake()->create($name, 5);
+        //$filepath = Storage::disk('public')->putFile( Document::getDownloadsPath(), $file);
 
-		$name = $this->faker->word() . '.' . $this->faker->fileExtension();
-		$file = UploadedFile::fake()->create($name, 5);
-		//$filepath = Storage::disk('public')->putFile( Document::getDownloadsPath(), $file);
-
-		return [
-			'title' => $this->faker->sentence(3, true),
-			'folder_id' => $folders->random(1)->first()->id,
-			//'filepath'          => $name,
-			'document_upload' => $file,
-			'created_at' => now(),
-			'updated_at' => now(),
-		];
-	}
+        return [
+            'title' => $this->faker->sentence(3, true),
+            'folder_id' => $folders->random(1)->first()->id,
+            //'filepath'          => $name,
+            'document_upload' => $file,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
 }
