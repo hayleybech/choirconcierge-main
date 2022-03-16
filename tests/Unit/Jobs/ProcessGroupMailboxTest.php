@@ -5,7 +5,6 @@ namespace Tests\Unit\Jobs;
 use App\Jobs\ProcessGroupMailbox;
 use App\Mail\IncomingMailbox;
 use App\Mail\IncomingMessage;
-use App\Mail\WebklexImapMessageMailableAdapter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery\MockInterface;
 use Tests\TestCase;
