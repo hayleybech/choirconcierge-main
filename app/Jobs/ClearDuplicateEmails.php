@@ -23,7 +23,7 @@ class ClearDuplicateEmails implements ShouldQueue
 
     public function handle(): void
     {
-        $this->mailbox->getMessages()
+        $this->mailbox->getMessages(true)
             ->filter(fn(Message $message) => $this->messageHasMatchingCcAndTo($message))
             ->each(function (Message $message) {
                 $message->delete(true);

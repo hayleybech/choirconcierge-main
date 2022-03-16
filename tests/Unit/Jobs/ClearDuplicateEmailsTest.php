@@ -26,7 +26,9 @@ class ClearDuplicateEmailsTest extends TestCase
         });
 
         $this->mock(IncomingMailbox::class, function (MockInterface $mock) use ($mockMessage) {
-            $mock->shouldReceive('getMessages')->andReturn(collect([$mockMessage]));
+            $mock->shouldReceive('getMessages')
+                ->with(true)
+                ->andReturn(collect([$mockMessage]));
         });
 
         $this->app->make(ClearDuplicateEmails::class)->handle();
