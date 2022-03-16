@@ -22,7 +22,7 @@
         "axios": "^0.25",
         "babel-loader": "^8.2.2",
         "jest": "^27.0.6",
-        "laravel-mix": "^6.0.13",
+        "laravel-mix": "^6.0.43",
         "lodash": "^4.17.21",
         "popper.js": "^1.16.1",
         "postcss": "^8.4.5",
