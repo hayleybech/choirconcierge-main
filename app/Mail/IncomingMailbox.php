@@ -28,8 +28,12 @@ class IncomingMailbox
 
         $folder_name = $read ? self::FOLDER_READ : self::FOLDER_UNREAD;
         $client = Client::make([]);
+
         try {
             $client->connect();
+
+            $folder = $client->getFolder($folder_name);
+            $messages = $folder->getMessages('UNSEEN', null, true, true, true, self::BATCH_LIMIT);
 
 			echo count($messages) . ' message(s) found.' . PHP_EOL;
 		} catch (ConnectionFailedException | GetMessagesFailedException | InvalidWhereQueryCriteriaException $e) {
