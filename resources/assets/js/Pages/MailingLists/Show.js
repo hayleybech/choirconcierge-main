@@ -55,7 +55,7 @@ const Show = ({ list }) => {
                                         <div className="flex items-center justify-between px-4">
                                             <span className="text-sm font-medium truncate">
                                                 {`${getTypeName(member.memberable_type)}: `}
-                                                {member.memberable.name ?? member.memberable.title}
+                                                {member?.memberable.name ?? member?.memberable.title ?? 'Recipient not found'}
                                             </span>
                                         </div>
                                     </div>
@@ -80,7 +80,7 @@ const Show = ({ list }) => {
                                         <div className="flex items-center justify-between px-4">
                                             <span className="text-sm font-medium truncate">
                                                 {`${getTypeName(sender.sender_type)}: `}
-                                                {sender.sender.name ?? sender.sender.title}
+                                                {sender?.sender.name ?? sender?.sender.title ?? 'Sender not found'}
                                             </span>
                                         </div>
                                     </div>
