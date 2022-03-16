@@ -31,17 +31,11 @@ class IncomingMailbox
         try {
             $client->connect();
 
-            $folder = $client->getFolder($folder_name);
-
-            $messages = $folder->getMessages('UNSEEN', null, true, true, true, self::BATCH_LIMIT);
-
-            echo count($messages).' message(s) found.'.PHP_EOL;
-        } catch (ConnectionFailedException | GetMessagesFailedException | InvalidWhereQueryCriteriaException $e) {
-            report($e);
-        } finally {
-            return $messages
-                ->map(fn ($message) => (new WebklexImapMessageMailableAdapter($message))->toMailable())
-                ->toBase();
-        }
-    }
+			echo count($messages) . ' message(s) found.' . PHP_EOL;
+		} catch (ConnectionFailedException | GetMessagesFailedException | InvalidWhereQueryCriteriaException $e) {
+			report($e);
+		} finally {
+			return $messages->toBase();
+		}
+	}
 }
