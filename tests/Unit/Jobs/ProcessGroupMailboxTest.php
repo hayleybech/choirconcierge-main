@@ -9,7 +9,7 @@ use App\Mail\WebklexImapMessageMailableAdapter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery\MockInterface;
 use Tests\TestCase;
-use Webklex\IMAP\Message;
+use Webklex\PHPIMAP\Message;
 
 /**
  * @see \App\Jobs\ProcessGroupMailbox
