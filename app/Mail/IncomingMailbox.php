@@ -4,7 +4,7 @@ namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Collection;
-use Webklex\PHPIMAP\Client;
+use Webklex\IMAP\Facades\Client;
 use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
 use Webklex\PHPIMAP\Exceptions\GetMessagesFailedException;
 use Webklex\PHPIMAP\Exceptions\InvalidWhereQueryCriteriaException;
@@ -27,7 +27,7 @@ class IncomingMailbox
         $messages = new MessageCollection();
 
         $folder_name = $read ? self::FOLDER_READ : self::FOLDER_UNREAD;
-        $client = new Client();
+        $client = Client::make([]);
         try {
             $client->connect();
 
