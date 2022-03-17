@@ -38,7 +38,9 @@ class ProcessGroupMailbox implements ShouldQueue
 		$this->mailbox->getMessages()
             ->each(function (Message $message) {
                 /** @var IncomingMessage $incomingMessage */
+
                 $incomingMessage = (new WebklexImapMessageMailableAdapter($message))->toMailable();
+
                 $incomingMessage->resendToGroups();
 
                 $message->delete(true);
