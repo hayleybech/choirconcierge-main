@@ -8,7 +8,7 @@ use Webklex\PHPIMAP\Message;
 
 class WebklexImapMessageMailableAdapter implements MailableInterface
 {
-    private $message;
+    private Message $message;
 
     public function __construct(Message $message)
     {
@@ -20,15 +20,15 @@ class WebklexImapMessageMailableAdapter implements MailableInterface
         $mailable = new IncomingMessage();
 
         $mailable->to(
-            collect($this->message->getTo())->map(fn ($to) => ['email' => $to->mail, 'name' => $to->personal ?? '']),
+            collect($this->message->getTo()->all())->map(fn ($to) => ['email' => $to->mail, 'name' => $to->personal ?? '']),
         );
 
         $mailable->cc(
-            collect($this->message->getCc())->map(fn ($cc) => ['email' => $cc->mail, 'name' => $cc->personal ?? '']),
+            collect($this->message->getCc()?->all() ?? [])->map(fn ($cc) => ['email' => $cc->mail, 'name' => $cc->personal ?? '']),
         );
 
         $mailable->from(
-            collect($this->message->getFrom())->map(
+            collect($this->message->getFrom()->all())->map(
                 fn ($from) => ['email' => $from->mail, 'name' => $from->personal ?? ''],
             ),
         );

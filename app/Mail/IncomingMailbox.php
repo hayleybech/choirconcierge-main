@@ -6,15 +6,17 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Support\Collection;
 use Webklex\IMAP\Facades\Client;
 use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
+use Webklex\PHPIMAP\Exceptions\FolderFetchingException;
 use Webklex\PHPIMAP\Exceptions\GetMessagesFailedException;
 use Webklex\PHPIMAP\Exceptions\InvalidWhereQueryCriteriaException;
+use Webklex\PHPIMAP\Exceptions\RuntimeException;
+use Webklex\PHPIMAP\Folder;
+use Webklex\PHPIMAP\Query\WhereQuery;
 use Webklex\PHPIMAP\Support\MessageCollection;
 
 class IncomingMailbox
 {
-    private const FOLDER_UNREAD = 'INBOX';
-
-    private const FOLDER_READ = 'INBOX.read';
+    private const FOLDER_INBOX = 'INBOX';
 
     private const BATCH_LIMIT = 10;
 
@@ -26,20 +28,28 @@ class IncomingMailbox
     {
         $messages = new MessageCollection();
 
-        $folder_name = $read ? self::FOLDER_READ : self::FOLDER_UNREAD;
-        $client = Client::make([]);
-
+        $client = Client::account('default');
         try {
             $client->connect();
 
-            $folder = $client->getFolder($folder_name);
-            $messages = $folder->getMessages('UNSEEN', null, true, true, true, self::BATCH_LIMIT);
+            /** @var Folder $folder */
+            $folder = $client->getFolderByPath(self::FOLDER_INBOX);
 
-			echo count($messages) . ' message(s) found.' . PHP_EOL;
-		} catch (ConnectionFailedException | GetMessagesFailedException | InvalidWhereQueryCriteriaException $e) {
-			report($e);
-		} finally {
-			return $messages->toBase();
-		}
-	}
+            $messages = $folder->messages()
+                ->all()
+                ->when($read,
+                    fn (WhereQuery $query) => $query->seen(),
+                    fn (WhereQuery $query) => $query->unseen(),
+                )
+                ->limit(self::BATCH_LIMIT)
+                ->get();
+
+            echo count($messages) . ' message(s) found.' . PHP_EOL;
+        } catch (ConnectionFailedException | GetMessagesFailedException | FolderFetchingException | RuntimeException $e) {
+            report($e);
+        } finally {
+            return $messages->toBase();
+        }
+
+    }
 }

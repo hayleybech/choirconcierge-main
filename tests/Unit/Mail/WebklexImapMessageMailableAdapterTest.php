@@ -7,6 +7,8 @@ use App\Mail\WebklexImapMessageMailableAdapter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery\MockInterface;
 use Tests\TestCase;
+use Webklex\PHPIMAP\Address;
+use Webklex\PHPIMAP\Attribute;
 use Webklex\PHPIMAP\Message;
 
 /**
@@ -93,32 +95,32 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
         $recipients = array_merge(
             [
                 'to' => [
-                    (object) [
+                    new Address((object) [
                         'mail' => 'to@example.com',
                         'personal' => 'Name To',
-                    ],
+                    ]),
                 ],
                 'cc' => [
-                    (object) [
+                    new Address((object) [
                         'mail' => 'cc@example.com',
                         'personal' => 'Name Cc',
-                    ],
+                    ]),
                 ],
                 'from' => [
-                    (object) [
+                    new Address((object) [
                         'mail' => 'to@example.com',
                         'personal' => 'Name To',
-                    ],
+                    ]),
                 ],
             ],
             $test_recipients,
         );
 
         return $this->mock(Message::class, function (MockInterface $mock) use ($recipients) {
-            $mock->shouldReceive('getTo')->andReturn($recipients['to']);
-            $mock->shouldReceive('getCc')->andReturn($recipients['cc']);
-            $mock->shouldReceive('getFrom')->andReturn($recipients['from']);
-            $mock->shouldReceive('getSubject')->andReturn('A Test Subject');
+            $mock->shouldReceive('getTo')->andReturn(new Attribute('to', $recipients['to']));
+            $mock->shouldReceive('getCc')->andReturn(new Attribute('cc', $recipients['cc']));
+            $mock->shouldReceive('getFrom')->andReturn(new Attribute('from', $recipients['from']));
+            $mock->shouldReceive('getSubject')->andReturn(new Attribute('subject', 'A Test Subject'));
             $mock->shouldReceive('getTextBody')->andReturn('Hello');
             $mock->shouldReceive('getHTMLBody')->andReturn('<html>Hello</html>');
             $mock->shouldReceive('getAttachments')->andReturn([]);
