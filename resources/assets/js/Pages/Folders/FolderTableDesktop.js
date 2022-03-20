@@ -37,7 +37,7 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                             <DateTag date={folder.created_at} />
                         </TableCell>
                         <TableCell>
-                            {permissions['folders_delete'] && (
+                            {permissions['delete_folder'] && (
                                 <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline">
                                     <Icon icon="times" />
                                 </Button>
@@ -61,7 +61,7 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                                 <DateTag date={document.created_at} />
                             </TableCell>
                             <TableCell>
-                                {permissions['documents_delete'] && (
+                                {permissions['delete_document'] && (
                                     <Button onClick={() => setDeletingDocument(document)} variant="danger-outline">
                                         <Icon icon="times" />
                                     </Button>
