@@ -1,110 +1,83 @@
 <?php
-
-namespace Tests\Feature\Http\Controllers;
-
 use App\Models\Singer;
 use App\Models\User;
-use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia;
-use Tests\TestCase;
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\get;
+use function Pest\Laravel\post;
 
-/**
- * @see \App\Http\Controllers\AccountController
- */
-class AccountControllerTest extends TestCase
-{
-    use RefreshDatabase, WithFaker;
+/** @see \App\Http\Controllers\AccountController */
 
-    /**
-     * @test
-     */
-    public function edit_renders_the_template(): void
-    {
-        $this->actingAs(User::factory()->has(Singer::factory())->create());
+uses(RefreshDatabase::class, WithFaker::class);
 
-        $this->get(the_tenant_route('accounts.edit'))
-            ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
-                ->component('Account/Edit')
-                ->has('user'));
-    }
+test('edit@ renders the template', function() {
+    actingAs(User::factory()->has(Singer::factory())->create());
 
-    /**
-     * @test
-     * @dataProvider profileProvider
-     */
-    public function update_saves_the_user_details($getData): void
-    {
-        $user = User::factory()->has(Singer::factory())->create();
-        $this->actingAs($user);
+    get(the_tenant_route('accounts.edit'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Account/Edit')
+            ->has('user'));
+});
 
-        $data = $getData();
-        $response = $this->post(the_tenant_route('accounts.update'), $data);
+test('update@ saves the user details', function ($data) {
+    $user = User::factory()->has(Singer::factory())->create();
+    actingAs($user);
 
-        $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('users', Arr::except($data, ['password_confirmation', 'password']));
-        $response->assertRedirect(the_tenant_route('singers.show', $user->singer));
-    }
+    post(the_tenant_route('accounts.update'), $data)
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(the_tenant_route('singers.show', $user->singer));
 
-    /**
-     * @test
-     * @dataProvider profileProvider
-     */
-    public function update_saves_the_user_password($getData): void
-    {
-        $user = User::factory()->has(Singer::factory())->create();
-        $this->actingAs($user);
+    assertDatabaseHas('users', Arr::except($data, ['password_confirmation', 'password']));
+})->with('profiles');
 
-        $data = $getData();
-        $response = $this->post(the_tenant_route('accounts.update'), $data);
+test('update@ saves the user password', function ($data) {
+    $user = User::factory()->has(Singer::factory())->create();
+    actingAs($user);
 
-        $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('users', Arr::except($data, ['password_confirmation', 'password']));
+    post(the_tenant_route('accounts.update'), $data)
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(the_tenant_route('singers.show', $user->singer));
 
-        $user->refresh();
-        $this->assertTrue(Hash::check($data['password'], $user->password));
+    assertDatabaseHas('users', Arr::except($data, ['password_confirmation', 'password']));
 
-        $response->assertRedirect(the_tenant_route('singers.show', $user->singer));
-    }
+    $user->refresh();
+    expect(Hash::check($data['password'], $user->password))->toBeTrue();
+})->with('profiles');
 
-    public function profileProvider(): array
-    {
+dataset('profiles', [
+    function () {
+        $this->setUpFaker();
+        $password = Str::random(8);
+
         return [
-            [
-                function () {
-                    $this->setUpFaker();
-                    $password = Str::random(8);
-
-                    return [
-                        'first_name' => $this->faker->firstName(),
-                        'last_name' => $this->faker->lastName(),
-                        'pronouns' => $this->faker->sentence(),
-                        'email' => $this->faker->email(),
-                        'password' => $password,
-                        'password_confirmation' => $password,
-                        'dob' => Carbon::instance($this->faker->dateTimeBetween('-100 years', '-5 years'))->format(
-                            'Y-m-d',
-                        ),
-                        'phone' => $this->faker->phoneNumber(),
-                        'ice_name' => $this->faker->name(),
-                        'ice_phone' => $this->faker->phoneNumber(),
-                        'address_street_1' => $this->faker->streetAddress(),
-                        'address_street_2' => $this->faker->secondaryAddress(),
-                        'address_suburb' => $this->faker->city(),
-                        'address_state' => $this->faker->stateAbbr(),
-                        'address_postcode' => $this->faker->numerify('####'),
-                        'profession' => $this->faker->sentence(),
-                        'skills' => $this->faker->sentence(),
-                        'height' => $this->faker->randomFloat(2, 0, 300),
-                        'bha_id' => $this->faker->numerify('####'),
-                    ];
-                },
-            ],
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'pronouns' => $this->faker->sentence(),
+            'email' => $this->faker->email(),
+            'password' => $password,
+            'password_confirmation' => $password,
+            'dob' => Carbon::instance($this->faker->dateTimeBetween('-100 years', '-5 years'))->format(
+                'Y-m-d',
+            ),
+            'phone' => $this->faker->phoneNumber(),
+            'ice_name' => $this->faker->name(),
+            'ice_phone' => $this->faker->phoneNumber(),
+            'address_street_1' => $this->faker->streetAddress(),
+            'address_street_2' => $this->faker->secondaryAddress(),
+            'address_suburb' => $this->faker->city(),
+            'address_state' => $this->faker->stateAbbr(),
+            'address_postcode' => $this->faker->numerify('####'),
+            'profession' => $this->faker->sentence(),
+            'skills' => $this->faker->sentence(),
+            'height' => $this->faker->randomFloat(2, 0, 300),
+            'bha_id' => $this->faker->numerify('####'),
         ];
-    }
-}
+    },
+]);

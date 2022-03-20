@@ -47,10 +47,12 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "nunomaduro/larastan": "^1.0",
+        "pestphp/pest": "^1.21",
+        "pestphp/pest-plugin-laravel": "^1.2",
         "phpunit/php-code-coverage": "^9.2",
         "phpunit/phpunit": "^9.5.10",
-        "wnx/laravel-stats": "^2.8",
-        "spatie/laravel-ignition": "^1.0"
+        "spatie/laravel-ignition": "^1.0",
+        "wnx/laravel-stats": "^2.8"
     },
     "autoload": {
         "files": [
