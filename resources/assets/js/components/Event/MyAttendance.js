@@ -1,17 +1,11 @@
 import React from 'react';
-import SectionTitle from "../SectionTitle";
-import SectionHeader from "../SectionHeader";
 import AddToCalendarDropdown from "./AddToCalendarDropdown";
 import RsvpTag from "./RsvpTag";
 import MyRsvpButtons from "./MyRsvpButtons";
+import CollapsePanel from "../CollapsePanel";
 
 const MyAttendance = ({ event, addToCalendarLinks }) => (
-    <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <SectionHeader>
-            <SectionTitle>My Attendance</SectionTitle>
-        </SectionHeader>
-
+    <CollapsePanel>
         <h3 className="text-lg mt-3 mb-1">RSVP</h3>
         <p className="mb-2">
             <span className="mr-2">Your response:</span>
@@ -35,7 +29,7 @@ const MyAttendance = ({ event, addToCalendarLinks }) => (
                 </p>
             </>
         }
-    </div>
+    </CollapsePanel>
 );
 
 export default MyAttendance;
