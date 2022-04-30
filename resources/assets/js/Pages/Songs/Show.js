@@ -17,8 +17,11 @@ import {PlayerContext} from "../../contexts/player-context";
 import SongStatus from "../../SongStatus";
 import Icon from "../../components/Icon";
 import Prose from "../../components/Prose";
-import SectionTitle from "../../components/SectionTitle";
-import SectionHeader from "../../components/SectionHeader";
+import { Disclosure } from "@headlessui/react";
+import ButtonLink from "../../components/inputs/ButtonLink";
+import CollapseHeader from "../../components/CollapseHeader";
+import CollapseTitle from "../../components/CollapseTitle";
+import CollapsePanel from "../../components/CollapsePanel";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const player = useContext(PlayerContext);
@@ -119,18 +122,32 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                     )}
 
                     <div className="sm:col-span-1 sm:order-2 xl:order-3 sm:border-l sm:border-l-gray-300 sm:divide-y sm:divide-y-gray-300">
+                        {[
+                            { title: 'Song Description', show: true, defaultOpen: true, content: <SongDescription description={song.description} /> },
+                            { title: 'My Learning Status', show: true, content: <MyLearningStatus song={song} /> },
+                            {
+                                title: 'Learning Summary',
+                                show: song.can['update_song'],
+                                action: <EditLearningSummaryButton song={song} />,
+                                content: <LearningSummary status_count={status_count} voice_parts_count={voice_parts_count} song={song} />,
+                            },
+                        ].map(({ title, show, defaultOpen, action, content }) => (
+                            <Disclosure defaultOpen={defaultOpen}>
+                                {({ open }) => (show && <>
+                                    <CollapseHeader>
+                                        <Disclosure.Button>
+                                            <CollapseTitle open={open}>{title}</CollapseTitle>
+                                        </Disclosure.Button>
 
-                        <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <SectionHeader>
-                                <SectionTitle>Song Description</SectionTitle>
-                            </SectionHeader>
+                                        {action}
+                                    </CollapseHeader>
 
-                            <Prose content={song.description ?? 'No description'} className="mb-8" />
-                        </div>
-
-                        <MyLearningStatus song={song} />
-
-                        { song.can['update_song'] && <LearningSummary status_count={status_count} voice_parts_count={voice_parts_count} song={song} />}
+                                    <Disclosure.Panel>
+                                        {content}
+                                    </Disclosure.Panel>
+                                </>)}
+                            </Disclosure>
+                        ))}
 
                     </div>
 
@@ -143,3 +160,12 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
 Show.layout = page => <Layout children={page} />
 
 export default Show;
+
+const SongDescription = ({ description }) => <CollapsePanel><Prose content={description ?? 'No description'} className="mb-8" /></CollapsePanel>;
+
+const EditLearningSummaryButton = ({ song }) => (
+    <ButtonLink variant="primary" size="sm" href={route('songs.singers.index', song)}>
+        <Icon icon="edit" />
+        Edit
+    </ButtonLink>
+);
