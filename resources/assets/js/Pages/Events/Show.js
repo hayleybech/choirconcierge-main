@@ -4,17 +4,18 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import DateTag from "../../components/DateTag";
 import Badge from "../../components/Badge";
-import SectionTitle from "../../components/SectionTitle";
 import GoogleMap from "../../components/GoogleMap";
 import MyAttendance from "../../components/Event/MyAttendance";
 import RsvpSummary from "../../components/Event/RsvpSummary";
 import AttendanceSummary from "../../components/Event/AttendanceSummary";
-import SectionHeader from "../../components/SectionHeader";
 import {usePage} from "@inertiajs/inertia-react";
 import Icon from "../../components/Icon";
 import EditRepeatingEventDialog from "../../components/Event/EditRepeatingEventDialog";
 import DeleteDialog from "../../components/DeleteDialog";
 import Prose from "../../components/Prose";
+import ButtonLink from "../../components/inputs/ButtonLink";
+import CollapsePanel from "../../components/CollapsePanel";
+import CollapseGroup from "../../components/CollapseGroup";
 
 const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePartsAttendanceCount, addToCalendarLinks }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -55,41 +56,26 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
 
             <EditRepeatingEventDialog isOpen={editDialogIsOpen} setIsOpen={setEditDialogIsOpen} event={event} />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 h-full sm:divide-x sm:divide-x-gray-300">
+            <div className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-4 h-full divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
 
-                <div className="sm:col-span-1 xl:col-span-3 flex flex-col justify-stretch divide-y divide-y-gray-300">
-
-                    <div className="py-6 px-4 sm:px-6 lg:px-8">
-                        <SectionHeader>
-                            <SectionTitle>Event Location</SectionTitle>
-                        </SectionHeader>
-                        <p><strong>{event.location_name}</strong></p>
-                        <p className="mb-8">{event.location_address}</p>
-
-                        <GoogleMap placeId={event.location_place_id} />
-                    </div>
-
-                    <div className="py-6 px-4 sm:px-6 lg:px-8">
-                        <SectionHeader>
-                            <SectionTitle>Event Description</SectionTitle>
-                        </SectionHeader>
-
-                        <Prose content={event.description} className="mb-8" />
-
-                        <p className="text-sm text-gray-500 my-2">Choir's Timezone: {pageProps.tenant.timezone_label}</p>
-                    </div>
-
+                <div className="sm:col-span-1 xl:col-span-3 divide-y divide-y-gray-300">
+                    <CollapseGroup items={[
+                        { title: 'Event Description', show: true, content: <EventDescription description={event.description} timezone={pageProps.tenant.timezone_label} />},
+                        { title: 'Event Location', show: true, defaultOpen: true, content: <EventLocation event={event} />},
+                    ]} />
                 </div>
 
-                <div className="sm:col-span-1 sm:divide-y sm:divide-y-gray-300">
-
-                    <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />
-
-                    {event.can['update_event'] && <>
-                        <RsvpSummary event={event} rsvpCount={rsvpCount} voicePartsRsvpCount={voicePartsRsvpCount} />
-                        <AttendanceSummary event={event} attendanceCount={attendanceCount} voicePartsAttendanceCount={voicePartsAttendanceCount}/>
-                    </>}
-
+                <div className="sm:col-span-1 divide-y divide-y-gray-300">
+                    <CollapseGroup items={[
+                        { title: 'My Attendance', show: true, content: <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />},
+                        { title: 'RSVP Summary', show: event.can['update_event'], content: <RsvpSummary event={event} rsvpCount={rsvpCount} voicePartsRsvpCount={voicePartsRsvpCount} /> },
+                        {
+                            title: 'Attendance Summary',
+                            show: event.can['update_event'],
+                            action: <EditAttendanceButton event={event} />,
+                            content: <AttendanceSummary event={event} attendanceCount={attendanceCount} voicePartsAttendanceCount={voicePartsAttendanceCount}/>,
+                        },
+                    ]} />
                 </div>
 
             </div>
@@ -100,3 +86,28 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
 Show.layout = page => <Layout children={page} />
 
 export default Show;
+
+const EventDescription = ({ description, timezone }) => (
+    <CollapsePanel>
+        <Prose content={description} className="mb-8" />
+
+        <p className="text-sm text-gray-500 my-2">Choir's Timezone: {timezone}</p>
+    </CollapsePanel>
+);
+
+const EventLocation = ({ event }) => (
+    <CollapsePanel>
+        <p><strong>{event.location_name}</strong></p>
+        <p className="mb-8">{event.location_address}</p>
+
+        <GoogleMap placeId={event.location_place_id} />
+    </CollapsePanel>
+);
+
+
+const EditAttendanceButton = ({ event }) => (
+    <ButtonLink variant="primary" size="sm" href={route('events.attendances.index', [event])}>
+        <Icon icon="edit" />
+        Edit
+    </ButtonLink>
+);

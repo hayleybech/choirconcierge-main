@@ -14,10 +14,12 @@ import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 import SongStatus from "../../SongStatus";
+import RichTextInput from "../../components/inputs/RichTextInput";
 
 const SongForm = ({ categories, statuses, pitches, song}) => {
     const { data, setData, post, put, processing, errors } = useForm({
         title: song?.title ?? '',
+        description: song?.description ?? '',
         categories: song?.categories.map(category => category.id) ?? [],
         status: song?.status.id ?? null,
         pitch_blown: song?.pitch_blown ?? 0,
@@ -39,6 +41,12 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
                         <Label label="Song Title" forInput="title" />
                         <TextInput name="title" value={data.title} updateFn={value => setData('title', value)} hasErrors={ !! errors['title'] } />
                         {errors.title && <Error>{errors.title}</Error>}
+                    </div>
+
+                    <div className="sm:col-span-6">
+                        <Label label="Description" forInput="description" />
+                        <RichTextInput value={data.description} updateFn={value => setData('description', value)} />
+                        {errors.description && <Error>{errors.description}</Error>}
                     </div>
 
                     <div className="sm:col-span-6">

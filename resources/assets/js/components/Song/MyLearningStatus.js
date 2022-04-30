@@ -4,14 +4,11 @@ import LearningStatusTag from "./LearningStatusTag";
 import SectionTitle from "../SectionTitle";
 import SectionHeader from "../SectionHeader";
 import LearningStatus from "../../LearningStatus";
+import Prose from "../Prose";
+import CollapsePanel from "../CollapsePanel";
 
 const MyLearningStatus = ({ song }) => (
-    <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <SectionHeader>
-            <SectionTitle>My Learning Status</SectionTitle>
-        </SectionHeader>
-
+    <CollapsePanel>
         <LearningStatusTag status={new LearningStatus(song.my_learning.status)} />
 
         {song.my_learning.status === 'not-started' && (
@@ -20,7 +17,7 @@ const MyLearningStatus = ({ song }) => (
         {song.my_learning.status !== 'not-started' && (
             <Button href={route('songs.my-learning.update', song)} method="post" data={{ status: 'not-started' }} size="sm" className="mt-2">I'm Still Learning</Button>
         )}
-    </div>
+    </CollapsePanel>
 );
 
 export default MyLearningStatus;
