@@ -13,11 +13,9 @@ import Icon from "../../components/Icon";
 import EditRepeatingEventDialog from "../../components/Event/EditRepeatingEventDialog";
 import DeleteDialog from "../../components/DeleteDialog";
 import Prose from "../../components/Prose";
-import {Disclosure} from "@headlessui/react";
-import CollapseHeader from "../../components/CollapseHeader";
-import CollapseTitle from "../../components/CollapseTitle";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CollapsePanel from "../../components/CollapsePanel";
+import CollapseGroup from "../../components/CollapseGroup";
 
 const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePartsAttendanceCount, addToCalendarLinks }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -58,37 +56,17 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
 
             <EditRepeatingEventDialog isOpen={editDialogIsOpen} setIsOpen={setEditDialogIsOpen} event={event} />
 
-            <div className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-4 h-full sm:divide-x sm:divide-x-gray-300">
+            <div className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-4 h-full divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
 
-                <div className="flex flex-col justify-stretch sm:col-span-1 xl:col-span-3 divide-y divide-y-gray-300">
-
-                    <div className="sm:col-span-1 sm:divide-y sm:divide-y-gray-300">
-                        {[
-                            { title: 'Event Description', show: true, content: <EventDescription description={event.description} timezone={pageProps.tenant.timezone_label} />},
-                            { title: 'Event Location', show: true, defaultOpen: true, content: <EventLocation event={event} />},
-                        ].map(({ title, show, defaultOpen, action, content }) => (
-                            <Disclosure defaultOpen={defaultOpen}>
-                                {({ open }) => (show && <>
-                                    <CollapseHeader>
-                                        <Disclosure.Button>
-                                            <CollapseTitle open={open}>{title}</CollapseTitle>
-                                        </Disclosure.Button>
-
-                                        {action}
-                                    </CollapseHeader>
-
-                                    <Disclosure.Panel>
-                                        {content}
-                                    </Disclosure.Panel>
-                                </>)}
-                            </Disclosure>
-                        ))}
-                    </div>
-
+                <div className="sm:col-span-1 xl:col-span-3 divide-y divide-y-gray-300">
+                    <CollapseGroup items={[
+                        { title: 'Event Description', show: true, content: <EventDescription description={event.description} timezone={pageProps.tenant.timezone_label} />},
+                        { title: 'Event Location', show: true, defaultOpen: true, content: <EventLocation event={event} />},
+                    ]} />
                 </div>
 
-                <div className="sm:col-span-1 sm:divide-y sm:divide-y-gray-300">
-                    {[
+                <div className="sm:col-span-1 divide-y divide-y-gray-300">
+                    <CollapseGroup items={[
                         { title: 'My Attendance', show: true, content: <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />},
                         { title: 'RSVP Summary', show: event.can['update_event'], content: <RsvpSummary event={event} rsvpCount={rsvpCount} voicePartsRsvpCount={voicePartsRsvpCount} /> },
                         {
@@ -97,23 +75,7 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
                             action: <EditAttendanceButton event={event} />,
                             content: <AttendanceSummary event={event} attendanceCount={attendanceCount} voicePartsAttendanceCount={voicePartsAttendanceCount}/>,
                         },
-                    ].map(({ title, show, defaultOpen, action, content }) => (
-                        <Disclosure defaultOpen={defaultOpen}>
-                            {({ open }) => (show && <>
-                                <CollapseHeader>
-                                    <Disclosure.Button>
-                                        <CollapseTitle open={open}>{title}</CollapseTitle>
-                                    </Disclosure.Button>
-
-                                    {action}
-                                </CollapseHeader>
-
-                                <Disclosure.Panel>
-                                    {content}
-                                </Disclosure.Panel>
-                            </>)}
-                        </Disclosure>
-                    ))}
+                    ]} />
                 </div>
 
             </div>

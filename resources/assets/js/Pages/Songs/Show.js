@@ -17,11 +17,9 @@ import {PlayerContext} from "../../contexts/player-context";
 import SongStatus from "../../SongStatus";
 import Icon from "../../components/Icon";
 import Prose from "../../components/Prose";
-import { Disclosure } from "@headlessui/react";
 import ButtonLink from "../../components/inputs/ButtonLink";
-import CollapseHeader from "../../components/CollapseHeader";
-import CollapseTitle from "../../components/CollapseTitle";
 import CollapsePanel from "../../components/CollapsePanel";
+import CollapseGroup from "../../components/CollapseGroup";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const player = useContext(PlayerContext);
@@ -103,7 +101,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                     This action cannot be undone.
                 </DeleteDialog>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 lg:overflow-y-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 lg:overflow-y-auto divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
 
                     <div className="sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch">
                         <SongAttachmentList attachment_categories={attachment_categories} song={song} currentPdf={currentPdf} setCurrentPdf={showPdf} player={player} />
@@ -121,8 +119,8 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                     </div>
                     )}
 
-                    <div className="sm:col-span-1 sm:order-2 xl:order-3 sm:border-l sm:border-l-gray-300 sm:divide-y sm:divide-y-gray-300">
-                        {[
+                    <div className="sm:col-span-1 sm:order-2 xl:order-3">
+                        <CollapseGroup items={[
                             { title: 'Song Description', show: true, defaultOpen: true, content: <SongDescription description={song.description} /> },
                             { title: 'My Learning Status', show: true, content: <MyLearningStatus song={song} /> },
                             {
@@ -131,24 +129,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                                 action: <EditLearningSummaryButton song={song} />,
                                 content: <LearningSummary status_count={status_count} voice_parts_count={voice_parts_count} song={song} />,
                             },
-                        ].map(({ title, show, defaultOpen, action, content }) => (
-                            <Disclosure defaultOpen={defaultOpen}>
-                                {({ open }) => (show && <>
-                                    <CollapseHeader>
-                                        <Disclosure.Button>
-                                            <CollapseTitle open={open}>{title}</CollapseTitle>
-                                        </Disclosure.Button>
-
-                                        {action}
-                                    </CollapseHeader>
-
-                                    <Disclosure.Panel>
-                                        {content}
-                                    </Disclosure.Panel>
-                                </>)}
-                            </Disclosure>
-                        ))}
-
+                        ]} />
                     </div>
 
                 </div>
