@@ -27,6 +27,7 @@ class SongRequest extends FormRequest
     {
         return [
             'title' => ['required', 'max:255'],
+            'description' => ['nullable', 'max:5000'],
             'categories' => ['required', 'exists:song_categories,id'],
             'status' => ['required', 'exists:song_statuses,id'],
             'pitch_blown' => ['required'],
