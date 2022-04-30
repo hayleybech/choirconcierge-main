@@ -16,6 +16,9 @@ import {useMediaQuery} from "react-responsive";
 import {PlayerContext} from "../../contexts/player-context";
 import SongStatus from "../../SongStatus";
 import Icon from "../../components/Icon";
+import Prose from "../../components/Prose";
+import SectionTitle from "../../components/SectionTitle";
+import SectionHeader from "../../components/SectionHeader";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const player = useContext(PlayerContext);
@@ -116,6 +119,14 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                     )}
 
                     <div className="sm:col-span-1 sm:order-2 xl:order-3 sm:border-l sm:border-l-gray-300 sm:divide-y sm:divide-y-gray-300">
+
+                        <div className="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <SectionHeader>
+                                <SectionTitle>Song Description</SectionTitle>
+                            </SectionHeader>
+
+                            <Prose content={song.description ?? 'No description'} className="mb-8" />
+                        </div>
 
                         <MyLearningStatus song={song} />
 

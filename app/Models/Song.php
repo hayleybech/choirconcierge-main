@@ -21,6 +21,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Columns
  * @property int $id
  * @property string $title
+ * @property string $description
  * @property string $pitch_blown
  * @property int $status_id
  * @property Carbon $created_at
@@ -48,7 +49,7 @@ class Song extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'pitch_blown', 'show_for_prospects', 'suppress_email'];
+    protected $fillable = ['title', 'pitch_blown', 'show_for_prospects', 'suppress_email', 'description'];
 
     protected $with = ['categories', 'status'];
 
