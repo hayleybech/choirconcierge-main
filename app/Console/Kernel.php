@@ -69,14 +69,17 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(ClearDuplicateEmails::class)->daily();
 
-        $schedule
-            ->command('backup:clean')
+        $schedule->command('telescope:prune --hours=72')
             ->daily()
-            ->at('18:00');
-        $schedule
-            ->command('backup:run')
+            ->at('16:00'); // Midnight Perth
+
+        $schedule->command('backup:clean')
             ->daily()
-            ->at('19:00');
+            ->at('18:00'); // 2 am Perth
+
+        $schedule->command('backup:run')
+            ->daily()
+            ->at('19:00'); // 3 am Perth
     }
 
     /**
