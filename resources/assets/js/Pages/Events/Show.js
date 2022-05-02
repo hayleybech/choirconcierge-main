@@ -68,10 +68,10 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
                 <div className="sm:col-span-1 divide-y divide-y-gray-300">
                     <CollapseGroup items={[
                         { title: 'My Attendance', show: true, content: <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />},
-                        { title: 'RSVP Summary', show: event.can['update_event'], content: <RsvpSummary event={event} rsvpCount={rsvpCount} voicePartsRsvpCount={voicePartsRsvpCount} /> },
+                        { title: 'RSVP Summary', show: pageProps.can['list_attendances'], content: <RsvpSummary event={event} rsvpCount={rsvpCount} voicePartsRsvpCount={voicePartsRsvpCount} /> },
                         {
                             title: 'Attendance Summary',
-                            show: event.can['update_event'],
+                            show: pageProps.can['create_attendance'],
                             action: <EditAttendanceButton event={event} />,
                             content: <AttendanceSummary event={event} attendanceCount={attendanceCount} voicePartsAttendanceCount={voicePartsAttendanceCount}/>,
                         },
