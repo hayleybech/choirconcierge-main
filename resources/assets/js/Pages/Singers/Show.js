@@ -109,7 +109,7 @@ const Show = ({ singer, categories }) => {
             <AppHead title={`${singer.user.name} - Singers`} />
             <PageHeader
                 title={<>{singer.user.name} {singer.user.pronouns && <Pronouns pronouns={singer.user.pronouns} />}</>}
-                image={singer.user.avatar_url}
+                image={singer.user.profile_avatar_url}
                 meta={[
                     <>{singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}</>,
                     <SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />,
