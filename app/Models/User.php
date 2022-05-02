@@ -105,7 +105,7 @@ class User extends Authenticatable implements HasMedia
 
     public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
 
-    protected $appends = ['name', 'avatar_url'];
+    protected $appends = ['name', 'avatar_url', 'profile_avatar_url'];
 
     public $notify_channels = ['database', 'mail'];
 
@@ -193,9 +193,9 @@ class User extends Authenticatable implements HasMedia
                     ->height(50)
                     ->crop(Manipulations::CROP_CENTER, 50, 50);
                 $this->addMediaConversion('profile')
-                    ->width(400)
-                    ->height(600)
-                    ->crop(Manipulations::CROP_CENTER, 400, 600);
+                    ->width(200)
+                    ->height(200)
+                    ->crop(Manipulations::CROP_CENTER, 200, 200);
             });
     }
 
@@ -215,6 +215,11 @@ class User extends Authenticatable implements HasMedia
     public function getAvatarUrlAttribute(): string
     {
         return $this->getFirstMediaUrl('avatar', 'thumb');
+    }
+
+    public function getProfileAvatarUrlAttribute(): string
+    {
+        return $this->getFirstMediaUrl('avatar', 'profile');
     }
 
     // @todo make separate user vs singer welcome email
