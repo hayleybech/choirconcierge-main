@@ -11,8 +11,8 @@ const SidebarDesktop = ({ navigation, switchChoirButton }) => (
                 <img src="/img/logo.svg" alt="Choir Concierge" className="h-12 w-auto" />
             </Link>
 
-            <Link href={route('dash')} className="flex justify-center mb-4 py-4 px-6 bg-white border-l border-r border-gray-300">
-                <img src="/tenancy/assets/choir-logo.png" className="max-h-12 w-auto" />
+            <Link href={route('dash')} className="flex justify-center mb-4 py-4 px-8 bg-white border-l border-r border-gray-300">
+                <img src="/tenancy/assets/choir-logo.png" className="max-h-32 w-auto" />
             </Link>
 
             {switchChoirButton}
