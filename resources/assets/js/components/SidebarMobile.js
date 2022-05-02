@@ -56,7 +56,7 @@ const SidebarMobile = ({ navigation, open, setOpen, switchChoirButton }) => (
 
                     <div className="shrink-0 flex justify-center items-center px-4 bg-gray-50 mb-4">
                         <Link href={route('dash')} className="flex justify-center py-4 px-6 bg-gray-50">
-                            <img src="/tenancy/assets/choir-logo.png" className="max-h-12 w-auto" />
+                            <img src="/tenancy/assets/choir-logo.png" className="max-h-32 w-auto" />
                         </Link>
                     </div>
 
