@@ -83,6 +83,8 @@ class Event extends Model
         'repeat_until',
         'repeat_frequency_amount',
         'repeat_frequency_unit',
+        'created_at',
+        'updated_at',
     ];
 
     protected $with = ['type'];
