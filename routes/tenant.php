@@ -21,6 +21,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RsvpController;
 use App\Http\Controllers\Search\FindSingerController;
 use App\Http\Controllers\Search\GlobalFindUserController;
+use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SingerPlacementController;
 use App\Http\Controllers\SongAttachmentController;
@@ -128,6 +129,8 @@ Route::middleware([
     });
 
     // Mailing Lists (User Groups) module
+    Route::get('/groups/send', [SendEmailController::class, 'create'])->name('groups.send.create');
+    Route::post('/groups/send', [SendEmailController::class, 'store'])->name('groups.send.store');
     Route::resource('groups', UserGroupController::class)->middleware(['auth']);
 
     /** Mailbox **/
