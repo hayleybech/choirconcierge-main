@@ -38,7 +38,7 @@ class IncomingMessage extends Mailable
         $this->getMatchingGroups()
             ->flatten(1)
             ->filter(fn (UserGroup $group) => $this->authoriseSenderForGroup($group))
-            ->each(fn (UserGroup $group) => CloneMessage::forGroup($this, $group));
+            ->each(fn (UserGroup $group) => CloneMessage::forGroup(clone $this, $group));
     }
 
     public function getMatchingGroups(): Collection

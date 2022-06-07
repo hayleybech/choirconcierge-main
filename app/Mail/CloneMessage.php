@@ -12,7 +12,7 @@ class CloneMessage
     public static function forGroup(Mailable $message, UserGroup $group): void
     {
         $group->get_all_recipients()
-            ->each(fn ($user) => self::resendToUser($message, $user, $group));
+            ->each(fn ($user) => self::resendToUser(clone $message, $user, $group));
     }
 
     private static function resendToUser(Mailable $message, User $user, UserGroup $group): void
@@ -40,6 +40,6 @@ class CloneMessage
         $message->to = [];
         Mail::to($user)
             ->cc($group->email) // Required for recipients to reply-all
-            ->send(clone $message);
+            ->send($message);
     }
 }
