@@ -70,13 +70,7 @@ class IncomingMessage extends Mailable
 
     private function authoriseSenderForGroup(UserGroup $group): bool
     {
-        if (
-            $group->authoriseSender(
-                User::firstWhere([
-                    ['email', '=', $this->from[0]['address']],
-                ]),
-            )
-        ) {
+        if ($group->authoriseSender(User::firstWhere('email', $this->from[0]['address']))) {
             return true;
         }
 
