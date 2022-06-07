@@ -14,8 +14,6 @@ class IncomingMessage extends Mailable
 
     public $content_text;
 
-    private $original_sender;
-
     /**
      * Build the message.
      *
@@ -37,24 +35,10 @@ class IncomingMessage extends Mailable
      */
     public function resendToGroups(): void
     {
-        $this->original_sender = $this->from[0];
-
-        // Clear replyTo, then put the original sender as the reply-to
-        $this->replyTo = [
-            [
-                'address' => $this->original_sender['address'],
-                'name' => $this->original_sender['name'] ?? null,
-            ],
-        ];
-
         $this->getMatchingGroups()
             ->flatten(1)
             ->filter(fn (UserGroup $group) => $this->authoriseSenderForGroup($group))
-            ->each(
-                fn (UserGroup $group) => $group
-                    ->get_all_recipients()
-                    ->each(fn ($user) => $this->resendToUser($user, $group)),
-            );
+            ->each(fn (UserGroup $group) => CloneMessage::forGroup(clone $this, $group));
     }
 
     public function getMatchingGroups(): Collection
@@ -67,7 +51,7 @@ class IncomingMessage extends Mailable
         ])->map(
             fn (Collection $recipients) => $recipients
                 ->map(fn ($recipient) => $this->getGroupByEmail($recipient['address']))
-                ->filter(fn ($recipient) => $recipient),
+                ->filter(),
         );
 
         // Allow reply-all by cloning emails CCd to the group
@@ -79,46 +63,19 @@ class IncomingMessage extends Mailable
 
     private function getGroupByEmail(string $email): ?UserGroup
     {
-        [$slug, $host] = explode('@', $email);
-
-        return UserGroup::withoutTenancy()->firstWhere([
-            ['tenant_id', '=', explode('.', $host)[0]],
-            ['slug', '=', $slug],
-        ]);
+        return UserGroup::withoutTenancy()
+            ->byEmail($email)
+            ->first();
     }
 
     private function authoriseSenderForGroup(UserGroup $group): bool
     {
-        if (
-            $group->authoriseSender(
-                User::firstWhere([
-                    ['email', '=', $this->original_sender['address']],
-                ]),
-            )
-        ) {
+        if ($group->authoriseSender(User::firstWhere('email', $this->from[0]['address']))) {
             return true;
         }
 
-        Mail::to($this->original_sender['address'])->send(new NotPermittedSenderMessage($group));
+        Mail::to($this->from[0]['address'])->send(new NotPermittedSenderMessage($group));
 
         return false;
-    }
-
-    private function resendToUser(User $user, UserGroup $group): void
-    {
-        // Clear from, then put the mailing list as the clone sender
-        // e.g. From: Mr Director via Active Members <active@example.choirconcierge.com>
-        $this->from = [
-            [
-                'address' => $group->email,
-                'name' => ($this->original_sender['name'] ?? $this->original_sender['address']).' via '.$group->title,
-            ],
-        ];
-
-        // Clear 'to', then put the group member as the recipient
-        $this->to = [];
-        Mail::to($user)
-            ->cc($group->email) // Required for recipients to reply-all
-            ->send(clone $this);
     }
 }
