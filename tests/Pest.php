@@ -11,6 +11,9 @@
 |
 */
 
+use App\Models\Tenant;
+use Illuminate\Support\Collection;
+
 uses(Tests\TestCase::class)->in('Feature');
 
 /*
@@ -39,7 +42,21 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function createTestTenants(int $numTenants = 1): Collection
 {
-    // ..
+    return Collection::times($numTenants, function ($index) {
+        return [
+            'test-tenant-'.$index,
+            'Test Tenant '.$index,
+            'Australia/Perth',
+        ];
+    })
+        ->map(function ($data) {
+            $tenant = Tenant::create(...$data);
+            $tenant->domains()->create(['domain' => $tenant->id]);
+
+            tenancy()->end();
+
+            return $tenant;
+        });
 }

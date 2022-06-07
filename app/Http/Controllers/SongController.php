@@ -69,7 +69,7 @@ class SongController extends Controller
         ]);
     }
 
-    public function create(): View|InertiaResponse
+    public function create(): InertiaResponse
     {
         $this->authorize('create', Song::class);
 

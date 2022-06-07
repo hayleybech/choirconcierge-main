@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -128,6 +129,16 @@ class UserGroup extends Model
     public function recipient_singer_categories(): MorphToMany
     {
         return $this->morphedByMany(SingerCategory::class, 'memberable', 'group_members', 'group_id');
+    }
+
+    public function scopeByEmail(Builder $query, string $email): Builder
+    {
+        [$slug, $host] = explode('@', $email);
+
+        return $query->where([
+            ['tenant_id', '=', explode('.', $host)[0]],
+            ['slug', '=', $slug],
+        ]);
     }
 
     /**
