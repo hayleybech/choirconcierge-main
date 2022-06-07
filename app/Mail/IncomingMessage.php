@@ -51,7 +51,7 @@ class IncomingMessage extends Mailable
         ])->map(
             fn (Collection $recipients) => $recipients
                 ->map(fn ($recipient) => $this->getGroupByEmail($recipient['address']))
-                ->filter(fn ($recipient) => $recipient),
+                ->filter(),
         );
 
         // Allow reply-all by cloning emails CCd to the group
