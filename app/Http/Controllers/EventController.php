@@ -46,7 +46,7 @@ class EventController extends Controller
                 AllowedSort::custom('type-title', new EventTypeSort(), 'type'),
                 'created_at',
             ])
-            ->defaultSort('-start_date')
+            ->defaultSort('start_date')
             ->get();
 
         return Inertia::render('Events/Index', [
