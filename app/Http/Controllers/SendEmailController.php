@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmailForGroup;
+use App\Mail\ChoirBroadcast;
+use App\Mail\CloneMessage;
 use App\Models\UserGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,6 +32,16 @@ class SendEmailController extends Controller
             'body' => ['required', 'max:5000'],
         ]);
 
+        SendEmailForGroup::dispatch(
+            (new ChoirBroadcast())
+                ->from(auth()->user()->email, auth()->user()->name)
+                ->subject($request->input('subject'))
+                ->html($request->input('body')),
+            UserGroup::find($request->input('list'))
+        );
 
+        return redirect()
+            ->route('groups.index')
+            ->with(['status' => 'Email sent! ']);
     }
 }
