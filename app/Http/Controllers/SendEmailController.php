@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Jobs\SendEmailForGroup;
 use App\Mail\ChoirBroadcast;
-use App\Mail\CloneMessage;
 use App\Models\UserGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,27 +16,33 @@ class SendEmailController extends Controller
     {
 //        $this->authorize('send', Song::class);
 
+        // @todo discuss with vic - mailing list permissions vs send email permissions
+
         return Inertia::render('MailingLists/SendEmail', [
-            'lists' => UserGroup::with('tenant')->get()->values(),
+            'lists' => [],
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-        //        $this->authorize('send', Song::class);
-
         $request->validate([
             'list' => ['required', 'exists:user_groups,id'],
             'subject' => ['required', 'max:255'],
             'body' => ['required', 'max:5000'],
         ]);
 
+        $group = UserGroup::find($request->input('list'));
+
+        if(! $group->authoriseSender(auth()->user())){
+            abort(403, 'You are not a permitted sender for this mailing list.');
+        }
+
         SendEmailForGroup::dispatch(
             (new ChoirBroadcast())
                 ->from(auth()->user()->email, auth()->user()->name)
                 ->subject($request->input('subject'))
                 ->html($request->input('body')),
-            UserGroup::find($request->input('list'))
+            $group
         );
 
         return redirect()
