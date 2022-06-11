@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -11,23 +11,24 @@ class ChoirBroadcast extends Mailable
 {
     use Queueable, SerializesModels;
 
+    private string $body;
+    private User $fromUser;
+
     /**
      * Create a new message instance.
-     *
-     * @return void
      */
-    public function __construct()
+    public function __construct(string $subject, string $body, User $fromUser)
     {
-        //
+        $this->subject($subject);
+        $this->from($fromUser->email, $fromUser->name);
+        $this->body = $body;
     }
 
     /**
      * Build the message.
-     *
-     * @return $this
      */
-    public function build()
+    public function build(): static
     {
-        return $this->view('view.name');
+        return $this->markdown('emails.broadcast', ['body' => $this->body]);
     }
 }

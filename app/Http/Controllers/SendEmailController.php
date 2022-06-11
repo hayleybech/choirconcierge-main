@@ -39,10 +39,11 @@ class SendEmailController extends Controller
         $this->authorize('sendEmailTo', $group);
 
         SendEmailForGroup::dispatch(
-            (new ChoirBroadcast())
-                ->from($request->user()->email, auth()->user()->name)
-                ->subject($request->input('subject'))
-                ->html($request->input('body')),
+            (new ChoirBroadcast(
+                $request->input('subject'),
+                $request->input('body'),
+                $request->user(),
+            )),
             $group
         );
 
