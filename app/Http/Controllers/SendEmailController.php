@@ -12,14 +12,17 @@ use Inertia\Response as InertiaResponse;
 
 class SendEmailController extends Controller
 {
-    public function create(): InertiaResponse
+    public function create(Request $request): InertiaResponse
     {
 //        $this->authorize('send', Song::class);
 
         // @todo discuss with vic - mailing list permissions vs send email permissions
 
         return Inertia::render('MailingLists/SendEmail', [
-            'lists' => [],
+            'lists' => UserGroup::with(['tenant', 'sender_roles', 'recipient_roles'])
+                ->get()
+                ->filter(fn(UserGroup $group) => $group->authoriseSender($request->user()))
+                ->values(),
         ]);
     }
 
@@ -33,13 +36,11 @@ class SendEmailController extends Controller
 
         $group = UserGroup::find($request->input('list'));
 
-        if(! $group->authoriseSender(auth()->user())){
-            abort(403, 'You are not a permitted sender for this mailing list.');
-        }
+        $this->authorize('sendEmailTo', $group);
 
         SendEmailForGroup::dispatch(
             (new ChoirBroadcast())
-                ->from(auth()->user()->email, auth()->user()->name)
+                ->from($request->user()->email, auth()->user()->name)
                 ->subject($request->input('subject'))
                 ->html($request->input('body')),
             $group
