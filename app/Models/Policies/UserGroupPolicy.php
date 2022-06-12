@@ -58,8 +58,13 @@ class UserGroupPolicy
         return false;
     }
 
-    public function sendEmailTo(User $user, UserGroup $group): bool
+    public function createBroadcast(User $user): bool
     {
-        return $group->authoriseSender($user);
+        return $user->singer->hasAbility('mailing_lists_send');
+    }
+
+    public function createBroadcastFor(User $user, UserGroup $group): bool
+    {
+        return $user->singer->hasAbility('mailing_lists_send') && $group->authoriseSender($user);
     }
 }

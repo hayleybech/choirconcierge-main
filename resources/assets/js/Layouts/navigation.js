@@ -61,7 +61,7 @@ const navigation = [
         showAsActiveForRoutes: ['groups.*'],
         items: [
             { name: 'Add New', route: 'groups.create', icon: 'fa-plus-square', can: 'create_group', showAsActiveForRoutes: ['groups.create'], },
-            { name: 'Send Email', route: 'groups.send.create', icon: 'inbox-out', can: 'create_group', showAsActiveForRoutes: ['groups.send.create'], },
+            { name: 'Send Broadcast', route: 'groups.broadcasts.create', icon: 'inbox-out', can: 'create_broadcast', showAsActiveForRoutes: ['groups.broadcasts.create'], },
         ]
     },
     {

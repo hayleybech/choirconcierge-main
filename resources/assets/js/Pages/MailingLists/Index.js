@@ -21,7 +21,7 @@ const Index = ({ lists }) => {
                 ]}
                 actions={[
                     { label: 'Add New', icon: 'plus', url: route('groups.create'), variant: 'primary', can: 'create_group' },
-                    { label: 'Send Email', icon: 'inbox-out', url: route('groups.send.create'), variant: 'secondary' },
+                    { label: 'Send Broadcast', icon: 'inbox-out', url: route('groups.broadcasts.create'), variant: 'secondary', can: 'create_broadcast' },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 

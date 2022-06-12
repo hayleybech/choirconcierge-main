@@ -10,15 +10,13 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
-class SendEmailController extends Controller
+class BroadcastController extends Controller
 {
     public function create(Request $request): InertiaResponse
     {
-//        $this->authorize('send', Song::class);
+        $this->authorize('createBroadcast', UserGroup::class);
 
-        // @todo discuss with vic - mailing list permissions vs send email permissions
-
-        return Inertia::render('MailingLists/SendEmail', [
+        return Inertia::render('MailingLists/Broadcasts/Create', [
             'lists' => UserGroup::with(['tenant', 'sender_roles', 'recipient_roles'])
                 ->get()
                 ->filter(fn(UserGroup $group) => $group->authoriseSender($request->user()))
@@ -36,7 +34,7 @@ class SendEmailController extends Controller
 
         $group = UserGroup::find($request->input('list'));
 
-        $this->authorize('sendEmailTo', $group);
+        $this->authorize('createBroadcastFor', $group);
 
         SendEmailForGroup::dispatch(
             (new ChoirBroadcast(

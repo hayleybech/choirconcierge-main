@@ -1,22 +1,22 @@
 import React from 'react'
-import Layout from "../../Layouts/Layout";
-import PageHeader from "../../components/PageHeader";
-import AppHead from "../../components/AppHead";
-import Label from "../../components/inputs/Label";
-import TextInput from "../../components/inputs/TextInput";
-import Error from "../../components/inputs/Error";
+import Layout from "../../../Layouts/Layout";
+import PageHeader from "../../../components/PageHeader";
+import AppHead from "../../../components/AppHead";
+import Label from "../../../components/inputs/Label";
+import TextInput from "../../../components/inputs/TextInput";
+import Error from "../../../components/inputs/Error";
 import {useForm} from "@inertiajs/inertia-react";
-import Form from "../../components/Form";
-import FormSection from "../../components/FormSection";
-import RichTextInput from "../../components/inputs/RichTextInput";
-import ButtonLink from "../../components/inputs/ButtonLink";
-import Button from "../../components/inputs/Button";
-import FormFooter from "../../components/FormFooter";
-import MailingListSelect from "../../components/inputs/MailingListSelect";
-import Icon from "../../components/Icon";
-import ErrorAlert from "../../components/ErrorAlert";
+import Form from "../../../components/Form";
+import FormSection from "../../../components/FormSection";
+import RichTextInput from "../../../components/inputs/RichTextInput";
+import ButtonLink from "../../../components/inputs/ButtonLink";
+import Button from "../../../components/inputs/Button";
+import FormFooter from "../../../components/FormFooter";
+import MailingListSelect from "../../../components/inputs/MailingListSelect";
+import Icon from "../../../components/Icon";
+import ErrorAlert from "../../../components/ErrorAlert";
 
-const SendEmail = ({ lists }) => {
+const Create = ({ lists }) => {
     const {data, setData, post, processing, errors} = useForm({
         subject: '',
         body: '',
@@ -25,19 +25,19 @@ const SendEmail = ({ lists }) => {
 
     function submit(e) {
         e.preventDefault();
-        post(route('groups.send.store'));
+        post(route('groups.broadcasts.store'));
     }
 
     return (
         <>
             <AppHead title="Send Email"/>
             <PageHeader
-                title="Send Email"
+                title="Send Email Broadcast"
                 icon="inbox-out"
                 breadcrumbs={[
                     {name: 'Dashboard', url: route('dash')},
                     {name: 'Mailing Lists', url: route('groups.index')},
-                    {name: 'Send Email', url: route('groups.send.create')},
+                    {name: 'Send Email', url: route('groups.broadcasts.create')},
                 ]}
             />
 
@@ -88,6 +88,6 @@ const SendEmail = ({ lists }) => {
     );
 }
 
-SendEmail.layout = page => <Layout children={page} />
+Create.layout = page => <Layout children={page} />
 
-export default SendEmail;
+export default Create;

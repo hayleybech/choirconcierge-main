@@ -74,6 +74,7 @@ class HandleInertiaRequests extends Middleware
                 'create_stack' => auth()->user()?->can('create', RiserStack::class),
                 'list_groups' => auth()->user()?->can('viewAny', UserGroup::class),
                 'create_group' => auth()->user()?->can('create', UserGroup::class),
+                'create_broadcast' => auth()->user()?->can('createBroadcast', UserGroup::class),
                 'list_tasks' => auth()->user()?->can('viewAny', Task::class),
                 'create_task' => auth()->user()?->can('create', Task::class),
                 'impersonate' => auth()->user()?->singer?->hasRole('Admin'),

@@ -93,6 +93,7 @@ class Role extends Model
         'mailing_lists_create',
         'mailing_lists_update',
         'mailing_lists_delete',
+        'broadcasts_create',
         'tasks_view',
         'tasks_create',
         'tasks_update',
