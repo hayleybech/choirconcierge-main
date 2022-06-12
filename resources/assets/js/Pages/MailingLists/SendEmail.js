@@ -45,7 +45,7 @@ const SendEmail = ({ lists }) => {
                 {lists.length > 0 ? (
                     <Form onSubmit={submit}>
     
-                        <FormSection title="Compose Email" description="Choose a mailing list, then start writing!">
+                        <FormSection title="Compose email with letterhead" description="Choose a mailing list, then start writing! ">
                             <div className="sm:col-span-6">
                                 <Label label="Mailing List" />
                                 <MailingListSelect
