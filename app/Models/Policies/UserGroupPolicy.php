@@ -60,11 +60,11 @@ class UserGroupPolicy
 
     public function createBroadcast(User $user): bool
     {
-        return $user->singer->hasAbility('mailing_lists_send');
+        return $user->singer->hasAbility('broadcasts_create');
     }
 
     public function createBroadcastFor(User $user, UserGroup $group): bool
     {
-        return $user->singer->hasAbility('mailing_lists_send') && $group->authoriseSender($user);
+        return $user->singer->hasAbility('broadcasts_create') && $group->authoriseSender($user);
     }
 }
