@@ -9,9 +9,8 @@ uses(RefreshDatabase::class);
 it('has a send email page', function () {
     actingAs($this->createUserWithRole('Music Team'));
 
-    $this->get(the_tenant_route('groups.send.create'))
+    $this->get(the_tenant_route('groups.broadcasts.create'))
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('MailingLists/SendEmail'));
-//            ->has('user'));
+            ->component('MailingLists/Broadcasts/Create'));
 });

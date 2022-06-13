@@ -47,6 +47,10 @@ export const modelsAndAbilities = {
         label: 'Mailing Lists',
         abilities: ['view', 'create', 'update', 'delete'],
     },
+    broadcasts: {
+        label: 'Broadcasts',
+        abilities: ['create'],
+    },
     tasks: {
         label: 'Tasks',
         abilities: ['view', 'create', 'delete'],
