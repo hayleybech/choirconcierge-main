@@ -37,6 +37,11 @@ abstract class TestCase extends BaseTestCase
         tenancy()->initialize($tenant);
     }
 
+    protected function actingAsRole(string $roleName): User
+    {
+        return tap($this->createUserWithRole($roleName), fn ($user) => $this->actingAs($user));
+    }
+
     protected function createUserWithRole(string $roleName): User
     {
         $singer = Singer::factory()->create();

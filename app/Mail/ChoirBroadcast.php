@@ -11,7 +11,7 @@ class ChoirBroadcast extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private string $body;
+    public string $body;
     private User $fromUser;
 
     /**
