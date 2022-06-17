@@ -19,7 +19,8 @@ class ClearTemporaryBroadcastFiles implements ShouldQueue
     public function handle()
     {
         collect(Storage::disk('temp')->listContents('broadcasts'))
-            ->filter(fn (StorageAttributes $file) => $file->isFile())
+            ->filter(fn (StorageAttributes $file) =>
+                $file->isFile() && $file->lastModified() < now()->subDay()->getTimestamp())
             ->each(fn (FileAttributes $file) => Storage::disk('temp')->delete($file->path()));
     }
 }
