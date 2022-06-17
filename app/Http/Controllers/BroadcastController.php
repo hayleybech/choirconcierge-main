@@ -7,8 +7,10 @@ use App\Mail\ChoirBroadcast;
 use App\Models\UserGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use Storage;
 
 class BroadcastController extends Controller
 {
@@ -30,17 +32,26 @@ class BroadcastController extends Controller
             'list' => ['required', 'exists:user_groups,id'],
             'subject' => ['required', 'max:255'],
             'body' => ['required', 'max:5000'],
+            'attachments.*' => ['sometimes', 'file'],
         ]);
 
         $group = UserGroup::find($request->input('list'));
 
         $this->authorize('createBroadcastFor', $group);
 
+        $fileMeta = collect($request->file('attachments'))
+            ->each(fn (UploadedFile $file) => Storage::disk('temp')->putFile('broadcasts', $file))
+            ->map(fn (UploadedFile $file) => [
+                'hashName' => $file->hashName(),
+                'originalName' => $file->getClientOriginalName(),
+            ]);
+
         SendEmailForGroup::dispatch(
             (new ChoirBroadcast(
                 $request->input('subject'),
                 $request->input('body'),
                 $request->user(),
+                $fileMeta,
             )),
             $group
         );

@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from 'react';
 import Button from "./Button";
 import classNames from "../../classNames";
 
-const FileInput = ({ name, type = 'text', value, updateFn, hasErrors, multiple, vertical = false, otherProps }) => {
+const FileInput = ({ name, value, updateFn, hasErrors, multiple, vertical = false, otherProps }) => {
     const inputRef = useRef(null);
     const [filename, setFilename] = useState('');
 
