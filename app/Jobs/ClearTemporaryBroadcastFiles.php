@@ -19,12 +19,7 @@ class ClearTemporaryBroadcastFiles implements ShouldQueue
     public function handle()
     {
         collect(Storage::disk('temp')->listContents('broadcasts'))
-            ->filter(fn (StorageAttributes $file) =>
-                dd('now: '.now()->subDay()
-                    .' | file: '.Carbon::createFromTimestamp($file->lastModified())
-                    .' | result: '.($file->isFile() && $file->lastModified() < now()->subDay()->getTimestamp())
-                )
-                && $file->isFile() && $file->lastModified() < now()->subDay()->getTimestamp())
+            ->filter(fn (StorageAttributes $file) => $file->isFile())
             ->each(fn (FileAttributes $file) => Storage::disk('temp')->delete($file->path()));
     }
 }
