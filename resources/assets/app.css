@@ -21,5 +21,8 @@ body,
     background-color: white;
 }
 
-
+/* PDF Viewer */
+.react-pdf__Page__canvas {
+    margin: 0 auto;
+}
 
