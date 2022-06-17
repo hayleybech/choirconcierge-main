@@ -15,9 +15,9 @@ class SendEmailForGroup implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private Mailable $message;
+    public Mailable $message;
 
-    private UserGroup $group;
+    public UserGroup $group;
 
     public function __construct(Mailable $message, UserGroup $group)
     {

@@ -15,12 +15,14 @@ import FormFooter from "../../../components/FormFooter";
 import MailingListSelect from "../../../components/inputs/MailingListSelect";
 import Icon from "../../../components/Icon";
 import ErrorAlert from "../../../components/ErrorAlert";
+import FileInput from "../../../components/inputs/FileInput";
 
 const Create = ({ lists }) => {
     const {data, setData, post, processing, errors} = useForm({
         subject: '',
         body: '',
         list: null,
+        attachments: [],
     });
 
     function submit(e) {
@@ -70,6 +72,18 @@ const Create = ({ lists }) => {
                                 <Label label="Body" forInput="body" />
                                 <RichTextInput value={data.body} updateFn={value => setData('body', value)} />
                                 {errors.body && <Error>{errors.body}</Error>}
+                            </div>
+
+                            <div className="sm:col-span-6">
+                                <Label label="Attachments" forInput="attachments" />
+                                <FileInput
+                                    name="attachments"
+                                    value={data.attachments}
+                                    updateFn={value => setData('attachments', value)}
+                                    multiple
+                                    hasErrors={!!errors['attachments']}
+                                />
+                                {errors.attachments && <Error>{errors.attachments}</Error>}
                             </div>
                         </FormSection>
     

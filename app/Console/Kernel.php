@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Jobs\ClearDuplicateEmails;
+use App\Jobs\ClearTemporaryBroadcastFiles;
 use App\Jobs\ProcessGroupMailbox;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -69,6 +70,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(ClearDuplicateEmails::class)->daily();
 
+
         $schedule->command('telescope:prune --hours=72')
             ->daily()
             ->at('16:00'); // Midnight Perth
@@ -80,6 +82,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('backup:run')
             ->daily()
             ->at('19:00'); // 3 am Perth
+
+        $schedule->job(ClearTemporaryBroadcastFiles::class)
+            ->daily()
+            ->at('21:00'); // 5 am Perth
     }
 
     /**
