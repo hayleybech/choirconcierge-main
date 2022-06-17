@@ -18,7 +18,7 @@ import ErrorAlert from "../../../components/ErrorAlert";
 import FileInput from "../../../components/inputs/FileInput";
 
 const Create = ({ lists }) => {
-    const {data, setData, post, processing, errors} = useForm({
+    const {data, setData, post, processing, errors, progress} = useForm({
         subject: '',
         body: '',
         list: null,
@@ -84,6 +84,17 @@ const Create = ({ lists }) => {
                                     hasErrors={!!errors['attachments']}
                                 />
                                 {errors.attachments && <Error>{errors.attachments}</Error>}
+
+                                {progress && (
+                                    <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700 mt-2.5">
+                                        <div
+                                            className="bg-purple-600 text-xs text-purple-100 text-center p-0.5 rounded-full"
+                                            style={{ width: `${progress.percentage}%` }}
+                                        >
+                                            {progress.percentage}%
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </FormSection>
     
