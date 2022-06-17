@@ -15,8 +15,6 @@ return [
 
     'default' => env('QUEUE_CONNECTION', 'sync'),
 
-    'cron_fix' => env('QUEUE_DIRTY_CRON_FIX', false),
-
     /*
     |--------------------------------------------------------------------------
     | Queue Connections

@@ -15,12 +15,14 @@ import FormFooter from "../../../components/FormFooter";
 import MailingListSelect from "../../../components/inputs/MailingListSelect";
 import Icon from "../../../components/Icon";
 import ErrorAlert from "../../../components/ErrorAlert";
+import FileInput from "../../../components/inputs/FileInput";
 
 const Create = ({ lists }) => {
-    const {data, setData, post, processing, errors} = useForm({
+    const {data, setData, post, processing, errors, progress} = useForm({
         subject: '',
         body: '',
         list: null,
+        attachments: [],
     });
 
     function submit(e) {
@@ -70,6 +72,29 @@ const Create = ({ lists }) => {
                                 <Label label="Body" forInput="body" />
                                 <RichTextInput value={data.body} updateFn={value => setData('body', value)} />
                                 {errors.body && <Error>{errors.body}</Error>}
+                            </div>
+
+                            <div className="sm:col-span-6">
+                                <Label label="Attachments" forInput="attachments" />
+                                <FileInput
+                                    name="attachments"
+                                    value={data.attachments}
+                                    updateFn={value => setData('attachments', value)}
+                                    multiple
+                                    hasErrors={!!errors['attachments']}
+                                />
+                                {errors.attachments && <Error>{errors.attachments}</Error>}
+
+                                {progress && (
+                                    <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700 mt-2.5">
+                                        <div
+                                            className="bg-purple-600 text-xs text-purple-100 text-center p-0.5 rounded-full"
+                                            style={{ width: `${progress.percentage}%` }}
+                                        >
+                                            {progress.percentage}%
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </FormSection>
     
