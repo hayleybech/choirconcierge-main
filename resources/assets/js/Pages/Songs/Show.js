@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import SongStatusTag from "../../components/SongStatusTag";
@@ -55,6 +55,12 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
             setCurrentPdf(null);
         }
     };
+
+    useEffect(() => {
+        return () => {
+            closeFullscreenMobile();
+        }
+    }, []);
 
     return (
         <>
