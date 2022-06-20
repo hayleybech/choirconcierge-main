@@ -30,14 +30,6 @@
     <script src="{{ mix('/js/vendor.js') }}"></script>
     <script src="{{ mix('/js/app.js') }}"></script>
 
-	<script>
-	  var HW_config = {
-		selector: ".headway-badge", // CSS selector where to inject the badge
-		account:  "7L6Rky"
-	  }
-	</script>
-	<script async src="//cdn.headwayapp.co/widget.js"></script>
-
 	@stack('scripts-footer-bottom')
 
 </body>

@@ -1,7 +1,6 @@
 import React, {Fragment} from 'react';
 import Icon from "./Icon";
 import route from "ziggy-js";
-import HeadwayWidget from "@headwayapp/react-widget";
 import {Menu, Transition} from "@headlessui/react";
 import classNames from "../classNames";
 import {Link, usePage} from "@inertiajs/inertia-react";

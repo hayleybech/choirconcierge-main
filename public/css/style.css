@@ -185,19 +185,6 @@ i.fa.fa-external-link {
 
 
 
-/* Headway widget styles */
-#changelog-link {
-	position: relative;
-	padding-right: 10px;
-}
-#changelog-link #HW_badge_cont {
-	position: absolute;
-	top: -5px;
-	right: -5px;
-}
-
-
-
 
 
 /* Location input */
