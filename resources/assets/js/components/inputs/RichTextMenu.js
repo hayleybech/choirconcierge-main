@@ -10,6 +10,28 @@ const RichTextMenu = ({ editor }) => {
     return (
         <div className="p-2 flex space-x-3">
             <div>
+                <MenuButton
+                    onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                    isActive={editor.isActive('heading', { level: 1 })}
+                >
+                    <Icon icon="h1" />
+                </MenuButton>
+
+                <MenuButton
+                    onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                    isActive={editor.isActive('heading', { level: 2 })}
+                >
+                    <Icon icon="h2" />
+                </MenuButton>
+
+                <MenuButton
+                    onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                    isActive={editor.isActive('heading', { level: 3 })}
+                >
+                    <Icon icon="h3" />
+                </MenuButton>
+            </div>
+            <div>
                 <MenuButton onClick={() => editor.chain().focus().toggleBold().run()} isActive={editor.isActive('bold')}>
                     <Icon icon="bold" />
                 </MenuButton>
