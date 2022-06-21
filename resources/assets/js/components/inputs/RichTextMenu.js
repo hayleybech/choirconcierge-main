@@ -44,6 +44,14 @@ const RichTextMenu = ({ editor }) => {
                     <Icon icon="remove-format" />
                 </MenuButton>
             </div>
+            <div>
+                <MenuButton onClick={() => editor.chain().focus().undo().run()}>
+                    <Icon icon="undo" />
+                </MenuButton>
+                <MenuButton onClick={() => editor.chain().focus().redo().run()}>
+                    <Icon icon="redo" />
+                </MenuButton>
+            </div>
         </div>
     );
 }
