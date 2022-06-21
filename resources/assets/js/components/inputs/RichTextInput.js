@@ -23,7 +23,7 @@ const RichTextInput = ({ value, updateFn }) => {
         },
         editorProps: {
             attributes: {
-                class: 'p-4 bg-white focus:outline-none rounded-md'
+                class: 'prose sm:max-w-none p-4 bg-white focus:outline-none rounded-bl-md rounded-br-md'
             }
         }
     });
