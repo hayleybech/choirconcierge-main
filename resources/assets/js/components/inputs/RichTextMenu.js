@@ -8,7 +8,7 @@ const RichTextMenu = ({ editor }) => {
     }
 
     return (
-        <div className="p-2 flex space-x-2">
+        <div className="p-2 flex space-x-3">
             <div>
                 <MenuButton onClick={() => editor.chain().focus().toggleBold().run()} isActive={editor.isActive('bold')}>
                     <Icon icon="bold" />
@@ -37,6 +37,11 @@ const RichTextMenu = ({ editor }) => {
             <div>
                 <MenuButton onClick={() => editor.chain().focus().setHorizontalRule().run()}>
                     <Icon icon="horizontal-rule" />
+                </MenuButton>
+            </div>
+            <div>
+                <MenuButton onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}>
+                    <Icon icon="remove-format" />
                 </MenuButton>
             </div>
         </div>
