@@ -34,6 +34,11 @@ const RichTextMenu = ({ editor }) => {
                     <Icon icon="list-ol" />
                 </MenuButton>
             </div>
+            <div>
+                <MenuButton onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+                    <Icon icon="horizontal-rule" />
+                </MenuButton>
+            </div>
         </div>
     );
 }
