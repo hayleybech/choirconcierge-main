@@ -3,10 +3,20 @@ import {nl2br} from "../../util";
 import {EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import RichTextMenu from "./RichTextMenu";
+import {Underline} from "@tiptap/extension-underline";
+import {Link} from "@tiptap/extension-link";
 
 const RichTextInput = ({ value, updateFn }) => {
     const editor = useEditor({
-        extensions: [StarterKit],
+        extensions: [
+            StarterKit,
+            Underline,
+            Link.configure({
+                HTMLAttributes: {
+                    class: 'text-purple-700',
+                },
+            }),
+        ],
         content: nl2br(value),
         onUpdate({ editor }) {
             updateFn(editor.getHTML());
@@ -14,7 +24,6 @@ const RichTextInput = ({ value, updateFn }) => {
         editorProps: {
             attributes: {
                 class: 'p-4 bg-white focus:outline-none rounded-md'
-                + ''
             }
         }
     });

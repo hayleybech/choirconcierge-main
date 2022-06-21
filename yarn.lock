@@ -1648,6 +1648,15 @@
   "resolved" "https://registry.npmjs.org/@tiptap/extension-italic/-/extension-italic-2.0.0-beta.28.tgz"
   "version" "2.0.0-beta.28"
 
+"@tiptap/extension-link@^2.0.0-beta.42":
+  "integrity" "sha512-cyIYcNJTqBEf6eRSYI6AZptwMnZw0xUMl4FNo9qyo/PbPNwXcoIyyNRdn1jPB9mtlW0eTNwhHDlFpwJgbDcsxg=="
+  "resolved" "https://registry.npmjs.org/@tiptap/extension-link/-/extension-link-2.0.0-beta.42.tgz"
+  "version" "2.0.0-beta.42"
+  dependencies:
+    "linkifyjs" "^3.0.5"
+    "prosemirror-model" "^1.17.0"
+    "prosemirror-state" "^1.4.0"
+
 "@tiptap/extension-list-item@^2.0.0-beta.23":
   "integrity" "sha512-AkzvdELz3ZnrlZM0r9+ritBDOnAjXHR/8zCZhW0ZlWx4zyKPMsNG5ygivY+xr4QT65NEGRT8P8b2zOhXrMjjMQ=="
   "resolved" "https://registry.npmjs.org/@tiptap/extension-list-item/-/extension-list-item-2.0.0-beta.23.tgz"
@@ -1672,6 +1681,11 @@
   "integrity" "sha512-OyKL+pqWJEtjyd9/mrsuY1kZh2b3LWpOQDWKtd4aWR4EA0efmQG+7FPwcIeAVEh7ZoqM+/ABCnPjN6IjzIrSfg=="
   "resolved" "https://registry.npmjs.org/@tiptap/extension-text/-/extension-text-2.0.0-beta.17.tgz"
   "version" "2.0.0-beta.17"
+
+"@tiptap/extension-underline@^2.0.0-beta.25":
+  "integrity" "sha512-kRDdb/mF6QWzFGV3cQuLh6xyXULXaKPL/TghefoOZhwkdIWV/M3zFar5tsZO54+tbIrzxoVP6t7mO2Y5G/SLDQ=="
+  "resolved" "https://registry.npmjs.org/@tiptap/extension-underline/-/extension-underline-2.0.0-beta.25.tgz"
+  "version" "2.0.0-beta.25"
 
 "@tiptap/react@^2.0.0-beta.113":
   "integrity" "sha512-x81UIXhS8kQGBv/vCUChZP2v7Lx4whzSrxihVGC8EZ0JF5Gr/EtFpf1CylibjtYqcSDVtCARopE877l5LvPgaA=="
@@ -5345,6 +5359,11 @@
   "integrity" "sha512-KrWJJbFOvlDhjlt5OhUipVlXg+plUfRurICAyij1ZVxQcqPt/zeReb9KiUVdGUwwhS/2KS9h3TbyfYLA5MDlxQ=="
   "resolved" "https://registry.npmjs.org/linguist-languages/-/linguist-languages-7.21.0.tgz"
   "version" "7.21.0"
+
+"linkifyjs@^3.0.5":
+  "integrity" "sha512-1Y9XQH65eQKA9p2xtk+zxvnTeQBG7rdAXSkUG97DmuI/Xhji9uaUzaWxRj6rf9YC0v8KKHkxav7tnLX82Sz5Fg=="
+  "resolved" "https://registry.npmjs.org/linkifyjs/-/linkifyjs-3.0.5.tgz"
+  "version" "3.0.5"
 
 "loader-runner@^4.2.0":
   "integrity" "sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg=="

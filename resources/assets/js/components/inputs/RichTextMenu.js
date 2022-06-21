@@ -8,17 +8,36 @@ const RichTextMenu = ({ editor }) => {
     }
 
     return (
-        <div className="p-3">
-            <Button
-                variant="secondary"
-                onClick={() => editor.chain().focus().toggleBold().run()}
-                type="button"
-                size="sm"
-            >
+        <div className="p-2">
+            <MenuButton onClick={() => editor.chain().focus().toggleBold().run()} isActive={editor.isActive('bold')}>
                 <Icon icon="bold" />
-            </Button>
+            </MenuButton>
+
+            <MenuButton onClick={() => editor.chain().focus().toggleItalic().run()} isActive={editor.isActive('italic')}>
+                <Icon icon="italic" />
+            </MenuButton>
+
+            <MenuButton onClick={() => editor.chain().focus().toggleUnderline().run()} isActive={editor.isActive('underline')}>
+                <Icon icon="underline" />
+            </MenuButton>
+
+            <MenuButton onClick={() => editor.chain().focus().toggleStrike().run()} isActive={editor.isActive('strike')}>
+                <Icon icon="strikethrough" />
+            </MenuButton>
         </div>
     );
 }
 
 export default RichTextMenu;
+
+const MenuButton = ({ onClick, isActive, children }) => (
+    <Button
+        variant="clear"
+        onClick={onClick}
+        type="button"
+        size="sm"
+        className={isActive ? 'text-purple-500' : ''}
+    >
+        { children }
+    </Button>
+);
