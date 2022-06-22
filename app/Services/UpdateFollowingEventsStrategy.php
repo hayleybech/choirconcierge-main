@@ -14,35 +14,19 @@ class UpdateFollowingEventsStrategy
      */
     public function handle(Event $event, $attributes): bool
     {
-        // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
-        abort_if(
-            $event->is_repeat_parent,
-            405,
-            'Cannot do "following" update method on a repeating event parent. Try "all" update method instead.',
-        );
+        if($event->is_repeat_parent) {
+            throw new \BadMethodCallException('Cannot do "following" update mode on a repeating event parent (too inefficient). Try "all" mode instead.');
+        }
 
-        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        abort_if(
-            $event->in_past,
-            405,
-            'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.',
-        );
+        if($event->in_past) {
+            throw new \BadMethodCallException('To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
+        }
 
         self::reassignAsParentOfFollowing($event);
 
         $event->fill($attributes);
 
-        // Update or regenerate children
-        if ($event->isRepeatDirty()) {
-            // Delete all repeats following this one
-            $event->repeat_children()->delete();
-
-            // Re-create events with this as the new parent
-            $event->createRepeats();
-        } else {
-            // Update attributes on following events and make them children
-            $event->repeat_children()->update($event->getDirty());
-        }
+        self::updateChildren($event);
 
         return $event->save();
     }
@@ -57,5 +41,23 @@ class UpdateFollowingEventsStrategy
         $event->nextRepeats()->update(['repeat_parent_id' => $event->id]);
 
         $event->repeat_parent_id = $event->id;
+    }
+
+    private static function updateChildren(Event $event): void
+    {
+        if ($event->isRepeatDirty()) {
+            self::regenerateChildren($event);
+
+            return;
+        }
+
+        $event->repeat_children()->update($event->getDirty());
+    }
+
+    private static function regenerateChildren(Event $event): void
+    {
+        $event->repeat_children()->delete();
+
+        $event->createRepeats();
     }
 }

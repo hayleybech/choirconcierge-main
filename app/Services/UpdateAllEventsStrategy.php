@@ -13,34 +13,36 @@ class UpdateAllEventsStrategy
      */
     public function handle(Event $event, $attributes): bool
     {
-        // Only perform this on an event parent
-        abort_if(
-            ! $event->is_repeat_parent,
-            500,
-            'The server attempted to update all repeats of an event without finding the parent event. ',
-        );
+        if(! $event->is_repeat_parent){
+            throw new \BadMethodCallException('The server attempted to update all repeats of an event without finding the parent event. ');
+        }
 
-        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        abort_if(
-            $event->in_past,
-            405,
-            'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.',
-        );
+        if($event->in_past) {
+            throw new \BadMethodCallException('To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.');
+        }
 
         $event->fill($attributes);
 
-        // Update or regenerate children
-        if ($event->isRepeatDirty()) {
-            // Delete children
-            $event->repeat_children()->delete();
-
-            // Re-create children
-            $event->createRepeats();
-        } else {
-            // Update attributes on children
-            $event->repeat_children()->update($event->getDirty());
-        }
+        self::updateChildren($event);
 
         return $event->save();
+    }
+
+    private static function updateChildren(Event $event): void
+    {
+        if ($event->isRepeatDirty()) {
+            self::regenerateChildren($event);
+
+            return;
+        }
+
+        $event->repeat_children()->update($event->getDirty());
+    }
+
+    private static function regenerateChildren(Event $event): void
+    {
+        $event->repeat_children()->delete();
+
+        $event->createRepeats();
     }
 }

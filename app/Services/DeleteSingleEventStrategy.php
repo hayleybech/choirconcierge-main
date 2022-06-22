@@ -8,11 +8,18 @@ class DeleteSingleEventStrategy
 {
     public function handle(Event $event): bool
     {
-        // Re-assign parent to the next event
-        if ($event->is_repeat_parent && $event->nextRepeat()) {
-            $event->nextRepeats()->update(['repeat_parent_id' => $event->nextRepeat()->id]);
-        }
+        self::reassignParent($event);
 
         return $event->delete();
     }
+
+    private static function reassignParent(Event $event): void
+    {
+        if (! $event->is_repeat_parent || ! $event->nextRepeat()) {
+            return;
+        }
+
+        $event->nextRepeats()->update(['repeat_parent_id' => $event->nextRepeat()->id]);
+    }
+
 }

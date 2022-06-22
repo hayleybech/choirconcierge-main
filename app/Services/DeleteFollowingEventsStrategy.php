@@ -8,26 +8,23 @@ class DeleteFollowingEventsStrategy
 {
     public function handle(Event $event): bool
     {
-        // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
-        abort_if(
-            $event->is_repeat_parent,
-            405,
-            'Cannot do "following" delete method on a repeating event parent. Try "all" delete method instead.',
-        );
+        if($event->is_repeat_parent) {
+            throw new \BadMethodCallException('Cannot do "following" delete mode on a repeating event parent (too inefficient). Try "all" mode instead.');
+        }
 
-        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        abort_if(
-            $event->in_past,
-            405,
-            'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.',
-        );
+        if($event->in_past) {
+            throw new \BadMethodCallException('To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.');
+        }
 
-        // Update prev siblings with repeat_until dates that reflect their smaller scope.
-        $event->prevRepeats()->update(['repeat_until' => tz_from_tenant_to_utc($event->prevRepeat()->call_time)]);
+        self::shortenRepeatUntilForPrevSiblings($event);
 
-        // Delete all repeats following this one
         $event->nextRepeats()->delete();
 
         return $event->delete();
+    }
+
+    private static function shortenRepeatUntilForPrevSiblings(Event $event): void
+    {
+        $event->prevRepeats()->update(['repeat_until' => tz_from_tenant_to_utc($event->prevRepeat()->call_time)]);
     }
 }
