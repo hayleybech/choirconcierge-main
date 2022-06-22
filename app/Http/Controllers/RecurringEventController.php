@@ -45,7 +45,7 @@ class RecurringEventController extends Controller
             return back()->with(['error' => 'The server tried to edit a non-repeating event incorrectly.']);
         }
 
-        UpdateRecurringEvent::handle('single', $event, Arr::except($request->validated(), 'send_notification'));
+        UpdateRecurringEvent::handle($mode, $event, Arr::except($request->validated(), 'send_notification'));
 
         if ($request->input('send_notification')) {
             Notification::send(

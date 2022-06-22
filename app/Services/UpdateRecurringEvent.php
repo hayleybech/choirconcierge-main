@@ -10,7 +10,7 @@ class UpdateRecurringEvent
         (self::getStrategy($mode))->handle($event, $data);
     }
 
-    private static function getStrategy($mode): UpdateFollowingEventsStrategy|UpdateSingleEventStrategy
+    private static function getStrategy($mode): UpdateFollowingEventsStrategy|UpdateSingleEventStrategy|UpdateAllEventsStrategy
     {
         return match($mode) {
             'single' => new UpdateSingleEventStrategy(),
