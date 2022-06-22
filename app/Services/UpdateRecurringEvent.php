@@ -6,8 +6,8 @@ use App\Models\Event;
 
 class UpdateRecurringEvent
 {
-    public static function handle(string $mode, Event $event, array $data){
-        (self::getStrategy($mode))->handle($event, $data);
+    public static function handle(string $mode, Event $event, array $attributes){
+        (self::getStrategy($mode))->handle($event, $attributes);
     }
 
     private static function getStrategy($mode): UpdateFollowingEventsStrategy|UpdateSingleEventStrategy|UpdateAllEventsStrategy

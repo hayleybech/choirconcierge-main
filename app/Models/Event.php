@@ -112,7 +112,7 @@ class Event extends Model
      * - Doesn't yet support repeat_frequency_amount (always = 1 for now)
      * - Doesn't yet differentiate between e.g. "every month on the 18th" and "every month on the 3rd thursday" and "every 30 days"
      */
-    private function createRepeats(): void
+    public function createRepeats(): void
     {
         if (! $this->is_repeating) {
             return;
@@ -160,121 +160,6 @@ class Event extends Model
                 ->attributesToArray();
         }
         DB::table('events')->insert($event_occurrences);
-    }
-
-    /**
-     * Updates one event in a repeating series
-     * For simplicity, it converts the event into regular single event.
-     */
-    public function updateSingle(array $attributes): bool
-    {
-        // If this event was the parent, reset parent id on children to next child
-        if ($this->is_repeat_parent && $this->repeat_children->count()) {
-            $new_parent = $this->nextRepeat();
-            $new_parent?->repeat_children()
-                ->saveMany($this->repeat_children);
-        }
-
-        $this->fill($attributes);
-
-        // Reset parent id on this event
-        $this->repeat_parent_id = null;
-        // Convert to single
-        $this->is_repeating = false;
-        // @todo allow creating new repeating events when editing a single occurrence
-
-        return $this->save();
-    }
-
-    /**
-     * Updates ALL events in a repeating series
-     * When the date or repeat details change, it deletes and regenerates the entire series.
-     * As a result, existing RSVPs will be deleted, but as the dates may have changed this is ideal.
-     */
-    public function updateAll(array $attributes): bool
-    {
-        // Only perform this on an event parent
-        abort_if(
-            ! $this->is_repeat_parent,
-            500,
-            'The server attempted to update all repeats of an event without finding the parent event. ',
-        );
-
-        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        abort_if(
-            $this->in_past,
-            405,
-            'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.',
-        );
-
-        $this->fill($attributes);
-
-        // Update or regenerate children
-        if ($this->isRepeatDirty()) {
-            // Delete children
-            $this->repeat_children()->delete();
-
-            // Re-create children
-            $this->createRepeats();
-        } else {
-            // Update attributes on children
-            $this->repeat_children()->update($this->getDirty());
-        }
-
-        return $this->save();
-    }
-
-    /**
-     * Updates the target event and all repeats after it.
-     * Makes this event the event parent for following events.
-     * If repeat data (including start date) has changed, then delete and regenerate the new children.
-     * Also, update the older events that still exist in the old series with new repeat_until dates.
-     */
-    public function updateFollowing(array $attributes): bool
-    {
-        // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
-        abort_if(
-            $this->is_repeat_parent,
-            405,
-            'Cannot do "following" update method on a repeating event parent. Try "all" update method instead.',
-        );
-
-        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        abort_if(
-            $this->in_past,
-            405,
-            'To protect attendance data, you cannot bulk update events in the past. Please edit individually instead.',
-        );
-
-        $this->reassignAsParentOfFollowing();
-
-        $this->fill($attributes);
-
-        // Update or regenerate children
-        if ($this->isRepeatDirty()) {
-            // Delete all repeats following this one
-            $this->repeat_children()->delete();
-
-            // Re-create events with this as the new parent
-            $this->createRepeats();
-        } else {
-            // Update attributes on following events and make them children
-            $this->repeat_children()->update($this->getDirty());
-        }
-
-        return $this->save();
-    }
-
-    private function reassignAsParentOfFollowing(): void
-    {
-        // Update prev siblings with repeat_until dates that reflect their smaller scope.
-        $this->prevRepeats()->update(['repeat_until' => tz_from_tenant_to_utc($this->prevRepeat()->call_time)]);
-
-        // Re-assign children
-        // @todo eliminate double save (first here, then again in updateFollowing())
-        $this->nextRepeats()->update(['repeat_parent_id' => $this->id]);
-
-        $this->repeat_parent_id = $this->id;
     }
 
     public function delete_single(): bool
