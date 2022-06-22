@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Document, Page} from 'react-pdf/dist/esm/entry.webpack';
 import Button from "../inputs/Button";
 import Icon from "../Icon";
@@ -10,8 +10,20 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
 
     const [allPageNumbers, setAllPageNumbers] = useState([]);
     const [outerWidth, setOuterWidth] = useState(0);
+    const [refreshKey, setRefreshKey] = useState(1);
 
     const containerRef = useRef();
+
+    function forceRefresh() {
+        setRefreshKey((prevKey) => prevKey + 1);
+    }
+
+    useEffect(() => {
+        window.addEventListener('orientationchange', forceRefresh);
+        return () => {
+            window.removeEventListener('orientationchange', forceRefresh);
+        }
+    }, []);
 
     function onDocumentLoadSuccess({ numPages }) {
         const allPageNumbers = [];
@@ -24,7 +36,7 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
     }
 
     return (
-        <TransformWrapper>
+        <TransformWrapper key={refreshKey}>
             {({ zoomIn, zoomOut }) => (
                 <div className="flex flex-col overflow-hidden h-full">
 

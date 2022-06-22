@@ -17,14 +17,23 @@ class RecurringEventControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // @todo sometimes fails, but I don't know why
+        // fails with "missing column deleted_at"... which makes no sense.
+        // so I think this might be happening during migration.
+        // - maybe because the base class does tenant seeding
+        // - or maybe something is messing up and not getting reset between test methods.
+        $this->markTestSkipped();
+    }
+
     /**
      * @test
      */
     public function destroy_for_single_deletes_one(): void
     {
-        $this->markTestSkipped();
-        $this->markAsRisky(); // @todo sometimes fails, but I don't know why
-
         $this->actingAs($this->createUserWithRole('Events Team'));
 
         $parent = Event::factory()
@@ -55,7 +64,6 @@ class RecurringEventControllerTest extends TestCase
      */
     public function destroy_for_all_deletes_all(): void
     {
-        $this->markTestSkipped();
         $this->actingAs($this->createUserWithRole('Events Team'));
 
         $parent = Event::factory()
@@ -81,7 +89,6 @@ class RecurringEventControllerTest extends TestCase
      */
     public function destroy_for_following_deletes_some(): void
     {
-        $this->markTestSkipped();
         $this->actingAs($this->createUserWithRole('Events Team'));
 
         $parent = Event::factory()
@@ -117,7 +124,6 @@ class RecurringEventControllerTest extends TestCase
      */
     public function edit_redirects_to_correct_edit_page($mode): void
     {
-        $this->markTestSkipped();
         $this->actingAs($this->createUserWithRole('Events Team'));
 
         $event = Event::factory()
@@ -141,7 +147,6 @@ class RecurringEventControllerTest extends TestCase
      */
     public function update_for_single_updates_one($getData): void
     {
-        $this->markTestSkipped();
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -178,7 +183,6 @@ class RecurringEventControllerTest extends TestCase
      */
     public function update_for_all_updates_all($getData): void
     {
-        $this->markTestSkipped();
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -225,7 +229,6 @@ class RecurringEventControllerTest extends TestCase
      */
     public function update_for_all_regenerates_all_when_dirty($getData): void
     {
-        $this->markTestSkipped();
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -263,7 +266,6 @@ class RecurringEventControllerTest extends TestCase
      */
     public function update_for_following_updates_some($getData): void
     {
-        $this->markTestSkipped();
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -329,7 +331,6 @@ class RecurringEventControllerTest extends TestCase
      */
     public function update_for_following_regenerates_some_when_dirty($getData): void
     {
-        $this->markTestSkipped();
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
 

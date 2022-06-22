@@ -6,6 +6,8 @@ use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\Singer;
 use App\Notifications\EventUpdated;
+use App\Services\DeleteRecurringEvent;
+use App\Services\UpdateRecurringEvent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -44,12 +46,7 @@ class RecurringEventController extends Controller
             return back()->with(['error' => 'The server tried to edit a non-repeating event incorrectly.']);
         }
 
-        match ($mode) {
-            'single' => $event->updateSingle(Arr::except($request->validated(), 'send_notification')),
-            'all' => $event->updateAll(Arr::except($request->validated(), 'send_notification')),
-            'following' => $event->updateFollowing(Arr::except($request->validated(), 'send_notification')),
-            default => abort(500, 'The server failed to determine the edit mode on the repeating event.')
-        };
+        UpdateRecurringEvent::handle($mode, $event, Arr::except($request->validated(), 'send_notification'));
 
         if ($request->input('send_notification')) {
             Notification::send(
@@ -76,11 +73,7 @@ class RecurringEventController extends Controller
         // No point being here if the event isn't repeating
         abort_if(! $event->is_repeating, 403, 'This action is intended for repeating events only.');
 
-        match ($mode) {
-            'single' => $event->delete_single(),
-            'following' => $event->delete_with_following(),
-            'all' => $event->repeat_parent->delete_with_all()
-        };
+        DeleteRecurringEvent::handle($mode, $event);
 
         return redirect()
             ->route('events.index')

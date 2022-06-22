@@ -13,6 +13,7 @@ import SwitchChoirModal from "../components/SwitchChoirModal";
 import Button from "../components/inputs/Button";
 import Icon from "../components/Icon";
 import ToastFlash from "../components/ToastFlash";
+import {useMediaQuery} from "react-responsive";
 
 
 export default function Layout({ children }) {
@@ -46,6 +47,8 @@ export default function Layout({ children }) {
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
     const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
 
+    const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
+
     const { can, userChoirs, errors, flash } = usePage().props;
 
     const navFiltered = navigation
@@ -64,20 +67,22 @@ export default function Layout({ children }) {
     return (
         <PlayerContext.Provider value={player}>
             <div className="h-screen flex overflow-hidden bg-gray-100">
-                <SidebarMobile
-                    navigation={navFiltered}
-                    open={sidebarOpen}
-                    setOpen={setSidebarOpen}
-                    switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => { setSidebarOpen(false); setShowSwitchChoirModal(true); }} />}
-                />
-
-                {/* Static sidebar for desktop */}
-                <div className="hidden xl:flex xl:shrink-0">
-                    <SidebarDesktop
+                {isMobile ? (
+                    <SidebarMobile
                         navigation={navFiltered}
-                        switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
+                        open={sidebarOpen}
+                        setOpen={setSidebarOpen}
+                        switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => { setSidebarOpen(false); setShowSwitchChoirModal(true); }} />}
                     />
-                </div>
+                ) : (
+                    <div className="flex shrink-0">
+                        <SidebarDesktop
+                            navigation={navFiltered}
+                            switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
+                        />
+                    </div>
+                )}
+
                 <div className="flex flex-col w-0 flex-1 overflow-hidden">
                     {player.showFullscreen || <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />}
 
