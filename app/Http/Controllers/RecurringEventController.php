@@ -6,6 +6,7 @@ use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\Singer;
 use App\Notifications\EventUpdated;
+use App\Services\DeleteRecurringEvent;
 use App\Services\UpdateRecurringEvent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -72,11 +73,7 @@ class RecurringEventController extends Controller
         // No point being here if the event isn't repeating
         abort_if(! $event->is_repeating, 403, 'This action is intended for repeating events only.');
 
-        match ($mode) {
-            'single' => $event->delete_single(),
-            'following' => $event->delete_with_following(),
-            'all' => $event->repeat_parent->delete_with_all()
-        };
+        DeleteRecurringEvent::handle($mode, $event);
 
         return redirect()
             ->route('events.index')
