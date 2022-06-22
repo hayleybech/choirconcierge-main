@@ -162,62 +162,6 @@ class Event extends Model
         DB::table('events')->insert($event_occurrences);
     }
 
-    public function delete_single(): bool
-    {
-        // Re-assign parent to the next event
-        if ($this->is_repeat_parent && $this->nextRepeat()) {
-            $this->nextRepeats()->update(['repeat_parent_id' => $this->nextRepeat()->id]);
-        }
-
-        return $this->delete();
-    }
-
-    public function delete_with_following(): bool
-    {
-        // Only perform this on event children - it's too inefficient to attempt this on a parent rather than simply updateAll()
-        abort_if(
-            $this->is_repeat_parent,
-            405,
-            'Cannot do "following" delete method on a repeating event parent. Try "all" delete method instead.',
-        );
-
-        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        abort_if(
-            $this->in_past,
-            405,
-            'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.',
-        );
-
-        // Update prev siblings with repeat_until dates that reflect their smaller scope.
-        $this->prevRepeats()->update(['repeat_until' => tz_from_tenant_to_utc($this->prevRepeat()->call_time)]);
-
-        // Delete all repeats following this one
-        $this->nextRepeats()->delete();
-
-        return $this->delete();
-    }
-
-    public function delete_with_all(): bool
-    {
-        // Only perform this on an event parent
-        abort_if(
-            ! $this->is_repeat_parent,
-            500,
-            'The server attempted to delete all repeats of an event without finding the parent event. ',
-        );
-
-        // Only perform this on events in the future - we don't want users to accidentally delete attendance data.
-        abort_if(
-            $this->in_past,
-            405,
-            'To protect attendance data, you cannot bulk delete events in the past. Please delete individually instead.',
-        );
-
-        $this->repeat_children()->delete();
-
-        return $this->delete();
-    }
-
     public function type(): BelongsTo
     {
         return $this->belongsTo(EventType::class, 'type_id');
