@@ -8,13 +8,13 @@ import Button from "./inputs/Button";
 import Icon from "./Icon";
 import {Link} from "@inertiajs/inertia-react";
 
-const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) => (
+const PageHeader = ({title, image, icon, meta = [], breadcrumbs = [], actions = []}) => (
     <div className="py-6 bg-white border-b border-gray-300">
         <div className=" px-4 sm:px-6 md:px-8">
             <div className="lg:flex lg:items-center lg:justify-between">
                 {image && <img src={image} alt={title} className="h-32 lg:h-24 rounded-md mb-3 mr-6" />}
                 <div className="flex-1 min-w-0">
-                    <Breadcrumbs breadcrumbs={breadcrumbs} />
+                    {breadcrumbs.length > 0 && <Breadcrumbs breadcrumbs={breadcrumbs} />}
                     <h2 className="mt-2 text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
                         {icon && <Icon icon={icon} type="solid" className="mr-2" />}
                         <span>{title}</span>
