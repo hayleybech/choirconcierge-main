@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +30,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
  * @property Carbon $joined_at
+ * @property Carbon $membership_expires_at
  * @property int $singer_category_id
  * @property int $voice_part_id
  * @property int $user_id
@@ -48,6 +50,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Attributes
  * @property Carbon memberversary
+ * @property boolean is_paid
  *
  * Dynamic
  * @property string $name
@@ -65,11 +68,12 @@ class Singer extends Model
         'membership_details',
         'voice_part_id',
         'joined_at',
+	    'membership_expires_at',
     ];
 
     protected $with = [];
 
-    public $dates = ['updated_at', 'created_at', 'joined_at'];
+    public $dates = ['updated_at', 'created_at', 'joined_at', 'membership_expires_at'];
 
     protected $appends = [];
 
@@ -195,6 +199,13 @@ class Singer extends Model
     {
         return $this->joined_at->copy()->year(now()->year);
     }
+
+	public function isPaid(): Attribute
+	{
+		return Attribute::make(
+			get: fn ($value, $attributes) => Carbon::make($attributes['membership_expires_at']) >= now(),
+		);
+	}
 
     public function scopeEmptyDobs(Builder $query): Builder
     {

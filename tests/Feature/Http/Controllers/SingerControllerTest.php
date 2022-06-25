@@ -318,6 +318,32 @@ class SingerControllerTest extends TestCase
         ]);
     }
 
+	/**
+	 * @test
+	 * @dataProvider singerProvider
+	 */
+	public function update_saves_the_financial_details($getData): void
+	{
+		$this->withoutExceptionHandling();
+
+		$this->actingAs($this->createUserWithRole('Accounts Team'));
+
+		$singer = Singer::factory()->create();
+
+		$expiryDate = now();
+
+		$data = $getData();
+		$response = $this->put(the_tenant_route('singers.update', [$singer]), array_merge($data, [
+			'membership_expires_at' => $expiryDate,
+		]));
+
+		$response->assertSessionHasNoErrors();
+		$this->assertDatabaseHas('singers', [
+			'id' => $singer->id,
+			'membership_expires_at' => $expiryDate,
+		]);
+	}
+
     public function singerProvider(): array
     {
         return [

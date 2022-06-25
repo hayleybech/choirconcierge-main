@@ -78,6 +78,8 @@ class HandleInertiaRequests extends Middleware
                 'list_tasks' => auth()->user()?->can('viewAny', Task::class),
                 'create_task' => auth()->user()?->can('create', Task::class),
                 'impersonate' => auth()->user()?->singer?->hasRole('Admin'),
+	            'manage_finances' => auth()->user()?->singer?->hasRole('Accounts Team')
+	                || auth()->user()?->singer?->hasRole('Admin'),
             ],
             'googleApiKey' => config('services.google.key'),
             'tenant' => tenancy()?->tenant,

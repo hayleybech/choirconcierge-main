@@ -305,8 +305,20 @@ const MembershipDetails = ({ singer }) => (
                 colClass: 'sm:col-span-2',
             },
             {
-                label: 'Reason for Joining',
-                value: singer.reason_for_joining ?? 'Unknown',
+                label: 'Financial Status',
+                value: singer.membership_expires_at
+                    ? (<>
+                        <div className="mb-2">
+                            <Icon icon="circle" mr className={singer.is_paid ? 'text-sm text-green-500' : 'text-sm text-red-500'} />
+                            <span className="text-sm font-medium text-gray-500 truncate">
+                                {singer.is_paid ? 'Paid' : 'Expired'}
+                            </span>
+                        </div>
+                        <span className="text-sm text-gray-500 italic">
+                            <DateTag date={singer.created_at} label="Expires" />
+                        </span>
+                    </>
+                    ) : 'Unknown'
             },
             {
                 label: 'Referred by',
@@ -322,13 +334,17 @@ const MembershipDetails = ({ singer }) => (
                 value: <>
                     <DateTag date={singer.joined_at} /><br />
                     <span className="text-sm text-gray-500 italic">
-                                        <DateTag date={singer.created_at} label="Added" />
-                                    </span>
+                        <DateTag date={singer.created_at} label="Added" />
+                    </span>
                 </>,
             },
             {
                 label: 'Last Login',
                 value: <DateTag date={singer.user.last_login} />,
+            },
+            {
+                label: 'Reason for Joining',
+                value: singer.reason_for_joining ?? 'Unknown',
             },
         ]} />
     </CollapsePanel>

@@ -28,6 +28,9 @@ const Edit = ({ voice_parts, roles, singer }) => {
 
         onboarding_enabled: singer.onboarding_enabled,
         joined_at: singer.joined_at ? DateTime.fromJSDate(new Date(singer.joined_at)).toISODate() : null,
+        membership_expires_at: singer.membership_expires_at
+            ? DateTime.fromJSDate(new Date(singer.membership_expires_at)).toISODate()
+            : null,
         user_roles: singer.roles.map(role => role.id),
     });
 
@@ -104,6 +107,21 @@ const Edit = ({ voice_parts, roles, singer }) => {
                             {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
                         </div>
                     </FormSection>
+                    )}
+
+                    {can['manage_finances'] && (
+                        <FormSection title="Financial Details" description="Fees etc.">
+                            <div className="sm:col-span-6">
+                                <Label label="Membership expires" forInput="membership_expires_at" />
+                                <DayInput
+                                    name="membership_expires_at"
+                                    hasErrors={ !! errors.membership_expires_at }
+                                    value={data.membership_expires_at}
+                                    updateFn={value => setData('membership_expires_at', value)}
+                                />
+                                {errors.membership_expires_at && <Error>{errors.membership_expires_at}</Error>}
+                            </div>
+                        </FormSection>
                     )}
 
                     {can['create_role'] && (
