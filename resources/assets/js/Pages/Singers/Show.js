@@ -305,12 +305,16 @@ const MembershipDetails = ({ singer }) => (
                 colClass: 'sm:col-span-2',
             },
             {
-                label: 'Financial Status',
+                label: 'Membership Fees',
                 value: singer.membership_expires_at
                     ? (<>
-                        <div className="mb-2">
-                            <Icon icon="circle" mr className={singer.is_paid ? 'text-sm text-green-500' : 'text-sm text-red-500'} />
-                            <span className="text-sm font-medium text-gray-500 truncate">
+                        <div className={classNames('mb-2 text-sm', singer.is_paid ? 'text-green-500' : 'text-red-500')}>
+                            <Icon
+	                            icon={singer.is_paid ? 'check-circle' : 'times-circle'}
+                                mr
+                                className={singer.is_paid ? 'text-green-500' : 'text-red-500'}
+                            />
+                            <span className="font-semibold truncate">
                                 {singer.is_paid ? 'Paid' : 'Expired'}
                             </span>
                         </div>
