@@ -28,9 +28,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
 
         onboarding_enabled: singer.onboarding_enabled,
         joined_at: singer.joined_at ? DateTime.fromJSDate(new Date(singer.joined_at)).toISODate() : null,
-        membership_expires_at: singer.membership_expires_at
-            ? DateTime.fromJSDate(new Date(singer.membership_expires_at)).toISODate()
-            : null,
+        paid_until: singer.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : null,
         user_roles: singer.roles.map(role => role.id),
     });
 
@@ -112,14 +110,14 @@ const Edit = ({ voice_parts, roles, singer }) => {
                     {can['manage_finances'] && (
                         <FormSection title="Financial Details" description="Fees etc.">
                             <div className="sm:col-span-6">
-                                <Label label="Membership expires" forInput="membership_expires_at" />
+                                <Label label="Membership expires" forInput="paid_until" />
                                 <DayInput
-                                    name="membership_expires_at"
-                                    hasErrors={ !! errors.membership_expires_at }
-                                    value={data.membership_expires_at}
-                                    updateFn={value => setData('membership_expires_at', value)}
+                                    name="paid_until"
+                                    hasErrors={ !! errors.paid_until }
+                                    value={data.paid_until}
+                                    updateFn={value => setData('paid_until', value)}
                                 />
-                                {errors.membership_expires_at && <Error>{errors.membership_expires_at}</Error>}
+                                {errors.paid_until && <Error>{errors.paid_until}</Error>}
                             </div>
                         </FormSection>
                     )}

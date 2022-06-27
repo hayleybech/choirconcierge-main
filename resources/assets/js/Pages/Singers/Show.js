@@ -306,7 +306,7 @@ const MembershipDetails = ({ singer }) => (
             },
             {
                 label: 'Membership Fees',
-                value: singer.membership_expires_at
+                value: singer.paid_until
                     ? (<>
                         <div className={classNames('mb-2 text-sm', singer.is_paid ? 'text-green-500' : 'text-red-500')}>
                             <Icon

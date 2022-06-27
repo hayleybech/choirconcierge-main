@@ -172,7 +172,7 @@ class SingerController extends Controller
             'joined_at',
             'onboarding_enabled',
             'voice_part_id',
-	        'membership_expires_at',
+	        'paid_until',
         ]));
         $singer->update([
             'user_roles' => array_merge(

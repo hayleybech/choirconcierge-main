@@ -334,13 +334,13 @@ class SingerControllerTest extends TestCase
 
 		$data = $getData();
 		$response = $this->put(the_tenant_route('singers.update', [$singer]), array_merge($data, [
-			'membership_expires_at' => $expiryDate,
+			'paid_until' => $expiryDate,
 		]));
 
 		$response->assertSessionHasNoErrors();
 		$this->assertDatabaseHas('singers', [
 			'id' => $singer->id,
-			'membership_expires_at' => $expiryDate,
+			'paid_until' => $expiryDate,
 		]);
 	}
 

@@ -30,7 +30,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
  * @property Carbon $joined_at
- * @property Carbon $membership_expires_at
+ * @property Carbon $paid_until
  * @property int $singer_category_id
  * @property int $voice_part_id
  * @property int $user_id
@@ -68,12 +68,12 @@ class Singer extends Model
         'membership_details',
         'voice_part_id',
         'joined_at',
-	    'membership_expires_at',
+	    'paid_until',
     ];
 
     protected $with = [];
 
-    public $dates = ['updated_at', 'created_at', 'joined_at', 'membership_expires_at'];
+    public $dates = ['updated_at', 'created_at', 'joined_at', 'paid_until'];
 
     protected $appends = [];
 
@@ -203,7 +203,7 @@ class Singer extends Model
 	public function isPaid(): Attribute
 	{
 		return Attribute::make(
-			get: fn ($value, $attributes) => Carbon::make($attributes['membership_expires_at']) >= now(),
+			get: fn ($value, $attributes) => $attributes['paid_until'] && Carbon::make($attributes['paid_until'])->isFuture(),
 		);
 	}
 
