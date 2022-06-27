@@ -203,7 +203,8 @@ class Singer extends Model
 	public function isPaid(): Attribute
 	{
 		return Attribute::make(
-			get: fn ($value, $attributes) => $attributes['paid_until'] && Carbon::make($attributes['paid_until'])->isFuture(),
+			get: fn ($value, $attributes) => isset($attributes['paid_until'])
+				&& Carbon::make($attributes['paid_until'])->isFuture(),
 		);
 	}
 

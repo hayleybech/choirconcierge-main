@@ -17,6 +17,7 @@ import Pronouns from "../../components/Pronouns";
 import SingerStatus from "../../SingerStatus";
 import CollapsePanel from "../../components/CollapsePanel";
 import CollapseGroup from "../../components/CollapseGroup";
+import FeeStatus from "../../components/FeeStatus";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -308,16 +309,7 @@ const MembershipDetails = ({ singer }) => (
                 label: 'Membership Fees',
                 value: singer.paid_until
                     ? (<>
-                        <div className={classNames('mb-2 text-sm', singer.is_paid ? 'text-green-500' : 'text-red-500')}>
-                            <Icon
-	                            icon={singer.is_paid ? 'check-circle' : 'times-circle'}
-                                mr
-                                className={singer.is_paid ? 'text-green-500' : 'text-red-500'}
-                            />
-                            <span className="font-semibold truncate">
-                                {singer.is_paid ? 'Paid' : 'Expired'}
-                            </span>
-                        </div>
+                        <FeeStatus isPaid={singer.is_paid} />
                         <span className="text-sm text-gray-500 italic">
                             <DateTag date={singer.created_at} label="Expires" />
                         </span>
