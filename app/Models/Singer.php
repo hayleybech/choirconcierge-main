@@ -50,7 +50,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Attributes
  * @property Carbon memberversary
- * @property boolean is_paid
+ * @property boolean fee_status
  *
  * Dynamic
  * @property string $name
@@ -200,11 +200,15 @@ class Singer extends Model
         return $this->joined_at->copy()->year(now()->year);
     }
 
-	public function isPaid(): Attribute
+	public function feeStatus(): Attribute
 	{
 		return Attribute::make(
-			get: fn ($value, $attributes) => isset($attributes['paid_until'])
-				&& Carbon::make($attributes['paid_until'])->isFuture(),
+			get: fn ($value, $attributes) => match(true) {
+				! isset($attributes['paid_until']) => 'unknown',
+				Carbon::make($attributes['paid_until'])->isPast() => 'expired',
+				Carbon::make($attributes['paid_until'])->between(now(), now()->addMonth()) => 'expires-soon',
+				default => 'paid',
+			}
 		);
 	}
 

@@ -307,14 +307,14 @@ const MembershipDetails = ({ singer }) => (
             },
             {
                 label: 'Membership Fees',
-                value: singer.paid_until
-                    ? (<>
-                        <FeeStatus isPaid={singer.is_paid} />
+                value: <>
+                    <FeeStatus status={singer.fee_status} />
+                    {singer.paid_until && (
                         <span className="text-sm text-gray-500 italic">
                             <DateTag date={singer.created_at} label="Expires" />
                         </span>
-                    </>
-                    ) : 'Unknown'
+                    )}
+                </>
             },
             {
                 label: 'Referred by',

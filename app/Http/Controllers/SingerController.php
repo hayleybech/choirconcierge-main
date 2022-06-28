@@ -127,7 +127,7 @@ class SingerController extends Controller
     {
         $this->authorize('view', $singer);
 
-		$singer->append('is_paid');
+		$singer->append('fee_status');
 
         $singer->load('user', 'voice_part', 'category', 'roles', 'placement', 'tasks');
 
