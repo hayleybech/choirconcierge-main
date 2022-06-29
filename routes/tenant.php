@@ -84,9 +84,14 @@ Route::middleware([
     Route::resource('events', EventController::class);
     Route::resource('events.rsvps', RsvpController::class)->only(['store', 'update', 'destroy']);
     Route::resource('events.attendances', AttendanceController::class)->only(['index']);
-    Route::get('events/{event}/recurring/edit/{mode}', [RecurringEventController::class, 'edit'])->name('events.edit-recurring');
-    Route::put('events/{event}/recurring/{mode}', [RecurringEventController::class, 'update'])->name('events.update-recurring');
-    Route::get('events/{event}/recurring/delete/{mode}', [RecurringEventController::class, 'destroy'])->name('events.delete-recurring');
+	Route::controller(RecurringEventController::class)
+		->prefix('events/{event}/recurring/')
+		->name('events.recurring.')
+		->group(function () {
+		    Route::get('edit/{mode}', 'edit')->name('edit');
+		    Route::put('{mode}', 'update')->name('update');
+		    Route::get('delete/{mode}', 'destroy')->name('delete');
+		});
     Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
     Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
     Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
@@ -100,20 +105,24 @@ Route::middleware([
 
     // Users/Team module
     Route::prefix('users')->middleware(['auth'])->group(static function () {
-        // Index
-        Route::get('/', [UserController::class, 'index'])->name('users.index');
 
-        // AJAX Search
-        Route::get('/find', [UserController::class, 'findUsers'])->name('findUsers');
-        Route::get('/roles/find', [UserController::class, 'findRoles'])->name('findRoles');
-        Route::get('/voice-parts/find', [UserController::class, 'findVoiceParts'])->name('findVoiceParts');
-        Route::get('/singer-categories/find', [UserController::class, 'findSingerCategories'])->name('findSingerCategories');
+	    Route::controller(UserController::class)->group(function () {
+		    // Index
+		    Route::get('/', 'index')->name('users.index');
 
-        // Attach/Detach role from a user
-        Route::get('{user}/roles/{role}/detach', [UserController::class, 'detachRole'])->name('users.detachrole');
-        Route::post('{user}/role', [UserController::class, 'addRoles'])->name('users.addroles');
+		    // AJAX Search
+		    Route::get('/find', 'findUsers')->name('findUsers');
+		    Route::get('/roles/find', 'findRoles')->name('findRoles');
+		    Route::get('/voice-parts/find', 'findVoiceParts')->name('findVoiceParts');
+		    Route::get('/singer-categories/find', 'findSingerCategories')->name('findSingerCategories');
 
-        // User Impersonation
+		    // Attach/Detach role from a user
+		    Route::get('{user}/roles/{role}/detach', 'detachRole')->name('users.detachrole');
+		    Route::post('{user}/role', 'addRoles')->name('users.addroles');
+		});
+
+
+	    // User Impersonation
         Route::get('{user}/impersonate', [ImpersonateUserController::class, 'start'])->name('users.impersonate');
         Route::get('/impersonation/stop', [ImpersonateUserController::class, 'stop'])->name('impersonation.stop');
     });

@@ -42,7 +42,7 @@ class RecurringEventControllerTest extends TestCase
 
         $first_child = $parent->repeat_children->first();
 
-        $response = $this->get(the_tenant_route('events.delete-recurring', [$parent, 'mode' => 'single']));
+        $response = $this->get(the_tenant_route('events.recurring.delete', [$parent, 'mode' => 'single']));
         $response->assertRedirect(the_tenant_route('events.index'));
 
         // Assert parent deleted
@@ -73,7 +73,7 @@ class RecurringEventControllerTest extends TestCase
         $first_child = $parent->repeat_children->first();
         $last_child = $parent->repeat_children->last();
 
-        $response = $this->get(the_tenant_route('events.delete-recurring', [$parent, 'mode' => 'all']));
+        $response = $this->get(the_tenant_route('events.recurring.delete', [$parent, 'mode' => 'all']));
         $response->assertRedirect(the_tenant_route('events.index'));
 
         // Assert parent deleted
@@ -101,7 +101,7 @@ class RecurringEventControllerTest extends TestCase
         $next_sibling = $target->nextRepeat();
         $last_sibling = $parent->repeat_children->last();
 
-        $response = $this->get(the_tenant_route('events.delete-recurring', [$target, 'mode' => 'following']));
+        $response = $this->get(the_tenant_route('events.recurring.delete', [$target, 'mode' => 'following']));
         $response->assertRedirect(the_tenant_route('events.index'));
 
         // Assert target and following siblings deleted
@@ -131,7 +131,7 @@ class RecurringEventControllerTest extends TestCase
             ->create();
         self::assertGreaterThan(0, $event->repeat_children()->count());
 
-        $response = $this->get(the_tenant_route('events.edit-recurring', [$event, 'mode' => $mode]));
+        $response = $this->get(the_tenant_route('events.recurring.edit', [$event, 'mode' => $mode]));
 
         $edit_urls = [
             'single' => route('events.edit', ['event' => $event, 'mode' => $mode]),
@@ -159,7 +159,7 @@ class RecurringEventControllerTest extends TestCase
 
         // Make the update request
         ['request' => $request_data, 'saved' => $saved_data] = $getData();
-        $response = $this->put(the_tenant_route('events.update-recurring', [$target, 'single']), $request_data);
+        $response = $this->put(the_tenant_route('events.recurring.update', [$target, 'single']), $request_data);
         $response->assertSessionHasNoErrors();
 
         // Assert target updated
@@ -201,7 +201,7 @@ class RecurringEventControllerTest extends TestCase
         $saved_data['title'] = 'New title';
 
         // Make the update request
-        $response = $this->put(the_tenant_route('events.update-recurring', [$parent, 'all']), $request_data);
+        $response = $this->put(the_tenant_route('events.recurring.update', [$parent, 'all']), $request_data);
         $response->assertSessionHasNoErrors();
 
         // Assert target updated
@@ -243,7 +243,7 @@ class RecurringEventControllerTest extends TestCase
         // Make the update request.
         // Note: We specifically want to change the event dates.
         ['request' => $request_data, 'saved' => $saved_data] = $getData();
-        $response = $this->put(the_tenant_route('events.update-recurring', [$target, 'all']), $request_data);
+        $response = $this->put(the_tenant_route('events.recurring.update', [$target, 'all']), $request_data);
         $response->assertSessionHasNoErrors();
 
         // Assert target updated
@@ -292,7 +292,7 @@ class RecurringEventControllerTest extends TestCase
             'end_date' => $target->end_date->format($date_format),
         ]);
         $saved_data['title'] = 'New title';
-        $response = $this->put(the_tenant_route('events.update-recurring', [$target, 'following']), $request_data);
+        $response = $this->put(the_tenant_route('events.recurring.update', [$target, 'following']), $request_data);
         $response->assertSessionHasNoErrors();
 
         // Assert target and siblings updated but not regenerated
@@ -347,7 +347,7 @@ class RecurringEventControllerTest extends TestCase
 
         // Make the update request
         ['request' => $request_data, 'saved' => $saved_data] = $getData();
-        $response = $this->put(the_tenant_route('events.update-recurring', [$target, 'following']), $request_data);
+        $response = $this->put(the_tenant_route('events.recurring.update', [$target, 'following']), $request_data);
         $response->assertSessionHasNoErrors();
 
         // Assert target updated
