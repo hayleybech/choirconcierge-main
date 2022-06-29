@@ -63,7 +63,8 @@ class SingerController extends Controller
                 AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),
             ])
             ->defaultSort($nameSort)
-            ->get();
+            ->get()
+            ->append('fee_status');
 
         return Inertia::render('Singers/Index', [
             'allSingers' => $allSingers->values(),
