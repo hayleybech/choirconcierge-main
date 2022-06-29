@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link, usePage} from "@inertiajs/inertia-react";
 import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
@@ -6,8 +6,12 @@ import Table, {TableCell} from "../../components/Table";
 import Icon from "../../components/Icon";
 import SingerStatus from "../../SingerStatus";
 import FeeStatus from "../../components/FeeStatus";
+import Dialog from "../../components/Dialog";
+import Button from "../../components/inputs/Button";
 
 const SingerTableDesktop = ({ singers }) => {
+    const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
+
     const { can } = usePage().props;
 
     return (
@@ -42,6 +46,10 @@ const SingerTableDesktop = ({ singers }) => {
                     {can['manage_finances'] && (
                     <TableCell>
                         <FeeStatus status={singer.fee_status} />
+
+                        <Button variant="secondary" size="xs" onClick={() => setFeeDialogIsOpen(true)}>Renew Fees</Button>
+
+                        <RenewFeesDialog isOpen={feeDialogIsOpen} setIsOpen={setFeeDialogIsOpen} />
                     </TableCell>
                     )}
                 </tr>
@@ -51,3 +59,17 @@ const SingerTableDesktop = ({ singers }) => {
 }
 
 export default SingerTableDesktop;
+
+const RenewFeesDialog = ({ isOpen, setIsOpen }) => (
+    <Dialog
+        title="Mark fees paid"
+        okLabel="Save"
+        okUrl="#"
+        okVariant="primary"
+        okMethod="delete"
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+    >
+        To renew a singer's fees, update their expiry date below.
+    </Dialog>
+)
