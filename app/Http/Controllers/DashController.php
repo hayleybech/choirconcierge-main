@@ -83,6 +83,7 @@ class DashController extends Controller
             'birthdays' => $birthdays->values(),
             'emptyDobs' => $empty_dobs,
             'memberversaries' => $memberversaries->values(),
+	        'feeStatus' => auth()->user()->singer->fee_status,
         ]);
     }
 }

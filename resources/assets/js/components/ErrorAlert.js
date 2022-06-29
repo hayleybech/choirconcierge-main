@@ -1,8 +1,8 @@
 import React from 'react';
 import Icon from "./Icon";
 
-const ErrorAlert = ({ title, children }) => (
-    <div className="rounded-md bg-red-50 p-4">
+const ErrorAlert = ({ title, className, children }) => (
+    <div className={`rounded-md bg-red-50 p-4 ${className}`}>
         <div className="flex">
             <div className="flex-shrink-0">
                 <Icon icon="times-circle" className="h-5 w-5 text-red-400" aria-hidden="true" />
