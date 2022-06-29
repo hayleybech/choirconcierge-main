@@ -33,6 +33,7 @@ class EditSingerRequest extends FormRequest
             'referrer' => ['max:255'],
             'membership_details' => ['max:255'],
             'joined_at' => ['date', 'before_or_equal:today'],
+            'paid_until' => ['nullable', 'sometimes', 'date'],
             'onboarding_enabled' => ['boolean'],
             'voice_part_id' => ['numeric', 'exists:voice_parts,id'],
             'user_roles' => auth()->user()->singer->hasAbility('roles_create')

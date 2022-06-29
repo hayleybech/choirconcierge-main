@@ -93,6 +93,7 @@ class CriticalUserSeeder extends Seeder
                 'abilities' => json_encode(
                     [
                         'singers_view',
+						'singers_update',
                         'singer_profiles_view',
                         'singer_placements_view',
                         'singer_placements_create',
@@ -168,6 +169,7 @@ class CriticalUserSeeder extends Seeder
                 'abilities' => json_encode(
                     [
                         'singers_view',
+						'singers_update',
                         'singer_profiles_view',
                         'voice_parts_view',
                         'songs_view',

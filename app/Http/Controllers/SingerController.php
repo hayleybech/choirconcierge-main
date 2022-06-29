@@ -127,6 +127,8 @@ class SingerController extends Controller
     {
         $this->authorize('view', $singer);
 
+		$singer->append('fee_status');
+
         $singer->load('user', 'voice_part', 'category', 'roles', 'placement', 'tasks');
 
         $singer->can = [
@@ -170,6 +172,7 @@ class SingerController extends Controller
             'joined_at',
             'onboarding_enabled',
             'voice_part_id',
+	        'paid_until',
         ]));
         $singer->update([
             'user_roles' => array_merge(

@@ -17,6 +17,7 @@ import Pronouns from "../../components/Pronouns";
 import SingerStatus from "../../SingerStatus";
 import CollapsePanel from "../../components/CollapsePanel";
 import CollapseGroup from "../../components/CollapseGroup";
+import FeeStatus from "../../components/FeeStatus";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -305,8 +306,15 @@ const MembershipDetails = ({ singer }) => (
                 colClass: 'sm:col-span-2',
             },
             {
-                label: 'Reason for Joining',
-                value: singer.reason_for_joining ?? 'Unknown',
+                label: 'Membership Fees',
+                value: <>
+                    <FeeStatus status={singer.fee_status} />
+                    {singer.paid_until && (
+                        <span className="text-sm text-gray-500 italic">
+                            <DateTag date={singer.created_at} label="Expires" />
+                        </span>
+                    )}
+                </>
             },
             {
                 label: 'Referred by',
@@ -322,13 +330,17 @@ const MembershipDetails = ({ singer }) => (
                 value: <>
                     <DateTag date={singer.joined_at} /><br />
                     <span className="text-sm text-gray-500 italic">
-                                        <DateTag date={singer.created_at} label="Added" />
-                                    </span>
+                        <DateTag date={singer.created_at} label="Added" />
+                    </span>
                 </>,
             },
             {
                 label: 'Last Login',
                 value: <DateTag date={singer.user.last_login} />,
+            },
+            {
+                label: 'Reason for Joining',
+                value: singer.reason_for_joining ?? 'Unknown',
             },
         ]} />
     </CollapsePanel>
