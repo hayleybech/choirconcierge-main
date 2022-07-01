@@ -14,6 +14,7 @@ use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -29,33 +30,16 @@ class SongController extends Controller
     {
         $this->authorize('viewAny', Song::class);
 
-        $includePending = auth()->user()?->singer?->hasAbility('songs_update');
+        $includePending = auth()->user()?->singer->hasAbility('songs_update');
         $statuses = SongStatus::query()
             ->when(! $includePending, fn ($query) => $query->where('title', '!=', 'Pending'))
             ->get();
         $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
 
-        $includeNonAuditionSongs = auth()->user()?->singer?->category->name === 'Members';
+        $includeNonAuditionSongs = auth()->user()?->singer->category->name === 'Members';
         $showForProspectsDefault = $includeNonAuditionSongs ? [false, true] : [true];
 
-        $songs = QueryBuilder::for(Song::class)
-            ->allowedFilters([
-                'title',
-                AllowedFilter::exact('status.id')
-                    ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
-                    ->default($defaultStatuses),
-                AllowedFilter::callback('show_for_prospects', fn (Builder $query, $value) => $query->whereIn('show_for_prospects', $includeNonAuditionSongs ? $value : [true])
-                    )
-                    ->default($showForProspectsDefault),
-                AllowedFilter::exact('categories.id'),
-            ])
-            ->defaultSort('title')
-            ->allowedSorts([
-                'title',
-                'created_at',
-                AllowedSort::custom('status-title', new SongStatusSort(), 'title'),
-            ])
-            ->get();
+        $songs = $this->getSongs($includePending, $defaultStatuses, $includeNonAuditionSongs, $showForProspectsDefault);
 
         return Inertia::render('Songs/Index', [
             'songs' => $songs->values(),
@@ -113,12 +97,12 @@ class SongController extends Controller
             },
             'singers as performance_ready_count' => function (Builder $query) use ($song) {
                 $query
-                        ->active()
-                        ->with('songs')
-                        ->whereHas('songs', function (Builder $query) use ($song) {
-                            $query->where('songs.id', $song->id)
-                                ->where('singer_song.status', 'performance-ready');
-                        });
+                    ->active()
+                    ->with('songs')
+                    ->whereHas('songs', function (Builder $query) use ($song) {
+                        $query->where('songs.id', $song->id)
+                            ->where('singer_song.status', 'performance-ready');
+                    });
             },
         ])->get();
 
@@ -193,5 +177,27 @@ class SongController extends Controller
         return redirect()
             ->route('songs.index')
             ->with(['status' => 'Song deleted. ']);
+    }
+
+    private function getSongs(bool $includePending, array $defaultStatuses, bool $includeNonAuditionSongs, array $showForProspectsDefault): array|Collection
+    {
+        return QueryBuilder::for(Song::class)
+            ->allowedFilters([
+                'title',
+                AllowedFilter::exact('status.id')
+                    ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
+                    ->default($defaultStatuses),
+                AllowedFilter::callback('show_for_prospects', fn(Builder $query, $value) => $query->whereIn('show_for_prospects', $includeNonAuditionSongs ? $value : [true])
+                )
+                    ->default($showForProspectsDefault),
+                AllowedFilter::exact('categories.id'),
+            ])
+            ->defaultSort('title')
+            ->allowedSorts([
+                'title',
+                'created_at',
+                AllowedSort::custom('status-title', new SongStatusSort(), 'title'),
+            ])
+            ->get();
     }
 }
