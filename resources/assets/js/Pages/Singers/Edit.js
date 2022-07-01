@@ -16,24 +16,31 @@ import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
 import {DateTime} from "luxon";
 import DayInput from "../../components/inputs/Day";
+import Help from "../../components/inputs/Help";
+import ButtonGroup from "../../components/inputs/ButtonGroup";
 
 const Edit = ({ voice_parts, roles, singer }) => {
     const { can } = usePage().props;
 
     const { data, setData, put, processing, errors } = useForm({
         voice_part_id: singer.voice_part.id,
-        reason_for_joining: singer.reason_for_joining,
-        referrer: singer.referrer,
-        membership_details: singer.membership_details,
+        reason_for_joining: singer.reason_for_joining ?? '',
+        referrer: singer.referrer ?? '',
+        membership_details: singer.membership_details ?? '',
 
         onboarding_enabled: singer.onboarding_enabled,
-        joined_at: singer.joined_at ? DateTime.fromJSDate(new Date(singer.joined_at)).toISODate() : null,
+        joined_at: singer.joined_at ? DateTime.fromJSDate(new Date(singer.joined_at)).toISODate() : '',
+        paid_until: singer.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : '',
         user_roles: singer.roles.map(role => role.id),
     });
 
     function submit(e) {
         e.preventDefault();
         put(route('singers.update', singer));
+    }
+
+    function renewFor(timeObj) {
+        setData('paid_until', DateTime.fromJSDate(new Date(data.paid_until)).plus(timeObj).toISODate());
     }
 
     return (
@@ -53,13 +60,8 @@ const Edit = ({ voice_parts, roles, singer }) => {
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
                 <Form onSubmit={submit}>
 
-                    <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
-                        <div className="sm:col-span-3">
-                            <Label label="Voice part" forInput="voice_part_id" />
-                            <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
-                            {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
-                        </div>
-
+                    {can['create_singer'] && (
+                    <FormSection title="Membership Details" description="Essential membership info.">
                         <div className="sm:col-span-6">
                             <Label label="Why are you joining?" forInput="reason_for_joining" />
                             <TextInput name="reason_for_joining" value={data.reason_for_joining} updateFn={value => setData('reason_for_joining', value)} hasErrors={ !! errors['reason_for_joining'] } />
@@ -98,15 +100,53 @@ const Edit = ({ voice_parts, roles, singer }) => {
                             />
                             {errors.joined_at && <Error>{errors.joined_at}</Error>}
                         </div>
-
-                        {can['create_role'] && (
-                            <fieldset className="mt-6 sm:col-span-6">
-                                <legend className="text-base font-medium text-gray-900">Roles</legend>
-                                <CheckboxGroup name={"user_roles"} options={roles} value={data.user_roles} updateFn={value => setData('user_roles', value)} />
-                                {errors.user_roles && <Error>{errors.user_roles}</Error>}
-                            </fieldset>
-                        )}
                     </FormSection>
+                    )}
+
+                    {can['create_song'] && (
+                    <FormSection title="Music Details" description="Voice part etc.">
+                        <div className="sm:col-span-3">
+                            <Label label="Voice part" forInput="voice_part_id" />
+                            <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
+                            {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
+                        </div>
+                    </FormSection>
+                    )}
+
+                    {can['manage_finances'] && (
+                        <FormSection title="Financial Details" description="Fees etc.">
+                            <div className="sm:col-span-6">
+                                <Label label="Renew for" forInput="paid_until" />
+                                <ButtonGroup options={[
+                                    { label: '1 Month', onClick: () => renewFor({ months: 1 }) },
+                                    { label: '1 Quarter', onClick: () => renewFor({ quarters: 1 }) },
+                                    { label: '6 Months', onClick: () => renewFor({ months: 6 }) },
+                                    { label: '1 Year', onClick: () => renewFor({ years: 1 }) },
+                                ]} />
+                            </div>
+                            <div className="sm:col-span-6">
+                                <Label label="Membership expires" forInput="paid_until" />
+                                <DayInput
+                                    name="paid_until"
+                                    hasErrors={ !! errors.paid_until }
+                                    value={data.paid_until}
+                                    updateFn={value => setData('paid_until', value)}
+                                />
+                                <Help>Manually adjust the expiry date here.</Help>
+                                {errors.paid_until && <Error>{errors.paid_until}</Error>}
+                            </div>
+                        </FormSection>
+                    )}
+
+                    {can['create_role'] && (
+                    <FormSection title="Account Details" description="Manage permissions etc.">
+                        <fieldset className="mt-6 sm:col-span-6">
+                            <legend className="text-base font-medium text-gray-900">Roles</legend>
+                            <CheckboxGroup name={"user_roles"} options={roles} value={data.user_roles} updateFn={value => setData('user_roles', value)} />
+                            {errors.user_roles && <Error>{errors.user_roles}</Error>}
+                        </fieldset>
+                    </FormSection>
+                    )}
 
                     <FormFooter>
                         <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>

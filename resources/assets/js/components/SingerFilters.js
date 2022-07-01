@@ -3,6 +3,7 @@ import Filters from "./Filters";
 import Label from "./inputs/Label";
 import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
+import RadioGroup from "./inputs/RadioGroup";
 
 const SingerFilters = ({ statuses, defaultStatus, voiceParts, roles}) => (
     <Filters
@@ -14,6 +15,7 @@ const SingerFilters = ({ statuses, defaultStatus, voiceParts, roles}) => (
                 [defaultStatus],
             'voice_part.id': params.getAll('filter[voice_part.id][]').map(value => parseInt(value)),
             'roles.id': params.getAll('filter[roles.id][]').map(value => parseInt(value)),
+            'fee_status': params.get('filter[fee_status]') ?? '',
         })}
         render={(data, setData) => (<>
             <div>
@@ -48,6 +50,22 @@ const SingerFilters = ({ statuses, defaultStatus, voiceParts, roles}) => (
                     options={roles.map((role) => ({ id: role.id, name: role.name }))}
                     value={data['roles.id']}
                     updateFn={value => setData('roles.id', value)}
+                />
+            </fieldset>
+
+            <fieldset>
+                <RadioGroup
+                    name="fee_status"
+                    label={<Label label="Fee Status" />}
+                    options={[
+                        { id: 'paid', name: 'Paid', icon: 'check-circle', colour: 'green-500' },
+                        { id: 'expires-soon', name: 'Expires Soon', icon: 'exclamation-triangle', colour: 'orange-500' },
+                        { id: 'expired', name: 'Expired', icon: 'times-circle', colour: 'red-500' },
+                        { id: 'unknown', name: 'Unknown', icon: 'question-circle', colour: 'gray-500' },
+                    ]}
+                    selected={data.fee_status}
+                    setSelected={value => setData('fee_status', value)}
+                    vertical
                 />
             </fieldset>
         </>)}

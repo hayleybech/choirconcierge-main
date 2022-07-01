@@ -8,6 +8,7 @@ const SingerSorts = ({ }) => (
             { id: 'full-name', name: 'Name', default: true },
             { id: 'status-title', name: 'Status' },
             { id: 'part-title', name: 'Voice Part' },
+            { id: 'paid_until', name: 'Paid Until' },
         ]}
     />
 );

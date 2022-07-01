@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -40,34 +41,11 @@ class SingerController extends Controller
     {
         $this->authorize('viewAny', Singer::class);
 
-        $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
-
-        $statuses = SingerCategory::all();
-        $defaultStatus = $statuses->firstWhere('name', 'Members')->id;
-
-        $allSingers = QueryBuilder::for(Singer::class)
-            ->with(['tasks', 'category', 'voice_part', 'user'])
-            ->allowedFilters([
-                AllowedFilter::callback('user.name', fn (Builder $query, $value) => $query
-                    ->whereHas('user', fn (Builder $query) => $query
-                        ->whereRaw('CONCAT(first_name, ?, last_name) LIKE ?', [' ', "%$value%"])
-                )),
-                AllowedFilter::exact('category.id')
-                    ->default([$defaultStatus]),
-                AllowedFilter::exact('voice_part.id'),
-                AllowedFilter::exact('roles.id'),
-            ])
-            ->allowedSorts([
-                $nameSort,
-                AllowedSort::custom('status-title', new SingerStatusSort(), 'status'),
-                AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),
-            ])
-            ->defaultSort($nameSort)
-            ->get();
+        $defaultStatus = SingerCategory::all()->firstWhere('name', 'Members')->id;
 
         return Inertia::render('Singers/Index', [
-            'allSingers' => $allSingers->values(),
-            'statuses' => $statuses->values(),
+            'allSingers' => $this->getSingers($defaultStatus)->values(),
+            'statuses' => SingerCategory::all()->values(),
             'defaultStatus' => $defaultStatus,
             'voiceParts' => VoicePart::all()->values(),
             'roles' => Role::all()->values(),
@@ -127,6 +105,8 @@ class SingerController extends Controller
     {
         $this->authorize('view', $singer);
 
+		$singer->append('fee_status');
+
         $singer->load('user', 'voice_part', 'category', 'roles', 'placement', 'tasks');
 
         $singer->can = [
@@ -170,6 +150,7 @@ class SingerController extends Controller
             'joined_at',
             'onboarding_enabled',
             'voice_part_id',
+	        'paid_until',
         ]));
         $singer->update([
             'user_roles' => array_merge(
@@ -195,34 +176,37 @@ class SingerController extends Controller
             ->with(['status' => 'Singer deleted. ']);
     }
 
-    public function getSorts(Request $request): array
+    private function getSingers(string $defaultStatus): array|Collection
     {
-        $sort_cols = ['name', 'voice_part', 'category.name'];
+        $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
 
-        // Merge filters with sort query string
-        $url = $request->url().'?'.Singer::getFilterQueryString();
-
-        $current_sort = $request->input('sort_by', 'name');
-        $current_dir = $request->input('sort_dir', 'asc');
-
-        $sorts = [];
-        foreach ($sort_cols as $col) {
-            // If current sort
-            if ($col === $current_sort) {
-                // Create link for opposite sort direction
-                $current = true;
-                $dir = 'asc' === $current_dir ? 'desc' : 'asc';
-            } else {
-                $current = false;
-                $dir = 'asc';
-            }
-            $sorts[$col] = [
-                'url' => $url."&sort_by=$col&sort_dir=$dir",
-                'dir' => $current_dir,
-                'current' => $current,
-            ];
-        }
-
-        return $sorts;
+        return QueryBuilder::for(Singer::class)
+            ->with(['tasks', 'category', 'voice_part', 'user'])
+            ->allowedFilters([
+                AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query
+                    ->whereHas('user', fn(Builder $query) => $query
+                        ->whereRaw('CONCAT(first_name, ?, last_name) LIKE ?', [' ', "%$value%"])
+                    )),
+                AllowedFilter::exact('category.id')
+                    ->default([$defaultStatus]),
+                AllowedFilter::exact('voice_part.id'),
+                AllowedFilter::exact('roles.id'),
+                AllowedFilter::callback('fee_status', fn(Builder $query, $value) => match ($value) {
+                    'unknown' => $query->whereNull('paid_until'),
+                    'expired' => $query->whereDate('paid_until', '<', now()),
+                    'expires-soon' => $query->whereDate('paid_until', '>', now())
+                        ->whereDate('paid_until', '<', now()->addMonth()),
+                    default => $query->whereDate('paid_until', '>', now()->addMonth()),
+                })
+            ])
+            ->allowedSorts([
+                $nameSort,
+                AllowedSort::custom('status-title', new SingerStatusSort(), 'status'),
+                AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),
+                AllowedSort::field('paid_until'),
+            ])
+            ->defaultSort($nameSort)
+            ->get()
+            ->append('fee_status');
     }
 }

@@ -5,7 +5,7 @@ import React from "react";
 
 const CollapseGroup = ({ items }) => (
     items.map(({ title, show, defaultOpen, action, content }) => (
-    <Disclosure defaultOpen={defaultOpen}>
+    <Disclosure defaultOpen={defaultOpen} key={title}>
         {({ open }) => (show && <>
             <CollapseHeader>
                 <Disclosure.Button>

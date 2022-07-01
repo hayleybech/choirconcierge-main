@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +30,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
  * @property Carbon $joined_at
+ * @property Carbon $paid_until
  * @property int $singer_category_id
  * @property int $voice_part_id
  * @property int $user_id
@@ -48,6 +50,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Attributes
  * @property Carbon memberversary
+ * @property boolean fee_status
  *
  * Dynamic
  * @property string $name
@@ -65,11 +68,12 @@ class Singer extends Model
         'membership_details',
         'voice_part_id',
         'joined_at',
+	    'paid_until',
     ];
 
     protected $with = [];
 
-    public $dates = ['updated_at', 'created_at', 'joined_at'];
+    public $dates = ['updated_at', 'created_at', 'joined_at', 'paid_until'];
 
     protected $appends = [];
 
@@ -195,6 +199,18 @@ class Singer extends Model
     {
         return $this->joined_at->copy()->year(now()->year);
     }
+
+	public function feeStatus(): Attribute
+	{
+		return Attribute::make(
+			get: fn ($value, $attributes) => match(true) {
+				! isset($attributes['paid_until']) => 'unknown',
+				Carbon::make($attributes['paid_until'])->isPast() => 'expired',
+				Carbon::make($attributes['paid_until'])->between(now(), now()->addMonth()) => 'expires-soon',
+				default => 'paid',
+			}
+		);
+	}
 
     public function scopeEmptyDobs(Builder $query): Builder
     {

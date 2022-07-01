@@ -10,6 +10,7 @@ use App\Models\Singer;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -25,32 +26,8 @@ class EventController extends Controller
     {
         $this->authorize('viewAny', Event::class);
 
-        $all_events = QueryBuilder::for(Event::class)
-            ->allowedFilters([
-                'title',
-                AllowedFilter::exact('type.id'),
-                AllowedFilter::scope('date')->default(['upcoming']),
-            ])
-            ->with(['repeat_parent:id,call_time'])
-            ->withCount([
-                'rsvps as going_count' => function ($query) {
-                    $query->where('response', '=', 'yes');
-                },
-                'attendances as present_count' => function ($query) {
-                    $query->whereIn('response', ['present', 'late']);
-                },
-            ])
-            ->allowedSorts([
-                'title',
-                'start_date',
-                AllowedSort::custom('type-title', new EventTypeSort(), 'type'),
-                'created_at',
-            ])
-            ->defaultSort('start_date')
-            ->get();
-
         return Inertia::render('Events/Index', [
-            'events' => $all_events->values(),
+            'events' => $this->getEvents()->values(),
             'eventTypes' => EventType::all()->values(),
         ]);
     }
@@ -165,5 +142,32 @@ class EventController extends Controller
         return redirect()
             ->route('events.index')
             ->with(['status' => 'Event deleted. ']);
+    }
+
+    private function getEvents(): array|Collection
+    {
+        return QueryBuilder::for(Event::class)
+            ->allowedFilters([
+                'title',
+                AllowedFilter::exact('type.id'),
+                AllowedFilter::scope('date')->default(['upcoming']),
+            ])
+            ->with(['repeat_parent:id,call_time'])
+            ->withCount([
+                'rsvps as going_count' => function ($query) {
+                    $query->where('response', '=', 'yes');
+                },
+                'attendances as present_count' => function ($query) {
+                    $query->whereIn('response', ['present', 'late']);
+                },
+            ])
+            ->allowedSorts([
+                'title',
+                'start_date',
+                AllowedSort::custom('type-title', new EventTypeSort(), 'type'),
+                'created_at',
+            ])
+            ->defaultSort('start_date')
+            ->get();
     }
 }
