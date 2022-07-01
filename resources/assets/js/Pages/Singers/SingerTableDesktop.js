@@ -18,7 +18,7 @@ import ButtonGroup from "../../components/inputs/ButtonGroup";
 
 const SingerTableDesktop = ({ singers }) => {
     const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
-    const [renewingSinger, setRenewingSinger] = useState(singers[0]);
+    const [renewingSinger, setRenewingSinger] = useState(singers[0] ?? null);
 
     const { can } = usePage().props;
 
@@ -73,7 +73,7 @@ export default SingerTableDesktop;
 
 const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
     const { data, setData, put, errors } = useForm({
-        paid_until: singer.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : '',
+        paid_until: singer?.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : '',
     });
 
     function submit(e) {
