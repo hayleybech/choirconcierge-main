@@ -1,7 +1,6 @@
 import React from 'react';
 import { Fragment } from 'react';
 import { Dialog as BaseDialog, Transition } from '@headlessui/react';
-import ButtonLink from "./inputs/ButtonLink";
 import Button from "./inputs/Button";
 import Icon from "./Icon";
 
