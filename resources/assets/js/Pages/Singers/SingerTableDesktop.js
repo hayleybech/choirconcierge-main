@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, useForm, usePage} from "@inertiajs/inertia-react";
 import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
@@ -15,6 +15,7 @@ import DayInput from "../../components/inputs/Day";
 import Error from "../../components/inputs/Error";
 import Help from "../../components/inputs/Help";
 import ButtonGroup from "../../components/inputs/ButtonGroup";
+import DateTag from "../../components/DateTag";
 
 const SingerTableDesktop = ({ singers }) => {
     const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
@@ -56,6 +57,12 @@ const SingerTableDesktop = ({ singers }) => {
                         <TableCell>
                             <FeeStatus status={singer.fee_status} />
 
+                            {singer.paid_until && (
+                            <div className="text-sm text-gray-500 italic mb-2">
+                                <DateTag date={singer.paid_until} />
+                            </div>
+                            )}
+
                             <Button variant="secondary" size="xs" onClick={() => { setRenewingSinger(singer); setFeeDialogIsOpen(true); }}>
                                 Renew Fees
                             </Button>
@@ -75,6 +82,10 @@ const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
     const { data, setData, put, errors } = useForm({
         paid_until: singer?.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : '',
     });
+
+    useEffect(() => {
+        setData('paid_until', singer?.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : '');
+    }, [singer]);
 
     function submit(e) {
         e.preventDefault();

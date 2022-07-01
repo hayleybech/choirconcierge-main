@@ -194,7 +194,7 @@ class SingerController extends Controller
                 AllowedFilter::callback('fee_status', fn(Builder $query, $value) => match ($value) {
                     'unknown' => $query->whereNull('paid_until'),
                     'expired' => $query->whereDate('paid_until', '<', now()),
-                    'expires_soon' => $query->whereDate('paid_until', '>', now())
+                    'expires-soon' => $query->whereDate('paid_until', '>', now())
                         ->whereDate('paid_until', '<', now()->addMonth()),
                     default => $query->whereDate('paid_until', '>', now()->addMonth()),
                 })
@@ -203,6 +203,7 @@ class SingerController extends Controller
                 $nameSort,
                 AllowedSort::custom('status-title', new SingerStatusSort(), 'status'),
                 AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),
+                AllowedSort::field('paid_until'),
             ])
             ->defaultSort($nameSort)
             ->get()
