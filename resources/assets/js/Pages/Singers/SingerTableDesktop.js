@@ -13,6 +13,8 @@ import Form from "../../components/Form";
 import Label from "../../components/inputs/Label";
 import DayInput from "../../components/inputs/Day";
 import Error from "../../components/inputs/Error";
+import Help from "../../components/inputs/Help";
+import ButtonGroup from "../../components/inputs/ButtonGroup";
 
 const SingerTableDesktop = ({ singers }) => {
     const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
@@ -81,6 +83,10 @@ const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
         });
     }
 
+    function renewFor(timeObj) {
+        setData('paid_until', DateTime.fromJSDate(new Date(data.paid_until)).plus(timeObj).toISODate());
+    }
+
     return (
         <Dialog
             title="Mark fees as paid"
@@ -95,6 +101,15 @@ const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
 
             <Form onSubmit={submit}>
                 <div className="sm:col-span-6">
+                    <Label label="Renew for" forInput="paid_until" />
+                    <ButtonGroup options={[
+                        { label: '1 Month', onClick: () => renewFor({ months: 1 }) },
+                        { label: '1 Quarter', onClick: () => renewFor({ quarters: 1 }) },
+                        { label: '6 Months', onClick: () => renewFor({ months: 6 }) },
+                        { label: '1 Year', onClick: () => renewFor({ years: 1 }) },
+                    ]} />
+                </div>
+                <div className="sm:col-span-6">
                     <Label label="Membership expires" forInput="paid_until" />
                     <DayInput
                         name="paid_until"
@@ -102,6 +117,7 @@ const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
                         value={data.paid_until}
                         updateFn={value => setData('paid_until', value)}
                     />
+                    <Help>Manually adjust the expiry date here.</Help>
                     {errors.paid_until && <Error>{errors.paid_until}</Error>}
                 </div>
             </Form>

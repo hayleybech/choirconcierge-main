@@ -16,6 +16,8 @@ import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
 import {DateTime} from "luxon";
 import DayInput from "../../components/inputs/Day";
+import Help from "../../components/inputs/Help";
+import ButtonGroup from "../../components/inputs/ButtonGroup";
 
 const Edit = ({ voice_parts, roles, singer }) => {
     const { can } = usePage().props;
@@ -35,6 +37,10 @@ const Edit = ({ voice_parts, roles, singer }) => {
     function submit(e) {
         e.preventDefault();
         put(route('singers.update', singer));
+    }
+
+    function renewFor(timeObj) {
+        setData('paid_until', DateTime.fromJSDate(new Date(data.paid_until)).plus(timeObj).toISODate());
     }
 
     return (
@@ -110,6 +116,15 @@ const Edit = ({ voice_parts, roles, singer }) => {
                     {can['manage_finances'] && (
                         <FormSection title="Financial Details" description="Fees etc.">
                             <div className="sm:col-span-6">
+                                <Label label="Renew for" forInput="paid_until" />
+                                <ButtonGroup options={[
+                                    { label: '1 Month', onClick: () => renewFor({ months: 1 }) },
+                                    { label: '1 Quarter', onClick: () => renewFor({ quarters: 1 }) },
+                                    { label: '6 Months', onClick: () => renewFor({ months: 6 }) },
+                                    { label: '1 Year', onClick: () => renewFor({ years: 1 }) },
+                                ]} />
+                            </div>
+                            <div className="sm:col-span-6">
                                 <Label label="Membership expires" forInput="paid_until" />
                                 <DayInput
                                     name="paid_until"
@@ -117,6 +132,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
                                     value={data.paid_until}
                                     updateFn={value => setData('paid_until', value)}
                                 />
+                                <Help>Manually adjust the expiry date here.</Help>
                                 {errors.paid_until && <Error>{errors.paid_until}</Error>}
                             </div>
                         </FormSection>
