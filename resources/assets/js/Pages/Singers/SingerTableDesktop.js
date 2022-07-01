@@ -108,8 +108,9 @@ const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
                         { label: '6 Months', onClick: () => renewFor({ months: 6 }) },
                         { label: '1 Year', onClick: () => renewFor({ years: 1 }) },
                     ]} />
-                </div>
-                <div className="sm:col-span-6">
+
+                    <hr className="mt-6 mb-4" />
+
                     <Label label="Membership expires" forInput="paid_until" />
                     <DayInput
                         name="paid_until"
