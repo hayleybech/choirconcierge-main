@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Mail\Welcome;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -105,7 +106,7 @@ class User extends Authenticatable implements HasMedia
 
     public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
 
-    protected $appends = ['name', 'avatar_url', 'profile_avatar_url'];
+    protected $appends = ['name', 'avatar_url', 'profile_avatar_url', 'bha_type'];
 
     public $notify_channels = ['database', 'mail'];
 
@@ -179,6 +180,15 @@ class User extends Authenticatable implements HasMedia
     public function getNameAttribute(): string
     {
         return $this->first_name.' '.$this->last_name;
+    }
+
+    public function bhaType(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) =>  $attributes['dob']
+                ? Carbon::make($attributes['dob'])->diffInYears(now()->startOfYear()) > 25 ? 'Full' : 'Youth'
+                : ''
+        );
     }
 
     public function registerMediaCollections(): void

@@ -252,7 +252,11 @@ const PersonalDetails = ({ singer }) => (
             },
             {
                 label: 'BHA Member ID',
-                value: singer.user.bha_id ?? 'Unknown',
+                value: <>
+                    <Icon icon="id-card" mr type="regular" className="text-gray-400" />
+                    <span>{singer.user.bha_id ?? 'Unknown'}</span>
+                    <span className="ml-2 text-gray-500">{`(${singer.user.bha_type})` ?? ''}</span>
+                </>
             },
             {
                 label: 'Address',
