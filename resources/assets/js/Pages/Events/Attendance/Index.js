@@ -62,6 +62,7 @@ const Index = ({ event, voice_parts }) => {
                                                     data={{ response: response, absent_reason: absentReasons[attendance.singer.id] }}
                                                     size="sm"
                                                     variant={variant}
+                                                    key={response}
                                                 >
                                                     <Icon icon={icon} />
                                                     Mark as {label}

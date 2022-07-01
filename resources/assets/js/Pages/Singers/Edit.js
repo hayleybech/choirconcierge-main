@@ -24,13 +24,13 @@ const Edit = ({ voice_parts, roles, singer }) => {
 
     const { data, setData, put, processing, errors } = useForm({
         voice_part_id: singer.voice_part.id,
-        reason_for_joining: singer.reason_for_joining,
-        referrer: singer.referrer,
-        membership_details: singer.membership_details,
+        reason_for_joining: singer.reason_for_joining ?? '',
+        referrer: singer.referrer ?? '',
+        membership_details: singer.membership_details ?? '',
 
         onboarding_enabled: singer.onboarding_enabled,
-        joined_at: singer.joined_at ? DateTime.fromJSDate(new Date(singer.joined_at)).toISODate() : null,
-        paid_until: singer.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : null,
+        joined_at: singer.joined_at ? DateTime.fromJSDate(new Date(singer.joined_at)).toISODate() : '',
+        paid_until: singer.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : '',
         user_roles: singer.roles.map(role => role.id),
     });
 
