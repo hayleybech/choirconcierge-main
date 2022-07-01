@@ -23,6 +23,7 @@ use App\Http\Controllers\Search\FindSingerController;
 use App\Http\Controllers\Search\GlobalFindUserController;
 use App\Http\Controllers\BroadcastController;
 use App\Http\Controllers\SingerController;
+use App\Http\Controllers\UpdateSingerFeeController;
 use App\Http\Controllers\SingerPlacementController;
 use App\Http\Controllers\SongAttachmentController;
 use App\Http\Controllers\SongController;
@@ -70,6 +71,7 @@ Route::middleware([
     // Singers module
     Route::resource('singers', SingerController::class)->middleware('auth');
     Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update'])->middleware('auth');
+    Route::put('singers/{singer}/fees', UpdateSingerFeeController::class)->name('singers.fees.update');
     Route::post('singers/import', ImportSingerController::class)->name('singers.import');
     Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
     Route::get('singers/{singer}/tasks/{task}/complete', CompleteSingerTaskController::class)->name('task.complete');

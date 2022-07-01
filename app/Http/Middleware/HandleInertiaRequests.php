@@ -15,6 +15,7 @@ use App\Models\Tenant;
 use App\Models\UserGroup;
 use App\Models\VoicePart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -78,8 +79,7 @@ class HandleInertiaRequests extends Middleware
                 'list_tasks' => auth()->user()?->can('viewAny', Task::class),
                 'create_task' => auth()->user()?->can('create', Task::class),
                 'impersonate' => auth()->user()?->singer?->hasRole('Admin'),
-	            'manage_finances' => auth()->user()?->singer?->hasRole('Accounts Team')
-	                || auth()->user()?->singer?->hasRole('Admin'),
+	            'manage_finances' => Gate::allows('update-fees'),
             ],
             'googleApiKey' => config('services.google.key'),
             'tenant' => tenancy()?->tenant,
