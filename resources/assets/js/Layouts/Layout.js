@@ -14,7 +14,7 @@ import Button from "../components/inputs/Button";
 import Icon from "../components/Icon";
 import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
-
+import usePromptBeforePageUnload from "../hooks/usePromptBeforePageUnload";
 
 export default function Layout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -46,6 +46,8 @@ export default function Layout({ children }) {
     });
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
     const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
+
+    usePromptBeforePageUnload();
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
