@@ -12,13 +12,9 @@ class UpdateSingerCategoryController extends Controller
     {
         $this->authorize('create', $singer);
 
-        $category = $request->input('move_category', 0);
+        $request->validate(['move_category' => 'required|numeric|gt:0']);
 
-        if ($category === 0) {
-            return redirect()
-                ->route('singers.index')
-                ->with(['status' => 'No category selected. ', 'fail' => true]);
-        }
+        $category = $request->input('move_category', 0);
 
         // Attach to Prospects category
         $singer->category()->associate($category);
