@@ -40,16 +40,18 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
             {({ zoomIn, zoomOut }) => (
                 <div className="flex flex-col overflow-hidden h-full">
 
-                    <div className="p-2 space-x-2 border-b border-gray-300">
-                        <Button onClick={() => zoomIn()}>
-                            <Icon icon="search-plus" />
-                        </Button>
-                        <Button onClick={() => zoomOut()}>
-                            <Icon icon="search-minus" />
-                        </Button>
-                        <Button variant="secondary" onClick={isFullscreen ? closeFullscreen : openFullscreen}>
+                    <div className="flex p-2 space-x-2 border-b border-gray-300">
+                        <Button variant="secondary" onClick={isFullscreen ? closeFullscreen : openFullscreen} size="sm">
                             <Icon icon={isFullscreen ? 'compress' : 'expand'} />
                         </Button>
+                        <div className="space-x-1">
+                            <Button onClick={() => zoomIn()} size="sm">
+                                <Icon icon="search-plus" />
+                            </Button>
+                            <Button onClick={() => zoomOut()} size="sm">
+                                <Icon icon="search-minus" />
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="grow-0 h-full overflow-hidden">
