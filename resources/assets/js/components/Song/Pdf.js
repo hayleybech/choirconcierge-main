@@ -4,8 +4,9 @@ import Button from "../inputs/Button";
 import Icon from "../Icon";
 import LoadingSpinner from "../LoadingSpinner";
 import {TransformComponent, TransformWrapper} from "react-zoom-pan-pinch";
+import PitchButton from "../PitchButton";
 
-const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
+const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pitch }) => {
     const CONTAINER_PADDING = 0;
 
     const [allPageNumbers, setAllPageNumbers] = useState([]);
@@ -40,18 +41,19 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen }) => {
             {({ zoomIn, zoomOut }) => (
                 <div className="flex flex-col overflow-hidden h-full">
 
-                    <div className="flex p-2 space-x-2 border-b border-gray-300">
-                        <Button variant="secondary" onClick={isFullscreen ? closeFullscreen : openFullscreen} size="sm">
+                    <div className="flex p-1.5 space-x-2.5 border-b border-gray-300">
+                        <Button variant="secondary" onClick={isFullscreen ? closeFullscreen : openFullscreen} size="sm" className="h-7">
                             <Icon icon={isFullscreen ? 'compress' : 'expand'} />
                         </Button>
                         <div className="space-x-1">
-                            <Button onClick={() => zoomIn()} size="sm">
+                            <Button onClick={() => zoomIn()} size="sm" className="h-7">
                                 <Icon icon="search-plus" />
                             </Button>
-                            <Button onClick={() => zoomOut()} size="sm">
+                            <Button onClick={() => zoomOut()} size="sm" className="h-7">
                                 <Icon icon="search-minus" />
                             </Button>
                         </div>
+                        <PitchButton note={pitch} size="sm" className="h-7" />
                     </div>
 
                     <div className="grow-0 h-full overflow-hidden">
