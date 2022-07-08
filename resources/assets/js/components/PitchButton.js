@@ -3,7 +3,7 @@ import Button from "./inputs/Button";
 import {start, Synth} from "tone";
 import Icon from "./Icon";
 
-const PitchButton = ({ note, octave = 4, size = "md"}) => {
+const PitchButton = ({ note, octave = 4, withIcon = true, variant="primary", size = "md", className }) => {
     const [synth] = useState(new Synth().toDestination());
     const [pitch] = useState(note + octave.toString());
 
@@ -14,6 +14,7 @@ const PitchButton = ({ note, octave = 4, size = "md"}) => {
         document.addEventListener('touchend', stop);
 
         start();
+        synth.volume.value = 5;
         synth.triggerAttack(pitch);
     }
 
@@ -27,8 +28,8 @@ const PitchButton = ({ note, octave = 4, size = "md"}) => {
     }
 
     return (
-        <Button onMouseDown={play} onMouseUp={stop} onTouchStart={play} onTouchEnd={stop} variant="primary" size={size}>
-            <Icon icon="play" mr />
+        <Button onMouseDown={play} onMouseUp={stop} onTouchStart={play} onTouchEnd={stop} variant={variant} size={size} className={className}>
+            {withIcon && <Icon icon="play" />}
             <span className="key w-4">{note}</span>
         </Button>
     );
