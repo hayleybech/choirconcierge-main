@@ -72,6 +72,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                     isFullscreen={player.showFullscreen}
                     openFullscreen={openFullscreen}
                     closeFullscreen={closeFullscreenMobile}
+                    pitch={song.pitch.split('/')[0]}
                 />
             ) : <>
                 <PageHeader
@@ -121,6 +122,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                             isFullscreen={player.showFullscreen}
                             openFullscreen={openFullscreen}
                             closeFullscreen={closeFullscreen}
+                            pitch={song.pitch.split('/')[0]}
                         />
                     </div>
                     )}
