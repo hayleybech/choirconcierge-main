@@ -14,6 +14,7 @@ const PitchButton = ({ note, octave = 4, withIcon = true, variant="primary", siz
         document.addEventListener('touchend', stop);
 
         start();
+        synth.volume.value = 5;
         synth.triggerAttack(pitch);
     }
 
