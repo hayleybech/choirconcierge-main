@@ -12,6 +12,7 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pitch })
     const [allPageNumbers, setAllPageNumbers] = useState([]);
     const [outerWidth, setOuterWidth] = useState(0);
     const [refreshKey, setRefreshKey] = useState(1);
+    const [showPitchBar, setShowPitchBar] = useState(false);
 
     const containerRef = useRef();
 
@@ -41,11 +42,12 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pitch })
             {({ zoomIn, zoomOut }) => (
                 <div className="flex flex-col overflow-hidden h-full">
 
-                    <div className="flex p-1.5 space-x-2.5 border-b border-gray-300">
+                    <div className="flex flex-wrap p-1.5 gap-x-2.5 border-b border-gray-300">
                         <Button variant="secondary" onClick={isFullscreen ? closeFullscreen : openFullscreen} size="sm" className="h-7">
                             <Icon icon={isFullscreen ? 'compress' : 'expand'} />
                         </Button>
-                        <div className="space-x-1">
+
+                        <div className="flex gap-x-1">
                             <Button onClick={() => zoomIn()} size="sm" className="h-7">
                                 <Icon icon="search-plus" />
                             </Button>
@@ -53,8 +55,20 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pitch })
                                 <Icon icon="search-minus" />
                             </Button>
                         </div>
-                        <PitchButton note={pitch} size="sm" className="h-7" />
+
+                        <div className="flex gap-x-1">
+                            <PitchButton note={pitch} size="sm" className="h-7" />
+                            <Button onClick={() => setShowPitchBar((value) => !value)} size="sm" className="h-7">
+                                <Icon icon="piano-keyboard" />
+                            </Button>
+                        </div>
                     </div>
+
+                    {showPitchBar && (
+                    <div className="flex flex-wrap p-1.5 gap-x-1 gap-y-1.5 border-b border-gray-300">
+                        <PitchScale root={pitch} />
+                    </div>
+                    )}
 
                     <div className="grow-0 h-full overflow-hidden">
                         <div className="flex h-full w-full" style={{ padding: `${CONTAINER_PADDING}px` }} ref={containerRef}>
@@ -89,3 +103,16 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pitch })
 };
 
 export default Pdf;
+
+const pitches = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const PitchScale = ({ root }) => (
+  <>
+      <PitchButton note={root} size="sm" className="h-7" />
+
+      {rotate(pitches, pitches.indexOf(root)).slice(1).map((pitch) => (
+          <PitchButton note={pitch} withIcon={false} variant="secondary" size="sm" className="h-7" key={pitch} />
+      ))}
+  </>
+);
+
+const rotate = (arr, n = 1) => [...arr.slice(n, arr.length), ...arr.slice(0, n)]
