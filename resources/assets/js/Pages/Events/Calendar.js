@@ -1,9 +1,11 @@
-import {Fragment, useState} from 'react'
+import React, {Fragment, useState} from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import Icon from "../../components/Icon";
 import classNames from "../../classNames";
 import {InertiaLink} from "@inertiajs/inertia-react";
 import {DateTime} from "luxon";
+import DateTag from "../../components/DateTag";
+import Badge from "../../components/Badge";
 
 const Calendar = ({ days, month }) => {
     const [selectedDay, setSelectedDay] = useState(days[0]);
@@ -362,27 +364,49 @@ const MobileEventList = ({ selectedDay }) => selectedDay?.events.length > 0 && (
 
         <ol className="divide-y divide-gray-100 overflow-hidden rounded-lg bg-white text-sm shadow ring-1 ring-black ring-opacity-5">
             {selectedDay.events.map((event) => (
-                <li key={event.id} className="group flex p-4 pr-6 focus-within:bg-gray-50 hover:bg-gray-50">
-                    <div className="flex-auto">
-                        <p className="font-semibold text-purple-600">{event.title}</p>
+                <li key={event.id} className="">
 
-                        <time dateTime={event.call_time} className="mt-2 flex items-center text-gray-700 text-xs">
-                            <Icon icon="clock" type="regular" className="text-gray-400" mr />
-                            {DateTime.fromISO(event.call_time).toLocaleString(DateTime.TIME_SIMPLE)}
-                        </time>
-
-                        {event.location_name && (
-                        <div className="mt-2 text-gray-700 text-xs">
-                            <Icon icon="map-marker" type="regular" mr className="text-gray-400" />
-                            {event.location_name}
-                        </div>
-                        )}
-                    </div>
                     <InertiaLink
                         href={route('events.show', event.id)}
-                        className="ml-6 flex-none self-center rounded-md border border-gray-300 bg-white py-2 px-3 font-semibold text-gray-700 opacity-0 shadow-sm hover:bg-gray-50 focus:opacity-100 group-hover:opacity-100"
+                        className="flex items-center px-4 py-4 sm:px-6 focus-within:bg-gray-50 hover:bg-gray-50"
                     >
-                        Edit<span className="sr-only">, {event.title}</span>
+                        <div className="flex-1 flex flex-col justify-center justify-between min-w-0 pr-4">
+
+                            <div className="flex items-center justify-between">
+                                <p className="flex items-center min-w-0 mr-1.5">
+                                    <span className="text-sm font-medium text-purple-600 truncate">{event.title}</span>
+                                </p>
+                                <div className="text-xs text-gray-500">
+                                    {DateTime.fromISO(event.call_time) < DateTime.now()
+                                        ? <p>{event.present_count ? `${event.present_count} present` : ''}</p>
+                                        : <p>{event.going_count ? `${event.going_count} going` : ''}</p>
+                                    }
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <p className="mt-1.5 flex items-center text-xs text-gray-500 min-w-0">
+                                    <time dateTime={event.call_time} className="mt-2 flex items-center text-gray-700 text-xs">
+                                        <Icon icon="clock" type="regular" className="text-gray-400" mr />
+                                        {DateTime.fromISO(event.call_time).toLocaleString(DateTime.TIME_SIMPLE)}
+                                    </time>
+                                </p>
+
+                                <p className="mt-2 flex items-center text-sm text-gray-500 min-w-0">
+                                    <Badge>{event.type.title}</Badge>
+                                </p>
+                            </div>
+
+                            {event.location_name && (
+                                <div className="mt-2 text-gray-700 text-xs">
+                                    <Icon icon="map-marker" type="regular" mr className="text-gray-400" />
+                                    {event.location_name}
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <Icon icon="chevron-right" mr className="text-gray-400" />
+                        </div>
                     </InertiaLink>
                 </li>
             ))}

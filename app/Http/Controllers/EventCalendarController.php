@@ -33,6 +33,14 @@ class EventCalendarController extends Controller
         $events = Event::query()
             ->whereDate('call_time', '>=', $dates->first()->clone()->utc())
             ->whereDate('call_time', '<', $dates->last()->clone()->addDays(2)->utc())
+            ->withCount([
+                'rsvps as going_count' => function ($query) {
+                    $query->where('response', '=', 'yes');
+                },
+                'attendances as present_count' => function ($query) {
+                    $query->whereIn('response', ['present', 'late']);
+                },
+            ])
             ->get();
 
         return $dates->map(fn (Carbon $date) => [
