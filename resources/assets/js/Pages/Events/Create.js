@@ -9,7 +9,7 @@ const Create = ({ types }) => (
         <AppHead title="Create Event" />
         <PageHeader
             title="Create Event"
-            icon="calendar-alt"
+            icon="calendar-plus"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Events', url: route('events.index')},
