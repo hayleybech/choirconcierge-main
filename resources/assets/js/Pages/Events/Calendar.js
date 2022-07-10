@@ -302,7 +302,7 @@ const DayEntryDesktop = ({ day }) => (
             <ol className="mt-2">
                 {day.events.slice(0, 2).map((event) => (
                     <li key={event.id}>
-                        <InertiaLink href={route('events.show', event.id)} className="group flex">
+                        <InertiaLink href={route('events.show', event.id)} className={`group flex px-2 mb-1 rounded border ${(new EventType(event.type.title)).borderColour}`}>
                             <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-purple-600">
                                 {event.title}
                             </p>
