@@ -3,11 +3,9 @@ import Layout from "../../../Layouts/Layout";
 import PageHeader from "../../../components/PageHeader";
 import AppHead from "../../../components/AppHead";
 import {usePage} from "@inertiajs/inertia-react";
-import useFilterPane from "../../../hooks/useFilterPane";
 import Calendar from "./../Calendar";
 
-const Index = ({ days, month, eventTypes }) => {
-    const [showFilters, setShowFilters] = useFilterPane();
+const Month = ({ days, month }) => {
     const { can } = usePage().props;
 
     return (
@@ -24,7 +22,6 @@ const Index = ({ days, month, eventTypes }) => {
                 actions={[
                     { label: 'Add New', icon: 'calendar-plus', url: route('events.create'), variant: 'primary', can: 'create_event' },
                     { label: 'Attendance Report', icon: 'analytics', url: route('events.reports.attendance'), can: 'list_attendances' },
-                    { label: 'Filter/Sort', icon: 'filter', onClick: () => setShowFilters(! showFilters) },
                     { label: 'List View', icon: 'th-list', url: route('events.index'), can: 'list_events' },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
@@ -34,6 +31,6 @@ const Index = ({ days, month, eventTypes }) => {
     );
 }
 
-Index.layout = page => <Layout children={page} />
+Month.layout = page => <Layout children={page} />
 
-export default Index;
+export default Month;

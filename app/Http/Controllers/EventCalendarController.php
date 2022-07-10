@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\EventType;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -22,7 +21,6 @@ class EventCalendarController extends Controller
         return Inertia::render('Events/Calendar/Month', [
             'days' => $this->getEventsForMonth($month),
             'month' => $month,
-            'eventTypes' => EventType::all()->values(),
         ]);
     }
 
