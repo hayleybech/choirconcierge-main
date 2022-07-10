@@ -25,11 +25,12 @@ const navigation = [
     {
         name: 'Events',
         route: 'events.index',
-        icon: 'fa-calendar-alt',
+        icon: 'calendar',
         can: 'list_events',
         showAsActiveForRoutes: ['events.*'],
         items: [
             { name: 'Add New', route: 'events.create', icon: 'fa-plus-square', can: 'create_event', showAsActiveForRoutes: ['events.create'], },
+            { name: 'Calendar View', route: 'events.calendar.month', icon: 'calendar-alt', can: 'list_events', showAsActiveForRoutes: ['events.calendar.month'], },
             { name: 'Attendance Report', route: 'events.reports.attendance', icon: 'fa-analytics', can: 'list_attendances', showAsActiveForRoutes: ['events.reports.attendance'], },
         ]
     },

@@ -4,6 +4,7 @@ import Badge from "../../components/Badge";
 import {DateTime} from "luxon";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
+import EventType from "../../EventType";
 
 const EventTableMobile = ({ events }) => (
     <TableMobile>
@@ -27,7 +28,7 @@ const EventTableMobile = ({ events }) => (
                         </p>
 
                         <p className="mt-2 flex items-center text-sm text-gray-500 min-w-0">
-                            <Badge>{event.type.title}</Badge>
+                            <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>
                         </p>
                     </div>
                     {event.location_name &&(
