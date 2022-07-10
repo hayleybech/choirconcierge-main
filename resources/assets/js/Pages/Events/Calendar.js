@@ -6,6 +6,7 @@ import {InertiaLink} from "@inertiajs/inertia-react";
 import {DateTime} from "luxon";
 import DateTag from "../../components/DateTag";
 import Badge from "../../components/Badge";
+import EventType from "../../EventType";
 
 const Calendar = ({ days, month }) => {
     const [selectedDay, setSelectedDay] = useState(days[0]);
@@ -349,7 +350,7 @@ const DayEntryMobile = ({ day, isSelectedDay, selectDay, }) => (
         {day.events.length > 0 && (
             <span className="-mx-0.5 mt-auto flex flex-wrap-reverse">
                 {day.events.map((event) => (
-                    <span key={event.id} className="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-gray-400" />
+                    <span key={event.id} className={`mx-0.5 mb-1 h-1.5 w-1.5 rounded-full ${(new EventType(event.type.title)).dotColour}`} />
                 ))}
             </span>
         )}
@@ -393,7 +394,7 @@ const MobileEventList = ({ selectedDay }) => selectedDay?.events.length > 0 && (
                                 </p>
 
                                 <p className="mt-2 flex items-center text-sm text-gray-500 min-w-0">
-                                    <Badge>{event.type.title}</Badge>
+                                    <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>
                                 </p>
                             </div>
 

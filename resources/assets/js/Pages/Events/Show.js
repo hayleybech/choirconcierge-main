@@ -16,6 +16,7 @@ import Prose from "../../components/Prose";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CollapsePanel from "../../components/CollapsePanel";
 import CollapseGroup from "../../components/CollapseGroup";
+import EventType from "../../EventType";
 
 const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePartsAttendanceCount, addToCalendarLinks }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -29,7 +30,7 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
             <PageHeader
                 title={<>{event.title}{event.is_repeating && <Icon icon="repeat" className="ml-1.5" />}</>}
                 meta={[
-                    <Badge>{event.type.title}</Badge>,
+                    <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>,
                     <DateTag label="Start" date={event.call_time} format="DATETIME_MED" />,
                     <DateTag label="End" date={event.end_date} format="DATETIME_MED" />, // shorter for same day
                     <DateTag label="On Stage" date={event.start_date} format="TIME_SIMPLE" />, // hide unless music team
