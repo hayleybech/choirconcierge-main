@@ -4,6 +4,7 @@ import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
 import Badge from "../../components/Badge";
 import DateTag from "../../components/DateTag";
+import EventType from "../../EventType";
 
 const EventTableDesktop = ({ events }) => (
     <Table
@@ -18,7 +19,7 @@ const EventTableDesktop = ({ events }) => (
                     </div>
                 </TableCell>
                 <TableCell>
-                    <Badge>{event.type.title}</Badge>
+                    <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>
                 </TableCell>
                 <TableCell>
                     <DateTag date={event.call_time} />

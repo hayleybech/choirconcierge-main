@@ -9,7 +9,7 @@ const Edit = ({ event, types }) => (
         <AppHead title={`Edit - ${event.title}`} />
         <PageHeader
             title="Edit Event"
-            icon="calendar-alt"
+            icon="calendar-edit"
             breadcrumbs={[
                 { name: 'Dashboard', url: route('dash')},
                 { name: 'Events', url: route('events.index')},

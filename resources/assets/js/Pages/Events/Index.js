@@ -20,7 +20,7 @@ const Index = ({ events, eventTypes }) => {
             <AppHead title="Events" />
             <PageHeader
                 title="Events"
-                icon="calendar-alt"
+                icon="calendar"
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Events', url: route('events.index')},
@@ -29,6 +29,7 @@ const Index = ({ events, eventTypes }) => {
                     { label: 'Add New', icon: 'calendar-plus', url: route('events.create'), variant: 'primary', can: 'create_event' },
                     { label: 'Attendance Report', icon: 'analytics', url: route('events.reports.attendance'), can: 'list_attendances' },
                     { label: 'Filter/Sort', icon: 'filter', onClick: () => setShowFilters(! showFilters) },
+                    { label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
