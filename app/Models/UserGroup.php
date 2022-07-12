@@ -144,45 +144,15 @@ class UserGroup extends Model
     /**
      * @return Collection<User>
      */
-    public function get_all_recipients(): Collection
+    public function get_all_recipients(): \Illuminate\Support\Collection
     {
         tenancy()->initialize($this->tenant);
 
-        // Get directly-assigned users
-        $users = $this->recipient_users()->get();
-
-        // Get users from roles
-        // @todo use queries instead
-        $users = $users->merge($this->recipient_roles
-            ->flatMap(fn ($role) => $role->singers()->with('user')->active()->get()
-                ->map(fn ($singer) => $singer->user)));
-
-        // Get users from voice parts
-        $voice_part_ids = $this->recipient_voice_parts()
-            ->get()
-            ->pluck('id')
-            ->toArray();
-        $part_users = User::query()
-            ->whereHas('singers', function ($singer_query) use ($voice_part_ids) {
-                $singer_query
-                    ->active()
-                    ->whereIn('voice_part_id', $voice_part_ids);
-            })
-            ->get();
-        $users = $users->merge($part_users);
-
-        // Get singers from categories
-        $cat_ids = $this->recipient_singer_categories()
-            ->get()
-            ->pluck('id');
-        $category_users = User::query()
-            ->whereHas('singers', function ($singer_query) use ($cat_ids) {
-                $singer_query->whereIn('singer_category_id', $cat_ids);
-            })
-            ->get();
-        $users = $users->merge($category_users);
-
-        return $users->unique();
+        return $this->recipient_users()->get()
+            ->merge($this->getRoleUsers())
+            ->merge($this->getPartUsers())
+            ->merge($this->getCategoryUsers())
+            ->unique();
     }
 
     public function senders(): HasMany
@@ -227,44 +197,15 @@ class UserGroup extends Model
     /**
      * @return Collection<User>
      */
-    public function get_all_senders(): Collection
+    public function get_all_senders(): \Illuminate\Support\Collection
     {
         tenancy()->initialize($this->tenant);
 
-        // Get directly-assigned users
-        $users = $this->sender_users()->get();
-
-        // Get users from roles
-        // @todo use queries instead
-        $users = $users->merge($this->sender_roles
-            ->flatMap(fn ($role) => $role->singers()->with('user')->active()->get()
-                ->map(fn ($singer) => $singer->user)));
-
-        // Get users from voice parts
-        $voice_part_ids = $this->sender_voice_parts()
-            ->get()
-            ->pluck('id')
-            ->toArray();
-        $part_users = User::query()
-            ->whereHas('singers', function ($singer_query) use ($voice_part_ids) {
-                $singer_query->active()
-                    ->whereIn('voice_part_id', $voice_part_ids);
-            })
-            ->get();
-        $users = $users->merge($part_users);
-
-        // Get singers from categories
-        $cat_ids = $this->sender_singer_categories()
-            ->get()
-            ->pluck('id');
-        $category_users = User::query()
-            ->whereHas('singers', function ($singer_query) use ($cat_ids) {
-                $singer_query->whereIn('singer_category_id', $cat_ids);
-            })
-            ->get();
-        $users = $users->merge($category_users);
-
-        return $users->unique();
+        return $this->sender_users()->get()
+            ->merge($this->getRoleUsers('sender_roles'))
+            ->merge($this->getPartUsers('sender_voice_parts'))
+            ->merge($this->getCategoryUsers('sender_singer_categories'))
+            ->unique();
     }
 
     /**
@@ -338,5 +279,40 @@ class UserGroup extends Model
             'distribution' => $user && $this->get_all_senders()->contains($user),
             default => false
         };
+    }
+
+    private function getRoleUsers(string $recipientType = 'recipient_roles'): \Illuminate\Support\Collection
+    {
+        // @todo use queries instead
+        return $this->$recipientType
+            ->flatMap(fn($role) => $role->singers()->with('user')->active()->get()
+                ->map(fn($singer) => $singer->user));
+    }
+
+    private function getPartUsers(string $recipientType = 'recipient_voice_parts'): \Illuminate\Support\Collection
+    {
+        $voice_part_ids = $this->$recipientType()
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+        return User::query()
+            ->whereHas('singers', fn ($singer_query) =>
+                $singer_query->active()->whereIn('voice_part_id', $voice_part_ids)
+            )
+            ->get();
+    }
+
+    private function getCategoryUsers(string $recipientType = 'recipient_singer_categories'): \Illuminate\Support\Collection
+    {
+        $cat_ids = $this->$recipientType()
+            ->get()
+            ->pluck('id');
+
+        return User::query()
+            ->whereHas('singers', fn ($singer_query) =>
+                $singer_query->whereIn('singer_category_id', $cat_ids)
+            )
+            ->get();
     }
 }
