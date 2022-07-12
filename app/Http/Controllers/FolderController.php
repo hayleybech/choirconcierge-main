@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FolderRequest;
 use App\Models\Folder;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -13,10 +12,10 @@ class FolderController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Folder::class, 'folder');
+        $this->authorizeResource(Folder::class);
     }
 
-    public function index(): View|Response
+    public function index(): Response
     {
         $folders = Folder::with([
             'documents' => static function ($query) {
@@ -31,7 +30,7 @@ class FolderController extends Controller
         ]);
     }
 
-    public function create(): View|Response
+    public function create(): Response
     {
         return Inertia::render('Folders/Create');
     }
@@ -49,28 +48,6 @@ class FolderController extends Controller
         return redirect()
             ->route('folders.index')
             ->with(['status' => 'Folder created. ']);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param Folder $folder
-     * @return View
-     */
-    public function show(Folder $folder): View
-    {
-        return view('folders.show', compact('folder'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Folder $folder
-     * @return View
-     */
-    public function edit(Folder $folder): View
-    {
-        return view('folders.edit', compact('folder'));
     }
 
     /**

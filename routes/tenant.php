@@ -101,7 +101,7 @@ Route::middleware([
     Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
 
     // Documents module
-    Route::resource('folders', FolderController::class)->middleware('auth');
+    Route::resource('folders', FolderController::class)->except(['show', 'edit'])->middleware('auth');
     Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'destroy'])->middleware('auth');
 
     // Risers module
@@ -150,11 +150,11 @@ Route::middleware([
     Route::get('/mailbox/process', [MailboxController::class, 'process']);
 
     // Tasks module
-    Route::resource('tasks', TaskController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->middleware(['auth', 'role:Admin']);
+    Route::resource('tasks', TaskController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->middleware(['auth']);
     Route::resource('tasks.notifications', TaskNotificationTemplateController::class)->except('index');
 
     // Voice Parts module
-    Route::resource('voice-parts', VoicePartController::class);
+    Route::resource('voice-parts', VoicePartController::class)->except(['show']);
 
     // Roles module
     Route::resource('roles', RoleController::class);

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RiserStackRequest;
 use App\Models\RiserStack;
 use App\Models\VoicePart;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,19 +12,20 @@ use Inertia\Response;
 
 class RiserStackController extends Controller
 {
-    public function index(Request $request): View|Response
+    public function __construct()
     {
-        $this->authorize('viewAny', RiserStack::class);
+        $this->authorizeResource(RiserStack::class, 'stack');
+    }
 
+    public function index(Request $request): Response
+    {
         return Inertia::render('RiserStacks/Index', [
             'stacks' => RiserStack::all()->values(),
         ]);
     }
 
-    public function create(): View|Response
+    public function create(): Response
     {
-        $this->authorize('create', RiserStack::class);
-
         $voice_parts = VoicePart::with(['singers' => function ($query) {
             $query->active()->with('user');
         }])->get();
@@ -38,11 +38,9 @@ class RiserStackController extends Controller
 
     public function store(RiserStackRequest $request): RedirectResponse
     {
-        $this->authorize('create', RiserStack::class);
-
         $stack = RiserStack::create($request->validated());
 
-        $positions = $this->prepPositions($request);
+        $positions = $this->prepPositions($request->validated('singer_positions'));
         $stack->singers()->sync($positions);
 
         return redirect()
@@ -50,10 +48,8 @@ class RiserStackController extends Controller
             ->with(['status' => 'Riser stack created. ']);
     }
 
-    public function show(RiserStack $stack): View|Response
+    public function show(RiserStack $stack): Response
     {
-        $this->authorize('view', $stack);
-
         $stack->load('singers.user');
         $stack->singers->each->append('user_avatar_thumb_url');
 
@@ -70,10 +66,8 @@ class RiserStackController extends Controller
         ]);
     }
 
-    public function edit(RiserStack $stack): View|Response
+    public function edit(RiserStack $stack): Response
     {
-        $this->authorize('update', $stack);
-
         // Get singers that are already on the riser stack.
         $stack->load(['singers' => function ($query) {
             $query->active()->with('user');
@@ -99,11 +93,9 @@ class RiserStackController extends Controller
 
     public function update(RiserStack $stack, RiserStackRequest $request): RedirectResponse
     {
-        $this->authorize('update', $stack);
-
         $stack->update($request->validated());
 
-        $positions = $this->prepPositions($request);
+        $positions = $this->prepPositions($request->validated('singer_positions'));
         $stack->singers()->sync($positions);
 
         return redirect()
@@ -113,8 +105,6 @@ class RiserStackController extends Controller
 
     public function destroy(RiserStack $stack): RedirectResponse
     {
-        $this->authorize('delete', $stack);
-
         $stack->delete();
 
         return redirect()
@@ -127,16 +117,10 @@ class RiserStackController extends Controller
      * and turns it into a format compatible with sync().
      *
      * @todo Convert the riser position data within the React component.
-     *
-     * @param RiserStackRequest $request
-     *
-     * @return array<array>
      */
-    private function prepPositions(RiserStackRequest $request): array
+    private function prepPositions(array $singerPositions): array
     {
-        $position_data = $request->validated()['singer_positions'];
-
-        return collect($position_data)
+        return collect($singerPositions)
             ->mapWithKeys(fn ($item) => [
                 $item['id'] => [
                     'row' => $item['position']['row'],

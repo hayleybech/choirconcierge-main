@@ -12,8 +12,11 @@ const MemberversariesWidget = ({ memberversaries }) => (
                 {memberversaries.map((singer) => (
                     <TableMobileItem url={route('singers.show', singer)}>
                         <div className="text-sm font-medium text-purple-800">{singer.user.name}</div>
-                        <div className="mr-4">
-                            <DateUpcomingTag date={DateTime.fromISO(singer.joined_at).set({ year: DateTime.now().year })} />
+                        <div className="flex items-center mr-4">
+                            <div className="text-sm text-gray-700 mr-2">
+                                {DateTime.fromISO(singer.memberversary).diff(DateTime.fromISO(singer.joined_at), 'years').years} Years
+                            </div>
+                            <DateUpcomingTag date={DateTime.fromISO(singer.memberversary)} />
                         </div>
                     </TableMobileItem>
                 ))}

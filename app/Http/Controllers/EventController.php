@@ -9,7 +9,6 @@ use App\Models\EventType;
 use App\Models\Singer;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,20 +21,21 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class EventController extends Controller
 {
-    public function index(Request $request): View|Response
+    public function __construct()
     {
-        $this->authorize('viewAny', Event::class);
+        $this->authorizeResource(Event::class);
+    }
 
+    public function index(Request $request): Response
+    {
         return Inertia::render('Events/Index', [
             'events' => $this->getEvents()->values(),
             'eventTypes' => EventType::all()->values(),
         ]);
     }
 
-    public function create(): View|Response
+    public function create(): Response
     {
-        $this->authorize('create', Event::class);
-
         return Inertia::render('Events/Create', [
             'types' => EventType::all()->values(),
         ]);
@@ -43,12 +43,7 @@ class EventController extends Controller
 
     public function store(EventRequest $request): RedirectResponse
     {
-        $this->authorize('create', Event::class);
-
-        $event = Event::create(
-            collect($request->validated())
-                ->toArray(),
-        );
+        $event = Event::create($request->safe()->except('send_notification'));
 
         if ($request->input('send_notification')) {
             Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventCreated($event));
@@ -59,10 +54,8 @@ class EventController extends Controller
             ->with(['status' => 'Event created. ']);
     }
 
-    public function show(Event $event): View|Response
+    public function show(Event $event): Response
     {
-        $this->authorize('view', $event);
-
         $event->load('repeat_parent:id,call_time', 'my_rsvp', 'my_attendance')
             ->append(['in_future', 'is_repeat_parent', 'parent_in_past']);
 
@@ -100,10 +93,8 @@ class EventController extends Controller
         ]);
     }
 
-    public function edit(Event $event): View|Response
+    public function edit(Event $event): Response
     {
-        $this->authorize('update', $event);
-
         return Inertia::render('Events/Edit', [
             'event' => $event,
             'types' => EventType::all()->values(),
@@ -112,17 +103,11 @@ class EventController extends Controller
 
     public function update(Event $event, EventRequest $request): RedirectResponse
     {
-        $this->authorize('update', $event);
-
         if ($event->is_repeating) {
             return back()->with(['error' => 'The server tried to edit a repeating event incorrectly.']);
         }
 
-        $event->update(
-            collect($request->validated())
-                ->except('send_notification')
-                ->toArray(),
-        );
+        $event->update($request->safe()->except('send_notification'));
 
         if ($request->input('send_notification')) {
             Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventUpdated($event));
@@ -135,8 +120,6 @@ class EventController extends Controller
 
     public function destroy(Event $event): RedirectResponse
     {
-        $this->authorize('delete', $event);
-
         $event->delete();
 
         return redirect()
@@ -144,7 +127,7 @@ class EventController extends Controller
             ->with(['status' => 'Event deleted. ']);
     }
 
-    private function getEvents(): array|Collection
+    private function getEvents(): Collection
     {
         return QueryBuilder::for(Event::class)
             ->allowedFilters([

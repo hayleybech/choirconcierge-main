@@ -10,17 +10,18 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SongAttachmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Song::class);
+    }
+
     public function show(Song $song, SongAttachment $attachment): BinaryFileResponse
     {
-        $this->authorize('view', $song);
-
         return response()->download($attachment->path);
     }
 
     public function store(Song $song, SongAttachmentRequest $request): RedirectResponse
     {
-        $this->authorize('update', $song);
-
         $data = $request->validated();
 
         $files = $request->file('attachment_uploads');
@@ -40,8 +41,6 @@ class SongAttachmentController extends Controller
 
     public function destroy(Song $song, SongAttachment $attachment): RedirectResponse
     {
-        $this->authorize('update', $song);
-
         $attachment->delete();
 
         return redirect()

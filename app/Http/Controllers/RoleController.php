@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
-use Illuminate\Contracts\View\View;
+use App\Models\Role;;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,30 +15,29 @@ class RoleController extends Controller
         $this->authorizeResource(Role::class, 'role');
     }
 
-    public function index(): View|Response
+    public function index(): Response
     {
         return Inertia::render('Roles/Index', ['roles' => Role::withCount('singers')->get()->values()]);
     }
 
-    public function create(): View|Response
+    public function create(): Response
     {
         return Inertia::render('Roles/Create');
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate([
+        $role = Role::create($request->validate([
             'name' => 'required|max:255',
             'abilities' => 'array',
-        ]);
-        $role = Role::create($data);
+        ]));
 
         return redirect()
             ->route('roles.show', $role)
             ->with(['status' => 'Role created.']);
     }
 
-    public function show(Role $role): View|Response
+    public function show(Role $role): Response
     {
         $role->can = [
             'update_role' => auth()->user()?->can('update', $role),
@@ -49,18 +47,17 @@ class RoleController extends Controller
         return Inertia::render('Roles/Show', ['role' => $role]);
     }
 
-    public function edit(Role $role): View|Response
+    public function edit(Role $role): Response
     {
         return Inertia::render('Roles/Edit', ['role' => $role]);
     }
 
     public function update(Request $request, Role $role): RedirectResponse
     {
-        $data = $request->validate([
+        $role->update($request->validate([
             'name' => 'required|max:255',
             'abilities' => 'array',
-        ]);
-        $role->update($data);
+        ]));
 
         return redirect()
             ->route('roles.show', $role)

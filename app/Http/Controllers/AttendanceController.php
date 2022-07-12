@@ -6,7 +6,6 @@ use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Singer;
 use App\Models\VoicePart;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,16 +13,13 @@ use Inertia\Response;
 
 class AttendanceController extends Controller
 {
-    public function index(Event $event): View|Response
+    public function index(Event $event): Response
     {
         $this->authorize('viewAny', Attendance::class);
 
         $event->createMissingAttendanceRecords();
 
-        $event->load(['attendances' => function ($query) {
-            return $query->with('singer.user')
-                ->whereHas('singer', fn ($query) => $query->active());
-        }]);
+        $event->load(['attendances' => fn ($query) => $query->with('singer.user')->whereHas('singer', fn ($query) => $query->active())]);
 
         $event->attendances->each(fn ($attendance) => $attendance->singer->user->append('avatar_url'));
 

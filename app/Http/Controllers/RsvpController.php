@@ -10,13 +10,14 @@ use Illuminate\Http\Request;
 
 class RsvpController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Rsvp::class);
+    }
+
     public function store(Request $request, Event $event): RedirectResponse
     {
-        $this->authorize('create', Rsvp::class);
-
-        $request->validate([
-            'rsvp_response' => 'required',
-        ]);
+        $request->validate(['rsvp_response' => 'required']);
 
         $event->rsvps()->create([
             'response' => $request->input('rsvp_response'),
@@ -28,11 +29,7 @@ class RsvpController extends Controller
 
     public function update(Request $request, Event $event, Rsvp $rsvp): RedirectResponse
     {
-        $this->authorize('update', $rsvp);
-
-        $request->validate([
-            'rsvp_response' => 'required',
-        ]);
+        $request->validate(['rsvp_response' => 'required']);
 
         $rsvp->update([
             'response' => $request->input('rsvp_response'),
@@ -43,8 +40,6 @@ class RsvpController extends Controller
 
     public function destroy(Event $event, Rsvp $rsvp): RedirectResponse
     {
-        $this->authorize('delete', $rsvp);
-
         $rsvp->delete();
 
         return back()->with(['status' => 'RSVP deleted.']);
