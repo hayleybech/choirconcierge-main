@@ -49,6 +49,7 @@ class DashController extends Controller
             ->active()
             ->memberversaries()
             ->get()
+            ->append('memberversary')
             ->sort(static function (Singer $singer1, Singer $singer2): int {
                 // Sort by joined date
                 if ($singer1->joined_at->equalTo($singer2->joined_at)) {
