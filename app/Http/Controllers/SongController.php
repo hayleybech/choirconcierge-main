@@ -41,10 +41,8 @@ class SongController extends Controller
         $includeNonAuditionSongs = auth()->user()?->singer->category->name === 'Members';
         $showForProspectsDefault = $includeNonAuditionSongs ? [false, true] : [true];
 
-        $songs = $this->getSongs($includePending, $defaultStatuses, $includeNonAuditionSongs, $showForProspectsDefault);
-
         return Inertia::render('Songs/Index', [
-            'songs' => $songs->values(),
+            'songs' => $this->getSongs($includePending, $defaultStatuses, $includeNonAuditionSongs, $showForProspectsDefault)->values(),
             'statuses' => SongStatus::query()
                 ->when(! $includePending, fn ($query) => $query->where('title', '!=', 'Pending'))
                 ->get()
@@ -66,10 +64,7 @@ class SongController extends Controller
 
     public function store(SongRequest $request): RedirectResponse
     {
-        $song = Song::create(
-            collect($request->validated())
-                ->toArray(),
-        );
+        $song = Song::create($request->safe()->except('send_notification'));
 
         if ($request->input('send_notification')) {
             Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUploaded($song));
@@ -145,11 +140,7 @@ class SongController extends Controller
 
     public function update(SongRequest $request, Song $song): RedirectResponse
     {
-        $song->update(
-            collect($request->validated())
-                ->except('send_notification')
-                ->toArray(),
-        );
+        $song->update($request->safe()->except('send_notification'));
 
         if ($request->input('send_notification')) {
             Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUpdated($song));

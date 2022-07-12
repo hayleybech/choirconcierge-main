@@ -33,11 +33,13 @@ class TaskController extends Controller
 
     public function store(TaskRequest $request): RedirectResponse
     {
-        $data = array_merge($request->validated(), [
-            'type' => 'manual',
-            'route' => 'task.complete',
-        ]);
-        $task = Task::create($data);
+        $task = Task::create($request->safe()
+            ->merge([
+                'type' => 'manual',
+                'route' => 'task.complete',
+            ])
+            ->all()
+        );
 
         return redirect()
             ->route('tasks.show', $task)

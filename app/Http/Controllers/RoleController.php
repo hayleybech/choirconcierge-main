@@ -27,11 +27,10 @@ class RoleController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate([
+        $role = Role::create($request->validate([
             'name' => 'required|max:255',
             'abilities' => 'array',
-        ]);
-        $role = Role::create($data);
+        ]));
 
         return redirect()
             ->route('roles.show', $role)
@@ -55,11 +54,10 @@ class RoleController extends Controller
 
     public function update(Request $request, Role $role): RedirectResponse
     {
-        $data = $request->validate([
+        $role->update($request->validate([
             'name' => 'required|max:255',
             'abilities' => 'array',
-        ]);
-        $role->update($data);
+        ]));
 
         return redirect()
             ->route('roles.show', $role)

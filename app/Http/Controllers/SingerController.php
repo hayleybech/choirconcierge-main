@@ -46,30 +46,20 @@ class SingerController extends Controller
 
     public function create(): InertiaResponse
     {
-        $voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
-        $roles = Role::where('name', '!=', 'User')->get();
-
         return Inertia::render('Singers/Create', [
-            'voice_parts' => $voice_parts->values(),
-            'roles' => $roles->values(),
+            'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
+            'roles' => Role::where('name', '!=', 'User')->get()->values(),
         ]);
     }
 
     public function store(CreateSingerRequest $request): RedirectResponse
     {
-        if ($request->has('user_id') && ! empty($request->input('user_id'))) {
-            $user = User::find($request->input('user_id'));
-        } else {
-            $user = User::create(Arr::only($request->validated(), [
-                'email',
-                'first_name',
-                'last_name',
-                'password',
-            ]));
-        }
-        $singer = Singer::create(array_merge(
-            ['user_id' => $user->id],
-            $request->only([
+        $user = $this->maybeCreateUser($request);
+
+        $singer = Singer::create($request->safe()
+            ->merge(['user_id' => $user->id])
+            ->only([
+                'user_id',
                 'onboarding_enabled',
                 'reason_for_joining',
                 'referrer',
@@ -78,7 +68,7 @@ class SingerController extends Controller
                 'voice_part_id',
                 'user_roles',
             ])
-        ));
+        );
         $singer->initOnboarding();
         $singer->save();
 
@@ -112,34 +102,31 @@ class SingerController extends Controller
     {
         $singer->load('user', 'voice_part', 'category', 'roles');
 
-        $voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
-
-        $roles = Role::where('name', '!=', 'User')->get();
-
         return Inertia::render('Singers/Edit', [
-            'voice_parts' => $voice_parts->values(),
-            'roles' => $roles->values(),
+            'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
+            'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'singer' => $singer,
         ]);
     }
 
     public function update(Singer $singer, EditSingerRequest $request): RedirectResponse
     {
-        $singer->update(Arr::only($request->validated(), [
-            'reason_for_joining',
-            'referrer',
-            'membership_details',
-            'joined_at',
-            'onboarding_enabled',
-            'voice_part_id',
-	        'paid_until',
-        ]));
-        $singer->update([
-            'user_roles' => array_merge(
-                $request->validated()['user_roles'] ?? [],
+        $singer->update($request->safe()
+            ->merge(['user_roles' => array_merge(
+                $request->validated('user_roles', []),
                 [Role::where('name', '=', 'User')->pluck('id')->first()]
-            ),
-        ]);
+            )])
+            ->only([
+                'user_roles',
+                'reason_for_joining',
+                'referrer',
+                'membership_details',
+                'joined_at',
+                'onboarding_enabled',
+                'voice_part_id',
+                'paid_until',
+            ])
+        );
 
         return redirect()
             ->route('singers.show', [$singer])
@@ -188,5 +175,18 @@ class SingerController extends Controller
             ->defaultSort($nameSort)
             ->get()
             ->append('fee_status');
+    }
+
+    private function maybeCreateUser(CreateSingerRequest $request): Builder|\Illuminate\Database\Eloquent\Model
+    {
+        if ($request->has('user_id') && !empty($request->input('user_id'))) {
+            return User::find($request->input('user_id'));
+        }
+        return User::create(Arr::only($request->validated(), [
+            'email',
+            'first_name',
+            'last_name',
+            'password',
+        ]));
     }
 }

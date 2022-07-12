@@ -40,7 +40,7 @@ class RiserStackController extends Controller
     {
         $stack = RiserStack::create($request->validated());
 
-        $positions = $this->prepPositions($request);
+        $positions = $this->prepPositions($request->validated('singer_positions'));
         $stack->singers()->sync($positions);
 
         return redirect()
@@ -95,7 +95,7 @@ class RiserStackController extends Controller
     {
         $stack->update($request->validated());
 
-        $positions = $this->prepPositions($request);
+        $positions = $this->prepPositions($request->validated('singer_positions'));
         $stack->singers()->sync($positions);
 
         return redirect()
@@ -117,16 +117,10 @@ class RiserStackController extends Controller
      * and turns it into a format compatible with sync().
      *
      * @todo Convert the riser position data within the React component.
-     *
-     * @param RiserStackRequest $request
-     *
-     * @return array<array>
      */
-    private function prepPositions(RiserStackRequest $request): array
+    private function prepPositions(array $singerPositions): array
     {
-        $position_data = $request->validated()['singer_positions'];
-
-        return collect($position_data)
+        return collect($singerPositions)
             ->mapWithKeys(fn ($item) => [
                 $item['id'] => [
                     'row' => $item['position']['row'],

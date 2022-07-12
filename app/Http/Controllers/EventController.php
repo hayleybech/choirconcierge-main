@@ -43,10 +43,7 @@ class EventController extends Controller
 
     public function store(EventRequest $request): RedirectResponse
     {
-        $event = Event::create(
-            collect($request->validated())
-                ->toArray(),
-        );
+        $event = Event::create($request->safe()->except('send_notification'));
 
         if ($request->input('send_notification')) {
             Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventCreated($event));
@@ -110,11 +107,7 @@ class EventController extends Controller
             return back()->with(['error' => 'The server tried to edit a repeating event incorrectly.']);
         }
 
-        $event->update(
-            collect($request->validated())
-                ->except('send_notification')
-                ->toArray(),
-        );
+        $event->update($request->safe()->except('send_notification'));
 
         if ($request->input('send_notification')) {
             Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventUpdated($event));

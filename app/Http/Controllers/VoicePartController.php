@@ -48,11 +48,10 @@ class VoicePartController extends Controller
 
     public function update(Request $request, VoicePart $voice_part): RedirectResponse
     {
-        $data = $request->validate([
+        $voice_part->update($request->validate([
             'title' => 'required|max:255',
             'colour' => 'required|max:255',
-        ]);
-        $voice_part->update($data);
+        ]));
 
         return redirect()
             ->route('voice-parts.index')

@@ -34,7 +34,7 @@ class SingerPlacementController extends Controller
     {
         $this->authorize('create', [Placement::class, $singer]);
 
-        $singer->placement()->create($request->validated()); // refer to whitelist in model
+        $singer->placement()->create($request->safe()->except('voice_part_id'));
 
         if ($singer->onboarding_enabled) {
             // Mark matching task completed
@@ -44,9 +44,7 @@ class SingerPlacementController extends Controller
             event(new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer));
         }
 
-        $singer->update([
-            'voice_part_id' => $request->validated()['voice_part_id'],
-        ]);
+        $singer->update($request->safe()->only(['voice_part_id']));
 
         return redirect()
             ->route('singers.show', $singer)
@@ -70,11 +68,9 @@ class SingerPlacementController extends Controller
     {
         $this->authorize('update', $placement);
 
-        $placement->update($request->validated());
+        $placement->update($request->safe()->except('voice_part_id'));
 
-        $singer->update([
-            'voice_part_id' => $request->validated()['voice_part_id'],
-        ]);
+        $singer->update($request->safe()->only(['voice_part_id']));
 
         return redirect()
             ->route('singers.show', $singer)
