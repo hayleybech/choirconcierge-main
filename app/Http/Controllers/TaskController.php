@@ -12,6 +12,11 @@ use Inertia\Response;
 
 class TaskController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Task::class);
+    }
+
     public function index(): View|Response
     {
         return Inertia::render('Tasks/Index', [

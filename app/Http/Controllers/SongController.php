@@ -12,7 +12,6 @@ use App\Models\SongStatus;
 use App\Models\VoicePart;
 use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
@@ -26,10 +25,13 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class SongController extends Controller
 {
-    public function index(Request $request): InertiaResponse|View
+    public function __construct()
     {
-        $this->authorize('viewAny', Song::class);
+        $this->authorizeResource(Song::class);
+    }
 
+    public function index(Request $request): InertiaResponse
+    {
         $includePending = auth()->user()?->singer->hasAbility('songs_update');
         $statuses = SongStatus::query()
             ->when(! $includePending, fn ($query) => $query->where('title', '!=', 'Pending'))
@@ -55,8 +57,6 @@ class SongController extends Controller
 
     public function create(): InertiaResponse
     {
-        $this->authorize('create', Song::class);
-
         return Inertia::render('Songs/Create', [
             'categories' => SongCategory::all()->values(),
             'statuses' => SongStatus::all()->values(),
@@ -66,8 +66,6 @@ class SongController extends Controller
 
     public function store(SongRequest $request): RedirectResponse
     {
-        $this->authorize('create', Song::class);
-
         $song = Song::create(
             collect($request->validated())
                 ->toArray(),
@@ -82,10 +80,8 @@ class SongController extends Controller
             ->with(['status' => 'Song created. ']);
     }
 
-    public function show(Song $song): View|InertiaResponse
+    public function show(Song $song): InertiaResponse
     {
-        $this->authorize('view', $song);
-
         $song->load('attachments.category');
 
         $assessment_ready_count = $song->singers()->active()->wherePivot('status', 'assessment-ready')->count();
@@ -137,10 +133,8 @@ class SongController extends Controller
         ]);
     }
 
-    public function edit(Song $song): View|InertiaResponse
+    public function edit(Song $song): InertiaResponse
     {
-        $this->authorize('update', $song);
-
         return Inertia::render('Songs/Edit', [
             'categories' => SongCategory::all()->values(),
             'statuses' => SongStatus::all()->values(),
@@ -151,8 +145,6 @@ class SongController extends Controller
 
     public function update(SongRequest $request, Song $song): RedirectResponse
     {
-        $this->authorize('update', $song);
-
         $song->update(
             collect($request->validated())
                 ->except('send_notification')
@@ -170,8 +162,6 @@ class SongController extends Controller
 
     public function destroy(Song $song): RedirectResponse
     {
-        $this->authorize('delete', $song);
-
         $song->delete();
 
         return redirect()

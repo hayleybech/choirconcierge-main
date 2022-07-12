@@ -13,7 +13,6 @@ use App\Models\Singer;
 use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
@@ -27,20 +26,13 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class SingerController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        //
+        $this->authorizeResource(Singer::class);
     }
 
-    public function index(Request $request): View|InertiaResponse
+    public function index(Request $request): InertiaResponse
     {
-        $this->authorize('viewAny', Singer::class);
-
         $defaultStatus = SingerCategory::all()->firstWhere('name', 'Members')->id;
 
         return Inertia::render('Singers/Index', [
@@ -52,10 +44,8 @@ class SingerController extends Controller
         ]);
     }
 
-    public function create(): View|InertiaResponse
+    public function create(): InertiaResponse
     {
-        $this->authorize('create', Singer::class);
-
         $voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
         $roles = Role::where('name', '!=', 'User')->get();
 
@@ -67,8 +57,6 @@ class SingerController extends Controller
 
     public function store(CreateSingerRequest $request): RedirectResponse
     {
-        $this->authorize('create', Singer::class);
-
         if ($request->has('user_id') && ! empty($request->input('user_id'))) {
             $user = User::find($request->input('user_id'));
         } else {
@@ -101,10 +89,8 @@ class SingerController extends Controller
             ->with(['status' => 'Singer created. ']);
     }
 
-    public function show(Singer $singer): View|InertiaResponse
+    public function show(Singer $singer): InertiaResponse
     {
-        $this->authorize('view', $singer);
-
 		$singer->append('fee_status');
 
         $singer->load('user', 'voice_part', 'category', 'roles', 'placement', 'tasks');
@@ -122,10 +108,8 @@ class SingerController extends Controller
         ]);
     }
 
-    public function edit(Singer $singer): View|InertiaResponse
+    public function edit(Singer $singer): InertiaResponse
     {
-        $this->authorize('update', $singer);
-
         $singer->load('user', 'voice_part', 'category', 'roles');
 
         $voice_parts = VoicePart::all()->prepend(VoicePart::getNullVoicePart());
@@ -141,8 +125,6 @@ class SingerController extends Controller
 
     public function update(Singer $singer, EditSingerRequest $request): RedirectResponse
     {
-        $this->authorize('update', $singer);
-
         $singer->update(Arr::only($request->validated(), [
             'reason_for_joining',
             'referrer',
@@ -166,8 +148,6 @@ class SingerController extends Controller
 
     public function destroy(Singer $singer): RedirectResponse
     {
-        $this->authorize('delete', $singer);
-
         $singer->user->delete();
         $singer->delete();
 
@@ -176,7 +156,7 @@ class SingerController extends Controller
             ->with(['status' => 'Singer deleted. ']);
     }
 
-    private function getSingers(string $defaultStatus): array|Collection
+    private function getSingers(string $defaultStatus): Collection
     {
         $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
 

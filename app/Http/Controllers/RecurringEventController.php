@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Notification;
 
 class RecurringEventController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Event::class);
+    }
+
     /**
      * @param Request $request
      * @param Event $event
@@ -40,8 +45,6 @@ class RecurringEventController extends Controller
      */
     public function update(Event $event, EventRequest $request, string $mode): RedirectResponse
     {
-        $this->authorize('update', $event);
-
         if (! $event->is_repeating) {
             return back()->with(['error' => 'The server tried to edit a non-repeating event incorrectly.']);
         }
@@ -68,8 +71,6 @@ class RecurringEventController extends Controller
      */
     public function destroy(Request $request, Event $event, string $mode): RedirectResponse
     {
-        $this->authorize('delete', $event);
-
         // No point being here if the event isn't repeating
         abort_if(! $event->is_repeating, 403, 'This action is intended for repeating events only.');
 

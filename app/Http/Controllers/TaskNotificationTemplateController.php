@@ -5,21 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NotificationTemplateRequest;
 use App\Models\NotificationTemplate;
 use App\Models\Task;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TaskNotificationTemplateController extends Controller
 {
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param Task $task
-     *
-     * @return View
-     */
-    public function create(Task $task): View|Response
+    public function __construct()
+    {
+        $this->authorizeResource(Task::class);
+    }
+
+    public function create(Task $task): Response
     {
         return Inertia::render('Tasks/Notifications/Create', [
             'task' => $task,
@@ -43,15 +40,7 @@ class TaskNotificationTemplateController extends Controller
             ->with(['status' => 'Notification created.']);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Task                 $task
-     * @param NotificationTemplate $notification
-     *
-     * @return View
-     */
-    public function show(Task $task, NotificationTemplate $notification): View|Response
+    public function show(Task $task, NotificationTemplate $notification): Response
     {
         $task->can = [
             'update_task' => auth()->user()?->can('update', $task),
@@ -64,15 +53,7 @@ class TaskNotificationTemplateController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Task                 $task
-     * @param NotificationTemplate $notification
-     *
-     * @return View
-     */
-    public function edit(Task $task, NotificationTemplate $notification): View|Response
+    public function edit(Task $task, NotificationTemplate $notification): Response
     {
         return Inertia::render('Tasks/Notifications/Edit', [
             'task' => $task,

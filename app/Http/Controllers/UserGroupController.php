@@ -7,7 +7,6 @@ use App\Models\Role;
 use App\Models\SingerCategory;
 use App\Models\UserGroup;
 use App\Models\VoicePart;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,7 +21,7 @@ class UserGroupController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View|Response
+    public function index(): Response
     {
         return Inertia::render('MailingLists/Index', [
             'lists' => UserGroup::with('tenant')->orderBy('title')->get()->values(),
@@ -32,7 +31,7 @@ class UserGroupController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View|Response
+    public function create(): Response
     {
         return Inertia::render('MailingLists/Create', [
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
@@ -55,12 +54,7 @@ class UserGroupController extends Controller
             ->with(['status' => 'Group created. ']);
     }
 
-    /**
-     * Display the specified resource.
-     * @param UserGroup $group
-     * @return View
-     */
-    public function show(UserGroup $group): View|Response
+    public function show(UserGroup $group): Response
     {
         $group->load('members.memberable', 'senders.sender');
 
@@ -74,7 +68,7 @@ class UserGroupController extends Controller
         ]);
     }
 
-    public function edit(UserGroup $group): View|Response
+    public function edit(UserGroup $group): Response
     {
         $group->load([
             'recipient_roles', 'recipient_voice_parts', 'recipient_singer_categories', 'recipient_users',

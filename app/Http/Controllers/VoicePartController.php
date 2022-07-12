@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\VoicePart;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,14 +15,14 @@ class VoicePartController extends Controller
         $this->authorizeResource(VoicePart::class, 'voice_part');
     }
 
-    public function index(): View|Response
+    public function index(): Response
     {
         return Inertia::render('VoiceParts/Index', [
             'parts' => VoicePart::withCount('singers')->get()->values(),
         ]);
     }
 
-    public function create(): View|Response
+    public function create(): Response
     {
         return Inertia::render('VoiceParts/Create');
     }
@@ -40,12 +39,7 @@ class VoicePartController extends Controller
             ->with(['status' => 'Voice part created.']);
     }
 
-    public function show(VoicePart $voice_part): View
-    {
-        return view('voice-parts.show')->with(compact('voice_part'));
-    }
-
-    public function edit(VoicePart $voice_part): View|Response
+    public function edit(VoicePart $voice_part): Response
     {
         return Inertia::render('VoiceParts/Edit', [
             'voice_part' => $voice_part,
