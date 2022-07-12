@@ -69,7 +69,7 @@ const AccountForm = ({ }) => {
                         {errors.last_name && <Error>{errors.last_name}</Error>}
                     </div>
                     <div className="sm:col-span-2">
-                        <Label label="Preferred Pronouns" forInput="pronouns" />
+                        <Label label="Pronouns" forInput="pronouns" />
                         <TextInput name="pronouns" value={data.pronouns} placeholder="she/they/he" updateFn={value => setData('pronouns', value)} hasErrors={ !! errors['pronouns'] } />
                         {errors.pronouns && <Error>{errors.pronouns}</Error>}
                     </div>
