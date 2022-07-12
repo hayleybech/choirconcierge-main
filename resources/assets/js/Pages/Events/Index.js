@@ -31,6 +31,7 @@ const Index = ({ events, eventTypes }) => {
                     { label: 'Filter/Sort', icon: 'filter', onClick: () => setShowFilters(! showFilters) },
                     { label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
                 ].filter(action => action.can ? can[action.can] : true)}
+                meta={[<div className="text-gray-400">Calendar Sync URL: {route('events.feed')}</div>]}
             />
 
             <IndexContainer

@@ -24,6 +24,7 @@ const Month = ({ days, month }) => {
                     { label: 'Attendance Report', icon: 'analytics', url: route('events.reports.attendance'), can: 'list_attendances' },
                     { label: 'List View', icon: 'th-list', url: route('events.index'), can: 'list_events' },
                 ].filter(action => action.can ? can[action.can] : true)}
+                meta={[<div className="text-gray-400">Calendar Sync URL: {route('events.feed')}</div>]}
             />
 
             <Calendar days={days} month={month} />
