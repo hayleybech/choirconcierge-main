@@ -16,6 +16,8 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
     const [openFolder, setOpenFolder] = useState(0);
     const [renameDocumentIsOpen, setRenameDocumentIsOpen] = useState(false);
     const [renamingDocument, setRenamingDocument] = useState({ folder: folders[0], document: folders[0].documents[0] });
+    const [renameFolderIsOpen, setRenameFolderIsOpen] = useState(false);
+    const [renamingFolder, setRenamingFolder] = useState(folders[0]);
 
     const headings = permissions['delete_folder'] || permissions['delete_document']
         ? ['Title', 'Created', 'Delete']
@@ -39,6 +41,17 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                                             <Icon icon={folder.id === openFolder ? 'folder-open' : 'folder'} mr className="text-purple-500" />
                                             {folder.title}
                                         </a>
+                                        {permissions['update_folder'] && (
+                                        <Button
+                                            variant="secondary"
+                                            size="xs"
+                                            className="ml-2"
+                                            onClick={() => { setRenamingFolder(folder); setRenameFolderIsOpen(true); }}
+                                        >
+                                            <Icon icon="edit" />
+                                            Rename
+                                        </Button>
+                                        )}
                                     </div>
                                 </div>
                             </TableCell>
@@ -63,6 +76,7 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                                                 <FolderIcon icon={document.icon} />
                                                 {document.title}
                                             </a>
+                                            {permissions['update_document'] && (
                                             <Button
                                                 variant="secondary"
                                                 size="xs"
@@ -72,6 +86,7 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                                                 <Icon icon="edit" />
                                                 Rename
                                             </Button>
+                                            )}
                                         </div>
                                     </div>
                                 </TableCell>
@@ -87,7 +102,7 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                                 </TableCell>
                             </tr>
                         ))}
-                        {folder.id === openFolder && (
+                        {folder.id === openFolder && permissions['create_document'] && (
                         <tr>
                             <TableCell colSpan={3}>
                                 <div className="ml-4">
@@ -100,6 +115,7 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                 ))}
             />
             <RenameDocumentDialog folder={renamingDocument.folder} document={renamingDocument.document} isOpen={renameDocumentIsOpen} setIsOpen={setRenameDocumentIsOpen} />
+            <RenameFolderDialog folder={renamingFolder} isOpen={renameFolderIsOpen} setIsOpen={setRenameFolderIsOpen} />
         </>
     );
 }
@@ -125,6 +141,42 @@ const RenameDocumentDialog = ({ isOpen, setIsOpen, folder, document }) => {
     return (
         <Dialog
             title="Rename document"
+            okLabel="Rename"
+            onOk={submit}
+            okVariant="primary"
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+        >
+            <Form onSubmit={submit}>
+                <div className="sm:col-span-6">
+                    <Label label="New name" forInput="title" />
+                    <TextInput name="title" value={data.title} updateFn={value => setData('title', value)} hasErrors={ !! errors['title'] } />
+                    {errors.title && <Error>{errors.title}</Error>}
+                </div>
+            </Form>
+        </Dialog>
+    )
+};
+
+const RenameFolderDialog = ({ isOpen, setIsOpen, folder }) => {
+    const { data, setData, put, errors } = useForm({
+        title: document?.title ?? '',
+    });
+
+    useEffect(() => {
+        setData('title', folder?.title ?? '');
+    }, [folder]);
+
+    function submit(e) {
+        e.preventDefault();
+        put(route('folders.update', folder), {
+            onSuccess: () => setIsOpen(false),
+        });
+    }
+
+    return (
+        <Dialog
+            title="Rename folder"
             okLabel="Rename"
             onOk={submit}
             okVariant="primary"
