@@ -79,13 +79,18 @@ const SingerTableDesktop = ({ singers }) => {
 export default SingerTableDesktop;
 
 const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
-    const { data, setData, put, errors } = useForm({
-        paid_until: singer?.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : '',
+    const { data, setData, put, errors, transform } = useForm({
+        paid_until: singer?.paid_until ? DateTime.fromISO(singer.paid_until) : null,
     });
 
     useEffect(() => {
-        setData('paid_until', singer?.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : '');
-    }, [singer]);
+        setData('paid_until', singer?.paid_until ? DateTime.fromISO(singer.paid_until) : null);
+    }, [singer])
+
+    transform((data) => ({
+        ...data,
+        paid_until: data.paid_until?.toISODate() ?? null,
+    }));
 
     function submit(e) {
         e.preventDefault();
@@ -94,8 +99,8 @@ const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
         });
     }
 
-    function renewFor(timeObj) {
-        setData('paid_until', DateTime.fromJSDate(new Date(data.paid_until)).plus(timeObj).toISODate());
+    function renewFor(diff) {
+        setData('paid_until', data.paid_until?.plus(diff) ?? DateTime.now().plus(diff));
     }
 
     return (
@@ -126,8 +131,8 @@ const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
                     <DayInput
                         name="paid_until"
                         hasErrors={ !! errors.paid_until }
-                        value={data.paid_until}
-                        updateFn={value => setData('paid_until', value)}
+                        value={data.paid_until?.toISODate() ?? ''}
+                        updateFn={value => setData('paid_until', DateTime.fromISO(value) ?? null)}
                     />
                     <Help>Manually adjust the expiry date here.</Help>
                     {errors.paid_until && <Error>{errors.paid_until}</Error>}

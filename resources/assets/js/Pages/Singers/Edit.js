@@ -22,25 +22,31 @@ import ButtonGroup from "../../components/inputs/ButtonGroup";
 const Edit = ({ voice_parts, roles, singer }) => {
     const { can } = usePage().props;
 
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, put, processing, errors, transform } = useForm({
         voice_part_id: singer.voice_part.id,
         reason_for_joining: singer.reason_for_joining ?? '',
         referrer: singer.referrer ?? '',
         membership_details: singer.membership_details ?? '',
 
         onboarding_enabled: singer.onboarding_enabled,
-        joined_at: singer.joined_at ? DateTime.fromJSDate(new Date(singer.joined_at)).toISODate() : '',
-        paid_until: singer.paid_until ? DateTime.fromJSDate(new Date(singer.paid_until)).toISODate() : '',
+        joined_at: singer.joined_at ? DateTime.fromISO(singer.joined_at) : null,
+        paid_until: singer.paid_until ? DateTime.fromISO(singer.paid_until) : null,
         user_roles: singer.roles.map(role => role.id),
     });
+
+    transform((data) => ({
+        ...data,
+        joined_at: data.joined_at?.toISODate() ?? null,
+        paid_until: data.paid_until?.toISODate() ?? null,
+    }));
 
     function submit(e) {
         e.preventDefault();
         put(route('singers.update', singer));
     }
 
-    function renewFor(timeObj) {
-        setData('paid_until', DateTime.fromJSDate(new Date(data.paid_until)).plus(timeObj).toISODate());
+    function renewFor(diff) {
+        setData('paid_until', data.paid_until?.plus(diff) ?? DateTime.now().plus(diff));
     }
 
     return (
@@ -94,8 +100,8 @@ const Edit = ({ voice_parts, roles, singer }) => {
                             <DayInput
                                 name="joined_at"
                                 hasErrors={ !! errors.joined_at }
-                                value={data.joined_at}
-                                updateFn={value => setData('joined_at', value)}
+                                value={data.joined_at?.toISODate() ?? ''}
+                                updateFn={value => setData('joined_at', DateTime.fromISO(value) ?? null)}
                                 max={DateTime.now().toISODate()}
                             />
                             {errors.joined_at && <Error>{errors.joined_at}</Error>}
@@ -129,8 +135,8 @@ const Edit = ({ voice_parts, roles, singer }) => {
                                 <DayInput
                                     name="paid_until"
                                     hasErrors={ !! errors.paid_until }
-                                    value={data.paid_until}
-                                    updateFn={value => setData('paid_until', value)}
+                                    value={data.paid_until?.toISODate() ?? ''}
+                                    updateFn={value => setData('paid_until', DateTime.fromISO(value) ?? null)}
                                 />
                                 <Help>Manually adjust the expiry date here.</Help>
                                 {errors.paid_until && <Error>{errors.paid_until}</Error>}

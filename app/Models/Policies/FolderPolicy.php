@@ -10,7 +10,7 @@ class FolderPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user, string $ability): ?bool
+    public function before(User $user): ?bool
     {
         if (! $user->singer) {
             return false;
@@ -23,91 +23,37 @@ class FolderPolicy
         return null;
     }
 
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param User $user
-     *
-     * @return mixed
-     */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return $user->singer->hasAbility('folders_view');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param User       $user
-     * @param Folder $folder
-     *
-     * @return mixed
-     */
-    public function view(User $user, Folder $folder)
+    public function view(User $user): bool
     {
         return $user->singer->hasAbility('folders_view');
     }
 
-    /**
-     * Determine whether the user can create models.
-     *
-     * @param User  $user
-     *
-     * @return mixed
-     */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return $user->singer->hasAbility('folders_create');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     *
-     * @param User   $user
-     * @param Folder $folder
-     *
-     * @return mixed
-     */
-    public function update(User $user, Folder $folder)
+    public function update(User $user): bool
     {
         return $user->singer->hasAbility('folders_update');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param User   $user
-     * @param Folder $folder
-     *
-     * @return mixed
-     */
-    public function delete(User $user, Folder $folder)
+    public function delete(User $user): bool
     {
         return $user->singer->hasAbility('folders_delete');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param User   $user
-     * @param Folder $folder
-     *
-     * @return mixed
-     */
-    public function restore(User $user, Folder $folder)
+    public function restore(): bool
     {
         return false;
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param User   $user
-     * @param Folder $folder
-     *
-     * @return mixed
-     */
-    public function forceDelete(User $user, Folder $folder)
+    public function forceDelete(): bool
     {
         return false;
     }
