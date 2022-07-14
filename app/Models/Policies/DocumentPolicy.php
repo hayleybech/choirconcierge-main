@@ -40,7 +40,7 @@ class DocumentPolicy
 
     public function update(User $user, Document $document): bool
     {
-        return $user->singer->hasAbility('documents_update');
+        return $user->singer->hasAbility('documents_create');
     }
 
     public function delete(User $user, Document $document): bool

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use _HumbugBox61bfe547a037\Nette\Neon\Exception;
 use App\Models\Traits\TenantTimezoneDates;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,7 +34,7 @@ class Document extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['document_upload'];
+    protected $fillable = ['document_upload', 'title'];
 
     protected $appends = ['download_url', 'icon'];
 

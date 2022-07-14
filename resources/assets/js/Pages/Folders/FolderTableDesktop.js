@@ -1,87 +1,143 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Table, {TableCell} from "../../components/Table";
 import FolderIcon from "../../components/FolderIcon";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import DocumentForm from "./DocumentForm";
 import Button from "../../components/inputs/Button";
+import {useForm} from "@inertiajs/inertia-react";
+import Dialog from "../../components/Dialog";
+import Form from "../../components/Form";
+import Label from "../../components/inputs/Label";
+import Error from "../../components/inputs/Error";
+import TextInput from "../../components/inputs/TextInput";
 
 const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, permissions }) => {
     const [openFolder, setOpenFolder] = useState(0);
+    const [renameDocumentIsOpen, setRenameDocumentIsOpen] = useState(false);
+    const [renamingDocument, setRenamingDocument] = useState({ folder: folders[0], document: folders[0].documents[0] });
 
     const headings = permissions['delete_folder'] || permissions['delete_document']
         ? ['Title', 'Created', 'Delete']
         : ['Title', 'Created'];
 
     return (
-        <Table
-            headings={headings}
-            body={folders.map((folder) => (
-                <React.Fragment key={folder.id}>
-                    <tr>
-                        <TableCell>
-                            <div className="flex items-center">
-                                <div className="ml-4">
-                                    <a
-                                        href="#"
-                                        className="text-purple-600"
-                                        onClick={() => setOpenFolder(folder.id === openFolder ? 0 : folder.id)}
-                                    >
-                                        <Icon icon={folder.id === openFolder ? 'folder-open' : 'folder'} mr className="text-purple-500" />
-                                        {folder.title}
-                                    </a>
-                                </div>
-                            </div>
-                        </TableCell>
-                        <TableCell>
-                            <DateTag date={folder.created_at} />
-                        </TableCell>
-                        <TableCell>
-                            {permissions['delete_folder'] && (
-                                <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline">
-                                    <Icon icon="times" />
-                                </Button>
-                            )}
-                        </TableCell>
-                    </tr>
-                    {folder.id === openFolder && folder.documents.map((document) => (
-                        <tr key={document.id}>
+        <>
+            <Table
+                headings={headings}
+                body={folders.map((folder) => (
+                    <React.Fragment key={folder.id}>
+                        <tr>
                             <TableCell>
                                 <div className="flex items-center">
                                     <div className="ml-4">
-                                        <a href={document.download_url} download={document.title} className="text-purple-600">
-                                            <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" />
-                                            <FolderIcon icon={document.icon} />
-                                            {document.title}
+                                        <a
+                                            href="#"
+                                            className="text-purple-600"
+                                            onClick={() => setOpenFolder(folder.id === openFolder ? 0 : folder.id)}
+                                        >
+                                            <Icon icon={folder.id === openFolder ? 'folder-open' : 'folder'} mr className="text-purple-500" />
+                                            {folder.title}
                                         </a>
                                     </div>
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <DateTag date={document.created_at} />
+                                <DateTag date={folder.created_at} />
                             </TableCell>
                             <TableCell>
-                                {permissions['delete_document'] && (
-                                    <Button onClick={() => setDeletingDocument(document)} variant="danger-outline">
+                                {permissions['delete_folder'] && (
+                                    <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline">
                                         <Icon icon="times" />
                                     </Button>
                                 )}
                             </TableCell>
                         </tr>
-                    ))}
-                    {folder.id === openFolder && (
-                    <tr>
-                        <TableCell colSpan={3}>
-                            <div className="ml-4">
-                                <DocumentForm folder={folder} />
-                            </div>
-                        </TableCell>
-                    </tr>
-                    )}
-                </React.Fragment>
-            ))}
-        />
+                        {folder.id === openFolder && folder.documents.map((document) => (
+                            <tr key={document.id}>
+                                <TableCell>
+                                    <div className="flex items-center">
+                                        <div className="ml-4">
+                                            <a href={document.download_url} download={document.title} className="text-purple-600">
+                                                <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" />
+                                                <FolderIcon icon={document.icon} />
+                                                {document.title}
+                                            </a>
+                                            <Button
+                                                variant="secondary"
+                                                size="xs"
+                                                className="ml-2"
+                                                onClick={() => { setRenamingDocument({folder, document}); setRenameDocumentIsOpen(true); }}
+                                            >
+                                                <Icon icon="edit" />
+                                                Rename
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                                <TableCell>
+                                    <DateTag date={document.created_at} />
+                                </TableCell>
+                                <TableCell>
+                                    {permissions['delete_document'] && (
+                                        <Button onClick={() => setDeletingDocument(document)} variant="danger-outline">
+                                            <Icon icon="times" />
+                                        </Button>
+                                    )}
+                                </TableCell>
+                            </tr>
+                        ))}
+                        {folder.id === openFolder && (
+                        <tr>
+                            <TableCell colSpan={3}>
+                                <div className="ml-4">
+                                    <DocumentForm folder={folder} />
+                                </div>
+                            </TableCell>
+                        </tr>
+                        )}
+                    </React.Fragment>
+                ))}
+            />
+            <RenameDocumentDialog folder={renamingDocument.folder} document={renamingDocument.document} isOpen={renameDocumentIsOpen} setIsOpen={setRenameDocumentIsOpen} />
+        </>
     );
 }
 
 export default FolderTableDesktop;
+
+const RenameDocumentDialog = ({ isOpen, setIsOpen, folder, document }) => {
+    const { data, setData, put, errors } = useForm({
+        title: document?.title ?? '',
+    });
+
+    useEffect(() => {
+        setData('title', document?.title ?? '');
+    }, [document]);
+
+    function submit(e) {
+        e.preventDefault();
+        put(route('folders.documents.update', [folder, document]), {
+            onSuccess: () => setIsOpen(false),
+        });
+    }
+
+    return (
+        <Dialog
+            title="Rename document"
+            okLabel="Rename"
+            onOk={submit}
+            okVariant="primary"
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+        >
+            <Form onSubmit={submit}>
+                <div className="sm:col-span-6">
+                    <Label label="New name" forInput="title" />
+                    <TextInput name="title" value={data.title} updateFn={value => setData('title', value)} hasErrors={ !! errors['title'] } />
+                    {errors.title && <Error>{errors.title}</Error>}
+                </div>
+            </Form>
+        </Dialog>
+    )
+};
