@@ -102,7 +102,7 @@ Route::middleware([
 
     // Documents module
     Route::resource('folders', FolderController::class)->except(['show', 'edit'])->middleware('auth');
-    Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'destroy'])->middleware('auth');
+    Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('auth');
 
     // Risers module
     Route::resource('stacks', RiserStackController::class);

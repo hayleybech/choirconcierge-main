@@ -91,4 +91,28 @@ class DocumentControllerTest extends TestCase
         $document = Document::firstWhere('filepath', $data['document_uploads'][0]->hashName());
         Storage::disk('public')->assertExists($document->getPath());
     }
+
+    /** @test */
+    public function it_can_rename_documents(): void
+    {
+        $this->withoutExceptionHandling();
+        Storage::fake('public');
+
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        $folder = Folder::factory()
+            ->hasDocuments()
+            ->create();
+
+        $this->from(the_tenant_route('folders.index'))
+            ->put(the_tenant_route('folders.documents.update', [$folder, $folder->documents->first()]), [
+                'title' => 'new-name.txt',
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(the_tenant_route('folders.index'));
+
+        $this->assertDatabaseHas(Document::class, [
+            'title' => 'new-name.txt',
+        ]);
+    }
 }

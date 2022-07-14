@@ -6,6 +6,7 @@ use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use App\Models\Folder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DocumentController extends Controller
@@ -32,6 +33,13 @@ class DocumentController extends Controller
     public function show(Folder $folder, Document $document): BinaryFileResponse
     {
         return response()->download($document->path);
+    }
+
+    public function update(Folder $folder, Document $document, Request $request): RedirectResponse
+    {
+        $document->update($request->validate(['title' => 'required|max:127']));
+
+        return redirect()->back()->with(['status' => 'Document renamed.']);
     }
 
     public function destroy(Folder $folder, Document $document): RedirectResponse

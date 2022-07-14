@@ -10,7 +10,7 @@ class DocumentPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user, string $ability): ?bool
+    public function before(User $user): ?bool
     {
         if (! $user->singer) {
             return false;
@@ -28,7 +28,7 @@ class DocumentPolicy
         return $user->singer->hasAbility('documents_view');
     }
 
-    public function view(User $user, Document $document): bool
+    public function view(User $user): bool
     {
         return $user->singer->hasAbility('documents_view');
     }
@@ -38,22 +38,22 @@ class DocumentPolicy
         return $user->singer->hasAbility('documents_create');
     }
 
-    public function update(User $user, Document $document): bool
+    public function update(User $user): bool
     {
-        return $user->singer->hasAbility('documents_update');
+        return $user->singer->hasAbility('documents_create');
     }
 
-    public function delete(User $user, Document $document): bool
+    public function delete(User $user): bool
     {
         return $user->singer->hasAbility('documents_delete');
     }
 
-    public function restore(User $user, Document $document): bool
+    public function restore(): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, Document $document): bool
+    public function forceDelete(): bool
     {
         return false;
     }

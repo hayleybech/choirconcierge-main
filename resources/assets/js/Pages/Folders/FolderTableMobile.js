@@ -53,7 +53,7 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, pe
                             </div>
                         </a>
                     ))}
-                    {folder.id === openFolder && (
+                    {folder.id === openFolder && permissions['create_document'] && (
                         <div className="flex items-center px-4 py-4 sm:px-6 ml">
                             <div className="px-4 w-full">
                                 <DocumentForm folder={folder} />
