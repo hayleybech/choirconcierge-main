@@ -10,7 +10,7 @@ const MemberversariesWidget = ({ memberversaries }) => (
         {memberversaries.length > 0 ? (
             <TableMobile>
                 {memberversaries.map((singer) => (
-                    <TableMobileItem url={route('singers.show', singer)}>
+                    <TableMobileItem url={route('singers.show', singer)} key={singer.id}>
                         <div className="text-sm font-medium text-purple-800">{singer.user.name}</div>
                         <div className="flex items-center mr-4">
                             <div className="text-sm text-gray-700 mr-2">

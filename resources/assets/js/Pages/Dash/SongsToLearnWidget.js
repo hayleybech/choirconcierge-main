@@ -10,7 +10,7 @@ const SongsToLearnWidget = ({ songs }) => (
         {songs.length > 0 ? (
             <TableMobile>
                 {songs.map((song) => (
-                    <TableMobileItem url={route('songs.show', song)}>
+                    <TableMobileItem url={route('songs.show', song)} key={song.id}>
                         <div className="text-sm font-medium text-purple-800 shrink-1">{song.title}</div>
                         <div className="text-sm">
                             <LearningStatusTag status={new LearningStatus(song.my_learning.status)} />

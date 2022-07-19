@@ -2,10 +2,10 @@ import React from 'react';
 import buttonStyles from "./buttonStyles";
 import ButtonLink from "./ButtonLink";
 
-const Button = ({ variant = 'secondary', size = 'md', href, className, children, disabled, ...otherProps }) => (
+const Button = ({ variant = 'secondary', size = 'md', href, method, className, children, disabled, ...otherProps }) => (
     href
         ?
-        <ButtonLink href={href} variant={variant} size={size} className={className} disabled={disabled} {...otherProps}>
+        <ButtonLink href={href} variant={variant} size={size} className={className} disabled={disabled} method={method} as={method ? 'button' : 'a'} {...otherProps}>
             {children}
         </ButtonLink>
         :
