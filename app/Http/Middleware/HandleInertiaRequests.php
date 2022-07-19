@@ -88,12 +88,19 @@ class HandleInertiaRequests extends Middleware
             'tenant' => tenancy()?->tenant,
             'user' => auth()->user(),
             'impersonationActive' => session()->has('impersonation:active'),
-            'userChoirs' => auth()->user()
+            'userChoirs' => $this->getUserChoirs(),
+        ]);
+    }
+
+    private function getUserChoirs()
+    {
+        return session()->has('impersonation:active')
+            ? [tenant()->load('domains')]
+            : auth()->user()
                 ?->singers()
                 ->withoutTenancy()
                 ->with('tenant.domains')
                 ->get()
-                ->map(fn ($singer) => $singer->tenant),
-        ]);
+                ->map(fn($singer) => $singer->tenant);
     }
 }
