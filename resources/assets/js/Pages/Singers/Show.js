@@ -169,14 +169,9 @@ const Show = ({ singer, categories }) => {
                         },
                         {
                             title: 'Voice Placement',
-                            action: <EditSingerPlacementButton singer={singer} />,
-                            show: singer.can['create_placement'] && singer.placement,
+                            action: singer.placement ? <EditSingerPlacementButton singer={singer} /> : null,
+                            show: singer.can['create_placement'],
                             content: <VoicePlacementDetails singer={singer} />,
-                        },
-                        {
-                            title: 'Voice Placement',
-                            show: singer.can['create_placement'] && !singer.placement,
-                            content: <VoicePlacementEmptyState singer={singer} />
                         },
                     ]} />
                 </div>
@@ -357,50 +352,54 @@ const EditSingerPlacementButton = ({ singer }) => (
     </ButtonLink>
 );
 
-const VoicePlacementDetails = ({ singer }) => (
-    <CollapsePanel>
-        <DetailList gridCols="sm:grid-cols-2" items={[
-            {
-                label: 'Voice Part',
-                value: <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />,
-            },
-            {
-                label: 'Voice Tone',
-                value: <Range
-                    min={1}
-                    max={3}
-                    minLabel={<Icon icon="flute" className="text-gray-600 fa-lg" />}
-                    maxLabel={<Icon icon="trumpet" className="text-gray-600 fa-lg" />}
-                    value={singer.placement.voice_tone}
-                />,
-            },
-            {
-                label: 'Pitch Skill',
-                value: <Progress value={singer.placement.skill_pitch} min={1} max={5} />,
-            },
-            {
-                label: 'Harmony Skill',
-                value: <Progress value={singer.placement.skill_harmony} min={1} max={5} />,
-            },
-            {
-                label: 'Performance Skill',
-                value: <Progress value={singer.placement.skill_performance} min={1} max={5} />,
-            },
-            {
-                label: 'Sight Reading Skill',
-                value: <Progress value={singer.placement.skill_sightreading} min={1} max={5} />,
-            },
-            {
-                label: 'Experience',
-                value: singer.placement.experience ?? 'None listed',
-            },
-            {
-                label: 'Instruments',
-                value: singer.placement.instruments ?? 'None listed',
-            },
-        ]} />
-    </CollapsePanel>
-);
+const VoicePlacementDetails = ({ singer }) =>
+    singer.placement
+        ? (
+            <CollapsePanel>
+                <DetailList gridCols="sm:grid-cols-2" items={[
+                    {
+                        label: 'Voice Part',
+                        value: <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />,
+                    },
+                    {
+                        label: 'Voice Tone',
+                        value: <Range
+                            min={1}
+                            max={3}
+                            minLabel={<Icon icon="flute" className="text-gray-600 fa-lg" />}
+                            maxLabel={<Icon icon="trumpet" className="text-gray-600 fa-lg" />}
+                            value={singer.placement.voice_tone}
+                        />,
+                    },
+                    {
+                        label: 'Pitch Skill',
+                        value: <Progress value={singer.placement.skill_pitch} min={1} max={5} />,
+                    },
+                    {
+                        label: 'Harmony Skill',
+                        value: <Progress value={singer.placement.skill_harmony} min={1} max={5} />,
+                    },
+                    {
+                        label: 'Performance Skill',
+                        value: <Progress value={singer.placement.skill_performance} min={1} max={5} />,
+                    },
+                    {
+                        label: 'Sight Reading Skill',
+                        value: <Progress value={singer.placement.skill_sightreading} min={1} max={5} />,
+                    },
+                    {
+                        label: 'Experience',
+                        value: singer.placement.experience ?? 'None listed',
+                    },
+                    {
+                        label: 'Instruments',
+                        value: singer.placement.instruments ?? 'None listed',
+                    },
+                ]} />
+            </CollapsePanel>
+        )
+        : <VoicePlacementEmptyState singer={singer} />
+;
 
 const VoicePlacementEmptyState = ({ singer }) => (
     <div className="text-center py-6 px-4">
