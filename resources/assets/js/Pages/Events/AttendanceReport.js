@@ -58,8 +58,8 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                     </tr>
                 </thead>
                 <tbody>
-                {voiceParts.map((voicePart) => (<>
-                    <tr key={voicePart.id}>
+                {voiceParts.map((voicePart) => (<React.Fragment key={voicePart.id}>
+                    <tr>
                         <th colSpan="100000" className="text-left px-5 py-3 bg-gray-100 border border-gray-300">{voicePart.title}</th>
                     </tr>
                     {voicePart.singers.map((singer) => (
@@ -73,8 +73,8 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                                     {singer.user.name}
                                 </div>
                             </th>
-                            {events.map((event) => getAttendanceBySingerAndEvent(singer, event)).map((attendance) => (
-                                <td className="border border-gray-300 text-center">
+                            {events.map((event) => getAttendanceBySingerAndEvent(singer, event)).map((attendance, key) => (
+                                <td className="border border-gray-300 text-center" key={key}>
                                     {attendance
                                         ? <AttendanceTag icon={attendance.icon} colour={attendance.colour} />
                                         : <AttendanceTag icon="question" colour="gray" />
@@ -87,16 +87,18 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                             </td>
                         </tr>
                     ))}
-                </>))}
+                </React.Fragment>))}
                 </tbody>
                 <tfoot>
-                    <th className="border border-gray-300 bg-gray-100 text-left p-5">Singers Present</th>
-                    {events.map((event) => (
-                        <td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-5">
-                            <div>{event.percentPresent}%</div>
-                            <div className="text-xs">{event.singersPresent} / {numSingers}</div>
-                        </td>
-                    ))}
+                    <tr>
+                        <th className="border border-gray-300 bg-gray-100 text-left p-5">Singers Present</th>
+                        {events.map((event) => (
+                            <td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-5" key={event.id}>
+                                <div>{event.percentPresent}%</div>
+                                <div className="text-xs">{event.singersPresent} / {numSingers}</div>
+                            </td>
+                        ))}
+                    </tr>
                 </tfoot>
             </table>
         </div>
