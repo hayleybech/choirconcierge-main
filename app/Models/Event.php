@@ -53,6 +53,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Rsvp $my_rsvp
  * @property Attendance $my_attendance
  * @property Collection<Attendance> $attendances
+ * @property Collection<EventActivity> $activities
  *
  * Relationships - Repeating Events
  * @property Event $repeat_parent
@@ -188,6 +189,11 @@ class Event extends Model
     public function attendances(): HasMany
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function activities(): HasMany
+    {
+        return $this->hasMany(EventActivity::class);
     }
 
     public function repeat_parent(): BelongsTo
