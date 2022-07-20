@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $event_id
  * @property string $description
  * @property int $duration
+ * @property int $order
  */
 
 class EventActivity extends Model

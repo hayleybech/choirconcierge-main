@@ -11,9 +11,9 @@ const EventScheduleDesktop = ({ event }) => {
     return (
         <>
             <Table
-                headings={event.can.update_event ? ['Description', 'Duration', 'Delete'] : ['Description', 'Duration']}
+                headings={event.can.update_event ? ['Description', 'Duration', 'Move', 'Delete'] : ['Description', 'Duration']}
                 body={<>
-                    {event.activities.map((activity) => (
+                    {event.activities.map((activity, index) => (
                         <tr key={activity.id}>
                             <TableCell>
                                 {activity.description}
@@ -21,8 +21,33 @@ const EventScheduleDesktop = ({ event }) => {
                             <TableCell>
                                 {activity.duration} min
                             </TableCell>
+                            {event.can.update_event && (
                             <TableCell>
-                                {event.can.update_event && (
+                                <Button
+                                    variant="clear"
+                                    size="sm"
+                                    href={route('events.activities.move', [event, activity])}
+                                    method="post"
+                                    data={{direction: 'up'}}
+                                    className={index > 0 ? '' : 'invisible'}
+                                >
+                                    <Icon icon="arrow-up"/>
+                                </Button>
+                                {index < event.activities.length - 1 &&
+                                <Button
+                                    variant="clear"
+                                    size="sm"
+                                    href={route('events.activities.move', [event, activity])}
+                                    method="post"
+                                    data={{direction: 'down'}}
+                                >
+                                    <Icon icon="arrow-down"/>
+                                </Button>
+                                }
+                            </TableCell>
+                            )}
+                            {event.can.update_event && (
+                            <TableCell>
                                     <Button
                                         variant="danger-clear"
                                         onClick={() => {setDeletingActivityId(activity.id);
@@ -30,8 +55,8 @@ const EventScheduleDesktop = ({ event }) => {
                                     >
                                         <Icon icon="trash" />
                                     </Button>
-                                )}
                             </TableCell>
+                            )}
                         </tr>
                     ))}
                     <tr className="bg-gray-50">
@@ -45,7 +70,10 @@ const EventScheduleDesktop = ({ event }) => {
                                 {event.activities.reduce((prevValue, item) => prevValue + item.duration, 0)} min
                             </div>
                         </TableCell>
-                        <TableCell />
+                        {event.can.update_event && (<>
+                            <TableCell />
+                            <TableCell />
+                        </>)}
                     </tr>
                 </>}
             />

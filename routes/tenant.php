@@ -17,6 +17,7 @@ use App\Http\Controllers\ImpersonateUserController;
 use App\Http\Controllers\ImportSingerController;
 use App\Http\Controllers\LearningStatusController;
 use App\Http\Controllers\MailboxController;
+use App\Http\Controllers\MoveActivityController;
 use App\Http\Controllers\RecurringEventController;
 use App\Http\Controllers\RiserStackController;
 use App\Http\Controllers\RoleController;
@@ -89,6 +90,7 @@ Route::middleware([
     Route::resource('events.rsvps', RsvpController::class)->only(['store', 'update', 'destroy']);
     Route::resource('events.attendances', AttendanceController::class)->only(['index']);
     Route::resource('events.activities', EventActivityController::class)->only(['store', 'destroy']);
+    Route::post('events/{event}/activities/{activity}/move', MoveActivityController::class)->name('events.activities.move');
     Route::get('events/calendar/month', EventCalendarController::class)->name('events.calendar.month');
 	Route::controller(RecurringEventController::class)
 		->prefix('events/{event}/recurring/')
