@@ -8,12 +8,13 @@ import Error from "../inputs/Error";
 import Button from "../inputs/Button";
 import Icon from "../Icon";
 import TextInput from "../inputs/TextInput";
+import EventScheduleMobile from "./EventScheduleMobile";
 
 const EventSchedule = ({ event }) => {
     const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
     return (
         <div>
-            {isDesktop ? <EventScheduleDesktop event={event} /> : null}
+            {isDesktop ? <EventScheduleDesktop event={event} /> : <EventScheduleMobile event={event} />}
 
             {event.can.update_event && <ScheduleItemForm event={event} />}
         </div>
