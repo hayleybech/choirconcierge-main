@@ -17,6 +17,7 @@ import ButtonLink from "../../components/inputs/ButtonLink";
 import CollapsePanel from "../../components/CollapsePanel";
 import CollapseGroup from "../../components/CollapseGroup";
 import EventType from "../../EventType";
+import EventSchedule from "../../components/Event/EventSchedule";
 
 const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePartsAttendanceCount, addToCalendarLinks }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -61,8 +62,9 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
 
                 <div className="sm:col-span-1 xl:col-span-3 divide-y divide-y-gray-300">
                     <CollapseGroup items={[
-                        { title: 'Event Description', show: true, content: <EventDescription description={event.description} timezone={pageProps.tenant.timezone_label} />},
-                        { title: 'Event Location', show: true, defaultOpen: true, content: <EventLocation event={event} />},
+                        { title: 'Description', show: true, content: <EventDescription description={event.description} timezone={pageProps.tenant.timezone_label} />},
+                        { title: 'Location', show: true, defaultOpen: true, content: <EventLocation event={event} />},
+                        { title: 'Schedule', show: true, content: <EventSchedule event={event} />},
                     ]} />
                 </div>
 
