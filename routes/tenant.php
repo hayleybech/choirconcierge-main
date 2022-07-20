@@ -88,7 +88,7 @@ Route::middleware([
     Route::resource('events', EventController::class);
     Route::resource('events.rsvps', RsvpController::class)->only(['store', 'update', 'destroy']);
     Route::resource('events.attendances', AttendanceController::class)->only(['index']);
-    Route::resource('events.activities', EventActivityController::class)->only(['store']);
+    Route::resource('events.activities', EventActivityController::class)->only(['store', 'destroy']);
     Route::get('events/calendar/month', EventCalendarController::class)->name('events.calendar.month');
 	Route::controller(RecurringEventController::class)
 		->prefix('events/{event}/recurring/')
