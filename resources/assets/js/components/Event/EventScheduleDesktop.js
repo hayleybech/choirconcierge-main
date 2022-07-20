@@ -34,10 +34,16 @@ const EventScheduleDesktop = ({ event }) => {
                             </TableCell>
                         </tr>
                     ))}
-                    <tr>
-                        <TableCell />
+                    <tr className="bg-gray-50">
                         <TableCell>
-                            Total: {event.activities.reduce((prevValue, item) => prevValue + item.duration, 0)} min
+                            <div className="font-bold text-gray-500">
+                                Total
+                            </div>
+                        </TableCell>
+                        <TableCell>
+                            <div className="font-bold text-gray-500">
+                                {event.activities.reduce((prevValue, item) => prevValue + item.duration, 0)} min
+                            </div>
                         </TableCell>
                         <TableCell />
                     </tr>
