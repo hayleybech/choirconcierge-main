@@ -9,6 +9,7 @@ import Button from "../inputs/Button";
 import Icon from "../Icon";
 import TextInput from "../inputs/TextInput";
 import EventScheduleMobile from "./EventScheduleMobile";
+import SongSelect from "../inputs/SongSelect";
 
 const EventSchedule = ({ event }) => {
     const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
@@ -25,6 +26,7 @@ export default EventSchedule;
 
 const ScheduleItemForm = ({ event }) => {
     const {data, setData, post, processing, errors} = useForm({
+        song_id: null,
         description: '',
         duration: 0,
     });
@@ -37,26 +39,26 @@ const ScheduleItemForm = ({ event }) => {
     return (
         <div className="md:max-w-5xl md:mx-auto px-4 sm:px-6 lg:px-8 pb-8">
             <FormSection title="Add Activity">
-                <div className="sm:col-span-3">
-                    <div className="sm:col-span-2">
-                        <Label label="Description" forInput="description" />
-                        <TextInput name="description" value={data.description} updateFn={value => setData('description', value)} hasErrors={ !! errors['description'] } />
-                        {errors.description && <Error>{errors.description}</Error>}
-                    </div>
+                <div className="sm:col-span-2">
+                    <Label label="Song (Optional)" />
+                    <SongSelect updateFn={(value) => setData('song_id', value)} />
                 </div>
                 <div className="sm:col-span-3">
-                    <div className="sm:col-span-2">
-                        <Label label="Duration" forInput="duration" />
-                        <TextInput
-                            name="duration"
-                            value={data.duration}
-                            updateFn={value => setData('duration', value)}
-                            hasErrors={ !! errors['duration'] }
-                            type="number"
-                            min={0}
-                        />
-                        {errors.duration && <Error>{errors.duration}</Error>}
-                    </div>
+                    <Label label="Description (Optional)" forInput="description" />
+                    <TextInput name="description" value={data.description} updateFn={value => setData('description', value)} hasErrors={ !! errors['description'] } />
+                    {errors.description && <Error>{errors.description}</Error>}
+                </div>
+                <div className="sm:col-span-1">
+                    <Label label="Duration (Optional)" forInput="duration" />
+                    <TextInput
+                        name="duration"
+                        value={data.duration}
+                        updateFn={value => setData('duration', value)}
+                        hasErrors={ !! errors['duration'] }
+                        type="number"
+                        min={0}
+                    />
+                    {errors.duration && <Error>{errors.duration}</Error>}
                 </div>
                 <div className="">
                     <Button onClick={submit} variant="primary" size="sm" disabled={processing}><Icon icon="check"/>Save</Button>

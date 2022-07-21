@@ -13,10 +13,13 @@ class EventActivityController extends Controller
     {
         $this->authorize('update', $event);
 
-        $event->activities()->create($request->validate([
+        $request->validate([
             'description' => 'nullable',
             'duration' => 'numeric|min:0',
-        ]));
+            'song_id' => 'nullable|sometimes|exists:songs,id'
+        ]);
+
+        $event->activities()->create($request->only('description', 'duration', 'song_id'));
 
         return redirect()->back()->with(['status' => 'Item added.']);
     }
