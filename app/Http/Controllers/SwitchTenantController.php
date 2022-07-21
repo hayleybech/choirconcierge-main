@@ -15,6 +15,10 @@ class SwitchTenantController extends Controller
 
     public function start(Request $request, Tenant $tenant): Response
     {
+        if(session()->has('impersonation:active')) {
+            abort(401);
+        }
+
         $tenant->load('domains');
 
         $token = tenancy()->impersonate(

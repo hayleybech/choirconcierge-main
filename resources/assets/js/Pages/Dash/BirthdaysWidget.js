@@ -13,7 +13,7 @@ const BirthdaysWidget = ({ birthdays, emptyDobs }) => (
         {birthdays.length > 0 ? (
             <TableMobile>
                 {birthdays.map((user) => (
-                    <TableMobileItem url={route('singers.show', user.singer)}>
+                    <TableMobileItem url={route('singers.show', user.singer)} key={user.id}>
                         <div className="text-sm font-medium text-purple-800">{user.name}</div>
                         <div className="mr-4">
                             <DateUpcomingTag date={user.birthday} />
