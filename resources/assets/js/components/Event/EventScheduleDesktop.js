@@ -3,6 +3,7 @@ import Table, {TableCell} from "../Table";
 import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
+import {Link} from "@inertiajs/inertia-react";
 
 const EventScheduleDesktop = ({ event }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -11,12 +12,17 @@ const EventScheduleDesktop = ({ event }) => {
     return (
         <>
             <Table
-                headings={event.can.update_event ? ['Description', 'Duration', 'Move', 'Delete'] : ['Description', 'Duration']}
+                headings={event.can.update_event ? ['Item', 'Duration', 'Move', 'Delete'] : ['Item', 'Duration']}
                 body={<>
                     {event.activities.map((activity, index) => (
                         <tr key={activity.id}>
                             <TableCell>
-                                {activity.description}
+                                {activity.song && (
+                                    <Link href={route('songs.show', activity.song)} className="text-sm font-medium text-purple-800">{activity.song.title}</Link>
+                                )}
+                                <div>
+                                    {activity.description}
+                                </div>
                             </TableCell>
                             <TableCell>
                                 {activity.duration} min

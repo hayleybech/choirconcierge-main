@@ -11,6 +11,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EventActivityController;
 use App\Http\Controllers\EventCalendarController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\FindSongController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
 use App\Http\Controllers\ImpersonateUserController;
@@ -136,8 +137,9 @@ Route::middleware([
     });
 
     // Search APIs
-    Route::prefix('find')->middleware(['auth'])->group(function () {
-        Route::get('/singers', FindSingerController::class)->name('find.singers');
+    Route::prefix('find')->name('find.')->middleware(['auth'])->group(function () {
+        Route::get('/singers', FindSingerController::class)->name('singers');
+        Route::get('/songs/{keyword}', FindSongController::class)->name('songs');
     });
 
     // Global Search APIs

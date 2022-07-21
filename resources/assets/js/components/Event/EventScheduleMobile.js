@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
+import {Link} from "@inertiajs/inertia-react";
 
 const EventScheduleMobile = ({ event }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -14,7 +15,12 @@ const EventScheduleMobile = ({ event }) => {
                     <li key={activity.id} className="bg-white">
                         <div className="px-6 py-5 flex justify-between items-center space-x-3 hover:bg-gray-50">
                             <div>
-                                {activity.description}
+                                {activity.song && (
+                                    <Link href={route('songs.show', activity.song)} className="text-sm font-medium text-purple-800">{activity.song.title}</Link>
+                                )}
+                                <div className="text-sm text-gray-500">
+                                    {activity.description}
+                                </div>
                             </div>
 
                             <div className="flex items-center justify-between shrink-0">
