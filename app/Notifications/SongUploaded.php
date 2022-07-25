@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class SongUploaded extends Notification
 {
@@ -48,6 +49,7 @@ class SongUploaded extends Notification
             ->greeting('New song uploaded!')
             ->line('A new song, "'.$this->song->title.'", has been uploaded.')
             ->action('View Song', route('songs.show', $this->song))
+            ->line(new HtmlString($this->song->description))
             ->line('Enjoy!');
     }
 
