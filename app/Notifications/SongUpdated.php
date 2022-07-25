@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class SongUpdated extends Notification
 {
@@ -48,6 +49,7 @@ class SongUpdated extends Notification
             ->greeting('Updated song')
             ->line('The song, "'.$this->song->title.'", has recently been modified.')
             ->action('View Song', route('songs.show', $this->song))
+            ->line(new HtmlString($this->song->description))
             ->line('Enjoy!');
     }
 
