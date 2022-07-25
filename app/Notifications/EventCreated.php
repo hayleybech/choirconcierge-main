@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class EventCreated extends Notification
 {
@@ -50,7 +51,7 @@ class EventCreated extends Notification
             ->line('Date: '.$this->event->call_time->diffForHumans())
             ->line('Location: '.$this->event->location_name.' '.$this->event->location_address)
             ->action('View Event', route('events.show', $this->event))
-            ->line($this->event->description);
+            ->line(new HtmlString($this->event->description));
     }
 
     /**
