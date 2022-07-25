@@ -62,7 +62,7 @@ const Create = ({ lists }) => {
                                 <TextInput
                                     name="subject"
                                     value={data.subject}
-                                    updateFn={value => setData({...data, subject: value})}
+                                    updateFn={value => setData({ ...data, subject: value })}
                                     hasErrors={!!errors['subject']}
                                 />
                                 {errors.subject && <Error>{errors.subject}</Error>}
@@ -70,7 +70,7 @@ const Create = ({ lists }) => {
     
                             <div className="sm:col-span-6">
                                 <Label label="Body" forInput="body" />
-                                <RichTextInput value={data.body} updateFn={value => setData('body', value)} />
+                                <RichTextInput value={data.body} updateFn={value => setData(data => ({ ...data, body: value }))} />
                                 {errors.body && <Error>{errors.body}</Error>}
                             </div>
 
