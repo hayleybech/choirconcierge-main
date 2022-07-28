@@ -13,11 +13,15 @@
 
     <!-- Scripts -->
     @if (App::environment('production'))
-        @include ('snippets.hotjar')
+        @include ('snippets.tagmanagerhead')
     @endif
 
 </head>
 <body>
+    @if (App::environment('production'))
+        @include ('snippets.tagmanagerbody')
+    @endif
+
     @routes(nonce: 'your-nonce-here')
 
     @inertia
