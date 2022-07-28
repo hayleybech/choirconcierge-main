@@ -51,7 +51,7 @@ const SidebarMobile = ({ navigation, open, setOpen, switchChoirButton }) => (
                     </Transition.Child>
 
                     <Link href={route('dash')} className="shrink-0 flex justify-center items-center px-4 pb-6">
-                        <img src="/img/logo.svg" alt="Choir Concierge" className="h-10 w-auto" />
+                        <img src="/img/vibrant/logo.svg" alt="Choir Concierge" className="h-10 w-auto" />
                     </Link>
 
                     <div className="shrink-0 flex justify-center items-center px-4 bg-gray-50 mb-4">

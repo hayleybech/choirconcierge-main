@@ -77,7 +77,7 @@ const TenantLayout = ({children}) =>  (
     <div className="flex items-stretch h-full">
         <div className="w-250px h-full bg-brand-purple-dark">
             <Link href={route('dash')} className="flex py-6 px-8">
-                <img src="/img/logo.svg" alt="Choir Concierge" />
+                <img src="/img/vibrant/logo.svg" alt="Choir Concierge" />
             </Link>
 
             <Link href={route('dash')} className="flex justify-center mb-4 py-4 px-6 bg-brand-off-white">
