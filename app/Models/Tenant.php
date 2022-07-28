@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Traits\TenantTimezoneDates;
 use Carbon\CarbonTimeZone;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
@@ -13,7 +14,8 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * Class Tenant
  *
  * Virtual Columns
- * @property string choir_name
+ * @property string $choir_name
+ * @property string $choir_logo
  *
  * Attributes
  * @property CarbonTimeZone timezone from virtual column 'timezone'
@@ -21,12 +23,13 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string mail_from_address
  * @property string primary_domain
  * @property string host
+ * @property string $logo_url
  */
 class Tenant extends BaseTenant
 {
     use HasDomains, TenantTimezoneDates;
 
-    protected $appends = ['host', 'timezone_label'];
+    protected $appends = ['host', 'timezone_label', 'logo_url'];
 
     public static function create(
         string $id,
@@ -74,5 +77,12 @@ class Tenant extends BaseTenant
     public function getHostAttribute(): string
     {
         return $this->primary_domain.'.'.central_domain() ?? '';
+    }
+
+    public function logoUrl(): Attribute
+    {
+        return Attribute::get(fn () =>
+            asset('storage/choir-logos/'.$this->choir_logo
+        ));
     }
 }
