@@ -1,9 +1,10 @@
 import React from 'react';
 import buttonStyles from "./inputs/buttonStyles";
+import classNames from "../classNames";
 
-const AvatarUpload = ({ currentImage, updateFn }) => (
+const AvatarUpload = ({ currentImage, isSquare = true, updateFn }) => (
     <div className="mt-1 flex items-center">
-        <span className="h-24 w-24 rounded-xl overflow-hidden bg-gray-100">
+        <span className={classNames('h-24 rounded-xl overflow-hidden bg-gray-100', isSquare ?? 'w-24')}>
 
             {currentImage
                 ? <img src={currentImage} alt="Selected Profile Picture" className="h-full w-full" />

@@ -27,6 +27,7 @@ use App\Http\Controllers\Search\FindSingerController;
 use App\Http\Controllers\Search\GlobalFindUserController;
 use App\Http\Controllers\BroadcastController;
 use App\Http\Controllers\SingerController;
+use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UpdateSingerFeeController;
 use App\Http\Controllers\SingerPlacementController;
 use App\Http\Controllers\SongAttachmentController;
@@ -171,4 +172,8 @@ Route::middleware([
     // Switch choir
     Route::get('/switch-choir/{tenant}', [SwitchTenantController::class, 'start'])->name('tenants.switch.start');
     Route::get('/switch-choir/login/{token}', [SwitchTenantController::class, 'loginWithToken'])->name('tenants.switch.login');
+
+    // Choir Settings
+    Route::get('/choir-settings', [TenantController::class, 'edit'])->name('choir-settings.edit');
+    Route::post('/choir-settings', [TenantController::class, 'update'])->name('choir-settings.update');
 });

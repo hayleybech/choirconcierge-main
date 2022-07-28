@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from "@inertiajs/inertia-react";
+import {Link, usePage} from "@inertiajs/inertia-react";
 import Icon from "../components/Icon";
 
 const nav = [
@@ -73,51 +73,55 @@ const nav = [
     },
 ];
 
-const TenantLayout = ({children}) =>  (
-    <div className="flex items-stretch h-full">
-        <div className="w-250px h-full bg-brand-purple-dark">
-            <Link href={route('dash')} className="flex py-6 px-8">
-                <img src="/img/vibrant/logo.svg" alt="Choir Concierge" />
-            </Link>
+const TenantLayout = ({ children }) => {
+    const { tenant } = usePage().props;
 
-            <Link href={route('dash')} className="flex justify-center mb-4 py-4 px-6 bg-brand-off-white">
-                <img src="/img/choir-logo.png" className="h-12 w-auto" />
-            </Link>
+    return (
+        <div className="flex items-stretch h-full">
+            <div className="w-250px h-full bg-brand-purple-dark">
+                <Link href={route('dash')} className="flex py-6 px-8">
+                    <img src="/img/vibrant/logo.svg" alt="Choir Concierge" />
+                </Link>
 
-            <div className="flex flex-col">
+                <Link href={route('dash')} className="flex justify-center mb-4 py-4 px-6 bg-brand-off-white">
+                    <img src={tenant.logo_url} alt={tenant.choir_name} className="h-12 w-auto" />
+                </Link>
 
-                {nav.map((item) => (
-                    <>
-                    {item.on ? (
-                        <div className="bg-brand-light-pink ml-3 my-2 py-4 px-6 flex flex-col rounded-l-3xl text-brand-purple-dark">
-                            <Link href={route(item.route)} className="uppercase font-semibold hover:opacity-75 mb-1">
-                                <Icon icon={item.icon} type="light" className="mr-3" />
-                                {item.label}
-                            </Link>
-                            <>
-                                {item.items.map((child) => (
-                                    <Link href={route(child.route)} className="py-1 text-sm hover:opacity-75">
-                                        <Icon icon={child.icon} type="light" className="mr-3" />
-                                        {child.label}
+                <div className="flex flex-col">
+
+                    {nav.map((item) => (
+                        <>
+                            {item.on ? (
+                                <div className="bg-brand-light-pink ml-3 my-2 py-4 px-6 flex flex-col rounded-l-3xl text-brand-purple-dark">
+                                    <Link href={route(item.route)} className="uppercase font-semibold hover:opacity-75 mb-1">
+                                        <Icon icon={item.icon} type="light" className="mr-3" />
+                                        {item.label}
                                     </Link>
-                                ))}
-                            </>
-                        </div>
-                    ): (
-                        <div className="ml-3 py-3 px-6 flex flex-col">
-                            <Link href={route(item.route)} className="text-white opacity-75 uppercase font-semibold hover:opacity-50">
-                                <Icon icon={item.icon} type="light" className="mr-3" />
-                                {item.label}
-                            </Link>
-                        </div>
-                    )}
-                    </>
-                ))}
+                                    <>
+                                        {item.items.map((child) => (
+                                            <Link href={route(child.route)} className="py-1 text-sm hover:opacity-75">
+                                                <Icon icon={child.icon} type="light" className="mr-3" />
+                                                {child.label}
+                                            </Link>
+                                        ))}
+                                    </>
+                                </div>
+                            ): (
+                                <div className="ml-3 py-3 px-6 flex flex-col">
+                                    <Link href={route(item.route)} className="text-white opacity-75 uppercase font-semibold hover:opacity-50">
+                                        <Icon icon={item.icon} type="light" className="mr-3" />
+                                        {item.label}
+                                    </Link>
+                                </div>
+                            )}
+                        </>
+                    ))}
+                </div>
             </div>
-        </div>
 
-        <div>{children}</div>
-    </div>
-);
+            <div>{children}</div>
+        </div>
+    );
+}
 
 export default TenantLayout;
