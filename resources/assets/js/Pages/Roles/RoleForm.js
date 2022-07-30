@@ -10,6 +10,7 @@ import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 import {modelsAndAbilities} from "./modelsAndAbilities";
+import FormWrapper from "../../components/FormWrapper";
 
 const RoleForm = ({ role }) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -37,7 +38,7 @@ const RoleForm = ({ role }) => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <FormWrapper>
             <Form onSubmit={submit}>
 
                 <FormSection title="Role Details">
@@ -98,7 +99,7 @@ const RoleForm = ({ role }) => {
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
-        </div>
+        </FormWrapper>
     );
 }
 

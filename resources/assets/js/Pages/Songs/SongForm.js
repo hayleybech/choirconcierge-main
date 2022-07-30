@@ -15,6 +15,7 @@ import FormFooter from "../../components/FormFooter";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 import SongStatus from "../../SongStatus";
 import RichTextInput from "../../components/inputs/RichTextInput";
+import FormWrapper from "../../components/FormWrapper";
 
 const SongForm = ({ categories, statuses, pitches, song}) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -33,7 +34,7 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <FormWrapper>
             <Form onSubmit={submit}>
 
                 <FormSection title="Song Details">
@@ -117,7 +118,7 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
-        </div>
+        </FormWrapper>
     );
 }
 

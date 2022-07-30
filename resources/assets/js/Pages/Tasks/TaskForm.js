@@ -9,6 +9,7 @@ import FormFooter from "../../components/FormFooter";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import Button from "../../components/inputs/Button";
 import Select from "../../components/inputs/Select";
+import FormWrapper from "../../components/FormWrapper";
 
 const TaskForm = ({ roles }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -22,7 +23,7 @@ const TaskForm = ({ roles }) => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <FormWrapper>
             <Form onSubmit={submit}>
 
                 <FormSection title="Task Details">
@@ -50,7 +51,7 @@ const TaskForm = ({ roles }) => {
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
-        </div>
+        </FormWrapper>
     );
 }
 

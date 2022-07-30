@@ -8,6 +8,7 @@ import ButtonLink from "../../components/inputs/ButtonLink";
 import Button from "../../components/inputs/Button";
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
+import FormWrapper from "../../components/FormWrapper";
 
 const FolderForm = () => {
     const { data, setData, post, processing, errors } = useForm({
@@ -20,7 +21,7 @@ const FolderForm = () => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <FormWrapper>
             <Form onSubmit={submit}>
 
                 <FormSection title="Folder Details">
@@ -41,7 +42,7 @@ const FolderForm = () => {
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
-        </div>
+        </FormWrapper>
     );
 }
 

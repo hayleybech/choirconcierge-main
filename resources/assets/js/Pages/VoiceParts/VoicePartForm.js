@@ -8,6 +8,7 @@ import ButtonLink from "../../components/inputs/ButtonLink";
 import Button from "../../components/inputs/Button";
 import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
+import FormWrapper from "../../components/FormWrapper";
 
 const VoicePartForm = ({ voicePart }) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -21,7 +22,7 @@ const VoicePartForm = ({ voicePart }) => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <FormWrapper>
             <Form onSubmit={submit}>
 
                 <FormSection title="Voice Part Details">
@@ -44,7 +45,7 @@ const VoicePartForm = ({ voicePart }) => {
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
-        </div>
+        </FormWrapper>
     );
 }
 

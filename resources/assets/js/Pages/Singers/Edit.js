@@ -18,6 +18,7 @@ import {DateTime} from "luxon";
 import DayInput from "../../components/inputs/Day";
 import Help from "../../components/inputs/Help";
 import ButtonGroup from "../../components/inputs/ButtonGroup";
+import FormWrapper from "../../components/FormWrapper";
 
 const Edit = ({ voice_parts, roles, singer }) => {
     const { can } = usePage().props;
@@ -63,7 +64,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
                 ]}
             />
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            <FormWrapper>
                 <Form onSubmit={submit}>
 
                     {can['create_singer'] && (
@@ -160,7 +161,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
                     </FormFooter>
 
                 </Form>
-            </div>
+            </FormWrapper>
         </>
     );
 }

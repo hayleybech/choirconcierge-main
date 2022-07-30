@@ -13,6 +13,7 @@ import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";
 import DayInput from "../../components/inputs/Day";
 import {DateTime} from "luxon";
+import FormWrapper from "../../components/FormWrapper";
 
 const AccountForm = ({ }) => {
     const { user } = usePage().props;
@@ -48,7 +49,7 @@ const AccountForm = ({ }) => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <FormWrapper>
             <Form onSubmit={submit}>
 
                 <FormSection title="User Details">
@@ -203,7 +204,7 @@ const AccountForm = ({ }) => {
                 </FormFooter>
 
             </Form>
-        </div>
+        </FormWrapper>
     );
 }
 

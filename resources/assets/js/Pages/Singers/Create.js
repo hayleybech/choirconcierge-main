@@ -18,6 +18,7 @@ import FormFooter from "../../components/FormFooter";
 import GlobalUserSelect from "../../components/inputs/GlobalUserSelect";
 import DayInput from "../../components/inputs/Day";
 import {DateTime} from "luxon";
+import FormWrapper from "../../components/FormWrapper";
 
 const Create = ({voice_parts, roles}) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -79,7 +80,7 @@ const Create = ({voice_parts, roles}) => {
                 ]}
             />
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            <FormWrapper>
                 <Form onSubmit={submit}>
 
                     <FormSection title="User Details" description=" Link a new or existing user account with this singer.">
@@ -181,7 +182,7 @@ const Create = ({voice_parts, roles}) => {
                         <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                     </FormFooter>
                 </Form>
-            </div>
+            </FormWrapper>
         </>
     );
 }
