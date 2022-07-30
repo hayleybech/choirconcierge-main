@@ -112,7 +112,7 @@ const Edit = ({ voice_parts, roles, singer }) => {
 
                     {can['create_song'] && (
                     <FormSection title="Music Details" description="Voice part etc.">
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-6">
                             <Label label="Voice part" forInput="voice_part_id" />
                             <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
                             {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
