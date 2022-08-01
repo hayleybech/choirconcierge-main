@@ -4,7 +4,7 @@ import SectionTitle from "./SectionTitle";
 import Button from "./inputs/Button";
 import Icon from "./Icon";
 
-const FilterSortPane = ({sorts, filters, closeFn}) => (
+const FilterSortPane = ({ sorts, filters, closeFn }) => (
     <div className="bg-white p-5 border-b border-gray-300">
         <SectionHeader>
             <SectionTitle>Filter/Sort</SectionTitle>

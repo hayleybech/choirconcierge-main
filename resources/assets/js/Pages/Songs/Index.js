@@ -7,14 +7,27 @@ import AppHead from "../../components/AppHead";
 import {usePage} from "@inertiajs/inertia-react";
 import SongFilters from "../../components/Song/SongFilters";
 import IndexContainer from "../../components/IndexContainer";
-import SongSorts from "../../components/Song/SongSorts";
 import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
+import Sorts from "../../components/Sorts";
 
 const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault }) => {
     const [showFilters, setShowFilters] = useFilterPane();
 
     const { can } = usePage().props;
+
+    const sorts = [
+        { id: 'title', name: 'Title', default: true },
+        { id: 'created_at', name: 'Dated Created' },
+        { id: 'status-title', name: 'Status' },
+    ];
+
+    const filters = [
+        { name: 'title', defaultValue: '' },
+        { name: 'status.id', multiple: true, defaultValue: defaultStatuses },
+        { name: 'categories.id', multiple: true },
+        { name: 'show_for_prospects', multiple: true, multipleBool: true, defaultValue: showForProspectsDefault },
+    ];
 
     return (
         <>
@@ -36,8 +49,15 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                 showFilters={showFilters}
                 filterPane={
                     <FilterSortPane
-                        sorts={<SongSorts />}
-                        filters={<SongFilters statuses={statuses} defaultStatuses={defaultStatuses} categories={categories} showForProspectsDefault={showForProspectsDefault} />}
+                        sorts={<Sorts routeName="songs.index" sorts={sorts} filters={filters} />}
+                        filters={<SongFilters
+                            statuses={statuses}
+                            defaultStatuses={defaultStatuses}
+                            categories={categories}
+                            showForProspectsDefault={showForProspectsDefault}
+                            sorts={sorts}
+                            filters={filters}
+                        />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }

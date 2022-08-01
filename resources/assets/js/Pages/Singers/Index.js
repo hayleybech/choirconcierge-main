@@ -9,11 +9,26 @@ import IndexContainer from "../../components/IndexContainer";
 import SingerFilters from "../../components/SingerFilters";
 import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
-import SingerSorts from "../../components/SingerSorts";
+import Sorts from "../../components/Sorts";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     const [showFilters, setShowFilters] = useFilterPane();
     const { can } = usePage().props;
+
+    const sorts = [
+        { id: 'full-name', name: 'Name', default: true },
+        { id: 'status-title', name: 'Status' },
+        { id: 'part-title', name: 'Voice Part' },
+        { id: 'paid_until', name: 'Paid Until' },
+    ];
+
+    const filters = [
+        { name: 'user.name', defaultValue: '' },
+        { name: 'category.id', multiple: true, defaultValue: [defaultStatus] },
+        { name: 'voice_part.id', multiple: true },
+        { name: 'roles.id', multiple: true },
+        { name: 'fee_status', defaultValue: '' },
+    ];
 
     return (
         <>
@@ -37,8 +52,15 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                 showFilters={showFilters}
                 filterPane={
                     <FilterSortPane
-                        sorts={<SingerSorts />}
-                        filters={<SingerFilters statuses={statuses} defaultStatus={defaultStatus} voiceParts={voiceParts} roles={roles} onClose={() => setShowFilters(false)} />}
+                        sorts={<Sorts routeName="singers.index" sorts={sorts} filters={filters} />}
+                        filters={<SingerFilters
+                            statuses={statuses}
+                            voiceParts={voiceParts}
+                            roles={roles}
+                            onClose={() => setShowFilters(false)}
+                            filters={filters}
+                            sorts={sorts}
+                        />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }

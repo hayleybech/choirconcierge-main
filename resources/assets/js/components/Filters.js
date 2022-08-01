@@ -1,28 +1,11 @@
 import React, {useEffect, useRef} from 'react';
-import {useForm} from "@inertiajs/inertia-react";
 import Icon from "./Icon";
 import Button from "./inputs/Button";
 import SectionSubtitle from "./SectionSubtitle";
-import {getFilters} from "../sortsAndFilters";
+import useSortFilterForm from "../hooks/useSortFilterForm";
 
-const Filters = ({ routeName, fields, transforms = () => {}, render }) => {
-    const params = new URLSearchParams(location.search);
-
-    const { data, setData, get, transform } = useForm(getFilters(fields));
-
-    function submit(e) {
-        e?.preventDefault();
-
-        get(route(routeName));
-    }
-
-    transform((data) => ({
-        sort: params.has('sort') ? params.get('sort') : null,
-        filter: {
-            ...data,
-            ...transforms(data),
-        }
-    }));
+const Filters = ({ routeName, filters, sorts, transforms, render }) => {
+    const { data, setData, submit } = useSortFilterForm(routeName, filters, sorts, transforms);
 
     const firstUpdate = useRef(true);
     useEffect(() => {

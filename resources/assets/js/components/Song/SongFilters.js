@@ -4,15 +4,11 @@ import TextInput from "../inputs/TextInput";
 import CheckboxGroup from "../inputs/CheckboxGroup";
 import Filters from "../Filters";
 
-const SongFilters = ({ statuses, defaultStatuses, categories, showForProspectsDefault }) => (
+const SongFilters = ({ statuses, categories, sorts, filters, showForProspectsDefault }) => (
     <Filters
         routeName="songs.index"
-        fields={[
-            { name: 'title', defaultValue: '' },
-            { name: 'status.id', multiple: true, defaultValue: defaultStatuses },
-            { name: 'categories.id', multiple: true },
-            { name: 'show_for_prospects', multiple: true, multipleBool: true, defaultValue: showForProspectsDefault },
-        ]}
+        sorts={sorts}
+        filters={filters}
         render={(data, setData) => (<>
             <div>
                 <Label label="Title" forInput="title" />

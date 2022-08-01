@@ -9,11 +9,28 @@ import EventFilters from "../../components/Event/EventFilters";
 import IndexContainer from "../../components/IndexContainer";
 import FilterSortPane from "../../components/FilterSortPane";
 import useFilterPane from "../../hooks/useFilterPane";
-import EventSorts from "../../components/Event/EventSorts";
+import Sorts from "../../components/Sorts";
 
 const Index = ({ events, eventTypes }) => {
     const [showFilters, setShowFilters] = useFilterPane();
     const { can } = usePage().props;
+
+    const sorts = [
+        { id: 'title', name: 'Title', default: true },
+        { id: 'start_date', name: 'Event Date' },
+        { id: 'type-title', name: 'Type' },
+        { id: 'created_at', name: 'Dated Created' },
+    ];
+
+    const filters = [
+        { name: 'title', defaultValue: '' },
+        { name: 'type.id', multiple: true },
+        { name: 'date', defaultValue: 'upcoming' },
+    ];
+
+    const transforms = (data) => ({
+        date: data.date === 'all' ? null : data.date,
+    });
 
     return (
         <>
@@ -38,8 +55,8 @@ const Index = ({ events, eventTypes }) => {
                 showFilters={showFilters}
                 filterPane={
                     <FilterSortPane
-                        sorts={<EventSorts />}
-                        filters={<EventFilters eventTypes={eventTypes} />}
+                        sorts={<Sorts routeName="events.index" sorts={sorts} filters={filters} transforms={transforms} />}
+                        filters={<EventFilters eventTypes={eventTypes} filters={filters} sorts={sorts} transforms={transforms} />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }
