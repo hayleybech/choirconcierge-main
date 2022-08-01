@@ -8,11 +8,11 @@ import Filters from "../Filters";
 const EventFilters = ({ eventTypes }) => (
     <Filters
         routeName="events.index"
-        fields={(params) => ({
-            title: params.get('filter[title]') ?? '',
-            'type.id': params.getAll('filter[type.id][]').map(value => parseInt(value)) ?? [],
-            date: params.get('filter[date]') ?? 'upcoming',
-        })}
+        fields={[
+            { name: 'title', defaultValue: '' },
+            { name: 'type.id', multiple: true },
+            { name: 'date', defaultValue: 'upcoming' },
+        ]}
         transforms={(data) => ({
             date: data.date === 'all' ? null : data.date,
         })}

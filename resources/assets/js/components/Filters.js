@@ -3,11 +3,12 @@ import {useForm} from "@inertiajs/inertia-react";
 import Icon from "./Icon";
 import Button from "./inputs/Button";
 import SectionSubtitle from "./SectionSubtitle";
+import {getFilters} from "../sortsAndFilters";
 
 const Filters = ({ routeName, fields, transforms = () => {}, render }) => {
     const params = new URLSearchParams(location.search);
 
-    const { data, setData, get, transform } = useForm(fields(params));
+    const { data, setData, get, transform } = useForm(getFilters(fields));
 
     function submit(e) {
         e?.preventDefault();
