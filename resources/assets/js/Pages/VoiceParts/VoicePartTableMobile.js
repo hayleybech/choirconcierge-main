@@ -17,7 +17,7 @@ const VoicePartTableMobile = ({ voiceParts }) => (
                             </p>
                             <p className="flex items-center min-w-0 mr-1.5">
                                 <span className="text-sm font-medium text-sm text-gray-500">
-                                    Singers: {voicePart.singers_count}
+                                    {voicePart.singers_count} {voicePart.singers_count === 1 ? 'singer' : 'singers'}
                                 </span>
                             </p>
                         </div>

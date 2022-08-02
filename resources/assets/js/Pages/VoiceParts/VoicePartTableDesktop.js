@@ -28,7 +28,9 @@ const VoicePartTableDesktop = ({ voiceParts }) => {
                         </div>
                     </TableCell>
                     <TableCell>
-                        {voicePart.singers_count}
+                        <Link href={route('singers.index')} data={{ filter: { 'voice_part.id': [voicePart.id] } }} className="text-purple-800">
+                            {voicePart.singers_count} {voicePart.singers_count === 1 ? 'singer' : 'singers'}
+                        </Link>
                     </TableCell>
                     <TableCell>
                         <DateTag date={voicePart.created_at} />

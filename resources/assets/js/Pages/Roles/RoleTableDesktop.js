@@ -22,7 +22,9 @@ const RoleTableDesktop = ({ roles }) => {
                         </div>
                     </TableCell>
                     <TableCell>
-                        {role.singers_count}
+                        <Link href={route('singers.index')} data={{ filter: { 'roles.id': [role.id] } }} className="text-purple-800">
+                            {role.singers_count} {role.singers_count === 1 ? 'singer' : 'singers'}
+                        </Link>
                     </TableCell>
                 </tr>
             ))}
