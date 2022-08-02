@@ -1,34 +1,42 @@
 import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
-import {DateTime} from "luxon";
 import Swatch from "../../components/Swatch";
 import Table, {TableCell} from "../../components/Table";
 import DateTag from "../../components/DateTag";
+import collect from "collect.js";
 
-const VoicePartTableDesktop = ({ voiceParts }) => (
-    <Table
-        headings={['Name', 'Singers', 'Created']}
-        body={voiceParts.map((voicePart) => (
-            <tr key={voicePart.id}>
-                <TableCell>
-                    <div className="flex items-center">
-                        <div>
-                            <Swatch colour={voicePart.colour} />
+const VoicePartTableDesktop = ({ voiceParts }) => {
+    const headings = collect({
+        title: 'Name',
+        singers: 'Singers',
+        created: 'Created',
+    })
+
+    return (
+        <Table
+            headings={headings}
+            body={voiceParts.map((voicePart) => (
+                <tr key={voicePart.id}>
+                    <TableCell>
+                        <div className="flex items-center">
+                            <div>
+                                <Swatch colour={voicePart.colour} />
+                            </div>
+                            <div className="ml-4">
+                                <Link href={route('voice-parts.edit', voicePart.id)} className="text-sm font-medium text-purple-800">{voicePart.title}</Link>
+                            </div>
                         </div>
-                        <div className="ml-4">
-                            <Link href={route('voice-parts.edit', voicePart.id)} className="text-sm font-medium text-purple-800">{voicePart.title}</Link>
-                        </div>
-                    </div>
-                </TableCell>
-                <TableCell>
-                    {voicePart.singers_count}
-                </TableCell>
-                <TableCell>
-                    <DateTag date={voicePart.created_at} />
-                </TableCell>
-            </tr>
-        ))}
-    />
-);
+                    </TableCell>
+                    <TableCell>
+                        {voicePart.singers_count}
+                    </TableCell>
+                    <TableCell>
+                        <DateTag date={voicePart.created_at} />
+                    </TableCell>
+                </tr>
+            ))}
+        />
+    );
+}
 
 export default VoicePartTableDesktop;

@@ -61,7 +61,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                     />
                 }
                 tableMobile={<SingerTableMobile singers={allSingers} />}
-                tableDesktop={<SingerTableDesktop singers={allSingers} />}
+                tableDesktop={<SingerTableDesktop singers={allSingers} sortFilterForm={sortFilterForm} />}
             />
         </>
     );

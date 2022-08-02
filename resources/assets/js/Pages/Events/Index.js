@@ -17,10 +17,10 @@ const Index = ({ events, eventTypes }) => {
     const { can } = usePage().props;
 
     const sorts = [
-        { id: 'title', name: 'Title', default: true },
-        { id: 'start_date', name: 'Event Date' },
+        { id: 'title', name: 'Title' },
+        { id: 'start_date', name: 'Event Date', default: true },
         { id: 'type-title', name: 'Type' },
-        { id: 'created_at', name: 'Dated Created' },
+        { id: 'created_at', name: 'Date Created' },
     ];
 
     const filters = [
@@ -64,7 +64,7 @@ const Index = ({ events, eventTypes }) => {
                     />
                 }
                 tableMobile={<EventTableMobile events={events} />}
-                tableDesktop={<EventTableDesktop events={events} />}
+                tableDesktop={<EventTableDesktop events={events} sortFilterForm={sortFilterForm} />}
             />
         </>
     );

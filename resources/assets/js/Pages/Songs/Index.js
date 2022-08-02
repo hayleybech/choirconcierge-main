@@ -19,7 +19,7 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
 
     const sorts = [
         { id: 'title', name: 'Title', default: true },
-        { id: 'created_at', name: 'Dated Created' },
+        { id: 'created_at', name: 'Date Created' },
         { id: 'status-title', name: 'Status' },
     ];
 
@@ -63,7 +63,7 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                     />
                 }
                 tableMobile={<SongTableMobile songs={songs} />}
-                tableDesktop={<SongTableDesktop songs={songs} />}
+                tableDesktop={<SongTableDesktop songs={songs} sortFilterForm={sortFilterForm} />}
             />
         </>
     );

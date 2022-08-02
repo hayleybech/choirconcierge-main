@@ -16,17 +16,28 @@ import Error from "../../components/inputs/Error";
 import Help from "../../components/inputs/Help";
 import ButtonGroup from "../../components/inputs/ButtonGroup";
 import DateTag from "../../components/DateTag";
+import collect from "collect.js";
+import TableHeadingSort from "../../components/TableHeadingSort";
 
-const SingerTableDesktop = ({ singers }) => {
+const SingerTableDesktop = ({ singers, sortFilterForm }) => {
     const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
     const [renewingSinger, setRenewingSinger] = useState(singers[0] ?? null);
 
     const { can } = usePage().props;
 
+    const headings = collect({
+            name: <TableHeadingSort form={sortFilterForm} sort="full-name">Name</TableHeadingSort>,
+            part: <TableHeadingSort form={sortFilterForm} sort="part-title">Voice Part</TableHeadingSort>,
+            status: <TableHeadingSort form={sortFilterForm} sort="status-title">Status</TableHeadingSort>,
+            email: 'Email',
+            fees: <TableHeadingSort form={sortFilterForm} sort="paid_until">Fees</TableHeadingSort>,
+        })
+        .filter((item, key) => key !== 'fees' || can['manage_finances']);
+
     return (
         <>
             <Table
-                headings={['Name', 'Voice Part', 'Status', 'Email', 'Fees'].filter((item) => item !== 'Fees' || can['manage_finances'])}
+                headings={headings}
                 body={singers.map((singer) => (
                     <tr key={singer.id}>
                         <TableCell>
