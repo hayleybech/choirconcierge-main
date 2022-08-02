@@ -47,7 +47,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                     { label: 'Add New', icon: 'user-plus', url: route('singers.create'), variant: 'primary', can: 'create_singer' },
                     { label: 'Voice Parts', icon: 'users-class', url: route('voice-parts.index'), can: 'list_voice_parts' },
                     { label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
-                    { label: 'Filter/Sort', icon: 'filter', onClick: () => setShowFilters(! showFilters) },
+                    { label: <span>Filter<span className="inline md:hidden">/Sort</span></span>, icon: 'filter', onClick: () => setShowFilters(! showFilters) },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 

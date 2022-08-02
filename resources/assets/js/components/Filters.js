@@ -16,7 +16,7 @@ const Filters = ({ routeName, form: { submit, data, setData }, render }) => {
 
     return (
         <form onSubmit={submit}>
-            <SectionSubtitle>Filter</SectionSubtitle>
+            <SectionSubtitle className="block md:hidden">Filter</SectionSubtitle>
 
             <div className="flex flex-col items-stretch space-y-4 mb-4">
                 {render(data, setData)}

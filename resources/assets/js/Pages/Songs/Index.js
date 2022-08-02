@@ -44,7 +44,7 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                 ]}
                 actions={[
                     { label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary', can: 'create_song' },
-                    { label: 'Filter/Sort', icon: 'filter', onClick: () => setShowFilters(! showFilters) },
+                    { label: <span>Filter<span className="inline md:hidden">/Sort</span></span>, icon: 'filter', onClick: () => setShowFilters(! showFilters) },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
