@@ -13,7 +13,7 @@ import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
-    const [showFilters, setShowFilters] = useFilterPane();
+    const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const { can } = usePage().props;
 
     const sorts = [
@@ -47,8 +47,9 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                     { label: 'Add New', icon: 'user-plus', url: route('singers.create'), variant: 'primary', can: 'create_singer' },
                     { label: 'Voice Parts', icon: 'users-class', url: route('voice-parts.index'), can: 'list_voice_parts' },
                     { label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
-                    { label: <span>Filter<span className="inline md:hidden">/Sort</span></span>, icon: 'filter', onClick: () => setShowFilters(! showFilters) },
+                    filterAction,
                 ].filter(action => action.can ? can[action.can] : true)}
+                optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
             />
 
             <IndexContainer

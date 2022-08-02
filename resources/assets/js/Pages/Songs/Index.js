@@ -13,7 +13,7 @@ import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
 
 const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault }) => {
-    const [showFilters, setShowFilters] = useFilterPane();
+    const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
     const { can } = usePage().props;
 
@@ -44,8 +44,9 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                 ]}
                 actions={[
                     { label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary', can: 'create_song' },
-                    { label: <span>Filter<span className="inline md:hidden">/Sort</span></span>, icon: 'filter', onClick: () => setShowFilters(! showFilters) },
+                    filterAction,
                 ].filter(action => action.can ? can[action.can] : true)}
+                optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
             />
 
             <IndexContainer

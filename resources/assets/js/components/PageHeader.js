@@ -8,7 +8,7 @@ import Button from "./inputs/Button";
 import Icon from "./Icon";
 import {Link} from "@inertiajs/inertia-react";
 
-const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) => (
+const PageHeader = ({ title, image, icon, meta = [], breadcrumbs, actions = [], optionsVariant }) => (
     <div className="py-6 bg-white border-b border-gray-300">
         <div className=" px-4 sm:px-6 md:px-8">
             <div className="lg:flex lg:items-center lg:justify-between">
@@ -46,9 +46,9 @@ const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) 
                     {actions.length > 2
                         ? (
                         <Menu as="span" className="ml-3 relative sm:hidden z-20">
-                            <Menu.Button className={buttonStyles()}>
+                            <Menu.Button className={buttonStyles(optionsVariant)}>
                                 Options
-                                <Icon icon="chevron-down" type="light" ml className="-mr-1 text-gray-500 text-sm" />
+                                <Icon icon="chevron-down" type="light" ml className="-mr-1 text-sm" />
                             </Menu.Button>
 
                             <Transition
@@ -83,7 +83,9 @@ const PageHeader = ({title, image, icon, meta = [], breadcrumbs, actions = []}) 
                                                         className={classNames(
                                                             'block w-full text-left px-4 py-2 text-sm',
                                                             active ? 'bg-gray-100' : '',
-                                                            action.variant === 'danger-outline' ? 'text-red-500' : 'text-gray-700'
+                                                            action.variant === 'danger-outline' ? 'text-red-500' : '',
+                                                            action.variant === 'success-solid' ? 'text-emerald-500' : '',
+                                                            action.variant !== 'danger-outline' && action.variant !== 'success-solid' ? 'text-gray-700' : '',
                                                         )}
                                                     >
                                                         <Icon icon={action.icon} mr/>

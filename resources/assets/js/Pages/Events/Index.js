@@ -13,7 +13,7 @@ import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
 
 const Index = ({ events, eventTypes }) => {
-    const [showFilters, setShowFilters] = useFilterPane();
+    const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const { can } = usePage().props;
 
     const sorts = [
@@ -48,10 +48,11 @@ const Index = ({ events, eventTypes }) => {
                 actions={[
                     { label: 'Add New', icon: 'calendar-plus', url: route('events.create'), variant: 'primary', can: 'create_event' },
                     { label: 'Attendance Report', icon: 'analytics', url: route('events.reports.attendance'), can: 'list_attendances' },
-                    { label: <span>Filter<span className="inline md:hidden">/Sort</span></span>, icon: 'filter', onClick: () => setShowFilters(! showFilters) },
+                    filterAction,
                     { label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
                 ].filter(action => action.can ? can[action.can] : true)}
                 meta={[<div className="text-gray-400">Calendar Sync URL: {route('events.feed')}</div>]}
+                optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
             />
 
             <IndexContainer
