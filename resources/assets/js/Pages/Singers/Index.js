@@ -10,6 +10,7 @@ import SingerFilters from "../../components/SingerFilters";
 import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
 import Sorts from "../../components/Sorts";
+import useSortFilterForm from "../../hooks/useSortFilterForm";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     const [showFilters, setShowFilters] = useFilterPane();
@@ -29,6 +30,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
         { name: 'roles.id', multiple: true },
         { name: 'fee_status', defaultValue: '' },
     ];
+
+    const sortFilterForm = useSortFilterForm('singers.index', filters, sorts);
 
     return (
         <>
@@ -52,15 +55,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                 showFilters={showFilters}
                 filterPane={
                     <FilterSortPane
-                        sorts={<Sorts routeName="singers.index" sorts={sorts} filters={filters} />}
-                        filters={<SingerFilters
-                            statuses={statuses}
-                            voiceParts={voiceParts}
-                            roles={roles}
-                            onClose={() => setShowFilters(false)}
-                            filters={filters}
-                            sorts={sorts}
-                        />}
+                        sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+                        filters={<SingerFilters statuses={statuses} voiceParts={voiceParts} roles={roles} form={sortFilterForm} />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }

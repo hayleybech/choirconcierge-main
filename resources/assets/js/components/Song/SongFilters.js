@@ -4,11 +4,10 @@ import TextInput from "../inputs/TextInput";
 import CheckboxGroup from "../inputs/CheckboxGroup";
 import Filters from "../Filters";
 
-const SongFilters = ({ statuses, categories, sorts, filters, showForProspectsDefault }) => (
+const SongFilters = ({ statuses, categories, form, showForProspectsDefault }) => (
     <Filters
         routeName="songs.index"
-        sorts={sorts}
-        filters={filters}
+        form={form}
         render={(data, setData) => (<>
             <div>
                 <Label label="Title" forInput="title" />

@@ -10,6 +10,7 @@ import IndexContainer from "../../components/IndexContainer";
 import FilterSortPane from "../../components/FilterSortPane";
 import useFilterPane from "../../hooks/useFilterPane";
 import Sorts from "../../components/Sorts";
+import useSortFilterForm from "../../hooks/useSortFilterForm";
 
 const Index = ({ events, eventTypes }) => {
     const [showFilters, setShowFilters] = useFilterPane();
@@ -31,6 +32,8 @@ const Index = ({ events, eventTypes }) => {
     const transforms = (data) => ({
         date: data.date === 'all' ? null : data.date,
     });
+
+    const sortFilterForm = useSortFilterForm('events.index', filters, sorts, transforms);
 
     return (
         <>
@@ -55,8 +58,8 @@ const Index = ({ events, eventTypes }) => {
                 showFilters={showFilters}
                 filterPane={
                     <FilterSortPane
-                        sorts={<Sorts routeName="events.index" sorts={sorts} filters={filters} transforms={transforms} />}
-                        filters={<EventFilters eventTypes={eventTypes} filters={filters} sorts={sorts} transforms={transforms} />}
+                        sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+                        filters={<EventFilters eventTypes={eventTypes} form={sortFilterForm} />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }

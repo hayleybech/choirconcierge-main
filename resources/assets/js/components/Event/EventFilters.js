@@ -5,12 +5,10 @@ import CheckboxGroup from "../inputs/CheckboxGroup";
 import RadioGroup from "../inputs/RadioGroup";
 import Filters from "../Filters";
 
-const EventFilters = ({ eventTypes, filters, sorts, transforms }) => (
+const EventFilters = ({ eventTypes, form }) => (
     <Filters
         routeName="events.index"
-        filters={filters}
-        sorts={sorts}
-        transforms={transforms}
+        form={form}
         render={(data, setData) => (<>
             <div>
                 <Label label="Title" forInput="title" />

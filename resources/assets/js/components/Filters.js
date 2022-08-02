@@ -2,11 +2,8 @@ import React, {useEffect, useRef} from 'react';
 import Icon from "./Icon";
 import Button from "./inputs/Button";
 import SectionSubtitle from "./SectionSubtitle";
-import useSortFilterForm from "../hooks/useSortFilterForm";
 
-const Filters = ({ routeName, filters, sorts, transforms, render }) => {
-    const { data, setData, submit } = useSortFilterForm(routeName, filters, sorts, transforms);
-
+const Filters = ({ routeName, form: { submit, data, setData }, render }) => {
     const firstUpdate = useRef(true);
     useEffect(() => {
         if (firstUpdate.current) {
@@ -15,7 +12,7 @@ const Filters = ({ routeName, filters, sorts, transforms, render }) => {
         }
 
         submit();
-    }, [data])
+    }, [data]);
 
     return (
         <form onSubmit={submit}>

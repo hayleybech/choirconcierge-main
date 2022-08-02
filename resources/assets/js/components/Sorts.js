@@ -2,11 +2,8 @@ import React, {useEffect, useRef} from 'react';
 import RadioGroup from "./inputs/RadioGroup";
 import Label from "./inputs/Label";
 import SectionSubtitle from "./SectionSubtitle";
-import useSortFilterForm from "../hooks/useSortFilterForm";
 
-const Sorts = ({ routeName, sorts, filters, transforms }) => {
-    const { data, setData, submit } = useSortFilterForm(routeName, filters, sorts, transforms);
-
+const Sorts = ({ sorts, form: { submit, data, setData} }) => {
     const firstUpdate = useRef(true);
     useEffect(() => {
         if (firstUpdate.current) {
@@ -15,7 +12,7 @@ const Sorts = ({ routeName, sorts, filters, transforms }) => {
         }
 
         submit();
-    }, [data])
+    }, [data]);
 
     return (
         <form onSubmit={submit}>

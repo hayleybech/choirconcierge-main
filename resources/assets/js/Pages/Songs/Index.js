@@ -10,6 +10,7 @@ import IndexContainer from "../../components/IndexContainer";
 import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
 import Sorts from "../../components/Sorts";
+import useSortFilterForm from "../../hooks/useSortFilterForm";
 
 const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault }) => {
     const [showFilters, setShowFilters] = useFilterPane();
@@ -28,6 +29,8 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
         { name: 'categories.id', multiple: true },
         { name: 'show_for_prospects', multiple: true, multipleBool: true, defaultValue: showForProspectsDefault },
     ];
+
+    const sortFilterForm = useSortFilterForm('songs.index', filters, sorts);
 
     return (
         <>
@@ -49,14 +52,12 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                 showFilters={showFilters}
                 filterPane={
                     <FilterSortPane
-                        sorts={<Sorts routeName="songs.index" sorts={sorts} filters={filters} />}
+                        sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
                         filters={<SongFilters
                             statuses={statuses}
-                            defaultStatuses={defaultStatuses}
                             categories={categories}
                             showForProspectsDefault={showForProspectsDefault}
-                            sorts={sorts}
-                            filters={filters}
+                            form={sortFilterForm}
                         />}
                         closeFn={() => setShowFilters(false)}
                     />

@@ -5,11 +5,10 @@ import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
 import RadioGroup from "./inputs/RadioGroup";
 
-const SingerFilters = ({ statuses, voiceParts, roles, filters, sorts }) => (
+const SingerFilters = ({ statuses, voiceParts, roles, form }) => (
     <Filters
         routeName="singers.index"
-        filters={filters}
-        sorts={sorts}
+        form={form}
         render={(data, setData) => (<>
             <div>
                 <Label label="Name" forInput="user.name" />
