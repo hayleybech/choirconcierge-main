@@ -11,6 +11,8 @@ import Form from "../../components/Form";
 import Label from "../../components/inputs/Label";
 import Error from "../../components/inputs/Error";
 import TextInput from "../../components/inputs/TextInput";
+import collect from "collect.js";
+import TableHeadingSort from "../../components/TableHeadingSort";
 
 const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, permissions }) => {
     const [openFolder, setOpenFolder] = useState(0);
@@ -19,9 +21,11 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
     const [renameFolderIsOpen, setRenameFolderIsOpen] = useState(false);
     const [renamingFolder, setRenamingFolder] = useState(folders[0]);
 
-    const headings = permissions['delete_folder'] || permissions['delete_document']
-        ? ['Title', 'Created', 'Delete']
-        : ['Title', 'Created'];
+    const headings = collect({
+        title: 'Title',
+        created: 'Created',
+        delete: 'Delete',
+    }).filter((item, key) => key !== 'delete' ||  permissions['delete_folder'] || permissions['delete_document']);
 
     return (
         <>

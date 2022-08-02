@@ -9,11 +9,29 @@ import IndexContainer from "../../components/IndexContainer";
 import SingerFilters from "../../components/SingerFilters";
 import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
-import SingerSorts from "../../components/SingerSorts";
+import Sorts from "../../components/Sorts";
+import useSortFilterForm from "../../hooks/useSortFilterForm";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     const [showFilters, setShowFilters] = useFilterPane();
     const { can } = usePage().props;
+
+    const sorts = [
+        { id: 'full-name', name: 'Name', default: true },
+        { id: 'status-title', name: 'Status' },
+        { id: 'part-title', name: 'Voice Part' },
+        { id: 'paid_until', name: 'Paid Until' },
+    ];
+
+    const filters = [
+        { name: 'user.name', defaultValue: '' },
+        { name: 'category.id', multiple: true, defaultValue: [defaultStatus] },
+        { name: 'voice_part.id', multiple: true },
+        { name: 'roles.id', multiple: true },
+        { name: 'fee_status', defaultValue: '' },
+    ];
+
+    const sortFilterForm = useSortFilterForm('singers.index', filters, sorts);
 
     return (
         <>
@@ -29,7 +47,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                     { label: 'Add New', icon: 'user-plus', url: route('singers.create'), variant: 'primary', can: 'create_singer' },
                     { label: 'Voice Parts', icon: 'users-class', url: route('voice-parts.index'), can: 'list_voice_parts' },
                     { label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
-                    { label: 'Filter/Sort', icon: 'filter', onClick: () => setShowFilters(! showFilters) },
+                    { label: <span>Filter<span className="inline md:hidden">/Sort</span></span>, icon: 'filter', onClick: () => setShowFilters(! showFilters) },
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
@@ -37,13 +55,13 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                 showFilters={showFilters}
                 filterPane={
                     <FilterSortPane
-                        sorts={<SingerSorts />}
-                        filters={<SingerFilters statuses={statuses} defaultStatus={defaultStatus} voiceParts={voiceParts} roles={roles} onClose={() => setShowFilters(false)} />}
+                        sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+                        filters={<SingerFilters statuses={statuses} voiceParts={voiceParts} roles={roles} form={sortFilterForm} />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }
                 tableMobile={<SingerTableMobile singers={allSingers} />}
-                tableDesktop={<SingerTableDesktop singers={allSingers} />}
+                tableDesktop={<SingerTableDesktop singers={allSingers} sortFilterForm={sortFilterForm} />}
             />
         </>
     );

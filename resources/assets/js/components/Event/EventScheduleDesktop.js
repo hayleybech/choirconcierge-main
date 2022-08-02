@@ -4,15 +4,23 @@ import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 import {Link} from "@inertiajs/inertia-react";
+import collect from "collect.js";
 
 const EventScheduleDesktop = ({ event }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [deletingActivityId, setDeletingActivityId] = useState(0);
 
+    const headings = collect({
+        title: 'Title',
+        duration: 'Duration',
+        move: 'Move',
+        delete: 'Delete',
+    }).filter((item, key) => (key !== 'move' && key !== 'delete') || event.can.update_event);
+
     return (
         <>
             <Table
-                headings={event.can.update_event ? ['Item', 'Duration', 'Move', 'Delete'] : ['Item', 'Duration']}
+                headings={headings}
                 body={<>
                     {event.activities.map((activity, index) => (
                         <tr key={activity.id}>
