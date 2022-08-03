@@ -7,14 +7,30 @@ import AppHead from "../../components/AppHead";
 import {usePage} from "@inertiajs/inertia-react";
 import SongFilters from "../../components/Song/SongFilters";
 import IndexContainer from "../../components/IndexContainer";
-import SongSorts from "../../components/Song/SongSorts";
 import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
+import Sorts from "../../components/Sorts";
+import useSortFilterForm from "../../hooks/useSortFilterForm";
 
 const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault }) => {
-    const [showFilters, setShowFilters] = useFilterPane();
+    const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
     const { can } = usePage().props;
+
+    const sorts = [
+        { id: 'title', name: 'Title', default: true },
+        { id: 'created_at', name: 'Date Created' },
+        { id: 'status-title', name: 'Status' },
+    ];
+
+    const filters = [
+        { name: 'title', defaultValue: '' },
+        { name: 'status.id', multiple: true, defaultValue: defaultStatuses },
+        { name: 'categories.id', multiple: true },
+        { name: 'show_for_prospects', multiple: true, multipleBool: true, defaultValue: showForProspectsDefault },
+    ];
+
+    const sortFilterForm = useSortFilterForm('songs.index', filters, sorts);
 
     return (
         <>
@@ -28,21 +44,27 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                 ]}
                 actions={[
                     { label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary', can: 'create_song' },
-                    { label: 'Filter/Sort', icon: 'filter', onClick: () => setShowFilters(! showFilters) },
+                    filterAction,
                 ].filter(action => action.can ? can[action.can] : true)}
+                optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
             />
 
             <IndexContainer
                 showFilters={showFilters}
                 filterPane={
                     <FilterSortPane
-                        sorts={<SongSorts />}
-                        filters={<SongFilters statuses={statuses} defaultStatuses={defaultStatuses} categories={categories} showForProspectsDefault={showForProspectsDefault} />}
+                        sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+                        filters={<SongFilters
+                            statuses={statuses}
+                            categories={categories}
+                            showForProspectsDefault={showForProspectsDefault}
+                            form={sortFilterForm}
+                        />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }
                 tableMobile={<SongTableMobile songs={songs} />}
-                tableDesktop={<SongTableDesktop songs={songs} />}
+                tableDesktop={<SongTableDesktop songs={songs} sortFilterForm={sortFilterForm} />}
             />
         </>
     );

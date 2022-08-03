@@ -11,6 +11,7 @@ import ButtonLink from "../../../components/inputs/ButtonLink";
 import Button from "../../../components/inputs/Button";
 import SnippetTag from "../../../components/SnippetTag";
 import RichTextInput from "../../../components/inputs/RichTextInput";
+import FormWrapper from "../../../components/FormWrapper";
 
 const TaskNotificationForm = ({ task, notification }) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -26,7 +27,7 @@ const TaskNotificationForm = ({ task, notification }) => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <FormWrapper>
             <Form onSubmit={submit}>
 
                 <FormSection title="Notification Details">
@@ -90,7 +91,7 @@ const TaskNotificationForm = ({ task, notification }) => {
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
-        </div>
+        </FormWrapper>
     );
 }
 

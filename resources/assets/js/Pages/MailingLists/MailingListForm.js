@@ -13,6 +13,7 @@ import SingerSelect from "../../components/inputs/SingerSelect";
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import Help from "../../components/inputs/Help";
+import FormWrapper from "../../components/FormWrapper";
 
 const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
     const { props: pageProps } = usePage();
@@ -83,7 +84,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
     ];
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <FormWrapper>
             <Form onSubmit={submit}>
 
                 <FormSection title="Mailing List Details" description="Start setting up your mailing list.">
@@ -242,7 +243,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
-        </div>
+        </FormWrapper>
     );
 }
 

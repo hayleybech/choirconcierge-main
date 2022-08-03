@@ -6,6 +6,7 @@ import Icon from "../../components/Icon";
 import {modelsAndAbilities} from "./modelsAndAbilities";
 import classNames from "../../classNames";
 import DeleteDialog from "../../components/DeleteDialog";
+import FormWrapper from "../../components/FormWrapper";
 
 const Show = ({ role }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -33,7 +34,7 @@ const Show = ({ role }) => {
                 This action cannot be undone.
             </DeleteDialog>
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            <FormWrapper>
 
                 <table className="w-full">
                     <thead>
@@ -66,7 +67,7 @@ const Show = ({ role }) => {
                     ))}
                     </tbody>
                 </table>
-            </div>
+            </FormWrapper>
         </>
     );
 }

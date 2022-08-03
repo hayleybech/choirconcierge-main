@@ -5,17 +5,10 @@ import CheckboxGroup from "../inputs/CheckboxGroup";
 import RadioGroup from "../inputs/RadioGroup";
 import Filters from "../Filters";
 
-const EventFilters = ({ eventTypes }) => (
+const EventFilters = ({ eventTypes, form }) => (
     <Filters
         routeName="events.index"
-        fields={(params) => ({
-            title: params.get('filter[title]') ?? '',
-            'type.id': params.getAll('filter[type.id][]').map(value => parseInt(value)) ?? [],
-            date: params.get('filter[date]') ?? 'upcoming',
-        })}
-        transforms={(data) => ({
-            date: data.date === 'all' ? null : data.date,
-        })}
+        form={form}
         render={(data, setData) => (<>
             <div>
                 <Label label="Title" forInput="title" />

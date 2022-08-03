@@ -4,19 +4,10 @@ import TextInput from "../inputs/TextInput";
 import CheckboxGroup from "../inputs/CheckboxGroup";
 import Filters from "../Filters";
 
-const SongFilters = ({ statuses, defaultStatuses, categories, showForProspectsDefault }) => (
+const SongFilters = ({ statuses, categories, form, showForProspectsDefault }) => (
     <Filters
         routeName="songs.index"
-        fields={(params) => ({
-            title: params.get('filter[title]') ?? '',
-            'status.id': params.has('filter[status.id][]')
-                ? params.getAll('filter[status.id][]').map(value => parseInt(value))
-                : defaultStatuses,
-            'categories.id': params.getAll('filter[categories.id][]').map(value => parseInt(value)),
-            show_for_prospects: params.has('filter[show_for_prospects][]')
-                ? params.getAll('filter[show_for_prospects][]').map(value => value === 'true')
-                : showForProspectsDefault,
-        })}
+        form={form}
         render={(data, setData) => (<>
             <div>
                 <Label label="Title" forInput="title" />

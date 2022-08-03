@@ -18,6 +18,7 @@ import FormFooter from "../../components/FormFooter";
 import GlobalUserSelect from "../../components/inputs/GlobalUserSelect";
 import DayInput from "../../components/inputs/Day";
 import {DateTime} from "luxon";
+import FormWrapper from "../../components/FormWrapper";
 
 const Create = ({voice_parts, roles}) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -79,7 +80,7 @@ const Create = ({voice_parts, roles}) => {
                 ]}
             />
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            <FormWrapper>
                 <Form onSubmit={submit}>
 
                     <FormSection title="User Details" description=" Link a new or existing user account with this singer.">
@@ -120,7 +121,7 @@ const Create = ({voice_parts, roles}) => {
                     </FormSection>
 
                     <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-6">
                             <Label label="Voice part" forInput="voice_part_id" />
                             <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
                             {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
@@ -181,7 +182,7 @@ const Create = ({voice_parts, roles}) => {
                         <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                     </FormFooter>
                 </Form>
-            </div>
+            </FormWrapper>
         </>
     );
 }

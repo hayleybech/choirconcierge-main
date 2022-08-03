@@ -10,6 +10,7 @@ import Select from "../../../components/inputs/Select";
 import Icon from "../../../components/Icon";
 import FormFooter from "../../../components/FormFooter";
 import Form from "../../../components/Form";
+import FormWrapper from "../../../components/FormWrapper";
 
 const PlacementForm = ({ singer, placement, voice_parts }) => {
     const { data, setData, post, put, processing, errors } = useForm({
@@ -29,7 +30,7 @@ const PlacementForm = ({ singer, placement, voice_parts }) => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <FormWrapper>
             <Form onSubmit={submit}>
 
                 <FormSection title="Placement Details">
@@ -126,7 +127,7 @@ const PlacementForm = ({ singer, placement, voice_parts }) => {
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
-        </div>
+        </FormWrapper>
     );
 }
 

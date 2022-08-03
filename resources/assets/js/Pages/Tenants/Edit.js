@@ -15,6 +15,7 @@ import SubdomainInput from "../../components/inputs/SubdomainInput";
 import TimezoneSelect from "../../components/inputs/TimezoneSelect";
 import AvatarUpload from "../../components/AvatarUpload";
 import Help from "../../components/inputs/Help";
+import FormWrapper from "../../components/FormWrapper";
 
 const Edit = ({ tenant, centralDomain, timezones, choirLogo }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -41,7 +42,7 @@ const Edit = ({ tenant, centralDomain, timezones, choirLogo }) => {
                 ]}
             />
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            <FormWrapper>
                 <Form onSubmit={submit}>
 
                     <FormSection title="Basic Details">
@@ -98,7 +99,7 @@ const Edit = ({ tenant, centralDomain, timezones, choirLogo }) => {
                     </FormFooter>
 
                 </Form>
-            </div>
+            </FormWrapper>
         </>
     );
 }
