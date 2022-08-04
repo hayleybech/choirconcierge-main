@@ -66,12 +66,12 @@ class Handler extends ExceptionHandler
             ])
                 ->toResponse($request)
                 ->setStatusCode($response->status());
+        } else if ($response->status() === 419) {
+            return back()->with([
+                'status' => 'The page expired, please try again.',
+                'success' => false,
+            ]);
         }
-//        } else if ($response->status() === 419) {
-//            return redirect()->route('singers.index')->with([
-//                'status' => 'The page expired, please try again.',
-//            ]);
-//        }
 
         return $response;
     }
