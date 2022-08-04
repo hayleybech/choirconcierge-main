@@ -38,12 +38,10 @@ const Index = ({ folders }) => {
                 emptyState={folders.length === 0
                     ? <EmptyState
                         title="No folders"
-                        description={<>
-                            Looks like you haven't made any folders or documents yet. This is a great place to store meeting minutes, your constitution, or other important files.<br />
-                            Get started by adding a folder, then upload some documents to the folder.
-                        </>}
+                        description="Looks like you don't have any folders or documents yet. This is a great place to store meeting minutes, your constitution, or other important files."
+                        actionDescription={can['create_folder'] ? 'Get started by adding a folder, then upload some documents to the folder.' : null}
                         icon="folders"
-                        href={route('folders.create')}
+                        href={can['create_folder'] ? route('folders.create') : null}
                         actionLabel="Add Folder"
                         actionIcon="folder-plus"
                     />

@@ -72,55 +72,54 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                             </TableCell>
                         </tr>
                         {folder.id === openFolder && <>
-                            {folder.documents.length > 0
-                                ? <>
-                                    {folder.documents.map((document) => (
-                                        <tr key={document.id}>
-                                            <TableCell>
-                                                <div className="flex items-center">
-                                                    <div className="ml-4">
-                                                        <a href={document.download_url} download={document.title} className="text-purple-600">
-                                                            <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" />
-                                                            <FolderIcon icon={document.icon} />
-                                                            {document.title}
-                                                        </a>
-                                                        {permissions['update_document'] && (
-                                                        <Button
-                                                            variant="secondary"
-                                                            size="xs"
-                                                            className="ml-2"
-                                                            onClick={() => { setRenamingDocument({folder, document}); setRenameDocumentIsOpen(true); }}
-                                                        >
-                                                            <Icon icon="edit" />
-                                                            Rename
-                                                        </Button>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <DateTag date={document.created_at} />
-                                            </TableCell>
-                                            <TableCell>
-                                                {permissions['delete_document'] && (
-                                                    <Button onClick={() => setDeletingDocument(document)} variant="danger-outline">
-                                                        <Icon icon="times" />
-                                                    </Button>
+                            {folder.documents.map((document) => (
+                                <tr key={document.id}>
+                                    <TableCell>
+                                        <div className="flex items-center">
+                                            <div className="ml-4">
+                                                <a href={document.download_url} download={document.title} className="text-purple-600">
+                                                    <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" />
+                                                    <FolderIcon icon={document.icon} />
+                                                    {document.title}
+                                                </a>
+                                                {permissions['update_document'] && (
+                                                <Button
+                                                    variant="secondary"
+                                                    size="xs"
+                                                    className="ml-2"
+                                                    onClick={() => { setRenamingDocument({folder, document}); setRenameDocumentIsOpen(true); }}
+                                                >
+                                                    <Icon icon="edit" />
+                                                    Rename
+                                                </Button>
                                                 )}
-                                            </TableCell>
-                                        </tr>
-                                    ))}
-                            </>
-                            : <tr>
-                                <TableCell colSpan={3}>
-                                    <EmptyState
-                                        title="No documents"
-                                        description="This folder is empty. Use the form below to add a document."
-                                        icon="file"
-                                    />
-                                </TableCell>
-                            </tr>
-                            }
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <DateTag date={document.created_at} />
+                                    </TableCell>
+                                    <TableCell>
+                                        {permissions['delete_document'] && (
+                                            <Button onClick={() => setDeletingDocument(document)} variant="danger-outline">
+                                                <Icon icon="times" />
+                                            </Button>
+                                        )}
+                                    </TableCell>
+                                </tr>
+                            ))}
+                            {folder.documents.length === 0 && (
+                                <tr>
+                                    <TableCell colSpan={3}>
+                                        <EmptyState
+                                            title="No documents"
+                                            description="This folder is empty. "
+                                            actionDescription={permissions['create_document'] ? 'Use the form below to add a document.' : null}
+                                            icon="file"
+                                        />
+                                    </TableCell>
+                                </tr>
+                            )}
                             {permissions['create_document'] && (
                             <tr>
                                 <TableCell colSpan={3}>

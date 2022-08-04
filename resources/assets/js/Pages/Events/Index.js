@@ -72,9 +72,12 @@ const Index = ({ events, eventTypes }) => {
                 emptyState={events.length === 0
                     ? <EmptyState
                         title="No events"
-                        description="Get started by adding an event like a rehearsal or performance. Otherwise, try expanding your filtering options."
+                        actionDescription={can['create_event']
+                            ? "Get started by adding an event like a rehearsal or performance. Otherwise, try expanding your filtering options."
+                            : "Your team might not have added any events yet. Otherwise, you may need to expand your filtering options."
+                        }
                         icon="calendar"
-                        href={route('events.create')}
+                        href={can['create_event'] ? route('events.create') : null}
                         actionLabel="Add Event"
                         actionIcon="calendar-plus"
                     />

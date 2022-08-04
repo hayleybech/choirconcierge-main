@@ -5,8 +5,6 @@ import AppHead from "../../components/AppHead";
 import TaskTableDesktop from "./TaskTableDesktop";
 import TaskTableMobile from "./TaskTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
-import MailingListTableDesktop from "../MailingLists/MailingListTableDesktop";
-import MailingListTableMobile from "../MailingLists/MailingListTableMobile";
 import EmptyState from "../../components/EmptyState";
 import IndexContainer from "../../components/IndexContainer";
 
@@ -36,10 +34,11 @@ const Index = ({ tasks }) => {
                         title="No onboarding tasks"
                         description={<>
                             Onboarding tasks allow you to keep track of your recruitment process and send reminders and resources to prospects and team members. <br />
-                            Looks like you haven't set up onboarding tasks yet. Create a task like "Pass Audition", then create some notifications e.g. "Congratulations".
+                            Looks like there are no onboarding tasks set up yet.
                         </>}
+                        actionDescription={can['create_task'] ? 'Create a task like "Pass Audition", then create some notifications e.g. "Congratulations".' : null}
                         icon="tasks"
-                        href={route('tasks.create')}
+                        href={can['create_task'] ? route('tasks.create') : null}
                         actionLabel="Add Task"
                         actionIcon="plus"
                     />

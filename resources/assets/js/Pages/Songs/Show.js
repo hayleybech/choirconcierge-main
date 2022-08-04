@@ -127,8 +127,8 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                                     description={<>
                                         Looks like there are no attachments for this song yet. <br />
                                         This is the perfect place to store sheet music, learning tracks and more!<br/>
-                                        To get started, use the form below.
                                     </>}
+                                    actionDescription={song.can['update_song'] ? "To get started, use the form below." : null}
                                     icon="file-music"
                                 />
                             )
@@ -152,8 +152,9 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                                         title="No sheet music"
                                         description={<>
                                             This prime location is reserved for displaying your sheet music. <br />
-                                            To add some, use the "Add Attachment" form on the left.
+                                            It looks like you don't have any yet for this song.
                                         </>}
+                                        actionDescription={song.can['update_song'] ? 'To add some, use the "Add Attachment" form on the left.' : null}
                                         icon="file-pdf"
                                     />
                                 )

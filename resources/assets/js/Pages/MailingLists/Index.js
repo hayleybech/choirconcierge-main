@@ -35,12 +35,13 @@ const Index = ({ lists }) => {
                 emptyState={lists.length === 0
                     ? <EmptyState
                         title="No mailing lists"
-                        description={<>
-                            Mailing lists allow you to assign an email address to a group of users, for chat or announcements. <br />
-                            You don't have any yet. Get started by adding a mailing list.
-                        </>}
+                        description="Mailing lists allow you to assign an email address to a group of users, for chat or announcements. "
+                        actionDescription={can['create_group']
+                            ? "You don't have any yet. Get started by adding a mailing list."
+                            : "You don't have any yet. Ask one of your admins to create one for you."
+                        }
                         icon="mail-bulk"
-                        href={route('groups.create')}
+                        href={can['create_group'] ? route('groups.create') : null}
                         actionLabel="Add Mailing List"
                         actionIcon="plus"
                     />

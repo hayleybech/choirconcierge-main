@@ -90,11 +90,12 @@ const Show = ({ task }) => {
                             title="No task notifications"
                             description={<>
                                 Task notifications allow you to send reminders and resources to prospects and team members when a task is completed. <br />
-                                Looks like you haven't set up notifications. For a task like "Pass Audition", you could create a notification like "Congratulations", or "Please invoice".
+                                Looks like you haven't set up notifications.
                             </>}
+                            actionDescription={'For a task like "Pass Audition", you could create a notification like "Congratulations", or "Please invoice".'}
                             icon="bells"
-                            href={route('tasks.create')}
-                            actionLabel="Add Task"
+                            href={route('tasks.notifications.create', task)}
+                            actionLabel="Add Notification"
                             actionIcon="plus"
                         />
                     )

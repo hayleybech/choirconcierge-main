@@ -14,6 +14,7 @@ import EmptyState from "../EmptyState";
 
 const EventSchedule = ({ event }) => {
     const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
+
     return (
         <div>
             {event.activities.length > 0
@@ -21,10 +22,10 @@ const EventSchedule = ({ event }) => {
                 : <EmptyState
                     title="Empty schedule"
                     description={<>
-                        Looks like you haven't added any items to this schedule. This tool is great for rehearsals and performances. <br />
-                        You can assign songs and estimate the event duration.<br />
-                        To get started, use the form below.
+                        Looks like this event doesn't have a schedule. This tool is great for rehearsals and performances. <br />
+                        Schedules can assign songs and estimate the event duration.
                     </>}
+                    actionDescription={event.can['update_event'] ? 'To get started, use the form below.' : null}
                     icon="stream"
                 />
             }

@@ -71,9 +71,10 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                 emptyState={songs.length === 0
                     ? <EmptyState
                         title="No songs"
-                        description="You don't have any songs yet, or you need to expand your filters. To get started, add a song then upload some sheet music or audio files. "
+                        description="You don't have any songs yet, or you need to expand your filters. "
+                        actionDescription={can['create_song'] ? "To get started, add a song then upload some sheet music or audio files. " : null}
                         icon="list-music"
-                        href={route('songs.create')}
+                        href={can['create_song'] ? route('songs.create') : null}
                         actionLabel="Add Song"
                         actionIcon="plus"
                     />

@@ -68,12 +68,13 @@ const Show = ({ list }) => {
                             </>
                             : <EmptyState
                                 title="No recipients"
-                                description={<>
-                                    This mailing list has no recipients, so it won't be able to do very much. <br />
-                                    To add recipients, edit this list, then assign a singer or an entire role, category or voice part.
-                                </>}
+                                description="This mailing list has no recipients, so it won't be able to do very much. "
+                                actionDescription={list.can['update_group']
+                                    ? 'To add recipients, edit this list, then assign a singer or an entire role, category or voice part.'
+                                    : 'Ask your admin to finish setting up this list.'
+                                }
                                 icon="inbox-in"
-                                href={route('groups.edit', list)}
+                                href={list.can['update_group'] ? route('groups.edit', list) : null}
                                 actionLabel="Edit Mailing List"
                                 actionIcon="edit"
                             />
@@ -110,12 +111,13 @@ const Show = ({ list }) => {
                             </>
                             : <EmptyState
                                 title="No senders"
-                                description={<>
-                                    This type of mailing list needs permitted senders to be assigned (a Chat type list just assumes the recipients are the senders). <br />
-                                    To add senders, edit this list, then assign a singer or an entire role, category or voice part.
-                                </>}
+                                description="This type of mailing list needs permitted senders to be assigned (a Chat type list just assumes the recipients are the senders). "
+                                actionDescription={list.can['update_group']
+                                    ? 'To add senders, edit this list, then assign a singer or an entire role, category or voice part.'
+                                    : 'Ask your admin to finish setting up this list.'
+                                }
                                 icon="inbox-out"
-                                href={route('groups.edit', list)}
+                                href={list.can['update_group'] ? route('groups.edit', list) : null}
                                 actionLabel="Edit Mailing List"
                                 actionIcon="edit"
                             />

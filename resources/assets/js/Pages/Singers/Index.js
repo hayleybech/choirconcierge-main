@@ -11,8 +11,6 @@ import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
 import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
-import Icon from "../../components/Icon";
-import Button from "../../components/inputs/Button";
 import EmptyState from "../../components/EmptyState";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
@@ -69,9 +67,12 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                 emptyState={allSingers.length === 0
                     ? <EmptyState
                         title="No singers"
-                        description="Get started by adding a singer or try expanding your filtering options."
+                        actionDescription={can['create_singer']
+                            ? "Get started by adding a singer or try expanding your filtering options."
+                            : "Your team might not have added any singers yet or you may need to expand your filtering options."
+                        }
                         icon="users"
-                        href={route('singers.create')}
+                        href={can['create_singer'] ? route('singers.create') : null}
                         actionLabel="Add Singer"
                         actionIcon="user-plus"
                     />

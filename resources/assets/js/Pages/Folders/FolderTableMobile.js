@@ -57,7 +57,8 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, pe
                             {folder.documents.length === 0 && (
                                 <EmptyState
                                     title="No documents"
-                                    description="This folder is empty. Use the form below to add a document."
+                                    description="This folder is empty. "
+                                    actionDescription={permissions['create_document'] ? 'Use the form below to add a document.' : null}
                                     icon="file"
                                 />
                             )}

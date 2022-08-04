@@ -32,12 +32,13 @@ const Index = ({ stacks }) => {
                 emptyState={stacks.length === 0
                     ? <EmptyState
                         title="No riser stacks"
-                        description={<>
-                            Riser stacks allow you to track where your singers should be physically positioned. <br />
-                            You haven't made any yet. Press the button and get started!
-                        </>}
+                        description="Riser stacks allow you to track where your singers should be physically positioned. "
+                        actionDescription={can['create_stack']
+                            ? "You haven't made any yet. Press the button and get started!"
+                            : "Your team haven't made any yet."
+                        }
                         icon="people-arrows"
-                        href={route('stacks.create')}
+                        href={can['create_stack'] ? route('stacks.create') : null}
                         actionLabel="Add Riser Stack"
                         actionIcon="plus"
                     />
