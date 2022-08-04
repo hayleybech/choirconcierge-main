@@ -2,8 +2,10 @@ import React from 'react';
 import {Link} from "@inertiajs/inertia-react";
 import buttonStyles from "./buttonStyles";
 
-const ButtonLink = ({ href, variant = 'secondary', size = 'md', className, children, disabled, onClick, ...otherProps }) => (
-    <Link href={href} className={buttonStyles(variant, size, disabled, className)} {...otherProps}>{children}</Link>
+const ButtonLink = ({ href, variant = 'secondary', size = 'md', className, children, disabled, onClick, external = false, ...otherProps }) => (
+    external
+        ? <a href={href} className={buttonStyles(variant, size, disabled, className)} {...otherProps}>{children}</a>
+        : <Link href={href} className={buttonStyles(variant, size, disabled, className)} {...otherProps}>{children}</Link>
 );
 
 export default ButtonLink;

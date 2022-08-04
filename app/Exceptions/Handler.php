@@ -2,12 +2,14 @@
 
 namespace App\Exceptions;
 
+use App\Models\Singer;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Inertia\Inertia;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -55,14 +57,22 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof AuthorizationException) {
-            if ($request->expectsJson()) {
-                return response()->json(['error' => 'Unauthorized.'], 403);
-            }
+        $response = parent::render($request, $exception);
 
-            return redirect()->route('dash');
+        if (in_array($response->status(), [500, 503, 404, 403])) {
+            return Inertia::render('Error', [
+                'status' => $response->status(),
+                'choirAdmins' => Singer::role('Admin')->limit(5)->with('user')->get()->values(),
+            ])
+                ->toResponse($request)
+                ->setStatusCode($response->status());
         }
+//        } else if ($response->status() === 419) {
+//            return redirect()->route('singers.index')->with([
+//                'status' => 'The page expired, please try again.',
+//            ]);
+//        }
 
-        return parent::render($request, $exception);
+        return $response;
     }
 }
