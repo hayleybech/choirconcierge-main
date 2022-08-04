@@ -11,6 +11,7 @@ import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
 import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
+import EmptyState from "../../components/EmptyState";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -63,6 +64,20 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                 }
                 tableMobile={<SingerTableMobile singers={allSingers} />}
                 tableDesktop={<SingerTableDesktop singers={allSingers} sortFilterForm={sortFilterForm} />}
+                emptyState={allSingers.length === 0
+                    ? <EmptyState
+                        title="No singers"
+                        actionDescription={can['create_singer']
+                            ? "Get started by adding a singer or try expanding your filtering options."
+                            : "Your team might not have added any singers yet or you may need to expand your filtering options."
+                        }
+                        icon="users"
+                        href={can['create_singer'] ? route('singers.create') : null}
+                        actionLabel="Add Singer"
+                        actionIcon="user-plus"
+                    />
+                    : null
+                }
             />
         </>
     );

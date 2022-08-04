@@ -11,6 +11,9 @@ import FilterSortPane from "../../components/FilterSortPane";
 import useFilterPane from "../../hooks/useFilterPane";
 import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
+import Icon from "../../components/Icon";
+import Button from "../../components/inputs/Button";
+import EmptyState from "../../components/EmptyState";
 
 const Index = ({ events, eventTypes }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -66,6 +69,20 @@ const Index = ({ events, eventTypes }) => {
                 }
                 tableMobile={<EventTableMobile events={events} />}
                 tableDesktop={<EventTableDesktop events={events} sortFilterForm={sortFilterForm} />}
+                emptyState={events.length === 0
+                    ? <EmptyState
+                        title="No events"
+                        actionDescription={can['create_event']
+                            ? "Get started by adding an event like a rehearsal or performance. Otherwise, try expanding your filtering options."
+                            : "Your team might not have added any events yet. Otherwise, you may need to expand your filtering options."
+                        }
+                        icon="calendar"
+                        href={can['create_event'] ? route('events.create') : null}
+                        actionLabel="Add Event"
+                        actionIcon="calendar-plus"
+                    />
+                    : null
+                }
             />
         </>
     );

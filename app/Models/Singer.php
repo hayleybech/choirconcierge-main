@@ -238,6 +238,13 @@ class Singer extends Model
         });
     }
 
+    public function scopeRole(Builder $query, string $roleName): Builder
+    {
+        return $query->whereHas('roles', static function (Builder $query) use ($roleName) {
+            $query->where('name', '=', $roleName);
+        });
+    }
+
     public function hasAbility(string $ability): bool
     {
         return $this->roles->contains(fn (Role $role) => collect($role->abilities)->contains($ability));

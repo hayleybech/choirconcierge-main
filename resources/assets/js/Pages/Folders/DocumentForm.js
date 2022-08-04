@@ -5,6 +5,7 @@ import Label from "../../components/inputs/Label";
 import Error from "../../components/inputs/Error";
 import Button from "../../components/inputs/Button";
 import FileInput from "../../components/inputs/FileInput";
+import Icon from "../../components/Icon";
 
 const DocumentForm = ({ folder }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -32,7 +33,10 @@ const DocumentForm = ({ folder }) => {
                 </div>
 
                 <div className="sm:col-span-1">
-                    <Button variant="primary" type="submit" className="block w-full" disabled={processing}>Upload</Button>
+                    <Button variant="primary" type="submit" className="block w-full" disabled={processing}>
+                        <Icon icon="file-plus" />
+                        Upload
+                    </Button>
                 </div>
 
             </div>

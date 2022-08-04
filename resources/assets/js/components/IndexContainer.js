@@ -1,7 +1,7 @@
 import React from 'react';
 import {useMediaQuery} from "react-responsive";
 
-const IndexContainer = ({ tableDesktop, tableMobile, filterPane, showFilters }) => {
+const IndexContainer = ({ tableDesktop, tableMobile, emptyState, filterPane, showFilters }) => {
     const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
     return (
@@ -12,16 +12,21 @@ const IndexContainer = ({ tableDesktop, tableMobile, filterPane, showFilters }) 
                 </div>
             )}
             <div className="grow lg:overflow-x-auto">
-                {isDesktop ? (
-                    <div className="flex-col overflow-y-hidden">
-                        {tableDesktop}
-                    </div>
-                ) : (
-                    <div className="bg-white shadow block">
-                        {tableMobile}
-                    </div>
-                )}
+                {emptyState
+                    ? emptyState
+                    : (<>
+                        {isDesktop ? (
+                            <div className="flex-col overflow-y-hidden">
+                                {tableDesktop}
+                            </div>
+                        ) : (
+                            <div className="bg-white shadow block">
+                                {tableMobile}
+                            </div>
 
+                        )}
+                    </>)
+                }
             </div>
         </div>
     );

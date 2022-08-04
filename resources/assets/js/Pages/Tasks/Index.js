@@ -5,6 +5,8 @@ import AppHead from "../../components/AppHead";
 import TaskTableDesktop from "./TaskTableDesktop";
 import TaskTableMobile from "./TaskTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
+import EmptyState from "../../components/EmptyState";
+import IndexContainer from "../../components/IndexContainer";
 
 const Index = ({ tasks }) => {
     const { can } = usePage().props;
@@ -24,13 +26,25 @@ const Index = ({ tasks }) => {
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
-            <div className="hidden lg:flex flex-col">
-                <TaskTableDesktop tasks={tasks} />
-            </div>
-
-            <div className="bg-white shadow block lg:hidden">
-                <TaskTableMobile tasks={tasks} />
-            </div>
+            <IndexContainer
+                tableDesktop={<TaskTableDesktop tasks={tasks} />}
+                tableMobile={<TaskTableMobile tasks={tasks} />}
+                emptyState={tasks.length === 0
+                    ? <EmptyState
+                        title="No onboarding tasks"
+                        description={<>
+                            Onboarding tasks allow you to keep track of your recruitment process and send reminders and resources to prospects and team members. <br />
+                            Looks like there are no onboarding tasks set up yet.
+                        </>}
+                        actionDescription={can['create_task'] ? 'Create a task like "Pass Audition", then create some notifications e.g. "Congratulations".' : null}
+                        icon="tasks"
+                        href={can['create_task'] ? route('tasks.create') : null}
+                        actionLabel="Add Task"
+                        actionIcon="plus"
+                    />
+                    : null
+                }
+            />
         </>
     );
 }

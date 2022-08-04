@@ -6,6 +6,10 @@ import FolderTableDesktop from "./FolderTableDesktop";
 import FolderTableMobile from "./FolderTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
 import DeleteDialog from "../../components/DeleteDialog";
+import MailingListTableDesktop from "../MailingLists/MailingListTableDesktop";
+import MailingListTableMobile from "../MailingLists/MailingListTableMobile";
+import EmptyState from "../../components/EmptyState";
+import IndexContainer from "../../components/IndexContainer";
 
 const Index = ({ folders }) => {
     const { can } = usePage().props;
@@ -28,13 +32,22 @@ const Index = ({ folders }) => {
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
-            <div className="hidden lg:flex flex-col">
-                <FolderTableDesktop folders={folders} setDeletingFolder={setDeletingFolder} setDeletingDocument={setDeletingDocument} permissions={can} />
-            </div>
-
-            <div className="bg-white shadow block lg:hidden">
-                <FolderTableMobile folders={folders} setDeletingFolder={setDeletingFolder} setDeletingDocument={setDeletingDocument} permissions={can} />
-            </div>
+            <IndexContainer
+                tableDesktop={<FolderTableDesktop folders={folders} setDeletingFolder={setDeletingFolder} setDeletingDocument={setDeletingDocument} permissions={can} />}
+                tableMobile={<FolderTableMobile folders={folders} setDeletingFolder={setDeletingFolder} setDeletingDocument={setDeletingDocument} permissions={can} />}
+                emptyState={folders.length === 0
+                    ? <EmptyState
+                        title="No folders"
+                        description="Looks like you don't have any folders or documents yet. This is a great place to store meeting minutes, your constitution, or other important files."
+                        actionDescription={can['create_folder'] ? 'Get started by adding a folder, then upload some documents to the folder.' : null}
+                        icon="folders"
+                        href={can['create_folder'] ? route('folders.create') : null}
+                        actionLabel="Add Folder"
+                        actionIcon="folder-plus"
+                    />
+                    : null
+                }
+            />
 
             <DeleteDialog title="Delete Folder" url={deletingFolder ? route('folders.destroy', deletingFolder) : '#'} isOpen={!!deletingFolder} setIsOpen={setDeletingFolder}>
                 Are you sure you want to delete this folder?
