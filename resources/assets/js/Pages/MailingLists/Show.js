@@ -6,6 +6,7 @@ import Icon from "../../components/Icon";
 import SectionTitle from "../../components/SectionTitle";
 import DateTag from "../../components/DateTag";
 import DeleteDialog from "../../components/DeleteDialog";
+import EmptyState from "../../components/EmptyState";
 
 const Show = ({ list }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -45,50 +46,83 @@ const Show = ({ list }) => {
                         <SectionTitle>Recipients</SectionTitle>
                     </div>
                     <div className="h-full overflow-y-auto relative">
-                        <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
-                            <h3>Recipients</h3>
-                        </div>
-                        <ul role="list" className="relative z-0 divide-y divide-gray-200">
-                            {list.members.map((member) => (
-                                <li key={member.id} >
-                                    <div className="relative px-6 py-5 flex items-center space-x-3">
-                                        <div className="flex items-center justify-between px-4">
-                                            <span className="text-sm font-medium truncate">
-                                                {`${getTypeName(member.memberable_type)}: `}
-                                                {member?.memberable.name ?? member?.memberable.title ?? 'Recipient not found'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                        {list.members.length > 0
+                            ? <>
+                                <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
+                                    <h3>Recipients</h3>
+                                </div>
+                                <ul role="list" className="relative z-0 divide-y divide-gray-200">
+                                    {list.members.map((member) => (
+                                        <li key={member.id} >
+                                            <div className="relative px-6 py-5 flex items-center space-x-3">
+                                                <div className="flex items-center justify-between px-4">
+                                                    <span className="text-sm font-medium truncate">
+                                                        {`${getTypeName(member.memberable_type)}: `}
+                                                        {member?.memberable.name ?? member?.memberable.title ?? 'Recipient not found'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </>
+                            : <EmptyState
+                                title="No recipients"
+                                description={<>
+                                    This mailing list has no recipients, so it won't be able to do very much. <br />
+                                    To add recipients, edit this list, then assign a singer or an entire role, category or voice part.
+                                </>}
+                                icon="inbox-in"
+                                href={route('groups.edit', list)}
+                                actionLabel="Edit Mailing List"
+                                actionIcon="edit"
+                            />
+                        }
                     </div>
                 </div>
 
+                {list.list_type !== 'chat' && (
                 <div className="sm:col-span-1">
                     <div className="py-6 px-4 sm:px-6 lg:px-8">
                         <SectionTitle>Senders</SectionTitle>
                     </div>
                     <div className="h-full overflow-y-auto relative">
-                        <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
-                            <h3>Senders</h3>
-                        </div>
-                        <ul role="list" className="relative z-0 divide-y divide-gray-200">
-                            {list.senders.map((sender) => (
-                                <li key={sender.id} >
-                                    <div className="relative px-6 py-5 flex items-center space-x-3">
-                                        <div className="flex items-center justify-between px-4">
-                                            <span className="text-sm font-medium truncate">
-                                                {`${getTypeName(sender.sender_type)}: `}
-                                                {sender?.sender.name ?? sender?.sender.title ?? 'Sender not found'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                        {list.senders.length > 0
+                            ? <>
+                                <div
+                                    className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
+                                    <h3>Senders</h3>
+                                </div>
+                                <ul role="list" className="relative z-0 divide-y divide-gray-200">
+                                    {list.senders.map((sender) => (
+                                        <li key={sender.id}>
+                                            <div className="relative px-6 py-5 flex items-center space-x-3">
+                                                <div className="flex items-center justify-between px-4">
+                                                    <span className="text-sm font-medium truncate">
+                                                        {`${getTypeName(sender.sender_type)}: `}
+                                                        {sender?.sender.name ?? sender?.sender.title ?? 'Sender not found'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </>
+                            : <EmptyState
+                                title="No senders"
+                                description={<>
+                                    This type of mailing list needs permitted senders to be assigned (a Chat type list just assumes the recipients are the senders). <br />
+                                    To add senders, edit this list, then assign a singer or an entire role, category or voice part.
+                                </>}
+                                icon="inbox-out"
+                                href={route('groups.edit', list)}
+                                actionLabel="Edit Mailing List"
+                                actionIcon="edit"
+                            />
+                        }
                     </div>
                 </div>
+                )}
 
             </div>
         </>

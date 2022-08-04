@@ -11,6 +11,9 @@ import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
 import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
+import Icon from "../../components/Icon";
+import Button from "../../components/inputs/Button";
+import EmptyState from "../../components/EmptyState";
 
 const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -65,6 +68,17 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                 }
                 tableMobile={<SongTableMobile songs={songs} />}
                 tableDesktop={<SongTableDesktop songs={songs} sortFilterForm={sortFilterForm} />}
+                emptyState={songs.length === 0
+                    ? <EmptyState
+                        title="No songs"
+                        description="You don't have any songs yet, or you need to expand your filters. To get started, add a song then upload some sheet music or audio files. "
+                        icon="list-music"
+                        href={route('songs.create')}
+                        actionLabel="Add Song"
+                        actionIcon="plus"
+                    />
+                    : null
+                }
             />
         </>
     );

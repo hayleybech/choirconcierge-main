@@ -20,6 +20,7 @@ import Prose from "../../components/Prose";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CollapsePanel from "../../components/CollapsePanel";
 import CollapseGroup from "../../components/CollapseGroup";
+import EmptyState from "../../components/EmptyState";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
     const player = useContext(PlayerContext);
@@ -111,20 +112,54 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 lg:overflow-y-auto divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
 
                     <div className="sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch">
-                        <SongAttachmentList attachment_categories={attachment_categories} song={song} currentPdf={currentPdf} setCurrentPdf={showPdf} player={player} />
+                        {song.attachments.length > 0
+                            ? (
+                                <SongAttachmentList
+                                    attachment_categories={attachment_categories}
+                                    song={song}
+                                    currentPdf={currentPdf}
+                                    setCurrentPdf={showPdf}
+                                    player={player}
+                                />
+                            ) : (
+                                <EmptyState
+                                    title="No attachments"
+                                    description={<>
+                                        Looks like there are no attachments for this song yet. <br />
+                                        This is the perfect place to store sheet music, learning tracks and more!<br/>
+                                        To get started, use the form below.
+                                    </>}
+                                    icon="file-music"
+                                />
+                            )
+                        }
                         { song.can['update_song'] && <SongAttachmentForm categories={all_attachment_categories} song={song} />}
                     </div>
 
-                    {isDesktop && currentPdf && ! player.showFullscreen && (
-                    <div className="hidden md:block sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-hidden">
-                        <Pdf
-                            filename={currentPdf?.download_url}
-                            isFullscreen={player.showFullscreen}
-                            openFullscreen={openFullscreen}
-                            closeFullscreen={closeFullscreen}
-                            pitch={song.pitch.split('/')[0]}
-                        />
-                    </div>
+                    {isDesktop && ! player.showFullscreen && (
+                        <div className="hidden md:block sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-hidden">
+                            {!!currentPdf
+                                ? (
+                                <Pdf
+                                    filename={currentPdf?.download_url}
+                                    isFullscreen={player.showFullscreen}
+                                    openFullscreen={openFullscreen}
+                                    closeFullscreen={closeFullscreen}
+                                    pitch={song.pitch.split('/')[0]}
+                                />
+                                ) : (
+                                    <EmptyState
+                                        title="No sheet music"
+                                        description={<>
+                                            This prime location is reserved for displaying your sheet music. <br />
+                                            To add some, use the "Add Attachment" form on the left.
+                                        </>}
+                                        icon="file-pdf"
+                                    />
+                                )
+                            }
+                        </div>
+
                     )}
 
                     <div className="sm:col-span-1 sm:order-2 xl:order-3">

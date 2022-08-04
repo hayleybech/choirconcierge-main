@@ -9,6 +9,7 @@ import ButtonLink from "../../components/inputs/ButtonLink";
 import DateTag from "../../components/DateTag";
 import SectionHeader from "../../components/SectionHeader";
 import DeleteDialog from "../../components/DeleteDialog";
+import EmptyState from "../../components/EmptyState";
 
 const Show = ({ task }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -56,30 +57,48 @@ const Show = ({ task }) => {
 
             </div>
             <div className="h-full overflow-y-auto relative">
-                <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
-                    <h3>Notifications</h3>
-                </div>
-                <ul role="list" className="relative z-0 divide-y divide-gray-200">
-                    {task.notification_templates.map((notification) => (
-                        <li key={notification.id} >
-                            <div className="relative px-6 py-5 flex items-center space-x-3">
-                                <div className="flex flex-wrap items-center justify-between px-4 w-full ms:space-x-2 space-y-2 md:space-y-0">
-                                    <span className="text-sm font-medium truncate">
-                                        <Link href={route('tasks.notifications.show', { task: task, notification: notification.id })} className="text-purple-600">
-                                            {notification.subject}
-                                        </Link>
-                                    </span>
-                                    <span className="text-xs text-gray-500">
-                                        {notification.recipients}
-                                    </span>
-                                    <span className="text-xs text-gray-500">
-                                        {notification.delay}
-                                    </span>
-                                </div>
+                {task.notification_templates.length > 0
+                    ? (
+                        <>
+                            <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
+                                <h3>Notifications</h3>
                             </div>
-                        </li>
-                    ))}
-                </ul>
+                            <ul role="list" className="relative z-0 divide-y divide-gray-200">
+                                {task.notification_templates.map((notification) => (
+                                    <li key={notification.id} >
+                                        <div className="relative px-6 py-5 flex items-center space-x-3">
+                                            <div className="flex flex-wrap items-center justify-between px-4 w-full ms:space-x-2 space-y-2 md:space-y-0">
+                                                <span className="text-sm font-medium truncate">
+                                                    <Link href={route('tasks.notifications.show', { task: task, notification: notification.id })} className="text-purple-600">
+                                                        {notification.subject}
+                                                    </Link>
+                                                </span>
+                                                <span className="text-xs text-gray-500">
+                                                    {notification.recipients}
+                                                </span>
+                                                <span className="text-xs text-gray-500">
+                                                    {notification.delay}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </>
+                    ) : (
+                        <EmptyState
+                            title="No task notifications"
+                            description={<>
+                                Task notifications allow you to send reminders and resources to prospects and team members when a task is completed. <br />
+                                Looks like you haven't set up notifications. For a task like "Pass Audition", you could create a notification like "Congratulations", or "Please invoice".
+                            </>}
+                            icon="bells"
+                            href={route('tasks.create')}
+                            actionLabel="Add Task"
+                            actionIcon="plus"
+                        />
+                    )
+                }
             </div>
         </>
     );

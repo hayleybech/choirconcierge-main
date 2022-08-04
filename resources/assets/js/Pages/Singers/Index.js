@@ -11,6 +11,9 @@ import useFilterPane from "../../hooks/useFilterPane";
 import FilterSortPane from "../../components/FilterSortPane";
 import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
+import Icon from "../../components/Icon";
+import Button from "../../components/inputs/Button";
+import EmptyState from "../../components/EmptyState";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -63,6 +66,17 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                 }
                 tableMobile={<SingerTableMobile singers={allSingers} />}
                 tableDesktop={<SingerTableDesktop singers={allSingers} sortFilterForm={sortFilterForm} />}
+                emptyState={allSingers.length === 0
+                    ? <EmptyState
+                        title="No singers"
+                        description="Get started by adding a singer or try expanding your filtering options."
+                        icon="users"
+                        href={route('singers.create')}
+                        actionLabel="Add Singer"
+                        actionIcon="user-plus"
+                    />
+                    : null
+                }
             />
         </>
     );

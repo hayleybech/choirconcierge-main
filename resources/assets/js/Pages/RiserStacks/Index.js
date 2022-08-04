@@ -5,6 +5,8 @@ import AppHead from "../../components/AppHead";
 import RiserStackTableDesktop from "./RiserStackTableDesktop";
 import RiserStackTableMobile from "./RiserStackTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
+import IndexContainer from "../../components/IndexContainer";
+import EmptyState from "../../components/EmptyState";
 
 const Index = ({ stacks }) => {
     const { can } = usePage().props;
@@ -24,13 +26,24 @@ const Index = ({ stacks }) => {
                 ].filter(action => action.can ? can[action.can] : true)}
             />
 
-            <div className="hidden lg:flex flex-col">
-                <RiserStackTableDesktop stacks={stacks} />
-            </div>
-
-            <div className="bg-white shadow block lg:hidden">
-                <RiserStackTableMobile stacks={stacks} />
-            </div>
+            <IndexContainer
+                tableDesktop={<RiserStackTableDesktop stacks={stacks} />}
+                tableMobile={<RiserStackTableMobile stacks={stacks} />}
+                emptyState={stacks.length === 0
+                    ? <EmptyState
+                        title="No riser stacks"
+                        description={<>
+                            Riser stacks allow you to track where your singers should be physically positioned. <br />
+                            You haven't made any yet. Press the button and get started!
+                        </>}
+                        icon="people-arrows"
+                        href={route('stacks.create')}
+                        actionLabel="Add Riser Stack"
+                        actionIcon="plus"
+                    />
+                    : null
+                }
+            />
         </>
     );
 }

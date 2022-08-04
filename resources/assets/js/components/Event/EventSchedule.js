@@ -10,12 +10,24 @@ import Icon from "../Icon";
 import TextInput from "../inputs/TextInput";
 import EventScheduleMobile from "./EventScheduleMobile";
 import SongSelect from "../inputs/SongSelect";
+import EmptyState from "../EmptyState";
 
 const EventSchedule = ({ event }) => {
     const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
     return (
         <div>
-            {isDesktop ? <EventScheduleDesktop event={event} /> : <EventScheduleMobile event={event} />}
+            {event.activities.length > 0
+                ? (isDesktop ? <EventScheduleDesktop event={event} /> : <EventScheduleMobile event={event} />)
+                : <EmptyState
+                    title="Empty schedule"
+                    description={<>
+                        Looks like you haven't added any items to this schedule. This tool is great for rehearsals and performances. <br />
+                        You can assign songs and estimate the event duration.<br />
+                        To get started, use the form below.
+                    </>}
+                    icon="stream"
+                />
+            }
 
             {event.can.update_event && <ScheduleItemForm event={event} />}
         </div>
