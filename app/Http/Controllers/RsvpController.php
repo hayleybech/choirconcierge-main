@@ -19,10 +19,10 @@ class RsvpController extends Controller
     {
         $request->validate(['rsvp_response' => 'required']);
 
-        $event->rsvps()->create([
-            'response' => $request->input('rsvp_response'),
-            'singer_id' => Auth::user()->singer->id,
-        ]);
+        $event->rsvps()->updateOrCreate(
+            ['singer_id' => Auth::user()->singer->id],
+            ['response' => $request->input('rsvp_response')]
+        );
 
         return back()->with(['status' => 'RSVP saved.']);
     }
@@ -31,9 +31,10 @@ class RsvpController extends Controller
     {
         $request->validate(['rsvp_response' => 'required']);
 
-        $rsvp->update([
-            'response' => $request->input('rsvp_response'),
-        ]);
+        $event->rsvps()->updateOrCreate(
+            ['singer_id' => Auth::user()->singer->id],
+            ['response' => $request->input('rsvp_response')]
+        );
 
         return back()->with(['status' => 'RSVP saved.']);
     }
