@@ -47,10 +47,10 @@ class DashController extends Controller
     private function getEvents(): Collection
     {
         return Event::query()
-            ->with(['my_rsvp'])
             ->whereBetween('call_time', [today(), today()->addMonth()])
             ->orderBy('call_time')
-            ->get();
+            ->get()
+            ->append(['my_rsvp']);
     }
 
     private function getSongs()

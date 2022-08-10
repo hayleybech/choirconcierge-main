@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Rsvp;
 use App\Models\Singer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -84,6 +85,50 @@ class RsvpControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('events.show', $event));
         $this->assertDatabaseHas('rsvps', [
             'response' => $new_rsvp_response,
+            'event_id' => $event->id,
+            'singer_id' => Auth::user()->singer->id,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function update_changes_the_oldest(): void
+    {
+        $this->actingAs(Singer::factory()->create()->user);
+
+        $event = Event::factory()->create();
+
+        Rsvp::factory()
+            ->count(2)
+            ->sequence(
+                [
+                    'response' => 'no',
+                    'singer_id' => Auth::user()->singer->id,
+                    'event_id' => $event->id,
+                    'created_at' => now(),
+                ],
+                [
+                    'response' => 'no',
+                    'singer_id' => Auth::user()->singer->id,
+                    'event_id' => $event->id,
+                    'created_at' => now()->addMinute(),
+                ],
+            )
+            ->create();
+        
+        $response = $this->from(the_tenant_route('events.show', $event))->put(
+            the_tenant_route('events.rsvps.update', [$event, $event->rsvps->first()]),
+            [
+                'rsvp_response' => 'yes',
+            ],
+        );
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect(the_tenant_route('events.show', $event));
+        $this->assertDatabaseHas('rsvps', [
+            'id' => $event->rsvps()->oldest()->first()->id,
+            'response' => 'yes',
             'event_id' => $event->id,
             'singer_id' => Auth::user()->singer->id,
         ]);
