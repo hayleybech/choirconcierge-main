@@ -46,11 +46,11 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property bool $in_future
  * @property bool $is_repeat_parent
  * @property bool $parent_in_past
+ * @property Rsvp $my_rsvp
  *
  * Relationships
  * @property EventType $type
  * @property Collection<Rsvp> $rsvps
- * @property Rsvp $my_rsvp
  * @property Attendance $my_attendance
  * @property Collection<Attendance> $attendances
  * @property Collection<EventActivity> $activities
@@ -171,19 +171,6 @@ class Event extends Model
     public function rsvps(): HasMany
     {
         return $this->hasMany(Rsvp::class);
-    }
-
-    public function my_rsvp(): HasOne
-    {
-        return $this->hasOne(Rsvp::class)
-            ->where(
-                'singer_id',
-                '=',
-                DB::table('singers')
-                    ->where('user_id', auth()->id())
-                    ->value('id')
-            )
-            ->withDefault(['response' => 'unknown']);
     }
 
     public function attendances(): HasMany
@@ -374,6 +361,17 @@ class Event extends Model
         }
 
         return $this->_add_to_calendar_link;
+    }
+
+    public function getMyRsvpAttribute(): Rsvp|Model
+    {
+        if(! auth()->check()) {
+            return Rsvp::Null();
+        }
+
+        return $this->rsvps()
+            ->where('singer_id', '=', auth()->user()->singer->id)
+            ->first() ?? Rsvp::Null();
     }
 
     /**

@@ -86,4 +86,11 @@ class Rsvp extends Model
 
         return $icons[$this->response];
     }
+
+    public static function Null(): self
+    {
+        $null = new self();
+        $null->response = 'unknown';
+        return $null;
+    }
 }

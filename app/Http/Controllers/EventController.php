@@ -56,8 +56,8 @@ class EventController extends Controller
 
     public function show(Event $event): Response
     {
-        $event->load(['repeat_parent:id,call_time', 'my_rsvp', 'my_attendance', 'activities' => fn ($query) => $query->orderBy('order'), 'activities.song'])
-            ->append(['in_future', 'is_repeat_parent', 'parent_in_past']);
+        $event->load(['repeat_parent:id,call_time', 'my_attendance', 'activities' => fn ($query) => $query->orderBy('order'), 'activities.song'])
+            ->append(['in_future', 'is_repeat_parent', 'parent_in_past', 'my_rsvp']);
 
         $event->can = [
             'update_event' => auth()->user()?->can('update', $event),

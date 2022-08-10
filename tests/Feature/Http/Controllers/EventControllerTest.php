@@ -4,11 +4,13 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\EventType;
+use App\Models\Rsvp;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Testing\AssertableInertia;
 use Notification;
 use Tests\TestCase;
@@ -103,6 +105,43 @@ class EventControllerTest extends TestCase
                 ->has('attendanceCount')
                 ->has('voicePartsAttendanceCount')
                 ->has('addToCalendarLinks')
+            );
+    }
+
+    /** @test */
+    public function it_shows_the_oldest_rsvp_for_an_event(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $event = Event::factory()->create();
+
+        Rsvp::factory()
+            ->count(2)
+            ->sequence(
+                [
+                    'response' => 'no',
+                    'singer_id' => Auth::user()->singer->id,
+                    'event_id' => $event->id,
+                    'created_at' => now(),
+                ],
+                [
+                    'response' => 'no',
+                    'singer_id' => Auth::user()->singer->id,
+                    'event_id' => $event->id,
+                    'created_at' => now()->addMinute(),
+                ],
+            )
+            ->create();
+
+        $newestRsvp = $event->rsvps()->latest()->first();
+        $newestRsvp->update(['response' => 'yes']);
+
+
+        $this->get(the_tenant_route('events.show', [$event]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('Events/Show')
+                ->where('event.my_rsvp.response',  'no')
             );
     }
 
