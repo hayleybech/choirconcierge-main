@@ -9,8 +9,13 @@ class AttendancePolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user, string $ability)
+    public function before(User $user, string $ability): ?bool
     {
+        if( $user->isSuperAdmin)
+        {
+            return true;
+        }
+
         if (! $user->singer) {
             return false;
         }
@@ -18,6 +23,8 @@ class AttendancePolicy
         if ($user->singer->hasRole('Admin')) {
             return true;
         }
+
+        return null;
     }
 
     public function viewAny(User $user): bool

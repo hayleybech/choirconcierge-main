@@ -148,6 +148,10 @@ class Song extends Model
 
     public function getMyLearningAttribute(): LearningStatus
     {
+        if(! auth()->user()->singer) {
+            return LearningStatus::getNullLearningStatus();
+        }
+
         return $this->singers()
             ->where('singers.id', '=', auth()->user()->singer->id)
             ->first()

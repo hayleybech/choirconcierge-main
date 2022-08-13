@@ -27,6 +27,11 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('update-fees', function (User $user) {
+            if( $user->isSuperAdmin)
+            {
+                return true;
+            }
+
             return $user->singer?->hasRole('Accounts Team') || $user->singer?->hasRole('Admin');
         });
     }

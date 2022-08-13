@@ -12,6 +12,11 @@ class VoicePartPolicy
 
     public function before(User $user, string $ability)
     {
+        if( $user->isSuperAdmin)
+        {
+            return true;
+        }
+
         if (! $user->singer) {
             return false;
         }
@@ -19,6 +24,8 @@ class VoicePartPolicy
         if ($user->singer->hasRole('Admin')) {
             return true;
         }
+
+        return null;
     }
 
     /**

@@ -12,6 +12,11 @@ class RiserStackPolicy
 
     public function before(User $user, string $ability): ?bool
     {
+        if( $user->isSuperAdmin)
+        {
+            return true;
+        }
+
         if (! $user->singer) {
             return false;
         }
