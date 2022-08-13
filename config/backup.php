@@ -150,7 +150,7 @@ return [
         'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
 
         'mail' => [
-            'to' => 'haydenbech@gmail.com',
+            'to' => 'hayleybech@gmail.com',
 
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'backup@choirconcierge.com'),
