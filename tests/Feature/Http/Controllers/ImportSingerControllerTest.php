@@ -34,7 +34,7 @@ class ImportSingerControllerTest extends TestCase
                 $this->createUserWithRole('Admin')
             )
             ->post(the_tenant_route('singers.import'), [
-                'import_csv' => $file,
+                'import_csv' => [$file],
             ])
             ->assertSessionHasNoErrors()
             ->assertRedirect();
@@ -46,11 +46,11 @@ class ImportSingerControllerTest extends TestCase
             'dob' => (new Carbon(new DateTime('1989-03-17')))->toDateTimeString(),
             'phone' => '(04) 0793-3305',
             'address_street_1' => '3 / 7 Blake St Southport',
-            'address_street_2' => null,
+            'address_street_2' => '',
             'address_suburb' => 'Southport',
             'address_state' => 'QLD',
             'address_postcode' => '4215',
-            'skills' => null,
+            'skills' => '',
             'height' => '0.00',
         ]);
     }
@@ -70,7 +70,7 @@ class ImportSingerControllerTest extends TestCase
             $this->createUserWithRole('Admin')
         )
             ->post(the_tenant_route('singers.import'), [
-                'import_csv' => $file,
+                'import_csv' => [$file],
             ])
             ->assertSessionHasNoErrors()
             ->assertRedirect();
@@ -100,7 +100,7 @@ class ImportSingerControllerTest extends TestCase
             $this->createUserWithRole('Admin')
         )
             ->post(the_tenant_route('singers.import'), [
-                'import_csv' => $file,
+                'import_csv' => [$file],
             ])
             ->assertSessionHasNoErrors()
             ->assertRedirect();
@@ -136,7 +136,7 @@ class ImportSingerControllerTest extends TestCase
             $this->createUserWithRole('Admin')
         )
             ->post(the_tenant_route('singers.import'), [
-                'import_csv' => $file,
+                'import_csv' => [$file],
             ])
             ->assertSessionHasNoErrors()
             ->assertRedirect();
@@ -148,13 +148,13 @@ class ImportSingerControllerTest extends TestCase
             'dob' => '1991-07-08',
             'phone' => '0432 837 215',
             'address_street_1' => '8 Scaddan Street',
-            'address_street_2' => null,
+            'address_street_2' => '',
             'address_suburb' => 'Wembley',
             'address_state' => 'WA',
             'address_postcode' => '6014',
             'height' => '0.00',
-            'ice_name' => null,
-            'profession' => null,
+            'ice_name' => '',
+            'profession' => '',
         ]);
     }
 
@@ -173,7 +173,7 @@ class ImportSingerControllerTest extends TestCase
             $this->createUserWithRole('Admin')
         )
             ->post(the_tenant_route('singers.import'), [
-                'import_csv' => $file,
+                'import_csv' => [$file],
             ])
             ->assertSessionHasNoErrors()
             ->assertRedirect();

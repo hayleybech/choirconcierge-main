@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Layout from "../../Layouts/Layout";
 import PageHeader from "../../components/PageHeader";
 import SingerTableDesktop from "./SingerTableDesktop";
@@ -12,9 +12,11 @@ import FilterSortPane from "../../components/FilterSortPane";
 import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
 import EmptyState from "../../components/EmptyState";
+import ImportSingersDialog from "../../components/ImportSingersDialog";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+    const [showImportDialog, setShowImportDialog] = useState(false);
     const { can } = usePage().props;
 
     const sorts = [
@@ -48,10 +50,13 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                     { label: 'Add New', icon: 'user-plus', url: route('singers.create'), variant: 'primary', can: 'create_singer' },
                     { label: 'Voice Parts', icon: 'users-class', url: route('voice-parts.index'), can: 'list_voice_parts' },
                     { label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
+                    { label: 'Import Singers', icon: 'file-import', onClick: () => setShowImportDialog(true), can: 'import_singers'},
                     filterAction,
                 ].filter(action => action.can ? can[action.can] : true)}
                 optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
             />
+
+            <ImportSingersDialog isOpen={showImportDialog} setIsOpen={setShowImportDialog} />
 
             <IndexContainer
                 showFilters={showFilters}

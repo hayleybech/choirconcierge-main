@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Row;
 
-class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
+class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow
 {
     private SingerCategory $activeCategory;
 
@@ -45,46 +45,54 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
             [
                 'first_name' => $rowArr['first_name'],
                 'last_name' => $rowArr['last_name'],
-                'password' => random_int(0, 100000),
-                'dob' => isset($rowArr['birthday']) && trim($rowArr['birthday']) ? date_create($rowArr['birthday']) : null,
-                'phone' => $rowArr['mobile_phone'] ?? '',
-                'address_street_1' => $rowArr['street'] ?? '',
-                'address_street_2' => $rowArr['additional'] ?? '',
-                'address_suburb' => $rowArr['city'] ?? '',
-                'address_state' => $rowArr['province'] ?? '',
-                'address_postcode' => $rowArr['postal_code'] ?? '',
+                'pronouns' => $rowArr['pronouns'] ?? '',
+                'password' => $rowArr['password'] ?? random_int(0, 100000),
+                'dob' => isset($rowArr['dob']) && trim($rowArr['dob']) ? date_create($rowArr['dob']) : null,
+                'phone' => $rowArr['phone'] ?? '',
+                'ice_name' => $rowArr['ice_name'] ?? '',
+                'ice_phone' => $rowArr['ice_phone'] ?? '',
+                'address_street_1' => $rowArr['address_street_1'] ?? '',
+                'address_street_2' => $rowArr['address_street_2'] ?? '',
+                'address_suburb' => $rowArr['address_suburb'] ?? '',
+                'address_state' => $rowArr['address_state'] ?? '',
+                'address_postcode' => $rowArr['address_postcode'] ?? '',
+                'profession' => $rowArr['profession'] ?? '',
                 'skills' => $rowArr['skills'] ?? '',
                 'height' =>  isset($rowArr['height']) ? $this->make_valid_height($rowArr['height'] ?? '') : '',
+                'bha_id' => $rowArr['bha_id'] ?? '',
             ]
         );
 
         $singer = $user->singers()->updateOrCreate(['id' => $user->id], [
             'onboarding_enabled' => false,
+            'reason_for_joining' => $rowArr['reason_for_joining'] ?? '',
+            'referrer' => $rowArr['referrer'] ?? '',
+            'membership_details' => $rowArr['membership_details'] ?? '',
             'voice_part_id' => isset($rowArr['voice_part']) ? VoicePart::firstWhere('title', $rowArr['voice_part'])->id : null,
-            'joined_at' => $this->make_valid_mysql_datetime($rowArr['member_since'] ?? null),
-            'membership_details' => $rowArr['member_id'] ?? '',
+            'joined_at' => $this->make_valid_mysql_datetime($rowArr['joined_at'] ?? null),
+            'paid_until' => $this->make_valid_mysql_datetime($rowArr['paid_until'] ?? null),
         ]);
 
         // Add Roles
         $roles_list = isset($rowArr['roles']) ? explode(',', $rowArr['roles']) : [];
 
         $roles_to_add = [$this->roles->firstWhere('name', 'User')->id];
-        if (in_array('Site Admin', $roles_list, true)) {
+        if (in_array('Admin', $roles_list, true)) {
             $roles_to_add[] = $this->roles->firstWhere('name', 'Admin')->id;
         }
         if (in_array('Music Team', $roles_list, true)) {
             $roles_to_add[] = $this->roles->firstWhere('name', 'Music Team')->id;
         }
-        if (in_array('User Admin', $roles_list, true)) {
+        if (in_array('Membership Team', $roles_list, true)) {
             $roles_to_add[] = $this->roles->firstWhere('name', 'Membership Team')->id;
         }
-        if (in_array('Event Admin', $roles_list, true)) {
+        if (in_array('Events Team', $roles_list, true)) {
             $roles_to_add[] = $this->roles->firstWhere('name', 'Events Team')->id;
         }
         $singer->roles()->syncWithoutDetaching($roles_to_add);
 
         // Add SingerCategory
-        if (in_array('Inactive Member', $roles_list, true)) {
+        if (in_array('Archived Members', $roles_list, true)) {
             $category = $this->archivedCategory;
         } else {
             $category = $this->activeCategory;

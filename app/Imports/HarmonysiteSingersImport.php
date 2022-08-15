@@ -45,22 +45,22 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
                 'last_name' => $rowArr['surname'],
                 'password' => random_int(0, 100000),
                 'dob' => isset($rowArr['date_of_birth']) ? DateTime::createFromFormat('d/m/Y', $rowArr['date_of_birth']) : null,
-                'phone' => $rowArr['mobile_phone'],
-                'address_street_1' => $rowArr['street_address'],
-                'address_street_2' => $rowArr['street_address_line_2'],
-                'address_suburb' => $rowArr['townsuburb'],
-                'address_state' => $rowArr['state'],
-                'address_postcode' => $rowArr['postcode'],
-                'height' =>  $this->make_valid_height($rowArr['height']),
-                'ice_name' => $rowArr['emergency_contact'],
-                'profession' => $rowArr['occupation'],
+                'phone' => $rowArr['mobile_phone'] ?? '',
+                'address_street_1' => $rowArr['street_address'] ?? '',
+                'address_street_2' => $rowArr['street_address_line_2'] ?? '',
+                'address_suburb' => $rowArr['townsuburb'] ?? '',
+                'address_state' => $rowArr['state'] ?? '',
+                'address_postcode' => $rowArr['postcode'] ?? '',
+                'height' =>  isset($rowArr['height']) ? $this->make_valid_height($rowArr['height'] ?? '') : '',
+                'ice_name' => $rowArr['emergency_contact'] ?? '',
+                'profession' => $rowArr['occupation'] ?? '',
             ]
         );
 
         $singer = $user->singers()->updateOrCreate(['id' => $user->id], [
             'onboarding_enabled' => false,
-            'voice_part_id' => VoicePart::firstWhere('title', $this->convert_voice_part($rowArr['section']))->id ?? null,
-            'joined_at' => $this->make_valid_mysql_datetime($rowArr['registration_date']),
+            'voice_part_id' => isset($rowArr['section']) ? VoicePart::firstWhere('title', $this->convert_voice_part($rowArr['section']))->id ?? null : null,
+            'joined_at' => $this->make_valid_mysql_datetime($rowArr['registration_date'] ?? null),
         ]);
 
         // Add SingerCategory
