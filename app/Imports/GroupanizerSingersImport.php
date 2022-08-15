@@ -40,26 +40,23 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
             return $item;
         }, $row->toArray());
 
-        $user = User::firstWhere('email', $rowArr['email']);
-        if ($user) {
-            return;
-        }
-
-        $user = User::create([
-            'email' => $rowArr['email'],
-            'first_name' => $rowArr['first_name'],
-            'last_name' => $rowArr['last_name'],
-            'password' => random_int(0, 100000),
-            'dob' => date_create($rowArr['birthday'] ?? null),
-            'phone' => $rowArr['mobile_phone'],
-            'address_street_1' => $rowArr['street'],
-            'address_street_2' => $rowArr['additional'],
-            'address_suburb' => $rowArr['city'],
-            'address_state' => $rowArr['province'],
-            'address_postcode' => $rowArr['postal_code'],
-            'skills' => $rowArr['skills'],
-            'height' =>  $this->make_valid_height($rowArr['height']),
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => $rowArr['email']],
+            [
+                'first_name' => $rowArr['first_name'],
+                'last_name' => $rowArr['last_name'],
+                'password' => random_int(0, 100000),
+                'dob' => date_create($rowArr['birthday'] ?? null),
+                'phone' => $rowArr['mobile_phone'],
+                'address_street_1' => $rowArr['street'],
+                'address_street_2' => $rowArr['additional'],
+                'address_suburb' => $rowArr['city'],
+                'address_state' => $rowArr['province'],
+                'address_postcode' => $rowArr['postal_code'],
+                'skills' => $rowArr['skills'],
+                'height' =>  $this->make_valid_height($rowArr['height']),
+            ]
+        );
 
         $singer = $user->singers()->updateOrCreate(['id' => $user->id], [
             'onboarding_enabled' => false,
