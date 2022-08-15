@@ -63,6 +63,10 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow
             ]
         );
 
+        if(! $user) {
+            return;
+        }
+
         $singer = $user->singers()->updateOrCreate(['id' => $user->id], [
             'onboarding_enabled' => false,
             'reason_for_joining' => $rowArr['reason_for_joining'] ?? '',

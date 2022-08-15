@@ -57,6 +57,10 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
             ]
         );
 
+        if(! $user) {
+            return;
+        }
+
         $singer = $user->singers()->updateOrCreate(['id' => $user->id], [
             'onboarding_enabled' => false,
             'voice_part_id' => isset($rowArr['section']) ? VoicePart::firstWhere('title', $this->convert_voice_part($rowArr['section']))->id ?? null : null,
