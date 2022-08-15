@@ -29,7 +29,7 @@ class DashController extends Controller
             'birthdays' => $this->getBirthdays()->values(),
             'emptyDobs' => $this->getEmptyDobs(),
             'memberversaries' => $this->getMemberversaries()->values(),
-	        'feeStatus' => auth()->user()->singer->fee_status,
+	        'feeStatus' => auth()->user()->singer?->fee_status,
         ]);
     }
 

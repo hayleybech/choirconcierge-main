@@ -37,7 +37,7 @@ class EditSingerRequest extends FormRequest
             'paid_until' => Gate::allows('update-fees') ? ['nullable', 'sometimes', 'date'] : ['prohibited'],
             'onboarding_enabled' => ['boolean'],
             'voice_part_id' => ['numeric', 'exists:voice_parts,id'],
-            'user_roles' => auth()->user()->singer->hasAbility('roles_create')
+            'user_roles' => auth()->user()->isSuperAdmin || auth()->user()?->singer->hasAbility('roles_create')
                 ? ['array', 'exists:roles,id']
                 : ['prohibited'],
         ];
