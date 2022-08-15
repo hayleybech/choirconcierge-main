@@ -58,6 +58,10 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
             ]
         );
 
+        if(! $user) {
+            return;
+        }
+
         $singer = $user->singers()->updateOrCreate(['id' => $user->id], [
             'onboarding_enabled' => false,
             'voice_part_id' => isset($rowArr['voice_part']) ? VoicePart::firstWhere('title', $rowArr['voice_part'])->id : null,
