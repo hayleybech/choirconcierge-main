@@ -135,7 +135,6 @@ class SingerController extends Controller
 
     public function destroy(Singer $singer): RedirectResponse
     {
-        $singer->user->delete();
         $singer->delete();
 
         return redirect()
