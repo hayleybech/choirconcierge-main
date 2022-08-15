@@ -58,6 +58,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Attributes
  * @property Carbon $birthday
  * @property string $name
+ * @property boolean $isSuperAdmin
  *
  * Relationships
  * @property Collection<Role> $roles
@@ -189,6 +190,11 @@ class User extends Authenticatable implements HasMedia
                 ? Carbon::make($attributes['dob'])->diffInYears(now()->startOfYear()) > 25 ? 'Full' : 'Youth'
                 : ''
         );
+    }
+
+    public function isSuperAdmin(): Attribute
+    {
+        return Attribute::get(fn ($value, $attributes) => $attributes['email'] === 'hayleybech@gmail.com');
     }
 
     public function registerMediaCollections(): void

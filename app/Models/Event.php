@@ -230,7 +230,7 @@ class Event extends Model
             ->where(
                 'singer_id',
                 '=',
-                auth()->user()->singer->id,
+                auth()->user()->singer?->id ?? 0,
             )
             ->withDefault(['response' => 'unknown']);
     }
@@ -365,7 +365,7 @@ class Event extends Model
 
     public function getMyRsvpAttribute(): Rsvp|Model
     {
-        if(! auth()->check()) {
+        if(! auth()->check() || ! auth()->user()->singer) {
             return Rsvp::Null();
         }
 

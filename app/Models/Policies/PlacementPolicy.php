@@ -11,18 +11,13 @@ class PlacementPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function before(User $user, string $ability): ?bool
     {
-        //
-    }
+        if( $user->isSuperAdmin)
+        {
+            return true;
+        }
 
-    public function before(User $user, string $ability)
-    {
         if (! $user->singer) {
             return false;
         }
@@ -30,6 +25,8 @@ class PlacementPolicy
         if ($user->singer->hasRole('Admin')) {
             return true;
         }
+
+        return null;
     }
 
     /**
