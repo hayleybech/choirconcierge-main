@@ -51,7 +51,7 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
                 'address_suburb' => $rowArr['townsuburb'] ?? '',
                 'address_state' => $rowArr['state'] ?? '',
                 'address_postcode' => $rowArr['postcode'] ?? '',
-                'height' =>  isset($rowArr['height']) ? $this->make_valid_height($rowArr['height'] ?? '') : '',
+                'height' =>  isset($rowArr['height']) ? $this->make_valid_height($rowArr['height'] ?? null) : null,
                 'ice_name' => $rowArr['emergency_contact'] ?? '',
                 'profession' => $rowArr['occupation'] ?? '',
             ]

@@ -51,7 +51,7 @@ class ImportSingerControllerTest extends TestCase
             'address_state' => 'QLD',
             'address_postcode' => '4215',
             'skills' => '',
-            'height' => '0.00',
+            'height' => null,
         ]);
     }
 
@@ -152,7 +152,7 @@ class ImportSingerControllerTest extends TestCase
             'address_suburb' => 'Wembley',
             'address_state' => 'WA',
             'address_postcode' => '6014',
-            'height' => '0.00',
+            'height' => null,
             'ice_name' => '',
             'profession' => '',
         ]);

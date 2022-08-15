@@ -54,7 +54,7 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
                 'address_state' => $rowArr['province'] ?? '',
                 'address_postcode' => $rowArr['postal_code'] ?? '',
                 'skills' => $rowArr['skills'] ?? '',
-                'height' =>  isset($rowArr['height']) ? $this->make_valid_height($rowArr['height'] ?? '') : '',
+                'height' =>  isset($rowArr['height']) ? $this->make_valid_height($rowArr['height'] ?? null) : null,
             ]
         );
 
