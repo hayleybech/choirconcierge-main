@@ -32,13 +32,13 @@ class SongController extends Controller
 
     public function index(Request $request): InertiaResponse
     {
-        $includePending = auth()->user()->isSuperAdmin || auth()->user()?->singer->hasAbility('songs_update');
+        $includePending = auth()->user()?->isSuperAdmin || auth()->user()?->singer->hasAbility('songs_update');
         $statuses = SongStatus::query()
             ->when(! $includePending, fn ($query) => $query->where('title', '!=', 'Pending'))
             ->get();
         $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
 
-        $includeNonAuditionSongs = auth()->user()->isSuperAdmin || auth()->user()?->singer->category->name === 'Members';
+        $includeNonAuditionSongs = auth()->user()?->isSuperAdmin || auth()->user()?->singer->category->name === 'Members';
         $showForProspectsDefault = $includeNonAuditionSongs ? [false, true] : [true];
 
         return Inertia::render('Songs/Index', [

@@ -82,7 +82,7 @@ class HandleInertiaRequests extends Middleware
                 'create_broadcast' => auth()->user()?->can('createBroadcast', UserGroup::class),
                 'list_tasks' => auth()->user()?->can('viewAny', Task::class),
                 'create_task' => auth()->user()?->can('create', Task::class),
-                'impersonate' => auth()->user()->isSuperAdmin || auth()->user()?->singer?->hasRole('Admin'),
+                'impersonate' => auth()->user()?->isSuperAdmin || auth()->user()?->singer?->hasRole('Admin'),
 	            'manage_finances' => Gate::allows('update-fees'),
                 'update_tenant' => auth()->user()?->can('update', Tenant::class),
             ],
