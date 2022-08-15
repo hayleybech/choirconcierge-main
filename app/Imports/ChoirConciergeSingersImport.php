@@ -58,7 +58,7 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow
                 'address_postcode' => $rowArr['address_postcode'] ?? '',
                 'profession' => $rowArr['profession'] ?? '',
                 'skills' => $rowArr['skills'] ?? '',
-                'height' =>  isset($rowArr['height']) ? $this->make_valid_height($rowArr['height'] ?? '') : '',
+                'height' =>  isset($rowArr['height']) ? $this->make_valid_height($rowArr['height'] ?? null) : null,
                 'bha_id' => $rowArr['bha_id'] ?? '',
             ]
         );
