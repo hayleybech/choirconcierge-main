@@ -58,6 +58,7 @@ class HandleInertiaRequests extends Middleware
                 'view_dash' => true,
                 'list_singers' => auth()->user()?->can('viewAny', Singer::class),
                 'create_singer' => auth()->user()?->can('create', Singer::class),
+                'import_singers' => auth()->user()?->isSuperAdmin,
                 'create_voice_part' => auth()->user()?->can('create', VoicePart::class),
                 'list_voice_parts' => auth()->user()?->can('viewAny', VoicePart::class),
                 'list_roles' => auth()->user()?->can('viewAny', Role::class),
