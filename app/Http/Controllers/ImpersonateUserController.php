@@ -25,8 +25,8 @@ class ImpersonateUserController extends Controller
         // abort if target is self
         abort_if($user->is(auth()->user()), 405, 'You can\'t impersonate yourself!');
 
-        // abort if the target user is an admin
-        abort_if($user->singer?->hasRole('Admin'), 405, 'Sorry, currently it\'s not possible to impersonate other administrators.');
+        // abort if the target user is a super admin
+        abort_if($user->isSuperAdmin, 405, 'Sorry, impersonation is not allowed for this user.');
 
         // abort if impersonation is already active
         abort_if(session()->has('impersonation:active'), 405, 'You are already impersonating a user. Switch to your own account then try again.');
