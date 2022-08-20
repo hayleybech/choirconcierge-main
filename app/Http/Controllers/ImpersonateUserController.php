@@ -19,17 +19,23 @@ class ImpersonateUserController extends Controller
 
     public function start(Request $request, User $user): RedirectResponse
     {
-        // abort if guest or not allowed
-        abort_if(auth()->guest() || ! auth()->user()->singer?->hasRole('Admin'), 405, 'Not allowed or not logged in. ');
+        abort_if(auth()->guest(), 405, 'Not logged in. ');
 
-        // abort if target is self
-        abort_if($user->is(auth()->user()), 405, 'You can\'t impersonate yourself!');
+        if(! auth()->user()->singer?->hasRole('Admin') && ! auth()->user()->isSuperAdmin){
+            return back()->with(['status' => 'You don\'t have permission to impersonate users', 'success' => false]);
+        }
 
-        // abort if the target user is a super admin
-        abort_if($user->isSuperAdmin, 405, 'Sorry, impersonation is not allowed for this user.');
+        if($user->is(auth()->user())){
+            return back()->with(['status' => 'You can\'t impersonate yourself!', 'success' => false]);
+        }
 
-        // abort if impersonation is already active
-        abort_if(session()->has('impersonation:active'), 405, 'You are already impersonating a user. Switch to your own account then try again.');
+        if($user->isSuperAdmin) {
+            return back()->with(['status' => 'Sorry, impersonation is not allowed for this user.', 'success' => false]);
+        }
+
+        if(session()->has('impersonation:active')) {
+            return back()->with(['status' => 'You are already impersonating a user. Switch to your own account then try again.', 'success' => false]);
+        }
 
         // store a token for the original user, so the user can return to normal use
         $token_stop = tenancy()->impersonate(tenancy()->tenant, auth()->id(), $this->getRedirectUrl()); // this url should be overwritten when stopping to avoid confusing the user
@@ -44,11 +50,11 @@ class ImpersonateUserController extends Controller
 
     public function stop(Request $request): RedirectResponse
     {
-        // abort if guest
         abort_if(auth()->guest(), 405, 'You must be logged in to do that. ');
-
-        // abort if unable to find the original user
-        abort_if(! session()->has('impersonation:original_user_token'), 500, 'Could not reset impersonation. User token not found.');
+        
+        if(! session()->has('impersonation:original_user_token')){
+            return back()->with(['status' => 'Sorry, could not reset impersonation. (User token not found).', 'success' => false]);
+        }
 
         // get token and clean up session
         $token_stop = session()->pull('impersonation:original_user_token');
