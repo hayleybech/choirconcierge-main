@@ -104,7 +104,7 @@ class EventController extends Controller
     public function update(Event $event, EventRequest $request): RedirectResponse
     {
         if ($event->is_repeating) {
-            return back()->with(['error' => 'The server tried to edit a repeating event incorrectly.']);
+            return back()->with(['status' => 'The server tried to edit a repeating event incorrectly.', 'success' => false]);
         }
 
         $event->update($request->safe()->except('send_notification'));

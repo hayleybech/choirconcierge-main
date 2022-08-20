@@ -46,4 +46,13 @@ class UserGroupRequest extends FormRequest
             'sender_singer_categories' => [],
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'slug.required' => 'The address field is required',
+            'slug.unique' => 'A mailing list with this address already exists',
+            'slug.max' => 'The address field must not contain more than 255 characters',
+        ];
+    }
 }

@@ -190,7 +190,7 @@ const EventForm = ({ event, types }) => {
 
                     <div className="sm:col-span-6">
                         <Label label="Description" forInput="description" />
-                        <RichTextInput value={data.description} updateFn={value => setData('description', value)} />
+                        <RichTextInput value={data.description} updateFn={value => setData(data => ({ ...data, description: value }))} />
                         {errors.description && <Error>{errors.description}</Error>}
                     </div>
 

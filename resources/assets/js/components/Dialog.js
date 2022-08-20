@@ -58,7 +58,7 @@ const Dialog = ({ title, children, okLabel, okUrl, onOk, okVariant, okMethod, da
                             </div>
                         </div>
                         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                            <Button variant={okVariant} size="sm" href={okUrl} onClick={(e) => onOk(e) && setIsOpen(false)} method={okMethod} data={data} as="button" className="sm:ml-3 w-full">{okLabel}</Button>
+                            <Button variant={okVariant} size="sm" href={okUrl} onClick={(e) => !!onOk ? onOk(e) : setIsOpen(false)} method={okMethod} data={data} as="button" className="sm:ml-3 w-full">{okLabel}</Button>
                             <Button size="sm" onClick={() => setIsOpen(false)} className="w-full mt-3 sm:mt-0">Cancel</Button>
                         </div>
                     </div>
