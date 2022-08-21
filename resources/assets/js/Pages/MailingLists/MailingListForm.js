@@ -49,7 +49,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
 
     const listTypes = [
         {
-            id: 'pulic',
+            id: 'public',
             name: 'Public',
             icon: 'envelope-open-text',
             description: <>
