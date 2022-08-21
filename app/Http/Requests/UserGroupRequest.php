@@ -35,7 +35,7 @@ class UserGroupRequest extends FormRequest
                     ->ignore($this->group->id ?? ''),
                 'max:255',
             ],
-            'list_type' => ['required'],
+            'list_type' => ['required', 'in:public,chat,distribution'],
             'recipient_roles' => [],
             'recipient_voice_parts' => [],
             'recipient_users' => [],
