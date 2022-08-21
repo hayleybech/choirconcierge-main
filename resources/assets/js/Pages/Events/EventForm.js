@@ -20,7 +20,7 @@ import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 import RichTextInput from "../../components/inputs/RichTextInput";
 import FormWrapper from "../../components/FormWrapper";
 
-const EventForm = ({ event, types }) => {
+const EventForm = ({ event, types, mode }) => {
     const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
     const { timezone_label } = usePage().props.tenant;
     const { data, setData, post, put, processing, errors, transform } = useForm({
@@ -43,7 +43,12 @@ const EventForm = ({ event, types }) => {
 
     function submit(e) {
         e.preventDefault();
-        event ? put(route('events.update', event)) : post(route('events.store'));
+        event
+            ? (event.is_repeating
+                ? put(route('events.recurring.update', [event, mode]))
+                : put(route('events.update', event))
+            )
+            : post(route('events.store'));
     }
 
     transform((data) => ({

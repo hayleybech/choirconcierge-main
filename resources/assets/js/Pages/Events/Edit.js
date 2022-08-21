@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import EventForm from "./EventForm";
 
-const Edit = ({ event, types }) => (
+const Edit = ({ event, types, mode }) => (
     <>
         <AppHead title={`Edit - ${event.title}`} />
         <PageHeader
@@ -18,7 +18,7 @@ const Edit = ({ event, types }) => (
             ]}
         />
 
-        <EventForm event={event} types={types} />
+        <EventForm event={event} types={types} mode={mode} />
     </>
 );
 
