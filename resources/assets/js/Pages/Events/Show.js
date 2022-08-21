@@ -29,7 +29,7 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
         <>
             <AppHead title={`${event.title} - Events`} />
             <PageHeader
-                title={<>{event.title}{event.is_repeating && <Icon icon="repeat" className="ml-1.5" />}</>}
+                title={<>{event.title}{event.is_repeating && <Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />}</>}
                 meta={[
                     <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>,
                     <DateTag label="Start" date={event.call_time} format="DATETIME_MED" />,

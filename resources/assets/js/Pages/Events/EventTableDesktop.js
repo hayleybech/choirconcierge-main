@@ -7,6 +7,7 @@ import DateTag from "../../components/DateTag";
 import EventType from "../../EventType";
 import collect from "collect.js";
 import TableHeadingSort from "../../components/TableHeadingSort";
+import Icon from "../../components/Icon";
 
 const EventTableDesktop = ({ events, sortFilterForm }) => {
     const headings = collect({
@@ -26,7 +27,10 @@ const EventTableDesktop = ({ events, sortFilterForm }) => {
                     <TableCell>
                         <div className="flex items-center">
                             <div className="ml-4">
-                                <Link href={route('events.show', event.id)} className="text-sm font-medium text-purple-800">{event.title}</Link>
+                                <Link href={route('events.show', event.id)} className="text-sm font-medium text-purple-800">
+                                    {event.title}
+                                    {event.is_repeating && <Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />}
+                                </Link>
                             </div>
                         </div>
                     </TableCell>
