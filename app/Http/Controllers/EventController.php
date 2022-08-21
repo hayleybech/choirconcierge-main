@@ -110,6 +110,10 @@ class EventController extends Controller
 
         $event->update($request->safe()->except('send_notification'));
 
+        if($request->input('is_repeating')) {
+            $event->createRepeats();
+        }
+
         if ($request->input('send_notification')) {
             Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventUpdated($event));
         }
