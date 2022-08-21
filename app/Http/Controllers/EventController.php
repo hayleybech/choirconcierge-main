@@ -93,11 +93,12 @@ class EventController extends Controller
         ]);
     }
 
-    public function edit(Event $event): Response
+    public function edit(Event $event, Request $request): Response
     {
         return Inertia::render('Events/Edit', [
             'event' => $event,
             'types' => EventType::all()->values(),
+            'mode' => $request->input('mode'),
         ]);
     }
 
