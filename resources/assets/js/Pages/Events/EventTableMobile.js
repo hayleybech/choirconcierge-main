@@ -13,7 +13,10 @@ const EventTableMobile = ({ events }) => (
                 <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
                     <div className="flex items-center justify-between">
                         <p className="flex items-center min-w-0 mr-1.5">
-                            <span className="text-sm font-medium text-purple-600 truncate">{event.title}</span>
+                            <span className="text-sm font-medium text-purple-600 truncate">
+                                {event.title}
+                                {event.is_repeating && <Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />}
+                            </span>
                         </p>
                         <div className="text-xs text-gray-500">
                             {DateTime.fromJSDate(new Date(event.call_time)) < DateTime.now()
