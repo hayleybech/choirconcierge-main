@@ -16,7 +16,8 @@ const SongSelect = ({ defaultValue, updateFn, multiple = false }) => {
                 loadOptions={load}
                 isMulti={multiple}
                 defaultValue={defaultValue}
-                onChange={option => multiple ? updateFn(option.map(item => item.value)) : updateFn(option.value)}
+                onChange={option => multiple ? updateFn(option.map(item => item?.value)) : updateFn(option?.value)}
+                isClearable
             />
         </div>
     );
