@@ -41,6 +41,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\VoicePartController;
 use App\Http\Middleware\EnsureUserIsMember;
+use App\Http\Middleware\NoRobots;
 use App\Http\Middleware\RedirectToPrimaryTenantDomain;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -64,6 +65,7 @@ Route::middleware([
     InitializeTenancyByDomainOrSubdomain::class,
     PreventAccessFromCentralDomains::class,
     RedirectToPrimaryTenantDomain::class,
+    NoRobots::class,
 ])->group(function () {
     Auth::routes(['register' => false]);
 
