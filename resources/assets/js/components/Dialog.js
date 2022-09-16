@@ -4,7 +4,7 @@ import { Dialog as BaseDialog, Transition } from '@headlessui/react';
 import Button from "./inputs/Button";
 import Icon from "./Icon";
 
-const Dialog = ({ title, children, okLabel, okUrl, onOk, okVariant, okMethod, data, isOpen, setIsOpen}) => (
+const Dialog = ({ title, children, okLabel, okUrl, onOk, okVariant, okMethod, data, isOpen, setIsOpen, processing }) => (
     <Transition.Root show={isOpen} as={Fragment}>
         <BaseDialog as="div" className="fixed z-20 inset-0 overflow-y-auto" onClose={setIsOpen}>
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -58,8 +58,20 @@ const Dialog = ({ title, children, okLabel, okUrl, onOk, okVariant, okMethod, da
                             </div>
                         </div>
                         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                            <Button variant={okVariant} size="sm" href={okUrl} onClick={(e) => !!onOk ? onOk(e) : setIsOpen(false)} method={okMethod} data={data} as="button" className="sm:ml-3 w-full">{okLabel}</Button>
-                            <Button size="sm" onClick={() => setIsOpen(false)} className="w-full mt-3 sm:mt-0">Cancel</Button>
+                            <Button
+                                variant={okVariant}
+                                size="sm"
+                                href={okUrl}
+                                onClick={(e) => !!onOk ? onOk(e) : setIsOpen(false)}
+                                method={okMethod}
+                                data={data}
+                                as="button"
+                                className="sm:ml-3 w-full"
+                                disabled={processing}
+                            >
+                                {okLabel}
+                            </Button>
+                            <Button size="sm" onClick={() => setIsOpen(false)} disabled={processing} className="w-full mt-3 sm:mt-0">Cancel</Button>
                         </div>
                     </div>
                 </Transition.Child>

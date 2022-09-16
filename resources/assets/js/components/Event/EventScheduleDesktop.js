@@ -5,17 +5,20 @@ import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 import {Link} from "@inertiajs/inertia-react";
 import collect from "collect.js";
+import EditScheduleItemDialog from "../EditScheduleItemDialog";
 
 const EventScheduleDesktop = ({ event }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [deletingActivityId, setDeletingActivityId] = useState(0);
 
+    const [editDialogIsOpen, setEditDialogIsOpen] = useState(false);
+    const [editingActivity, setEditingActivity] = useState(0);
+
     const headings = collect({
         title: 'Title',
         duration: 'Duration',
-        move: 'Move',
-        delete: 'Delete',
-    }).filter((item, key) => (key !== 'move' && key !== 'delete') || event.can.update_event);
+        actions: 'Actions',
+    }).filter((item, key) => key !== 'actions' || event.can.update_event);
 
     return (
         <>
@@ -47,28 +50,33 @@ const EventScheduleDesktop = ({ event }) => {
                                 >
                                     <Icon icon="arrow-up"/>
                                 </Button>
-                                {index < event.activities.length - 1 &&
                                 <Button
                                     variant="clear"
                                     size="sm"
                                     href={route('events.activities.move', [event, activity])}
                                     method="post"
                                     data={{direction: 'down'}}
+                                    className={index < event.activities.length - 1 ? '' : 'invisible'}
                                 >
                                     <Icon icon="arrow-down"/>
                                 </Button>
-                                }
-                            </TableCell>
-                            )}
-                            {event.can.update_event && (
-                            <TableCell>
-                                    <Button
-                                        variant="danger-clear"
-                                        onClick={() => {setDeletingActivityId(activity.id);
-                                            setDeleteDialogIsOpen(true)}}
-                                    >
-                                        <Icon icon="trash" />
-                                    </Button>
+
+                                <Button
+                                    variant="clear"
+                                    size="sm"
+                                    onClick={() => {setEditingActivity(activity);
+                                        setEditDialogIsOpen(true)}}
+                                >
+                                    <Icon icon="edit" />
+                                </Button>
+                                <Button
+                                    variant="danger-clear"
+                                    size="sm"
+                                    onClick={() => {setDeletingActivityId(activity.id);
+                                        setDeleteDialogIsOpen(true)}}
+                                >
+                                    <Icon icon="trash" />
+                                </Button>
                             </TableCell>
                             )}
                         </tr>
@@ -84,10 +92,7 @@ const EventScheduleDesktop = ({ event }) => {
                                 {event.activities.reduce((prevValue, item) => prevValue + item.duration, 0)} min
                             </div>
                         </TableCell>
-                        {event.can.update_event && (<>
-                            <TableCell />
-                            <TableCell />
-                        </>)}
+                        {event.can.update_event && <TableCell />}
                     </tr>
                 </>}
             />
@@ -101,6 +106,8 @@ const EventScheduleDesktop = ({ event }) => {
                 It will be permanently removed from our servers forever.
                 This action cannot be undone.
             </DeleteDialog>
+
+            <EditScheduleItemDialog isOpen={editDialogIsOpen} setIsOpen={setEditDialogIsOpen} event={event} activity={editingActivity} />
         </>
     );
 }
