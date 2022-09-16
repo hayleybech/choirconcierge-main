@@ -15,7 +15,7 @@ class UpdateFollowingEventsStrategy
     public function handle(Event $event, $attributes): bool
     {
         if($event->is_repeat_parent) {
-            throw new \BadMethodCallException('Cannot do "following" update mode on a repeating event parent (too inefficient). Try "all" mode instead.');
+            return (new UpdateAllEventsStrategy())->handle($event, $attributes);
         }
 
         if($event->in_past) {

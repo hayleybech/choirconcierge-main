@@ -40,6 +40,8 @@ use App\Http\Controllers\UpdateSingerCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\VoicePartController;
+use App\Http\Middleware\EnsureUserIsMember;
+use App\Http\Middleware\NoRobots;
 use App\Http\Middleware\RedirectToPrimaryTenantDomain;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -63,108 +65,9 @@ Route::middleware([
     InitializeTenancyByDomainOrSubdomain::class,
     PreventAccessFromCentralDomains::class,
     RedirectToPrimaryTenantDomain::class,
+    NoRobots::class,
 ])->group(function () {
     Auth::routes(['register' => false]);
-
-    // Dashboard
-    Route::get('/', [DashController::class, 'index'])->name('dash');
-
-    // Account Settings
-    Route::get('account/edit', [AccountController::class, 'edit'])->name('accounts.edit');
-    Route::post('account', [AccountController::class, 'update'])->name('accounts.update');
-
-    // Singers module
-    Route::resource('singers', SingerController::class)->middleware('auth');
-    Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update'])->middleware('auth');
-    Route::put('singers/{singer}/fees', UpdateSingerFeeController::class)->name('singers.fees.update');
-    Route::post('singers/import', ImportSingerController::class)->name('singers.import');
-    Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
-    Route::get('singers/{singer}/tasks/{task}/complete', CompleteSingerTaskController::class)->name('task.complete');
-
-    // Songs module
-    Route::resource('songs', SongController::class);
-    Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'destroy'])->middleware('employee');
-    Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
-    Route::resource('songs.singers', LearningStatusController::class)->only(['index', 'update']);
-
-    // Events module
-    Route::resource('events', EventController::class);
-    Route::resource('events.rsvps', RsvpController::class)->only(['store', 'update', 'destroy']);
-    Route::resource('events.attendances', AttendanceController::class)->only(['index']);
-    Route::resource('events.activities', EventActivityController::class)->only(['store', 'update', 'destroy']);
-    Route::post('events/{event}/activities/{activity}/move', MoveActivityController::class)->name('events.activities.move');
-    Route::get('events/calendar/month', EventCalendarController::class)->name('events.calendar.month');
-	Route::controller(RecurringEventController::class)
-		->prefix('events/{event}/recurring/')
-		->name('events.recurring.')
-		->group(function () {
-		    Route::get('edit/{mode}', 'edit')->name('edit');
-		    Route::put('{mode}', 'update')->name('update');
-		    Route::get('delete/{mode}', 'destroy')->name('delete');
-		});
-    Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
-    Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
-    Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
-
-    // Documents module
-    Route::resource('folders', FolderController::class)->except(['show', 'edit'])->middleware('auth');
-    Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('auth');
-
-    // Risers module
-    Route::resource('stacks', RiserStackController::class);
-
-    // Users/Team module
-    Route::prefix('users')->middleware(['auth'])->group(static function () {
-
-	    Route::controller(UserController::class)->group(function () {
-		    // Index
-		    Route::get('/', 'index')->name('users.index');
-
-		    // AJAX Search
-		    Route::get('/find', 'findUsers')->name('findUsers');
-		    Route::get('/roles/find', 'findRoles')->name('findRoles');
-		    Route::get('/voice-parts/find', 'findVoiceParts')->name('findVoiceParts');
-		    Route::get('/singer-categories/find', 'findSingerCategories')->name('findSingerCategories');
-
-		    // Attach/Detach role from a user
-		    Route::get('{user}/roles/{role}/detach', 'detachRole')->name('users.detachrole');
-		    Route::post('{user}/role', 'addRoles')->name('users.addroles');
-		});
-
-
-	    // User Impersonation
-        Route::get('{user}/impersonate', [ImpersonateUserController::class, 'start'])->name('users.impersonate');
-        Route::get('/impersonation/stop', [ImpersonateUserController::class, 'stop'])->name('impersonation.stop');
-    });
-
-    // Search APIs
-    Route::prefix('find')->name('find.')->middleware(['auth'])->group(function () {
-        Route::get('/singers', FindSingerController::class)->name('singers');
-        Route::get('/songs/{keyword}', FindSongController::class)->name('songs');
-    });
-
-    // Global Search APIs
-    Route::prefix('find')->middleware(['auth'])->group(function () {
-        Route::get('/users', GlobalFindUserController::class)->name('global-find.users');
-    });
-
-    // Mailing Lists (User Groups) module
-    Route::get('/groups/broadcasts/create', [BroadcastController::class, 'create'])->name('groups.broadcasts.create');
-    Route::post('/groups/broadcasts', [BroadcastController::class, 'store'])->name('groups.broadcasts.store');
-    Route::resource('groups', UserGroupController::class)->middleware(['auth']);
-
-    /** Mailbox **/
-    Route::get('/mailbox/process', [MailboxController::class, 'process']);
-
-    // Tasks module
-    Route::resource('tasks', TaskController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->middleware(['auth']);
-    Route::resource('tasks.notifications', TaskNotificationTemplateController::class)->except('index');
-
-    // Voice Parts module
-    Route::resource('voice-parts', VoicePartController::class)->except(['show']);
-
-    // Roles module
-    Route::resource('roles', RoleController::class);
 
     // Public calendar feed
     Route::get('/events-ical', [ICalController::class, 'index'])->name('events.feed');
@@ -173,7 +76,110 @@ Route::middleware([
     Route::get('/switch-choir/{tenant}', [SwitchTenantController::class, 'start'])->name('tenants.switch.start');
     Route::get('/switch-choir/login/{token}', [SwitchTenantController::class, 'loginWithToken'])->name('tenants.switch.login');
 
-    // Choir Settings
-    Route::get('/choir-settings', [TenantController::class, 'edit'])->name('choir-settings.edit');
-    Route::post('/choir-settings', [TenantController::class, 'update'])->name('choir-settings.update');
+    /** Mailbox **/
+    Route::get('/mailbox/process', [MailboxController::class, 'process']);
+
+    Route::middleware(EnsureUserIsMember::class)->group(function() {
+
+        // Dashboard
+        Route::get('/', [DashController::class, 'index'])->name('dash');
+
+        // Account Settings
+        Route::get('account/edit', [AccountController::class, 'edit'])->name('accounts.edit');
+        Route::post('account', [AccountController::class, 'update'])->name('accounts.update');
+
+        // Singers module
+        Route::resource('singers', SingerController::class)->middleware('auth');
+        Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update'])->middleware('auth');
+        Route::put('singers/{singer}/fees', UpdateSingerFeeController::class)->name('singers.fees.update');
+        Route::post('singers/import', ImportSingerController::class)->name('singers.import');
+        Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
+        Route::get('singers/{singer}/tasks/{task}/complete', CompleteSingerTaskController::class)->name('task.complete');
+
+        // Songs module
+        Route::resource('songs', SongController::class);
+        Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'destroy'])->middleware('employee');
+        Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
+        Route::resource('songs.singers', LearningStatusController::class)->only(['index', 'update']);
+
+        // Events module
+        Route::resource('events', EventController::class);
+        Route::resource('events.rsvps', RsvpController::class)->only(['store', 'update', 'destroy']);
+        Route::resource('events.attendances', AttendanceController::class)->only(['index']);
+        Route::resource('events.activities', EventActivityController::class)->only(['store', 'update', 'destroy']);
+        Route::post('events/{event}/activities/{activity}/move', MoveActivityController::class)->name('events.activities.move');
+        Route::get('events/calendar/month', EventCalendarController::class)->name('events.calendar.month');
+        Route::controller(RecurringEventController::class)
+            ->prefix('events/{event}/recurring/')
+            ->name('events.recurring.')
+            ->group(function () {
+                Route::get('edit/{mode}', 'edit')->name('edit');
+                Route::put('{mode}', 'update')->name('update');
+                Route::get('delete/{mode}', 'destroy')->name('delete');
+            });
+        Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
+        Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
+        Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
+
+        // Documents module
+        Route::resource('folders', FolderController::class)->except(['show', 'edit'])->middleware('auth');
+        Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('auth');
+
+        // Risers module
+        Route::resource('stacks', RiserStackController::class);
+
+        // Users/Team module
+        Route::prefix('users')->middleware(['auth'])->group(static function () {
+
+            Route::controller(UserController::class)->group(function () {
+                // Index
+                Route::get('/', 'index')->name('users.index');
+
+                // AJAX Search
+                Route::get('/find', 'findUsers')->name('findUsers');
+                Route::get('/roles/find', 'findRoles')->name('findRoles');
+                Route::get('/voice-parts/find', 'findVoiceParts')->name('findVoiceParts');
+                Route::get('/singer-categories/find', 'findSingerCategories')->name('findSingerCategories');
+
+                // Attach/Detach role from a user
+                Route::get('{user}/roles/{role}/detach', 'detachRole')->name('users.detachrole');
+                Route::post('{user}/role', 'addRoles')->name('users.addroles');
+            });
+
+
+            // User Impersonation
+            Route::get('{user}/impersonate', [ImpersonateUserController::class, 'start'])->name('users.impersonate');
+            Route::get('/impersonation/stop', [ImpersonateUserController::class, 'stop'])->name('impersonation.stop');
+        });
+
+        // Search APIs
+        Route::prefix('find')->name('find.')->middleware(['auth'])->group(function () {
+            Route::get('/singers', FindSingerController::class)->name('singers');
+            Route::get('/songs/{keyword}', FindSongController::class)->name('songs');
+        });
+
+        // Global Search APIs
+        Route::prefix('find')->middleware(['auth'])->group(function () {
+            Route::get('/users', GlobalFindUserController::class)->name('global-find.users');
+        });
+
+        // Mailing Lists (User Groups) module
+        Route::get('/groups/broadcasts/create', [BroadcastController::class, 'create'])->name('groups.broadcasts.create');
+        Route::post('/groups/broadcasts', [BroadcastController::class, 'store'])->name('groups.broadcasts.store');
+        Route::resource('groups', UserGroupController::class)->middleware(['auth']);
+
+        // Tasks module
+        Route::resource('tasks', TaskController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->middleware(['auth']);
+        Route::resource('tasks.notifications', TaskNotificationTemplateController::class)->except('index');
+
+        // Voice Parts module
+        Route::resource('voice-parts', VoicePartController::class)->except(['show']);
+
+        // Roles module
+        Route::resource('roles', RoleController::class);
+
+        // Choir Settings
+        Route::get('/choir-settings', [TenantController::class, 'edit'])->name('choir-settings.edit');
+        Route::post('/choir-settings', [TenantController::class, 'update'])->name('choir-settings.update');
+    });
 });

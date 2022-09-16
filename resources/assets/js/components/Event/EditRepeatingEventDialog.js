@@ -18,8 +18,16 @@ const EditRepeatingEventDialog = ({ isOpen, setIsOpen, event }) => {
             name: 'Following events',
             icon: 'calendar-week',
             description: <>
-                This and all the following events will be changed.<br />
-                <strong>Any changes to future events will be lost, including RSVPs.</strong>
+                <p className="mb-2">
+                    This and all the following events will be changed.<br />
+                    <strong>Any changes to future events will be lost, including RSVPs.</strong>
+                </p>
+                {!event.in_future && (
+                    <p className="mb-2 text-red-500">
+                        This option affects events in the past. To protect attendance data, you cannot bulk edit past events. Please edit individually
+                        instead.
+                    </p>
+                )}
             </>,
             disabled: !event.in_future,
         },
@@ -28,15 +36,15 @@ const EditRepeatingEventDialog = ({ isOpen, setIsOpen, event }) => {
             name: 'All events',
             icon: 'calendar-alt',
             description: <>
-                <p>
+                <p className="mb-2">
                     All events in the series will be changed.<br/>
                     <strong>Any changes to other events will be lost, including RSVPs and attendance records.</strong>
                 </p>
                 {(! event.id === event.repeat_parent_id && ! event.parent_in_past) && (
-                    <p className="text-red-500">You will be redirected to the first event in the series to make these changes.</p>
+                    <p className="mb-2 text-orange-500">You will be redirected to the first event in the series to make these changes.</p>
                 )}
                 {event.parent_in_past && (
-                    <p className="text-red-500">
+                    <p className="mb-2 text-red-500">
                         This option affects events in the past. To protect attendance data, you cannot bulk edit past events. Please edit individually
                         instead.
                     </p>
