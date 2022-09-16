@@ -91,7 +91,7 @@ Route::middleware([
     Route::resource('events', EventController::class);
     Route::resource('events.rsvps', RsvpController::class)->only(['store', 'update', 'destroy']);
     Route::resource('events.attendances', AttendanceController::class)->only(['index']);
-    Route::resource('events.activities', EventActivityController::class)->only(['store', 'destroy']);
+    Route::resource('events.activities', EventActivityController::class)->only(['store', 'update', 'destroy']);
     Route::post('events/{event}/activities/{activity}/move', MoveActivityController::class)->name('events.activities.move');
     Route::get('events/calendar/month', EventCalendarController::class)->name('events.calendar.month');
 	Route::controller(RecurringEventController::class)
