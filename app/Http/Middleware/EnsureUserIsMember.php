@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class EnsureUserIsMember
 {
@@ -21,6 +22,14 @@ class EnsureUserIsMember
         }
 
         if(! auth()?->user()?->singer) {
+            abort(403);
+        }
+
+        if(in_array(
+            auth()?->user()?->singer?->category->name, [
+            'Archived Members',
+            'Archived Prospects',
+        ])) {
             abort(403);
         }
 
