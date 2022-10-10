@@ -4,7 +4,7 @@ import Icon from "../components/Icon";
 import classNames from "../classNames";
 import Button from "../components/inputs/Button";
 
-const Show = ({ status, choirAdmins }) => {
+const Show = ({ status, choirAdmins, isMember }) => {
     const title = {
         403: 'Forbidden',
         404: 'Page Not Found',
@@ -47,7 +47,7 @@ const Show = ({ status, choirAdmins }) => {
     }[status];
 
     const extraDetails = {
-        403: <ChoirAdmins admins={choirAdmins} />,
+        403: isMember ? <ChoirAdmins admins={choirAdmins} /> : null,
         404: <PopularPages />,
         500: null,
         503: null,

@@ -63,6 +63,7 @@ class Handler extends ExceptionHandler
             return Inertia::render('Error', [
                 'status' => $response->status(),
                 'choirAdmins' => Singer::role('Admin')->limit(5)->with('user')->get()->values(),
+                'isMember' => auth()?->user()?->singer,
             ])
                 ->toResponse($request)
                 ->setStatusCode($response->status());
