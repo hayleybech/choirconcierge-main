@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import Button from "./inputs/Button";
-import {start, Synth} from "tone";
+import {start} from "tone";
 import Icon from "./Icon";
 
-const PitchButton = ({ note, octave = 4, withIcon = true, variant="primary", size = "md", className }) => {
-    const [synth] = useState(new Synth().toDestination());
+const PitchButton = ({ synth, note, octave = 4, withIcon = true, variant="primary", size = "md", className }) => {
     const [pitch] = useState(note + octave.toString());
 
     function play(e) {

@@ -21,8 +21,10 @@ import ButtonLink from "../../components/inputs/ButtonLink";
 import CollapsePanel from "../../components/CollapsePanel";
 import CollapseGroup from "../../components/CollapseGroup";
 import EmptyState from "../../components/EmptyState";
+import {Synth} from "tone";
 
 const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
+    const [synth] = useState(() => new Synth().toDestination());
     const player = useContext(PlayerContext);
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
@@ -73,6 +75,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                     isFullscreen={player.showFullscreen}
                     openFullscreen={openFullscreen}
                     closeFullscreen={closeFullscreenMobile}
+                    synth={synth}
                     pitch={song.pitch.split('/')[0]}
                 />
             ) : <>
@@ -97,7 +100,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                         { name: song.title, url: route('songs.show', song) },
                     ]}
                     actions={[
-                        <PitchButton note={song.pitch.split('/')[0]} />,
+                        <PitchButton synth={synth} note={song.pitch.split('/')[0]} />,
                         { label: 'Edit', icon: 'edit', url: route('songs.edit', song), can: 'update_song' },
                         { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_song' },
                     ].filter(action => action.can ? song.can[action.can] : true)}
@@ -145,6 +148,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                                     isFullscreen={player.showFullscreen}
                                     openFullscreen={openFullscreen}
                                     closeFullscreen={closeFullscreen}
+                                    synth={synth}
                                     pitch={song.pitch.split('/')[0]}
                                 />
                                 ) : (
