@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from "@inertiajs/inertia-react";
 import SongStatusTag from "../../components/SongStatusTag";
 import PitchButton from "../../components/PitchButton";
@@ -8,8 +8,10 @@ import DateTag from "../../components/DateTag";
 import SongStatus from "../../SongStatus";
 import collect from "collect.js";
 import TableHeadingSort from "../../components/TableHeadingSort";
+import {Synth} from "tone";
 
 const SongTableDesktop = ({ songs, sortFilterForm }) => {
+    const [synth] = useState(() => new Synth().toDestination());
     const headings = collect({
         title: <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>,
         status: <TableHeadingSort form={sortFilterForm} sort="status-title">Status</TableHeadingSort>,
@@ -25,7 +27,7 @@ const SongTableDesktop = ({ songs, sortFilterForm }) => {
                     <TableCell>
                         <div className="flex items-center">
                             <div>
-                                <PitchButton note={song.pitch.split('/')[0]} size="sm" />
+                                <PitchButton synth={synth} note={song.pitch.split('/')[0]} size="sm" />
                             </div>
                             <div className="ml-4">
                                 <Link href={route('songs.show', song.id)} className="text-sm font-medium text-purple-800">{song.title}</Link>

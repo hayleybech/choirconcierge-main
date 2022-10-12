@@ -6,7 +6,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import {TransformComponent, TransformWrapper} from "react-zoom-pan-pinch";
 import PitchButton from "../PitchButton";
 
-const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pitch }) => {
+const Pdf = ({ synth, filename, openFullscreen, closeFullscreen, isFullscreen, pitch }) => {
     const CONTAINER_PADDING = 0;
 
     const [allPageNumbers, setAllPageNumbers] = useState([]);
@@ -57,7 +57,7 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pitch })
                         </div>
 
                         <div className="flex gap-x-1">
-                            <PitchButton note={pitch} size="sm" className="h-7" />
+                            <PitchButton synth={synth} note={pitch} size="sm" className="h-7" />
                             <Button onClick={() => setShowPitchBar((value) => !value)} size="sm" className="h-7">
                                 <Icon icon="piano-keyboard" />
                             </Button>
@@ -66,7 +66,7 @@ const Pdf = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pitch })
 
                     {showPitchBar && (
                     <div className="flex flex-wrap p-1.5 gap-x-1 gap-y-1.5 border-b border-gray-300">
-                        <PitchScale root={pitch} />
+                        <PitchScale synth={synth} root={pitch} />
                     </div>
                     )}
 
@@ -107,10 +107,10 @@ export default Pdf;
 const pitches = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const PitchScale = ({ root }) => (
   <>
-      <PitchButton note={root} size="sm" className="h-7" />
+      <PitchButton synth={synth} note={root} size="sm" className="h-7" />
 
       {rotate(pitches, pitches.indexOf(root)).slice(1).map((pitch) => (
-          <PitchButton note={pitch} withIcon={false} variant="secondary" size="sm" className="h-7" key={pitch} />
+          <PitchButton synth={synth} note={pitch} withIcon={false} variant="secondary" size="sm" className="h-7" key={pitch} />
       ))}
   </>
 );
