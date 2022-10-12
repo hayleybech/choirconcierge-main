@@ -105,7 +105,7 @@ const Pdf = ({ synth, filename, openFullscreen, closeFullscreen, isFullscreen, p
 export default Pdf;
 
 const pitches = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-const PitchScale = ({ root }) => (
+const PitchScale = ({ root, synth }) => (
   <>
       <PitchButton synth={synth} note={root} size="sm" className="h-7" />
 
