@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Button from "./inputs/Button";
 import {start} from "tone";
 import Icon from "./Icon";
@@ -9,6 +9,8 @@ const PitchButton = ({ synth, note, octave = 4, withIcon = true, variant="primar
     function play(e) {
         e.stopPropagation();
         e.preventDefault();
+        document.addEventListener('mouseup', stop);
+        document.addEventListener('touchend', stop);
 
         start();
         synth.envelope.release = 0.3;
@@ -20,18 +22,11 @@ const PitchButton = ({ synth, note, octave = 4, withIcon = true, variant="primar
     function stop(e) {
         e.stopPropagation();
         e.preventDefault();
+        document.removeEventListener('mouseup', stop);
+        document.removeEventListener('touchend', stop);
 
         synth.triggerRelease();
     }
-
-    useEffect(() => {
-        document.addEventListener('mouseup', stop);
-        document.addEventListener('touchend', stop);
-        return () => {
-            document.removeEventListener('mouseup', stop);
-            document.removeEventListener('touchend', stop);
-        }
-    }, []);
 
     return (
         <Button onMouseDown={play} onMouseUp={stop} onTouchStart={play} onTouchEnd={stop} variant={variant} size={size} className={className}>
