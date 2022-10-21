@@ -36,10 +36,18 @@ class CloneMessage
             ],
         ];
 
+        // Remove the group as its own CC by default
+        $message->cc = array_filter($message->cc, fn ($cc) => $cc['address'] !== $group->email);
+
+        // Re-add group as its own CC, to allow reply-all (if not distribution)
+        // This 2-step process is how I chose to avoid the group appearing multiple times in the CC.
+        if($group->list_type !== 'distribution') {
+            $message->cc($group->email);
+        }
+
         // Clear 'to', then put the group member as the recipient
         $message->to = [];
         Mail::to($user)
-            ->cc($group->email) // Required for recipients to reply-all
             ->send($message);
     }
 }
