@@ -508,6 +508,22 @@ class IncomingMessageTest extends TestCase
         self::assertCount(0, $groups_found);
     }
 
+    /** @test */
+    public function getGroupByEmail_skips_special_emails(): void
+    {
+        $message = (new IncomingMessage())
+            ->to('undisclosed-recipients:;')
+            ->cc('test-group@test-tenant-1.'.central_domain())
+            ->from('test-group@test-tenant-1.'.central_domain())
+            ->subject('Just a test');
+
+        // Act
+        $groups_found = $message->getMatchingGroups()->flatten(1);
+
+        // Assert
+        self::assertCount(0, $groups_found);
+    }
+
     /**
      * @param int $numTenants
      * @return Collection<Tenant>

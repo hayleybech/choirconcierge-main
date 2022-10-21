@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Models\User;
 use App\Models\UserGroup;
+use Exception;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
@@ -63,9 +64,18 @@ class IncomingMessage extends Mailable
 
     private function getGroupByEmail(string $email): ?UserGroup
     {
-        return UserGroup::withoutTenancy()
+        if(!$email || !str_contains($email, '@')) {
+            return null;
+        }
+
+        try {
+            return UserGroup::withoutTenancy()
             ->byEmail($email)
             ->first();
+        }
+        catch (Exception) {
+            return null;
+        }
     }
 
     private function authoriseSenderForGroup(UserGroup $group): bool
