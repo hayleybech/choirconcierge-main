@@ -9,10 +9,6 @@ const PdfToolbar = ({ isFullscreen, closeFullscreen, openFullscreen, zoomIn, zoo
 
     return (<>
         <div className="flex flex-wrap p-1.5 gap-x-2.5 border-b border-gray-300">
-            <Button variant="secondary" onClick={isFullscreen ? closeFullscreen : openFullscreen} size="sm" className="h-7">
-                <Icon icon={isFullscreen ? 'compress' : 'expand'} />
-            </Button>
-
             <div className="flex gap-x-1">
                 <Button onClick={() => zoomIn()} size="sm" className="h-7">
                     <Icon icon="search-plus" />
@@ -28,6 +24,10 @@ const PdfToolbar = ({ isFullscreen, closeFullscreen, openFullscreen, zoomIn, zoo
                     <Icon icon="piano-keyboard" />
                 </Button>
             </div>
+
+            <Button variant="secondary" onClick={isFullscreen ? closeFullscreen : openFullscreen} size="sm" className="h-7 ml-auto">
+                <Icon icon={isFullscreen ? 'times' : 'expand'} />
+            </Button>
         </div>
 
         {showPitchBar && (
