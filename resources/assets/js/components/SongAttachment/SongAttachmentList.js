@@ -17,6 +17,16 @@ const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurren
         player.play(attachment);
     };
 
+    const openAttachment = (attachment) => {
+        if(isPlayable(attachment)) {
+            play(attachment);
+        }
+
+        if(isPdf(attachment)) {
+            setCurrentPdf(attachment);
+        }
+    }
+
     const isPlayable = (attachment) => ['Learning Tracks', 'Full Mix (Demo)'].includes(attachment.category.title);
     const isCurrentTrack = (attachment) => player.src === attachment.download_url;
 
@@ -33,23 +43,21 @@ const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurren
                         </div>
                         <ul role="list" className="relative z-0 divide-y divide-gray-200">
                             {Object.values(attachment_categories[category_title]).map(attachment => (
-                                <li key={attachment.id} className="bg-white">
-                                    <div className="px-6 py-5 flex items-center space-x-3 hover:bg-gray-50">
-                                        <div className="shrink-0">
-                                            {isPlayable(attachment) && (
-                                                <Button variant="clear" onClick={() => play(attachment)} size="sm" disabled={isCurrentTrack(attachment)}>
-                                                    <Icon icon={isCurrentTrack(attachment) ? 'waveform' : 'play'} />
-                                                </Button>
-                                            )}
-                                            {isPdf(attachment) && (
-                                                <Button variant="clear" onClick={() => setCurrentPdf(attachment)} size="sm" disabled={isCurrentPdf(attachment)}>
-                                                    <Icon icon={isCurrentPdf(attachment) ? 'book-open' : 'book'} />
-                                                </Button>
-                                            )}
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-gray-900 break-all">{attachment.title !== '' ? attachment.title : attachment.filepath}</p>
-                                        </div>
+                                <li key={attachment.id} className="bg-white hover:bg-purple-100">
+                                    <div className="flex items-center space-x-3 pr-6">
+                                        <a href="#" onClick={() => openAttachment(attachment)} className="flex-1 min-w-0 flex py-5 px-6 gap-x-3 items-center group">
+                                            <div className="shrink-0">
+                                                {isPlayable(attachment) && (
+                                                    <Icon icon={isCurrentTrack(attachment) ? 'waveform' : 'play'} className="text-sm text-gray-700 group-hover:text-purple-600" />
+                                                )}
+                                                {isPdf(attachment) && (
+                                                    <Icon icon={isCurrentPdf(attachment) ? 'book-open' : 'book'} className="text-sm text-gray-700 group-hover:text-purple-600" />
+                                                )}
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-medium text-gray-900 group-hover:text-purple-600 break-all">{attachment.title !== '' ? attachment.title : attachment.filepath}</p>
+                                            </div>
+                                        </a>
                                         { song.can['update_song'] &&
                                             <Button
                                                 variant="danger-clear"

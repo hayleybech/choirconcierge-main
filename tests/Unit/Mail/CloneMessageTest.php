@@ -52,3 +52,48 @@ it('sends one copy per group recipient', function () {
         return $mail->hasTo($users);
     });
 });
+
+it('removes the group as its own cc if the group is a distribution', function () {
+    Mail::fake();
+
+    $users = collect([]);
+
+    $users->push(
+        User::factory()->create([
+            'email' => 'permitted@example.com',
+        ]),
+        User::factory()->create([
+            'email' => 'recipient_1@example.com',
+        ]),
+        User::factory()->create([
+            'email' => 'recipient_2@example.com',
+        ]),
+    );
+
+    createTestTenants()[0]
+        ->run(function () use ($users) {
+            $group_expected = UserGroup::create([
+                'title' => 'Active Members',
+                'slug' => 'members',
+                'list_type' => 'distribution',
+            ]);
+
+            $group_expected->recipient_users()->attach($users->pluck('id'));
+            $group_expected->sender_users()->attach($users->pluck('id'));
+        });
+
+    $message = (new IncomingMessage())
+        ->to('members@test-tenant-1.'.central_domain())
+        ->from('permitted@example.com')
+        ->cc('members@test-tenant-1.'.central_domain())
+        ->subject('Just a test');
+
+    // Act
+    CloneMessage::forGroup($message, UserGroup::first());
+
+    // Assert
+    Mail::assertSent(IncomingMessage::class, 3);
+    Mail::assertNotSent(IncomingMessage::class, static function ($mail) use ($users) {
+        return $mail->hasCc('members@test-tenant-1.'.central_domain());
+    });
+});
