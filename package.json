@@ -47,6 +47,7 @@
         "@tiptap/starter-kit": "^2.0.0-beta.189",
         "@types/snapsvg": "^0.5.0",
         "collect.js": "^4.29.3",
+        "detect-it": "^4.0.1",
         "howler": "^2.2.1",
         "luxon": "^2.0.2",
         "moment": "^2.29.1",
