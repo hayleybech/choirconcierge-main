@@ -4,9 +4,10 @@ import FormSection from "../FormSection";
 import Label from "../inputs/Label";
 import FileInput from "../inputs/FileInput";
 import Error from "../inputs/Error";
-import Select from "../inputs/Select";
 import Button from "../inputs/Button";
 import Icon from "../Icon";
+import RadioGroup from "../inputs/RadioGroup";
+import AttachmentType from "../../AttachmentType";
 
 const SongAttachmentForm = ({ categories, song }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -22,7 +23,23 @@ const SongAttachmentForm = ({ categories, song }) => {
     return (
         <div className="md:max-w-5xl md:mx-auto px-4 sm:px-6 lg:px-8 pb-8">
             <FormSection title="Add Attachment">
-                <div className="sm:col-span-3">
+                <div className="sm:col-span-6">
+                    <RadioGroup
+                        label={<Label label="Attachment Type" />}
+                        options={categories.map(category => ({
+                            id: category.id,
+                            name: category.title,
+                            textColour: AttachmentType.types[AttachmentType.slugify(category.title)].textColour,
+                            colour: AttachmentType.types[AttachmentType.slugify(category.title)].textColour,
+                            icon: AttachmentType.types[AttachmentType.slugify(category.title)].icon,
+                        }))}
+                        vertical
+                        selected={data.status}
+                        setSelected={value => setData('status', value)}
+                    />
+                    {errors.category && <Error>{errors.category}</Error>}
+                </div>
+                <div className="sm:col-span-6">
                     <Label label="File Upload" forInput="attachment_uploads" />
                     <FileInput
                         name="attachment_uploads"
@@ -33,16 +50,6 @@ const SongAttachmentForm = ({ categories, song }) => {
                         vertical
                     />
                     {errors.attachment_uploads && <Error>{errors.attachment_uploads}</Error>}
-                </div>
-                <div className="sm:col-span-3">
-                    <Label label="Category" forInput="category" />
-                    <Select
-                        name="category"
-                        options={categories.map(category => ({ key: category.id, label: category.title }) )}
-                        value={data.category}
-                        updateFn={value => setData('category', value)} hasErrors={ !! errors['category'] }
-                    />
-                    {errors.category && <Error>{errors.category}</Error>}
                 </div>
                 <div className="">
                     <Button onClick={submit} variant="primary" size="sm" disabled={processing}><Icon icon="check" />Save</Button>
