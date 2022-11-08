@@ -83,4 +83,25 @@ class ClearDuplicateEmailsTest extends TestCase
 
         $mockMessage->shouldHaveReceived('delete');
     }
+
+    /** @test */
+    public function it_does_not_delete_emails_where_the_cc_is_empty(): void
+    {
+        $mockMessage = $this->mock(Message::class, function (MockInterface $mock) {
+            $mock->shouldReceive('getTo')->andReturn(new Attribute('to', [
+                (object)['mail' => 'group@example.com', 'personal' => 'Group'],
+            ]));
+            $mock->shouldReceive('getCc')->andReturn(null);
+
+            $mock->shouldNotReceive('delete');
+        });
+
+        $this->mock(IncomingMailbox::class, function (MockInterface $mock) use ($mockMessage) {
+            $mock->shouldReceive('getMessages')->andReturn(collect([$mockMessage]));
+        });
+
+        $this->app->make(ClearDuplicateEmails::class)->handle();
+
+        $mockMessage->shouldNotHaveReceived('delete');
+    }
 }

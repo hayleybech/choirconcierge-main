@@ -32,7 +32,7 @@ class ClearDuplicateEmails implements ShouldQueue
 
     private function messageHasMatchingCcAndTo(Message $message): bool
     {
-        return collect($message->getCc()->all())
+        return collect($message->getCc()?->all())
             ->map(fn (Object $recipientCc) => $recipientCc->mail)
             ->intersect(collect($message->getTo()->all())
                 ->map(fn (Object $recipientTo) => $recipientTo->mail))
