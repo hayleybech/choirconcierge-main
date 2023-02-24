@@ -9,10 +9,10 @@ import Icon from "../Icon";
 import RadioGroup from "../inputs/RadioGroup";
 import AttachmentType from "../../AttachmentType";
 
-const SongAttachmentForm = ({ categories, song }) => {
+const SongAttachmentForm = ({ song }) => {
     const { data, setData, post, processing, errors } = useForm({
         attachment_uploads: [],
-        category: categories[0].id,
+        type: Object.keys(AttachmentType.types)[0],
     });
 
     function submit(e) {
@@ -26,18 +26,18 @@ const SongAttachmentForm = ({ categories, song }) => {
                 <div className="sm:col-span-6">
                     <RadioGroup
                         label={<Label label="Attachment Type" />}
-                        options={categories.map(category => ({
-                            id: category.id,
-                            name: category.title,
-                            textColour: AttachmentType.get(category.slug).textColour,
-                            colour: AttachmentType.get(category.slug).textColour,
-                            icon: AttachmentType.get(category.slug).icon,
+                        options={Object.keys(AttachmentType.types).map(slug => ({
+                            id: slug,
+                            name: AttachmentType.get(slug).title,
+                            textColour: AttachmentType.get(slug).textColour,
+                            colour: AttachmentType.get(slug).textColour,
+                            icon: AttachmentType.get(slug).icon,
                         }))}
                         vertical
-                        selected={data.category}
-                        setSelected={value => setData('category', value)}
+                        selected={data.type}
+                        setSelected={value => setData('type', value)}
                     />
-                    {errors.category && <Error>{errors.category}</Error>}
+                    {errors.type && <Error>{errors.type}</Error>}
                 </div>
                 <div className="sm:col-span-6">
                     <Label label="File Upload" forInput="attachment_uploads" />

@@ -5,7 +5,7 @@ import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 import AttachmentType from "../../AttachmentType";
 
-const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurrentPdf, player }) => {
+const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, player }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [deletingAttachmentId, setDeletingAttachmentId] = useState(0);
     const { load } = useAudioPlayer();
@@ -28,22 +28,22 @@ const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurren
         }
     }
 
-    const isPlayable = (attachment) => AttachmentType.get(attachment.category.slug).isPlayable;
+    const isPlayable = (attachment) => AttachmentType.get(attachment.type).isPlayable;
     const isCurrentTrack = (attachment) => player.src === attachment.download_url;
 
-    const isPdf = (attachment) => AttachmentType.get(attachment.category.slug).isPdf;
+    const isPdf = (attachment) => AttachmentType.get(attachment.type).isPdf;
     const isCurrentPdf = (attachment) => currentPdf && attachment.id === currentPdf.id;
 
     return (
         <>
             <nav className="h-full overflow-y-auto" aria-label="Directory">
-                {Object.keys(attachment_categories).map((category_title) => (
-                    <div key={category_title} className="relative border-b border-gray-200">
+                {Object.keys(attachmentTypes).map((typeSlug) => (
+                    <div key={typeSlug} className="relative border-b border-gray-200">
                         <div className="z-10 sticky top-0 border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
-                            <h3>{category_title}</h3>
+                            <h3>{AttachmentType.get(typeSlug).title}</h3>
                         </div>
                         <ul role="list" className="relative z-0 divide-y divide-gray-200">
-                            {Object.values(attachment_categories[category_title]).map(attachment => (
+                            {Object.values(attachmentTypes[typeSlug]).map(attachment => (
                                 <li key={attachment.id} className="bg-white hover:bg-purple-100">
                                     <div className="flex items-center space-x-3 pr-6">
                                         <a href="#" onClick={() => openAttachment(attachment)} className="flex-1 min-w-0 flex py-5 px-6 gap-x-3 items-center group">

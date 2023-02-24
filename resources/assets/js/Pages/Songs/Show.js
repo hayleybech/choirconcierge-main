@@ -23,7 +23,7 @@ import CollapseGroup from "../../components/CollapseGroup";
 import EmptyState from "../../components/EmptyState";
 import {Synth} from "tone";
 
-const Show = ({ song, attachment_categories, all_attachment_categories, status_count, voice_parts_count }) => {
+const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
     const [synth] = useState(() => new Synth().toDestination());
     const player = useContext(PlayerContext);
 
@@ -35,10 +35,10 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
         if(isMobile) {
             return null;
         }
-        if(! attachment_categories['Sheet Music']) {
+        if(! attachment_types['sheet-music']) {
             return null;
         }
-         return attachment_categories['Sheet Music'][0];
+         return attachment_types['sheet-music'][0];
     });
 
     const showPdf = (attachment) => {
@@ -118,7 +118,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                         {song.attachments.length > 0
                             ? (
                                 <SongAttachmentList
-                                    attachment_categories={attachment_categories}
+                                    attachmentTypes={attachment_types}
                                     song={song}
                                     currentPdf={currentPdf}
                                     setCurrentPdf={showPdf}
@@ -136,7 +136,7 @@ const Show = ({ song, attachment_categories, all_attachment_categories, status_c
                                 />
                             )
                         }
-                        { song.can['update_song'] && <SongAttachmentForm categories={all_attachment_categories} song={song} />}
+                        { song.can['update_song'] && <SongAttachmentForm song={song} />}
                     </div>
 
                     {isDesktop && ! player.showFullscreen && (

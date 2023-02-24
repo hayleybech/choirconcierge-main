@@ -24,8 +24,7 @@ class SongAttachmentRequest extends FormRequest
     public function rules()
     {
         return [
-            //'title'               => ['required', 'max:255'],
-            'category' => ['required', 'exists:song_attachment_categories,id'],
+            'type' => ['required', 'in:sheet-music,full-mix-demo,learning-tracks,other'],
             'attachment_uploads' => ['required', 'array'],
             'attachment_uploads.*' => ['required', 'file'],
         ];

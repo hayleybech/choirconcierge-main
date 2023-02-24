@@ -18,13 +18,12 @@ use Illuminate\Support\Facades\Storage;
  * @property string $title
  * @property string $filepath
  * @property int $song_id
- * @property int $category_id
+ * @property string $type
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * Relationships
  * @property Song $song
- * @property SongAttachmentCategory $category
  *
  * Dynamic
  * @property string $download_url
@@ -42,7 +41,7 @@ class SongAttachment extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'category_id', 'song_id', 'file'];
+    protected $fillable = ['title', 'song_id', 'file', 'type'];
 
     protected $appends = ['download_url'];
 
@@ -100,11 +99,6 @@ class SongAttachment extends Model
     public function song(): BelongsTo
     {
         return $this->belongsTo(Song::class);
-    }
-
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(SongAttachmentCategory::class, 'category_id');
     }
 
     public function getDownloadUrlAttribute(): string

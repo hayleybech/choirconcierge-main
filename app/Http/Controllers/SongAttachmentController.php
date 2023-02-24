@@ -29,7 +29,7 @@ class SongAttachmentController extends Controller
             SongAttachment::create([
                 'title' => '',
                 'song_id' => $song->id,
-                'category_id' => $data['category'],
+                'type' => $data['type'],
                 'file' => $file,
             ]);
         }
