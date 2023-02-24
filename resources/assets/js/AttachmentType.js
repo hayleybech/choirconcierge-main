@@ -43,12 +43,16 @@ class AttachmentType {
 
     get test() { return 'hello'; }
 
-    get isPlayable() {
+    get isAudio() {
         return [
             AttachmentType.types['learning-tracks'],
             AttachmentType.types['full-mix-demo'],
         ]
         .includes(AttachmentType.types[this.slug]);
+    }
+
+    get isVideo() {
+        return [AttachmentType.types['youtube']].includes(AttachmentType.types[this.slug]);
     }
 
     get isPdf() {

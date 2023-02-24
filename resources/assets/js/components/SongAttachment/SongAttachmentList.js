@@ -19,7 +19,7 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
     };
 
     const openAttachment = (attachment) => {
-        if(isPlayable(attachment)) {
+        if(isAudio(attachment)) {
             play(attachment);
         }
 
@@ -28,8 +28,10 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
         }
     }
 
-    const isPlayable = (attachment) => AttachmentType.get(attachment.type).isPlayable;
+    const isAudio = (attachment) => AttachmentType.get(attachment.type).isAudio;
     const isCurrentTrack = (attachment) => player.src === attachment.download_url;
+
+    const isVideo = (attachment) => AttachmentType.get(attachment.type).isVideo;
 
     const isPdf = (attachment) => AttachmentType.get(attachment.type).isPdf;
     const isCurrentPdf = (attachment) => currentPdf && attachment.id === currentPdf.id;
@@ -48,7 +50,7 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
                                     <div className="flex items-center space-x-3 pr-6">
                                         <a href="#" onClick={() => openAttachment(attachment)} className="flex-1 min-w-0 flex py-5 px-6 gap-x-3 items-center group">
                                             <div className="shrink-0">
-                                                {isPlayable(attachment) && (
+                                                {isAudio(attachment) && (
                                                     <Icon icon={isCurrentTrack(attachment) ? 'waveform' : 'play'} className="text-sm text-gray-700 group-hover:text-purple-600" />
                                                 )}
                                                 {isPdf(attachment) && (
@@ -68,11 +70,15 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
                                                 <Icon icon="trash" />
                                             </Button>
                                         }
-                                        <>
+                                        {isVideo(attachment) ? (
+                                            <a href={attachment.filepath} target="_blank" className="text-purple-500">
+                                                <Icon icon="external-link" />
+                                            </a>
+                                        ) : (
                                             <a href={attachment.download_url} download={attachment.filepath} className="text-purple-500">
                                                 <Icon icon="download" />
                                             </a>
-                                        </>
+                                        )}
                                     </div>
                                 </li>
                             ))}
