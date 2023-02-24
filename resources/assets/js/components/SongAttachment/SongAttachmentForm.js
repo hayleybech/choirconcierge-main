@@ -34,8 +34,8 @@ const SongAttachmentForm = ({ categories, song }) => {
                             icon: AttachmentType.types[AttachmentType.slugify(category.title)].icon,
                         }))}
                         vertical
-                        selected={data.status}
-                        setSelected={value => setData('status', value)}
+                        selected={data.category}
+                        setSelected={value => setData('category', value)}
                     />
                     {errors.category && <Error>{errors.category}</Error>}
                 </div>
