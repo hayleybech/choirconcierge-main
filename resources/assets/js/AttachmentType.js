@@ -15,6 +15,11 @@ class AttachmentType {
             textColour: 'text-gray-500',
             icon: 'file-audio',
         },
+        'youtube': {
+            title: 'YouTube',
+            textColour: 'text-gray-500',
+            icon: 'video',
+        },
         'other': {
             title: 'Other',
             textColour: 'text-gray-500',

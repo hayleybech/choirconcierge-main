@@ -111,7 +111,8 @@ class SongController extends Controller
                     'sheet-music' => 0,
                     'full-mix-demo' => 1,
                     'learning-tracks' => 2,
-                    'other' => 3,
+                    'youtube' => 3,
+                    'other' => 4,
                 };
             }),
             'status_count' => [

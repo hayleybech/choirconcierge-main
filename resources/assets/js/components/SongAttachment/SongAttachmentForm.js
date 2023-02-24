@@ -8,11 +8,14 @@ import Button from "../inputs/Button";
 import Icon from "../Icon";
 import RadioGroup from "../inputs/RadioGroup";
 import AttachmentType from "../../AttachmentType";
+import TextInput from "../inputs/TextInput";
 
 const SongAttachmentForm = ({ song }) => {
     const { data, setData, post, processing, errors } = useForm({
         attachment_uploads: [],
         type: Object.keys(AttachmentType.types)[0],
+        url: '',
+        title: '',
     });
 
     function submit(e) {
@@ -39,6 +42,32 @@ const SongAttachmentForm = ({ song }) => {
                     />
                     {errors.type && <Error>{errors.type}</Error>}
                 </div>
+                {data.type === 'youtube' ? (
+                <>
+                    <div className="sm:col-span-6">
+                        <Label label="YouTube URL" forInput="url" />
+                        <TextInput
+                            name="url"
+                            value={data.url}
+                            updateFn={value => setData('url', value)}
+                            hasErrors={ !! errors['url'] }
+                            placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                        />
+                        {errors.url && <Error>{errors.url}</Error>}
+                    </div>
+                    <div className="sm:col-span-6">
+                        <Label label="Video description" forInput="title" />
+                        <TextInput
+                            name="title"
+                            value={data.title}
+                            updateFn={value => setData('title', value)}
+                            hasErrors={ !! errors['title'] }
+                            placeholder="Never Gonna Give You Up"
+                        />
+                        {errors.title && <Error>{errors.title}</Error>}
+                    </div>
+                </>
+                ) : (
                 <div className="sm:col-span-6">
                     <Label label="File Upload" forInput="attachment_uploads" />
                     <FileInput
@@ -51,6 +80,7 @@ const SongAttachmentForm = ({ song }) => {
                     />
                     {errors.attachment_uploads && <Error>{errors.attachment_uploads}</Error>}
                 </div>
+                )}
                 <div className="">
                     <Button onClick={submit} variant="primary" size="sm" disabled={processing}><Icon icon="check" />Save</Button>
                 </div>

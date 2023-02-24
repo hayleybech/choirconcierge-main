@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Storage;
  *
  * Other
  * @property UploadedFile $file
+ * @property string $url
  */
 class SongAttachment extends Model
 {
@@ -41,7 +42,7 @@ class SongAttachment extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'song_id', 'file', 'type'];
+    protected $fillable = ['title', 'song_id', 'file', 'url', 'type'];
 
     protected $appends = ['download_url'];
 
@@ -57,6 +58,8 @@ class SongAttachment extends Model
     }
 
     private UploadedFile $file;
+
+    private string $url;
 
     public static function create(array $attributes = [])
     {
@@ -82,8 +85,18 @@ class SongAttachment extends Model
         $this->file = $file;
     }
 
+    public function setUrlAttribute(string $url): void
+    {
+        $this->url = $url;
+    }
+
     public function saveFile(): void
     {
+        if($this->type === 'youtube') {
+            $this->filepath = $this->url;
+            return;
+        }
+
         $this->filepath = $this->file->getClientOriginalName();
 
         Storage::disk('public')->makeDirectory(self::getPathSongs());
