@@ -28,9 +28,27 @@ class AttachmentType {
         this.slug = slug;
     }
 
+    static get(slug) {
+        return new AttachmentType(slug);
+    }
+
     get title() { return AttachmentType.types[this.slug].title; }
     get textColour() { return AttachmentType.types[this.slug].textColour; }
     get icon() { return AttachmentType.types[this.slug].icon; }
+
+    get test() { return 'hello'; }
+
+    get isPlayable() {
+        return [
+            AttachmentType.types['learning-tracks'],
+            AttachmentType.types['full-mix-demo'],
+        ]
+        .includes(AttachmentType.types[this.slug]);
+    }
+
+    get isPdf() {
+        return [AttachmentType.types['sheet-music']].includes(AttachmentType.types[this.slug]);
+    }
 
     static slugify(str) {
         return str

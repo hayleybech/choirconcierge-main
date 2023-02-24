@@ -3,6 +3,7 @@ import Button from "../inputs/Button";
 import React, {useState} from "react";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
+import AttachmentType from "../../AttachmentType";
 
 const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurrentPdf, player }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -27,10 +28,10 @@ const SongAttachmentList = ({ attachment_categories, song, currentPdf, setCurren
         }
     }
 
-    const isPlayable = (attachment) => ['Learning Tracks', 'Full Mix (Demo)'].includes(attachment.category.title);
+    const isPlayable = (attachment) => AttachmentType.get(attachment.category.slug).isPlayable;
     const isCurrentTrack = (attachment) => player.src === attachment.download_url;
 
-    const isPdf = (attachment) => ['Sheet Music'].includes(attachment.category.title);
+    const isPdf = (attachment) => AttachmentType.get(attachment.category.slug).isPdf;
     const isCurrentPdf = (attachment) => currentPdf && attachment.id === currentPdf.id;
 
     return (

@@ -29,9 +29,9 @@ const SongAttachmentForm = ({ categories, song }) => {
                         options={categories.map(category => ({
                             id: category.id,
                             name: category.title,
-                            textColour: AttachmentType.types[AttachmentType.slugify(category.title)].textColour,
-                            colour: AttachmentType.types[AttachmentType.slugify(category.title)].textColour,
-                            icon: AttachmentType.types[AttachmentType.slugify(category.title)].icon,
+                            textColour: AttachmentType.get(category.slug).textColour,
+                            colour: AttachmentType.get(category.slug).textColour,
+                            icon: AttachmentType.get(category.slug).icon,
                         }))}
                         vertical
                         selected={data.category}
