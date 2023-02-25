@@ -4,14 +4,18 @@ import FormSection from "../FormSection";
 import Label from "../inputs/Label";
 import FileInput from "../inputs/FileInput";
 import Error from "../inputs/Error";
-import Select from "../inputs/Select";
 import Button from "../inputs/Button";
 import Icon from "../Icon";
+import RadioGroup from "../inputs/RadioGroup";
+import AttachmentType from "../../AttachmentType";
+import TextInput from "../inputs/TextInput";
 
-const SongAttachmentForm = ({ categories, song }) => {
+const SongAttachmentForm = ({ song }) => {
     const { data, setData, post, processing, errors } = useForm({
         attachment_uploads: [],
-        category: categories[0].id,
+        type: Object.keys(AttachmentType.types)[0],
+        url: '',
+        title: '',
     });
 
     function submit(e) {
@@ -22,7 +26,49 @@ const SongAttachmentForm = ({ categories, song }) => {
     return (
         <div className="md:max-w-5xl md:mx-auto px-4 sm:px-6 lg:px-8 pb-8">
             <FormSection title="Add Attachment">
-                <div className="sm:col-span-3">
+                <div className="sm:col-span-6">
+                    <RadioGroup
+                        label={<Label label="Attachment Type" />}
+                        options={Object.keys(AttachmentType.types).map(slug => ({
+                            id: slug,
+                            name: AttachmentType.get(slug).title,
+                            textColour: AttachmentType.get(slug).textColour,
+                            colour: AttachmentType.get(slug).textColour,
+                            icon: AttachmentType.get(slug).icon,
+                        }))}
+                        vertical
+                        selected={data.type}
+                        setSelected={value => setData('type', value)}
+                    />
+                    {errors.type && <Error>{errors.type}</Error>}
+                </div>
+                {data.type === 'youtube' ? (
+                <>
+                    <div className="sm:col-span-6">
+                        <Label label="YouTube URL" forInput="url" />
+                        <TextInput
+                            name="url"
+                            value={data.url}
+                            updateFn={value => setData('url', value)}
+                            hasErrors={ !! errors['url'] }
+                            placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                        />
+                        {errors.url && <Error>{errors.url}</Error>}
+                    </div>
+                    <div className="sm:col-span-6">
+                        <Label label="Video description" forInput="title" />
+                        <TextInput
+                            name="title"
+                            value={data.title}
+                            updateFn={value => setData('title', value)}
+                            hasErrors={ !! errors['title'] }
+                            placeholder="Never Gonna Give You Up"
+                        />
+                        {errors.title && <Error>{errors.title}</Error>}
+                    </div>
+                </>
+                ) : (
+                <div className="sm:col-span-6">
                     <Label label="File Upload" forInput="attachment_uploads" />
                     <FileInput
                         name="attachment_uploads"
@@ -34,16 +80,7 @@ const SongAttachmentForm = ({ categories, song }) => {
                     />
                     {errors.attachment_uploads && <Error>{errors.attachment_uploads}</Error>}
                 </div>
-                <div className="sm:col-span-3">
-                    <Label label="Category" forInput="category" />
-                    <Select
-                        name="category"
-                        options={categories.map(category => ({ key: category.id, label: category.title }) )}
-                        value={data.category}
-                        updateFn={value => setData('category', value)} hasErrors={ !! errors['category'] }
-                    />
-                    {errors.category && <Error>{errors.category}</Error>}
-                </div>
+                )}
                 <div className="">
                     <Button onClick={submit} variant="primary" size="sm" disabled={processing}><Icon icon="check" />Save</Button>
                 </div>

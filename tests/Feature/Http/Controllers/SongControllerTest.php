@@ -107,8 +107,7 @@ class SongControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Show')
                 ->has('song')
-                ->has('all_attachment_categories')
-                ->has('attachment_categories')
+                ->has('attachment_types')
                 ->has('status_count')
                 ->has('voice_parts_count')
             );

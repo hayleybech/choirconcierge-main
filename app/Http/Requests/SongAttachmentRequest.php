@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 
 class SongAttachmentRequest extends FormRequest
 {
@@ -24,10 +26,15 @@ class SongAttachmentRequest extends FormRequest
     public function rules()
     {
         return [
-            //'title'               => ['required', 'max:255'],
-            'category' => ['required', 'exists:song_attachment_categories,id'],
-            'attachment_uploads' => ['required', 'array'],
-            'attachment_uploads.*' => ['required', 'file'],
+            'type' => ['required', 'in:sheet-music,full-mix-demo,learning-tracks,youtube,other'],
+            'attachment_uploads' => [Rule::requiredIf(fn () => ! $this->isVideo()), 'array'],
+            'attachment_uploads.*' => [Rule::requiredIf(fn () => ! $this->isVideo()), 'file'],
+            'url' => [Rule::requiredIf(fn () => $this->isVideo()), 'url', 'max:255'],
+            'title' => ['max:255'],
         ];
+    }
+
+    private function isVideo(): bool {
+        return 'youtube' === $this->input('type');
     }
 }

@@ -4,7 +4,6 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Song;
 use App\Models\SongAttachment;
-use App\Models\SongAttachmentCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -64,7 +63,7 @@ class SongAttachmentControllerTest extends TestCase
 
     /**
      * @test
-     * @dataProvider eventProvider
+     * @dataProvider attachmentProvider
      */
     public function store_redirects_to_song($getData): void
     {
@@ -86,7 +85,7 @@ class SongAttachmentControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('songs.show', [$song]));
     }
 
-    public function eventProvider(): array
+    public function attachmentProvider(): array
     {
         return [
             [
@@ -95,7 +94,7 @@ class SongAttachmentControllerTest extends TestCase
 
                     return [
                         'attachment_uploads' => [UploadedFile::fake()->create('random.mp3')],
-                        'category' => SongAttachmentCategory::inRandomOrder()->value('id'),
+                        'type' => $this->faker->randomElement(['sheet-music', 'learning-tracks', 'full-mix-demo']),
                     ];
                 },
             ],

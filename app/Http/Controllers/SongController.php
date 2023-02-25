@@ -77,8 +77,6 @@ class SongController extends Controller
 
     public function show(Song $song): InertiaResponse
     {
-        $song->load('attachments.category');
-
         $assessment_ready_count = $song->singers()->active()->wherePivot('status', 'assessment-ready')->count();
         $performance_ready_count = $song->singers()->active()->wherePivot('status', 'performance-ready')->count();
 
@@ -106,15 +104,15 @@ class SongController extends Controller
 
         return Inertia::render('Songs/Show', [
             'song' => $song,
-            'all_attachment_categories' => SongAttachmentCategory::all(),
-            'attachment_categories' => $song->attachments->mapToGroups(function ($attachment) {
-                return [$attachment->category->title => $attachment];
-            })->sortBy(function ($attachments, $category_title) {
-                return match ($category_title) {
-                    'Sheet Music' => 0,
-                    'Full Mix (Demo)' => 1,
-                    'Learning Tracks' => 2,
-                    'Other' => 3,
+            'attachment_types' => $song->attachments->mapToGroups(function ($attachment) {
+                return [$attachment->type => $attachment];
+            })->sortBy(function ($attachments, $type) {
+                return match ($type) {
+                    'sheet-music' => 0,
+                    'full-mix-demo' => 1,
+                    'learning-tracks' => 2,
+                    'youtube' => 3,
+                    'other' => 4,
                 };
             }),
             'status_count' => [
