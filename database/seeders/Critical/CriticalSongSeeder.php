@@ -77,13 +77,5 @@ class CriticalSongSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
         ]);
-
-        // Insert song attachment categories
-        DB::table('song_attachment_categories')->insert([
-            ['tenant_id' => tenant('id'), 'title' => 'Sheet Music'],
-            ['tenant_id' => tenant('id'), 'title' => 'Full Mix (Demo)'],
-            ['tenant_id' => tenant('id'), 'title' => 'Learning Tracks'],
-            ['tenant_id' => tenant('id'), 'title' => 'Other'],
-        ]);
     }
 }
