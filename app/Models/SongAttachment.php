@@ -18,13 +18,12 @@ use Illuminate\Support\Facades\Storage;
  * @property string $title
  * @property string $filepath
  * @property int $song_id
- * @property int $category_id
+ * @property string $type
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * Relationships
  * @property Song $song
- * @property SongAttachmentCategory $category
  *
  * Dynamic
  * @property string $download_url
@@ -32,6 +31,7 @@ use Illuminate\Support\Facades\Storage;
  *
  * Other
  * @property UploadedFile $file
+ * @property string $url
  */
 class SongAttachment extends Model
 {
@@ -42,7 +42,7 @@ class SongAttachment extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'category_id', 'song_id', 'file'];
+    protected $fillable = ['title', 'song_id', 'file', 'url', 'type'];
 
     protected $appends = ['download_url'];
 
@@ -58,6 +58,8 @@ class SongAttachment extends Model
     }
 
     private UploadedFile $file;
+
+    private string $url;
 
     public static function create(array $attributes = [])
     {
@@ -83,8 +85,18 @@ class SongAttachment extends Model
         $this->file = $file;
     }
 
+    public function setUrlAttribute(string $url): void
+    {
+        $this->url = $url;
+    }
+
     public function saveFile(): void
     {
+        if($this->type === 'youtube') {
+            $this->filepath = $this->url;
+            return;
+        }
+
         $this->filepath = $this->file->getClientOriginalName();
 
         Storage::disk('public')->makeDirectory(self::getPathSongs());
@@ -100,11 +112,6 @@ class SongAttachment extends Model
     public function song(): BelongsTo
     {
         return $this->belongsTo(Song::class);
-    }
-
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(SongAttachmentCategory::class, 'category_id');
     }
 
     public function getDownloadUrlAttribute(): string

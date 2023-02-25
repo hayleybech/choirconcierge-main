@@ -25,12 +25,21 @@ class SongAttachmentController extends Controller
         $data = $request->validated();
 
         $files = $request->file('attachment_uploads');
-        foreach ($files as $file) {
+        if(is_countable($files)) {
+            foreach ($files as $file) {
+                SongAttachment::create([
+                    'title' => '',
+                    'song_id' => $song->id,
+                    'type' => $data['type'],
+                    'file' => $file,
+                ]);
+            }
+        } else {
             SongAttachment::create([
-                'title' => '',
+                'title' => $data['title'],
                 'song_id' => $song->id,
-                'category_id' => $data['category'],
-                'file' => $file,
+                'type' => $data['type'],
+                'url' => $data['url'],
             ]);
         }
 

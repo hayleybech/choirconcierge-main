@@ -4,7 +4,6 @@ namespace Database\Seeders\Dummy;
 
 use App\Models\Song;
 use App\Models\SongAttachment;
-use App\Models\SongAttachmentCategory;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
 use Carbon\Carbon;
@@ -22,13 +21,12 @@ class DummySongSeeder extends Seeder
         // Fetch all song statuses and categories
         $statuses = SongStatus::all();
         $categories = SongCategory::all();
-        $attachment_categories = SongAttachmentCategory::all();
 
         // Generate random songs
         Song::factory()
             ->count(30)
             ->create()
-            ->each(static function (Song $song) use ($statuses, $categories, $attachment_categories) {
+            ->each(static function (Song $song) use ($statuses, $categories) {
                 self::attachRandomStatus($song, $statuses);
                 self::attachRandomCategories($song, $categories);
 
@@ -43,18 +41,14 @@ class DummySongSeeder extends Seeder
                             ->count(4)
                             ->make(),
                     )
-                    ->each(static function (SongAttachment $attachment) use ($song, $attachment_categories) {
+                    ->each(static function (SongAttachment $attachment) use ($song) {
                         // Copy random sample files
                         // Computer-generated music from https://www.fakemusicgenerator.com/
                         $demo_dir = Storage::disk('global-local')->path('sample/mp3');
                         $song_dir = Storage::disk('public')->path('songs/'.$song->id);
                         $faker = Faker\Factory::create();
                         $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
-
-                        // Attach to learning tracks category
-                        $category = SongAttachmentCategory::where('title', '=', 'Learning Tracks')->first();
-                        $attachment->category()->associate($category);
-                        $attachment->save();
+                        $attachment->type = 'learning-tracks';
                     });
 
                 // Sample PDFs
@@ -66,16 +60,12 @@ class DummySongSeeder extends Seeder
                             ->count(1)
                             ->make(),
                     )
-                    ->each(static function (SongAttachment $attachment) use ($song, $attachment_categories) {
+                    ->each(static function (SongAttachment $attachment) use ($song) {
                         $demo_dir = Storage::disk('global-local')->path('sample/mp3');
                         $song_dir = Storage::disk('public')->path('songs/'.$song->id);
                         $faker = Faker\Factory::create();
                         $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
-
-                        // Attach to sheet music category
-                        $category = SongAttachmentCategory::where('title', '=', 'Sheet Music')->first();
-                        $attachment->category()->associate($category);
-                        $attachment->save();
+                        $attachment->type = 'sheet-music';
                     });
             });
 
