@@ -48,7 +48,7 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
                             {Object.values(attachmentTypes[typeSlug]).map(attachment => (
                                 <li key={attachment.id} className="bg-white hover:bg-purple-100">
                                     <div className="flex items-center space-x-3 pr-6">
-                                        <a href="#" onClick={() => openAttachment(attachment)} className="flex-1 min-w-0 flex py-5 px-6 gap-x-3 items-center group">
+                                        <a href={isVideo(attachment) ? attachment.filepath : '#'} target={isVideo(attachment) ? '_blank' : '_self'} onClick={() => openAttachment(attachment)} className="flex-1 min-w-0 flex py-5 px-6 gap-x-3 items-center group">
                                             <div className="shrink-0">
                                                 {isAudio(attachment) && (
                                                     <Icon icon={isCurrentTrack(attachment) ? 'waveform' : 'play'} className="text-sm text-gray-700 group-hover:text-purple-600" />
