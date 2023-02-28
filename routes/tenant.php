@@ -79,7 +79,10 @@ Route::middleware([
     /** Mailbox **/
     Route::get('/mailbox/process', [MailboxController::class, 'process']);
 
-    Route::middleware(EnsureUserIsMember::class)->group(function() {
+    Route::middleware([
+        'auth',
+        EnsureUserIsMember::class
+    ])->group(function() {
 
         // Dashboard
         Route::get('/', [DashController::class, 'index'])->name('dash');
@@ -89,8 +92,8 @@ Route::middleware([
         Route::post('account', [AccountController::class, 'update'])->name('accounts.update');
 
         // Singers module
-        Route::resource('singers', SingerController::class)->middleware('auth');
-        Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update'])->middleware('auth');
+        Route::resource('singers', SingerController::class);
+        Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
         Route::put('singers/{singer}/fees', UpdateSingerFeeController::class)->name('singers.fees.update');
         Route::post('singers/import', ImportSingerController::class)->name('singers.import');
         Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
@@ -122,14 +125,14 @@ Route::middleware([
         Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
 
         // Documents module
-        Route::resource('folders', FolderController::class)->except(['show', 'edit'])->middleware('auth');
-        Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('auth');
+        Route::resource('folders', FolderController::class)->except(['show', 'edit']);
+        Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'update', 'destroy']);
 
         // Risers module
         Route::resource('stacks', RiserStackController::class);
 
         // Users/Team module
-        Route::prefix('users')->middleware(['auth'])->group(static function () {
+        Route::prefix('users')->group(static function () {
 
             Route::controller(UserController::class)->group(function () {
                 // Index
@@ -153,23 +156,23 @@ Route::middleware([
         });
 
         // Search APIs
-        Route::prefix('find')->name('find.')->middleware(['auth'])->group(function () {
+        Route::prefix('find')->name('find.')->group(function () {
             Route::get('/singers', FindSingerController::class)->name('singers');
             Route::get('/songs/{keyword}', FindSongController::class)->name('songs');
         });
 
         // Global Search APIs
-        Route::prefix('find')->middleware(['auth'])->group(function () {
+        Route::prefix('find')->group(function () {
             Route::get('/users', GlobalFindUserController::class)->name('global-find.users');
         });
 
         // Mailing Lists (User Groups) module
         Route::get('/groups/broadcasts/create', [BroadcastController::class, 'create'])->name('groups.broadcasts.create');
         Route::post('/groups/broadcasts', [BroadcastController::class, 'store'])->name('groups.broadcasts.store');
-        Route::resource('groups', UserGroupController::class)->middleware(['auth']);
+        Route::resource('groups', UserGroupController::class);
 
         // Tasks module
-        Route::resource('tasks', TaskController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->middleware(['auth']);
+        Route::resource('tasks', TaskController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
         Route::resource('tasks.notifications', TaskNotificationTemplateController::class)->except('index');
 
         // Voice Parts module
