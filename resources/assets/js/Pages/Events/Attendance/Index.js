@@ -33,8 +33,8 @@ const Index = ({ event, voice_parts }) => {
                         <ul role="list" className="relative z-0 divide-y divide-gray-200">
                             {part.singers.map((attendance) => (
                                 <li key={attendance.singer.id} className="bg-white">
-                                    <div className="relative px-6 py-5 flex flex-col sm:flex-row items-center space-y-3 sm:space-x-3 hover:bg-gray-50 justify-between items-stretch sm:items-center">
-                                        <div className="flex space-x-2">
+                                    <div className="relative flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3 hover:bg-gray-50 justify-between items-stretch sm:items-center">
+                                        <a href={route('singers.show', attendance.singer)} className="flex space-x-2 hover:bg-purple-100 px-6 py-5 flex-grow">
                                             <div className="shrink-0">
                                                 <img className="h-12 w-12 rounded-lg" src={attendance.singer.user.avatar_url} alt={attendance.singer.user.name}/>
                                             </div>
@@ -47,8 +47,8 @@ const Index = ({ event, voice_parts }) => {
                                                     )}
                                                 </p>
                                             </div>
-                                        </div>
-                                        <div className="shrink-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 items:stretch sm:items-center">
+                                        </a>
+                                        <div className="shrink-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 items:stretch sm:items-center px-6 py-5 flex-grow">
                                             {[
                                                 { response: 'present', label: 'On Time', icon: 'check', variant: 'success-outline' },
                                                 { response: 'late', label: 'Late', icon: 'alarm-exclamation', variant: 'warning-outline' },
@@ -72,7 +72,7 @@ const Index = ({ event, voice_parts }) => {
 
                                         </div>
 
-                                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:ml-16 space-y-2 sm:space-x-2">
+                                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:ml-16 space-y-2 sm:space-y-0 sm:space-x-2 px-6 py-5 flex-grow">
                                             <Label label="Reason for absence" forInput={`absent_reason_${attendance.singer.id}`} />
                                             <TextInput
                                                 name="absent_reason"
