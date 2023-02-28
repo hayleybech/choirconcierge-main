@@ -64,14 +64,15 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
                     </tr>
                     {voicePart.singers.map((singer) => (
                         <tr key={singer.id}>
-                            <th className="px-5 py-3 text-left whitespace-nowrap border border-gray-300">
-                                <div className="flex flex-nowrap items-center">
+                            <th className="text-left whitespace-nowrap border border-gray-300">
+                                <a href={route('singers.show', singer)} className="flex flex-nowrap items-center px-5 py-3 hover:bg-purple-100">
+
                                     <div className="shrink-0 h-10 w-10 mr-4">
                                         <img className="h-10 w-10 rounded-md" src={singer.user.avatar_url} alt={singer.user.name} />
                                     </div>
 
-                                    {singer.user.name}
-                                </div>
+                                    <span className="text-purple-800">{singer.user.name}</span>
+                                </a>
                             </th>
                             {events.map((event) => getAttendanceBySingerAndEvent(singer, event)).map((attendance, key) => (
                                 <td className="border border-gray-300 text-center" key={key}>
