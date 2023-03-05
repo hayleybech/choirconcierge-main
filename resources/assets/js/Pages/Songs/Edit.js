@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import SongForm from "./SongForm";
 import AppHead from "../../components/AppHead";
@@ -22,6 +22,6 @@ const Edit = ({ categories, statuses, pitches, song }) => (
     </>
 );
 
-Edit.layout = page => <Layout children={page} />
+Edit.layout = page => <TenantLayout children={page} />
 
 export default Edit;

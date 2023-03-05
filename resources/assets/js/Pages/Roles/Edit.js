@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import RoleForm from "./RoleForm";
@@ -23,6 +23,6 @@ const Edit = ({ role }) => (
     </>
 );
 
-Edit.layout = page => <Layout children={page} />
+Edit.layout = page => <TenantLayout children={page} />
 
 export default Edit;

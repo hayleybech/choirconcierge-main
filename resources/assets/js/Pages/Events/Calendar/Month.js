@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from "../../../Layouts/Layout";
+import TenantLayout from "../../../Layouts/TenantLayout";
 import PageHeader from "../../../components/PageHeader";
 import AppHead from "../../../components/AppHead";
 import {usePage} from "@inertiajs/inertia-react";
@@ -32,6 +32,6 @@ const Month = ({ days, month }) => {
     );
 }
 
-Month.layout = page => <Layout children={page} />
+Month.layout = page => <TenantLayout children={page} />
 
 export default Month;

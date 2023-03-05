@@ -1,7 +1,7 @@
 import React from 'react'
 import AppHead from "../../components/AppHead";
 import PageHeader from "../../components/PageHeader";
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import TaskForm from "./TaskForm";
 
 const Create = ({ roles }) => (
@@ -21,6 +21,6 @@ const Create = ({ roles }) => (
     </>
 );
 
-Create.layout = page => <Layout children={page} />
+Create.layout = page => <TenantLayout children={page} />
 
 export default Create;

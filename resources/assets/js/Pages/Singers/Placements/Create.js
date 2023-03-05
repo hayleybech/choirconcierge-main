@@ -1,5 +1,5 @@
 import PageHeader from "../../../components/PageHeader";
-import Layout from "../../../Layouts/Layout";
+import TenantLayout from "../../../Layouts/TenantLayout";
 import React from "react";
 import PlacementForm from "./PlacementForm";
 import AppHead from "../../../components/AppHead";
@@ -21,6 +21,6 @@ const Create = ({ singer, voice_parts }) => (
     </>
 );
 
-Create.layout = page => <Layout children={page} />
+Create.layout = page => <TenantLayout children={page} />
 
 export default Create;

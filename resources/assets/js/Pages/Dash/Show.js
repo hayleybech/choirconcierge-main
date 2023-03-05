@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import AppHead from "../../components/AppHead";
 import UpcomingEventsWidget from "./UpcomingEventsWidget";
 import SongsToLearnWidget from "./SongsToLearnWidget";
@@ -36,7 +36,7 @@ const Show = ({ events, songs, birthdays, emptyDobs, memberversaries, feeStatus 
     </>
 );
 
-Show.layout = page => <Layout children={page} />
+Show.layout = page => <TenantLayout children={page} />
 
 export default Show;
 
