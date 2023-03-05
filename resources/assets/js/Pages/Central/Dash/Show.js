@@ -1,6 +1,7 @@
 import React from 'react'
 import AppHead from "../../../components/AppHead";
 import CentralLayout from "../../../Layouts/CentralLayout";
+import ChoirsListWidget from "./ChoirsListWidget";
 
 const Show = () => (
     <>
@@ -11,7 +12,7 @@ const Show = () => (
 
                 <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-2">
-                        Central Dash - WIP
+                        <ChoirsListWidget />
                     </div>
 
                     <div className="sm:col-span-2">
