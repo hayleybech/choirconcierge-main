@@ -2,8 +2,9 @@ import React from 'react'
 import AppHead from "../../../components/AppHead";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import ChoirsListWidget from "./ChoirsListWidget";
+import CentralUpcomingEventsWidget from "./CentralUpcomingEventsWidget";
 
-const Show = () => (
+const Show = ({ events }) => (
     <>
         <AppHead title="Dashboard" />
         <div className="py-6">
@@ -16,7 +17,7 @@ const Show = () => (
                     </div>
 
                     <div className="sm:col-span-2">
-
+                        <CentralUpcomingEventsWidget events={events} />
                     </div>
 
                     <div className="sm:col-span-2">
