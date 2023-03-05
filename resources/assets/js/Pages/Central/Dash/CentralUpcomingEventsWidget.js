@@ -26,7 +26,12 @@ const CentralUpcomingEventsWidget = ({ events }) => {
                                 <div className="text-md font-bold mr-2">Today</div>
 
                                 {can['create_attendance'] && (
-                                    <ButtonLink href={route('events.attendances.index', {tenant: event.tenant_id, event})} variant="primary" size="xs" className="mt-2">
+                                    <ButtonLink
+                                        href={route('events.attendances.index', {tenant: event.tenant_id, event})}
+                                        variant="primary"
+                                        size="xs"
+                                        className="mt-2"
+                                    >
                                         <Icon icon="edit" />
                                         Record Attendance
                                     </ButtonLink>
@@ -34,8 +39,10 @@ const CentralUpcomingEventsWidget = ({ events }) => {
                             </div>
                             )}
                             <div className="flex items-center justify-between">
-                                <div className="text-sm font-medium text-purple-800">{event.title}</div>
-                                <div>[{event.tenant.choir_name}]</div>
+                                <div>
+                                    <div className="text-sm font-medium text-purple-800">{event.title}</div>
+                                    <div className="text-xs text-gray-500">{event.tenant.choir_name}</div>
+                                </div>
                                 <div className="text-sm">
                                     <DateTag date={event.call_time} format={isToday(event) ? 'TIME_24_SIMPLE' : 'DATE_MED'} />
                                 </div>
@@ -49,9 +56,15 @@ const CentralUpcomingEventsWidget = ({ events }) => {
                             )}
                             {! isToday(event) && (
                                 <div className="flex items-center justify-between mt-2">
-                                    <RsvpTag label={event.my_rsvp.label} icon={event.my_rsvp.icon} colour={event.my_rsvp.colour} size="xs" className="mr-3" />
+                                    <RsvpTag
+                                        label={event.my_rsvp.label}
+                                        icon={event.my_rsvp.icon}
+                                        colour={event.my_rsvp.colour}
+                                        size="xs"
+                                        className="mr-3"
+                                    />
 
-                                    {/*<MyRsvpButtons event={event} size="xs" />*/}
+                                    <MyRsvpButtons event={event} size="xs" />
                                 </div>
                             )}
                         </div>
