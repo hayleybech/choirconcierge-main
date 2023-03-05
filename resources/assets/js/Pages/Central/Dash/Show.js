@@ -3,8 +3,9 @@ import AppHead from "../../../components/AppHead";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import ChoirsListWidget from "./ChoirsListWidget";
 import CentralUpcomingEventsWidget from "./CentralUpcomingEventsWidget";
+import CentralSongsToLearnWidget from "./CentralSongsToLearnWidget";
 
-const Show = ({ events }) => (
+const Show = ({ events, songs }) => (
     <>
         <AppHead title="Dashboard" />
         <div className="py-6">
@@ -21,7 +22,7 @@ const Show = ({ events }) => (
                     </div>
 
                     <div className="sm:col-span-2">
-
+                        <CentralSongsToLearnWidget songs={songs} />
                     </div>
                 </div>
             </div>
