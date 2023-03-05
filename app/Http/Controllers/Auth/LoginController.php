@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class LoginController extends Controller
@@ -26,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/app';
 
     /**
      * Create a new controller instance.
@@ -42,4 +43,9 @@ class LoginController extends Controller
     {
         return Inertia::render('Auth/Login');
     }
+
+	public function loggedOut(Request $request)
+	{
+		return redirect()->route('login');
+	}
 }

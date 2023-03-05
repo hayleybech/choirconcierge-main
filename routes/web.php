@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\CentralDashController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,12 +12,15 @@
 |
 */
 
-// Central app will redirect to public site for now.
-Route::redirect('/', 'https://www.choirconcierge.com')->name('menu');
 
-// Public pages
-//Route::view('/', 'home')->name('menu');
+Route::redirect('/', '/app');
 
-Auth::routes(['register' => false]);
+Route::prefix('/app')->group(function () {
+	Auth::routes(['register' => false]);
 
-Route::get('/', [CentralDashController::class, 'index'])->name('central.dash');
+	Route::middleware(['auth'])->group(function () {
+		Route::get('/', [CentralDashController::class, 'index'])->name('central.dash');
+	});
+});
+
+

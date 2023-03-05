@@ -9,11 +9,9 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen }) => {
     const { can, user, impersonationActive } = usePage().props;
 
     const userNavigation = [
-        user.singer ? { name: 'Your Profile', href: route('singers.show', user.singer), icon: 'user' } : null,
-        { name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit' },
-        { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
-        { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
-        { name: 'Choir Settings', href: route('choir-settings.edit'), icon: 'cogs', hide: !can.update_tenant },
+        // { name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit' },
+        // { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
+        // { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
         { name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' }
     ];
 
