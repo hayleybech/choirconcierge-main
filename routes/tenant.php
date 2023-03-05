@@ -83,10 +83,6 @@ Route::middleware([
     // Public calendar feed
     Route::get('/events-ical', [ICalController::class, 'index'])->name('events.feed');
 
-    // Switch choir
-    Route::get('/switch-choir/{newTenant}', [SwitchTenantController::class, 'start'])->name('tenants.switch.start');
-    Route::get('/switch-choir/login/{token}', [SwitchTenantController::class, 'loginWithToken'])->name('tenants.switch.login');
-
     /** Mailbox **/
     Route::get('/mailbox/process', [MailboxController::class, 'process']);
 

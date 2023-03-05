@@ -10,7 +10,6 @@ import Button from "../components/inputs/Button";
 import Icon from "../components/Icon";
 import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
-import usePromptBeforeUnload from "../hooks/usePromptBeforeUnload";
 import centralNavigation from "./centralNavigation";
 
 export default function CentralLayout({ children }) {
@@ -21,7 +20,9 @@ export default function CentralLayout({ children }) {
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
-    const { can, userChoirs, errors, flash } = usePage().props;
+    const { can, userChoirs, errors, flash, tenant } = usePage().props;
+
+    const shouldShowChoirSwitcher = (tenant ? userChoirs.length > 1 : userChoirs.length > 0);
 
     const navFiltered = centralNavigation
         .filter((item) => can[item.can])
@@ -44,14 +45,14 @@ export default function CentralLayout({ children }) {
                         navigation={navFiltered}
                         open={sidebarOpen}
                         setOpen={setSidebarOpen}
-                        switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => { setSidebarOpen(false); setShowSwitchChoirModal(true); }} />}
+                        switchChoirButton={shouldShowChoirSwitcher && <SwitchChoirButton onClick={() => { setSidebarOpen(false); setShowSwitchChoirModal(true); }} />}
                     />
                 </>
             ) : (
                 <div className="flex shrink-0">
                     <SidebarDesktop
                         navigation={navFiltered}
-                        switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
+                        switchChoirButton={shouldShowChoirSwitcher && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
                     />
                 </div>
             )}
@@ -67,7 +68,7 @@ export default function CentralLayout({ children }) {
             <ToastFlash errors={errors} flash={flash} />
 
             {/*<ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />*/}
-            {/*<SwitchChoirModal setIsOpen={setShowSwitchChoirModal} isOpen={showSwitchChoirModal} choirs={userChoirs} />*/}
+            <SwitchChoirModal setIsOpen={setShowSwitchChoirModal} isOpen={showSwitchChoirModal} choirs={userChoirs} />
         </div>
     )
 }

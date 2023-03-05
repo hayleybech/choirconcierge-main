@@ -1,5 +1,6 @@
 <?php
-use App\Http\Controllers\CentralDashController;
+
+use App\Http\Controllers\Central;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,8 +22,15 @@ Route::domain(config('tenancy.central_domains')[0])->group(function() {
 Route::prefix('/app')->group(function () {
 	Auth::routes(['register' => false]);
 
-	Route::middleware(['auth'])->group(function () {
-		Route::get('/', [CentralDashController::class, 'index'])->name('central.dash');
+	// Switch choir
+	Route::get('/switch-choir/{newTenant}', [Central\SwitchTenantController::class, 'start'])->name('tenants.switch.start');
+
+	Route::middleware(['auth'])->name('central.')->group(function () {
+		Route::get('/', [Central\DashController::class, 'index'])->name('dash');
+
+		// Account Settings
+		Route::get('account/edit', [Central\AccountController::class, 'edit'])->name('accounts.edit');
+		Route::post('account', [Central\AccountController::class, 'update'])->name('accounts.update');
 	});
 });
 
