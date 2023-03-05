@@ -16,3 +16,7 @@ Route::redirect('/', 'https://www.choirconcierge.com')->name('menu');
 
 // Public pages
 //Route::view('/', 'home')->name('menu');
+
+Auth::routes(['register' => false]);
+
+Route::get('/', [CentralDashController::class, 'index'])->name('central.dash');

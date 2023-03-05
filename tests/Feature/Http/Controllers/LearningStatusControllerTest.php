@@ -27,7 +27,7 @@ class LearningStatusControllerTest extends TestCase
 
         $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $this->get(the_tenant_route('songs.singers.index', $song))
+        $this->get(the_tenant_route('songs.singers.index', [$song]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Learning/Index')

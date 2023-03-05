@@ -13,21 +13,21 @@ class SwitchTenantController extends Controller
 {
     private const REDIRECT_ROUTE = 'dash';
 
-    public function start(Request $request, Tenant $tenant): Response
+    public function start(Request $request, Tenant $newTenant): Response
     {
         if(session()->has('impersonation:active')) {
             abort(401);
         }
 
-        $tenant->load('domains');
+        $newTenant->load('domains');
 
         $token = tenancy()->impersonate(
-            $tenant,
+            $newTenant,
             auth()->id(),
-            tenant_route($tenant->host, self::REDIRECT_ROUTE)
+            tenant_route($newTenant->host, self::REDIRECT_ROUTE)
         );
 
-        return Inertia::location(tenant_route($tenant->host, 'tenants.switch.login', $token));
+        return Inertia::location(tenant_route($newTenant->host, 'tenants.switch.login', $token));
     }
 
     public function loginWithToken(string $token): RedirectResponse

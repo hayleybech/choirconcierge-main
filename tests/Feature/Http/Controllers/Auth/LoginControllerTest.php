@@ -12,10 +12,12 @@ class LoginControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+	protected bool $tenancy = false;
+
     /** @test */
     public function login_displays_the_login_form(): void
     {
-        $this->get(the_tenant_route('login'))
+        $this->get(route('login'))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Auth/Login'));
@@ -24,7 +26,7 @@ class LoginControllerTest extends TestCase
     /** @test */
     public function invalid_login_displays_validation_errors(): void
     {
-        $this->post(the_tenant_route('login'), [])
+        $this->post(route('login'), [])
             ->assertStatus(302)
             ->assertSessionHasErrors('email');
     }
@@ -34,11 +36,11 @@ class LoginControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->post(the_tenant_route('login'), [
+        $this->post(route('login'), [
             'email' => $user->email,
             'password' => 'password',
         ])
-            ->assertRedirect(the_tenant_route('dash'));
+            ->assertRedirect(route('central.dash'));
 
         $this->assertAuthenticatedAs($user);
     }
@@ -47,16 +49,16 @@ class LoginControllerTest extends TestCase
     public function logout_deauthenticates_and_redirects_user(): void
     {
         // login
-        $user = User::factory()->has(Singer::factory())->create();
+        $user = User::factory()->create();
 
-        $this->post(the_tenant_route('login'), [
+        $this->post(route('login'), [
             'email' => $user->email,
             'password' => 'password',
         ]);
 
         // logout
-        $this->post(the_tenant_route('logout'))
-            ->assertRedirect(the_tenant_route('dash'));
+        $this->post(route('logout'))
+            ->assertRedirect(route('central.dash'));
 
         $this->assertGuest();
     }
