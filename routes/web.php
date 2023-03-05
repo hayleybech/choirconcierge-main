@@ -12,8 +12,11 @@ use App\Http\Controllers\CentralDashController;
 |
 */
 
-
-Route::redirect('/', '/app');
+// Redirect central index to folder
+// choirconcierge.com/ => choirconcierge.com/app
+Route::domain(config('tenancy.central_domains')[0])->group(function() {
+	Route::redirect('/', '/app');
+});
 
 Route::prefix('/app')->group(function () {
 	Auth::routes(['register' => false]);
@@ -22,5 +25,4 @@ Route::prefix('/app')->group(function () {
 		Route::get('/', [CentralDashController::class, 'index'])->name('central.dash');
 	});
 });
-
 

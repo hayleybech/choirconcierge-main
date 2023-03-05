@@ -42,13 +42,11 @@ use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\VoicePartController;
 use App\Http\Middleware\EnsureUserIsMember;
 use App\Http\Middleware\NoRobots;
-use App\Http\Middleware\RedirectToPrimaryTenantDomain;
+use App\Http\Middleware\RedirectTenantFromDomainToFolder;
 use App\Http\Middleware\SetTenantRouteParam;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,14 +60,25 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 |
 */
 
+
+
+// Redirect subdomains to folders
+// test.choirconcierge.com/singers => choirconcierge.com/test/singers
+Route::middleware([
+	InitializeTenancyByDomainOrSubdomain::class,
+	RedirectTenantFromDomainToFolder::class
+])->domain('{tenant}.'.config('tenancy.central_domains')[0])->group(function () {
+	Route::any('/{any}', function ($any) {
+		// any other url, subfolders also
+	})->where('any', '.*');
+});
+
 Route::middleware([
     'web',
 	InitializeTenancyByPath::class,
     SetTenantRouteParam::class,
-	// @todo identify tenant by subdomain then redirect to path
     NoRobots::class,
 ])->prefix('/{tenant}')->group(function () {
-//    Auth::routes(['register' => false]);
 
     // Public calendar feed
     Route::get('/events-ical', [ICalController::class, 'index'])->name('events.feed');
