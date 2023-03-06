@@ -111,7 +111,7 @@ Route::middleware([
 
         // Events module
         Route::resource('events', EventController::class);
-        Route::resource('events.rsvps', RsvpController::class)->only(['store', 'update', 'destroy']);
+        Route::resource('events.rsvps', RsvpController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('events.attendances', AttendanceController::class)->only(['index']);
         Route::resource('events.activities', EventActivityController::class)->only(['store', 'update', 'destroy']);
         Route::post('events/{event}/activities/{activity}/move', MoveActivityController::class)->name('events.activities.move');
