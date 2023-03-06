@@ -26,8 +26,8 @@ class DashController extends Controller
 			->whereIn('tenant_id', $this->getUserChoirs()->map(fn ($choir) => $choir->id))
 			->whereBetween('call_time', [today(), today()->addMonth()])
 			->orderBy('call_time')
+			->with('tenant.domains')
 			->get()
-			->load('tenant')
 			->append(['my_rsvp']);
 	}
 
@@ -37,8 +37,8 @@ class DashController extends Controller
 			->whereIn('tenant_id', $this->getUserChoirs()->map(fn ($choir) => $choir->id))
 			->whereHas('status', fn (Builder $query) => $query->where('title', 'Learning'))
 			->orderBy('title')
+			->with('tenant.domains')
 			->get()
-			->load('tenant')
 			->append('my_learning');
 	}
 
