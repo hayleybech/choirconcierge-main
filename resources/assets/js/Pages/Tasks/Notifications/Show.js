@@ -4,7 +4,7 @@ import PageHeader from "../../../components/PageHeader";
 import DateTag from "../../../components/DateTag";
 import SectionHeader from "../../../components/SectionHeader";
 import SectionTitle from "../../../components/SectionTitle";
-import Layout from "../../../Layouts/Layout";
+import TenantLayout from "../../../Layouts/TenantLayout";
 import DeleteDialog from "../../../components/DeleteDialog";
 import Prose from "../../../components/Prose";
 
@@ -55,6 +55,6 @@ const Show = ({ task, notification }) => {
     );
 }
 
-Show.layout = page => <Layout children={page} />
+Show.layout = page => <TenantLayout children={page} />
 
 export default Show;

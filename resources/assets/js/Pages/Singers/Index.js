@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import SingerTableDesktop from "./SingerTableDesktop";
 import SingerTableMobile from "./SingerTableMobile";
@@ -88,6 +88,6 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     );
 }
 
-Index.layout = page => <Layout children={page} />
+Index.layout = page => <TenantLayout children={page} />
 
 export default Index;

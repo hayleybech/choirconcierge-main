@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import {useForm} from "@inertiajs/inertia-react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
@@ -187,6 +187,6 @@ const Create = ({voice_parts, roles}) => {
     );
 }
 
-Create.layout = page => <Layout children={page} />
+Create.layout = page => <TenantLayout children={page} />
 
 export default Create;

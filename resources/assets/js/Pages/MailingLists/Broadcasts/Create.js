@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from "../../../Layouts/Layout";
+import TenantLayout from "../../../Layouts/TenantLayout";
 import PageHeader from "../../../components/PageHeader";
 import AppHead from "../../../components/AppHead";
 import Label from "../../../components/inputs/Label";
@@ -113,6 +113,6 @@ const Create = ({ lists }) => {
     );
 }
 
-Create.layout = page => <Layout children={page} />
+Create.layout = page => <TenantLayout children={page} />
 
 export default Create;

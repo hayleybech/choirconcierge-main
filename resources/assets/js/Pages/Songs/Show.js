@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import SongStatusTag from "../../components/SongStatusTag";
 import PitchButton from "../../components/PitchButton";
@@ -186,7 +186,7 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
     );
 }
 
-Show.layout = page => <Layout children={page} />
+Show.layout = page => <TenantLayout children={page} />
 
 export default Show;
 

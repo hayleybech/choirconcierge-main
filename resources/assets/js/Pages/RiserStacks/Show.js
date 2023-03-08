@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import RiserStackEditor from "../../components/RiserStack/RiserStackEditor";
@@ -53,6 +53,6 @@ const Show = ({ stack }) => {
     );
 }
 
-Show.layout = page => <Layout children={page} />
+Show.layout = page => <TenantLayout children={page} />
 
 export default Show;

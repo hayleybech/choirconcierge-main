@@ -1,5 +1,5 @@
 import PageHeader from "../../../components/PageHeader";
-import Layout from "../../../Layouts/Layout";
+import TenantLayout from "../../../Layouts/TenantLayout";
 import React from "react";
 import PlacementForm from "./PlacementForm";
 import AppHead from "../../../components/AppHead";
@@ -21,6 +21,6 @@ const Edit = ({ singer, placement, voice_parts }) => (
     </>
 );
 
-Edit.layout = page => <Layout children={page} />
+Edit.layout = page => <TenantLayout children={page} />
 
 export default Edit;

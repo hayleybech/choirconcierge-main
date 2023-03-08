@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PageHeader from "../../../components/PageHeader";
-import Layout from "../../../Layouts/Layout";
+import TenantLayout from "../../../Layouts/TenantLayout";
 import Button from "../../../components/inputs/Button";
 import AppHead from "../../../components/AppHead";
 import AttendanceTag from "../../../components/Event/AttendanceTag";
@@ -96,6 +96,6 @@ const Index = ({ event, voice_parts }) => {
     );
 }
 
-Index.layout = page => <Layout children={page} />
+Index.layout = page => <TenantLayout children={page} />
 
 export default Index;

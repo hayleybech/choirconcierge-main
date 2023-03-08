@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Central;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,8 +13,24 @@
 |
 */
 
-// Central app will redirect to public site for now.
-Route::redirect('/', 'https://www.choirconcierge.com')->name('menu');
+// Redirect central index to folder
+// choirconcierge.com/ => choirconcierge.com/app
+Route::domain(config('tenancy.central_domains')[0])->group(function() {
+	Route::redirect('/', '/app');
+});
 
-// Public pages
-//Route::view('/', 'home')->name('menu');
+Route::prefix('/app')->group(function () {
+	Auth::routes(['register' => false]);
+
+	// Switch choir
+	Route::get('/switch-choir/{newTenant}', [Central\SwitchTenantController::class, 'start'])->name('tenants.switch.start');
+
+	Route::middleware(['auth'])->name('central.')->group(function () {
+		Route::get('/', [Central\DashController::class, 'index'])->name('dash');
+
+		// Account Settings
+		Route::get('account/edit', [Central\AccountController::class, 'edit'])->name('accounts.edit');
+		Route::post('account', [Central\AccountController::class, 'update'])->name('accounts.update');
+	});
+});
+

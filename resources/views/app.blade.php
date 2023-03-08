@@ -11,6 +11,10 @@
 
 	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap" rel="stylesheet">
 
+
+    <link rel="manifest" href="{{ global_asset('manifest.json') }}" />
+    @include ('snippets.pwa')
+
     <!-- Scripts -->
     @if (App::environment('production'))
         @include ('snippets.tagmanagerhead')
@@ -25,6 +29,24 @@
     @routes(nonce: 'your-nonce-here')
 
     @inertia
+
+    <!-- Load Service Worker -->
+    <script>
+        if('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').then(
+                    registration => {
+                        console.log(`ServiceWorker registration successful with scope: ${registration.scope}`);
+                    },
+                    error => {
+                        console.log(`ServiceWorker registration failed: ${error}`);
+                    }
+                );
+            });
+        } else {
+            console.error("Service workers are not supported.");
+        }
+    </script>
 
     <!-- Scripts -->
     <script src="{{ mix('/js/manifest.js') }}"></script>

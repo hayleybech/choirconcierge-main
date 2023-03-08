@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import MailingListForm from "./MailingListForm";
@@ -21,6 +21,6 @@ const Create = ({ roles, voiceParts, singerCategories }) => (
     </>
 );
 
-Create.layout = page => <Layout children={page} />
+Create.layout = page => <TenantLayout children={page} />
 
 export default Create;

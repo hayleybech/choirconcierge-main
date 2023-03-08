@@ -1,7 +1,7 @@
 import React from 'react'
 import AppHead from "../../../components/AppHead";
 import PageHeader from "../../../components/PageHeader";
-import Layout from "../../../Layouts/Layout";
+import TenantLayout from "../../../Layouts/TenantLayout";
 import TaskNotificationForm from "./TaskNotificationForm";
 
 const Edit = ({ task, notification }) => (
@@ -22,6 +22,6 @@ const Edit = ({ task, notification }) => (
     </>
 );
 
-Edit.layout = page => <Layout children={page} />
+Edit.layout = page => <TenantLayout children={page} />
 
 export default Edit;

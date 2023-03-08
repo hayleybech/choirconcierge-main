@@ -24,6 +24,6 @@ class CompleteSingerTaskController extends Controller
         // Simply mark as done.
         $singer->tasks()->updateExistingPivot($task, ['completed' => true]);
 
-        return redirect('/singers')->with(['status' => 'Task updated. ']);
+        return redirect()->route('singers.index')->with(['status' => 'Task updated. ']);
     }
 }

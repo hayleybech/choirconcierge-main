@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
@@ -181,7 +181,7 @@ const Show = ({ singer, categories }) => {
     );
 }
 
-Show.layout = page => <Layout children={page} />
+Show.layout = page => <TenantLayout children={page} />
 
 export default Show;
 

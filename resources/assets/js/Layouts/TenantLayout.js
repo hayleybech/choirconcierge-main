@@ -1,127 +1,116 @@
-import React from 'react';
-import {Link, usePage} from "@inertiajs/inertia-react";
+import React, {useState} from 'react'
+import route from 'ziggy-js';
+import SidebarDesktop from "../components/SidebarDesktop";
+import SidebarMobile from "../components/SidebarMobile";
+import navigation from "./navigation";
+import {usePage} from '@inertiajs/inertia-react';
+import GlobalTrackPlayer from "../components/Audio/GlobalTrackPlayer";
+import { PlayerContext } from '../contexts/player-context';
+import { AudioPlayerProvider } from "react-use-audio-player"
+import ImpersonateUserModal from "../components/ImpersonateUserModal";
+import LayoutTopBar from "../components/LayoutTopBar";
+import SwitchChoirModal from "../components/SwitchChoirModal";
+import Button from "../components/inputs/Button";
 import Icon from "../components/Icon";
+import ToastFlash from "../components/ToastFlash";
+import {useMediaQuery} from "react-responsive";
+import usePromptBeforeUnload from "../hooks/usePromptBeforeUnload";
 
-const nav = [
-    { label: 'Dashboard', route: 'dash', icon: 'chart-line', items: [],  },
-    {
-        label: 'Singers',
-        route: 'singers.index',
-        icon: 'users',
-        on: true,
-        items: [
-            { label: 'All Singers', route: 'singers.index', icon: 'list' },
-            { label: 'Add New', route: 'singers.create', icon: 'plus-square' },
-            { label: 'Voice Parts', route: 'voice-parts.index', icon: 'users-class' },
-            { label: 'Roles', route: 'roles.index', icon: 'user-tag' }
-        ]
-    },
-    {
-        label: 'Songs',
-        route: 'songs.index',
-        icon: 'list-music',
-        items: [
-            { label: 'All Songs', route: 'songs.index', icon: 'list' },
-            { label: 'Add New', route: 'songs.create', icon: 'plus-square' },
-        ]
-    },
-    {
-        label: 'Events',
-        route: 'events.index',
-        icon: 'calendar-alt',
-        items: [
-            { label: 'All Events', route: 'events.index', icon: 'list' },
-            { label: 'Add New', route: 'events.create', icon: 'plus-square' },
-            { label: 'Attendance Report', route: 'events.reports.attendance', icon: 'analytics' },
-        ]
-    },
-    {
-        label: 'Documents',
-        route: 'folders.index',
-        icon: 'folders',
-        items: [
-            { label: 'All Folders', route: 'folders.index', icon: 'list' },
-            { label: 'Add Folder', route: 'folders.create', icon: 'plus-square' },
-        ]
-    },
-    {
-        label: 'Riser Stacks',
-        route: 'stacks.index',
-        icon: 'people-arrows',
-        items: [
-            { label: 'All Stacks', route: 'stacks.index', icon: 'list' },
-            { label: 'Add New', route: 'stacks.create', icon: 'plus-square' },
-        ]
-    },
-    {
-        label: 'Mailing Lists',
-        route: 'groups.index',
-        icon: 'mail-bulk',
-        items: [
-            { label: 'All Lists', route: 'groups.index', icon: 'list' },
-            { label: 'Add New', route: 'groups.create', icon: 'plus-square' },
-        ]
-    },
-    {
-        label: 'Onboarding',
-        route: 'tasks.index',
-        icon: 'tasks',
-        items: [
-            { label: 'All Tasks', route: 'tasks.index', icon: 'list' },
-            { label: 'Add New', route: 'tasks.create', icon: 'plus-square' },
-        ]
-    },
-];
+export default function TenantLayout({ children }) {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [player, setPlayer] = useState({
+        songTitle: null,
+        songId: 0,
+        fileName: null,
+        src: null,
+        play: (attachment) => setPlayer(oldState => ({
+            ...oldState,
+            songTitle: attachment.song.title,
+            songId: attachment.song.id,
+            fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
+            src: attachment.download_url,
+        })),
+        stop: () => setPlayer({
+            ...player,
+            songTitle: null,
+            songId: 0,
+            fileName: null,
+            src: null,
+        }),
 
-const TenantLayout = ({ children }) => {
-    const { tenant } = usePage().props;
+        showFullscreen: false,
+        setShowFullscreen: (value) => setPlayer(oldState => ({
+            ...oldState,
+            showFullscreen: value,
+        })),
+    });
+    const [showImpersonateModal, setShowImpersonateModal] = useState(false);
+    const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
+
+    usePromptBeforeUnload(player.fileName || player.showFullscreen);
+
+    const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
+
+    const { can, userChoirs, errors, flash } = usePage().props;
+
+    const navFiltered = navigation
+        .filter((item) => can[item.can])
+        .map((item) => {
+            item.active = item.showAsActiveForRoutes.some((routeName) => route().current(routeName));
+            item.items = item.items
+                .filter((subItem) => can[subItem.can])
+                .map((subItem) => {
+                    subItem.active = subItem.showAsActiveForRoutes.some((routeName) => route().current(routeName));
+                    return subItem;
+                });
+            return item;
+        })
 
     return (
-        <div className="flex items-stretch h-full">
-            <div className="w-250px h-full bg-brand-purple-dark">
-                <Link href={route('dash')} className="flex py-6 px-8">
-                    <img src="/img/vibrant/logo.svg" alt="Choir Concierge" />
-                </Link>
+        <PlayerContext.Provider value={player}>
+            <div className="h-screen flex overflow-hidden bg-gray-100">
+                {isMobile ? (
+                    <SidebarMobile
+                        navigation={navFiltered}
+                        open={sidebarOpen}
+                        setOpen={setSidebarOpen}
+                        switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => { setSidebarOpen(false); setShowSwitchChoirModal(true); }} />}
+                    />
+                ) : (
+                    <div className="flex shrink-0">
+                        <SidebarDesktop
+                            navigation={navFiltered}
+                            switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
+                        />
+                    </div>
+                )}
 
-                <Link href={route('dash')} className="flex justify-center mb-4 py-4 px-6 bg-brand-off-white">
-                    <img src={tenant.logo_url} alt={tenant.choir_name} className="h-12 w-auto" />
-                </Link>
+                <div className="flex flex-col w-0 flex-1 overflow-hidden">
+                    {player.showFullscreen || <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />}
 
-                <div className="flex flex-col">
+                    <AudioPlayerProvider>
+                        <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none">
+                            {children}
+                        </main>
 
-                    {nav.map((item) => (
-                        <>
-                            {item.on ? (
-                                <div className="bg-brand-light-pink ml-3 my-2 py-4 px-6 flex flex-col rounded-l-3xl text-brand-purple-dark">
-                                    <Link href={route(item.route)} className="uppercase font-semibold hover:opacity-75 mb-1">
-                                        <Icon icon={item.icon} type="light" className="mr-3" />
-                                        {item.label}
-                                    </Link>
-                                    <>
-                                        {item.items.map((child) => (
-                                            <Link href={route(child.route)} className="py-1 text-sm hover:opacity-75">
-                                                <Icon icon={child.icon} type="light" className="mr-3" />
-                                                {child.label}
-                                            </Link>
-                                        ))}
-                                    </>
-                                </div>
-                            ): (
-                                <div className="ml-3 py-3 px-6 flex flex-col">
-                                    <Link href={route(item.route)} className="text-white opacity-75 uppercase font-semibold hover:opacity-50">
-                                        <Icon icon={item.icon} type="light" className="mr-3" />
-                                        {item.label}
-                                    </Link>
-                                </div>
-                            )}
-                        </>
-                    ))}
+                        {player.fileName &&
+                            <GlobalTrackPlayer songTitle={player.songTitle} songId={player.songId} fileName={player.fileName} close={player.stop} />
+                        }
+                    </AudioPlayerProvider>
                 </div>
-            </div>
 
-            <div>{children}</div>
-        </div>
-    );
+                <ToastFlash errors={errors} flash={flash} />
+
+                <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
+                <SwitchChoirModal setIsOpen={setShowSwitchChoirModal} isOpen={showSwitchChoirModal} choirs={userChoirs} />
+            </div>
+        </PlayerContext.Provider>
+    )
 }
 
-export default TenantLayout;
+const SwitchChoirButton = ({ onClick }) => (
+    <Button variant="secondary" size="xs" className="mx-4" onClick={onClick}>
+        <Icon icon="exchange" mr />
+        Switch Choir
+    </Button>
+);
