@@ -58,7 +58,7 @@ class LoginControllerTest extends TestCase
 
         // logout
         $this->post(route('logout'))
-            ->assertRedirect(route('central.dash'));
+            ->assertRedirect(route('login'));
 
         $this->assertGuest();
     }
