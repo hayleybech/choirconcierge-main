@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import RiserStackTableDesktop from "./RiserStackTableDesktop";
@@ -49,6 +49,6 @@ const Index = ({ stacks }) => {
     );
 }
 
-Index.layout = page => <Layout children={page} />
+Index.layout = page => <TenantLayout children={page} />
 
 export default Index;

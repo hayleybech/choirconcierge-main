@@ -2,7 +2,7 @@ import React from 'react'
 import TaskNotificationForm from "./TaskNotificationForm";
 import AppHead from "../../../components/AppHead";
 import PageHeader from "../../../components/PageHeader";
-import Layout from "../../../Layouts/Layout";
+import TenantLayout from "../../../Layouts/TenantLayout";
 
 const Create = ({ task }) => (
     <>
@@ -21,6 +21,6 @@ const Create = ({ task }) => (
     </>
 );
 
-Create.layout = page => <Layout children={page} />
+Create.layout = page => <TenantLayout children={page} />
 
 export default Create;

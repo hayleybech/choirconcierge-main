@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from "../../Layouts/Layout";
+import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import {DateTime} from "luxon";
@@ -106,7 +106,7 @@ const AttendanceReport = ({ events, voiceParts, numSingers, avgSingersPerEvent, 
     </>
 );
 
-AttendanceReport.layout = page => <Layout children={page} />
+AttendanceReport.layout = page => <TenantLayout children={page} />
 
 export default AttendanceReport;
 
