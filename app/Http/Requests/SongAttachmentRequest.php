@@ -27,9 +27,9 @@ class SongAttachmentRequest extends FormRequest
     {
         return [
             'type' => ['required', 'in:sheet-music,full-mix-demo,learning-tracks,youtube,other'],
-            'attachment_uploads' => [Rule::requiredIf(fn () => ! $this->isVideo()), 'array'],
-            'attachment_uploads.*' => [Rule::requiredIf(fn () => ! $this->isVideo()), 'file'],
-            'url' => [Rule::requiredIf(fn () => $this->isVideo()), 'url', 'max:255'],
+            'attachment_uploads' => [Rule::excludeIf(fn () => $this->isVideo()), 'required', 'array'],
+            'attachment_uploads.*' => [Rule::excludeIf(fn () => $this->isVideo()), 'required', 'file'],
+            'url' => [Rule::excludeIf(fn () => !$this->isVideo()), 'required', 'url', 'max:255'],
             'title' => ['max:255'],
         ];
     }

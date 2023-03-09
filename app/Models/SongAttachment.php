@@ -116,7 +116,7 @@ class SongAttachment extends Model
 
     public function getDownloadUrlAttribute(): string
     {
-        return tenant_asset($this->getPath());
+        return route('tenancy.asset', ['path' => $this->getPath(), 'tenant' => $this->song->tenant_id]);
     }
 
     public function getPathAttribute()
