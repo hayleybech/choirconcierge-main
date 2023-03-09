@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\LearningStatus;
 use App\Models\Singer;
 use App\Models\Song;
 use App\Models\User;
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Validation\Rules\In;
 use Inertia\Inertia;
 use Inertia\Response;
 

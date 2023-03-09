@@ -27,6 +27,7 @@ use App\Http\Controllers\Search\FindSingerController;
 use App\Http\Controllers\Search\GlobalFindUserController;
 use App\Http\Controllers\BroadcastController;
 use App\Http\Controllers\SingerController;
+use App\Http\Controllers\TenantAssetsController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UpdateSingerFeeController;
 use App\Http\Controllers\SingerPlacementController;
@@ -79,6 +80,11 @@ Route::middleware([
     SetTenantRouteParam::class,
     NoRobots::class,
 ])->prefix('/{tenant}')->group(function () {
+
+    // Tenant asset - path version as path tenancy isn't supported by the library
+    Route::get('/tenancy/assets/{path?}', [TenantAssetsController::class, 'asset'])
+        ->where('path', '(.*)')
+        ->name('tenancy.asset');
 
     // Public calendar feed
     Route::get('/events-ical', [ICalController::class, 'index'])->name('events.feed');
