@@ -3,23 +3,28 @@ import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import MailingListForm from "./MailingListForm";
+import useRoute from "../../hooks/useRoute";
 
-const Create = ({ roles, voiceParts, singerCategories }) => (
-    <>
-        <AppHead title="Create Mailing List" />
-        <PageHeader
-            title="Create Mailing List"
-            icon="mail-bulk"
-            breadcrumbs={[
-                { name: 'Dashboard', url: route('dash')},
-                { name: 'Mailing Lists', url: route('groups.index')},
-                { name: 'Create', url: route('groups.create')},
-            ]}
-        />
+const Create = ({ roles, voiceParts, singerCategories }) => {
+    const { route } = useRoute();
 
-        <MailingListForm roles={roles} voiceParts={voiceParts} singerCategories={singerCategories} />
-    </>
-);
+    return (
+        <>
+            <AppHead title="Create Mailing List" />
+            <PageHeader
+                title="Create Mailing List"
+                icon="mail-bulk"
+                breadcrumbs={[
+                    { name: 'Dashboard', url: route('dash')},
+                    { name: 'Mailing Lists', url: route('groups.index')},
+                    { name: 'Create', url: route('groups.create')},
+                ]}
+            />
+
+            <MailingListForm roles={roles} voiceParts={voiceParts} singerCategories={singerCategories} />
+        </>
+    );
+}
 
 Create.layout = page => <TenantLayout children={page} />
 

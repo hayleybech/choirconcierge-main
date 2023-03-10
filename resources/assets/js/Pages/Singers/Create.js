@@ -19,8 +19,11 @@ import GlobalUserSelect from "../../components/inputs/GlobalUserSelect";
 import DayInput from "../../components/inputs/Day";
 import {DateTime} from "luxon";
 import FormWrapper from "../../components/FormWrapper";
+import useRoute from "../../hooks/useRoute";
 
 const Create = ({voice_parts, roles}) => {
+    const { route } = useRoute();
+
     const { data, setData, post, processing, errors } = useForm({
         create: true,
 

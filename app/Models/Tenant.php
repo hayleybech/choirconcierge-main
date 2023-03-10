@@ -82,7 +82,7 @@ class Tenant extends BaseTenant
     public function logoUrl(): Attribute
     {
         return Attribute::get(fn () =>
-            asset('storage/choir-logos/'.$this->choir_logo
-        ));
+            $this->choir_logo ? asset('storage/choir-logos/'.$this->choir_logo) : ''
+        );
     }
 }

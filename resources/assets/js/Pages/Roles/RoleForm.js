@@ -11,8 +11,11 @@ import FormFooter from "../../components/FormFooter";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 import {modelsAndAbilities} from "./modelsAndAbilities";
 import FormWrapper from "../../components/FormWrapper";
+import useRoute from "../../hooks/useRoute";
 
 const RoleForm = ({ role }) => {
+    const { route } = useRoute();
+
     const { data, setData, post, put, processing, errors } = useForm({
         name: role?.name ?? '',
         abilities: role?.abilities ?? [],
@@ -20,7 +23,7 @@ const RoleForm = ({ role }) => {
 
     function submit(e) {
         e.preventDefault();
-        role ? put(route('roles.update', role)) : post(route('roles.store'));
+        role ? put(route('roles.update', {role})) : post(route('roles.store'));
     }
 
     function toggleAllAbilitiesForModel(modelKey, value) {
@@ -95,7 +98,7 @@ const RoleForm = ({ role }) => {
                 </FormSection>
 
                 <FormFooter>
-                    <ButtonLink href={role ? route('roles.show', role) : route('roles.index')}>Cancel</ButtonLink>
+                    <ButtonLink href={role ? route('roles.show', {role}) : route('roles.index')}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>

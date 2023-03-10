@@ -6,13 +6,13 @@ import FolderTableDesktop from "./FolderTableDesktop";
 import FolderTableMobile from "./FolderTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
 import DeleteDialog from "../../components/DeleteDialog";
-import MailingListTableDesktop from "../MailingLists/MailingListTableDesktop";
-import MailingListTableMobile from "../MailingLists/MailingListTableMobile";
 import EmptyState from "../../components/EmptyState";
 import IndexContainer from "../../components/IndexContainer";
+import useRoute from "../../hooks/useRoute";
 
 const Index = ({ folders }) => {
     const { can } = usePage().props;
+    const { route } = useRoute();
 
     const [deletingFolder, setDeletingFolder] = useState(null);
     const [deletingDocument, setDeletingDocument] = useState(null);
@@ -49,7 +49,7 @@ const Index = ({ folders }) => {
                 }
             />
 
-            <DeleteDialog title="Delete Folder" url={deletingFolder ? route('folders.destroy', deletingFolder) : '#'} isOpen={!!deletingFolder} setIsOpen={setDeletingFolder}>
+            <DeleteDialog title="Delete Folder" url={deletingFolder ? route('folders.destroy', {folder: deletingFolder}) : '#'} isOpen={!!deletingFolder} setIsOpen={setDeletingFolder}>
                 Are you sure you want to delete this folder?
                 All of its documents will be permanently removed from our servers forever.
                 This action cannot be undone.
@@ -57,7 +57,10 @@ const Index = ({ folders }) => {
 
             <DeleteDialog
                 title="Delete Document"
-                url={deletingDocument ? route('folders.documents.destroy', [deletingDocument.folder_id, deletingDocument]) : '#'}
+                url={deletingDocument
+                    ? route('folders.documents.destroy', {folder: deletingDocument.folder_id, document: deletingDocument})
+                    : '#'
+                }
                 isOpen={!!deletingDocument}
                 setIsOpen={setDeletingDocument}
             >

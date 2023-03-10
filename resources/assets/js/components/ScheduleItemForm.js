@@ -8,8 +8,11 @@ import TextInput from "./inputs/TextInput";
 import Error from "./inputs/Error";
 import Button from "./inputs/Button";
 import Icon from "./Icon";
+import useRoute from "../hooks/useRoute";
 
 const ScheduleItemForm = ({ event }) => {
+    const { route } = useRoute();
+
     const {data, setData, post, processing, errors} = useForm({
         song_id: null,
         description: '',
@@ -18,7 +21,7 @@ const ScheduleItemForm = ({ event }) => {
 
     function submit(e) {
         e.preventDefault();
-        post(route('events.activities.store', event));
+        post(route('events.activities.store', {event}));
     }
 
     return (

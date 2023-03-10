@@ -14,9 +14,12 @@ import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import Help from "../../components/inputs/Help";
 import FormWrapper from "../../components/FormWrapper";
+import useRoute from "../../hooks/useRoute";
 
 const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
     const { props: pageProps } = usePage();
+    const { route } = useRoute();
+
     const { data, setData, post, put, processing, errors } = useForm({
         title: list?.title ?? '',
         slug: list?.slug ?? '',
@@ -33,7 +36,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
 
     function submit(e) {
         e.preventDefault();
-        list ? put(route('groups.update', list)) : post(route('groups.store'));
+        list ? put(route('groups.update', {group: list})) : post(route('groups.store'));
     }
 
     /**
@@ -239,7 +242,9 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                 )}
 
                 <FormFooter>
-                    <ButtonLink href={list ? route('groups.show', list) : route('groups.index')}>Cancel</ButtonLink>
+                    <ButtonLink href={list ? route('groups.show', {group: list}) : route('groups.index')}>
+                        Cancel
+                    </ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>

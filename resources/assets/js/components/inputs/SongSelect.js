@@ -1,11 +1,13 @@
 import React from 'react';
 import AsyncSelect from 'react-select/async';
 import axios from 'axios';
+import useRoute from "../../hooks/useRoute";
 
 const SongSelect = ({ defaultValue, updateFn, multiple = false }) => {
+    const { route } = useRoute();
 
     const load = (inputValue) => axios
-        .get(route('find.songs', inputValue))
+        .get(route('find.songs', {keyword: inputValue}))
         .then(response => response.data);
 
     return (

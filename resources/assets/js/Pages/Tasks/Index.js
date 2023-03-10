@@ -7,9 +7,11 @@ import TaskTableMobile from "./TaskTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
 import EmptyState from "../../components/EmptyState";
 import IndexContainer from "../../components/IndexContainer";
+import useRoute from "../../hooks/useRoute";
 
 const Index = ({ tasks }) => {
     const { can } = usePage().props;
+    const { route } = useRoute();
 
     return (
         <>

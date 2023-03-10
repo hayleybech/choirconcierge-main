@@ -10,8 +10,11 @@ import DateTag from "../../components/DateTag";
 import SectionHeader from "../../components/SectionHeader";
 import DeleteDialog from "../../components/DeleteDialog";
 import EmptyState from "../../components/EmptyState";
+import useRoute from "../../hooks/useRoute";
 
 const Show = ({ task }) => {
+    const { route } = useRoute();
+
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
     return (
@@ -30,14 +33,19 @@ const Show = ({ task }) => {
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Tasks', url: route('tasks.index')},
-                    { name: task.name, url: route('tasks.show', task) },
+                    { name: task.name, url: route('tasks.show', {task}) },
                 ]}
                 actions={[
                     { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_task' },
                 ].filter(action => action.can ? task.can[action.can] : true)}
             />
 
-            <DeleteDialog title="Delete Task" url={route('tasks.destroy', task)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+            <DeleteDialog
+                title="Delete Task"
+                url={route('tasks.destroy', {task})}
+                isOpen={deleteDialogIsOpen}
+                setIsOpen={setDeleteDialogIsOpen}
+            >
                 Are you sure you want to delete this task? This may break your onboarding process! This action cannot be undone.
             </DeleteDialog>
 
@@ -49,7 +57,7 @@ const Show = ({ task }) => {
                     <ButtonLink
                         variant="primary"
                         size="sm"
-                        href={route('tasks.notifications.create', task)}
+                        href={route('tasks.notifications.create', {task})}
                     >
                         <Icon icon="edit" mr />Add Notification
                     </ButtonLink>
@@ -69,7 +77,10 @@ const Show = ({ task }) => {
                                         <div className="relative px-6 py-5 flex items-center space-x-3">
                                             <div className="flex flex-wrap items-center justify-between px-4 w-full ms:space-x-2 space-y-2 md:space-y-0">
                                                 <span className="text-sm font-medium truncate">
-                                                    <Link href={route('tasks.notifications.show', { task: task, notification: notification.id })} className="text-purple-600">
+                                                    <Link
+                                                        href={route('tasks.notifications.show', { task: task, notification: notification.id })}
+                                                        className="text-purple-600"
+                                                    >
                                                         {notification.subject}
                                                     </Link>
                                                 </span>
@@ -94,7 +105,7 @@ const Show = ({ task }) => {
                             </>}
                             actionDescription={'For a task like "Pass Audition", you could create a notification like "Congratulations", or "Please invoice".'}
                             icon="bells"
-                            href={route('tasks.notifications.create', task)}
+                            href={route('tasks.notifications.create', {task})}
                             actionLabel="Add Notification"
                             actionIcon="plus"
                         />

@@ -4,9 +4,11 @@ import PageHeader from "../../../components/PageHeader";
 import AppHead from "../../../components/AppHead";
 import {usePage} from "@inertiajs/inertia-react";
 import Calendar from "./../Calendar";
+import useRoute from "../../../hooks/useRoute";
 
 const Month = ({ days, month }) => {
     const { can } = usePage().props;
+    const { route } = useRoute();
 
     return (
         <>

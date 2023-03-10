@@ -12,8 +12,11 @@ import Button from "../../../components/inputs/Button";
 import SnippetTag from "../../../components/SnippetTag";
 import RichTextInput from "../../../components/inputs/RichTextInput";
 import FormWrapper from "../../../components/FormWrapper";
+import useRoute from "../../../hooks/useRoute";
 
 const TaskNotificationForm = ({ task, notification }) => {
+    const { route } = useRoute();
+
     const { data, setData, post, put, processing, errors } = useForm({
         subject: notification?.subject ?? '',
         recipients: notification?.recipients ?? '',
@@ -23,7 +26,9 @@ const TaskNotificationForm = ({ task, notification }) => {
 
     function submit(e) {
         e.preventDefault();
-        notification ? put(route('tasks.notifications.update', [task, notification])) : post(route('tasks.notifications.store', task));
+        notification
+            ? put(route('tasks.notifications.update', {task, notification}))
+            : post(route('tasks.notifications.store', {task}));
     }
 
     return (

@@ -6,15 +6,18 @@ import Error from "../../components/inputs/Error";
 import Button from "../../components/inputs/Button";
 import FileInput from "../../components/inputs/FileInput";
 import Icon from "../../components/Icon";
+import useRoute from "../../hooks/useRoute";
 
 const DocumentForm = ({ folder }) => {
+    const { route } = useRoute();
+
     const { data, setData, post, processing, errors } = useForm({
         document_uploads: [],
     });
 
     function submit(e) {
         e.preventDefault();
-        post(route('folders.documents.store', folder));
+        post(route('folders.documents.store', {folder}));
     }
 
     return (

@@ -3,24 +3,29 @@ import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import EventForm from "./EventForm";
+import useRoute from "../../hooks/useRoute";
 
-const Edit = ({ event, types, mode }) => (
-    <>
-        <AppHead title={`Edit - ${event.title}`} />
-        <PageHeader
-            title="Edit Event"
-            icon="calendar-edit"
-            breadcrumbs={[
-                { name: 'Dashboard', url: route('dash')},
-                { name: 'Events', url: route('events.index')},
-                { name: event.title, url: route('events.show', event)},
-                { name: 'Edit', url: route('events.edit', event)},
-            ]}
-        />
+const Edit = ({ event, types, mode }) => {
+    const { route } = useRoute();
 
-        <EventForm event={event} types={types} mode={mode} />
-    </>
-);
+    return (
+        <>
+            <AppHead title={`Edit - ${event.title}`} />
+            <PageHeader
+                title="Edit Event"
+                icon="calendar-edit"
+                breadcrumbs={[
+                    { name: 'Dashboard', url: route('dash')},
+                    { name: 'Events', url: route('events.index')},
+                    { name: event.title, url: route('events.show', {event})},
+                    { name: 'Edit', url: route('events.edit', {event})},
+                ]}
+            />
+
+            <EventForm event={event} types={types} mode={mode} />
+        </>
+    );
+}
 
 Edit.layout = page => <TenantLayout children={page} />
 

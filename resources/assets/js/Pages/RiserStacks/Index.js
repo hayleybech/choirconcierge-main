@@ -7,9 +7,11 @@ import RiserStackTableMobile from "./RiserStackTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
 import IndexContainer from "../../components/IndexContainer";
 import EmptyState from "../../components/EmptyState";
+import useRoute from "../../hooks/useRoute";
 
 const Index = ({ stacks }) => {
     const { can } = usePage().props;
+    const { route } = useRoute();
 
     return (
         <>

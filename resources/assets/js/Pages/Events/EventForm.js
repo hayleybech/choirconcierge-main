@@ -19,10 +19,12 @@ import Form from "../../components/Form";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 import RichTextInput from "../../components/inputs/RichTextInput";
 import FormWrapper from "../../components/FormWrapper";
+import useRoute from "../../hooks/useRoute";
 
 const EventForm = ({ event, types, mode }) => {
-    const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
+    const { route } = useRoute();
     const { timezone_label } = usePage().props.tenant;
+
     const { data, setData, post, put, processing, errors, transform } = useForm({
         title: event?.title ?? '',
         type_id: event?.type.id ?? null,
@@ -41,12 +43,14 @@ const EventForm = ({ event, types, mode }) => {
         repeat_until: event?.repeat_until ? DateTime.fromISO(event.repeat_until) : DateTime.now(),
     });
 
+    const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
+
     function submit(e) {
         e.preventDefault();
         event
             ? (event.is_repeating
-                ? put(route('events.recurring.update', [event, mode]))
-                : put(route('events.update', event))
+                ? put(route('events.recurring.update', {event, mode}))
+                : put(route('events.update', {event}))
             )
             : post(route('events.store'));
     }
@@ -300,7 +304,7 @@ const EventForm = ({ event, types, mode }) => {
                 </FormSection>
 
                 <FormFooter>
-                    <ButtonLink href={event ? route('events.show', event) : route('events.index')}>Cancel</ButtonLink>
+                    <ButtonLink href={event ? route('events.show', {event}) : route('events.index')}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>

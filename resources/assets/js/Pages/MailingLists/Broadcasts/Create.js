@@ -16,8 +16,11 @@ import MailingListSelect from "../../../components/inputs/MailingListSelect";
 import Icon from "../../../components/Icon";
 import ErrorAlert from "../../../components/ErrorAlert";
 import FileInput from "../../../components/inputs/FileInput";
+import useRoute from "../../../hooks/useRoute";
 
 const Create = ({ lists }) => {
+    const { route } = useRoute();
+
     const {data, setData, post, processing, errors, progress} = useForm({
         subject: '',
         body: '',

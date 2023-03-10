@@ -3,8 +3,10 @@ import {components} from "react-select";
 import AsyncSelect from 'react-select/async';
 import axios from 'axios';
 import Badge from "../Badge";
+import useRoute from "../../hooks/useRoute";
 
 const SingerSelect = ({ defaultValue, updateFn, multiple = false }) => {
+    const { route } = useRoute();
 
     const load = (inputValue) => axios
         .get(route('find.singers', { q: inputValue }))

@@ -19,8 +19,10 @@ import DayInput from "../../components/inputs/Day";
 import Help from "../../components/inputs/Help";
 import ButtonGroup from "../../components/inputs/ButtonGroup";
 import FormWrapper from "../../components/FormWrapper";
+import useRoute from "../../hooks/useRoute";
 
 const Edit = ({ voice_parts, roles, singer }) => {
+    const { route } = useRoute();
     const { can } = usePage().props;
 
     const { data, setData, put, processing, errors, transform } = useForm({
@@ -59,8 +61,8 @@ const Edit = ({ voice_parts, roles, singer }) => {
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Singers', url: route('singers.index')},
-                    { name: singer.user.name, url: route('singers.show', singer)},
-                    { name: 'Edit Membership', url: route('singers.edit', singer)},
+                    { name: singer.user.name, url: route('singers.show', {singer})},
+                    { name: 'Edit Membership', url: route('singers.edit', {singer})},
                 ]}
             />
 

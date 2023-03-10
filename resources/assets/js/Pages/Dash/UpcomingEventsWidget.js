@@ -10,23 +10,25 @@ import Icon from "../../components/Icon";
 import {usePage} from "@inertiajs/inertia-react";
 import RsvpTag from "../../components/Event/RsvpTag";
 import MyRsvpButtons from "../../components/Event/MyRsvpButtons";
+import useRoute from "../../hooks/useRoute";
 
 const UpcomingEventsWidget = ({ events }) => {
     const { can } = usePage().props;
+    const { route } = useRoute();
 
     return (
         <Panel header={<SectionTitle>Upcoming Events</SectionTitle>} noPadding>
             {events.length > 0 ? (
             <TableMobile>
                 {events.map((event) => (
-                    <TableMobileItem url={route('events.show', event)} key={event.id}>
+                    <TableMobileItem url={route('events.show', {event})} key={event.id}>
                         <div className="flex-1 flex flex-col mr-2 sm:mr-4">
                             {isToday(event) && (
                             <div className="flex items-center justify-between mb-3">
                                 <div className="text-md font-bold mr-2">Today</div>
 
                                 {can['create_attendance'] && (
-                                    <ButtonLink href={route('events.attendances.index', event)} variant="primary" size="xs" className="mt-2">
+                                    <ButtonLink href={route('events.attendances.index', {event})} variant="primary" size="xs" className="mt-2">
                                         <Icon icon="edit" />
                                         Record Attendance
                                     </ButtonLink>
