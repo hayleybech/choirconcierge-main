@@ -23,6 +23,4 @@ mix.alias({
 	ziggy: path.resolve('vendor/tightenco/ziggy/dist'),
 });
 
-if (mix.inProduction()) {
-	mix.version();
-}
+mix.version();
