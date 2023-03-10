@@ -12,8 +12,8 @@ import Label from "../../components/inputs/Label";
 import Error from "../../components/inputs/Error";
 import TextInput from "../../components/inputs/TextInput";
 import collect from "collect.js";
-import TableHeadingSort from "../../components/TableHeadingSort";
 import EmptyState from "../../components/EmptyState";
+import useRoute from "../../hooks/useRoute";
 
 const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, permissions }) => {
     const [openFolder, setOpenFolder] = useState(0);
@@ -142,6 +142,8 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
 export default FolderTableDesktop;
 
 const RenameDocumentDialog = ({ isOpen, setIsOpen, folder, document }) => {
+    const { route } = useRoute();
+
     const { data, setData, put, errors } = useForm({
         title: document?.title ?? '',
     });
@@ -152,7 +154,7 @@ const RenameDocumentDialog = ({ isOpen, setIsOpen, folder, document }) => {
 
     function submit(e) {
         e.preventDefault();
-        put(route('folders.documents.update', [folder, document]), {
+        put(route('folders.documents.update', {folder, document}), {
             onSuccess: () => setIsOpen(false),
         });
     }
@@ -178,6 +180,8 @@ const RenameDocumentDialog = ({ isOpen, setIsOpen, folder, document }) => {
 };
 
 const RenameFolderDialog = ({ isOpen, setIsOpen, folder }) => {
+    const { route } = useRoute();
+
     const { data, setData, put, errors } = useForm({
         title: document?.title ?? '',
     });
@@ -188,7 +192,7 @@ const RenameFolderDialog = ({ isOpen, setIsOpen, folder }) => {
 
     function submit(e) {
         e.preventDefault();
-        put(route('folders.update', folder), {
+        put(route('folders.update', {folder}), {
             onSuccess: () => setIsOpen(false),
         });
     }

@@ -9,8 +9,11 @@ import Icon from "../Icon";
 import RadioGroup from "../inputs/RadioGroup";
 import AttachmentType from "../../AttachmentType";
 import TextInput from "../inputs/TextInput";
+import useRoute from "../../hooks/useRoute";
 
 const SongAttachmentForm = ({ song }) => {
+    const { route } = useRoute();
+
     const { data, setData, post, processing, errors } = useForm({
         attachment_uploads: [],
         type: Object.keys(AttachmentType.types)[0],
@@ -20,7 +23,7 @@ const SongAttachmentForm = ({ song }) => {
 
     function submit(e) {
         e.preventDefault();
-        post(route('songs.attachments.store', song.id));
+        post(route('songs.attachments.store', {song: song.id}));
     }
 
     return (

@@ -6,8 +6,10 @@ import FileInput from "./inputs/FileInput";
 import Help from "./inputs/Help";
 import Error from "./inputs/Error";
 import React from "react";
+import useRoute from "../hooks/useRoute";
 
 const ImportSingersDialog = ({ isOpen, setIsOpen }) => {
+    const { route } = useRoute();
     const { data, setData, post, errors } = useForm({
         import_csv: null,
     });

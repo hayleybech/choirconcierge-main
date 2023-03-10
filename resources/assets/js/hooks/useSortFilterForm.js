@@ -1,7 +1,10 @@
 import {useForm} from "@inertiajs/inertia-react";
 import collect from "collect.js";
+import useRoute from "./useRoute";
 
 const useSortFilterForm = (routeName, filters, sorts, transforms = () => {}) => {
+    const { route } = useRoute();
+
     const { data, setData, get, transform } = useForm({
         sort: getSort(sorts.find(option => option.default).id),
         sortDir: getSortDir(),

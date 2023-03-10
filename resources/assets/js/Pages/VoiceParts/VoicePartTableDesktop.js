@@ -4,8 +4,11 @@ import Swatch from "../../components/Swatch";
 import Table, {TableCell} from "../../components/Table";
 import DateTag from "../../components/DateTag";
 import collect from "collect.js";
+import useRoute from "../../hooks/useRoute";
 
 const VoicePartTableDesktop = ({ voiceParts }) => {
+    const { route } = useRoute();
+
     const headings = collect({
         title: 'Name',
         singers: 'Singers',
@@ -23,7 +26,9 @@ const VoicePartTableDesktop = ({ voiceParts }) => {
                                 <Swatch colour={voicePart.colour} />
                             </div>
                             <div className="ml-4">
-                                <Link href={route('voice-parts.edit', voicePart.id)} className="text-sm font-medium text-purple-800">{voicePart.title}</Link>
+                                <Link href={route('voice-parts.edit', {voice_part: voicePart.id})} className="text-sm font-medium text-purple-800">
+                                    {voicePart.title}
+                                </Link>
                             </div>
                         </div>
                     </TableCell>

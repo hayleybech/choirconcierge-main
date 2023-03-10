@@ -5,8 +5,10 @@ import AppHead from "../../components/AppHead";
 import RiserStackEditor from "../../components/RiserStack/RiserStackEditor";
 import DateTag from "../../components/DateTag";
 import DeleteDialog from "../../components/DeleteDialog";
+import useRoute from "../../hooks/useRoute";
 
 const Show = ({ stack }) => {
+    const { route } = useRoute();
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
     return (
@@ -24,7 +26,7 @@ const Show = ({ stack }) => {
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Riser Stacks', url: route('stacks.index')},
-                    { name: stack.title, url: route('stacks.show', stack) },
+                    { name: stack.title, url: route('stacks.show', {stack}) },
                 ]}
                 actions={[
                     { label: 'Edit', icon: 'edit', url: route('stacks.edit', stack), can: 'update_stack' },
@@ -32,7 +34,12 @@ const Show = ({ stack }) => {
                 ].filter(action => action.can ? stack.can[action.can] : true)}
             />
 
-            <DeleteDialog title="Delete Riser Stack" url={route('stacks.destroy', stack)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+            <DeleteDialog
+                title="Delete Riser Stack"
+                url={route('stacks.destroy', {stack})}
+                isOpen={deleteDialogIsOpen}
+                setIsOpen={setDeleteDialogIsOpen}
+            >
                 Are you sure you want to delete this riser stack? This action cannot be undone.
             </DeleteDialog>
 

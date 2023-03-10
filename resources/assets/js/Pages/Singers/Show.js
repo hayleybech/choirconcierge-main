@@ -18,6 +18,7 @@ import SingerStatus from "../../SingerStatus";
 import CollapsePanel from "../../components/CollapsePanel";
 import CollapseGroup from "../../components/CollapseGroup";
 import FeeStatus from "../../components/FeeStatus";
+import useRoute from "../../hooks/useRoute";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -66,13 +67,15 @@ const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
 );
 
 const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
+    const { route } = useRoute();
+
     const [selectedCategory, setSelectedCategory] = useState(singer.category.id ?? 0);
 
     return (
         <Dialog
             title="Move Singer"
             okLabel="Move"
-            okUrl={route('singers.categories.update', singer)}
+            okUrl={route('singers.categories.update', {singer})}
             okVariant="primary"
             okMethod="get"
             data={{ move_category: selectedCategory.id }}
@@ -104,6 +107,7 @@ const Show = ({ singer, categories }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
     const { can, user: authUser } = usePage().props;
+    const { route } = useRoute();
 
     return (
         <>
@@ -119,17 +123,22 @@ const Show = ({ singer, categories }) => {
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Singers', url: route('singers.index')},
-                    { name: singer.user.name, url: route('singers.show', singer) },
+                    { name: singer.user.name, url: route('singers.show', {singer}) },
                 ]}
                 actions={[
                     { label: 'Edit Profile', icon: 'user-edit', url: route('accounts.edit'), can: singer.user.id === authUser.id, variant: 'primary' },
-                    { label: 'Edit Membership', icon: 'edit', url: route('singers.edit', singer), can: 'update_singer', variant: 'primary' },
+                    { label: 'Edit Membership', icon: 'edit', url: route('singers.edit', {singer}), can: 'update_singer', variant: 'primary' },
                     { label: 'Move', icon: 'arrow-circle-right', onClick: () => setMoveDialogIsOpen(true), can: 'update_singer' },
                     { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_singer' },
                 ].filter(action => action.can === true || singer.can[action.can])}
             />
 
-            <DeleteDialog title="Delete Singer" url={route('singers.destroy', singer)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+            <DeleteDialog
+                title="Delete Singer"
+                url={route('singers.destroy', {singer})}
+                isOpen={deleteDialogIsOpen}
+                setIsOpen={setDeleteDialogIsOpen}
+            >
                 Are you sure you want to deactivate this singer?
                 All of their data will be permanently removed from our servers forever.
                 This action cannot be undone.
@@ -185,12 +194,15 @@ Show.layout = page => <TenantLayout children={page} />
 
 export default Show;
 
-const TaskList = ({ singer }) => (
-    <CollapsePanel>
-        <nav className="flex" aria-label="Progress">
-            <ol role="list" className="space-y-6">
-                {singer.tasks.map((task, index, tasks) => (
-                    <li key={index}>
+const TaskList = ({ singer }) => {
+    const { route } = useRoute();
+
+    return (
+        <CollapsePanel>
+            <nav className="flex" aria-label="Progress">
+                <ol role="list" className="space-y-6">
+                    {singer.tasks.map((task, index, tasks) => (
+                        <li key={index}>
                         <span className="flex items-center">
                             <span className="shrink-0 h-5 w-5 relative flex items-center justify-center" aria-hidden="true">
                                 {task.pivot.completed
@@ -207,18 +219,21 @@ const TaskList = ({ singer }) => (
                             || (! tasks[index - 1] || tasks[index - 1].pivot.completed) && <>
                                 <span className="ml-3 text-sm font-medium text-purple-600">{task.name}</span>
                                 {task.can['complete'] && (
-                                    <ButtonLink href={route(task.route, [singer.id, task.id])} size="xs" className="ml-3">Complete</ButtonLink>
+                                    <ButtonLink href={route(task.route, {singer: singer.id, task: task.id})} size="xs" className="ml-3">
+                                        Complete
+                                    </ButtonLink>
                                 )}
                             </>
                             || <span className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-900">{task.name}</span>
                             }
                         </span>
-                    </li>
-                ))}
-            </ol>
-        </nav>
-    </CollapsePanel>
-);
+                        </li>
+                    ))}
+                </ol>
+            </nav>
+        </CollapsePanel>
+    );
+}
 
 const PersonalDetails = ({ singer }) => (
     <CollapsePanel>
@@ -345,12 +360,20 @@ const MembershipDetails = ({ singer }) => (
     </CollapsePanel>
 );
 
-const EditSingerPlacementButton = ({ singer }) => (
-    <ButtonLink variant="primary" size="sm" href={route('singers.placements.edit', [singer.id, singer.placement.id])}>
-        <Icon icon="edit" />
-        Edit
-    </ButtonLink>
-);
+const EditSingerPlacementButton = ({ singer }) => {
+    const { route } = useRoute();
+
+    return (
+        <ButtonLink
+            variant="primary"
+            size="sm"
+            href={route('singers.placements.edit', {singer: singer.id, placement: singer.placement.id})}
+        >
+            <Icon icon="edit" />
+            Edit
+        </ButtonLink>
+    );
+}
 
 const VoicePlacementDetails = ({ singer }) =>
     singer.placement
@@ -401,18 +424,22 @@ const VoicePlacementDetails = ({ singer }) =>
         : <VoicePlacementEmptyState singer={singer} />
 ;
 
-const VoicePlacementEmptyState = ({ singer }) => (
-    <div className="text-center py-6 px-4">
-        <Icon icon="user-music" type="light" className="text-gray-400 text-4xl mb-2" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900">No Voice Placement</h3>
-        <p className="mt-1 text-sm text-gray-500">
-            Get this singer started on their journey by creating their Voice Placement.
-        </p>
-        <div className="mt-6">
-            <ButtonLink href={route('singers.placements.create', singer)} variant="primary">
-                <Icon icon="plus" />
-                Create Placement
-            </ButtonLink>
+const VoicePlacementEmptyState = ({ singer }) => {
+    const { route } = useRoute();
+
+    return (
+        <div className="text-center py-6 px-4">
+            <Icon icon="user-music" type="light" className="text-gray-400 text-4xl mb-2" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No Voice Placement</h3>
+            <p className="mt-1 text-sm text-gray-500">
+                Get this singer started on their journey by creating their Voice Placement.
+            </p>
+            <div className="mt-6">
+                <ButtonLink href={route('singers.placements.create', {singer})} variant="primary">
+                    <Icon icon="plus" />
+                    Create Placement
+                </ButtonLink>
+            </div>
         </div>
-    </div>
-);
+    );
+}

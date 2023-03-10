@@ -5,8 +5,10 @@ import Label from "../../components/inputs/Label";
 import Button from "../../components/inputs/Button";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
+import useRoute from "../../hooks/useRoute";
 
 const Login = ({ email, token }) => {
+    const { route } = useRoute();
     const { tenant } = usePage().props;
     const { data, setData, post, processing, errors } = useForm({
         email: email,

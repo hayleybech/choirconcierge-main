@@ -16,8 +16,11 @@ import TimezoneSelect from "../../components/inputs/TimezoneSelect";
 import AvatarUpload from "../../components/AvatarUpload";
 import Help from "../../components/inputs/Help";
 import FormWrapper from "../../components/FormWrapper";
+import useRoute from "../../hooks/useRoute";
 
 const Edit = ({ tenant, centralDomain, timezones, choirLogo }) => {
+    const { route } = useRoute();
+
     const { data, setData, post, processing, errors } = useForm({
         choir_name: tenant.choir_name,
         choir_logo: null,

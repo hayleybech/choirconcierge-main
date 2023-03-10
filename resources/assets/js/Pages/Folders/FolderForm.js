@@ -9,8 +9,11 @@ import Button from "../../components/inputs/Button";
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import FormWrapper from "../../components/FormWrapper";
+import useRoute from "../../hooks/useRoute";
 
 const FolderForm = () => {
+    const { route } = useRoute();
+
     const { data, setData, post, processing, errors } = useForm({
         title: '',
     });

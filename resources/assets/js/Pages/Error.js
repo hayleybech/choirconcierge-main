@@ -3,6 +3,7 @@ import AppHead from "../components/AppHead";
 import Icon from "../components/Icon";
 import classNames from "../classNames";
 import Button from "../components/inputs/Button";
+import useRoute from "../hooks/useRoute";
 
 const Show = ({ status, choirAdmins, isMember }) => {
     const title = {
@@ -126,18 +127,22 @@ const Link = ({ variant = 'primary', className, children, ...extraProps }) => (
     </a>
 );
 
-const NavButtons = () => (
-    <div className="flex gap-x-4 items-center justify-center">
-        <Button href={route('dash')} variant="primary">
-            Go to dashboard
-            <Icon icon="long-arrow-right" />
-        </Button>
-        <Button href="mailto:hello@choirconcierge.com" target="_blank" external variant="secondary">
-            <Icon icon="envelope" />
-            Email Us
-        </Button>
-    </div>
-);
+const NavButtons = () => {
+    const { route } = useRoute();
+
+    return (
+        <div className="flex gap-x-4 items-center justify-center">
+            <Button href={route('dash')} variant="primary">
+                Go to dashboard
+                <Icon icon="long-arrow-right" />
+            </Button>
+            <Button href="mailto:hello@choirconcierge.com" target="_blank" external variant="secondary">
+                <Icon icon="envelope" />
+                Email Us
+            </Button>
+        </div>
+    );
+}
 
 const SocialButtons = () => (
     <div className="flex gap-x-2 text-2xl justify-center">

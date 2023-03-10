@@ -22,8 +22,11 @@ import CollapsePanel from "../../components/CollapsePanel";
 import CollapseGroup from "../../components/CollapseGroup";
 import EmptyState from "../../components/EmptyState";
 import {Synth} from "tone";
+import useRoute from "../../hooks/useRoute";
 
 const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
+    const { route } = useRoute();
+
     const [synth] = useState(() => new Synth().toDestination());
     const player = useContext(PlayerContext);
 
@@ -97,16 +100,21 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
                     breadcrumbs={[
                         { name: 'Dashboard', url: route('dash')},
                         { name: 'Songs', url: route('songs.index')},
-                        { name: song.title, url: route('songs.show', song) },
+                        { name: song.title, url: route('songs.show', {song}) },
                     ]}
                     actions={[
                         <PitchButton synth={synth} note={song.pitch.split('/')[0]} />,
-                        { label: 'Edit', icon: 'edit', url: route('songs.edit', song), can: 'update_song' },
+                        { label: 'Edit', icon: 'edit', url: route('songs.edit', {song}), can: 'update_song' },
                         { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_song' },
                     ].filter(action => action.can ? song.can[action.can] : true)}
                 />
 
-                <DeleteDialog title="Delete Song" url={route('songs.destroy', song)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+                <DeleteDialog
+                    title="Delete Song"
+                    url={route('songs.destroy', {song})}
+                    isOpen={deleteDialogIsOpen}
+                    setIsOpen={setDeleteDialogIsOpen}
+                >
                     Are you sure you want to delete this song?
                     All of its attachments will be permanently removed from our servers forever.
                     This action cannot be undone.
@@ -192,9 +200,13 @@ export default Show;
 
 const SongDescription = ({ description }) => <CollapsePanel><Prose content={description ?? 'No description'} className="mb-8" /></CollapsePanel>;
 
-const EditLearningSummaryButton = ({ song }) => (
-    <ButtonLink variant="primary" size="sm" href={route('songs.singers.index', song)}>
-        <Icon icon="edit" />
-        Edit
-    </ButtonLink>
-);
+const EditLearningSummaryButton = ({ song }) => {
+    const { route } = useRoute();
+
+    return (
+        <ButtonLink variant="primary" size="sm" href={route('songs.singers.index', {song})}>
+            <Icon icon="edit" />
+            Edit
+        </ButtonLink>
+    );
+}

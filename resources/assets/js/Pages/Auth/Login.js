@@ -6,8 +6,10 @@ import Button from "../../components/inputs/Button";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
+import useRoute from "../../hooks/useRoute";
 
 const Login = ({  }) => {
+    const { route } = useRoute();
     const { tenant } = usePage().props;
     const { data, setData, post, processing, errors } = useForm({
         email: '',

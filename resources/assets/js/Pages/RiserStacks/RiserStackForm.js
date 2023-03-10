@@ -11,8 +11,10 @@ import DetailToggle from "../../components/inputs/DetailToggle";
 import RiserStackHoldingArea from "../../components/RiserStack/RiserStackHoldingArea";
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
+import useRoute from "../../hooks/useRoute";
 
 const RiserStackForm = ({ stack, voiceParts }) => {
+    const { route } = useRoute();
     const { data, setData, post, put, processing, errors } = useForm({
         title: stack?.title ?? '',
         rows: stack?.rows ?? 4,
@@ -24,7 +26,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
 
     function submit(e) {
         e.preventDefault();
-        stack ? put(route('stacks.update', stack)) : post(route('stacks.store'));
+        stack ? put(route('stacks.update', {stack})) : post(route('stacks.store'));
     }
 
     const [selectedSinger, setSelectedSinger] = useState(null);
@@ -147,7 +149,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
             </div>
 
             <FormFooter>
-                <ButtonLink href={stack ? route('stacks.show', stack) : route('stacks.index')}>Cancel</ButtonLink>
+                <ButtonLink href={stack ? route('stacks.show', {stack}) : route('stacks.index')}>Cancel</ButtonLink>
                 <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
             </FormFooter>
         </Form>

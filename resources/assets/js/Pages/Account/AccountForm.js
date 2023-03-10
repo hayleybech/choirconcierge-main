@@ -14,9 +14,12 @@ import FormFooter from "../../components/FormFooter";
 import DayInput from "../../components/inputs/Day";
 import {DateTime} from "luxon";
 import FormWrapper from "../../components/FormWrapper";
+import useRoute from "../../hooks/useRoute";
 
 const AccountForm = ({ }) => {
+    const { route } = useRoute();
     const { user } = usePage().props;
+
     const { data, setData, post, processing, errors } = useForm({
         first_name: user.first_name,
         last_name: user.last_name,
@@ -199,7 +202,7 @@ const AccountForm = ({ }) => {
                 </FormSection>
 
                 <FormFooter>
-                    <ButtonLink href={route('singers.show', user.singer)}>Cancel</ButtonLink>
+                    <ButtonLink href={route('singers.show', {singer: user.singer})}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
 

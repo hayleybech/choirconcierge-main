@@ -11,8 +11,11 @@ import Icon from "../../../components/Icon";
 import FormFooter from "../../../components/FormFooter";
 import Form from "../../../components/Form";
 import FormWrapper from "../../../components/FormWrapper";
+import useRoute from "../../../hooks/useRoute";
 
 const PlacementForm = ({ singer, placement, voice_parts }) => {
+    const { route } = useRoute();
+
     const { data, setData, post, put, processing, errors } = useForm({
         experience: placement?.experience ?? '',
         instruments: placement?.instruments ?? '',
@@ -26,7 +29,9 @@ const PlacementForm = ({ singer, placement, voice_parts }) => {
 
     function submit(e) {
         e.preventDefault();
-        placement ? put(route('singers.placements.update', [singer, placement])) : post(route('singers.placements.store', [singer]));
+        placement
+            ? put(route('singers.placements.update', {singer, placement}))
+            : post(route('singers.placements.store', {singer}));
     }
 
     return (
@@ -123,7 +128,7 @@ const PlacementForm = ({ singer, placement, voice_parts }) => {
                 </FormSection>
 
                 <FormFooter>
-                    <Button href={route('singers.show', [singer])}>Cancel</Button>
+                    <Button href={route('singers.show', {singer})}>Cancel</Button>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>

@@ -6,8 +6,11 @@ import DeleteDialog from "../DeleteDialog";
 import {Link} from "@inertiajs/inertia-react";
 import collect from "collect.js";
 import EditScheduleItemDialog from "../EditScheduleItemDialog";
+import useRoute from "../../hooks/useRoute";
 
 const EventScheduleDesktop = ({ event }) => {
+    const { route } = useRoute();
+
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [deletingActivityId, setDeletingActivityId] = useState(0);
 
@@ -29,7 +32,7 @@ const EventScheduleDesktop = ({ event }) => {
                         <tr key={activity.id}>
                             <TableCell>
                                 {activity.song && (
-                                    <Link href={route('songs.show', activity.song)} className="text-sm font-medium text-purple-800">{activity.song.title}</Link>
+                                    <Link href={route('songs.show', {song: activity.song})} className="text-sm font-medium text-purple-800">{activity.song.title}</Link>
                                 )}
                                 <div>
                                     {activity.description}
@@ -43,7 +46,7 @@ const EventScheduleDesktop = ({ event }) => {
                                 <Button
                                     variant="clear"
                                     size="sm"
-                                    href={route('events.activities.move', [event, activity])}
+                                    href={route('events.activities.move', {event, activity})}
                                     method="post"
                                     data={{direction: 'up'}}
                                     className={index > 0 ? '' : 'invisible'}
@@ -53,7 +56,7 @@ const EventScheduleDesktop = ({ event }) => {
                                 <Button
                                     variant="clear"
                                     size="sm"
-                                    href={route('events.activities.move', [event, activity])}
+                                    href={route('events.activities.move', {event, activity})}
                                     method="post"
                                     data={{direction: 'down'}}
                                     className={index < event.activities.length - 1 ? '' : 'invisible'}
@@ -98,7 +101,7 @@ const EventScheduleDesktop = ({ event }) => {
             />
             <DeleteDialog
                 title="Delete Activity"
-                url={route('events.activities.destroy', [event, deletingActivityId])}
+                url={route('events.activities.destroy', {event, activity: deletingActivityId})}
                 isOpen={deleteDialogIsOpen}
                 setIsOpen={setDeleteDialogIsOpen}
             >

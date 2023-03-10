@@ -10,8 +10,10 @@ import Icon from "../../../components/Icon";
 import {usePage} from "@inertiajs/inertia-react";
 import RsvpTag from "../../../components/Event/RsvpTag";
 import MyRsvpButtons from "../../../components/Event/MyRsvpButtons";
+import useRoute from "../../../hooks/useRoute";
 
 const CentralUpcomingEventsWidget = ({ events }) => {
+    const { route } = useRoute();
     const { can } = usePage().props;
 
     return (

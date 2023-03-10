@@ -6,8 +6,10 @@ import Button from "../../components/inputs/Button";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import Icon from "../../components/Icon";
+import useRoute from "../../hooks/useRoute";
 
 const ForgotPassword = ({  }) => {
+    const { route } = useRoute();
     const { tenant } = usePage().props;
     const { data, setData, post, processing, errors } = useForm({
         email: '',

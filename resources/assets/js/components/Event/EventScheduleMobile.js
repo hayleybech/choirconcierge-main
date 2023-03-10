@@ -3,8 +3,11 @@ import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 import {Link} from "@inertiajs/inertia-react";
+import useRoute from "../../hooks/useRoute";
 
 const EventScheduleMobile = ({ event }) => {
+    const { route } = useRoute();
+
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [deletingActivityId, setDeletingActivityId] = useState(0);
 
@@ -16,7 +19,7 @@ const EventScheduleMobile = ({ event }) => {
                         <div className="px-6 py-5 flex justify-between items-center space-x-3 hover:bg-gray-50">
                             <div>
                                 {activity.song && (
-                                    <Link href={route('songs.show', activity.song)} className="text-sm font-medium text-purple-800">{activity.song.title}</Link>
+                                    <Link href={route('songs.show', {song: activity.song})} className="text-sm font-medium text-purple-800">{activity.song.title}</Link>
                                 )}
                                 <div className="text-sm text-gray-500">
                                     {activity.description}
@@ -57,7 +60,7 @@ const EventScheduleMobile = ({ event }) => {
 
             <DeleteDialog
                 title="Delete Activity"
-                url={route('events.activities.destroy', [event, deletingActivityId])}
+                url={route('events.activities.destroy', {event, activity: deletingActivityId})}
                 isOpen={deleteDialogIsOpen}
                 setIsOpen={setDeleteDialogIsOpen}
             >

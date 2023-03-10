@@ -4,8 +4,11 @@ import React, {useState} from "react";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 import AttachmentType from "../../AttachmentType";
+import useRoute from "../../hooks/useRoute";
 
 const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, player }) => {
+    const { route } = useRoute();
+
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [deletingAttachmentId, setDeletingAttachmentId] = useState(0);
     const { load } = useAudioPlayer();
@@ -89,7 +92,7 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
 
             <DeleteDialog
                 title="Delete Song Attachment"
-                url={route('songs.attachments.destroy', [song, deletingAttachmentId])}
+                url={route('songs.attachments.destroy', {song, attachment: deletingAttachmentId})}
                 isOpen={deleteDialogIsOpen}
                 setIsOpen={setDeleteDialogIsOpen}
             >

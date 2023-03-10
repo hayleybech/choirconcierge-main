@@ -7,8 +7,11 @@ import Label from "./inputs/Label";
 import SongSelect from "./inputs/SongSelect";
 import TextInput from "./inputs/TextInput";
 import Error from "./inputs/Error";
+import useRoute from "../hooks/useRoute";
 
 const EditScheduleItemDialog = ({ isOpen, setIsOpen, event, activity }) => {
+    const { route } = useRoute();
+
     const {data, setData, put, processing, errors} = useForm({
         song_id: activity?.song_id ?? null,
         description: activity?.description ?? '',
@@ -25,7 +28,7 @@ const EditScheduleItemDialog = ({ isOpen, setIsOpen, event, activity }) => {
 
     function submit(e) {
         e.preventDefault();
-        put(route('events.activities.update', [event, activity]), {
+        put(route('events.activities.update', {event, activity}), {
             onSuccess: () => setIsOpen(false),
         });
     }
