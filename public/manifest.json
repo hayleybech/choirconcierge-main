@@ -9,7 +9,7 @@
 	"display": "standalone",
 	"orientation": "portrait",
 	"scope": "/",
-	"start_url": "/app",
+	"start_url": "/app/default-dash",
 	"icons": [
 		{
 			"src": "icons/icon-72x72.png",
