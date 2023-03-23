@@ -33,7 +33,20 @@ const ChoirsListWidget = () => {
                                         Set as default
                                     </Button>
                                     )
-                                    : <span className="text-gray-600 text-sm mr-2">Default Choir</span>
+                                    : (
+                                    <div>
+                                        <span className="text-gray-600 text-sm mr-2">Default Choir</span>
+                                        <Button
+                                            variant="danger-outline"
+                                            size="xs"
+                                            href={route('central.default-dash.destroy', {default_dash: choir.id})}
+                                            method="delete"
+                                            className="mr-2"
+                                        >
+                                            Unset default
+                                        </Button>
+                                    </div>
+                                    )
                                 }
                                 </>
                             )}

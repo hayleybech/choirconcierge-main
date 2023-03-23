@@ -41,12 +41,23 @@ class DefaultDashController extends Controller
     {
         /* @var User $user */
         $user = auth()->user();
-
         $user->defaultTenant()->associate($default_dash);
         $user->save();
 
         return redirect()
             ->route('central.dash')
             ->with(['status' => 'Default choir updated. ']);
+    }
+
+    public function destroy(): RedirectResponse
+    {
+        /* @var User $user */
+        $user = auth()->user();
+        $user->defaultTenant()->disassociate();
+        $user->save();
+
+        return redirect()
+            ->route('central.dash')
+            ->with(['status' => 'Default choir unset. Next time you log in, you\'ll start at the central dash instead.']);
     }
 }
