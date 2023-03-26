@@ -12,7 +12,6 @@ class CloneMessage
     public static function forGroup(Mailable $message, UserGroup $group): void
     {
         $group->get_all_recipients()
-            ->reject(fn ($user) => self::userIsExplicitRecipient($user, $message))
             ->each(fn ($user) => self::resendToUser(clone $message, $user, $group));
     }
 
@@ -50,13 +49,5 @@ class CloneMessage
         $message->to = [];
         Mail::to($user)
             ->send($message);
-    }
-
-    private static function userIsExplicitRecipient(User $user, Mailable $message): bool
-    {
-        return $message->hasTo($user->email)
-            || $message->hasCc($user->email)
-            || $message->hasBcc($user->email)
-            || $message->hasReplyTo($user->email);
     }
 }
