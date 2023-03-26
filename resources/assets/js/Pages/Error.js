@@ -4,8 +4,12 @@ import Icon from "../components/Icon";
 import classNames from "../classNames";
 import Button from "../components/inputs/Button";
 import useRoute from "../hooks/useRoute";
+import {usePage} from "@inertiajs/inertia-react";
 
 const Show = ({ status, choirAdmins, isMember }) => {
+    const { tenant } = usePage().props;
+    console.log(usePage().props);
+
     const title = {
         403: 'Forbidden',
         404: 'Page Not Found',
@@ -49,7 +53,7 @@ const Show = ({ status, choirAdmins, isMember }) => {
 
     const extraDetails = {
         403: isMember ? <ChoirAdmins admins={choirAdmins} /> : null,
-        404: <PopularPages />,
+        404: tenant ? <PopularPages /> : null,
         500: null,
         503: null,
     }[status];
@@ -61,7 +65,7 @@ const Show = ({ status, choirAdmins, isMember }) => {
             <div className="bg-white">
                 <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex-shrink-0 pt-16">
-                        <a href="/" className="flex">
+                        <a href={route('central.dash')} className="flex">
                             <img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
                         </a>
                     </div>
@@ -129,10 +133,11 @@ const Link = ({ variant = 'primary', className, children, ...extraProps }) => (
 
 const NavButtons = () => {
     const { route } = useRoute();
+    const { tenant } = usePage().props;
 
     return (
         <div className="flex gap-x-4 items-center justify-center">
-            <Button href={route('dash')} variant="primary">
+            <Button href={tenant ? route('dash') : route('central.dash')} variant="primary">
                 Go to dashboard
                 <Icon icon="long-arrow-right" />
             </Button>
@@ -172,39 +177,43 @@ const ChoirAdmins = ({ admins }) => (
     </div>
 );
 
-const popularLinks = [
-    { title: 'Songs', icon: 'list-music', description: 'View all of your music and start practising!', href: route('songs.index') },
-    { title: 'Events', icon: 'calendar', description: 'Your gigs for the year, right here.', href: route('events.index') },
-    { title: 'Documents', icon: 'folders', description: 'Important minutes, documents and more.', href: route('folders.index') },
-];
+const PopularPages = () => {
+    const { tenant } = usePage().props;
 
-const PopularPages = () => (
-    <div className="mt-12">
-        <h2 className="text-sm font-semibold text-gray-500 tracking-wide uppercase">Popular pages</h2>
-        <ul role="list" className="mt-4 border-t border-b border-gray-200 divide-y divide-gray-200">
-            {popularLinks.map((link, linkIdx) => (
-                <li key={linkIdx} className="relative py-6 flex items-start space-x-4">
-                    <div className="flex-shrink-0">
+    const popularLinks = [
+        { title: 'Songs', icon: 'list-music', description: 'View all of your music and start practising!', href: route('songs.index', {tenant: tenant.id}) },
+        { title: 'Events', icon: 'calendar', description: 'Your gigs for the year, right here.', href: route('events.index', {tenant: tenant.id}) },
+        { title: 'Documents', icon: 'folders', description: 'Important minutes, documents and more.', href: route('folders.index', {tenant: tenant.id}) },
+    ];
+
+    return (
+        <div className="mt-12">
+            <h2 className="text-sm font-semibold text-gray-500 tracking-wide uppercase">Popular pages</h2>
+            <ul role="list" className="mt-4 border-t border-b border-gray-200 divide-y divide-gray-200">
+                {popularLinks.map((link, linkIdx) => (
+                    <li key={linkIdx} className="relative py-6 flex items-start space-x-4">
+                        <div className="flex-shrink-0">
                         <span className="flex items-center justify-center h-12 w-12 rounded-lg bg-purple-50">
                           <Icon icon={link.icon} className="h-6 w-6 text-purple-700" aria-hidden="true" />
                         </span>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                        <h3 className="text-base font-medium text-gray-900">
+                        </div>
+                        <div className="min-w-0 flex-1">
+                            <h3 className="text-base font-medium text-gray-900">
                       <span className="rounded-sm focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-purple-500">
                         <a href={link.href} className="focus:outline-none">
                           <span className="absolute inset-0" aria-hidden="true" />
                             {link.title}
                         </a>
                       </span>
-                        </h3>
-                        <p className="text-base text-gray-500">{link.description}</p>
-                    </div>
-                    <div className="flex-shrink-0 self-center">
-                        <Icon icon="chevron-right" className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                    </div>
-                </li>
-            ))}
-        </ul>
-    </div>
-);
+                            </h3>
+                            <p className="text-base text-gray-500">{link.description}</p>
+                        </div>
+                        <div className="flex-shrink-0 self-center">
+                            <Icon icon="chevron-right" className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}

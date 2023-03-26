@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -59,8 +60,11 @@ class Handler extends ExceptionHandler
     {
         $response = parent::render($request, $exception);
 
+        $this->initialiseTenancyByPath($request->getRequestUri());
+
         if (in_array($response->status(), [500, 503, 404, 403])) {
             return Inertia::render('Error', [
+                'tenant' => tenant(),
                 'status' => $response->status(),
                 'choirAdmins' => Singer::role('Admin')->limit(5)->with('user')->get()->values(),
                 'isMember' => auth()?->user()?->singer,
@@ -75,5 +79,19 @@ class Handler extends ExceptionHandler
         }
 
         return $response;
+    }
+
+    private function initialiseTenancyByPath(string $uri) {
+        $found = preg_match('/\/(.*?)\//', $uri, $match) === 1;
+
+        if(! $found) {
+            return;
+        }
+
+        try {
+            tenancy()->initialize($match[1]);
+        } catch (TenantCouldNotBeIdentifiedById $e) {
+            // Allow handler to continue without tenant
+        }
     }
 }
