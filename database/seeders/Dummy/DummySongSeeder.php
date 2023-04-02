@@ -11,7 +11,6 @@ use Exception;
 use Faker;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class DummySongSeeder extends Seeder
@@ -37,8 +36,8 @@ class DummySongSeeder extends Seeder
 
                 // Generate random attachments
                 Storage::disk('public')->makeDirectory('songs/' . $song->id);
-                $this->insertSampleMp3s($song);
-                $this->insertSamplePdfs($song);
+                self::insertSampleMp3s($song);
+                self::insertSamplePdfs($song);
             });
     }
 
@@ -67,7 +66,7 @@ class DummySongSeeder extends Seeder
         $song->save();
     }
 
-    private function insertSampleMp3s(Song $song): void
+    private static function insertSampleMp3s(Song $song): void
     {
         $song
             ->attachments()
@@ -85,10 +84,11 @@ class DummySongSeeder extends Seeder
                 $faker = Faker\Factory::create();
                 $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
                 $attachment->type = 'learning-tracks';
+                $attachment->save();
             });
     }
 
-    private function insertSamplePdfs(Song $song): void
+    private static function insertSamplePdfs(Song $song): void
     {
         $song
             ->attachments()
@@ -98,12 +98,13 @@ class DummySongSeeder extends Seeder
                     ->make(),
             )
             ->each(static function (SongAttachment $attachment) use ($song) {
-                $demo_dir = Storage::disk('global-local')->path('sample/mp3');
+                $demo_dir = Storage::disk('global-local')->path('sample/pdf');
                 $song_dir = Storage::disk('public')->path('songs/' . $song->id);
-                
+
                 $faker = Faker\Factory::create();
                 $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
                 $attachment->type = 'sheet-music';
+                $attachment->save();
             });
     }
 
@@ -113,14 +114,59 @@ class DummySongSeeder extends Seeder
      */
     private function insertDemoSong(Collection $statuses): void
     {
-        Song::create([
-            [
-                'title' => 'Touch of Paradise',
-                'pitch_blown' => 5,
-                'status_id' => $statuses->first()->id,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
+        $song = Song::create([
+            'title' => '1. Touch of Paradise (Demo Song)',
+            'pitch_blown' => 5,
+            'status' => $statuses->first()->id,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
+
+        $files = [
+            [
+                'file' => 'Touch of Paradise FULL e3.mp3',
+                'type' => 'full-mix-demo',
+            ],
+            [
+                'file' => 'Touch_of_Paradise v2-3.pdf',
+                'type' => 'sheet-music',
+            ],
+            [
+                'file' => 'Touch of Paradise ALTO e3.mp3',
+                'type' => 'learning-tracks',
+            ],
+            [
+                'file' => 'Touch of Paradise BASS e3.mp3',
+                'type' => 'learning-tracks',
+            ],
+            [
+                'file' => 'Touch of Paradise SOPR e3.mp3',
+                'type' => 'learning-tracks',
+            ],
+            [
+                'file' => 'Touch of Paradise TNRH e3.mp3',
+                'type' => 'learning-tracks',
+            ],
+            [
+                'file' => 'Touch of Paradise TNRL e3.mp3',
+                'type' => 'learning-tracks',
+            ],
+        ];
+
+        foreach ($files as $file) {
+            $path = Storage::disk('global-local')->path('sample/top/' . $file['file']);
+
+            if(! Storage::disk('global-local')->exists('sample/top/' . $file['file'])) {
+                continue;
+            }
+
+            SongAttachment::create([
+                'title' => '',
+                'song_id' => $song->id,
+                'file' => $path,
+                'filepath' => $file['file'],
+                'type' => $file['type'],
+            ]);
+        }
     }
 }
