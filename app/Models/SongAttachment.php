@@ -131,7 +131,8 @@ class SongAttachment extends Model
 
     public function getPathSong(): string
     {
-        return self::getPathSongs().'/'.$this->song->id;
+        // song might be null during seeding
+        return $this->song !== null ? self::getPathSongs().'/'.$this->song->id : '';
     }
 
     public function getPath(): string
