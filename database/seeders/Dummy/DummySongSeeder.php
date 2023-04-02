@@ -11,7 +11,6 @@ use Exception;
 use Faker;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class DummySongSeeder extends Seeder
@@ -22,7 +21,12 @@ class DummySongSeeder extends Seeder
         $statuses = SongStatus::all();
         $categories = SongCategory::all();
 
-        // Generate random songs
+        $this->insertRandomlyGeneratedSongs($statuses, $categories);
+        $this->insertDemoSong($statuses);
+    }
+
+    private function insertRandomlyGeneratedSongs(Collection $statuses, Collection $categories): void
+    {
         Song::factory()
             ->count(30)
             ->create()
@@ -31,58 +35,10 @@ class DummySongSeeder extends Seeder
                 self::attachRandomCategories($song, $categories);
 
                 // Generate random attachments
-                Storage::disk('public')->makeDirectory('songs/'.$song->id);
-
-                // Sample mp3s
-                $song
-                    ->attachments()
-                    ->saveMany(
-                        SongAttachment::factory()
-                            ->count(4)
-                            ->make(),
-                    )
-                    ->each(static function (SongAttachment $attachment) use ($song) {
-                        // Copy random sample files
-                        // Computer-generated music from https://www.fakemusicgenerator.com/
-                        $demo_dir = Storage::disk('global-local')->path('sample/mp3');
-                        $song_dir = Storage::disk('public')->path('songs/'.$song->id);
-                        $faker = Faker\Factory::create();
-                        $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
-                        $attachment->type = 'learning-tracks';
-                    });
-
-                // Sample PDFs
-                Storage::disk('public')->makeDirectory('songs/'.$song->id);
-                $song
-                    ->attachments()
-                    ->saveMany(
-                        SongAttachment::factory()
-                            ->count(1)
-                            ->make(),
-                    )
-                    ->each(static function (SongAttachment $attachment) use ($song) {
-                        $demo_dir = Storage::disk('global-local')->path('sample/mp3');
-                        $song_dir = Storage::disk('public')->path('songs/'.$song->id);
-                        $faker = Faker\Factory::create();
-                        $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
-                        $attachment->type = 'sheet-music';
-                    });
+                Storage::disk('public')->makeDirectory('songs/' . $song->id);
+                self::insertSampleMp3s($song);
+                self::insertSamplePdfs($song);
             });
-
-        /*
-         * ALSO - Insert a real song
-         * My arrangement of Touch of Paradise
-         */
-        DB::table('songs')->insert([
-            [
-                'tenant_id' => tenant('id'),
-                'title' => 'Touch of Paradise',
-                'pitch_blown' => 5,
-                'status_id' => $statuses->first()->id,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-        ]);
     }
 
     /**
@@ -108,5 +64,109 @@ class DummySongSeeder extends Seeder
         $category = $categories->random($qty);
         $song->categories()->attach($category);
         $song->save();
+    }
+
+    private static function insertSampleMp3s(Song $song): void
+    {
+        $song
+            ->attachments()
+            ->saveMany(
+                SongAttachment::factory()
+                    ->count(4)
+                    ->make(),
+            )
+            ->each(static function (SongAttachment $attachment) use ($song) {
+                // Copy random sample files
+                // Computer-generated music from https://www.fakemusicgenerator.com/
+                $demo_dir = Storage::disk('global-local')->path('sample/mp3');
+                $song_dir = Storage::disk('public')->path('songs/' . $song->id);
+
+                $faker = Faker\Factory::create();
+                $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
+                $attachment->type = 'learning-tracks';
+                $attachment->save();
+            });
+    }
+
+    private static function insertSamplePdfs(Song $song): void
+    {
+        $song
+            ->attachments()
+            ->saveMany(
+                SongAttachment::factory()
+                    ->count(1)
+                    ->make(),
+            )
+            ->each(static function (SongAttachment $attachment) use ($song) {
+                $demo_dir = Storage::disk('global-local')->path('sample/pdf');
+                $song_dir = Storage::disk('public')->path('songs/' . $song->id);
+
+                $faker = Faker\Factory::create();
+                $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
+                $attachment->type = 'sheet-music';
+                $attachment->save();
+            });
+    }
+
+    /*
+     * Insert a real song
+     * My arrangement of Touch of Paradise
+     */
+    private function insertDemoSong(Collection $statuses): void
+    {
+        $song = Song::create([
+            'title' => '1. Touch of Paradise (Demo Song)',
+            'pitch_blown' => 5,
+            'status' => $statuses->first()->id,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
+        $files = [
+            [
+                'file' => 'Touch of Paradise FULL e3.mp3',
+                'type' => 'full-mix-demo',
+            ],
+            [
+                'file' => 'Touch_of_Paradise v2-3.pdf',
+                'type' => 'sheet-music',
+            ],
+            [
+                'file' => 'Touch of Paradise ALTO e3.mp3',
+                'type' => 'learning-tracks',
+            ],
+            [
+                'file' => 'Touch of Paradise BASS e3.mp3',
+                'type' => 'learning-tracks',
+            ],
+            [
+                'file' => 'Touch of Paradise SOPR e3.mp3',
+                'type' => 'learning-tracks',
+            ],
+            [
+                'file' => 'Touch of Paradise TNRH e3.mp3',
+                'type' => 'learning-tracks',
+            ],
+            [
+                'file' => 'Touch of Paradise TNRL e3.mp3',
+                'type' => 'learning-tracks',
+            ],
+        ];
+
+        foreach ($files as $file) {
+            $path = Storage::disk('global-local')->path('sample/top/' . $file['file']);
+
+            if(! Storage::disk('global-local')->exists('sample/top/' . $file['file'])) {
+                continue;
+            }
+
+            SongAttachment::create([
+                'title' => '',
+                'song_id' => $song->id,
+                'file' => $path,
+                'filepath' => $file['file'],
+                'type' => $file['type'],
+            ]);
+        }
     }
 }

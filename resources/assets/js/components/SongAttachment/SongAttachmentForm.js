@@ -14,7 +14,7 @@ import useRoute from "../../hooks/useRoute";
 const SongAttachmentForm = ({ song }) => {
     const { route } = useRoute();
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         attachment_uploads: [],
         type: Object.keys(AttachmentType.types)[0],
         url: '',
@@ -24,6 +24,8 @@ const SongAttachmentForm = ({ song }) => {
     function submit(e) {
         e.preventDefault();
         post(route('songs.attachments.store', {song: song.id}));
+
+        reset();
     }
 
     return (

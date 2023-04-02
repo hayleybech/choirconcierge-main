@@ -32,6 +32,7 @@ class SongAttachmentController extends Controller
                     'song_id' => $song->id,
                     'type' => $data['type'],
                     'file' => $file,
+                    'filepath' => $file->getClientOriginalName(),
                 ]);
             }
         } else {
@@ -39,7 +40,7 @@ class SongAttachmentController extends Controller
                 'title' => $data['title'],
                 'song_id' => $song->id,
                 'type' => $data['type'],
-                'url' => $data['url'],
+                'filepath' => $data['url'],
             ]);
         }
 
