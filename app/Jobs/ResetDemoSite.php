@@ -4,12 +4,15 @@ namespace App\Jobs;
 
 use App\Models\SongAttachment;
 use App\Models\Tenant;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ResetDemoSite implements ShouldQueue, ShouldBeUnique
 {
@@ -29,6 +32,7 @@ class ResetDemoSite implements ShouldQueue, ShouldBeUnique
      * Execute the job.
      *
      * @return void
+     * @throws Exception
      */
     public function handle()
     {
@@ -44,5 +48,12 @@ class ResetDemoSite implements ShouldQueue, ShouldBeUnique
         // Re-create demo tenant
         $demo = Tenant::create('demo', 'Hypothetical Harmony', 'Australia/Perth');
         $demo->domains()->create(['domain' => 'demo']);
+
+        // Re-upload tenant logo ("upload" - we're just copying the sample file)
+        $logo_path = Storage::disk('global-local')->path('sample/'. 'demo-logo.png');
+        $logo_hashname = Str::random(40).'.png';
+
+        $demo->updateLogo($logo_path, $logo_hashname);
     }
+
 }

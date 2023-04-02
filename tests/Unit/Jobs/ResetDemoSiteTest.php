@@ -10,6 +10,7 @@ use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\seed;
 use function PHPUnit\Framework\assertGreaterThan;
 use function PHPUnit\Framework\assertNotEquals;
+use function PHPUnit\Framework\assertNotNull;
 
 uses(RefreshDatabase::class);
 
@@ -65,4 +66,16 @@ it('does not delete data for other tenants', function () {
         'id' => $song_to_not_delete->id,
         'title' => $song_to_not_delete->title,
     ]);
+});
+
+it('re-uploads the demo logo', function () {
+    Storage::fake('global-public');
+
+    Tenant::create('demo', 'Hypothetical Harmony', 'Australia/Perth');
+
+    $job = new App\Jobs\ResetDemoSite();
+    $job->handle();
+
+    assertNotNull(Tenant::find('demo')->choir_logo);
+    Storage::disk('global-public')->assertExists('choir-logos/'. Tenant::find('demo')->choir_logo);
 });

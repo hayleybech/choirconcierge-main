@@ -45,26 +45,12 @@ class TenantController extends Controller
         ]));
 
         if($request->hasFile('choir_logo')) {
-            $this->updateLogo(tenant(), $request->file('choir_logo'));
+            tenant()->updateLogo($request->file('choir_logo'), $request->file('choir_logo')->hashName());
         }
 
         $this->updatePrimaryDomain(tenant(), $request->input('primary_domain'));
 
         return redirect()->back()->with(['status' => 'Choir settings saved.']);
-    }
-
-    private function updateLogo(Tenant $tenant, UploadedFile $logo)
-    {
-        if (! Storage::disk('global-public')->exists('choir-logos')) {
-            Storage::disk('global-public')->makeDirectory('choir-logos');
-        }
-        if (! Storage::disk('global-public')
-            ->putFileAs('choir-logos', $logo, $logo->hashName())
-        ) {
-            throw new Exception('Failed to save the logo.');
-        }
-
-        $tenant->update(['choir_logo' => $logo->hashName()]);
     }
 
     private function updatePrimaryDomain(Tenant $tenant, string $domain)
