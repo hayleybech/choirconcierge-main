@@ -22,7 +22,12 @@ class DummySongSeeder extends Seeder
         $statuses = SongStatus::all();
         $categories = SongCategory::all();
 
-        // Generate random songs
+        $this->insertRandomlyGeneratedSongs($statuses, $categories);
+        $this->insertDemoSong($statuses);
+    }
+
+    private function insertRandomlyGeneratedSongs(Collection $statuses, Collection $categories): void
+    {
         Song::factory()
             ->count(30)
             ->create()
@@ -31,58 +36,10 @@ class DummySongSeeder extends Seeder
                 self::attachRandomCategories($song, $categories);
 
                 // Generate random attachments
-                Storage::disk('public')->makeDirectory('songs/'.$song->id);
-
-                // Sample mp3s
-                $song
-                    ->attachments()
-                    ->saveMany(
-                        SongAttachment::factory()
-                            ->count(4)
-                            ->make(),
-                    )
-                    ->each(static function (SongAttachment $attachment) use ($song) {
-                        // Copy random sample files
-                        // Computer-generated music from https://www.fakemusicgenerator.com/
-                        $demo_dir = Storage::disk('global-local')->path('sample/mp3');
-                        $song_dir = Storage::disk('public')->path('songs/'.$song->id);
-                        $faker = Faker\Factory::create();
-                        $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
-                        $attachment->type = 'learning-tracks';
-                    });
-
-                // Sample PDFs
-                Storage::disk('public')->makeDirectory('songs/'.$song->id);
-                $song
-                    ->attachments()
-                    ->saveMany(
-                        SongAttachment::factory()
-                            ->count(1)
-                            ->make(),
-                    )
-                    ->each(static function (SongAttachment $attachment) use ($song) {
-                        $demo_dir = Storage::disk('global-local')->path('sample/mp3');
-                        $song_dir = Storage::disk('public')->path('songs/'.$song->id);
-                        $faker = Faker\Factory::create();
-                        $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
-                        $attachment->type = 'sheet-music';
-                    });
+                Storage::disk('public')->makeDirectory('songs/' . $song->id);
+                $this->insertSampleMp3s($song);
+                $this->insertSamplePdfs($song);
             });
-
-        /*
-         * ALSO - Insert a real song
-         * My arrangement of Touch of Paradise
-         */
-        DB::table('songs')->insert([
-            [
-                'tenant_id' => tenant('id'),
-                'title' => 'Touch of Paradise',
-                'pitch_blown' => 5,
-                'status_id' => $statuses->first()->id,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-        ]);
     }
 
     /**
@@ -108,5 +65,62 @@ class DummySongSeeder extends Seeder
         $category = $categories->random($qty);
         $song->categories()->attach($category);
         $song->save();
+    }
+
+    private function insertSampleMp3s(Song $song): void
+    {
+        $song
+            ->attachments()
+            ->saveMany(
+                SongAttachment::factory()
+                    ->count(4)
+                    ->make(),
+            )
+            ->each(static function (SongAttachment $attachment) use ($song) {
+                // Copy random sample files
+                // Computer-generated music from https://www.fakemusicgenerator.com/
+                $demo_dir = Storage::disk('global-local')->path('sample/mp3');
+                $song_dir = Storage::disk('public')->path('songs/' . $song->id);
+
+                $faker = Faker\Factory::create();
+                $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
+                $attachment->type = 'learning-tracks';
+            });
+    }
+
+    private function insertSamplePdfs(Song $song): void
+    {
+        $song
+            ->attachments()
+            ->saveMany(
+                SongAttachment::factory()
+                    ->count(1)
+                    ->make(),
+            )
+            ->each(static function (SongAttachment $attachment) use ($song) {
+                $demo_dir = Storage::disk('global-local')->path('sample/mp3');
+                $song_dir = Storage::disk('public')->path('songs/' . $song->id);
+                
+                $faker = Faker\Factory::create();
+                $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
+                $attachment->type = 'sheet-music';
+            });
+    }
+
+    /*
+     * Insert a real song
+     * My arrangement of Touch of Paradise
+     */
+    private function insertDemoSong(Collection $statuses): void
+    {
+        Song::create([
+            [
+                'title' => 'Touch of Paradise',
+                'pitch_blown' => 5,
+                'status_id' => $statuses->first()->id,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ]);
     }
 }
