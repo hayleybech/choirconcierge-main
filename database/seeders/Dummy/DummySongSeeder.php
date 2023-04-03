@@ -114,10 +114,12 @@ class DummySongSeeder extends Seeder
      */
     private function insertDemoSong(Collection $statuses): void
     {
+        $description = "<p>This demo song showcases some of the best features of Choir Concierge. Here are some things to try:</p><ul><li><p>Hit \"Play\" on a learning track. Take note of the audio player down the bottom and how it hangs around as your browse other pages. You can get back by clicking the song title.</p></li><li><p>Now open the sheet music (mobile) or expand it to full screen (desktop). Take note that the audio player (if you've opened it) will stay open - it's so easy to use learning tracks and sheet music at the same time!</p></li><li><p>There's always a pitch pipe handy in the correct key: on the songs list next to the titles, on individual song pages at the top, and even in the PDF viewer. The PDF viewer also has a complete chromatic scale - just hit the button with the piano icon!</p></li><li><p>Try using it on a mobile!</p></li></ul>";
         $song = Song::create([
             'title' => '1. Touch of Paradise (Demo Song)',
             'pitch_blown' => 5,
             'status' => $statuses->first()->id,
+            'description' => $description,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
