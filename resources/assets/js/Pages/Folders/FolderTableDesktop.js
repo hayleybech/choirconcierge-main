@@ -77,7 +77,7 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                                     <TableCell>
                                         <div className="flex items-center">
                                             <div className="ml-4">
-                                                <a href={document.download_url} download={document.title} className="text-purple-600">
+                                                <a href={document.download_url} download={document.title} target="_blank" className="text-purple-600">
                                                     <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" />
                                                     <FolderIcon icon={document.icon} />
                                                     {document.title}

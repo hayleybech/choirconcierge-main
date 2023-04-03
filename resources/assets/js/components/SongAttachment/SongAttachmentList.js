@@ -78,7 +78,7 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
                                                 <Icon icon="external-link" />
                                             </a>
                                         ) : (
-                                            <a href={attachment.download_url} download={attachment.filepath} className="text-purple-500">
+                                            <a href={attachment.download_url} download={attachment.filepath} target="_blank" className="text-purple-500">
                                                 <Icon icon="download" />
                                             </a>
                                         )}
