@@ -14,7 +14,7 @@
 use App\Models\Tenant;
 use Illuminate\Support\Collection;
 
-uses(Tests\TestCase::class)->in('Feature');
+uses(Tests\TestCase::class)->in('Feature', 'Unit');
 
 /*
 |--------------------------------------------------------------------------

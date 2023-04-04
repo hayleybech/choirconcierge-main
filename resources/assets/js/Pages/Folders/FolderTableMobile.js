@@ -34,7 +34,7 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, pe
                     {folder.id === openFolder && (
                         <TableMobile>
                             {folder.documents.map((document) => (
-                                <a href={document.download_url} download={document.title} key={document.id} className="block hover:bg-gray-50">
+                                <a href={document.download_url} download={document.title} target="_blank" key={document.id} className="block hover:bg-gray-50">
                                     <div className="flex items-center px-4 py-4 sm:px-6">
                                         <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
                                             <div className="flex items-center justify-between">

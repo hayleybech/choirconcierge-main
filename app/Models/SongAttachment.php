@@ -30,8 +30,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $path
  *
  * Other
- * @property UploadedFile $file
- * @property string $url
+ * @property UploadedFile|string $file
  */
 class SongAttachment extends Model
 {
@@ -42,7 +41,7 @@ class SongAttachment extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'song_id', 'file', 'url', 'type'];
+    protected $fillable = ['title', 'song_id', 'file', 'filepath', 'type'];
 
     protected $appends = ['download_url'];
 
@@ -57,9 +56,7 @@ class SongAttachment extends Model
         });
     }
 
-    private UploadedFile $file;
-
-    private string $url;
+    private UploadedFile|string $file;
 
     public static function create(array $attributes = [])
     {
@@ -80,24 +77,16 @@ class SongAttachment extends Model
         return true;
     }
 
-    public function setFileAttribute(UploadedFile $file): void
+    public function setFileAttribute(UploadedFile|string $file): void
     {
         $this->file = $file;
-    }
-
-    public function setUrlAttribute(string $url): void
-    {
-        $this->url = $url;
     }
 
     public function saveFile(): void
     {
         if($this->type === 'youtube') {
-            $this->filepath = $this->url;
             return;
         }
-
-        $this->filepath = $this->file->getClientOriginalName();
 
         Storage::disk('public')->makeDirectory(self::getPathSongs());
         Storage::disk('public')->makeDirectory($this->getPathSong());
@@ -131,7 +120,9 @@ class SongAttachment extends Model
 
     public function getPathSong(): string
     {
-        return self::getPathSongs().'/'.$this->song->id;
+        // song might be null during seeding
+        $song_id = $this->song?->id ?? $this->song_id;
+        return $song_id !== null ? self::getPathSongs().'/'.$song_id : '';
     }
 
     public function getPath(): string

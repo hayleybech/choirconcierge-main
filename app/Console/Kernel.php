@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Jobs\ClearDuplicateEmails;
 use App\Jobs\ClearTemporaryBroadcastFiles;
 use App\Jobs\ProcessGroupMailbox;
+use App\Jobs\ResetDemoSite;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -37,6 +38,10 @@ class Kernel extends ConsoleKernel
         $schedule->job(ClearTemporaryBroadcastFiles::class)
             ->daily()
             ->at('21:00'); // 5 am Perth
+
+        $schedule->job(ResetDemoSite::class)
+            ->weekly()
+            ->at('23:00'); // 7 am Perth
     }
 
     /**

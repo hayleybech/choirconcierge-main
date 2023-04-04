@@ -13,6 +13,7 @@ class SongAttachmentFactory extends Factory
         return [
             'title' => '',
             'file' => UploadedFile::fake()->create('random.mp3', 2, 'audio/mpeg'),
+            'filepath' => 'random.mp3',
             'type' => $this->faker->randomElement(['sheet-music', 'learning-tracks', 'full-mix-demo']),
         ];
     }

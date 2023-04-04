@@ -93,15 +93,19 @@ class Song extends Model
 
     public static function create(array $attributes = [])
     {
+        $status = SongStatus::find($attributes['status']);
+        $categories = $attributes['categories'] ?? [];
+
+        unset($attributes['status'], $attributes['categories']);
+
         /** @var Song $song */
         $song = static::query()->create($attributes);
 
         // Associate status
-        $status = SongStatus::find($attributes['status']);
         $status->songs()->save($song);
 
         // Attach categories
-        $song->categories()->attach($attributes['categories']);
+        $song->categories()->attach($categories);
         $song->save();
 
         return $song;
