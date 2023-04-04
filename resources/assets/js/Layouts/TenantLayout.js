@@ -91,7 +91,7 @@ export default function TenantLayout({ children }) {
                     {player.showFullscreen || <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />}
 
                     <AudioPlayerProvider>
-                        <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none">
+                        <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
                             {children}
                         </main>
 

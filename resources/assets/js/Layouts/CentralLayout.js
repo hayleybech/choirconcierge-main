@@ -60,7 +60,7 @@ export default function CentralLayout({ children }) {
             <div className="flex flex-col w-0 flex-1 overflow-hidden">
                 <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />
 
-                <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none">
+                <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
                     {children}
                 </main>
             </div>
