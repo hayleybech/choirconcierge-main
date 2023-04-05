@@ -28,6 +28,7 @@ Route::prefix('/app')->group(function () {
 	Route::middleware(['auth'])->name('central.')->group(function () {
 		Route::get('/', [Central\DashController::class, 'index'])->name('dash');
         Route::resource('default-dash', Central\DefaultDashController::class)->only(['index', 'update', 'destroy']);
+        Route::resource('tenants', Central\TenantController::class)->only(['index']);
 
 		// Account Settings
 		Route::get('account/edit', [Central\AccountController::class, 'edit'])->name('accounts.edit');

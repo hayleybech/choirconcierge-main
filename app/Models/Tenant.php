@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
@@ -19,6 +20,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * Virtual Columns
  * @property string $choir_name
  * @property string $choir_logo
+ * @property Carbon $renews_at
  *
  * Attributes
  * @property CarbonTimeZone timezone from virtual column 'timezone'
