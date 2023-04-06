@@ -2,6 +2,7 @@ import React from 'react';
 import Table, {TableCell} from "../../../components/Table";
 import collect from "collect.js";
 import DateTag from "../../../components/DateTag";
+import {Link} from "@inertiajs/inertia-react";
 
 const TenantTableDesktop = ({ tenants }) => {
     const headings = collect({
@@ -18,9 +19,9 @@ const TenantTableDesktop = ({ tenants }) => {
             body={tenants.map((tenant) => (
                 <tr key={tenant.id}>
                     <TableCell>
-                        <div className="flex items-center">
-                            <div className="ml-4">{tenant.choir_name}</div>
-                        </div>
+                        <Link href={route('central.tenants.show', {tenant})} className="text-purple-600 hover:text-purple-800 focus:text-purple-800">
+                            {tenant.choir_name}
+                        </Link>
                     </TableCell>
                     <TableCell>{tenant.domains.map(domainItem => domainItem.domain).join()}</TableCell>
                     <TableCell>{tenant.timezone.timezone}</TableCell>

@@ -15,4 +15,11 @@ class TenantController extends Controller
             'tenants' => Tenant::with('domains')->get()->values(),
         ]);
     }
+
+    public function show(Tenant $tenant): Response
+    {
+        return Inertia::render('Central/Tenants/Show', [
+            'tenant' => $tenant,
+        ]);
+    }
 }
