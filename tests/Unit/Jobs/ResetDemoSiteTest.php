@@ -57,6 +57,7 @@ it('does not delete data for other tenants', function () {
 
     assertGreaterThan(0, DB::table('songs')->where('tenant_id', 'other')->count());
     $song_to_not_delete = Song::query()->where('tenant_id', 'other')->first();
+    $attachment_to_not_delete = $song_to_not_delete->attachments()->first();
 
     $job = new ResetDemoSite();
     $job->handle();
@@ -65,6 +66,10 @@ it('does not delete data for other tenants', function () {
     assertDatabaseHas('songs', [
         'id' => $song_to_not_delete->id,
         'title' => $song_to_not_delete->title,
+    ]);
+    assertDatabaseHas('song_attachments', [
+        'id' => $attachment_to_not_delete->id,
+        'filepath' => $attachment_to_not_delete->filepath,
     ]);
 });
 

@@ -82,6 +82,7 @@ class Song extends Model
 
     protected static function booted(): void
     {
+        // @todo convert this to a regular scope to prevent unwanted side effects
         static::addGlobalScope('filterPending', static function (Builder $builder): void {
             $builder->unless(Auth::user()?->isSuperAdmin || Auth::user()?->singer?->hasAbility('songs_update'), function (Builder $query): Builder {
                 return $query->whereDoesntHave('status', static function (Builder $query): Builder {

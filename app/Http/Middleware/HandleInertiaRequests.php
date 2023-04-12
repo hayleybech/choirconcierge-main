@@ -86,6 +86,7 @@ class HandleInertiaRequests extends Middleware
                 'impersonate' => auth()->user()?->isSuperAdmin || auth()->user()?->singer?->hasRole('Admin'),
 	            'manage_finances' => Gate::allows('update-fees'),
                 'update_tenant' => auth()->user()?->can('update', Tenant::class),
+                'list_tenants' => auth()->user()?->isSuperAdmin,
             ],
             'googleApiKey' => config('services.google.key'),
             'tenant' => tenancy()?->tenant,
