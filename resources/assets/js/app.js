@@ -5,7 +5,7 @@ import { InertiaProgress } from '@inertiajs/progress'
 import * as Sentry from '@sentry/react';
 import {Integrations as TracingIntegrations} from "@sentry/tracing";
 
-const VERSION = 'choir-concierge@2023-04-04a';
+const VERSION = 'choir-concierge@2023-04-12a';
 
 Sentry.init({
 	dsn: process.env.MIX_SENTRY_DSN,
