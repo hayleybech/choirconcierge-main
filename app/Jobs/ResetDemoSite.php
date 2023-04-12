@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Song;
 use App\Models\SongAttachment;
 use App\Models\Tenant;
 use Exception;
@@ -40,7 +41,12 @@ class ResetDemoSite implements ShouldQueue, ShouldBeUnique
 
         // Delete any data in tables lacking "on delete cascade"
         $demo_old?->run(function() {
-            SongAttachment::query()->delete();
+            SongAttachment::query()
+                ->whereIn('song_id', Song::query()
+                    ->withoutGlobalScopes(['filterPending'])
+                    ->withTrashed()
+                    ->pluck('id'))
+                ->delete();
         });
 
         $demo_old?->delete();
