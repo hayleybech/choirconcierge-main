@@ -114,7 +114,7 @@ Route::middleware([
 
         // Songs module
         Route::resource('songs', SongController::class);
-        Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'destroy'])->middleware('employee');
+        Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('employee');
         Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
         Route::resource('songs.singers', LearningStatusController::class)->only(['index', 'update']);
 
