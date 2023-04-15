@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SongAttachmentRequest;
 use App\Models\Song;
 use App\Models\SongAttachment;
+use App\Rules\FileDoesntExist;
+use App\Rules\Filename;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -53,7 +55,14 @@ class SongAttachmentController extends Controller
 
     public function update(Song $song, SongAttachment $attachment, Request $request): RedirectResponse
     {
-        $data = $request->validate(['filename' => ['max:255']]);
+        $data = $request->validate([
+            'filename' => [
+                'bail', // Abort immediately on first failure. Abort if directory to prevent user from abusing "file exists" validation in any directory.
+                'max:255',
+                new Filename,
+                new FileDoesntExist('public', $attachment->getPathSong()),
+            ]
+        ]);
 
         $old_name = $attachment->filepath;
 
