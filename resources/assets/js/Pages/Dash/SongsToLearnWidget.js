@@ -5,12 +5,21 @@ import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 import LearningStatusTag from "../../components/Song/LearningStatusTag";
 import LearningStatus from "../../LearningStatus";
 import useRoute from "../../hooks/useRoute";
+import Button from "../../components/inputs/Button";
 
 const SongsToLearnWidget = ({ songs }) => {
     const { route } = useRoute();
 
     return (
-        <Panel header={<SectionTitle>Songs to Learn</SectionTitle>} noPadding>
+        <Panel
+            header={
+                <div className="flex justify-between">
+                    <SectionTitle>Songs to Learn</SectionTitle>
+                    <Button href={route('songs.index')} variant="secondary" size="sm">View All</Button>
+                </div>
+            }
+            noPadding
+        >
             {songs.length > 0 ? (
                 <TableMobile>
                     {songs.map((song) => (
