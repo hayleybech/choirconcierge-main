@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import FolderTableDesktop from "./FolderTableDesktop";
 import FolderTableMobile from "./FolderTableMobile";
-import {usePage} from "@inertiajs/inertia-react";
+import {usePage} from "@inertiajs/react";
 import DeleteDialog from "../../components/DeleteDialog";
 import EmptyState from "../../components/EmptyState";
 import IndexContainer from "../../components/IndexContainer";

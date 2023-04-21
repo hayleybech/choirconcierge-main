@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import Icon from "./Icon";
 import {Menu, Transition} from "@headlessui/react";
 import classNames from "../classNames";
-import {Link, usePage} from "@inertiajs/inertia-react";
+import {Link, usePage} from "@inertiajs/react";
 import useRoute from "../hooks/useRoute";
 
 const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen }) => {

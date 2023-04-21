@@ -8,7 +8,7 @@ import GoogleMap from "../../components/GoogleMap";
 import MyAttendance from "../../components/Event/MyAttendance";
 import RsvpSummary from "../../components/Event/RsvpSummary";
 import AttendanceSummary from "../../components/Event/AttendanceSummary";
-import {usePage} from "@inertiajs/inertia-react";
+import {usePage} from "@inertiajs/react";
 import Icon from "../../components/Icon";
 import EditRepeatingEventDialog from "../../components/Event/EditRepeatingEventDialog";
 import DeleteDialog from "../../components/DeleteDialog";

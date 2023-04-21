@@ -3,7 +3,7 @@ import Table, {TableCell} from "../Table";
 import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 import collect from "collect.js";
 import EditScheduleItemDialog from "../EditScheduleItemDialog";
 import useRoute from "../../hooks/useRoute";
