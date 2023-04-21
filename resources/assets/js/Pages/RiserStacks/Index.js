@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import RiserStackTableDesktop from "./RiserStackTableDesktop";
 import RiserStackTableMobile from "./RiserStackTableMobile";
-import {usePage} from "@inertiajs/react";
+import {usePage} from "@inertiajs/inertia-react";
 import IndexContainer from "../../components/IndexContainer";
 import EmptyState from "../../components/EmptyState";
 import useRoute from "../../hooks/useRoute";

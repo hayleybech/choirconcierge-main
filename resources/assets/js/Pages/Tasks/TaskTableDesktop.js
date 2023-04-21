@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from "@inertiajs/react";
+import {Link} from "@inertiajs/inertia-react";
 import Table, {TableCell} from "../../components/Table";
 import DateTag from "../../components/DateTag";
 import collect from "collect.js";

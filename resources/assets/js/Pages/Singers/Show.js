@@ -7,7 +7,7 @@ import ButtonLink from "../../components/inputs/ButtonLink";
 import classNames from "../../classNames";
 import Dialog from "../../components/Dialog";
 import RadioGroup from "../../components/inputs/RadioGroup";
-import {usePage} from "@inertiajs/react";
+import {usePage} from "@inertiajs/inertia-react";
 import AppHead from "../../components/AppHead";
 import Badge from "../../components/Badge";
 import Icon from "../../components/Icon";

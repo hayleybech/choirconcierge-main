@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
-import {Link} from "@inertiajs/react";
+import {Link} from "@inertiajs/inertia-react";
 import useRoute from "../../hooks/useRoute";
 
 const EventScheduleMobile = ({ event }) => {

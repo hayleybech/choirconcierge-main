@@ -2,7 +2,7 @@ import React from 'react';
 import Table, {TableCell} from "../../../components/Table";
 import collect from "collect.js";
 import DateTag from "../../../components/DateTag";
-import {Link} from "@inertiajs/react";
+import {Link} from "@inertiajs/inertia-react";
 
 const TenantTableDesktop = ({ tenants }) => {
     const headings = collect({

@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import TaskTableDesktop from "./TaskTableDesktop";
 import TaskTableMobile from "./TaskTableMobile";
-import {usePage} from "@inertiajs/react";
+import {usePage} from "@inertiajs/inertia-react";
 import EmptyState from "../../components/EmptyState";
 import IndexContainer from "../../components/IndexContainer";
 import useRoute from "../../hooks/useRoute";

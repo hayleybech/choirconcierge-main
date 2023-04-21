@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Link, useForm, usePage} from "@inertiajs/react";
+import {Link, useForm, usePage} from "@inertiajs/inertia-react";
 import VoicePartTag from "../../components/VoicePartTag";
 import SingerCategoryTag from "../../components/SingerCategoryTag";
 import Table, {TableCell} from "../../components/Table";

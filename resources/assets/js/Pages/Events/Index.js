@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import EventTableDesktop from "./EventTableDesktop";
 import EventTableMobile from "./EventTableMobile";
-import {usePage} from "@inertiajs/react";
+import {usePage} from "@inertiajs/inertia-react";
 import EventFilters from "../../components/Event/EventFilters";
 import IndexContainer from "../../components/IndexContainer";
 import FilterSortPane from "../../components/FilterSortPane";

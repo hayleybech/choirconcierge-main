@@ -1,4 +1,4 @@
-import {useForm} from "@inertiajs/react";
+import {useForm} from "@inertiajs/inertia-react";
 import collect from "collect.js";
 import useRoute from "./useRoute";
 

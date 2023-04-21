@@ -1,5 +1,5 @@
 import React from 'react';
-import {usePage} from "@inertiajs/react";
+import {usePage} from "@inertiajs/inertia-react";
 
 const GoogleMap = ({ placeId }) => {
     const { googleApiKey } = usePage().props;

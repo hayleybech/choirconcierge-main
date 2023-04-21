@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import RoleTableDesktop from "./RoleTableDesktop";
 import RoleTableMobile from "./RoleTableMobile";
-import {usePage} from "@inertiajs/react";
+import {usePage} from "@inertiajs/inertia-react";
 import useRoute from "../../hooks/useRoute";
 
 const Index = ({ roles }) => {

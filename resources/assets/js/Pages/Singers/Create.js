@@ -1,6 +1,6 @@
 import React from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
-import {useForm} from "@inertiajs/react";
+import {useForm} from "@inertiajs/inertia-react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import DetailToggle from "../../components/inputs/DetailToggle";

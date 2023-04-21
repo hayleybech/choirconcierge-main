@@ -1,7 +1,7 @@
 import React from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
-import {useForm, usePage} from "@inertiajs/react";
+import {useForm, usePage} from "@inertiajs/inertia-react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import DetailToggle from "../../components/inputs/DetailToggle";
