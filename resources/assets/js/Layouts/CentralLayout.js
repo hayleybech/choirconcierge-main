@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
-import {usePage} from '@inertiajs/inertia-react';
+import { usePage } from '@inertiajs/react';
 import LayoutTopBar from "../components/LayoutTopBar";
 import SwitchChoirModal from "../components/SwitchChoirModal";
 import Button from "../components/inputs/Button";

@@ -4,7 +4,7 @@ import SongTableDesktop from "./SongTableDesktop";
 import SongTableMobile from "./SongTableMobile";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
-import {usePage} from "@inertiajs/inertia-react";
+import {usePage} from "@inertiajs/react";
 import SongFilters from "../../components/Song/SongFilters";
 import IndexContainer from "../../components/IndexContainer";
 import useFilterPane from "../../hooks/useFilterPane";

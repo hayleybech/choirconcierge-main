@@ -7,7 +7,7 @@ import {DateTime} from "luxon";
 import GoogleMap from "../../components/GoogleMap";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import Icon from "../../components/Icon";
-import {usePage} from "@inertiajs/inertia-react";
+import {usePage} from "@inertiajs/react";
 import RsvpTag from "../../components/Event/RsvpTag";
 import MyRsvpButtons from "../../components/Event/MyRsvpButtons";
 import useRoute from "../../hooks/useRoute";

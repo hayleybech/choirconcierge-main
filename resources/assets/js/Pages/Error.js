@@ -4,7 +4,7 @@ import Icon from "../components/Icon";
 import classNames from "../classNames";
 import Button from "../components/inputs/Button";
 import useRoute from "../hooks/useRoute";
-import {usePage} from "@inertiajs/inertia-react";
+import {usePage} from "@inertiajs/react";
 
 const Show = ({ status, choirAdmins, isMember }) => {
     const { tenant } = usePage().props;

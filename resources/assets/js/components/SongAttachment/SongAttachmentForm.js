@@ -1,5 +1,5 @@
 import React from 'react';
-import {useForm} from "@inertiajs/inertia-react";
+import {useForm} from "@inertiajs/react";
 import FormSection from "../FormSection";
 import Label from "../inputs/Label";
 import FileInput from "../inputs/FileInput";

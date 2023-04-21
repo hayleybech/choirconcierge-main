@@ -1,4 +1,4 @@
-import {useForm} from "@inertiajs/inertia-react";
+import {useForm} from "@inertiajs/react";
 import Dialog from "./Dialog";
 import Form from "./Form";
 import Label from "./inputs/Label";

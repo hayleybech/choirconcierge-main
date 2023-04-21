@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import navigation from "./navigation";
-import {usePage} from '@inertiajs/inertia-react';
+import { usePage } from '@inertiajs/react';
 import GlobalTrackPlayer from "../components/Audio/GlobalTrackPlayer";
 import { PlayerContext } from '../contexts/player-context';
 import { AudioPlayerProvider } from "react-use-audio-player"
