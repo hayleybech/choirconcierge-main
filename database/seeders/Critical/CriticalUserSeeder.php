@@ -12,6 +12,7 @@ use Faker\Factory as Faker;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CriticalUserSeeder extends Seeder
 {
@@ -322,7 +323,7 @@ class CriticalUserSeeder extends Seeder
         ], [
             'first_name' => 'Hayley',
             'last_name' => 'Bech',
-            'password' => bcrypt('*tokra1#'),
+            'password' => bcrypt(Str::random(30)),
         ]);
 
         // Create matching singer for admin

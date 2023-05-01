@@ -11,13 +11,22 @@ import {usePage} from "@inertiajs/inertia-react";
 import RsvpTag from "../../components/Event/RsvpTag";
 import MyRsvpButtons from "../../components/Event/MyRsvpButtons";
 import useRoute from "../../hooks/useRoute";
+import Button from "../../components/inputs/Button";
 
 const UpcomingEventsWidget = ({ events }) => {
     const { can } = usePage().props;
     const { route } = useRoute();
 
     return (
-        <Panel header={<SectionTitle>Upcoming Events</SectionTitle>} noPadding>
+        <Panel
+            header={
+                <div className="flex justify-between">
+                    <SectionTitle>Upcoming Events</SectionTitle>
+                    <Button href={route('events.index')} variant="secondary" size="sm">View All</Button>
+                </div>
+            }
+           noPadding
+        >
             {events.length > 0 ? (
             <TableMobile>
                 {events.map((event) => (
