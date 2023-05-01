@@ -5,7 +5,7 @@ import AppHead from "../../../components/AppHead";
 import Label from "../../../components/inputs/Label";
 import TextInput from "../../../components/inputs/TextInput";
 import Error from "../../../components/inputs/Error";
-import {useForm} from "@inertiajs/react";
+import {useForm} from "@inertiajs/inertia-react";
 import Form from "../../../components/Form";
 import FormSection from "../../../components/FormSection";
 import RichTextInput from "../../../components/inputs/RichTextInput";

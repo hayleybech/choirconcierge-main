@@ -2,7 +2,7 @@ import React from 'react'
 import TenantLayout from "../../../Layouts/TenantLayout";
 import PageHeader from "../../../components/PageHeader";
 import AppHead from "../../../components/AppHead";
-import {usePage} from "@inertiajs/react";
+import {usePage} from "@inertiajs/inertia-react";
 import Calendar from "./../Calendar";
 import useRoute from "../../../hooks/useRoute";
 

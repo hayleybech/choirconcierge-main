@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from "../../classNames";
-import {usePage} from "@inertiajs/react";
+import {usePage} from "@inertiajs/inertia-react";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { components } from 'react-select';
 import Icon from "../Icon";

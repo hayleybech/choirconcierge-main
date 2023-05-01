@@ -63,15 +63,5 @@ class DummyTaskSeeder extends Seeder
                 'route' => 'task.complete',
             ],
         ]);
-
-        // Attach all tasks to all singers
-        $tasks = Task::all();
-        $singers = DB::table('singers')
-            ->where('tenant_id', '=', tenant('id'))
-            ->pluck('id');
-
-        foreach ($tasks as $task) {
-            $task->singers()->attach($singers);
-        }
     }
 }

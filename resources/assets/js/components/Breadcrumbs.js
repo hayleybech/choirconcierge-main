@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from "@inertiajs/react";
+import {Link} from "@inertiajs/inertia-react";
 import Icon from "./Icon";
 
 const Breadcrumbs = ({ breadcrumbs }) => {

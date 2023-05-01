@@ -1,6 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { createInertiaApp } from '@inertiajs/react'
+import { createInertiaApp } from '@inertiajs/inertia-react'
+import { InertiaProgress } from '@inertiajs/progress'
 import * as Sentry from '@sentry/react';
 import {Integrations as TracingIntegrations} from "@sentry/tracing";
 
@@ -22,7 +23,6 @@ createInertiaApp({
 	setup({ el, App, props }) {
 		render(<App {...props} />, el)
 	},
-	progress: {
-		color: '#38bdf8'
-	},
 });
+
+InertiaProgress.init({ color: '#38bdf8' });

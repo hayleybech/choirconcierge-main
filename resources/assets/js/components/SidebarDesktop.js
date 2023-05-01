@@ -1,4 +1,4 @@
-import {Link, usePage} from "@inertiajs/react";
+import {Link, usePage} from "@inertiajs/inertia-react";
 import React from "react";
 import MainNavigation from "./MainNavigation";
 import useRoute from "../hooks/useRoute";

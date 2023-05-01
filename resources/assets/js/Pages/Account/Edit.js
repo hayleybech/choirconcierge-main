@@ -3,7 +3,7 @@ import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import AccountForm from "./AccountForm";
-import {usePage} from "@inertiajs/react";
+import {usePage} from "@inertiajs/inertia-react";
 import useRoute from "../../hooks/useRoute";
 
 const Edit = ({ }) => {

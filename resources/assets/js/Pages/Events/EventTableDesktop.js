@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from "@inertiajs/react";
+import {Link} from "@inertiajs/inertia-react";
 import {DateTime} from "luxon";
 import Table, {TableCell} from "../../components/Table";
 import Badge from "../../components/Badge";
