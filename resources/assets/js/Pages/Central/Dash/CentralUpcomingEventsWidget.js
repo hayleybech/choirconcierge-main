@@ -8,9 +8,8 @@ import GoogleMap from "../../../components/GoogleMap";
 import ButtonLink from "../../../components/inputs/ButtonLink";
 import Icon from "../../../components/Icon";
 import {usePage} from "@inertiajs/inertia-react";
-import RsvpTag from "../../../components/Event/RsvpTag";
-import MyRsvpButtons from "../../../components/Event/MyRsvpButtons";
 import useRoute from "../../../hooks/useRoute";
+import RsvpDropdown from "../../../components/Event/RsvpDropdown";
 
 const CentralUpcomingEventsWidget = ({ events }) => {
     const { route } = useRoute();
@@ -57,17 +56,9 @@ const CentralUpcomingEventsWidget = ({ events }) => {
                                 </div>
                             )}
                             {! isToday(event) && (
-                                <div className="flex items-center justify-between mt-2">
-                                    <RsvpTag
-                                        label={event.my_rsvp.label}
-                                        icon={event.my_rsvp.icon}
-                                        colour={event.my_rsvp.colour}
-                                        size="xs"
-                                        className="mr-3"
-                                    />
-
-                                    <MyRsvpButtons event={event} size="xs" />
-                                </div>
+                              <div className="mt-2 self-stretch md:self-start">
+                                  <RsvpDropdown event={event} size="xs" />
+                              </div>
                             )}
                         </div>
                     </TableMobileItem>

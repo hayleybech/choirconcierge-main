@@ -5,7 +5,7 @@ import DateTag from "../../components/DateTag";
 import collect from "collect.js";
 import useRoute from "../../hooks/useRoute";
 
-const MailingListTableDesktop = ({ tasks }) => {
+const TaskTableDesktop = ({ tasks }) => {
     const { route } = useRoute();
 
     const headings = collect({
@@ -13,7 +13,7 @@ const MailingListTableDesktop = ({ tasks }) => {
         role: 'Role',
         type: 'Type',
         created: 'Created',
-    })
+    });
 
     return (
         <Table
@@ -43,4 +43,4 @@ const MailingListTableDesktop = ({ tasks }) => {
     );
 }
 
-export default MailingListTableDesktop;
+export default TaskTableDesktop;
