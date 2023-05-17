@@ -12,16 +12,16 @@ const Show = ({ events, songs }) => (
             <div className="mx-auto px-4 sm:px-6 lg:px-16">
                 <h1 className="text-2xl font-semibold text-gray-900 mb-8">Dashboard</h1>
 
-                <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                    <div className="sm:col-span-2">
+                <div className="grid gap-y-6 gap-x-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+                    <div className="sm:col-span-2 lx:col-span-1">
                         <ChoirsListWidget />
                     </div>
 
-                    <div className="sm:col-span-2">
+                    <div>
                         <CentralUpcomingEventsWidget events={events} />
                     </div>
 
-                    <div className="sm:col-span-2">
+                    <div>
                         <CentralSongsToLearnWidget songs={songs} />
                     </div>
                 </div>

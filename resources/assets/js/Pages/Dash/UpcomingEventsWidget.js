@@ -43,10 +43,13 @@ const UpcomingEventsWidget = ({ events }) => {
                                 )}
                             </div>
                             )}
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between gap-1">
                                 <div className="text-sm font-medium text-purple-800">{event.title}</div>
-                                <div className="text-sm">
+                                <div className="text-sm hidden xl:block shrink-0">
                                     <DateTag date={event.call_time} format={isToday(event) ? 'TIME_24_SIMPLE' : 'DATE_MED'} />
+                                </div>
+                                <div className="text-sm xl:hidden shrink-0">
+                                  <DateTag date={event.call_time} format={isToday(event) ? 'TIME_24_SIMPLE' : 'DATE_SHORT'} />
                                 </div>
                             </div>
                             {isToday(event) && (
