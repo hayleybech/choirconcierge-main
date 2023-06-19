@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Carbon;
 
+// @todo figure out why I made all these tenancy helpers and whether there are better officially-supported solutiosn
+
 if (! function_exists('the_tenant_route')) {
     // Allows tenant_route to auto-fetch the domain
     function the_tenant_route($route, $parameters = [], $absolute = true)

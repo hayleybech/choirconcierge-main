@@ -2,8 +2,11 @@ import React, {useEffect, useRef} from 'react';
 import Icon from "./Icon";
 import Button from "./inputs/Button";
 import SectionSubtitle from "./SectionSubtitle";
+import useRoute from "../hooks/useRoute";
 
 const Filters = ({ routeName, form: { submit, data, setData }, render }) => {
+    const { route } = useRoute();
+
     const firstUpdate = useRef(true);
     useEffect(() => {
         if (firstUpdate.current) {

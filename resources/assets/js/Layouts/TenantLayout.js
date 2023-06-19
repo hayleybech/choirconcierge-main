@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import route from 'ziggy-js';
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import navigation from "./navigation";
@@ -15,9 +14,12 @@ import Icon from "../components/Icon";
 import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
 import usePromptBeforeUnload from "../hooks/usePromptBeforeUnload";
+import useRoute from "../hooks/useRoute";
 
 export default function TenantLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { route } = useRoute();
+
     const [player, setPlayer] = useState({
         songTitle: null,
         songId: 0,
@@ -89,7 +91,7 @@ export default function TenantLayout({ children }) {
                     {player.showFullscreen || <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />}
 
                     <AudioPlayerProvider>
-                        <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none">
+                        <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
                             {children}
                         </main>
 

@@ -11,13 +11,13 @@ import FilterSortPane from "../../components/FilterSortPane";
 import useFilterPane from "../../hooks/useFilterPane";
 import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
-import Icon from "../../components/Icon";
-import Button from "../../components/inputs/Button";
 import EmptyState from "../../components/EmptyState";
+import useRoute from "../../hooks/useRoute";
 
 const Index = ({ events, eventTypes }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const { can } = usePage().props;
+    const { route } = useRoute();
 
     const sorts = [
         { id: 'title', name: 'Title' },

@@ -40,7 +40,7 @@ class LoginControllerTest extends TestCase
             'email' => $user->email,
             'password' => 'password',
         ])
-            ->assertRedirect(route('central.dash'));
+            ->assertRedirect(route('central.default-dash.index'));
 
         $this->assertAuthenticatedAs($user);
     }
@@ -58,7 +58,7 @@ class LoginControllerTest extends TestCase
 
         // logout
         $this->post(route('logout'))
-            ->assertRedirect(route('central.dash'));
+            ->assertRedirect(route('login'));
 
         $this->assertGuest();
     }

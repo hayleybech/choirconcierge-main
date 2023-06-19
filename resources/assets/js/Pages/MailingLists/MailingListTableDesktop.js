@@ -4,8 +4,11 @@ import Table, {TableCell} from "../../components/Table";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import collect from "collect.js";
+import useRoute from "../../hooks/useRoute";
 
 const MailingListTableDesktop = ({ tasks }) => {
+    const { route } = useRoute();
+
     const headings = collect({
         title: 'Title',
         type: 'Type',
@@ -21,7 +24,9 @@ const MailingListTableDesktop = ({ tasks }) => {
                     <TableCell>
                         <div className="flex items-center">
                             <div className="ml-4">
-                                <Link href={route('groups.show', list.id)} className="text-sm font-medium text-purple-800">{list.title}</Link>
+                                <Link href={route('groups.show', {group: list.id})} className="text-sm font-medium text-purple-800">
+                                    {list.title}
+                                </Link>
                             </div>
                         </div>
                     </TableCell>

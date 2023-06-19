@@ -7,8 +7,10 @@ import SectionTitle from "../../components/SectionTitle";
 import DateTag from "../../components/DateTag";
 import DeleteDialog from "../../components/DeleteDialog";
 import EmptyState from "../../components/EmptyState";
+import useRoute from "../../hooks/useRoute";
 
 const Show = ({ list }) => {
+    const { route } = useRoute();
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
     return (
@@ -27,15 +29,20 @@ const Show = ({ list }) => {
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Mailing Lists', url: route('groups.index')},
-                    { name: list.title, url: route('groups.show', list) },
+                    { name: list.title, url: route('groups.show', {group: list}) },
                 ]}
                 actions={[
-                    { label: 'Edit', icon: 'edit', url: route('groups.edit', list), can: 'update_group' },
+                    { label: 'Edit', icon: 'edit', url: route('groups.edit', {group: list}), can: 'update_group' },
                     { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_group' },
                 ].filter(action => action.can ? list.can[action.can] : true)}
             />
 
-            <DeleteDialog title="Delete Mailing Lists" url={route('groups.destroy', list)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+            <DeleteDialog
+                title="Delete Mailing Lists"
+                url={route('groups.destroy', {group: list})}
+                isOpen={deleteDialogIsOpen}
+                setIsOpen={setDeleteDialogIsOpen}
+            >
                 Are you sure you want to delete this mailing list? This action cannot be undone.
             </DeleteDialog>
 
@@ -74,7 +81,7 @@ const Show = ({ list }) => {
                                     : 'Ask your admin to finish setting up this list.'
                                 }
                                 icon="inbox-in"
-                                href={list.can['update_group'] ? route('groups.edit', list) : null}
+                                href={list.can['update_group'] ? route('groups.edit', {group: list}) : null}
                                 actionLabel="Edit Mailing List"
                                 actionIcon="edit"
                             />
@@ -117,7 +124,7 @@ const Show = ({ list }) => {
                                     : 'Ask your admin to finish setting up this list.'
                                 }
                                 icon="inbox-out"
-                                href={list.can['update_group'] ? route('groups.edit', list) : null}
+                                href={list.can['update_group'] ? route('groups.edit', {group: list}) : null}
                                 actionLabel="Edit Mailing List"
                                 actionIcon="edit"
                             />

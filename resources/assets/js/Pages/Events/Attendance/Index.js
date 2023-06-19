@@ -8,9 +8,12 @@ import Icon from "../../../components/Icon";
 import TextInput from "../../../components/inputs/TextInput";
 import Label from "../../../components/inputs/Label";
 import CollapseGroup from "../../../components/CollapseGroup";
+import useRoute from "../../../hooks/useRoute";
 
 const Index = ({ event, voice_parts }) => {
     const [absentReasons, setAbsentReasons] = useState({});
+    const { route } = useRoute();
+
     return (
         <>
             <AppHead title={`Attendance Summary - ${event.title}`} />
@@ -20,8 +23,8 @@ const Index = ({ event, voice_parts }) => {
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash') },
                     { name: 'Events', url: route('events.index') },
-                    { name: event.title, url: route('events.show', event) },
-                    { name: 'Attendance', url: route('events.attendances.index', event) },
+                    { name: event.title, url: route('events.show', {event}) },
+                    { name: 'Attendance', url: route('events.attendances.index', {event}) },
                 ]}
             />
 

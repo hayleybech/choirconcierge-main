@@ -7,8 +7,11 @@ import {modelsAndAbilities} from "./modelsAndAbilities";
 import classNames from "../../classNames";
 import DeleteDialog from "../../components/DeleteDialog";
 import FormWrapper from "../../components/FormWrapper";
+import useRoute from "../../hooks/useRoute";
 
 const Show = ({ role }) => {
+    const { route } = useRoute();
+
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
     return (
@@ -20,15 +23,20 @@ const Show = ({ role }) => {
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Singers', url: route('singers.index')},
                     { name: 'Roles', url: route('roles.index')},
-                    { name: role.name, url: route('roles.show', role) },
+                    { name: role.name, url: route('roles.show', {role}) },
                 ]}
                 actions={[
-                    { label: 'Edit', icon: 'edit', url: route('roles.edit', role), can: 'update_role' },
+                    { label: 'Edit', icon: 'edit', url: route('roles.edit', {role}), can: 'update_role' },
                     { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_role' },
                 ].filter(action => action.can ? role.can[action.can] : true)}
             />
 
-            <DeleteDialog title="Delete Role" url={route('roles.destroy', role)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+            <DeleteDialog
+                title="Delete Role"
+                url={route('roles.destroy', {role})}
+                isOpen={deleteDialogIsOpen}
+                setIsOpen={setDeleteDialogIsOpen}
+            >
                 Are you sure you want to delete this role?
                 This will affect all users in this role and could break your site!
                 This action cannot be undone.

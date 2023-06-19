@@ -2,15 +2,18 @@ import React, {useState} from "react";
 import Dialog from "./Dialog";
 import SingerSelect from "./inputs/SingerSelect";
 import Label from "./inputs/Label";
+import useRoute from "../hooks/useRoute";
 
 const ImpersonateUserModal = ({ isOpen, setIsOpen }) => {
+    const { route } = useRoute();
+
     const [selectedSinger, setSelectedSinger] = useState(null);
 
     return (
         <Dialog
             title="Choose a user to impersonate"
             okLabel="Start"
-            okUrl={selectedSinger ? route('users.impersonate', selectedSinger) : '#'}
+            okUrl={selectedSinger ? route('users.impersonate', {user: selectedSinger}) : '#'}
             okVariant="primary"
             okMethod="get"
             isOpen={isOpen}

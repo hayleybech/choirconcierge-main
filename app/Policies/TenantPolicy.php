@@ -27,6 +27,10 @@ class TenantPolicy
         return null;
     }
 
+    public function viewAny(User $user) {
+        return false;
+    }
+
     public function update(User $user)
     {
         return false;

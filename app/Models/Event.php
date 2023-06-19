@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Spatie\CalendarLinks\Exceptions\InvalidLink;
 use Spatie\CalendarLinks\Link;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
@@ -96,7 +97,7 @@ class Event extends Model
         'is_repeating' => 'boolean',
     ];
 
-    private Link $_add_to_calendar_link;
+    private ?Link $_add_to_calendar_link;
 
     protected static function booted(): void
     {
@@ -352,12 +353,17 @@ class Event extends Model
         return $this->repeat_parent?->in_past ?? null;
     }
 
-    public function getAddToCalendarLinkAttribute(): Link
+    public function getAddToCalendarLinkAttribute(): ?Link
     {
         if (! isset($this->_add_to_calendar_link)) {
-            $this->_add_to_calendar_link = Link::create($this->title, $this->call_time, $this->end_date)
-                ->description($this->description ?? '')
-                ->address($this->location_address ?? '');
+            try {
+                $this->_add_to_calendar_link = Link::create($this->title, $this->call_time, $this->end_date)
+                    ->description($this->description ?? '')
+                    ->address($this->location_address ?? '');
+            } catch(InvalidLink $e) {
+                $this->_add_to_calendar_link = null;
+                \Sentry::captureException($e);
+            }
         }
 
         return $this->_add_to_calendar_link;

@@ -1,12 +1,13 @@
 import {Dialog, Transition} from "@headlessui/react";
 import React, {Fragment} from "react";
 import {Link, usePage} from "@inertiajs/inertia-react";
-import route from "ziggy-js";
 import MainNavigation from "./MainNavigation";
 import Icon from "./Icon";
+import useRoute from "../hooks/useRoute";
 
 const SidebarMobile = ({ navigation, open, setOpen, switchChoirButton }) => {
     const { tenant } = usePage().props;
+    const { route } = useRoute();
 
     return (
         <Transition.Root show={open} as={Fragment}>

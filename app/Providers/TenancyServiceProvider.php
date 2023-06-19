@@ -107,6 +107,9 @@ class TenancyServiceProvider extends ServiceProvider
         InitializeTenancyByDomain::$onFail = static function () {
             return redirect(config('app.url'));
         };
+        Middleware\InitializeTenancyByPath::$onFail = static function() {
+            abort(404);
+        };
     }
 
     protected function bootEvents()

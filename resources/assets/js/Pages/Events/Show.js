@@ -18,11 +18,13 @@ import CollapsePanel from "../../components/CollapsePanel";
 import CollapseGroup from "../../components/CollapseGroup";
 import EventType from "../../EventType";
 import EventSchedule from "../../components/Event/EventSchedule";
+import useRoute from "../../hooks/useRoute";
 
 const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePartsAttendanceCount, addToCalendarLinks }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [editDialogIsOpen, setEditDialogIsOpen] = useState(false);
 
+    const { route } = useRoute();
     const { props: pageProps } = usePage();
 
     return (
@@ -42,17 +44,17 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Events', url: route('events.index')},
-                    { name: event.title, url: route('events.show', event) },
+                    { name: event.title, url: route('events.show', {event}) },
                 ]}
                 actions={[
                     event.is_repeating
                         ? { label: 'Edit', icon: 'edit', onClick: () => setEditDialogIsOpen(true), can: 'update_event' }
-                        : { label: 'Edit', icon: 'edit', url: route('events.edit', event), can: 'update_event' },
+                        : { label: 'Edit', icon: 'edit', url: route('events.edit', {event}), can: 'update_event' },
                     { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_event' },
                 ].filter(action => action.can ? event.can[action.can] : true)}
             />
 
-            <DeleteDialog title="Delete Event" url={route('events.destroy', event)} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
+            <DeleteDialog title="Delete Event" url={route('events.destroy', {event})} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
                 Are you sure you want to delete this event? This action cannot be undone.
             </DeleteDialog>
 
@@ -123,9 +125,13 @@ const ViewRsvpsButton = ({ event }) => (
     </ButtonLink>
 );
 
-const EditAttendanceButton = ({ event }) => (
-    <ButtonLink variant="primary" size="sm" href={route('events.attendances.index', [event])}>
-        <Icon icon="edit" />
-        Edit
-    </ButtonLink>
-);
+const EditAttendanceButton = ({ event }) => {
+    const { route } = useRoute();
+
+    return (
+        <ButtonLink variant="primary" size="sm" href={route('events.attendances.index', {event})}>
+            <Icon icon="edit" />
+            Edit
+        </ButtonLink>
+    );
+}

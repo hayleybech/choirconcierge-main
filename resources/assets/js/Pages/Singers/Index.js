@@ -13,11 +13,13 @@ import Sorts from "../../components/Sorts";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
 import EmptyState from "../../components/EmptyState";
 import ImportSingersDialog from "../../components/ImportSingersDialog";
+import useRoute from "../../hooks/useRoute";
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const [showImportDialog, setShowImportDialog] = useState(false);
     const { can } = usePage().props;
+    const { route } = useRoute();
 
     const sorts = [
         { id: 'full-name', name: 'Name', default: true },

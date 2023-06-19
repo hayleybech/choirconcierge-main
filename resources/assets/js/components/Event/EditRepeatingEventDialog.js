@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import Dialog from "../Dialog";
 import RadioGroup from "../inputs/RadioGroup";
+import useRoute from "../../hooks/useRoute";
 
 const EditRepeatingEventDialog = ({ isOpen, setIsOpen, event }) => {
+    const { route } = useRoute();
+
     const [selectedMode, setSelectedMode] = useState('single');
 
     const editModes = [
@@ -58,7 +61,7 @@ const EditRepeatingEventDialog = ({ isOpen, setIsOpen, event }) => {
         <Dialog
             title="Edit Repeating Event"
             okLabel="Start"
-            okUrl={route('events.recurring.edit', [event, selectedMode])}
+            okUrl={route('events.recurring.edit', {event, mode: selectedMode})}
             okVariant="primary"
             okMethod="get"
             isOpen={isOpen}

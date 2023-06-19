@@ -7,6 +7,7 @@ use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -65,6 +66,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<GroupMember> $memberships
  * @property Collection<Singer> $singers
  * @property Singer $singer
+ * @property Tenant $default_tenant
  */
 class User extends Authenticatable implements HasMedia
 {
@@ -165,6 +167,11 @@ class User extends Authenticatable implements HasMedia
             ->ofMany(['id' => 'max'], function ($query) {
                 $query->where('tenant_id', '=', tenancy()?->tenant?->id ?? null);
             });
+    }
+
+    public function defaultTenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class, 'default_tenant_id');
     }
 
     public function scopeBirthdays(Builder $query): Builder

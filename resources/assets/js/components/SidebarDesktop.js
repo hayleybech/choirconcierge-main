@@ -1,10 +1,11 @@
 import {Link, usePage} from "@inertiajs/inertia-react";
-import route from "ziggy-js";
 import React from "react";
 import MainNavigation from "./MainNavigation";
+import useRoute from "../hooks/useRoute";
 
 const SidebarDesktop = ({ navigation, switchChoirButton }) => {
     const { tenant } = usePage().props;
+    const { route } = useRoute();
 
     return (
         <div className="flex flex-col w-64 bg-brand-purple-dark">

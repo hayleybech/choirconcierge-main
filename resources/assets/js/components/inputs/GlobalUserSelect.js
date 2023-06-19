@@ -3,8 +3,10 @@ import {components} from "react-select";
 import axios from 'axios';
 import AsyncCreatableSelect from "react-select/async-creatable";
 import Icon from "../Icon";
+import useRoute from "../../hooks/useRoute";
 
 const GlobalUserSelect = ({ defaultValue, updateFn, multiple = false }) => {
+    const { route } = useRoute();
 
     const load = (inputValue) => axios
         .get(route('global-find.users', { q: inputValue }))

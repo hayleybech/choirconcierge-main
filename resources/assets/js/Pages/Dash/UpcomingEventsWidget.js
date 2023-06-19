@@ -8,35 +8,48 @@ import GoogleMap from "../../components/GoogleMap";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import Icon from "../../components/Icon";
 import {usePage} from "@inertiajs/inertia-react";
-import RsvpTag from "../../components/Event/RsvpTag";
-import MyRsvpButtons from "../../components/Event/MyRsvpButtons";
+import useRoute from "../../hooks/useRoute";
+import Button from "../../components/inputs/Button";
+import RsvpDropdown from "../../components/Event/RsvpDropdown";
 
 const UpcomingEventsWidget = ({ events }) => {
     const { can } = usePage().props;
+    const { route } = useRoute();
 
     return (
-        <Panel header={<SectionTitle>Upcoming Events</SectionTitle>} noPadding>
+        <Panel
+            header={
+                <div className="flex justify-between">
+                    <SectionTitle>Upcoming Events</SectionTitle>
+                    <Button href={route('events.index')} variant="secondary" size="sm">View All</Button>
+                </div>
+            }
+           noPadding
+        >
             {events.length > 0 ? (
             <TableMobile>
                 {events.map((event) => (
-                    <TableMobileItem url={route('events.show', event)} key={event.id}>
+                    <TableMobileItem url={route('events.show', {event})} key={event.id}>
                         <div className="flex-1 flex flex-col mr-2 sm:mr-4">
                             {isToday(event) && (
                             <div className="flex items-center justify-between mb-3">
                                 <div className="text-md font-bold mr-2">Today</div>
 
                                 {can['create_attendance'] && (
-                                    <ButtonLink href={route('events.attendances.index', event)} variant="primary" size="xs" className="mt-2">
+                                    <ButtonLink href={route('events.attendances.index', {event})} variant="primary" size="xs" className="mt-2">
                                         <Icon icon="edit" />
                                         Record Attendance
                                     </ButtonLink>
                                 )}
                             </div>
                             )}
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between gap-1">
                                 <div className="text-sm font-medium text-purple-800">{event.title}</div>
-                                <div className="text-sm">
+                                <div className="text-sm hidden xl:block shrink-0">
                                     <DateTag date={event.call_time} format={isToday(event) ? 'TIME_24_SIMPLE' : 'DATE_MED'} />
+                                </div>
+                                <div className="text-sm xl:hidden shrink-0">
+                                  <DateTag date={event.call_time} format={isToday(event) ? 'TIME_24_SIMPLE' : 'DATE_SHORT'} />
                                 </div>
                             </div>
                             {isToday(event) && (
@@ -47,11 +60,9 @@ const UpcomingEventsWidget = ({ events }) => {
                                 </div>
                             )}
                             {! isToday(event) && (
-                                <div className="flex items-center justify-between mt-2">
-                                    <RsvpTag label={event.my_rsvp.label} icon={event.my_rsvp.icon} colour={event.my_rsvp.colour} size="xs" className="mr-3" />
-
-                                    <MyRsvpButtons event={event} size="xs" />
-                                </div>
+                              <div className="mt-2 self-stretch md:self-start">
+                                <RsvpDropdown event={event} size="xs" />
+                              </div>
                             )}
                         </div>
                     </TableMobileItem>

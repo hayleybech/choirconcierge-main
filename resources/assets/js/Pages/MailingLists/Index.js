@@ -5,13 +5,13 @@ import AppHead from "../../components/AppHead";
 import MailingListTableDesktop from "./MailingListTableDesktop";
 import MailingListTableMobile from "./MailingListTableMobile";
 import {usePage} from "@inertiajs/inertia-react";
-import RiserStackTableDesktop from "../RiserStacks/RiserStackTableDesktop";
-import RiserStackTableMobile from "../RiserStacks/RiserStackTableMobile";
 import EmptyState from "../../components/EmptyState";
 import IndexContainer from "../../components/IndexContainer";
+import useRoute from "../../hooks/useRoute";
 
 const Index = ({ lists }) => {
     const { can } = usePage().props;
+    const { route } = useRoute();
 
     return (
         <>

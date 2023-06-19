@@ -3,14 +3,17 @@ import {Link} from "@inertiajs/inertia-react";
 import Table, {TableCell} from "../../components/Table";
 import DateTag from "../../components/DateTag";
 import collect from "collect.js";
+import useRoute from "../../hooks/useRoute";
 
-const MailingListTableDesktop = ({ tasks }) => {
+const TaskTableDesktop = ({ tasks }) => {
+    const { route } = useRoute();
+
     const headings = collect({
         title: 'Title',
         role: 'Role',
         type: 'Type',
         created: 'Created',
-    })
+    });
 
     return (
         <Table
@@ -20,7 +23,7 @@ const MailingListTableDesktop = ({ tasks }) => {
                     <TableCell>
                         <div className="flex items-center">
                             <div className="ml-4">
-                                <Link href={route('tasks.show', task.id)} className="text-sm font-medium text-purple-800">{task.name}</Link>
+                                <Link href={route('tasks.show', {task: task.id})} className="text-sm font-medium text-purple-800">{task.name}</Link>
                             </div>
                         </div>
                     </TableCell>
@@ -40,4 +43,4 @@ const MailingListTableDesktop = ({ tasks }) => {
     );
 }
 
-export default MailingListTableDesktop;
+export default TaskTableDesktop;

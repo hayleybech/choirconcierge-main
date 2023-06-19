@@ -7,8 +7,11 @@ import {AudioVolumeButton} from "./AudioVolumeButton";
 import Icon from "../Icon";
 import {Link} from "@inertiajs/inertia-react";
 import LoadingSpinner from "../LoadingSpinner";
+import useRoute from "../../hooks/useRoute";
 
 const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
+    const { route } = useRoute();
+
     const { togglePlayPause, ready, loading, playing, stop } = useAudioPlayer();
 
     return (
@@ -19,7 +22,7 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
                 </Button>
 
                 <div className="flex flex-col sm:flex-row items-center text-center sm:text-left mb-2 sm:mb-0 sm:mr-8">
-                    <Link href={route('songs.show', songId)} className="text-sm text-purple-800 sm:mr-4">{songTitle}</Link>
+                    <Link href={route('songs.show', {song: songId})} className="text-sm text-purple-800 sm:mr-4">{songTitle}</Link>
                     <span className="text-gray-600 text-xs truncate">{fileName}</span>
                 </div>
 

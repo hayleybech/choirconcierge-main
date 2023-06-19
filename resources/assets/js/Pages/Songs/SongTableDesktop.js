@@ -9,8 +9,11 @@ import SongStatus from "../../SongStatus";
 import collect from "collect.js";
 import TableHeadingSort from "../../components/TableHeadingSort";
 import {Synth} from "tone";
+import useRoute from "../../hooks/useRoute";
 
 const SongTableDesktop = ({ songs, sortFilterForm }) => {
+    const { route } = useRoute();
+
     const [synth] = useState(() => new Synth().toDestination());
     const headings = collect({
         title: <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>,
@@ -30,7 +33,7 @@ const SongTableDesktop = ({ songs, sortFilterForm }) => {
                                 <PitchButton synth={synth} note={song.pitch.split('/')[0]} size="sm" />
                             </div>
                             <div className="ml-4">
-                                <Link href={route('songs.show', song.id)} className="text-sm font-medium text-purple-800">{song.title}</Link>
+                                <Link href={route('songs.show', {song})} className="text-sm font-medium text-purple-800">{song.title}</Link>
                             </div>
                         </div>
                     </TableCell>

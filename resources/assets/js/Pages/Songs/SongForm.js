@@ -16,8 +16,11 @@ import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 import SongStatus from "../../SongStatus";
 import RichTextInput from "../../components/inputs/RichTextInput";
 import FormWrapper from "../../components/FormWrapper";
+import useRoute from "../../hooks/useRoute";
 
-const SongForm = ({ categories, statuses, pitches, song}) => {
+const SongForm = ({ categories, statuses, pitches, song }) => {
+    const { route } = useRoute();
+
     const { data, setData, post, put, processing, errors } = useForm({
         title: song?.title ?? '',
         description: song?.description ?? '',
@@ -30,7 +33,7 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
 
     function submit(e) {
         e.preventDefault();
-        song ? put(route('songs.update', song)) : post(route('songs.store'));
+        song ? put(route('songs.update', {song})) : post(route('songs.store'));
     }
 
     return (
@@ -114,7 +117,7 @@ const SongForm = ({ categories, statuses, pitches, song}) => {
                 </FormSection>
 
                 <FormFooter>
-                    <ButtonLink href={song ? route('songs.show', song) : route('songs.index')}>Cancel</ButtonLink>
+                    <ButtonLink href={song ? route('songs.show', {song}) : route('songs.index')}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>

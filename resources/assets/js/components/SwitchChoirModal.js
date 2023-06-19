@@ -1,17 +1,19 @@
 import React, {useState} from "react";
 import Dialog from "./Dialog";
-import SingerSelect from "./inputs/SingerSelect";
 import Label from "./inputs/Label";
 import Select from "./inputs/Select";
+import useRoute from "../hooks/useRoute";
 
 const SwitchChoirModal = ({ isOpen, setIsOpen, choirs }) => {
+    const { route } = useRoute();
+
     const [selectedChoir, setSelectedChoir] = useState(choirs[0].id);
 
     return (
         <Dialog
             title="Log in to another choir"
             okLabel="Log In"
-            okUrl={selectedChoir ? route('tenants.switch.start', selectedChoir) : '#'}
+            okUrl={selectedChoir ? route('tenants.switch.start', {newTenant: selectedChoir}) : '#'}
             okVariant="primary"
             okMethod="get"
             isOpen={isOpen}

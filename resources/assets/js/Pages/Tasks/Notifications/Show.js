@@ -7,8 +7,11 @@ import SectionTitle from "../../../components/SectionTitle";
 import TenantLayout from "../../../Layouts/TenantLayout";
 import DeleteDialog from "../../../components/DeleteDialog";
 import Prose from "../../../components/Prose";
+import useRoute from "../../../hooks/useRoute";
 
 const Show = ({ task, notification }) => {
+    const { route } = useRoute();
+
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
     return (
@@ -25,18 +28,18 @@ const Show = ({ task, notification }) => {
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Tasks', url: route('tasks.index')},
-                    { name: task.name, url: route('tasks.show', task) },
-                    { name: notification.subject, url: route('tasks.notifications.show', [task, notification]) },
+                    { name: task.name, url: route('tasks.show', {task}) },
+                    { name: notification.subject, url: route('tasks.notifications.show', {task, notification}) },
                 ]}
                 actions={[
-                    { label: 'Edit', icon: 'edit', url: route('tasks.notifications.edit', [task, notification]), can: 'update_task' },
+                    { label: 'Edit', icon: 'edit', url: route('tasks.notifications.edit', {task, notification}), can: 'update_task' },
                     { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_task' },
                 ].filter(action => action.can ? task.can[action.can] : true)}
             />
 
             <DeleteDialog
                 title="Delete Notifications"
-                url={route('tasks.notifications.destroy', [task, notification])}
+                url={route('tasks.notifications.destroy', {task, notification})}
                 isOpen={deleteDialogIsOpen}
                 setIsOpen={setDeleteDialogIsOpen}
             >

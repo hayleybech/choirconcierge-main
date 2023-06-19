@@ -68,7 +68,7 @@ class Document extends Model
 
     public function getDownloadUrlAttribute(): string
     {
-        return tenant_asset($this->getPath());
+        return route('tenancy.asset', ['path' => $this->getPath()]);
     }
 
     public function getPathAttribute()

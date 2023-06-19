@@ -1,15 +1,16 @@
 import React, {Fragment} from 'react';
 import Icon from "./Icon";
-import route from "ziggy-js";
 import {Menu, Transition} from "@headlessui/react";
 import classNames from "../classNames";
 import {Link, usePage} from "@inertiajs/inertia-react";
+import useRoute from "../hooks/useRoute";
 
 const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen }) => {
     const { can, user, impersonationActive, tenant } = usePage().props;
+    const { route } = useRoute();
 
     const userNavigation = tenant ? [
-        user.singer ? { name: 'Your Profile', href: route('singers.show', user.singer), icon: 'user' } : null,
+        user.singer ? { name: 'Your Profile', href: route('singers.show', {singer: user.singer}), icon: 'user' } : null,
         { name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit' },
         { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
         { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },

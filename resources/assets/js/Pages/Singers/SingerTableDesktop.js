@@ -18,12 +18,14 @@ import ButtonGroup from "../../components/inputs/ButtonGroup";
 import DateTag from "../../components/DateTag";
 import collect from "collect.js";
 import TableHeadingSort from "../../components/TableHeadingSort";
+import useRoute from "../../hooks/useRoute";
 
 const SingerTableDesktop = ({ singers, sortFilterForm }) => {
     const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
     const [renewingSinger, setRenewingSinger] = useState(singers[0] ?? null);
 
     const { can } = usePage().props;
+    const { route } = useRoute();
 
     const headings = collect({
             name: <TableHeadingSort form={sortFilterForm} sort="full-name">Name</TableHeadingSort>,
@@ -46,7 +48,7 @@ const SingerTableDesktop = ({ singers, sortFilterForm }) => {
                                     <img className="h-10 w-10 rounded-md" src={singer.user.avatar_url} alt={singer.user.name} />
                                 </div>
                                 <div className="ml-4">
-                                    <Link href={route('singers.show', singer.id)} className="text-sm font-medium text-purple-800">{singer.user.name}</Link>
+                                    <Link href={route('singers.show', {singer: singer.id})} className="text-sm font-medium text-purple-800">{singer.user.name}</Link>
                                     <div>
                                         <Icon icon="phone" mr className="text-gray-400" />
                                         {singer.user.phone ? <a href={`tel:${singer.user.phone}`} target="_blank">{singer.user.phone}</a> : 'No phone'}
@@ -90,6 +92,8 @@ const SingerTableDesktop = ({ singers, sortFilterForm }) => {
 export default SingerTableDesktop;
 
 const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
+    const { route } = useRoute();
+
     const { data, setData, put, errors, transform } = useForm({
         paid_until: singer?.paid_until ? DateTime.fromISO(singer.paid_until) : null,
     });
@@ -105,7 +109,7 @@ const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
 
     function submit(e) {
         e.preventDefault();
-        put(route('singers.fees.update', singer), {
+        put(route('singers.fees.update', {singer}), {
             onSuccess: () => setIsOpen(false),
         });
     }
