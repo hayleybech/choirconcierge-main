@@ -73,12 +73,21 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
                 <div className="sm:col-span-1 divide-y divide-y-gray-300">
                     <CollapseGroup items={[
                         { title: 'My Attendance', show: true, content: <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />},
-                        { title: 'RSVP Summary', show: pageProps.can['list_attendances'], content: <RsvpSummary event={event} rsvpCount={rsvpCount} voicePartsRsvpCount={voicePartsRsvpCount} /> },
+                        {
+                            title: 'RSVP Summary',
+                            show: pageProps.can['list_attendances'],
+                            action: <ViewRsvpsButton event={event} />,
+                            content: <RsvpSummary event={event} rsvpCount={rsvpCount} voicePartsRsvpCount={voicePartsRsvpCount} />
+                        },
                         {
                             title: 'Attendance Summary',
                             show: pageProps.can['create_attendance'],
                             action: <EditAttendanceButton event={event} />,
-                            content: <AttendanceSummary event={event} attendanceCount={attendanceCount} voicePartsAttendanceCount={voicePartsAttendanceCount}/>,
+                            content: <AttendanceSummary
+                                event={event}
+                                attendanceCount={attendanceCount}
+                                voicePartsAttendanceCount={voicePartsAttendanceCount}
+                            />,
                         },
                     ]} />
                 </div>
@@ -109,6 +118,12 @@ const EventLocation = ({ event }) => (
     </CollapsePanel>
 );
 
+const ViewRsvpsButton = ({ event }) => (
+    <ButtonLink variant="primary" size="sm" href={route('events.rsvps.index', [event])}>
+        <Icon icon="clipboard-list" />
+        View All
+    </ButtonLink>
+);
 
 const EditAttendanceButton = ({ event }) => {
     const { route } = useRoute();

@@ -17,16 +17,16 @@ const Show = ({ events, songs, birthdays, emptyDobs, memberversaries, feeStatus 
 
                 <FeeStatusWarning status={feeStatus} />
 
-                <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                    <div className="sm:col-span-2">
+                <div className="grid gap-y-6 gap-x-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+                    <div>
                         <UpcomingEventsWidget events={events} />
                     </div>
 
-                    <div className="sm:col-span-2">
+                    <div>
                         <SongsToLearnWidget songs={songs} />
                     </div>
 
-                    <div className="sm:col-span-2">
+                    <div>
                         <BirthdaysWidget birthdays={birthdays} emptyDobs={emptyDobs} />
                         <MemberversariesWidget memberversaries={memberversaries} />
                     </div>

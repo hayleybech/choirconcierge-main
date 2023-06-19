@@ -68,8 +68,8 @@ class Rsvp extends Model
         $colours = [
             'yes' => 'emerald',
             'maybe' => 'amber',
-            'unknown' => 'amber',
-            'no' => 'red',
+            'unknown' => 'red',
+            'no' => 'gray',
         ];
 
         return $colours[$this->response];

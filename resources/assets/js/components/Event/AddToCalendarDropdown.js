@@ -4,7 +4,7 @@ import buttonStyles from "../inputs/buttonStyles";
 import Icon from "../Icon";
 import classNames from "../../classNames";
 
-const AddToCalendarDropdown = ({ urls }) => {
+const AddToCalendarDropdown = ({ urls, size = 'sm' }) => {
     let items = [
         { label: 'Google', icon: 'google', iconType: 'brand', url: urls.google },
         { label: 'Outlook Web', icon: 'microsoft', iconType: 'brand', url: urls.webOutlook },
@@ -13,7 +13,7 @@ const AddToCalendarDropdown = ({ urls }) => {
 
     return items.length > 0 && (
         <Menu as="div" className="relative inline-block overflow-visible">
-            <Menu.Button className={buttonStyles('secondary', 'sm')}>
+            <Menu.Button className={buttonStyles('secondary', size)}>
                 <Icon icon="calendar-plus" />
                 Add To Calendar
                 <Icon icon="chevron-down" />
@@ -28,7 +28,7 @@ const AddToCalendarDropdown = ({ urls }) => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
             >
-                <Menu.Items className="origin-top-right absolute right-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="origin-top-right absolute left-0 mt-2 -mr-1 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                     {items.map(({ label, icon, iconType, url }) =>
                         <Menu.Item key={label}>
                             {({ active }) => (

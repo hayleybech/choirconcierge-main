@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Rsvp;
+use App\Models\Singer;
+use App\Models\VoicePart;
 use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class RsvpController extends Controller
 {
@@ -14,6 +18,35 @@ class RsvpController extends Controller
     {
         $this->authorizeResource(Rsvp::class);
     }
+
+	public function index(Event $event): Response
+	{
+		$this->authorize('viewAny', Rsvp::class);
+
+		$singers = Singer::query()
+			->with([
+				'user',
+				'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
+			])
+			->get()
+            ->map(function ($singer) {
+                $singer->rsvp = $singer->rsvps->first() ?? Rsvp::Null();
+                return $singer;
+            })
+			->groupBy('voice_part_id');
+
+		$voice_parts = VoicePart::all()
+			->push(VoicePart::getNullVoicePart())
+			->map(function ($part) use ($singers) {
+				$part->singers = $singers[$part->id === null ? "" : $part->id] ?? collect([]);
+				return $part;
+			});
+
+		return Inertia::render('Events/Rsvps/Index', [
+			'event' => $event,
+			'voiceParts' => $voice_parts->values(),
+		]);
+	}
 
     public function store(Request $request, Event $event): RedirectResponse
     {
