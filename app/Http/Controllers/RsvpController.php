@@ -23,40 +23,27 @@ class RsvpController extends Controller
 	{
 		$this->authorize('viewAny', Rsvp::class);
 
-//		$event->load(['attendances' => fn ($query) => $query->with('singer.user')->whereHas('singer', fn ($query) => $query->active())]);
-//
-//		$event->attendances->each(fn ($attendance) => $attendance->singer->user->append('avatar_url'));
-
-		// get all singers
-			// with voice part
-			// with rsvp for this event
-			// replace no voice part with NullVoicePart
-		// group by voice part
-
 		$singers = Singer::query()
 			->with([
 				'user',
 				'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
 			])
 			->get()
+            ->map(function ($singer) {
+                $singer->rsvp = $singer->rsvps->first() ?? Rsvp::Null();
+                return $singer;
+            })
 			->groupBy('voice_part_id');
 
-		$voice_parts = VoicePart::all();
-
-//
-//		$voice_parts = VoicePart::all()
-//			->push(VoicePart::getNullVoicePart())
-//			->map(function ($part) use ($event) {
-//				$part->singers = $event->attendances
-//					->filter(fn ($attendance) => $attendance->singer->voice_part_id === $part->id)
-//					->values();
-//
-//				return $part;
-//			});
+		$voice_parts = VoicePart::all()
+			->push(VoicePart::getNullVoicePart())
+			->map(function ($part) use ($singers) {
+				$part->singers = $singers[$part->id === null ? "" : $part->id] ?? collect([]);
+				return $part;
+			});
 
 		return Inertia::render('Events/Rsvps/Index', [
 			'event' => $event,
-			'singers' => $singers->values(),
 			'voiceParts' => $voice_parts->values(),
 		]);
 	}
