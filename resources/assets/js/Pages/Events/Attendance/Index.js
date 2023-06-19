@@ -48,8 +48,8 @@ const Index = ({ event, voice_parts }) => {
                     <ul role="list" className="relative z-0 divide-y divide-gray-200">
                         {part.singers.map((attendance) => (
                             <li key={attendance.singer.id} className="bg-white">
-                                <div className="relative px-6 py-5 flex flex-col sm:flex-row items-center space-y-3 sm:space-x-3 hover:bg-gray-50 justify-between items-stretch sm:items-center">
-                                    <div className="flex space-x-2">
+                                <div className="relative px-6 py-5 flex flex-col xl:flex-row items-stretch xl:items-center gap-y-3 sm:gap-x-3 hover:bg-gray-50 justify-between">
+                                    <div className="flex space-x-2 shrink-0">
                                         <div className="shrink-0">
                                             <img className="h-12 w-12 rounded-lg" src={attendance.singer.user.avatar_url} alt={attendance.singer.user.name}/>
                                         </div>
@@ -83,11 +83,9 @@ const Index = ({ event, voice_parts }) => {
                                                 Mark as {label}
                                             </Button>
                                         )}
-
-
                                     </div>
 
-                                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:ml-16 space-y-2 sm:space-x-2">
+                                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-x-2">
                                         <Label label="Reason for absence" forInput={`absent_reason_${attendance.singer.id}`} />
                                         <TextInput
                                             name="absent_reason"
@@ -97,6 +95,7 @@ const Index = ({ event, voice_parts }) => {
                                                 ...absentReasons,
                                                 [attendance.singer.id]: value
                                             })}
+                                            wrapperClasses="grow"
                                         />
                                     </div>
 

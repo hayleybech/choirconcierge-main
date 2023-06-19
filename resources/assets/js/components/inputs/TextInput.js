@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from '../../classNames';
 
-const TextInput = ({ name, type = 'text', value, updateFn, hasErrors, ...otherProps }) => (
-    <div className="mt-1">
+const TextInput = ({ name, type = 'text', value, updateFn, hasErrors, wrapperClasses, ...otherProps }) => (
+    <div className={`mt-1 ${wrapperClasses}`}>
         <input
             type={type}
             name={name}
