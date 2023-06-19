@@ -30,6 +30,21 @@ const Index = ({ event, voice_parts }) => {
             show: true,
             content: (
                 <div key={part.id} className="relative">
+                  <div className="flex flex-wrap bg-white py-4 border-b border-gray-200 gap-y-4">
+                    {[
+                      { label: 'On Time', colour: 'emerald-500', icon: 'check', count: part.singers.filter(attendance => attendance.response === 'present').length },
+                      { label: 'Late', colour: 'amber-500', icon: 'alarm-exclamation', count: part.singers.filter(attendance => attendance.response === 'late').length },
+                      { label: 'Absent', colour: 'red-500', icon: 'times', count: part.singers.filter(attendance => attendance.response === 'absent').length },
+                      { label: 'Absent (with apology)', colour: 'red-500', icon: 'times', count: part.singers.filter(attendance => attendance.response === 'absent_apology').length },
+                      { label: 'Unknown', colour: 'gray-500', icon: 'question', count: part.singers.filter(attendance => attendance.response === 'unknown').length },
+                    ].map(({ label, colour, icon, count}) => (
+                      <div className="w-1/2 md:w-1/5 text-center" key={label}>
+                        <Icon icon={icon} className={`text-${colour}`} />
+                        <p className={`font-semibold text-${colour}`}>{label}</p>
+                        {count}
+                      </div>
+                    ))}
+                  </div>
                     <ul role="list" className="relative z-0 divide-y divide-gray-200">
                         {part.singers.map((attendance) => (
                             <li key={attendance.singer.id} className="bg-white">

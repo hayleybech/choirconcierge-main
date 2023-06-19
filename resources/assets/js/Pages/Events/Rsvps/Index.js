@@ -33,7 +33,7 @@ const Index = ({ event, voiceParts, singers }) => {
               show: true,
               content: (
                 <div key={part.id} className="relative">
-                  <div className="flex bg-white py-4 border-b-1 border-gray-200">
+                  <div className="flex bg-white py-4 border-b border-gray-200">
                     {[
                       { label: 'Going', colour: 'emerald-500', icon: 'check', count: part.singers.filter(singer => singer.rsvp.response === 'yes').length },
                       { label: 'Unknown', colour: 'amber-500', icon: 'question', count: part.singers.filter(singer => singer.rsvp.response === 'unknown').length },
