@@ -75,6 +75,7 @@ class AttendanceReportController extends Controller
     private function getSingers(Collection $events)
     {
         return Singer::with(['user', 'attendances'])
+            ->active()
             ->get()
             ->append('user_avatar_thumb_url')
             ->each(function ($singer) use ($events) {
