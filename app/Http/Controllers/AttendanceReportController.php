@@ -17,6 +17,7 @@ class AttendanceReportController extends Controller
         $this->authorize('viewAny', Attendance::class);
 
         $all_events = Event::with([])
+            ->whereDate('start_date', '>', now()->subYear()->toDateString()) // @TODO remove this when filters added
             ->orderBy('start_date')
             ->get();
 
