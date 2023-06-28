@@ -30,20 +30,21 @@ const UpcomingEventsWidget = ({ events }) => {
             <TableMobile>
                 {events.map((event) => (
                     <TableMobileListItem key={event.id}>
+                        {isToday(event) && (
+                          <div className="flex items-center justify-between mt-4 -mb-2 px-4 sm:px-6 z-10">
+                            <div className="text-md font-bold mr-2">Today</div>
+
+                            {can['create_attendance'] && (
+                                <ButtonLink href={route('events.attendances.index', {event})} variant="primary" size="xs" className="mt-2">
+                                    <Icon icon="edit" />
+                                    Record Attendance
+                                </ButtonLink>
+                            )}
+                          </div>
+                        )}
+
                       <TableMobileLink url={route('events.show', {event})}>
                         <div className="flex-1 flex flex-col mr-2 sm:mr-4">
-                            {isToday(event) && (
-                            <div className="flex items-center justify-between mb-3">
-                                <div className="text-md font-bold mr-2">Today</div>
-
-                                {can['create_attendance'] && (
-                                    <ButtonLink href={route('events.attendances.index', {event})} variant="primary" size="xs" className="mt-2">
-                                        <Icon icon="edit" />
-                                        Record Attendance
-                                    </ButtonLink>
-                                )}
-                            </div>
-                            )}
                             <div className="flex items-center justify-between gap-1">
                                 <div className="text-sm font-medium text-purple-800">{event.title}</div>
                                 <div className="text-sm hidden xl:block shrink-0">
