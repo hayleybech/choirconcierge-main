@@ -1,7 +1,7 @@
 import React from 'react';
 import Panel from "../../../components/Panel";
 import SectionTitle from "../../../components/SectionTitle";
-import TableMobile, { TableMobileItem, TableMobileLink, TableMobileListItem } from "../../../components/TableMobile";
+import TableMobile, { TableMobileLink, TableMobileListItem } from "../../../components/TableMobile";
 import DateTag from "../../../components/DateTag";
 import {DateTime} from "luxon";
 import GoogleMap from "../../../components/GoogleMap";
