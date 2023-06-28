@@ -75,7 +75,7 @@ const Index = ({ event, voice_parts }) => {
                                         ].map(({ response, label, icon, variant }) =>
                                             attendance.response !== response &&
                                             <Button
-                                                href={route('events.attendances.update', [event, attendance.singer.id])}
+                                                href={route('events.attendances.update', {event, singer: attendance.singer.id})}
                                                 method="put"
                                                 data={{ response: response, absent_reason: absentReasons[attendance.singer.id] }}
                                                 size="sm"
