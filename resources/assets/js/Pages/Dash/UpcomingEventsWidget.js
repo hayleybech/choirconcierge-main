@@ -1,7 +1,7 @@
 import React from 'react';
 import Panel from "../../components/Panel";
 import SectionTitle from "../../components/SectionTitle";
-import TableMobile, {TableMobileItem} from "../../components/TableMobile";
+import TableMobile, { TableMobileItem, TableMobileLink, TableMobileListItem } from "../../components/TableMobile";
 import DateTag from "../../components/DateTag";
 import {DateTime} from "luxon";
 import GoogleMap from "../../components/GoogleMap";
@@ -29,7 +29,8 @@ const UpcomingEventsWidget = ({ events }) => {
             {events.length > 0 ? (
             <TableMobile>
                 {events.map((event) => (
-                    <TableMobileItem url={route('events.show', {event})} key={event.id}>
+                    <TableMobileListItem key={event.id}>
+                      <TableMobileLink url={route('events.show', {event})}>
                         <div className="flex-1 flex flex-col mr-2 sm:mr-4">
                             {isToday(event) && (
                             <div className="flex items-center justify-between mb-3">
@@ -59,13 +60,15 @@ const UpcomingEventsWidget = ({ events }) => {
                                     {event.location_place_id && <GoogleMap placeId={event.location_place_id} />}
                                 </div>
                             )}
-                            {! isToday(event) && (
-                              <div className="mt-2 self-stretch md:self-start">
-                                <RsvpDropdown event={event} size="xs" />
-                              </div>
-                            )}
                         </div>
-                    </TableMobileItem>
+                        </TableMobileLink>
+
+                        {! isToday(event) && (
+                          <div className="-mt-2 mb-4 self-stretch md:self-start px-4 sm:px-6">
+                            <RsvpDropdown event={event} size="xs" />
+                          </div>
+                        )}
+                    </TableMobileListItem>
                 ))}
             </TableMobile>
             ) : (
