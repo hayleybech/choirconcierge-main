@@ -405,6 +405,7 @@ class Event extends Model
         );
     }
 
+
     public function scopeDate(Builder $query, string $mode = 'upcoming', Carbon $date = null, Carbon $date2 = null): Builder
     {
         return match ($mode) {
@@ -414,5 +415,14 @@ class Event extends Model
             'past' => $query->where('call_time', '<=', Carbon::today()),
             'between' => $query->where('call_time', '>=', $date)->where('call_time', '<=', $date2)
         };
+    }
+    public function scopeStartsBefore(Builder $query, Carbon|string $date): Builder
+    {
+        return $query->where('start_date', '<=', $date instanceof Carbon ? $date : Carbon::parse($date));
+    }
+
+    public function scopeStartsAfter(Builder $query, Carbon|string $date): Builder
+    {
+        return $query->where('start_date', '>=', $date instanceof Carbon ? $date : Carbon::parse($date));
     }
 }

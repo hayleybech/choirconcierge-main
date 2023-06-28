@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\Event;
+use App\Models\EventType;
 use App\Models\Singer;
 use App\Models\VoicePart;
 use Illuminate\Database\Eloquent\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class AttendanceReportController extends Controller
 {
@@ -16,27 +19,46 @@ class AttendanceReportController extends Controller
     {
         $this->authorize('viewAny', Attendance::class);
 
-        $all_events = Event::with([])
+        $defaultEventType = EventType::where('title', 'Performance')->value('id');
+        $defaultStartsAfter = now()->subYear();
+        $defaultStartsBefore = now();
+
+        $events = QueryBuilder::for(Event::class)
+            ->with([])
+            ->allowedFilters([
+                AllowedFilter::exact('type.id')
+                    ->default([$defaultEventType]),
+                AllowedFilter::scope('starts_after')
+                    ->default($defaultStartsAfter),
+                AllowedFilter::scope('starts_before')
+                    ->default($defaultStartsBefore),
+            ])
             ->orderBy('start_date')
             ->get();
 
-        $singers = $this->getSingers($all_events);
+        $singers = $this->getSingers($events);
 
-        $all_events->each(function ($event) use ($singers) {
+        $events->each(function ($event) use ($singers) {
             $event->singersPresent = $event->singers_attendance('present')->active()->get()->count();
-            $event->percentPresent = floor($event->singersPresent / $singers->count() * 100);
+            $event->percentPresent = $singers->count() > 0 ? floor($event->singersPresent / $singers->count() * 100) : null;
         });
 
         $avg_singers_per_event = round(
-            $all_events->reduce(static function ($carry, $event) {
-                return $carry + $event->singers_attendance('present')->count();
-            }, 0) / $all_events->count(),
+            $events->count() > 0
+                ? $events->reduce(static function ($carry, $event) {
+                    return $carry + $event->singers_attendance('present')->count();
+                }, 0) / $events->count()
+                : null,
             2,
         );
 
         return Inertia::render('Events/AttendanceReport', [
             'voiceParts' => $this->getVoiceParts($singers)->values(),
-            'events' => $all_events->where('start_date', '<', now())->values(),
+            'events' => $events->values(),
+            'eventTypes' => EventType::all()->values(),
+            'defaultEventType' => $defaultEventType,
+            'defaultStartsAfter' => $defaultStartsAfter,
+            'defaultStartsBefore' => $defaultStartsBefore,
             'numSingers' => $singers->count(),
             'avgSingersPerEvent' => $avg_singers_per_event,
             'avgEventsPerSinger' => $this->getAverageEventsPerSinger(),
@@ -75,11 +97,12 @@ class AttendanceReportController extends Controller
     private function getSingers(Collection $events)
     {
         return Singer::with(['user', 'attendances'])
+            ->active()
             ->get()
             ->append('user_avatar_thumb_url')
             ->each(function ($singer) use ($events) {
                 $singer->timesPresent = $singer->attendances->where('response', 'present')->count();
-                $singer->percentPresent = floor($singer->timesPresent / $events->count() * 100);
+                $singer->percentPresent = $events->count() > 0 ? floor($singer->timesPresent / $events->count() * 100) : null;
             });
     }
 }
