@@ -15,12 +15,14 @@ const CentralSongsToLearnWidget = ({ songs }) => {
                 <TableMobile>
                     {songs.map((song) => (
                         <TableMobileItem url={route('songs.show', {tenant: song.tenant_id, song})} key={song.id}>
-                            <div>
-                                <div className="text-sm font-medium text-purple-800 shrink-1">{song.title}</div>
-                                <div className="text-xs text-gray-500">{song.tenant.choir_name}</div>
-                            </div>
-                            <div className="text-sm">
-                                <LearningStatusTag status={new LearningStatus(song.my_learning.status)} />
+                            <div className="flex items-center justify-between gap-1 grow">
+                                <div>
+                                    <div className="text-sm font-medium text-purple-800 shrink-1">{song.title}</div>
+                                    <div className="text-xs text-gray-500">{song.tenant.choir_name}</div>
+                                </div>
+                                <div className="text-sm">
+                                    <LearningStatusTag status={new LearningStatus(song.my_learning.status)} />
+                                </div>
                             </div>
                         </TableMobileItem>
                     ))}

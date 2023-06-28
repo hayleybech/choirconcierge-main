@@ -6,7 +6,7 @@ const useSortFilterForm = (routeName, filters, sorts, transforms = () => {}) => 
     const { route } = useRoute();
 
     const { data, setData, get, transform } = useForm({
-        sort: getSort(sorts.find(option => option.default).id),
+        sort: getSort(sorts.find(option => option.default)?.id),
         sortDir: getSortDir(),
         ...getFilters(filters),
     });

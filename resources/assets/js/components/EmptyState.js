@@ -4,7 +4,7 @@ import Button from "./inputs/Button";
 
 const EmptyState = ({ title, description, actionDescription, icon, href, actionLabel, actionIcon }) => (
     <div className="text-center px-5 py-10 md:py-16">
-        <Icon icon={icon} type="regular" className="text-5xl" />
+      {icon && <Icon icon={icon} type="regular" className="text-5xl" />}
 
         <h3 className="mt-2 text-lg font-medium text-gray-900">{title}</h3>
 
