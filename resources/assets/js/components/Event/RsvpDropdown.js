@@ -39,6 +39,7 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
                     ? route('events.rsvps.update', {tenant: event.tenant_id, event, rsvp: event.my_rsvp})
                     : route('events.rsvps.store', {tenant: event.tenant_id, event})
                   }
+                  preserveScroll
                   method={event.my_rsvp.id ? 'put' : 'post'}
                   data={{rsvp_response: key}}
                   className={classNames(
