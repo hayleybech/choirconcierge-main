@@ -78,6 +78,7 @@ const Index = ({ event, voice_parts }) => {
                                                 href={route('events.attendances.update', {event, singer: attendance.singer.id})}
                                                 method="put"
                                                 data={{ response: response, absent_reason: absentReasons[attendance.singer.id] }}
+                                                preserveScroll
                                                 size="sm"
                                                 variant={variant}
                                                 key={response}
