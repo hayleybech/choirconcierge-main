@@ -13,17 +13,6 @@ const PdfTouch = ({ synth, filename, openFullscreen, closeFullscreen, isFullscre
 
     const containerRef = useRef();
 
-    function forceRefresh() {
-        setRefreshKey((prevKey) => prevKey + 1);
-    }
-
-    useEffect(() => {
-        window.addEventListener('orientationchange', forceRefresh);
-        return () => {
-            window.removeEventListener('orientationchange', forceRefresh);
-        }
-    }, []);
-
     function onDocumentLoadSuccess({ numPages }) {
         const allPageNumbers = [];
         for (let p = 1; p < numPages + 1; p++) {
@@ -44,7 +33,7 @@ const PdfTouch = ({ synth, filename, openFullscreen, closeFullscreen, isFullscre
                     <div className="grow-0 h-full overflow-hidden">
                         <div className="flex h-full w-full" style={{ padding: `${CONTAINER_PADDING}px` }} ref={containerRef}>
 
-                            <TransformComponent wrapperStyle={{ height: "100%" }}>
+                            <TransformComponent wrapperStyle={{ height: "100%", width: "100%" }}>
                                 <Document
                                     file={filename}
                                     onLoadSuccess={onDocumentLoadSuccess}
