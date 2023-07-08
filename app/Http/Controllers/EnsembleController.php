@@ -25,8 +25,14 @@ class EnsembleController extends Controller
 	    return redirect()->back()->with(['status' => 'Ensemble created.']);
     }
 
-    public function update(EnsembleRequest $request, Ensemble $ensemble)
+    public function update(EnsembleRequest $request, Tenant $organisation, Ensemble $ensemble): RedirectResponse
     {
-        //
+        $ensemble->update($request->safe()->only(['name']));
+
+	    if($request->hasFile('logo')) {
+		    $ensemble->updateLogo($request->file('logo'), $request->file('logo')->hashName());
+	    }
+
+	    return redirect()->back()->with(['status' => 'Ensemble saved.']);
     }
 }

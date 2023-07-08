@@ -198,6 +198,6 @@ Route::middleware([
         Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');
         Route::post('/organisation', [TenantController::class, 'update'])->name('organisation.update');
 
-		Route::resource('organisations.ensembles', EnsembleController::class)->only(['store']);
+		Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);
     });
 });

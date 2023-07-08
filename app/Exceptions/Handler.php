@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
 
         $this->initialiseTenancyByPath($request->getRequestUri());
 
-        if (in_array($response->status(), [500, 503, 404, 403])) {
+        if (! config('app.debug') && in_array($response->status(), [500, 503, 404, 403])) {
             return Inertia::render('Error', [
                 'tenant' => tenant(),
                 'status' => $response->status(),
