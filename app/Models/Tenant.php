@@ -8,8 +8,10 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
@@ -29,6 +31,9 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string primary_domain
  * @property string host
  * @property string $logo_url
+ *
+ * Relationships
+ * @property Collection<Ensemble> $ensembles
  */
 class Tenant extends BaseTenant
 {
@@ -103,7 +108,10 @@ class Tenant extends BaseTenant
         );
     }
 
-    public function updateLogo(UploadedFile|string $logo, string $hash_name)
+	/**
+	 * @throws Exception
+	 */
+	public function updateLogo(UploadedFile|string $logo, string $hash_name)
     {
         if (!Storage::disk('global-public')->exists('choir-logos')) {
             Storage::disk('global-public')->makeDirectory('choir-logos');
@@ -116,4 +124,8 @@ class Tenant extends BaseTenant
 
         $this->update(['choir_logo' => $hash_name]);
     }
+
+	public function ensembles(): HasMany {
+		return $this->hasMany(Ensemble::class);
+	}
 }

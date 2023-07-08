@@ -2,7 +2,7 @@ import React from 'react';
 import buttonStyles from "./inputs/buttonStyles";
 import classNames from "../classNames";
 
-const AvatarUpload = ({ currentImage, isSquare = true, updateFn }) => (
+const AvatarUpload = ({ name, currentImage, isSquare = true, updateFn }) => (
     <div className="mt-1 flex items-center">
         <span className={classNames('h-24 rounded-xl overflow-hidden bg-gray-100', isSquare ?? 'w-24')}>
 
@@ -15,10 +15,10 @@ const AvatarUpload = ({ currentImage, isSquare = true, updateFn }) => (
                 )
             }
         </span>
-        <label htmlFor="avatar" className={buttonStyles('secondary', 'sm', false, 'ml-4')}>
+        <label htmlFor={name} className={buttonStyles('secondary', 'sm', false, 'ml-4')}>
             Change
         </label>
-        <input type="file" id="avatar" className="hidden" onChange={e => updateFn(e.target.files[0])} />
+        <input type="file" id={name} name={name} className="hidden" onChange={e => updateFn(e.target.files[0])} />
     </div>
 );
 

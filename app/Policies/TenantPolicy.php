@@ -27,11 +27,12 @@ class TenantPolicy
         return null;
     }
 
-    public function viewAny(User $user) {
+    public function viewAny(User $user): bool
+    {
         return false;
     }
 
-    public function update(User $user)
+    public function update(User $user): bool
     {
         return false;
     }

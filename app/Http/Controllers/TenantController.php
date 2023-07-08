@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tenant;
 use DateTimeZone;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -18,13 +15,12 @@ class TenantController extends Controller
     {
         $this->authorize('update', tenant());
 
-        $tenant = tenant()->load('domains')->append('primary_domain');
+        $tenant = tenant()->load(['domains', 'ensembles'])->append(['primary_domain']);
 
         return Inertia::render('Tenants/Edit', [
-            'tenant' => $tenant,
+            'organisation' => $tenant,
             'centralDomain' => central_domain(),
             'timezones' => DateTimeZone::listIdentifiers(),
-            'choirLogo' => $tenant->logo_url,
         ]);
     }
 
