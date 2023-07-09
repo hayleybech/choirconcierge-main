@@ -10,13 +10,13 @@ import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
 import centralNavigation from "./centralNavigation";
 import useRoute from "../hooks/useRoute";
+import SwitchChoirMenu from "../components/SwitchChoirMenu";
 
 export default function CentralLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { route } = useRoute();
 
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
-    const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
@@ -45,14 +45,14 @@ export default function CentralLayout({ children }) {
                         navigation={navFiltered}
                         open={sidebarOpen}
                         setOpen={setSidebarOpen}
-                        switchChoirButton={shouldShowChoirSwitcher && <SwitchChoirButton onClick={() => { setSidebarOpen(false); setShowSwitchChoirModal(true); }} />}
+                        switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
                     />
                 </>
             ) : (
                 <div className="flex shrink-0">
                     <SidebarDesktop
                         navigation={navFiltered}
-                        switchChoirButton={shouldShowChoirSwitcher && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
+                        switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
                     />
                 </div>
             )}
@@ -68,14 +68,6 @@ export default function CentralLayout({ children }) {
             <ToastFlash errors={errors} flash={flash} />
 
             {/*<ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />*/}
-            <SwitchChoirModal setIsOpen={setShowSwitchChoirModal} isOpen={showSwitchChoirModal} choirs={userChoirs} />
         </div>
     )
 }
-
-const SwitchChoirButton = ({ onClick }) => (
-    <Button variant="secondary" size="xs" className="mx-4" onClick={onClick}>
-        <Icon icon="exchange" mr />
-        Switch Choir
-    </Button>
-);

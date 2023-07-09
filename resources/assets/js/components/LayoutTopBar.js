@@ -5,7 +5,7 @@ import classNames from "../classNames";
 import {Link, usePage} from "@inertiajs/inertia-react";
 import useRoute from "../hooks/useRoute";
 
-const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen }) => {
+const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu }) => {
     const { can, user, impersonationActive, tenant } = usePage().props;
     const { route } = useRoute();
 
@@ -35,6 +35,10 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen }) => {
             </button>
             <div className="flex-1 px-4 flex justify-between">
                 <div className="flex-1 flex">
+                    <div className="w-64">
+                        {switchChoirMenu}
+                    </div>
+
                     {/*<form className="w-full flex lg:ml-0" action="#" method="GET">*/}
                     {/*    <label htmlFor="search-field" className="sr-only">*/}
                     {/*        Search*/}

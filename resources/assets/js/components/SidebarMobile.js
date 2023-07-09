@@ -5,7 +5,7 @@ import MainNavigation from "./MainNavigation";
 import Icon from "./Icon";
 import useRoute from "../hooks/useRoute";
 
-const SidebarMobile = ({ navigation, open, setOpen, switchChoirButton }) => {
+const SidebarMobile = ({ navigation, open, setOpen, switchChoirMenu }) => {
     const { tenant } = usePage().props;
     const { route } = useRoute();
 
@@ -58,15 +58,7 @@ const SidebarMobile = ({ navigation, open, setOpen, switchChoirButton }) => {
                             <img src="/img/vibrant/logo.svg" alt="Choir Concierge" className="h-10 w-auto" />
                         </Link>
 
-                        {tenant && (
-                        <div className="shrink-0 flex justify-center items-center px-4 bg-gray-50 mb-4">
-                            <Link href={route('dash')} className="flex justify-center py-4 px-6 bg-gray-50">
-                                <img src={tenant.logo_url} alt={tenant.choir_name} className="max-h-32 w-auto" />
-                            </Link>
-                        </div>
-                        )}
-
-                        {switchChoirButton}
+                        {switchChoirMenu}
 
                         <div className="mt-5 flex-1 h-0 overflow-y-auto">
                             <MainNavigation navigation={navigation} closeSidebar={() => setOpen(false)} />

@@ -15,6 +15,7 @@ import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
 import usePromptBeforeUnload from "../hooks/usePromptBeforeUnload";
 import useRoute from "../hooks/useRoute";
+import SwitchChoirMenu from "../components/SwitchChoirMenu";
 
 export default function TenantLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -47,13 +48,12 @@ export default function TenantLayout({ children }) {
         })),
     });
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
-    const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
 
     usePromptBeforeUnload(player.fileName || player.showFullscreen);
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
-    const { can, userChoirs, errors, flash } = usePage().props;
+    const { can, userChoirs, errors, flash, tenant } = usePage().props;
 
     const navFiltered = navigation
         .filter((item) => can[item.can])
@@ -76,13 +76,13 @@ export default function TenantLayout({ children }) {
                         navigation={navFiltered}
                         open={sidebarOpen}
                         setOpen={setSidebarOpen}
-                        switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => { setSidebarOpen(false); setShowSwitchChoirModal(true); }} />}
+                        switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
                     />
                 ) : (
                     <div className="flex shrink-0">
                         <SidebarDesktop
                             navigation={navFiltered}
-                            switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
+                            switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
                         />
                     </div>
                 )}
@@ -104,15 +104,7 @@ export default function TenantLayout({ children }) {
                 <ToastFlash errors={errors} flash={flash} />
 
                 <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
-                <SwitchChoirModal setIsOpen={setShowSwitchChoirModal} isOpen={showSwitchChoirModal} choirs={userChoirs} />
             </div>
         </PlayerContext.Provider>
     )
 }
-
-const SwitchChoirButton = ({ onClick }) => (
-    <Button variant="secondary" size="xs" className="mx-4" onClick={onClick}>
-        <Icon icon="exchange" mr />
-        Switch Choir
-    </Button>
-);
