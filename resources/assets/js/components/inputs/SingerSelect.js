@@ -22,6 +22,7 @@ const SingerSelect = ({ defaultValue, updateFn, multiple = false }) => {
                 isMulti={multiple}
                 defaultValue={defaultValue}
                 onChange={option => multiple ? updateFn(option.map(item => item.value)) : updateFn(option.value)}
+                placeholder="Start typing..."
             />
         </div>
     );

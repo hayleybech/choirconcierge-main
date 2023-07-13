@@ -24,6 +24,7 @@ const GlobalUserSelect = ({ defaultValue, updateFn, multiple = false }) => {
                 onChange={option => multiple ? updateFn(option.map(item => item.value)) : updateFn(option.value)}
                 createOptionPosition="first"
                 isValidNewOption={(inputValue, value, options) => ! options.some((option) => option.email === inputValue)}
+                placeholder="Start typing..."
             />
         </div>
     );
