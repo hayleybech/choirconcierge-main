@@ -20,6 +20,7 @@ const SongSelect = ({ defaultValue, updateFn, multiple = false }) => {
                 defaultValue={defaultValue}
                 onChange={option => multiple ? updateFn(option.map(item => item?.value)) : updateFn(option?.value)}
                 isClearable
+                placeholder="Start typing..."
             />
         </div>
     );
