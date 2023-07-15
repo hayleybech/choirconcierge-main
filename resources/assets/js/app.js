@@ -5,7 +5,7 @@ import { InertiaProgress } from '@inertiajs/progress'
 import * as Sentry from '@sentry/react';
 import {Integrations as TracingIntegrations} from "@sentry/tracing";
 
-const VERSION = 'choir-concierge@2023-07-15a';
+const VERSION = 'choir-concierge@2023-07-15b';
 
 Sentry.init({
 	dsn: process.env.MIX_SENTRY_DSN,
@@ -16,6 +16,7 @@ Sentry.init({
 		trackComponents: true,
 	},
 	release: process.env.MIX_APP_ENV === 'production' ? VERSION : VERSION + ':dev',
+	environment: process.env.MIX_APP_ENV,
 });
 
 createInertiaApp({
