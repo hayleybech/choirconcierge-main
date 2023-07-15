@@ -10,23 +10,28 @@ const SwitchChoirMenu = ({ choirs: organisations, tenant }) => {
 	return (
 		<Menu as="div" className="relative inline-block text-left grow">
 			<div className="h-full">
-				{tenant ? (
 					<Menu.Button
-						disabled={organisations.length < 2}
-						className="inline-flex h-full w-full justify-between items-center gap-x-2.5 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+						disabled={tenant && organisations.length < 2}
+						className={classNames(
+							'inline-flex h-full sm:min-w-[200px] justify-between items-center gap-x-2.5 px-3 py-2',
+							'bg-white text-sm font-semibold text-gray-900 hover:bg-gray-50'
+							)}
 					>
-						{tenant.logo_url
-							? <img src={tenant.logo_url} alt={tenant.name} className="max-h-10 w-auto" />
-							: tenant.name
-						}
-						{organisations.length > 1 && <Icon icon="chevron-down" className="text-gray-400" />}
+						{tenant ? (
+							<>
+								{tenant.logo_url
+										? <img src={tenant.logo_url} alt={tenant.name} className="max-h-10 w-auto" />
+										: tenant.name
+								}
+								{organisations.length > 1 && <Icon icon="chevron-down" className="text-gray-400" />}
+							</>
+						) : (
+							<>
+								<div>Switch Choir</div>
+								<Icon icon="chevron-down" className="text-gray-400" />
+							</>
+						)}
 					</Menu.Button>
-				) : (
-					<Menu.Button className="inline-flex h-full w-full justify-between items-center gap-x-2.5 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50">
-						<div>Switch Choir</div>
-						<Icon icon="chevron-down" className="text-gray-400" />
-					</Menu.Button>
-				)}
 			</div>
 
 			<Transition
