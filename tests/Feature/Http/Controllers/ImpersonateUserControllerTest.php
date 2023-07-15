@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -39,7 +39,7 @@ class ImpersonateUserControllerTest extends TestCase
         $user1 = $this->createUserWithRole('Admin');
         $this->actingAs($user1);
 
-        $user2 = User::factory()->has(Singer::factory())->create();
+        $user2 = User::factory()->has(Membership::factory())->create();
 
         $response = $this->get(the_tenant_route('users.impersonate', [$user2]));
         $response->assertRedirect();

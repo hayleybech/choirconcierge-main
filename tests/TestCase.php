@@ -3,7 +3,7 @@
 namespace Tests;
 
 use App\Models\Role;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
@@ -44,7 +44,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function createUserWithRole(string $roleName): User
     {
-        $singer = Singer::factory()->create();
+        $singer = Membership::factory()->create();
         $singer->roles()->attach([Role::where('name', $roleName)->value('id')]);
 
         return $singer->user;

@@ -84,14 +84,14 @@ class NotificationTemplate extends Model
                 $recipients[] = User::find($recipient_id);
                 break;
             case 'singer':
-                $recipients[] = Singer::find($recipient_id);
+                $recipients[] = Membership::find($recipient_id);
                 break;
         }
 
         return $recipients;
     }
 
-    public function generateBody(Singer $singer, User $user = null): string
+    public function generateBody(Membership $singer, User $user = null): string
     {
         $replacements = [
             '%%singer.name%%' => $singer->user->name,
@@ -129,9 +129,9 @@ class NotificationTemplate extends Model
     }
 
     /**
-     * @param Singer $singer
+     * @param Membership $singer
      */
-    public function generateNotifications(Singer $singer): void
+    public function generateNotifications(Membership $singer): void
     {
         // Only generate in-app notifications for actual users
         if ($this->getRecipientType() === 'role' || $this->getRecipientType() === 'user') {

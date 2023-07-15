@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\EventType;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\VoicePart;
 use Illuminate\Database\Eloquent\Collection;
 use Inertia\Inertia;
@@ -68,7 +68,7 @@ class AttendanceReportController extends Controller
     private function getAverageEventsPerSinger(): float
     {
         return round(
-            Singer::active()
+            Membership::active()
                 ->with(['attendances'])
                 ->get()
                 ->reduce(fn ($carry, $singer) =>
@@ -76,7 +76,7 @@ class AttendanceReportController extends Controller
                         ->attendances()
                         ->where('response', 'present')
                         ->count()
-                , 0) / Singer::all()->count(),
+                , 0) / Membership::all()->count(),
             2,
         );
     }
@@ -86,7 +86,7 @@ class AttendanceReportController extends Controller
         return VoicePart::all()
             ->push(VoicePart::getNullVoicePart())
             ->map(function ($part) use ($singers) {
-                $part->singers = $singers
+                $part->members = $singers
                     ->filter(fn($singer) => $singer->voice_part_id === $part->id)
                     ->values();
 
@@ -96,7 +96,7 @@ class AttendanceReportController extends Controller
 
     private function getSingers(Collection $events)
     {
-        return Singer::with(['user', 'attendances'])
+        return Membership::with(['user', 'attendances'])
             ->active()
             ->get()
             ->append('user_avatar_thumb_url')

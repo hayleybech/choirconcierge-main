@@ -3,7 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\Singer;
+use App\Models\Membership;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -41,7 +41,7 @@ class AttendanceControllerTest extends TestCase
         $this->actingAs($this->createUserWithRole('Events Team'));
 
         $event = Event::factory()->create();
-        $singer = Singer::factory()->create();
+        $singer = Membership::factory()->create();
 
         $attendance_response = $this->faker->randomElement(['present', 'absent', 'absent_apology']);
         $absent_reason = $this->faker->optional(0.3)->sentence();
@@ -60,7 +60,7 @@ class AttendanceControllerTest extends TestCase
             'response' => $attendance_response,
             'absent_reason' => $absent_reason,
             'event_id' => $event->id,
-            'singer_id' => $singer->id,
+            'membership_id' => $singer->id,
         ]);
     }
 }

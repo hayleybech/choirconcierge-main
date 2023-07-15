@@ -17,7 +17,7 @@ class RoleController extends Controller
 
     public function index(): Response
     {
-        return Inertia::render('Roles/Index', ['roles' => Role::withCount('singers')->get()->values()]);
+        return Inertia::render('Roles/Index', ['roles' => Role::withCount('members')->get()->values()]);
     }
 
     public function create(): Response

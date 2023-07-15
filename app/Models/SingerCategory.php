@@ -21,7 +21,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $updated_at
  *
  * Relationships
- * @property Collection<Singer> $singers
+ * @property Collection<Membership> $members
  *
  * Attributes
  * @property string $colour
@@ -39,9 +39,9 @@ class SingerCategory extends Model
         'Archived Members' => 'emerald-700',
     ];
 
-    public function singers(): HasMany
+    public function members(): HasMany
     {
-        return $this->hasMany(Singer::class);
+        return $this->hasMany(Membership::class);
     }
 
     public function getSlugAttribute(): string

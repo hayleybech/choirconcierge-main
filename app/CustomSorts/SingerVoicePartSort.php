@@ -17,7 +17,7 @@ class SingerVoicePartSort implements Sort
             ->addSubSelect(
                 'part_title',
                 VoicePart::select('title')
-                    ->whereRaw("`${prefix}singers`.`voice_part_id` = `${prefix}voice_parts`.`id`")
+                    ->whereRaw("`${prefix}memberships`.`voice_part_id` = `${prefix}voice_parts`.`id`")
             )
             ->orderBy('part_title', $descending ? 'desc' : 'asc');
     }

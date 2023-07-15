@@ -13,7 +13,7 @@ use Illuminate\Support\Carbon;
  *
  * Columns
  * @property int $id
- * @property int $singer_id
+ * @property int $membership_id
  * @property string $experience
  * @property string $instruments
  * @property int $skill_pitch
@@ -25,7 +25,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $updated_at
  *
  * Relationships
- * @property Singer $singer
+ * @property Membership $member
  */
 class Placement extends Model
 {
@@ -41,10 +41,10 @@ class Placement extends Model
         'voice_tone',
     ];
 
-    protected $touches = ['singer'];
+    protected $touches = ['member'];
 
-    public function singer(): BelongsTo
+    public function member(): BelongsTo
     {
-        return $this->belongsTo(Singer::class);
+        return $this->belongsTo(Membership::class, 'membership_id');
     }
 }

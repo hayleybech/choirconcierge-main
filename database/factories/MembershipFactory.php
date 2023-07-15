@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class SingerFactory extends Factory
+class MembershipFactory extends Factory
 {
     public function definition(): array
     {

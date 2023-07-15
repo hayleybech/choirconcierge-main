@@ -3,7 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Role;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Song;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
@@ -118,13 +118,13 @@ class SongControllerTest extends TestCase
     {
         $song = Song::factory()->create();
         $user = User::factory()
-            ->has(Singer::factory()
+            ->has(Membership::factory()
                 ->hasAttached(
                     $song,
                     ['status' => 'assessment-ready']
                 ))
             ->create();
-        $user->singer->roles()->attach([Role::where('name', 'User')->value('id')]);
+        $user->membership->roles()->attach([Role::where('name', 'User')->value('id')]);
 
         $this->actingAs($user);
 
@@ -142,7 +142,7 @@ class SongControllerTest extends TestCase
         $song = Song::factory()->create();
         User::factory()
             ->count(3)
-            ->has(Singer::factory()
+            ->has(Membership::factory()
                 ->hasAttached(
                     $song,
                     ['status' => 'assessment-ready']

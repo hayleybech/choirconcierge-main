@@ -29,7 +29,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property Role $role
- * @property Collection<Singer> $singers
+ * @property Collection<Membership> $members
  * @property Collection<NotificationTemplate> $notification_templates
  */
 class Task extends Model
@@ -48,9 +48,9 @@ class Task extends Model
         return $this->belongsTo(Role::class);
     }
 
-    public function singers(): BelongsToMany
+    public function members(): BelongsToMany
     {
-        return $this->belongsToMany(Singer::class, 'singers_tasks')
+        return $this->belongsToMany(Membership::class, 'memberships_tasks', 'task_id', 'membership_id')
             ->withPivot('completed')
             ->withTimestamps();
     }
@@ -60,7 +60,7 @@ class Task extends Model
         return $this->hasMany(NotificationTemplate::class);
     }
 
-    public function generateNotifications(Singer $singer): void
+    public function generateNotifications(Membership $singer): void
     {
         // Loop through templates for this Task to create Notifications
         $notification_templates = $this->notification_templates;

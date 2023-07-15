@@ -8,7 +8,7 @@ use App\Models\Event;
 use App\Models\Folder;
 use App\Models\RiserStack;
 use App\Models\Role;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Song;
 use App\Models\Task;
 use App\Models\Tenant;
@@ -56,8 +56,8 @@ class HandleInertiaRequests extends Middleware
             ],
             'can' => [
                 'view_dash' => true,
-                'list_singers' => auth()->user()?->can('viewAny', Singer::class),
-                'create_singer' => auth()->user()?->can('create', Singer::class),
+                'list_singers' => auth()->user()?->can('viewAny', Membership::class),
+                'create_singer' => auth()->user()?->can('create', Membership::class),
                 'import_singers' => auth()->user()?->isSuperAdmin,
                 'create_voice_part' => auth()->user()?->can('create', VoicePart::class),
                 'list_voice_parts' => auth()->user()?->can('viewAny', VoicePart::class),
@@ -83,7 +83,7 @@ class HandleInertiaRequests extends Middleware
                 'create_broadcast' => auth()->user()?->can('createBroadcast', UserGroup::class),
                 'list_tasks' => auth()->user()?->can('viewAny', Task::class),
                 'create_task' => auth()->user()?->can('create', Task::class),
-                'impersonate' => auth()->user()?->isSuperAdmin || auth()->user()?->singer?->hasRole('Admin'),
+                'impersonate' => auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasRole('Admin'),
 	            'manage_finances' => Gate::allows('update-fees'),
                 'update_tenant' => auth()->user()?->can('update', Tenant::class),
                 'list_tenants' => auth()->user()?->isSuperAdmin,
@@ -101,7 +101,7 @@ class HandleInertiaRequests extends Middleware
         return session()->has('impersonation:active')
             ? [tenant()->load('domains')]
             : auth()->user()
-                ?->singers()
+                ?->memberships()
                 ->withoutTenancy()
                 ->with('tenant.domains')
                 ->get()

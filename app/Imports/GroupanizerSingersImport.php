@@ -62,7 +62,7 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
             return;
         }
 
-        $singer = $user->singers()->updateOrCreate(['id' => $user->id], [
+        $singer = $user->memberships()->updateOrCreate(['id' => $user->id], [
             'onboarding_enabled' => false,
             'voice_part_id' => isset($rowArr['voice_part']) ? VoicePart::firstWhere('title', $rowArr['voice_part'])->id : null,
             'joined_at' => $this->make_valid_mysql_datetime($rowArr['member_since'] ?? null),

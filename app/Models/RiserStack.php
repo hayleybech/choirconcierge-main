@@ -27,7 +27,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property int $tenant_id
  *
  * Relationships
- * @property Collection<Singer> $singers
+ * @property Collection<Membership> $members
  */
 class RiserStack extends Model
 {
@@ -42,9 +42,9 @@ class RiserStack extends Model
 
     protected $casts = ['front_row_on_floor' => 'boolean'];
 
-    public function singers(): BelongsToMany
+    public function members(): BelongsToMany
     {
-        return $this->belongsToMany(Singer::class)
+        return $this->belongsToMany(Membership::class, 'riser_stack_membership', 'riser_stack_id', 'membership_id')
             ->as('position')
             ->withPivot('row', 'column');
     }

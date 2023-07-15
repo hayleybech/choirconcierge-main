@@ -16,7 +16,7 @@ class UpdateMyLearningStatusController extends Controller
 
         $song->createMissingLearningRecords();
 
-        $song->singers()->updateExistingPivot(auth()->user()->singer->id, ['status' => $request->input('status')]);
+        $song->members()->updateExistingPivot(auth()->user()->membership->id, ['status' => $request->input('status')]);
 
         return redirect()->route('songs.show', $song);
     }

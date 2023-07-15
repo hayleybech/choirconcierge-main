@@ -26,10 +26,10 @@ class RiserStackController extends Controller
 
     public function create(): Response
     {
-        $voice_parts = VoicePart::with(['singers' => function ($query) {
+        $voice_parts = VoicePart::with(['members' => function ($query) {
             $query->active()->with('user');
         }])->get();
-        $voice_parts->each(fn ($part) => $part->singers->each->append('user_avatar_thumb_url'));
+        $voice_parts->each(fn ($part) => $part->members->each->append('user_avatar_thumb_url'));
 
         return Inertia::render('RiserStacks/Create', [
             'voice_parts' => $voice_parts->values(),
@@ -41,7 +41,7 @@ class RiserStackController extends Controller
         $stack = RiserStack::create($request->validated());
 
         $positions = $this->prepPositions($request->validated('singer_positions'));
-        $stack->singers()->sync($positions);
+        $stack->members()->sync($positions);
 
         return redirect()
             ->route('stacks.show', [$stack])
@@ -50,16 +50,16 @@ class RiserStackController extends Controller
 
     public function show(RiserStack $stack): Response
     {
-        $stack->load('singers.user');
-        $stack->singers->each->append('user_avatar_thumb_url');
+        $stack->load('members.user');
+        $stack->members->each->append('user_avatar_thumb_url');
 
         $stack->can = [
             'update_stack' => auth()->user()?->can('update', $stack),
             'delete_stack' => auth()->user()?->can('delete', $stack),
         ];
 
-        $voice_parts = VoicePart::with(['singers.user'])->get();
-        $voice_parts->each(fn ($part) => $part->singers->each->append('user_avatar_thumb_url'));
+        $voice_parts = VoicePart::with(['members.user'])->get();
+        $voice_parts->each(fn ($part) => $part->members->each->append('user_avatar_thumb_url'));
 
         return Inertia::render('RiserStacks/Show', [
             'stack' => $stack,
@@ -69,21 +69,21 @@ class RiserStackController extends Controller
     public function edit(RiserStack $stack): Response
     {
         // Get singers that are already on the riser stack.
-        $stack->load(['singers' => function ($query) {
+        $stack->load(['members' => function ($query) {
             $query->active()->with('user');
         }]);
-        $stack->singers->each->append('user_avatar_thumb_url');
+        $stack->members->each->append('user_avatar_thumb_url');
 
         // Get singers (by voice part) who are not already on the riser stack.
         $voice_parts = VoicePart::with([
-            'singers' => static function ($query) use ($stack) {
+            'members' => static function ($query) use ($stack) {
                 $query->active()->whereDoesntHave('riser_stacks', static function ($query) use ($stack) {
                     $query->where('riser_stack_id', '=', $stack->id);
                 });
             },
-            'singers.user',
+            'members.user',
         ])->get();
-        $voice_parts->each(fn ($part) => $part->singers->each->append('user_avatar_thumb_url'));
+        $voice_parts->each(fn ($part) => $part->members->each->append('user_avatar_thumb_url'));
 
         return Inertia::render('RiserStacks/Edit', [
             'stack' => $stack,
@@ -96,7 +96,7 @@ class RiserStackController extends Controller
         $stack->update($request->validated());
 
         $positions = $this->prepPositions($request->validated('singer_positions'));
-        $stack->singers()->sync($positions);
+        $stack->members()->sync($positions);
 
         return redirect()
             ->route('stacks.show', [$stack])

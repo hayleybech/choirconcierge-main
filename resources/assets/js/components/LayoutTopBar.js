@@ -10,7 +10,7 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu
     const { route } = useRoute();
 
     const userNavigation = tenant ? [
-        user.singer ? { name: 'Your Profile', href: route('singers.show', {singer: user.singer}), icon: 'user' } : null,
+        user.membership ? { name: 'Your Profile', href: route('singers.show', {singer: user.membership}), icon: 'user' } : null,
         { name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit' },
         { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
         { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },

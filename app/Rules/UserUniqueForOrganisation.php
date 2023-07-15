@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use Illuminate\Contracts\Validation\Rule;
 
 class UserUniqueForOrganisation implements Rule
@@ -16,7 +16,7 @@ class UserUniqueForOrganisation implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        return ! Singer::query()->where('user_id', $value)->exists();
+        return ! Membership::query()->where('user_id', $value)->exists();
     }
 
     /**

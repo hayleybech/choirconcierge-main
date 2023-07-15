@@ -31,9 +31,9 @@ const Index = ({ event, voiceParts }) => {
           <div key={part.id} className="relative">
             <div className="flex bg-white py-4 border-b border-gray-200">
               {[
-                { label: 'Going', colour: 'emerald-500', icon: 'check', count: part.singers.filter(singer => singer.rsvp.response === 'yes').length },
-                { label: 'Unknown', colour: 'amber-500', icon: 'question', count: part.singers.filter(singer => singer.rsvp.response === 'unknown').length },
-                { label: 'Not going', colour: 'red-500', icon: 'times', count: part.singers.filter(singer => singer.rsvp.response === 'no').length },
+                { label: 'Going', colour: 'emerald-500', icon: 'check', count: part.members.filter(singer => singer.rsvp.response === 'yes').length },
+                { label: 'Unknown', colour: 'amber-500', icon: 'question', count: part.members.filter(singer => singer.rsvp.response === 'unknown').length },
+                { label: 'Not going', colour: 'red-500', icon: 'times', count: part.members.filter(singer => singer.rsvp.response === 'no').length },
               ].map(({ label, colour, icon, count}) => (
                 <div className="w-1/3 text-center" key={label}>
                   <Icon icon={icon} className={`text-${colour}`} />
@@ -43,7 +43,7 @@ const Index = ({ event, voiceParts }) => {
               ))}
             </div>
             <ul role="list" className="relative z-0 divide-y divide-gray-200">
-              {part.singers.map((singer) => (
+              {part.members.map((singer) => (
                 <li key={singer.id} className="bg-white">
                   <div className="relative px-6 py-5 flex flex-col sm:flex-row items-center space-y-3 sm:space-x-3 hover:bg-gray-50 justify-between items-stretch sm:items-center">
                     <div className="flex space-x-2">

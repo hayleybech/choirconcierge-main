@@ -120,13 +120,13 @@ class EventControllerTest extends TestCase
             ->sequence(
                 [
                     'response' => 'no',
-                    'singer_id' => Auth::user()->singer->id,
+                    'membership_id' => Auth::user()->membership->id,
                     'event_id' => $event->id,
                     'created_at' => now(),
                 ],
                 [
                     'response' => 'no',
-                    'singer_id' => Auth::user()->singer->id,
+                    'membership_id' => Auth::user()->membership->id,
                     'event_id' => $event->id,
                     'created_at' => now()->addMinute(),
                 ],

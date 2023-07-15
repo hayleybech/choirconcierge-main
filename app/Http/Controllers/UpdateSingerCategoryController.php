@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class UpdateSingerCategoryController extends Controller
 {
-    public function __invoke(Singer $singer, Request $request): RedirectResponse
+    public function __invoke(Membership $singer, Request $request): RedirectResponse
     {
         $this->authorize('create', $singer);
 

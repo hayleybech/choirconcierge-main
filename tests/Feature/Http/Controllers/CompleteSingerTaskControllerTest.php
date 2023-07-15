@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -23,7 +23,7 @@ class CompleteSingerTaskControllerTest extends TestCase
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
         $task = Task::factory()->create();
-        $singer = Singer::factory()->create(['onboarding_enabled' => true]);
+        $singer = Membership::factory()->create(['onboarding_enabled' => true]);
         $singer->initOnboarding();
         $singer->save();
 
@@ -31,8 +31,8 @@ class CompleteSingerTaskControllerTest extends TestCase
         $response->assertSessionHasNoErrors();
         $response->assertRedirect(the_tenant_route('singers.index'));
 
-        $this->assertDatabaseHas('singers_tasks', [
-            'singer_id' => $singer->id,
+        $this->assertDatabaseHas('memberships_tasks', [
+            'membership_id' => $singer->id,
             'task_id' => $task->id,
             'completed' => true,
         ]);
