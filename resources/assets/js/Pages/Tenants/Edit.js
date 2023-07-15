@@ -48,8 +48,8 @@ export default Edit;
 
 const EditForm = ({ organisation, centralDomain, timezones }) => {
     const { data, setData, post, processing, errors } = useForm({
-        choir_name: organisation.choir_name,
-        choir_logo: null,
+        name: organisation.name,
+        logo: null,
         primary_domain: organisation.primary_domain,
         timezone: organisation.timezone.timezone,
     });
@@ -65,18 +65,18 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
 
                 <FormSection title="Basic Details">
                     <div className="sm:col-span-6">
-                        <Label label="Organisation Name" forInput="choir_name" />
-                        <TextInput name="choir_name" value={data.choir_name} updateFn={value => setData('choir_name', value)} hasErrors={ !! errors['choir_name'] } />
-                        {errors.choir_name && <Error>{errors.choir_name}</Error>}
+                        <Label label="Organisation Name" forInput="name" />
+                        <TextInput name="name" value={data.name} updateFn={value => setData('name', value)} hasErrors={ !! errors['name'] } />
+                        {errors.name && <Error>{errors.name}</Error>}
                     </div>
 
                     <div className="sm:col-span-6">
-                        <Label label="Organisation Logo" forInput="choir_logo" />
+                        <Label label="Organisation Logo" forInput="logo" />
                         <AvatarUpload
-                            name="choir_logo"
-                            currentImage={data.choir_logo ? URL.createObjectURL(data.choir_logo) : organisation.logo_url}
+                            name="logo"
+                            currentImage={data.logo ? URL.createObjectURL(data.logo) : organisation.logo_url}
                             isSquare={false}
-                            updateFn={value => setData('choir_logo', value)}
+                            updateFn={value => setData('logo', value)}
                         />
                     </div>
 

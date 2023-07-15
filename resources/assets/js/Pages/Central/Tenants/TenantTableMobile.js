@@ -10,7 +10,7 @@ const TenantTableMobile = ({ tenants }) => (
                     <div className="block hover:bg-gray-50 flex-grow min-w-0 text-gray-500">
                         <div className="flex items-center">
                             <div className="flex-1 flex items-center justify-between min-w-0 w-full">
-                                <div className="text-purple-600">{tenant.choir_name}</div>
+                                <div className="text-purple-600">{tenant.name}</div>
                                 <div>{tenant.renews_at && <DateTag date={tenant.renews_at} />}</div>
                             </div>
                         </div>

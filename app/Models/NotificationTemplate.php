@@ -50,6 +50,7 @@ class NotificationTemplate extends Model
             '%%singer.email%%' => '<code class="text-brand-blue">%%singer.email%%</code>',
             '%%placement.create%%' => '<code class="text-brand-blue">%%placement.create%%</code>',
             '%%choir.name%%' => '<code class="text-brand-blue">%%choir.name%%</code>',
+            '%%organisation.name%%' => '<code class="text-brand-blue">%%organisation.name%%</code>',
             '%%singer.dob%%' => '<code class="text-brand-blue">%%singer.dob%%</code>',
             '%%singer.age%%' => '<code class="text-brand-blue">%%singer.age%%</code>',
             '%%singer.phone%%' => '<code class="text-brand-blue">%%singer.phone%%</code>',
@@ -98,7 +99,8 @@ class NotificationTemplate extends Model
             '%%singer.lname%%' => $singer->user->last_name,
             '%%singer.email%%' => $singer->user->email,
             '%%placement.create%%' => '', //route( 'placement.create', $singer, $this->task ),
-            '%%choir.name%%' => tenant('choir_name') ?? 'Choir Name',
+            '%%choir.name%%' => tenant('name') ?? 'Organisation Name',
+            '%%organisation.name%%' => tenant('name') ?? 'Organisation Name',
         ];
         $profile_replacements = [
             '%%singer.dob%%' => $singer->user->dob,

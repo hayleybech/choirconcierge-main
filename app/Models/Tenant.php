@@ -20,8 +20,8 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * Class Tenant
  *
  * Virtual Columns
- * @property string $choir_name
- * @property string $choir_logo
+ * @property string $name
+ * @property string $logo
  * @property Carbon $renews_at
  *
  * Attributes
@@ -44,22 +44,22 @@ class Tenant extends BaseTenant
     protected static function booted(): void
     {
         static::deleted(function (Tenant $tenant) {
-            if(! $tenant->choir_logo) {
+            if(! $tenant->logo) {
                 return;
             }
 
             Storage::disk('global-public')
-                ->delete('choir-logos/'.$tenant->choir_logo);
+                ->delete('choir-logos/'.$tenant->logo);
         });
     }
 
     public static function create(
         string $id,
-        string $choir_name,
+        string $name,
         string $timezone,
-        array $attributes = []
+        array  $attributes = []
     ): self|Model {
-        return static::query()->create(array_merge($attributes, compact('id', 'choir_name', 'timezone')));
+        return static::query()->create(array_merge($attributes, compact('id', 'name', 'timezone')));
     }
 
     public static function findByDomain(string $domain): ?self
@@ -81,7 +81,7 @@ class Tenant extends BaseTenant
 
     public function getMailFromNameAttribute(): string
     {
-        return $this->choir_name.' via Choir Concierge';
+        return $this->name.' via Choir Concierge';
     }
 
     public function getMailFromAddressAttribute(): string
@@ -104,7 +104,7 @@ class Tenant extends BaseTenant
     public function logoUrl(): Attribute
     {
         return Attribute::get(fn () =>
-            $this->choir_logo ? asset('storage/choir-logos/'.$this->choir_logo) : ''
+            $this->logo ? asset('storage/choir-logos/'.$this->logo) : ''
         );
     }
 
@@ -122,7 +122,7 @@ class Tenant extends BaseTenant
             throw new Exception('Failed to save the logo.');
         }
 
-        $this->update(['choir_logo' => $hash_name]);
+        $this->update(['logo' => $hash_name]);
     }
 
 	public function ensembles(): HasMany {

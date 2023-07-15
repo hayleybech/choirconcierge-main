@@ -30,7 +30,7 @@ abstract class TestCase extends BaseTestCase
     public function initializeTenancy(): void
     {
         Tenant::find('phpunit')?->delete();
-        $tenant = Tenant::create(id: 'phpunit', choir_name: 'PHPUnit Testing', timezone: 'Australia/Perth');
+        $tenant = Tenant::create(id: 'phpunit', name: 'PHPUnit Testing', timezone: 'Australia/Perth');
         $tenant->domains()->create(['domain' => 'phpunit']);
         $tenant->save();
 

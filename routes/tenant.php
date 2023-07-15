@@ -194,10 +194,11 @@ Route::middleware([
         // Roles module
         Route::resource('roles', RoleController::class);
 
-        // Choir Settings
+        // Organisation Settings
         Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');
         Route::post('/organisation', [TenantController::class, 'update'])->name('organisation.update');
 
+        // Sub-groups aka Ensembles aka Choirs
 		Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);
     });
 });

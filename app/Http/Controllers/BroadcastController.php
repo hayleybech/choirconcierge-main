@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SendEmailForGroup;
-use App\Mail\ChoirBroadcast;
+use App\Mail\OrganisationBroadcast;
 use App\Models\UserGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -47,7 +47,7 @@ class BroadcastController extends Controller
             ]);
 
         SendEmailForGroup::dispatch(
-            (new ChoirBroadcast(
+            (new OrganisationBroadcast(
                 $request->input('subject'),
                 $request->input('body'),
                 $request->user(),

@@ -5,7 +5,7 @@ namespace App\Rules;
 use App\Models\Singer;
 use Illuminate\Contracts\Validation\Rule;
 
-class UserUniqueForChoir implements Rule
+class UserUniqueForOrganisation implements Rule
 {
     /**
      * Determine if the validation rule passes.
@@ -26,6 +26,6 @@ class UserUniqueForChoir implements Rule
      */
     public function message(): string
     {
-        return 'That user has already been added to your choir. ';
+        return 'That user has already been added to your organisation. ';
     }
 }

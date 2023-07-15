@@ -16,8 +16,8 @@ const SwitchChoirMenu = ({ choirs: organisations, tenant }) => {
 						className="inline-flex h-full w-full justify-between items-center gap-x-2.5 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
 					>
 						{tenant.logo_url
-							? <img src={tenant.logo_url} alt={tenant.choir_name} className="max-h-10 w-auto" />
-							: tenant.choir_name
+							? <img src={tenant.logo_url} alt={tenant.name} className="max-h-10 w-auto" />
+							: tenant.name
 						}
 						{organisations.length > 1 && <Icon icon="chevron-down" className="text-gray-400" />}
 					</Menu.Button>
@@ -38,7 +38,7 @@ const SwitchChoirMenu = ({ choirs: organisations, tenant }) => {
 				leaveFrom="transform opacity-100 scale-100"
 				leaveTo="transform opacity-0 scale-95"
 			>
-				<Menu.Items className="absolute right-0 z-20 mt-2 w-full origin-top-left bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+				<Menu.Items className="absolute right-0 z-20 mt-2 w-full max-h-[80dvh] sm:max-h-[60dvh] overflow-y-scroll origin-top-left bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
 					<div className="py-1 divide-y divide-gray-200">
 						{organisations.map(org => (
 							<Menu.Item key={org.id}>
@@ -51,8 +51,8 @@ const SwitchChoirMenu = ({ choirs: organisations, tenant }) => {
 										)}
 									>
 										{org.logo_url
-											? <img src={org.logo_url} alt={org.choir_name} className="max-h-10 w-auto"/>
-											: org.choir_name
+											? <img src={org.logo_url} alt={org.name} className="max-h-10 w-auto"/>
+											: org.name
 										}
 									</Link>
 								)}

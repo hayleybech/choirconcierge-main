@@ -3,7 +3,7 @@
     @slot('header')
         @if(tenant())
             @component('mail::header', ['url' => '//'.tenant('host')])
-                {{ tenant('choir_name') }}
+                {{ tenant('name') }}
             @endcomponent
         @else
             @component('mail::header', ['url' => config('app.url')])

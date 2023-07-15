@@ -70,7 +70,7 @@ const TaskNotificationForm = ({ task, notification }) => {
                             Singer email: <SnippetTag>%%singer.email%%</SnippetTag>, <br />
                             Create profile link: <SnippetTag>%%profile.create%%</SnippetTag>, <br />
                             Create placement link: <SnippetTag>%%placement.create%%</SnippetTag>, <br />
-                            Choir name: <SnippetTag>%%choir.name%%</SnippetTag>, <br />
+                            Organisation name: <SnippetTag>%%organisation.name%%</SnippetTag>, <br />
                             Recipient full name: <SnippetTag>%%user.name%%</SnippetTag>, <br />
                             Recipient first name: <SnippetTag>%%user.fname%%</SnippetTag>, <br />
                             Recipient last name: <SnippetTag>%%user.lname%%</SnippetTag>, <br />

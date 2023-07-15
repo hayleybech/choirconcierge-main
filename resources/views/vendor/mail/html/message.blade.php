@@ -3,7 +3,7 @@
 @slot('header')
 @if(tenant())
 @component('mail::header', ['url' => '//'.tenant('host')])
-<img src="{{ tenant('logo_url') }}" alt="{{ tenant('choir_name') ?? 'Choir Name' }}">
+<img src="{{ tenant('logo_url') }}" alt="{{ tenant('name') ?? 'Organisation Name' }}">
 @endcomponent
 @else
 @component('mail::header', ['url' => config('app.url')])

@@ -30,7 +30,7 @@ const ForgotPassword = ({  }) => {
 
                     <img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
 
-                    {tenant && <img src={tenant.logo_url} alt={tenant.choir_name} className="h-12 w-auto mx-auto mt-6" />}
+                    {tenant && <img src={tenant.logo_url} alt={tenant.name} className="h-12 w-auto mx-auto mt-6" />}
 
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Reset your password</h2>
 

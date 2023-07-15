@@ -12,7 +12,7 @@ jest.mock('@inertiajs/inertia-react', () => ({
       tenant: {
         id: 2,
         logo_url: 'choir2.png',
-        choir_name: 'Choir Number 2',
+        name: 'Choir Number 2',
       }
     },
   }),
@@ -31,18 +31,18 @@ describe('SwitchChoirMenu', () => {
         {
           id: 1,
           logo_url: 'choir1.png',
-          choir_name: 'Choir Number 1',
+          name: 'Choir Number 1',
         },
         {
           id: 2,
           logo_url: 'choir2.png',
-          choir_name: 'Choir Number 2',
+          name: 'Choir Number 2',
         }
       ]}
       tenant={{
         id: 2,
         logo_url: 'choir2.png',
-        choir_name: 'Choir Number 2',
+        name: 'Choir Number 2',
       }}
     />);
 
@@ -62,13 +62,13 @@ describe('SwitchChoirMenu', () => {
         {
           id: 2,
           logo_url: 'choir2.png',
-          choir_name: 'Choir Number 2',
+          name: 'Choir Number 2',
         }
       ]}
       tenant={{
         id: 2,
         logo_url: 'choir2.png',
-        choir_name: 'Choir Number 2',
+        name: 'Choir Number 2',
       }}
     />);
 
@@ -81,7 +81,7 @@ describe('SwitchChoirMenu', () => {
         {
           id: 2,
           logo_url: 'choir2.png',
-          choir_name: 'Choir Number 2',
+          name: 'Choir Number 2',
         }
       ]}
       tenant={null}
