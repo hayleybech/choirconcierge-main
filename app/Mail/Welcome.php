@@ -22,7 +22,7 @@ class Welcome extends Mailable
     public function __construct(User $user, string $token)
     {
         $this->user = $user;
-        $this->url = url('password/reset', $token).'?email='.urlencode($user->getEmailForPasswordReset());
+        $this->url = url('app/password/reset', $token).'?email='.urlencode($user->getEmailForPasswordReset());
     }
 
     /**
