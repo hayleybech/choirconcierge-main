@@ -69,23 +69,21 @@ export default function TenantLayout({ children }) {
         <PlayerContext.Provider value={player}>
             <div className="h-screen flex overflow-hidden bg-gray-100">
                 {isMobile ? (
-                    <SidebarMobile
-                        navigation={navFiltered}
-                        open={sidebarOpen}
-                        setOpen={setSidebarOpen}
-                        switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
-                    />
+                    <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
                 ) : (
                     <div className="flex shrink-0">
-                        <SidebarDesktop
-                            navigation={navFiltered}
-                            switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
-                        />
+                        <SidebarDesktop navigation={navFiltered} />
                     </div>
                 )}
 
                 <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                    {player.showFullscreen || <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />}
+                    {player.showFullscreen || (
+                      <LayoutTopBar
+                          setSidebarOpen={setSidebarOpen}
+                          setShowImpersonateModal={setShowImpersonateModal}
+                          switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
+                        />
+                    )}
 
                     <AudioPlayerProvider>
                         <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">

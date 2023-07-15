@@ -5,7 +5,7 @@ import MainNavigation from "./MainNavigation";
 import Icon from "./Icon";
 import useRoute from "../hooks/useRoute";
 
-const SidebarMobile = ({ navigation, open, setOpen, switchChoirMenu }) => {
+const SidebarMobile = ({ navigation, open, setOpen }) => {
     const { route } = useRoute();
 
     return (
@@ -53,13 +53,11 @@ const SidebarMobile = ({ navigation, open, setOpen, switchChoirMenu }) => {
                             </div>
                         </Transition.Child>
 
-                        <Link href={route('central.dash')} className="shrink-0 flex justify-center items-center px-4 pb-6">
+                        <Link href={route('central.dash')} className="shrink-0 flex justify-center items-center px-4 mb-5">
                             <img src="/img/vibrant/logo.svg" alt="Choir Concierge" className="h-10 w-auto" />
                         </Link>
 
-                        {switchChoirMenu}
-
-                        <div className="mt-5 flex-1 h-0 overflow-y-auto">
+                        <div className="flex-1 h-0 overflow-y-auto">
                             <MainNavigation navigation={navigation} closeSidebar={() => setOpen(false)} />
                         </div>
                     </div>

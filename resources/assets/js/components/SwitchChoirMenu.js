@@ -8,10 +8,13 @@ const SwitchChoirMenu = ({ choirs: organisations, tenant }) => {
 	const { route } = useRoute();
 
 	return (
-		<Menu as="div" className="relative inline-block text-left">
-			<div>
+		<Menu as="div" className="relative inline-block text-left grow">
+			<div className="h-full">
 				{tenant ? (
-					<Menu.Button disabled={organisations.length < 2} className="inline-flex w-full justify-between items-center gap-x-1.5 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50">
+					<Menu.Button
+						disabled={organisations.length < 2}
+						className="inline-flex h-full w-full justify-between items-center gap-x-2.5 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+					>
 						{tenant.logo_url
 							? <img src={tenant.logo_url} alt={tenant.choir_name} className="max-h-10 w-auto" />
 							: tenant.choir_name
@@ -19,7 +22,7 @@ const SwitchChoirMenu = ({ choirs: organisations, tenant }) => {
 						{organisations.length > 1 && <Icon icon="chevron-down" className="text-gray-400" />}
 					</Menu.Button>
 				) : (
-					<Menu.Button className="inline-flex w-full justify-between items-center gap-x-1.5 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50">
+					<Menu.Button className="inline-flex h-full w-full justify-between items-center gap-x-2.5 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50">
 						<div>Switch Choir</div>
 						<Icon icon="chevron-down" className="text-gray-400" />
 					</Menu.Button>
