@@ -119,7 +119,7 @@ const EventLocation = ({ event }) => (
 );
 
 const ViewRsvpsButton = ({ event }) => (
-    <ButtonLink variant="primary" size="sm" href={route('events.rsvps.index', [event])}>
+    <ButtonLink variant="primary" size="sm" href={route('events.rsvps.index', {event})}>
         <Icon icon="clipboard-list" />
         View All
     </ButtonLink>
