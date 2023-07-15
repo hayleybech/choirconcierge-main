@@ -16,6 +16,7 @@ Sentry.init({
 		trackComponents: true,
 	},
 	release: process.env.MIX_APP_ENV === 'production' ? VERSION : VERSION + ':dev',
+	environment: process.env.MIX_APP_ENV,
 });
 
 createInertiaApp({
