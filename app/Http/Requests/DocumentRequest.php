@@ -26,6 +26,7 @@ class DocumentRequest extends FormRequest
     public function rules(Folder $folder)
     {
         return [
+            'document_uploads' => ['required', 'array'],
             'document_uploads.*' => ['required', 'file'],
         ];
     }
