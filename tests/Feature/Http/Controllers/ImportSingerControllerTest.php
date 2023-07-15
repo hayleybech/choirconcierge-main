@@ -75,7 +75,7 @@ class ImportSingerControllerTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertRedirect();
 
-        $this->assertDatabaseHas('singers', [
+        $this->assertDatabaseHas('memberships', [
             'onboarding_enabled' => false,
             'membership_details' => 'BHA  1945 Blenders old No 245',
             'joined_at' => '2007-01-31 00:00:00',
@@ -105,12 +105,12 @@ class ImportSingerControllerTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertRedirect();
 
-        $this->assertDatabaseHas('singers_roles', [
-            'singer_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->singer->id,
+        $this->assertDatabaseHas('memberships_roles', [
+            'membership_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->membership->id,
             'role_id' => Role::firstWhere('name', 'Admin')->id,
         ]);
-        $this->assertDatabaseHas('singers_roles', [
-            'singer_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->singer->id,
+        $this->assertDatabaseHas('memberships_roles', [
+            'membership_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->membership->id,
             'role_id' => Role::firstWhere('name', 'Music Team')->id,
         ]);
     }
@@ -178,7 +178,7 @@ class ImportSingerControllerTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertRedirect();
 
-        $this->assertDatabaseHas('singers', [
+        $this->assertDatabaseHas('memberships', [
             'user_id' => User::firstWhere('email', 'nick.s@internode.on.net')->id,
             'onboarding_enabled' => false,
             'joined_at' => '2015-07-17 00:00:00',

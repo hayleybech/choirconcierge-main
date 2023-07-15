@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
@@ -66,8 +66,8 @@ class Handler extends ExceptionHandler
             return Inertia::render('Error', [
                 'tenant' => tenant(),
                 'status' => $response->status(),
-                'orgAdmins' => Singer::role('Admin')->limit(5)->with('user')->get()->values(),
-                'isMember' => auth()?->user()?->singer,
+                'orgAdmins' => Membership::role('Admin')->limit(5)->with('user')->get()->values(),
+                'isMember' => auth()?->user()?->membership,
             ])
                 ->toResponse($request)
                 ->setStatusCode($response->status());

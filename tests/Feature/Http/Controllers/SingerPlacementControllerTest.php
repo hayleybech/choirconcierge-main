@@ -3,7 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Placement;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -24,7 +24,7 @@ class SingerPlacementControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $singer = Singer::factory()->create();
+        $singer = Membership::factory()->create();
 
         $this->get(the_tenant_route('singers.placements.create', [$singer]))
             ->assertOk()
@@ -42,7 +42,7 @@ class SingerPlacementControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $singer = Singer::factory()
+        $singer = Membership::factory()
             ->has(Placement::factory())
             ->create();
 
@@ -64,7 +64,7 @@ class SingerPlacementControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $singer = Singer::factory()->create();
+        $singer = Membership::factory()->create();
 
         $data = $getData();
         $this->withoutExceptionHandling();
@@ -84,7 +84,7 @@ class SingerPlacementControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $singer = Singer::factory()
+        $singer = Membership::factory()
             ->has(Placement::factory())
             ->create();
 

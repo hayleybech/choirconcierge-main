@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\SingerCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -22,7 +22,7 @@ class UpdateSingerCategoryControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
-        $singer = Singer::factory()->create();
+        $singer = Membership::factory()->create();
 
         $new_category_id = SingerCategory::inRandomOrder()->value('id');
         $response = $this->get(
@@ -34,7 +34,7 @@ class UpdateSingerCategoryControllerTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
-        $this->assertDatabaseHas('singers', [
+        $this->assertDatabaseHas('memberships', [
             'id' => $singer->id,
             'singer_category_id' => $new_category_id,
         ]);

@@ -17,11 +17,11 @@ class RolePolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($ability !== 'delete' && $user->singer->hasRole('Admin')) {
+        if ($ability !== 'delete' && $user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -37,7 +37,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->singer->hasAbility('roles_view');
+        return $user->membership->hasAbility('roles_view');
     }
 
     /**
@@ -50,7 +50,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        return $user->singer->hasAbility('roles_view');
+        return $user->membership->hasAbility('roles_view');
     }
 
     /**
@@ -62,7 +62,7 @@ class RolePolicy
      */
     public function create(User $user)
     {
-        return $user->singer->hasAbility('roles_create');
+        return $user->membership->hasAbility('roles_create');
     }
 
     /**
@@ -79,7 +79,7 @@ class RolePolicy
             return false;
         }
 
-        return $user->singer->hasAbility('roles_update');
+        return $user->membership->hasAbility('roles_update');
     }
 
     /**
@@ -96,7 +96,7 @@ class RolePolicy
             return false;
         }
 
-        return $user->singer->hasAbility('roles_delete');
+        return $user->membership->hasAbility('roles_delete');
     }
 
     /**

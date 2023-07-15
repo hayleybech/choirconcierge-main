@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,9 +13,9 @@ uses(RefreshDatabase::class, WithFaker::class);
 test('archived users cannot view site', function($category) {
     $archived = SingerCategory::where('name', $category)->first();
 
-    $user = User::factory()->has(Singer::factory())->create();
-    $user->singer->category()->associate($archived);
-    $user->singer->save();
+    $user = User::factory()->has(Membership::factory())->create();
+    $user->membership->category()->associate($archived);
+    $user->membership->save();
 
     actingAs($user);
 

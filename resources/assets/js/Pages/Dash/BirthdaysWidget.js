@@ -17,7 +17,7 @@ const BirthdaysWidget = ({ birthdays, emptyDobs }) => {
             {birthdays.length > 0 ? (
                 <TableMobile>
                     {birthdays.map((user) => (
-                        <TableMobileItem url={route('singers.show', {singer: user.singer})} key={user.id}>
+                        <TableMobileItem url={route('singers.show', {singer: user.membership})} key={user.id}>
                             <div className="flex items-center justify-between gap-1 grow">
                                 <div className="text-sm font-medium text-purple-800">{user.name}</div>
                                 <div className="mr-4">

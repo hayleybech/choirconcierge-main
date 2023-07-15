@@ -21,7 +21,7 @@ class ImpersonateUserController extends Controller
     {
         abort_if(auth()->guest(), 405, 'Not logged in. ');
 
-        if(! auth()->user()->singer?->hasRole('Admin') && ! auth()->user()->isSuperAdmin){
+        if(! auth()->user()->membership?->hasRole('Admin') && ! auth()->user()->isSuperAdmin){
             return back()->with(['status' => 'You don\'t have permission to impersonate users', 'success' => false]);
         }
 

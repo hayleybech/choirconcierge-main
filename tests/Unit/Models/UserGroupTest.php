@@ -3,7 +3,7 @@
 namespace Tests\Unit\Models;
 
 use App\Models\Role;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\Tenant;
 use App\Models\User;
@@ -35,7 +35,7 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $roles = Role::factory()
-            ->has(Singer::factory()->count(3))
+            ->has(Membership::factory()->count(3), 'members')
             ->count(2)
             ->create();
 
@@ -50,7 +50,7 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $voice_parts = VoicePart::factory()
-            ->has(Singer::factory()->count(3))
+            ->has(Membership::factory()->count(3), 'members')
             ->count(2)
             ->create();
 
@@ -65,7 +65,7 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $categories = SingerCategory::factory()
-            ->has(Singer::factory()->count(3))
+            ->has(Membership::factory()->count(3), 'members')
             ->count(2)
             ->create();
 
@@ -93,7 +93,7 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $roles = Role::factory()
-            ->has(Singer::factory()->count(3))
+            ->has(Membership::factory()->count(3), 'members')
             ->count(2)
             ->create();
 
@@ -108,7 +108,7 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $voice_parts = VoicePart::factory()
-            ->has(Singer::factory()->count(3))
+            ->has(Membership::factory()->count(3), 'members')
             ->count(2)
             ->create();
 
@@ -123,7 +123,7 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $categories = SingerCategory::factory()
-            ->has(Singer::factory()->count(3))
+            ->has(Membership::factory()->count(3), 'members')
             ->count(2)
             ->create();
 

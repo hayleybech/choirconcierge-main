@@ -21,7 +21,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
         columns: stack?.cols ?? 4,
         front_row_length: stack?.front_row_length ?? 1,
         front_row_on_floor: stack?.front_row_on_floor ?? false,
-        singer_positions: stack?.singers ??  [],
+        singer_positions: stack?.members ??  [],
     });
 
     function submit(e) {
@@ -35,7 +35,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
     function removeSingerFromHoldingArea(singer){
         setHoldingAreaSingers(
             holdingAreaSingers.map(part => {
-                part.singers = part.singers.filter(partSinger => partSinger.id !== singer.id);
+                part.members = part.members.filter(partSinger => partSinger.id !== singer.id);
                 return part;
             })
         );
@@ -47,7 +47,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
         setHoldingAreaSingers(
             holdingAreaSingers.map(part => {
                 if(part.id === singer.voice_part_id) {
-                    part.singers.push(singer);
+                    part.members.push(singer);
                 }
                 return part;
             })

@@ -25,7 +25,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $tenant_id
  *
  * Relationships
- * @property Collection<Singer> $singers
+ * @property Collection<Membership> $members
  * @property Collection<User> $users
  */
 class VoicePart extends Model
@@ -34,14 +34,14 @@ class VoicePart extends Model
 
     protected $fillable = ['title', 'colour'];
 
-    public function singers(): HasMany
+    public function members(): HasMany
     {
-        return $this->hasMany(Singer::class);
+        return $this->hasMany(Membership::class);
     }
 
     public function users(): HasManyThrough
     {
-        return $this->hasManyThrough(User::class, Singer::class);
+        return $this->hasManyThrough(User::class, Membership::class);
     }
 
     public static function getNullVoicePart(): self

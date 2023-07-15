@@ -61,7 +61,7 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
             return;
         }
 
-        $singer = $user->singers()->updateOrCreate(['id' => $user->id], [
+        $singer = $user->memberships()->updateOrCreate(['id' => $user->id], [
             'onboarding_enabled' => false,
             'voice_part_id' => isset($rowArr['section']) ? VoicePart::firstWhere('title', $this->convert_voice_part($rowArr['section']))->id ?? null : null,
             'joined_at' => $this->make_valid_mysql_datetime($rowArr['registration_date'] ?? null),

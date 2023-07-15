@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Song;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,7 +19,7 @@ class LearningStatusControllerTest extends TestCase
         $song = Song::factory()->create();
         User::factory()
             ->count(20)
-            ->has(Singer::factory()->hasAttached(
+            ->has(Membership::factory()->hasAttached(
                 $song,
                 ['status' => 'performance-ready']
             ))
@@ -41,7 +41,7 @@ class LearningStatusControllerTest extends TestCase
     {
         $song = Song::factory()->create();
         $user = User::factory()
-            ->has(Singer::factory()->hasAttached(
+            ->has(Membership::factory()->hasAttached(
                 $song,
                 ['status' => 'assessment-ready']
             ))
@@ -49,14 +49,14 @@ class LearningStatusControllerTest extends TestCase
 
         $this->actingAs($this->createUserWithRole('Music Team'));
 
-        $this->put(the_tenant_route('songs.singers.update', [$song, $user->singer]), [
+        $this->put(the_tenant_route('songs.singers.update', [$song, $user->membership]), [
             'status' => 'performance-ready',
         ])
             ->assertRedirect(the_tenant_route('songs.singers.index', $song));
 
-        $this->assertDatabaseHas('singer_song', [
+        $this->assertDatabaseHas('membership_song', [
             'song_id' => $song->id,
-            'singer_id' => $user->singer->id,
+            'membership_id' => $user->membership->id,
             'status' => 'performance-ready',
         ]);
     }

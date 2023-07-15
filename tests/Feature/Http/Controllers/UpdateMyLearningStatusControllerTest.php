@@ -3,7 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Role;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Song;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,9 +19,9 @@ class UpdateMyLearningStatusControllerTest extends TestCase
     {
         $song = Song::factory()->create();
         $user = User::factory()
-            ->has(Singer::factory())
+            ->has(Membership::factory())
             ->create();
-        $user->singer->roles()->attach([Role::where('name', 'User')->value('id')]);
+        $user->membership->roles()->attach([Role::where('name', 'User')->value('id')]);
 
         $this->actingAs($user);
 
@@ -29,8 +29,8 @@ class UpdateMyLearningStatusControllerTest extends TestCase
             'status' => 'assessment-ready',
         ]);
 
-        $this->assertDatabaseHas('singer_song', [
-            'singer_id' => $user->singer->id,
+        $this->assertDatabaseHas('membership_song', [
+            'membership_id' => $user->membership->id,
             'song_id' => $song->id,
             'status' => 'assessment-ready',
         ]);
@@ -45,12 +45,12 @@ class UpdateMyLearningStatusControllerTest extends TestCase
     {
         $song = Song::factory()->create();
         $user = User::factory()
-            ->has(Singer::factory()->hasAttached(
+            ->has(Membership::factory()->hasAttached(
                 $song,
                 ['status' => 'performance-ready']
             ))
             ->create();
-        $user->singer->roles()->attach([Role::where('name', 'User')->value('id')]);
+        $user->membership->roles()->attach([Role::where('name', 'User')->value('id')]);
 
         $this->actingAs($user);
 
@@ -58,8 +58,8 @@ class UpdateMyLearningStatusControllerTest extends TestCase
             'status' => 'assessment-ready',
         ]);
 
-        $this->assertDatabaseHas('singer_song', [
-            'singer_id' => $user->singer->id,
+        $this->assertDatabaseHas('membership_song', [
+            'membership_id' => $user->membership->id,
             'song_id' => $song->id,
             'status' => 'assessment-ready',
         ]);

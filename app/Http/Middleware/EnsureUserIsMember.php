@@ -21,12 +21,12 @@ class EnsureUserIsMember
             return $next($request);
         }
 
-        if(! auth()?->user()?->singer) {
+        if(! auth()?->user()?->membership) {
             abort(403);
         }
 
         if(in_array(
-            auth()?->user()?->singer?->category->name, [
+            auth()?->user()?->membership?->category->name, [
             'Archived Members',
             'Archived Prospects',
         ])) {

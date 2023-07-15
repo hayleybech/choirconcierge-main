@@ -1,5 +1,5 @@
 <?php
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -17,7 +17,7 @@ use function Pest\Laravel\post;
 uses(RefreshDatabase::class, WithFaker::class);
 
 test('edit@ renders the template', function() {
-    actingAs(User::factory()->has(Singer::factory())->create());
+    actingAs(User::factory()->has(Membership::factory())->create());
 
     get(the_tenant_route('accounts.edit'))
         ->assertOk()
@@ -27,23 +27,23 @@ test('edit@ renders the template', function() {
 });
 
 test('update@ saves the user details', function ($data) {
-    $user = User::factory()->has(Singer::factory())->create();
+    $user = User::factory()->has(Membership::factory())->create();
     actingAs($user);
 
     post(the_tenant_route('accounts.update'), $data)
         ->assertSessionHasNoErrors()
-        ->assertRedirect(the_tenant_route('singers.show', $user->singer));
+        ->assertRedirect(the_tenant_route('singers.show', $user->membership));
 
     assertDatabaseHas('users', Arr::except($data, ['password_confirmation', 'password']));
 })->with('profiles');
 
 test('update@ saves the user password', function ($data) {
-    $user = User::factory()->has(Singer::factory())->create();
+    $user = User::factory()->has(Membership::factory())->create();
     actingAs($user);
 
     post(the_tenant_route('accounts.update'), $data)
         ->assertSessionHasNoErrors()
-        ->assertRedirect(the_tenant_route('singers.show', $user->singer));
+        ->assertRedirect(the_tenant_route('singers.show', $user->membership));
 
     assertDatabaseHas('users', Arr::except($data, ['password_confirmation', 'password']));
 

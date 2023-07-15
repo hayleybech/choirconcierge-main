@@ -17,11 +17,11 @@ class DocumentPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -30,27 +30,27 @@ class DocumentPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->singer->hasAbility('documents_view');
+        return $user->membership->hasAbility('documents_view');
     }
 
     public function view(User $user): bool
     {
-        return $user->singer->hasAbility('documents_view');
+        return $user->membership->hasAbility('documents_view');
     }
 
     public function create(User $user): bool
     {
-        return $user->singer->hasAbility('documents_create');
+        return $user->membership->hasAbility('documents_create');
     }
 
     public function update(User $user): bool
     {
-        return $user->singer->hasAbility('documents_create');
+        return $user->membership->hasAbility('documents_create');
     }
 
     public function delete(User $user): bool
     {
-        return $user->singer->hasAbility('documents_delete');
+        return $user->membership->hasAbility('documents_delete');
     }
 
     public function restore(): bool

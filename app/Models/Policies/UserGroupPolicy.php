@@ -17,11 +17,11 @@ class UserGroupPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -30,27 +30,27 @@ class UserGroupPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->singer->hasAbility('mailing_lists_view');
+        return $user->membership->hasAbility('mailing_lists_view');
     }
 
     public function view(User $user, UserGroup $user_group): bool
     {
-        return $user->singer->hasAbility('mailing_lists_view');
+        return $user->membership->hasAbility('mailing_lists_view');
     }
 
     public function create(User $user): bool
     {
-        return $user->singer->hasAbility('mailing_lists_create');
+        return $user->membership->hasAbility('mailing_lists_create');
     }
 
     public function update(User $user, UserGroup $user_group): bool
     {
-        return $user->singer->hasAbility('mailing_lists_update');
+        return $user->membership->hasAbility('mailing_lists_update');
     }
 
     public function delete(User $user, UserGroup $user_group): bool
     {
-        return $user->singer->hasAbility('mailing_lists_delete');
+        return $user->membership->hasAbility('mailing_lists_delete');
     }
 
     public function restore(User $user, UserGroup $user_group): bool
@@ -65,11 +65,11 @@ class UserGroupPolicy
 
     public function createBroadcast(User $user): bool
     {
-        return $user->singer->hasAbility('broadcasts_create');
+        return $user->membership->hasAbility('broadcasts_create');
     }
 
     public function createBroadcastFor(User $user, UserGroup $group): bool
     {
-        return $user->singer->hasAbility('broadcasts_create') && $group->authoriseSender($user);
+        return $user->membership->hasAbility('broadcasts_create') && $group->authoriseSender($user);
     }
 }

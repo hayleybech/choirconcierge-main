@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\TaskCompleted;
 use App\Http\Requests\PlacementRequest;
 use App\Models\Placement;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Task;
 use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
@@ -18,7 +18,7 @@ class SingerPlacementController extends Controller
 {
     const PLACEMENT_TASK_ID = 2;
 
-    public function create(Singer $singer): View|Response
+    public function create(Membership $singer): View|Response
     {
         $this->authorize('create', [Placement::class, $singer]);
 
@@ -30,7 +30,7 @@ class SingerPlacementController extends Controller
         ]);
     }
 
-    public function store(Singer $singer, PlacementRequest $request): RedirectResponse
+    public function store(Membership $singer, PlacementRequest $request): RedirectResponse
     {
         $this->authorize('create', [Placement::class, $singer]);
 
@@ -51,7 +51,7 @@ class SingerPlacementController extends Controller
             ->with(['status' => 'Voice Placement created. ']);
     }
 
-    public function edit(Singer $singer, Placement $placement, Request $request): View|Response
+    public function edit(Membership $singer, Placement $placement, Request $request): View|Response
     {
         $this->authorize('update', $placement);
 
@@ -64,7 +64,7 @@ class SingerPlacementController extends Controller
         ]);
     }
 
-    public function update(PlacementRequest $request, Singer $singer, Placement $placement): RedirectResponse
+    public function update(PlacementRequest $request, Membership $singer, Placement $placement): RedirectResponse
     {
         $this->authorize('update', $placement);
 

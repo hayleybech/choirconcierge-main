@@ -16,11 +16,11 @@ class AttendancePolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -29,27 +29,27 @@ class AttendancePolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->singer->hasAbility('attendances_view');
+        return $user->membership->hasAbility('attendances_view');
     }
 
     public function view(User $user): bool
     {
-        return $user->singer->hasAbility('attendances_view');
+        return $user->membership->hasAbility('attendances_view');
     }
 
     public function create(User $user): bool
     {
-        return $user->singer->hasAbility('attendances_create');
+        return $user->membership->hasAbility('attendances_create');
     }
 
     public function update(User $user): bool
     {
-        return $user->singer->hasAbility('attendances_update');
+        return $user->membership->hasAbility('attendances_update');
     }
 
     public function delete(User $user): bool
     {
-        return $user->singer->hasAbility('attendances_delete');
+        return $user->membership->hasAbility('attendances_delete');
     }
 
     public function restore(User $user): bool

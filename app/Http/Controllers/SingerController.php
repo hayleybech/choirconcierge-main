@@ -9,7 +9,7 @@ use App\Http\Requests\CreateSingerRequest;
 use App\Http\Requests\EditSingerRequest;
 use App\Models\Placement;
 use App\Models\Role;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
@@ -28,7 +28,7 @@ class SingerController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Singer::class);
+        $this->authorizeResource(Membership::class, 'singer');
     }
 
     public function index(Request $request): InertiaResponse
@@ -56,7 +56,7 @@ class SingerController extends Controller
     {
         $user = $this->maybeCreateUser($request);
 
-        $singer = Singer::create($request->safe()
+        $singer = Membership::create($request->safe()
             ->merge(['user_id' => $user->id])
             ->only([
                 'user_id',
@@ -79,7 +79,7 @@ class SingerController extends Controller
             ->with(['status' => 'Singer created. ']);
     }
 
-    public function show(Singer $singer): InertiaResponse
+    public function show(Membership $singer): InertiaResponse
     {
 		$singer->append('fee_status');
 
@@ -98,7 +98,7 @@ class SingerController extends Controller
         ]);
     }
 
-    public function edit(Singer $singer): InertiaResponse
+    public function edit(Membership $singer): InertiaResponse
     {
         $singer->load('user', 'voice_part', 'category', 'roles');
 
@@ -109,7 +109,7 @@ class SingerController extends Controller
         ]);
     }
 
-    public function update(Singer $singer, EditSingerRequest $request): RedirectResponse
+    public function update(Membership $singer, EditSingerRequest $request): RedirectResponse
     {
         $singer->update($request->safe()
             ->merge(['user_roles' => array_merge(
@@ -133,7 +133,7 @@ class SingerController extends Controller
             ->with(['status' => 'Singer saved. ']);
     }
 
-    public function destroy(Singer $singer): RedirectResponse
+    public function destroy(Membership $singer): RedirectResponse
     {
         $singer->delete();
 
@@ -146,7 +146,7 @@ class SingerController extends Controller
     {
         $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
 
-        return QueryBuilder::for(Singer::class)
+        return QueryBuilder::for(Membership::class)
             ->with(['tasks', 'category', 'voice_part', 'user'])
             ->allowedFilters([
                 AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query

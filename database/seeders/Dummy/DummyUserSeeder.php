@@ -3,7 +3,7 @@
 namespace Database\Seeders\Dummy;
 
 use App\Models\Role;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\User;
 use Carbon\Carbon;
@@ -25,7 +25,7 @@ class DummyUserSeeder extends Seeder
                 $faker = Faker::create();
 
                 // Create matching singer
-                $singer = $user->singers()->create([
+                $singer = $user->memberships()->create([
                     'onboarding_enabled' => $faker->boolean(30),
                 ]);
 
@@ -40,7 +40,7 @@ class DummyUserSeeder extends Seeder
             });
     }
 
-    public static function attachRandomSingerCategory(Singer $singer, Collection $categories): void
+    public static function attachRandomSingerCategory(Membership $singer, Collection $categories): void
     {
         $category = $categories->random(1)->first();
         $singer->category()->associate($category);

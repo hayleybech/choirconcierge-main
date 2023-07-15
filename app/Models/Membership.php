@@ -56,7 +56,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string $name
  * @property int $age
  */
-class Singer extends Model
+class Membership extends Model
 {
     use Notifiable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
@@ -81,7 +81,7 @@ class Singer extends Model
 
     public static function create(array $attributes = [])
     {
-        /** @var Singer $singer */
+        /** @var Membership $singer */
         $singer = static::query()->create($attributes);
 
         // Sync roles
@@ -125,7 +125,7 @@ class Singer extends Model
      */
     public function tasks(): BelongsToMany
     {
-        return $this->belongsToMany(Task::class, 'singers_tasks')
+        return $this->belongsToMany(Task::class, 'memberships_tasks')
             ->withPivot('completed')
             ->withTimestamps();
     }
@@ -152,7 +152,7 @@ class Singer extends Model
 
     public function riser_stacks(): BelongsToMany
     {
-        return $this->belongsToMany(RiserStack::class)
+        return $this->belongsToMany(RiserStack::class, 'riser_stack_membership')
             ->as('position')
             ->withPivot('row', 'column');
     }
@@ -169,7 +169,7 @@ class Singer extends Model
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'singers_roles');
+        return $this->belongsToMany(Role::class, 'memberships_roles');
     }
 
     public function songs(): BelongsToMany

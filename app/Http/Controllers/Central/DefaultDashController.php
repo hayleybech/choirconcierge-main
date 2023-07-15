@@ -30,7 +30,7 @@ class DefaultDashController extends Controller
         return session()->has('impersonation:active')
             ? collect([tenant()->load('domains')])
             : auth()->user()
-                ?->singers()
+                ?->memberships()
                 ->withoutTenancy()
                 ->with('tenant.domains')
                 ->get()

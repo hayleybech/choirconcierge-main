@@ -15,7 +15,7 @@ class SingerNameSort implements Sort
         return $query
             ->addSubSelect('full_name',
                 User::selectRaw('CONCAT(first_name, " ", last_name) AS full_name')
-                    ->whereRaw("`${prefix}singers`.`user_id` = `${prefix}users`.`id`")
+                    ->whereRaw("`${prefix}memberships`.`user_id` = `${prefix}users`.`id`")
             )
             ->orderBy('full_name', $descending ? 'desc' : 'asc');
     }

@@ -3,7 +3,7 @@
 namespace Database\Seeders\Critical;
 
 use App\Models\Role;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
@@ -327,7 +327,7 @@ class CriticalUserSeeder extends Seeder
         ]);
 
         // Create matching singer for admin
-        $singer = $user->singers()->create([
+        $singer = $user->memberships()->create([
             'onboarding_enabled' => 0,
         ]);
         $roles = Role::all()

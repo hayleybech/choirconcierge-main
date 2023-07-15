@@ -45,7 +45,7 @@ class DashController extends Controller
 	private function getUserChoirs()
 	{
 		return auth()->user()
-			?->singers()
+			?->memberships()
 			->withoutTenancy()
 			->with('tenant.domains')
 			->get()

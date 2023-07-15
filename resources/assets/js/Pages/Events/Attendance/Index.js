@@ -35,11 +35,11 @@ const Index = ({ event, voice_parts }) => {
                 <div key={part.id} className="relative">
                   <div className="flex flex-wrap bg-white py-4 border-b border-gray-200 gap-y-4">
                     {[
-                      { label: 'On Time', colour: 'emerald-500', icon: 'check', count: part.singers.filter(attendance => attendance.response === 'present').length },
-                      { label: 'Late', colour: 'amber-500', icon: 'alarm-exclamation', count: part.singers.filter(attendance => attendance.response === 'late').length },
-                      { label: 'Absent', colour: 'red-500', icon: 'times', count: part.singers.filter(attendance => attendance.response === 'absent').length },
-                      { label: 'Absent (with apology)', colour: 'red-500', icon: 'times', count: part.singers.filter(attendance => attendance.response === 'absent_apology').length },
-                      { label: 'Unknown', colour: 'gray-500', icon: 'question', count: part.singers.filter(attendance => attendance.response === 'unknown').length },
+                      { label: 'On Time', colour: 'emerald-500', icon: 'check', count: part.members.filter(attendance => attendance.response === 'present').length },
+                      { label: 'Late', colour: 'amber-500', icon: 'alarm-exclamation', count: part.members.filter(attendance => attendance.response === 'late').length },
+                      { label: 'Absent', colour: 'red-500', icon: 'times', count: part.members.filter(attendance => attendance.response === 'absent').length },
+                      { label: 'Absent (with apology)', colour: 'red-500', icon: 'times', count: part.members.filter(attendance => attendance.response === 'absent_apology').length },
+                      { label: 'Unknown', colour: 'gray-500', icon: 'question', count: part.members.filter(attendance => attendance.response === 'unknown').length },
                     ].map(({ label, colour, icon, count}) => (
                       <div className="w-1/2 md:w-1/5 text-center" key={label}>
                         <Icon icon={icon} className={`text-${colour}`} />
@@ -49,15 +49,15 @@ const Index = ({ event, voice_parts }) => {
                     ))}
                   </div>
                     <ul role="list" className="relative z-0 divide-y divide-gray-200">
-                        {part.singers.map((attendance) => (
-                            <li key={attendance.singer.id} className="bg-white">
+                        {part.members.map((attendance) => (
+                            <li key={attendance.member.id} className="bg-white">
                                 <div className="relative px-6 py-5 flex flex-col xl:flex-row items-stretch xl:items-center gap-y-3 sm:gap-x-3 hover:bg-gray-50 justify-between">
                                     <div className="flex space-x-2 shrink-0">
                                         <div className="shrink-0">
-                                            <img className="h-12 w-12 rounded-lg" src={attendance.singer.user.avatar_url} alt={attendance.singer.user.name}/>
+                                            <img className="h-12 w-12 rounded-lg" src={attendance.member.user.avatar_url} alt={attendance.member.user.name}/>
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-gray-900">{attendance.singer.user.name}</p>
+                                            <p className="text-sm font-medium text-gray-900">{attendance.member.user.name}</p>
                                             <p className="text-sm">
                                                 <AttendanceTag label={attendance.label} icon={attendance.icon} colour={attendance.colour} />
                                                 {attendance.response.includes('absent') && attendance.absent_reason && (
@@ -75,9 +75,9 @@ const Index = ({ event, voice_parts }) => {
                                         ].map(({ response, label, icon, variant }) =>
                                             attendance.response !== response &&
                                             <Button
-                                                href={route('events.attendances.update', {event, singer: attendance.singer.id})}
+                                                href={route('events.attendances.update', {event, singer: attendance.member.id})}
                                                 method="put"
-                                                data={{ response: response, absent_reason: absentReasons[attendance.singer.id] }}
+                                                data={{ response: response, absent_reason: absentReasons[attendance.member.id] }}
                                                 preserveScroll
                                                 size="sm"
                                                 variant={variant}
@@ -90,14 +90,14 @@ const Index = ({ event, voice_parts }) => {
                                     </div>
 
                                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-x-2">
-                                        <Label label="Reason for absence" forInput={`absent_reason_${attendance.singer.id}`} />
+                                        <Label label="Reason for absence" forInput={`absent_reason_${attendance.member.id}`} />
                                         <TextInput
                                             name="absent_reason"
-                                            id={`absent_reason_${attendance.singer.id}`}
-                                            value={absentReasons[attendance.singer.id]}
+                                            id={`absent_reason_${attendance.member.id}`}
+                                            value={absentReasons[attendance.member.id]}
                                             updateFn={(value) => setAbsentReasons({
                                                 ...absentReasons,
-                                                [attendance.singer.id]: value
+                                                [attendance.member.id]: value
                                             })}
                                             wrapperClasses="grow"
                                         />

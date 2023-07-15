@@ -17,11 +17,11 @@ class RiserStackPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -37,7 +37,7 @@ class RiserStackPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->singer->hasAbility('riser_stacks_view');
+        return $user->membership->hasAbility('riser_stacks_view');
     }
 
     /**
@@ -50,7 +50,7 @@ class RiserStackPolicy
      */
     public function view(User $user, RiserStack $riserStack)
     {
-        return $user->singer->hasAbility('riser_stacks_view');
+        return $user->membership->hasAbility('riser_stacks_view');
     }
 
     /**
@@ -62,7 +62,7 @@ class RiserStackPolicy
      */
     public function create(User $user)
     {
-        return $user->singer->hasAbility('riser_stacks_create');
+        return $user->membership->hasAbility('riser_stacks_create');
     }
 
     /**
@@ -75,7 +75,7 @@ class RiserStackPolicy
      */
     public function update(User $user, RiserStack $riserStack)
     {
-        return $user->singer->hasAbility('riser_stacks_update');
+        return $user->membership->hasAbility('riser_stacks_update');
     }
 
     /**
@@ -88,7 +88,7 @@ class RiserStackPolicy
      */
     public function delete(User $user, RiserStack $riserStack)
     {
-        return $user->singer->hasAbility('riser_stacks_delete');
+        return $user->membership->hasAbility('riser_stacks_delete');
     }
 
     /**
