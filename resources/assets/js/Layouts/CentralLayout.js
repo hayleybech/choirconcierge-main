@@ -3,9 +3,6 @@ import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import {usePage} from '@inertiajs/inertia-react';
 import LayoutTopBar from "../components/LayoutTopBar";
-import SwitchChoirModal from "../components/SwitchChoirModal";
-import Button from "../components/inputs/Button";
-import Icon from "../components/Icon";
 import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
 import centralNavigation from "./centralNavigation";
@@ -21,8 +18,6 @@ export default function CentralLayout({ children }) {
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
     const { can, userChoirs, errors, flash, tenant } = usePage().props;
-
-    const shouldShowChoirSwitcher = (tenant ? userChoirs.length > 1 : userChoirs.length > 0);
 
     const navFiltered = centralNavigation
         .filter((item) => can[item.can])

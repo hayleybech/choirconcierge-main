@@ -42,6 +42,7 @@
         "@inertiajs/progress": "^0.2.6",
         "@sentry/react": "^6.11.0",
         "@sentry/tracing": "^6.2.5",
+        "@testing-library/user-event": "^14.4.3",
         "@tiptap/extension-link": "^2.0.0-beta.42",
         "@tiptap/extension-underline": "^2.0.0-beta.25",
         "@tiptap/react": "^2.0.0-beta.113",

@@ -8,9 +8,6 @@ import { PlayerContext } from '../contexts/player-context';
 import { AudioPlayerProvider } from "react-use-audio-player"
 import ImpersonateUserModal from "../components/ImpersonateUserModal";
 import LayoutTopBar from "../components/LayoutTopBar";
-import SwitchChoirModal from "../components/SwitchChoirModal";
-import Button from "../components/inputs/Button";
-import Icon from "../components/Icon";
 import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
 import usePromptBeforeUnload from "../hooks/usePromptBeforeUnload";

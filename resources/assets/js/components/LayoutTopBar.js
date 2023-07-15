@@ -35,10 +35,6 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu
             </button>
             <div className="flex-1 px-4 flex justify-between">
                 <div className="flex-1 flex">
-                    <div className="w-64">
-                        {switchChoirMenu}
-                    </div>
-
                     {/*<form className="w-full flex lg:ml-0" action="#" method="GET">*/}
                     {/*    <label htmlFor="search-field" className="sr-only">*/}
                     {/*        Search*/}
