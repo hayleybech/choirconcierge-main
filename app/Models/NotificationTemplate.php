@@ -110,7 +110,11 @@ class NotificationTemplate extends Model
         $replacements = array_merge($replacements, $profile_replacements);
         if ($singer->placement) {
             $placement_replacements = [
-                '%%singer.section%%' => $singer->placement->voice_part,
+                '%%singer.section%%' => $singer->enrolments
+                    ->load('voice_part')
+                    ->map(fn($enrolment) => $enrolment->voice_part->title)
+                    ->implode(', ')
+                ,
             ];
             $replacements = array_merge($replacements, $placement_replacements);
         }

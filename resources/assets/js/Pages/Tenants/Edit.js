@@ -47,6 +47,8 @@ Edit.layout = page => <TenantLayout children={page} />
 export default Edit;
 
 const EditForm = ({ organisation, centralDomain, timezones }) => {
+    const { route } = useRoute();
+
     const { data, setData, post, processing, errors } = useForm({
         name: organisation.name,
         logo: null,

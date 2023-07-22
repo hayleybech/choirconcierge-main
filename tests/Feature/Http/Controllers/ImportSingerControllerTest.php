@@ -80,7 +80,6 @@ class ImportSingerControllerTest extends TestCase
             'membership_details' => 'BHA  1945 Blenders old No 245',
             'joined_at' => '2007-01-31 00:00:00',
             'singer_category_id' => SingerCategory::firstWhere('name', 'Members')->id,
-            'voice_part_id' => VoicePart::firstWhere('title', 'Lead')->id,
             'user_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->id,
         ]);
     }
@@ -183,7 +182,6 @@ class ImportSingerControllerTest extends TestCase
             'onboarding_enabled' => false,
             'joined_at' => '2015-07-17 00:00:00',
             'singer_category_id' => SingerCategory::firstWhere('name', 'Members')->id,
-            'voice_part_id' => VoicePart::firstWhere('title', 'Bass')->id,
         ]);
     }
 

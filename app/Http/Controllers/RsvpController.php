@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Enrolment;
 use App\Models\Event;
 use App\Models\Rsvp;
 use App\Models\Membership;
@@ -23,14 +24,16 @@ class RsvpController extends Controller
 	{
 		$this->authorize('viewAny', Rsvp::class);
 
-		$singers = Membership::query()
+		$singers = Enrolment::query()
 			->with([
-				'user',
-				'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
+                'membership' => [
+                    'user',
+				    'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
+                ],
 			])
 			->get()
             ->map(function ($singer) {
-                $singer->rsvp = $singer->rsvps->first() ?? Rsvp::Null();
+                $singer->membership->rsvp = $singer->membership->rsvps->first() ?? Rsvp::Null();
                 return $singer;
             })
 			->groupBy('voice_part_id');
@@ -38,7 +41,7 @@ class RsvpController extends Controller
 		$voice_parts = VoicePart::all()
 			->push(VoicePart::getNullVoicePart())
 			->map(function ($part) use ($singers) {
-				$part->members = $singers[$part->id === null ? "" : $part->id] ?? collect([]);
+				$part->singers = $singers[$part->id === null ? "" : $part->id] ?? collect([]);
 				return $part;
 			});
 

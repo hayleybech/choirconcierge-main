@@ -28,10 +28,10 @@ const SingerFilters = ({ statuses, voiceParts, roles, form }) => (
             <fieldset>
                 <legend className="text-sm font-medium text-gray-700">Voice Part</legend>
                 <CheckboxGroup
-                    name="voice_part.id"
+                    name="enrolments.voice_part_id"
                     options={voiceParts.map((part) => ({ id: part.id, name: part.title }))}
-                    value={data['voice_part.id']}
-                    updateFn={value => setData('voice_part.id', value)}
+                    value={data['enrolments.voice_part_id']}
+                    updateFn={value => setData('enrolments.voice_part_id', value)}
                 />
             </fieldset>
 

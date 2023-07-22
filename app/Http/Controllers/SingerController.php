@@ -65,7 +65,6 @@ class SingerController extends Controller
                 'referrer',
                 'membership_details',
                 'joined_at',
-                'voice_part_id',
                 'user_roles',
             ])
         );
@@ -83,7 +82,14 @@ class SingerController extends Controller
     {
 		$singer->append('fee_status');
 
-        $singer->load('user', 'voice_part', 'category', 'roles', 'placement', 'tasks');
+        $singer->load([
+            'user',
+            'enrolments' => ['voice_part', 'ensemble'],
+            'category',
+            'roles',
+            'placement',
+            'tasks',
+        ]);
 
         $singer->can = [
             'update_singer' => auth()->user()?->can('update', $singer),
@@ -100,10 +106,10 @@ class SingerController extends Controller
 
     public function edit(Membership $singer): InertiaResponse
     {
-        $singer->load('user', 'voice_part', 'category', 'roles');
+        $singer->load('user', 'category', 'roles');
 
         return Inertia::render('Singers/Edit', [
-            'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
+//            'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(), // @todo move to enrolments
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'singer' => $singer,
         ]);
@@ -123,7 +129,6 @@ class SingerController extends Controller
                 'membership_details',
                 'joined_at',
                 'onboarding_enabled',
-                'voice_part_id',
                 'paid_until',
             ])
         );
@@ -147,7 +152,7 @@ class SingerController extends Controller
         $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
 
         return QueryBuilder::for(Membership::class)
-            ->with(['tasks', 'category', 'voice_part', 'user'])
+            ->with(['tasks', 'category', 'user', 'enrolments' => ['voice_part', 'ensemble'],])
             ->allowedFilters([
                 AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query
                     ->whereHas('user', fn(Builder $query) => $query
@@ -155,7 +160,11 @@ class SingerController extends Controller
                     )),
                 AllowedFilter::exact('category.id')
                     ->default([$defaultStatus]),
-                AllowedFilter::exact('voice_part.id'),
+                AllowedFilter::callback('enrolments.voice_part_id', fn(Builder $query, $value) => $query
+                    ->whereHas('enrolments', fn(Builder $query) => $query
+                        ->where('voice_part_id','=', $value)
+                    )
+                ),
                 AllowedFilter::exact('roles.id'),
                 AllowedFilter::callback('fee_status', fn(Builder $query, $value) => match ($value) {
                     'unknown' => $query->whereNull('paid_until'),

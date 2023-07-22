@@ -57,7 +57,6 @@ class CreateSingerRequest extends FormRequest
             'membership_details' => ['max:255'],
             'joined_at' => ['date', 'before_or_equal:today'],
             'onboarding_enabled' => ['boolean'],
-            'voice_part_id' => [],
             'user_roles' => ['array', 'exists:roles,id'],
         ]);
     }

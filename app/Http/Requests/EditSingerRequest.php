@@ -36,7 +36,7 @@ class EditSingerRequest extends FormRequest
             'joined_at' => ['date', 'before_or_equal:today'],
             'paid_until' => Gate::allows('update-fees') ? ['nullable', 'sometimes', 'date'] : ['exclude'],
             'onboarding_enabled' => ['boolean'],
-            'voice_part_id' => ['numeric', 'exists:voice_parts,id'],
+//            'voice_part_id' => ['numeric', 'exists:voice_parts,id'], // @todo move to enrolments
             'user_roles' => auth()->user()->isSuperAdmin || auth()->user()?->membership->hasAbility('roles_create')
                 ? ['array', 'exists:roles,id']
                 : ['exclude'],

@@ -19,13 +19,18 @@ class LearningStatusController extends Controller
         $song->createMissingLearningRecords();
 
         $song->load(['members' => function ($query) {
-            $query->active()->with('user', 'voice_part');
+            $query->active()->with('user', 'enrolments.voice_part');
         }]);
 
         $voice_parts = VoicePart::all()
             ->push(VoicePart::getNullVoicePart())
             ->map(function ($part) use ($song) {
-                $part->members = $song->members->where('voice_part_id', $part->id)->values();
+                $part->members = $song->members
+                    ->filter(fn($member) => $member
+                        ->enrolments
+                        ->contains(fn($enrolment) => $enrolment->voice_part_id === $part->id)
+                    )
+                    ->values();
 
                 return $part;
             });

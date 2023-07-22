@@ -68,7 +68,6 @@ class SingerControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Edit')
                 ->has('singer')
-                ->has('voice_parts')
                 ->has('roles')
             );
     }
@@ -294,29 +293,30 @@ class SingerControllerTest extends TestCase
         ]);
     }
 
+    // @todo move to enrolments
     /**
      * @test
      * @dataProvider singerProvider
      */
-    public function update_saves_the_voice_part($getData): void
-    {
-        $this->actingAs($this->createUserWithRole('Membership Team'));
-
-        $singer = Membership::factory()->create();
-
-        $part = VoicePart::pluck('id')->random(1)[0];
-
-        $data = $getData();
-        $response = $this->put(the_tenant_route('singers.update', [$singer]), array_merge($data, [
-            'voice_part_id' => $part,
-        ]));
-
-        $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('memberships', [
-            'id' => $singer->id,
-            'voice_part_id' => $part,
-        ]);
-    }
+//    public function update_saves_the_voice_part($getData): void
+//    {
+//        $this->actingAs($this->createUserWithRole('Membership Team'));
+//
+//        $singer = Membership::factory()->create();
+//
+//        $part = VoicePart::pluck('id')->random(1)[0];
+//
+//        $data = $getData();
+//        $response = $this->put(the_tenant_route('singers.update', [$singer]), array_merge($data, [
+//            'voice_part_id' => $part,
+//        ]));
+//
+//        $response->assertSessionHasNoErrors();
+//        $this->assertDatabaseHas('memberships', [
+//            'id' => $singer->id,
+//            'voice_part_id' => $part,
+//        ]);
+//    }
 
 	/**
 	 * @test
@@ -353,7 +353,7 @@ class SingerControllerTest extends TestCase
                     $password = Str::random(8);
 
                     return [
-                        // Singer
+                        // Member
                         'onboarding_enabled' => false,
                         'onboarding_disabled' => true,
                         'reason_for_joining' => $this->faker->sentence(),

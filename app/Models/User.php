@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -65,6 +66,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Role> $roles
  * @property Collection<GroupMember> $mailing_list_memberships
  * @property Collection<Membership> $memberships
+ * @property Collection<Enrolment> $enrolments
  * @property Membership $membership
  * @property Tenant $default_tenant
  */
@@ -167,6 +169,11 @@ class User extends Authenticatable implements HasMedia
             ->ofMany(['id' => 'max'], function ($query) {
                 $query->where('tenant_id', '=', tenancy()?->tenant?->id ?? null);
             });
+    }
+
+    public function enrolments(): HasManyThrough
+    {
+        return $this->hasManyThrough(Enrolment::class, Membership::class);
     }
 
     public function defaultTenant(): BelongsTo

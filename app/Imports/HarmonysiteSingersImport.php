@@ -61,11 +61,21 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
             return;
         }
 
-        $singer = $user->memberships()->updateOrCreate(['id' => $user->id], [
+        $member = $user->memberships()->updateOrCreate(['user_id' => $user->id], [
             'onboarding_enabled' => false,
-            'voice_part_id' => isset($rowArr['section']) ? VoicePart::firstWhere('title', $this->convert_voice_part($rowArr['section']))->id ?? null : null,
             'joined_at' => $this->make_valid_mysql_datetime($rowArr['registration_date'] ?? null),
         ]);
+
+        // Add an enrolment to the first ensemble
+        // @todo add support for specifying which ensemble
+        $ensemble = tenant()->ensembles?->first();
+        if($ensemble) {
+            $member->enrolments()->updateOrCreate([
+                'membership_id' => $member->id,
+                'ensemble_id'   => $ensemble->id,
+                'voice_part_id' => isset($rowArr['voice_part']) ? VoicePart::firstWhere('title', $rowArr['voice_part'])->id : null,
+            ]);
+        }
 
         // Add SingerCategory
         if (explode(' ', $rowArr['status'])[0] === 'Active') {
@@ -73,12 +83,12 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
         } else {
             $category = $this->archivedCategory;
         }
-        $singer->category()->associate($category);
+        $member->category()->associate($category);
 
         // Add User Role
-        $singer->roles()->attach($this->userRole);
+        $member->roles()->attach($this->userRole);
 
-        $singer->save();
+        $member->save();
     }
 
     private function make_valid_mysql_datetime(?string $datetime_raw): string

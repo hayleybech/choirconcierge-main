@@ -32,7 +32,6 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $joined_at
  * @property Carbon $paid_until
  * @property int $singer_category_id
- * @property int $voice_part_id
  * @property int $user_id
  * @property int $tenant_id
  *
@@ -40,6 +39,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Task> $tasks
  * @property Placement $placement
  * @property SingerCategory $category
+ * @property Collection<Enrolment> $enrolments
  * @property User $user
  * @property VoicePart $voice_part
  * @property Collection<RiserStack> $riser_stacks
@@ -66,7 +66,6 @@ class Membership extends Model
         'reason_for_joining',
         'referrer',
         'membership_details',
-        'voice_part_id',
         'joined_at',
 	    'paid_until',
     ];
@@ -140,14 +139,14 @@ class Membership extends Model
         return $this->belongsTo(SingerCategory::class, 'singer_category_id');
     }
 
+    public function enrolments(): HasMany
+    {
+        return $this->hasMany(Enrolment::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function voice_part(): BelongsTo
-    {
-        return $this->belongsTo(VoicePart::class)->withDefault(['title' => 'No Part', 'colour' => '#9095a0']);
     }
 
     public function riser_stacks(): BelongsToMany

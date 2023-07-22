@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Enrolment;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\VoicePart;
@@ -19,7 +20,11 @@ class AttendanceController extends Controller
 
         $event->createMissingAttendanceRecords();
 
-        $event->load(['attendances' => fn ($query) => $query->with('member.user')->whereHas('member', fn ($query) => $query->active())]);
+        $event->load([
+            'attendances' => fn ($query) => $query
+                ->with(['member' => ['user', 'enrolments']])
+                ->whereHas('member', fn ($query) => $query->active())
+        ]);
 
         $event->attendances->each(fn ($attendance) => $attendance->member->user->append('avatar_url'));
 
@@ -27,7 +32,9 @@ class AttendanceController extends Controller
             ->push(VoicePart::getNullVoicePart())
             ->map(function ($part) use ($event) {
                 $part->members = $event->attendances
-                    ->filter(fn ($attendance) => $attendance->member->voice_part_id === $part->id)
+                    ->filter(fn ($attendance) => $attendance->member->enrolments
+                        ->contains(fn(Enrolment $enrolment) => $enrolment->voice_part_id === $part->id)
+                    )
                     ->values();
 
                 return $part;

@@ -297,8 +297,11 @@ class UserGroup extends Model
             ->toArray();
 
         return User::query()
-            ->whereHas('memberships', fn ($singer_query) =>
-                $singer_query->active()->whereIn('voice_part_id', $voice_part_ids)
+            ->whereHas('memberships', fn ($query) => $query
+                ->active()
+                ->whereHas('enrolments', fn ($query) => $query
+                    ->whereIn('voice_part_id', $voice_part_ids)
+                )
             )
             ->get();
     }

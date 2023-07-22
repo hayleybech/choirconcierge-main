@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
 
 /**
  * Columns
@@ -22,6 +25,9 @@ use Illuminate\Support\Facades\Storage;
  *
  * Relationships
  * @property Tenant $organisation
+ * @property Collection<Enrolment> $enrolments
+ * @property Collection<Membership> $members
+ * @property Collection<User> $users
  */
 
 class Ensemble extends Model
@@ -35,6 +41,11 @@ class Ensemble extends Model
 	public function organisation(): BelongsTo {
 		return $this->belongsTo(Tenant::class);
 	}
+
+    public function enrolments(): HasMany
+    {
+        return $this->hasMany(Enrolment::class);
+    }
 
 	public function logoUrl(): Attribute
 	{

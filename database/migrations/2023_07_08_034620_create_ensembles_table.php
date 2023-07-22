@@ -24,12 +24,17 @@ return new class extends Migration
         });
 
 		// copy choir info from organisation/tenant
-	    $organisations = DB::table('tenants')->select(['id', 'data'])->get();
-		$ensembles = $organisations->map(fn ($org) => [
-			'name' => json_decode($org->data, true)['choir_name'],
-			'logo' => json_decode($org->data, true)['choir_logo'] ?? null,
-			'tenant_id' => $org->id,
-		]);
+        $now = now('utc')->toDateTimeString();
+        $ensembles = DB::table('tenants')
+            ->select(['id', 'data'])
+            ->get()
+		    ->map(fn ($org) => [
+                'name' => json_decode($org->data, true)['choir_name'],
+                'logo' => json_decode($org->data, true)['choir_logo'] ?? null,
+                'tenant_id' => $org->id,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
 
 		DB::table('ensembles')->insert($ensembles->toArray());
 

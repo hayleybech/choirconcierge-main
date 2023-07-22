@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Enrolment;
 use App\Models\Role;
 use App\Models\Membership;
 use App\Models\SingerCategory;
@@ -50,7 +51,7 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $voice_parts = VoicePart::factory()
-            ->has(Membership::factory()->count(3), 'members')
+            ->has(Enrolment::factory()->count(3), 'enrolments')
             ->count(2)
             ->create();
 
@@ -108,7 +109,7 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $voice_parts = VoicePart::factory()
-            ->has(Membership::factory()->count(3), 'members')
+            ->has(Enrolment::factory()->count(3), 'enrolments')
             ->count(2)
             ->create();
 

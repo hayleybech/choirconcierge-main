@@ -67,15 +67,25 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow
             return;
         }
 
-        $singer = $user->memberships()->updateOrCreate(['id' => $user->id], [
+        $member = $user->memberships()->updateOrCreate(['id' => $user->id], [
             'onboarding_enabled' => false,
             'reason_for_joining' => $rowArr['reason_for_joining'] ?? '',
             'referrer' => $rowArr['referrer'] ?? '',
             'membership_details' => $rowArr['membership_details'] ?? '',
-            'voice_part_id' => isset($rowArr['voice_part']) ? VoicePart::firstWhere('title', $rowArr['voice_part'])->id : null,
             'joined_at' => $this->make_valid_mysql_datetime($rowArr['joined_at'] ?? null),
             'paid_until' => $this->make_valid_mysql_datetime($rowArr['paid_until'] ?? null),
         ]);
+
+        // Add an enrolment to the first ensemble
+        // @todo add support for specifying which ensemble
+        $ensemble = tenant()->ensembles?->first();
+        if($ensemble) {
+            $member->enrolments()->updateOrCreate([
+                'membership_id' => $member->id,
+                'ensemble_id'   => $ensemble->id,
+                'voice_part_id' => isset($rowArr['voice_part']) ? VoicePart::firstWhere('title', $rowArr['voice_part'])->id : null,
+            ]);
+        }
 
         // Add Roles
         $roles_list = isset($rowArr['roles']) ? explode(',', $rowArr['roles']) : [];
@@ -93,7 +103,7 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow
         if (in_array('Events Team', $roles_list, true)) {
             $roles_to_add[] = $this->roles->firstWhere('name', 'Events Team')->id;
         }
-        $singer->roles()->syncWithoutDetaching($roles_to_add);
+        $member->roles()->syncWithoutDetaching($roles_to_add);
 
         // Add SingerCategory
         if (in_array('Archived Members', $roles_list, true)) {
@@ -101,9 +111,9 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow
         } else {
             $category = $this->activeCategory;
         }
-        $singer->category()->associate($category);
+        $member->category()->associate($category);
 
-        $singer->save();
+        $member->save();
     }
 
     private function make_valid_mysql_datetime(?string $datetime_raw): string

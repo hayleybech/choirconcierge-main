@@ -116,7 +116,11 @@ const Show = ({ singer, categories }) => {
                 title={<>{singer.user.name} {singer.user.pronouns && <Pronouns pronouns={singer.user.pronouns} />}</>}
                 image={singer.user.profile_avatar_url}
                 meta={[
-                    <>{singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}</>,
+                    <>
+                    {singer.enrolments.map((enrolment) => (
+                        enrolment.voice_part && <VoicePartTag key={enrolment.id} title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />
+                    ))}
+                    </>,
                     <SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />,
                     <DateTag date={singer.joined_at} label="Joined" />,
                 ]}
@@ -161,6 +165,12 @@ const Show = ({ singer, categories }) => {
                             show: true,
                             defaultOpen: true,
                             content: <MembershipDetails singer={singer} />,
+                        },
+                        {
+                            title: 'Ensemble Details',
+                            show: true,
+                            defaultOpen: true,
+                            content: <EnsembleDetails singer={singer} />,
                         },
                     ]} />
                 </div>
@@ -358,6 +368,19 @@ const MembershipDetails = ({ singer }) => (
             },
         ]} />
     </CollapsePanel>
+);
+
+const EnsembleDetails = ({ singer }) => (
+  <CollapsePanel>
+      <ul className="divide-y divide-gray-200">
+      {singer.enrolments.map((enrolment) => (
+        <li key={enrolment.id} className="flex gap-2 justify-between">
+            <strong>{enrolment.ensemble.name}</strong>
+            {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
+        </li>
+      ))}
+      </ul>
+  </CollapsePanel>
 );
 
 const EditSingerPlacementButton = ({ singer }) => {

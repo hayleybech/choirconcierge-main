@@ -80,17 +80,22 @@ class SongController extends Controller
         $performance_ready_count = $song->members()->active()->wherePivot('status', 'performance-ready')->count();
 
         $voice_parts_performance_ready_count = VoicePart::withCount([
-            'members' => function (Builder $query) use ($song) {
-                $query->active();
+            'enrolments as singers_count' => function (Builder $query) use ($song) {
+                $query->whereHas('membership', function (Builder $query) {
+                    $query->active();
+                });
             },
-            'members as performance_ready_count' => function (Builder $query) use ($song) {
+            'enrolments as performance_ready_count' => function (Builder $query) use ($song) {
                 $query
-                    ->active()
-                    ->with('songs')
-                    ->whereHas('songs', function (Builder $query) use ($song) {
-                        $query->where('songs.id', $song->id)
-                            ->where('membership_song.status', 'performance-ready');
-                    });
+                    ->whereHas('membership', function (Builder $query) use ($song) {
+                        $query
+                            ->active()
+                            ->whereHas('songs', function (Builder $query) use ($song) {
+                                $query->where('songs.id', $song->id)
+                                    ->where('membership_song.status', 'performance-ready');
+                            });
+                    })
+                    ->with('songs');
             },
         ])->get();
 

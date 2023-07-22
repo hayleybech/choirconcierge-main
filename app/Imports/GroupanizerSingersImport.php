@@ -62,12 +62,22 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
             return;
         }
 
-        $singer = $user->memberships()->updateOrCreate(['id' => $user->id], [
+        $member = $user->memberships()->updateOrCreate(['user_id' => $user->id], [
             'onboarding_enabled' => false,
-            'voice_part_id' => isset($rowArr['voice_part']) ? VoicePart::firstWhere('title', $rowArr['voice_part'])->id : null,
             'joined_at' => $this->make_valid_mysql_datetime($rowArr['member_since'] ?? null),
             'membership_details' => $rowArr['member_id'] ?? '',
         ]);
+
+        // Add an enrolment to the first ensemble
+        // @todo add support for specifying which ensemble
+        $ensemble = tenant()->ensembles?->first();
+        if($ensemble) {
+            $member->enrolments()->updateOrCreate([
+                'membership_id' => $member->id,
+                'ensemble_id'   => $ensemble->id,
+                'voice_part_id' => isset($rowArr['voice_part']) ? VoicePart::firstWhere('title', $rowArr['voice_part'])->id : null,
+            ]);
+        }
 
         // Add Roles
         $roles_list = isset($rowArr['roles']) ? explode(',', $rowArr['roles']) : [];
@@ -85,7 +95,7 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
         if (in_array('Event Admin', $roles_list, true)) {
             $roles_to_add[] = $this->roles->firstWhere('name', 'Events Team')->id;
         }
-        $singer->roles()->syncWithoutDetaching($roles_to_add);
+        $member->roles()->syncWithoutDetaching($roles_to_add);
 
         // Add SingerCategory
         if (in_array('Inactive Member', $roles_list, true)) {
@@ -93,9 +103,9 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
         } else {
             $category = $this->activeCategory;
         }
-        $singer->category()->associate($category);
+        $member->category()->associate($category);
 
-        $singer->save();
+        $member->save();
     }
 
     private function make_valid_mysql_datetime(?string $datetime_raw): string

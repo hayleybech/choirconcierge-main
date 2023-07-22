@@ -246,13 +246,17 @@ class Event extends Model
     public function voice_parts_rsvp_response_count(string $response)
     {
         return VoicePart::withCount([
-            'members' => function ($query) {
-                $query->active();
+            'enrolments as singers_count' => function ($query) {
+                $query->whereHas('membership', function (Builder $query) {
+                    $query->active();
+                });
             },
-            'members as singers_going_count' => function ($query) use ($response) {
-                $query->active()->whereHas('rsvps', function (Builder $query) use ($response) {
-                    $query->where('event_id', '=', $this->id)
-                        ->where('response', '=', $response);
+            'enrolments as singers_going_count' => function ($query) use ($response) {
+                $query->whereHas('membership', function (Builder $query) use ($response) {
+                    $query->active()->whereHas('rsvps', function (Builder $query) use ($response) {
+                        $query->where('event_id', '=', $this->id)
+                            ->where('response', '=', $response);
+                    });
                 });
             }, ]);
     }
@@ -281,13 +285,17 @@ class Event extends Model
     public function voice_parts_attendance_count(string $response)
     {
         return VoicePart::withCount([
-            'members' => function ($query) use ($response) {
-                $query->active();
+            'enrolments as singers_count' => function ($query) use ($response) {
+                $query->whereHas('membership', function (Builder $query) {
+                    $query->active();
+                });
             },
-            'members as singers_response_count' => function ($query) use ($response) {
-                $query->active()->whereHas('attendances', function (Builder $query) use ($response) {
-                    $query->where('event_id', '=', $this->id)
-                        ->where('response', '=', $response);
+            'enrolments as singers_response_count' => function ($query) use ($response) {
+                $query->whereHas('membership', function (Builder $query) use ($response) {
+                    $query->active()->whereHas('attendances', function (Builder $query) use ($response) {
+                        $query->where('event_id', '=', $this->id)
+                            ->where('response', '=', $response);
+                    });
                 });
             },
         ]);
