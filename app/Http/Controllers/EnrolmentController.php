@@ -20,4 +20,10 @@ class EnrolmentController extends Controller
 
         return redirect()->back()->with(['status' => 'Enrolment details saved']);
     }
+
+    public function destroy(Membership $singer, Enrolment $enrolment): RedirectResponse {
+        $enrolment->delete();
+
+        return redirect()->back()->with(['status' => 'Enrolment deleted.']);
+    }
 }

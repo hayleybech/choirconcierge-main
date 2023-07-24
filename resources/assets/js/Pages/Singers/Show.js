@@ -166,10 +166,10 @@ const Show = ({ singer, categories, voiceParts }) => {
                             content: <MembershipDetails singer={singer} />,
                         },
                         {
-                            title: 'Ensemble Details',
+                            title: 'Enrolments',
                             show: true,
                             defaultOpen: true,
-                            content: <EnsembleDetails singer={singer} voiceParts={voiceParts} />,
+                            content: <EnrolmentDetails singer={singer} voiceParts={voiceParts} />,
                         },
                     ]} />
                 </div>
@@ -369,7 +369,7 @@ const MembershipDetails = ({ singer }) => (
     </CollapsePanel>
 );
 
-const EnsembleDetails = ({ singer, voiceParts }) => {
+const EnrolmentDetails = ({ singer, voiceParts }) => {
     const [editingEnrolment, setEditingEnrolment] = useState(null);
     const [deletingEnrolment, setDeletingEnrolment] = useState(null);
 
@@ -426,7 +426,7 @@ const EditEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts 
         setIsOpen={setIsOpen}
       >
           <p className="mb-2">
-              Here you can update the singer's "enrolment" to an ensemble. Currently, this is limited to their voice part.
+              Here you can update the singer's enrolment to an ensemble. Currently, this is limited to their voice part.
           </p>
           <RadioGroup
             label="Select a new voice part"
@@ -448,9 +448,9 @@ const DeleteEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voicePart
     return (
       <Dialog
         title="Delete Enrolment"
-        okLabel="Delete"
+        okLabel="Remove"
         okUrl={enrolment ? route('singers.enrolments.destroy', {singer, enrolment}) : '#'}
-        okVariant="primary"
+        okVariant="danger-solid"
         okMethod="delete"
         isOpen={isOpen}
         setIsOpen={setIsOpen}
