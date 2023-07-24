@@ -22,7 +22,7 @@ const VoicePartForm = ({ voicePart }) => {
 
     function submit(e) {
         e.preventDefault();
-        voicePart ? put(route('voice-parts.update', {voicePart})) : post(route('voice-parts.store'));
+        voicePart ? put(route('voice-parts.update', {voice_part: voicePart})) : post(route('voice-parts.store'));
     }
 
     return (
