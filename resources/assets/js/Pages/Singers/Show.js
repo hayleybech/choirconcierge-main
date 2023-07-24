@@ -371,6 +371,7 @@ const MembershipDetails = ({ singer }) => (
 
 const EnsembleDetails = ({ singer, voiceParts }) => {
     const [editingEnrolment, setEditingEnrolment] = useState(null);
+    const [deletingEnrolment, setDeletingEnrolment] = useState(null);
 
     return (
       <>
@@ -382,7 +383,15 @@ const EnsembleDetails = ({ singer, voiceParts }) => {
                             <strong>{enrolment.ensemble.name}</strong>
                             {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
                         </div>
-                        <div>
+                        <div className="flex items-center gap-2">
+                            {/* @todo add a more specific ability check */}
+                            {singer.can['update_singer'] && (
+                              <Button variant="danger-outline" size="sm" onClick={() => setDeletingEnrolment(enrolment.id)}>
+                                  <Icon icon="trash" />
+                                  Delete
+                              </Button>
+                            )}
+
                             {/* @todo add a more specific ability check */}
                             {singer.can['update_singer'] && (
                                 <Button variant="primary" size="sm" onClick={() => setEditingEnrolment(enrolment.id)}>
@@ -397,6 +406,7 @@ const EnsembleDetails = ({ singer, voiceParts }) => {
           </CollapsePanel>
 
           <EditEnrolmentDialog isOpen={!!editingEnrolment} setIsOpen={setEditingEnrolment} singer={singer} enrolment={editingEnrolment} voiceParts={voiceParts} />
+          <DeleteEnrolmentDialog isOpen={!!deletingEnrolment} setIsOpen={setDeletingEnrolment} singer={singer} enrolment={deletingEnrolment} voiceParts={voiceParts} />
       </>
     );
 }
@@ -430,6 +440,24 @@ const EditEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts 
             setSelected={setSelectedVoicePart}
             vertical
           />
+      </Dialog>
+    );
+};
+
+const DeleteEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts }) => {
+    return (
+      <Dialog
+        title="Delete Enrolment"
+        okLabel="Delete"
+        okUrl={enrolment ? route('singers.enrolments.destroy', {singer, enrolment}) : '#'}
+        okVariant="primary"
+        okMethod="delete"
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      >
+          <p className="mb-2">
+              Are you sure you want to remove the singer from this ensemble?
+          </p>
       </Dialog>
     );
 };
