@@ -101,6 +101,7 @@ class SingerController extends Controller
         return Inertia::render('Singers/Show', [
             'singer' => $singer,
             'categories' => SingerCategory::all(),
+            'voiceParts' => VoicePart::all(),
         ]);
     }
 
@@ -109,7 +110,6 @@ class SingerController extends Controller
         $singer->load('user', 'category', 'roles');
 
         return Inertia::render('Singers/Edit', [
-//            'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(), // @todo move to enrolments
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'singer' => $singer,
         ]);

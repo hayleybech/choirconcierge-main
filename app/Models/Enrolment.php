@@ -47,6 +47,6 @@ class Enrolment extends Model
 
     public function voice_part(): BelongsTo
     {
-        return $this->belongsTo(VoicePart::class)->withDefault(['title' => 'No Part', 'colour' => '#9095a0']);
+        return $this->belongsTo(VoicePart::class)->withDefault(['title' => 'No Part', 'colour' => 'gray']);
     }
 }

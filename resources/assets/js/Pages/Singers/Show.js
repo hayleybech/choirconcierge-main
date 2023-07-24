@@ -19,6 +19,7 @@ import CollapsePanel from "../../components/CollapsePanel";
 import CollapseGroup from "../../components/CollapseGroup";
 import FeeStatus from "../../components/FeeStatus";
 import useRoute from "../../hooks/useRoute";
+import Button from "../../components/inputs/Button";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -103,7 +104,7 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
     );
 }
 
-const Show = ({ singer, categories }) => {
+const Show = ({ singer, categories, voiceParts }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
     const { can, user: authUser } = usePage().props;
@@ -168,7 +169,7 @@ const Show = ({ singer, categories }) => {
                             title: 'Ensemble Details',
                             show: true,
                             defaultOpen: true,
-                            content: <EnsembleDetails singer={singer} />,
+                            content: <EnsembleDetails singer={singer} voiceParts={voiceParts} />,
                         },
                     ]} />
                 </div>
@@ -368,18 +369,70 @@ const MembershipDetails = ({ singer }) => (
     </CollapsePanel>
 );
 
-const EnsembleDetails = ({ singer }) => (
-  <CollapsePanel>
-      <ul className="divide-y divide-gray-200">
-      {singer.enrolments.map((enrolment) => (
-        <li key={enrolment.id} className="flex gap-2 justify-between">
-            <strong>{enrolment.ensemble.name}</strong>
-            {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
-        </li>
-      ))}
-      </ul>
-  </CollapsePanel>
-);
+const EnsembleDetails = ({ singer, voiceParts }) => {
+    const [editingEnrolment, setEditingEnrolment] = useState(null);
+
+    return (
+      <>
+          <CollapsePanel>
+              <ul className="divide-y divide-gray-200">
+                  {singer.enrolments.map((enrolment) => (
+                    <li key={enrolment.id} className="flex gap-2 justify-between items-center">
+                        <div className="flex items-center gap-2">
+                            <strong>{enrolment.ensemble.name}</strong>
+                            {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
+                        </div>
+                        <div>
+                            {/* @todo add a more specific ability check */}
+                            {singer.can['update_singer'] && (
+                                <Button variant="primary" size="sm" onClick={() => setEditingEnrolment(enrolment.id)}>
+                                    <Icon icon="edit" />
+                                    Edit
+                                </Button>
+                            )}
+                        </div>
+                    </li>
+                  ))}
+              </ul>
+          </CollapsePanel>
+
+          <EditEnrolmentDialog isOpen={!!editingEnrolment} setIsOpen={setEditingEnrolment} singer={singer} enrolment={editingEnrolment} voiceParts={voiceParts} />
+      </>
+    );
+}
+
+const EditEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts }) => {
+    const [selectedVoicePart, setSelectedVoicePart] = useState(0);
+
+    return (
+      <Dialog
+        title="Edit Enrolment"
+        okLabel="Save"
+        okUrl={enrolment ? route('singers.enrolments.update', {singer, enrolment}) : '#'}
+        okVariant="primary"
+        okMethod="put"
+        data={{ voice_part_id: selectedVoicePart }}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      >
+          <p className="mb-2">
+              Here you can update the singer's "enrolment" to an ensemble. Currently, this is limited to their voice part.
+          </p>
+          <RadioGroup
+            label="Select a new voice part"
+            options={voiceParts.map(part => ({
+                id: part.id,
+                name: part.title,
+                colour: `${part.colour}-500`,
+                icon: 'circle',
+            }))}
+            selected={selectedVoicePart}
+            setSelected={setSelectedVoicePart}
+            vertical
+          />
+      </Dialog>
+    );
+};
 
 const EditSingerPlacementButton = ({ singer }) => {
     const { route } = useRoute();

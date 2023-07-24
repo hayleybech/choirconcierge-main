@@ -112,17 +112,6 @@ const Edit = ({ roles, singer }) => {
                     </FormSection>
                     )}
 
-                    {/* @todo move to enrolments */}
-                    {/*{can['create_song'] && (*/}
-                    {/*<FormSection title="Music Details" description="Voice part etc.">*/}
-                    {/*    <div className="sm:col-span-6">*/}
-                    {/*        <Label label="Voice part" forInput="voice_part_id" />*/}
-                    {/*        <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />*/}
-                    {/*        {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}*/}
-                    {/*    </div>*/}
-                    {/*</FormSection>*/}
-                    {/*)}*/}
-
                     {can['manage_finances'] && (
                         <FormSection title="Financial Details" description="Fees etc.">
                             <div className="sm:col-span-6">

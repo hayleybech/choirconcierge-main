@@ -8,6 +8,7 @@ use App\Http\Controllers\AttendanceReportController;
 use App\Http\Controllers\CompleteSingerTaskController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\EnsembleController;
 use App\Http\Controllers\EventActivityController;
 use App\Http\Controllers\EventCalendarController;
@@ -107,6 +108,7 @@ Route::middleware([
         // Singers module
         Route::resource('singers', SingerController::class);
         Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
+        Route::resource('singers.enrolments', EnrolmentController::class)->only(['update']);
         Route::put('singers/{singer}/fees', UpdateSingerFeeController::class)->name('singers.fees.update');
         Route::post('singers/import', ImportSingerController::class)->name('singers.import');
         Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
