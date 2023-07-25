@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Mail\Welcome;
+use App\Models\Ensemble;
 use App\Models\Role;
 use App\Models\Membership;
 use App\Models\Task;
@@ -239,6 +240,49 @@ class SingerControllerTest extends TestCase
 
         $response->assertRedirect(the_tenant_route('singers.show', [$user->membership]));
         $mail->assertSent(Welcome::class);
+    }
+
+    /**
+     * @test
+     * @dataProvider singerProvider
+     */
+    public function store_inserts_default_enrolment_when_org_has_only_one_ensemble($getData): void
+    {
+        $ensemble = Ensemble::factory()->create([
+            'tenant_id' => tenant('id'),
+        ]);
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $data = $getData();
+        $this->post(the_tenant_route('singers.store'), $data)
+            ->assertSessionHasNoErrors();
+
+        $user = User::firstWhere('email', $data['email']);
+        $this->assertDatabaseHas('enrolments', [
+            'membership_id' => $user->membership->id,
+            'ensemble_id' => $ensemble->id,
+        ]);
+    }
+
+    /**
+     * @test
+     * @dataProvider singerProvider
+     */
+    public function store_doesnt_insert_default_enrolment_when_org_has_multiple_ensembles($getData): void
+    {
+        Ensemble::factory()->count(2)->create([
+            'tenant_id' => tenant('id'),
+        ]);
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $data = $getData();
+        $this->post(the_tenant_route('singers.store'), $data)
+            ->assertSessionHasNoErrors();
+
+        $user = User::firstWhere('email', $data['email']);
+        $this->assertDatabaseMissing('enrolments', [
+            'membership_id' => $user->membership->id,
+        ]);
     }
 
     /**

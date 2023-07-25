@@ -89,6 +89,14 @@ class Membership extends Model
         $singer->roles()->sync($singer_roles);
         $singer->save();
 
+        // Add default enrolment (if only one ensemble)
+        $ensembles = Ensemble::all();
+        if($ensembles->count() === 1) {
+            $singer->enrolments()->create([
+                'ensemble_id' => $ensembles->first()->id,
+            ]);
+        }
+
         return $singer;
     }
 
