@@ -59,9 +59,11 @@ const SingerTableDesktop = ({ singers, sortFilterForm }) => {
                         <TableCell>
                           <ul>
                           {singer.enrolments.map((enrolment) => (
-                            <li key={enrolment.id} className="flex gap-2 items-center">
+                            <li key={enrolment.id} className="flex gap-2 items-center mb-2">
                               {tenant.ensembles.length > 1 && (
-                                <strong>{enrolment.ensemble.name}</strong>
+                                <div className="lg:w-36 xl:w-48 overflow-hidden text-ellipsis">
+                                  <strong>{enrolment.ensemble.name}</strong>
+                                </div>
                               )}
                               {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
                             </li>
