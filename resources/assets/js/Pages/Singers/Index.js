@@ -15,7 +15,7 @@ import EmptyState from "../../components/EmptyState";
 import ImportSingersDialog from "../../components/ImportSingersDialog";
 import useRoute from "../../hooks/useRoute";
 
-const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
+const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const [showImportDialog, setShowImportDialog] = useState(false);
     const { can } = usePage().props;
@@ -24,7 +24,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
     const sorts = [
         { id: 'full-name', name: 'Name', default: true },
         { id: 'status-title', name: 'Status' },
-        { id: 'part-title', name: 'Voice Part' },
+        // { id: 'part-title', name: 'Voice Part' },
         { id: 'paid_until', name: 'Paid Until' },
     ];
 
@@ -34,6 +34,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
         { name: 'enrolments.voice_part_id', multiple: true },
         { name: 'roles.id', multiple: true },
         { name: 'fee_status', defaultValue: '' },
+        { name: 'enrolments.ensemble_id', multiple: true },
     ];
 
     const sortFilterForm = useSortFilterForm('singers.index', filters, sorts);
@@ -65,7 +66,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles }) => {
                 filterPane={
                     <FilterSortPane
                         sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-                        filters={<SingerFilters statuses={statuses} voiceParts={voiceParts} roles={roles} form={sortFilterForm} />}
+                        filters={<SingerFilters statuses={statuses} voiceParts={voiceParts} roles={roles} form={sortFilterForm} ensembles={ensembles} />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }

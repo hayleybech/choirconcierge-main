@@ -42,6 +42,7 @@ class SingerController extends Controller
             'defaultStatus' => $defaultStatus,
             'voiceParts' => VoicePart::all()->values(),
             'roles' => Role::all()->values(),
+            'ensembles' => Ensemble::all()->values(),
         ]);
     }
 
@@ -167,6 +168,11 @@ class SingerController extends Controller
                 AllowedFilter::callback('enrolments.voice_part_id', fn(Builder $query, $value) => $query
                     ->whereHas('enrolments', fn(Builder $query) => $query
                         ->where('voice_part_id','=', $value)
+                    )
+                ),
+                AllowedFilter::callback('enrolments.ensemble_id', fn(Builder $query, $value) => $query
+                    ->whereHas('enrolments', fn(Builder $query) => $query
+                        ->where('ensemble_id','=', $value)
                     )
                 ),
                 AllowedFilter::exact('roles.id'),
