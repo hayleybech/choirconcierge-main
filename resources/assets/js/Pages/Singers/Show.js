@@ -388,7 +388,7 @@ const EnrolmentDetails = ({ singer, voiceParts, ensembles }) => {
           <CollapsePanelWithoutPadding>
               <ul className="divide-y divide-gray-200">
                   {singer.enrolments.map((enrolment) => (
-                    <li key={enrolment.id} className="flex gap-2 justify-between items-center py-3 px-4">
+                    <li key={enrolment.id} className="flex gap-2 justify-between items-center py-3 px-4 sm:px-6 lg:px-8">
                         <div className="flex items-center gap-2">
                             <strong>{enrolment.ensemble.name}</strong>
                             {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
@@ -414,7 +414,7 @@ const EnrolmentDetails = ({ singer, voiceParts, ensembles }) => {
                   ))}
                   {/* @todo add a more specific ability check */}
                   {singer.can['update_singer'] && ensembles.length > 0 && (
-                  <li className="flex justify-center items-center gap-2 py-3 px-4">
+                  <li className="flex justify-center items-center gap-2 py-3 px-4 sm:px-6 lg:px-8">
                       <div className="text-gray-800">
                         Add a new enrolment
                       </div>
