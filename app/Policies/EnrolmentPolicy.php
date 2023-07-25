@@ -28,6 +28,12 @@ class EnrolmentPolicy
         return null;
     }
 
+    public function create(User $user): bool
+    {
+        // @todo add a more specific ability check
+        return $user->membership->hasAbility('singers_update');
+    }
+
     public function update(User $user, Enrolment $enrolment): bool
     {
         // @todo add a new ability specific to enrolments eg 'enrolments_update' so this can be customised per role

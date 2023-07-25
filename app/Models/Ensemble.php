@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * Columns
@@ -32,7 +33,7 @@ use Illuminate\Support\Collection;
 
 class Ensemble extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToTenant;
 
 	protected $guarded = [];
 

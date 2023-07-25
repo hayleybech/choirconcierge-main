@@ -108,7 +108,7 @@ Route::middleware([
         // Singers module
         Route::resource('singers', SingerController::class);
         Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
-        Route::resource('singers.enrolments', EnrolmentController::class)->only(['update', 'destroy']);
+        Route::resource('singers.enrolments', EnrolmentController::class)->only(['store', 'update', 'destroy']);
         Route::put('singers/{singer}/fees', UpdateSingerFeeController::class)->name('singers.fees.update');
         Route::post('singers/import', ImportSingerController::class)->name('singers.import');
         Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');

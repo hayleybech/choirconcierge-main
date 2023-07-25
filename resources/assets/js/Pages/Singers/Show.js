@@ -20,6 +20,9 @@ import CollapseGroup from "../../components/CollapseGroup";
 import FeeStatus from "../../components/FeeStatus";
 import useRoute from "../../hooks/useRoute";
 import Button from "../../components/inputs/Button";
+import Label from "../../components/inputs/Label";
+import Select from "../../components/inputs/Select";
+import Error from "../../components/inputs/Error";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -104,7 +107,7 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
     );
 }
 
-const Show = ({ singer, categories, voiceParts }) => {
+const Show = ({ singer, categories, voiceParts, ensembles }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
     const { can, user: authUser } = usePage().props;
@@ -169,7 +172,7 @@ const Show = ({ singer, categories, voiceParts }) => {
                             title: 'Enrolments',
                             show: true,
                             defaultOpen: true,
-                            content: <EnrolmentDetails singer={singer} voiceParts={voiceParts} />,
+                            content: <EnrolmentDetails singer={singer} voiceParts={voiceParts} ensembles={ensembles} />,
                         },
                     ]} />
                 </div>
@@ -369,16 +372,23 @@ const MembershipDetails = ({ singer }) => (
     </CollapsePanel>
 );
 
-const EnrolmentDetails = ({ singer, voiceParts }) => {
+const CollapsePanelWithoutPadding = ({ children }) => (
+  <div className="bg-gray-100">
+      {children}
+  </div>
+)
+
+const EnrolmentDetails = ({ singer, voiceParts, ensembles }) => {
+    const [creatingEnrolment, setCreatingEnrolment] = useState(false);
     const [editingEnrolment, setEditingEnrolment] = useState(null);
     const [deletingEnrolment, setDeletingEnrolment] = useState(null);
 
     return (
       <>
-          <CollapsePanel>
+          <CollapsePanelWithoutPadding>
               <ul className="divide-y divide-gray-200">
                   {singer.enrolments.map((enrolment) => (
-                    <li key={enrolment.id} className="flex gap-2 justify-between items-center">
+                    <li key={enrolment.id} className="flex gap-2 justify-between items-center py-3 px-4">
                         <div className="flex items-center gap-2">
                             <strong>{enrolment.ensemble.name}</strong>
                             {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
@@ -402,17 +412,84 @@ const EnrolmentDetails = ({ singer, voiceParts }) => {
                         </div>
                     </li>
                   ))}
+                  {/* @todo add a more specific ability check */}
+                  {singer.can['update_singer'] && ensembles.length > 0 && (
+                  <li className="flex justify-center items-center gap-2 py-3 px-4">
+                      <div className="text-gray-800">
+                        Add a new enrolment
+                      </div>
+                      <Button variant="primary" size="sm" onClick={() => setCreatingEnrolment(true)}>
+                          <Icon icon="plus" />
+                          Create
+                      </Button>
+                  </li>
+                  )}
               </ul>
-          </CollapsePanel>
+          </CollapsePanelWithoutPadding>
 
-          <EditEnrolmentDialog isOpen={!!editingEnrolment} setIsOpen={setEditingEnrolment} singer={singer} enrolment={editingEnrolment} voiceParts={voiceParts} />
-          <DeleteEnrolmentDialog isOpen={!!deletingEnrolment} setIsOpen={setDeletingEnrolment} singer={singer} enrolment={deletingEnrolment} voiceParts={voiceParts} />
+          {singer.can['update_singer'] && (<>
+            {ensembles.length > 0 && (
+                <CreateEnrolmentDialog isOpen={!!creatingEnrolment} setIsOpen={setCreatingEnrolment} singer={singer} voiceParts={voiceParts} ensembles={ensembles} />
+            )}
+            <EditEnrolmentDialog isOpen={!!editingEnrolment} setIsOpen={setEditingEnrolment} singer={singer} enrolment={editingEnrolment} voiceParts={voiceParts} />
+            <DeleteEnrolmentDialog isOpen={!!deletingEnrolment} setIsOpen={setDeletingEnrolment} singer={singer} enrolment={deletingEnrolment} voiceParts={voiceParts} />
+          </>)}
       </>
     );
 }
 
+const CreateEnrolmentDialog = ({ singer, isOpen, setIsOpen, voiceParts, ensembles }) => {
+    const [selectedEnsemble, setSelectedEnsemble] = useState(ensembles[0].id);
+    const [selectedVoicePart, setSelectedVoicePart] = useState(0);
+
+    const { route } = useRoute();
+
+    return (
+      <Dialog
+        title="Create Enrolment"
+        okLabel="Save"
+        okUrl={route('singers.enrolments.store', {singer})}
+        okVariant="primary"
+        okMethod="post"
+        data={{
+            voice_part_id: selectedVoicePart,
+            ensemble_id: selectedEnsemble,
+        }}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      >
+          <p className="mb-2">
+              Here you can enrol a singer to an ensemble and assign them a voice part for that ensemble.
+          </p>
+          <div className="mb-2">
+              <Label label="Ensemble" forInput="ensemble_id" />
+              <Select
+                name="ensemble_id"
+                options={ensembles.map(ensemble => ({ key: ensemble.id, label: ensemble.name}))}
+                value={selectedEnsemble}
+                updateFn={value => setSelectedEnsemble(value)}
+              />
+          </div>
+          <RadioGroup
+            label="Select a new voice part"
+            options={voiceParts.map(part => ({
+                id: part.id,
+                name: part.title,
+                colour: `${part.colour}-500`,
+                icon: 'circle',
+            }))}
+            selected={selectedVoicePart}
+            setSelected={setSelectedVoicePart}
+            vertical
+          />
+      </Dialog>
+    );
+};
+
 const EditEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts }) => {
     const [selectedVoicePart, setSelectedVoicePart] = useState(0);
+
+    const { route } = useRoute();
 
     return (
       <Dialog
@@ -445,6 +522,8 @@ const EditEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts 
 };
 
 const DeleteEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts }) => {
+    const { route } = useRoute();
+
     return (
       <Dialog
         title="Delete Enrolment"

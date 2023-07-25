@@ -7,6 +7,7 @@ use App\CustomSorts\SingerStatusSort;
 use App\CustomSorts\SingerVoicePartSort;
 use App\Http\Requests\CreateSingerRequest;
 use App\Http\Requests\EditSingerRequest;
+use App\Models\Ensemble;
 use App\Models\Placement;
 use App\Models\Role;
 use App\Models\Membership;
@@ -102,6 +103,9 @@ class SingerController extends Controller
             'singer' => $singer,
             'categories' => SingerCategory::all(),
             'voiceParts' => VoicePart::all(),
+            'ensembles' => Ensemble::whereDoesntHave('enrolments', fn(Builder $query) =>
+                $query->where('membership_id', $singer->id)
+            )->get(),
         ]);
     }
 
