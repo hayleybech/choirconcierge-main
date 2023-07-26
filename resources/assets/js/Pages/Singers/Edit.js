@@ -1,7 +1,7 @@
 import React from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
-import {useForm, usePage} from "@inertiajs/inertia-react";
+import { Link, useForm, usePage } from "@inertiajs/inertia-react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import DetailToggle from "../../components/inputs/DetailToggle";
@@ -20,6 +20,7 @@ import Help from "../../components/inputs/Help";
 import ButtonGroup from "../../components/inputs/ButtonGroup";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
+import WarningAlert from "../../components/WarningAlert";
 
 const Edit = ({ roles, singer }) => {
     const { route } = useRoute();
@@ -111,6 +112,18 @@ const Edit = ({ roles, singer }) => {
                         </div>
                     </FormSection>
                     )}
+
+                  {can['create_song'] && (
+                    <FormSection title="Music Details" description="Voice part etc.">
+                      <div className="sm:col-span-6">
+                        <WarningAlert title="Voice part has moved">
+                          <p className="mb-2">Voice parts are now edited in the "Enrolments" section on the <Link className="text-purple-800 underline" href={route('singers.show', {singer})}>singer's profile</Link>.</p>
+
+                          <p className="mb-2">This change is part of our "Ensembles" update, allowing you to host multiple groups under the one organisation. </p>
+                        </WarningAlert>
+                      </div>
+                    </FormSection>
+                  )}
 
                     {can['manage_finances'] && (
                         <FormSection title="Financial Details" description="Fees etc.">
