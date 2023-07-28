@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'public_site_url' => 'https://www.choirconcierge.com',
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
