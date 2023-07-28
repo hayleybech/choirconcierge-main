@@ -13,10 +13,9 @@ use App\Http\Controllers\Central;
 |
 */
 
-// Redirect central index to folder
-// choirconcierge.com/ => choirconcierge.com/app
+// Redirect root to marketing site (only run app in /app)
 Route::domain(config('tenancy.central_domains')[0])->group(function() {
-	Route::redirect('/', '/app');
+	Route::redirect('/', config('app.public_site_url'));
 });
 
 Route::prefix('/app')->group(function () {
