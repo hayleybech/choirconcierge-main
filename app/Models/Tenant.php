@@ -34,6 +34,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  *
  * Relationships
  * @property Collection<Ensemble> $ensembles
+ * @property Collection<Membership> $members
  */
 class Tenant extends BaseTenant
 {
@@ -128,4 +129,8 @@ class Tenant extends BaseTenant
 	public function ensembles(): HasMany {
 		return $this->hasMany(Ensemble::class);
 	}
+
+    public function members(): HasMany {
+        return $this->hasMany(Membership::class);
+    }
 }

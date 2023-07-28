@@ -2,11 +2,10 @@
 
 namespace Database\Seeders\Dummy;
 
-use App\Models\Role;
 use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Models\VoicePart;
 use Faker\Factory as Faker;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
@@ -25,12 +24,23 @@ class DummyUserSeeder extends Seeder
                 $faker = Faker::create();
 
                 // Create matching singer
-                $singer = $user->memberships()->create([
+                $member = $user->memberships()->create([
                     'onboarding_enabled' => $faker->boolean(30),
                 ]);
 
+                // The ResetDemoSite job also tries to add an ensemble,
+                // but this file runs before the rest of the ResetDemoSite job runs.
+                if(tenant()->ensembles->count() === 0) {
+                    tenant()->ensembles()->create(['name' => tenant('name')]);
+                }
+                // Create enrolment
+                tenant()->ensembles()?->first()->enrolments()->create([
+                    'membership_id' => $member->id,
+                    'voice_part_id' => VoicePart::query()->inRandomOrder()->first()->id,
+                ]);
+
                 // Attach random singer category
-                self::attachRandomSingerCategory($singer, $singer_categories);
+                self::attachRandomSingerCategory($member, $singer_categories);
 
                 // Generate placement for singer
                 // @todo Seed voice placement
@@ -40,10 +50,10 @@ class DummyUserSeeder extends Seeder
             });
     }
 
-    public static function attachRandomSingerCategory(Membership $singer, Collection $categories): void
+    public static function attachRandomSingerCategory(Membership $member, Collection $categories): void
     {
         $category = $categories->random(1)->first();
-        $singer->category()->associate($category);
-        $singer->save();
+        $member->category()->associate($category);
+        $member->save();
     }
 }

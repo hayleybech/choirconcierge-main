@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\Enrolment;
+use App\Models\Ensemble;
 use App\Models\Song;
 use App\Models\SongAttachment;
 use App\Models\Tenant;
@@ -42,26 +44,35 @@ class ResetDemoSite implements ShouldQueue, ShouldBeUnique
             $demo_old = Tenant::find('demo');
 
             // Delete any data in tables lacking "on delete cascade"
-            $demo_old?->run(function() {
+            $demo_old?->run(function() use ($demo_old) {
                 SongAttachment::query()
                     ->whereIn('song_id', Song::query()
                         ->withoutGlobalScopes(['filterPending'])
                         ->withTrashed()
                         ->pluck('id'))
                     ->delete();
+
+                Enrolment::query()
+                    ->whereIn('ensemble_id', $demo_old->ensembles->pluck('id'))
+                    ->delete();
+
+                $demo_old->ensembles()->delete();
+                $demo_old->members()->delete();
             });
 
             $demo_old?->delete();
 
             // Re-create demo tenant
-            $demo = Tenant::create('demo', 'Hypothetical Harmony', 'Australia/Perth');
+            $demo = Tenant::create('demo', 'Hypothetical Harmony Pty Ltd', 'Australia/Perth');
             $demo->domains()->create(['domain' => 'demo']);
+            $demo->ensembles()->updateOrCreate(['name' => 'Hypothetical Harmony']);
 
             // Re-upload tenant logo ("upload" - we're just copying the sample file)
             $logo_path = Storage::disk('global-local')->path('sample/'. 'demo-logo.png');
             $logo_hashname = Str::random(40).'.png';
 
             $demo->updateLogo($logo_path, $logo_hashname);
+            $demo->ensembles()->first()->updateLogo($logo_path, $logo_hashname);
         });
     }
 
