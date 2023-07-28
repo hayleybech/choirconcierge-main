@@ -88,6 +88,13 @@ const Login = ({  }) => {
                         </form>
 
                     </div>
+
+                    <div className="text-center mt-6">
+                        <span className="text-gray-800">Not a member?</span>
+                        &nbsp;
+                        <a href="https://www.choirconcierge.com" className="font-medium text-purple-600 hover:text-purple-500">Book a Demo</a>
+                    </div>
+
                 </div>
             </div>
         </>
