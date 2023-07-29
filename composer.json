@@ -41,17 +41,17 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
         "beyondcode/laravel-query-detector": "^1.6",
-        "brianium/paratest": "^6.4",
+        "brianium/paratest": "^7.2.0",
         "jasonmccreary/laravel-test-assertions": "^2.1",
         "laravel-shift/factory-generator": "dev-master",
         "laravel/sail": "^1.13",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "nunomaduro/larastan": "^1.0",
-        "pestphp/pest": "^1.21",
-        "pestphp/pest-plugin-laravel": "^1.2",
-        "phpunit/php-code-coverage": "^9.2",
-        "phpunit/phpunit": "^9.5.10",
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "phpunit/php-code-coverage": "^10.1.0",
+        "phpunit/phpunit": "^10.1.0",
         "spatie/laravel-ignition": "^1.0",
         "wnx/laravel-stats": "^2.8"
     },
@@ -99,7 +99,8 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     }
 }
