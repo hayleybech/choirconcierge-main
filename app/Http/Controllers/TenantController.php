@@ -30,7 +30,7 @@ class TenantController extends Controller
 
         $request->validate([
             'name' => ['required', 'max:127'],
-            'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png', 'max:10240'],
+            'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
             'primary_domain' => ['required', 'max:127'],
             'timezone' => ['required', Rule::in(DateTimeZone::listIdentifiers())],
         ]);
