@@ -23,7 +23,7 @@ class EnsembleRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:127'],
-	        'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png', 'max:10240'],
+	        'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
         ];
     }
 }

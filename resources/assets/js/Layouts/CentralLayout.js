@@ -17,7 +17,7 @@ export default function CentralLayout({ children }) {
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
-    const { can, userChoirs, errors, flash, tenant } = usePage().props;
+    const { can, userChoirs, errors, flash } = usePage().props;
 
     const navFiltered = centralNavigation
         .filter((item) => can[item.can])
@@ -48,7 +48,7 @@ export default function CentralLayout({ children }) {
                 <LayoutTopBar
                   setSidebarOpen={setSidebarOpen}
                   setShowImpersonateModal={setShowImpersonateModal}
-                  switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
+                  switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} />}
                 />
 
                 <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">

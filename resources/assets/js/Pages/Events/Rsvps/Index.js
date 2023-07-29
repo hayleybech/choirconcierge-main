@@ -31,13 +31,12 @@ const Index = ({ event, voiceParts }) => {
           <div key={part.id} className="relative">
             <div className="flex bg-white py-4 border-b border-gray-200">
               {[
-                { label: 'Going', colour: 'emerald-500', icon: 'check', count: part.singers.filter(singer => singer.membership.rsvp.response === 'yes').length },
-                { label: 'Unknown', colour: 'amber-500', icon: 'question', count: part.singers.filter(singer => singer.membership.rsvp.response === 'unknown').length },
-                { label: 'Not going', colour: 'red-500', icon: 'times', count: part.singers.filter(singer => singer.membership.rsvp.response === 'no').length },
+                { label: 'Going', colour: 'emerald', icon: 'check', count: part.singers.filter(singer => singer.membership.rsvp.response === 'yes').length },
+                { label: 'Unknown', colour: 'amber', icon: 'question', count: part.singers.filter(singer => singer.membership.rsvp.response === 'unknown').length },
+                { label: 'Not going', colour: 'red', icon: 'times', count: part.singers.filter(singer => singer.membership.rsvp.response === 'no').length },
               ].map(({ label, colour, icon, count}) => (
                 <div className="w-1/3 text-center" key={label}>
-                  <Icon icon={icon} className={`text-${colour}`} />
-                  <p className={`font-semibold text-${colour}`}>{label}</p>
+                  <RsvpTag icon={icon} label={label} colour={colour} size="md" className="font-bold block" />
                   {count}
                 </div>
               ))}

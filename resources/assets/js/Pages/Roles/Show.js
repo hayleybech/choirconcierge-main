@@ -27,8 +27,10 @@ const Show = ({ role }) => {
                 ]}
                 actions={[
                     { label: 'Edit', icon: 'edit', url: route('roles.edit', {role}), can: 'update_role' },
-                    { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_role' },
-                ].filter(action => action.can ? role.can[action.can] : true)}
+                    ['User', 'Admin'].includes(role.name)
+                      ? null
+                      :  { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_role' },
+                ].filter(action => !!action && (action.can ? role.can[action.can] : true))}
             />
 
             <DeleteDialog

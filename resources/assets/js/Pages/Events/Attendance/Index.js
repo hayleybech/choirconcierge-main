@@ -35,15 +35,14 @@ const Index = ({ event, voice_parts }) => {
                 <div key={part.id} className="relative">
                   <div className="flex flex-wrap bg-white py-4 border-b border-gray-200 gap-y-4">
                     {[
-                      { label: 'On Time', colour: 'emerald-500', icon: 'check', count: part.members.filter(attendance => attendance.response === 'present').length },
-                      { label: 'Late', colour: 'amber-500', icon: 'alarm-exclamation', count: part.members.filter(attendance => attendance.response === 'late').length },
-                      { label: 'Absent', colour: 'red-500', icon: 'times', count: part.members.filter(attendance => attendance.response === 'absent').length },
-                      { label: 'Absent (with apology)', colour: 'red-500', icon: 'times', count: part.members.filter(attendance => attendance.response === 'absent_apology').length },
-                      { label: 'Unknown', colour: 'gray-500', icon: 'question', count: part.members.filter(attendance => attendance.response === 'unknown').length },
+                      { label: 'On Time', colour: 'emerald', icon: 'check', count: part.members.filter(attendance => attendance.response === 'present').length },
+                      { label: 'Late', colour: 'amber', icon: 'alarm-exclamation', count: part.members.filter(attendance => attendance.response === 'late').length },
+                      { label: 'Absent', colour: 'red', icon: 'times', count: part.members.filter(attendance => attendance.response === 'absent').length },
+                      { label: 'Absent (with apology)', colour: 'red', icon: 'times', count: part.members.filter(attendance => attendance.response === 'absent_apology').length },
+                      { label: 'Unknown', colour: 'gray', icon: 'question', count: part.members.filter(attendance => attendance.response === 'unknown').length },
                     ].map(({ label, colour, icon, count}) => (
                       <div className="w-1/2 md:w-1/5 text-center" key={label}>
-                        <Icon icon={icon} className={`text-${colour}`} />
-                        <p className={`font-semibold text-${colour}`}>{label}</p>
+                        <AttendanceTag label={label} icon={icon} colour={colour} size="md" className="font-bold block" />
                         {count}
                       </div>
                     ))}
