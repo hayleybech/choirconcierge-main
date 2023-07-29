@@ -2,7 +2,7 @@ import React, {useMemo} from "react";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../../../../../tailwind.config";
 
-const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelected }) => {
+const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelected, showHeight, singerHeight, isMe }) => {
 	const fullConfig = resolveConfig(tailwindConfig);
 	const labelHeight = 15;
 	const labelWidth = 35;
@@ -51,15 +51,22 @@ const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelecte
 				y={labelPosition.y}
 				width={labelPosition.width}
 				height={labelPosition.height}
-				style={{ fill: '#eee', rx: '10px' }}
+				style={{
+					fill: isMe ? fullConfig.theme.colors.purple[500] : '#eee',
+					rx: '10px'
+			}}
 			/>
 			<text
 				x={namePosition.x}
 				y={namePosition.y}
 				textAnchor="middle"
-				style={{ fontSize: '12px', fontWeight: 600 }}
+				style={{
+					fill: isMe ? 'white' : '#333',
+					fontSize: '12px',
+					fontWeight: 600,
+			}}
 			>
-				{ singerInitials }
+				{ showHeight ? `${singerHeight}cm` : singerInitials }
 			</text>
 			<defs>
 				<pattern

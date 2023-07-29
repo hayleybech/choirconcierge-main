@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useForm} from "@inertiajs/inertia-react";
+import { useForm, usePage } from "@inertiajs/inertia-react";
 import FormSection from "../../components/FormSection";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
@@ -13,8 +13,13 @@ import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import useRoute from "../../hooks/useRoute";
 
-const RiserStackForm = ({ stack, voiceParts }) => {
+const RiserStackForm = ({ stack, voiceParts, singers }) => {
     const { route } = useRoute();
+
+    const { user } = usePage().props;
+
+    const [showHeights, setShowHeights] = useState(false);
+
     const { data, setData, post, put, processing, errors } = useForm({
         title: stack?.title ?? '',
         rows: stack?.rows ?? 4,
@@ -30,28 +35,21 @@ const RiserStackForm = ({ stack, voiceParts }) => {
     }
 
     const [selectedSinger, setSelectedSinger] = useState(null);
-    const [holdingAreaSingers, setHoldingAreaSingers] = useState(voiceParts);
+    const [holdingAreaSingers, setHoldingAreaSingers] = useState(singers);
 
-    function removeSingerFromHoldingArea(singer){
+    function removeSingerFromHoldingArea(singerRemoving){
         setHoldingAreaSingers(
-            holdingAreaSingers.map(part => {
-                part.members = part.members.filter(partSinger => partSinger.id !== singer.id);
-                return part;
-            })
+          holdingAreaSingers.filter(singer => singer.id !== singerRemoving.id)
         );
     }
 
     function moveSingerToHoldingArea(singer){
         removeSingerFromStack(singer);
 
-        setHoldingAreaSingers(
-            holdingAreaSingers.map(part => {
-                if(part.id === singer.voice_part_id) {
-                    part.members.push(singer);
-                }
-                return part;
-            })
-        );
+        setHoldingAreaSingers(holdingAreaSingers => {
+            holdingAreaSingers.push(singer)
+            return holdingAreaSingers;
+        });
     }
 
     function removeSingerFromStack(singer){
@@ -63,7 +61,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
 
             <div className="px-8">
                 <FormSection>
-                    <div className="sm:col-span-2">
+                    <div className="sm:col-span-3">
                         <Label label="Riser Stack Title" forInput="title" />
                         <TextInput name="title" value={data.title} updateFn={value => setData('title', value)} hasErrors={ !! errors['title'] } />
                         {errors.title && <Error>{errors.title}</Error>}
@@ -117,16 +115,27 @@ const RiserStackForm = ({ stack, voiceParts }) => {
                         />
                     </div>
 
+                    <div className="sm:col-span-1">
+                        <DetailToggle
+                          label="Show heights"
+                          description="Show the heights of singers"
+                          value={showHeights}
+                          updateFn={value => setShowHeights(value)}
+                        />
+                    </div>
+
                 </FormSection>
             </div>
 
             <div className="flex">
                 <div className="w-1/3 border-r border-gray-200">
                     <RiserStackHoldingArea
-                        singersByVoicePart={holdingAreaSingers}
+                        voiceParts={voiceParts}
+                        singers={holdingAreaSingers}
                         setSelectedSinger={setSelectedSinger}
                         selectedSinger={selectedSinger}
                         moveSelectedSingerToHoldingArea={() => { moveSingerToHoldingArea(selectedSinger); setSelectedSinger(null); }}
+                        showHeights={showHeights}
                     />
                 </div>
 
@@ -144,6 +153,8 @@ const RiserStackForm = ({ stack, voiceParts }) => {
                         setSelectedSinger={setSelectedSinger}
                         selectedSinger={selectedSinger}
                         removeSingerFromHoldingArea={removeSingerFromHoldingArea}
+                        showHeights={showHeights}
+                        currentUserId={user.id}
                     />
                 </div>
             </div>
