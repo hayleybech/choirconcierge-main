@@ -305,7 +305,6 @@ class CriticalUserSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ],
         ]);
-        $singer_categories = SingerCategory::all();
 
         /*
          * STEP 1b - Insert Voice Parts
@@ -320,33 +319,12 @@ class CriticalUserSeeder extends Seeder
         /*
          * STEP 2 - Insert Admin
          */
-        $user = User::firstOrCreate([
+        User::firstOrCreate([
             'email' => 'hayleybech@gmail.com',
         ], [
             'first_name' => 'Hayley',
             'last_name' => 'Bech',
             'password' => bcrypt(Str::random(30)),
         ]);
-
-        // Create matching singer for admin
-        $member = $user->memberships()->create([
-            'onboarding_enabled' => 0,
-        ]);
-        $roles = Role::all()
-            ->pluck('id')
-            ->toArray();
-        $member->roles()->attach($roles);
-
-        // Attach admin to member category
-        $cat_member = $singer_categories->firstWhere('name', '=', 'Members');
-        $member->category()->associate($cat_member);
-
-        // Attach admin to a voice part
-        tenant()->ensembles?->each(fn (Ensemble $ensemble) =>
-            $ensemble->enrolments()->create([
-                'membership_id' => $member->id,
-                'voice_part_id' => VoicePart::firstWhere('title', '=', 'Tenor')->id,
-            ])
-        );
     }
 }
