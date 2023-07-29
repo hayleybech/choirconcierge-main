@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Song;
 use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
@@ -18,14 +18,19 @@ class LearningStatusController extends Controller
 
         $song->createMissingLearningRecords();
 
-        $song->load(['singers' => function ($query) {
-            $query->active()->with('user', 'voice_part');
+        $song->load(['members' => function ($query) {
+            $query->active()->with('user', 'enrolments.voice_part');
         }]);
 
         $voice_parts = VoicePart::all()
             ->push(VoicePart::getNullVoicePart())
             ->map(function ($part) use ($song) {
-                $part->singers = $song->singers->where('voice_part_id', $part->id)->values();
+                $part->members = $song->members
+                    ->filter(fn($member) => $member
+                        ->enrolments
+                        ->contains(fn($enrolment) => $enrolment->voice_part_id === $part->id)
+                    )
+                    ->values();
 
                 return $part;
             });
@@ -36,11 +41,11 @@ class LearningStatusController extends Controller
         ]);
     }
 
-    public function update(Song $song, Singer $singer, Request $request)
+    public function update(Song $song, Membership $singer, Request $request)
     {
         $this->authorize('update', $song);
 
-        $song->singers()->updateExistingPivot($singer->id, ['status' => $request->input('status')]);
+        $song->members()->updateExistingPivot($singer->id, ['status' => $request->input('status')]);
 
         return redirect()->route('songs.singers.index', $song);
     }

@@ -118,7 +118,7 @@ const AttendanceReport = ({
                                 <tr>
                                     <th colSpan="100000" className="text-left px-5 py-3 bg-gray-100 border border-gray-300">{voicePart.title}</th>
                                 </tr>
-                                {voicePart.singers.map((singer) => (
+                                {voicePart.members.map((singer) => (
                                     <tr key={singer.id}>
                                         <th className="text-left whitespace-nowrap border border-gray-300">
                                             <a href={route('singers.show', {singer})} className="flex flex-nowrap items-center px-5 py-3 hover:bg-purple-100">

@@ -2,8 +2,10 @@
 
 namespace Database\Seeders\Critical;
 
+use App\Models\Enrolment;
+use App\Models\Ensemble;
 use App\Models\Role;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
@@ -327,21 +329,24 @@ class CriticalUserSeeder extends Seeder
         ]);
 
         // Create matching singer for admin
-        $singer = $user->singers()->create([
+        $member = $user->memberships()->create([
             'onboarding_enabled' => 0,
         ]);
         $roles = Role::all()
             ->pluck('id')
             ->toArray();
-        $singer->roles()->attach($roles);
+        $member->roles()->attach($roles);
 
         // Attach admin to member category
         $cat_member = $singer_categories->firstWhere('name', '=', 'Members');
-        $singer->category()->associate($cat_member);
+        $member->category()->associate($cat_member);
 
         // Attach admin to a voice part
-        $part = VoicePart::firstWhere('title', '=', 'Tenor');
-        $singer->voice_part_id = $part->id;
-        $singer->save();
+        tenant()->ensembles?->each(fn (Ensemble $ensemble) =>
+            $ensemble->enrolments()->create([
+                'membership_id' => $member->id,
+                'voice_part_id' => VoicePart::firstWhere('title', '=', 'Tenor')->id,
+            ])
+        );
     }
 }

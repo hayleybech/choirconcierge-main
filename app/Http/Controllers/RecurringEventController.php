@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EventRequest;
 use App\Models\Event;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Notifications\EventUpdated;
 use App\Services\DeleteRecurringEvent;
 use App\Services\UpdateRecurringEvent;
@@ -53,7 +53,7 @@ class RecurringEventController extends Controller
 
         if ($request->input('send_notification')) {
             Notification::send(
-                Singer::active()->with('user')->get()->map(fn ($singer) => $singer->user),
+                Membership::active()->with('user')->get()->map(fn ($singer) => $singer->user),
                 new EventUpdated($event)
             );
         }

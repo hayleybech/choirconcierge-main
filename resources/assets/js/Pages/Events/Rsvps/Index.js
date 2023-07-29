@@ -31,9 +31,9 @@ const Index = ({ event, voiceParts }) => {
           <div key={part.id} className="relative">
             <div className="flex bg-white py-4 border-b border-gray-200">
               {[
-                { label: 'Going', colour: 'emerald-500', icon: 'check', count: part.singers.filter(singer => singer.rsvp.response === 'yes').length },
-                { label: 'Unknown', colour: 'amber-500', icon: 'question', count: part.singers.filter(singer => singer.rsvp.response === 'unknown').length },
-                { label: 'Not going', colour: 'red-500', icon: 'times', count: part.singers.filter(singer => singer.rsvp.response === 'no').length },
+                { label: 'Going', colour: 'emerald-500', icon: 'check', count: part.singers.filter(singer => singer.membership.rsvp.response === 'yes').length },
+                { label: 'Unknown', colour: 'amber-500', icon: 'question', count: part.singers.filter(singer => singer.membership.rsvp.response === 'unknown').length },
+                { label: 'Not going', colour: 'red-500', icon: 'times', count: part.singers.filter(singer => singer.membership.rsvp.response === 'no').length },
               ].map(({ label, colour, icon, count}) => (
                 <div className="w-1/3 text-center" key={label}>
                   <Icon icon={icon} className={`text-${colour}`} />
@@ -48,12 +48,12 @@ const Index = ({ event, voiceParts }) => {
                   <div className="relative px-6 py-5 flex flex-col sm:flex-row items-center space-y-3 sm:space-x-3 hover:bg-gray-50 justify-between items-stretch sm:items-center">
                     <div className="flex space-x-2">
                       <div className="shrink-0">
-                        <img className="h-12 w-12 rounded-lg" src={singer.user.avatar_url} alt={singer.user.name}/>
+                        <img className="h-12 w-12 rounded-lg" src={singer.membership.user.avatar_url} alt={singer.membership.user.name}/>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900">{singer.user.name}</p>
+                        <p className="text-sm font-medium text-gray-900">{singer.membership.user.name}</p>
                         <p className="text-sm">
-                          <RsvpTag icon={singer.rsvp.icon} label={singer.rsvp.label} colour={singer.rsvp.colour} />
+                          <RsvpTag icon={singer.membership.rsvp.icon} label={singer.membership.rsvp.label} colour={singer.membership.rsvp.colour} />
                         </p>
                       </div>
                     </div>

@@ -2,11 +2,11 @@
 
 namespace App\Models\Policies;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SingerPolicy
+class MembershipPolicy
 {
     use HandlesAuthorization;
 
@@ -17,11 +17,11 @@ class SingerPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($ability !== 'delete' && $user->singer->hasRole('Admin')) {
+        if ($ability !== 'delete' && $user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -37,20 +37,20 @@ class SingerPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->singer->hasAbility('singers_view');
+        return $user->membership->hasAbility('singers_view');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param User       $user
-     * @param Singer $singer
+     * @param Membership $singer
      *
      * @return mixed
      */
-    public function view(User $user, Singer $singer)
+    public function view(User $user, Membership $singer)
     {
-        return $user->singer->is($singer) || $user->singer->hasAbility('singers_view');
+        return $user->membership->is($singer) || $user->membership->hasAbility('singers_view');
     }
 
     /**
@@ -62,48 +62,48 @@ class SingerPolicy
      */
     public function create(User $user)
     {
-        return $user->singer->hasAbility('singers_create');
+        return $user->membership->hasAbility('singers_create');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param User       $user
-     * @param Singer $singer
+     * @param Membership $singer
      *
      * @return mixed
      */
-    public function update(User $user, Singer $singer)
+    public function update(User $user, Membership $singer)
     {
-        return $user->singer->hasAbility('singers_update');
+        return $user->membership->hasAbility('singers_update');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param User       $user
-     * @param Singer $singer
+     * @param Membership $singer
      *
      * @return mixed
      */
-    public function delete(User $user, Singer $singer)
+    public function delete(User $user, Membership $singer)
     {
-        if ($user->singer->is($singer)) {
+        if ($user->membership->is($singer)) {
             return false;
         }
 
-        return $user->singer->hasAbility('singers_delete');
+        return $user->membership->hasAbility('singers_delete');
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param User       $user
-     * @param Singer $singer
+     * @param Membership $singer
      *
      * @return mixed
      */
-    public function restore(User $user, Singer $singer)
+    public function restore(User $user, Membership $singer)
     {
         return false;
     }
@@ -112,11 +112,11 @@ class SingerPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param User       $user
-     * @param Singer $singer
+     * @param Membership $singer
      *
      * @return mixed
      */
-    public function forceDelete(User $user, Singer $singer)
+    public function forceDelete(User $user, Membership $singer)
     {
         return false;
     }

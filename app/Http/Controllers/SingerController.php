@@ -7,9 +7,10 @@ use App\CustomSorts\SingerStatusSort;
 use App\CustomSorts\SingerVoicePartSort;
 use App\Http\Requests\CreateSingerRequest;
 use App\Http\Requests\EditSingerRequest;
+use App\Models\Ensemble;
 use App\Models\Placement;
 use App\Models\Role;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
@@ -28,7 +29,7 @@ class SingerController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Singer::class);
+        $this->authorizeResource(Membership::class, 'singer');
     }
 
     public function index(Request $request): InertiaResponse
@@ -41,6 +42,7 @@ class SingerController extends Controller
             'defaultStatus' => $defaultStatus,
             'voiceParts' => VoicePart::all()->values(),
             'roles' => Role::all()->values(),
+            'ensembles' => Ensemble::all()->values(),
         ]);
     }
 
@@ -56,7 +58,7 @@ class SingerController extends Controller
     {
         $user = $this->maybeCreateUser($request);
 
-        $singer = Singer::create($request->safe()
+        $singer = Membership::create($request->safe()
             ->merge(['user_id' => $user->id])
             ->only([
                 'user_id',
@@ -65,7 +67,6 @@ class SingerController extends Controller
                 'referrer',
                 'membership_details',
                 'joined_at',
-                'voice_part_id',
                 'user_roles',
             ])
         );
@@ -79,11 +80,18 @@ class SingerController extends Controller
             ->with(['status' => 'Singer created. ']);
     }
 
-    public function show(Singer $singer): InertiaResponse
+    public function show(Membership $singer): InertiaResponse
     {
 		$singer->append('fee_status');
 
-        $singer->load('user', 'voice_part', 'category', 'roles', 'placement', 'tasks');
+        $singer->load([
+            'user',
+            'enrolments' => ['voice_part', 'ensemble'],
+            'category',
+            'roles',
+            'placement',
+            'tasks',
+        ]);
 
         $singer->can = [
             'update_singer' => auth()->user()?->can('update', $singer),
@@ -95,21 +103,24 @@ class SingerController extends Controller
         return Inertia::render('Singers/Show', [
             'singer' => $singer,
             'categories' => SingerCategory::all(),
+            'voiceParts' => VoicePart::all(),
+            'ensembles' => Ensemble::whereDoesntHave('enrolments', fn(Builder $query) =>
+                $query->where('membership_id', $singer->id)
+            )->get(),
         ]);
     }
 
-    public function edit(Singer $singer): InertiaResponse
+    public function edit(Membership $singer): InertiaResponse
     {
-        $singer->load('user', 'voice_part', 'category', 'roles');
+        $singer->load('user', 'category', 'roles');
 
         return Inertia::render('Singers/Edit', [
-            'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'singer' => $singer,
         ]);
     }
 
-    public function update(Singer $singer, EditSingerRequest $request): RedirectResponse
+    public function update(Membership $singer, EditSingerRequest $request): RedirectResponse
     {
         $singer->update($request->safe()
             ->merge(['user_roles' => array_merge(
@@ -123,7 +134,6 @@ class SingerController extends Controller
                 'membership_details',
                 'joined_at',
                 'onboarding_enabled',
-                'voice_part_id',
                 'paid_until',
             ])
         );
@@ -133,7 +143,7 @@ class SingerController extends Controller
             ->with(['status' => 'Singer saved. ']);
     }
 
-    public function destroy(Singer $singer): RedirectResponse
+    public function destroy(Membership $singer): RedirectResponse
     {
         $singer->delete();
 
@@ -146,8 +156,8 @@ class SingerController extends Controller
     {
         $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
 
-        return QueryBuilder::for(Singer::class)
-            ->with(['tasks', 'category', 'voice_part', 'user'])
+        return QueryBuilder::for(Membership::class)
+            ->with(['tasks', 'category', 'user', 'enrolments' => ['voice_part', 'ensemble'],])
             ->allowedFilters([
                 AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query
                     ->whereHas('user', fn(Builder $query) => $query
@@ -155,7 +165,16 @@ class SingerController extends Controller
                     )),
                 AllowedFilter::exact('category.id')
                     ->default([$defaultStatus]),
-                AllowedFilter::exact('voice_part.id'),
+                AllowedFilter::callback('enrolments.voice_part_id', fn(Builder $query, $value) => $query
+                    ->whereHas('enrolments', fn(Builder $query) => $query
+                        ->where('voice_part_id','=', $value)
+                    )
+                ),
+                AllowedFilter::callback('enrolments.ensemble_id', fn(Builder $query, $value) => $query
+                    ->whereHas('enrolments', fn(Builder $query) => $query
+                        ->where('ensemble_id','=', $value)
+                    )
+                ),
                 AllowedFilter::exact('roles.id'),
                 AllowedFilter::callback('fee_status', fn(Builder $query, $value) => match ($value) {
                     'unknown' => $query->whereNull('paid_until'),

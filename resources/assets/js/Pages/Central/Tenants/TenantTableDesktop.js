@@ -6,7 +6,7 @@ import {Link} from "@inertiajs/inertia-react";
 
 const TenantTableDesktop = ({ tenants }) => {
     const headings = collect({
-        choir_name: 'Choir Name',
+        name: 'Organisation Name',
         domains: 'Domains',
         timezone: 'Timezone',
         renews_at: 'Fees Due',
@@ -20,7 +20,7 @@ const TenantTableDesktop = ({ tenants }) => {
                 <tr key={tenant.id}>
                     <TableCell>
                         <Link href={route('central.tenants.show', {tenant})} className="text-purple-600 hover:text-purple-800 focus:text-purple-800">
-                            {tenant.choir_name}
+                            {tenant.name}
                         </Link>
                     </TableCell>
                     <TableCell>{tenant.domains.map(domainItem => domainItem.domain).join()}</TableCell>

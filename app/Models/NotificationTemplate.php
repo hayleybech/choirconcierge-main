@@ -50,6 +50,7 @@ class NotificationTemplate extends Model
             '%%singer.email%%' => '<code class="text-brand-blue">%%singer.email%%</code>',
             '%%placement.create%%' => '<code class="text-brand-blue">%%placement.create%%</code>',
             '%%choir.name%%' => '<code class="text-brand-blue">%%choir.name%%</code>',
+            '%%organisation.name%%' => '<code class="text-brand-blue">%%organisation.name%%</code>',
             '%%singer.dob%%' => '<code class="text-brand-blue">%%singer.dob%%</code>',
             '%%singer.age%%' => '<code class="text-brand-blue">%%singer.age%%</code>',
             '%%singer.phone%%' => '<code class="text-brand-blue">%%singer.phone%%</code>',
@@ -83,14 +84,14 @@ class NotificationTemplate extends Model
                 $recipients[] = User::find($recipient_id);
                 break;
             case 'singer':
-                $recipients[] = Singer::find($recipient_id);
+                $recipients[] = Membership::find($recipient_id);
                 break;
         }
 
         return $recipients;
     }
 
-    public function generateBody(Singer $singer, User $user = null): string
+    public function generateBody(Membership $singer, User $user = null): string
     {
         $replacements = [
             '%%singer.name%%' => $singer->user->name,
@@ -98,7 +99,8 @@ class NotificationTemplate extends Model
             '%%singer.lname%%' => $singer->user->last_name,
             '%%singer.email%%' => $singer->user->email,
             '%%placement.create%%' => '', //route( 'placement.create', $singer, $this->task ),
-            '%%choir.name%%' => tenant('choir_name') ?? 'Choir Name',
+            '%%choir.name%%' => tenant('name') ?? 'Organisation Name',
+            '%%organisation.name%%' => tenant('name') ?? 'Organisation Name',
         ];
         $profile_replacements = [
             '%%singer.dob%%' => $singer->user->dob,
@@ -108,7 +110,11 @@ class NotificationTemplate extends Model
         $replacements = array_merge($replacements, $profile_replacements);
         if ($singer->placement) {
             $placement_replacements = [
-                '%%singer.section%%' => $singer->placement->voice_part,
+                '%%singer.section%%' => $singer->enrolments
+                    ->load('voice_part')
+                    ->map(fn($enrolment) => $enrolment->voice_part->title)
+                    ->implode(', ')
+                ,
             ];
             $replacements = array_merge($replacements, $placement_replacements);
         }
@@ -127,9 +133,9 @@ class NotificationTemplate extends Model
     }
 
     /**
-     * @param Singer $singer
+     * @param Membership $singer
      */
-    public function generateNotifications(Singer $singer): void
+    public function generateNotifications(Membership $singer): void
     {
         // Only generate in-app notifications for actual users
         if ($this->getRecipientType() === 'role' || $this->getRecipientType() === 'user') {

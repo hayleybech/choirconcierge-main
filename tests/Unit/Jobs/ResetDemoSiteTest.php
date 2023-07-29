@@ -81,6 +81,6 @@ it('re-uploads the demo logo', function () {
     $job = new App\Jobs\ResetDemoSite();
     $job->handle();
 
-    assertNotNull(Tenant::find('demo')->choir_logo);
-    Storage::disk('global-public')->assertExists('choir-logos/'. Tenant::find('demo')->choir_logo);
+    assertNotNull(Tenant::find('demo')->logo);
+    Storage::disk('global-public')->assertExists('choir-logos/'. Tenant::find('demo')->logo);
 });

@@ -24,6 +24,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property Collection<User> $users
+ * @property Collection<Membership> $members
  * @property Collection<Task> $tasks
  */
 class Role extends Model
@@ -104,9 +105,9 @@ class Role extends Model
         'notifications_delete',
     ];
 
-    public function singers(): BelongsToMany
+    public function members(): BelongsToMany
     {
-        return $this->belongsToMany(Singer::class, 'singers_roles');
+        return $this->belongsToMany(Membership::class, 'memberships_roles', 'role_id', 'membership_id');
     }
 
     /**
@@ -118,9 +119,9 @@ class Role extends Model
     }
 
     /*
-     * Get all groups this is a member of.
+     * Get all mailing lists this is a member of.
      */
-    public function memberships(): MorphMany
+    public function mailing_list_memberships(): MorphMany
     {
         return $this->morphMany(GroupMember::class, 'memberable');
     }

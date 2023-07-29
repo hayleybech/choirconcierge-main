@@ -59,7 +59,7 @@ const AccountForm = ({ }) => {
 
                     <div className="sm:col-span-6">
                         <Label label="Profile Picture" forInput="avatar" />
-                        <AvatarUpload currentImage={data.avatar ? URL.createObjectURL(data.avatar) : user.avatar_url} updateFn={value => setData('avatar', value)} />
+                        <AvatarUpload name="avatar" currentImage={data.avatar ? URL.createObjectURL(data.avatar) : user.avatar_url} updateFn={value => setData('avatar', value)} />
                     </div>
                     
                     <div className="sm:col-span-2">
@@ -202,7 +202,7 @@ const AccountForm = ({ }) => {
                 </FormSection>
 
                 <FormFooter>
-                    <ButtonLink href={route('singers.show', {singer: user.singer})}>Cancel</ButtonLink>
+                    <ButtonLink href={route('singers.show', {singer: user.membership})}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
 

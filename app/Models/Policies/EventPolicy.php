@@ -17,11 +17,11 @@ class EventPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -37,7 +37,7 @@ class EventPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->singer->hasAbility('events_view');
+        return $user->membership->hasAbility('events_view');
     }
 
     /**
@@ -50,7 +50,7 @@ class EventPolicy
      */
     public function view(User $user, Event $event)
     {
-        return $user->singer->hasAbility('events_view');
+        return $user->membership->hasAbility('events_view');
     }
 
     /**
@@ -62,7 +62,7 @@ class EventPolicy
      */
     public function create(User $user)
     {
-        return $user->singer->hasAbility('events_create');
+        return $user->membership->hasAbility('events_create');
     }
 
     /**
@@ -75,7 +75,7 @@ class EventPolicy
      */
     public function update(User $user, Event $event)
     {
-        return $user->singer->hasAbility('events_update');
+        return $user->membership->hasAbility('events_update');
     }
 
     /**
@@ -88,7 +88,7 @@ class EventPolicy
      */
     public function delete(User $user, Event $event)
     {
-        return $user->singer->hasAbility('events_delete');
+        return $user->membership->hasAbility('events_delete');
     }
 
     /**

@@ -17,10 +17,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property int $event_id
- * @property int $singer_id
+ * @property int $membership_id
  *
  * Relationships
- * @property Singer $singer
+ * @property Membership $member
  * @property Event $event
  *
  * Attributes
@@ -32,13 +32,13 @@ class Rsvp extends Model
 {
     use TenantTimezoneDates, HasFactory;
 
-    protected $fillable = ['singer_id', 'response', 'event_id'];
+    protected $fillable = ['membership_id', 'response', 'event_id'];
 
     protected $appends = ['label', 'colour', 'icon'];
 
-    public function singer(): BelongsTo
+    public function member(): BelongsTo
     {
-        return $this->belongsTo(Singer::class);
+        return $this->belongsTo(Membership::class, 'membership_id');
     }
 
     public function event(): BelongsTo

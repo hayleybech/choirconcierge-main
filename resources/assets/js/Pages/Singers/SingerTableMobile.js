@@ -23,7 +23,9 @@ const SingerTableMobile = ({ singers }) => {
                                     <SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
                                     <span className="text-sm font-medium text-purple-600 truncate">{singer.user.name}</span>
                                 </p>
-                                {singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}
+                                {singer.enrolments.length < 3 && singer.enrolments.map((enrolment) => (
+                                  enrolment.voice_part && <VoicePartTag key={enrolment.id} title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />
+                                ))}
                             </div>
                             <div className="flex items-center justify-between">
                                 <p className="mt-2 flex items-center text-sm text-gray-500 min-w-0">

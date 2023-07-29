@@ -1,7 +1,7 @@
 import React from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
-import {useForm, usePage} from "@inertiajs/inertia-react";
+import { Link, useForm, usePage } from "@inertiajs/inertia-react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import DetailToggle from "../../components/inputs/DetailToggle";
@@ -20,13 +20,14 @@ import Help from "../../components/inputs/Help";
 import ButtonGroup from "../../components/inputs/ButtonGroup";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
+import WarningAlert from "../../components/WarningAlert";
 
-const Edit = ({ voice_parts, roles, singer }) => {
+const Edit = ({ roles, singer }) => {
     const { route } = useRoute();
     const { can } = usePage().props;
 
     const { data, setData, put, processing, errors, transform } = useForm({
-        voice_part_id: singer.voice_part.id,
+        // voice_part_id: singer.voice_part.id,
         reason_for_joining: singer.reason_for_joining ?? '',
         referrer: singer.referrer ?? '',
         membership_details: singer.membership_details ?? '',
@@ -112,15 +113,15 @@ const Edit = ({ voice_parts, roles, singer }) => {
                     </FormSection>
                     )}
 
-                    {can['create_song'] && (
+                  {can['create_song'] && (
                     <FormSection title="Music Details" description="Voice part etc.">
-                        <div className="sm:col-span-6">
-                            <Label label="Voice part" forInput="voice_part_id" />
-                            <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
-                            {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
-                        </div>
+                      <div className="sm:col-span-6">
+                        <WarningAlert title="Voice part has moved">
+                          <p className="mb-2">Voice parts are now edited in the "Enrolments" section on the <Link className="text-purple-800 underline" href={route('singers.show', {singer})}>singer's profile</Link>.</p>
+                        </WarningAlert>
+                      </div>
                     </FormSection>
-                    )}
+                  )}
 
                     {can['manage_finances'] && (
                         <FormSection title="Financial Details" description="Fees etc.">

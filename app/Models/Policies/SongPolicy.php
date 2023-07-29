@@ -17,11 +17,11 @@ class SongPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -37,7 +37,7 @@ class SongPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->singer->hasAbility('songs_view');
+        return $user->membership->hasAbility('songs_view');
     }
 
     /**
@@ -51,13 +51,13 @@ class SongPolicy
     public function view(User $user, Song $song)
     {
         if ($song->status->title === 'Pending') {
-            return $user->singer->hasAbility('songs_update');
+            return $user->membership->hasAbility('songs_update');
         }
         if (! $song->show_for_prospects) {
-            return $user->singer->category->name === 'Members';
+            return $user->membership->category->name === 'Members';
         }
 
-        return $user->singer->hasAbility('songs_view');
+        return $user->membership->hasAbility('songs_view');
     }
 
     /**
@@ -69,7 +69,7 @@ class SongPolicy
      */
     public function create(User $user)
     {
-        return $user->singer->hasAbility('songs_create');
+        return $user->membership->hasAbility('songs_create');
     }
 
     /**
@@ -82,7 +82,7 @@ class SongPolicy
      */
     public function update(User $user, Song $song)
     {
-        return $user->singer->hasAbility('songs_update');
+        return $user->membership->hasAbility('songs_update');
     }
 
     /**
@@ -95,7 +95,7 @@ class SongPolicy
      */
     public function delete(User $user, Song $song)
     {
-        return $user->singer->hasAbility('songs_delete');
+        return $user->membership->hasAbility('songs_delete');
     }
 
     /**

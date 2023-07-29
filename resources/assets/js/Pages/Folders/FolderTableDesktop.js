@@ -183,7 +183,7 @@ const RenameFolderDialog = ({ isOpen, setIsOpen, folder }) => {
     const { route } = useRoute();
 
     const { data, setData, put, errors } = useForm({
-        title: document?.title ?? '',
+        title: folder?.title ?? '',
     });
 
     useEffect(() => {

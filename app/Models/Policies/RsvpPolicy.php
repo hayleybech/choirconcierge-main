@@ -17,11 +17,11 @@ class RsvpPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -30,12 +30,12 @@ class RsvpPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->singer->hasAbility('rsvps_view');
+        return $user->membership->hasAbility('rsvps_view');
     }
 
     public function view(User $user, Rsvp $rsvp): bool
     {
-        return $user->is($rsvp->singer->user) || $user->singer->hasAbility('rsvps_view');
+        return $user->is($rsvp->member->user) || $user->membership->hasAbility('rsvps_view');
     }
 
     public function create(User $user): bool
@@ -45,12 +45,12 @@ class RsvpPolicy
 
     public function update(User $user, Rsvp $rsvp): bool
     {
-        return $user->is($rsvp->singer->user);
+        return $user->is($rsvp->member->user);
     }
 
     public function delete(User $user, Rsvp $rsvp): bool
     {
-        return $user->is($rsvp->singer->user);
+        return $user->is($rsvp->member->user);
     }
 
     public function restore(User $user): bool

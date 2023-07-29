@@ -6,7 +6,7 @@ import Button from "../components/inputs/Button";
 import useRoute from "../hooks/useRoute";
 import {usePage} from "@inertiajs/inertia-react";
 
-const Show = ({ status, choirAdmins, isMember }) => {
+const Show = ({ status, orgAdmins, isMember }) => {
     const { tenant } = usePage().props;
     console.log(usePage().props);
 
@@ -34,7 +34,7 @@ const Show = ({ status, choirAdmins, isMember }) => {
     const callToAction = {
         403: <>
             If you think you should be allowed here, <br />
-            please contact one of your choir's admins.
+            please contact one of your organisation's admins.
         </>,
         404: "Check the address and try again.",
         500: "Try again. If the issue happens again, please contact us.",
@@ -52,7 +52,7 @@ const Show = ({ status, choirAdmins, isMember }) => {
     }[status];
 
     const extraDetails = {
-        403: isMember ? <ChoirAdmins admins={choirAdmins} /> : null,
+        403: isMember ? <OrganisationAdmins admins={orgAdmins} /> : null,
         404: tenant ? <PopularPages /> : null,
         500: null,
         503: null,
@@ -160,9 +160,9 @@ const SocialButtons = () => (
     </div>
 );
 
-const ChoirAdmins = ({ admins }) => (
+const OrganisationAdmins = ({ admins }) => (
     <div className="mt-12">
-        <h2 className="text-sm font-semibold text-gray-500 tracking-wide uppercase">Choir Site Admins</h2>
+        <h2 className="text-sm font-semibold text-gray-500 tracking-wide uppercase">Organisation Site Admins</h2>
         <ul role="list" className="mt-4 border-t border-b border-gray-200 divide-y divide-gray-200">
             {admins.map((singer) => (
                 <li key={singer.user.email} className="py-4 flex">

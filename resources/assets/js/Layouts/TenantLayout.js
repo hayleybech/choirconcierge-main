@@ -8,13 +8,11 @@ import { PlayerContext } from '../contexts/player-context';
 import { AudioPlayerProvider } from "react-use-audio-player"
 import ImpersonateUserModal from "../components/ImpersonateUserModal";
 import LayoutTopBar from "../components/LayoutTopBar";
-import SwitchChoirModal from "../components/SwitchChoirModal";
-import Button from "../components/inputs/Button";
-import Icon from "../components/Icon";
 import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
 import usePromptBeforeUnload from "../hooks/usePromptBeforeUnload";
 import useRoute from "../hooks/useRoute";
+import SwitchChoirMenu from "../components/SwitchChoirMenu";
 
 export default function TenantLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -47,13 +45,12 @@ export default function TenantLayout({ children }) {
         })),
     });
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
-    const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
 
     usePromptBeforeUnload(player.fileName || player.showFullscreen);
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
-    const { can, userChoirs, errors, flash } = usePage().props;
+    const { can, userChoirs, errors, flash, tenant } = usePage().props;
 
     const navFiltered = navigation
         .filter((item) => can[item.can])
@@ -72,23 +69,21 @@ export default function TenantLayout({ children }) {
         <PlayerContext.Provider value={player}>
             <div className="h-screen flex overflow-hidden bg-gray-100">
                 {isMobile ? (
-                    <SidebarMobile
-                        navigation={navFiltered}
-                        open={sidebarOpen}
-                        setOpen={setSidebarOpen}
-                        switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => { setSidebarOpen(false); setShowSwitchChoirModal(true); }} />}
-                    />
+                    <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
                 ) : (
                     <div className="flex shrink-0">
-                        <SidebarDesktop
-                            navigation={navFiltered}
-                            switchChoirButton={userChoirs.length > 1 && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
-                        />
+                        <SidebarDesktop navigation={navFiltered} />
                     </div>
                 )}
 
                 <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                    {player.showFullscreen || <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />}
+                    {player.showFullscreen || (
+                      <LayoutTopBar
+                          setSidebarOpen={setSidebarOpen}
+                          setShowImpersonateModal={setShowImpersonateModal}
+                          switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
+                        />
+                    )}
 
                     <AudioPlayerProvider>
                         <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
@@ -104,15 +99,7 @@ export default function TenantLayout({ children }) {
                 <ToastFlash errors={errors} flash={flash} />
 
                 <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
-                <SwitchChoirModal setIsOpen={setShowSwitchChoirModal} isOpen={showSwitchChoirModal} choirs={userChoirs} />
             </div>
         </PlayerContext.Provider>
     )
 }
-
-const SwitchChoirButton = ({ onClick }) => (
-    <Button variant="secondary" size="xs" className="mx-4" onClick={onClick}>
-        <Icon icon="exchange" mr />
-        Switch Choir
-    </Button>
-);

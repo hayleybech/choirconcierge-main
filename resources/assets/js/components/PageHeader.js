@@ -20,7 +20,7 @@ const PageHeader = ({ title, image, icon, meta = [], breadcrumbs, actions = [], 
                         <span>{title}</span>
                     </h2>
                     <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
-                        {meta.map((item, key) => (
+                        {meta.filter(item => item).map((item, key) => (
                             <div className="mt-2 flex items-center text-sm text-gray-500" key={key}>
                                 {item}
                             </div>

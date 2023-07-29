@@ -5,16 +5,16 @@ import classNames from "../classNames";
 import {Link, usePage} from "@inertiajs/inertia-react";
 import useRoute from "../hooks/useRoute";
 
-const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen }) => {
+const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu }) => {
     const { can, user, impersonationActive, tenant } = usePage().props;
     const { route } = useRoute();
 
     const userNavigation = tenant ? [
-        user.singer ? { name: 'Your Profile', href: route('singers.show', {singer: user.singer}), icon: 'user' } : null,
+        user.membership ? { name: 'Your Profile', href: route('singers.show', {singer: user.membership}), icon: 'user' } : null,
         { name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit' },
         { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
         { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
-        { name: 'Choir Settings', href: route('choir-settings.edit'), icon: 'cogs', hide: !can.update_tenant },
+        { name: 'Organisation Settings', href: route('organisation.edit'), icon: 'cogs', hide: !can.update_tenant },
         { name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' }
     ] : [
         { name: 'Edit Profile', href: route('central.accounts.edit'), icon: 'user-edit' },
@@ -33,31 +33,17 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen }) => {
                 <span className="sr-only">Open sidebar</span>
                 <Icon icon="bars" />
             </button>
-            <div className="flex-1 px-4 flex justify-between">
+            <div className="flex-1 pr-4 sm:px-4 flex justify-between">
                 <div className="flex-1 flex">
-                    {/*<form className="w-full flex lg:ml-0" action="#" method="GET">*/}
-                    {/*    <label htmlFor="search-field" className="sr-only">*/}
-                    {/*        Search*/}
-                    {/*    </label>*/}
-                    {/*    <div className="relative w-full text-gray-400 focus-within:text-gray-600">*/}
-                    {/*        <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">*/}
-                    {/*            <SearchIcon className="h-5 w-5" aria-hidden="true" />*/}
-                    {/*        </div>*/}
-                    {/*        <input*/}
-                    {/*            id="search-field"*/}
-                    {/*            className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"*/}
-                    {/*            placeholder="Search"*/}
-                    {/*            type="search"*/}
-                    {/*            name="search"*/}
-                    {/*        />*/}
-                    {/*    </div>*/}
-                    {/*</form>*/}
+                    <div className="grow sm:grow-0 flex">
+                        {switchChoirMenu}
+                    </div>
                 </div>
                 <div className="ml-4 flex items-center lg:ml-6">
 
-                    <a href="https://leanbe.ai/Choir%20Concierge/" target="_blank" className="text-gray-500 text-sm mx-2">
+                    <a href="https://portal.leanbe.ai/choir-concierge" target="_blank" className="text-gray-500 text-sm mx-2">
                         <Icon icon="bullhorn" mr />
-                        What's New
+                        <span className="hidden sm:inline">What's New</span>
                     </a>
 
                     {/* Profile dropdown */}

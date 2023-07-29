@@ -4,9 +4,9 @@
 @if(tenant())
 @component('mail::header', ['url' => '//'.tenant('host')])
 @if(tenant('logo_url'))
-<img src="{{ tenant('logo_url') }}" alt="{{ tenant('choir_name') ?? 'Choir Name' }}">
+<img src="{{ tenant('logo_url') }}" alt="{{ tenant('name') ?? 'Organisation Name' }}">
 @else
-{{ tenant('choir_name') }}
+{{ tenant('name') }}
 @endif
 @endcomponent
 @else

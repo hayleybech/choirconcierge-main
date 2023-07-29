@@ -7,7 +7,7 @@ const RiserStackHoldingArea = ({ singersByVoicePart, setSelectedSinger, selected
 		if(! selectedSinger){
 			return false;
 		}
-		return singersByVoicePart.some(part => part.singers.some(singer => singer.id === selectedSinger.id));
+		return singersByVoicePart.some(part => part.members.some(singer => singer.id === selectedSinger.id));
 	}
 
 	function toggleSelectedSinger(singer) {
@@ -25,7 +25,7 @@ const RiserStackHoldingArea = ({ singersByVoicePart, setSelectedSinger, selected
 						<h3 style={{ color: voicePart.colour }}>{voicePart.title}</h3>
 					</div>
 					<ul role="list" className="relative z-0 divide-y divide-gray-200">
-						{voicePart.singers.map((singer) => (
+						{voicePart.members.map((singer) => (
 							<li key={singer.id} >
 								<div className={classNames(
 									'relative px-6 py-5 flex items-center space-x-3',

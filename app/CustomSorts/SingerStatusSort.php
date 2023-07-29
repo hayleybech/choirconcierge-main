@@ -16,7 +16,7 @@ class SingerStatusSort implements Sort
             ->addSubSelect(
                 'status_title',
                 SingerCategory::select('name')
-                    ->whereRaw("`${prefix}singers`.`singer_category_id` = `${prefix}singer_categories`.`id`")
+                    ->whereRaw("`${prefix}memberships`.`singer_category_id` = `${prefix}singer_categories`.`id`")
             )
             ->orderBy('status_title', $descending ? 'desc' : 'asc');
     }

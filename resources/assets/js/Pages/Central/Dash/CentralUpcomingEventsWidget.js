@@ -44,7 +44,7 @@ const CentralUpcomingEventsWidget = ({ events }) => {
                                 <div className="flex items-center justify-between gap-1">
                                     <div>
                                         <div className="text-sm font-medium text-purple-800">{event.title}</div>
-                                        <div className="text-xs text-gray-500">{event.tenant.choir_name}</div>
+                                        <div className="text-xs text-gray-500">{event.tenant.name}</div>
                                     </div>
                                     <div className="text-sm hidden xl:block shrink-0">
                                         <DateTag date={event.call_time} format={isToday(event) ? 'TIME_24_SIMPLE' : 'DATE_MED'} />

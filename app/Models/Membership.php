@@ -32,7 +32,6 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $joined_at
  * @property Carbon $paid_until
  * @property int $singer_category_id
- * @property int $voice_part_id
  * @property int $user_id
  * @property int $tenant_id
  *
@@ -40,6 +39,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Task> $tasks
  * @property Placement $placement
  * @property SingerCategory $category
+ * @property Collection<Enrolment> $enrolments
  * @property User $user
  * @property VoicePart $voice_part
  * @property Collection<RiserStack> $riser_stacks
@@ -56,7 +56,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string $name
  * @property int $age
  */
-class Singer extends Model
+class Membership extends Model
 {
     use Notifiable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
@@ -66,7 +66,6 @@ class Singer extends Model
         'reason_for_joining',
         'referrer',
         'membership_details',
-        'voice_part_id',
         'joined_at',
 	    'paid_until',
     ];
@@ -81,7 +80,7 @@ class Singer extends Model
 
     public static function create(array $attributes = [])
     {
-        /** @var Singer $singer */
+        /** @var Membership $singer */
         $singer = static::query()->create($attributes);
 
         // Sync roles
@@ -89,6 +88,14 @@ class Singer extends Model
         $singer_roles[] = Role::firstWhere('name', 'User')->id;
         $singer->roles()->sync($singer_roles);
         $singer->save();
+
+        // Add default enrolment (if only one ensemble)
+        $ensembles = Ensemble::all();
+        if($ensembles->count() === 1) {
+            $singer->enrolments()->create([
+                'ensemble_id' => $ensembles->first()->id,
+            ]);
+        }
 
         return $singer;
     }
@@ -125,7 +132,7 @@ class Singer extends Model
      */
     public function tasks(): BelongsToMany
     {
-        return $this->belongsToMany(Task::class, 'singers_tasks')
+        return $this->belongsToMany(Task::class, 'memberships_tasks')
             ->withPivot('completed')
             ->withTimestamps();
     }
@@ -140,19 +147,19 @@ class Singer extends Model
         return $this->belongsTo(SingerCategory::class, 'singer_category_id');
     }
 
+    public function enrolments(): HasMany
+    {
+        return $this->hasMany(Enrolment::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function voice_part(): BelongsTo
-    {
-        return $this->belongsTo(VoicePart::class)->withDefault(['title' => 'No Part', 'colour' => '#9095a0']);
-    }
-
     public function riser_stacks(): BelongsToMany
     {
-        return $this->belongsToMany(RiserStack::class)
+        return $this->belongsToMany(RiserStack::class, 'riser_stack_membership')
             ->as('position')
             ->withPivot('row', 'column');
     }
@@ -169,7 +176,7 @@ class Singer extends Model
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'singers_roles');
+        return $this->belongsToMany(Role::class, 'memberships_roles');
     }
 
     public function songs(): BelongsToMany

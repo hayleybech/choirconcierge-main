@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;

@@ -17,11 +17,11 @@ class VoicePartPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -37,7 +37,7 @@ class VoicePartPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->singer->hasAbility('voice_parts_view');
+        return $user->membership->hasAbility('voice_parts_view');
     }
 
     /**
@@ -50,7 +50,7 @@ class VoicePartPolicy
      */
     public function view(User $user, VoicePart $voice_part)
     {
-        return $user->singer->hasAbility('voice_parts_view');
+        return $user->membership->hasAbility('voice_parts_view');
     }
 
     /**
@@ -62,7 +62,7 @@ class VoicePartPolicy
      */
     public function create(User $user)
     {
-        return $user->singer->hasAbility('voice_parts_create');
+        return $user->membership->hasAbility('voice_parts_create');
     }
 
     /**
@@ -75,7 +75,7 @@ class VoicePartPolicy
      */
     public function update(User $user, VoicePart $voice_part)
     {
-        return $user->singer->hasAbility('voice_parts_update');
+        return $user->membership->hasAbility('voice_parts_update');
     }
 
     /**
@@ -88,7 +88,7 @@ class VoicePartPolicy
      */
     public function delete(User $user, VoicePart $voice_part)
     {
-        return $user->singer->hasAbility('voice_parts_delete');
+        return $user->membership->hasAbility('voice_parts_delete');
     }
 
     /**

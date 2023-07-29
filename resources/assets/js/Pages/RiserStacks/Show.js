@@ -48,7 +48,7 @@ const Show = ({ stack }) => {
                 columns={parseInt(stack.columns)}
                 spotsOnFrontRow={parseInt(stack.front_row_length)}
                 frontRowOnFloor={stack.front_row_on_floor}
-                singerPositions={stack.singers}
+                singerPositions={stack.members}
                 width={1000}
                 height={500}
                 setSelectedSinger={() => {}}

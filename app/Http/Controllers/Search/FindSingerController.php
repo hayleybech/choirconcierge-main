@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
-use App\Models\Singer;
+use App\Models\Membership;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class FindSingerController extends Controller
             return Response::json([]);
         }
 
-        $formatted_results = Singer::query()
+        $formatted_results = Membership::query()
             ->with(['roles', 'user'])
             ->whereHas('user', function (Builder $query) use ($term) {
                 $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%$term%'");

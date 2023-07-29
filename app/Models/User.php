@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -63,9 +64,10 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property Collection<Role> $roles
- * @property Collection<GroupMember> $memberships
- * @property Collection<Singer> $singers
- * @property Singer $singer
+ * @property Collection<GroupMember> $mailing_list_memberships
+ * @property Collection<Membership> $memberships
+ * @property Collection<Enrolment> $enrolments
+ * @property Membership $membership
  * @property Tenant $default_tenant
  */
 class User extends Authenticatable implements HasMedia
@@ -105,7 +107,7 @@ class User extends Authenticatable implements HasMedia
      */
     protected $hidden = ['password', 'remember_token'];
 
-    protected $with = ['media', 'singer.roles'];
+    protected $with = ['media', 'membership.roles'];
 
     public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
 
@@ -148,25 +150,30 @@ class User extends Authenticatable implements HasMedia
     }
 
     // @todo MAYBE move to singer
-    /*
-     * Get all groups this is a member of.
-     */
-    public function memberships(): MorphMany
+    // Mailing List memberships
+    public function mailing_list_memberships(): MorphMany
     {
         return $this->morphMany(GroupMember::class, 'memberable');
     }
 
-    public function singers(): HasMany
+    // Organisation/Club memberships
+    public function memberships(): HasMany
     {
-        return $this->hasMany(Singer::class);
+        return $this->hasMany(Membership::class);
     }
 
-    public function singer(): HasOne
+    // The membership for the current logged-in organisation
+    public function membership(): HasOne
     {
-        return $this->hasOne(Singer::class)
+        return $this->hasOne(Membership::class)
             ->ofMany(['id' => 'max'], function ($query) {
                 $query->where('tenant_id', '=', tenancy()?->tenant?->id ?? null);
             });
+    }
+
+    public function enrolments(): HasManyThrough
+    {
+        return $this->hasManyThrough(Enrolment::class, Membership::class);
     }
 
     public function defaultTenant(): BelongsTo

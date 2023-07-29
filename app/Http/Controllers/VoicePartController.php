@@ -18,7 +18,7 @@ class VoicePartController extends Controller
     public function index(): Response
     {
         return Inertia::render('VoiceParts/Index', [
-            'parts' => VoicePart::withCount('singers')->get()->values(),
+            'parts' => VoicePart::withCount('enrolments as singers_count')->get()->values(),
         ]);
     }
 

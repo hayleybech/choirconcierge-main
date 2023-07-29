@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Song;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,13 +26,13 @@ class DashController extends Controller
             'birthdays' => $this->getBirthdays()->values(),
             'emptyDobs' => $this->getEmptyDobs(),
             'memberversaries' => $this->getMemberversaries()->values(),
-	        'feeStatus' => auth()->user()->singer?->fee_status,
+	        'feeStatus' => auth()->user()->membership?->fee_status,
         ]);
     }
 
     private function getMemberversaries()
     {
-        return Singer::query()
+        return Membership::query()
             ->with('user')
             ->active()
             ->memberversaries()
@@ -60,7 +60,7 @@ class DashController extends Controller
 
     private function getEmptyDobs()
     {
-        return Singer::query()
+        return Membership::query()
             ->with('user')
             ->emptyDobs()
             ->count();
@@ -69,7 +69,7 @@ class DashController extends Controller
     private function getBirthdays()
     {
         return User::query()
-            ->whereHas('singers', fn($query) => $query->active())
+            ->whereHas('memberships', fn($query) => $query->active())
             ->birthdays()
             ->get()
             ->append('birthday')

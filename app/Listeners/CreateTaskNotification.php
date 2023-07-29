@@ -26,6 +26,6 @@ class CreateTaskNotification
      */
     public function handle(TaskCompleted $event)
     {
-        $event->task->generateNotifications($event->singer);
+        $event->task->generateNotifications($event->member);
     }
 }

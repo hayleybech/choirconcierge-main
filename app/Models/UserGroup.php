@@ -285,7 +285,7 @@ class UserGroup extends Model
     {
         // @todo use queries instead
         return $this->$recipientType
-            ->flatMap(fn($role) => $role->singers()->with('user')->active()->get()
+            ->flatMap(fn($role) => $role->members()->with('user')->active()->get()
                 ->map(fn($singer) => $singer->user));
     }
 
@@ -297,8 +297,11 @@ class UserGroup extends Model
             ->toArray();
 
         return User::query()
-            ->whereHas('singers', fn ($singer_query) =>
-                $singer_query->active()->whereIn('voice_part_id', $voice_part_ids)
+            ->whereHas('memberships', fn ($query) => $query
+                ->active()
+                ->whereHas('enrolments', fn ($query) => $query
+                    ->whereIn('voice_part_id', $voice_part_ids)
+                )
             )
             ->get();
     }
@@ -310,7 +313,7 @@ class UserGroup extends Model
             ->pluck('id');
 
         return User::query()
-            ->whereHas('singers', fn ($singer_query) =>
+            ->whereHas('memberships', fn ($singer_query) =>
                 $singer_query->whereIn('singer_category_id', $cat_ids)
             )
             ->get();

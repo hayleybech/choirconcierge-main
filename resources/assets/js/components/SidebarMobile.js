@@ -1,12 +1,11 @@
 import {Dialog, Transition} from "@headlessui/react";
 import React, {Fragment} from "react";
-import {Link, usePage} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/inertia-react";
 import MainNavigation from "./MainNavigation";
 import Icon from "./Icon";
 import useRoute from "../hooks/useRoute";
 
-const SidebarMobile = ({ navigation, open, setOpen, switchChoirButton }) => {
-    const { tenant } = usePage().props;
+const SidebarMobile = ({ navigation, open, setOpen }) => {
     const { route } = useRoute();
 
     return (
@@ -54,21 +53,11 @@ const SidebarMobile = ({ navigation, open, setOpen, switchChoirButton }) => {
                             </div>
                         </Transition.Child>
 
-                        <Link href={route('central.dash')} className="shrink-0 flex justify-center items-center px-4 pb-6">
+                        <Link href={route('central.dash')} className="shrink-0 flex justify-center items-center px-4 mb-5">
                             <img src="/img/vibrant/logo.svg" alt="Choir Concierge" className="h-10 w-auto" />
                         </Link>
 
-                        {tenant && (
-                        <div className="shrink-0 flex justify-center items-center px-4 bg-gray-50 mb-4">
-                            <Link href={route('dash')} className="flex justify-center py-4 px-6 bg-gray-50">
-                                <img src={tenant.logo_url} alt={tenant.choir_name} className="max-h-32 w-auto" />
-                            </Link>
-                        </div>
-                        )}
-
-                        {switchChoirButton}
-
-                        <div className="mt-5 flex-1 h-0 overflow-y-auto">
+                        <div className="flex-1 h-0 overflow-y-auto">
                             <MainNavigation navigation={navigation} closeSidebar={() => setOpen(false)} />
                         </div>
                     </div>

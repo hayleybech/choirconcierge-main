@@ -32,7 +32,7 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
 
-            return $user->singer?->hasRole('Accounts Team') || $user->singer?->hasRole('Admin');
+            return $user->membership?->hasRole('Accounts Team') || $user->membership?->hasRole('Admin');
         });
     }
 }

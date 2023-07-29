@@ -3,26 +3,21 @@ import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import {usePage} from '@inertiajs/inertia-react';
 import LayoutTopBar from "../components/LayoutTopBar";
-import SwitchChoirModal from "../components/SwitchChoirModal";
-import Button from "../components/inputs/Button";
-import Icon from "../components/Icon";
 import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
 import centralNavigation from "./centralNavigation";
 import useRoute from "../hooks/useRoute";
+import SwitchChoirMenu from "../components/SwitchChoirMenu";
 
 export default function CentralLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { route } = useRoute();
 
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
-    const [showSwitchChoirModal, setShowSwitchChoirModal] = useState(false);
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
     const { can, userChoirs, errors, flash, tenant } = usePage().props;
-
-    const shouldShowChoirSwitcher = (tenant ? userChoirs.length > 1 : userChoirs.length > 0);
 
     const navFiltered = centralNavigation
         .filter((item) => can[item.can])
@@ -41,24 +36,20 @@ export default function CentralLayout({ children }) {
         <div className="h-screen flex overflow-hidden bg-gray-100">
             {isMobile ? (
                 <>
-                    <SidebarMobile
-                        navigation={navFiltered}
-                        open={sidebarOpen}
-                        setOpen={setSidebarOpen}
-                        switchChoirButton={shouldShowChoirSwitcher && <SwitchChoirButton onClick={() => { setSidebarOpen(false); setShowSwitchChoirModal(true); }} />}
-                    />
+                    <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
                 </>
             ) : (
                 <div className="flex shrink-0">
-                    <SidebarDesktop
-                        navigation={navFiltered}
-                        switchChoirButton={shouldShowChoirSwitcher && <SwitchChoirButton onClick={() => setShowSwitchChoirModal(true)}/>}
-                    />
+                    <SidebarDesktop navigation={navFiltered} />
                 </div>
             )}
 
             <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                <LayoutTopBar setSidebarOpen={setSidebarOpen} setShowImpersonateModal={setShowImpersonateModal} />
+                <LayoutTopBar
+                  setSidebarOpen={setSidebarOpen}
+                  setShowImpersonateModal={setShowImpersonateModal}
+                  switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
+                />
 
                 <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
                     {children}
@@ -68,14 +59,6 @@ export default function CentralLayout({ children }) {
             <ToastFlash errors={errors} flash={flash} />
 
             {/*<ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />*/}
-            <SwitchChoirModal setIsOpen={setShowSwitchChoirModal} isOpen={showSwitchChoirModal} choirs={userChoirs} />
         </div>
     )
 }
-
-const SwitchChoirButton = ({ onClick }) => (
-    <Button variant="secondary" size="xs" className="mx-4" onClick={onClick}>
-        <Icon icon="exchange" mr />
-        Switch Choir
-    </Button>
-);

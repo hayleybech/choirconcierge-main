@@ -17,11 +17,11 @@ class FolderPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -30,27 +30,27 @@ class FolderPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->singer->hasAbility('folders_view');
+        return $user->membership->hasAbility('folders_view');
     }
 
     public function view(User $user): bool
     {
-        return $user->singer->hasAbility('folders_view');
+        return $user->membership->hasAbility('folders_view');
     }
 
     public function create(User $user): bool
     {
-        return $user->singer->hasAbility('folders_create');
+        return $user->membership->hasAbility('folders_create');
     }
 
     public function update(User $user): bool
     {
-        return $user->singer->hasAbility('folders_update');
+        return $user->membership->hasAbility('folders_update');
     }
 
     public function delete(User $user): bool
     {
-        return $user->singer->hasAbility('folders_delete');
+        return $user->membership->hasAbility('folders_delete');
     }
 
     public function restore(): bool
