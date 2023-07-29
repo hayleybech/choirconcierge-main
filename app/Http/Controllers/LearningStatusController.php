@@ -37,7 +37,7 @@ class LearningStatusController extends Controller
 
         return Inertia::render('Songs/Learning/Index', [
             'song' => $song,
-            'voice_parts' => $voice_parts->values(),
+            'voiceParts' => $voice_parts->values(),
         ]);
     }
 
