@@ -13,6 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
+        DB::statement('ALTER TABLE '.DB::getTablePrefix().'memberships ENGINE = InnoDB');
+
         Schema::create('enrolments', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('membership_id');
@@ -22,7 +24,6 @@ return new class extends Migration
 
             $table->foreign('membership_id')->references('id')->on('memberships');
             $table->foreign('ensemble_id')->references('id')->on('ensembles');
-            $table->foreign('voice_part_id')->references('id')->on('voice_parts');
         });
 
         $ensembles = DB::table('ensembles')
