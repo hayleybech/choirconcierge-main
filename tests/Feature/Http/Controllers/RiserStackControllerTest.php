@@ -26,7 +26,7 @@ class RiserStackControllerTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('RiserStacks/Create')
-                ->has('voice_parts')
+                ->has('voiceParts')
             );
     }
 
@@ -59,7 +59,7 @@ class RiserStackControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('RiserStacks/Edit')
                 ->has('stack')
-                ->has('voice_parts')
+                ->has('voiceParts')
             );
     }
 

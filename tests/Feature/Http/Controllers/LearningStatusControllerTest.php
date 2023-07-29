@@ -32,7 +32,7 @@ class LearningStatusControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Learning/Index')
                 ->has('song')
-                ->has('voice_parts')
+                ->has('voiceParts')
             );
     }
 
