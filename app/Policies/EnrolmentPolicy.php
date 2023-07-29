@@ -37,12 +37,12 @@ class EnrolmentPolicy
     public function update(User $user, Enrolment $enrolment): bool
     {
         // @todo add a new ability specific to enrolments eg 'enrolments_update' so this can be customised per role
-        return $user->can('update', $enrolment->singer);
+        return $user->membership->hasAbility('singers_update');
     }
 
     public function delete(User $user, Enrolment $enrolment): bool
     {
         // @todo add a more specific ability check
-        return $user->can('update', $enrolment->singer);
+        return $user->membership->hasAbility('singers_update');
     }
 }

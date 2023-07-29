@@ -9,7 +9,7 @@ use function Pest\Laravel\put;
 
 uses(RefreshDatabase::class);
 
-it('update saves the voice part', function () {
+test('update saves the voice part', function () {
     actingAs($this->createUserWithRole('Membership Team'));
 
     $enrolment = Enrolment::factory()->create();
@@ -18,7 +18,7 @@ it('update saves the voice part', function () {
     put(the_tenant_route('singers.enrolments.update', [$enrolment->membership, $enrolment]), [
             'voice_part_id' => $part,
         ])
-        ->assertSessionHasNoErrors();
+        ->assertRedirect();
 
     assertDatabaseHas('enrolments', [
         'id' => $enrolment->id,
