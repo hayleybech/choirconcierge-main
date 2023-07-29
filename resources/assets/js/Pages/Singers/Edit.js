@@ -118,8 +118,6 @@ const Edit = ({ roles, singer }) => {
                       <div className="sm:col-span-6">
                         <WarningAlert title="Voice part has moved">
                           <p className="mb-2">Voice parts are now edited in the "Enrolments" section on the <Link className="text-purple-800 underline" href={route('singers.show', {singer})}>singer's profile</Link>.</p>
-
-                          <p className="mb-2">This change is part of our "Ensembles" update, allowing you to host multiple groups under the one organisation. </p>
                         </WarningAlert>
                       </div>
                     </FormSection>
