@@ -31,6 +31,7 @@ class RsvpController extends Controller
 				    'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
                 ],
 			])
+            ->whereHas('membership', fn ($query) => $query->active())
 			->get()
             ->map(function ($singer) {
                 $singer->membership->rsvp = $singer->membership->rsvps->first() ?? Rsvp::Null();
