@@ -41,7 +41,10 @@ const Show = ({ tenant }) => {
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('central.dash')},
                     { name: 'Tenants', url: route('central.tenants.index')},
-                    { name: tenant.name, url: route('centra.tenants.show', {tenant}) },
+                    { name: tenant.name, url: route('central.tenants.show', {tenant}) },
+                ]}
+                actions={[
+                  { label: 'Open', icon: 'sign-in-alt', url: route('dash', {tenant}), variant: 'primary' },
                 ]}
             />
 
