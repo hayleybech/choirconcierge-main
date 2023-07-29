@@ -16,6 +16,7 @@ const RiserStackSpots = ({
     setSelectedSinger,
     moveSelectedSingerTo,
     showHeights,
+    currentUserId,
 }) => {
     const spots = createSpots(rows);
 
@@ -108,6 +109,7 @@ const RiserStackSpots = ({
                             isSelected={selectedSinger?.id === spot.singer.id}
                             showHeight={showHeights}
                             singerHeight={Math.round(spot.singer.user.height)}
+                            isMe={spot.singer.user.id === currentUserId}
                         />
                     }
                </RiserStackSpot>

@@ -91,7 +91,7 @@ class RiserStackController extends Controller
                             $query->where('riser_stack_id', '=', $stack->id);
                         });
                 });
-            }])
+            }, 'enrolments.membership.user'])
             ->get()
             ->each(function($part) {
                 $part->members = $part->enrolments->map(function ($enrolment) {

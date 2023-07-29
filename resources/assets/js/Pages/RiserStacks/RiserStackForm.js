@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useForm} from "@inertiajs/inertia-react";
+import { useForm, usePage } from "@inertiajs/inertia-react";
 import FormSection from "../../components/FormSection";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
@@ -15,6 +15,8 @@ import useRoute from "../../hooks/useRoute";
 
 const RiserStackForm = ({ stack, voiceParts }) => {
     const { route } = useRoute();
+
+    const { user } = usePage().props;
 
     const [showHeights, setShowHeights] = useState(false);
 
@@ -158,6 +160,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
                         selectedSinger={selectedSinger}
                         removeSingerFromHoldingArea={removeSingerFromHoldingArea}
                         showHeights={showHeights}
+                        currentUserId={user.id}
                     />
                 </div>
             </div>

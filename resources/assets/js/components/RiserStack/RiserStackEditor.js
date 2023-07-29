@@ -16,6 +16,7 @@ const RiserStackEditor = ({
   setSelectedSinger,
   removeSingerFromHoldingArea,
   showHeights,
+  currentUserId,
 }) => {
     const originModifier = {
         x: 0.5,
@@ -76,6 +77,7 @@ const RiserStackEditor = ({
                     setSelectedSinger={setSelectedSinger}
                     moveSelectedSingerTo={(coords) => moveSingerToStack(coords, selectedSinger)}
                     showHeights={showHeights}
+                    currentUserId={currentUserId}
                 />
 
             </svg>
