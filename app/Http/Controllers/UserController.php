@@ -26,7 +26,6 @@ class UserController extends Controller
 
     public function index(): View
     {
-        //$users = User::all();
         $users = User::with('roles')->get();
         $roles_all = Role::all();
 
@@ -35,7 +34,7 @@ class UserController extends Controller
 
     public function addRoles(Request $request, $userid): RedirectResponse
     {
-        $user = \App\Models\User::find($userid);
+        $user = User::find($userid);
         $roles = $request->input('roles');
 
         $user->addRoles($roles);
@@ -45,7 +44,7 @@ class UserController extends Controller
 
     public function detachRole($userid, $role): RedirectResponse
     {
-        $user = \App\Models\User::find($userid);
+        $user = User::find($userid);
         $user->detachRole($role);
 
         return redirect('/users');
@@ -66,8 +65,8 @@ class UserController extends Controller
 
         foreach ($users as $user) {
             $role_string = '';
-            if ($user->singer) {
-                $role_string = $user->singer->roles->count() ? ' ['.$user->singer->roles->implode('name', ', ').']' : '';
+            if ($user->membership) {
+                $role_string = $user->membership->roles->count() ? ' ['.$user->membership->roles->implode('name', ', ').']' : '';
             }
 
             $formatted_results[] = [

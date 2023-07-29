@@ -3,7 +3,7 @@
 namespace App\Models\Policies;
 
 use App\Models\Placement;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -18,11 +18,11 @@ class PlacementPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -39,11 +39,11 @@ class PlacementPolicy
      */
     public function view(User $user, Placement $placement)
     {
-        if ($user->singer->is($placement->singer)) {
+        if ($user->membership->is($placement->member)) {
             return false;
         }
 
-        return $user->singer->hasAbility('singer_placements_view');
+        return $user->membership->hasAbility('singer_placements_view');
     }
 
     /**
@@ -53,13 +53,13 @@ class PlacementPolicy
      *
      * @return mixed
      */
-    public function create(User $user, Singer $singer)
+    public function create(User $user, Membership $singer)
     {
-        if ($user->singer->is($singer)) {
+        if ($user->membership->is($singer)) {
             return false;
         }
 
-        return $user->singer->hasAbility('singer_placements_create');
+        return $user->membership->hasAbility('singer_placements_create');
     }
 
     /**
@@ -72,10 +72,10 @@ class PlacementPolicy
      */
     public function update(User $user, Placement $placement)
     {
-        if ($user->singer->is($placement->singer)) {
+        if ($user->membership->is($placement->member)) {
             return false;
         }
 
-        return $user->singer->hasAbility('singer_placements_update');
+        return $user->membership->hasAbility('singer_placements_update');
     }
 }

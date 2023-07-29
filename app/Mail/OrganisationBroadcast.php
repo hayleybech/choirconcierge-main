@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 
-class ChoirBroadcast extends Mailable
+class OrganisationBroadcast extends Mailable
 {
     use Queueable, SerializesModels;
 

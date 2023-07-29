@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\CustomSorts\SongStatusSort;
 use App\Http\Requests\SongRequest;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Song;
-use App\Models\SongAttachmentCategory;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
 use App\Models\VoicePart;
@@ -32,13 +31,13 @@ class SongController extends Controller
 
     public function index(Request $request): InertiaResponse
     {
-        $includePending = auth()->user()?->isSuperAdmin || auth()->user()?->singer->hasAbility('songs_update');
+        $includePending = auth()->user()?->isSuperAdmin || auth()->user()?->membership->hasAbility('songs_update');
         $statuses = SongStatus::query()
             ->when(! $includePending, fn ($query) => $query->where('title', '!=', 'Pending'))
             ->get();
         $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
 
-        $includeNonAuditionSongs = auth()->user()?->isSuperAdmin || auth()->user()?->singer->category->name === 'Members';
+        $includeNonAuditionSongs = auth()->user()?->isSuperAdmin || auth()->user()?->membership->category->name === 'Members';
         $showForProspectsDefault = $includeNonAuditionSongs ? [false, true] : [true];
 
         return Inertia::render('Songs/Index', [
@@ -67,7 +66,7 @@ class SongController extends Controller
         $song = Song::create($request->safe()->except('send_notification'));
 
         if ($request->input('send_notification')) {
-            Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUploaded($song));
+            Notification::send(Membership::active()->with('user')->get()->pluck('user'), new SongUploaded($song));
         }
 
         return redirect()
@@ -77,21 +76,26 @@ class SongController extends Controller
 
     public function show(Song $song): InertiaResponse
     {
-        $assessment_ready_count = $song->singers()->active()->wherePivot('status', 'assessment-ready')->count();
-        $performance_ready_count = $song->singers()->active()->wherePivot('status', 'performance-ready')->count();
+        $assessment_ready_count = $song->members()->active()->wherePivot('status', 'assessment-ready')->count();
+        $performance_ready_count = $song->members()->active()->wherePivot('status', 'performance-ready')->count();
 
         $voice_parts_performance_ready_count = VoicePart::withCount([
-            'singers' => function (Builder $query) use ($song) {
-                $query->active();
+            'enrolments as singers_count' => function (Builder $query) use ($song) {
+                $query->whereHas('membership', function (Builder $query) {
+                    $query->active();
+                });
             },
-            'singers as performance_ready_count' => function (Builder $query) use ($song) {
+            'enrolments as performance_ready_count' => function (Builder $query) use ($song) {
                 $query
-                    ->active()
-                    ->with('songs')
-                    ->whereHas('songs', function (Builder $query) use ($song) {
-                        $query->where('songs.id', $song->id)
-                            ->where('singer_song.status', 'performance-ready');
-                    });
+                    ->whereHas('membership', function (Builder $query) use ($song) {
+                        $query
+                            ->active()
+                            ->whereHas('songs', function (Builder $query) use ($song) {
+                                $query->where('songs.id', $song->id)
+                                    ->where('membership_song.status', 'performance-ready');
+                            });
+                    })
+                    ->with('songs');
             },
         ])->get();
 
@@ -118,7 +122,7 @@ class SongController extends Controller
             'status_count' => [
                 'performance_ready' => $performance_ready_count,
                 'assessment_ready' => $assessment_ready_count,
-                'learning' => Singer::active()->count() - $assessment_ready_count - $performance_ready_count,
+                'learning' => Membership::active()->count() - $assessment_ready_count - $performance_ready_count,
             ],
             'voice_parts_count' => [
                 'performance_ready' => $voice_parts_performance_ready_count,
@@ -141,7 +145,7 @@ class SongController extends Controller
         $song->update($request->safe()->except('send_notification'));
 
         if ($request->input('send_notification')) {
-            Notification::send(Singer::active()->with('user')->get()->pluck('user'), new SongUpdated($song));
+            Notification::send(Membership::active()->with('user')->get()->pluck('user'), new SongUpdated($song));
         }
 
         return redirect()

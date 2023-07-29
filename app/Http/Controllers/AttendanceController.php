@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Enrolment;
 use App\Models\Event;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\VoicePart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,15 +20,21 @@ class AttendanceController extends Controller
 
         $event->createMissingAttendanceRecords();
 
-        $event->load(['attendances' => fn ($query) => $query->with('singer.user')->whereHas('singer', fn ($query) => $query->active())]);
+        $event->load([
+            'attendances' => fn ($query) => $query
+                ->with(['member' => ['user', 'enrolments']])
+                ->whereHas('member', fn ($query) => $query->active())
+        ]);
 
-        $event->attendances->each(fn ($attendance) => $attendance->singer->user->append('avatar_url'));
+        $event->attendances->each(fn ($attendance) => $attendance->member->user->append('avatar_url'));
 
         $voice_parts = VoicePart::all()
             ->push(VoicePart::getNullVoicePart())
             ->map(function ($part) use ($event) {
-                $part->singers = $event->attendances
-                    ->filter(fn ($attendance) => $attendance->singer->voice_part_id === $part->id)
+                $part->members = $event->attendances
+                    ->filter(fn ($attendance) => $attendance->member->enrolments
+                        ->contains(fn(Enrolment $enrolment) => $enrolment->voice_part_id === $part->id)
+                    )
                     ->values();
 
                 return $part;
@@ -39,7 +46,7 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function update(Event $event, Singer $singer, Request $request): RedirectResponse
+    public function update(Event $event, Membership $singer, Request $request): RedirectResponse
     {
         $this->authorize('create', Attendance::class);
 
@@ -49,7 +56,7 @@ class AttendanceController extends Controller
 
         $event->attendances()
             ->updateOrCreate(
-                ['singer_id' => $singer->id],
+                ['membership_id' => $singer->id],
                 [
                     'response' => $request->input('response'),
                     'absent_reason' => $request->input('absent_reason'),
@@ -67,12 +74,12 @@ class AttendanceController extends Controller
 
         $absent_reason = $request->input('absent_reason');
         $responses = $request->input('attendance_response');
-        foreach ($responses as $singer_id => $response) {
+        foreach ($responses as $membership_id => $response) {
             $event->attendances()->updateOrCreate(
-                ['singer_id' => $singer_id],
+                ['membership_id' => $membership_id],
                 [
                     'response' => $response,
-                    'absent_reason' => $absent_reason[$singer_id],
+                    'absent_reason' => $absent_reason[$membership_id],
                 ],
             );
         }

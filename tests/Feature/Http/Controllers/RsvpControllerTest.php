@@ -4,7 +4,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Rsvp;
-use App\Models\Singer;
+use App\Models\Membership;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
@@ -22,10 +22,10 @@ class RsvpControllerTest extends TestCase
      */
     public function destroy_redirects_back(): void
     {
-        $this->actingAs(Singer::factory()->create()->user);
+        $this->actingAs(Membership::factory()->create()->user);
 
         $event = Event::factory()
-            ->hasRsvps(['singer_id' => Auth::user()->singer->id])
+            ->hasRsvps(['membership_id' => Auth::user()->membership->id])
             ->create();
 
         $response = $this->from(the_tenant_route('events.show', $event))->delete(
@@ -41,7 +41,7 @@ class RsvpControllerTest extends TestCase
      */
     public function store_redirects_back(): void
     {
-        $this->actingAs(Singer::factory()->create()->user);
+        $this->actingAs(Membership::factory()->create()->user);
 
         $event = Event::factory()->create();
 
@@ -58,7 +58,7 @@ class RsvpControllerTest extends TestCase
         $this->assertDatabaseHas('rsvps', [
             'response' => $rsvp_response,
             'event_id' => $event->id,
-            'singer_id' => Auth::user()->singer->id,
+            'membership_id' => Auth::user()->membership->id,
         ]);
     }
 
@@ -67,10 +67,10 @@ class RsvpControllerTest extends TestCase
      */
     public function update_redirects_back(): void
     {
-        $this->actingAs(Singer::factory()->create()->user);
+        $this->actingAs(Membership::factory()->create()->user);
 
         $event = Event::factory()
-            ->hasRsvps(['singer_id' => Auth::user()->singer->id])
+            ->hasRsvps(['membership_id' => Auth::user()->membership->id])
             ->create();
 
         $new_rsvp_response = $this->faker->randomElement(['yes', 'no']);
@@ -86,7 +86,7 @@ class RsvpControllerTest extends TestCase
         $this->assertDatabaseHas('rsvps', [
             'response' => $new_rsvp_response,
             'event_id' => $event->id,
-            'singer_id' => Auth::user()->singer->id,
+            'membership_id' => Auth::user()->membership->id,
         ]);
     }
 
@@ -95,7 +95,7 @@ class RsvpControllerTest extends TestCase
      */
     public function update_changes_the_oldest(): void
     {
-        $this->actingAs(Singer::factory()->create()->user);
+        $this->actingAs(Membership::factory()->create()->user);
 
         $event = Event::factory()->create();
 
@@ -104,13 +104,13 @@ class RsvpControllerTest extends TestCase
             ->sequence(
                 [
                     'response' => 'no',
-                    'singer_id' => Auth::user()->singer->id,
+                    'membership_id' => Auth::user()->membership->id,
                     'event_id' => $event->id,
                     'created_at' => now(),
                 ],
                 [
                     'response' => 'no',
-                    'singer_id' => Auth::user()->singer->id,
+                    'membership_id' => Auth::user()->membership->id,
                     'event_id' => $event->id,
                     'created_at' => now()->addMinute(),
                 ],
@@ -130,7 +130,7 @@ class RsvpControllerTest extends TestCase
             'id' => $event->rsvps()->oldest()->first()->id,
             'response' => 'yes',
             'event_id' => $event->id,
-            'singer_id' => Auth::user()->singer->id,
+            'membership_id' => Auth::user()->membership->id,
         ]);
     }
 }

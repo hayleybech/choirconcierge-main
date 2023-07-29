@@ -6,7 +6,7 @@ use App\CustomSorts\EventTypeSort;
 use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\EventType;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
 use Illuminate\Database\Eloquent\Collection;
@@ -46,7 +46,7 @@ class EventController extends Controller
         $event = Event::create($request->safe()->except('send_notification'));
 
         if ($request->input('send_notification')) {
-            Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventCreated($event));
+            Notification::send(Membership::active()->with('user')->get()->pluck('user'), new EventCreated($event));
         }
 
         return redirect()
@@ -115,7 +115,7 @@ class EventController extends Controller
         }
 
         if ($request->input('send_notification')) {
-            Notification::send(Singer::active()->with('user')->get()->pluck('user'), new EventUpdated($event));
+            Notification::send(Membership::active()->with('user')->get()->pluck('user'), new EventUpdated($event));
         }
 
         return redirect()

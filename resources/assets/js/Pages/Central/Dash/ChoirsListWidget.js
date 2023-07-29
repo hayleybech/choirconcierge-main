@@ -17,8 +17,11 @@ const ChoirsListWidget = () => {
                     {choirs.map((choir) => (
                         <TableMobileItem url={route('dash', {tenant: choir.id})} key={choir.id}>
                             <div className="flex items-center justify-between">
-                                <img src={choir.logo_url} alt={choir.choir_name} className="max-h-10 w-auto mr-4 shrink" />
-                                {/*<div className="text-sm font-medium text-purple-800 shrink-0">{choir.choir_name}</div>*/}
+                                {choir.logo_url
+                                  ? <img src={choir.logo_url} alt={choir.name} className="max-h-10 w-auto mr-4 shrink" />
+                                  : choir.name // insert mr-4
+                                }
+                                {/*<div className="text-sm font-medium text-purple-800 shrink-0">{choir.name}</div>*/}
 
                                 {choirs.length > 1 && (
                                     <>

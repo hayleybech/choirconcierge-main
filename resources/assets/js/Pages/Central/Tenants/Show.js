@@ -29,9 +29,9 @@ const Show = ({ tenant }) => {
 
     return (
         <>
-            <AppHead title={`${tenant.choir_name} - Tenants`} />
+            <AppHead title={`${tenant.name} - Tenants`} />
             <PageHeader
-                title={tenant.choir_name}
+                title={tenant.name}
                 image={tenant.logo_url}
                 meta={[
                     tenant.timezone.timezone,
@@ -41,7 +41,7 @@ const Show = ({ tenant }) => {
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('central.dash')},
                     { name: 'Tenants', url: route('central.tenants.index')},
-                    { name: tenant.choir_name, url: route('centra.tenants.show', {tenant}) },
+                    { name: tenant.name, url: route('centra.tenants.show', {tenant}) },
                 ]}
             />
 

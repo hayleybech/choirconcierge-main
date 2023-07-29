@@ -139,7 +139,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                                 name: user.name,
                                 avatarUrl: user.avatar_url,
                                 email: user.email,
-                                roles: user.singer.roles,
+                                roles: user.membership.roles,
                             })) ?? null}
                             updateFn={value => setData('recipient_users', value)}
                         />
@@ -196,7 +196,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                                     name: user.name,
                                     avatarUrl: user.avatar_url,
                                     email: user.email,
-                                    roles: user.singer.roles,
+                                    roles: user.membership.roles,
                                 })) ?? null}
                                 updateFn={value => setData('sender_users', value)}
                             />

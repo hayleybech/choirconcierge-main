@@ -24,12 +24,12 @@ const SingerTableDesktop = ({ singers, sortFilterForm }) => {
     const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
     const [renewingSinger, setRenewingSinger] = useState(singers[0] ?? null);
 
-    const { can } = usePage().props;
+    const { can, tenant } = usePage().props;
     const { route } = useRoute();
 
     const headings = collect({
             name: <TableHeadingSort form={sortFilterForm} sort="full-name">Name</TableHeadingSort>,
-            part: <TableHeadingSort form={sortFilterForm} sort="part-title">Voice Part</TableHeadingSort>,
+            part: tenant.ensembles.length > 1 ? 'Ensembles' : 'Voice Part',
             status: <TableHeadingSort form={sortFilterForm} sort="status-title">Status</TableHeadingSort>,
             email: 'Email',
             fees: <TableHeadingSort form={sortFilterForm} sort="paid_until">Fees</TableHeadingSort>,
@@ -57,7 +57,18 @@ const SingerTableDesktop = ({ singers, sortFilterForm }) => {
                             </div>
                         </TableCell>
                         <TableCell>
-                            {singer.voice_part && <VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />}
+                          <ul>
+                          {singer.enrolments.map((enrolment) => (
+                            <li key={enrolment.id} className="flex gap-2 items-center mb-2">
+                              {tenant.ensembles.length > 1 && (
+                                <div className="lg:w-36 xl:w-48 overflow-hidden text-ellipsis">
+                                  <strong>{enrolment.ensemble.name}</strong>
+                                </div>
+                              )}
+                              {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
+                            </li>
+                          ))}
+                          </ul>
                         </TableCell>
                         <TableCell>
                             <SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />

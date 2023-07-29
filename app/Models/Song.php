@@ -34,7 +34,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property SongStatus $status
  * @property Collection<SongCategory> $categories
  * @property Collection<SongAttachment> $attachments
- * @property Collection<Singer> $singers
+ * @property Collection<Membership> $members
  *
  * Dynamic
  * @property string $pitch
@@ -84,7 +84,7 @@ class Song extends Model
     {
         // @todo convert this to a regular scope to prevent unwanted side effects
         static::addGlobalScope('filterPending', static function (Builder $builder): void {
-            $builder->unless(Auth::user()?->isSuperAdmin || Auth::user()?->singer?->hasAbility('songs_update'), function (Builder $query): Builder {
+            $builder->unless(Auth::user()?->isSuperAdmin || Auth::user()?->membership?->hasAbility('songs_update'), function (Builder $query): Builder {
                 return $query->whereDoesntHave('status', static function (Builder $query): Builder {
                     return $query->where('title', '=', 'Pending');
                 });
@@ -142,9 +142,9 @@ class Song extends Model
         return $this->hasMany(SongAttachment::class);
     }
 
-    public function singers(): BelongsToMany
+    public function members(): BelongsToMany
     {
-        return $this->belongsToMany(Singer::class)
+        return $this->belongsToMany(Membership::class, 'membership_song', 'song_id', 'membership_id')
             ->withPivot(['status'])
             ->using(LearningStatus::class)
             ->as('learning')
@@ -153,12 +153,12 @@ class Song extends Model
 
     public function getMyLearningAttribute(): LearningStatus
     {
-        if(! auth()->user()->singer) {
+        if(! auth()->user()->membership) {
             return LearningStatus::getNullLearningStatus();
         }
 
-        return $this->singers()
-            ->where('singers.id', '=', auth()->user()->singer->id)
+        return $this->members()
+            ->where('memberships.id', '=', auth()->user()->membership->id)
             ->first()
             ?->learning
             ?? LearningStatus::getNullLearningStatus();
@@ -181,8 +181,8 @@ class Song extends Model
 
     public function createMissingLearningRecords(): void
     {
-        $this->singers()->attach(
-            Singer::whereDoesntHave('songs', function ($query) {
+        $this->members()->attach(
+            Membership::whereDoesntHave('songs', function ($query) {
                 $query->where('songs.id', $this->id);
             })->pluck('id'),
             ['status' => 'not-started']

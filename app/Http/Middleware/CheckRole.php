@@ -19,7 +19,7 @@ class CheckRole
      */
     public function handle($request, Closure $next, $role)
     {
-        if (! $request->user()->singer->hasRole($role)) {
+        if (! $request->user()->membership->hasRole($role)) {
             Session::flash('message', "You don't have permission to do that. ");
 
             return Redirect::to('/');

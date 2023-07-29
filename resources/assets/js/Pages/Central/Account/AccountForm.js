@@ -59,7 +59,7 @@ const AccountForm = ({ }) => {
 
                     <div className="sm:col-span-6">
                         <Label label="Profile Picture" forInput="avatar" />
-                        <AvatarUpload currentImage={data.avatar ? URL.createObjectURL(data.avatar) : user.avatar_url} updateFn={value => setData('avatar', value)} />
+                        <AvatarUpload name="avatar" currentImage={data.avatar ? URL.createObjectURL(data.avatar) : user.avatar_url} updateFn={value => setData('avatar', value)} />
                     </div>
                     
                     <div className="sm:col-span-2">

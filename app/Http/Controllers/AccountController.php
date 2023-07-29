@@ -20,7 +20,7 @@ class AccountController extends Controller
         auth()->user()->update($request->validated());
 
         return redirect()
-            ->route('singers.show', auth()->user()->singer)
+            ->route('singers.show', auth()->user()->membership)
             ->with(['status' => 'Account Settings updated.']);
     }
 }

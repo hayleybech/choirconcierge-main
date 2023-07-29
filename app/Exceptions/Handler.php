@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
@@ -62,12 +62,12 @@ class Handler extends ExceptionHandler
 
         $this->initialiseTenancyByPath($request->getRequestUri());
 
-        if (in_array($response->status(), [500, 503, 404, 403])) {
+        if (! config('app.debug') && in_array($response->status(), [500, 503, 404, 403])) {
             return Inertia::render('Error', [
                 'tenant' => tenant(),
                 'status' => $response->status(),
-                'choirAdmins' => Singer::role('Admin')->limit(5)->with('user')->get()->values(),
-                'isMember' => auth()?->user()?->singer,
+                'orgAdmins' => Membership::role('Admin')->limit(5)->with('user')->get()->values(),
+                'isMember' => auth()?->user()?->membership,
             ])
                 ->toResponse($request)
                 ->setStatusCode($response->status());

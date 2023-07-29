@@ -16,22 +16,23 @@ class TenantPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($ability !== 'delete' && $user->singer->hasRole('Admin')) {
+        if ($ability !== 'delete' && $user->membership->hasRole('Admin')) {
             return true;
         }
 
         return null;
     }
 
-    public function viewAny(User $user) {
+    public function viewAny(User $user): bool
+    {
         return false;
     }
 
-    public function update(User $user)
+    public function update(User $user): bool
     {
         return false;
     }

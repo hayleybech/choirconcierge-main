@@ -30,7 +30,7 @@ class Welcome extends Mailable
      */
     public function build(): self
     {
-        return $this->subject('Welcome to '.tenant('choir_name'))
+        return $this->subject('Welcome to '.tenant('name'))
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
             ->to($this->user->email, $this->user->name)
             ->markdown('emails.welcome');

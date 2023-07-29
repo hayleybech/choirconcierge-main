@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Task;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -18,19 +18,19 @@ class TaskCompleted
 
     public $task;
 
-    public $singer;
+    public $member;
 
     /**
      * Create a new event instance.
      *
      * @param \App\Models\Task $task
-     * @param \App\Models\Singer $singer
+     * @param \App\Models\Membership $member
      * @return void
      */
-    public function __construct(Task $task, Singer $singer)
+    public function __construct(Task $task, Membership $member)
     {
         $this->task = $task;
-        $this->singer = $singer;
+        $this->member = $member;
     }
 
     /**

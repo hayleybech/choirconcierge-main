@@ -33,7 +33,7 @@ const VoicePartTableDesktop = ({ voiceParts }) => {
                         </div>
                     </TableCell>
                     <TableCell>
-                        <Link href={route('singers.index')} data={{ filter: { 'voice_part.id': [voicePart.id] } }} className="text-purple-800">
+                        <Link href={route('singers.index')} data={{ filter: { 'enrolments.voice_part_id': [voicePart.id] } }} className="text-purple-800">
                             {voicePart.singers_count} {voicePart.singers_count === 1 ? 'singer' : 'singers'}
                         </Link>
                     </TableCell>

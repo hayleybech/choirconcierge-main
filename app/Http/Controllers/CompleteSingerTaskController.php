@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Events\TaskCompleted;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CompleteSingerTaskController extends Controller
 {
-    public function __invoke(Singer $singer, Task $task): RedirectResponse
+    public function __invoke(Membership $singer, Task $task): RedirectResponse
     {
         $this->authorize('update', $singer); // @todo Check user has the role needed to complete the task
 

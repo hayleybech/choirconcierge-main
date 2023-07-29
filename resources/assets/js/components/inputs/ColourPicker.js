@@ -78,6 +78,7 @@ const ColourPicker = ({ value, updateFn }) => {
     return <div className="flex flex-wrap gap-2 mt-1">
         {Object.entries(tailwindColours).map(([colourName, colour]) => (
             <div
+                key={colourName}
                 className={`
                     h-8 w-8 rounded-md outline outline-2 outline-offset-2 cursor-pointer hover:opacity-75 focus:opacity-75
                     ${colour.bg}

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class UpdateSingerFeeController extends Controller
 {
-    public function __invoke(Request $request, Singer $singer): RedirectResponse
+    public function __invoke(Request $request, Membership $singer): RedirectResponse
     {
         Gate::authorize('update-fees');
 

@@ -31,7 +31,7 @@ const Index = ({ song, voice_parts }) => {
 							<h3>{part.title}</h3>
 						</div>
 						<ul role="list" className="relative z-0 divide-y divide-gray-200">
-							{part.singers.map((singer) => (
+							{part.members.map((singer) => (
 								<li key={singer.id} className="bg-white">
 									<div className="relative px-6 py-5 flex flex-col sm:flex-row items-center space-y-3 sm:space-x-3 hover:bg-gray-50 justify-between items-stretch sm:items-center">
 										<div className="flex space-x-2">

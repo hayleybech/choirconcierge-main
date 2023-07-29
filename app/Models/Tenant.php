@@ -8,8 +8,10 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
@@ -18,8 +20,8 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * Class Tenant
  *
  * Virtual Columns
- * @property string $choir_name
- * @property string $choir_logo
+ * @property string $name
+ * @property string $logo
  * @property Carbon $renews_at
  *
  * Attributes
@@ -29,6 +31,10 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string primary_domain
  * @property string host
  * @property string $logo_url
+ *
+ * Relationships
+ * @property Collection<Ensemble> $ensembles
+ * @property Collection<Membership> $members
  */
 class Tenant extends BaseTenant
 {
@@ -39,22 +45,22 @@ class Tenant extends BaseTenant
     protected static function booted(): void
     {
         static::deleted(function (Tenant $tenant) {
-            if(! $tenant->choir_logo) {
+            if(! $tenant->logo) {
                 return;
             }
 
             Storage::disk('global-public')
-                ->delete('choir-logos/'.$tenant->choir_logo);
+                ->delete('choir-logos/'.$tenant->logo);
         });
     }
 
     public static function create(
         string $id,
-        string $choir_name,
+        string $name,
         string $timezone,
-        array $attributes = []
+        array  $attributes = []
     ): self|Model {
-        return static::query()->create(array_merge($attributes, compact('id', 'choir_name', 'timezone')));
+        return static::query()->create(array_merge($attributes, compact('id', 'name', 'timezone')));
     }
 
     public static function findByDomain(string $domain): ?self
@@ -76,7 +82,7 @@ class Tenant extends BaseTenant
 
     public function getMailFromNameAttribute(): string
     {
-        return $this->choir_name.' via Choir Concierge';
+        return $this->name.' via Choir Concierge';
     }
 
     public function getMailFromAddressAttribute(): string
@@ -99,11 +105,14 @@ class Tenant extends BaseTenant
     public function logoUrl(): Attribute
     {
         return Attribute::get(fn () =>
-            $this->choir_logo ? asset('storage/choir-logos/'.$this->choir_logo) : ''
+            $this->logo ? asset('storage/choir-logos/'.$this->logo) : ''
         );
     }
 
-    public function updateLogo(UploadedFile|string $logo, string $hash_name)
+	/**
+	 * @throws Exception
+	 */
+	public function updateLogo(UploadedFile|string $logo, string $hash_name)
     {
         if (!Storage::disk('global-public')->exists('choir-logos')) {
             Storage::disk('global-public')->makeDirectory('choir-logos');
@@ -114,6 +123,14 @@ class Tenant extends BaseTenant
             throw new Exception('Failed to save the logo.');
         }
 
-        $this->update(['choir_logo' => $hash_name]);
+        $this->update(['logo' => $hash_name]);
+    }
+
+	public function ensembles(): HasMany {
+		return $this->hasMany(Ensemble::class);
+	}
+
+    public function members(): HasMany {
+        return $this->hasMany(Membership::class);
     }
 }

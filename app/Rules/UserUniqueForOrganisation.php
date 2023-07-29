@@ -2,10 +2,10 @@
 
 namespace App\Rules;
 
-use App\Models\Singer;
+use App\Models\Membership;
 use Illuminate\Contracts\Validation\Rule;
 
-class UserUniqueForChoir implements Rule
+class UserUniqueForOrganisation implements Rule
 {
     /**
      * Determine if the validation rule passes.
@@ -16,7 +16,7 @@ class UserUniqueForChoir implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        return ! Singer::query()->where('user_id', $value)->exists();
+        return ! Membership::query()->where('user_id', $value)->exists();
     }
 
     /**
@@ -26,6 +26,6 @@ class UserUniqueForChoir implements Rule
      */
     public function message(): string
     {
-        return 'That user has already been added to your choir. ';
+        return 'That user has already been added to your organisation. ';
     }
 }

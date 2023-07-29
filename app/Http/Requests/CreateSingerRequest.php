@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\UserUniqueForChoir;
+use App\Rules\UserUniqueForOrganisation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -36,7 +36,7 @@ class CreateSingerRequest extends FormRequest
             'user_id' => [
                 Rule::when(! empty($this->input('user_id')), [
                     Rule::exists('users', 'id'),
-                    new UserUniqueForChoir,
+                    new UserUniqueForOrganisation,
                 ]),
             ],
             'email' => [
@@ -57,7 +57,6 @@ class CreateSingerRequest extends FormRequest
             'membership_details' => ['max:255'],
             'joined_at' => ['date', 'before_or_equal:today'],
             'onboarding_enabled' => ['boolean'],
-            'voice_part_id' => [],
             'user_roles' => ['array', 'exists:roles,id'],
         ]);
     }

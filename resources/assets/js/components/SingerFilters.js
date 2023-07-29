@@ -5,7 +5,7 @@ import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
 import RadioGroup from "./inputs/RadioGroup";
 
-const SingerFilters = ({ statuses, voiceParts, roles, form }) => (
+const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
     <Filters
         routeName="singers.index"
         form={form}
@@ -28,12 +28,22 @@ const SingerFilters = ({ statuses, voiceParts, roles, form }) => (
             <fieldset>
                 <legend className="text-sm font-medium text-gray-700">Voice Part</legend>
                 <CheckboxGroup
-                    name="voice_part.id"
+                    name="enrolments.voice_part_id"
                     options={voiceParts.map((part) => ({ id: part.id, name: part.title }))}
-                    value={data['voice_part.id']}
-                    updateFn={value => setData('voice_part.id', value)}
+                    value={data['enrolments.voice_part_id']}
+                    updateFn={value => setData('enrolments.voice_part_id', value)}
                 />
             </fieldset>
+
+          <fieldset>
+            <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+            <CheckboxGroup
+              name="enrolments.ensemble_id"
+              options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
+              value={data['enrolments.ensemble_id']}
+              updateFn={value => setData('enrolments.ensemble_id', value)}
+            />
+          </fieldset>
 
             <fieldset>
                 <legend className="text-sm font-medium text-gray-700">Role</legend>

@@ -21,11 +21,11 @@ class CheckRoleOrSameUser
     {
         $singer = $request->route('singer');
 
-        if ($request->user()->singer->id === $singer->id) {
+        if ($request->user()->membership->id === $singer->id) {
             return $next($request);
         }
 
-        if ($request->user()->singer->hasRole($role)) {
+        if ($request->user()->membership->hasRole($role)) {
             return $next($request);
         }
 

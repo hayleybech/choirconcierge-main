@@ -17,11 +17,11 @@ class TaskPolicy
             return true;
         }
 
-        if (! $user->singer) {
+        if (! $user->membership) {
             return false;
         }
 
-        if ($user->singer->hasRole('Admin')) {
+        if ($user->membership->hasRole('Admin')) {
             return true;
         }
 
@@ -35,7 +35,7 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->singer->hasAbility('tasks_view');
+        return $user->membership->hasAbility('tasks_view');
     }
 
     /**
@@ -46,7 +46,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        return $user->singer->hasAbility('tasks_view');
+        return $user->membership->hasAbility('tasks_view');
     }
 
     /**
@@ -56,7 +56,7 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        return $user->singer->hasAbility('tasks_create');
+        return $user->membership->hasAbility('tasks_create');
     }
 
     /**
@@ -67,7 +67,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->singer->hasAbility('tasks_update');
+        return $user->membership->hasAbility('tasks_update');
     }
 
     /**
@@ -78,7 +78,7 @@ class TaskPolicy
      */
     public function complete(User $user, Task $task): bool
     {
-        return $user->singer->hasRole($task->role->name);
+        return $user->membership->hasRole($task->role->name);
     }
 
     /**
@@ -89,7 +89,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->singer->hasAbility('tasks_delete');
+        return $user->membership->hasAbility('tasks_delete');
     }
 
     /**

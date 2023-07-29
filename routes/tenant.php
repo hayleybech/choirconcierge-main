@@ -8,6 +8,8 @@ use App\Http\Controllers\AttendanceReportController;
 use App\Http\Controllers\CompleteSingerTaskController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EnrolmentController;
+use App\Http\Controllers\EnsembleController;
 use App\Http\Controllers\EventActivityController;
 use App\Http\Controllers\EventCalendarController;
 use App\Http\Controllers\EventController;
@@ -33,7 +35,6 @@ use App\Http\Controllers\UpdateSingerFeeController;
 use App\Http\Controllers\SingerPlacementController;
 use App\Http\Controllers\SongAttachmentController;
 use App\Http\Controllers\SongController;
-use App\Http\Controllers\SwitchTenantController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskNotificationTemplateController;
 use App\Http\Controllers\UpdateMyLearningStatusController;
@@ -107,6 +108,7 @@ Route::middleware([
         // Singers module
         Route::resource('singers', SingerController::class);
         Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
+        Route::resource('singers.enrolments', EnrolmentController::class)->only(['store', 'update', 'destroy']);
         Route::put('singers/{singer}/fees', UpdateSingerFeeController::class)->name('singers.fees.update');
         Route::post('singers/import', ImportSingerController::class)->name('singers.import');
         Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
@@ -194,8 +196,11 @@ Route::middleware([
         // Roles module
         Route::resource('roles', RoleController::class);
 
-        // Choir Settings
-        Route::get('/choir-settings', [TenantController::class, 'edit'])->name('choir-settings.edit');
-        Route::post('/choir-settings', [TenantController::class, 'update'])->name('choir-settings.update');
+        // Organisation Settings
+        Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');
+        Route::post('/organisation', [TenantController::class, 'update'])->name('organisation.update');
+
+        // Sub-groups aka Ensembles aka Choirs
+		Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);
     });
 });

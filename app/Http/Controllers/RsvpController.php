@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Enrolment;
 use App\Models\Event;
 use App\Models\Rsvp;
-use App\Models\Singer;
+use App\Models\Membership;
 use App\Models\VoicePart;
 use Auth;
 use Illuminate\Http\RedirectResponse;
@@ -23,14 +24,16 @@ class RsvpController extends Controller
 	{
 		$this->authorize('viewAny', Rsvp::class);
 
-		$singers = Singer::query()
+		$singers = Enrolment::query()
 			->with([
-				'user',
-				'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
+                'membership' => [
+                    'user',
+				    'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
+                ],
 			])
 			->get()
             ->map(function ($singer) {
-                $singer->rsvp = $singer->rsvps->first() ?? Rsvp::Null();
+                $singer->membership->rsvp = $singer->membership->rsvps->first() ?? Rsvp::Null();
                 return $singer;
             })
 			->groupBy('voice_part_id');
@@ -53,7 +56,7 @@ class RsvpController extends Controller
         $request->validate(['rsvp_response' => 'required']);
 
         $event->rsvps()->updateOrCreate(
-            ['singer_id' => Auth::user()->singer->id],
+            ['membership_id' => Auth::user()->membership->id],
             ['response' => $request->input('rsvp_response')]
         );
 
@@ -65,7 +68,7 @@ class RsvpController extends Controller
         $request->validate(['rsvp_response' => 'required']);
 
         $event->rsvps()->updateOrCreate(
-            ['singer_id' => Auth::user()->singer->id],
+            ['membership_id' => Auth::user()->membership->id],
             ['response' => $request->input('rsvp_response')]
         );
 
