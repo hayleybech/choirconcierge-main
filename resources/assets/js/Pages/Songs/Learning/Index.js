@@ -40,8 +40,6 @@ const Index = ({ song, voiceParts }) => {
 										{ slug: 'not-started', count: part.members.filter(member => member.learning.status === 'not-started').length },
 									].map(({slug, count}) => (
 										<div className="w-1/3 text-center" key={slug}>
-											{/*<Icon icon={icon} className={`text-${colour}`} />*/}
-											{/*<p className={`font-semibold text-${colour}`}>{label}</p>*/}
 											<LearningStatusTag status={new LearningStatus(slug)} />
 											{count}
 										</div>
