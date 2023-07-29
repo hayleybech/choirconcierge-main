@@ -15,6 +15,9 @@ import useRoute from "../../hooks/useRoute";
 
 const RiserStackForm = ({ stack, voiceParts }) => {
     const { route } = useRoute();
+
+    const [showHeights, setShowHeights] = useState(false);
+
     const { data, setData, post, put, processing, errors } = useForm({
         title: stack?.title ?? '',
         rows: stack?.rows ?? 4,
@@ -63,7 +66,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
 
             <div className="px-8">
                 <FormSection>
-                    <div className="sm:col-span-2">
+                    <div className="sm:col-span-3">
                         <Label label="Riser Stack Title" forInput="title" />
                         <TextInput name="title" value={data.title} updateFn={value => setData('title', value)} hasErrors={ !! errors['title'] } />
                         {errors.title && <Error>{errors.title}</Error>}
@@ -117,6 +120,15 @@ const RiserStackForm = ({ stack, voiceParts }) => {
                         />
                     </div>
 
+                    <div className="sm:col-span-1">
+                        <DetailToggle
+                          label="Show heights"
+                          description="Show the heights of singers"
+                          value={showHeights}
+                          updateFn={value => setShowHeights(value)}
+                        />
+                    </div>
+
                 </FormSection>
             </div>
 
@@ -127,6 +139,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
                         setSelectedSinger={setSelectedSinger}
                         selectedSinger={selectedSinger}
                         moveSelectedSingerToHoldingArea={() => { moveSingerToHoldingArea(selectedSinger); setSelectedSinger(null); }}
+                        showHeights={showHeights}
                     />
                 </div>
 
@@ -144,6 +157,7 @@ const RiserStackForm = ({ stack, voiceParts }) => {
                         setSelectedSinger={setSelectedSinger}
                         selectedSinger={selectedSinger}
                         removeSingerFromHoldingArea={removeSingerFromHoldingArea}
+                        showHeights={showHeights}
                     />
                 </div>
             </div>

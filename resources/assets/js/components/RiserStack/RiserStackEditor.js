@@ -3,7 +3,19 @@ import RiserStackFrame from "./RiserStackFrame";
 import RiserStackSpots from "./RiserStackSpots";
 
 const RiserStackEditor = ({
-    editing = false, width, height, rows, columns, spotsOnFrontRow, frontRowOnFloor, singerPositions, setPositions, selectedSinger, setSelectedSinger, removeSingerFromHoldingArea
+  editing = false,
+  width,
+  height,
+  rows,
+  columns,
+  spotsOnFrontRow,
+  frontRowOnFloor,
+  singerPositions,
+  setPositions,
+  selectedSinger,
+  setSelectedSinger,
+  removeSingerFromHoldingArea,
+  showHeights,
 }) => {
     const originModifier = {
         x: 0.5,
@@ -63,6 +75,7 @@ const RiserStackEditor = ({
                     selectedSinger={selectedSinger}
                     setSelectedSinger={setSelectedSinger}
                     moveSelectedSingerTo={(coords) => moveSingerToStack(coords, selectedSinger)}
+                    showHeights={showHeights}
                 />
 
             </svg>

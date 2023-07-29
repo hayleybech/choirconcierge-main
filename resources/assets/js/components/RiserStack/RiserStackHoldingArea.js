@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from "../../classNames";
 
-const RiserStackHoldingArea = ({ singersByVoicePart, setSelectedSinger, selectedSinger, moveSelectedSingerToHoldingArea }) => {
+const RiserStackHoldingArea = ({ singersByVoicePart, setSelectedSinger, selectedSinger, moveSelectedSingerToHoldingArea, showHeights }) => {
 
 	function holdingAreaContainsSelectedSinger() {
 		if(! selectedSinger){
@@ -41,6 +41,7 @@ const RiserStackHoldingArea = ({ singersByVoicePart, setSelectedSinger, selected
 											<span className="text-sm font-medium truncate">{singer.user.name}</span>
 										</button>
 									</div>
+									{showHeights && <div className="text-sm text-gray-500">({Math.round(singer.user.height)}cm)</div>}
 								</div>
 							</li>
 						))}
