@@ -1,13 +1,13 @@
 import React from 'react';
 import classNames from "../../classNames";
 
-const RiserStackHoldingArea = ({ singersByVoicePart, setSelectedSinger, selectedSinger, moveSelectedSingerToHoldingArea, showHeights }) => {
+const RiserStackHoldingArea = ({ voiceParts, singers, setSelectedSinger, selectedSinger, moveSelectedSingerToHoldingArea, showHeights }) => {
 
 	function holdingAreaContainsSelectedSinger() {
 		if(! selectedSinger){
 			return false;
 		}
-		return singersByVoicePart.some(part => part.members.some(singer => singer.id === selectedSinger.id));
+		return singers.some(singer => singer.id === selectedSinger.id);
 	}
 
 	function toggleSelectedSinger(singer) {
@@ -19,13 +19,13 @@ const RiserStackHoldingArea = ({ singersByVoicePart, setSelectedSinger, selected
 			className={classNames('h-full overflow-y-auto relative', selectedSinger && !holdingAreaContainsSelectedSinger() && 'ring-2 ring-purple-500')}
 			aria-label="Holding Area"
 		>
-			{singersByVoicePart.map((voicePart) =>
+			{voiceParts.map((voicePart) =>
 				<div key={voicePart.id} className="relative">
 					<div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
 						<h3 style={{ color: voicePart.colour }}>{voicePart.title}</h3>
 					</div>
 					<ul role="list" className="relative z-0 divide-y divide-gray-200">
-						{voicePart.members.map((singer) => (
+						{singers.filter(singer => singer.enrolments.some(enrolment => enrolment.voice_part_id === voicePart.id)).map((singer) => (
 							<li key={singer.id} >
 								<div className={classNames(
 									'relative px-6 py-5 flex items-center space-x-3',

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RiserStackRequest;
+use App\Models\Membership;
 use App\Models\RiserStack;
 use App\Models\VoicePart;
 use Illuminate\Http\RedirectResponse;
@@ -26,24 +27,15 @@ class RiserStackController extends Controller
 
     public function create(): Response
     {
-        // store members directly on voice parts, but filter by enrolment
-        $voice_parts = VoicePart::with(['enrolments' => function ($query) {
-                $query->whereHas('membership', function($query) {
-                    $query->active()->with('user');
-                });
-            }, 'enrolments.membership.user'])
+        $singers = Membership::query()
+            ->active()
+            ->with(['user', 'enrolments'])
             ->get()
-            ->each(function($part) {
-                $part->members = $part->enrolments->map(function ($enrolment) {
-                    $membership = $enrolment->membership;
-                    $membership->voice_part_id = $enrolment->voice_part_id;
-                    $membership->append('user_avatar_thumb_url');
-                    return $enrolment->membership;
-                });
-            });
+            ->append('user_avatar_thumb_url');
 
         return Inertia::render('RiserStacks/Create', [
-            'voice_parts' => $voice_parts->values(),
+            'voiceParts' => VoicePart::all()->values(),
+            'singers' => $singers,
         ]);
     }
 
@@ -79,32 +71,23 @@ class RiserStackController extends Controller
         // Get singers that are already on the riser stack.
         $stack->load(['members' => function ($query) {
             $query->active()->with('user');
-        }]);
+        }, 'members.enrolments']);
         $stack->members->each->append('user_avatar_thumb_url');
 
-        // Get singers (by voice part) who are not already on the riser stack.
-        $voice_parts = VoicePart::with(['enrolments' => function ($query) use ($stack) {
-                $query->whereHas('membership', function($query) use ($stack) {
-                    $query->active()
-                        ->with('user')
-                        ->whereDoesntHave('riser_stacks', static function ($query) use ($stack) {
-                            $query->where('riser_stack_id', '=', $stack->id);
-                        });
-                });
-            }, 'enrolments.membership.user'])
+        // Get singers who are not already on the riser stack.
+        $singers = Membership::query()
+            ->active()
+            ->with(['user', 'enrolments'])
+            ->whereDoesntHave('riser_stacks', static function ($query) use ($stack) {
+                $query->where('riser_stack_id', '=', $stack->id);
+            })
             ->get()
-            ->each(function($part) {
-                $part->members = $part->enrolments->map(function ($enrolment) {
-                    $membership = $enrolment->membership;
-                    $membership->voice_part_id = $enrolment->voice_part_id;
-                    $membership->append('user_avatar_thumb_url');
-                    return $enrolment->membership;
-                });
-            });
+            ->append('user_avatar_thumb_url');
 
         return Inertia::render('RiserStacks/Edit', [
             'stack' => $stack,
-            'voice_parts' => $voice_parts->values(),
+            'voiceParts' => VoicePart::all()->values(),
+            'singers' => $singers->values(),
         ]);
     }
 

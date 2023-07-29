@@ -13,7 +13,7 @@ import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import useRoute from "../../hooks/useRoute";
 
-const RiserStackForm = ({ stack, voiceParts }) => {
+const RiserStackForm = ({ stack, voiceParts, singers }) => {
     const { route } = useRoute();
 
     const { user } = usePage().props;
@@ -35,28 +35,21 @@ const RiserStackForm = ({ stack, voiceParts }) => {
     }
 
     const [selectedSinger, setSelectedSinger] = useState(null);
-    const [holdingAreaSingers, setHoldingAreaSingers] = useState(voiceParts);
+    const [holdingAreaSingers, setHoldingAreaSingers] = useState(singers);
 
-    function removeSingerFromHoldingArea(singer){
+    function removeSingerFromHoldingArea(singerRemoving){
         setHoldingAreaSingers(
-            holdingAreaSingers.map(part => {
-                part.members = part.members.filter(partSinger => partSinger.id !== singer.id);
-                return part;
-            })
+          holdingAreaSingers.filter(singer => singer.id !== singerRemoving.id)
         );
     }
 
     function moveSingerToHoldingArea(singer){
         removeSingerFromStack(singer);
 
-        setHoldingAreaSingers(
-            holdingAreaSingers.map(part => {
-                if(part.id === singer.voice_part_id) {
-                    part.members.push(singer);
-                }
-                return part;
-            })
-        );
+        setHoldingAreaSingers(holdingAreaSingers => {
+            holdingAreaSingers.push(singer)
+            return holdingAreaSingers;
+        });
     }
 
     function removeSingerFromStack(singer){
@@ -137,7 +130,8 @@ const RiserStackForm = ({ stack, voiceParts }) => {
             <div className="flex">
                 <div className="w-1/3 border-r border-gray-200">
                     <RiserStackHoldingArea
-                        singersByVoicePart={holdingAreaSingers}
+                        voiceParts={voiceParts}
+                        singers={holdingAreaSingers}
                         setSelectedSinger={setSelectedSinger}
                         selectedSinger={selectedSinger}
                         moveSelectedSingerToHoldingArea={() => { moveSingerToHoldingArea(selectedSinger); setSelectedSinger(null); }}
