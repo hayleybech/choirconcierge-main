@@ -19,7 +19,7 @@ const MyAttendance = ({ event, addToCalendarLinks }) => (
             <RsvpDropdown event={event} />
           </div>
 
-          <div className="mt-6">
+          <div className="mt-6 self-stretch md:self-start">
             <AddToCalendarDropdown urls={addToCalendarLinks} size="xs" />
           </div>
         </>)}
