@@ -118,12 +118,16 @@ const EventLocation = ({ event }) => (
     </CollapsePanel>
 );
 
-const ViewRsvpsButton = ({ event }) => (
+const ViewRsvpsButton = ({ event }) => {
+  const { route } = useRoute();
+
+  return (
     <ButtonLink variant="primary" size="sm" href={route('events.rsvps.index', {event})}>
-        <Icon icon="clipboard-list" />
-        View All
+      <Icon icon="clipboard-list" />
+      View All
     </ButtonLink>
-);
+  );
+}
 
 const EditAttendanceButton = ({ event }) => {
     const { route } = useRoute();
