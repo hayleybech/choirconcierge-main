@@ -64,7 +64,7 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
 
                 <div className="sm:col-span-1 xl:col-span-3 divide-y divide-y-gray-300">
                     <CollapseGroup items={[
-                        { title: 'Description', show: true, content: <EventDescription description={event.description} timezone={pageProps.tenant.timezone_label} />},
+                        { title: 'Description', show: true, defaultOpen: event.description?.length > 0, content: <EventDescription description={event.description} timezone={pageProps.tenant.timezone_label} />},
                         { title: 'Location', show: true, defaultOpen: true, content: <EventLocation event={event} />},
                         { title: 'Schedule', show: true, content: <EventSchedule event={event} />},
                     ]} />
