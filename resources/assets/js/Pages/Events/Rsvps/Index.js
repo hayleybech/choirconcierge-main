@@ -6,23 +6,21 @@ import Icon from "../../../components/Icon";
 import RsvpTag from "../../../components/Event/RsvpTag";
 import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
-import LearningStatusTag from "../../../components/Song/LearningStatusTag";
-import LearningStatus from "../../../LearningStatus";
 
 const Index = ({ event, voiceParts }) => {
   const { route } = useRoute();
   
   return (
     <>
-      <AppHead title={`RSVP Summary - ${event.title}`} />
+      <AppHead title={`RSVP List - ${event.title}`} />
       <PageHeader
-        title="RSVP Summary"
+        title="RSVP List"
         icon="calendar"
         breadcrumbs={[
           { name: 'Dashboard', url: route('dash') },
           { name: 'Events', url: route('events.index') },
           { name: event.title, url: route('events.show', {event}) },
-          { name: 'RSVPs', url: route('events.rsvps.index', {event}) },
+          { name: 'RSVP List', url: route('events.rsvps.index', {event}) },
         ]}
       />
 

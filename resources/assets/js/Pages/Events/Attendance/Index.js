@@ -9,7 +9,6 @@ import TextInput from "../../../components/inputs/TextInput";
 import Label from "../../../components/inputs/Label";
 import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
-import RsvpTag from "../../../components/Event/RsvpTag";
 
 const Index = ({ event, voice_parts }) => {
     const [absentReasons, setAbsentReasons] = useState({});
@@ -17,15 +16,15 @@ const Index = ({ event, voice_parts }) => {
 
     return (
         <>
-            <AppHead title={`Attendance Summary - ${event.title}`} />
+            <AppHead title={`Attendance List - ${event.title}`} />
             <PageHeader
-                title="Attendance Summary"
+                title="Attendance List"
                 icon="calendar"
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash') },
                     { name: 'Events', url: route('events.index') },
                     { name: event.title, url: route('events.show', {event}) },
-                    { name: 'Attendance', url: route('events.attendances.index', {event}) },
+                    { name: 'Attendance List', url: route('events.attendances.index', {event}) },
                 ]}
             />
 
@@ -52,11 +51,6 @@ const Index = ({ event, voice_parts }) => {
                         </div>
                         {count}
                       </div>
-
-                      // <div className="w-1/2 md:w-1/5 text-center" key={label}>
-                      //   <AttendanceTag label={label} icon={icon} colour={colour} size="md" className="font-bold block" />
-                      //   {count}
-                      // </div>
                     ))}
                   </div>
                     <ul role="list" className="relative z-0 divide-y divide-gray-200">

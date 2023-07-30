@@ -14,15 +14,15 @@ const Index = ({ song, voiceParts }) => {
 
 	return (
 		<>
-			<AppHead title={`Learning Summary - ${song.title}`} />
+			<AppHead title={`Learning Status List - ${song.title}`} />
 			<PageHeader
-				title="Learning Status Report"
+				title="Learning Status List"
 				icon="fa-list-music"
 				breadcrumbs={[
 					{ name: 'Dashboard', url: route('dash') },
 					{ name: 'Songs', url: route('songs.index') },
 					{ name: song.title, url: route('songs.show', {song}) },
-					{ name: 'Learning Status', url: route('songs.singers.index', {song}) },
+					{ name: 'Learning Status List', url: route('songs.singers.index', {song}) },
 				]}
 			/>
 
