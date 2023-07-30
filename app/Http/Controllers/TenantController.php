@@ -15,7 +15,7 @@ class TenantController extends Controller
     {
         $this->authorize('update', tenant());
 
-        $tenant = tenant()->load(['domains', 'ensembles'])->append(['primary_domain']);
+        $tenant = tenant()->load(['domains', 'ensembles', 'billingUser'])->append(['primary_domain']);
 
         return Inertia::render('Tenants/Edit', [
             'organisation' => $tenant,
@@ -33,12 +33,17 @@ class TenantController extends Controller
             'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
             'primary_domain' => ['required', 'max:127'],
             'timezone' => ['required', Rule::in(DateTimeZone::listIdentifiers())],
+            'billing_user_membership' => ['exists:memberships,id'],
         ]);
 
-        tenant()->update($request->only([
-            'name',
-            'timezone',
-        ]));
+        tenant()->update([
+            ...$request->only([
+                'name',
+                'timezone',
+            ]), ...[
+                'billing_user_id' => $request->input('billing_user') ?? null,
+            ],
+        ]);
 
         if($request->hasFile('logo')) {
             tenant()->updateLogo($request->file('logo'), $request->file('logo')->hashName());
