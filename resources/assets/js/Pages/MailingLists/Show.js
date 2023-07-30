@@ -13,6 +13,12 @@ const Show = ({ list }) => {
     const { route } = useRoute();
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
+  const list_type_labels = {
+    chat: 'Chat',
+    public: 'Public',
+    distribution: 'Mailout',
+  }
+
     return (
         <>
             <AppHead title={`${list.title} - Mailing Lists`} />
@@ -21,7 +27,7 @@ const Show = ({ list }) => {
                 meta={[
                     <>
                         <Icon icon={list.type_icon} mr className="text-gray-400" />
-                        {list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}
+                        {list_type_labels[list.list_type]}
                     </>,
                     <><strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span></>,
                     <DateTag date={list.created_at} label="Created" />,
