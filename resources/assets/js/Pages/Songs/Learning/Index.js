@@ -39,8 +39,14 @@ const Index = ({ song, voiceParts }) => {
 										{ slug: 'assessment-ready', count: part.members.filter(member => member.learning.status === 'assessment-ready').length },
 										{ slug: 'not-started', count: part.members.filter(member => member.learning.status === 'not-started').length },
 									].map(({slug, count}) => (
-										<div className="w-1/3 text-center" key={slug}>
-											<LearningStatusTag status={new LearningStatus(slug)} />
+										<div className="w-1/3 text-center flex flex-col items-center justify-between" key={slug}>
+											<div className="hidden md:block">
+												<LearningStatusTag status={new LearningStatus(slug)} />
+											</div>
+											<div className={`flex flex-col items-center md:hidden font-bold ${(new LearningStatus(slug)).textColour}`}>
+												<Icon icon={(new LearningStatus(slug)).icon} className="text-lg" />
+												{(new LearningStatus(slug)).title}
+											</div>
 											{count}
 										</div>
 									))}
@@ -48,7 +54,7 @@ const Index = ({ song, voiceParts }) => {
 								<ul role="list" className="relative z-0 divide-y divide-gray-200">
 									{part.members.map((singer) => (
 										<li key={singer.id} className="bg-white">
-											<div className="relative px-6 py-5 flex flex-col sm:flex-row items-center space-y-3 sm:space-x-3 hover:bg-gray-50 justify-between items-stretch sm:items-center">
+											<div className="relative px-6 py-5 flex flex-col sm:flex-row space-y-3 sm:space-x-3 hover:bg-gray-50 justify-between items-stretch sm:items-center">
 												<div className="flex space-x-2">
 													<div className="shrink-0">
 														<img className="h-12 w-12 rounded-lg" src={singer.user.avatar_url} alt={singer.user.name}/>

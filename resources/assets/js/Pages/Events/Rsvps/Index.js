@@ -6,6 +6,8 @@ import Icon from "../../../components/Icon";
 import RsvpTag from "../../../components/Event/RsvpTag";
 import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
+import LearningStatusTag from "../../../components/Song/LearningStatusTag";
+import LearningStatus from "../../../LearningStatus";
 
 const Index = ({ event, voiceParts }) => {
   const { route } = useRoute();
@@ -35,8 +37,14 @@ const Index = ({ event, voiceParts }) => {
                 { label: 'Unknown', colour: 'amber', icon: 'question', count: part.singers.filter(singer => singer.membership.rsvp.response === 'unknown').length },
                 { label: 'Not going', colour: 'red', icon: 'times', count: part.singers.filter(singer => singer.membership.rsvp.response === 'no').length },
               ].map(({ label, colour, icon, count}) => (
-                <div className="w-1/3 text-center" key={label}>
-                  <RsvpTag icon={icon} label={label} colour={colour} size="md" className="font-bold block" />
+                <div className="w-1/3 text-center flex flex-col items-center justify-between" key={label}>
+                  <div className="hidden md:block">
+                    <RsvpTag icon={icon} label={label} colour={colour} size="md" className="font-bold block" />
+                  </div>
+                  <div className={`flex flex-col items-center md:hidden font-bold text-${colour}-500`}>
+                    <Icon icon={icon} className="text-lg" />
+                    {label}
+                  </div>
                   {count}
                 </div>
               ))}
