@@ -127,8 +127,8 @@ const RiserStackForm = ({ stack, voiceParts, singers }) => {
                 </FormSection>
             </div>
 
-            <div className="flex">
-                <div className="w-1/3 border-r border-gray-200">
+            <div className="flex flex-wrap">
+                <div className="w-full md:w-1/3 border-r border-gray-200">
                     <RiserStackHoldingArea
                         voiceParts={voiceParts}
                         singers={holdingAreaSingers}
@@ -139,7 +139,7 @@ const RiserStackForm = ({ stack, voiceParts, singers }) => {
                     />
                 </div>
 
-                <div className="w-2/3">
+                <div className="w-full md:w-2/3 overflow-scroll">
                     <RiserStackEditor
                         editing
                         rows={parseInt(data.rows)}
