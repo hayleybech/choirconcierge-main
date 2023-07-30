@@ -47,9 +47,9 @@ const AttendanceSummary = ({ attendanceCount, voicePartsAttendanceCount }) => (
                         On Time
                     </span>
                 </p>
-                <div className="flex">
+                <div className="flex flex-wrap gap-y-6">
                     {voicePartsAttendanceCount.present.map(voice_part => (
-                        <div className="w-1/2 text-center" key={voice_part.id}>
+                        <div className="w-1/4 text-center" key={voice_part.id}>
                             <p className="mb-2">
                                 <VoicePartTag title={voice_part.title} colour={voice_part.colour} />
                             </p>
@@ -64,9 +64,9 @@ const AttendanceSummary = ({ attendanceCount, voicePartsAttendanceCount }) => (
                         Late
                     </span>
                 </p>
-                <div className="flex">
+                <div className="flex flex-wrap gap-y-6">
                     {voicePartsAttendanceCount.late.map(voice_part => (
-                        <div className="w-1/2 text-center" key={voice_part.id}>
+                        <div className="w-1/4 text-center" key={voice_part.id}>
                             <p className="mb-2">
                                 <VoicePartTag title={voice_part.title} colour={voice_part.colour} />
                             </p>

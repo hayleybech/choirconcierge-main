@@ -45,9 +45,9 @@ const LearningSummary = ({ status_count, voice_parts_count, song }) => (
             </Tab.Panel>
             <Tab.Panel className="py-6 px-4">
                 <LearningStatusTag status={new LearningStatus('performance-ready')} />
-                <div className="flex mt-4">
+                <div className="flex flex-wrap mt-4 gap-y-6">
                     {voice_parts_count.performance_ready.map(voice_part => (
-                        <div className="w-1/2 text-center" key={voice_part.id}>
+                        <div className="w-1/4 text-center" key={voice_part.id}>
                             <p className="mb-2">
                                 <VoicePartTag title={voice_part.title} colour={voice_part.colour} />
                             </p>
