@@ -87,7 +87,8 @@ class AttendanceReportController extends Controller
             ->push(VoicePart::getNullVoicePart())
             ->map(function ($part) use ($singers) {
                 $part->members = $singers
-                    ->filter(fn($singer) => $singer->voice_part_id === $part->id)
+                    ->filter(fn($singer) => $singer->enrolments
+                        ->contains(fn ($enrolment) => $enrolment->voice_part_id === $part->id))
                     ->values();
 
                 return $part;
@@ -96,7 +97,7 @@ class AttendanceReportController extends Controller
 
     private function getSingers(Collection $events)
     {
-        return Membership::with(['user', 'attendances'])
+        return Membership::with(['user', 'attendances', 'enrolments'])
             ->active()
             ->get()
             ->append('user_avatar_thumb_url')
