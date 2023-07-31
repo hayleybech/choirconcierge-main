@@ -48,8 +48,8 @@ const Show = ({ role }) => {
 
                 <table className="w-full">
                     <thead>
-                    <tr className="text-left">
-                        <th className="py-4">Model</th>
+                    <tr className="text-center md:text-left text-gray-900">
+                        <th className="py-4 text-left">Model</th>
                         <th className="py-4">View</th>
                         <th className="py-4">Create</th>
                         <th className="py-4">Update</th>
@@ -60,7 +60,7 @@ const Show = ({ role }) => {
                     {objectMap(modelsAndAbilities, (modelKey, { label: modelName, abilities }) => (
                         <tr key={modelKey}>
                             <th className="py-4 text-left">
-                                <span className="font-bold">{modelName}</span>
+                                <span className="font-bold text-gray-700">{modelName}</span>
                             </th>
                             {(abilities.map((abilityKey) => (
                                 <td
@@ -69,8 +69,10 @@ const Show = ({ role }) => {
                                         role.abilities.includes(`${modelKey}_${abilityKey}`) ? 'text-emerald-500' : 'text-gray-500',
                                     )}
                                 >
+                                  <div className="flex flex-col items-center md:flex-row">
                                     <Icon icon={role.abilities.includes(`${modelKey}_${abilityKey}`) ? 'check' : 'times'} mr />
                                     {abilityKey[0].toUpperCase() + abilityKey.substring(1)}
+                                  </div>
                                 </td>
                             )))}
                         </tr>

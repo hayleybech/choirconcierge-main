@@ -53,8 +53,8 @@ const RoleForm = ({ role }) => {
 
                     <table className="sm:col-span-6">
                         <thead>
-                        <tr className="text-left">
-                            <th className="py-4">Model</th>
+                        <tr className="text-center md:text-left text-gray-900">
+                            <th className="py-4 text-left">Model</th>
                             <th className="py-4">View</th>
                             <th className="py-4">Create</th>
                             <th className="py-4">Update</th>
@@ -64,19 +64,19 @@ const RoleForm = ({ role }) => {
                         <tbody>
                         {objectMap(modelsAndAbilities, (modelKey, { label: modelName, abilities }) => (
                             <tr key={modelKey}>
-                                <th className="py-4">
+                                <th className="py-4 px-2 text-left">
                                     <CheckboxWithLabel
                                         label={modelName}
                                         id={`${modelName}_all`}
                                         name={`${modelName}_all`}
                                         value="true"
-                                        className="font-bold"
+                                        className="font-bold flex-col md:flex-row items-start"
                                         onChange={(e) => setData('abilities', toggleAllAbilitiesForModel(modelKey, e.target.checked))}
                                         checked={allAbilitiesForModelChecked(modelKey)}
                                     />
                                 </th>
                                 {(abilities.map((abilityKey) => (
-                                <td className="py-4" key={`${modelKey}_${abilityKey}`}>
+                                <td className="py-4 px-2" key={`${modelKey}_${abilityKey}`}>
                                     <CheckboxWithLabel
                                         label={abilityKey[0].toUpperCase() + abilityKey.substring(1)}
                                         id={`${modelKey}_${abilityKey}`}
@@ -87,6 +87,7 @@ const RoleForm = ({ role }) => {
                                             'abilities',
                                             toggleArrayValue(`${modelKey}_${abilityKey}`, data.abilities, e.target.checked)
                                         )}
+                                        className="flex-col md:flex-row items-center"
                                     />
                                 </td>
                                 )))}
