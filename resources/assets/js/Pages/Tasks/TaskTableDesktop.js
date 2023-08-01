@@ -28,7 +28,7 @@ const TaskTableDesktop = ({ tasks }) => {
                         </div>
                     </TableCell>
                     <TableCell>
-                        {task.role.name}
+                        {task.role?.name}
                     </TableCell>
                     <TableCell>
                         {task.type[0].toUpperCase() + task.type.slice(1)}
