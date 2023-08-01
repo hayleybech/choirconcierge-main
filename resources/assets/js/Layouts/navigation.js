@@ -20,6 +20,7 @@ const navigation = [
         showAsActiveForRoutes: ['songs.*'],
         items: [
             { name: 'Add New', route: 'songs.create', icon: 'fa-plus-square', can: 'create_song', showAsActiveForRoutes: ['singers.create'], },
+            { name: 'Song Categories', route: 'song-categories.index', icon: 'tags', can: 'list_songs', showAsActiveForRoutes: ['song-categories.*'], }
         ]
     },
     {

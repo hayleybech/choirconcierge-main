@@ -29,6 +29,7 @@ use App\Http\Controllers\Search\FindSingerController;
 use App\Http\Controllers\Search\GlobalFindUserController;
 use App\Http\Controllers\BroadcastController;
 use App\Http\Controllers\SingerController;
+use App\Http\Controllers\SongCategoryController;
 use App\Http\Controllers\TenantAssetsController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UpdateSingerFeeController;
@@ -119,6 +120,9 @@ Route::middleware([
         Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('employee');
         Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
         Route::resource('songs.singers', LearningStatusController::class)->only(['index', 'update']);
+
+        // Song Categories module
+        Route::resource('song-categories', SongCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 
         // Events module
         Route::resource('events', EventController::class);
