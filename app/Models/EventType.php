@@ -26,6 +26,8 @@ class EventType extends Model
 {
     use BelongsToTenant, SoftDeletes, TenantTimezoneDates;
 
+    protected $guarded = [];
+
     public function events(): HasMany
     {
         return $this->hasMany(Event::class, 'type_id');

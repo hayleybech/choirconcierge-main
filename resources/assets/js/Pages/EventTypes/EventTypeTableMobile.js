@@ -4,7 +4,7 @@ import Icon from "../../components/Icon";
 import Button from "../../components/inputs/Button";
 import { usePage } from "@inertiajs/inertia-react";
 
-const SongCategoryTableMobile = ({ categories, showEditCategory, showDeleteCategory }) => {
+const EventTypeTableMobile = ({ categories, showEditCategory, showDeleteCategory }) => {
     const { can } = usePage().props;
 
     return (
@@ -17,17 +17,17 @@ const SongCategoryTableMobile = ({ categories, showEditCategory, showDeleteCateg
                         </div>
                         <div className="flex items-center min-w-0 mr-1.5">
                             <span className="text-sm font-medium text-gray-500">
-                                {category.songs_count} {category.songs_count === 1 ? 'song' : 'songs'}
+                                {category.events_count} {category.events_count === 1 ? 'event' : 'events'}
                             </span>
                         </div>
                         <div className="flex gap-2 justify-end">
-                            {can.create_song && (
+                            {can.create_event && (
                             <Button variant="primary" size="sm" onClick={() => showEditCategory(category)}>
                                 <Icon icon="edit" />
                                 <div className="sr-only">Edit</div>
                             </Button>
                             )}
-                            {can.create_song && (
+                            {can.create_event && (
                             <Button variant="danger-outline" size="sm" onClick={() => showDeleteCategory(category)}>
                                 <Icon icon="trash" />
                                 <div className="sr-only">Delete</div>
@@ -41,4 +41,4 @@ const SongCategoryTableMobile = ({ categories, showEditCategory, showDeleteCateg
     );
 }
 
-export default SongCategoryTableMobile;
+export default EventTypeTableMobile;

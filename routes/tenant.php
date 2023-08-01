@@ -13,6 +13,7 @@ use App\Http\Controllers\EnsembleController;
 use App\Http\Controllers\EventActivityController;
 use App\Http\Controllers\EventCalendarController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\FindSongController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
@@ -142,6 +143,9 @@ Route::middleware([
         Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
         Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
         Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
+
+        // Event Categories module
+        Route::resource('event-types', EventTypeController::class)->only(['index', 'store', 'update', 'destroy']);
 
         // Documents module
         Route::resource('folders', FolderController::class)->except(['show', 'edit']);
