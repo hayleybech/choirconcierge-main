@@ -17,6 +17,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.5",
         "laravel/framework": "^9.4",
+        "laravel/spark-paddle": "^4.0",
         "laravel/telescope": "^4.7",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
@@ -99,7 +100,14 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://spark.laravel.com"
+        }
+    ]
 }

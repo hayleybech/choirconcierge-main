@@ -2,16 +2,8 @@
 
 namespace Database\Seeders\Critical;
 
-use App\Models\Enrolment;
-use App\Models\Ensemble;
-use App\Models\Role;
-use App\Models\Membership;
-use App\Models\SingerCategory;
 use App\Models\User;
-use App\Models\VoicePart;
 use Carbon\Carbon;
-use Faker\Factory as Faker;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

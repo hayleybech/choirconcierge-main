@@ -16,6 +16,12 @@ class DummyUserSeeder extends Seeder
     {
         $singer_categories = SingerCategory::all();
 
+        // The ResetDemoSite job also tries to add an ensemble,
+        // but this file runs before the rest of the ResetDemoSite job runs.
+        if(tenant()->ensembles->count() === 0) {
+            tenant()->ensembles()->firstOrCreate(['name' => 'Hypothetical Harmony']);
+        }
+
         // Add dummy users - no roles
         User::factory()
             ->count(30)
@@ -28,11 +34,6 @@ class DummyUserSeeder extends Seeder
                     'onboarding_enabled' => $faker->boolean(30),
                 ]);
 
-                // The ResetDemoSite job also tries to add an ensemble,
-                // but this file runs before the rest of the ResetDemoSite job runs.
-                if(tenant()->ensembles->count() === 0) {
-                    tenant()->ensembles()->create(['name' => tenant('name')]);
-                }
                 // Create enrolment
                 tenant()->ensembles()?->first()->enrolments()->create([
                     'membership_id' => $member->id,

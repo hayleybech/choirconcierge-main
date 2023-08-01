@@ -20,6 +20,7 @@ const navigation = [
         showAsActiveForRoutes: ['songs.*'],
         items: [
             { name: 'Add New', route: 'songs.create', icon: 'fa-plus-square', can: 'create_song', showAsActiveForRoutes: ['singers.create'], },
+            { name: 'Song Categories', route: 'song-categories.index', icon: 'tags', can: 'list_songs', showAsActiveForRoutes: ['song-categories.*'], }
         ]
     },
     {
@@ -30,6 +31,7 @@ const navigation = [
         showAsActiveForRoutes: ['events.*'],
         items: [
             { name: 'Add New', route: 'events.create', icon: 'fa-plus-square', can: 'create_event', showAsActiveForRoutes: ['events.create'], },
+            { name: 'Event Types', route: 'event-types.index', icon: 'tags', can: 'list_events', showAsActiveForRoutes: ['event-types.*'], },
             { name: 'Calendar View', route: 'events.calendar.month', icon: 'calendar-alt', can: 'list_events', showAsActiveForRoutes: ['events.calendar.month'], },
             { name: 'Attendance Report', route: 'events.reports.attendance', icon: 'fa-analytics', can: 'list_attendances', showAsActiveForRoutes: ['events.reports.attendance'], },
         ]

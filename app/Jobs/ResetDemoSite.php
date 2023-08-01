@@ -65,7 +65,7 @@ class ResetDemoSite implements ShouldQueue, ShouldBeUnique
             // Re-create demo tenant
             $demo = Tenant::create('demo', 'Hypothetical Harmony Pty Ltd', 'Australia/Perth');
             $demo->domains()->create(['domain' => 'demo']);
-            $demo->ensembles()->updateOrCreate(['name' => 'Hypothetical Harmony']);
+            $demo->ensembles()->firstOrCreate(['name' => 'Hypothetical Harmony']);
 
             // Re-upload tenant logo ("upload" - we're just copying the sample file)
             $logo_path = Storage::disk('global-local')->path('sample/'. 'demo-logo.png');

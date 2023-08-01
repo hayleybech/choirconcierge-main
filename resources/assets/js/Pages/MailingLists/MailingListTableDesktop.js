@@ -14,7 +14,13 @@ const MailingListTableDesktop = ({ tasks }) => {
         type: 'Type',
         address: 'Address',
         created: 'Created',
-    })
+    });
+
+    const list_type_labels = {
+      chat: 'Chat',
+      public: 'Public',
+      distribution: 'Mailout',
+    }
 
     return (
         <Table
@@ -31,7 +37,7 @@ const MailingListTableDesktop = ({ tasks }) => {
                         </div>
                     </TableCell>
                     <TableCell>
-                        <Icon icon={list.type_icon} mr className="text-gray-400" />{list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}
+                        <Icon icon={list.type_icon} mr className="text-gray-400" />{list_type_labels[list.list_type]}
                     </TableCell>
                     <TableCell>
                         <strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span>

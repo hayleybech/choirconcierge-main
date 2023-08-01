@@ -6,6 +6,12 @@ import useRoute from "../../hooks/useRoute";
 const MailingListTableMobile = ({ lists }) => {
     const { route } = useRoute();
 
+    const list_type_labels = {
+        chat: 'Chat',
+        public: 'Public',
+        distribution: 'Mailout',
+    }
+
     return (
         <TableMobile>
             {lists.map((list) => (
@@ -17,7 +23,7 @@ const MailingListTableMobile = ({ lists }) => {
                             </p>
                             <div className="text-xs text-gray-500 shrink-0">
                                 <Icon icon={list.type_icon} mr className="text-gray-400" />
-                                {list.list_type.charAt(0).toUpperCase() + list.list_type.slice(1)}
+                                {list_type_labels[list.list_type]}
                             </div>
                         </div>
                         <div className="flex items-center justify-between">

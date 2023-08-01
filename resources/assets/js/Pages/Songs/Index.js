@@ -47,6 +47,7 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                 ]}
                 actions={[
                     { label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary', can: 'create_song' },
+                    { label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
                     filterAction,
                 ].filter(action => action.can ? can[action.can] : true)}
                 optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }

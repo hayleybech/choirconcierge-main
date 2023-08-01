@@ -87,6 +87,11 @@ export default function TenantLayout({ children }) {
 
                     <AudioPlayerProvider>
                         <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
+                            {tenant.id === 'demo' && (
+                              <div className="bg-red-500 text-white py-1 px-4 text-center text-sm font-bold">
+                                  This demo site is cleared once per week.
+                              </div>
+                            )}
                             {children}
                         </main>
 

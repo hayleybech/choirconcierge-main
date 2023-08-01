@@ -13,6 +13,7 @@ use App\Http\Controllers\EnsembleController;
 use App\Http\Controllers\EventActivityController;
 use App\Http\Controllers\EventCalendarController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\FindSongController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
@@ -29,6 +30,7 @@ use App\Http\Controllers\Search\FindSingerController;
 use App\Http\Controllers\Search\GlobalFindUserController;
 use App\Http\Controllers\BroadcastController;
 use App\Http\Controllers\SingerController;
+use App\Http\Controllers\SongCategoryController;
 use App\Http\Controllers\TenantAssetsController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UpdateSingerFeeController;
@@ -120,6 +122,9 @@ Route::middleware([
         Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
         Route::resource('songs.singers', LearningStatusController::class)->only(['index', 'update']);
 
+        // Song Categories module
+        Route::resource('song-categories', SongCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+
         // Events module
         Route::resource('events', EventController::class);
         Route::resource('events.rsvps', RsvpController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -138,6 +143,9 @@ Route::middleware([
         Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
         Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
         Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
+
+        // Event Categories module
+        Route::resource('event-types', EventTypeController::class)->only(['index', 'store', 'update', 'destroy']);
 
         // Documents module
         Route::resource('folders', FolderController::class)->except(['show', 'edit']);

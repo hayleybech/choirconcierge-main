@@ -19,6 +19,7 @@ import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
 import Icon from "../../components/Icon";
 import Dialog from "../../components/Dialog";
+import SingerSelect from "../../components/inputs/SingerSelect";
 
 const Edit = ({ organisation, centralDomain, timezones }) => {
     const { route } = useRoute();
@@ -54,6 +55,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
         logo: null,
         primary_domain: organisation.primary_domain,
         timezone: organisation.timezone.timezone,
+        billing_user: organisation.billing_user ?? null,
     });
 
     function submit(e) {
@@ -111,6 +113,22 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
                             updateFn={value => setData('timezone', value)}
                         />
                         {errors.timezone && <Error>{errors.timezone}</Error>}
+                    </div>
+
+                    <div className="sm:col-span-6">
+                        <Label label="Billing Contact" forInput="billing_user" />
+                        <SingerSelect
+                          defaultValue={ organisation.billing_user ? {
+                              value: organisation.billing_user.id,
+                              label: organisation.billing_user.name,
+                              name: organisation.billing_user.name,
+                              avatarUrl: organisation.billing_user.avatar_url,
+                              email: organisation.billing_user.email,
+                              roles: organisation.billing_user.membership.roles,
+                          } : null}
+                          updateFn={(value) => setData('billing_user', value)}
+                        />
+                        {<errors className="billing_user"></errors> && <Error>{errors.billing_user}</Error>}
                     </div>
                 </FormSection>
 

@@ -12,15 +12,15 @@ const Index = ({ event, voiceParts }) => {
   
   return (
     <>
-      <AppHead title={`RSVP Summary - ${event.title}`} />
+      <AppHead title={`RSVP List - ${event.title}`} />
       <PageHeader
-        title="RSVP Summary"
+        title="RSVP List"
         icon="calendar"
         breadcrumbs={[
           { name: 'Dashboard', url: route('dash') },
           { name: 'Events', url: route('events.index') },
           { name: event.title, url: route('events.show', {event}) },
-          { name: 'RSVPs', url: route('events.rsvps.index', {event}) },
+          { name: 'RSVP List', url: route('events.rsvps.index', {event}) },
         ]}
       />
 
@@ -35,8 +35,14 @@ const Index = ({ event, voiceParts }) => {
                 { label: 'Unknown', colour: 'amber', icon: 'question', count: part.singers.filter(singer => singer.membership.rsvp.response === 'unknown').length },
                 { label: 'Not going', colour: 'red', icon: 'times', count: part.singers.filter(singer => singer.membership.rsvp.response === 'no').length },
               ].map(({ label, colour, icon, count}) => (
-                <div className="w-1/3 text-center" key={label}>
-                  <RsvpTag icon={icon} label={label} colour={colour} size="md" className="font-bold block" />
+                <div className="w-1/3 text-center flex flex-col items-center justify-between" key={label}>
+                  <div className="hidden md:block">
+                    <RsvpTag icon={icon} label={label} colour={colour} size="md" className="font-bold block" />
+                  </div>
+                  <div className={`flex flex-col items-center md:hidden font-bold text-${colour}-500`}>
+                    <Icon icon={icon} className="text-lg" />
+                    {label}
+                  </div>
                   {count}
                 </div>
               ))}

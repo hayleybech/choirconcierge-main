@@ -177,7 +177,7 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
 
                     <div className="sm:col-span-1 sm:order-2 xl:order-3">
                         <CollapseGroup items={[
-                            { title: 'Song Description', show: true, defaultOpen: true, content: <SongDescription description={song.description} /> },
+                            { title: 'Song Description', show: true, defaultOpen: song.description?.length > 0, content: <SongDescription description={song.description} /> },
                             { title: 'My Learning Status', show: true, content: <MyLearningStatus song={song} /> },
                             {
                                 title: 'Learning Summary',

@@ -43,9 +43,9 @@ const RsvpSummary = ({ rsvpCount, voicePartsRsvpCount }) => (
                     <Icon icon="check" mr />
                     Going
                 </p>
-                <div className="flex">
+                <div className="flex flex-wrap gap-y-6">
                     {voicePartsRsvpCount.yes.map(voice_part => (
-                        <div className="w-1/2 text-center" key={voice_part.id}>
+                        <div className="w-1/4 text-center" key={voice_part.id}>
                             <p className="mb-2">
                                 <VoicePartTag title={voice_part.title} colour={voice_part.colour} />
                             </p>

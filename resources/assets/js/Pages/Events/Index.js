@@ -50,6 +50,7 @@ const Index = ({ events, eventTypes }) => {
                 ]}
                 actions={[
                     { label: 'Add New', icon: 'calendar-plus', url: route('events.create'), variant: 'primary', can: 'create_event' },
+                    { label: 'Event Types', icon: 'tags', url: route('event-types.index'), can: 'list_events' },
                     { label: 'Attendance Report', icon: 'analytics', url: route('events.reports.attendance'), can: 'list_attendances' },
                     filterAction,
                     { label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },

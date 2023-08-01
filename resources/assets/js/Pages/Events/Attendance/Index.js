@@ -16,15 +16,15 @@ const Index = ({ event, voice_parts }) => {
 
     return (
         <>
-            <AppHead title={`Attendance Summary - ${event.title}`} />
+            <AppHead title={`Attendance List - ${event.title}`} />
             <PageHeader
-                title="Attendance Summary"
+                title="Attendance List"
                 icon="calendar"
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash') },
                     { name: 'Events', url: route('events.index') },
                     { name: event.title, url: route('events.show', {event}) },
-                    { name: 'Attendance', url: route('events.attendances.index', {event}) },
+                    { name: 'Attendance List', url: route('events.attendances.index', {event}) },
                 ]}
             />
 
@@ -33,7 +33,7 @@ const Index = ({ event, voice_parts }) => {
             show: true,
             content: (
                 <div key={part.id} className="relative">
-                  <div className="flex flex-wrap bg-white py-4 border-b border-gray-200 gap-y-4">
+                  <div className="flex flex-wrap bg-white py-4 border-b border-gray-200 gap-y-6">
                     {[
                       { label: 'On Time', colour: 'emerald', icon: 'check', count: part.members.filter(attendance => attendance.response === 'present').length },
                       { label: 'Late', colour: 'amber', icon: 'alarm-exclamation', count: part.members.filter(attendance => attendance.response === 'late').length },
@@ -41,8 +41,14 @@ const Index = ({ event, voice_parts }) => {
                       { label: 'Absent (with apology)', colour: 'red', icon: 'times', count: part.members.filter(attendance => attendance.response === 'absent_apology').length },
                       { label: 'Unknown', colour: 'gray', icon: 'question', count: part.members.filter(attendance => attendance.response === 'unknown').length },
                     ].map(({ label, colour, icon, count}) => (
-                      <div className="w-1/2 md:w-1/5 text-center" key={label}>
-                        <AttendanceTag label={label} icon={icon} colour={colour} size="md" className="font-bold block" />
+                      <div className="w-1/3 md:w-1/5 text-center flex flex-col items-center justify-between" key={label}>
+                        <div className="hidden md:block">
+                          <AttendanceTag label={label} icon={icon} colour={colour} size="md" className="font-bold block" />
+                        </div>
+                        <div className={`flex flex-col items-center md:hidden font-bold text-${colour}-500`}>
+                          <Icon icon={icon} className="text-lg" />
+                          {label}
+                        </div>
                         {count}
                       </div>
                     ))}
