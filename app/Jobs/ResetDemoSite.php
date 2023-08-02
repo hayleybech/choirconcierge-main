@@ -52,10 +52,6 @@ class ResetDemoSite implements ShouldQueue, ShouldBeUnique
                         ->pluck('id'))
                     ->delete();
 
-                Enrolment::query()
-                    ->whereIn('ensemble_id', $demo_old->ensembles->pluck('id'))
-                    ->delete();
-
                 $demo_old->ensembles()->delete();
                 $demo_old->members()->delete();
             });
