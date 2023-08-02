@@ -20,17 +20,18 @@ class SparkServiceProvider extends ServiceProvider
         });
 
         Spark::billable(Tenant::class)->authorize(function (Tenant $billable, Request $request) {
-            return $request->user() && (
-                $request->user()->is($billable->billingUser)
-                || $request->user()
-                    ->memberships()
-                    ->firstWhere('tenant_id', $billable->id)
-                    ?->hasRole('Admin')
-                || $request->user()
-                    ->memberships()
-                    ->firstWhere('tenant_id', $billable->id)
-                    ?->hasRole('Accounts Team')
-            );
+            return $billable->id !== 'demo'
+                && $request->user() && (
+                    $request->user()->is($billable->billingUser)
+                    || $request->user()
+                        ->memberships()
+                        ->firstWhere('tenant_id', $billable->id)
+                        ?->hasRole('Admin')
+                    || $request->user()
+                        ->memberships()
+                        ->firstWhere('tenant_id', $billable->id)
+                        ?->hasRole('Accounts Team')
+                );
         });
 
         Spark::billable(Tenant::class)->checkPlanEligibility(function (Tenant $billable, Plan $plan) {
