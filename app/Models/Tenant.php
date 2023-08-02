@@ -25,6 +25,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string $name
  * @property string $logo
  * @property Carbon $renews_at
+ * @property bool $has_gratis
  *
  * Attributes
  * @property CarbonTimeZone timezone from virtual column 'timezone'
@@ -110,6 +111,20 @@ class Tenant extends BaseTenant
         return Attribute::get(fn () =>
             $this->logo ? asset('storage/choir-logos/'.$this->logo) : ''
         );
+    }
+
+    public function billingStatus(): Attribute
+    {
+        return Attribute::get(fn () => [
+            'subscribed' => $this->subscribed() || $this->has_gratis,
+            'onTrial' => $this->onTrial(),
+            'trialEndsAt' => $this->trialEndsAt(),
+            'onGracePeriod' => $this->subscription()?->onGracePeriod() ?? false,
+            'ended' => $this->subscription()?->ended() ?? false,
+            'onPausedGracePeriod' => $this->subscription()?->onPausedGracePeriod() ?? false,
+            'paused' => $this->subscription()?->paused() ?? false,
+            'pastDue' => $this->subscription()?->pastDue() ?? false,
+        ]);
     }
 
 	/**
