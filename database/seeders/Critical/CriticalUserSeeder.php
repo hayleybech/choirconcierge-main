@@ -302,10 +302,26 @@ class CriticalUserSeeder extends Seeder
          * STEP 1b - Insert Voice Parts
          */
         DB::table('voice_parts')->insert([
-            ['tenant_id' => tenant('id'), 'title' => 'Tenor'],
-            ['tenant_id' => tenant('id'), 'title' => 'Lead'],
-            ['tenant_id' => tenant('id'), 'title' => 'Baritone'],
-            ['tenant_id' => tenant('id'), 'title' => 'Bass'],
+            [
+                'tenant_id' => tenant('id'),
+                'title' => 'Tenor',
+                'colour' => 'red',
+            ],
+            [
+                'tenant_id' => tenant('id'),
+                'title' => 'Lead',
+                'colour' => 'yellow',
+            ],
+            [
+                'tenant_id' => tenant('id'),
+                'title' => 'Baritone',
+                'colour' => 'green',
+            ],
+            [
+                'tenant_id' => tenant('id'),
+                'title' => 'Bass',
+                'colour' => 'blue',
+            ],
         ]);
 
         /*
