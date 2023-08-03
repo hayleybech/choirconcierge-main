@@ -116,9 +116,10 @@ class Tenant extends BaseTenant
     public function billingStatus(): Attribute
     {
         return Attribute::get(fn () => [
-            'subscribed' => $this->subscribed() || $this->has_gratis,
+            'valid' => $this->onTrial() || $this->subscription()?->valid() || $this->has_gratis,
             'onTrial' => $this->onTrial(),
             'trialEndsAt' => $this->trialEndsAt(),
+            'hasExpiredTrial' => $this->hasExpiredTrial(),
             'onGracePeriod' => $this->subscription()?->onGracePeriod() ?? false,
             'ended' => $this->subscription()?->ended() ?? false,
             'onPausedGracePeriod' => $this->subscription()?->onPausedGracePeriod() ?? false,

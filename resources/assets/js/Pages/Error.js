@@ -8,9 +8,9 @@ import {usePage} from "@inertiajs/inertia-react";
 
 const Show = ({ status, orgAdmins, isMember }) => {
     const { tenant } = usePage().props;
-    console.log(usePage().props);
 
     const title = {
+        402: 'No Active Subscription',
         403: 'Forbidden',
         404: 'Page Not Found',
         500: 'Server Error',
@@ -18,6 +18,7 @@ const Show = ({ status, orgAdmins, isMember }) => {
     }[status];
 
     const description = {
+        402: 'Your organisation\'s subscription has expired. ',
         403: 'Sorry, you are forbidden from accessing this page.',
         404: 'Sorry, the page you are looking for could not be found.',
         500: 'Whoops, something went wrong on our servers.',
@@ -32,6 +33,7 @@ const Show = ({ status, orgAdmins, isMember }) => {
     }[status];
 
     const callToAction = {
+        402: "One of your admins or someone from your accounts team will need to contact us. ",
         403: <>
             If you think you should be allowed here, <br />
             please contact one of your organisation's admins.
@@ -45,6 +47,7 @@ const Show = ({ status, orgAdmins, isMember }) => {
     }[status];
 
     const action = {
+        402: <NavButtons goToTenant={false} />,
         403: <NavButtons />,
         404: <NavButtons />,
         500: <NavButtons />,
@@ -52,6 +55,7 @@ const Show = ({ status, orgAdmins, isMember }) => {
     }[status];
 
     const extraDetails = {
+        402: isMember ? <OrganisationAdmins admins={orgAdmins} /> : null,
         403: isMember ? <OrganisationAdmins admins={orgAdmins} /> : null,
         404: tenant ? <PopularPages /> : null,
         500: null,
@@ -131,13 +135,13 @@ const Link = ({ variant = 'primary', className, children, ...extraProps }) => (
     </a>
 );
 
-const NavButtons = () => {
+const NavButtons = ({ goToTenant = true }) => {
     const { route } = useRoute();
     const { tenant } = usePage().props;
 
     return (
         <div className="flex gap-x-4 items-center justify-center">
-            <Button href={tenant ? route('dash') : route('central.dash')} variant="primary">
+            <Button href={tenant && goToTenant ? route('dash') : route('central.dash')} variant="primary">
                 Go to dashboard
                 <Icon icon="long-arrow-right" />
             </Button>

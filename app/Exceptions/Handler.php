@@ -3,7 +3,6 @@
 namespace App\Exceptions;
 
 use App\Models\Membership;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -11,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedById;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -36,33 +36,35 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param Throwable $exception
+     * @param Throwable $e
      * @return void
+     * @throws Throwable
      */
-    public function report(Throwable $exception)
+    public function report(Throwable $e): void
     {
-        if ($this->shouldReport($exception) && app()->bound('sentry')) {
-            app('sentry')->captureException($exception);
+        if ($this->shouldReport($e) && app()->bound('sentry')) {
+            app('sentry')->captureException($e);
         }
 
-        parent::report($exception);
+        parent::report($e);
     }
 
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  Request  $request
-     * @param Throwable $exception
+     * @param Request $request
+     * @param Throwable $e
      *
-     * @return JsonResponse|RedirectResponse|Response|\Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse|RedirectResponse|Response|SymfonyResponse
+     * @throws Throwable
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e): Response|JsonResponse|SymfonyResponse|RedirectResponse
     {
-        $response = parent::render($request, $exception);
+        $response = parent::render($request, $e);
 
         $this->initialiseTenancyByPath($request->getRequestUri());
 
-        if (! config('app.debug') && in_array($response->status(), [500, 503, 404, 403])) {
+        if (! config('app.debug') && in_array($response->status(), [500, 503, 402, 403, 404])) {
             return Inertia::render('Error', [
                 'tenant' => tenant(),
                 'status' => $response->status(),
@@ -81,7 +83,8 @@ class Handler extends ExceptionHandler
         return $response;
     }
 
-    private function initialiseTenancyByPath(string $uri) {
+    private function initialiseTenancyByPath(string $uri): void
+    {
         $found = preg_match('/\/(.*?)\//', $uri, $match) === 1;
 
         if(! $found) {

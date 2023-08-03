@@ -9,16 +9,20 @@ const formatDate = (date, format) => (
 );
 
 const BillingNotices = ({ billing, tenantId }) => {
-  // Active subscription
-  if(billing.subscribed) {
-    return null;
-  }
-
   // On Trial
   if(billing.onTrial) {
     return (
       <TenantNotice variant="info">
         Your organisation is on a trial until {formatDate(billing.trialEndsAt, 'DATE_MED')}. <BillingLink tenantId={tenantId} />
+      </TenantNotice>
+    );
+  }
+
+  // On Trial - Expired
+  if(billing.hasExpiredTrial) {
+    return (
+      <TenantNotice variant="danger">
+        Your organisation's trial has expired. Your members won't be able to log in until you purchase a subscription. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
   }
@@ -64,6 +68,15 @@ const BillingNotices = ({ billing, tenantId }) => {
     return (
       <TenantNotice variant="danger">
         Your organisation's subscription has been paused. Only Admins and Accounts Team can log in. <BillingLink tenantId={tenantId} />
+      </TenantNotice>
+    );
+  }
+
+  // Fallback - No valid subscription
+  if(!billing.valid) {
+    return (
+      <TenantNotice variant="danger">
+        There is an issue with your organisation's billing. Your members won't be able to log in until you purchase a subscription. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
   }
