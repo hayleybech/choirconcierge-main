@@ -101,16 +101,20 @@ return [
 
             'plans' => [
                 [
-                    'name' => 'Standard',
-                    'short_description' => 'This is a short, human friendly description of the plan.',
+                    'name' => 'Small Choir',
+                    'short_description' => 'Up to 25 users.',
                     'monthly_id' => env('SPARK_STANDARD_MONTHLY_PLAN', 1000),
                     'yearly_id' => env('SPARK_STANDARD_YEARLY_PLAN', 1001),
                     'features' => [
-                        'Feature 1',
-                        'Feature 2',
-                        'Feature 3',
+                        'Up to 25 users',
+                        'Unmetered storage',
                     ],
                     'archived' => false,
+                    'options' => [
+                        'activeUserQuota' => 25,
+                        'activeUserQuotaBuffer' => 5,
+                        'activeUserGracePeriodDays' => 30,
+                    ]
                 ],
             ],
 

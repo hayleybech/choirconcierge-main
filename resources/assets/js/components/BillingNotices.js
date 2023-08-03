@@ -4,7 +4,7 @@ import Icon from "./Icon";
 import useRoute from "../hooks/useRoute";
 import ButtonLink from "./inputs/ButtonLink";
 
-const formatDate = (date, format) => (
+const formatDate = (date, format = 'DATE_MED') => (
   DateTime.fromJSDate(new Date(date)).toLocaleString(DateTime[format])
 );
 
@@ -13,7 +13,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   if(billing.onTrial) {
     return (
       <TenantNotice variant="info">
-        Your organisation is on a trial until {formatDate(billing.trialEndsAt, 'DATE_MED')}. <BillingLink tenantId={tenantId} />
+        Your organisation is on a trial until {formatDate(billing.trialEndsAt)}. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
   }
@@ -68,6 +68,34 @@ const BillingNotices = ({ billing, tenantId }) => {
     return (
       <TenantNotice variant="danger">
         Your organisation's subscription has been paused. Only Admins and Accounts Team can log in. <BillingLink tenantId={tenantId} />
+      </TenantNotice>
+    );
+  }
+
+  // Active User Quota - Nearly Exceeded
+  if(billing.activeUserQuota.quotaNearlyExceeded) {
+    return (
+      <TenantNotice variant="info">
+        Your organisation's has almost exceeded its quota of active members. You may need to upgrade your plan soon. <BillingLink tenantId={tenantId} />
+      </TenantNotice>
+    );
+  }
+
+  // Active User Quota - On Grace Period
+  if(billing.activeUserQuota.onGracePeriod) {
+    // @todo better copy here
+    return (
+      <TenantNotice variant="warning">
+        Your organisation's has exceeded its quota of active members. The app will function normally until {formatDate(billing.activeUserQuota.gracePeriodEndsAt)}. <BillingLink tenantId={tenantId} />
+      </TenantNotice>
+    );
+  }
+
+  // Active User Quota - Exceeded
+  if(billing.activeUserQuota.quotaExceeded) {
+    return (
+      <TenantNotice variant="danger">
+        Your organisation's has exceeded its quota of active members. Your members won't be able to log in until you upgrade your subscription. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
   }

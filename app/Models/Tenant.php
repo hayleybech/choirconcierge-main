@@ -115,8 +115,12 @@ class Tenant extends BaseTenant
 
     public function billingStatus(): Attribute
     {
+        $activeUserQuotaStatus = $this->getActiveUserQuotaStatus();
+
         return Attribute::get(fn () => [
-            'valid' => $this->onTrial() || $this->subscription()?->valid() || $this->has_gratis,
+            'valid' => $this->onTrial()
+                || $this->has_gratis
+                || ($this->subscription()?->valid() && ! $activeUserQuotaStatus['quotaExceeded']),
             'onTrial' => $this->onTrial(),
             'trialEndsAt' => $this->trialEndsAt(),
             'hasExpiredTrial' => $this->hasExpiredTrial(),
@@ -125,7 +129,43 @@ class Tenant extends BaseTenant
             'onPausedGracePeriod' => $this->subscription()?->onPausedGracePeriod() ?? false,
             'paused' => $this->subscription()?->paused() ?? false,
             'pastDue' => $this->subscription()?->pastDue() ?? false,
+
+            'activeUserQuota' => $activeUserQuotaStatus,
         ]);
+    }
+
+    public function getActiveUserQuotaStatus(): array
+    {
+        // Load config
+        $quota = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserQuota'] : null;
+        $quotaBuffer = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserQuotaBuffer'] : null;
+        $gracePeriodDays = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserGracePeriodDays'] : null;
+
+        $activeUserCount = Membership::query()
+            ->active()
+            ->count();
+        $lastUserCreatedAt = Membership::query()
+            ->orderBy('created_at', 'desc')
+            ->value('created_at');
+        $gracePeriodEndsAt = Carbon::make($lastUserCreatedAt)->addDays($gracePeriodDays);
+
+        return [
+            'quota' => $quota,
+            'activeUserCount' => $activeUserCount,
+            'quotaExceeded' => $quota
+                && $gracePeriodDays !== null
+                && $activeUserCount > $quota
+                && $gracePeriodEndsAt->isFuture(),
+            'onGracePeriod' => $quota
+                && $gracePeriodDays !== null
+                && $activeUserCount > $quota
+                && $gracePeriodEndsAt->isFuture(),
+            'gracePeriodEndsAt' => $gracePeriodEndsAt,
+            'quotaNearlyExceeded' => $quota
+                && $quotaBuffer !== null
+                && $activeUserCount < $quota
+                && ($activeUserCount + $quotaBuffer) > $quota,
+        ];
     }
 
 	/**

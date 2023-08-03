@@ -95,7 +95,7 @@ export default function TenantLayout({ children }) {
                               </TenantNotice>
                             )}
 
-                            { process.env.MIX_FEATURE_BILLING && tenant.id !== 'demo' && (can.manage_finances || can.update_tenant) && (
+                            {process.env.MIX_FEATURE_BILLING && tenant.id !== 'demo' && (can.manage_finances || can.update_tenant) && (
                                 <BillingNotices billing={tenant.billing_status} tenantId={tenant.id} />
                             )}
 
