@@ -91,7 +91,7 @@ const BillingLink = ({ tenantId }) => {
 
   const billingLink = route('spark.portal', { type: 'tenant', id: tenantId });
   return (
-    <ButtonLink variant="secondary" size="xs" href={billingLink} className="ml-6">
+    <ButtonLink variant="secondary" size="xs" href={billingLink} className="shrink-0">
       Go to Billing
       <Icon icon="chevron-right" />
     </ButtonLink>
