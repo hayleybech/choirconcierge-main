@@ -121,7 +121,7 @@ class Tenant extends BaseTenant
 
     public function billingStatus(): Attribute
     {
-        $this->load('subscriptions');
+        $this->load(['subscriptions', 'customer']);
         $activeUserQuotaStatus = $this->getActiveUserQuotaStatus();
 
         return Attribute::get(fn () => [
