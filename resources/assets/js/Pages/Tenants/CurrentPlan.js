@@ -3,6 +3,7 @@ import React from "react";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import useRoute from "../../hooks/useRoute";
 import classNames from "../../classNames";
+import BillingTag from "../Central/Tenants/BillingTag";
 
 const formatDate = (date, format = 'DATE_MED') => (
   DateTime.fromJSDate(new Date(date)).toLocaleString(DateTime[format])
@@ -21,7 +22,8 @@ const CurrentPlan = ({ plan, billing, tenantId }) => {
     return (
       <div className="border border-gray-300 rounded bg-white p-4 mt-2 flex flex-wrap justify-between items-start gap-4">
         <div>
-          <div className="font-bold">{plan.name}</div>
+          <BillingTag billing={billing} />
+          <div className="font-bold mt-2">{plan.name}</div>
           <div className="text-gray-800">{plan.short_description}</div>
         </div>
         <div className="w-full md:w-1/3 order-last md:order-none">
