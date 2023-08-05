@@ -121,6 +121,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
 
+                {process.env.MIX_FEATURE_BILLING && (
                 <FormSection title="Billing Details">
                     <div className="sm:col-span-6">
                         <Label label="Billing Contact" forInput="billing_user" />
@@ -143,6 +144,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
                         <CurrentPlan plan={organisation.plan} billing={organisation.billing_status} tenantId={organisation.id} />
                     </div>
                 </FormSection>
+                )}
 
                 <FormFooter>
                     <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
