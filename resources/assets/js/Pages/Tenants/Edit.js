@@ -20,6 +20,7 @@ import useRoute from "../../hooks/useRoute";
 import Icon from "../../components/Icon";
 import Dialog from "../../components/Dialog";
 import SingerSelect from "../../components/inputs/SingerSelect";
+import CurrentPlan from "./CurrentPlan";
 
 const Edit = ({ organisation, centralDomain, timezones }) => {
     const { route } = useRoute();
@@ -114,7 +115,13 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
                         />
                         {errors.timezone && <Error>{errors.timezone}</Error>}
                     </div>
+                </FormSection>
+                <FormFooter>
+                    <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
+                    <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
+                </FormFooter>
 
+                <FormSection title="Billing Details">
                     <div className="sm:col-span-6">
                         <Label label="Billing Contact" forInput="billing_user" />
                         <SingerSelect
@@ -129,6 +136,11 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
                           updateFn={(value) => setData('billing_user', value)}
                         />
                         {<errors className="billing_user"></errors> && <Error>{errors.billing_user}</Error>}
+                    </div>
+
+                    <div className="sm:col-span-6">
+                        <Label label="Current Plan" />
+                        <CurrentPlan plan={organisation.plan} billing={organisation.billing_status} tenantId={organisation.id} />
                     </div>
                 </FormSection>
 

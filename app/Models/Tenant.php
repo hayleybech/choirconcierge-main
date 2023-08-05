@@ -114,6 +114,11 @@ class Tenant extends BaseTenant
         );
     }
 
+    public function plan(): Attribute
+    {
+        return Attribute::get(fn() => $this->sparkPlan());
+    }
+
     public function billingStatus(): Attribute
     {
         $this->load('subscriptions');
