@@ -13,18 +13,18 @@ const CurrentPlan = ({ plan, billing, tenantId }) => {
 
   const billingLink = route('spark.portal', { type: 'tenant', id: tenantId });
 
-  const withinQuota = billing.activeUserQuota.activeUserCount + plan.options.activeUserQuotaBuffer < billing.activeUserQuota.quota;
   if (plan) {
 
-    let quotaPercentUsed = billing.activeUserQuota.activeUserCount / billing.activeUserQuota.quota * 100;
+    const withinQuota = billing.activeUserQuota.activeUserCount + plan.options.activeUserQuotaBuffer < billing.activeUserQuota.quota;
+    const quotaPercentUsed = billing.activeUserQuota.activeUserCount / billing.activeUserQuota.quota * 100;
 
     return (
-      <div className="border border-gray-300 rounded bg-white p-4 mt-2 flex justify-between items-start gap-x-4">
+      <div className="border border-gray-300 rounded bg-white p-4 mt-2 flex flex-wrap justify-between items-start gap-4">
         <div>
           <div className="font-bold">{plan.name}</div>
           <div className="text-gray-800">{plan.short_description}</div>
         </div>
-        <div className="md:w-1/3">
+        <div className="w-full md:w-1/3 order-last md:order-none">
           <div className="text-gray-600 text-sm">Active Users</div>
           <div className="overflow-hidden rounded-full bg-gray-200">
             <div
@@ -48,7 +48,7 @@ const CurrentPlan = ({ plan, billing, tenantId }) => {
 
   if (!plan && billing.onTrial) {
     return (
-      <div className="border border-blue-300 rounded bg-blue-100 p-4 mt-2 flex justify-between items-start gap-x-4">
+      <div className="border border-blue-300 rounded bg-blue-100 p-4 mt-2 flex justify-between items-start gap-4">
         <div>
           <div className="font-bold text-blue-700">30-day Trial</div>
           <div className="text-blue-800">
