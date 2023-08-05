@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Models\Tenant;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
 use Spark\Plan;
@@ -22,7 +21,6 @@ class SparkServiceProvider extends ServiceProvider
         });
 
         Spark::billable(Tenant::class)->authorize(function (Tenant $billable, Request $request) {
-            // @todo feature flag here
             return $billable->id !== 'demo'
                 && $request->user() && (
                     $request->user()->is($billable->billingUser)

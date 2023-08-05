@@ -21,6 +21,10 @@ class BlockMemberAccessWhenNoActiveSubscription
      */
     public function handle(Request $request, Closure $next): Response|RedirectResponse|JsonResponse
     {
+        if(! config('features.billing')) {
+            return $next($request);
+        }
+
         if(auth()->user()?->can('update', Tenant::class)
             || Gate::allows('update-fees')
         ) {
