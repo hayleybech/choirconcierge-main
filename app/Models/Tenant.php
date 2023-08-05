@@ -7,6 +7,7 @@ use Carbon\CarbonTimeZone;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -42,7 +43,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  */
 class Tenant extends BaseTenant
 {
-    use HasDomains, TenantTimezoneDates, Billable;
+    use HasDomains, TenantTimezoneDates, Billable, HasFactory;
 
     protected $appends = ['host', 'timezone_label', 'logo_url'];
 
@@ -76,7 +77,7 @@ class Tenant extends BaseTenant
 
     public function getTimezoneAttribute($value): CarbonTimeZone
     {
-        return new CarbonTimeZone($value);
+        return new CarbonTimeZone($value ?? 'Australia/Perth');
     }
 
     public function getTimezoneLabelAttribute(): string
@@ -115,6 +116,7 @@ class Tenant extends BaseTenant
 
     public function billingStatus(): Attribute
     {
+        $this->load('subscriptions');
         $activeUserQuotaStatus = $this->getActiveUserQuotaStatus();
 
         return Attribute::get(fn () => [

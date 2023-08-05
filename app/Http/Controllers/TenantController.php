@@ -15,7 +15,7 @@ class TenantController extends Controller
     {
         $this->authorize('update', tenant());
 
-        $tenant = tenant()->load(['domains', 'ensembles', 'billingUser'])->append(['primary_domain']);
+        $tenant = tenant()->load(['domains', 'ensembles', 'billingUser'])->append(['primary_domain', 'timezone']);
 
         return Inertia::render('Tenants/Edit', [
             'organisation' => $tenant,
