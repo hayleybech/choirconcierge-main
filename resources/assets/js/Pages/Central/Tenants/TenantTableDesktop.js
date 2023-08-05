@@ -6,6 +6,7 @@ import {Link} from "@inertiajs/inertia-react";
 import ButtonLink from "../../../components/inputs/ButtonLink";
 import Icon from "../../../components/Icon";
 import useRoute from "../../../hooks/useRoute";
+import BillingTag from "./BillingTag";
 
 const TenantTableDesktop = ({ tenants }) => {
     const { route } = useRoute();
@@ -14,7 +15,7 @@ const TenantTableDesktop = ({ tenants }) => {
         name: 'Organisation Name',
         domains: 'Domains',
         timezone: 'Timezone',
-        renews_at: 'Fees Due',
+        renews_at: 'Billing',
         created_at: 'Date Created',
         actions: 'Actions',
     });
@@ -32,7 +33,7 @@ const TenantTableDesktop = ({ tenants }) => {
                     <TableCell>{tenant.domains.map(domainItem => domainItem.domain).join()}</TableCell>
                     <TableCell>{tenant.timezone.timezone}</TableCell>
                     <TableCell>
-                        {tenant.renews_at && <DateTag date={tenant.renews_at} />}
+                        <BillingTag billing={tenant.billing_status} />
                     </TableCell>
                     <TableCell>
                         <DateTag date={tenant.created_at} />

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\ValidationException;
 use Spark\Plan;
 use Spark\Spark;
 
@@ -20,26 +21,26 @@ class SparkServiceProvider extends ServiceProvider
         });
 
         Spark::billable(Tenant::class)->authorize(function (Tenant $billable, Request $request) {
-            return $request->user() && (
-                $request->user()->is($billable->billingUser)
-                || $request->user()
-                    ->memberships()
-                    ->firstWhere('tenant_id', $billable->id)
-                    ?->hasRole('Admin')
-                || $request->user()
-                    ->memberships()
-                    ->firstWhere('tenant_id', $billable->id)
-                    ?->hasRole('Accounts Team')
-            );
+            return $billable->id !== 'demo'
+                && $request->user() && (
+                    $request->user()->is($billable->billingUser)
+                    || $request->user()
+                        ->memberships()
+                        ->firstWhere('tenant_id', $billable->id)
+                        ?->hasRole('Admin')
+                    || $request->user()
+                        ->memberships()
+                        ->firstWhere('tenant_id', $billable->id)
+                        ?->hasRole('Accounts Team')
+                );
         });
 
         Spark::billable(Tenant::class)->checkPlanEligibility(function (Tenant $billable, Plan $plan) {
-            // @todo add tiers for users (unless we decide to re-jig our pricing plan)
-            // if ($billable->projects > 5 && $plan->name == 'Basic') {
-            //     throw ValidationException::withMessages([
-            //         'plan' => 'You have too many projects for the selected plan.'
-            //     ]);
-            // }
+            if($billable->billingStatus['activeUserQuota']['activeUserCount'] > $plan->options['activeUserQuota']) {
+                throw ValidationException::withMessages([
+                     'plan' => 'You have too many active users for the selected plan.',
+                 ]);
+            }
         });
     }
 }

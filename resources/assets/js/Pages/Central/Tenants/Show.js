@@ -8,6 +8,7 @@ import CollapsePanel from "../../../components/CollapsePanel";
 import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
 import CentralLayout from "../../../Layouts/CentralLayout";
+import BillingTag from "./BillingTag";
 
 const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
     <dl className={classNames("grid grid-cols-1 gap-x-4 gap-y-8", gridCols)}>
@@ -37,6 +38,7 @@ const Show = ({ tenant }) => {
                     tenant.timezone.timezone,
                     tenant.renews_at && <DateTag date={tenant.renews_at} label="Renews" />,
                     <DateTag date={tenant.created_at} label="Created" />,
+                    <BillingTag billing={tenant.billing_status} />,
                 ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('central.dash')},
@@ -82,8 +84,12 @@ const ChoirDetails = ({ tenant }) => (
                 value: tenant.timezone.timezone,
             },
             {
-                label: 'Fee Renewal Date',
-                value: tenant.renews_at ? <DateTag date={tenant.renews_at} label="Renews" /> : 'Unknown',
+                label: 'Billing Details',
+                value: <div className="text-gray-600">
+                  <span className="font-bold">Current Plan:</span> {tenant.plan?.name ?? 'None'}<br />
+                  <span className="font-bold">Billing Status:</span> <BillingTag billing={tenant.billing_status} /><br />
+                  <span className="font-bold">Active Users:</span> {tenant.billing_status.activeUserQuota.activeUserCount} / {tenant.billing_status.activeUserQuota.quota}
+                </div>,
             },
         ]}/>
     </CollapsePanel>

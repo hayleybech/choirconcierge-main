@@ -44,6 +44,7 @@ use App\Http\Controllers\UpdateSingerCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\VoicePartController;
+use App\Http\Middleware\BlockMemberAccessWhenNoActiveSubscription;
 use App\Http\Middleware\EnsureUserIsMember;
 use App\Http\Middleware\NoRobots;
 use App\Http\Middleware\RedirectTenantFromDomainToFolder;
@@ -82,6 +83,7 @@ Route::middleware([
 	InitializeTenancyByPath::class,
     SetTenantRouteParam::class,
     NoRobots::class,
+    BlockMemberAccessWhenNoActiveSubscription::class,
 ])->prefix('/{tenant}')->group(function () {
 
     // Tenant asset - path version as path tenancy isn't supported by the library

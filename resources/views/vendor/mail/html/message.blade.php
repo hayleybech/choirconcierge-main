@@ -11,7 +11,7 @@
 @endcomponent
 @else
 @component('mail::header', ['url' => config('app.url')])
-<img src="{{ global_asset('/img/vibrant/logo-dark.svg') }}" alt="Choir Concierge" height="50"><br>
+<img src="{{ global_asset('/img/vibrant/logo-dark.png') }}" alt="Choir Concierge" height="50"><br>
 @endcomponent
 @endif
 @endslot
@@ -31,7 +31,7 @@
 {{-- Footer --}}
 @slot('footer')
 @component('mail::footer')
-<img src="{{ global_asset('/img/vibrant/logo-dark.svg') }}" alt="Choir Concierge" height="30"><br>
+<img src="{{ global_asset('/img/vibrant/logo-dark.png') }}" alt="Choir Concierge" height="30"><br>
 © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
 @endcomponent
 @endslot

@@ -7,6 +7,7 @@ use Carbon\CarbonTimeZone;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,6 +26,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string $name
  * @property string $logo
  * @property Carbon $renews_at
+ * @property bool $has_gratis
  *
  * Attributes
  * @property CarbonTimeZone timezone from virtual column 'timezone'
@@ -41,7 +43,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  */
 class Tenant extends BaseTenant
 {
-    use HasDomains, TenantTimezoneDates, Billable;
+    use HasDomains, TenantTimezoneDates, Billable, HasFactory;
 
     protected $appends = ['host', 'timezone_label', 'logo_url'];
 
@@ -75,7 +77,7 @@ class Tenant extends BaseTenant
 
     public function getTimezoneAttribute($value): CarbonTimeZone
     {
-        return new CarbonTimeZone($value);
+        return new CarbonTimeZone($value ?? 'Australia/Perth');
     }
 
     public function getTimezoneLabelAttribute(): string
@@ -110,6 +112,67 @@ class Tenant extends BaseTenant
         return Attribute::get(fn () =>
             $this->logo ? asset('storage/choir-logos/'.$this->logo) : ''
         );
+    }
+
+    public function plan(): Attribute
+    {
+        return Attribute::get(fn() => $this->sparkPlan());
+    }
+
+    public function billingStatus(): Attribute
+    {
+        $this->load(['subscriptions', 'customer']);
+        $activeUserQuotaStatus = $this->getActiveUserQuotaStatus();
+
+        return Attribute::get(fn () => [
+            'valid' => $this->onTrial()
+                || $this->has_gratis
+                || ($this->subscription()?->valid() && ! $activeUserQuotaStatus['quotaExceeded']),
+            'onTrial' => $this->onTrial(),
+            'trialEndsAt' => $this->trialEndsAt(),
+            'hasExpiredTrial' => $this->hasExpiredTrial(),
+            'onGracePeriod' => $this->subscription()?->onGracePeriod() ?? false,
+            'ended' => $this->subscription()?->ended() ?? false,
+            'onPausedGracePeriod' => $this->subscription()?->onPausedGracePeriod() ?? false,
+            'paused' => $this->subscription()?->paused() ?? false,
+            'pastDue' => $this->subscription()?->pastDue() ?? false,
+
+            'activeUserQuota' => $activeUserQuotaStatus,
+        ]);
+    }
+
+    public function getActiveUserQuotaStatus(): array
+    {
+        // Load config
+        $quota = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserQuota'] : null;
+        $quotaBuffer = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserQuotaBuffer'] : null;
+        $gracePeriodDays = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserGracePeriodDays'] : null;
+
+        $activeUserCount = $this->members()
+            ->active()
+            ->count();
+        $lastUserCreatedAt = $this->members()
+            ->orderBy('created_at', 'desc')
+            ->value('created_at');
+        $gracePeriodEndsAt = Carbon::make($lastUserCreatedAt)->addDays($gracePeriodDays);
+
+        return [
+            'quota' => $quota,
+            'activeUserCount' => $activeUserCount,
+            'quotaExceeded' => $quota
+                && $gracePeriodDays !== null
+                && $activeUserCount > $quota
+                && $gracePeriodEndsAt->isFuture(),
+            'onGracePeriod' => $quota
+                && $gracePeriodDays !== null
+                && $activeUserCount > $quota
+                && $gracePeriodEndsAt->isFuture(),
+            'gracePeriodEndsAt' => $gracePeriodEndsAt,
+            'quotaNearlyExceeded' => $quota
+                && $quotaBuffer !== null
+                && $activeUserCount < $quota
+                && ($activeUserCount + $quotaBuffer) > $quota,
+        ];
     }
 
 	/**

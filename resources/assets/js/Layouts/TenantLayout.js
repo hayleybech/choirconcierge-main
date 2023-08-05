@@ -13,6 +13,8 @@ import {useMediaQuery} from "react-responsive";
 import usePromptBeforeUnload from "../hooks/usePromptBeforeUnload";
 import useRoute from "../hooks/useRoute";
 import SwitchChoirMenu from "../components/SwitchChoirMenu";
+import BillingNotices from "../components/BillingNotices";
+import TenantNotice from "../components/TenantNotice";
 
 export default function TenantLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -88,10 +90,15 @@ export default function TenantLayout({ children }) {
                     <AudioPlayerProvider>
                         <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
                             {tenant.id === 'demo' && (
-                              <div className="bg-red-500 text-white py-1 px-4 text-center text-sm font-bold">
+                              <TenantNotice variant="warning">
                                   This demo site is cleared once per week.
-                              </div>
+                              </TenantNotice>
                             )}
+
+                            {process.env.MIX_FEATURE_BILLING && tenant.id !== 'demo' && (can.manage_finances || can.update_tenant) && (
+                                <BillingNotices billing={tenant.billing_status} tenantId={tenant.id} />
+                            )}
+
                             {children}
                         </main>
 
