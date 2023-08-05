@@ -19,7 +19,7 @@ class TenantController extends Controller
     public function show(Tenant $tenant): Response
     {
         return Inertia::render('Central/Tenants/Show', [
-            'tenant' => $tenant,
+            'tenant' => $tenant->append(['billing_status', 'plan']),
         ]);
     }
 }
