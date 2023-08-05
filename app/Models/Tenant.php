@@ -143,10 +143,10 @@ class Tenant extends BaseTenant
         $quotaBuffer = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserQuotaBuffer'] : null;
         $gracePeriodDays = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserGracePeriodDays'] : null;
 
-        $activeUserCount = Membership::query()
+        $activeUserCount = $this->members()
             ->active()
             ->count();
-        $lastUserCreatedAt = Membership::query()
+        $lastUserCreatedAt = $this->members()
             ->orderBy('created_at', 'desc')
             ->value('created_at');
         $gracePeriodEndsAt = Carbon::make($lastUserCreatedAt)->addDays($gracePeriodDays);
