@@ -14,12 +14,8 @@ class BlockMemberAccessWhenNoActiveSubscription
 {
     /**
      * Handle an incoming request.
-     *
-     * @param Request $request
-     * @param Closure(Request): (Response|RedirectResponse) $next
-     * @return Response|RedirectResponse|JsonResponse
      */
-    public function handle(Request $request, Closure $next): Response|RedirectResponse|JsonResponse
+    public function handle(Request $request, Closure $next)
     {
         if(! config('features.billing')) {
             return $next($request);

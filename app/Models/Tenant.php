@@ -154,7 +154,7 @@ class Tenant extends BaseTenant
         $lastUserCreatedAt = $this->members()
             ->orderBy('created_at', 'desc')
             ->value('created_at');
-        $gracePeriodEndsAt = Carbon::make($lastUserCreatedAt)->addDays($gracePeriodDays);
+        $gracePeriodEndsAt = $lastUserCreatedAt ? Carbon::make($lastUserCreatedAt)->addDays($gracePeriodDays ?? 0) : null;
 
         return [
             'quota' => $quota,
@@ -162,11 +162,11 @@ class Tenant extends BaseTenant
             'quotaExceeded' => $quota
                 && $gracePeriodDays !== null
                 && $activeUserCount > $quota
-                && $gracePeriodEndsAt->isFuture(),
+                && $gracePeriodEndsAt?->isFuture(),
             'onGracePeriod' => $quota
                 && $gracePeriodDays !== null
                 && $activeUserCount > $quota
-                && $gracePeriodEndsAt->isFuture(),
+                && $gracePeriodEndsAt?->isFuture(),
             'gracePeriodEndsAt' => $gracePeriodEndsAt,
             'quotaNearlyExceeded' => $quota
                 && $quotaBuffer !== null
