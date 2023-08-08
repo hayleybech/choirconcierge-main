@@ -28,9 +28,9 @@ class EventType {
         this.title = title;
     }
 
-    get badgeColour() { return EventType.types[this.title].badgeColour; }
-    get dotColour() { return EventType.types[this.title].dotColour; }
-    get borderColour() { return EventType.types[this.title].borderColour; }
+    get badgeColour() { return EventType.types[this.title]?.badgeColour ?? 'bg-gray-400/50'; }
+    get dotColour() { return EventType.types[this.title]?.dotColour ?? 'bg-gray-400'; }
+    get borderColour() { return EventType.types[this.title]?.borderColour ?? 'border-gray-400'; }
 }
 
 export default EventType;
