@@ -46,7 +46,7 @@ const Edit = ({ roles, singer }) => {
 
     function submit(e) {
         e.preventDefault();
-        put(route('singers.update', singer));
+        put(route('singers.update', {singer}));
     }
 
     function renewFor(diff) {
