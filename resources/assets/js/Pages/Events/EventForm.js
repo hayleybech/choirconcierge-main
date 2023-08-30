@@ -203,7 +203,7 @@ const EventForm = ({ event, types, mode }) => {
                         {errors.description && <Error>{errors.description}</Error>}
                     </div>
 
-                    <div className="sm:col-span-4">
+                    <div className="sm:col-span-4 relative z-20">
                         <Label label="Start Date" forInput="start_date" />
                         <DateInput
                             name="start_date"
@@ -234,7 +234,7 @@ const EventForm = ({ event, types, mode }) => {
                         <Help>At least 15 min before</Help>
                     </div>
 
-                    <div className="sm:col-span-4">
+                    <div className="sm:col-span-4 relative z-10">
                         <Label label="End Date" forInput="end_date" />
                         <DateInput
                             name="end_date"
