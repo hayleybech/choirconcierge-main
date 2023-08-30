@@ -75,14 +75,11 @@ class Tenant extends BaseTenant
         })->first();
     }
 
-    public function getTimezoneAttribute($value): CarbonTimeZone
-    {
-        return new CarbonTimeZone($value ?? 'Australia/Perth');
-    }
-
     public function getTimezoneLabelAttribute(): string
     {
-        return $this->timezone->toRegionName().' '.$this->timezone->toOffsetName();
+        $timezone = is_string($this->timezone) ? CarbonTimeZone::create($this->timezone) : $this->timezone;
+
+        return $timezone->toRegionName().' '.$timezone->toOffsetName();
     }
 
     public function getMailFromNameAttribute(): string

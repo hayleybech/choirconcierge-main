@@ -55,7 +55,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
         name: organisation.name,
         logo: null,
         primary_domain: organisation.primary_domain,
-        timezone: organisation.timezone.timezone,
+        timezone: organisation.timezone,
         billing_user: organisation.billing_user.id ?? null,
     });
 

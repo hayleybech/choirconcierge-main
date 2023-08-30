@@ -31,7 +31,7 @@ const TenantTableDesktop = ({ tenants }) => {
                         </Link>
                     </TableCell>
                     <TableCell>{tenant.domains.map(domainItem => domainItem.domain).join()}</TableCell>
-                    <TableCell>{tenant.timezone.timezone}</TableCell>
+                    <TableCell>{tenant.timezone}</TableCell>
                     <TableCell>
                         <BillingTag billing={tenant.billing_status} />
                     </TableCell>

@@ -12,7 +12,7 @@ class TenantController extends Controller
     public function index(): Response
     {
         return Inertia::render('Central/Tenants/Index', [
-            'tenants' => Tenant::with('domains')->get()->append(['timezone', 'billing_status'])->values(),
+            'tenants' => Tenant::with('domains')->get()->append(['billing_status'])->values(),
         ]);
     }
 
