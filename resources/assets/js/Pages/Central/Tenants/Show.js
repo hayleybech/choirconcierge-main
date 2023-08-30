@@ -35,7 +35,7 @@ const Show = ({ tenant }) => {
                 title={tenant.name}
                 image={tenant.logo_url}
                 meta={[
-                    tenant.timezone.timezone,
+                    tenant.timezone,
                     tenant.renews_at && <DateTag date={tenant.renews_at} label="Renews" />,
                     <DateTag date={tenant.created_at} label="Created" />,
                     <BillingTag billing={tenant.billing_status} />,
@@ -81,7 +81,7 @@ const ChoirDetails = ({ tenant }) => (
             },
             {
                 label: 'Timezone',
-                value: tenant.timezone.timezone,
+                value: tenant.timezone,
             },
             {
                 label: 'Billing Details',

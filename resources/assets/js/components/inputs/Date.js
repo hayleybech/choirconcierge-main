@@ -17,7 +17,6 @@ const DateInput = ({ name, value, updateFn, hasErrors }) => (
                 name={name}
                 type="text"
                 value={value ? DateTime.fromJSDate(new Date(value)).toLocaleString(DateTime.DATE_MED) : ''}
-                disabled
                 className={classNames('' +
                     'shadow-sm focus:outline-none block w-full sm:text-sm rounded-md pl-10',
                     hasErrors
