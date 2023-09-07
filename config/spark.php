@@ -19,6 +19,8 @@ return [
 
     'dashboard_url' => '/app',
 
+    'terms_url' => 'https://www.choirconcierge.com/terms-of-service/',
+
     /*
     |--------------------------------------------------------------------------
     | Spark Middleware
