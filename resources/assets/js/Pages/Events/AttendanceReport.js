@@ -52,7 +52,7 @@ const AttendanceReport = ({
                 actions={[filterAction]}
             />
 
-            <div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300">
+            <div className="flex flex-col overflow-auto lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300">
                 {showFilters && (
                   <div className="lg:w-1/5 xl:w-1/6 lg:z-10">
                     <FilterSortPane
@@ -70,7 +70,7 @@ const AttendanceReport = ({
                     />
                   )}
 
-                  <div className="overflow-auto pb-8 pr-8">
+                  <div className=" pb-8 pr-8">
                     {events.length > 0 && numSingers === 0 && (
                       <EmptyState
                         icon="users"

@@ -102,7 +102,11 @@ class AttendanceReportController extends Controller
             ->get()
             ->append('user_avatar_thumb_url')
             ->each(function ($singer) use ($events) {
-                $singer->timesPresent = $singer->attendances->where('response', 'present')->count();
+                $singer->timesPresent = $singer
+	                ->attendances
+	                ->whereIn('event_id', $events->pluck('id'))
+	                ->where('response', 'present')
+	                ->count();
                 $singer->percentPresent = $events->count() > 0 ? floor($singer->timesPresent / $events->count() * 100) : null;
             });
     }

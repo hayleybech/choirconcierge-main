@@ -99,7 +99,7 @@ class HandleInertiaRequests extends Middleware
     private function getUserChoirs()
     {
         return session()->has('impersonation:active')
-            ? [tenant()->load('domains')]
+            ? [tenant()?->load('domains')]
             : auth()->user()
                 ?->memberships()
                 ->withoutTenancy()
