@@ -1,7 +1,6 @@
 import React from 'react'
 import PageHeader from "../../../components/PageHeader";
 import classNames from "../../../classNames";
-import {usePage} from "@inertiajs/inertia-react";
 import AppHead from "../../../components/AppHead";
 import DateTag from "../../../components/DateTag";
 import CollapsePanel from "../../../components/CollapsePanel";
