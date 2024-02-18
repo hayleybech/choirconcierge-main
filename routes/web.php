@@ -19,7 +19,7 @@ Route::domain(config('tenancy.central_domains')[0])->group(function() {
 });
 
 Route::prefix('/app')->group(function () {
-	Auth::routes(['register' => false]);
+	Auth::routes();
 
 	// Switch organisation
 	Route::get('/switch-choir/{newTenant}', [Central\SwitchTenantController::class, 'start'])->name('tenants.switch.start');
