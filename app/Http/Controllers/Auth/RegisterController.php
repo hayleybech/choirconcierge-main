@@ -30,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/app/default-dash';
+    protected $redirectTo = '/app/tenants/create';
 
     /**
      * Create a new controller instance.

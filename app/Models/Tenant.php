@@ -27,6 +27,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string $logo
  * @property Carbon $renews_at
  * @property bool $has_gratis
+ * @property User $created_by
  *
  * Attributes
  * @property CarbonTimeZone timezone from virtual column 'timezone'

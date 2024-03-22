@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
-use App\Models\Role;
 use App\Models\Tenant;
 use DateTimeZone;
 use Illuminate\Http\RedirectResponse;
@@ -49,6 +48,9 @@ class TenantController extends Controller
 			$request->input('primary_domain'),
 			$request->input('name'),
 			$request->input('timezone'),
+			[
+				'created_by' => auth()->user()->id,
+			]
 		);
 		if($request->hasFile('logo')) {
 			$tenant->updateLogo($request->file('logo'), $request->file('logo')->hashName());
@@ -67,15 +69,6 @@ class TenantController extends Controller
 		if($request->hasFile('ensemble_logo')) {
 			$ensemble->updateLogo($request->file('ensemble_logo'), $request->file('ensemble_logo')->hashName());
 		}
-
-		// Add membership
-//		auth()->user()->memberships()->create([
-//			'onboarding_enabled' => false,
-//			'joined_at' => now(),
-//			'user_roles' => [Role::query()->where('tenant_id')->where('name', 'admin')],
-//		]);
-		// @todo move membership creation to a job
-		// @todo create a new high-priority job queue.
 
 		return redirect()->route('central.tenants.show', ['tenant' => $tenant])->with(['status' => 'Organisation created.']);
 	}
