@@ -19,7 +19,7 @@ Route::domain(config('tenancy.central_domains')[0])->group(function() {
 });
 
 Route::prefix('/app')->group(function () {
-	Auth::routes(['register' => false]);
+	Auth::routes();
 
 	// Switch organisation
 	Route::get('/switch-choir/{newTenant}', [Central\SwitchTenantController::class, 'start'])->name('tenants.switch.start');
@@ -27,7 +27,8 @@ Route::prefix('/app')->group(function () {
 	Route::middleware(['auth'])->name('central.')->group(function () {
 		Route::get('/', [Central\DashController::class, 'index'])->name('dash');
         Route::resource('default-dash', Central\DefaultDashController::class)->only(['index', 'update', 'destroy']);
-        Route::resource('tenants', Central\TenantController::class)->only(['index', 'show']);
+        Route::resource('tenants', Central\TenantController::class)->only(['index', 'show', 'create', 'store']);
+        Route::get('tenants/{tenant}/onboarding', Central\TenantOnboardingController::class)->name('tenants.onboarding');
 
 		// Account Settings
 		Route::get('account/edit', [Central\AccountController::class, 'edit'])->name('accounts.edit');

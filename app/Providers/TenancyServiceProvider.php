@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Jobs\CreateAdminMembershipForTenant;
 use App\Jobs\SeedForTenant;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -24,18 +25,22 @@ class TenancyServiceProvider extends ServiceProvider
             Events\CreatingTenant::class => [],
             Events\TenantCreated::class => [
                 JobPipeline::make([
+					// For multi-database tenancy
                     //Jobs\CreateDatabase::class,
                     //Jobs\MigrateDatabase::class,
                     //Jobs\SeedDatabase::class,
+
+	                // For single-database tenancy
                     SeedForTenant::class,
 
                     // Your own jobs to prepare the tenant.
                     // Provision API keys, create S3 buckets, anything you want!
+					CreateAdminMembershipForTenant::class,
                 ])
                     ->send(function (Events\TenantCreated $event) {
                         return $event->tenant;
                     })
-                    ->shouldBeQueued(false), // `false` by default, but you probably want to make this `true` for production.
+                    ->shouldBeQueued(true), // `false` by default, but you probably want to make this `true` for production.
             ],
             Events\SavingTenant::class => [],
             Events\TenantSaved::class => [],
@@ -49,7 +54,7 @@ class TenancyServiceProvider extends ServiceProvider
                     ->send(function (Events\TenantDeleted $event) {
                         return $event->tenant;
                     })
-                    ->shouldBeQueued(false), // `false` by default, but you probably want to make this `true` for production.
+                    ->shouldBeQueued(true), // `false` by default, but you probably want to make this `true` for production.
             ],
 
             // Domain events

@@ -136,7 +136,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
                           } : null}
                           updateFn={(value) => setData('billing_user', value)}
                         />
-                        {<errors className="billing_user"></errors> && <Error>{errors.billing_user}</Error>}
+                        {errors.billing_user && <Error>{errors.billing_user}</Error>}
                     </div>
 
                     <div className="sm:col-span-6">
@@ -261,9 +261,9 @@ const AddEnsembleForm = ({ organisation }) => {
                     </div>
 
                     <div className="sm:col-span-6">
-                        <Label label="Ensemble Logo" forInput="logo" />
+                        <Label label="Ensemble Logo" forInput="ensemble_logo" />
                         <AvatarUpload
-                            name="logo_create"
+                            name="ensemble_logo"
                             currentImage={data.logo ? URL.createObjectURL(data.logo) : null}
                             isSquare={false}
                             updateFn={value => setData('logo', value)}

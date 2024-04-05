@@ -16,7 +16,7 @@ class TenantPolicy
             return true;
         }
 
-        if (! $user->membership) {
+        if (! tenancy()->initialized && ! $user->membership) {
             return false;
         }
 
@@ -26,6 +26,11 @@ class TenantPolicy
 
         return null;
     }
+
+	public function create(User $user): bool
+	{
+		return true;
+	}
 
     public function viewAny(User $user): bool
     {

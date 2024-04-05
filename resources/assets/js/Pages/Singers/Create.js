@@ -105,7 +105,6 @@ const Create = ({voice_parts, roles}) => {
                                 <Label label="Last name" forInput="last_name" />
                                 <TextInput name="last_name" autoComplete="family-name" value={data.last_name} updateFn={value => setData('last_name', value)} hasErrors={ !! errors['last_name'] } />
                                 {errors.last_name && <Error>{errors.last_name}</Error>}
-
                             </div>
 
                             <div className="sm:col-span-3">

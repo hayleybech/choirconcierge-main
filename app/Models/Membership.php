@@ -60,15 +60,16 @@ class Membership extends Model
 {
     use Notifiable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'onboarding_enabled',
-        'reason_for_joining',
-        'referrer',
-        'membership_details',
-        'joined_at',
-	    'paid_until',
-    ];
+	protected $fillable = [
+		'user_id',
+		'onboarding_enabled',
+		'reason_for_joining',
+		'referrer',
+		'membership_details',
+		'joined_at',
+		'paid_until',
+		'singer_category_id',
+	];
 
     protected $with = [];
 
@@ -89,18 +90,24 @@ class Membership extends Model
         $singer->roles()->sync($singer_roles);
         $singer->save();
 
-        // Add default enrolment (if only one ensemble)
-        $ensembles = Ensemble::all();
-        if($ensembles->count() === 1) {
-            $singer->enrolments()->create([
-                'ensemble_id' => $ensembles->first()->id,
-            ]);
-        }
+		$singer->addDefaultEnrolment();
 
-        return $singer;
+	    return $singer;
     }
 
-    public function update(array $attributes = [], array $options = [])
+	// Add default enrolment (if only one ensemble)
+	public function addDefaultEnrolment(): void
+	{
+		if (Ensemble::count() !== 1) {
+			return;
+		}
+
+		$this->enrolments()->create([
+			'ensemble_id' => Ensemble::first()->id,
+		]);
+	}
+
+	public function update(array $attributes = [], array $options = [])
     {
         parent::update($attributes, $options);
 
