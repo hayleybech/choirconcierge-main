@@ -70,7 +70,7 @@ class TenantController extends Controller
 			$ensemble->updateLogo($request->file('ensemble_logo'), $request->file('ensemble_logo')->hashName());
 		}
 
-		return redirect()->route('central.tenants.show', ['tenant' => $tenant])->with(['status' => 'Organisation created.']);
+		return redirect()->route('central.tenants.onboarding', ['tenant' => $tenant])->with(['status' => 'Organisation created.']);
 	}
 
     public function show(Tenant $tenant): Response
