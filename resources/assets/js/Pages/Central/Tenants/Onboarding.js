@@ -5,23 +5,23 @@ import CentralLayout from "../../../Layouts/CentralLayout";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import {Inertia} from "@inertiajs/inertia";
 
-const Onboarding = ({ tenant, setupDone }) => {
+const Onboarding = ({ tenant }) => {
     const { route } = useRoute();
 
     const TIME_BETWEEN_CHECKS = 3000;
 
     useEffect(() => {
         const timer = setInterval(() => {
-            if(setupDone) {
+            if(tenant.setup_done) {
                 window.location.assign(route('dash', {'tenant': tenant}));
                 return;
             }
 
-            Inertia.reload({ only: ['setupDone'] })
+            Inertia.reload({ only: ['tenant'] })
         }, TIME_BETWEEN_CHECKS);
 
         return () => clearInterval(timer);
-    }, [setupDone]);
+    }, [tenant]);
 
     return (
         <>

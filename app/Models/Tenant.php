@@ -27,7 +27,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string $logo
  * @property Carbon $renews_at
  * @property bool $has_gratis
- * @property User $created_by
+ * @property string $created_by ID of user that created the Tenant
  *
  * Attributes
  * @property CarbonTimeZone timezone from virtual column 'timezone'
@@ -140,6 +140,14 @@ class Tenant extends BaseTenant
             'activeUserQuota' => $activeUserQuotaStatus,
         ]);
     }
+
+	public function setupDone(): Attribute
+	{
+		return Attribute::get(fn() => Membership::query()
+			->where('tenant_id', $this->id)
+			->where('user_id', $this->created_by)
+			->exists());
+	}
 
     public function getActiveUserQuotaStatus(): array
     {
