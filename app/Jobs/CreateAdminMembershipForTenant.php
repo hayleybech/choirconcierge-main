@@ -56,7 +56,7 @@ class CreateAdminMembershipForTenant implements ShouldQueue
 	    $this->tenant->members()->save($member);
     }
 
-	public function getAdminUser(string $adminId)
+	public function getAdminUser(?string $adminId)
 	{
 		if ($adminId) {
 			return User::findOrFail($adminId);

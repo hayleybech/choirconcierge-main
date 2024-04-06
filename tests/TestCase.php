@@ -45,7 +45,7 @@ abstract class TestCase extends BaseTestCase
     protected function createUserWithRole(string $roleName): User
     {
         $singer = Membership::factory()->create();
-        $singer->roles()->attach([Role::where('name', $roleName)->value('id')]);
+        $singer->roles()->attach([Role::where('name', $roleName)->valueOrFail('id')]);
 
         return $singer->user;
     }
