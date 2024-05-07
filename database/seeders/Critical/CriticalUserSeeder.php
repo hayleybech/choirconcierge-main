@@ -2,18 +2,16 @@
 
 namespace Database\Seeders\Critical;
 
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class CriticalUserSeeder extends Seeder
 {
     public function run(): void
     {
         /*
-         * STEP 1 - Insert categories
+         * STEP 1 - Insert User Roles
          */
 
         // Insert user roles
@@ -270,7 +268,9 @@ class CriticalUserSeeder extends Seeder
             ],
         ]);
 
-        // Insert singer categories
+	    /*
+		 * STEP 2 - Insert Membership Statuses (Singer Categories)
+		 */
         DB::table('singer_categories')->insert([
             [
                 'tenant_id' => tenant('id'),
@@ -299,7 +299,7 @@ class CriticalUserSeeder extends Seeder
         ]);
 
         /*
-         * STEP 1b - Insert Voice Parts
+         * STEP 3 - Insert Default Voice Parts
          */
         DB::table('voice_parts')->insert([
             [
@@ -322,17 +322,6 @@ class CriticalUserSeeder extends Seeder
                 'title' => 'Bass',
                 'colour' => 'blue',
             ],
-        ]);
-
-        /*
-         * STEP 2 - Insert Admin
-         */
-        User::firstOrCreate([
-            'email' => 'hayleybech@gmail.com',
-        ], [
-            'first_name' => 'Hayley',
-            'last_name' => 'Bech',
-            'password' => bcrypt(Str::random(30)),
-        ]);
+        ]);;
     }
 }

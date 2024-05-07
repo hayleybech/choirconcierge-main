@@ -1,7 +1,6 @@
 import React from 'react'
 import PageHeader from "../../../components/PageHeader";
 import classNames from "../../../classNames";
-import {usePage} from "@inertiajs/inertia-react";
 import AppHead from "../../../components/AppHead";
 import DateTag from "../../../components/DateTag";
 import CollapsePanel from "../../../components/CollapsePanel";
@@ -9,6 +8,7 @@ import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import BillingTag from "./BillingTag";
+import Badge from "../../../components/Badge";
 
 const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
     <dl className={classNames("grid grid-cols-1 gap-x-4 gap-y-8", gridCols)}>
@@ -39,6 +39,7 @@ const Show = ({ tenant }) => {
                     tenant.renews_at && <DateTag date={tenant.renews_at} label="Renews" />,
                     <DateTag date={tenant.created_at} label="Created" />,
                     <BillingTag billing={tenant.billing_status} />,
+                    !tenant.setup_done && <Badge colour="bg-orange-100 text-orange-700">Setup Pending - Come back later</Badge>
                 ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('central.dash')},
@@ -46,7 +47,7 @@ const Show = ({ tenant }) => {
                     { name: tenant.name, url: route('central.tenants.show', {tenant}) },
                 ]}
                 actions={[
-                  { label: 'Open', icon: 'sign-in-alt', url: route('dash', {tenant}), variant: 'primary' },
+                  tenant.setup_done && { label: 'Open', icon: 'sign-in-alt', url: route('dash', {tenant}), variant: 'primary' },
                 ]}
             />
 
