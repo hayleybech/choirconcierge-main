@@ -33,6 +33,8 @@ const Register = ({  }) => {
                     <img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
 
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create an account</h2>
+                    <p className="mt-2 text-center text-sm leading-6 text-gray-500">Enter your details to create an account and get your choir started with us. </p>
+                    <p className="mt-2 text-center text-sm leading-6 text-gray-500">Are you a regular singer? <a href={route('login')} className="font-medium text-purple-600 hover:text-purple-500">Log in</a></p>
 
                 </div>
 
