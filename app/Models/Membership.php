@@ -41,7 +41,6 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property SingerCategory $category
  * @property Collection<Enrolment> $enrolments
  * @property User $user
- * @property VoicePart $voice_part
  * @property Collection<RiserStack> $riser_stacks
  * @property Collection<Rsvp> $rsvps
  * @property Collection<Attendance> $attendances

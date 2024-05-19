@@ -32,7 +32,7 @@ const PageHeader = ({ title, image, icon, meta = [], breadcrumbs, actions = [], 
                         <span className={key === 0 ? 'sm:ml-3' : 'hidden sm:block ml-3'} key={key}>
                             {action.label
                                 ? (
-                                    <Button href={action.url} onClick={action.onClick} variant={action.variant}>
+                                    <Button href={action.url} onClick={action.onClick} variant={action.variant} external={action.download} download={action.download}>
                                         <Icon icon={action.icon} mr />{action.label}
                                     </Button>
                                 ): (
@@ -65,7 +65,21 @@ const PageHeader = ({ title, image, icon, meta = [], breadcrumbs, actions = [], 
                                         key > 0 && (
                                         <Menu.Item key={key}>
                                             {({ active }) => action.url
-                                                ? (
+                                                ? action.download
+                                                    ? (
+                                                        <a
+                                                            href={action.url}
+                                                            className={classNames(
+                                                                'block w-full text-left px-4 py-2 text-sm',
+                                                                active ? 'bg-gray-100' : '',
+                                                                action.variant === 'danger-outline' ? 'text-red-500' : 'text-gray-700'
+                                                            )}
+                                                            download={action?.download}
+                                                        >
+                                                            <Icon icon={action.icon} mr/>
+                                                            {action.label}
+                                                        </a>
+                                                    ) : (
                                                     <Link
                                                         href={action.url}
                                                         className={classNames(
