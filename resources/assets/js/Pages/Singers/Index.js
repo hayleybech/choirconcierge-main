@@ -54,6 +54,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
                     { label: 'Voice Parts', icon: 'users-class', url: route('voice-parts.index'), can: 'list_voice_parts' },
                     { label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
                     { label: 'Import Singers', icon: 'file-import', onClick: () => setShowImportDialog(true), can: 'import_singers'},
+                    { label: 'Export Singers', icon: 'file-export', url: route('singers.export'), download: true, can: 'export_singers'},
                     filterAction,
                 ].filter(action => action.can ? can[action.can] : true)}
                 optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }

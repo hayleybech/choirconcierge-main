@@ -14,6 +14,7 @@ use App\Http\Controllers\EventActivityController;
 use App\Http\Controllers\EventCalendarController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTypeController;
+use App\Http\Controllers\ExportMemberController;
 use App\Http\Controllers\FindSongController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
@@ -110,6 +111,7 @@ Route::middleware([
         Route::post('account', [AccountController::class, 'update'])->name('accounts.update');
 
         // Singers module
+        Route::get('singers/export', ExportMemberController::class)->name('singers.export');
         Route::resource('singers', SingerController::class);
         Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
         Route::resource('singers.enrolments', EnrolmentController::class)->only(['store', 'update', 'destroy']);
