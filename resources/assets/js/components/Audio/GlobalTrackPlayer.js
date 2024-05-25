@@ -5,7 +5,7 @@ import {AudioTimeLabel} from "./AudioTimeLabel";
 import {AudioSeekBar} from "./AudioSeekBar";
 import {AudioVolumeButton} from "./AudioVolumeButton";
 import Icon from "../Icon";
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 import LoadingSpinner from "../LoadingSpinner";
 import useRoute from "../../hooks/useRoute";
 

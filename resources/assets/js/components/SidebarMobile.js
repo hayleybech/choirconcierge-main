@@ -1,6 +1,6 @@
 import {Dialog, Transition} from "@headlessui/react";
 import React, {Fragment} from "react";
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 import MainNavigation from "./MainNavigation";
 import Icon from "./Icon";
 import useRoute from "../hooks/useRoute";

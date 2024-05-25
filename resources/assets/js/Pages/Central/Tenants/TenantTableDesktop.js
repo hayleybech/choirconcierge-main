@@ -2,7 +2,7 @@ import React from 'react';
 import Table, {TableCell} from "../../../components/Table";
 import collect from "collect.js";
 import DateTag from "../../../components/DateTag";
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 import ButtonLink from "../../../components/inputs/ButtonLink";
 import Icon from "../../../components/Icon";
 import useRoute from "../../../hooks/useRoute";

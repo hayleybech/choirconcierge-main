@@ -6,7 +6,7 @@ import classNames from '../classNames';
 import buttonStyles from "./inputs/buttonStyles";
 import Button from "./inputs/Button";
 import Icon from "./Icon";
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 
 const PageHeader = ({ title, image, icon, meta = [], breadcrumbs, actions = [], optionsVariant }) => (
     <div className="py-6 bg-white border-b border-gray-300">

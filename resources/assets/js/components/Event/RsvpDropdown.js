@@ -3,7 +3,7 @@ import buttonStyles from "../inputs/buttonStyles";
 import Icon from "../Icon";
 import React, { Fragment } from "react";
 import classNames from "../../classNames";
-import { Link } from "@inertiajs/inertia-react";
+import { Link } from "@inertiajs/react";
 
 const RsvpDropdown = ({ event, size = 'sm' }) => {
   let items = [

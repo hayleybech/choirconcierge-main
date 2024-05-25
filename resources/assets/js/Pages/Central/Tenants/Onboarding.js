@@ -3,7 +3,7 @@ import AppHead from "../../../components/AppHead";
 import useRoute from "../../../hooks/useRoute";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import {Inertia} from "@inertiajs/inertia";
+import {router} from "@inertiajs/react";
 
 const Onboarding = ({ tenant }) => {
     const { route } = useRoute();
@@ -17,7 +17,7 @@ const Onboarding = ({ tenant }) => {
                 return;
             }
 
-            Inertia.reload({ only: ['tenant'] })
+            router.reload({ only: ['tenant'] })
         }, TIME_BETWEEN_CHECKS);
 
         return () => clearInterval(timer);

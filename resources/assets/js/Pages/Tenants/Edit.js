@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
-import {useForm} from "@inertiajs/inertia-react";
+import {useForm} from "@inertiajs/react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
