@@ -2,7 +2,7 @@ import React from 'react';
 import SectionTitle from "../../../components/SectionTitle";
 import Panel from "../../../components/Panel";
 import TableMobile, {TableMobileItem} from "../../../components/TableMobile";
-import {usePage} from "@inertiajs/inertia-react";
+import {usePage} from "@inertiajs/react";
 import useRoute from "../../../hooks/useRoute";
 import Button from "../../../components/inputs/Button";
 

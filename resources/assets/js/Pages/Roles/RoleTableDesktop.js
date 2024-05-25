@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 import Table, {TableCell} from "../../components/Table";
 import collect from "collect.js";
 import useRoute from "../../hooks/useRoute";

@@ -2,7 +2,7 @@ import React from 'react';
 import TableMobile, { TableMobileListItem } from "../../components/TableMobile";
 import Icon from "../../components/Icon";
 import Button from "../../components/inputs/Button";
-import { usePage } from "@inertiajs/inertia-react";
+import { usePage } from "@inertiajs/react";
 
 const EventTypeTableMobile = ({ categories, showEditCategory, showDeleteCategory }) => {
     const { can } = usePage().props;

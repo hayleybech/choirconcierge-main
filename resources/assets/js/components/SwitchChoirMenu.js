@@ -2,7 +2,7 @@ import { Menu, Transition } from '@headlessui/react'
 import React, {Fragment} from "react";
 import Icon from "./Icon";
 import classNames from "../classNames";
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 import useRoute from "../hooks/useRoute";
 const SwitchChoirMenu = ({ choirs: organisations, tenant }) => {
 	const { route } = useRoute();

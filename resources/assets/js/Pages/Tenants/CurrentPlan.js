@@ -61,6 +61,20 @@ const CurrentPlan = ({ plan, billing, tenantId }) => {
       </div>
     );
   }
+
+  if(!plan && !billing.onTrial ) {
+      return (
+          <div className="border border-red-300 rounded bg-red-100 p-4 mt-2 flex justify-between items-start gap-4">
+              <div>
+                  <div className="font-bold text-red-700">No Plan Found</div>
+                  <div className="text-red-800">
+                      We couldn't find billing details for your organisation.
+                  </div>
+              </div>
+              <ButtonLink href={billingLink} variant="primary" size="sm" className="shrink-0">Select Plan</ButtonLink>
+          </div>
+      )
+  }
 };
 
 export default CurrentPlan;
