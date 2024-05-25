@@ -52,7 +52,7 @@ const Index = ({ categories }) => {
 
           <DeleteDialog
             title="Delete Event Type"
-            url={route('event-types.destroy', {event_type: deletingCategory})}
+            url={deletingCategory ? route('event-types.destroy', {event_type: deletingCategory}) : '#'}
             isOpen={!!deletingCategory}
             setIsOpen={setDeletingCategory}
           >

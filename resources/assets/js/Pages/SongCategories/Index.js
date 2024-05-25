@@ -52,7 +52,7 @@ const Index = ({ categories }) => {
 
           <DeleteDialog
             title="Delete Song Category"
-            url={route('song-categories.destroy', {song_category: deletingCategory})}
+            url={deletingCategory ? route('song-categories.destroy', {song_category: deletingCategory}) : '#'}
             isOpen={!!deletingCategory}
             setIsOpen={setDeletingCategory}
           >

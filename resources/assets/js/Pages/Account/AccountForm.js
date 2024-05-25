@@ -30,7 +30,7 @@ const AccountForm = ({ }) => {
         pronouns: user.pronouns ?? '',
 
         password_confirmation: '',
-        dob: user.dob ? DateTime.fromJSDate(new Date(user.dob)).toISODate() : null,
+        dob: user.dob ? DateTime.fromJSDate(new Date(user.dob)).toISODate() : '',
         height: user.height ?? '',
         profession: user.profession ?? '',
         skills: user.skills ?? '',

@@ -109,7 +109,7 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
 
             <DeleteDialog
                 title="Delete Song Attachment"
-                url={route('songs.attachments.destroy', {song, attachment: deletingAttachmentId})}
+                url={deletingAttachmentId ? route('songs.attachments.destroy', {song, attachment: deletingAttachmentId}) : '#'}
                 isOpen={deleteDialogIsOpen}
                 setIsOpen={setDeleteDialogIsOpen}
             >

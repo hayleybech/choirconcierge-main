@@ -60,7 +60,7 @@ const EventScheduleMobile = ({ event }) => {
 
             <DeleteDialog
                 title="Delete Activity"
-                url={route('events.activities.destroy', {event, activity: deletingActivityId})}
+                url={deletingActivityId ? route('events.activities.destroy', {event, activity: deletingActivityId}) : '#'}
                 isOpen={deleteDialogIsOpen}
                 setIsOpen={setDeleteDialogIsOpen}
             >
