@@ -3,7 +3,7 @@ import PageHeader from "../../../components/PageHeader";
 import AppHead from "../../../components/AppHead";
 import useRoute from "../../../hooks/useRoute";
 import CentralLayout from "../../../Layouts/CentralLayout";
-import {useForm} from "@inertiajs/inertia-react";
+import {useForm} from "@inertiajs/react";
 import Form from "../../../components/Form";
 import FormSection from "../../../components/FormSection";
 import Label from "../../../components/inputs/Label";

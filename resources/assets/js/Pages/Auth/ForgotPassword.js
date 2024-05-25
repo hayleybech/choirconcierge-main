@@ -1,6 +1,6 @@
 import React from 'react'
 import AppHead from "../../components/AppHead";
-import {Link, useForm, usePage} from "@inertiajs/inertia-react";
+import {Link, useForm, usePage} from "@inertiajs/react";
 import Label from "../../components/inputs/Label";
 import Button from "../../components/inputs/Button";
 import TextInput from "../../components/inputs/TextInput";

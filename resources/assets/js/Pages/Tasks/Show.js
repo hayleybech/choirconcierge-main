@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import Icon from "../../components/Icon";
 import SectionTitle from "../../components/SectionTitle";
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import DateTag from "../../components/DateTag";
 import SectionHeader from "../../components/SectionHeader";

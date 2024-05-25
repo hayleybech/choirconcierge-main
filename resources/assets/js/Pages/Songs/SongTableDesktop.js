@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 import SongStatusTag from "../../components/SongStatusTag";
 import PitchButton from "../../components/PitchButton";
 import Table, {TableCell} from "../../components/Table";

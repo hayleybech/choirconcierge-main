@@ -5,7 +5,7 @@ import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 import AttachmentType from "../../AttachmentType";
 import useRoute from "../../hooks/useRoute";
-import {useForm} from "@inertiajs/inertia-react";
+import {useForm} from "@inertiajs/react";
 import Dialog from "../Dialog";
 import Form from "../Form";
 import Label from "../inputs/Label";
@@ -109,7 +109,7 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
 
             <DeleteDialog
                 title="Delete Song Attachment"
-                url={route('songs.attachments.destroy', {song, attachment: deletingAttachmentId})}
+                url={deletingAttachmentId ? route('songs.attachments.destroy', {song, attachment: deletingAttachmentId}) : '#'}
                 isOpen={deleteDialogIsOpen}
                 setIsOpen={setDeleteDialogIsOpen}
             >

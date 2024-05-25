@@ -1,5 +1,5 @@
 import React from 'react';
-import {useForm, usePage} from "@inertiajs/inertia-react";
+import {useForm, usePage} from "@inertiajs/react";
 import FormSection from "../../components/FormSection";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
@@ -30,7 +30,7 @@ const AccountForm = ({ }) => {
         pronouns: user.pronouns ?? '',
 
         password_confirmation: '',
-        dob: user.dob ? DateTime.fromJSDate(new Date(user.dob)).toISODate() : null,
+        dob: user.dob ? DateTime.fromJSDate(new Date(user.dob)).toISODate() : '',
         height: user.height ?? '',
         profession: user.profession ?? '',
         skills: user.skills ?? '',

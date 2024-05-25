@@ -37,9 +37,7 @@
     "dependencies": {
         "@babel/preset-react": "^7.16.7",
         "@headlessui/react": "^1.4.0",
-        "@inertiajs/inertia": "^0.10.1",
-        "@inertiajs/inertia-react": "^0.7.1",
-        "@inertiajs/progress": "^0.2.6",
+        "@inertiajs/react": "^1.1.0",
         "@sentry/react": "^6.11.0",
         "@sentry/tracing": "^6.2.5",
         "@testing-library/user-event": "^14.4.3",

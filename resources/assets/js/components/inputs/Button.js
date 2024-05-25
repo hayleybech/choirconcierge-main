@@ -2,7 +2,7 @@ import React from 'react';
 import buttonStyles from "./buttonStyles";
 import ButtonLink from "./ButtonLink";
 
-const Button = ({ variant = 'secondary', size = 'md', href, method, className, children, disabled, ...otherProps }) => (
+const Button = React.forwardRef(({ variant = 'secondary', size = 'md', href, method, className, children, disabled, ...otherProps }, ref) => (
     href
         ?
         <ButtonLink href={href} variant={variant} size={size} className={className} disabled={disabled} method={method} as={method ? 'button' : 'a'} {...otherProps}>
@@ -16,6 +16,6 @@ const Button = ({ variant = 'secondary', size = 'md', href, method, className, c
         >
             {children}
         </button>
-);
+));
 
 export default Button;

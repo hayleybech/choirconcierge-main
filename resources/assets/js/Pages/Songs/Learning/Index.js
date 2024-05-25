@@ -61,9 +61,9 @@ const Index = ({ song, voiceParts }) => {
 													</div>
 													<div className="flex-1 min-w-0">
 														<p className="text-sm font-medium text-gray-900">{singer.user.name}</p>
-														<p className="text-sm">
+														<div className="text-sm">
 															<LearningStatusTag status={new LearningStatus(singer.learning.status)} />
-														</p>
+														</div>
 													</div>
 												</div>
 												<div className="shrink-0 flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 items-stretch">

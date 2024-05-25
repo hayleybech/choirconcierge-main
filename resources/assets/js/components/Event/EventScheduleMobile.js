@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 import useRoute from "../../hooks/useRoute";
 
 const EventScheduleMobile = ({ event }) => {
@@ -60,7 +60,7 @@ const EventScheduleMobile = ({ event }) => {
 
             <DeleteDialog
                 title="Delete Activity"
-                url={route('events.activities.destroy', {event, activity: deletingActivityId})}
+                url={deletingActivityId ? route('events.activities.destroy', {event, activity: deletingActivityId}) : '#'}
                 isOpen={deleteDialogIsOpen}
                 setIsOpen={setDeleteDialogIsOpen}
             >

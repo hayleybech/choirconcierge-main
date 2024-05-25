@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import VoicePartTableDesktop from "./VoicePartTableDesktop";
 import VoicePartTableMobile from "./VoicePartTableMobile";
-import {usePage} from "@inertiajs/inertia-react";
+import {usePage} from "@inertiajs/react";
 import useRoute from "../../hooks/useRoute";
 
 const Index = ({ parts }) => {

@@ -5,7 +5,7 @@ import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import DocumentForm from "./DocumentForm";
 import Button from "../../components/inputs/Button";
-import {useForm} from "@inertiajs/inertia-react";
+import {useForm} from "@inertiajs/react";
 import Dialog from "../../components/Dialog";
 import Form from "../../components/Form";
 import Label from "../../components/inputs/Label";

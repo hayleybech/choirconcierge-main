@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader";
-import {useForm} from "@inertiajs/inertia-react";
+import {useForm} from "@inertiajs/react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
@@ -56,7 +56,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
         logo: null,
         primary_domain: organisation.primary_domain,
         timezone: organisation.timezone,
-        billing_user: organisation.billing_user.id ?? null,
+        billing_user: organisation.billing_user?.id ?? null,
     });
 
     function submit(e) {
@@ -122,34 +122,36 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
                 </FormFooter>
 
                 {process.env.MIX_FEATURE_BILLING && (
-                <FormSection title="Billing Details">
-                    <div className="sm:col-span-6">
-                        <Label label="Billing Contact" forInput="billing_user" />
-                        <SingerSelect
-                          defaultValue={ organisation.billing_user ? {
-                              value: organisation.billing_user.id,
-                              label: organisation.billing_user.name,
-                              name: organisation.billing_user.name,
-                              avatarUrl: organisation.billing_user.avatar_url,
-                              email: organisation.billing_user.email,
-                              roles: organisation.billing_user.membership.roles,
-                          } : null}
-                          updateFn={(value) => setData('billing_user', value)}
-                        />
-                        {errors.billing_user && <Error>{errors.billing_user}</Error>}
-                    </div>
+                    <>
+                        <FormSection title="Billing Details">
+                            <div className="sm:col-span-6">
+                                <Label label="Billing Contact" forInput="billing_user" />
+                                <SingerSelect
+                                  defaultValue={ organisation.billing_user ? {
+                                      value: organisation.billing_user.id,
+                                      label: organisation.billing_user.name,
+                                      name: organisation.billing_user.name,
+                                      avatarUrl: organisation.billing_user.avatar_url,
+                                      email: organisation.billing_user.email,
+                                      roles: organisation.billing_user.membership.roles,
+                                  } : null}
+                                  updateFn={(value) => setData('billing_user', value)}
+                                />
+                                {errors.billing_user && <Error>{errors.billing_user}</Error>}
+                            </div>
 
-                    <div className="sm:col-span-6">
-                        <Label label="Current Plan" />
-                        <CurrentPlan plan={organisation.plan} billing={organisation.billing_status} tenantId={organisation.id} />
-                    </div>
-                </FormSection>
+                            <div className="sm:col-span-6">
+                                <Label label="Current Plan" />
+                                <CurrentPlan plan={organisation.plan} billing={organisation.billing_status} tenantId={organisation.id} />
+                            </div>
+                        </FormSection>
+
+                        <FormFooter>
+                            <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
+                            <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
+                        </FormFooter>
+                    </>
                 )}
-
-                <FormFooter>
-                    <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
-                    <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                </FormFooter>
 
             </Form>
         </FormWrapper>

@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import SongCategoryTableDesktop from "./SongCategoryTableDesktop";
 import SongCategoryTableMobile from "./SongCategoryTableMobile";
-import { useForm, usePage } from "@inertiajs/inertia-react";
+import { useForm, usePage } from "@inertiajs/react";
 import useRoute from "../../hooks/useRoute";
 import Dialog from "../../components/Dialog";
 import Form from "../../components/Form";
@@ -52,7 +52,7 @@ const Index = ({ categories }) => {
 
           <DeleteDialog
             title="Delete Song Category"
-            url={route('song-categories.destroy', {song_category: deletingCategory})}
+            url={deletingCategory ? route('song-categories.destroy', {song_category: deletingCategory}) : '#'}
             isOpen={!!deletingCategory}
             setIsOpen={setDeletingCategory}
           >

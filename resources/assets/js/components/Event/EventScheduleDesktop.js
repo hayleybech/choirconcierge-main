@@ -3,7 +3,7 @@ import Table, {TableCell} from "../Table";
 import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
-import {Link} from "@inertiajs/inertia-react";
+import {Link} from "@inertiajs/react";
 import collect from "collect.js";
 import EditScheduleItemDialog from "../EditScheduleItemDialog";
 import useRoute from "../../hooks/useRoute";
@@ -101,7 +101,7 @@ const EventScheduleDesktop = ({ event }) => {
             />
             <DeleteDialog
                 title="Delete Activity"
-                url={route('events.activities.destroy', {event, activity: deletingActivityId})}
+                url={deletingActivityId ? route('events.activities.destroy', {event, activity: deletingActivityId}) : '#'}
                 isOpen={deleteDialogIsOpen}
                 setIsOpen={setDeleteDialogIsOpen}
             >

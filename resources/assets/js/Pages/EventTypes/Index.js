@@ -4,7 +4,7 @@ import PageHeader from "../../components/PageHeader";
 import AppHead from "../../components/AppHead";
 import EventTypeTableDesktop from "./EventTypeTableDesktop";
 import EventTypeTableMobile from "./EventTypeTableMobile";
-import { useForm, usePage } from "@inertiajs/inertia-react";
+import { useForm, usePage } from "@inertiajs/react";
 import useRoute from "../../hooks/useRoute";
 import Dialog from "../../components/Dialog";
 import Form from "../../components/Form";
@@ -52,7 +52,7 @@ const Index = ({ categories }) => {
 
           <DeleteDialog
             title="Delete Event Type"
-            url={route('event-types.destroy', {event_type: deletingCategory})}
+            url={deletingCategory ? route('event-types.destroy', {event_type: deletingCategory}) : '#'}
             isOpen={!!deletingCategory}
             setIsOpen={setDeletingCategory}
           >

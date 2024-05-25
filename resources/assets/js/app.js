@@ -1,11 +1,10 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { createInertiaApp } from '@inertiajs/inertia-react'
-import { InertiaProgress } from '@inertiajs/progress'
+import { createInertiaApp } from '@inertiajs/react'
 import * as Sentry from '@sentry/react';
 import {Integrations as TracingIntegrations} from "@sentry/tracing";
 
-const VERSION = 'choir-concierge@2024-05-19b';
+const VERSION = 'choir-concierge@2024-05-25-a';
 
 Sentry.init({
 	dsn: process.env.MIX_SENTRY_DSN,
@@ -24,6 +23,5 @@ createInertiaApp({
 	setup({ el, App, props }) {
 		render(<App {...props} />, el)
 	},
+	progress: { color: '#38bdf8' },
 });
-
-InertiaProgress.init({ color: '#38bdf8' });
