@@ -15,6 +15,8 @@ import useRoute from "../hooks/useRoute";
 import SwitchChoirMenu from "../components/SwitchChoirMenu";
 import BillingNotices from "../components/BillingNotices";
 import TenantNotice from "../components/TenantNotice";
+import {ErrorBoundary} from "@sentry/react";
+import OuterPageErrorFallback from "./OuterPageErrorFallback";
 
 export default function TenantLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -99,7 +101,9 @@ export default function TenantLayout({ children }) {
                                 <BillingNotices billing={tenant.billing_status} tenantId={tenant.id} />
                             )}
 
-                            {children}
+                            <ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
+                                {children}
+                            </ErrorBoundary>
                         </main>
 
                         {player.fileName &&
