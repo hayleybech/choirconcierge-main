@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Jobs\CreateAdminMembershipForTenant;
 use App\Jobs\SeedForTenant;
+use App\Jobs\SendTenantCreatedNotification;
 use App\Jobs\SendWelcomeEmailSeries;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
