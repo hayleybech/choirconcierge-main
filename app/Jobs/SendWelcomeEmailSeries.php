@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Mail\TenantWelcomePart1;
+use App\Mail\TenantWelcomePart2;
+use App\Mail\TenantWelcomePart3;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -45,5 +47,11 @@ class SendWelcomeEmailSeries implements ShouldQueue
 		    ->send(new TenantWelcomePart1($ownerUser));
 
 		// Part 2
+	    Mail::to($ownerUser)
+		    ->later(now()->addDays(7), new TenantWelcomePart2($ownerUser));
+
+	    // Part 3
+	    Mail::to($ownerUser)
+		    ->later(now()->addDays(25), new TenantWelcomePart3($ownerUser));
     }
 }
