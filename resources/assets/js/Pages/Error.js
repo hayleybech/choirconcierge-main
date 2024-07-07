@@ -5,6 +5,7 @@ import classNames from "../classNames";
 import Button from "../components/inputs/Button";
 import useRoute from "../hooks/useRoute";
 import {usePage} from "@inertiajs/react";
+import StyledLink from "../components/StyledLink";
 
 const Show = ({ status, orgAdmins, isMember }) => {
     const { tenant } = usePage().props;
@@ -97,21 +98,21 @@ const Show = ({ status, orgAdmins, isMember }) => {
                 <footer className="flex-shrink-0 bg-gray-50">
                     <div className="mx-auto max-w-7xl w-full px-4 py-16 sm:px-6 lg:px-8">
                         <nav className="flex space-x-4 justify-center">
-                            <Link href="mailto:hello@choirconcierge.com" target="_blank" variant="secondary">
+                            <StyledLink href="mailto:hello@choirconcierge.com" target="_blank" variant="secondary">
                                 Email Us
-                            </Link>
+                            </StyledLink>
                             <span className="inline-block border-l border-gray-300" aria-hidden="true" />
-                            <Link href="https://stats.uptimerobot.com/99Y2MUmKA5" target="_blank" variant="secondary">
+                            <StyledLink href="https://stats.uptimerobot.com/99Y2MUmKA5" target="_blank" variant="secondary">
                                 Status
-                            </Link>
+                            </StyledLink>
                             <span className="inline-block border-l border-gray-300" aria-hidden="true" />
-                            <Link href="https://twitter.com/ChoirConcierge" target="_blank" variant="secondary">
+                            <StyledLink href="https://twitter.com/ChoirConcierge" target="_blank" variant="secondary">
                                 Twitter
-                            </Link>
+                            </StyledLink>
                             <span className="inline-block border-l border-gray-300" aria-hidden="true" />
-                            <Link href="https://www.facebook.com/choirconcierge" target="_blank" variant="secondary">
+                            <StyledLink href="https://www.facebook.com/choirconcierge" target="_blank" variant="secondary">
                                 Facebook
-                            </Link>
+                            </StyledLink>
                         </nav>
                     </div>
                 </footer>
@@ -122,18 +123,6 @@ const Show = ({ status, orgAdmins, isMember }) => {
 
 export default Show;
 
-const Link = ({ variant = 'primary', className, children, ...extraProps }) => (
-    <a
-        {...extraProps}
-        className={classNames(
-            'font-medium',
-            variant === 'primary' ? 'text-purple-600 hover:text-purple-500' : 'text-gray-500 hover:text-gray-600',
-            className
-        )}
-    >
-        {children}
-    </a>
-);
 
 const NavButtons = ({ goToTenant = true }) => {
     const { route } = useRoute();
@@ -155,12 +144,12 @@ const NavButtons = ({ goToTenant = true }) => {
 
 const SocialButtons = () => (
     <div className="flex gap-x-2 text-2xl justify-center">
-        <Link href="https://www.facebook.com/choirconcierge" target="_blank">
+        <StyledLink href="https://www.facebook.com/choirconcierge" target="_blank">
             <Icon icon="facebook" type="brand" />
-        </Link>
-        <Link href="https://twitter.com/ChoirConcierge" target="_blank">
+        </StyledLink>
+        <StyledLink href="https://twitter.com/ChoirConcierge" target="_blank">
             <Icon icon="twitter" type="brand" />
-        </Link>
+        </StyledLink>
     </div>
 );
 

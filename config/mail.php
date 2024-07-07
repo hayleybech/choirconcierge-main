@@ -94,6 +94,10 @@ return [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
+	'sales' => [
+		'address' => env('MAIL_SALES_ADDRESS', 'hello@example.com'),
+		'name' => env('MAIL_SALES_NAME', 'Example'),
+	],
 
     /*
     |--------------------------------------------------------------------------

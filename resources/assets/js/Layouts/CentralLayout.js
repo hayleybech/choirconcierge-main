@@ -8,6 +8,8 @@ import {useMediaQuery} from "react-responsive";
 import centralNavigation from "./centralNavigation";
 import useRoute from "../hooks/useRoute";
 import SwitchChoirMenu from "../components/SwitchChoirMenu";
+import OuterPageErrorFallback from "./OuterPageErrorFallback";
+import {ErrorBoundary} from "@sentry/react";
 
 export default function CentralLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -52,7 +54,9 @@ export default function CentralLayout({ children }) {
                 />
 
                 <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
-                    {children}
+                    <ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
+                        {children}
+                    </ErrorBoundary>
                 </main>
             </div>
 

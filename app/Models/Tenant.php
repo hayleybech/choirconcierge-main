@@ -27,6 +27,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string $logo
  * @property Carbon $renews_at
  * @property bool $has_gratis
+ * @property bool $had_demo
  * @property string $created_by ID of user that created the Tenant
  *
  * Attributes
@@ -136,6 +137,7 @@ class Tenant extends BaseTenant
             'onPausedGracePeriod' => $this->subscription()?->onPausedGracePeriod() ?? false,
             'paused' => $this->subscription()?->paused() ?? false,
             'pastDue' => $this->subscription()?->pastDue() ?? false,
+			'hasGratis' => $this->has_gratis,
 
             'activeUserQuota' => $activeUserQuotaStatus,
         ]);
