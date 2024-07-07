@@ -136,6 +136,7 @@ class Tenant extends BaseTenant
             'onPausedGracePeriod' => $this->subscription()?->onPausedGracePeriod() ?? false,
             'paused' => $this->subscription()?->paused() ?? false,
             'pastDue' => $this->subscription()?->pastDue() ?? false,
+			'hasGratis' => $this->has_gratis,
 
             'activeUserQuota' => $activeUserQuotaStatus,
         ]);

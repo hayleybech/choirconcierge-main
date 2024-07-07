@@ -55,6 +55,11 @@ const BillingTag = ({ billing }) => {
     return <Badge variant="danger">Invalid Status</Badge>;
   }
 
+  // Active - Gratis
+  if(billing.hasGratis) {
+    return <Badge variant="success">Active (Gratis)</Badge>;
+  }
+
   return <Badge variant="success">Active</Badge>;
 };
 
