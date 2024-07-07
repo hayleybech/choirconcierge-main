@@ -28,6 +28,7 @@ class TenancyServiceProvider extends ServiceProvider
             Events\TenantCreated::class => [
                 JobPipeline::make([
 	                    SendWelcomeEmailSeries::class,
+	                    SendTenantCreatedNotification::class,
 
 						// For multi-database tenancy
 	                    //Jobs\CreateDatabase::class,
