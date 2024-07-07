@@ -9,6 +9,7 @@ import useRoute from "../../../hooks/useRoute";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import BillingTag from "./BillingTag";
 import Badge from "../../../components/Badge";
+import {usePage} from "@inertiajs/react";
 
 const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
     <dl className={classNames("grid grid-cols-1 gap-x-4 gap-y-8", gridCols)}>
@@ -27,6 +28,7 @@ const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
 
 const Show = ({ tenant }) => {
     const { route } = useRoute();
+    const { can } = usePage().props;
 
     return (
         <>
@@ -59,7 +61,7 @@ const Show = ({ tenant }) => {
                             title: 'Choir Details',
                             show: true,
                             defaultOpen: true,
-                            content: <ChoirDetails tenant={tenant} />,
+                            content: <ChoirDetails tenant={tenant} showSales={can.list_tenants} />,
                         },
                     ]} />
                 </div>
@@ -73,7 +75,7 @@ Show.layout = page => <CentralLayout children={page} />
 
 export default Show;
 
-const ChoirDetails = ({ tenant }) => (
+const ChoirDetails = ({ tenant, showSales }) => (
     <CollapsePanel>
         <DetailList items={[
             {
@@ -92,6 +94,12 @@ const ChoirDetails = ({ tenant }) => (
                   <span className="font-bold">Active Users:</span> {tenant.billing_status.activeUserQuota.activeUserCount} / {tenant.billing_status.activeUserQuota.quota}
                 </div>,
             },
-        ]}/>
+            showSales ? {
+                label: 'Sales Details',
+                value: <div className="text-gray-600">
+                    <span className="font-bold">Demo Booked:</span> {tenant.had_demo ? 'Yes' : 'No'}<br/>
+                </div>
+            } : undefined,
+        ].filter(item => !!item)}/>
     </CollapsePanel>
 );
