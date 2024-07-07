@@ -48,10 +48,10 @@ class SendWelcomeEmailSeries implements ShouldQueue
 
 		// Part 2
 	    Mail::to($ownerUser)
-		    ->later(now()->addDays(7), new TenantWelcomePart2($ownerUser));
+		    ->later(now()->addDays(7), new TenantWelcomePart2($ownerUser, $this->tenant->had_demo ?? false));
 
 	    // Part 3
 	    Mail::to($ownerUser)
-		    ->later(now()->addDays(25), new TenantWelcomePart3($ownerUser));
+		    ->later(now()->addDays(25), new TenantWelcomePart3($ownerUser, $this->tenant->had_demo ?? false));
     }
 }

@@ -10,9 +10,13 @@ I'm genuinely curious:
 
 Remember, your feedback and questions are invaluable to me. They not only help you get the most out of your 30-day trial but also contribute to making Choir Concierge even better for choir leaders like yourself.
 
+@if(!$hadDemo)
 If you're facing any challenges or have questions, please don't hesitate to reach out. You can:
 - Reply directly to this email, and I'll get back to you as soon as I can.
 - Book a personalised demo where we can walk through any aspects of the software you'd like to explore further. You can schedule that [here](https://calendly.com/hayleybech/30min).
+@else
+If you're facing any challenges or have questions, please don't hesitate to reach out.
+@endif
 
 Your success with Choir Concierge matters to me. Whether you're sailing smoothly or encountering rough waters, I'm here to support you.
 
@@ -20,8 +24,7 @@ Looking forward to hearing about your experience!
 
 Warm regards,
 
-Hayley Bech
-
+Hayley Bech\
 Choir Concierge
 
 @endcomponent

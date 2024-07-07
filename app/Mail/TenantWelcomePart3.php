@@ -20,7 +20,7 @@ class TenantWelcomePart3 extends Mailable
      *
      * @return void
      */
-    public function __construct(public User $owner)
+    public function __construct(public User $owner, public bool $hadDemo)
     {
         //
     }
@@ -42,9 +42,10 @@ class TenantWelcomePart3 extends Mailable
 	public function content(): Content
 	{
 		return new Content(
-			markdown: 'emails.tenant_welcome_2',
+			markdown: 'emails.tenant_welcome_3',
 			with: [
 				'owner' => $this->owner,
+				'hadDemo' => $this->hadDemo,
 			]
 		);
 	}

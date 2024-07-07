@@ -23,8 +23,7 @@ Thank you again for your support. I truly hope you'll love using Choir Concierge
 
 Happy singing!
 
-Hayley Bech
-
+Hayley Bech\
 Choir Concierge
 
 @endcomponent

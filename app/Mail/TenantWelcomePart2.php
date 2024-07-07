@@ -20,7 +20,7 @@ class TenantWelcomePart2 extends Mailable
      *
      * @return void
      */
-    public function __construct(public User $owner)
+    public function __construct(public User $owner, public bool $hadDemo)
     {
         //
     }
@@ -45,6 +45,7 @@ class TenantWelcomePart2 extends Mailable
 		    markdown: 'emails.tenant_welcome_2',
 		    with: [
 			    'owner' => $this->owner,
+			    'hadDemo' => $this->hadDemo,
 		    ]
 	    );
     }
