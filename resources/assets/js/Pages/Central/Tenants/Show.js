@@ -50,6 +50,7 @@ const Show = ({ tenant }) => {
                 ]}
                 actions={[
                   tenant.setup_done && { label: 'Open', icon: 'sign-in-alt', url: route('dash', {tenant}), variant: 'primary' },
+                  !tenant.had_demo && can.list_tenants && { label: 'Demo done', icon: 'check', url: route('central.tenants.track-demo', {tenant}), variant: 'secondary' },
                 ]}
             />
 
