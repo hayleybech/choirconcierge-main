@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Webklex\IMAP\Facades\Client;
 use Webklex\PHPIMAP\Exceptions\ConnectionFailedException;
 use Webklex\PHPIMAP\Exceptions\FolderFetchingException;
@@ -44,7 +45,7 @@ class IncomingMailbox
                 ->limit(self::BATCH_LIMIT)
                 ->get();
 
-            echo count($messages) . ' message(s) found.' . PHP_EOL;
+			Log::info('Inbound box checked. '. count($messages) . ' message(s) found.');
         } catch (ConnectionFailedException | GetMessagesFailedException | FolderFetchingException | RuntimeException $e) {
             report($e);
         } finally {
