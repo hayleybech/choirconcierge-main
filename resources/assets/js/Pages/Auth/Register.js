@@ -1,14 +1,16 @@
 import React from 'react'
 import AppHead from "../../components/AppHead";
-import {useForm} from "@inertiajs/react";
+import {useForm, usePage} from "@inertiajs/react";
 import Label from "../../components/inputs/Label";
 import Button from "../../components/inputs/Button";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import useRoute from "../../hooks/useRoute";
+import ToastFlash from "../../components/ToastFlash";
 
 const Register = ({  }) => {
     const { route } = useRoute();
+    const { toastErrors, flash } = usePage().props;
     const { data, setData, post, processing, errors } = useForm({
         email: '',
         password: '',
@@ -26,6 +28,8 @@ const Register = ({  }) => {
     return (
         <>
             <AppHead title="Register" />
+
+            <ToastFlash errors={toastErrors} flash={flash} />
 
             <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-100">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">

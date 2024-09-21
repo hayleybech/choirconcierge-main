@@ -6,10 +6,11 @@ import Button from "../../components/inputs/Button";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import useRoute from "../../hooks/useRoute";
+import ToastFlash from "../../components/ToastFlash";
 
 const Login = ({ email, token }) => {
     const { route } = useRoute();
-    const { tenant } = usePage().props;
+    const { tenant, toastErrors, flash } = usePage().props;
     const { data, setData, post, processing, errors } = useForm({
         email: email,
         password: '',
@@ -26,6 +27,8 @@ const Login = ({ email, token }) => {
     return (
         <>
             <AppHead title="Reset Password" />
+
+            <ToastFlash errors={toastErrors} flash={flash} />
 
             <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-100">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
