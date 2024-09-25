@@ -171,17 +171,17 @@ class Tenant extends BaseTenant
             'activeUserCount' => $activeUserCount,
             'quotaExceeded' => $quota
                 && $gracePeriodDays !== null
-                && $activeUserCount > $quota
+                && ($quota !== null && $activeUserCount > $quota)
                 && $gracePeriodEndsAt?->isFuture(),
             'onGracePeriod' => $quota
                 && $gracePeriodDays !== null
-                && $activeUserCount > $quota
+                && ($quota !== null && $activeUserCount > $quota)
                 && $gracePeriodEndsAt?->isFuture(),
             'gracePeriodEndsAt' => $gracePeriodEndsAt,
             'quotaNearlyExceeded' => $quota
                 && $quotaBuffer !== null
                 && $activeUserCount < $quota
-                && ($activeUserCount + $quotaBuffer) > $quota,
+                && ($quota !== null && ($activeUserCount + $quotaBuffer) > $quota),
         ];
     }
 

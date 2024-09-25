@@ -41,6 +41,11 @@ class VoicePartController extends Controller
 
     public function edit(VoicePart $voice_part): Response
     {
+	    $voice_part->can = [
+		    'update_voice_part' => auth()->user()?->can('update', $voice_part),
+		    'delete_voice_part' => auth()->user()?->can('delete', $voice_part),
+	    ];
+
         return Inertia::render('VoiceParts/Edit', [
             'voice_part' => $voice_part,
         ]);
