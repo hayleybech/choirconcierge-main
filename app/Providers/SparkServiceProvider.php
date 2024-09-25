@@ -36,7 +36,9 @@ class SparkServiceProvider extends ServiceProvider
         });
 
         Spark::billable(Tenant::class)->checkPlanEligibility(function (Tenant $billable, Plan $plan) {
-            if($billable->billingStatus['activeUserQuota']['activeUserCount'] > $plan->options['activeUserQuota']) {
+            if($plan->options['activeUserQuota'] !== null
+	            && $billable->billingStatus['activeUserQuota']['activeUserCount'] > $plan->options['activeUserQuota']
+            ) {
                 throw ValidationException::withMessages([
                      'plan' => 'You have too many active users for the selected plan.',
                  ]);
