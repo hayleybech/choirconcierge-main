@@ -43,7 +43,7 @@ class ProfileRequest extends FormRequest
             'address_street_2' => ['max:255'],
             'address_suburb' => ['max:255'],
             'address_state' => ['max:3'],
-            'address_postcode' => ['max:4'],
+            'address_postcode' => ['max:191'],
             'profession' => ['max:255'],
             'skills' => ['max:255'],
             'height' => ['nullable', 'numeric', 'between:0,300'],
