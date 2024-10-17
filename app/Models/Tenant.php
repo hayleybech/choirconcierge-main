@@ -153,6 +153,10 @@ class Tenant extends BaseTenant
 						$query->onTrial();
 					});
 			})
+			->orWhereHas('customer', function($query) {
+				$query->whereNotNull('trial_ends_at')
+					->where('trial_ends_at', '>', \Carbon\Carbon::now());
+			})
 			->orWhere(function($query) {
 				// @TODO make has_gratis a regular column
 				$query->where('data->has_gratis', true);
