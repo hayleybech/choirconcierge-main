@@ -4,8 +4,9 @@ import CentralLayout from "../../../Layouts/CentralLayout";
 import ChoirsListWidget from "./ChoirsListWidget";
 import CentralUpcomingEventsWidget from "./CentralUpcomingEventsWidget";
 import CentralSongsToLearnWidget from "./CentralSongsToLearnWidget";
+import TenantStatsWidget from "./TenantStatsWidget";
 
-const Show = ({ events, songs }) => (
+const Show = ({ events, songs, tenantStats }) => (
     <>
         <AppHead title="Dashboard" />
         <div className="py-6">
@@ -13,6 +14,11 @@ const Show = ({ events, songs }) => (
                 <h1 className="text-2xl font-semibold text-gray-900 mb-8">Dashboard</h1>
 
                 <div className="grid gap-y-6 gap-x-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+                    {!!tenantStats && (
+                        <div className="sm:col-span-2 xl:col-span-3">
+                            <TenantStatsWidget {...tenantStats} />
+                        </div>
+                    )}
                     <div className="sm:col-span-2 lx:col-span-1">
                         <ChoirsListWidget />
                     </div>

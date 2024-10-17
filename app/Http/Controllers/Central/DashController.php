@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\Membership;
 use App\Models\Song;
+use App\Models\Tenant;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Inertia\Inertia;
@@ -17,6 +20,7 @@ class DashController extends Controller
 		return Inertia::render('Central/Dash/Show', [
 			'events' => $this->getEvents()->values(),
 			'songs' => $this->getSongs()->values(),
+			'tenantStats' => $this->getTenantStats(),
 		]);
 	}
 
@@ -50,5 +54,71 @@ class DashController extends Controller
 			->with('tenant.domains')
 			->get()
 			->map(fn($singer) => $singer->tenant);
+	}
+
+	private function getTenantStats()
+	{
+		if(! auth()->user()->isSuperAdmin()) {
+			return null;
+		};
+
+		return [
+			'activeTenants' => $this->getActiveTenantsCount(),
+			'tenantsOnTrial' => $this->getTenantsOnTrialCount(),
+			'tenantsTrialExpired' => $this->getTenantsTrialExpiredCount(),
+			'activeMembers' => $this->getActiveMembersCount(),
+		];
+	}
+
+	private function getActiveTenantsCount()
+	{
+		if(! auth()->user()->isSuperAdmin()) {
+			return null;
+		}
+
+		return Tenant::active()->count();
+	}
+
+	private function getTenantsOnTrialCount()
+	{
+		if(! auth()->user()->isSuperAdmin()) {
+			return null;
+		}
+
+		return Tenant::whereHas('subscriptions', function($query) {
+			$query->onTrial();
+		})->orWhereHas('customer', function($query) {
+			// @todo make customer on trial scope?
+			$query->whereNotNull('trial_ends_at')
+				->where('trial_ends_at', '>', Carbon::now());
+		})->count();
+	}
+
+	private function getTenantsTrialExpiredCount()
+	{
+		if(! auth()->user()->isSuperAdmin()) {
+			return null;
+		}
+
+		return Tenant::whereHas('subscriptions', function($query) {
+			$query->expiredTrial();
+		})->orWhereHas('customer', function($query) {
+			// @todo make customer expired trial scope?
+			$query->whereNotNull('trial_ends_at')
+				->where('trial_ends_at', '<', Carbon::now());
+		})->count();
+	}
+
+	private function getActiveMembersCount()
+	{
+		if(! auth()->user()->isSuperAdmin()) {
+			return null;
+		}
+
+		return Membership::whereHas('category', function($query) {
+			$query->where('name', 'Members');
+		})->whereHas('tenant', function($query) {
+			$query->active();
+		})->count();
 	}
 }
