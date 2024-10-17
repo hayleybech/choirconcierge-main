@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use Inertia\Response as InertiaResponse;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TenantController extends Controller
 {
@@ -19,7 +20,11 @@ class TenantController extends Controller
     public function index(): Response
     {
         return Inertia::render('Central/Tenants/Index', [
-            'tenants' => Tenant::with('domains')->get()->append(['billing_status'])->values(),
+            'tenants' => $this->getTenantQuery()
+	            ->with('domains')
+	            ->get()
+	            ->append(['billing_status'])
+	            ->values(),
         ]);
     }
 
@@ -79,4 +84,16 @@ class TenantController extends Controller
             'tenant' => $tenant->append(['billing_status', 'plan', 'setup_done']),
         ]);
     }
+
+	private function getTenantQuery() {
+		return QueryBuilder::for(Tenant::class)
+			->allowedFilters([
+				'id',
+			])
+			->defaultSort('id')
+			->allowedSorts([
+				'id',
+				'created_at',
+			]);
+	}
 }

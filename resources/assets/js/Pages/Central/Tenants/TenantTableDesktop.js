@@ -7,16 +7,17 @@ import ButtonLink from "../../../components/inputs/ButtonLink";
 import Icon from "../../../components/Icon";
 import useRoute from "../../../hooks/useRoute";
 import BillingTag from "./BillingTag";
+import TableHeadingSort from "../../../components/TableHeadingSort";
 
-const TenantTableDesktop = ({ tenants }) => {
+const TenantTableDesktop = ({ tenants, sortFilterForm }) => {
     const { route } = useRoute();
 
     const headings = collect({
-        name: 'Organisation Name',
+        name: <TableHeadingSort form={sortFilterForm} sort="id">Organisation Name</TableHeadingSort>,
         domains: 'Domains',
         timezone: 'Timezone',
         renews_at: 'Billing',
-        created_at: 'Date Created',
+        created_at: <TableHeadingSort form={sortFilterForm} sort="created_at">Date Created</TableHeadingSort>,
         actions: 'Actions',
     });
 

@@ -143,6 +143,22 @@ class Tenant extends BaseTenant
         ]);
     }
 
+	public function scopeActive($query)
+	{
+		// valid subscription (active plan, paused grace period, or grace period), on trial or gratis
+		return $query
+			->whereHas('subscriptions', function($query) {
+				$query->active()
+					->orWhere(function($query) {
+						$query->onTrial();
+					});
+			})
+			->orWhere(function($query) {
+				// @TODO make has_gratis a regular column
+				$query->where('data->has_gratis', true);
+			});
+	}
+
 	public function setupDone(): Attribute
 	{
 		return Attribute::get(fn() => Membership::query()
