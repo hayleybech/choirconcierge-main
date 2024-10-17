@@ -14,7 +14,7 @@ const TenantStatsWidget = ({activeTenants, tenantsOnTrial, tenantsTrialExpired, 
 				{/*<dd className="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">$30,156.00</dd>*/}
 			</div>
 			<div
-				className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2px-4 py-10 sm:px-6 xl:px-8">
+				className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 px-4 py-10 sm:px-6 xl:px-8">
 				<dt className="text-sm font-medium leading-6 text-gray-500">Tenants On Trial</dt>
 				<dd className="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">{tenantsOnTrial}</dd>
 			</div>
