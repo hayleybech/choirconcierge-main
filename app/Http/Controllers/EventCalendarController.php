@@ -16,7 +16,7 @@ class EventCalendarController extends Controller
     {
         $this->authorize('viewAny', Event::class);
 
-        $month = Carbon::make($request->input('month', today()))->setTimezone('Australia/Perth');
+        $month = Carbon::make($request->input('month', today()))->setTimezone(tenant()->timezone ?? 'Australia/Perth');
 
         return Inertia::render('Events/Calendar/Month', [
             'days' => $this->getEventsForMonth($month),
