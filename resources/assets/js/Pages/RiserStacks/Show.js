@@ -6,10 +6,12 @@ import RiserStackEditor from "../../components/RiserStack/RiserStackEditor";
 import DateTag from "../../components/DateTag";
 import DeleteDialog from "../../components/DeleteDialog";
 import useRoute from "../../hooks/useRoute";
+import { usePage } from '@inertiajs/react';
 
 const Show = ({ stack }) => {
     const { route } = useRoute();
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
+    const { tenant } = usePage().props;
 
     return (
         <>
@@ -26,7 +28,7 @@ const Show = ({ stack }) => {
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Riser Stacks', url: route('stacks.index')},
-                    { name: stack.title, url: route('stacks.show', {stack}) },
+                    { name: stack.title, url: route('stacks.show', {tenant, stack}) },
                 ]}
                 actions={[
                     { label: 'Edit', icon: 'edit', url: route('stacks.edit', stack), can: 'update_stack' },
