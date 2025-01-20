@@ -1,6 +1,7 @@
 import {useForm} from "@inertiajs/react";
 import collect from "collect.js";
 import useRoute from "./useRoute";
+import * as qs from 'qs';
 
 const useSortFilterForm = (routeName, filters, sorts, transforms = () => {}) => {
     const { route } = useRoute();
@@ -32,7 +33,7 @@ export default useSortFilterForm;
 
 
 function getFilters(filters){
-    const params = new URLSearchParams(location.search);
+    const params = qs.parse(location.search, {ignoreQueryPrefix: true});
 
     return collect(filters)
         .mapWithKeys(({ name, multiple, multipleBool, defaultValue }) => [
@@ -41,20 +42,20 @@ function getFilters(filters){
         ]).items;
 }
 
-const getFilterSingle = (params, name, defaultValue = '') => params.get(`filter[${name}]`) ?? defaultValue;
+const getFilterSingle = (params, name, defaultValue = '') => params.filter?.[name] ?? defaultValue;
 
-const getFilterMultiple = (params, name, defaultValue = [], bool) => params.has(`filter[${name}][]`)
-    ? params.getAll(`filter[${name}][]`).map(value => bool ? value === 'true' : parseInt(value))
+const getFilterMultiple = (params, name, defaultValue = [], bool) => !!params.filter && name in params.filter
+    ? params.filter?.[name].map(value => bool ? value === 'true' : parseInt(value))
     : defaultValue;
 
 function getSort(defaultSort) {
-    const params = new URLSearchParams(location.search);
-    return params.has('sort')
-        ? params.get('sort').replace(/^-/, '')
+    const params = new qs.parse(location.search, {ignoreQueryPrefix: true});
+    return 'sort' in params
+        ? params.sort.replace(/^-/, '')
         : defaultSort;
 }
 
 function getSortDir() {
-    const params = new URLSearchParams(location.search);
-    return params.get('sort')?.startsWith('-') ? 'desc' : 'asc';
+    const params = new qs.parse(location.search);
+    return params.sort?.startsWith('-') ? 'desc' : 'asc';
 }
