@@ -45,8 +45,9 @@ class IncomingMailbox
                 ->limit(self::BATCH_LIMIT)
                 ->get();
 
-			Log::info('Inbound box checked. '. count($messages) . ' message(s) found.');
+			Log::info('Inbound box checked. {messages} message(s) found.', ['messages' => count($messages)]);
         } catch (ConnectionFailedException | GetMessagesFailedException | FolderFetchingException | RuntimeException $e) {
+            Log::error('Failed fetching inbound box. '.$e->getMessage());
             report($e);
         } finally {
             return $messages->toBase();

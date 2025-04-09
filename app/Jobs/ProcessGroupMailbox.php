@@ -42,18 +42,18 @@ class ProcessGroupMailbox implements ShouldQueue
 
 				$incomingMessage = (new WebklexImapMessageMailableAdapter($message))->toMailable();
 
-				// @todo update to Laravel 10+ log format (no need for sprintf)
 				Log::info(
-					sprintf(
-						'Processing inbound message: "%s" to: <%s> from: <%s>',
-						$incomingMessage->subject,
-						collect($incomingMessage->to)
-							->map(fn($to) => $to['address'])
-							->join(', '),
-						collect($incomingMessage->from)
-							->map(fn($from) => $from['address'])
-							->join(', ')
-					)
+                    'Processing inbound message: "{subject}" to: <{to}> from: <{from}>',
+                    [
+                        'subject' => $incomingMessage->subject,
+                        'to' => collect($incomingMessage->to)
+                            ->map(fn($to) => $to['address'])
+                            ->join(', '),
+                        'from' => collect($incomingMessage->from)
+                            ->map(fn($from) => $from['address'])
+                            ->join(', '),
+                    ]
+
 				);
 
                 $incomingMessage->resendToGroups();
