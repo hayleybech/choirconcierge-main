@@ -1,14 +1,11 @@
-import React, { ChangeEvent, useCallback } from "react"
+import React, { useCallback } from "react"
 import { useAudioPlayer } from "react-use-audio-player"
 import Button from "../inputs/Button";
 import { Popover } from '@headlessui/react'
-import resolveConfig from 'tailwindcss/resolveConfig'
-import tailwindConfig from '../../../../../tailwind.config'
 import Icon from "../Icon";
 
 export const AudioVolumeButton = () => {
     const { volume } = useAudioPlayer();
-    const fullConfig = resolveConfig(tailwindConfig);
 
     const handleChange = useCallback(
         (slider) => {
@@ -34,7 +31,7 @@ export const AudioVolumeButton = () => {
                          max={100}
                          onChange={handleChange}
                          defaultValue={100}
-                         style={{ accentColor: fullConfig.theme.colors.purple[500] ?? '#ff0000' }}
+                         style={{ accentColor: 'var(--color-purple-500)' ?? '#ff0000' }}
                     />
                     <Icon icon="volume-up" className="text-gray-700" />
                 </div>

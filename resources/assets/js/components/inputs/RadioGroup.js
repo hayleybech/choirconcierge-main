@@ -43,8 +43,8 @@ const RadioGroup = ({ label, options, selected, setSelected, vertical }) => (
                                 'text-lg ml-3',
                                 option.textColour ?? '',
                                 option.colour && `text-${option.colour}`,
-                                (checked && !option.colour) && 'text-purple-700',
-                                (!checked && !option.colour) && 'text-gray-900',
+                                (checked && !option.colour && !option.textColour) && 'text-purple-700',
+                                (!checked && !option.colour && !option.textColour) && 'text-gray-900',
                                 option.disabled && 'text-opacity-50',
                             )} />}
 
