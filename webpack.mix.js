@@ -12,7 +12,7 @@ const mix = require('laravel-mix');
  */
 mix.js('resources/assets/js/app.js', 'public/js/app.js')
 	.postCss('resources/assets/app.css', 'public/css/app.css', [
-		require('tailwindcss')
+		require('@tailwindcss/postcss')
 	])
 	.extract()
 	.react()

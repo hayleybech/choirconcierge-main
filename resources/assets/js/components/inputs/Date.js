@@ -8,7 +8,7 @@ import Icon from "../Icon";
 
 const DateInput = ({ name, value, updateFn, hasErrors }) => (
     <Popover as="div" className="mt-1 relative">
-        <Popover.Button as="div" className="relative rounded-md shadow-sm">
+        <Popover.Button as="div" className="relative rounded-md shadow-xs">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Icon icon="calendar-day" type="regular" className="text-gray-400" />
             </div>
@@ -18,7 +18,7 @@ const DateInput = ({ name, value, updateFn, hasErrors }) => (
                 type="text"
                 value={value ? DateTime.fromJSDate(new Date(value)).toLocaleString(DateTime.DATE_MED) : ''}
                 className={classNames('' +
-                    'shadow-sm focus:outline-none block w-full sm:text-sm rounded-md pl-10',
+                    'shadow-xs focus:outline-hidden block w-full sm:text-sm rounded-md pl-10',
                     hasErrors
                         ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'
                         : 'border-gray-300 focus:ring-purple-500 focus:border-purple-500'

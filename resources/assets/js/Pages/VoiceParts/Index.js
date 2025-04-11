@@ -33,7 +33,7 @@ const Index = ({ parts }) => {
             </div>
 
             {/* Mobile Table */}
-            <div className="bg-white shadow block lg:hidden">
+            <div className="bg-white shadow-sm block lg:hidden">
                 <VoicePartTableMobile voiceParts={parts} />
             </div>
         </>

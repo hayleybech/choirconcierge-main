@@ -25,7 +25,7 @@ export const AudioVolumeButton = () => {
             <Popover.Button as={Button} variant="clear" size="xs">
                 <Icon icon="volume" />
             </Popover.Button>
-            <Popover.Panel className="absolute bottom-full right-0 bg-white p-3 rounded border border-gray-200 shadow-lg">
+            <Popover.Panel className="absolute bottom-full right-0 bg-white p-3 rounded-sm border border-gray-200 shadow-lg">
                 <div className="flex items-center space-x-2">
                     <Icon icon="volume-down" className="text-gray-700" />
                     <input

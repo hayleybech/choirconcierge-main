@@ -53,7 +53,7 @@ export default function CentralLayout({ children }) {
                   switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} />}
                 />
 
-                <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
+                <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-hidden" scroll-region="true">
                     <ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
                         {children}
                     </ErrorBoundary>

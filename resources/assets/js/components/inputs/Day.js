@@ -15,7 +15,7 @@ const DayInput = ({ name, value, updateFn, hasErrors, min, max }) => (
             value={value}
             onChange={e => updateFn(e.target.value)}
             className={classNames('' +
-                'shadow-sm focus:outline-none block w-full sm:text-sm rounded-md',
+                'shadow-xs focus:outline-hidden block w-full sm:text-sm rounded-md',
                 hasErrors
                     ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'
                     : 'border-gray-300 focus:ring-purple-500 focus:border-purple-500'

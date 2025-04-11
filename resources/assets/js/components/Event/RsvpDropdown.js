@@ -30,7 +30,7 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
         leaveTo="opacity-0 scale-95"
       >
         <Menu.Items
-          className="origin-top-right absolute z-10 left-0 mt-2 -mr-1 min-w-full md:min-w-0 md:w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+          className="origin-top-right absolute z-10 left-0 mt-2 -mr-1 min-w-full md:min-w-0 md:w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-hidden">
           {items.filter(item => item.key !== event.my_rsvp.response).map(({ label, key, icon, colour }) =>
             <Menu.Item key={label}>
               {({ active }) => (
