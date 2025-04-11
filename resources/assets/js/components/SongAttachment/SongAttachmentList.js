@@ -171,7 +171,7 @@ const RenameAttachmentDialog = ({ song, attachment, setAttachment }) => {
 };
 
 const FilenameInput = ({ name, value, extension, hasErrors, updateFn, otherProps }) => (
-    <div className="mt-1 flex rounded-md shadow-sm">
+    <div className="mt-1 flex rounded-md shadow-xs">
         <input
             type="text"
             name={name}

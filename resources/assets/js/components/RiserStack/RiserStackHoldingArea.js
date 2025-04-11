@@ -35,7 +35,7 @@ const RiserStackHoldingArea = ({ voiceParts, singers, setSelectedSinger, selecte
 										<img className="h-8 w-8 rounded-lg" src={singer.user.avatar_url} alt={singer.user.name} />
 									</div>
 									<div className="flex items-center justify-between px-4">
-										<button type="button" onClick={() => toggleSelectedSinger(singer)} className="focus:outline-none">
+										<button type="button" onClick={() => toggleSelectedSinger(singer)} className="focus:outline-hidden">
 											{/* Extend touch target to entire panel */}
 											<span className="absolute inset-0" aria-hidden="true" />
 											<span className="text-sm font-medium truncate">{singer.user.name}</span>
@@ -49,7 +49,7 @@ const RiserStackHoldingArea = ({ voiceParts, singers, setSelectedSinger, selecte
 				</div>
 			)}
 			{selectedSinger && !holdingAreaContainsSelectedSinger() &&
-				<button type="button" onClick={moveSelectedSingerToHoldingArea} className="focus:outline-none">
+				<button type="button" onClick={moveSelectedSingerToHoldingArea} className="focus:outline-hidden">
 					{/* Extend touch target to entire panel */}
 					<span className="absolute inset-0 z-20 hover:bg-purple-400 opacity-50" aria-hidden="true"/>
 				</button>

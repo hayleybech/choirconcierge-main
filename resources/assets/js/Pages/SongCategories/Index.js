@@ -43,7 +43,7 @@ const Index = ({ categories }) => {
             </div>
 
             {/* Mobile Table */}
-            <div className="bg-white shadow block lg:hidden">
+            <div className="bg-white shadow-sm block lg:hidden">
                 <SongCategoryTableMobile categories={categories} showEditCategory={setEditingCategory} showDeleteCategory={setDeletingCategory} />
             </div>
 

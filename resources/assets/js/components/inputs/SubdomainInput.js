@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from "../../classNames";
 
 const SubdomainInput = ({ name, value, updateFn, hasErrors, host, ...otherProps }) => (
-    <div className="mt-1 flex rounded-md shadow-sm">
+    <div className="mt-1 flex rounded-md shadow-xs">
         <input
             type="text"
             name={name}

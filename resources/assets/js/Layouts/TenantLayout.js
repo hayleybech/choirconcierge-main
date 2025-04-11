@@ -90,7 +90,7 @@ export default function TenantLayout({ children }) {
                     )}
 
                     <AudioPlayerProvider>
-                        <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
+                        <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-hidden" scroll-region="true">
                             {tenant.id === 'demo' && (
                               <TenantNotice variant="warning">
                                   This demo site is cleared once per week.

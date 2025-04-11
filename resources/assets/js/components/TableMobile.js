@@ -17,7 +17,7 @@ export const TableMobileListItem = ({ children }) => (
 );
 
 export const TableMobileLink = ({ url, onClick, children }) => (
-    <Link href={url} onClick={onClick} className="block hover:bg-gray-50 flex-grow min-w-0">
+    <Link href={url} onClick={onClick} className="block hover:bg-gray-50 grow min-w-0">
         <div className="flex items-center px-4 py-4 sm:px-6">
             <div className="flex-1 flex items-center justify-between min-w-0 w-full">
                 {children}

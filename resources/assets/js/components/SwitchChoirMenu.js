@@ -43,7 +43,7 @@ const SwitchChoirMenu = ({ choirs: organisations, tenant }) => {
 				leaveFrom="transform opacity-100 scale-100"
 				leaveTo="transform opacity-0 scale-95"
 			>
-				<Menu.Items className="absolute right-0 z-20 mt-2 w-full max-h-[80dvh] sm:max-h-[60dvh] overflow-y-scroll origin-top-left bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+				<Menu.Items className="absolute right-0 z-20 mt-2 w-full max-h-[80dvh] sm:max-h-[60dvh] overflow-y-scroll origin-top-left bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-hidden">
 					<div className="py-1 divide-y divide-gray-200">
 						{organisations.map(org => (
 							<Menu.Item key={org.id}>

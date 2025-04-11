@@ -23,13 +23,13 @@ const RichTextInput = ({ value, updateFn }) => {
         },
         editorProps: {
             attributes: {
-                class: 'prose sm:max-w-none p-4 bg-white focus:outline-none rounded-bl-md rounded-br-md'
+                class: 'prose sm:max-w-none p-4 bg-white focus:outline-hidden rounded-bl-md rounded-br-md'
             }
         }
     });
 
     return (
-        <div className="shadow-sm rounded-md border border-gray-300 ring-1 ring-transparent focus-within:ring-purple-500 focus-within:border-purple-500">
+        <div className="shadow-xs rounded-md border border-gray-300 ring-1 ring-transparent focus-within:ring-purple-500 focus-within:border-purple-500">
             <RichTextMenu editor={editor} />
             <EditorContent editor={editor} className="" />
         </div>
