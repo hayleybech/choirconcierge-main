@@ -260,4 +260,7 @@ return [
         'timezone'     => 'e P',               // e.g. Australia/Perth +08:00
     ],
 
+	'heartbeats' => [
+		'group_mailbox_processed' => env('HEARTBEAT_GROUP_MAILBOX_PROCESSED'),
+	]
 ];

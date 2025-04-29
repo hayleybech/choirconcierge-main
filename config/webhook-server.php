@@ -80,10 +80,4 @@ return [
      * underlying job that performs the webhook request.
      */
     'tags' => [],
-
-    'urls' => [
-        'heartbeats' => [
-            'group_mailbox_processed' => env('HEARTBEAT_GROUP_MAILBOX_PROCESSED'),
-        ]
-    ]
 ];

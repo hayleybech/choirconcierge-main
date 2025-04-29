@@ -60,8 +60,5 @@ class ProcessGroupMailbox implements ShouldQueue
 
                 $message->delete(true);
         });
-
-        Webook::create()
-            ->url(config(''))
 	}
 }

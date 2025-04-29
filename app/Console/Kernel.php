@@ -13,15 +13,15 @@ class Kernel extends ConsoleKernel
 {
     /**
      * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
      */
-    protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule): void
     {
-        $schedule->job(ProcessGroupMailbox::class)->everyFiveMinutes();
+        $schedule->job(ProcessGroupMailbox::class)
+	        ->everyFiveMinutes()
+	        ->thenPing(config('app.heartbeats.group_mailbox_processed'));
 
-        $schedule->job(ClearDuplicateEmails::class)->daily();
+        $schedule->job(ClearDuplicateEmails::class)
+	        ->daily();
 
         $schedule->command('telescope:prune --hours=72')
             ->daily()
@@ -46,10 +46,8 @@ class Kernel extends ConsoleKernel
 
     /**
      * Register the commands for the application.
-     *
-     * @return void
      */
-    protected function commands()
+    protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');
 
