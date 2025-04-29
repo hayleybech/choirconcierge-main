@@ -261,6 +261,6 @@ return [
     ],
 
 	'heartbeats' => [
-		'group_mailbox_processed' => env('HEARTBEAT_GROUP_MAILBOX_PROCESSED'),
+		'process_group_mailbox' => env('HEARTBEAT_PROCESS_GROUP_MAILBOX'),
 	]
 ];

@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(ProcessGroupMailbox::class)
 	        ->everyFiveMinutes()
-	        ->thenPing(config('app.heartbeats.group_mailbox_processed'));
+	        ->thenPing(config('app.heartbeats.process_group_mailbox'));
 
         $schedule->job(ClearDuplicateEmails::class)
 	        ->daily();
