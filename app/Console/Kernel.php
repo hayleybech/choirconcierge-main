@@ -13,43 +13,47 @@ class Kernel extends ConsoleKernel
 {
     /**
      * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
      */
-    protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule): void
     {
-        $schedule->job(ProcessGroupMailbox::class)->everyFiveMinutes();
+        $schedule->job(ProcessGroupMailbox::class)
+	        ->everyFiveMinutes()
+	        ->thenPing(config('app.heartbeats.process_group_mailbox'));
 
-        $schedule->job(ClearDuplicateEmails::class)->daily();
+        $schedule->job(ClearDuplicateEmails::class)
+	        ->daily()
+            ->thenPing(config('app.heartbeats.clear_duplicate_emails'));
 
         $schedule->command('telescope:prune --hours=72')
             ->daily()
-            ->at('16:00'); // Midnight Perth
+            ->at('16:00') // Midnight Perth
+            ->thenPing(config('app.heartbeats.telescope_prune'));
 
         $schedule->command('backup:clean')
             ->daily()
-            ->at('18:00'); // 2 am Perth
+            ->at('18:00') // 2 am Perth
+            ->thenPing(config('app.heartbeats.backup_clean'));
 
         $schedule->command('backup:run')
             ->daily()
-            ->at('19:00'); // 3 am Perth
+            ->at('19:00') // 3 am Perth
+            ->thenPing(config('app.heartbeats.backup_run'));
 
         $schedule->job(ClearTemporaryBroadcastFiles::class)
             ->daily()
-            ->at('21:00'); // 5 am Perth
+            ->at('21:00') // 5 am Perth
+            ->thenPing(config('app.heartbeats.clear_temporary_broadcast_files'));
 
         $schedule->job(ResetDemoSite::class)
             ->weekly()
-            ->at('23:00'); // 7 am Perth
+            ->at('23:00') // 7 am Perth
+            ->thenPing(config('app.heartbeats.reset_demo_site'));
     }
 
     /**
      * Register the commands for the application.
-     *
-     * @return void
      */
-    protected function commands()
+    protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');
 

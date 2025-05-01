@@ -260,4 +260,13 @@ return [
         'timezone'     => 'e P',               // e.g. Australia/Perth +08:00
     ],
 
+	'heartbeats' => [
+		'process_group_mailbox' => env('HEARTBEAT_PROCESS_GROUP_MAILBOX'),
+        'clear_duplicate_emails' => env('HEARTBEAT_CLEAR_DUPLICATE_EMAILS'),
+        'telescope_prune' => env('HEARTBEAT_TELESCOPE_PRUNE'),
+        'backup_clean' => env('HEARTBEAT_BACKUP_CLEAN'),
+        'backup_run' => env('HEARTBEAT_BACKUP_RUN'),
+        'clear_temporary_broadcast_files' => env('HEARTBEAT_CLEAR_TEMPORARY_BROADCAST_FILES'),
+        'reset_demo_site' => env('HEARTBEAT_RESET_DEMO_SITE'),
+	]
 ];
