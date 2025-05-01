@@ -20,7 +20,7 @@ const IndexContainer = ({ tableDesktop, tableMobile, emptyState, filterPane, sho
                                 {tableDesktop}
                             </div>
                         ) : (
-                            <div className="bg-white shadow-sm block">
+                            <div className="bg-white shadow block">
                                 {tableMobile}
                             </div>
 

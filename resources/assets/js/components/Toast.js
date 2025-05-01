@@ -21,16 +21,16 @@ const Toast = ({ show, close, title, titleClass = 'text-gray-900 font-medium', i
 				<div className="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden">
 					<div className="p-4">
 						<div className="flex items-start">
-							<div className="shrink-0">
+							<div className="flex-shrink-0">
 								<Icon icon={icon} className={`h-6 w-6 ${iconClass}`} aria-hidden="true" />
 							</div>
 							<div className="ml-3 w-0 flex-1 pt-0.5">
 								<p className={`text-sm ${titleClass}`}>{title}</p>
 								<p className="mt-1 text-sm text-gray-500">{children}</p>
 							</div>
-							<div className="ml-4 shrink-0 flex">
+							<div className="ml-4 flex-shrink-0 flex">
 								<button
-									className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+									className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 									onClick={close}
 								>
 									<span className="sr-only">Close</span>

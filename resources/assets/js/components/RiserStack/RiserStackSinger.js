@@ -1,6 +1,9 @@
 import React, {useMemo} from "react";
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig from "../../../../../tailwind.config";
 
 const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelected, showHeight, singerHeight, isMe }) => {
+	const fullConfig = resolveConfig(tailwindConfig);
 	const labelHeight = 15;
 	const labelWidth = 35;
 	const nameOffsetY = 15;
@@ -33,7 +36,7 @@ const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelecte
 				style={
 					isSelected ? {
 						fill: `url(#img_${singerId})`,
-						stroke: 'var(--color-purple-500)',
+						stroke: fullConfig.theme.colors.purple[500],
 						strokeWidth: '2px',
 					} : {
 						fill: `url(#img_${singerId})`,
@@ -49,7 +52,7 @@ const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelecte
 				width={labelPosition.width}
 				height={labelPosition.height}
 				style={{
-					fill: isMe ? 'var(--color-purple-500)' : '#eee',
+					fill: isMe ? fullConfig.theme.colors.purple[500] : '#eee',
 					rx: '10px'
 			}}
 			/>

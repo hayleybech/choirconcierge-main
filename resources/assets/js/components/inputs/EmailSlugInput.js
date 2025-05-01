@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from "../../classNames";
 
 const EmailSlugInput = ({ name, value, updateFn, hasErrors, host, ...otherProps }) => (
-    <div className="mt-1 flex rounded-md shadow-xs">
+    <div className="mt-1 flex rounded-md shadow-sm">
         <input
             type="text"
             name={name}

@@ -37,7 +37,7 @@ const Dialog = ({ title, children, okLabel, okUrl, onOk, okVariant, okMethod, da
                         <div className="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
                             <button
                                 type="button"
-                                className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                                 onClick={() => setIsOpen(false)}
                             >
                                 <span className="sr-only">Close</span>
@@ -48,7 +48,7 @@ const Dialog = ({ title, children, okLabel, okUrl, onOk, okVariant, okMethod, da
                             <div className="mx-auto shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                                 <Icon icon="exclamation-triangle" type="regular" className="text-red-600 text-xl" />
                             </div>
-                            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left grow">
+                            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left flex-grow">
                                 <BaseDialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
                                     {title}
                                 </BaseDialog.Title>
