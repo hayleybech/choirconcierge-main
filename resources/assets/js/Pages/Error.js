@@ -69,7 +69,7 @@ const Show = ({ status, orgAdmins, isMember }) => {
 
             <div className="bg-white">
                 <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="shrink-0 pt-16">
+                    <div className="flex-shrink-0 pt-16">
                         <a href={route('central.dash')} className="flex">
                             <img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
                         </a>
@@ -95,7 +95,7 @@ const Show = ({ status, orgAdmins, isMember }) => {
                     </div>
 
                 </main>
-                <footer className="shrink-0 bg-gray-50">
+                <footer className="flex-shrink-0 bg-gray-50">
                     <div className="mx-auto max-w-7xl w-full px-4 py-16 sm:px-6 lg:px-8">
                         <nav className="flex space-x-4 justify-center">
                             <StyledLink href="mailto:hello@choirconcierge.com" target="_blank" variant="secondary">
@@ -185,15 +185,15 @@ const PopularPages = () => {
             <ul role="list" className="mt-4 border-t border-b border-gray-200 divide-y divide-gray-200">
                 {popularLinks.map((link, linkIdx) => (
                     <li key={linkIdx} className="relative py-6 flex items-start space-x-4">
-                        <div className="shrink-0">
+                        <div className="flex-shrink-0">
                         <span className="flex items-center justify-center h-12 w-12 rounded-lg bg-purple-50">
                           <Icon icon={link.icon} className="h-6 w-6 text-purple-700" aria-hidden="true" />
                         </span>
                         </div>
                         <div className="min-w-0 flex-1">
                             <h3 className="text-base font-medium text-gray-900">
-                      <span className="rounded-xs focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-purple-500">
-                        <a href={link.href} className="focus:outline-hidden">
+                      <span className="rounded-sm focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-purple-500">
+                        <a href={link.href} className="focus:outline-none">
                           <span className="absolute inset-0" aria-hidden="true" />
                             {link.title}
                         </a>
@@ -201,7 +201,7 @@ const PopularPages = () => {
                             </h3>
                             <p className="text-base text-gray-500">{link.description}</p>
                         </div>
-                        <div className="shrink-0 self-center">
+                        <div className="flex-shrink-0 self-center">
                             <Icon icon="chevron-right" className="h-5 w-5 text-gray-400" aria-hidden="true" />
                         </div>
                     </li>

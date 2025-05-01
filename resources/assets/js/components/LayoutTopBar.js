@@ -27,7 +27,7 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu
         <div className="relative z-10 shrink-0 flex h-16 bg-white border-b border-gray-300">
             <button
                 type="button"
-                className="px-4 border-r border-gray-200 text-gray-500 focus:outline-hidden focus:ring-2 focus:ring-inset focus:ring-purple-500 xl:hidden"
+                className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 xl:hidden"
                 onClick={() => setSidebarOpen(true)}
             >
                 <span className="sr-only">Open sidebar</span>
@@ -51,7 +51,7 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu
                         <div>
                             <Menu.Button
                                 className={classNames(
-                                    'max-w-xs bg-white flex items-center text-sm rounded-lg focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-gray-500',
+                                    'max-w-xs bg-white flex items-center text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500',
                                     impersonationActive ? 'border-2 border-red-500' : '',
                                 )}
                             >
@@ -72,7 +72,7 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-hidden">
+                            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 {userNavigation.filter(item => item).map((item) => (
                                     <Menu.Item key={item.name}>
                                         {({ active }) => (

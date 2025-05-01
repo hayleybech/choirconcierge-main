@@ -28,7 +28,7 @@ const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
         {min}
         <div className="grow mx-2">
-            <div className="h-5 bg-purple-100 border border-purple-300 rounded-xs overflow-hidden">
+            <div className="h-5 bg-purple-100 border border-purple-300 rounded-sm overflow-hidden">
                 <div className="bg-purple-600 h-full flex justify-center items-center text-white" style={{ width: `${value / max * 100}%`}}>
                     {value}
                 </div>
@@ -42,7 +42,7 @@ const Range = ({ value, min, max, minLabel, maxLabel }) => (
     <div className="flex items-center text-xs">
         {minLabel}
         <div className="grow mx-2">
-            <div className="h-1 bg-gray-200 rounded-xs flex items-center pr-3">
+            <div className="h-1 bg-gray-200 rounded-sm flex items-center pr-3">
                 <div className="w-full relative">
                     <div
                         className="bg-gray-600 h-3 w-3 flex justify-center items-center text-white relative rounded-full"

@@ -1,6 +1,8 @@
 import React, {useMemo} from 'react';
 import {Arc} from "../../risers/Arc";
 import {ArcMath} from "../../risers/ArcMath";
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from '../../../../../tailwind.config'
 
 const RiserStackFrame = ({
     columns,
@@ -13,6 +15,7 @@ const RiserStackFrame = ({
     frameEndRadius,
     rowHeightAlongRadius,
 }) => {
+    const fullConfig = resolveConfig(tailwindConfig);
     const columnAngularWidth = useMemo(() => totalAngularWidth / columns, [columns]);
 
     const arcs = useMemo(() => createArcs(), [rows, columns, frontRowOnFloor]);
@@ -71,7 +74,7 @@ const RiserStackFrame = ({
         <g>
             <g>
             {arcs.map((arc, key) => (
-                <path key={key} d={arc} style={{ fill: 'none', stroke: 'var(--color-gray-500)', strokeWidth: 1 }} />
+                <path key={key} d={arc} style={{ fill: 'none', stroke: fullConfig.theme.colors.gray[500], strokeWidth: 1 }} />
             ))}
             </g>
 
@@ -83,7 +86,7 @@ const RiserStackFrame = ({
                         y1={edge.start.y}
                         x2={edge.end.x}
                         y2={edge.end.y}
-                        style={{ fill: 'none', stroke: 'var(--color-gray-500)', strokeWidth: 1 }}
+                        style={{ fill: 'none', stroke: fullConfig.theme.colors.gray[500], strokeWidth: 1 }}
                     />
                 ))}
             </g>

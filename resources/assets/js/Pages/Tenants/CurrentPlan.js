@@ -20,7 +20,7 @@ const CurrentPlan = ({ plan, billing, tenantId }) => {
     const quotaPercentUsed = billing.activeUserQuota.activeUserCount / billing.activeUserQuota.quota * 100;
 
     return (
-      <div className="border border-gray-300 rounded-sm bg-white p-4 mt-2 flex flex-wrap justify-between items-start gap-4">
+      <div className="border border-gray-300 rounded bg-white p-4 mt-2 flex flex-wrap justify-between items-start gap-4">
         <div>
           <BillingTag billing={billing} />
           <div className="font-bold mt-2">{plan.name}</div>
@@ -50,7 +50,7 @@ const CurrentPlan = ({ plan, billing, tenantId }) => {
 
   if (!plan && billing.onTrial) {
     return (
-      <div className="border border-blue-300 rounded-sm bg-blue-100 p-4 mt-2 flex justify-between items-start gap-4">
+      <div className="border border-blue-300 rounded bg-blue-100 p-4 mt-2 flex justify-between items-start gap-4">
         <div>
           <div className="font-bold text-blue-700">30-day Trial</div>
           <div className="text-blue-800">
@@ -64,7 +64,7 @@ const CurrentPlan = ({ plan, billing, tenantId }) => {
 
   if(!plan && !billing.onTrial ) {
       return (
-          <div className="border border-red-300 rounded-sm bg-red-100 p-4 mt-2 flex justify-between items-start gap-4">
+          <div className="border border-red-300 rounded bg-red-100 p-4 mt-2 flex justify-between items-start gap-4">
               <div>
                   <div className="font-bold text-red-700">No Plan Found</div>
                   <div className="text-red-800">
