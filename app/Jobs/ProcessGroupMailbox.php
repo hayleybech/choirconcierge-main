@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Webklex\PHPIMAP\Message;
 
 /**
@@ -40,6 +41,16 @@ class ProcessGroupMailbox implements ShouldQueue
                 /** @var IncomingMessage $incomingMessage */
 
                 $incomingMessage = (new WebklexImapMessageMailableAdapter($message))->toMailable();
+
+				Log::info(
+					'Processing inbound mail',
+					$incomingMessage->subject,
+					'<'.
+						collect($incomingMessage->to)
+							->map(fn($to) => $to['email']
+							->join(', ').
+					'>'
+					)
 
                 $incomingMessage->resendToGroups();
 

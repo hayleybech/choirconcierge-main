@@ -6,7 +6,7 @@ import AccountForm from "./AccountForm";
 import {usePage} from "@inertiajs/react";
 import useRoute from "../../hooks/useRoute";
 
-const Edit = ({ }) => {
+const Edit = ({ countriesByContinent }) => {
     const { user: authUser } = usePage().props;
     const { route } = useRoute();
 
@@ -24,7 +24,7 @@ const Edit = ({ }) => {
                 ]}
             />
 
-            <AccountForm />
+            <AccountForm countriesByContinent={countriesByContinent} />
         </>
     );
 }

@@ -15,8 +15,10 @@ import DayInput from "../../components/inputs/Day";
 import {DateTime} from "luxon";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
+import CountrySelect from "../../components/inputs/CountrySelect";
+import StateSelect from "../../components/inputs/StateSelect";
 
-const AccountForm = ({ }) => {
+const AccountForm = ({ countriesByContinent }) => {
     const { route } = useRoute();
     const { user } = usePage().props;
 
@@ -44,6 +46,7 @@ const AccountForm = ({ }) => {
 	    address_suburb: user.address_suburb ?? '',
 	    address_state: user.address_state ?? '',
 	    address_postcode: user.address_postcode ?? '',
+	    // address_country: user.address_country ?? '',
     });
 
     function submit(e) {
@@ -158,51 +161,77 @@ const AccountForm = ({ }) => {
                 <FormSection title="Address">
 
                     <div className="sm:col-span-6">
-                        <Label label="Street Address 1" forInput="address_street_1" />
-                        <TextInput name="address_street_1" value={data.address_street_1} updateFn={value => setData('address_street_1', value)} hasErrors={ !! errors['address_street_1'] } />
+                        <Label label="Street Address 1" forInput="address_street_1"/>
+                        <TextInput name="address_street_1" value={data.address_street_1}
+                                   updateFn={value => setData('address_street_1', value)}
+                                   hasErrors={!!errors['address_street_1']}/>
                         {errors.address_street_1 && <Error>{errors.address_street_1}</Error>}
                     </div>
                     <div className="sm:col-span-6">
-                        <Label label="Street Address 2" forInput="address_street_2" />
-                        <TextInput type="tel" name="address_street_2" value={data.address_street_2} updateFn={value => setData('address_street_2', value)} hasErrors={ !! errors['address_street_2'] } />
+                        <Label label="Street Address 2" forInput="address_street_2"/>
+                        <TextInput type="tel" name="address_street_2" value={data.address_street_2}
+                                   updateFn={value => setData('address_street_2', value)}
+                                   hasErrors={!!errors['address_street_2']}/>
                         {errors.address_street_2 && <Error>{errors.address_street_2}</Error>}
                     </div>
 
                     <div className="sm:col-span-3">
-                        <Label label="Suburb" forInput="address_suburb" />
-                        <TextInput name="address_suburb" value={data.address_suburb} updateFn={value => setData('address_suburb', value)} hasErrors={ !! errors['address_suburb'] } />
+                        <Label label="Suburb" forInput="address_suburb"/>
+                        <TextInput name="address_suburb" value={data.address_suburb}
+                                   updateFn={value => setData('address_suburb', value)}
+                                   hasErrors={!!errors['address_suburb']}/>
                         {errors.address_suburb && <Error>{errors.address_suburb}</Error>}
                     </div>
+                    <div className="sm:col-span-3">
+                        <Label label="Country" forInput="address_country"/>
+                        <CountrySelect
+                            defaultValue={data.address_country}
+                            options={countriesByContinent.map(continent => ({
+                                label: continent.name,
+                                options: continent.countries.map(country => ({
+                                    label: country.name, value: country.id
+                                }))
+                            }))}
+                            updateFn={value => setData('address_country', value)}
+                        />
+                        {errors.address_country && <Error>{errors.address_country}</Error>}
+                    </div>
                     <div className="sm:col-span-1">
-                        <Label label="State" forInput="address_state" />
+                        <Label label="State" forInput="address_state"/>
+                        <StateSelect countryId={data.address_country} />
+                    </div>
+                    <div className="sm:col-span-1">
+                        <Label label="State" forInput="address_state"/>
                         <Select
                             name="address_state"
                             value={data.address_state}
                             updateFn={value => setData('address_state', value)}
-                            hasErrors={ !! errors['address_state'] }
+                            hasErrors={!!errors['address_state']}
                             options={[
-                                { key: 'ACT', label: 'ACT' },
-                                { key: 'NSW', label: 'NSW' },
-                                { key: 'NT',  label: 'NT'  },
-                                { key: 'QLD', label: 'QLD' },
-                                { key: 'SA',  label: 'SA'  },
-                                { key: 'TAS', label: 'TAS' },
-                                { key: 'VIC', label: 'VIC' },
-                                { key: 'WA',  label: 'WA'  },
+                                {key: 'ACT', label: 'ACT'},
+                                {key: 'NSW', label: 'NSW'},
+                                {key: 'NT', label: 'NT'},
+                                {key: 'QLD', label: 'QLD'},
+                                {key: 'SA', label: 'SA'},
+                                {key: 'TAS', label: 'TAS'},
+                                {key: 'VIC', label: 'VIC'},
+                                {key: 'WA', label: 'WA'},
                             ]}
                         />
                         {errors.address_state && <Error>{errors.address_state}</Error>}
                     </div>
                     <div className="sm:col-span-2">
-                        <Label label="Postcode" forInput="address_postcode" />
-                        <TextInput name="address_postcode" value={data.address_postcode} updateFn={value => setData('address_postcode', value)} hasErrors={ !! errors['address_postcode'] } />
+                        <Label label="Postcode" forInput="address_postcode"/>
+                        <TextInput name="address_postcode" value={data.address_postcode}
+                                   updateFn={value => setData('address_postcode', value)}
+                                   hasErrors={!!errors['address_postcode']}/>
                         {errors.address_postcode && <Error>{errors.address_postcode}</Error>}
                     </div>
 
                 </FormSection>
 
                 <FormFooter>
-                    <ButtonLink href={route('singers.show', {singer: user.membership})}>Cancel</ButtonLink>
+                <ButtonLink href={route('singers.show', {singer: user.membership})}>Cancel</ButtonLink>
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
 
