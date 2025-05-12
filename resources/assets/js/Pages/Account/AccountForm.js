@@ -45,7 +45,7 @@ const AccountForm = ({ countriesByRegion }) => {
 	    address_suburb: user.address_suburb ?? '',
 	    address_state: user.address_state ?? '',
 	    address_postcode: user.address_postcode ?? '',
-        address_country: user.address_country.cca3 ?? '',
+        address_country: user.address_country?.cca3 ?? '',
     });
 
     function submit(e) {
@@ -174,10 +174,10 @@ const AccountForm = ({ countriesByRegion }) => {
                         <Label label="Country" forInput="address_country"/>
                         <CountrySelect
                             name="address_country"
-                            defaultValue={{
+                            defaultValue={user.address_country ? {
                                 label: user.address_country.name.common,
                                 value: user.address_country.cca3,
-                            }}
+                            } : null}
                             options={Object.keys(countriesByRegion).map(region => ({
                                 label: region,
                                 options: countriesByRegion[region].map(country => ({
