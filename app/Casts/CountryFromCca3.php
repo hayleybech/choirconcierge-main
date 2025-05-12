@@ -19,6 +19,9 @@ class CountryFromCca3 implements CastsAttributes
      */
     public function get($model, string $key, $value, array $attributes)
     {
+        if(! $value) {
+            return null;
+        }
         return Countries::firstWhere('cca3', $value);
     }
 
