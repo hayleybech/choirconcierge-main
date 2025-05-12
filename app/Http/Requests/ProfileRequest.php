@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use PragmaRX\Countries\Package\Countries;
 
 class ProfileRequest extends FormRequest
 {
@@ -44,6 +45,10 @@ class ProfileRequest extends FormRequest
             'address_suburb' => ['max:255'],
             'address_state' => ['max:3'],
             'address_postcode' => ['max:191'],
+            'address_country' => [
+                'max:3',
+                Rule::in(Countries::all()->pluck('cca3')->toArray()),
+            ],
             'profession' => ['max:255'],
             'skills' => ['max:255'],
             'height' => ['nullable', 'numeric', 'between:0,300'],

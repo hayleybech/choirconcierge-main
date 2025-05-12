@@ -15,8 +15,9 @@ import DayInput from "../../components/inputs/Day";
 import {DateTime} from "luxon";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
+import CountrySelect from '../../components/inputs/CountrySelect';
 
-const AccountForm = ({ }) => {
+const AccountForm = ({ countriesByRegion }) => {
     const { route } = useRoute();
     const { user } = usePage().props;
 
@@ -44,6 +45,7 @@ const AccountForm = ({ }) => {
 	    address_suburb: user.address_suburb ?? '',
 	    address_state: user.address_state ?? '',
 	    address_postcode: user.address_postcode ?? '',
+        address_country: user.address_country.cca3 ?? '',
     });
 
     function submit(e) {
@@ -169,11 +171,26 @@ const AccountForm = ({ }) => {
                     </div>
 
                     <div className="sm:col-span-3">
-                        <Label label="Suburb" forInput="address_suburb" />
-                        <TextInput name="address_suburb" value={data.address_suburb} updateFn={value => setData('address_suburb', value)} hasErrors={ !! errors['address_suburb'] } />
-                        {errors.address_suburb && <Error>{errors.address_suburb}</Error>}
+                        <Label label="Country" forInput="address_country"/>
+                        <CountrySelect
+                            name="address_country"
+                            defaultValue={{
+                                label: user.address_country.name.common,
+                                value: user.address_country.cca3,
+                            }}
+                            options={Object.keys(countriesByRegion).map(region => ({
+                                label: region,
+                                options: countriesByRegion[region].map(country => ({
+                                    label: country.name.common,
+                                    value: country.cca3,
+                                }))
+                            }))}
+                            updateFn={value => setData('address_country', value)}
+                        />
+                        {errors.address_country && <Error>{errors.address_country}</Error>}
                     </div>
-                    <div className="sm:col-span-1">
+
+                    <div className="sm:col-span-3">
                         <Label label="State" forInput="address_state" />
                         <Select
                             name="address_state"
@@ -193,7 +210,13 @@ const AccountForm = ({ }) => {
                         />
                         {errors.address_state && <Error>{errors.address_state}</Error>}
                     </div>
-                    <div className="sm:col-span-2">
+
+                    <div className="sm:col-span-3">
+                        <Label label="Suburb" forInput="address_suburb" />
+                        <TextInput name="address_suburb" value={data.address_suburb} updateFn={value => setData('address_suburb', value)} hasErrors={ !! errors['address_suburb'] } />
+                        {errors.address_suburb && <Error>{errors.address_suburb}</Error>}
+                    </div>
+                    <div className="sm:col-span-1">
                         <Label label="Postcode" forInput="address_postcode" />
                         <TextInput name="address_postcode" value={data.address_postcode} updateFn={value => setData('address_postcode', value)} hasErrors={ !! errors['address_postcode'] } />
                         {errors.address_postcode && <Error>{errors.address_postcode}</Error>}

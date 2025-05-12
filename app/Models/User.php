@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\CountryFromCca3;
 use App\Mail\Welcome;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,6 +50,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string $address_suburb
  * @property string $address_state
  * @property string $address_postcode
+ * @property string $address_country uses cca3, compatible with ISO 3166-1 alpha-3
  * @property string $profession
  * @property string $skills
  * @property float $height
@@ -94,10 +96,15 @@ class User extends Authenticatable implements HasMedia
         'address_suburb',
         'address_state',
         'address_postcode',
+        'address_country',
         'profession',
         'skills',
         'height',
         'bha_id',
+    ];
+
+    protected $casts = [
+        'address_country' => CountryFromCca3::class,
     ];
 
     /**

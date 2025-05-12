@@ -22,7 +22,6 @@ import useRoute from "../../hooks/useRoute";
 import Button from "../../components/inputs/Button";
 import Label from "../../components/inputs/Label";
 import Select from "../../components/inputs/Select";
-import Error from "../../components/inputs/Error";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -287,7 +286,8 @@ const PersonalDetails = ({ singer }) => (
                         ? (<>
                             {singer.user.address_street_1}<br />
                             {singer.user.address_street_2 && (<>{singer.user.address_street_2}<br /></>)}
-                            {`${singer.user.address_suburb}, ${singer.user.address_state} ${singer.user.address_postcode}`}
+                            {`${singer.user.address_suburb}, ${singer.user.address_state ?? ''} ${singer.user.address_postcode ?? ''}`}<br />
+                            {singer.user.address_country?.name?.common ?? ''}
                         </>)
                         : 'No address'
                     }

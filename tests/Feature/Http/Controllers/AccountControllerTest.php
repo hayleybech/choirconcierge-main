@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia;
+use PragmaRX\Countries\Package\Countries;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\get;
@@ -74,6 +75,7 @@ dataset('profiles', [
             'address_suburb' => $this->faker->city(),
             'address_state' => $this->faker->stateAbbr(),
             'address_postcode' => $this->faker->numerify('####'),
+            'address_country' => Countries::random()->cca3,
             'profession' => $this->faker->sentence(),
             'skills' => $this->faker->sentence(),
             'height' => $this->faker->randomFloat(2, 0, 300),
