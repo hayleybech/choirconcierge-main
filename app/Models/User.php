@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\CountryFromCca3;
+use App\Casts\StateFromIso3166_2;
 use App\Mail\Welcome;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
@@ -104,6 +105,7 @@ class User extends Authenticatable implements HasMedia
 
     protected $casts = [
         'address_country' => CountryFromCca3::class,
+        'address_state' => StateFromIso3166_2::class,
     ];
 
     /**

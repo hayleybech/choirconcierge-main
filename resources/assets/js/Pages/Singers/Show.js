@@ -286,7 +286,7 @@ const PersonalDetails = ({ singer }) => (
                         ? (<>
                             {singer.user.address_street_1}<br />
                             {singer.user.address_street_2 && (<>{singer.user.address_street_2}<br /></>)}
-                            {`${singer.user.address_suburb}, ${singer.user.address_state ?? ''} ${singer.user.address_postcode ?? ''}`}<br />
+                            {`${singer.user.address_suburb ?? ''}, ${singer.user.address_state.postal ?? ''} ${singer.user.address_postcode ?? ''}`}<br />
                             {singer.user.address_country?.name?.common ?? ''}
                         </>)
                         : 'No address'

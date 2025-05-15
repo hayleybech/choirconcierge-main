@@ -16,8 +16,9 @@ import {DateTime} from "luxon";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
 import CountrySelect from '../../components/inputs/CountrySelect';
+import StateSelect from '../../components/inputs/StateSelect';
 
-const AccountForm = ({ countriesByRegion }) => {
+const AccountForm = ({ countriesByRegion, statesForSelectedCountry }) => {
     const { route } = useRoute();
     const { user } = usePage().props;
 
@@ -43,7 +44,7 @@ const AccountForm = ({ countriesByRegion }) => {
 	    address_street_1: user.address_street_1 ?? '',
 	    address_street_2: user.address_street_2 ?? '',
 	    address_suburb: user.address_suburb ?? '',
-	    address_state: user.address_state ?? '',
+	    address_state: user.address_state?.iso_3166_2 ?? '',
 	    address_postcode: user.address_postcode ?? '',
         address_country: user.address_country?.cca3 ?? '',
     });
@@ -189,24 +190,21 @@ const AccountForm = ({ countriesByRegion }) => {
                         />
                         {errors.address_country && <Error>{errors.address_country}</Error>}
                     </div>
-
+                    
                     <div className="sm:col-span-3">
                         <Label label="State" forInput="address_state" />
-                        <Select
+                        <StateSelect
                             name="address_state"
-                            value={data.address_state}
+                            defaultValue={user.address_state ? {
+                                label: `${user.address_state.name} (${user.address_state.postal})`,
+                                value: user.address_state.iso_3166_2,
+                            } : null}
                             updateFn={value => setData('address_state', value)}
                             hasErrors={ !! errors['address_state'] }
-                            options={[
-                                { key: 'ACT', label: 'ACT' },
-                                { key: 'NSW', label: 'NSW' },
-                                { key: 'NT',  label: 'NT'  },
-                                { key: 'QLD', label: 'QLD' },
-                                { key: 'SA',  label: 'SA'  },
-                                { key: 'TAS', label: 'TAS' },
-                                { key: 'VIC', label: 'VIC' },
-                                { key: 'WA',  label: 'WA'  },
-                            ]}
+                            options={Object.values(statesForSelectedCountry).map(state => ({
+                                label: `${state.name} (${state.postal})`,
+                                value: state.iso_3166_2,
+                            }))}
                         />
                         {errors.address_state && <Error>{errors.address_state}</Error>}
                     </div>
