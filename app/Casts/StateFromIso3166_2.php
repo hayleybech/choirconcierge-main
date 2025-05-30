@@ -41,6 +41,10 @@ class StateFromIso3166_2 implements CastsAttributes
      */
     public function set($model, string $key, $value, array $attributes)
     {
+        if(!$value) {
+            return '';
+        }
+
         if(is_string($value)) {
             return $value;
         }

@@ -18,7 +18,7 @@ import useRoute from "../../hooks/useRoute";
 import CountrySelect from '../../components/inputs/CountrySelect';
 import StateSelect from '../../components/inputs/StateSelect';
 
-const AccountForm = ({ countriesByRegion, statesForSelectedCountry }) => {
+const AccountForm = ({ countriesByRegion }) => {
     const { route } = useRoute();
     const { user } = usePage().props;
 
@@ -175,7 +175,7 @@ const AccountForm = ({ countriesByRegion, statesForSelectedCountry }) => {
                         <Label label="Country" forInput="address_country"/>
                         <CountrySelect
                             name="address_country"
-                            defaultValue={user.address_country ? {
+                            defaultValue={user.address_country && data.address_country ? {
                                 label: user.address_country.name.common,
                                 value: user.address_country.cca3,
                             } : null}
@@ -186,25 +186,27 @@ const AccountForm = ({ countriesByRegion, statesForSelectedCountry }) => {
                                     value: country.cca3,
                                 }))
                             }))}
-                            updateFn={value => setData('address_country', value)}
+                            updateFn={value => setData({
+                                ...data,
+                                address_country: value,
+                                address_state: '',
+                            })}
                         />
                         {errors.address_country && <Error>{errors.address_country}</Error>}
                     </div>
-                    
+
                     <div className="sm:col-span-3">
                         <Label label="State" forInput="address_state" />
                         <StateSelect
                             name="address_state"
-                            defaultValue={user.address_state ? {
+                            country={data.address_country}
+                            key={data.address_country}
+                            defaultValue={user.address_state && data.address_state ? {
                                 label: `${user.address_state.name} (${user.address_state.postal})`,
                                 value: user.address_state.iso_3166_2,
                             } : null}
                             updateFn={value => setData('address_state', value)}
                             hasErrors={ !! errors['address_state'] }
-                            options={Object.values(statesForSelectedCountry).map(state => ({
-                                label: `${state.name} (${state.postal})`,
-                                value: state.iso_3166_2,
-                            }))}
                         />
                         {errors.address_state && <Error>{errors.address_state}</Error>}
                     </div>

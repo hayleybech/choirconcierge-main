@@ -40,6 +40,10 @@ class CountryFromCca3 implements CastsAttributes
             return $value;
         }
 
+        if(! $value) {
+            return '';
+        }
+
         return $value->cca3;
     }
 }

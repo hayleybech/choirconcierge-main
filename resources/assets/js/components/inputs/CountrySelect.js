@@ -9,8 +9,10 @@ const CountrySelect = ({ name, options, defaultValue, updateFn, multiple = false
 			cacheOptions
 			options={options}
 			isMulti={multiple}
+			isClearable
 			defaultValue={defaultValue}
-			onChange={option => multiple ? updateFn(option.map(item => item.value)) : updateFn(option.value)}
+			onChange={option => multiple ? updateFn(option.map(item => item?.value)) : updateFn(option?.value ?? '')}
+			placeholder="Start typing..."
 		/>
 	</div>
 );

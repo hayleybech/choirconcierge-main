@@ -16,6 +16,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\ExportMemberController;
 use App\Http\Controllers\FindSongController;
+use App\Http\Controllers\FindStateController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
 use App\Http\Controllers\ImpersonateUserController;
@@ -186,6 +187,7 @@ Route::middleware([
         Route::prefix('find')->name('find.')->group(function () {
             Route::get('/singers', FindSingerController::class)->name('singers');
             Route::get('/songs/{keyword}', FindSongController::class)->name('songs');
+            Route::get('/{country}/states', FindStateController::class)->name('states');
         });
 
         // Global Search APIs
