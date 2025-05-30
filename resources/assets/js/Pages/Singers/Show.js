@@ -281,17 +281,14 @@ const PersonalDetails = ({ singer }) => (
             },
             {
                 label: 'Address',
-                value: <>
-                    {singer.user.address_street_1
-                        ? (<>
-                            {singer.user.address_street_1}<br />
-                            {singer.user.address_street_2 && (<>{singer.user.address_street_2}<br /></>)}
-                            {`${singer.user.address_suburb ?? ''}, ${singer.user.address_state?.postal ?? ''} ${singer.user.address_postcode ?? ''}`}<br />
-                            {singer.user.address_country?.name?.common ?? ''}
-                        </>)
-                        : 'No address'
-                    }
-                </>,
+                value: <PhysicalAddress
+                    line_1={singer.user.address_street_1}
+                    line_2={singer.user.address_street_2}
+                    suburb={singer.user.address_suburb ?? ''}
+                    state={singer.user.address_state?.postal ?? ''}
+                    postcode={singer.user.address_postcode ?? ''}
+                    country={singer.user.address_country?.name?.common ?? ''}
+                />
             },
             {
                 label: 'Profession',
@@ -318,6 +315,31 @@ const PersonalDetails = ({ singer }) => (
         ]}/>
     </CollapsePanel>
 );
+
+const PhysicalAddress = ({
+    line_1,
+    line_2,
+    suburb,
+    state,
+    postcode,
+    country,
+}) => {
+    if(! line_1) {
+        return 'No address';
+    }
+
+    return [
+        line_1,
+        line_2,
+        [suburb, state, postcode].filter(item => !!item).join(', '),
+        country,
+    ].filter(line => !!line)
+    .map(line => (
+        <>
+            {line}<br />
+        </>
+    ));
+};
 
 const MembershipDetails = ({ singer }) => (
     <CollapsePanel>
