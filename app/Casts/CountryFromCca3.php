@@ -4,7 +4,7 @@ namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use PragmaRX\Countries\Package\Countries;
+use MenaraSolutions\Geographer\Earth;
 
 class CountryFromCca3 implements CastsAttributes
 {
@@ -22,7 +22,7 @@ class CountryFromCca3 implements CastsAttributes
         if(! $value) {
             return null;
         }
-        return Countries::firstWhere('cca3', $value);
+        return (new Earth())->findOne(['code3' => $value]);
     }
 
     /**
@@ -44,6 +44,6 @@ class CountryFromCca3 implements CastsAttributes
             return '';
         }
 
-        return $value->cca3;
+        return $value->code3;
     }
 }

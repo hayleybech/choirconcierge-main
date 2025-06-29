@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use PragmaRX\Countries\Package\Countries;
+use MenaraSolutions\Geographer\Earth;
 
 class ProfileRequest extends FormRequest
 {
@@ -54,7 +54,9 @@ class ProfileRequest extends FormRequest
                 'sometimes',
                 'nullable',
                 'max:3',
-                Rule::in(Countries::all()->pluck('cca3')->toArray()),
+                Rule::in(
+                    (new Earth())->getCountries()->pluck('code3')
+                ),
             ],
             'profession' => ['max:255'],
             'skills' => ['max:255'],

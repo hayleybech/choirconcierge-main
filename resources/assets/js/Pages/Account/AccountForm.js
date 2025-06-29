@@ -18,7 +18,7 @@ import useRoute from "../../hooks/useRoute";
 import CountrySelect from '../../components/inputs/CountrySelect';
 import StateSelect from '../../components/inputs/StateSelect';
 
-const AccountForm = ({ countriesByRegion }) => {
+const AccountForm = ({ countries }) => {
     const { route } = useRoute();
     const { user } = usePage().props;
 
@@ -179,12 +179,9 @@ const AccountForm = ({ countriesByRegion }) => {
                                 label: user.address_country.name.common,
                                 value: user.address_country.cca3,
                             } : null}
-                            options={Object.keys(countriesByRegion).map(region => ({
-                                label: region,
-                                options: countriesByRegion[region].map(country => ({
-                                    label: country.name.common,
-                                    value: country.cca3,
-                                }))
+                            options={countries.map(country => ({
+                                label: country.name,
+                                value: country.code3,
                             }))}
                             updateFn={value => setData({
                                 ...data,

@@ -5,6 +5,7 @@ namespace App\Casts;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use MenaraSolutions\Geographer\Earth;
 use PragmaRX\Countries\Package\Countries;
 
 class StateFromIso3166_2 implements CastsAttributes
@@ -24,9 +25,9 @@ class StateFromIso3166_2 implements CastsAttributes
             return null;
         }
 
-        return Countries::firstWhere('cca2', self::cca2FromIso3166_2($value))
-            ->hydrateStates()
-            ->states
+        return (new Earth())->findOne(['code' => self::cca2FromIso3166_2($value)])
+            ->getStates()
+            ->f
             ->firstWhere('iso_3166_2', $value);
     }
 

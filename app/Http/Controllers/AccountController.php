@@ -7,6 +7,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use MenaraSolutions\Geographer\Country;
+use MenaraSolutions\Geographer\Earth;
 use PragmaRX\Countries\Package\Countries;
 
 class AccountController extends Controller
@@ -14,9 +16,8 @@ class AccountController extends Controller
     public function edit(): View|Response
     {
         return Inertia::render('Account/Edit', [
-            'countriesByRegion' => Countries::all()
-                ->groupBy('region')
-                ->sortBy('name'),
+            'countries' => collect((new Earth())->getCountries()->toArray())
+                ->map(fn($country) => ['name' => $country['name'], 'code3' => $country['code3']]),
         ]);
     }
 
