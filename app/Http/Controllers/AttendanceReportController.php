@@ -39,14 +39,15 @@ class AttendanceReportController extends Controller
         $singers = $this->getSingers($events);
 
         $events->each(function ($event) use ($singers) {
-            $event->singersPresent = $event->singers_attendance('present')->active()->get()->count();
+            $event->singersPresent = $event->singers_attendance('present')->active()->get()->count()
+                + $event->singers_attendance('late')->active()->get()->count();
             $event->percentPresent = $singers->count() > 0 ? floor($event->singersPresent / $singers->count() * 100) : null;
         });
 
         $avg_singers_per_event = round(
             $events->count() > 0
                 ? $events->reduce(static function ($carry, $event) {
-                    return $carry + $event->singers_attendance('present')->count();
+                    return $carry + $event->singers_attendance('present')->count() + $event->singers_attendance('late')->count();
                 }, 0) / $events->count()
                 : null,
             2,
@@ -74,7 +75,7 @@ class AttendanceReportController extends Controller
                 ->reduce(fn ($carry, $singer) =>
                     $carry + $singer
                         ->attendances()
-                        ->where('response', 'present')
+                        ->whereIn('response', ['present', 'late'])
                         ->count()
                 , 0) / Membership::all()->count(),
             2,
@@ -105,7 +106,7 @@ class AttendanceReportController extends Controller
                 $singer->timesPresent = $singer
 	                ->attendances
 	                ->whereIn('event_id', $events->pluck('id'))
-	                ->where('response', 'present')
+	                ->whereIn('response', ['present', 'late'])
 	                ->count();
                 $singer->percentPresent = $events->count() > 0 ? floor($singer->timesPresent / $events->count() * 100) : null;
             });
