@@ -55,6 +55,7 @@ const Index = ({ event, voiceParts }) => {
                       <div className="shrink-0">
                         <img className="h-12 w-12 rounded-lg" src={singer.membership.user.avatar_url} alt={singer.membership.user.name}/>
                       </div>
+
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900">{singer.membership.user.name}</p>
                         <p className="text-sm">
@@ -62,6 +63,31 @@ const Index = ({ event, voiceParts }) => {
                         </p>
                       </div>
                     </div>
+
+                      <div className="flex space-between gap-4">
+                        {singer.membership.user.dietary_requirements ? (
+                        <div>
+                            <strong className="text-amber-600 mb-2">Dietary Requirements</strong>
+                            <p className="text-amber-800 text-xs">{singer.membership.user.dietary_requirements}</p>
+                        </div>
+                        ) : (
+                        <div>
+                            <strong className="text-gray-500 mb-2">Dietary Requirements</strong>
+                            <p className="text-gray-700 text-xs">None listed</p>
+                        </div>
+                        )}
+                        {singer.membership.user.medical_conditions ? (
+                          <div>
+                              <strong className="text-amber-600 mb-2">Medical Conditions</strong>
+                              <p className="text-amber-800 text-xs">{singer.membership.user.medical_conditions}</p>
+                          </div>
+                        ) : (
+                          <div>
+                              <strong className="text-gray-500 mb-2">Medical Conditions</strong>
+                              <p className="text-gray-700 text-xs">None listed</p>
+                          </div>
+                        )}
+                      </div>
 
                   </div>
                 </li>
