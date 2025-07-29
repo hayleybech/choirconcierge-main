@@ -1,6 +1,6 @@
 <?php
 
-$VERSION = 'choir-concierge@2025-05-01b';
+$VERSION = 'choir-concierge@2025-07-29a';
 
 return [
 
