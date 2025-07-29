@@ -53,6 +53,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string $skills
  * @property float $height
  * @property int $bha_id
+ * @property string $dietary_requirements
+ * @property string $medical_conditions
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $last_login
@@ -98,6 +100,8 @@ class User extends Authenticatable implements HasMedia
         'skills',
         'height',
         'bha_id',
+        'dietary_requirements',
+        'medical_conditions',
     ];
 
     /**

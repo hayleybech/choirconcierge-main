@@ -46,6 +46,8 @@ class ProfileRequest extends FormRequest
             'address_postcode' => ['max:191'],
             'profession' => ['max:255'],
             'skills' => ['max:255'],
+            'dietary_requirements' => ['max:256'],
+            'medical_conditions' => ['max:256'],
             'height' => ['nullable', 'numeric', 'between:0,300'],
             'bha_id' => ['nullable', 'numeric'],
         ];

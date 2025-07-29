@@ -6,6 +6,7 @@ import Icon from "../../../components/Icon";
 import RsvpTag from "../../../components/Event/RsvpTag";
 import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
+import DateTag from '../../../components/DateTag';
 
 const Index = ({ event, voiceParts }) => {
   const { route } = useRoute();
@@ -55,13 +56,40 @@ const Index = ({ event, voiceParts }) => {
                       <div className="shrink-0">
                         <img className="h-12 w-12 rounded-lg" src={singer.membership.user.avatar_url} alt={singer.membership.user.name}/>
                       </div>
+
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900">{singer.membership.user.name}</p>
-                        <p className="text-sm">
-                          <RsvpTag icon={singer.membership.rsvp.icon} label={singer.membership.rsvp.label} colour={singer.membership.rsvp.colour} />
-                        </p>
+                        <div className="text-sm flex gap-4">
+                          <RsvpTag icon={singer.membership.rsvp.icon} label={singer.membership.rsvp.label} colour={singer.membership.rsvp.colour} className="shrink-0" />
+                            <DateTag label="Updated" date={singer.membership.rsvp.updated_at} format="DATETIME_SHORT" className="text-gray-400" />
+                        </div>
                       </div>
                     </div>
+
+                      <div className="flex space-between gap-4">
+                        {singer.membership.user.dietary_requirements ? (
+                        <div>
+                            <strong className="text-amber-600 mb-2">Dietary Requirements</strong>
+                            <p className="text-amber-800 text-xs">{singer.membership.user.dietary_requirements}</p>
+                        </div>
+                        ) : (
+                        <div>
+                            <strong className="text-gray-500 mb-2">Dietary Requirements</strong>
+                            <p className="text-gray-700 text-xs">None listed</p>
+                        </div>
+                        )}
+                        {singer.membership.user.medical_conditions ? (
+                          <div>
+                              <strong className="text-amber-600 mb-2">Medical Conditions</strong>
+                              <p className="text-amber-800 text-xs">{singer.membership.user.medical_conditions}</p>
+                          </div>
+                        ) : (
+                          <div>
+                              <strong className="text-gray-500 mb-2">Medical Conditions</strong>
+                              <p className="text-gray-700 text-xs">None listed</p>
+                          </div>
+                        )}
+                      </div>
 
                   </div>
                 </li>

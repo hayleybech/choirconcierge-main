@@ -10,6 +10,7 @@ import FilterSortPane from "../../components/FilterSortPane";
 import AttendanceReportFilters from "./AttendanceReportFilters";
 import useSortFilterForm from "../../hooks/useSortFilterForm";
 import EmptyState from "../../components/EmptyState";
+import { Link } from '@inertiajs/react';
 
 const AttendanceReport = ({
   events,
@@ -79,17 +80,17 @@ const AttendanceReport = ({
                       />
                     )}
                     {events.length > 0 && numSingers > 0 && (
-                      <table className="bg-white">
-                            <thead>
-                            <tr>
+                      <table className="bg-white h-full">
+                            <thead className="h-full">
+                            <tr className="h-full">
                                 <th />
                                 {events.map((event) => (
-                                    <th key={event.id} className="p-5 border border-gray-300 align-bottom">
-                                        <div className="flex justify-center transform rotate-180">
+                                    <th key={event.id} className="border border-gray-300 align-bottom h-full">
+                                        <Link href={route('events.show', {event})} className="flex p-5 justify-center transform rotate-180 text-purple-800 hover:bg-purple-100 hover:text-purple-600 h-full">
                                             <div className="text-ellipsis overflow-hidden text-sm text-left" style={{ writingMode: 'vertical-lr' }}>
                                                 {event.title}
                                             </div>
-                                        </div>
+                                        </Link>
                                     </th>
                                 ))}
                                 <th className="p-5 border border-gray-300 align-bottom bg-gray-100">
@@ -121,14 +122,14 @@ const AttendanceReport = ({
                                 {voicePart.members.map((singer) => (
                                     <tr key={singer.id}>
                                         <th className="text-left whitespace-nowrap border border-gray-300">
-                                            <a href={route('singers.show', {singer})} className="flex flex-nowrap items-center px-5 py-3 hover:bg-purple-100">
+                                            <Link href={route('singers.show', {singer})} className="flex flex-nowrap items-center px-5 py-3 hover:bg-purple-100 hover:text-purple-600 text-purple-800">
 
                                                 <div className="shrink-0 h-10 w-10 mr-4">
                                                     <img className="h-10 w-10 rounded-md" src={singer.user.avatar_url} alt={singer.user.name} />
                                                 </div>
 
-                                                <span className="text-purple-800">{singer.user.name}</span>
-                                            </a>
+                                                <span className="">{singer.user.name}</span>
+                                            </Link>
                                         </th>
                                         {events.map((event) => getAttendanceBySingerAndEvent(singer, event)).map((attendance, key) => (
                                             <td className="border border-gray-300 text-center" key={key}>

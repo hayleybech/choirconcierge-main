@@ -34,6 +34,8 @@ const AccountForm = ({ }) => {
         height: user.height ?? '',
         profession: user.profession ?? '',
         skills: user.skills ?? '',
+        dietary_requirements: user.dietary_requirements ?? '',
+        medical_conditions: user.medical_conditions ?? '',
 	    
         bha_id: user.bha_id ?? '',
 	    ice_name: user.ice_name ?? '',
@@ -137,6 +139,18 @@ const AccountForm = ({ }) => {
                         <Label label="What non-musical skills do you have?" forInput="skills" />
                         <TextInput name="skills" value={data.skills} updateFn={value => setData('skills', value)} hasErrors={ !! errors['skills'] } />
                         {errors.skills && <Error>{errors.skills}</Error>}
+                    </div>
+
+                    <div className="sm:col-span-3">
+                        <Label label="Dietary Requirements" forInput="dietary_requirements" />
+                        <TextInput name="dietary_requirements" value={data.dietary_requirements} updateFn={value => setData('dietary_requirements', value)} hasErrors={ !! errors['dietary_requirements'] } />
+                        {errors.dietary_requirements && <Error>{errors.dietary_requirements}</Error>}
+                    </div>
+
+                    <div className="sm:col-span-3">
+                        <Label label="Medical Conditions" forInput="medical_conditions" />
+                        <TextInput name="medical_conditions" value={data.medical_conditions} updateFn={value => setData('medical_conditions', value)} hasErrors={ !! errors['medical_conditions'] } />
+                        {errors.medical_conditions && <Error>{errors.medical_conditions}</Error>}
                     </div>
                 </FormSection>
 

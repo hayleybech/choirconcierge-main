@@ -315,6 +315,14 @@ const PersonalDetails = ({ singer }) => (
                 </>,
                 colClass: 'sm:col-span-2 xl:col-span-1',
             },
+            {
+                label: 'Dietary Requirements',
+                value: singer.user.dietary_requirements ?? 'None listed',
+            },
+            {
+                label: 'Medical Conditions',
+                value: singer.user.medical_conditions ?? 'None listed',
+            }
         ]}/>
     </CollapsePanel>
 );
