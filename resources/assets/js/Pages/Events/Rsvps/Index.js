@@ -6,6 +6,7 @@ import Icon from "../../../components/Icon";
 import RsvpTag from "../../../components/Event/RsvpTag";
 import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
+import DateTag from '../../../components/DateTag';
 
 const Index = ({ event, voiceParts }) => {
   const { route } = useRoute();
@@ -58,9 +59,10 @@ const Index = ({ event, voiceParts }) => {
 
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900">{singer.membership.user.name}</p>
-                        <p className="text-sm">
-                          <RsvpTag icon={singer.membership.rsvp.icon} label={singer.membership.rsvp.label} colour={singer.membership.rsvp.colour} />
-                        </p>
+                        <div className="text-sm flex gap-4">
+                          <RsvpTag icon={singer.membership.rsvp.icon} label={singer.membership.rsvp.label} colour={singer.membership.rsvp.colour} className="shrink-0" />
+                            <DateTag label="Updated" date={singer.membership.rsvp.updated_at} format="DATETIME_SHORT" className="text-gray-400" />
+                        </div>
                       </div>
                     </div>
 
