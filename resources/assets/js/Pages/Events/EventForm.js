@@ -13,7 +13,6 @@ import DateInput from "../../components/inputs/Date";
 import TimeInput from "../../components/inputs/Time";
 import DetailToggle from "../../components/inputs/DetailToggle";
 import {DateTime} from "luxon";
-import {TIME_24_SIMPLE} from "luxon/src/impl/formats";
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
@@ -219,7 +218,7 @@ const EventForm = ({ event, types, mode }) => {
                         <Label label="Start Time" forInput="start_time" />
                         <TimeInput
                             name="start_time"
-                            value={data.start_date.toLocaleString(TIME_24_SIMPLE)}
+                            value={data.start_date.toLocaleString(DateTime.TIME_24_SIMPLE)}
                             updateFn={setStartTime}
                         />
                     </div>
@@ -228,7 +227,7 @@ const EventForm = ({ event, types, mode }) => {
                         <Label label="Arrival Time" forInput="call_time" />
                         <TimeInput
                             name="call_time"
-                            value={data.call_time.toLocaleString(TIME_24_SIMPLE)}
+                            value={data.call_time.toLocaleString(DateTime.TIME_24_SIMPLE)}
                             updateFn={setCallTime}
                         />
                         <Help>At least 15 min before</Help>
@@ -250,7 +249,7 @@ const EventForm = ({ event, types, mode }) => {
                         <Label label="End Time" forInput="end_time" />
                         <TimeInput
                             name="end_time"
-                            value={data.end_date.toLocaleString(TIME_24_SIMPLE)}
+                            value={data.end_date.toLocaleString(DateTime.TIME_24_SIMPLE)}
                             updateFn={setEndTime}
                         />
                         <Help>At least 15 min after</Help>
