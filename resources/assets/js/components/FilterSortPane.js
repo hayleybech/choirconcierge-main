@@ -9,7 +9,7 @@ const FilterSortPane = ({ sorts, filters, closeFn }) => {
     const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
     return (
-        <div className="bg-white p-5 border-b border-gray-300">
+        <div className="bg-white p-5 border-b border-gray-300 h-full">
             <SectionHeader>
                 <SectionTitle>{isDesktop ? 'Filter' : 'Filter/Sort'}</SectionTitle>
 

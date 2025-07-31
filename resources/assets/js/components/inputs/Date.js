@@ -33,7 +33,7 @@ const DateInput = ({ name, value, updateFn, hasErrors }) => (
             leaveFrom="scale-100 opacity-100"
             leaveTo="scale-95 opacity-0"
         >
-            <Popover.Panel className="absolute mt-2 bg-white overflow-hidden shadow-lg rounded-lg z-10 border border-gray-300">
+            <Popover.Panel className="absolute mt-2 bg-white overflow-hidden shadow-lg rounded-lg z-20 border border-gray-300">
                 <DayPicker onDayClick={day => updateFn(day)} style={{ day: { color: 'blue' } }} />
             </Popover.Panel>
         </Transition>
