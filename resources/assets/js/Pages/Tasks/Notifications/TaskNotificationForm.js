@@ -58,7 +58,7 @@ const TaskNotificationForm = ({ task, notification }) => {
 
                     <div className="sm:col-span-4">
                         <Label label="Body" forInput="body" />
-                        <RichTextInput value={data.body} updateFn={value => setData(data => ({ ...data, description: value }))}  />
+                        <RichTextInput value={data.body} updateFn={value => setData(data => ({ ...data, description: value }))} max={2000} />
                         {errors.body && <Error>{errors.body}</Error>}
                     </div>
                     <div className="sm:col-span-2">
