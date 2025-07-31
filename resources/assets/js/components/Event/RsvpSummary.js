@@ -27,8 +27,8 @@ const RsvpSummary = ({ rsvpCount, voicePartsRsvpCount }) => (
                 <div className="flex">
                     {[
                         { label: 'Going', colour: 'emerald-500', icon: 'check', count: rsvpCount.yes },
-                        { label: 'Unknown', colour: 'amber-500', icon: 'question', count: rsvpCount.unknown },
-                        { label: 'Not going', colour: 'red-500', icon: 'times', count: rsvpCount.no },
+                        { label: 'Unknown', colour: 'red-500', icon: 'question', count: rsvpCount.unknown },
+                        { label: 'Not going', colour: 'gray-500', icon: 'times', count: rsvpCount.no },
                     ].map(({ label, colour, icon, count}) => (
                         <div className="w-1/3 text-center" key={label}>
                             <Icon icon={icon} className={`text-${colour}`} />

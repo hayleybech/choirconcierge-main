@@ -33,8 +33,8 @@ const Index = ({ event, voiceParts }) => {
             <div className="flex bg-white py-4 border-b border-gray-200">
               {[
                 { label: 'Going', colour: 'emerald', icon: 'check', count: part.singers.filter(singer => singer.membership.rsvp.response === 'yes').length },
-                { label: 'Unknown', colour: 'amber', icon: 'question', count: part.singers.filter(singer => singer.membership.rsvp.response === 'unknown').length },
-                { label: 'Not going', colour: 'red', icon: 'times', count: part.singers.filter(singer => singer.membership.rsvp.response === 'no').length },
+                { label: 'Unknown', colour: 'red', icon: 'question', count: part.singers.filter(singer => singer.membership.rsvp.response === 'unknown').length },
+                { label: 'Not going', colour: 'gray', icon: 'times', count: part.singers.filter(singer => singer.membership.rsvp.response === 'no').length },
               ].map(({ label, colour, icon, count}) => (
                 <div className="w-1/3 text-center flex flex-col items-center justify-between" key={label}>
                   <div className="hidden md:block">
