@@ -4,7 +4,7 @@ import { createInertiaApp } from '@inertiajs/react'
 import * as Sentry from '@sentry/react';
 import {Integrations as TracingIntegrations} from "@sentry/tracing";
 
-const VERSION = 'choir-concierge@2025-07-30b';
+const VERSION = 'choir-concierge@2025-07-31a';
 
 Sentry.init({
 	dsn: process.env.MIX_SENTRY_DSN,
