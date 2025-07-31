@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Mail\Mailable;
@@ -13,6 +14,11 @@ class CloneMessage
     {
         $group->get_all_recipients()
             ->each(fn ($user) => self::resendToUser(clone $message, $user, $group));
+
+        MailLog::firstWhere('uid', $message->uid)->events()->create([
+            'status' => 'clones-sent',
+            'context' => $group->title,
+        ]);
     }
 
     private static function resendToUser(Mailable $message, User $user, UserGroup $group): void

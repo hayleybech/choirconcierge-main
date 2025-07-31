@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Jobs\SendEmailForGroup;
 use App\Mail\OrganisationBroadcast;
+use App\Models\MailLog;
 use App\Models\UserGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Storage;
@@ -46,15 +48,20 @@ class BroadcastController extends Controller
                 'originalName' => $file->getClientOriginalName(),
             ]);
 
-        SendEmailForGroup::dispatch(
-            (new OrganisationBroadcast(
-                $request->input('subject'),
-                $request->input('body'),
-                $request->user(),
-                $fileMeta,
-            )),
-            $group
+        $organisationBroadcast = new OrganisationBroadcast(
+            $group,
+            $request->input('subject'),
+            $request->input('body'),
+            $request->user(),
+            $fileMeta,
+            'broadcast-' . Str::uuid(),
         );
+
+        MailLog::createFromMessage($organisationBroadcast)->events()->create([
+            'status' => 'pending',
+        ]);
+
+        SendEmailForGroup::dispatch($organisationBroadcast, $group);
 
         return redirect()
             ->route('groups.index')
