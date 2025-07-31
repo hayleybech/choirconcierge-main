@@ -33,8 +33,8 @@ const Index = ({ event, voiceParts }) => {
             <div className="flex bg-white py-4 border-b border-gray-200">
               {[
                 { label: 'Going', colour: 'emerald', icon: 'check', count: part.singers.filter(singer => singer.membership.rsvp.response === 'yes').length },
-                { label: 'Unknown', colour: 'amber', icon: 'question', count: part.singers.filter(singer => singer.membership.rsvp.response === 'unknown').length },
-                { label: 'Not going', colour: 'red', icon: 'times', count: part.singers.filter(singer => singer.membership.rsvp.response === 'no').length },
+                { label: 'Unknown', colour: 'red', icon: 'question', count: part.singers.filter(singer => singer.membership.rsvp.response === 'unknown').length },
+                { label: 'Not going', colour: 'gray', icon: 'times', count: part.singers.filter(singer => singer.membership.rsvp.response === 'no').length },
               ].map(({ label, colour, icon, count}) => (
                 <div className="w-1/3 text-center flex flex-col items-center justify-between" key={label}>
                   <div className="hidden md:block">
@@ -61,7 +61,9 @@ const Index = ({ event, voiceParts }) => {
                         <p className="text-sm font-medium text-gray-900">{singer.membership.user.name}</p>
                         <div className="text-sm flex gap-4">
                           <RsvpTag icon={singer.membership.rsvp.icon} label={singer.membership.rsvp.label} colour={singer.membership.rsvp.colour} className="shrink-0" />
-                            <DateTag label="Updated" date={singer.membership.rsvp.updated_at} format="DATETIME_SHORT" className="text-gray-400" />
+                            {!!singer.membership.rsvp.updated_at && (
+                                <DateTag label="Updated" date={singer.membership.rsvp.updated_at} format="DATETIME_SHORT" className="text-gray-400" />
+                            )}
                         </div>
                       </div>
                     </div>

@@ -5,19 +5,22 @@ import React, { Fragment } from "react";
 import classNames from "../../classNames";
 import { Link } from "@inertiajs/react";
 
+const items = [
+    { label: 'Going', key: 'yes', icon: 'check', colour: 'text-emerald-500' },
+    { label: 'Not Going', key: 'no', icon: 'times', colour: 'text-gray-500' },
+    { label: 'No Response', key: 'unknown', icon: 'question', colour: 'text-red-500' },
+];
+
+const getItemColour = (label) => items.find(item => item.label === label).colour;
+
 const RsvpDropdown = ({ event, size = 'sm' }) => {
-  let items = [
-    { label: 'Going', key: 'yes', icon: 'check', colour: 'emerald' },
-    { label: 'Not Going', key: 'no', icon: 'times', colour: 'gray' },
-    { label: 'No Response', key: 'unknown', icon: 'question', colour: 'red' },
-  ];
 
   return items.length > 0 && (
     <Menu as="div" className="relative inline-block w-full overflow-visible">
       <Menu.Button className={buttonStyles('secondary', size, '', 'relative z-0 w-full md:w-auto')}>
-        <Icon icon={event.my_rsvp.icon} className={`text-${event.my_rsvp.colour}-600`} />
-        <span className={`text-${event.my_rsvp.colour}-500`}>{event.my_rsvp.label}</span>
-        <Icon icon="chevron-down" className="text-gray-800" />
+        <Icon icon={event.my_rsvp.icon} className={getItemColour(event.my_rsvp.label)} />
+        <span className={getItemColour(event.my_rsvp.label)}>{event.my_rsvp.label}</span>
+        <Icon icon="chevron-down" className="text-gray-700" />
       </Menu.Button>
 
       <Transition
@@ -44,11 +47,11 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
                   data={{rsvp_response: key}}
                   className={classNames(
                     'block w-full text-left px-4 py-2 text-sm',
-                    `text-${colour}-500`,
+                    colour,
                     active ? 'bg-gray-100' : '',
                   )}
                 >
-                  <Icon icon={icon} mr />
+                  <Icon icon={icon} mr className={colour} />
                   {label}
                 </Link>
               )}
