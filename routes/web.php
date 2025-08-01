@@ -28,6 +28,7 @@ Route::prefix('/app')->group(function () {
 		Route::get('/', [Central\DashController::class, 'index'])->name('dash');
         Route::resource('default-dash', Central\DefaultDashController::class)->only(['index', 'update', 'destroy']);
         Route::resource('tenants', Central\TenantController::class)->only(['index', 'show', 'create', 'store']);
+        Route::resource('mail-logs', Central\MailLogController::class)->only(['index', 'show']);
         Route::get('tenants/{tenant}/onboarding', Central\TenantOnboardingController::class)->name('tenants.onboarding');
         Route::get('tenants/{tenant}/track-demo', Central\TrackTenantSalesDemoController::class)->name('tenants.track-demo');
 

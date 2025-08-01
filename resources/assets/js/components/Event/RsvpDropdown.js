@@ -11,7 +11,7 @@ const items = [
     { label: 'No Response', key: 'unknown', icon: 'question', colour: 'text-red-500' },
 ];
 
-const getItemColour = (label) => items.find(item => item.label === label).colour;
+const getItemColour = (label) => items.find(item => item.label === label).colour ?? 'text-gray-500';
 
 const RsvpDropdown = ({ event, size = 'sm' }) => {
 

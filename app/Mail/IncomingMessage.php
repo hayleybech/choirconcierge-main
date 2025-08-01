@@ -78,7 +78,7 @@ class IncomingMessage extends Mailable implements Loggable
         try {
             return UserGroup::withoutTenancy()
             ->byEmail($email)
-            ->first();
+            ->firstOrFail();
         }
         catch (Exception) {
             MailLog::firstWhere('uid', $this->uid)->events()->create([
