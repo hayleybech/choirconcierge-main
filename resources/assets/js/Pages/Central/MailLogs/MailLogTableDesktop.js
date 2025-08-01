@@ -5,6 +5,7 @@ import DateTag from "../../../components/DateTag";
 import {Link} from "@inertiajs/react";
 import useRoute from "../../../hooks/useRoute";
 import Icon from '../../../components/Icon';
+import MailStatusTag from './MailStatusTag';
 
 const MailLogTableDesktop = ({ logs }) => {
     const { route } = useRoute();
@@ -13,6 +14,7 @@ const MailLogTableDesktop = ({ logs }) => {
         subject: 'Subject',
         from: 'From',
         to: 'To',
+        status: 'Status',
         created_at: 'Date Created',
     });
 
@@ -34,6 +36,9 @@ const MailLogTableDesktop = ({ logs }) => {
                     </TableCell>
                     <TableCell>{log.from}</TableCell>
                     <TableCell>{log.to}</TableCell>
+                    <TableCell>
+                        <MailStatusTag event={log.latest_event} />
+                    </TableCell>
                     <TableCell>
                         <DateTag date={log.created_at} />
                     </TableCell>

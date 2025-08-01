@@ -8,6 +8,7 @@ import useRoute from "../../../hooks/useRoute";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
+import { mailIconColours, mailIcons } from './MailStatusTag';
 const Show = ({ log }) => {
     const { route } = useRoute();
 
@@ -64,24 +65,6 @@ export default Show;
 const Activity = ({log}) => {
     const isBroadcast = log.uid.startsWith('broadcast');
 
-    const iconColours = {
-        'received': 'bg-gray-400',
-        'pending': 'bg-gray-400',
-        'group-not-found': 'bg-amber-400',
-        'rejected-sender': 'bg-red-400',
-        'malformed-recipient': 'bg-red-400',
-        'clones-sent': 'bg-emerald-400',
-    };
-
-    const icons = {
-        'received': 'inbox-in',
-        'pending': 'inbox',
-        'group-not-found': 'users-slash',
-        'rejected-sender': 'user-slash',
-        'malformed-recipient': 'exclamation-triangle',
-        'clones-sent': 'inbox-out',
-    }
-
     // @todo PAGINATION FOR THE LOVE OF GOD
 
     const events = [
@@ -94,8 +77,8 @@ const Activity = ({log}) => {
         ...log.events,
     ].map(event => ({
         ...event,
-        iconColour: iconColours[event.status] ?? 'bg-gray-400',
-        icon: icons[event.status] ?? 'question',
+        iconColour: mailIconColours[event.status] ?? 'bg-gray-400',
+        icon: mailIcons[event.status] ?? 'question',
     })).reverse();
 
 
@@ -111,16 +94,14 @@ const Activity = ({log}) => {
                                 ) : null}
                                 <div className="relative flex space-x-3">
                                     <div>
-                                  <span
-                                      className={classNames(
-                                          event.iconColour,
-                                          'flex size-8 h-8 w-8 items-center justify-center rounded-full ring-8 ring-gray-100',
-                                      )}
-                                  >
-
-                                <Icon icon={event.icon} type="regular" className="text-white text-sm" />
-
-                                  </span>
+                                        <span
+                                          className={classNames(
+                                              event.iconColour,
+                                              'flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-gray-100',
+                                          )}
+                                        >
+                                            <Icon icon={event.icon} type="regular" className="text-white text-sm" />
+                                        </span>
                                     </div>
                                     <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
                                         <div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
 use App\Models\MailLog;
+use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,7 +18,7 @@ class MailLogController extends Controller
     public function index(): Response
     {
         return Inertia::render('Central/MailLogs/Index', [
-            'logs' => MailLog::all()->values(),
+            'logs' => MailLog::with('latestEvent')->get()->values(),
         ]);
     }
 

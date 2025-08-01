@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Mail\Loggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -31,6 +32,11 @@ class MailLog extends Model
     public function events(): HasMany
     {
         return $this->hasMany(MailLogEvent::class);
+    }
+
+    public function latestEvent(): HasOne
+    {
+        return $this->hasOne(MailLogEvent::class)->latestOfMany();
     }
 
     public static function createFromMessage(Loggable $message) {
