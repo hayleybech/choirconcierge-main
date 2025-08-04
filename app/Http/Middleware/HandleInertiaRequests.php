@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Document;
 use App\Models\Event;
 use App\Models\Folder;
+use App\Models\MailLog;
 use App\Models\RiserStack;
 use App\Models\Role;
 use App\Models\Membership;
@@ -82,7 +83,7 @@ class HandleInertiaRequests extends Middleware
                 'list_groups' => auth()->user()?->can('viewAny', UserGroup::class),
                 'create_group' => auth()->user()?->can('create', UserGroup::class),
                 'create_broadcast' => auth()->user()?->can('createBroadcast', UserGroup::class),
-                'view_mail_logs' => auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasRole('Admin'),
+                'view_mail_logs' => auth()->user()?->can('viewAny', MailLog::class),
                 'list_tasks' => auth()->user()?->can('viewAny', Task::class),
                 'create_task' => auth()->user()?->can('create', Task::class),
                 'impersonate' => auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasRole('Admin'),
