@@ -10,6 +10,7 @@ import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons } from '../../../components/MailStatusTag';
 import { Link } from '@inertiajs/react';
 import TenantLayout from '../../../Layouts/TenantLayout';
+import MailStatusDetail from '../../../components/MailStatusDetail';
 const Show = ({ log }) => {
     const { route } = useRoute();
 
@@ -68,8 +69,6 @@ const Activity = ({log}) => {
 
     const isBroadcast = log.uid.startsWith('broadcast');
 
-    // @todo PAGINATION FOR THE LOVE OF GOD
-
     const events = [
         {
             id: 0,
@@ -108,87 +107,7 @@ const Activity = ({log}) => {
                                     </div>
                                     <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
                                         <div>
-                                            {event.status === 'received' && isBroadcast && (
-                                                <p className="text-sm text-gray-500">
-                                                    Broadcast created by{' '}
-                                                    <span className="font-medium text-gray-900">
-                                                        {log.from}
-                                                    </span>
-                                                </p>
-                                            )}
-                                            {event.status === 'received' && !isBroadcast && (
-                                                <p className="text-sm text-gray-500">
-                                                    Email delivered to{' '}
-                                                    <span className="font-medium text-gray-900">
-                                                        our inbox
-                                                    </span>
-                                                </p>
-                                            )}
-                                            {event.status === 'pending' && (
-                                                <p className="text-sm text-gray-500">
-                                                    Email found by {' '}
-                                                    <span className="font-medium text-gray-900">
-                                                        our email system
-                                                    </span>
-                                                </p>
-                                            )}
-                                            {event.status === 'group-not-found' && (
-                                                <p className="text-sm text-gray-500">
-                                                    Recipient skipped: Mailing group{' '}
-                                                    <span className="font-medium text-gray-900">
-                                                        {event.context}
-                                                    </span>
-                                                    {' '}does not exist.
-                                                </p>
-                                            )}
-                                            {event.status === 'group-found' && (
-                                                <p className="text-sm text-gray-500">
-                                                    A recipient matches group{' '}
-                                                    <Link
-                                                        href={route('groups.show', {group: event.user_group})}
-                                                        className="font-medium text-purple-600 hover:text-purple-800 focus:text-purple-800"
-                                                    >
-                                                        {event.user_group?.title ?? event.context}
-                                                    </Link>
-                                                    {' '}in our email system.
-                                                </p>
-                                            )}
-                                            {event.status === 'rejected-sender' && (
-                                                <p className="text-sm text-gray-500">
-                                                    Sender rejected: Mailing group{' '}
-                                                    <span className="font-medium text-gray-900">
-                                                        {event.context}
-                                                    </span>{' '}exists but{' '}
-                                                    <span className="font-medium text-gray-900">
-                                                        {log.from}
-                                                    </span>
-                                                    {' '}is not permitted to contact it.
-                                                </p>
-                                            )}
-                                            {event.status === 'malformed-recipient' && (
-                                                <p className="text-sm text-gray-500">
-                                                    It looks like
-                                                    <span className="font-medium text-gray-900">
-                                                        {event.context}
-                                                    </span>{' '} is not a valid email address.
-                                                </p>
-                                            )}
-                                            {event.status === 'clones-sent' && (
-                                                <p className="text-sm text-gray-500">
-                                                    A copy was sent to {' '}
-                                                    <span className="font-medium text-gray-900">
-                                                        all recipients
-                                                    </span>
-                                                </p>
-                                            )}
-                                            {! ['received', 'pending', 'clones-sent', 'group-not-found', 'group-found', 'rejected-sender'].includes(event.status) && (
-                                                <p className="text-sm text-gray-500">
-                                                    Other Status:{' '}
-                                                    <span className="font-medium text-gray-900">
-                                                        {event.status}
-                                                    </span>
-                                                </p>
-                                            )}
+                                            <MailStatusDetail log={log} event={event} isBroadcast={isBroadcast} />
                                         </div>
                                         <div className="text-right text-sm whitespace-nowrap text-gray-500">
                                             <DateTag date={event.created_at} format={'DATETIME_SHORT'} />
