@@ -10,11 +10,6 @@ use Inertia\Response;
 
 class MailLogController extends Controller
 {
-    public function __construct()
-    {
-        // @todo add auth
-    }
-
     public function index(): Response
     {
         return Inertia::render('Central/MailLogs/Index', [
