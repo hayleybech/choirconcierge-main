@@ -17,15 +17,18 @@ class MailLogController extends Controller
     public function index(): Response
     {
         return Inertia::render('MailingLists/MailLogs/Index', [
-            'logs' => auth()->user()?->membership->hasRole('Admin')
-                        ? self::queryLogsAdmin()
-                            ->latest()
-                            ->with('latestEvent')
-                            ->paginate(50)
-                        : self::queryLogsAuthorisedForUser()
-                            ->latest()
-                            ->with('latestEvent')
-                            ->paginate(50)
+            'logs' => (
+                auth()->user()?->membership->hasRole('Admin')
+                || auth()->user()->isSuperAdmin()
+            )
+                ? self::queryLogsAdmin()
+                    ->latest()
+                    ->with('latestEvent')
+                    ->paginate(50)
+                : self::queryLogsAuthorisedForUser()
+                    ->latest()
+                    ->with('latestEvent')
+                    ->paginate(50)
         ]);
     }
 
