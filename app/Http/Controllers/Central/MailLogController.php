@@ -18,7 +18,7 @@ class MailLogController extends Controller
     public function index(): Response
     {
         return Inertia::render('Central/MailLogs/Index', [
-            'logs' => MailLog::with('latestEvent')->get()->values(),
+            'logs' => MailLog::with('latestEvent')->paginate(50),
         ]);
     }
 

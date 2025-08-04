@@ -3,13 +3,14 @@ import TableMobile, {TableMobileLink} from "../../../components/TableMobile";
 import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import MailStatusTag from './MailStatusTag';
+import Pagination from '../../../components/Pagination';
 
 const MailLogTableMobile = ({ logs }) => {
     const { route } = useRoute();
 
     return (
-        <TableMobile>
-            {logs.map((log) => (
+        <TableMobile pagination={<Pagination details={logs} />}>
+            {logs.data.map((log) => (
                 <li key={log.id} className="flex pl-4">
                     <TableMobileLink url={route('central.mail-logs.show', {mail_log: log})}>
                         <div className="block hover:bg-gray-50 flex-grow min-w-0 text-gray-500">

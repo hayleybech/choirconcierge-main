@@ -6,6 +6,7 @@ import {Link} from "@inertiajs/react";
 import useRoute from "../../../hooks/useRoute";
 import Icon from '../../../components/Icon';
 import MailStatusTag from './MailStatusTag';
+import Pagination from '../../../components/Pagination';
 
 const MailLogTableDesktop = ({ logs }) => {
     const { route } = useRoute();
@@ -21,7 +22,7 @@ const MailLogTableDesktop = ({ logs }) => {
     return (
         <Table
             headings={headings}
-            body={logs.map((log) => (
+            body={logs.data.map((log) => (
                 <tr key={log.id}>
                     <TableCell>
                         <Link href={route('central.mail-logs.show', {mail_log: log})} className="text-purple-600 hover:text-purple-800 focus:text-purple-800">
@@ -44,6 +45,7 @@ const MailLogTableDesktop = ({ logs }) => {
                     </TableCell>
                 </tr>
             ))}
+            pagination={<Pagination details={logs} />}
         />
     );
 }
