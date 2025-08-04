@@ -1,5 +1,5 @@
-import classNames from '../../../classNames';
-import Icon from '../../../components/Icon';
+import classNames from '../classNames';
+import Icon from './Icon';
 import React from 'react';
 
 export const mailIconColours = {

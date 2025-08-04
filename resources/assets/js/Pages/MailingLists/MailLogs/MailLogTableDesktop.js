@@ -5,8 +5,8 @@ import DateTag from "../../../components/DateTag";
 import {Link} from "@inertiajs/react";
 import useRoute from "../../../hooks/useRoute";
 import Icon from '../../../components/Icon';
-import Pagination from '../../../components/Pagination';
 import MailStatusTag from '../../../components/MailStatusTag';
+import Pagination from '../../../components/Pagination';
 
 const MailLogTableDesktop = ({ logs }) => {
     const { route } = useRoute();

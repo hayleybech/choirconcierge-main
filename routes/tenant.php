@@ -22,6 +22,7 @@ use App\Http\Controllers\ImpersonateUserController;
 use App\Http\Controllers\ImportSingerController;
 use App\Http\Controllers\LearningStatusController;
 use App\Http\Controllers\MailboxController;
+use App\Http\Controllers\MailLogController;
 use App\Http\Controllers\MoveActivityController;
 use App\Http\Controllers\RecurringEventController;
 use App\Http\Controllers\RiserStackController;
@@ -194,6 +195,9 @@ Route::middleware([
         });
 
         // Mailing Lists (User Groups) module
+        Route::prefix('groups')->name('groups.')->group(function () {
+            Route::resource('mail-logs', MailLogController::class)->only(['index', 'show']);
+        });
         Route::get('/groups/broadcasts/create', [BroadcastController::class, 'create'])->name('groups.broadcasts.create');
         Route::post('/groups/broadcasts', [BroadcastController::class, 'store'])->name('groups.broadcasts.store');
         Route::resource('groups', UserGroupController::class);
