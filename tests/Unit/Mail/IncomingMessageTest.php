@@ -4,6 +4,7 @@ namespace Tests\Unit\Mail;
 
 use App\Mail\IncomingMessage;
 use App\Mail\NotPermittedSenderMessage;
+use App\Models\MailLog;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UserGroup;
@@ -46,6 +47,13 @@ class IncomingMessageTest extends TestCase
             ->from('permitted@example.com')
             ->subject('Just a test');
 
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
+
         // Act
         $message->resendToGroups();
 
@@ -80,6 +88,13 @@ class IncomingMessageTest extends TestCase
             ->to('music-team@test-tenant-1.'.central_domain())
             ->from('not-permitted@example.com')
             ->subject('Just a test');
+
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
 
         // Act
         $message->resendToGroups();
@@ -132,6 +147,13 @@ class IncomingMessageTest extends TestCase
             ->from('permitted@example.com')
             ->subject('Just a test');
 
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
+
         // Act
         $message->resendToGroups();
 
@@ -178,6 +200,13 @@ class IncomingMessageTest extends TestCase
             ->to(['music-team@test-tenant-1.'.central_domain(), 'membership-team@test-tenant-1.'.central_domain()])
             ->from('sender@example.com')
             ->subject('Just a test');
+
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
 
         // Act
         $message->resendToGroups();
@@ -243,6 +272,13 @@ class IncomingMessageTest extends TestCase
             ->from('sender@example.com')
             ->subject('Just a test');
 
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
+
         // Act
         $message->resendToGroups();
 
@@ -283,6 +319,13 @@ class IncomingMessageTest extends TestCase
             ->from('sender@example.com')
             ->subject('Just a test');
 
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
+
         // Act
         $groups_found = $message->getMatchingGroups()->flatten(1);
 
@@ -312,6 +355,13 @@ class IncomingMessageTest extends TestCase
             ->to(['test-group-1@test-tenant-1.'.central_domain(), 'test-group-2@test-tenant-1.'.central_domain()])
             ->from('sender@example.com')
             ->subject('Just a test');
+
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
 
         // Act
         $groups_found = $message->getMatchingGroups()->flatten(1);
@@ -350,6 +400,13 @@ class IncomingMessageTest extends TestCase
             ->from('sender@example.com')
             ->subject('Just a test');
 
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
+
         // Act
         $groups_found = $message->getMatchingGroups()->flatten(1);
 
@@ -387,6 +444,13 @@ class IncomingMessageTest extends TestCase
             ->from('sender@example.com')
             ->subject('Just a test');
 
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
+
         // Act
         $groups_found = $message->getMatchingGroups()->flatten(1);
 
@@ -420,6 +484,13 @@ class IncomingMessageTest extends TestCase
             ->from('sender@example.com')
             ->subject('Just a test');
 
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
+
         // Act
         $groups_found = $message->getMatchingGroups()->flatten(1);
 
@@ -444,6 +515,13 @@ class IncomingMessageTest extends TestCase
             ->to(['al@test-tenant-1.'.central_domain()])
             ->from('sender@example.com')
             ->subject('Just a test');
+
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
 
         // Act
         $groups_found = $message->getMatchingGroups()->flatten(0);
@@ -475,6 +553,13 @@ class IncomingMessageTest extends TestCase
             ->from('sender@example.com')
             ->subject('Just a test');
 
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
+
         // Act
         $groups_found = $message->getMatchingGroups()->flatten(1);
 
@@ -501,6 +586,13 @@ class IncomingMessageTest extends TestCase
             ->from('test-group@test-tenant-1.'.central_domain())
             ->subject('Just a test');
 
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
+
         // Act
         $groups_found = $message->getMatchingGroups()->flatten(1);
 
@@ -516,6 +608,13 @@ class IncomingMessageTest extends TestCase
             ->cc('test-group@test-tenant-1.'.central_domain())
             ->from('test-group@test-tenant-1.'.central_domain())
             ->subject('Just a test');
+
+        $message->uid = 'inbound-'.Str::uuid();
+        $message->has_attachments = false;
+        $message->received_at = now();
+        MailLog::createFromMessage($message)->events()->create([
+            'status' => 'pending',
+        ]);
 
         // Act
         $groups_found = $message->getMatchingGroups()->flatten(1);
