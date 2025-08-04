@@ -6,6 +6,7 @@ import useRoute from "../../../hooks/useRoute";
 import MailLogTableMobile from './MailLogTableMobile';
 import MailLogTableDesktop from './MailLogTableDesktop';
 import TenantLayout from '../../../Layouts/TenantLayout';
+import EmptyState from '../../../components/EmptyState';
 
 const Index = ({ logs }) => {
     const { route } = useRoute();
@@ -50,6 +51,16 @@ const Index = ({ logs }) => {
                 // }
                 tableMobile={<MailLogTableMobile logs={logs} />}
                 tableDesktop={<MailLogTableDesktop logs={logs} />}
+                emptyState={(
+                    <EmptyState
+                        title="No mail logs"
+                        description={<>
+                           This area tracks all emails sent through our mailing list system. <br />
+                            Either there are no emails yet, or you're not a member of any groups that have received emails.
+                        </>}
+                        icon="history"
+                    />
+                )}
             />
         </>
     );
