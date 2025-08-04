@@ -2,10 +2,12 @@
 
 use App\Mail\CloneMessage;
 use App\Mail\IncomingMessage;
+use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
@@ -41,6 +43,13 @@ it('sends one copy per group recipient', function () {
         ->to('music-team@test-tenant-1.'.central_domain())
         ->from('permitted@example.com')
         ->subject('Just a test');
+
+    $message->uid = 'inbound-'.Str::uuid();
+    $message->has_attachments = false;
+    $message->received_at = now();
+    MailLog::createFromMessage($message)->events()->create([
+        'status' => 'pending',
+    ]);
 
     // Act
     CloneMessage::forGroup($message, UserGroup::first());
@@ -86,6 +95,13 @@ it('removes the group as its own cc if the group is a distribution', function ()
         ->from('permitted@example.com')
         ->cc('members@test-tenant-1.'.central_domain())
         ->subject('Just a test');
+
+    $message->uid = 'inbound-'.Str::uuid();
+    $message->has_attachments = false;
+    $message->received_at = now();
+    MailLog::createFromMessage($message)->events()->create([
+        'status' => 'pending',
+    ]);
 
     // Act
     CloneMessage::forGroup($message, UserGroup::first());

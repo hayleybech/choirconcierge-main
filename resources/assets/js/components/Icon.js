@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from "../classNames";
 
-const Icon = ({ icon, type = 'solid', mr = false, ml = false, pulse = false, className = '', style = {} }) => {
+const Icon = ({ icon, type = 'solid', mr = false, ml = false, pulse = false, size = 'text-md', className = '', style = {} }) => {
     const types = {
         solid: 'fas',
         regular: 'far',
@@ -15,7 +15,8 @@ const Icon = ({ icon, type = 'solid', mr = false, ml = false, pulse = false, cla
     return (
         <i
             className={classNames(
-                'fa-fw text-md',
+                'fa-fw',
+                size,
                 typeClass,
                 iconClass,
                 mr ? 'mr-1.5' : '',

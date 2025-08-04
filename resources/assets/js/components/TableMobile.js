@@ -29,10 +29,13 @@ export const TableMobileLink = ({ url, onClick, children }) => (
     </Link>
 );
 
-const TableMobile = ({ children }) => (
-    <ul className="divide-y divide-gray-200">
-        {children}
-    </ul>
+const TableMobile = ({ children, pagination }) => (
+    <div>
+        <ul className="divide-y divide-gray-200">
+            {children}
+        </ul>
+        {pagination}
+    </div>
 );
 
 export default TableMobile;

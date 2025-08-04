@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
 use Exception;
@@ -9,8 +10,10 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 
-class IncomingMessage extends Mailable
+class IncomingMessage extends Mailable implements Loggable
 {
+    use CanBeLogged;
+
     public $content_html;
 
     public $content_text;
@@ -65,15 +68,32 @@ class IncomingMessage extends Mailable
     private function getGroupByEmail(string $email): ?UserGroup
     {
         if(!$email || !str_contains($email, '@')) {
+            MailLog::firstWhere('uid', $this->uid)->events()->create([
+                'status' => 'malformed-recipient',
+                'context' => $email,
+            ]);
             return null;
         }
 
         try {
-            return UserGroup::withoutTenancy()
+            $group = UserGroup::withoutTenancy()
             ->byEmail($email)
-            ->first();
+            ->firstOrFail();
+
+            MailLog::firstWhere('uid', $this->uid)->events()->create([
+                'status' => 'group-found',
+                'context' => $group->title,
+                'user_group_id' => $group->id,
+            ]);
+
+            return $group;
         }
         catch (Exception) {
+            MailLog::firstWhere('uid', $this->uid)->events()->create([
+                'status' => 'group-not-found',
+                'context' => $email,
+            ]);
+
             return null;
         }
     }
@@ -86,6 +106,16 @@ class IncomingMessage extends Mailable
 
         Mail::to($this->from[0]['address'])->send(new NotPermittedSenderMessage($group));
 
+        MailLog::firstWhere('uid', $this->uid)->events()->create([
+            'status' => 'rejected-sender',
+            'context' => $group->title,
+        ]);
+
         return false;
+    }
+
+    public function getContent(): string
+    {
+        return $this->content_html ?? $this->content_text ?? '';
     }
 }
