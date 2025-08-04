@@ -52,7 +52,7 @@ const Index = ({ logs }) => {
                 // }
                 tableMobile={<MailLogTableMobile logs={logs} />}
                 tableDesktop={<MailLogTableDesktop logs={logs} />}
-                emptyState={logs.length === 0 && (
+                emptyState={logs.data.length === 0 && (
                     <EmptyState
                         title="No mail logs"
                         description={<>
