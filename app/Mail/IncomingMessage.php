@@ -116,6 +116,6 @@ class IncomingMessage extends Mailable implements Loggable
 
     public function getContent(): string
     {
-        return $this->content_html ?? $this->content_text;
+        return $this->content_html ?? $this->content_text ?? '';
     }
 }

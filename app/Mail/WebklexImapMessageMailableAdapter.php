@@ -18,7 +18,7 @@ class WebklexImapMessageMailableAdapter implements MailableInterface
     {
         $mailable = new IncomingMessage();
 
-        $mailable->uid = 'inbound-'.$this->message->uid;
+        $mailable->uid = 'inbound-'.$this->message->getUid();
         $mailable->has_attachments = $this->message->hasAttachments();
         $mailable->received_at = $this->message->getDate()->first();
 
