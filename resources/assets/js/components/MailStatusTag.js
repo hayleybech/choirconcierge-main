@@ -3,13 +3,13 @@ import Icon from './Icon';
 import React from 'react';
 
 export const mailIconColours = {
-	'received': 'bg-gray-400',
-	'pending': 'bg-gray-400',
-	'group-not-found': 'bg-amber-400',
-	'group-found': 'bg-gray-400',
-	'rejected-sender': 'bg-red-400',
-	'malformed-recipient': 'bg-red-400',
-	'clones-sent': 'bg-emerald-400',
+	'received': 'bg-gray-500',
+	'pending': 'bg-gray-500',
+	'group-not-found': 'bg-amber-500',
+	'group-found': 'bg-gray-500',
+	'rejected-sender': 'bg-red-500',
+	'malformed-recipient': 'bg-red-500',
+	'clones-sent': 'bg-emerald-500',
 };
 
 export const mailIcons = {
