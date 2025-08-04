@@ -28,10 +28,10 @@ const Index = ({ logs }) => {
             <AppHead title="Tenants" />
             <PageHeader
                 title="Mail Logs"
-                icon="envelope"
+                icon="history"
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('central.dash')},
-                    { name: 'Tenants', url: route('central.mail-logs.index')},
+                    { name: 'Mail Logs', url: route('central.mail-logs.index')},
                 ]}
                 // actions={[
                 //     filterAction,

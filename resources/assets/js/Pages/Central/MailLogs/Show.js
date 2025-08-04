@@ -8,8 +8,7 @@ import useRoute from "../../../hooks/useRoute";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
-import MailStatusTag, { mailIconColours, mailIcons } from '../../../components/MailStatusTag';
-import { Link } from '@inertiajs/react';
+import { mailIconColours, mailIcons } from '../../../components/MailStatusTag';
 import MailStatusDetail from '../../../components/MailStatusDetail';
 const Show = ({ log }) => {
     const { route } = useRoute();

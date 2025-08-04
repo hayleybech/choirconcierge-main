@@ -34,9 +34,10 @@ const Show = ({ log }) => {
                     </div>,
                 ]}
                 breadcrumbs={[
-                    { name: 'Dashboard', url: route('central.dash')},
-                    { name: 'Mail Logs', url: route('central.mail-logs.index')},
-                    { name: log.subject, url: route('central.mail-logs.show', {mail_log: log}) },
+                    { name: 'Dashboard', url: route('dash')},
+                    { name: 'Mailing Lists', url: route('groups.index')},
+                    { name: 'Mailing Logs', url: route('groups.mail-logs.index')},
+                    { name: log.subject, url: route('groups.mail-logs.show', {mail_log: log}) },
                 ]}
                 actions={[]}
             />

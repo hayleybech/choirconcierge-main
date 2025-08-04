@@ -6,6 +6,7 @@ import useRoute from "../../../hooks/useRoute";
 import MailLogTableMobile from './MailLogTableMobile';
 import MailLogTableDesktop from './MailLogTableDesktop';
 import TenantLayout from '../../../Layouts/TenantLayout';
+import EmptyState from '../../../components/EmptyState';
 
 const Index = ({ logs }) => {
     const { route } = useRoute();
@@ -28,10 +29,11 @@ const Index = ({ logs }) => {
             <AppHead title="Tenants" />
             <PageHeader
                 title="Mail Logs"
-                icon="envelope"
+                icon="history"
                 breadcrumbs={[
-                    { name: 'Dashboard', url: route('central.dash')},
-                    { name: 'Tenants', url: route('central.mail-logs.index')},
+                    { name: 'Dashboard', url: route('dash')},
+                    { name: 'Mailing Lists', url: route('groups.index')},
+                    { name: 'Mailing Logs', url: route('groups.mail-logs.index')},
                 ]}
                 // actions={[
                 //     filterAction,
@@ -50,6 +52,16 @@ const Index = ({ logs }) => {
                 // }
                 tableMobile={<MailLogTableMobile logs={logs} />}
                 tableDesktop={<MailLogTableDesktop logs={logs} />}
+                emptyState={logs.length === 0 && (
+                    <EmptyState
+                        title="No mail logs"
+                        description={<>
+                           This area tracks all emails sent through our mailing list system. <br />
+                            Either there are no emails yet, or you're not a member of any groups that have received emails.
+                        </>}
+                        icon="history"
+                    />
+                )}
             />
         </>
     );
