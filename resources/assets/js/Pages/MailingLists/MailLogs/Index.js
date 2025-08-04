@@ -31,8 +31,9 @@ const Index = ({ logs }) => {
                 title="Mail Logs"
                 icon="history"
                 breadcrumbs={[
-                    { name: 'Dashboard', url: route('central.dash')},
-                    { name: 'Tenants', url: route('central.mail-logs.index')},
+                    { name: 'Dashboard', url: route('dash')},
+                    { name: 'Mailing Lists', url: route('groups.index')},
+                    { name: 'Mailing Logs', url: route('groups.mail-logs.index')},
                 ]}
                 // actions={[
                 //     filterAction,
