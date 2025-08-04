@@ -12,7 +12,7 @@ class MailLogController extends Controller
     public function index(): Response
     {
         // @todo create a mail log policy
-        $this->authorize('createBroadcast', UserGroup::class);
+//        $this->authorize('createBroadcast', UserGroup::class);
 
         // @todo filter by lists the user is a member of (or admin)
         return Inertia::render('MailingLists/MailLogs/Index', [
@@ -27,12 +27,11 @@ class MailLogController extends Controller
 
     public function show(MailLog $mail_log): Response
     {
-        $this->authorize('createBroadcast', UserGroup::class);
-
-        // @todo auth by lists the user is a member of
+        // @todo auth by lists the user is a member of (or admin)
+//        $this->authorize('createBroadcast', UserGroup::class);
 
         return Inertia::render('MailingLists/MailLogs/Show', [
-            'log' => $mail_log->load('events'),
+            'log' => $mail_log->load('events.user_group'),
         ]);
     }
 }

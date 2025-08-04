@@ -57,8 +57,15 @@ class BroadcastController extends Controller
             'broadcast-' . Str::uuid(),
         );
 
-        MailLog::createFromMessage($organisationBroadcast)->events()->create([
-            'status' => 'pending',
+        MailLog::createFromMessage($organisationBroadcast)->events()->createMany([
+            [
+                'status' => 'pending',
+            ],
+            [
+                'status' => 'group-found',
+                'context' => $group->title,
+                'user_group_id' => $group->id,
+            ],
         ]);
 
         SendEmailForGroup::dispatch($organisationBroadcast, $group);

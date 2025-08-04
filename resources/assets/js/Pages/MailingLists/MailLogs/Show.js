@@ -5,10 +5,11 @@ import AppHead from "../../../components/AppHead";
 import DateTag from "../../../components/DateTag";
 import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
-import CentralLayout from "../../../Layouts/CentralLayout";
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons } from '../../../components/MailStatusTag';
+import { Link } from '@inertiajs/react';
+import TenantLayout from '../../../Layouts/TenantLayout';
 const Show = ({ log }) => {
     const { route } = useRoute();
 
@@ -58,11 +59,13 @@ const Show = ({ log }) => {
     );
 }
 
-Show.layout = page => <CentralLayout children={page} />
+Show.layout = page => <TenantLayout children={page} />
 
 export default Show;
 
 const Activity = ({log}) => {
+    const { route } = useRoute();
+
     const isBroadcast = log.uid.startsWith('broadcast');
 
     // @todo PAGINATION FOR THE LOVE OF GOD
@@ -138,6 +141,18 @@ const Activity = ({log}) => {
                                                     {' '}does not exist.
                                                 </p>
                                             )}
+                                            {event.status === 'group-found' && (
+                                                <p className="text-sm text-gray-500">
+                                                    A recipient matches group{' '}
+                                                    <Link
+                                                        href={route('groups.show', {group: event.user_group})}
+                                                        className="font-medium text-purple-600 hover:text-purple-800 focus:text-purple-800"
+                                                    >
+                                                        {event.user_group?.title ?? event.context}
+                                                    </Link>
+                                                    {' '}in our email system.
+                                                </p>
+                                            )}
                                             {event.status === 'rejected-sender' && (
                                                 <p className="text-sm text-gray-500">
                                                     Sender rejected: Mailing group{' '}
@@ -166,7 +181,7 @@ const Activity = ({log}) => {
                                                     </span>
                                                 </p>
                                             )}
-                                            {! ['received', 'pending', 'clones-sent', 'group-not-found', 'rejected-sender'].includes(event.status) && (
+                                            {! ['received', 'pending', 'clones-sent', 'group-not-found', 'group-found', 'rejected-sender'].includes(event.status) && (
                                                 <p className="text-sm text-gray-500">
                                                     Other Status:{' '}
                                                     <span className="font-medium text-gray-900">

@@ -9,6 +9,7 @@ import CentralLayout from "../../../Layouts/CentralLayout";
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons } from '../../../components/MailStatusTag';
+import { Link } from '@inertiajs/react';
 const Show = ({ log }) => {
     const { route } = useRoute();
 
@@ -138,6 +139,17 @@ const Activity = ({log}) => {
                                                     {' '}does not exist.
                                                 </p>
                                             )}
+                                            {event.status === 'group-found' && (
+                                                <p className="text-sm text-gray-500">
+                                                    A recipient matches group{' '}
+                                                    <Link
+                                                        href={route('groups.show', {group: event.user_group, tenant: event.user_group.tenant_id})}
+                                                        className="font-medium text-purple-600 hover:text-purple-800 focus:text-purple-800"
+                                                    >
+                                                        {event.user_group?.title ?? event.context}
+                                                    </Link>
+                                                </p>
+                                            )}
                                             {event.status === 'rejected-sender' && (
                                                 <p className="text-sm text-gray-500">
                                                     Sender rejected: Mailing group{' '}
@@ -166,7 +178,7 @@ const Activity = ({log}) => {
                                                     </span>
                                                 </p>
                                             )}
-                                            {! ['received', 'pending', 'clones-sent', 'group-not-found', 'rejected-sender'].includes(event.status) && (
+                                            {! ['received', 'pending', 'clones-sent', 'group-not-found', 'group-found', 'rejected-sender'].includes(event.status) && (
                                                 <p className="text-sm text-gray-500">
                                                     Other Status:{' '}
                                                     <span className="font-medium text-gray-900">

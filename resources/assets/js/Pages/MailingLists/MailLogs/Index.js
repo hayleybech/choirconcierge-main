@@ -3,7 +3,6 @@ import PageHeader from "../../../components/PageHeader";
 import AppHead from "../../../components/AppHead";
 import IndexContainer from "../../../components/IndexContainer";
 import useRoute from "../../../hooks/useRoute";
-import CentralLayout from "../../../Layouts/CentralLayout";
 import MailLogTableMobile from './MailLogTableMobile';
 import MailLogTableDesktop from './MailLogTableDesktop';
 import TenantLayout from '../../../Layouts/TenantLayout';

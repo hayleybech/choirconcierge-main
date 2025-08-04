@@ -65,7 +65,7 @@ const navigation = [
         items: [
             { name: 'Add New', route: 'groups.create', icon: 'fa-plus-square', can: 'create_group', showAsActiveForRoutes: ['groups.create'], },
             { name: 'Send Broadcast', route: 'groups.broadcasts.create', icon: 'inbox-out', can: 'create_broadcast', showAsActiveForRoutes: ['groups.broadcasts.create'], },
-            { name: 'Logs', route: 'groups.mail-logs.index', icon: 'history', can: 'create_broadcast', showAsActiveForRoutes: ['groups.mail-logs.*'], },
+            { name: 'Logs', route: 'groups.mail-logs.index', icon: 'history', can: 'view_mail_logs', showAsActiveForRoutes: ['groups.mail-logs.*'], },
         ]
     },
     {

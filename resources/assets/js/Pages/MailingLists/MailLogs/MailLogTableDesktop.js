@@ -25,7 +25,7 @@ const MailLogTableDesktop = ({ logs }) => {
             body={logs.data.map((log) => (
                 <tr key={log.id}>
                     <TableCell>
-                        <Link href={route('central.mail-logs.show', {mail_log: log})} className="text-purple-600 hover:text-purple-800 focus:text-purple-800">
+                        <Link href={route('groups.mail-logs.show', {mail_log: log})} className="text-purple-600 hover:text-purple-800 focus:text-purple-800">
                             <Icon icon={log.uid.startsWith('broadcast') ? 'satellite-dish' : "envelope"} mr />
 
                             {log.subject}
