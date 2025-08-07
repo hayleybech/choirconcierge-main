@@ -1,13 +1,14 @@
 import React from 'react';
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
 const RiserStackTableMobile = ({ stacks }) => {
     const { route } = useRoute();
 
     return (
-        <TableMobile>
-            {stacks.map((stack) => (
+        <TableMobile pagination={<Pagination details={stacks} />}>
+            {stacks.data.map((stack) => (
                 <TableMobileItem key={stack.id} url={route('stacks.show', {stack: stack.id})}>
                     <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
                         <div>

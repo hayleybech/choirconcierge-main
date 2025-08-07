@@ -19,12 +19,13 @@ class TenantController extends Controller
 
     public function index(): Response
     {
+        $pagination = $this->getTenants();
+
         return Inertia::render('Central/Tenants/Index', [
-            'tenants' => $this->getTenantQuery()
-	            ->with('domains')
-	            ->get()
-	            ->append(['billing_status'])
-	            ->values(),
+            'tenants' => $pagination
+                ->getCollection()
+	            ->append(['billing_status']),
+            'pagination' => $pagination,
         ]);
     }
 
@@ -85,7 +86,7 @@ class TenantController extends Controller
         ]);
     }
 
-	private function getTenantQuery() {
+	private function getTenants() {
 		return QueryBuilder::for(Tenant::class)
 			->allowedFilters([
 				'id',
@@ -94,6 +95,7 @@ class TenantController extends Controller
 			->allowedSorts([
 				'id',
 				'created_at',
-			]);
+			])->with('domains')
+            ->paginate(50)->appends(request()->query());
 	}
 }

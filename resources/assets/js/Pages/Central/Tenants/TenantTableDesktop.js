@@ -8,8 +8,10 @@ import Icon from "../../../components/Icon";
 import useRoute from "../../../hooks/useRoute";
 import BillingTag from "./BillingTag";
 import TableHeadingSort from "../../../components/TableHeadingSort";
+import Pagination from '../../../components/Pagination';
+import pagination from '../../../components/Pagination';
 
-const TenantTableDesktop = ({ tenants, sortFilterForm }) => {
+const TenantTableDesktop = ({ tenants, sortFilterForm, pagination }) => {
     const { route } = useRoute();
 
     const headings = collect({
@@ -23,6 +25,7 @@ const TenantTableDesktop = ({ tenants, sortFilterForm }) => {
 
     return (
         <Table
+            pagination={<Pagination details={pagination} />}
             headings={headings}
             body={tenants.map((tenant) => (
                 <tr key={tenant.id}>

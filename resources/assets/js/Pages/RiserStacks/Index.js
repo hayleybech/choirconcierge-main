@@ -31,7 +31,7 @@ const Index = ({ stacks }) => {
             <IndexContainer
                 tableDesktop={<RiserStackTableDesktop stacks={stacks} />}
                 tableMobile={<RiserStackTableMobile stacks={stacks} />}
-                emptyState={stacks.length === 0
+                emptyState={stacks.data.length === 0
                     ? <EmptyState
                         title="No riser stacks"
                         description="Riser stacks allow you to track where your singers should be physically positioned. "

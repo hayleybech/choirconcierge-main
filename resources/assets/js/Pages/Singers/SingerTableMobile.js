@@ -5,12 +5,13 @@ import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 import Icon from "../../components/Icon";
 import SingerStatus from "../../SingerStatus";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
-const SingerTableMobile = ({ singers }) => {
+const SingerTableMobile = ({ singers, pagination }) => {
     const { route } = useRoute();
 
     return (
-        <TableMobile>
+        <TableMobile pagination={<Pagination details={pagination} />}>
             {singers.map((singer) => (
                 <TableMobileItem key={singer.id} url={route('singers.show', {singer: singer.id})}>
                     <div className="shrink-0">

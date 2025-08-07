@@ -30,9 +30,9 @@ const Index = ({ lists }) => {
             />
 
             <IndexContainer
-                tableDesktop={<MailingListTableDesktop tasks={lists} />}
+                tableDesktop={<MailingListTableDesktop lists={lists} />}
                 tableMobile={<MailingListTableMobile lists={lists} />}
-                emptyState={lists.length === 0
+                emptyState={lists.data.length === 0
                     ? <EmptyState
                         title="No mailing lists"
                         description="Mailing lists allow you to assign an email address to a group of users, for chat or announcements. "
