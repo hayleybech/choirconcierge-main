@@ -11,6 +11,7 @@ use Tests\TestCase;
 use Webklex\PHPIMAP\Address;
 use Webklex\PHPIMAP\Attribute;
 use Webklex\PHPIMAP\Message;
+use Webklex\PHPIMAP\Support\AttachmentCollection;
 
 /**
  * @see \App\Mail\WebklexImapMessageMailableAdapter
@@ -126,7 +127,7 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
             $mock->shouldReceive('getSubject')->andReturn(new Attribute('subject', 'A Test Subject'));
             $mock->shouldReceive('getTextBody')->andReturn('Hello');
             $mock->shouldReceive('getHTMLBody')->andReturn('<html>Hello</html>');
-            $mock->shouldReceive('getAttachments')->andReturn([]);
+            $mock->shouldReceive('getAttachments')->andReturn(new AttachmentCollection([]));
             $mock->shouldReceive('hasAttachments')->andReturn(false);
         });
     }
