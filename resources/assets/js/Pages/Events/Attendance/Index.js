@@ -31,6 +31,7 @@ const Index = ({ event, voice_parts }) => {
           <CollapseGroup items={voice_parts.map((part) => ({
             title: part.title,
             show: true,
+            defaultOpen: true,
             content: (
                 <div key={part.id} className="relative">
                   <div className="flex flex-wrap bg-white py-4 border-b border-gray-200 gap-y-6">
