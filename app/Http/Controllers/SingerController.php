@@ -14,8 +14,10 @@ use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -36,8 +38,10 @@ class SingerController extends Controller
     {
         $defaultStatus = SingerCategory::all()->firstWhere('name', 'Members')->id;
 
+        $pagination = $this->getSingers($defaultStatus);
         return Inertia::render('Singers/Index', [
-            'allSingers' => $this->getSingers($defaultStatus)->values(),
+            'allSingers' => $pagination->getCollection()->append('fee_status'),
+            'pagination' => $pagination,
             'statuses' => SingerCategory::all()->values(),
             'defaultStatus' => $defaultStatus,
             'voiceParts' => VoicePart::all()->values(),
@@ -152,7 +156,7 @@ class SingerController extends Controller
             ->with(['status' => 'Singer deleted. ']);
     }
 
-    private function getSingers(string $defaultStatus): Collection
+    private function getSingers(string $defaultStatus): LengthAwarePaginator
     {
         $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
 
@@ -191,11 +195,10 @@ class SingerController extends Controller
                 AllowedSort::field('paid_until'),
             ])
             ->defaultSort($nameSort)
-            ->get()
-            ->append('fee_status');
+            ->paginate(50)->appends(request()->query());
     }
 
-    private function maybeCreateUser(CreateSingerRequest $request): Builder|\Illuminate\Database\Eloquent\Model
+    private function maybeCreateUser(CreateSingerRequest $request): Builder|Model
     {
         if ($request->has('user_id') && !empty($request->input('user_id'))) {
             return User::find($request->input('user_id'));

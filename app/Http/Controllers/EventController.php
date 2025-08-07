@@ -9,6 +9,7 @@ use App\Models\EventType;
 use App\Models\Membership;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -134,7 +135,7 @@ class EventController extends Controller
             ->with(['status' => 'Event deleted. ']);
     }
 
-    private function getEvents()
+    private function getEvents(): LengthAwarePaginator
     {
         return QueryBuilder::for(Event::class)
             ->allowedFilters([

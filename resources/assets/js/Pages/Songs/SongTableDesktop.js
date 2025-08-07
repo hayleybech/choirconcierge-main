@@ -10,6 +10,7 @@ import collect from "collect.js";
 import TableHeadingSort from "../../components/TableHeadingSort";
 import {Synth} from "tone";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
 const SongTableDesktop = ({ songs, sortFilterForm }) => {
     const { route } = useRoute();
@@ -24,8 +25,9 @@ const SongTableDesktop = ({ songs, sortFilterForm }) => {
 
     return (
         <Table
+            pagination={<Pagination details={songs} />}
             headings={headings}
-            body={songs.map((song) => (
+            body={songs.data.map((song) => (
                 <tr key={song.id}>
                     <TableCell>
                         <div className="flex items-center">

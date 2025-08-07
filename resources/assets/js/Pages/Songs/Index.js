@@ -69,7 +69,7 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                 }
                 tableMobile={<SongTableMobile songs={songs} />}
                 tableDesktop={<SongTableDesktop songs={songs} sortFilterForm={sortFilterForm} />}
-                emptyState={songs.length === 0
+                emptyState={songs.data.length === 0
                     ? <EmptyState
                         title="No songs"
                         description="You don't have any songs yet, or you need to expand your filters. "

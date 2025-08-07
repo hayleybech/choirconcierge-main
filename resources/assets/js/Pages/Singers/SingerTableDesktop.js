@@ -19,8 +19,9 @@ import DateTag from "../../components/DateTag";
 import collect from "collect.js";
 import TableHeadingSort from "../../components/TableHeadingSort";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
-const SingerTableDesktop = ({ singers, sortFilterForm }) => {
+const SingerTableDesktop = ({ singers, sortFilterForm, pagination }) => {
     const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
     const [renewingSinger, setRenewingSinger] = useState(singers[0] ?? null);
 
@@ -39,6 +40,7 @@ const SingerTableDesktop = ({ singers, sortFilterForm }) => {
     return (
         <>
             <Table
+                pagination={<Pagination details={pagination} />}
                 headings={headings}
                 body={singers.map((singer) => (
                     <tr key={singer.id}>
