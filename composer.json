@@ -44,7 +44,6 @@
         "beyondcode/laravel-query-detector": "^1.6",
         "brianium/paratest": "^6.4",
         "jasonmccreary/laravel-test-assertions": "^2.1",
-        "laravel-shift/factory-generator": "dev-master",
         "laravel/sail": "^1.13",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
