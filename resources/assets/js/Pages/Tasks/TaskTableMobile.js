@@ -1,13 +1,15 @@
 import React from 'react';
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
+import pagination from '../../components/Pagination';
 
 const TaskTableMobile = ({ tasks }) => {
     const { route } = useRoute();
 
     return (
-        <TableMobile>
-            {tasks.map((task) => (
+        <TableMobile pagination={<Pagination details={pagination} />}>
+            {tasks.data.map((task) => (
                 <TableMobileItem key={task.id} url={route('tasks.show', {task: task.id})}>
                     <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
                         <div className="flex items-center justify-between">

@@ -5,8 +5,9 @@ import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import collect from "collect.js";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
-const MailingListTableDesktop = ({ tasks }) => {
+const MailingListTableDesktop = ({ lists }) => {
     const { route } = useRoute();
 
     const headings = collect({
@@ -24,8 +25,9 @@ const MailingListTableDesktop = ({ tasks }) => {
 
     return (
         <Table
+            pagination={<Pagination details={lists} />}
             headings={headings}
-            body={tasks.map((list) => (
+            body={lists.data.map((list) => (
                 <tr key={list.id}>
                     <TableCell>
                         <div className="flex items-center">
