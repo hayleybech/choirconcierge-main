@@ -12,7 +12,7 @@ import FilterSortPane from "../../../components/FilterSortPane";
 import Sorts from "../../../components/Sorts";
 import TenantFilters from "./TenantFilters";
 
-const Index = ({ tenants }) => {
+const Index = ({ tenants, pagination }) => {
     const { route } = useRoute();
 
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -53,8 +53,8 @@ const Index = ({ tenants }) => {
                         closeFn={() => setShowFilters(false)}
                     />
                 }
-                tableMobile={<TenantTableMobile tenants={tenants} />}
-                tableDesktop={<TenantTableDesktop tenants={tenants} sortFilterForm={sortFilterForm} />}
+                tableMobile={<TenantTableMobile tenants={tenants} pagination={pagination} />}
+                tableDesktop={<TenantTableDesktop tenants={tenants} sortFilterForm={sortFilterForm} pagination={pagination} />}
             />
         </>
     );
