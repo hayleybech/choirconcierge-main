@@ -51,9 +51,20 @@ class CloneMessage
             $message->cc($group->email);
         }
 
-        // Clear 'to', then put the group member as the recipient
-        $message->to = [];
-        Mail::to($user)
-            ->send($message);
+        try {
+            // Clear 'to', then put the group member as the recipient
+            $message->to = [];
+            Mail::to($user)
+                ->send($message);
+
+
+        } catch (\Throwable $exception) {
+            MailLog::firstWhere('uid', $message->uid)->events()->create([
+                'status' => 'clone-failed',
+                'context' => $user->email,
+            ]);
+
+            throw $exception;
+        }
     }
 }

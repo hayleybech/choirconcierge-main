@@ -1,6 +1,6 @@
 <?php
 
-$VERSION = 'choir-concierge@2025-08-04e';
+$VERSION = 'choir-concierge@2025-08-07a';
 
 return [
 
@@ -28,6 +28,9 @@ return [
 
         // Capture command information in breadcrumbs
         'command_info' => true,
+
+        // Capture HTTP client requests information in breadcrumbs
+        'http_client_requests' => true,
     ],
 
     // @see: https://docs.sentry.io/platforms/php/configuration/options/#send-default-pii

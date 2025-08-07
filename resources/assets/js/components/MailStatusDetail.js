@@ -88,6 +88,16 @@ const MailStatusDetail = ({log, event, isBroadcast}) => {
 			</p>
 		);
 	}
+	if (event.status === 'send-failed') {
+		return (
+			<p className="text-sm text-gray-500">
+				A fatal error occurred while sending mail to {' '}
+				<span className="font-medium text-gray-900">
+                    {event.context}
+                </span>. Processing has been stopped.
+			</p>
+		);
+	}
 	return (
 		<p className="text-sm text-gray-500">
 			Other Status:{' '}

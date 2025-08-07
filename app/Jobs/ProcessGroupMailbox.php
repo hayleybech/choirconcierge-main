@@ -40,6 +40,12 @@ class ProcessGroupMailbox implements ShouldQueue
 		$this->mailbox->getMessages()
 			->each(function (Message $message) {
 
+                if(MailLog::query()->where('uid', $message->getUid())->exists()) {
+                    $message->delete();
+
+                    return;
+                }
+
 				/** @var IncomingMessage $incomingMessage */
 				$incomingMessage = (new WebklexImapMessageMailableAdapter($message))->toMailable();
 
@@ -68,7 +74,7 @@ class ProcessGroupMailbox implements ShouldQueue
 
                 $incomingMessage->resendToGroups();
 
-                $message->delete(true);
+                $message->delete();
         });
 	}
 }

@@ -10,6 +10,7 @@ export const mailIconColours = {
 	'rejected-sender': 'bg-red-500',
 	'malformed-recipient': 'bg-red-500',
 	'clones-sent': 'bg-emerald-500',
+	'send-failed': 'bg-red-500',
 };
 
 export const mailIcons = {
@@ -20,6 +21,7 @@ export const mailIcons = {
 	'rejected-sender': 'user-slash',
 	'malformed-recipient': 'exclamation-triangle',
 	'clones-sent': 'inbox-out',
+	'send-failed': 'exclamation-circle',
 }
 
 export const mailLabels = {
@@ -30,6 +32,7 @@ export const mailLabels = {
 	'rejected-sender': 'Sender rejected',
 	'malformed-recipient': 'Malformed address',
 	'clones-sent': 'Sent',
+	'send-failed': 'Send failed',
 }
 
 const MailStatusTag = ({event, showLabel = true}) => (

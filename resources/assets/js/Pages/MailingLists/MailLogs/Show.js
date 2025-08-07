@@ -93,7 +93,7 @@ const Activity = ({log}) => {
                         <li key={event.id}>
                             <div className="relative pb-8">
                                 {eventIdx !== events.length - 1 ? (
-                                    <div aria-hidden="true" className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-400" />
+                                    <div aria-hidden="true" className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-500" />
                                 ) : null}
                                 <div className="relative flex space-x-3">
                                     <div>
