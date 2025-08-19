@@ -68,8 +68,8 @@ class SongAttachment extends Model
 
     public function delete()
     {
-        if (Storage::disk('public')->exists($this->getPath())) {
-            Storage::disk('public')->delete($this->getPath());
+        if (Storage::disk('tenant')->exists($this->getPath())) {
+            Storage::disk('tenant')->delete($this->getPath());
         }
 
         parent::delete();
@@ -88,14 +88,14 @@ class SongAttachment extends Model
             return;
         }
 
-        Storage::disk('public')->makeDirectory(self::getPathSongs());
-        Storage::disk('public')->makeDirectory($this->getPathSong());
+        Storage::disk('tenant')->makeDirectory(self::getPathSongs());
+        Storage::disk('tenant')->makeDirectory($this->getPathSong());
 
-        if (Storage::disk('public')->exists($this->getPath())) {
-            Storage::disk('public')->delete($this->getPath());
+        if (Storage::disk('tenant')->exists($this->getPath())) {
+            Storage::disk('tenant')->delete($this->getPath());
         }
 
-        Storage::disk('public')->putFileAs($this->getPathSong(), $this->file, $this->filepath);
+        Storage::disk('tenant')->putFileAs($this->getPathSong(), $this->file, $this->filepath);
     }
 
     public function song(): BelongsTo
@@ -110,7 +110,7 @@ class SongAttachment extends Model
 
     public function getPathAttribute()
     {
-        return Storage::disk('public')->path($this->getPath());
+        return Storage::disk('tenant')->path($this->getPath());
     }
 
     public static function getPathSongs(): string

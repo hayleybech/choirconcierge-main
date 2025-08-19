@@ -56,7 +56,7 @@ class Tenant extends BaseTenant
                 return;
             }
 
-            Storage::disk('global-public')
+            Storage::disk('public')
                 ->delete('choir-logos/'.$tenant->logo);
         });
     }
@@ -210,10 +210,10 @@ class Tenant extends BaseTenant
 	 */
 	public function updateLogo(UploadedFile|string $logo, string $hash_name)
     {
-        if (!Storage::disk('global-public')->exists('choir-logos')) {
-            Storage::disk('global-public')->makeDirectory('choir-logos');
+        if (!Storage::disk()->exists('choir-logos')) {
+            Storage::disk()->makeDirectory('choir-logos');
         }
-        if (!Storage::disk('global-public')
+        if (!Storage::disk()
             ->putFileAs('choir-logos', $logo, $hash_name)
         ) {
             throw new Exception('Failed to save the logo.');

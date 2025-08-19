@@ -37,6 +37,7 @@ return [
             'root' => storage_path('app'),
         ],
 
+        // @todo remove global-local disk
         'global-local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
@@ -48,12 +49,14 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
-
-        'global-public' => [
+        'tenant' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
+            // 'root' => storage_path(), // @todo update (during migration to Laravel Cloud) to root folder of tenant
+
             'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
+            'visibility' => 'public', // for testing
+            // 'visibility' => 'private', // @todo test private access
         ],
 
         'temp' => [

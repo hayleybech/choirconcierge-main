@@ -74,7 +74,7 @@ it('does not delete data for other tenants', function () {
 })->skip('fails on chipper, takes too long');
 
 it('re-uploads the demo logo', function () {
-    Storage::fake('global-public');
+    Storage::fake('public');
 
     Tenant::create('demo', 'Hypothetical Harmony', 'Australia/Perth');
 
@@ -82,5 +82,5 @@ it('re-uploads the demo logo', function () {
     $job->handle();
 
     assertNotNull(Tenant::find('demo')->logo);
-    Storage::disk('global-public')->assertExists('choir-logos/'. Tenant::find('demo')->logo);
+    Storage::disk('public')->assertExists('choir-logos/'. Tenant::find('demo')->logo);
 })->skip('fails on chipper, takes too long');

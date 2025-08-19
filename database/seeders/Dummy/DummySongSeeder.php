@@ -35,7 +35,7 @@ class DummySongSeeder extends Seeder
                 self::attachRandomCategories($song, $categories);
 
                 // Generate random attachments
-                Storage::disk('public')->makeDirectory('songs/' . $song->id);
+                Storage::disk('tenant')->makeDirectory('songs/' . $song->id);
                 self::insertSampleMp3s($song);
                 self::insertSamplePdfs($song);
             });
@@ -79,7 +79,7 @@ class DummySongSeeder extends Seeder
                 // Copy random sample files
                 // Computer-generated music from https://www.fakemusicgenerator.com/
                 $demo_dir = Storage::disk('global-local')->path('sample/mp3');
-                $song_dir = Storage::disk('public')->path('songs/' . $song->id);
+                $song_dir = Storage::disk('tenant')->path('songs/' . $song->id);
 
                 $faker = Faker\Factory::create();
                 $attachment->filepath = $faker->file($demo_dir, $song_dir, false);
@@ -99,7 +99,7 @@ class DummySongSeeder extends Seeder
             )
             ->each(static function (SongAttachment $attachment) use ($song) {
                 $demo_dir = Storage::disk('global-local')->path('sample/pdf');
-                $song_dir = Storage::disk('public')->path('songs/' . $song->id);
+                $song_dir = Storage::disk('tenant')->path('songs/' . $song->id);
 
                 $faker = Faker\Factory::create();
                 $attachment->filepath = $faker->file($demo_dir, $song_dir, false);

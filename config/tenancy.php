@@ -99,9 +99,7 @@ return [
          */
         'suffix_base' => 'tenant',
         'disks' => [
-            'local',
-            'public',
-            // 's3',
+            'tenant',
         ],
 
         /**
@@ -111,8 +109,8 @@ return [
          */
         'root_override' => [
             // Disks whose roots should be overriden after storage_path() is suffixed.
-            'local' => '%storage_path%/app/',
-            'public' => '%storage_path%/app/public/',
+//            'local' => '%storage_path%/app/',
+//            'public' => '%storage_path%/app/public/',
         ],
 
         /**
@@ -124,7 +122,7 @@ return [
          * edge cases, it can cause issues (like using Passport with Vapor - see #196), so
          * you may want to disable this if you are experiencing these edge case issues.
          */
-        'suffix_storage_path' => true,
+//        'suffix_storage_path' => true,
 
         /**
          * By default, asset() calls are made multi-tenant too. You can use global_asset() and mix()

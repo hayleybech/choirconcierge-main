@@ -51,7 +51,7 @@ class Ensemble extends Model
 	public function logoUrl(): Attribute
 	{
 		return Attribute::get(fn () =>
-			$this->logo ? asset('storage/choir-logos/'.$this->logo) : ''
+			$this->logo ? Storage::disk('public')->url('choir-logos/'.$this->logo) : ''
 		);
 	}
 
@@ -60,10 +60,10 @@ class Ensemble extends Model
 	 */
 	public function updateLogo(UploadedFile|string $logo, string $hash_name)
 	{
-		if (!Storage::disk('global-public')->exists('choir-logos')) {
-			Storage::disk('global-public')->makeDirectory('choir-logos');
+		if (!Storage::disk('public')->exists('choir-logos')) {
+			Storage::disk('public')->makeDirectory('choir-logos');
 		}
-		if (!Storage::disk('global-public')
+		if (!Storage::disk('public')
 			->putFileAs('choir-logos', $logo, $hash_name)
 		) {
 			throw new Exception('Failed to save the logo.');

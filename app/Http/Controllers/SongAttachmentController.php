@@ -60,7 +60,7 @@ class SongAttachmentController extends Controller
                 'bail', // Abort immediately on first failure. Abort if directory to prevent user from abusing "file exists" validation in any directory.
                 'max:255',
                 new Filename,
-                new FileDoesntExist('public', $attachment->getPathSong()),
+                new FileDoesntExist('tenant', $attachment->getPathSong()),
             ]
         ]);
 
@@ -70,7 +70,7 @@ class SongAttachmentController extends Controller
             'filepath' => $data['filename'],
         ]);
 
-        Storage::disk('public')
+        Storage::disk('tenant')
             ->move(
                 'songs/'.$song->id.'/'.$old_name,
                 'songs/'.$song->id.'/'.$attachment->filepath,

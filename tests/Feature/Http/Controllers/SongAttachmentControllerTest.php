@@ -25,7 +25,7 @@ class SongAttachmentControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
-        Storage::fake('public');
+        Storage::fake('tenant');
 
         $song = Song::factory()->create();
         $attachment = SongAttachment::factory()->create([
@@ -36,7 +36,7 @@ class SongAttachmentControllerTest extends TestCase
 
         $response->assertRedirect(the_tenant_route('songs.show', [$song]));
         $this->assertModelMissing($attachment);
-        Storage::disk('public')->assertMissing($attachment->getPath());
+        Storage::disk('tenant')->assertMissing($attachment->getPath());
     }
 
     /**
@@ -46,7 +46,7 @@ class SongAttachmentControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
-        Storage::fake('public');
+        Storage::fake('tenant');
 
         $song = Song::factory()->create();
         $attachment = SongAttachment::factory()->create([
@@ -70,7 +70,7 @@ class SongAttachmentControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
-        Storage::fake('public');
+        Storage::fake('tenant');
         $song = Song::factory()->create();
 
         $data = $getData();
@@ -82,7 +82,7 @@ class SongAttachmentControllerTest extends TestCase
         ]);
 
         $attachment = SongAttachment::firstWhere('filepath', $data['attachment_uploads'][0]->name);
-        Storage::disk('public')->assertExists($attachment->getPath());
+        Storage::disk('tenant')->assertExists($attachment->getPath());
         $response->assertRedirect(the_tenant_route('songs.show', [$song]));
     }
 
@@ -91,7 +91,7 @@ class SongAttachmentControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
-        Storage::fake('public');
+        Storage::fake('tenant');
 
         $song = Song::factory()->create();
         $attachment = SongAttachment::factory()->create([
@@ -109,8 +109,8 @@ class SongAttachmentControllerTest extends TestCase
 
         // Unlike documents (which use hashed filenames), for song attachments we need to rename the actual file.
         // @TODO: Pick a file storage approach for documents AND songs and bloody stick to it.
-        Storage::disk('public')->assertMissing($attachment->getPath());
-        Storage::disk('public')
+        Storage::disk('tenant')->assertMissing($attachment->getPath());
+        Storage::disk('tenant')
             ->assertExists(
                 Str::of($attachment->getPath())
                     ->replace($attachment->filepath, 'new.mp3')

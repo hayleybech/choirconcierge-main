@@ -45,8 +45,8 @@ class Document extends Model
 
     public function delete()
     {
-        if (Storage::disk('public')->exists($this->getPath())) {
-            Storage::disk('public')->delete($this->getPath());
+        if (Storage::disk('tenant')->exists($this->getPath())) {
+            Storage::disk('tenant')->delete($this->getPath());
         }
 
         parent::delete();
@@ -56,10 +56,10 @@ class Document extends Model
 
     public function setDocumentUploadAttribute(UploadedFile $file): void
     {
-        if (! Storage::disk('public')->exists(self::getDownloadsPath())) {
-            Storage::disk('public')->makeDirectory(self::getDownloadsPath());
+        if (! Storage::disk('tenant')->exists(self::getDownloadsPath())) {
+            Storage::disk('tenant')->makeDirectory(self::getDownloadsPath());
         }
-        if (! Storage::disk('public')->putFile(self::getDownloadsPath(), $file)) {
+        if (! Storage::disk('tenant')->putFile(self::getDownloadsPath(), $file)) {
             throw new Exception('Failed to save the document.');
         }
         $this->title = $file->getClientOriginalName();
@@ -73,7 +73,7 @@ class Document extends Model
 
     public function getPathAttribute()
     {
-        return Storage::disk('public')->path($this->getPath());
+        return Storage::disk('tenant')->path($this->getPath());
     }
 
     public function getIconAttribute(): string

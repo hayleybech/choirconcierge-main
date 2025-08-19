@@ -15,7 +15,7 @@ class DocumentFactory extends Factory
 
         $name = $this->faker->word().'.'.$this->faker->fileExtension();
         $file = UploadedFile::fake()->create($name, 5);
-        //$filepath = Storage::disk('public')->putFile( Document::getDownloadsPath(), $file);
+        //$filepath = Storage::disk('tenant')->putFile( Document::getDownloadsPath(), $file);
 
         return [
             'title' => $this->faker->sentence(3, true),

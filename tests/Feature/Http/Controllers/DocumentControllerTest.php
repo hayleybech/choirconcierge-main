@@ -22,7 +22,7 @@ class DocumentControllerTest extends TestCase
      */
     public function destroy_redirects_back(): void
     {
-        Storage::fake('public');
+        Storage::fake('tenant');
 
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -44,14 +44,14 @@ class DocumentControllerTest extends TestCase
      */
     public function show_returns_file(): void
     {
-        Storage::fake('public');
+        Storage::fake('tenant');
 
         $this->actingAs($this->createUserWithRole('Music Team'));
 
         $folder = Folder::factory()
             ->hasDocuments()
             ->create();
-        Storage::disk('public')->assertExists($folder->documents->first()->getPath());
+        Storage::disk('tenant')->assertExists($folder->documents->first()->getPath());
 
         $response = $this->get(the_tenant_route('folders.documents.show', [$folder, $folder->documents->first()]));
 
@@ -67,7 +67,7 @@ class DocumentControllerTest extends TestCase
      */
     public function store_redirects_back(): void
     {
-        Storage::fake('public');
+        Storage::fake('tenant');
 
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -89,14 +89,14 @@ class DocumentControllerTest extends TestCase
             'filepath' => $data['document_uploads'][0]->hashName(),
         ]);
         $document = Document::firstWhere('filepath', $data['document_uploads'][0]->hashName());
-        Storage::disk('public')->assertExists($document->getPath());
+        Storage::disk('tenant')->assertExists($document->getPath());
     }
 
     /** @test */
     public function it_can_rename_documents(): void
     {
         $this->withoutExceptionHandling();
-        Storage::fake('public');
+        Storage::fake('tenant');
 
         $this->actingAs($this->createUserWithRole('Music Team'));
 
