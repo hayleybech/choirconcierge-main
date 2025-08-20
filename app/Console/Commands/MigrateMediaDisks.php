@@ -31,11 +31,19 @@ class MigrateMediaDisks extends Command
     {
         DB::table('media')
             ->where('disk', 'global-public')
-            ->update(['disk' => 'public']);
+            ->update(['disk' => 'media']);
 
         DB::table('media')
             ->where('conversions_disk', 'global-public')
-            ->update(['conversions_disk' => 'public']);
+            ->update(['conversions_disk' => 'media']);
+
+        DB::table('media')
+            ->where('disk', 'public')
+            ->update(['disk' => 'media']);
+
+        DB::table('media')
+            ->where('conversions_disk', 'public')
+            ->update(['conversions_disk' => 'media']);
 
         return CommandAlias::SUCCESS;
     }
