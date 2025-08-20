@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
+use Storage;
 use Throwable;
 
 class TenantAssetsController extends Controller
@@ -19,7 +20,7 @@ class TenantAssetsController extends Controller
         abort_if($path === null, 404);
 
         try {
-            return response()->file(storage_path("app/public/$path"));
+            return Storage::disk('tenant')->download($path);
         } catch (Throwable $th) {
             abort(404);
         }
