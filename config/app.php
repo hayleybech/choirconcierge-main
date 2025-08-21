@@ -268,5 +268,10 @@ return [
         'backup_run' => env('HEARTBEAT_BACKUP_RUN'),
         'clear_temporary_broadcast_files' => env('HEARTBEAT_CLEAR_TEMPORARY_BROADCAST_FILES'),
         'reset_demo_site' => env('HEARTBEAT_RESET_DEMO_SITE'),
-	]
+	],
+
+    'maintenance' => [
+      'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
+      'store' => env('APP_MAINTENANCE_STORE', 'database'),
+    ],
 ];

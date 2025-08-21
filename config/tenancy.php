@@ -17,7 +17,11 @@ return [
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
     'central_domains' => [
-        env('TENANCY_CENTRAL_DOMAIN', 'choirconcierge.com'),
+        str_replace(
+            ['http://', 'https://'],
+            '',
+            env('TENANCY_CENTRAL_DOMAIN', 'choirconcierge.com')
+        ),
     ],
 
     /**
