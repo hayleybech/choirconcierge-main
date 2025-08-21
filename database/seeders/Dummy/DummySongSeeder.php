@@ -78,7 +78,7 @@ class DummySongSeeder extends Seeder
             ->each(static function (SongAttachment $attachment) use ($song) {
                 // Copy random sample files
                 // Computer-generated music from https://www.fakemusicgenerator.com/
-                $demo_dir = Storage::disk('global-local')->path('sample/mp3');
+                $demo_dir = Storage::disk('public')->path('sample/mp3');
                 $song_dir = Storage::disk('tenant')->path('songs/' . $song->id);
 
                 $faker = Faker\Factory::create();
@@ -98,7 +98,7 @@ class DummySongSeeder extends Seeder
                     ->make(),
             )
             ->each(static function (SongAttachment $attachment) use ($song) {
-                $demo_dir = Storage::disk('global-local')->path('sample/pdf');
+                $demo_dir = Storage::disk('public')->path('sample/pdf');
                 $song_dir = Storage::disk('tenant')->path('songs/' . $song->id);
 
                 $faker = Faker\Factory::create();
@@ -156,9 +156,9 @@ class DummySongSeeder extends Seeder
         ];
 
         foreach ($files as $file) {
-            $path = Storage::disk('global-local')->path('sample/top/' . $file['file']);
+            $path = Storage::disk('public')->path('sample/top/' . $file['file']);
 
-            if(! Storage::disk('global-local')->exists('sample/top/' . $file['file'])) {
+            if(! Storage::disk('public')->exists('sample/top/' . $file['file'])) {
                 continue;
             }
 

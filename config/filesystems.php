@@ -31,32 +31,21 @@ return [
     */
 
     'disks' => [
-
-        'local' => [
-            'driver' => 'local',
-            'root' => storage_path('app'),
-        ],
-
-        // @todo remove global-local disk
-        'global-local' => [
-            'driver' => 'local',
-            'root' => storage_path('app'),
-        ],
-
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => storage_path('app/public'), // just '/' on public on cloud
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
         'tenant' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            // 'root' => storage_path(), // @todo update (during migration to Laravel Cloud) to root folder of tenant
-
+            'root' => storage_path(),
             'url' => env('APP_URL').'/storage',
-            'visibility' => 'public', // for testing
-            // 'visibility' => 'private', // @todo test private access
+            'visibility' => 'private',
+        ],
+        'media' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'), // just '/' on media on cloud
         ],
 
         'temp' => [

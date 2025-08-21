@@ -64,7 +64,7 @@ class ResetDemoSite implements ShouldQueue, ShouldBeUnique
             $demo->ensembles()->firstOrCreate(['name' => 'Hypothetical Harmony']);
 
             // Re-upload tenant logo ("upload" - we're just copying the sample file)
-            $logo_path = Storage::disk('global-local')->path('sample/'. 'demo-logo.png');
+            $logo_path = Storage::disk('public')->path('sample/'. 'demo-logo.png');
             $logo_hashname = Str::random(40).'.png';
 
             $demo->updateLogo($logo_path, $logo_hashname);
