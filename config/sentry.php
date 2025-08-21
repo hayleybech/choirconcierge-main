@@ -8,7 +8,7 @@ return [
 
     // capture release as git sha
     // 'release' => trim(exec('git --git-dir ' . base_path('.git') . ' log --pretty="%h" -n1 HEAD')),
-    'release' => env('APP_ENV') === 'production' ? $VERSION : $VERSION.':dev',
+    'release' => env('SENTRY_ENVIRONMENT') === 'production' ? $VERSION : 'VERSION:'.env('SENTRY_ENVIRONMENT'),
 
     // When left empty or `null` the Laravel environment will be used
     'environment' => env('SENTRY_ENVIRONMENT'),
