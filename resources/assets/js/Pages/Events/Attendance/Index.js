@@ -26,6 +26,9 @@ const Index = ({ event, voice_parts }) => {
                     { name: event.title, url: route('events.show', {event}) },
                     { name: 'Attendance List', url: route('events.attendances.index', {event}) },
                 ]}
+                actions={[
+                    { label: 'Check-In Kiosk', icon: 'calendar-check', url: route('events.check-in', {event}) },
+                ]}
             />
 
           <CollapseGroup items={voice_parts.map((part) => ({
