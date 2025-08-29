@@ -12,6 +12,8 @@ use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\EnsembleController;
 use App\Http\Controllers\EventActivityController;
 use App\Http\Controllers\EventCalendarController;
+use App\Http\Controllers\EventCheckInController;
+use App\Http\Controllers\EventCheckInKioskController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\ExportMemberController;
@@ -145,6 +147,10 @@ Route::middleware([
                 Route::put('{mode}', 'update')->name('update');
                 Route::get('delete/{mode}', 'destroy')->name('delete');
             });
+
+        Route::resource('events.check-ins', EventCheckInController::class)->only(['index', 'store'])->middleware('signed');
+        Route::resource('events.kiosk-check-ins', EventCheckInKioskController::class)->only(['index', 'store']);
+
         Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
         Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
         Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');

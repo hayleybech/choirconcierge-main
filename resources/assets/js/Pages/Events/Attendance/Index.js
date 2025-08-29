@@ -9,10 +9,16 @@ import TextInput from "../../../components/inputs/TextInput";
 import Label from "../../../components/inputs/Label";
 import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
+import Dialog from '../../../components/Dialog';
+import { usePage } from '@inertiajs/react';
+import QRCode from 'react-qr-code';
 
-const Index = ({ event, voice_parts }) => {
+const Index = ({ event, voice_parts, individualCheckInUrl }) => {
     const [absentReasons, setAbsentReasons] = useState({});
+    const [checkInDialogIsOpen, setCheckInDialogIsOpen] = useState(false);
+
     const { route } = useRoute();
+    const { props: pageProps } = usePage();
 
     return (
         <>
@@ -26,7 +32,33 @@ const Index = ({ event, voice_parts }) => {
                     { name: event.title, url: route('events.show', {event}) },
                     { name: 'Attendance List', url: route('events.attendances.index', {event}) },
                 ]}
+                actions={[
+                    { label: 'Check-In Kiosk', icon: 'calendar-check', url: route('events.kiosk-check-ins.index', {event}), can: 'create_attendance' },
+                    { label: 'Individual Check-In', icon: 'qrcode', onClick: () => setCheckInDialogIsOpen(true), can: 'create_attendance' },
+                ].filter(action => action.can ? pageProps.can[action.can] : true)}
+                meta={[
+                    <div className="text-gray-500">
+                        Use this page to manually mark everyone's attendance. The kiosk page allows singers to mark themselves off from a shared device, while the individual check-in page allows singers to use their own device by scanning a QR code. Both check-in pages automatically mark singers as late after the call time, or absent 20 minutes later.
+                    </div>,
+                ]}
             />
+
+            <Dialog
+                title="Individual Check-In Link"
+                isOpen={checkInDialogIsOpen}
+                setIsOpen={setCheckInDialogIsOpen}
+                icon={null}
+            >
+                <div className="w-full">
+                    <p className="font-bold mb-2">Let singers check themselves in!</p>
+                    <p className="mb-2">They can scan this QR code while logged in to gain temporary access to the check-in page.</p>
+
+                    <div className="mb-2 flex justify-center">
+                        <QRCode value={individualCheckInUrl} />
+                    </div>
+                    <p className="break-all text-xs">{individualCheckInUrl}</p>
+                </div>
+            </Dialog>
 
           <CollapseGroup items={voice_parts.map((part) => ({
             title: part.title,
