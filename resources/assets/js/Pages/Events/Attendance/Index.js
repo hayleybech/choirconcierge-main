@@ -36,6 +36,11 @@ const Index = ({ event, voice_parts, individualCheckInUrl }) => {
                     { label: 'Check-In Kiosk', icon: 'calendar-check', url: route('events.kiosk-check-ins.index', {event}), can: 'create_attendance' },
                     { label: 'Individual Check-In', icon: 'qrcode', onClick: () => setCheckInDialogIsOpen(true), can: 'create_attendance' },
                 ].filter(action => action.can ? pageProps.can[action.can] : true)}
+                meta={[
+                    <div className="text-gray-500">
+                        Use this page to manually mark everyone's attendance. The kiosk page allows singers to mark themselves off from a shared device, while the individual check-in page allows singers to use their own device by scanning a QR code. Both check-in pages automatically mark singers as late after the call time, or absent 20 minutes later.
+                    </div>,
+                ]}
             />
 
             <Dialog
