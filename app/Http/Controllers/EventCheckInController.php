@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,11 +25,25 @@ class EventCheckInController extends Controller
         $event->attendances()
             ->updateOrCreate(
                 ['membership_id' => $request->user()->membership->id],
-                ['response' => 'present']
+                ['response' => self::getAttendanceByEvent($event)]
             );
 
         return redirect()
             ->back()
             ->with(['status' => 'Attendance recorded.']);
+    }
+
+    public static function getAttendanceByEvent(Event $event): string {
+        $MARK_ABSENT_GRACE_PERIOD_MIN = 20;
+
+        if($event->call_time->isAfter(now())) {
+            return 'present';
+        }
+
+         if($event->call_time->addMinutes($MARK_ABSENT_GRACE_PERIOD_MIN)->isAfter(now())) {
+            return 'late';
+        }
+
+        return 'absent';
     }
 }

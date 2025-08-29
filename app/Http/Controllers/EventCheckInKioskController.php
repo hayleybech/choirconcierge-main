@@ -35,7 +35,7 @@ class EventCheckInKioskController extends Controller
         $event->attendances()
             ->updateOrCreate(
                 ['membership_id' => Membership::firstWhere('user_id', $validated['user'])->id],
-                ['response' => 'present']
+                ['response' => EventCheckInController::getAttendanceByEvent($event)]
             );
 
         return redirect()
