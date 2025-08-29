@@ -9,18 +9,16 @@ import Button from '../../../components/inputs/Button';
 import ToastFlash from '../../../components/ToastFlash';
 import Icon from '../../../components/Icon';
 import Error from '../../../components/inputs/Error';
+import DateTag from '../../../components/DateTag';
 
-const CheckIn = ({ event }) => {
-    const { route } = useRoute();
-    const { tenant, flash } = usePage().props;
+const CheckIn = ({ event, storeUrlSigned }) => {
+    const { tenant, flash, user } = usePage().props;
 
-    const {data, setData, post, processing, errors} = useForm({
-        user: '',
-    });
+    const {data, setData, post, processing, errors} = useForm();
 
     function submit(e) {
         e.preventDefault();
-        post(route('events.check-in.store', {event}));
+        post(storeUrlSigned);
     }
 
     return (
@@ -29,30 +27,38 @@ const CheckIn = ({ event }) => {
             <ToastFlash errors={errors} flash={flash} />
 
             <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-100">
-                <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                <div className="sm:mx-auto sm:w-full sm:max-w-md mb-8">
 
-                    {tenant ? (
-                        <img src={tenant.logo_url} alt={tenant.name} className="h-16 w-auto mx-auto" />
-                    ) : (
-                        <img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
-                    )}
+                    <div className="mb-8">
+                        {tenant ? (
+                            <img src={tenant.logo_url} alt={tenant.name} className="h-16 w-auto mx-auto" />
+                        ) : (
+                            <img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
+                        )}
+                    </div>
 
-                    <h2 className="mt-8 text-center text-3xl font-extrabold text-gray-900">Event Check-In</h2>
+                    <h2 className="mb-6 text-center text-3xl font-extrabold text-gray-900">Event Check-In</h2>
 
-                    <p className="text-center mt-6">Checking in for:</p>
+                    <p className="text-center mb-2">You are checking in for:</p>
 
-                    <h3 className="mt-2 text-center text-xl font-extrabold text-gray-900">{event.title}</h3>
+                    <h3 className="mb-2 text-center text-xl font-extrabold text-gray-900">{event.title}</h3>
+
+                    <div className="text-gray-700 text-sm flex gap-2 justify-center">
+                        <div>This page expires at:</div>
+                        <DateTag date={event.end_date} />
+                    </div>
 
                 </div>
 
-                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+                <div className="sm:mx-auto sm:w-full sm:max-w-md mb-12">
                     <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
 
                         <Form onSubmit={submit}>
-                            <div>
-                                <Label label="Singer" />
-                                <SingerSelect updateFn={(value) => setData('user', value)} hasErrors={ !! errors['user'] } />
-                                {errors.user && <Error>{errors.user}</Error>}
+                            <div className="flex space-x-4 items-center justify-center">
+                                {user.profile_avatar_url && <img src={user.profile_avatar_url} alt={user.name} className="h-12 rounded-md" />}
+                                <div className="text-gray-800 text-lg font-bold">
+                                    {user.name}
+                                </div>
                             </div>
 
                             <Button variant="primary" type="submit" size="sm" className="space-x-2 w-full" disabled={processing}>
@@ -64,7 +70,7 @@ const CheckIn = ({ event }) => {
                     </div>
                 </div>
 
-                <img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-8 w-auto mx-auto mt-12" />
+                <img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-8 w-auto mx-auto" />
 
             </div>
 

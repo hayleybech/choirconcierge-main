@@ -47,7 +47,7 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
                     { name: event.title, url: route('events.show', {event}) },
                 ]}
                 actions={[
-                    { label: 'Check-In', icon: 'calendar-check', url: route('events.check-in', {event}), can: 'create_attendance' },
+                    { label: 'Check-In Kiosk', icon: 'calendar-check', url: route('events.kiosk-check-ins.index', {event}), can: 'create_attendance' },
                     event.is_repeating
                         ? { label: 'Edit', icon: 'edit', onClick: () => setEditDialogIsOpen(true), can: 'update_event' }
                         : { label: 'Edit', icon: 'edit', url: route('events.edit', {event}), can: 'update_event' },

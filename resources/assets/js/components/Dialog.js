@@ -48,7 +48,7 @@ const Dialog = ({ title, children, okLabel, okUrl, onOk, okVariant, okMethod, da
                             <div className="mx-auto shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                                 <Icon icon="exclamation-triangle" type="regular" className="text-red-600 text-xl" />
                             </div>
-                            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left flex-grow">
+                            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left flex-grow overflow-hidden">
                                 <BaseDialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
                                     {title}
                                 </BaseDialog.Title>
@@ -58,19 +58,21 @@ const Dialog = ({ title, children, okLabel, okUrl, onOk, okVariant, okMethod, da
                             </div>
                         </div>
                         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                            <Button
-                                variant={okVariant}
-                                size="sm"
-                                href={okUrl}
-                                onClick={(e) => !!onOk ? onOk(e) : setIsOpen(false)}
-                                method={okMethod}
-                                data={data}
-                                as="button"
-                                className="sm:ml-3 w-full"
-                                disabled={processing}
-                            >
-                                {okLabel}
-                            </Button>
+                            {okLabel && (
+                                <Button
+                                    variant={okVariant}
+                                    size="sm"
+                                    href={okUrl}
+                                    onClick={(e) => !!onOk ? onOk(e) : setIsOpen(false)}
+                                    method={okMethod}
+                                    data={data}
+                                    as="button"
+                                    className="sm:ml-3 w-full"
+                                    disabled={processing}
+                                >
+                                    {okLabel}
+                                </Button>
+                            )}
                             <Button size="sm" onClick={() => setIsOpen(false)} disabled={processing} className="w-full mt-3 sm:mt-0">Cancel</Button>
                         </div>
                     </div>

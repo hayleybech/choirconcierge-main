@@ -9,10 +9,16 @@ import TextInput from "../../../components/inputs/TextInput";
 import Label from "../../../components/inputs/Label";
 import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
+import Dialog from '../../../components/Dialog';
+import { usePage } from '@inertiajs/react';
+import QRCode from 'react-qr-code';
 
-const Index = ({ event, voice_parts }) => {
+const Index = ({ event, voice_parts, individualCheckInUrl }) => {
     const [absentReasons, setAbsentReasons] = useState({});
+    const [checkInDialogIsOpen, setCheckInDialogIsOpen] = useState(false);
+
     const { route } = useRoute();
+    const { props: pageProps } = usePage();
 
     return (
         <>
@@ -27,9 +33,26 @@ const Index = ({ event, voice_parts }) => {
                     { name: 'Attendance List', url: route('events.attendances.index', {event}) },
                 ]}
                 actions={[
-                    { label: 'Check-In Kiosk', icon: 'calendar-check', url: route('events.check-in', {event}) },
-                ]}
+                    { label: 'Check-In Kiosk', icon: 'calendar-check', url: route('events.kiosk-check-ins.index', {event}), can: 'create_attendance' },
+                    { label: 'Individual Check-In', icon: 'qrcode', onClick: () => setCheckInDialogIsOpen(true), can: 'create_attendance' },
+                ].filter(action => action.can ? pageProps.can[action.can] : true)}
             />
+
+            <Dialog
+                title="Individual Check-In Link"
+                isOpen={checkInDialogIsOpen}
+                setIsOpen={setCheckInDialogIsOpen}
+            >
+                <div className="w-full">
+                    <p className="font-bold mb-2">Let singers check themselves in!</p>
+                    <p className="mb-2">They can scan this QR code while logged in to gain temporary access to the check-in page.</p>
+
+                    <div className="mb-2 flex justify-center sm:justify-start">
+                        <QRCode value={individualCheckInUrl} />
+                    </div>
+                    <p className="break-all text-xs">{individualCheckInUrl}</p>
+                </div>
+            </Dialog>
 
           <CollapseGroup items={voice_parts.map((part) => ({
             title: part.title,
