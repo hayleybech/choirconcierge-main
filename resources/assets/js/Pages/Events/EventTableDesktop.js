@@ -9,8 +9,9 @@ import collect from "collect.js";
 import TableHeadingSort from "../../components/TableHeadingSort";
 import Icon from "../../components/Icon";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
-const EventTableDesktop = ({ events, sortFilterForm }) => {
+const EventTableDesktop = ({ events, sortFilterForm, pagination }) => {
     const { route } = useRoute();
 
     const headings = collect({
@@ -57,6 +58,7 @@ const EventTableDesktop = ({ events, sortFilterForm }) => {
                     </TableCell>
                 </tr>
             ))}
+            pagination={<Pagination details={pagination} />}
         />
     );
 }

@@ -15,7 +15,7 @@ import EmptyState from "../../components/EmptyState";
 import ImportSingersDialog from "../../components/ImportSingersDialog";
 import useRoute from "../../hooks/useRoute";
 
-const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles }) => {
+const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const [showImportDialog, setShowImportDialog] = useState(false);
     const { can } = usePage().props;
@@ -71,8 +71,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
                         closeFn={() => setShowFilters(false)}
                     />
                 }
-                tableMobile={<SingerTableMobile singers={allSingers} />}
-                tableDesktop={<SingerTableDesktop singers={allSingers} sortFilterForm={sortFilterForm} />}
+                tableMobile={<SingerTableMobile singers={allSingers} pagination={pagination} />}
+                tableDesktop={<SingerTableDesktop singers={allSingers} sortFilterForm={sortFilterForm} pagination={pagination} />}
                 emptyState={allSingers.length === 0
                     ? <EmptyState
                         title="No singers"

@@ -2,9 +2,10 @@ import React from 'react';
 import TableMobile, {TableMobileLink} from "../../../components/TableMobile";
 import DateTag from "../../../components/DateTag";
 import BillingTag from "./BillingTag";
+import Pagination from '../../../components/Pagination';
 
-const TenantTableMobile = ({ tenants }) => (
-    <TableMobile>
+const TenantTableMobile = ({ tenants, pagination }) => (
+    <TableMobile pagination={<Pagination details={pagination} />}>
         {tenants.map((tenant) => (
             <li key={tenant.id} className="flex pl-4">
                 <TableMobileLink url={route('central.tenants.show', {tenant})}>

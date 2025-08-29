@@ -14,7 +14,7 @@ import useSortFilterForm from "../../hooks/useSortFilterForm";
 import EmptyState from "../../components/EmptyState";
 import useRoute from "../../hooks/useRoute";
 
-const Index = ({ events, eventTypes }) => {
+const Index = ({ events, eventTypes, pagination }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const { can } = usePage().props;
     const { route } = useRoute();
@@ -68,8 +68,8 @@ const Index = ({ events, eventTypes }) => {
                         closeFn={() => setShowFilters(false)}
                     />
                 }
-                tableMobile={<EventTableMobile events={events} />}
-                tableDesktop={<EventTableDesktop events={events} sortFilterForm={sortFilterForm} />}
+                tableMobile={<EventTableMobile events={events} pagination={pagination} />}
+                tableDesktop={<EventTableDesktop events={events} sortFilterForm={sortFilterForm} pagination={pagination} />}
                 emptyState={events.length === 0
                     ? <EmptyState
                         title="No events"

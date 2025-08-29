@@ -6,12 +6,13 @@ import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import EventType from "../../EventType";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
-const EventTableMobile = ({ events }) => {
+const EventTableMobile = ({ events, pagination }) => {
     const { route } = useRoute();
 
     return (
-        <TableMobile>
+        <TableMobile pagination={<Pagination details={pagination} />}>
             {events.map((event) => (
                 <TableMobileItem key={event.id} url={route('events.show', {event})}>
                     <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">

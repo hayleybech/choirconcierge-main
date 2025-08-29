@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\Task;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,10 +18,11 @@ class TaskController extends Controller
         $this->authorizeResource(Task::class);
     }
 
-    public function index(): View|Response
+    public function index(Request $request): View|Response
     {
         return Inertia::render('Tasks/Index', [
-            'tasks' => Task::all()->values(),
+            'tasks' => Task::query()
+                ->paginate(20)->appends($request->query()),
         ]);
     }
 

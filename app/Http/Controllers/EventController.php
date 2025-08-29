@@ -9,6 +9,7 @@ use App\Models\EventType;
 use App\Models\Membership;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,8 +29,10 @@ class EventController extends Controller
 
     public function index(Request $request): Response
     {
+        $pagination = $this->getEvents();
         return Inertia::render('Events/Index', [
-            'events' => $this->getEvents()->append(['is_repeat_parent'])->values(),
+            'events' => $pagination->getCollection()->append(['is_repeat_parent']),
+            'pagination' => $pagination,
             'eventTypes' => EventType::all()->values(),
         ]);
     }
@@ -132,7 +135,7 @@ class EventController extends Controller
             ->with(['status' => 'Event deleted. ']);
     }
 
-    private function getEvents(): Collection
+    private function getEvents(): LengthAwarePaginator
     {
         return QueryBuilder::for(Event::class)
             ->allowedFilters([
@@ -156,6 +159,6 @@ class EventController extends Controller
                 'created_at',
             ])
             ->defaultSort('start_date')
-            ->get();
+            ->paginate(50)->appends(request()->query());
     }
 }
