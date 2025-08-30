@@ -180,6 +180,11 @@ class UserGroup extends Model
         return $this->morphedByMany(SingerCategory::class, 'sender', 'group_senders', 'group_id');
     }
 
+    public function mail_log_events(): HasMany
+    {
+        return $this->hasMany(MailLogEvent::class);
+    }
+
     public function getEmailAttribute(): string
     {
         return $this->slug.'@'.$this->tenant->host;

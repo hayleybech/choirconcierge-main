@@ -20,7 +20,7 @@ const Show = ({ status, orgAdmins, isMember }) => {
 
     const description = {
         402: 'Your organisation\'s subscription has expired. ',
-        403: 'Sorry, you are forbidden from accessing this page.',
+        403: 'Sorry, you are forbidden from accessing this page, or the link has expired.',
         404: 'Sorry, the page you are looking for could not be found.',
         500: 'Whoops, something went wrong on our servers.',
         503: 'Sorry, we are doing some maintenance. Please check back soon.',
@@ -36,6 +36,7 @@ const Show = ({ status, orgAdmins, isMember }) => {
     const callToAction = {
         402: "One of your admins or someone from your accounts team will need to contact us. ",
         403: <>
+            Check that the link is correct. <br />
             If you think you should be allowed here, <br />
             please contact one of your organisation's admins.
         </>,

@@ -16,7 +16,7 @@ export const TableCell = ({ colSpan, children }) => (
     </td>
 );
 
-const Table = ({ headings, body }) => (
+const Table = ({ headings, body, pagination }) => (
     <div className="-my-2 overflow-x-auto">
         <div className="py-2 align-middle inline-block min-w-full">
             <div className="shadow overflow-hidden border-b border-gray-200">
@@ -30,6 +30,7 @@ const Table = ({ headings, body }) => (
                         {body}
                     </tbody>
                 </table>
+                {pagination}
             </div>
         </div>
     </div>

@@ -53,9 +53,9 @@ const AttendanceReport = ({
                 actions={[filterAction]}
             />
 
-            <div className="flex flex-col overflow-auto lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300">
+            <div className="flex flex-col overflow-auto lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300 h-full">
                 {showFilters && (
-                  <div className="lg:w-1/5 xl:w-1/6 lg:z-10">
+                  <div className="lg:w-1/5 xl:w-1/6 lg:z-10 h-full">
                     <FilterSortPane
                       filters={<AttendanceReportFilters eventTypes={eventTypes} form={sortFilterForm} />}
                       closeFn={() => setShowFilters(false)}

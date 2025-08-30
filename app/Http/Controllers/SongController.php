@@ -11,6 +11,7 @@ use App\Models\SongStatus;
 use App\Models\VoicePart;
 use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
@@ -41,7 +42,7 @@ class SongController extends Controller
         $showForProspectsDefault = $includeNonAuditionSongs ? [false, true] : [true];
 
         return Inertia::render('Songs/Index', [
-            'songs' => $this->getSongs($includePending, $defaultStatuses, $includeNonAuditionSongs, $showForProspectsDefault)->values(),
+            'songs' => $this->getSongs($includePending, $defaultStatuses, $includeNonAuditionSongs, $showForProspectsDefault),
             'statuses' => SongStatus::query()
                 ->when(! $includePending, fn ($query) => $query->where('title', '!=', 'Pending'))
                 ->get()
@@ -162,7 +163,7 @@ class SongController extends Controller
             ->with(['status' => 'Song deleted. ']);
     }
 
-    private function getSongs(bool $includePending, array $defaultStatuses, bool $includeNonAuditionSongs, array $showForProspectsDefault): array|Collection
+    private function getSongs(bool $includePending, array $defaultStatuses, bool $includeNonAuditionSongs, array $showForProspectsDefault): LengthAwarePaginator
     {
         return QueryBuilder::for(Song::class)
             ->allowedFilters([
@@ -181,6 +182,6 @@ class SongController extends Controller
                 'created_at',
                 AllowedSort::custom('status-title', new SongStatusSort(), 'title'),
             ])
-            ->get();
+            ->paginate(50)->appends(request()->query());
     }
 }

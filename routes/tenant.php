@@ -12,6 +12,8 @@ use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\EnsembleController;
 use App\Http\Controllers\EventActivityController;
 use App\Http\Controllers\EventCalendarController;
+use App\Http\Controllers\EventCheckInController;
+use App\Http\Controllers\EventCheckInKioskController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\ExportMemberController;
@@ -22,6 +24,7 @@ use App\Http\Controllers\ImpersonateUserController;
 use App\Http\Controllers\ImportSingerController;
 use App\Http\Controllers\LearningStatusController;
 use App\Http\Controllers\MailboxController;
+use App\Http\Controllers\MailLogController;
 use App\Http\Controllers\MoveActivityController;
 use App\Http\Controllers\RecurringEventController;
 use App\Http\Controllers\RiserStackController;
@@ -144,6 +147,10 @@ Route::middleware([
                 Route::put('{mode}', 'update')->name('update');
                 Route::get('delete/{mode}', 'destroy')->name('delete');
             });
+
+        Route::resource('events.check-ins', EventCheckInController::class)->only(['index', 'store'])->middleware('signed');
+        Route::resource('events.kiosk-check-ins', EventCheckInKioskController::class)->only(['index', 'store']);
+
         Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
         Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
         Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
@@ -194,6 +201,9 @@ Route::middleware([
         });
 
         // Mailing Lists (User Groups) module
+        Route::prefix('groups')->name('groups.')->group(function () {
+            Route::resource('mail-logs', MailLogController::class)->only(['index', 'show'])->middleware(EnsureUserIsMember::class);
+        });
         Route::get('/groups/broadcasts/create', [BroadcastController::class, 'create'])->name('groups.broadcasts.create');
         Route::post('/groups/broadcasts', [BroadcastController::class, 'store'])->name('groups.broadcasts.store');
         Route::resource('groups', UserGroupController::class);

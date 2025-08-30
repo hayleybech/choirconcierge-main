@@ -2,6 +2,7 @@ import React from 'react';
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
 import Icon from "../../components/Icon";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
 const MailingListTableMobile = ({ lists }) => {
     const { route } = useRoute();
@@ -13,8 +14,8 @@ const MailingListTableMobile = ({ lists }) => {
     }
 
     return (
-        <TableMobile>
-            {lists.map((list) => (
+        <TableMobile pagination={<Pagination details={lists} />}>
+            {lists.data.map((list) => (
                 <TableMobileItem key={list.id} url={route('groups.show', {group: list.id})}>
                     <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
                         <div className="flex items-center justify-between">

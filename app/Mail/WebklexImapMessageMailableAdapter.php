@@ -9,7 +9,6 @@ use Webklex\PHPIMAP\Message;
 class WebklexImapMessageMailableAdapter implements MailableInterface
 {
     private Message $message;
-
     public function __construct(Message $message)
     {
         $this->message = $message;
@@ -18,6 +17,10 @@ class WebklexImapMessageMailableAdapter implements MailableInterface
     public function toMailable(): Mailable
     {
         $mailable = new IncomingMessage();
+
+        $mailable->uid = 'inbound-'.$this->message->getUid();
+        $mailable->has_attachments = $this->message->hasAttachments();
+        $mailable->received_at = $this->message->getDate()->first();
 
         $mailable->to(
             collect($this->message->getTo()?->all() ?? [])->map(fn ($to) => ['email' => $to->mail, 'name' => $to->personal ?? '']),
@@ -33,7 +36,7 @@ class WebklexImapMessageMailableAdapter implements MailableInterface
             ),
         );
 
-        $mailable->subject($this->message->getSubject());
+        $mailable->subject($this->message->getSubject()->first());
 
         $mailable->content_text = $this->message->getTextBody();
         $mailable->content_html = $this->message->getHTMLBody();

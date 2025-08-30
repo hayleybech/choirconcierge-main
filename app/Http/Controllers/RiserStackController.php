@@ -21,7 +21,8 @@ class RiserStackController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('RiserStacks/Index', [
-            'stacks' => RiserStack::all()->values(),
+            'stacks' => RiserStack::query()
+                ->paginate(20)->appends($request->query()),
         ]);
     }
 

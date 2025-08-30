@@ -31,7 +31,7 @@ const Index = ({ tasks }) => {
             <IndexContainer
                 tableDesktop={<TaskTableDesktop tasks={tasks} />}
                 tableMobile={<TaskTableMobile tasks={tasks} />}
-                emptyState={tasks.length === 0
+                emptyState={tasks.data.length === 0
                     ? <EmptyState
                         title="No onboarding tasks"
                         description={<>

@@ -5,6 +5,7 @@ import TableMobile, {TableMobileLink} from "../../components/TableMobile";
 import SongStatus from "../../SongStatus";
 import {Synth} from "tone";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
 const SongTableMobile = ({ songs }) => {
     const { route } = useRoute();
@@ -12,8 +13,8 @@ const SongTableMobile = ({ songs }) => {
     const [synth] = useState(() => new Synth().toDestination());
 
     return (
-        <TableMobile>
-            {songs.map((song) => (
+        <TableMobile pagination={<Pagination details={songs} />}>
+            {songs.data.map((song) => (
                 <li key={song.id} className="flex pl-4">
                     <div className="shrink-0 py-3">
                         <PitchButton synth={synth} note={song.pitch.split('/')[0]} size="sm" />

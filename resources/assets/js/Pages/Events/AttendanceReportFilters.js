@@ -18,7 +18,7 @@ const AttendanceReportFilters = ({ eventTypes, form }) => (
                 />
             </fieldset>
 
-            <fieldset>
+            <fieldset className="relative z-[2]">
                 <legend className="text-sm font-medium text-gray-700">Events After</legend>
                 <DateInput
                   name="starts_after"
@@ -27,7 +27,7 @@ const AttendanceReportFilters = ({ eventTypes, form }) => (
                 />
             </fieldset>
 
-          <fieldset>
+          <fieldset className="relative z-[1]">
             <legend className="text-sm font-medium text-gray-700">Events Before</legend>
             <DateInput
               name="starts_before"

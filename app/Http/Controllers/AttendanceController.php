@@ -9,6 +9,7 @@ use App\Models\Membership;
 use App\Models\VoicePart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -43,6 +44,9 @@ class AttendanceController extends Controller
         return Inertia::render('Events/Attendance/Index', [
             'event' => $event,
             'voice_parts' => $voice_parts->values(),
+            'individualCheckInUrl' => auth()->user()->can('create', Attendance::class)
+                ? URL::temporarySignedRoute('events.check-ins.index', $event->end_date, ['event' => $event])
+                : '',
         ]);
     }
 

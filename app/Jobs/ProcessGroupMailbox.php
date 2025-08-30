@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Mail\IncomingMailbox;
 use App\Mail\IncomingMessage;
 use App\Mail\WebklexImapMessageMailableAdapter;
+use App\Models\MailLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -38,9 +39,24 @@ class ProcessGroupMailbox implements ShouldQueue
 	{
 		$this->mailbox->getMessages()
 			->each(function (Message $message) {
-				/** @var IncomingMessage $incomingMessage */
 
+                if(MailLog::query()->where('uid', $message->getUid())->exists()) {
+                    $message->delete();
+
+                    return;
+                }
+
+				/** @var IncomingMessage $incomingMessage */
 				$incomingMessage = (new WebklexImapMessageMailableAdapter($message))->toMailable();
+
+                /**
+                 * Consider also tracking:
+                 * - sender
+                 * - reply_to
+                 */
+                MailLog::createFromMessage($incomingMessage)->events()->create([
+                    'status' => 'pending',
+                ]);
 
 				// @todo update to Laravel 10+ log format (no need for sprintf)
 				Log::info(
@@ -58,7 +74,7 @@ class ProcessGroupMailbox implements ShouldQueue
 
                 $incomingMessage->resendToGroups();
 
-                $message->delete(true);
+                $message->delete();
         });
 	}
 }

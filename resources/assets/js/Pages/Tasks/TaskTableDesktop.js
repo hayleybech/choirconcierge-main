@@ -4,6 +4,7 @@ import Table, {TableCell} from "../../components/Table";
 import DateTag from "../../components/DateTag";
 import collect from "collect.js";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
 const TaskTableDesktop = ({ tasks }) => {
     const { route } = useRoute();
@@ -17,8 +18,9 @@ const TaskTableDesktop = ({ tasks }) => {
 
     return (
         <Table
+            pagination={<Pagination details={tasks} />}
             headings={headings}
-            body={tasks.map((task) => (
+            body={tasks.data.map((task) => (
                 <tr key={task.id}>
                     <TableCell>
                         <div className="flex items-center">

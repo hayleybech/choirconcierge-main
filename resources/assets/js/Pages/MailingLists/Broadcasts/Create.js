@@ -73,7 +73,7 @@ const Create = ({ lists }) => {
     
                             <div className="sm:col-span-6">
                                 <Label label="Body" forInput="body" />
-                                <RichTextInput value={data.body} updateFn={value => setData(data => ({ ...data, body: value }))} />
+                                <RichTextInput value={data.body} updateFn={value => setData(data => ({ ...data, body: value }))} max={5000} />
                                 {errors.body && <Error>{errors.body}</Error>}
                             </div>
 

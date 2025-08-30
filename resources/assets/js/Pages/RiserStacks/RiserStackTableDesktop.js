@@ -4,6 +4,7 @@ import Table, {TableCell} from "../../components/Table";
 import DateTag from "../../components/DateTag";
 import collect from "collect.js";
 import useRoute from "../../hooks/useRoute";
+import Pagination from '../../components/Pagination';
 
 const RiserStackTableDesktop = ({ stacks }) => {
     const { route } = useRoute();
@@ -15,8 +16,9 @@ const RiserStackTableDesktop = ({ stacks }) => {
 
     return (
         <Table
+            pagination={<Pagination details={stacks} />}
             headings={headings}
-            body={stacks.map((stack) => (
+            body={stacks.data.map((stack) => (
                 <tr key={stack.id}>
                     <TableCell>
                         <div className="flex items-center">

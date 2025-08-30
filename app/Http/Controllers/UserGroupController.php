@@ -8,6 +8,7 @@ use App\Models\SingerCategory;
 use App\Models\UserGroup;
 use App\Models\VoicePart;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,10 +22,12 @@ class UserGroupController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return Inertia::render('MailingLists/Index', [
-            'lists' => UserGroup::with('tenant')->orderBy('title')->get()->values(),
+            'lists' => UserGroup::with('tenant')
+                ->orderBy('title')
+                ->paginate(20)->appends($request->query()),
         ]);
     }
 

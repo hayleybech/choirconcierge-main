@@ -5,11 +5,13 @@ namespace Tests\Unit\Mail;
 use App\Mail\IncomingMessage;
 use App\Mail\WebklexImapMessageMailableAdapter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Mockery\MockInterface;
 use Tests\TestCase;
 use Webklex\PHPIMAP\Address;
 use Webklex\PHPIMAP\Attribute;
 use Webklex\PHPIMAP\Message;
+use Webklex\PHPIMAP\Support\AttachmentCollection;
 
 /**
  * @see \App\Mail\WebklexImapMessageMailableAdapter
@@ -117,13 +119,16 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
         );
 
         return $this->mock(Message::class, function (MockInterface $mock) use ($recipients) {
+            $mock->shouldReceive('getUid')->andReturn(Str::uuid());
+            $mock->shouldReceive('getDate')->andReturn(new Attribute('date', now()));
             $mock->shouldReceive('getTo')->andReturn(new Attribute('to', $recipients['to']));
             $mock->shouldReceive('getCc')->andReturn(new Attribute('cc', $recipients['cc']));
             $mock->shouldReceive('getFrom')->andReturn(new Attribute('from', $recipients['from']));
             $mock->shouldReceive('getSubject')->andReturn(new Attribute('subject', 'A Test Subject'));
             $mock->shouldReceive('getTextBody')->andReturn('Hello');
             $mock->shouldReceive('getHTMLBody')->andReturn('<html>Hello</html>');
-            $mock->shouldReceive('getAttachments')->andReturn([]);
+            $mock->shouldReceive('getAttachments')->andReturn(new AttachmentCollection([]));
+            $mock->shouldReceive('hasAttachments')->andReturn(false);
         });
     }
 
