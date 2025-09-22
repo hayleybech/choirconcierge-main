@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App;
 use App\Mail\Welcome;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
@@ -270,6 +271,10 @@ class User extends Authenticatable implements HasMedia
 
     public function subscribeToAlerts(): void
     {
+        if(! App::environment(['local', 'production'])) {
+            return;
+        }
+
         try {
             Mailgun::create(config('services.mailgun.api_key'))
                 ->mailingList()
@@ -282,6 +287,10 @@ class User extends Authenticatable implements HasMedia
 
     public function unsubscribeFromAlerts(): void
     {
+        if(! App::environment(['local', 'production'])) {
+            return;
+        }
+
         try {
             Mailgun::create(config('services.mailgun.api_key'))
                 ->mailingList()
