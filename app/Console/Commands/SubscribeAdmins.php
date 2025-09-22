@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
 use Mailgun\Mailgun;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
@@ -30,6 +31,10 @@ class SubscribeAdmins extends Command
      */
     public function handle(): int
     {
+        if(! App::environment(['local', 'production'])) {
+            return CommandAlias::SUCCESS;
+        }
+
         Mailgun::create(config('services.mailgun.api_key'))
             ->mailingList()
             ->member()
