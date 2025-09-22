@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use Mailgun\Mailgun;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -77,6 +78,11 @@ class SingerController extends Controller
         $singer->initOnboarding();
         $singer->save();
 
+        $adminRoleId = Role::where('name', 'Admin')->value('id');
+        if(!$singer->hasRole('Admin') && Arr::has($request->validated('user_roles', []), $adminRoleId)) {
+            $singer->user->subscribeToAlerts();
+        }
+
         User::sendWelcomeEmail($user);
 
         return redirect()
@@ -126,6 +132,14 @@ class SingerController extends Controller
 
     public function update(Membership $singer, EditSingerRequest $request): RedirectResponse
     {
+        $adminRoleId = Role::where('name', 'Admin')->value('id');
+        if($singer->hasRole('Admin') && ! Arr::has($request->validated('user_roles', []), $adminRoleId)) {
+            $singer->user->unsubscribeFromAlerts();
+        }
+        if(!$singer->hasRole('Admin') && Arr::has($request->validated('user_roles', []),$adminRoleId)) {
+            $singer->user->subscribeToAlerts();
+        }
+
         $singer->update($request->safe()
             ->merge(['user_roles' => array_merge(
                 $request->validated('user_roles', []),
