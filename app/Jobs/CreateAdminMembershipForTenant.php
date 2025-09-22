@@ -54,6 +54,8 @@ class CreateAdminMembershipForTenant implements ShouldQueue
 		]);
 
 	    $this->tenant->members()->save($member);
+
+        $admin->subscribeToAlerts();
     }
 
 	public function getAdminUser(?string $adminId)
