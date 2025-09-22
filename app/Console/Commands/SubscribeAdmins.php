@@ -40,9 +40,10 @@ class SubscribeAdmins extends Command
             ->member()
             ->createMultiple(
                 config('services.mailgun.lists.alerts'),
-                User::whereHas('memberships.roles', function ($query) {
-                    $query->where('name', 'Admin');
-                })->select(['email', 'first_name', 'last_name'])
+                User::whereHas('memberships', fn ($query) => $query
+                    ->whereHas('roles', fn ($query) => $query->where('name', 'Admin'))
+                    ->whereHas('tenant', fn ($query) => $query->active())
+                )->select(['email', 'first_name', 'last_name'])
                     ->get()
                     ->map(fn($user) => [
                         'address' => $user->email,
