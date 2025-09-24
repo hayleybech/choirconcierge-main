@@ -18,6 +18,12 @@ return [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+
+        // Used for Mailgun PHP SDK, for subscriptions etc
+        'api_key' => env('MAILGUN_API_KEY'),
+        'lists' => [
+            'alerts' => env('MAIL_LIST_ADDRESS_ALERTS'),
+        ]
     ],
 
     'ses' => [

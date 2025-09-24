@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App;
 use App\Mail\Welcome;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,6 +21,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Mailgun\Mailgun;
+use Sentry;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -264,5 +267,37 @@ class User extends Authenticatable implements HasMedia
 
         // Send email
         Mail::send(new Welcome($user, $token));
+    }
+
+    public function subscribeToAlerts(): void
+    {
+        if(! App::environment(['local', 'production'])) {
+            return;
+        }
+
+        try {
+            Mailgun::create(config('services.mailgun.api_key'))
+                ->mailingList()
+                ->member()
+                ->create(config('services.mailgun.lists.alerts'), $this->email, $this->name);
+        } catch (\Exception $e) {
+            Sentry::captureException($e);
+        }
+    }
+
+    public function unsubscribeFromAlerts(): void
+    {
+        if(! App::environment(['local', 'production'])) {
+            return;
+        }
+
+        try {
+            Mailgun::create(config('services.mailgun.api_key'))
+                ->mailingList()
+                ->member()
+                ->delete(config('services.mailgun.lists.alerts'), $this->email);
+        } catch (\Exception $e) {
+            Sentry::captureException($e);
+        }
     }
 }
