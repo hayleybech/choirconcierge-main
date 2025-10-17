@@ -26,28 +26,28 @@ use Webklex\PHPIMAP\Message;
  */
 class ProcessGroupMailbox implements ShouldQueue
 {
-	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-	private IncomingMailbox $mailbox;
+    private IncomingMailbox $mailbox;
 
-	public function __construct(IncomingMailbox $mailbox)
-	{
-		$this->mailbox = $mailbox;
-	}
+    public function __construct(IncomingMailbox $mailbox)
+    {
+        $this->mailbox = $mailbox;
+    }
 
-	public function handle(): void
-	{
-		$this->mailbox->getMessages()
-			->each(function (Message $message) {
+    public function handle(): void
+    {
+        $this->mailbox->getMessages()
+            ->each(function (Message $message) {
 
-                if(MailLog::query()->where('uid', $message->getUid())->exists()) {
+                if ($this->isDuplicateEmail($message) || MailLog::query()->where('uid', $message->getUid())->exists()) {
                     $message->delete();
 
                     return;
                 }
 
-				/** @var IncomingMessage $incomingMessage */
-				$incomingMessage = (new WebklexImapMessageMailableAdapter($message))->toMailable();
+                /** @var IncomingMessage $incomingMessage */
+                $incomingMessage = (new WebklexImapMessageMailableAdapter($message))->toMailable();
 
                 /**
                  * Consider also tracking:
@@ -58,23 +58,35 @@ class ProcessGroupMailbox implements ShouldQueue
                     'status' => 'pending',
                 ]);
 
-				// @todo update to Laravel 10+ log format (no need for sprintf)
-				Log::info(
-					sprintf(
-						'Processing inbound message: "%s" to: <%s> from: <%s>',
-						$incomingMessage->subject,
-						collect($incomingMessage->to)
-							->map(fn($to) => $to['address'])
-							->join(', '),
-						collect($incomingMessage->from)
-							->map(fn($from) => $from['address'])
-							->join(', ')
-					)
-				);
+                // @todo update to Laravel 10+ log format (no need for sprintf)
+                Log::info(
+                    sprintf(
+                        'Processing inbound message: "%s" to: <%s> from: <%s>',
+                        $incomingMessage->subject,
+                        collect($incomingMessage->to)
+                            ->map(fn($to) => $to['address'])
+                            ->join(', '),
+                        collect($incomingMessage->from)
+                            ->map(fn($from) => $from['address'])
+                            ->join(', ')
+                    )
+                );
 
                 $incomingMessage->resendToGroups();
 
                 $message->delete();
-        });
-	}
+            });
+    }
+
+    private function isDuplicateEmail(Message $message): bool
+    {
+        return collect($message->getCc()?->all())
+            ->map(fn(object $recipientCc) => $recipientCc->mail)
+            ->intersect(
+                collect([...$message->getTo()->all(), ...$message->getFrom()->all()])
+                    ->map(fn(object $recipientToOrFrom) => $recipientToOrFrom->mail)
+            )
+            ->isNotEmpty();
+    }
 }
+

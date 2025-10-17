@@ -21,10 +21,10 @@ class Kernel extends ConsoleKernel
             ->sentryMonitor('process-group-mailbox')
 	        ->thenPing(config('app.heartbeats.process_group_mailbox'));
 
-        $schedule->job(ClearDuplicateEmails::class)
-	        ->daily()
-            ->sentryMonitor('clear-duplicate-emails')
-            ->thenPing(config('app.heartbeats.clear_duplicate_emails'));
+//        $schedule->job(ClearDuplicateEmails::class)
+//	        ->daily()
+//            ->sentryMonitor('clear-duplicate-emails')
+//            ->thenPing(config('app.heartbeats.clear_duplicate_emails'));
 
         $schedule->command('telescope:prune --hours=72')
             ->daily()
