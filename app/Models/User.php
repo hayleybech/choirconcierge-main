@@ -116,7 +116,7 @@ class User extends Authenticatable implements HasMedia
 
     protected $with = ['media', 'membership.roles'];
 
-    public $dates = ['updated_at', 'created_at', 'last_login', 'dob'];
+    public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'last_login' => 'datetime', 'dob' => 'datetime'];
 
     protected $appends = ['name', 'avatar_url', 'profile_avatar_url', 'bha_type'];
 
@@ -131,7 +131,7 @@ class User extends Authenticatable implements HasMedia
 
     public function update(array $attributes = [], array $options = [])
     {
-        if (array_key_exists('password', $attributes) && ! $attributes['password']) {
+        if (array_key_exists('password', $attributes) && !$attributes['password']) {
             unset($attributes['password']);
         } else {
             $attributes['password'] = Hash::make($attributes['password']);
@@ -201,13 +201,13 @@ class User extends Authenticatable implements HasMedia
 
     public function getNameAttribute(): string
     {
-        return $this->first_name.' '.$this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function bhaType(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) =>  $attributes['dob']
+            get: fn($value, $attributes) => $attributes['dob']
                 ? Carbon::make($attributes['dob'])->diffInYears(now()->startOfYear()) > 25 ? 'Full' : 'Youth'
                 : ''
         );
@@ -215,7 +215,7 @@ class User extends Authenticatable implements HasMedia
 
     public function isSuperAdmin(): Attribute
     {
-        return Attribute::get(fn ($value, $attributes) => $attributes['email'] === 'hayleybech@gmail.com');
+        return Attribute::get(fn($value, $attributes) => $attributes['email'] === 'hayleybech@gmail.com');
     }
 
     public function registerMediaCollections(): void
@@ -223,7 +223,7 @@ class User extends Authenticatable implements HasMedia
         $this->addMediaCollection('avatar')
             ->singleFile()
             ->acceptsMimeTypes(['image/jpeg', 'image/png'])
-            ->useFallbackUrl('https://api.dicebear.com/7.x/initials/svg?seed='.$this->name.'&backgroundColor=200142&backgroundType=gradientLinear&fontSize=40')
+            ->useFallbackUrl('https://api.dicebear.com/7.x/initials/svg?seed=' . $this->name . '&backgroundColor=200142&backgroundType=gradientLinear&fontSize=40')
             ->registerMediaConversions(function (Media $media) {
                 $this->addMediaConversion('thumb')
                     ->width(50)
@@ -238,7 +238,7 @@ class User extends Authenticatable implements HasMedia
 
     public function getAvatarUrl(string $conversion): string
     {
-        if (! $this->hasMedia('avatar')) {
+        if (!$this->hasMedia('avatar')) {
             return $this->getFallbackMediaUrl('avatar');
         }
 
@@ -271,7 +271,7 @@ class User extends Authenticatable implements HasMedia
 
     public function subscribeToAlerts(): void
     {
-        if(! App::environment(['local', 'production'])) {
+        if (!App::environment(['local', 'production'])) {
             return;
         }
 
@@ -287,7 +287,7 @@ class User extends Authenticatable implements HasMedia
 
     public function unsubscribeFromAlerts(): void
     {
-        if(! App::environment(['local', 'production'])) {
+        if (!App::environment(['local', 'production'])) {
             return;
         }
 

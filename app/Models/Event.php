@@ -91,10 +91,15 @@ class Event extends Model
 
     protected $with = ['type'];
 
-    public $dates = ['updated_at', 'created_at', 'start_date', 'end_date', 'call_time', 'repeat_until', 'deleted_at'];
-
     protected $casts = [
         'is_repeating' => 'boolean',
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'call_time' => 'datetime',
+        'repeat_until' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     private ?Link $_add_to_calendar_link;

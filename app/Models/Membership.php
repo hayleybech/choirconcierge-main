@@ -59,20 +59,20 @@ class Membership extends Model
 {
     use Notifiable, BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
-	protected $fillable = [
-		'user_id',
-		'onboarding_enabled',
-		'reason_for_joining',
-		'referrer',
-		'membership_details',
-		'joined_at',
-		'paid_until',
-		'singer_category_id',
-	];
+    protected $fillable = [
+        'user_id',
+        'onboarding_enabled',
+        'reason_for_joining',
+        'referrer',
+        'membership_details',
+        'joined_at',
+        'paid_until',
+        'singer_category_id',
+    ];
 
     protected $with = [];
 
-    public $dates = ['updated_at', 'created_at', 'joined_at', 'paid_until'];
+    public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'joined_at' => 'datetime', 'paid_until' => 'datetime'];
 
     protected $appends = [];
 
@@ -89,24 +89,24 @@ class Membership extends Model
         $singer->roles()->sync($singer_roles);
         $singer->save();
 
-		$singer->addDefaultEnrolment();
+        $singer->addDefaultEnrolment();
 
-	    return $singer;
+        return $singer;
     }
 
-	// Add default enrolment (if only one ensemble)
-	public function addDefaultEnrolment(): void
-	{
-		if (Ensemble::count() !== 1) {
-			return;
-		}
+    // Add default enrolment (if only one ensemble)
+    public function addDefaultEnrolment(): void
+    {
+        if (Ensemble::count() !== 1) {
+            return;
+        }
 
-		$this->enrolments()->create([
-			'ensemble_id' => Ensemble::first()->id,
-		]);
-	}
+        $this->enrolments()->create([
+            'ensemble_id' => Ensemble::first()->id,
+        ]);
+    }
 
-	public function update(array $attributes = [], array $options = [])
+    public function update(array $attributes = [], array $options = [])
     {
         parent::update($attributes, $options);
 
@@ -126,7 +126,7 @@ class Membership extends Model
         $category_name = $this->onboarding_enabled ? 'Prospects' : 'Members';
         $this->category()->associate(SingerCategory::firstWhere('name', '=', $category_name));
 
-        if (! $this->onboarding_enabled) {
+        if (!$this->onboarding_enabled) {
             return;
         }
         $tasks = Task::all();
@@ -213,17 +213,17 @@ class Membership extends Model
         return $this->joined_at->copy()->year(now()->year);
     }
 
-	public function feeStatus(): Attribute
-	{
-		return Attribute::make(
-			get: fn ($value, $attributes) => match(true) {
-				! isset($attributes['paid_until']) => 'unknown',
-				Carbon::make($attributes['paid_until'])->isPast() => 'expired',
-				Carbon::make($attributes['paid_until'])->between(now(), now()->addMonth()) => 'expires-soon',
-				default => 'paid',
-			}
-		);
-	}
+    public function feeStatus(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => match (true) {
+                !isset($attributes['paid_until']) => 'unknown',
+                Carbon::make($attributes['paid_until'])->isPast() => 'expired',
+                Carbon::make($attributes['paid_until'])->between(now(), now()->addMonth()) => 'expires-soon',
+                default => 'paid',
+            }
+        );
+    }
 
     public function scopeEmptyDobs(Builder $query): Builder
     {
@@ -260,7 +260,7 @@ class Membership extends Model
 
     public function hasAbility(string $ability): bool
     {
-        return $this->roles->contains(fn (Role $role) => collect($role->abilities)->contains($ability));
+        return $this->roles->contains(fn(Role $role) => collect($role->abilities)->contains($ability));
     }
 
     /**
