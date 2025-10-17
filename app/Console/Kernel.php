@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->job(ProcessGroupMailbox::class)
-	        ->everyFiveMinutes()
+	        ->everyMinute()
             ->sentryMonitor('process-group-mailbox')
 	        ->thenPing(config('app.heartbeats.process_group_mailbox'));
 

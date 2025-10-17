@@ -37,7 +37,7 @@
         "symfony/http-client": "^6.0",
         "symfony/mailgun-mailer": "^6.0",
         "tightenco/ziggy": "^1.4",
-        "webklex/laravel-imap": "^4.0"
+        "webklex/laravel-imap": "^5.0"
     },
     "type": "project",
     "require-dev": {
@@ -48,7 +48,6 @@
         "laravel/sail": "^1.13",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
-        "nunomaduro/larastan": "^1.0",
         "pestphp/pest": "^1.21",
         "pestphp/pest-plugin-laravel": "^1.2",
         "pestphp/pest-plugin-parallel": "^1.2",
