@@ -67,5 +67,13 @@
         "snapsvg-cjs": "0.0.6",
         "tone": "^15.1.22",
         "ziggy-js": "^1.8.2"
+    },
+    "overridesComments": {
+        "react-google-places-autocomplete": "this override can be removed when upgrading to react 19"
+    },
+    "overrides": {
+        "react-google-places-autocomplete": {
+            "react-select": "4.3.1"
+        }
     }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from "../../classNames";
 import {usePage} from "@inertiajs/react";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-import { components } from 'react-select';
+// import { components } from 'react-select'; // re-enable @ react18 and react-google-places-autocomplete is in sync with react-select
 import Icon from "../Icon";
 
 const LocationInput = ({ value, hasErrors, updateFn }) => {
@@ -49,8 +49,12 @@ const LocationInput = ({ value, hasErrors, updateFn }) => {
     return <GooglePlacesAutocomplete
         apiKey={googleApiKey}
         selectProps={{
-            styles: customSelectStyles,
-            components: { Control, DropdownIndicator, SingleValue },
+            // styles: customSelectStyles,
+            components: {
+                Control,
+                DropdownIndicator,
+                SingleValue,
+            },
             value: value,
             onFocus: clear,
             onInputChange: saveManualAddress,
@@ -80,17 +84,35 @@ const Control = ({ innerRef, innerProps, selectProps, children }) => (
 );
 
 const DropdownIndicator = (props) => (
-    <components.DropdownIndicator {...props}>
+    <div className="px-2">
         {props.selectProps.menuIsOpen
          ? <div className="text-purple-800 hover:text-purple-600 cursor-pointer">Use manually-entered address</div>
          : <Icon icon="chevron-down" className="cursor-pointer" />
         }
-    </components.DropdownIndicator>
+    </div>
 );
 
+// re-enable @ react18
+// const DropdownIndicator = (props) => (
+//     <components.DropdownIndicator {...props}>
+//         {props.selectProps.menuIsOpen
+//          ? <div className="text-purple-800 hover:text-purple-600 cursor-pointer">Use manually-entered address</div>
+//          : <Icon icon="chevron-down" className="cursor-pointer" />
+//         }
+//     </components.DropdownIndicator>
+// );
+
 const SingleValue = ({ children, ...props }) => (
-    <components.SingleValue {...props}>
+    <div>
         {props.selectProps?.value?.value?.place_id && <Icon icon="map-marker-check" type="regular" mr />}
         {children}
-    </components.SingleValue>
+    </div>
 );
+
+// re-enable @ react18
+// const SingleValue = ({ children, ...props }) => (
+//     <components.SingleValue {...props}>
+//         {props.selectProps?.value?.value?.place_id && <Icon icon="map-marker-check" type="regular" mr />}
+//         {children}
+//     </components.SingleValue>
+// );

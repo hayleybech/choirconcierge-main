@@ -12,6 +12,7 @@ import useRoute from "../../../hooks/useRoute";
 import Dialog from '../../../components/Dialog';
 import { usePage } from '@inertiajs/react';
 import QRCode from 'react-qr-code';
+import DateTag from '../../../components/DateTag';
 
 const Index = ({ event, voice_parts, individualCheckInUrl }) => {
     const [absentReasons, setAbsentReasons] = useState({});
@@ -99,6 +100,9 @@ const Index = ({ event, voice_parts, individualCheckInUrl }) => {
                                             <p className="text-sm font-medium text-gray-900">{attendance.member.user.name}</p>
                                             <p className="text-sm">
                                                 <AttendanceTag label={attendance.label} icon={attendance.icon} colour={attendance.colour} />
+                                                {!!attendance.updated_at && (
+                                                    <DateTag label="Updated" date={attendance.updated_at} format="DATETIME_SHORT" className="text-gray-400" />
+                                                )}
                                                 {attendance.response.includes('absent') && attendance.absent_reason && (
                                                     <div className="text-gray-500">Reason for absence: {attendance.absent_reason}</div>
                                                 )}
