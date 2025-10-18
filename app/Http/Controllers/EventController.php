@@ -31,7 +31,7 @@ class EventController extends Controller
     {
         $pagination = $this->getEvents();
         return Inertia::render('Events/Index', [
-            'events' => $pagination->getCollection()->append(['is_repeat_parent']),
+            'events' => $pagination->getCollection()->append(['is_repeat_parent', 'my_rsvp']),
             'pagination' => $pagination,
             'eventTypes' => EventType::all()->values(),
         ]);

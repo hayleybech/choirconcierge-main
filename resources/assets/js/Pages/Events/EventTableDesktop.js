@@ -10,6 +10,7 @@ import TableHeadingSort from "../../components/TableHeadingSort";
 import Icon from "../../components/Icon";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
+import RsvpDropdown from '../../components/Event/RsvpDropdown';
 
 const EventTableDesktop = ({ events, sortFilterForm, pagination }) => {
     const { route } = useRoute();
@@ -48,10 +49,17 @@ const EventTableDesktop = ({ events, sortFilterForm, pagination }) => {
                         {event.location_name}
                     </TableCell>
                     <TableCell>
-                        {DateTime.fromJSDate(new Date(event.call_time)) < DateTime.now()
-                            ? <p>{event.present_count}&nbsp;present</p>
-                            : <p>{event.going_count}&nbsp;going</p>
-                        }
+                        <div className="flex gap-2 items-center">
+                            <div>
+                                {DateTime.fromJSDate(new Date(event.call_time)) < DateTime.now()
+                                    ? <p>{event.present_count}&nbsp;present</p>
+                                    : <p>{event.going_count}&nbsp;going</p>
+                                }
+                            </div>
+                            {DateTime.fromJSDate(new Date(event.call_time)) > DateTime.now() && (
+                                <RsvpDropdown event={event} size="xs" />
+                            )}
+                        </div>
                     </TableCell>
                     <TableCell>
                         <DateTag date={event.created_at} />

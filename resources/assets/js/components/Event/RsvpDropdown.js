@@ -8,7 +8,7 @@ import { Link } from "@inertiajs/react";
 const items = [
     { label: 'Going', key: 'yes', icon: 'check', colour: 'text-emerald-500' },
     { label: 'Not Going', key: 'no', icon: 'times', colour: 'text-gray-500' },
-    { label: 'No Response', key: 'unknown', icon: 'question', colour: 'text-red-500' },
+    { label: 'No RSVP', key: 'unknown', icon: 'question', colour: 'text-red-500' },
 ];
 
 const getItemColour = (label) => items.find(item => item.label === label)?.colour ?? 'text-gray-500';
@@ -20,7 +20,7 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
       <Menu.Button className={buttonStyles('secondary', size, '', 'relative z-0 w-full md:w-auto')}>
         <Icon icon={event.my_rsvp.icon} className={getItemColour(event.my_rsvp.label)} />
         <span className={getItemColour(event.my_rsvp.label)}>{event.my_rsvp.label}</span>
-        <Icon icon="chevron-down" className="text-gray-700" />
+        <Icon icon="chevron-down" className="text-gray-500" />
       </Menu.Button>
 
       <Transition

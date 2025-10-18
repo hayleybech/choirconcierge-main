@@ -56,7 +56,7 @@ class Rsvp extends Model
         $labels = [
             'yes' => 'Going',
             'maybe' => 'Maybe',
-            'unknown' => 'No response',
+            'unknown' => 'No RSVP',
             'no' => 'Not Going',
         ];
 
