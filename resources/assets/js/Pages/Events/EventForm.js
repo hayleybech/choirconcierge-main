@@ -114,7 +114,7 @@ const EventForm = ({ event, types, mode }) => {
     }
     function constrainCallTime(newCallTime)
     {
-        const minCallTimeBeforeStartTime = { minutes: 15 };
+        const minCallTimeBeforeStartTime = { minutes: 0 };
         if (data.start_date.minus(minCallTimeBeforeStartTime) < newCallTime) {
             return data.start_date.minus(minCallTimeBeforeStartTime);
         }
@@ -215,7 +215,7 @@ const EventForm = ({ event, types, mode }) => {
                     </div>
 
                     <div className="sm:col-span-1">
-                        <Label label="Start Time" forInput="start_time" />
+                        <Label label="Start / On Stage Time" forInput="start_time" />
                         <TimeInput
                             name="start_time"
                             value={data.start_date.toLocaleString(DateTime.TIME_24_SIMPLE)}
@@ -230,7 +230,7 @@ const EventForm = ({ event, types, mode }) => {
                             value={data.call_time.toLocaleString(DateTime.TIME_24_SIMPLE)}
                             updateFn={setCallTime}
                         />
-                        <Help>At least 15 min before</Help>
+                        <Help><strike>15 min before</strike> - Update: No longer required.</Help>
                     </div>
 
                     <div className="sm:col-span-4 relative z-10">
