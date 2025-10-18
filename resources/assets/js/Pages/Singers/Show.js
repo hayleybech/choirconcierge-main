@@ -322,6 +322,13 @@ const PersonalDetails = ({ singer }) => (
             {
                 label: 'Medical Conditions',
                 value: singer.user.medical_conditions ?? 'None listed',
+            },
+            {
+                label: '',
+                value: <span className="text-sm text-gray-500 italic">
+                        <DateTag date={singer.user.created_at} label="Profile Created" />
+                        <DateTag date={singer.user.created_at} label="Profile Updated" />
+                    </span>,
             }
         ]}/>
     </CollapsePanel>
@@ -364,7 +371,8 @@ const MembershipDetails = ({ singer }) => (
                 value: <>
                     <DateTag date={singer.joined_at} /><br />
                     <span className="text-sm text-gray-500 italic">
-                        <DateTag date={singer.created_at} label="Added" />
+                        <DateTag date={singer.created_at} label="Membership Added" />
+                        <DateTag date={singer.created_at} label="Membership Updated" />
                     </span>
                 </>,
             },
@@ -400,6 +408,9 @@ const EnrolmentDetails = ({ singer, voiceParts, ensembles }) => {
                         <div className="flex items-center gap-2">
                             <strong>{enrolment.ensemble.name}</strong>
                             {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
+                            <span className="text-sm text-gray-500 italic">
+                                <DateTag date={enrolment.created_at} label="Updated" />
+                            </span>
                         </div>
                         <div className="flex items-center gap-2">
                             {/* @todo add a more specific ability check */}

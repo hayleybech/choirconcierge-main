@@ -24,6 +24,7 @@ const Show = ({ stack }) => {
                     <>Singers on front row: {stack.front_row_length}</>,
                     <>Front row on floor: {stack.front_row_on_floor ? 'Yes' : 'No'}</>,
                     <DateTag date={stack.created_at} label="Created" />,
+                    <DateTag date={stack.updated_at} label="Updated" />,
                 ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},

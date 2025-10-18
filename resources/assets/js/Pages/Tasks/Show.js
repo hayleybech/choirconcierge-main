@@ -29,6 +29,7 @@ const Show = ({ task }) => {
                         {task.type === 'form' && <span className="text-xs ml-1.5">({task.route})</span>}
                     </>,
                     <DateTag date={task.created_at} label="Created" />,
+                    <DateTag date={task.updated_at} label="Updated" />,
                 ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},

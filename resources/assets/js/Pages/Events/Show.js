@@ -43,6 +43,7 @@ const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePar
                     <DateTag label="End" date={event.end_date} format="DATETIME_MED" />, // shorter for same day
                     <DateTag label="On Stage" date={event.start_date} format="TIME_SIMPLE" />, // hide unless music team
                     <DateTag label="Created" date={event.created_at} />,
+                    <DateTag label="Updated" date={event.updated_at} />,
                     event.is_repeating && <><Icon icon="repeat" mr /> Repeat every {event.repeat_frequency_unit}</>,
                     event.is_repeating && <DateTag label="Repeat until" date={event.repeat_until} />,
                 ]}
