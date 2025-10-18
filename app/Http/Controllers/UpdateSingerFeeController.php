@@ -15,7 +15,15 @@ class UpdateSingerFeeController extends Controller
 
         $request->validate([
             'paid_until' => ['nullable', 'sometimes', 'date'],
+            'freq' => ['nullable', 'sometimes', 'string'],
         ]);
+
+
+        if($request->input('freq')) {
+            tenant()->update([
+                'fee_freq' => $request->input('freq'),
+            ]);
+        }
 
         $singer->update(['paid_until' => $request->input('paid_until')]);
 

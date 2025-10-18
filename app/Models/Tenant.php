@@ -28,6 +28,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property Carbon $renews_at
  * @property bool $has_gratis
  * @property bool $had_demo
+ * @property string $fee_freq Memorise renew fee dialog setting
  * @property string $created_by ID of user that created the Tenant
  *
  * Attributes
