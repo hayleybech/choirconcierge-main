@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * Class MailLog
@@ -54,8 +55,8 @@ class MailLog extends Model
             'bcc' => collect($message->bcc)
                 ->map(fn($item) => $item['address'])
                 ->join(', '),
-            'subject' => $message->subject,
-            'body' => $message->getContent(),
+            'subject' => Str::limit($message->subject, 128),
+            'body' => Str::limit($message->getContent(), 5000),
             'has_attachments' => $message->getHasAttachments(),
             'received_at' => $message->getReceivedAt(),
         ]);
