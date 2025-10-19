@@ -55,8 +55,8 @@ class MailLog extends Model
             'bcc' => collect($message->bcc)
                 ->map(fn($item) => $item['address'])
                 ->join(', '),
-            'subject' => Str::limit($message->subject, 128),
-            'body' => Str::limit($message->getContent(), 5000),
+            'subject' => Str::limit($message->subject, 128-3),
+            'body' => Str::limit($message->getContent(), 5000-3),
             'has_attachments' => $message->getHasAttachments(),
             'received_at' => $message->getReceivedAt(),
         ]);
