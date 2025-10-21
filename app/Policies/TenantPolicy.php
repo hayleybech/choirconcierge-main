@@ -16,11 +16,11 @@ class TenantPolicy
             return true;
         }
 
-        if (! tenancy()->initialized && ! $user->membership) {
+        if (! $user->membership && ! tenancy()->initialized) {
             return false;
         }
 
-        if ($ability !== 'delete' && $user->membership->hasRole('Admin')) {
+        if ($ability !== 'delete' && $user->membership && $user->membership->hasRole('Admin')) {
             return true;
         }
 
