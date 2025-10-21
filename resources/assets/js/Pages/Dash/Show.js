@@ -8,7 +8,7 @@ import MemberversariesWidget from "./MemberversariesWidget";
 import ErrorAlert from "../../components/ErrorAlert";
 import WarningAlert from "../../components/WarningAlert";
 
-const Show = ({ events, songs, birthdays, emptyDobs, memberversaries, feeStatus }) => (
+const Show = ({ events, eventCategories, songs, birthdays, emptyDobs, memberversaries, feeStatus }) => (
     <>
         <AppHead title="Dashboard" />
         <div className="py-6">
@@ -19,7 +19,7 @@ const Show = ({ events, songs, birthdays, emptyDobs, memberversaries, feeStatus 
 
                 <div className="grid gap-y-6 gap-x-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
                     <div>
-                        <UpcomingEventsWidget events={events} />
+                        <UpcomingEventsWidget events={events} eventCategories={eventCategories} />
                     </div>
 
                     <div>

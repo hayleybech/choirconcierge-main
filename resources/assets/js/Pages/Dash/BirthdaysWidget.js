@@ -1,7 +1,6 @@
 import React from 'react';
-import SectionTitle from "../../components/SectionTitle";
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
-import Panel from "../../components/Panel";
+import Panel, { PanelTitle } from '../../components/Panel';
 import DateUpcomingTag from "../../components/DateUpcomingTag";
 import useRoute from "../../hooks/useRoute";
 
@@ -10,7 +9,7 @@ const BirthdaysWidget = ({ birthdays, emptyDobs }) => {
 
     return (
         <Panel
-            header={<SectionTitle>Birthdays this Month</SectionTitle>}
+            header={<PanelTitle>Birthdays this Month</PanelTitle>}
             footer={<div className="text-gray-500 text-sm">{emptyDobs} active singers have no birthdate listed.</div>}
             noPadding
         >

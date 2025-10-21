@@ -1,6 +1,6 @@
 import React from 'react';
 import SectionTitle from "../../../components/SectionTitle";
-import Panel from "../../../components/Panel";
+import Panel, { PanelTitle } from '../../../components/Panel';
 import TableMobile, {TableMobileItem} from "../../../components/TableMobile";
 import LearningStatusTag from "../../../components/Song/LearningStatusTag";
 import LearningStatus from "../../../LearningStatus";
@@ -10,7 +10,7 @@ const CentralSongsToLearnWidget = ({ songs }) => {
     const { route } = useRoute();
 
     return (
-        <Panel header={<SectionTitle>Songs to Learn</SectionTitle>} noPadding>
+        <Panel header={<PanelTitle>Songs to Learn</PanelTitle>} noPadding>
             {songs.length > 0 ? (
                 <TableMobile>
                     {songs.map((song) => (

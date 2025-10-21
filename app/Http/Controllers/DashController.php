@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\EventType;
 use App\Models\Membership;
 use App\Models\Song;
 use App\Models\User;
@@ -22,6 +23,7 @@ class DashController extends Controller
     {
         return Inertia::render('Dash/Show', [
             'events' => $this->getEvents()->values(),
+            'eventCategories' => $this->getEventCategories(),
             'songs' => $this->getSongs()->values(),
             'birthdays' => $this->getBirthdays()->values(),
             'emptyDobs' => $this->getEmptyDobs(),
@@ -45,9 +47,21 @@ class DashController extends Controller
     {
         return Event::query()
             ->whereBetween('call_time', [today(), today()->addMonth()])
+            ->whereIn('type_id',tenant('widgets_upcoming_events_categories') ?? [])
             ->orderBy('call_time')
             ->get()
             ->append(['my_rsvp']);
+    }
+
+    private function getEventCategories(): \Illuminate\Support\Collection
+    {
+        if(! auth()->user()->can('create', Event::class)) {
+            return collect();
+        }
+        return EventType::query()
+            ->select(['id', 'title'])
+            ->get()
+            ->values();
     }
 
     private function getSongs()

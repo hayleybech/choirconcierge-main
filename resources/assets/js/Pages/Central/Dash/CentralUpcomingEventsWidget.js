@@ -1,6 +1,5 @@
 import React from 'react';
-import Panel from "../../../components/Panel";
-import SectionTitle from "../../../components/SectionTitle";
+import Panel, { PanelTitle } from '../../../components/Panel';
 import TableMobile, { TableMobileLink, TableMobileListItem } from "../../../components/TableMobile";
 import DateTag from "../../../components/DateTag";
 import {DateTime} from "luxon";
@@ -16,7 +15,7 @@ const CentralUpcomingEventsWidget = ({ events }) => {
     const { can } = usePage().props;
 
     return (
-        <Panel header={<SectionTitle>Upcoming Events</SectionTitle>} noPadding>
+        <Panel header={<PanelTitle>Upcoming Events</PanelTitle>} noPadding>
             {events.length > 0 ? (
             <TableMobile>
                 {events.map((event) => (

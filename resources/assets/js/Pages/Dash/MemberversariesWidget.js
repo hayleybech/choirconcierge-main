@@ -1,7 +1,6 @@
 import React from 'react';
-import SectionTitle from "../../components/SectionTitle";
 import TableMobile, {TableMobileItem} from "../../components/TableMobile";
-import Panel from "../../components/Panel";
+import Panel, { PanelTitle } from '../../components/Panel';
 import DateUpcomingTag from "../../components/DateUpcomingTag";
 import {DateTime} from "luxon";
 import useRoute from "../../hooks/useRoute";
@@ -10,7 +9,7 @@ const MemberversariesWidget = ({ memberversaries }) => {
     const { route } = useRoute();
 
     return (
-        <Panel header={<SectionTitle>Memberversaries this Month</SectionTitle>} noPadding>
+        <Panel header={<PanelTitle>Memberversaries this Month</PanelTitle>} noPadding>
             {memberversaries.length > 0 ? (
                 <TableMobile>
                     {memberversaries.map((singer) => (

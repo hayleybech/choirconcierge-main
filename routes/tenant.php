@@ -6,6 +6,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceReportController;
 use App\Http\Controllers\CompleteSingerTaskController;
+use App\Http\Controllers\CustomiseUpcomingEventsWidgetController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EnrolmentController;
@@ -108,6 +109,7 @@ Route::middleware([
 
         // Dashboard
         Route::get('/', [DashController::class, 'index'])->name('dash');
+        Route::put('/widgets/upcoming/events', CustomiseUpcomingEventsWidgetController::class)->name('widgets.upcoming-events');
 
         // Account Settings
         Route::get('account/edit', [AccountController::class, 'edit'])->name('accounts.edit');

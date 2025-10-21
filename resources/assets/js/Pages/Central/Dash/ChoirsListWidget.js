@@ -1,6 +1,5 @@
 import React from 'react';
-import SectionTitle from "../../../components/SectionTitle";
-import Panel from "../../../components/Panel";
+import Panel, { PanelTitle } from '../../../components/Panel';
 import TableMobile, {TableMobileItem} from "../../../components/TableMobile";
 import {usePage} from "@inertiajs/react";
 import useRoute from "../../../hooks/useRoute";
@@ -11,7 +10,7 @@ const ChoirsListWidget = () => {
     const { userChoirs: choirs, user } = usePage().props;
 
     return (
-        <Panel header={<SectionTitle>Your Choirs</SectionTitle>} noPadding>
+        <Panel header={<PanelTitle>Your Choirs</PanelTitle>} noPadding>
             {choirs.length > 0 ? (
                 <TableMobile>
                     {choirs.map((choir) => (
