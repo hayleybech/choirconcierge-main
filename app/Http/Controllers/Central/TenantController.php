@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
+use App\Models\User;
 use DateTimeZone;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -15,10 +17,10 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class TenantController extends Controller
 {
-	// @todo add missing auth
-
     public function index(): Response
     {
+        $this->authorize('viewAny', Tenant::class);
+
         $pagination = $this->getTenants();
 
         return Inertia::render('Central/Tenants/Index', [
@@ -81,6 +83,8 @@ class TenantController extends Controller
 
     public function show(Tenant $tenant): Response
     {
+        Gate::allowIf(fn (User $user) => $user->id === $tenant->created_by || $user->isSuperAdmin);
+
         return Inertia::render('Central/Tenants/Show', [
             'tenant' => $tenant->append(['billing_status', 'plan', 'setup_done']),
         ]);
