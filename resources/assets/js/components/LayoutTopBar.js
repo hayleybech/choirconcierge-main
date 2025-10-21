@@ -41,11 +41,6 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu
                 </div>
                 <div className="ml-4 flex items-center lg:ml-6">
 
-                    <a href="https://portal.leanbe.ai/choir-concierge" target="_blank" className="text-gray-500 text-sm mx-2">
-                        <Icon icon="bullhorn" mr />
-                        <span className="hidden sm:inline">What's New</span>
-                    </a>
-
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-3 relative">
                         <div>
