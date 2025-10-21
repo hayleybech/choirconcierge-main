@@ -35,6 +35,18 @@ class CriticalEventSeeder extends Seeder
             ],
             [
                 'tenant_id' => tenant('id'),
+                'title' => 'Meeting',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'tenant_id' => tenant('id'),
+                'title' => 'Workshop',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'tenant_id' => tenant('id'),
                 'title' => 'Other',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
