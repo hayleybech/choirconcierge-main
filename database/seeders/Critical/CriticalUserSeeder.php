@@ -304,18 +304,18 @@ class CriticalUserSeeder extends Seeder
         DB::table('voice_parts')->insert([
             [
                 'tenant_id' => tenant('id'),
-                'title' => 'Tenor',
-                'colour' => 'red',
-            ],
-            [
-                'tenant_id' => tenant('id'),
-                'title' => 'Lead',
+                'title' => 'Soprano',
                 'colour' => 'yellow',
             ],
             [
                 'tenant_id' => tenant('id'),
-                'title' => 'Baritone',
+                'title' => 'Alto',
                 'colour' => 'green',
+            ],
+            [
+                'tenant_id' => tenant('id'),
+                'title' => 'Tenor',
+                'colour' => 'red',
             ],
             [
                 'tenant_id' => tenant('id'),
