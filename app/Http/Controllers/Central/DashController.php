@@ -58,7 +58,7 @@ class DashController extends Controller
 
 	private function getTenantStats()
 	{
-		if(! auth()->user()->isSuperAdmin()) {
+		if(! auth()->user()->isSuperAdmin) {
 			return null;
 		};
 
@@ -72,7 +72,7 @@ class DashController extends Controller
 
 	private function getActiveTenantsCount()
 	{
-		if(! auth()->user()->isSuperAdmin()) {
+		if(! auth()->user()->isSuperAdmin) {
 			return null;
 		}
 
@@ -81,7 +81,7 @@ class DashController extends Controller
 
 	private function getTenantsOnTrialCount()
 	{
-		if(! auth()->user()->isSuperAdmin()) {
+		if(! auth()->user()->isSuperAdmin) {
 			return null;
 		}
 
@@ -96,7 +96,7 @@ class DashController extends Controller
 
 	private function getTenantsTrialExpiredCount()
 	{
-		if(! auth()->user()->isSuperAdmin()) {
+		if(! auth()->user()->isSuperAdmin) {
 			return null;
 		}
 
@@ -111,7 +111,7 @@ class DashController extends Controller
 
 	private function getActiveMembersCount()
 	{
-		if(! auth()->user()->isSuperAdmin()) {
+		if(! auth()->user()->isSuperAdmin) {
 			return null;
 		}
 
