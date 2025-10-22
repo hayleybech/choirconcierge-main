@@ -114,7 +114,8 @@ class SingerController extends Controller
             'singer' => $singer,
             'categories' => SingerCategory::all(),
             'voiceParts' => VoicePart::all(),
-            'ensembles' => Ensemble::whereDoesntHave('enrolments', fn(Builder $query) =>
+            'allEnsemblesCount' => Ensemble::count(),
+            'ensemblesNotEnrolled' => Ensemble::whereDoesntHave('enrolments', fn(Builder $query) =>
                 $query->where('membership_id', $singer->id)
             )->get(),
         ]);

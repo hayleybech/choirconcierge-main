@@ -22,7 +22,6 @@ import useRoute from "../../hooks/useRoute";
 import Button from "../../components/inputs/Button";
 import Label from "../../components/inputs/Label";
 import Select from "../../components/inputs/Select";
-import Error from "../../components/inputs/Error";
 
 const Progress = ({ value, max, min }) => (
     <div className="flex items-center text-xs">
@@ -107,7 +106,7 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
     );
 }
 
-const Show = ({ singer, categories, voiceParts, ensembles }) => {
+const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, allEnsemblesCount }) => {
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
     const { can, user: authUser } = usePage().props;
@@ -120,8 +119,8 @@ const Show = ({ singer, categories, voiceParts, ensembles }) => {
                 title={<>{singer.user.name} {singer.user.pronouns && <Pronouns pronouns={singer.user.pronouns} />}</>}
                 image={singer.user.profile_avatar_url}
                 meta={[
-                    ensembles.length === 1 && singer.enrolments?.[0]?.voice_part && (
-                      <VoicePartTag key={singer.enrolments[0].id} title={singer.enrolments[0].id} colour={singer.enrolments[0].voice_part.colour} />
+                    allEnsemblesCount === 1 && singer.enrolments?.[0]?.voice_part && (
+                      <VoicePartTag key={singer.enrolments[0].id} title={singer.enrolments[0].voice_part.title} colour={singer.enrolments[0].voice_part.colour} />
                     ),
                     <SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />,
                     <DateTag date={singer.joined_at} label="Joined" />,
@@ -172,7 +171,7 @@ const Show = ({ singer, categories, voiceParts, ensembles }) => {
                             title: 'Enrolments',
                             show: true,
                             defaultOpen: true,
-                            content: <EnrolmentDetails singer={singer} voiceParts={voiceParts} ensembles={ensembles} />,
+                            content: <EnrolmentDetails singer={singer} voiceParts={voiceParts} ensembles={ensemblesNotEnrolled} />,
                         },
                     ]} />
                 </div>
