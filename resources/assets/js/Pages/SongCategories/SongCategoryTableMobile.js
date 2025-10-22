@@ -2,7 +2,7 @@ import React from 'react';
 import TableMobile, { TableMobileListItem } from "../../components/TableMobile";
 import Icon from "../../components/Icon";
 import Button from "../../components/inputs/Button";
-import { usePage } from "@inertiajs/react";
+import { Link, usePage } from '@inertiajs/react';
 
 const SongCategoryTableMobile = ({ categories, showEditCategory, showDeleteCategory }) => {
     const { can } = usePage().props;
@@ -13,12 +13,12 @@ const SongCategoryTableMobile = ({ categories, showEditCategory, showDeleteCateg
                 <TableMobileListItem key={category.id}>
                     <div className="flex items-center justify-between px-4 py-4 sm:px-6">
                         <div className="flex items-center min-w-0 mr-1.5">
-                            <span className="text-sm font-medium text-purple-600 truncate">{category.title}</span>
+                            <span className="text-sm text-gray-700 truncate">{category.title}</span>
                         </div>
                         <div className="flex items-center min-w-0 mr-1.5">
-                            <span className="text-sm font-medium text-gray-500">
+                            <Link href={route('songs.index')} data={{ filter: { 'categories.id': [category.id] } }} className="text-purple-800 text-xs">
                                 {category.songs_count} {category.songs_count === 1 ? 'song' : 'songs'}
-                            </span>
+                            </Link>
                         </div>
                         <div className="flex gap-2 justify-end">
                             {can.create_song && (

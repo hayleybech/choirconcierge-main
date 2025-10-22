@@ -24,11 +24,9 @@ const SongCategoryTableDesktop = ({ categories, showEditCategory, showDeleteCate
                 <tr key={category.id}>
                     <TableCell>
                         <div className="flex items-center">
-                            <div className="ml-4">
-                                <div className="text-sm text-gray-700">
-                                    {category.title}
-                                </div>
-                            </div>
+                            <span className="text-sm text-gray-700">
+                                {category.title}
+                            </span>
                         </div>
                     </TableCell>
                     <TableCell>
