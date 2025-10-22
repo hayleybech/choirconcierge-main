@@ -40,7 +40,8 @@ const Index = ({ event, voice_parts, individualCheckInUrl }) => {
                 meta={[
                     <div className="text-gray-500">
                         <p className="mb-2">Use this page to manually mark everyone's attendance. </p>
-                        <p>The kiosk page allows singers to mark themselves off from a shared device, while the individual check-in page allows singers to use their own device by scanning a QR code. Both check-in pages automatically mark singers as late after the call time, or absent 20 minutes later.</p>
+                        <p className="mb-2">The kiosk page allows singers to mark themselves off from a shared device, while the individual check-in page allows singers to use their own device by scanning a QR code. Both check-in pages automatically mark singers as late after the call time, or absent 20 minutes later.</p>
+                        <p className="mb-2">If attendance was recorded during the event (either manually here or using the kiosk), remaining singers will automatically be marked absent once the event ends.</p>
                     </div>,
                 ]}
             />
