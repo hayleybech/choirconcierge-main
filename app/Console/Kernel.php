@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Jobs\ClearDuplicateEmails;
 use App\Jobs\ClearTemporaryBroadcastFiles;
+use App\Jobs\MarkAbsencesAfterEvents;
 use App\Jobs\ProcessGroupMailbox;
 use App\Jobs\ResetDemoSite;
 use Illuminate\Console\Scheduling\Schedule;
@@ -55,6 +56,9 @@ class Kernel extends ConsoleKernel
             ->at('23:00') // 7 am Perth
             ->sentryMonitor('reset-demo-site')
             ->thenPing(config('app.heartbeats.reset_demo_site'));
+
+        $schedule->job(MarkAbsencesAfterEvents::class)
+            ->hourly();
     }
 
     /**
