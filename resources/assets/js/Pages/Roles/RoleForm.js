@@ -55,7 +55,7 @@ const RoleForm = ({ role }) => {
 							disabled={data.name === 'Admin' || data.name === 'User'}
 						/>
 						{data.name === 'Admin' || data.name === 'User' && (
-							<Help>"Admin" and "User" are system roles and can't be renamed. </Help>
+							<Help>"Admin" and "User" are system roles and can't be renamed (or deleted). </Help>
 						)}
 						{errors.name && <Error>{errors.name}</Error>}
 					</div>
