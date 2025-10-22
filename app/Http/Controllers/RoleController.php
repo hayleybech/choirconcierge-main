@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;;
+use App\Models\Role;
+
+;
+
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,7 +32,7 @@ class RoleController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $role = Role::create($request->validate([
-            'name' => 'required|max:255',
+            'name' => ['required', 'max:255', 'not_in:Admin,User'],
             'abilities' => 'array',
         ]));
 
@@ -54,10 +58,16 @@ class RoleController extends Controller
 
     public function update(Request $request, Role $role): RedirectResponse
     {
-        $role->update($request->validate([
+        $validated = $request->validate([
             'name' => 'required|max:255',
             'abilities' => 'array',
-        ]));
+        ]);
+
+        $role->update(
+            in_array($role->name, ['Admin', 'User'])
+                ? Arr::except($validated, ['name'])
+                : $validated
+        );
 
         return redirect()
             ->route('roles.show', $role)
