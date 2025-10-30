@@ -56,6 +56,7 @@ class Attendance extends Model
         $labels = [
             'present' => 'On Time',
             'late' => 'Late',
+            'late_deemed_absent' => 'Late (Deemed Absent)',
             'absent' => 'Absent',
             'absent_apology' => 'Absent (With Apology)',
             'unknown' => 'Not recorded',
@@ -69,6 +70,7 @@ class Attendance extends Model
         $colours = [
             'present' => 'emerald',
             'late' => 'amber',
+            'late_deemed_absent' => 'red',
             'absent' => 'red',
             'absent_apology' => 'red',
             'unknown' => 'gray',
@@ -82,6 +84,7 @@ class Attendance extends Model
         $icons = [
             'present' => 'check',
             'late' => 'alarm-exclamation',
+            'late_deemed_absent' => 'times',
             'absent' => 'times',
             'absent_apology' => 'times',
             'unknown' => 'question',

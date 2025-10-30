@@ -28,7 +28,7 @@ const AttendanceSummary = ({ attendanceCount, voicePartsAttendanceCount }) => (
                     {[
                         { label: 'On Time', colour: 'emerald-500', icon: 'check', count: attendanceCount.present },
                         { label: 'Late', colour: 'amber-500', icon: 'alarm-exclamation', count: attendanceCount.late },
-                        { label: 'Absent', colour: 'red-500', icon: 'times', count: attendanceCount.absent + attendanceCount.absent_apology },
+                        { label: 'Absent', colour: 'red-500', icon: 'times', count: attendanceCount.absent + attendanceCount.absent_apology + attendanceCount.late_deemed_absent },
                         { label: 'Not recorded', colour: 'gray-500', icon: 'question', count: attendanceCount.unknown },
                     ].map(({ label, colour, icon, count}) => (
                         <div className="grow w-1/2 text-center" key={label}>
@@ -39,6 +39,7 @@ const AttendanceSummary = ({ attendanceCount, voicePartsAttendanceCount }) => (
                     ))}
                 </div>
                 <p className="text-gray-500 text-sm text-center mt-2">{attendanceCount.absent_apology} provided reasons for absences.</p>
+                <p className="text-gray-500 text-sm text-center mt-2">{attendanceCount.late_deemed_absent} arrived late enough to be deemed absent.</p>
             </Tab.Panel>
             <Tab.Panel className="py-6 px-4">
                 <p>

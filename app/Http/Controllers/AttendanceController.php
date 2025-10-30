@@ -55,7 +55,7 @@ class AttendanceController extends Controller
         $this->authorize('create', Attendance::class);
 
         $request->validate([
-            'response' => ['in:unknown,absent,absent_apology,late,present'],
+            'response' => ['in:unknown,absent,absent_apology,late,late_deemed_absent,present'],
         ]);
 
         $event->attendances()

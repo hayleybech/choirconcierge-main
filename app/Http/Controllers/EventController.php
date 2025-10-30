@@ -80,6 +80,7 @@ class EventController extends Controller
             'attendanceCount' => [
                 'present' => $event->singers_attendance('present')->count(),
                 'late' => $event->singers_attendance('late')->count(),
+                'late_deemed_absent' => $event->singers_attendance('late_deemed_absent')->count(),
                 'absent' => $event->singers_attendance('absent')->count(),
                 'absent_apology' => $event->singers_attendance('absent_apology')->count(),
                 'unknown' => $event->singers_attendance_missing()->count(),

@@ -44,6 +44,6 @@ class EventCheckInController extends Controller
             return 'late';
         }
 
-        return 'absent';
+        return 'late_deemed_absent';
     }
 }
