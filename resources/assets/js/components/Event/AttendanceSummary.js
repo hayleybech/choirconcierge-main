@@ -38,7 +38,7 @@ const AttendanceSummary = ({ attendanceCount, voicePartsAttendanceCount }) => (
                         </div>
                     ))}
                 </div>
-                <p className="text-gray-500 text-sm text-center mt-2">{attendanceCount.absent_apology} absent with apology.</p>
+                <p className="text-gray-500 text-sm text-center mt-2">{attendanceCount.absent_apology} provided reasons for absences.</p>
             </Tab.Panel>
             <Tab.Panel className="py-6 px-4">
                 <p>
