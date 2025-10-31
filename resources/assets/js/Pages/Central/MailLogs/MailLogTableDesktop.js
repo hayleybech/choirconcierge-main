@@ -41,7 +41,7 @@ const MailLogTableDesktop = ({ logs }) => {
                         <MailStatusTag event={log.latest_event} />
                     </TableCell>
                     <TableCell>
-                        <DateTag date={log.created_at} />
+                        <DateTag icon="pencil" date={log.created_at} />
                     </TableCell>
                 </tr>
             ))}

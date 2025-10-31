@@ -48,7 +48,7 @@ const SongTableDesktop = ({ songs, sortFilterForm }) => {
                         </div>
                     </TableCell>
                     <TableCell>
-                        <DateTag date={song.created_at} />
+                        <DateTag icon="pencil" date={song.created_at} />
                     </TableCell>
                 </tr>
             ))}

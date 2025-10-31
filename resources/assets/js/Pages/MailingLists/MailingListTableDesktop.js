@@ -45,7 +45,7 @@ const MailingListTableDesktop = ({ lists }) => {
                         <strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span>
                     </TableCell>
                     <TableCell>
-                        <DateTag date={list.created_at} />
+                        <DateTag icon="pencil" date={list.created_at} />
                     </TableCell>
                 </tr>
             ))}

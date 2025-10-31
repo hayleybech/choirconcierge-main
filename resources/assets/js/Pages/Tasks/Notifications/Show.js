@@ -22,8 +22,8 @@ const Show = ({ task, notification }) => {
                 meta={[
                     <>Recipients: {notification.recipients}</>,
                     <>Delay: {notification.delay}</>,
-                    <DateTag date={notification.created_at} label="Created" />,
-                    <DateTag date={notification.updated_at} label="Updated" />,
+                    <DateTag icon="pencil" date={notification.created_at} label="Created" />,
+                    <DateTag icon="pencil" date={notification.updated_at} label="Updated" />,
                 ]}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},

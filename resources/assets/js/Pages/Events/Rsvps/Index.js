@@ -63,7 +63,7 @@ const Index = ({ event, voiceParts }) => {
                         <div className="text-sm flex gap-4">
                           <RsvpTag icon={singer.membership.rsvp.icon} label={singer.membership.rsvp.label} colour={singer.membership.rsvp.colour} className="shrink-0" />
                             {!!singer.membership.rsvp.updated_at && (
-                                <DateTag label="Updated" date={singer.membership.rsvp.updated_at} format="DATETIME_SHORT" className="text-gray-400" />
+                                <DateTag icon="pencil" label="Updated" date={singer.membership.rsvp.updated_at} format="DATETIME_SHORT" className="text-gray-400" />
                             )}
                         </div>
                       </div>

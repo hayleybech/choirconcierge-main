@@ -37,7 +37,7 @@ const TaskTableDesktop = ({ tasks }) => {
                         {task.type === 'form' && <span className="text-xs ml-1.5">({task.route})</span>}
                     </TableCell>
                     <TableCell>
-                        <DateTag date={task.created_at} />
+                        <DateTag icon="pencil" date={task.created_at} />
                     </TableCell>
                 </tr>
             ))}

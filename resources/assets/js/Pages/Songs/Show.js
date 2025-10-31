@@ -89,8 +89,8 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
                         <div className="space-x-1 5">
                             {song.categories.map(category => <React.Fragment key={category.id}><SongCategoryTag category={category} /></React.Fragment>)}
                         </div>,
-                        <DateTag date={song.created_at} label="Created" />,
-                        <DateTag date={song.updated_at} label="Updated" />,
+                        <DateTag icon="pencil" date={song.created_at} label="Created" />,
+                        <DateTag icon="pencil" date={song.updated_at} label="Updated" />,
                         !!song.show_for_prospects && (
                             <div>
                                 <Icon icon="microphone-stand" mr className="text-sm text-emerald-500" />

@@ -9,7 +9,6 @@ import useRoute from "../../../hooks/useRoute";
 import BillingTag from "./BillingTag";
 import TableHeadingSort from "../../../components/TableHeadingSort";
 import Pagination from '../../../components/Pagination';
-import pagination from '../../../components/Pagination';
 
 const TenantTableDesktop = ({ tenants, sortFilterForm, pagination }) => {
     const { route } = useRoute();
@@ -40,7 +39,7 @@ const TenantTableDesktop = ({ tenants, sortFilterForm, pagination }) => {
                         <BillingTag billing={tenant.billing_status} />
                     </TableCell>
                     <TableCell>
-                        <DateTag date={tenant.created_at} />
+                        <DateTag icon="pencil" date={tenant.created_at} />
                     </TableCell>
                     <TableCell>
                         <ButtonLink href={route('dash', {tenant})} variant="primary" size="xs">

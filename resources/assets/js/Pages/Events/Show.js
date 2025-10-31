@@ -89,14 +89,8 @@ const Show = ({
 					),
 
 					<>
-						<div className="space-1.5 mr-2">
-							<Icon icon="pencil" type="regular" /> Created{' '}
-							{DateTime.fromISO(event.created_at).toLocaleString(DateTime.DATE_MED)}
-						</div>
-						<div className="space-1.5">
-							<Icon icon="pencil" type="regular" /> Updated{' '}
-							{DateTime.fromISO(event.updated_at).toLocaleString(DateTime.DATE_MED)}
-						</div>
+						<DateTag icon="pencil" date={event.created_at} label="Created" className="mr-2" />
+						<DateTag icon="pencil" date={event.updated_at} label="Updated" />
 					</>,
 				]}
 				breadcrumbs={[

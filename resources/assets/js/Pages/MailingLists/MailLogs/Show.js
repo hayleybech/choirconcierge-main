@@ -23,8 +23,8 @@ const Show = ({ log }) => {
                 title={log.subject}
                 icon={isBroadcast ? 'satellite-dish' : "envelope"}
                 meta={[
-                    <DateTag date={log.created_at} label="Created" />,
-                    <DateTag date={log.updated_at} label="Updated" />,
+                    <DateTag icon="pencil" date={log.created_at} label="Created" />,
+                    <DateTag icon="pencil" date={log.updated_at} label="Updated" />,
                     <div>From: {log.from}</div>,
                     <div>To: {log.to}</div>,
                     <div>Cc: {log.cc}</div>,
@@ -111,7 +111,7 @@ const Activity = ({log}) => {
                                             <MailStatusDetail log={log} event={event} isBroadcast={isBroadcast} />
                                         </div>
                                         <div className="text-right text-sm whitespace-nowrap text-gray-500">
-                                            <DateTag date={event.created_at} format={'DATETIME_SHORT'} />
+                                            <DateTag icon="pencil" date={event.created_at} format={'DATETIME_SHORT'} />
                                         </div>
                                     </div>
                                 </div>

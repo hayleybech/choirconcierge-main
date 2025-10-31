@@ -280,6 +280,7 @@ const AttendanceRecord = ({ attendance, event }) => {
 						</div>
 						{!!attendance.updated_at && (
 							<DateTag
+								icon="pencil"
 								label="Updated"
 								date={attendance.updated_at}
 								format="DATETIME_SHORT"

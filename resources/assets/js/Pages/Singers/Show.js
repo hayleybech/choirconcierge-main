@@ -325,8 +325,8 @@ const PersonalDetails = ({ singer }) => (
             {
                 label: '',
                 value: <span className="text-sm text-gray-500 italic">
-                        <DateTag date={singer.user.created_at} label="Profile Created" />
-                        <DateTag date={singer.user.created_at} label="Profile Updated" />
+                        <DateTag icon="pencil" date={singer.user.created_at} label="Profile Created" />
+                        <DateTag icon="pencil" date={singer.user.created_at} label="Profile Updated" />
                     </span>,
             }
         ]}/>
@@ -370,14 +370,14 @@ const MembershipDetails = ({ singer }) => (
                 value: <>
                     <DateTag date={singer.joined_at} /><br />
                     <span className="text-sm text-gray-500 italic">
-                        <DateTag date={singer.created_at} label="Membership Added" />
-                        <DateTag date={singer.created_at} label="Membership Updated" />
+                        <DateTag icon="pencil" date={singer.created_at} label="Membership Added" />
+                        <DateTag icon="pencil" date={singer.created_at} label="Membership Updated" />
                     </span>
                 </>,
             },
             {
                 label: 'Last Login',
-                value: <DateTag date={singer.user.last_login} />,
+                value: <DateTag icon="sign-in" date={singer.user.last_login} />,
             },
             {
                 label: 'Reason for Joining',
@@ -408,7 +408,7 @@ const EnrolmentDetails = ({ singer, voiceParts, ensembles }) => {
                             <strong>{enrolment.ensemble.name}</strong>
                             {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
                             <span className="text-sm text-gray-500 italic">
-                                <DateTag date={enrolment.created_at} label="Updated" />
+                                <DateTag icon="pencil" date={enrolment.updated_at} label="Updated" />
                             </span>
                         </div>
                         <div className="flex items-center gap-2">

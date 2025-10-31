@@ -61,7 +61,7 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <DateTag date={folder.created_at} />
+                                <DateTag icon="pencil" date={folder.created_at} />
                             </TableCell>
                             <TableCell>
                                 {permissions['delete_folder'] && (
@@ -97,7 +97,7 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        <DateTag date={document.created_at} />
+                                        <DateTag icon="pencil" date={document.created_at} />
                                     </TableCell>
                                     <TableCell>
                                         {permissions['delete_document'] && (

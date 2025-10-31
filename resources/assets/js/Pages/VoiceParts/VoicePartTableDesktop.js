@@ -38,7 +38,7 @@ const VoicePartTableDesktop = ({ voiceParts }) => {
                         </Link>
                     </TableCell>
                     <TableCell>
-                        <DateTag date={voicePart.created_at} />
+                        <DateTag icon="pencil" date={voicePart.created_at} />
                     </TableCell>
                 </tr>
             ))}

@@ -39,7 +39,7 @@ const Show = ({ tenant }) => {
                 meta={[
                     tenant.timezone,
                     tenant.renews_at && <DateTag date={tenant.renews_at} label="Renews" />,
-                    <DateTag date={tenant.created_at} label="Created" />,
+                    <DateTag icon="pencil" date={tenant.created_at} label="Created" />,
                     <BillingTag billing={tenant.billing_status} />,
                     !tenant.setup_done && <Badge colour="bg-orange-100 text-orange-700">Setup Pending - Come back later</Badge>
                 ]}

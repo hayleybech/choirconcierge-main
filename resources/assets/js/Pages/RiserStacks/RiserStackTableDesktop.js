@@ -30,7 +30,7 @@ const RiserStackTableDesktop = ({ stacks }) => {
                         </div>
                     </TableCell>
                     <TableCell>
-                        <DateTag date={stack.created_at} />
+                        <DateTag icon="pencil" date={stack.created_at} />
                     </TableCell>
                 </tr>
             ))}
