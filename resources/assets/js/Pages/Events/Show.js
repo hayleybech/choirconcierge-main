@@ -1,147 +1,241 @@
-import React, {useState} from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader";
-import AppHead from "../../components/AppHead";
-import DateTag from "../../components/DateTag";
-import Badge from "../../components/Badge";
-import GoogleMap from "../../components/GoogleMap";
-import MyAttendance from "../../components/Event/MyAttendance";
-import RsvpSummary from "../../components/Event/RsvpSummary";
-import AttendanceSummary from "../../components/Event/AttendanceSummary";
-import {usePage} from "@inertiajs/react";
-import Icon from "../../components/Icon";
-import EditRepeatingEventDialog from "../../components/Event/EditRepeatingEventDialog";
-import DeleteDialog from "../../components/DeleteDialog";
-import Prose from "../../components/Prose";
-import ButtonLink from "../../components/inputs/ButtonLink";
-import CollapsePanel from "../../components/CollapsePanel";
-import CollapseGroup from "../../components/CollapseGroup";
-import EventType from "../../EventType";
-import EventSchedule from "../../components/Event/EventSchedule";
-import useRoute from "../../hooks/useRoute";
+import React, { useState } from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import PageHeader from '../../components/PageHeader';
+import AppHead from '../../components/AppHead';
+import DateTag from '../../components/DateTag';
+import Badge from '../../components/Badge';
+import GoogleMap from '../../components/GoogleMap';
+import MyAttendance from '../../components/Event/MyAttendance';
+import RsvpSummary from '../../components/Event/RsvpSummary';
+import AttendanceSummary from '../../components/Event/AttendanceSummary';
+import { usePage } from '@inertiajs/react';
+import Icon from '../../components/Icon';
+import EditRepeatingEventDialog from '../../components/Event/EditRepeatingEventDialog';
+import DeleteDialog from '../../components/DeleteDialog';
+import Prose from '../../components/Prose';
+import ButtonLink from '../../components/inputs/ButtonLink';
+import CollapsePanel from '../../components/CollapsePanel';
+import CollapseGroup from '../../components/CollapseGroup';
+import EventType from '../../EventType';
+import EventSchedule from '../../components/Event/EventSchedule';
+import useRoute from '../../hooks/useRoute';
 import { DateTime } from 'luxon';
 import RsvpDropdown from '../../components/Event/RsvpDropdown';
 
-const Show = ({ event, rsvpCount, voicePartsRsvpCount, attendanceCount, voicePartsAttendanceCount, addToCalendarLinks }) => {
-    const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
-    const [editDialogIsOpen, setEditDialogIsOpen] = useState(false);
+const Show = ({
+	event,
+	rsvpCount,
+	voicePartsRsvpCount,
+	attendanceCount,
+	voicePartsAttendanceCount,
+	addToCalendarLinks,
+}) => {
+	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
+	const [editDialogIsOpen, setEditDialogIsOpen] = useState(false);
 
-    const { route } = useRoute();
-    const { props: pageProps } = usePage();
+	const { route } = useRoute();
+	const { props: pageProps } = usePage();
 
-    return (
-        <>
-            <AppHead title={`${event.title} - Events`} />
-            <PageHeader
-                title={<>{event.title}{event.is_repeating && <Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />}</>}
-                meta={[
-                    <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>,
-                    DateTime.fromJSDate(new Date(event.call_time)) > DateTime.now() && (
-                        <RsvpDropdown event={event} size="xs" />
-                    ),
-                    <DateTag label="Start" date={event.call_time} format="DATETIME_MED" />,
-                    <DateTag label="End" date={event.end_date} format="DATETIME_MED" />, // shorter for same day
-                    <DateTag label="On Stage" date={event.start_date} format="TIME_SIMPLE" />, // hide unless music team
-                    <DateTag label="Created" date={event.created_at} />,
-                    <DateTag label="Updated" date={event.updated_at} />,
-                    event.is_repeating && <><Icon icon="repeat" mr /> Repeat every {event.repeat_frequency_unit}</>,
-                    event.is_repeating && <DateTag label="Repeat until" date={event.repeat_until} />,
-                ]}
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Events', url: route('events.index')},
-                    { name: event.title, url: route('events.show', {event}) },
-                ]}
-                actions={[
-                    event.is_repeating
-                        ? { label: 'Edit', icon: 'edit', onClick: () => setEditDialogIsOpen(true), can: 'update_event' }
-                        : { label: 'Edit', icon: 'edit', url: route('events.edit', {event}), can: 'update_event' },
-                    { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_event' },
-                ].filter(action => action.can ? event.can[action.can] : true)}
-            />
+	return (
+		<>
+			<AppHead title={`${event.title} - Events`} />
+			<PageHeader
+				title={
+					<>
+						{event.title}
+						{event.is_repeating && (
+							<Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />
+						)}
+					</>
+				}
+				meta={[
+					DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
+						<span className="text-lg font-bold">
+							<Icon icon="calendar-day" type="regular" mr />
+							<span>
+								{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}
+							</span>
+							{' - '}
+							<span>
+								{DateTime.fromISO(event.end_date).toLocaleString(DateTime.TIME_SIMPLE)}
+							</span>
+						</span>
+					) : (
+						<div className="text-lg font-bold flex items-center">
+							<Icon icon="calendar-day" type="regular" mr />
+							<div>
+								<span className="whitespace-nowrap">
+									{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}
+								</span>
+								{' - '}
+								<span className="whitespace-nowrap">
+									{DateTime.fromISO(event.end_date).toLocaleString(DateTime.DATETIME_MED)}
+								</span>
+							</div>
+						</div>
+					),
+					<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>,
+					DateTime.fromISO(event.call_time) > DateTime.now() && (
+						<RsvpDropdown event={event} size="xs" />
+					),
 
-            <DeleteDialog title="Delete Event" url={route('events.destroy', {event})} isOpen={deleteDialogIsOpen} setIsOpen={setDeleteDialogIsOpen}>
-                Are you sure you want to delete this event? This action cannot be undone.
-            </DeleteDialog>
+					<DateTag label="Arrive" date={event.call_time} format="TIME_SIMPLE" />,
 
-            <EditRepeatingEventDialog isOpen={editDialogIsOpen} setIsOpen={setEditDialogIsOpen} event={event} />
+					event.is_repeating && (
+						<>
+							<Icon icon="repeat" mr /> Repeat every {event.repeat_frequency_unit} until{' '}
+							{DateTime.fromISO(event.repeat_until).toLocaleString(DateTime.DATE_MED)}
+						</>
+					),
 
-            <div className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-4 h-full divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
+					<>
+						<div className="space-1.5 mr-2">
+							<Icon icon="pencil" type="regular" /> Created{' '}
+							{DateTime.fromISO(event.created_at).toLocaleString(DateTime.DATE_MED)}
+						</div>
+						<div className="space-1.5">
+							<Icon icon="pencil" type="regular" /> Updated{' '}
+							{DateTime.fromISO(event.updated_at).toLocaleString(DateTime.DATE_MED)}
+						</div>
+					</>,
+				]}
+				breadcrumbs={[
+					{ name: 'Dashboard', url: route('dash') },
+					{ name: 'Events', url: route('events.index') },
+					{ name: event.title, url: route('events.show', { event }) },
+				]}
+				actions={[
+					event.is_repeating
+						? { label: 'Edit', icon: 'edit', onClick: () => setEditDialogIsOpen(true), can: 'update_event' }
+						: { label: 'Edit', icon: 'edit', url: route('events.edit', { event }), can: 'update_event' },
+					{
+						label: 'Delete',
+						icon: 'trash',
+						onClick: () => setDeleteDialogIsOpen(true),
+						variant: 'danger-outline',
+						can: 'delete_event',
+					},
+				].filter(action => (action.can ? event.can[action.can] : true))}
+			/>
 
-                <div className="sm:col-span-1 xl:col-span-3 divide-y divide-y-gray-300">
-                    <CollapseGroup items={[
-                        { title: 'Description', show: true, defaultOpen: event.description?.length > 0, content: <EventDescription description={event.description} timezone={pageProps.tenant.timezone_label} />},
-                        { title: 'Location', show: true, defaultOpen: true, content: <EventLocation event={event} />},
-                        { title: 'Schedule', show: true, content: <EventSchedule event={event} />},
-                    ]} />
-                </div>
+			<DeleteDialog
+				title="Delete Event"
+				url={route('events.destroy', { event })}
+				isOpen={deleteDialogIsOpen}
+				setIsOpen={setDeleteDialogIsOpen}
+			>
+				Are you sure you want to delete this event? This action cannot be undone.
+			</DeleteDialog>
 
-                <div className="sm:col-span-1 divide-y divide-y-gray-300">
-                    <CollapseGroup items={[
-                        { title: 'My Attendance', show: true, content: <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />},
-                        {
-                            title: 'RSVP Summary',
-                            show: pageProps.can['list_attendances'],
-                            action: <ViewRsvpsButton event={event} />,
-                            content: <RsvpSummary event={event} rsvpCount={rsvpCount} voicePartsRsvpCount={voicePartsRsvpCount} />
-                        },
-                        {
-                            title: 'Attendance Summary',
-                            show: pageProps.can['create_attendance'],
-                            action: <EditAttendanceButton event={event} />,
-                            content: <AttendanceSummary
-                                event={event}
-                                attendanceCount={attendanceCount}
-                                voicePartsAttendanceCount={voicePartsAttendanceCount}
-                            />,
-                        },
-                    ]} />
-                </div>
+			<EditRepeatingEventDialog isOpen={editDialogIsOpen} setIsOpen={setEditDialogIsOpen} event={event} />
 
-            </div>
-        </>
-    );
-}
+			<div className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-4 h-full divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
+				<div className="sm:col-span-1 xl:col-span-3 divide-y divide-y-gray-300">
+					<CollapseGroup
+						items={[
+							{
+								title: 'Description',
+								show: true,
+								defaultOpen: event.description?.length > 0,
+								content: (
+									<EventDescription
+										description={event.description}
+										timezone={pageProps.tenant.timezone_label}
+									/>
+								),
+							},
+							{
+								title: 'Location',
+								show: true,
+								defaultOpen: true,
+								content: <EventLocation event={event} />,
+							},
+							{ title: 'Schedule', show: true, content: <EventSchedule event={event} /> },
+						]}
+					/>
+				</div>
 
-Show.layout = page => <TenantLayout children={page} />
+				<div className="sm:col-span-1 divide-y divide-y-gray-300">
+					<CollapseGroup
+						items={[
+							{
+								title: 'My Attendance',
+								show: true,
+								content: <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />,
+							},
+							{
+								title: 'RSVP Summary',
+								show: pageProps.can['list_attendances'],
+								action: <ViewRsvpsButton event={event} />,
+								content: (
+									<RsvpSummary
+										event={event}
+										rsvpCount={rsvpCount}
+										voicePartsRsvpCount={voicePartsRsvpCount}
+									/>
+								),
+							},
+							{
+								title: 'Attendance Summary',
+								show: pageProps.can['create_attendance'],
+								action: <EditAttendanceButton event={event} />,
+								content: (
+									<AttendanceSummary
+										event={event}
+										attendanceCount={attendanceCount}
+										voicePartsAttendanceCount={voicePartsAttendanceCount}
+									/>
+								),
+							},
+						]}
+					/>
+				</div>
+			</div>
+		</>
+	);
+};
+
+Show.layout = page => <TenantLayout children={page} />;
 
 export default Show;
 
 const EventDescription = ({ description, timezone }) => (
-    <CollapsePanel>
-        <Prose content={description} className="mb-8" />
+	<CollapsePanel>
+		<Prose content={description} className="mb-8" />
 
-        <p className="text-sm text-gray-500 my-2">Choir's Timezone: {timezone}</p>
-    </CollapsePanel>
+		<p className="text-sm text-gray-500 my-2">Choir's Timezone: {timezone}</p>
+	</CollapsePanel>
 );
 
 const EventLocation = ({ event }) => (
-    <CollapsePanel>
-        <p><strong>{event.location_name}</strong></p>
-        <p className="mb-8">{event.location_address}</p>
+	<CollapsePanel>
+		<p>
+			<strong>{event.location_name}</strong>
+		</p>
+		<p className="mb-8">{event.location_address}</p>
 
-        <GoogleMap placeId={event.location_place_id} />
-    </CollapsePanel>
+		<GoogleMap placeId={event.location_place_id} />
+	</CollapsePanel>
 );
 
 const ViewRsvpsButton = ({ event }) => {
-  const { route } = useRoute();
+	const { route } = useRoute();
 
-  return (
-    <ButtonLink variant="primary" size="sm" href={route('events.rsvps.index', {event})}>
-      <Icon icon="clipboard-list" />
-      View All
-    </ButtonLink>
-  );
-}
+	return (
+		<ButtonLink variant="primary" size="sm" href={route('events.rsvps.index', { event })}>
+			<Icon icon="clipboard-list" />
+			View All
+		</ButtonLink>
+	);
+};
 
 const EditAttendanceButton = ({ event }) => {
-    const { route } = useRoute();
+	const { route } = useRoute();
 
-    return (
-        <ButtonLink variant="primary" size="sm" href={route('events.attendances.index', {event})}>
-            <Icon icon="edit" />
-            Edit
-        </ButtonLink>
-    );
-}
+	return (
+		<ButtonLink variant="primary" size="sm" href={route('events.attendances.index', { event })}>
+			<Icon icon="edit" />
+			Edit
+		</ButtonLink>
+	);
+};
