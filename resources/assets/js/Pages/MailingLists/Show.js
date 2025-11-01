@@ -24,15 +24,15 @@ const Show = ({ list }) => {
             <AppHead title={`${list.title} - Mailing Lists`} />
             <PageHeader
                 title={list.title}
-                meta={[
-                    <>
+                meta={<>
+                    <div>
                         <Icon icon={list.type_icon} mr className="text-gray-400" />
                         {list_type_labels[list.list_type]}
-                    </>,
-                    <><strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span></>,
-                    <DateTag icon="pencil" date={list.created_at} label="Created" />,
-                    <DateTag icon="pencil" date={list.updated_at} label="Updated" />,
-                ]}
+                    </div>
+                    <div><strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span></div>
+                    <DateTag icon="pencil" date={list.created_at} label="Created" />
+                    <DateTag icon="pencil" date={list.updated_at} label="Updated" />
+                </>}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Mailing Lists', url: route('groups.index')},

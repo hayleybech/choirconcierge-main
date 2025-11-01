@@ -22,15 +22,15 @@ const Show = ({ task }) => {
             <AppHead title={`${task.name} - Tasks`} />
             <PageHeader
                 title={task.name}
-                meta={[
-                    <>{task.role.name}</>,
-                    <>
+                meta={<>
+                    <div>{task.role.name}</div>
+                    <div>
                         {task.type[0].toUpperCase() + task.type.slice(1)}
                         {task.type === 'form' && <span className="text-xs ml-1.5">({task.route})</span>}
-                    </>,
-                    <DateTag icon="pencil" date={task.created_at} label="Created" />,
-                    <DateTag icon="pencil" date={task.updated_at} label="Updated" />,
-                ]}
+                    </div>
+                    <DateTag icon="pencil" date={task.created_at} label="Created" />
+                    <DateTag icon="pencil" date={task.updated_at} label="Updated" />
+                </>}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Tasks', url: route('tasks.index')},

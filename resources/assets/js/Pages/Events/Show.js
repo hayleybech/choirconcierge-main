@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader from '../../components/PageHeader';
+import PageHeader, {PageMetaItem} from '../../components/PageHeader';
 import AppHead from '../../components/AppHead';
 import DateTag from '../../components/DateTag';
 import Badge from '../../components/Badge';
@@ -48,10 +48,11 @@ const Show = ({
 						)}
 					</>
 				}
-				meta={[
-					DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
-						<span className="text-lg font-bold">
-							<Icon icon="calendar-day" type="regular" mr />
+				meta={<>
+
+					{DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
+						<div className="text-lg font-bold">
+							<Icon icon="calendar-day" type="regular" mr className="text-gray-500" />
 							<span>
 								{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}
 							</span>
@@ -59,7 +60,7 @@ const Show = ({
 							<span>
 								{DateTime.fromISO(event.end_date).toLocaleString(DateTime.TIME_SIMPLE)}
 							</span>
-						</span>
+						</div>
 					) : (
 						<div className="text-lg font-bold flex items-center">
 							<Icon icon="calendar-day" type="regular" mr />
@@ -73,26 +74,29 @@ const Show = ({
 								</span>
 							</div>
 						</div>
-					),
-					<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>,
-					DateTime.fromISO(event.call_time) > DateTime.now() && (
+					)}
+
+					<div>
+						<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>
+					</div>
+
+					{DateTime.fromISO(event.call_time) > DateTime.now() && (
 						<RsvpDropdown event={event} size="xs" />
-					),
+					)}
 
-					<DateTag label="Arrive" date={event.call_time} format="TIME_SIMPLE" />,
+					<DateTag label="Arrive" date={event.call_time} format="TIME_SIMPLE" />
 
-					event.is_repeating && (
-						<>
-							<Icon icon="repeat" mr /> Repeat every {event.repeat_frequency_unit} until{' '}
+					{event.is_repeating && (
+						<div>
+							<Icon icon="repeat" mr className="text-gray-400" /> Repeat every {event.repeat_frequency_unit} until{' '}
 							{DateTime.fromISO(event.repeat_until).toLocaleString(DateTime.DATE_MED)}
-						</>
-					),
-
-					<>
+						</div>
+					)}
+					<div className="flex items-center">
 						<DateTag icon="pencil" date={event.created_at} label="Created" className="mr-2" />
 						<DateTag icon="pencil" date={event.updated_at} label="Updated" />
-					</>,
-				]}
+					</div>
+				</>}
 				breadcrumbs={[
 					{ name: 'Dashboard', url: route('dash') },
 					{ name: 'Events', url: route('events.index') },

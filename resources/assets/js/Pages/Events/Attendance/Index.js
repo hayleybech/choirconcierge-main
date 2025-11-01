@@ -47,8 +47,8 @@ const Index = ({ event, voice_parts, individualCheckInUrl }) => {
 						can: 'create_attendance',
 					},
 				].filter(action => (action.can ? pageProps.can[action.can] : true))}
-				meta={[
-					<div className="text-gray-500">
+				meta={
+					<div>
 						<p className="mb-2">Use this page to manually mark everyone's attendance. </p>
 						<p className="mb-2">
 							The kiosk page allows singers to mark themselves off from a shared device, while the
@@ -60,8 +60,8 @@ const Index = ({ event, voice_parts, individualCheckInUrl }) => {
 							If attendance was recorded during the event (either manually here or using the kiosk),
 							remaining singers will automatically be marked absent once the event ends.
 						</p>
-					</div>,
-				]}
+					</div>
+				}
 			/>
 
 			<Dialog

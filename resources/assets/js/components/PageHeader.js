@@ -8,7 +8,7 @@ import Button from "./inputs/Button";
 import Icon from "./Icon";
 import {Link} from "@inertiajs/react";
 
-const PageHeader = ({ title, image, icon, meta = [], breadcrumbs, actions = [], optionsVariant }) => {
+const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optionsVariant }) => {
     const filteredActions = actions.filter(action => !!action);
 
     return (
@@ -22,12 +22,8 @@ const PageHeader = ({ title, image, icon, meta = [], breadcrumbs, actions = [], 
                             {icon && <Icon icon={icon} type="solid" className="mr-2" />}
                             <span>{title}</span>
                         </h2>
-                        <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
-                            {meta.filter(item => item).map((item, key) => (
-                                <div className="mt-2 flex items-center text-sm text-gray-500" key={key}>
-                                    {item}
-                                </div>
-                            ))}
+                        <div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
+                            {meta}
                         </div>
                     </div>
                     <div className="mt-5 flex sm:flex-row-reverse lg:mt-0 lg:ml-4">

@@ -36,13 +36,13 @@ const Show = ({ tenant }) => {
             <PageHeader
                 title={tenant.name}
                 image={tenant.logo_url}
-                meta={[
-                    tenant.timezone,
-                    tenant.renews_at && <DateTag date={tenant.renews_at} label="Renews" />,
-                    <DateTag icon="pencil" date={tenant.created_at} label="Created" />,
-                    <BillingTag billing={tenant.billing_status} />,
-                    !tenant.setup_done && <Badge colour="bg-orange-100 text-orange-700">Setup Pending - Come back later</Badge>
-                ]}
+                meta={<>
+                    <span>{tenant.timezone}</span>
+                    {tenant.renews_at && <DateTag date={tenant.renews_at} label="Renews" />}
+                    <DateTag icon="pencil" date={tenant.created_at} label="Created" />
+                    <BillingTag billing={tenant.billing_status} />
+                    {!tenant.setup_done && <Badge colour="bg-orange-100 text-orange-700">Setup Pending - Come back later</Badge>}
+                </>}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('central.dash')},
                     { name: 'Tenants', url: route('central.tenants.index')},

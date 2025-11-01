@@ -18,14 +18,14 @@ const Show = ({ stack }) => {
             <AppHead title={`${stack.title} - Riser Stacks`} />
             <PageHeader
                 title={stack.title}
-                meta={[
-                    <>Rows: {stack.rows}</>,
-                    <>Columns: {stack.columns}</>,
-                    <>Singers on front row: {stack.front_row_length}</>,
-                    <>Front row on floor: {stack.front_row_on_floor ? 'Yes' : 'No'}</>,
-                    <DateTag icon="pencil" date={stack.created_at} label="Created" />,
-                    <DateTag icon="pencil" date={stack.updated_at} label="Updated" />,
-                ]}
+                meta={<>
+                    <span>Rows: {stack.rows}</span>
+                    <span>Columns: {stack.columns}</span>
+                    <span>Singers on front row: {stack.front_row_length}</span>
+                    <span>Front row on floor: {stack.front_row_on_floor ? 'Yes' : 'No'}</span>
+                    <DateTag icon="pencil" date={stack.created_at} label="Created" />
+                    <DateTag icon="pencil" date={stack.updated_at} label="Updated" />
+                </>}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Riser Stacks', url: route('stacks.index')},

@@ -118,13 +118,13 @@ const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, allEnsembl
             <PageHeader
                 title={<>{singer.user.name} {singer.user.pronouns && <Pronouns pronouns={singer.user.pronouns} />}</>}
                 image={singer.user.profile_avatar_url}
-                meta={[
-                    allEnsemblesCount === 1 && singer.enrolments?.[0]?.voice_part && (
+                meta={<>
+                    {allEnsemblesCount === 1 && singer.enrolments?.[0]?.voice_part && (
                       <VoicePartTag key={singer.enrolments[0].id} title={singer.enrolments[0].voice_part.title} colour={singer.enrolments[0].voice_part.colour} />
-                    ),
-                    <SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />,
-                    <DateTag date={singer.joined_at} label="Joined" />,
-                ]}
+                    )}
+                    <SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />
+                    <DateTag date={singer.joined_at} label="Joined" />
+                </>}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Singers', url: route('singers.index')},

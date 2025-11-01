@@ -19,12 +19,12 @@ const Show = ({ task, notification }) => {
             <AppHead title={`${notification.subject} - Task Notifications for "${task.name}"`} />
             <PageHeader
                 title={notification.subject}
-                meta={[
-                    <>Recipients: {notification.recipients}</>,
-                    <>Delay: {notification.delay}</>,
-                    <DateTag icon="pencil" date={notification.created_at} label="Created" />,
-                    <DateTag icon="pencil" date={notification.updated_at} label="Updated" />,
-                ]}
+                meta={<>
+                    <div>Recipients: {notification.recipients}</div>
+                    <div>Delay: {notification.delay}</>
+                    <DateTag icon="pencil" date={notification.created_at} label="Created" />
+                    <DateTag icon="pencil" date={notification.updated_at} label="Updated" />
+                </>}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Tasks', url: route('tasks.index')},

@@ -55,7 +55,7 @@ const Index = ({ events, eventTypes, pagination }) => {
                     filterAction,
                     { label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
                 ].filter(action => action.can ? can[action.can] : true)}
-                meta={[<div className="text-gray-400">Calendar Sync URL: {route('events.feed')}</div>]}
+                meta={<div>Calendar Sync URL: {route('events.feed')}</div>}
                 optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
             />
 
