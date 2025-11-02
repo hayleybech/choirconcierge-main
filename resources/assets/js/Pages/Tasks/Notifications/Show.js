@@ -21,7 +21,7 @@ const Show = ({ task, notification }) => {
                 title={notification.subject}
                 meta={<>
                     <div>Recipients: {notification.recipients}</div>
-                    <div>Delay: {notification.delay}</>
+                    <div>Delay: {notification.delay}</div>
                     <DateTag icon="pencil" date={notification.created_at} label="Created" />
                     <DateTag icon="pencil" date={notification.updated_at} label="Updated" />
                 </>}
