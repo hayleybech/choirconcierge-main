@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Stancl\Tenancy\Database\Models\ImpersonationToken;
 use Stancl\Tenancy\Features\UserImpersonation;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -40,12 +41,12 @@ class ImpersonateUserController extends Controller
         // store a token for the original user, so the user can return to normal use
         $token_stop = tenancy()->impersonate(tenancy()->tenant, auth()->id(), $this->getRedirectUrl()); // this url should be overwritten when stopping to avoid confusing the user
         session()->put('impersonation:active', true);
-        session()->put('impersonation:original_user_token', $token_stop);
+        session()->put('impersonation:original_user_token', $token_stop->token);
 
         // initiate impersonation
         $token_start = tenancy()->impersonate(tenancy()->tenant, $user->id, $this->getRedirectUrl());
 
-        return UserImpersonation::makeResponse($token_start, self::START_TOKEN_TTL);
+        return UserImpersonation::makeResponse($token_start->token, self::START_TOKEN_TTL);
     }
 
     public function stop(Request $request): RedirectResponse
@@ -57,7 +58,7 @@ class ImpersonateUserController extends Controller
         }
 
         // get token and clean up session
-        $token_stop = session()->pull('impersonation:original_user_token');
+        $token_stop = ImpersonationToken::find(session()->pull('impersonation:original_user_token'));
         session()->forget('impersonation:active');
 
         // abort if token too old - package does this already but we need a nicer error message here.
