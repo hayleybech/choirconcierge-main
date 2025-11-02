@@ -110,11 +110,11 @@ class UserControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
-        $response = $this->get(the_tenant_route('findVoiceParts', ['q' => 'bari']));
+        $response = $this->get(the_tenant_route('findVoiceParts', ['q' => 'sopr']));
 
         $response->assertOk();
         $response->assertJson([
-            ['text' => 'Baritone'],
+            ['text' => 'Soprano'],
         ]);
     }
 
