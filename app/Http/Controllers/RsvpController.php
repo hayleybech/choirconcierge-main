@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Enrolment;
 use App\Models\Event;
 use App\Models\Rsvp;
-use App\Models\Membership;
 use App\Models\VoicePart;
 use Auth;
 use Illuminate\Http\RedirectResponse;

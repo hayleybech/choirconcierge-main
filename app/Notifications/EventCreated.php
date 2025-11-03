@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
 
 class EventCreated extends Notification
@@ -46,12 +47,21 @@ class EventCreated extends Notification
     {
         return (new MailMessage())
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
-            ->greeting('New event posted!')
-            ->line('A new '.$this->event->type->title.' event, "'.$this->event->title.'" has been created. ')
-            ->line('Date: '.$this->event->call_time->diffForHumans())
-            ->line('Location: '.$this->event->location_name.' '.$this->event->location_address)
-            ->action('View Event', route('events.show', $this->event))
-            ->line(new HtmlString($this->event->description));
+            ->subject('Event Created: ' . $this->event->title)
+            ->markdown('emails.event_created', [
+                'event' => $this->event,
+                'view_url' => route('events.show', $this->event),
+                'going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
+                    'event' => $this->event,
+                    'user' => $notifiable->id,
+                    'response' => 'yes'
+                ]),
+                'not_going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
+                    'event' => $this->event,
+                    'user' => $notifiable->id,
+                    'response' => 'no'
+                ]),
+            ]);
     }
 
     /**

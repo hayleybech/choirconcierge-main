@@ -31,6 +31,7 @@ use App\Http\Controllers\RecurringEventController;
 use App\Http\Controllers\RiserStackController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RsvpController;
+use App\Http\Controllers\RsvpFromNotificationController;
 use App\Http\Controllers\Search\FindSingerController;
 use App\Http\Controllers\Search\GlobalFindUserController;
 use App\Http\Controllers\BroadcastController;
@@ -101,6 +102,11 @@ Route::middleware([
 
     /** Mailbox **/
     Route::get('/mailbox/process', [MailboxController::class, 'process']);
+
+    // Event Email magic links (no login required)
+    Route::get('/events/{event}/email-rsvp/{user}', RsvpFromNotificationController::class)
+        ->name('events.rsvp-from-email')
+        ->middleware('signed');
 
     Route::middleware([
         'auth',

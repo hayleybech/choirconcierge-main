@@ -35,9 +35,10 @@ class DummySongSeeder extends Seeder
                 self::attachRandomCategories($song, $categories);
 
                 // Generate random attachments
-                Storage::disk('tenant')->makeDirectory('songs/' . $song->id);
-                self::insertSampleMp3s($song);
-                self::insertSamplePdfs($song);
+                // @todo fix - broken since LC
+//                Storage::disk('tenant')->makeDirectory('songs/' . $song->id);
+//                self::insertSampleMp3s($song);
+//                self::insertSamplePdfs($song);
             });
     }
 
