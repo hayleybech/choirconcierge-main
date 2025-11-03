@@ -1,6 +1,6 @@
 
 <x-mail::message>
-# New event posted!
+# This event has been updated
 ## {{ $event->title }}
 
 {{-- method 1: attach then reference--}}
@@ -9,14 +9,32 @@
 
 {{-- method 2: path to public folder--}}
 
+@if($event->wasChanged(['start_date', 'end_date']))
+<h3 class="changed-heading">Date Changed</h3>
+<x-mail::panel class="success">
 @if($event->start_date->isSameDay($event->end_date))
 <img src="{{ global_asset('/img/email/calendar-day.png') }}" alt="Date" height="16px"> **{{ $event->start_date->toDayDateTimeString() }} - {{ $event->end_date->format('h:i A') }}**
 @else
 <img src="{{ global_asset('/img/email/calendar-day.png') }}" alt="Date" height="16px"> **{{ $event->start_date->toDayDateTimeString() }} - {{ $event->end_date->toDayDateTimeString() }}**
 @endif
+</x-mail::panel>
+@else
+@if($event->start_date->isSameDay($event->end_date))
+<img src="{{ global_asset('/img/email/calendar-day.png') }}" alt="Date" height="16px"> **{{ $event->start_date->toDayDateTimeString() }} - {{ $event->end_date->format('h:i A') }}**
+@else
+<img src="{{ global_asset('/img/email/calendar-day.png') }}" alt="Date" height="16px"> **{{ $event->start_date->toDayDateTimeString() }} - {{ $event->end_date->toDayDateTimeString() }}**
+@endif
+@endif
 
 @if($event->location_name || $event->location_address)
+@if($event->wasChanged(['location_name', 'location_address']))
+<h3 class="changed-heading">Location Changed</h3>
+<x-mail::panel class="success">
 <img src="{{ global_asset('/img/email/map-marker-alt.png') }}" alt="Location" height="16px"> @if($event->location_name)**{{ $event->location_name }}** -@endif {{ $event->location_address }}
+</x-mail::panel>
+@else
+<img src="{{ global_asset('/img/email/map-marker-alt.png') }}" alt="Location" height="16px"> @if($event->location_name)**{{ $event->location_name }}** -@endif {{ $event->location_address }}
+@endif
 @endif
 
 <x-mail::table>
@@ -24,8 +42,12 @@
 </x-mail::table>
 
 ### Description
+@if($event->wasChanged('description'))
+{{ new \Illuminate\Support\HtmlString($description_diff) }}
+@else
 {{ new \Illuminate\Support\HtmlString($event->description) }}
+@endif
 
-Regards,
+Regards, <br />
 {{ config('app.name') }}
 </x-mail::message>

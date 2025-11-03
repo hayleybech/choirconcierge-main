@@ -106,20 +106,22 @@ class EventController extends Controller
         ]);
     }
 
-    public function update(Event $event, EventRequest $request): RedirectResponse
+    public function update(Event $event, EventRequest $request)
     {
         if ($event->is_repeating) {
             return back()->with(['status' => 'The server tried to edit a repeating event incorrectly.', 'success' => false]);
         }
 
-        $event->update($request->safe()->except('send_notification'));
+        $event->fill($request->safe()->except('send_notification'));
+        $original = $event->getOriginal();
+        $event->save();
 
         if($request->input('is_repeating')) {
             $event->createRepeats();
         }
 
         if ($request->input('send_notification')) {
-            Notification::send(Membership::active()->with('user')->get()->pluck('user'), new EventUpdated($event));
+            Notification::send(Membership::active()->with('user')->get()->pluck('user'), new EventUpdated($event, $original));
         }
 
         return redirect()

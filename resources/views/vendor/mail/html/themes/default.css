@@ -278,15 +278,33 @@ img {
     border-left: #2d3748 solid 4px;
     margin: 21px 0;
 }
+.panel.success {
+    border-left-color: #047857;
+}
+.panel.danger {
+    border-left-color: #dc2626;
+}
 
 .panel-content {
     background-color: #edf2f7;
     color: #718096;
     padding: 16px;
 }
+.success .panel-content {
+    background-color: #dcfce7;
+}
+.danger .panel-content {
+    background-color: #fee2e2;
+}
 
 .panel-content p {
     color: #718096;
+}
+.success .panel-content p {
+    color: #047857;
+}
+.danger .panel-content p {
+    color: #dc2626;
 }
 
 .panel-item {
@@ -296,6 +314,20 @@ img {
 .panel-item p:last-of-type {
     margin-bottom: 0;
     padding-bottom: 0;
+}
+
+/* Diffs */
+.changed-heading {
+    color: #047857;
+    margin-bottom: -16px;
+}
+del {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+ins {
+    color: #047857;
+    background-color: #dcfce7;
 }
 
 /* Utilities */

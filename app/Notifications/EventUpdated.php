@@ -7,7 +7,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
+use Jfcherng\Diff\DiffHelper;
 
 class EventUpdated extends Notification
 {
@@ -20,15 +23,16 @@ class EventUpdated extends Notification
      *
      * @param Event $event
      */
-    public function __construct(Event $event)
+    public function __construct(Event $event, array $original)
     {
         $this->event = $event;
+        $this->original = $original;
     }
 
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function via($notifiable): array
@@ -39,25 +43,52 @@ class EventUpdated extends Notification
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return MailMessage
      */
     public function toMail($notifiable): MailMessage
     {
+        $description_diff = Str::of(
+            DiffHelper::calculate(
+                $this->original['description'],
+                $this->event->description,
+                'Combined',
+                ['ignoreLineEnding' => true],
+                [
+                    'detailLevel' => 'word',
+                    'lineNumbers' => false,
+                    'separateBlock' => false,
+                    'showHeader' => false,
+                ]
+            )
+        )->replace('&lt;', '<')
+        ->replace('&gt;', '>');
+
         return (new MailMessage())
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
-            ->greeting('An event has been updated!')
-            ->line('The event '.$this->event->type->title.' event, "'.$this->event->title.'" has new changes. ')
-            ->line('Date: '.$this->event->call_time->diffForHumans())
-            ->line('Location: '.$this->event->location_name.' '.$this->event->location_address)
-            ->action('View Event', route('events.show', $this->event))
-            ->line(new HtmlString($this->event->description));
+            ->subject('Event Updated: ' . $this->event->title)
+            ->markdown('emails.event_updated', [
+                'event' => $this->event,
+                'original' => $this->original,
+                'view_url' => route('events.show', $this->event),
+                'description_diff' => $description_diff,
+                'going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
+                    'event' => $this->event,
+                    'user' => $notifiable->id,
+                    'response' => 'yes'
+                ]),
+                'not_going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
+                    'event' => $this->event,
+                    'user' => $notifiable->id,
+                    'response' => 'no'
+                ]),
+            ]);
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function toArray($notifiable): array
