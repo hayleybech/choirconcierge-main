@@ -1,26 +1,29 @@
-import {Disclosure} from "@headlessui/react";
-import CollapseHeader from "./CollapseHeader";
-import CollapseTitle from "./CollapseTitle";
-import React from "react";
+import { Disclosure } from '@headlessui/react';
+import CollapseHeader from './CollapseHeader';
+import CollapseTitle from './CollapseTitle';
+import React from 'react';
 
-const CollapseGroup = ({ items }) => (
-    items.map(({ title, show, defaultOpen, action, content }) => (
-    <Disclosure defaultOpen={defaultOpen} key={title}>
-        {({ open }) => (show && <>
-            <CollapseHeader>
-                <Disclosure.Button>
-                    <CollapseTitle open={open}>{title}</CollapseTitle>
-                </Disclosure.Button>
+const CollapseGroup = ({ items }) =>
+	items.map(({ title, show, defaultOpen, action, content }) => (
+		<Disclosure defaultOpen={defaultOpen} key={title}>
+			{({ open }) =>
+				show && (
+					<>
+						<CollapseHeader>
+							<Disclosure.Button>
+								<CollapseTitle open={open}>{title}</CollapseTitle>
+							</Disclosure.Button>
 
-                {action}
-            </CollapseHeader>
+							{action}
+						</CollapseHeader>
 
-            <Disclosure.Panel>
-                {content}
-            </Disclosure.Panel>
-        </>)}
-    </Disclosure>
-    ))
-);
+						<Disclosure.Panel>{content}</Disclosure.Panel>
+					</>
+				)
+			}
+		</Disclosure>
+	));
 
 export default CollapseGroup;
+
+export const CollapsePanelWithoutPadding = ({ children }) => <div className="bg-gray-100">{children}</div>;
