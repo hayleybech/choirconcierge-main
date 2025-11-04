@@ -409,14 +409,14 @@ const EnrolmentDetails = ({ singer, voiceParts, ensembles }) => {
                         <div className="flex items-center gap-2">
                             <strong>{enrolment.ensemble.name}</strong>
                             {enrolment.voice_part && <VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />}
-                            <span className="text-sm text-gray-500 italic">
+                            <span className="text-sm text-gray-500 italic hidden sm:inline">
                                 <DateTag icon="pencil" date={enrolment.updated_at} label="Updated" />
                             </span>
                         </div>
                         <div className="flex items-center gap-2">
                             {/* @todo add a more specific ability check */}
                             {singer.can['update_singer'] && (
-                              <Button variant="danger-outline" size="sm" onClick={() => setDeletingEnrolment(enrolment.id)}>
+                              <Button variant="danger-outline" size="xs" onClick={() => setDeletingEnrolment(enrolment.id)}>
                                   <Icon icon="trash" />
                                   Delete
                               </Button>
@@ -424,7 +424,7 @@ const EnrolmentDetails = ({ singer, voiceParts, ensembles }) => {
 
                             {/* @todo add a more specific ability check */}
                             {singer.can['update_singer'] && (
-                                <Button variant="primary" size="sm" onClick={() => setEditingEnrolment(enrolment.id)}>
+                                <Button variant="primary" size="xs" onClick={() => setEditingEnrolment(enrolment.id)}>
                                     <Icon icon="edit" />
                                     Edit
                                 </Button>
@@ -438,7 +438,7 @@ const EnrolmentDetails = ({ singer, voiceParts, ensembles }) => {
                       <div className="text-gray-800">
                         Add a new enrolment
                       </div>
-                      <Button variant="primary" size="sm" onClick={() => setCreatingEnrolment(true)}>
+                      <Button variant="primary" size="xs" onClick={() => setCreatingEnrolment(true)}>
                           <Icon icon="plus" />
                           Create
                       </Button>
