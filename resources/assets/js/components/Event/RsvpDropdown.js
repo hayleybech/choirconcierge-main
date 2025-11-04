@@ -16,7 +16,7 @@ const getItemColour = (label) => items.find(item => item.label === label)?.colou
 const RsvpDropdown = ({ event, size = 'sm' }) => {
 
   return items.length > 0 && (
-    <Menu as="div" className="relative inline-block w-full overflow-visible">
+    <Menu as="div" className="relative inline-block w-full sm:w-auto overflow-visible">
       <Menu.Button className={buttonStyles('secondary', size, '', 'relative z-0 w-full md:w-auto')}>
         <Icon icon={event.my_rsvp.icon} className={getItemColour(event.my_rsvp.label)} />
         <span className={getItemColour(event.my_rsvp.label)}>{event.my_rsvp.label}</span>
