@@ -22,13 +22,13 @@ const SongCategoryTableMobile = ({ categories, showEditCategory, showDeleteCateg
                         </div>
                         <div className="flex gap-2 justify-end">
                             {can.create_song && (
-                            <Button variant="primary" size="sm" onClick={() => showEditCategory(category)}>
+                            <Button variant="primary" size="xs" onClick={() => showEditCategory(category)}>
                                 <Icon icon="edit" />
                                 <div className="sr-only">Edit</div>
                             </Button>
                             )}
                             {can.create_song && (
-                            <Button variant="danger-outline" size="sm" onClick={() => showDeleteCategory(category)}>
+                            <Button variant="danger-outline" size="xs" onClick={() => showDeleteCategory(category)}>
                                 <Icon icon="trash" />
                                 <div className="sr-only">Delete</div>
                             </Button>

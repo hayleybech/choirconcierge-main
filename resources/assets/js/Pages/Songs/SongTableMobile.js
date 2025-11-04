@@ -17,7 +17,7 @@ const SongTableMobile = ({ songs }) => {
             {songs.data.map((song) => (
                 <li key={song.id} className="flex pl-4">
                     <div className="shrink-0 py-3">
-                        <PitchButton synth={synth} note={song.pitch.split('/')[0]} size="sm" />
+                        <PitchButton synth={synth} note={song.pitch.split('/')[0]} size="xs" />
                     </div>
                     <TableMobileLink url={route('songs.show', {song})}>
                         <div className="min-w-0 flex-1 lg:grid lg:grid-cols-2 lg:gap-4">

@@ -118,7 +118,7 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
 							{ name: song.title, url: route('songs.show', { song }) },
 						]}
 						actions={[
-							<PitchButton synth={synth} note={song.pitch.split('/')[0]} />,
+							<PitchButton synth={synth} note={song.pitch.split('/')[0]} size="sm" />,
 							{ label: 'Edit', icon: 'edit', url: route('songs.edit', { song }), can: 'update_song' },
 							{
 								label: 'Delete',
@@ -250,7 +250,7 @@ const EditLearningSummaryButton = ({ song }) => {
 	const { route } = useRoute();
 
 	return (
-		<ButtonLink variant="primary" size="sm" href={route('songs.singers.index', { song })}>
+		<ButtonLink variant="primary" size="xs" href={route('songs.singers.index', { song })}>
 			<Icon icon="edit" />
 			Edit
 		</ButtonLink>

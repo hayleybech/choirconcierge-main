@@ -72,7 +72,7 @@ const Index = ({ song, voiceParts }) => {
 															href={route('songs.singers.update', {song, singer})}
 															method="put"
 															data={{ status: 'performance-ready' }}
-															size="sm"
+															size="xs"
 														>
 															Mark as Performance Ready
 														</Button>
@@ -82,7 +82,7 @@ const Index = ({ song, voiceParts }) => {
 															href={route('songs.singers.update', {song, singer})}
 															method="put"
 															data={{ status: 'not-started' }}
-															size="sm"
+															size="xs"
 														>
 															Mark as Learning
 														</Button>

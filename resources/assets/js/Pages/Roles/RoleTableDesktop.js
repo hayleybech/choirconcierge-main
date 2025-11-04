@@ -18,13 +18,9 @@ const RoleTableDesktop = ({ roles }) => {
             body={roles.map((role) => (
                 <tr key={role.id}>
                     <TableCell>
-                        <div className="flex items-center">
-                            <div className="ml-4">
-                                <Link href={route('roles.show', {role: role.id})} className="text-sm font-medium text-purple-800">
-                                    {role.name}
-                                </Link>
-                            </div>
-                        </div>
+                        <Link href={route('roles.show', {role: role.id})} className="text-sm font-medium text-purple-800">
+                            {role.name}
+                        </Link>
                     </TableCell>
                     <TableCell>
                         <Link href={route('singers.index')} data={{ filter: { 'roles.id': [role.id] } }} className="text-purple-800">

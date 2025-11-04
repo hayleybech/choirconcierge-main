@@ -36,17 +36,21 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                     <React.Fragment key={folder.id}>
                         <tr>
                             <TableCell>
-                                <div className="flex items-center">
-                                    <div className="ml-4">
-                                        <a
-                                            href="#"
-                                            className="text-purple-600"
-                                            onClick={() => setOpenFolder(folder.id === openFolder ? 0 : folder.id)}
-                                        >
-                                            <Icon icon={folder.id === openFolder ? 'folder-open' : 'folder'} mr className="text-purple-500" />
-                                            {folder.title}
-                                        </a>
-                                        {permissions['update_folder'] && (
+                                <a
+                                    href="#"
+                                    className="text-purple-600"
+                                    onClick={() => setOpenFolder(folder.id === openFolder ? 0 : folder.id)}
+                                >
+                                    <Icon icon={folder.id === openFolder ? 'folder-open' : 'folder'} mr className="text-purple-500" />
+                                    {folder.title}
+                                </a>
+                            </TableCell>
+                            <TableCell>
+                                <DateTag icon="pencil" date={folder.created_at} />
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex items-center gap-2">
+                                    {permissions['update_folder'] && (
                                         <Button
                                             variant="secondary"
                                             size="xs"
@@ -56,33 +60,31 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                                             <Icon icon="edit" />
                                             Rename
                                         </Button>
-                                        )}
-                                    </div>
+                                    )}
+                                    {permissions['delete_folder'] && (
+                                        <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline" size="xs">
+                                            <Icon icon="times" /> Delete
+                                        </Button>
+                                    )}
                                 </div>
-                            </TableCell>
-                            <TableCell>
-                                <DateTag icon="pencil" date={folder.created_at} />
-                            </TableCell>
-                            <TableCell>
-                                {permissions['delete_folder'] && (
-                                    <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline">
-                                        <Icon icon="times" />
-                                    </Button>
-                                )}
                             </TableCell>
                         </tr>
                         {folder.id === openFolder && <>
                             {folder.documents.map((document) => (
                                 <tr key={document.id}>
                                     <TableCell>
-                                        <div className="flex items-center">
-                                            <div className="ml-4">
-                                                <a href={document.download_url} download={document.title} target="_blank" className="text-purple-600">
-                                                    <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" />
-                                                    <FolderIcon icon={document.icon} />
-                                                    {document.title}
-                                                </a>
-                                                {permissions['update_document'] && (
+                                        <a href={document.download_url} download={document.title} target="_blank" className="text-purple-600">
+                                            <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" />
+                                            <FolderIcon icon={document.icon} />
+                                            {document.title}
+                                        </a>
+                                    </TableCell>
+                                    <TableCell>
+                                        <DateTag icon="pencil" date={document.created_at} />
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center gap-2">
+                                            {permissions['update_document'] && (
                                                 <Button
                                                     variant="secondary"
                                                     size="xs"
@@ -92,19 +94,13 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                                                     <Icon icon="edit" />
                                                     Rename
                                                 </Button>
-                                                )}
-                                            </div>
+                                            )}
+                                            {permissions['delete_document'] && (
+                                                <Button onClick={() => setDeletingDocument(document)} variant="danger-outline" size="xs">
+                                                    <Icon icon="times" /> Delete
+                                                </Button>
+                                            )}
                                         </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <DateTag icon="pencil" date={document.created_at} />
-                                    </TableCell>
-                                    <TableCell>
-                                        {permissions['delete_document'] && (
-                                            <Button onClick={() => setDeletingDocument(document)} variant="danger-outline">
-                                                <Icon icon="times" />
-                                            </Button>
-                                        )}
                                     </TableCell>
                                 </tr>
                             ))}
@@ -123,9 +119,7 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
                             {permissions['create_document'] && (
                             <tr>
                                 <TableCell colSpan={3}>
-                                    <div className="ml-4">
-                                        <DocumentForm folder={folder} />
-                                    </div>
+                                    <DocumentForm folder={folder} />
                                 </TableCell>
                             </tr>
                             )}

@@ -172,7 +172,7 @@ const EnsemblesList = ({ organisation }) => {
                                     {ensemble.logo && <img src={ensemble.logo_url} alt={ensemble.name} className="max-h-10 w-auto shrink" />}
                                     <div>{ensemble.name}</div>
                                 </div>
-                                <Button variant="primary" size="sm" onClick={() => setEditingEnsemble(ensemble)}>
+                                <Button variant="primary" size="xs" onClick={() => setEditingEnsemble(ensemble)}>
                                     <Icon icon="edit" />
                                     Edit
                                 </Button>

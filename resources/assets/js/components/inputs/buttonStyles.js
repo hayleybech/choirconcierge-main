@@ -17,7 +17,7 @@ const buttonStyles = (variant = 'secondary', size = 'md', disabled, extra) => cl
     size === 'md' ? 'py-2 px-4 text-md rounded-md' : '',
     size === 'sm' && (variant !== 'clear' && variant !== 'danger-clear') ? 'py-1.5 px-3 text-sm rounded' : '',
     size === 'sm' && (variant === 'clear' || variant === 'danger-clear') ? 'py-1.5 px-1.5 text-sm rounded' : '',
-    size === 'xs' ? 'py-1 px-1.5 text-xs rounded-sm' : '',
+    size === 'xs' ? 'py-1 px-1.5 text-xs rounded' : '',
 );
 
 export default buttonStyles;

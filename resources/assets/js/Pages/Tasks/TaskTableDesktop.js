@@ -23,11 +23,7 @@ const TaskTableDesktop = ({ tasks }) => {
             body={tasks.data.map((task) => (
                 <tr key={task.id}>
                     <TableCell>
-                        <div className="flex items-center">
-                            <div className="ml-4">
-                                <Link href={route('tasks.show', {task: task.id})} className="text-sm font-medium text-purple-800">{task.name}</Link>
-                            </div>
-                        </div>
+                        <Link href={route('tasks.show', {task: task.id})} className="text-sm font-medium text-purple-800">{task.name}</Link>
                     </TableCell>
                     <TableCell>
                         {task.role?.name}

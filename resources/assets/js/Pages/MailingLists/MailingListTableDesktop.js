@@ -30,13 +30,9 @@ const MailingListTableDesktop = ({ lists }) => {
             body={lists.data.map((list) => (
                 <tr key={list.id}>
                     <TableCell>
-                        <div className="flex items-center">
-                            <div className="ml-4">
-                                <Link href={route('groups.show', {group: list.id})} className="text-sm font-medium text-purple-800">
-                                    {list.title}
-                                </Link>
-                            </div>
-                        </div>
+                        <Link href={route('groups.show', {group: list.id})} className="text-sm font-medium text-purple-800">
+                            {list.title}
+                        </Link>
                     </TableCell>
                     <TableCell>
                         <Icon icon={list.type_icon} mr className="text-gray-400" />{list_type_labels[list.list_type]}

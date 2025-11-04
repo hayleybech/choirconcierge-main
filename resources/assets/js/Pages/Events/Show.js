@@ -162,7 +162,7 @@ const Show = ({
 								content: <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />,
 							},
 							{
-								title: 'RSVP Summary',
+								title: 'RSVPs',
 								show: pageProps.can['list_attendances'],
 								action: <ViewRsvpsButton event={event} />,
 								content: (
@@ -174,7 +174,7 @@ const Show = ({
 								),
 							},
 							{
-								title: 'Attendance Summary',
+								title: 'Attendance',
 								show: pageProps.can['create_attendance'],
 								action: <EditAttendanceButton event={event} />,
 								content: (
@@ -220,7 +220,7 @@ const ViewRsvpsButton = ({ event }) => {
 	const { route } = useRoute();
 
 	return (
-		<ButtonLink variant="primary" size="sm" href={route('events.rsvps.index', { event })}>
+		<ButtonLink variant="primary" size="xs" href={route('events.rsvps.index', { event })}>
 			<Icon icon="clipboard-list" />
 			View All
 		</ButtonLink>
@@ -231,7 +231,7 @@ const EditAttendanceButton = ({ event }) => {
 	const { route } = useRoute();
 
 	return (
-		<ButtonLink variant="primary" size="sm" href={route('events.attendances.index', { event })}>
+		<ButtonLink variant="primary" size="xs" href={route('events.attendances.index', { event })}>
 			<Icon icon="edit" />
 			Edit
 		</ButtonLink>

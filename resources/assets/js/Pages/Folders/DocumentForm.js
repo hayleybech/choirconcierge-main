@@ -36,7 +36,7 @@ const DocumentForm = ({ folder }) => {
                 </div>
 
                 <div className="sm:col-span-1">
-                    <Button variant="primary" type="submit" className="block w-full" disabled={processing}>
+                    <Button variant="primary" type="submit" className="block w-full" disabled={processing} size="sm">
                         <Icon icon="file-plus" />
                         Upload
                     </Button>

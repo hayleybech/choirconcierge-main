@@ -30,14 +30,10 @@ const EventTableDesktop = ({ events, sortFilterForm, pagination }) => {
             body={events.map((event) => (
                 <tr key={event.id}>
                     <TableCell>
-                        <div className="flex items-center">
-                            <div className="ml-4">
-                                <Link href={route('events.show', {event})} className="text-sm font-medium text-purple-800">
-                                    {event.title}
-                                    {event.is_repeating && <Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />}
-                                </Link>
-                            </div>
-                        </div>
+                        <Link href={route('events.show', {event})} className="text-sm font-medium text-purple-800">
+                            {event.title}
+                            {event.is_repeating && <Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />}
+                        </Link>
                     </TableCell>
                     <TableCell>
                         <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>

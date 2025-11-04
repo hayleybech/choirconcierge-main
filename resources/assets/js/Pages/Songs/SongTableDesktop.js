@@ -32,7 +32,7 @@ const SongTableDesktop = ({ songs, sortFilterForm }) => {
                     <TableCell>
                         <div className="flex items-center">
                             <div>
-                                <PitchButton synth={synth} note={song.pitch.split('/')[0]} size="sm" />
+                                <PitchButton synth={synth} note={song.pitch.split('/')[0]} size="xs" />
                             </div>
                             <div className="ml-4">
                                 <Link href={route('songs.show', {song})} className="text-sm font-medium text-purple-800">{song.title}</Link>

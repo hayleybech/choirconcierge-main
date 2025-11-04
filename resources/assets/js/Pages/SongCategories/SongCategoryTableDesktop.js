@@ -37,13 +37,13 @@ const SongCategoryTableDesktop = ({ categories, showEditCategory, showDeleteCate
                   <TableCell>
                     <div className="flex gap-2 justify-end">
                       {can.create_song && (
-                        <Button variant="primary" size="sm" onClick={() => showEditCategory(category)}>
+                        <Button variant="primary" size="xs" onClick={() => showEditCategory(category)}>
                           <Icon icon="edit" />
                           Edit
                         </Button>
                       )}
                       {can.create_song && (
-                        <Button variant="danger-outline" size="sm" onClick={() => showDeleteCategory(category)}>
+                        <Button variant="danger-outline" size="xs" onClick={() => showDeleteCategory(category)}>
                           <Icon icon="trash" />
                           Delete
                         </Button>
