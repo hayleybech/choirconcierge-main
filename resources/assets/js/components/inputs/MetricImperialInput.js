@@ -62,7 +62,7 @@ const MetricImperialInput = ({ name, value, updateFn, hasErrors, wrapperClasses,
 						<TextInput
 							name={name}
 							type="number"
-							value={value}
+							value={Math.floor(value)}
 							updateFn={updateFn}
 							wrapperClasses="w-24"
 							hasErrors={hasErrors}
