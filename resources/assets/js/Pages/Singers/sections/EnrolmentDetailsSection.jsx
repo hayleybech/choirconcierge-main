@@ -32,7 +32,7 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 										colour={enrolment.voice_part.colour}
 									/>
 								)}
-								<span className="text-sm text-gray-500 italic hidden sm:inline">
+								<span className="text-sm text-gray-500 italic hidden md:inline">
 									<DateTag icon="pencil" date={enrolment.updated_at} label="Updated" />
 								</span>
 							</div>
