@@ -88,10 +88,11 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 						/>
 					)}
 					<EditEnrolmentDialog
+						key={editingEnrolment}
 						isOpen={!!editingEnrolment}
 						setIsOpen={setEditingEnrolment}
 						singer={singer}
-						enrolment={editingEnrolment}
+						enrolment={singer.enrolments.find(item => item.id === editingEnrolment)}
 						voiceParts={voiceParts}
 					/>
 					<DeleteEnrolmentDialog
@@ -156,7 +157,7 @@ const CreateEnrolmentDialog = ({ singer, isOpen, setIsOpen, voiceParts, ensemble
 };
 
 const EditEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts }) => {
-	const [selectedVoicePart, setSelectedVoicePart] = useState(0);
+	const [selectedVoicePart, setSelectedVoicePart] = useState(enrolment?.voice_part?.id ?? 0);
 
 	const { route } = useRoute();
 
