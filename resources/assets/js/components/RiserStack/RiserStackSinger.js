@@ -1,12 +1,15 @@
 import React, {useMemo} from "react";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../../../../../tailwind.config";
+import {cmToInFt} from "../../Pages/Singers/components/HeightToggle";
 
-const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelected, showHeight, singerHeight, isMe }) => {
+const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelected, showHeight, showImperial, singerHeight, isMe }) => {
 	const fullConfig = resolveConfig(tailwindConfig);
 	const labelHeight = 15;
 	const labelWidth = 35;
 	const nameOffsetY = 15;
+
+	const heightImperial = cmToInFt(singerHeight);
 
 	const namePosition = useMemo( () => ({
 		x: radius,
@@ -19,7 +22,6 @@ const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelecte
 		height: labelHeight,
 		width: labelWidth,
 	}), [namePosition]);
-
 
 	const singerInitials = useMemo(() =>
 		name.split(' ')
@@ -66,7 +68,17 @@ const RiserStackSinger = ({ singerId, name, imageUrl, radius, onClick, isSelecte
 					fontWeight: 600,
 			}}
 			>
-				{ showHeight ? `${singerHeight}cm` : singerInitials }
+				{showHeight ? (
+					<>
+					{Number.isNaN(singerHeight) ? '?' : (
+						<>
+							{showImperial
+								? `${heightImperial.feet} ft ${heightImperial.feet} in`
+								: `${Math.round(singerHeight)} cm`}
+						</>
+					)}
+					</>
+				) : singerInitials}
 			</text>
 			<defs>
 				<pattern

@@ -3,6 +3,7 @@ import { DetailList, DetailListItem } from '../components/DetailList';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
 import React from 'react';
+import HeightToggle from "../components/HeightToggle";
 
 export const PersonalDetailsSection = ({ singer }) => (
 	<CollapsePanel>
@@ -29,7 +30,7 @@ export const PersonalDetailsSection = ({ singer }) => (
 				{singer.user.dob ? <DateTag date={singer.user.dob} /> : 'No date of birth'}
 			</DetailListItem>
 			<DetailListItem label="Height">
-				{singer.user.height ? `${Math.round(singer.user.height)} cm` : 'Unknown'}
+				{singer.user.height ? <HeightToggle cm={singer.user.height} /> : 'Unknown'}
 			</DetailListItem>
 			<DetailListItem label="BHA Member ID">
 				<Icon icon="id-card" mr type="regular" className="text-gray-400" />

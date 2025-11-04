@@ -19,6 +19,7 @@ const RiserStackForm = ({ stack, voiceParts, singers }) => {
     const { user } = usePage().props;
 
     const [showHeights, setShowHeights] = useState(false);
+    const [showImperial, setShowImperial] = useState(false);
 
     const { data, setData, post, put, processing, errors } = useForm({
         title: stack?.title ?? '',
@@ -118,9 +119,18 @@ const RiserStackForm = ({ stack, voiceParts, singers }) => {
                     <div className="sm:col-span-1">
                         <DetailToggle
                           label="Show heights"
-                          description="Show the heights of singers"
+                          description="Show singers' heights instead of initials"
                           value={showHeights}
                           updateFn={value => setShowHeights(value)}
+                        />
+                    </div>
+                    <div className="sm:col-span-1">
+                        <DetailToggle
+                            label="Metric/Imperial"
+                            description={`Showing ${showImperial ? 'imperial' : 'metric'}`}
+                            value={showImperial}
+                            updateFn={setShowImperial}
+                            disabled={!showHeights}
                         />
                     </div>
 
@@ -135,7 +145,7 @@ const RiserStackForm = ({ stack, voiceParts, singers }) => {
                         setSelectedSinger={setSelectedSinger}
                         selectedSinger={selectedSinger}
                         moveSelectedSingerToHoldingArea={() => { moveSingerToHoldingArea(selectedSinger); setSelectedSinger(null); }}
-                        showHeights={showHeights}
+                        showImperial={showImperial}
                     />
                 </div>
 
@@ -154,6 +164,7 @@ const RiserStackForm = ({ stack, voiceParts, singers }) => {
                         selectedSinger={selectedSinger}
                         removeSingerFromHoldingArea={removeSingerFromHoldingArea}
                         showHeights={showHeights}
+                        showImperial={showImperial}
                         currentUserId={user.id}
                     />
                 </div>

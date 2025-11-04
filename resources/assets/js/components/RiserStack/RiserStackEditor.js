@@ -16,6 +16,7 @@ const RiserStackEditor = ({
   setSelectedSinger,
   removeSingerFromHoldingArea,
   showHeights,
+  showImperial,
   currentUserId,
 }) => {
     const originModifier = {
@@ -77,6 +78,7 @@ const RiserStackEditor = ({
                     setSelectedSinger={setSelectedSinger}
                     moveSelectedSingerTo={(coords) => moveSingerToStack(coords, selectedSinger)}
                     showHeights={showHeights}
+                    showImperial={showImperial}
                     currentUserId={currentUserId}
                 />
 

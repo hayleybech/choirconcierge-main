@@ -1,7 +1,8 @@
 import React from 'react';
 import classNames from "../../classNames";
+import {cmToInFt} from "../../Pages/Singers/components/HeightToggle";
 
-const RiserStackHoldingArea = ({ voiceParts, singers, setSelectedSinger, selectedSinger, moveSelectedSingerToHoldingArea, showHeights }) => {
+const RiserStackHoldingArea = ({ voiceParts, singers, setSelectedSinger, selectedSinger, moveSelectedSingerToHoldingArea, showImperial }) => {
 
 	function holdingAreaContainsSelectedSinger() {
 		if(! selectedSinger){
@@ -28,20 +29,30 @@ const RiserStackHoldingArea = ({ voiceParts, singers, setSelectedSinger, selecte
 						{singers.filter(singer => singer.enrolments.some(enrolment => enrolment.voice_part_id === voicePart.id)).map((singer) => (
 							<li key={singer.id} >
 								<div className={classNames(
-									'relative px-6 py-5 flex items-center space-x-3',
+									'relative px-6 py-5 flex items-center space-x-3 justify-between',
 									selectedSinger?.id === singer.id ? 'bg-purple-400 ring-2 ring-inset ring-purple-500' : 'bg-white hover:bg-purple-300'
 								)}>
-									<div className="shrink-0">
-										<img className="h-8 w-8 rounded-lg" src={singer.user.avatar_url} alt={singer.user.name} />
+									<div className="flex items-center space-x-3">
+										<div className="shrink-0">
+											<img className="h-8 w-8 rounded-lg" src={singer.user.avatar_url} alt={singer.user.name} />
+										</div>
+										<div className="flex items-center justify-between px-4">
+											<button type="button" onClick={() => toggleSelectedSinger(singer)} className="focus:outline-none">
+												{/* Extend touch target to entire panel */}
+												<span className="absolute inset-0" aria-hidden="true" />
+												<span className="text-sm font-medium truncate">{singer.user.name}</span>
+											</button>
+										</div>
 									</div>
-									<div className="flex items-center justify-between px-4">
-										<button type="button" onClick={() => toggleSelectedSinger(singer)} className="focus:outline-none">
-											{/* Extend touch target to entire panel */}
-											<span className="absolute inset-0" aria-hidden="true" />
-											<span className="text-sm font-medium truncate">{singer.user.name}</span>
-										</button>
+									<div className="text-sm text-gray-500">
+										{!Number.isNaN(singer.user.height) && (
+											<>
+												{showImperial
+													? `${cmToInFt(singer.user.height).feet} ft ${cmToInFt(singer.user.height).feet} in`
+													: `${Math.round(singer.user.height)} cm`}
+											</>
+										)}
 									</div>
-									{showHeights && <div className="text-sm text-gray-500">({Math.round(singer.user.height)}cm)</div>}
 								</div>
 							</li>
 						))}

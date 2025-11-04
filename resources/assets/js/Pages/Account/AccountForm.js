@@ -15,6 +15,7 @@ import DayInput from "../../components/inputs/Day";
 import {DateTime} from "luxon";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
+import MetricImperialInput from "../../components/inputs/MetricImperialInput";
 
 const AccountForm = ({ }) => {
     const { route } = useRoute();
@@ -119,8 +120,8 @@ const AccountForm = ({ }) => {
                     </div>
 
                     <div className="sm:col-span-2">
-                        <Label label="Height (cm)" forInput="height" />
-                        <TextInput type="number" name="height" value={data.height} updateFn={value => setData('height', value)} hasErrors={ !! errors['height'] } />
+                        <Label label="Height" forInput="height" />
+                        <MetricImperialInput name="height" value={data.height} updateFn={value => setData('height', value)} hasErrors={!!errors['height']} />
                         <Help>Knowing the singer's height is useful for riser stacks.</Help>
                         {errors.height && <Error>{errors.height}</Error>}
                     </div>
