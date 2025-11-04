@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Models\Song;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\HtmlString;
@@ -46,6 +45,7 @@ class SongUpdated extends Notification
     {
         return (new MailMessage())
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
+            ->subject('Song Updated: '.$this->song->title)
             ->greeting('Updated song')
             ->line('The song, "'.$this->song->title.'", has recently been modified.')
             ->action('View Song', route('songs.show', $this->song))
