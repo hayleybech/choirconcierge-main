@@ -90,18 +90,18 @@ const AttendanceReport = ({
 											<th key={event.id} className="border border-gray-300 align-bottom h-full">
 												<Link
 													href={route('events.show', { event })}
-													className="flex p-5 justify-center transform rotate-180 text-purple-800 hover:bg-purple-100 hover:text-purple-600 h-full"
+													className="flex px-2 md:px-2 py-3 md:py-5 justify-center transform rotate-180 text-purple-800 hover:bg-purple-100 hover:text-purple-600 h-full"
 												>
 													<div
 														className="text-ellipsis overflow-hidden text-sm text-left"
 														style={{ writingMode: 'vertical-lr' }}
 													>
-														{event.title}
+														{truncateString(event.title, 30)}
 													</div>
 												</Link>
 											</th>
 										))}
-										<th className="p-5 border border-gray-300 align-bottom bg-gray-100">
+										<th className="px-2 md:px-2 py-3 md:py-5 border border-gray-300 align-bottom bg-gray-100">
 											<div className="flex justify-center transform rotate-180">
 												<div
 													className="text-ellipsis overflow-hidden text-sm text-left"
@@ -117,7 +117,7 @@ const AttendanceReport = ({
 										{events.map(event => (
 											<th
 												key={event.id}
-												className="font-medium text-gray-500 text-sm whitespace-nowrap border border-gray-300 p-5"
+												className="font-medium text-gray-500 text-xs md:text-sm whitespace-nowrap border border-gray-300 px-1 md:px-5 py-2 md:py-3"
 											>
 												{DateTime.fromISO(event.start_date).toFormat('y')}
 												<br />
@@ -134,7 +134,7 @@ const AttendanceReport = ({
 											<tr>
 												<th
 													colSpan="100000"
-													className="text-left px-5 py-3 bg-gray-100 border border-gray-300"
+													className="text-left px-3 md:px-5 py-2 md:py-3 text-sm md:text-base bg-gray-100 border border-gray-300"
 												>
 													{voicePart.title}
 												</th>
@@ -144,17 +144,17 @@ const AttendanceReport = ({
 													<th className="text-left whitespace-nowrap border border-gray-300">
 														<Link
 															href={route('singers.show', { singer })}
-															className="flex flex-nowrap items-center px-5 py-3 hover:bg-purple-100 hover:text-purple-600 text-purple-800"
+															className="flex flex-nowrap items-center px-3 md:px-5 py-2 md:py-3 gap-2 md:gap-3 hover:bg-purple-100 hover:text-purple-600 text-purple-800"
 														>
-															<div className="shrink-0 h-10 w-10 mr-4">
+															<div className="shrink-0 h-6 md:h-8 w-6 md:w-8">
 																<img
-																	className="h-10 w-10 rounded-md"
+																	className="h-6 w-6 md:h-8 md: md:w-8 rounded-sm md:rounded-md"
 																	src={singer.user.avatar_url}
 																	alt={singer.user.name}
 																/>
 															</div>
 
-															<span className="">{singer.user.name}</span>
+															<span className="text-sm md:text-base">{singer.user.name}</span>
 														</Link>
 													</th>
 													{events
@@ -174,9 +174,9 @@ const AttendanceReport = ({
 																)}
 															</td>
 														))}
-													<td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-5">
-														<div>{singer.percentPresent}%</div>
-														<div className="text-xs">
+													<td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-5">
+														<div className="text-sm md:text-base">{singer.percentPresent}%</div>
+														<div className="text-xs hidden md:block">
 															{singer.timesPresent}&nbsp;/&nbsp;{events.length}
 														</div>
 													</td>
@@ -187,16 +187,16 @@ const AttendanceReport = ({
 								</tbody>
 								<tfoot>
 									<tr>
-										<th className="border border-gray-300 bg-gray-100 text-left p-5">
+										<th className="border border-gray-300 bg-gray-100 text-left px-2 md:px-2 py-3 md:py-3 text-xs md:text-base">
 											Singers Present
 										</th>
 										{events.map(event => (
 											<td
-												className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-5"
+												className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-3"
 												key={event.id}
 											>
-												<div>{event.percentPresent}%</div>
-												<div className="text-xs">
+												<div className="text-sm md:text-base">{event.percentPresent}%</div>
+												<div className="text-xs hidden md:block">
 													{event.singersPresent} / {numSingers}
 												</div>
 											</td>
@@ -217,3 +217,8 @@ AttendanceReport.layout = page => <TenantLayout children={page} />
 export default AttendanceReport;
 
 const getAttendanceBySingerAndEvent = (singer, event) => singer.attendances.filter((attendance) => attendance.event_id === event.id)[0] ?? null;
+
+const truncateString = (string = '', maxLength = 50) =>
+	string.length > maxLength
+		? `${string.substring(0, maxLength)}…`
+		: string
