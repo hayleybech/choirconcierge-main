@@ -40,8 +40,8 @@ const Show = ({ tenant }) => {
                     <span>{tenant.timezone}</span>
                     {tenant.renews_at && <DateTag date={tenant.renews_at} label="Renews" />}
                     <DateTag icon="pencil" date={tenant.created_at} label="Created" />
-                    <BillingTag billing={tenant.billing_status} />
-                    {!tenant.setup_done && <Badge colour="bg-orange-100 text-orange-700">Setup Pending - Come back later</Badge>}
+                    <div><BillingTag billing={tenant.billing_status} /></div>
+                    {!tenant.setup_done && <div><Badge colour="bg-orange-100 text-orange-700">Setup Pending - Come back later</Badge></div>}
                 </>}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('central.dash')},
