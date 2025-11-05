@@ -70,6 +70,7 @@ const SongForm = ({ categories, statuses, pitches, song }) => {
                                 id: status.id,
                                 name: SongStatus.statuses[status.slug].title,
                                 textColour: SongStatus.statuses[status.slug].textColour,
+                                colour: SongStatus.statuses[status.slug].textColour,
                                 icon: SongStatus.statuses[status.slug].icon,
                             }))}
                             selected={data.status}

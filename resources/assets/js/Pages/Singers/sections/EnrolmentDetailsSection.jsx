@@ -145,7 +145,7 @@ const CreateEnrolmentDialog = ({ singer, isOpen, setIsOpen, voiceParts, ensemble
 				options={voiceParts.map(part => ({
 					id: part.id,
 					name: part.title,
-					colour: `${part.colour}-500`,
+					colour: `text-${part.colour}-500`,
 					icon: 'circle',
 				}))}
 				selected={selectedVoicePart}
@@ -181,7 +181,7 @@ const EditEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts 
 				options={voiceParts.map(part => ({
 					id: part.id,
 					name: part.title,
-					colour: `${part.colour}-500`,
+					colour: `text-{part.colour}-500`,
 					icon: 'circle',
 				}))}
 				selected={selectedVoicePart}

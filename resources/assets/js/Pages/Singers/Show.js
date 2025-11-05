@@ -210,7 +210,7 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
 				options={categories.map(category => ({
 					id: category,
 					name: SingerStatus.statuses[category.slug].title,
-					textColour: SingerStatus.statuses[category.slug].textColour,
+					colour: SingerStatus.statuses[category.slug].textColour,
 					icon: SingerStatus.statuses[category.slug].icon,
 				}))}
 				selected={selectedCategory}
