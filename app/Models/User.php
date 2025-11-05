@@ -207,7 +207,7 @@ class User extends Authenticatable implements HasMedia
     public function bhaType(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['dob']
+            get: fn($value, $attributes) => array_key_exists('dob', $attributes) && $attributes['dob']
                 ? Carbon::make($attributes['dob'])->diffInYears(now()->startOfYear()) > 25 ? 'Full' : 'Youth'
                 : ''
         );

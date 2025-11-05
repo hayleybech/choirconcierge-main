@@ -179,7 +179,8 @@ class SingerController extends Controller
             ->allowedFilters([
                 AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query
                     ->whereHas('user', fn(Builder $query) => $query
-                        ->whereRaw('CONCAT(first_name, ?, last_name) LIKE ?', [' ', "%$value%"])
+                        ->whereRaw('CONCAT(first_name, ?, last_name) LIKE LOWER(?)', [' ', "%$value%"])
+                        ->orWhereRaw('email LIKE LOWER(?)', ["%$value%"])
                     )),
                 AllowedFilter::exact('category.id')
                     ->default([$defaultStatus]),

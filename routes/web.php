@@ -28,10 +28,15 @@ Route::prefix('/app')->group(function () {
 	Route::middleware(['auth'])->name('central.')->group(function () {
 		Route::get('/', [Central\DashController::class, 'index'])->name('dash');
         Route::resource('default-dash', Central\DefaultDashController::class)->only(['index', 'update', 'destroy']);
-        Route::resource('tenants', Central\TenantController::class)->only(['index', 'show', 'create', 'store']);
         Route::resource('mail-logs', Central\MailLogController::class)->only(['index', 'show'])->middleware([EnsureUserIsSuperAdmin::class]);
+
+        // Tenants
+        Route::resource('tenants', Central\TenantController::class)->only(['index', 'show', 'create', 'store']);
         Route::get('tenants/{tenant}/onboarding', Central\TenantOnboardingController::class)->name('tenants.onboarding');
         Route::get('tenants/{tenant}/track-demo', Central\TrackTenantSalesDemoController::class)->name('tenants.track-demo');
+
+        // Users
+        Route::resource('users', Central\UserController::class)->only(['index', 'show']);
 
 		// Account Settings
 		Route::get('account/edit', [Central\AccountController::class, 'edit'])->name('accounts.edit');
