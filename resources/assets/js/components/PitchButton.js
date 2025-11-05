@@ -3,8 +3,8 @@ import Button from "./inputs/Button";
 import {start} from "tone";
 import Icon from "./Icon";
 
-const PitchButton = ({ synth, note, octave = 4, withIcon = true, variant="primary", size = "md", className, labelClassName = 'w-4' }) => {
-    const [pitch] = useState(note + octave.toString());
+const PitchButton = ({ instrument, note, octave = 4, withIcon = true, variant="primary", size = "md", className, labelClassName = 'w-4' }) => {
+    const pitch = (note.length > 1 ? note.slice(0, 2) : note) + octave.toString();
 
     function play(e) {
         e.stopPropagation();
@@ -13,10 +13,7 @@ const PitchButton = ({ synth, note, octave = 4, withIcon = true, variant="primar
         document.addEventListener('touchend', stop);
 
         start();
-        synth.envelope.release = 0.3;
-        synth.envelope.sustain = 0.1;
-        synth.volume.value = 50;
-        synth.triggerAttack(pitch);
+        instrument.instrument.triggerAttack(pitch);
     }
 
     function stop(e) {
@@ -25,7 +22,7 @@ const PitchButton = ({ synth, note, octave = 4, withIcon = true, variant="primar
         document.removeEventListener('mouseup', stop);
         document.removeEventListener('touchend', stop);
 
-        synth.triggerRelease();
+        instrument.instrument.triggerRelease();
     }
 
     return (

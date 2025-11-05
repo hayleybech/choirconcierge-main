@@ -21,14 +21,15 @@ import ButtonLink from '../../components/inputs/ButtonLink';
 import CollapsePanel from '../../components/CollapsePanel';
 import CollapseGroup from '../../components/CollapseGroup';
 import EmptyState from '../../components/EmptyState';
-import { Synth } from 'tone';
 import useRoute from '../../hooks/useRoute';
+import {useInstrument} from "../../hooks/useInstrument";
 
 const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
 	const { route } = useRoute();
 
-	const [synth] = useState(() => new Synth().toDestination());
 	const player = useContext(PlayerContext);
+
+	const [instrument, setInstrument] = useInstrument();
 
 	const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
@@ -78,8 +79,9 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
 					isFullscreen={player.showFullscreen}
 					openFullscreen={openFullscreen}
 					closeFullscreen={closeFullscreenMobile}
-					synth={synth}
 					pitch={song.pitch.split('/')[0]}
+					instrument={instrument}
+					setInstrument={setInstrument}
 				/>
 			) : (
 				<>
@@ -120,7 +122,7 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
 							{ name: song.title, url: route('songs.show', { song }) },
 						]}
 						actions={[
-							<PitchButton synth={synth} note={song.pitch.split('/')[0]} size="sm" />,
+							<PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="sm" />,
 							{ label: 'Edit', icon: 'edit', url: route('songs.edit', { song }), can: 'update_song' },
 							{
 								label: 'Delete',
@@ -179,8 +181,9 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
 										isFullscreen={player.showFullscreen}
 										openFullscreen={openFullscreen}
 										closeFullscreen={closeFullscreen}
-										synth={synth}
 										pitch={song.pitch.split('/')[0]}
+										instrument={instrument}
+										setInstrument={setInstrument}
 									/>
 								) : (
 									<EmptyState
