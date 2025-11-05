@@ -15,12 +15,11 @@ const ChoirsListWidget = () => {
                 <TableMobile>
                     {choirs.map((choir) => (
                         <TableMobileItem url={route('dash', {tenant: choir.id})} key={choir.id}>
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between w-full gap-4">
                                 {choir.logo_url
-                                  ? <img src={choir.logo_url} alt={choir.name} className="max-h-10 w-auto mr-4 shrink" />
-                                  : choir.name // insert mr-4
+                                  ? <img src={choir.logo_url} alt={choir.name} className="max-h-10 w-auto shrink" />
+                                  : <span className="text-purple-800">{choir.name}</span>
                                 }
-                                {/*<div className="text-sm font-medium text-purple-800 shrink-0">{choir.name}</div>*/}
 
                                 {choirs.length > 1 && (
                                     <>
@@ -31,13 +30,13 @@ const ChoirsListWidget = () => {
                                             size="xs"
                                             href={route('central.default-dash.update', {default_dash: choir.id})}
                                             method="put"
-                                            className="mr-2"
+                                            className="mr-2 shrink-0"
                                         >
                                             Set as default
                                         </Button>
                                         )
                                         : (
-                                        <div>
+                                        <div className="shrink-0">
                                             <span className="text-gray-600 text-sm mr-2">Default Choir</span>
                                             <Button
                                                 variant="danger-outline"
