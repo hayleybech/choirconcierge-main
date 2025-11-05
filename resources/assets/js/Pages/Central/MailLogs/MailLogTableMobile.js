@@ -11,7 +11,7 @@ const MailLogTableMobile = ({ logs }) => {
     return (
         <TableMobile pagination={<Pagination details={logs} />}>
             {logs.data.map((log) => (
-                <li key={log.id} className="flex pl-4">
+                <li key={log.id} className="flex">
                     <TableMobileLink url={route('central.mail-logs.show', {mail_log: log})}>
                         <div className="block hover:bg-gray-50 flex-grow min-w-0 text-gray-500">
                             <div className="flex items-center pr-2">
