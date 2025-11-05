@@ -55,17 +55,22 @@ class Song extends Model
 
     public const PITCHES = [
         0 => 'A',
-        1 => 'A#/Bb',
+        1 => 'A#',
+        '1.5' => 'Bb',
         2 => 'B',
         3 => 'C',
-        4 => 'C#/Db',
+        4 => 'C#',
+       '4.5' => 'Db',
         5 => 'D',
-        6 => 'D#/Eb',
+        6 => 'D#',
+        '6.5' => 'Eb',
         7 => 'E',
         8 => 'F',
-        9 => 'F#/Gb',
+        9 => 'F#',
+        '9.5' => 'Gb',
         10 => 'G',
-        11 => 'G#/Ab',
+        11 => 'G#',
+        '11.5' => 'Ab',
     ];
 
     public const KEYS = [
@@ -171,12 +176,14 @@ class Song extends Model
 
     public static function getAllPitches(): array
     {
-        $all_pitches = [];
-        foreach (self::KEYS as $mode => $pitches) {
-            $all_pitches = array_merge($all_pitches, $pitches);
-        }
+        return self::PITCHES;
 
-        return $all_pitches;
+//        $all_pitches = [];
+//        foreach (self::KEYS as $mode => $pitches) {
+//            $all_pitches = array_merge($all_pitches, $pitches);
+//        }
+//
+//        return $all_pitches;
     }
 
     public function createMissingLearningRecords(): void

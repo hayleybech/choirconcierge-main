@@ -31,9 +31,7 @@ const PdfToolbar = ({ isFullscreen, closeFullscreen, openFullscreen, zoomIn, zoo
         </div>
 
         {showPitchBar && (
-            <div className="flex flex-wrap p-1.5 gap-x-1 gap-y-1.5 border-b border-gray-300">
-                <PitchScale synth={synth} root={pitch} />
-            </div>
+            <PitchScale synth={synth} />
         )}
     </>
     );

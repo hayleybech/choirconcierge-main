@@ -5,6 +5,7 @@ const buttonStyles = (variant = 'secondary', size = 'md', disabled, extra) => cl
     'inline-flex justify-center items-center gap-x-1.5 border shadow-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500',
     variant === 'primary' ? 'bg-purple-600 border-transparent text-white hover:bg-purple-700' : '',
     variant === 'secondary' ? 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100' : '',
+    variant === 'dark' ? 'bg-gray-800 border-gray-300 text-white hover:bg-gray-700' : '',
     variant === 'danger-outline' ? 'bg-white border-red-300 text-red-500 hover:bg-red-100' : '',
     variant === 'danger-solid' ? 'bg-red-600 border-transparent text-white hover:bg-red-700' : '',
     variant === 'danger-clear' ? 'border-transparent shadow-none text-red-500 hover:text-red-700' : '',

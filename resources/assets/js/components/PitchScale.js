@@ -1,18 +1,25 @@
-import PitchButton from "./PitchButton";
-import React from "react";
+import PitchButton from './PitchButton';
+import React from 'react';
 
-const pitches = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const pitches = ['C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab', 'A', 'A#/Bb', 'B'];
 
-const PitchScale = ({ root, synth }) => (
-    <>
-        <PitchButton synth={synth} note={root} size="sm" className="h-7" />
-
-        {rotate(pitches, pitches.indexOf(root)).slice(1).map((pitch) => (
-            <PitchButton synth={synth} note={pitch} withIcon={false} variant="secondary" size="sm" className="h-7" key={pitch} />
-        ))}
-    </>
+const PitchScale = ({ synth }) => (
+	<div className="flex flex-wrap p-1.5 gap-x-1 gap-y-1.5 border-b border-gray-300">
+		{pitches.map(pitch => (
+			<PitchButton
+				synth={synth}
+				note={pitch}
+				withIcon={false}
+				variant={pitch.length > 1 ? 'dark' : 'secondary'}
+				size="xs"
+				className="h-7 grow"
+				labelClassName="w-10"
+				key={pitch}
+			/>
+		))}
+	</div>
 );
 
 export default PitchScale;
 
-const rotate = (arr, n = 1) => [...arr.slice(n, arr.length), ...arr.slice(0, n)]
+const rotate = (arr, n = 1) => [...arr.slice(n, arr.length), ...arr.slice(0, n)];

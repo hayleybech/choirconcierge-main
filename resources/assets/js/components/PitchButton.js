@@ -3,7 +3,7 @@ import Button from "./inputs/Button";
 import {start} from "tone";
 import Icon from "./Icon";
 
-const PitchButton = ({ synth, note, octave = 4, withIcon = true, variant="primary", size = "md", className }) => {
+const PitchButton = ({ synth, note, octave = 4, withIcon = true, variant="primary", size = "md", className, labelClassName = 'w-4' }) => {
     const [pitch] = useState(note + octave.toString());
 
     function play(e) {
@@ -31,7 +31,7 @@ const PitchButton = ({ synth, note, octave = 4, withIcon = true, variant="primar
     return (
         <Button onMouseDown={play} onMouseUp={stop} onTouchStart={play} onTouchEnd={stop} variant={variant} size={size} className={className}>
             {withIcon && <Icon icon="play" />}
-            <span className="key w-4">{note}</span>
+            <span className={labelClassName}>{note}</span>
         </Button>
     );
 }
