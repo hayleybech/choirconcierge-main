@@ -15,6 +15,7 @@ import DayInput from "../../../components/inputs/Day";
 import {DateTime} from "luxon";
 import FormWrapper from "../../../components/FormWrapper";
 import useRoute from "../../../hooks/useRoute";
+import MetricImperialInput from "../../../components/inputs/MetricImperialInput";
 
 const AccountForm = ({ }) => {
     const { route } = useRoute();
@@ -104,7 +105,7 @@ const AccountForm = ({ }) => {
 
                 <FormSection title="Profile Details">
 
-                    <div className="sm:col-span-2">
+                    <div className="sm:col-span-3 lg:col-span-2">
                         <Label label="Date of Birth" forInput="dob" />
                         <DayInput
                             name="dob"
@@ -116,13 +117,13 @@ const AccountForm = ({ }) => {
                         {errors.dob && <Error>{errors.dob}</Error>}
                     </div>
 
-                    <div className="sm:col-span-2">
-                        <Label label="Height (cm)" forInput="height" />
-                        <TextInput type="number" name="height" value={data.height} updateFn={value => setData('height', value)} hasErrors={ !! errors['height'] } />
+                    <div className="sm:col-span-3 lg:col-span-2">
+                        <Label label="Height" forInput="height" />
+                        <MetricImperialInput name="height" value={data.height} updateFn={value => setData('height', value)} hasErrors={!!errors['height']} />
                         <Help>Knowing the singer's height is useful for riser stacks.</Help>
                         {errors.height && <Error>{errors.height}</Error>}
                     </div>
-                    <div className="sm:col-span-2">
+                    <div className="sm:col-span-3 lg:col-span-2">
                         <Label label="BHA Member ID (e.g. 1234)" forInput="bha_id" />
                         <TextInput name="bha_id" value={data.bha_id} updateFn={value => setData('bha_id', value)} hasErrors={ !! errors['bha_id'] } />
                         {errors.bha_id && <Error>{errors.bha_id}</Error>}
