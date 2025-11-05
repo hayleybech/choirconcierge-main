@@ -11,11 +11,9 @@ const EventTypeTableMobile = ({ categories, showEditCategory, showDeleteCategory
 		<TableMobile>
 			{categories.map(category => (
 				<TableMobileListItem key={category.id}>
-					<div className="flex items-center justify-between px-4 py-4 sm:px-6">
-						<div className="flex items-center min-w-0 mr-1.5">
+					<div className="flex items-center justify-between px-4 py-4 sm:px-6 gap-2">
+						<div className="flex items-center min-w-0 gap-2">
 							<span className="text-sm text-gray-700 truncate">{category.title}</span>
-						</div>
-						<div className="flex items-center min-w-0 mr-1.5">
 							<Link
 								href={route('events.index')}
 								data={{ filter: { 'type.id': [category.id], 'date': '' } }}
@@ -28,13 +26,13 @@ const EventTypeTableMobile = ({ categories, showEditCategory, showDeleteCategory
 							{can.create_event && (
 								<Button variant="primary" size="xs" onClick={() => showEditCategory(category)}>
 									<Icon icon="edit" />
-									<div className="sr-only">Edit</div>
+									Edit
 								</Button>
 							)}
 							{can.create_event && (
 								<Button variant="danger-outline" size="xs" onClick={() => showDeleteCategory(category)}>
 									<Icon icon="trash" />
-									<div className="sr-only">Delete</div>
+									Delete
 								</Button>
 							)}
 						</div>
