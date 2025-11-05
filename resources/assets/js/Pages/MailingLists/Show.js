@@ -30,8 +30,10 @@ const Show = ({ list }) => {
                         {list_type_labels[list.list_type]}
                     </div>
                     <div><strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span></div>
-                    <DateTag icon="pencil" date={list.created_at} label="Created" />
-                    <DateTag icon="pencil" date={list.updated_at} label="Updated" />
+                    <div className="flex items-center gap-2">
+                        <DateTag icon="pencil" date={list.created_at} label="Created" />
+                        <DateTag icon="pencil" date={list.updated_at} label="Updated" />
+                    </div>
                 </>}
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},

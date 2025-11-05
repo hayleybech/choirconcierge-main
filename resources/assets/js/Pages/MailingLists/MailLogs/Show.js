@@ -24,14 +24,16 @@ const Show = ({ log }) => {
                 icon={isBroadcast ? 'satellite-dish' : "envelope"}
                 meta={
                 <>
-                    <DateTag icon="pencil" date={log.created_at} label="Created" />
-                    <DateTag icon="pencil" date={log.updated_at} label="Updated" />
                     <div>From: {log.from}</div>
                     <div>To: {log.to}</div>
                     <div>Cc: {log.cc}</div>
                     <div>Bcc: {log.bcc}</div>
                     <div>
                         <Icon icon="paperclip" mr /> {log.has_attachments ? 'Has attachments' : 'No attachments'}
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <DateTag icon="pencil" date={log.created_at} label="Created" />
+                        <DateTag icon="pencil" date={log.updated_at} label="Updated" />
                     </div>
                 </>
                 }

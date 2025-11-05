@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader, {PageMetaItem} from '../../components/PageHeader';
+import PageHeader from '../../components/PageHeader';
 import AppHead from '../../components/AppHead';
 import DateTag from '../../components/DateTag';
 import Badge from '../../components/Badge';
@@ -92,8 +92,8 @@ const Show = ({
 							{DateTime.fromISO(event.repeat_until).toLocaleString(DateTime.DATE_MED)}
 						</div>
 					)}
-					<div className="flex items-center">
-						<DateTag icon="pencil" date={event.created_at} label="Created" className="mr-2" />
+					<div className="flex items-center gap-2">
+						<DateTag icon="pencil" date={event.created_at} label="Created" />
 						<DateTag icon="pencil" date={event.updated_at} label="Updated" />
 					</div>
 				</>}

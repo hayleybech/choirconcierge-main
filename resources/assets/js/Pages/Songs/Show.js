@@ -99,8 +99,10 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
 									</div>
 								)}
 
-								<DateTag icon="pencil" date={song.created_at} label="Created" />
-								<DateTag icon="pencil" date={song.updated_at} label="Updated" />
+								<div className="flex items-center gap-2">
+									<DateTag icon="pencil" date={song.created_at} label="Created" />
+									<DateTag icon="pencil" date={song.updated_at} label="Updated" />
+								</div>
 
 								{!!song.show_for_prospects && (
 									<div>
