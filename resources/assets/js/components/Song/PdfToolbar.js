@@ -13,7 +13,7 @@ const PdfToolbar = ({ isFullscreen, closeFullscreen, openFullscreen, zoomIn, zoo
 
 	return (
 		<>
-			<div className="flex flex-wrap p-1.5 gap-x-2.5 border-b border-gray-300">
+			<div className="flex flex-wrap p-1.5 gap-x-1.5 md:gap-x-2.5 border-b border-gray-300">
 				<div className="flex gap-x-1">
 					<Button onClick={() => zoomIn()} size="sm" className="h-7">
 						<Icon icon="search-plus" />
@@ -33,7 +33,7 @@ const PdfToolbar = ({ isFullscreen, closeFullscreen, openFullscreen, zoomIn, zoo
 				</div>
 
 				<Button
-					variant="secondary"
+					variant="clear"
 					onClick={isFullscreen ? closeFullscreen : openFullscreen}
 					size="sm"
 					className="h-7 ml-auto"
@@ -65,22 +65,22 @@ const InstrumentMenu = (props) => {
 		<SimpleMenu label={
 			<>
 				{props.instrument.name === 'sine' && (
-					<><Icon icon="wave-sine" mr /> Synth</>
+					<><Icon icon="wave-sine" /> Synth</>
 				)}
 				{props.instrument.name === 'piano' && (
-					<><Icon icon="piano" mr /> Piano</>
+					<><Icon icon="piano" /> Piano</>
 				)}
 				{props.instrument.name === 'pipe' && (
-					<><Icon icon="whistle" mr /> Pipe</>
+					<><Icon icon="whistle" /> Pipe</>
 				)}
 				{props.instrument.name === 'cat' && (
-					<><Icon icon="cat" mr /> Cat</>
+					<><Icon icon="cat" /> Cat</>
 				)}
 				{props.instrument.name === 'wilhelm' && (
-					<><Icon icon="jack-o-lantern" mr /> Wilhelm</>
+					<><Icon icon="jack-o-lantern" /> Wilhelm</>
 				)}
 				{props.instrument.name === 'sleigh' && (
-					<><Icon icon="sleigh" mr /> Sleigh</>
+					<><Icon icon="sleigh" /> Sleigh</>
 				)}
 			</>
 		}>
@@ -89,10 +89,10 @@ const InstrumentMenu = (props) => {
 			<SimpleMenuItem onClick={() => props.setInstrument('pipe')}><Icon icon="whistle" mr /> Pipe</SimpleMenuItem>
 			<SimpleMenuItem onClick={() => props.setInstrument('cat')}><Icon icon="cat" mr /> Cat</SimpleMenuItem>
 			{(showSecrets || DateTime.now().month === 10) && (
-				<SimpleMenuItem onClick={() => props.setInstrument('wilhelm')}><Icon icon="jack-o-lantern" mr /> Wilhelm</SimpleMenuItem>
+				<SimpleMenuItem onClick={() => props.setInstrument('wilhelm')}><Icon icon="jack-o-lantern" /> Wilhelm</SimpleMenuItem>
 			)}
 			{(showSecrets || DateTime.now().month === 12) && (
-				<SimpleMenuItem onClick={() => props.setInstrument('sleigh')}><Icon icon="sleigh" mr /> Sleigh</SimpleMenuItem>
+				<SimpleMenuItem onClick={() => props.setInstrument('sleigh')}><Icon icon="sleigh" /> Sleigh</SimpleMenuItem>
 			)}
 		</SimpleMenu>
 	)
@@ -101,9 +101,10 @@ const InstrumentMenu = (props) => {
 const SimpleMenu = props => (
 	<Menu as="div" className="relative inline-block">
 		<Menu.Button className={buttonStyles('secondary', 'sm', false, 'h-7 text-sm')}>
-			{props.label}
-			{/*<ChevronDownIcon aria-hidden="true" className="-mr-1 size-5 text-gray-400" />*/}
-			<Icon icon="chevron-down" size="sm" />
+			<div className="flex items-center gap-x-1">
+				{props.label}
+				<Icon icon="chevron-down" size="text-xs" />
+			</div>
 		</Menu.Button>
 
 		<Transition
