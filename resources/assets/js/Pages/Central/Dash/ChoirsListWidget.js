@@ -17,7 +17,7 @@ const ChoirsListWidget = () => {
                         <TableMobileItem url={route('dash', {tenant: choir.id})} key={choir.id}>
                             <div className="flex items-center justify-between w-full gap-4">
                                 {choir.logo_url
-                                  ? <img src={choir.logo_url} alt={choir.name} className="max-h-10 w-auto shrink" />
+                                  ? <img src={choir.logo_url} alt={choir.name} className="max-h-10 w-auto shrink min-w-0" />
                                   : <span className="text-purple-800">{choir.name}</span>
                                 }
 
