@@ -7,7 +7,7 @@ import buttonStyles from './inputs/buttonStyles';
 import Button from './inputs/Button';
 import Icon from './Icon';
 import { Link } from '@inertiajs/react';
-import ActionMenuItem from './ActionMenuItem';
+import ActionMenuItem from './ActionMenu/ActionMenuItem';
 
 const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optionsVariant }) => {
 	const filteredActions = actions.filter(action => !!action);
