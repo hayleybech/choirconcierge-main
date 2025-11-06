@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import classNames from "../classNames";
 import Icon from "./Icon";
 import Button from "./inputs/Button";
+import useCookie from "react-use-cookie";
 
 const TenantNotice = ({ variant, children }) => {
-  const [showNotices, setShowNotices] = useState(true);
+  const [showNotices, setShowNotices] = useCookie('show-tenant-notices', 'yes');
 
-  if(!showNotices) {
-    return false;
+  if(showNotices === 'no') {
+    return null;
   }
 
   return (
@@ -20,7 +21,7 @@ const TenantNotice = ({ variant, children }) => {
       <div className="grow flex flex-col md:flex-row gap-x-6 gap-y-2 items-center justify-center">
         {children}
       </div>
-      <Button variant="clear" size="xs" onClick={() => setShowNotices(false)}>
+      <Button variant="clear" size="xs" onClick={() => setShowNotices('no')}>
         <Icon icon="times" className="text-white" />
       </Button>
     </div>
