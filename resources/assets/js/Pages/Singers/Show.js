@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader from '../../components/PageHeader';
+import PageHeader from '../../components/PageHeader/PageHeader';
 import VoicePartTag from '../../components/VoicePartTag';
 import SingerCategoryTag from '../../components/SingerCategoryTag';
 import ButtonLink from '../../components/inputs/ButtonLink';

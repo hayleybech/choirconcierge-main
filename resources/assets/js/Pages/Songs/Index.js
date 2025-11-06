@@ -2,7 +2,7 @@ import React from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
 import SongTableDesktop from "./SongTableDesktop";
 import SongTableMobile from "./SongTableMobile";
-import PageHeader from "../../components/PageHeader";
+import PageHeader from "../../components/PageHeader/PageHeader";
 import AppHead from "../../components/AppHead";
 import {usePage} from "@inertiajs/react";
 import SongFilters from "../../components/Song/SongFilters";

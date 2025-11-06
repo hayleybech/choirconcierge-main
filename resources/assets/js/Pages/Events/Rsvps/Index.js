@@ -1,5 +1,5 @@
 import React from 'react';
-import PageHeader from "../../../components/PageHeader";
+import PageHeader from "../../../components/PageHeader/PageHeader";
 import TenantLayout from "../../../Layouts/TenantLayout";
 import AppHead from "../../../components/AppHead";
 import Icon from "../../../components/Icon";

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader";
+import PageHeader from "../../components/PageHeader/PageHeader";
 import AppHead from "../../components/AppHead";
 import Icon from "../../components/Icon";
 import {modelsAndAbilities} from "./modelsAndAbilities";

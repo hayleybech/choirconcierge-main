@@ -1,7 +1,7 @@
 import React from 'react'
 import AccountForm from "./AccountForm";
 import AppHead from "../../../components/AppHead";
-import PageHeader from "../../../components/PageHeader";
+import PageHeader from "../../../components/PageHeader/PageHeader";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import useRoute from "../../../hooks/useRoute";
 

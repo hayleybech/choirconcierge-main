@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import AppHead from "../../../components/AppHead";
-import PageHeader from "../../../components/PageHeader";
+import PageHeader from "../../../components/PageHeader/PageHeader";
 import DateTag from "../../../components/DateTag";
 import SectionHeader from "../../../components/SectionHeader";
 import SectionTitle from "../../../components/SectionTitle";

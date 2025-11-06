@@ -1,14 +1,9 @@
 import React from 'react';
-import { Fragment } from 'react';
-import { Menu, Transition } from '@headlessui/react';
 import Breadcrumbs from './Breadcrumbs';
-import classNames from '../classNames';
-import buttonStyles from './inputs/buttonStyles';
-import Button from './inputs/Button';
-import Icon from './Icon';
-import { Link } from '@inertiajs/react';
-import ActionMenuItem from './ActionMenu/ActionMenuItem';
-import ActionMenu from './ActionMenu/ActionMenu';
+import Button from '../inputs/Button';
+import Icon from '../Icon';
+import ActionMenuItem from '../ActionMenu/ActionMenuItem';
+import ActionMenu from '../ActionMenu/ActionMenu';
 
 const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optionsVariant }) => {
 	const filteredActions = actions.filter(action => !!action);

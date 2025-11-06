@@ -1,6 +1,6 @@
 import React from 'react'
 import AppHead from "../../../components/AppHead";
-import PageHeader from "../../../components/PageHeader";
+import PageHeader from "../../../components/PageHeader/PageHeader";
 import TenantLayout from "../../../Layouts/TenantLayout";
 import TaskNotificationForm from "./TaskNotificationForm";
 import useRoute from "../../../hooks/useRoute";

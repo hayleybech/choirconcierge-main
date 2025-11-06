@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader";
+import PageHeader from "../../components/PageHeader/PageHeader";
 import {useForm} from "@inertiajs/react";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";

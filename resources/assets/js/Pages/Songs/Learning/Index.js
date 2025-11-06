@@ -1,5 +1,5 @@
 import React from 'react';
-import PageHeader from "../../../components/PageHeader";
+import PageHeader from "../../../components/PageHeader/PageHeader";
 import TenantLayout from "../../../Layouts/TenantLayout";
 import LearningStatusTag from "../../../components/Song/LearningStatusTag";
 import Button from "../../../components/inputs/Button";

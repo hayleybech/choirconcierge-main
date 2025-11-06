@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader";
+import PageHeader from "../../components/PageHeader/PageHeader";
 import AppHead from "../../components/AppHead";
 import EventTypeTableDesktop from "./EventTypeTableDesktop";
 import EventTypeTableMobile from "./EventTypeTableMobile";

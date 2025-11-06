@@ -1,6 +1,6 @@
 import React from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader";
+import PageHeader from "../../components/PageHeader/PageHeader";
 import AppHead from "../../components/AppHead";
 import RiserStackForm from "./RiserStackForm";
 import useRoute from "../../hooks/useRoute";

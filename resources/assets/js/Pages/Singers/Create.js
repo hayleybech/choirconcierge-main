@@ -11,7 +11,7 @@ import FormSection from "../../components/FormSection";
 import Button from "../../components/inputs/Button";
 import ButtonLink from "../../components/inputs/ButtonLink";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
-import PageHeader from "../../components/PageHeader";
+import PageHeader from "../../components/PageHeader/PageHeader";
 import AppHead from "../../components/AppHead";
 import Form from "../../components/Form";
 import FormFooter from "../../components/FormFooter";

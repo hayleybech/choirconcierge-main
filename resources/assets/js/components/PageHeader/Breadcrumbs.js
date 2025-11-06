@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from "@inertiajs/react";
-import Icon from "./Icon";
+import Icon from "../Icon";
 
 const Breadcrumbs = ({ breadcrumbs }) => {
     const parentCrumb = breadcrumbs[breadcrumbs.length - 2] ?? breadcrumbs[0];

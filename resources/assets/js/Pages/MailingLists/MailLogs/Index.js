@@ -1,5 +1,5 @@
 import React from 'react'
-import PageHeader from "../../../components/PageHeader";
+import PageHeader from "../../../components/PageHeader/PageHeader";
 import AppHead from "../../../components/AppHead";
 import IndexContainer from "../../../components/IndexContainer";
 import useRoute from "../../../hooks/useRoute";
