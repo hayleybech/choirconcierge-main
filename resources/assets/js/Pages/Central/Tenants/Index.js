@@ -24,6 +24,7 @@ const Index = ({ tenants, pagination }) => {
 
     const filters = [
         { name: 'id', defaultValue: '' },
+        { name: 'billing_status', defaultValue: '' },
     ]
 
     const sortFilterForm = useSortFilterForm('central.tenants.index', filters, sorts);

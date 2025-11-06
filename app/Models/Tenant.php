@@ -149,21 +149,40 @@ class Tenant extends BaseTenant
 	{
 		// valid subscription (active plan, paused grace period, or grace period), on trial or gratis
 		return $query
-			->whereHas('subscriptions', function($query) {
-				$query->active()
-					->orWhere(function($query) {
-						$query->onTrial();
-					});
-			})
-			->orWhereHas('customer', function($query) {
-				$query->whereNotNull('trial_ends_at')
-					->where('trial_ends_at', '>', \Carbon\Carbon::now());
-			})
-			->orWhere(function($query) {
-				// @TODO make has_gratis a regular column
-				$query->where('data->has_gratis', true);
-			});
+            ->whereHas('subscriptions', function($query) {
+                $query->active();
+            })
+            ->orWhere(fn () => $query->trial())
+            ->orWhere(fn () => $query->gratis());
 	}
+
+    public function scopeInactive($query)
+    {
+        return $query
+            ->whereDoesntHave('subscriptions', function($query) {
+                $query->active();
+            })
+            ->whereNot(fn () => $query->trial())
+            ->whereNot(fn () => $query->gratis());
+    }
+
+    public function scopeTrial($query)
+    {
+        return $query
+            ->whereHas('subscriptions', function($query) {
+                $query->onTrial();
+            })
+            ->orWhereHas('customer', function($query) {
+                $query->whereNotNull('trial_ends_at')
+                    ->where('trial_ends_at', '>', \Carbon\Carbon::now());
+            });
+    }
+    public function scopeGratis($query)
+    {
+        // @TODO make has_gratis a regular column
+        return $query->where('data->has_gratis', true);
+    }
+
 
 	public function setupDone(): Attribute
 	{

@@ -60,10 +60,10 @@ const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
                     name="fee_status"
                     label={<Label label="Fee Status" />}
                     options={[
-                        { id: 'paid', name: 'Paid', icon: 'check-circle', colour: 'green-500' },
-                        { id: 'expires-soon', name: 'Expires Soon', icon: 'exclamation-triangle', colour: 'orange-500' },
-                        { id: 'expired', name: 'Expired', icon: 'times-circle', colour: 'red-500' },
-                        { id: 'unknown', name: 'Unknown', icon: 'question-circle', colour: 'gray-500' },
+                        { id: 'paid', name: 'Paid', icon: 'check-circle', colour: 'green-500', textColour: 'text-green-500' },
+                        { id: 'expires-soon', name: 'Expires Soon', icon: 'exclamation-triangle', colour: 'orange-500', textColour: 'text-orange-500' },
+                        { id: 'expired', name: 'Expired', icon: 'times-circle', colour: 'red-500', textColour: 'text-red-500' },
+                        { id: 'unknown', name: 'Unknown', icon: 'question-circle', colour: 'gray-500', textColour: 'text-gray-500' },
                     ]}
                     selected={data.fee_status}
                     setSelected={value => setData('fee_status', value)}

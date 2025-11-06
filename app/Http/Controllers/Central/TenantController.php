@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use App\Models\User;
 use DateTimeZone;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -13,6 +14,7 @@ use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use Inertia\Response as InertiaResponse;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class TenantController extends Controller
@@ -94,6 +96,13 @@ class TenantController extends Controller
 		return QueryBuilder::for(Tenant::class)
 			->allowedFilters([
 				'id',
+                AllowedFilter::callback('billing_status', fn(Builder $query, $value) => match ($value) {
+                    'active' => $query->active(),
+                    'inactive' => $query->inactive(),
+                    'gratis' => $query->gratis(),
+                    'trial' => $query->trial(),
+                    default => $query,
+                })
 			])
 			->defaultSort('id')
 			->allowedSorts([
