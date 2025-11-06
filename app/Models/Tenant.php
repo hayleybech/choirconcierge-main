@@ -145,16 +145,36 @@ class Tenant extends BaseTenant
         ]);
     }
 
-	public function scopeActive($query)
-	{
-		// valid subscription (active plan, paused grace period, or grace period), on trial or gratis
-		return $query
+    public function scopeActive($query)
+    {
+        // valid subscription (active plan, paused grace period, or grace period), on trial or gratis
+        return $query
             ->whereHas('subscriptions', function($query) {
-                $query->active();
+                $query->active()
+                    ->orWhere(function($query) {
+                        $query->onTrial();
+                    });
             })
-            ->orWhere(fn () => $query->trial())
-            ->orWhere(fn () => $query->gratis());
-	}
+            ->orWhereHas('customer', function($query) {
+                $query->whereNotNull('trial_ends_at')
+                    ->where('trial_ends_at', '>', \Carbon\Carbon::now());
+            })
+            ->orWhere(function($query) {
+                // @TODO make has_gratis a regular column
+                $query->where('data->has_gratis', true);
+            });
+    }
+
+//	public function scopeActive($query)
+//	{
+//		// valid subscription (active plan, paused grace period, or grace period), on trial or gratis
+//		return $query
+//            ->whereHas('subscriptions', function($query) {
+//                $query->active();
+//            })
+//            ->orWhere(fn () => $query->trial())
+//            ->orWhere(fn () => $query->gratis());
+//	}
 
     public function scopeInactive($query)
     {
