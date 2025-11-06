@@ -98,6 +98,7 @@ class TenantController extends Controller
 				'id',
                 AllowedFilter::callback('billing_status', fn(Builder $query, $value) => match ($value) {
                     'active' => $query->active(),
+                    'subscribed' => $query->subscribed(),
                     'inactive' => $query->inactive(),
                     'gratis' => $query->gratis(),
                     'trial' => $query->trial(),

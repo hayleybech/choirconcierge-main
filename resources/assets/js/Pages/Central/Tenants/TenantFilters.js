@@ -20,6 +20,7 @@ const TenantFilters = ({ form }) => (
                     label={<Label label="Billing Status" />}
                     options={[
                         { id: 'active', name: 'Active', icon: 'check-circle', colour: 'green-500', textColour: 'text-green-500' },
+                        { id: 'subscribed', name: 'Subscribed', icon: 'usd-circle', colour: 'green-500', textColour: 'text-green-500' },
                         { id: 'gratis', name: 'Gratis', icon: 'heart-circle', colour: 'green-500', textColour: 'text-green-500' },
                         { id: 'trial', name: 'Trial', icon: 'dot-circle', colour: 'blue-500', textColour: 'text-blue-500' },
                         { id: 'inactive', name: 'Inactive', icon: 'times-circle', colour: 'red-500', textColour: 'text-red-500' },
