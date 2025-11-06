@@ -7,6 +7,7 @@ import buttonStyles from './inputs/buttonStyles';
 import Button from './inputs/Button';
 import Icon from './Icon';
 import { Link } from '@inertiajs/react';
+import ActionMenuItem from './ActionMenuItem';
 
 const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optionsVariant }) => {
 	const filteredActions = actions.filter(action => !!action);
@@ -68,63 +69,16 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 										{filteredActions.map(
 											(action, key) =>
 												key > 0 && (
-													<Menu.Item key={key}>
-														{({ active }) =>
-															action.url ? (
-																action.download ? (
-																	<a
-																		href={action.url}
-																		className={classNames(
-																			'block w-full text-left px-4 py-2 text-sm',
-																			active ? 'bg-gray-100' : '',
-																			action.variant === 'danger-outline'
-																				? 'text-red-500'
-																				: 'text-gray-700'
-																		)}
-																		download={action?.download}
-																	>
-																		<Icon icon={action.icon} mr />
-																		{action.label}
-																	</a>
-																) : (
-																	<Link
-																		href={action.url}
-																		className={classNames(
-																			'block w-full text-left px-4 py-2 text-sm',
-																			active ? 'bg-gray-100' : '',
-																			action.variant === 'danger-outline'
-																				? 'text-red-500'
-																				: 'text-gray-700'
-																		)}
-																	>
-																		<Icon icon={action.icon} mr />
-																		{action.label}
-																	</Link>
-																)
-															) : (
-																<button
-																	onClick={action.onClick}
-																	className={classNames(
-																		'block w-full text-left px-4 py-2 text-sm',
-																		active ? 'bg-gray-100' : '',
-																		action.variant === 'danger-outline'
-																			? 'text-red-500'
-																			: '',
-																		action.variant === 'success-solid'
-																			? 'text-emerald-500'
-																			: '',
-																		action.variant !== 'danger-outline' &&
-																			action.variant !== 'success-solid'
-																			? 'text-gray-700'
-																			: ''
-																	)}
-																>
-																	<Icon icon={action.icon} mr />
-																	{action.label}
-																</button>
-															)
-														}
-													</Menu.Item>
+													<ActionMenuItem
+														key={key}
+														url={action.url}
+														onClick={action.onClick}
+														download={action.download}
+														variant={action.variant}
+													>
+														<Icon icon={action.icon} mr />
+														{action.label}
+													</ActionMenuItem>
 												)
 										)}
 									</Menu.Items>
