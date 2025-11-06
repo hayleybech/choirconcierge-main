@@ -384,12 +384,14 @@ class Event extends Model
 
     public function getMyRsvpAttribute(): Rsvp|Model
     {
-        if(! auth()->check() || ! auth()->user()->membership) {
+        $membership = auth()->user()->memberships()->firstWhere('tenant_id', '=', $this->tenant_id);
+
+        if(! auth()->check() || !$membership) {
             return Rsvp::Null();
         }
 
         return $this->rsvps()
-            ->where('membership_id', '=', auth()->user()->membership->id)
+            ->where('membership_id', '=', $membership->id)
             ->first() ?? Rsvp::Null();
     }
 
