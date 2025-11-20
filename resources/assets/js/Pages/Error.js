@@ -1,7 +1,6 @@
 import React from 'react'
 import AppHead from "../components/AppHead";
 import Icon from "../components/Icon";
-import classNames from "../classNames";
 import Button from "../components/inputs/Button";
 import useRoute from "../hooks/useRoute";
 import {usePage} from "@inertiajs/react";
@@ -9,6 +8,7 @@ import StyledLink from "../components/StyledLink";
 
 const Show = ({ status, orgAdmins, isMember }) => {
     const { tenant } = usePage().props;
+    const { route } = useRoute();
 
     const title = {
         402: 'No Active Subscription',

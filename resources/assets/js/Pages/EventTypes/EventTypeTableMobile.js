@@ -3,9 +3,11 @@ import TableMobile, { TableMobileListItem } from '../../components/TableMobile';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/Button';
 import { Link, usePage } from '@inertiajs/react';
+import useRoute from '../../hooks/useRoute';
 
 const EventTypeTableMobile = ({ categories, showEditCategory, showDeleteCategory }) => {
 	const { can } = usePage().props;
+	const { route } = useRoute();
 
 	return (
 		<TableMobile>
