@@ -41,6 +41,9 @@ Route::prefix('/app')->group(function () {
 		// Account Settings
 		Route::get('account/edit', [Central\AccountController::class, 'edit'])->name('accounts.edit');
 		Route::post('account', [Central\AccountController::class, 'update'])->name('accounts.update');
+
+        // Roadmap
+        Route::get('changelog', Central\ChangelogController::class)->name('changelog');
 	});
 });
 

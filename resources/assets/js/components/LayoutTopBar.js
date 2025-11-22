@@ -5,22 +5,33 @@ import classNames from "../classNames";
 import {Link, usePage} from "@inertiajs/react";
 import useRoute from "../hooks/useRoute";
 
-const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu }) => {
-    const { can, user, impersonationActive, tenant } = usePage().props;
-    const { route } = useRoute();
+const LayoutTopBar = ({setShowImpersonateModal, setSidebarOpen, switchChoirMenu}) => {
+    const {can, user, impersonationActive, tenant} = usePage().props;
+    const {route} = useRoute();
 
     const userNavigation = tenant ? [
-        user.membership ? { name: 'Your Profile', href: route('singers.show', {singer: user.membership}), icon: 'user' } : null,
-        { name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit' },
-        { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
-        { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
-        { name: 'Organisation Settings', href: route('organisation.edit'), icon: 'cogs', hide: !can.update_tenant },
-        { name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' }
+        user.membership ? {
+            name: 'Your Profile',
+            href: route('singers.show', {singer: user.membership}),
+            icon: 'user'
+        } : null,
+        {name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit'},
+        {
+            name: 'Impersonate User',
+            action: () => setShowImpersonateModal(true),
+            icon: 'user-unlock',
+            hide: !can.impersonate || impersonationActive
+        },
+        {name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive},
+        {name: 'Organisation Settings', href: route('organisation.edit'), icon: 'cogs', hide: !can.update_tenant},
+        {name: 'Changelog', href: route('central.changelog'), icon: 'code-merge'},
+        {name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt'}
     ] : [
-        { name: 'Edit Profile', href: route('central.accounts.edit'), icon: 'user-edit' },
+        {name: 'Edit Profile', href: route('central.accounts.edit'), icon: 'user-edit'},
         // { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
         // { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
-        { name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' }
+        {name: 'Changelog', href: route('central.changelog'), icon: 'code-merge'},
+        {name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt'}
     ];
 
     return (
@@ -31,7 +42,7 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu
                 onClick={() => setSidebarOpen(true)}
             >
                 <span className="sr-only">Open sidebar</span>
-                <Icon icon="bars" />
+                <Icon icon="bars"/>
             </button>
             <div className="flex-1 pr-4 sm:px-4 flex justify-between">
                 <div className="flex-1 flex">
@@ -67,10 +78,11 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <Menu.Items
+                                className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 {userNavigation.filter(item => item).map((item) => (
                                     <Menu.Item key={item.name}>
-                                        {({ active }) => (
+                                        {({active}) => (
                                             <>
                                                 {item.hide || (
                                                     <>
@@ -81,7 +93,7 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu
                                                                 method={item.method}
                                                                 className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                                                             >
-                                                                <Icon icon={item.icon} mr />
+                                                                <Icon icon={item.icon} mr/>
                                                                 {item.name}
                                                             </Link>
                                                         ) : (
@@ -90,7 +102,7 @@ const LayoutTopBar = ({ setShowImpersonateModal, setSidebarOpen, switchChoirMenu
                                                                 type="button"
                                                                 className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                                                             >
-                                                                <Icon icon={item.icon} mr />
+                                                                <Icon icon={item.icon} mr/>
                                                                 {item.name}
                                                             </button>
                                                         )}
