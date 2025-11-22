@@ -47,6 +47,10 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/public'), // just '/' on media on cloud
         ],
+        'assets' => [
+            'driver' => 'local',
+            'root' => public_path(),
+        ],
 
         'temp' => [
             'driver' => 'local',

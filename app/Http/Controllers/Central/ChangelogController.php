@@ -16,7 +16,7 @@ class ChangelogController extends Controller
     public function __invoke(Request $request)
     {
         return Inertia::render('Central/Changelog', [
-            'logs' => Str::of(Storage::disk('public')->get('changelog.md'))
+            'logs' => Str::of(Storage::disk('assets')->get('changelog.md'))
                 ->explode('---'.PHP_EOL)
                 ->map(function ($log) {
                     $lines = Str::of($log)->explode(PHP_EOL);
