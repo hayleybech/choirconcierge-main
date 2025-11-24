@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BroadcastRequest;
 use App\Jobs\SendEmailForGroup;
 use App\Mail\OrganisationBroadcast;
 use App\Models\MailLog;
@@ -10,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\File;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Storage;
@@ -28,15 +30,8 @@ class BroadcastController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(BroadcastRequest $request): RedirectResponse
     {
-        $request->validate([
-            'list' => ['required', 'exists:user_groups,id'],
-            'subject' => ['required', 'max:255'],
-            'body' => ['required', 'max:5000'],
-            'attachments.*' => ['sometimes', 'file'],
-        ]);
-
         $group = UserGroup::find($request->input('list'));
 
         $this->authorize('createBroadcastFor', $group);
