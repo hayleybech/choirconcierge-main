@@ -5,6 +5,7 @@ import DateTag from '../../../components/DateTag';
 import React from 'react';
 import HeightToggle from "../components/HeightToggle";
 import {countries} from "countries-list";
+import StreetAddress from "../components/StreetAddress";
 
 export const PersonalDetailsSection = ({ singer }) => (
 	<CollapsePanel>
@@ -39,23 +40,14 @@ export const PersonalDetailsSection = ({ singer }) => (
 				<span className="ml-2 text-gray-500">{`(${singer.user.bha_type})` ?? ''}</span>
 			</DetailListItem>
 			<DetailListItem label="Address">
-				{singer.user.address_street_1 ? (
-					<>
-						{singer.user.address_street_1}
-						<br />
-						{singer.user.address_street_2 && (
-							<>
-								{singer.user.address_street_2}
-								<br />
-							</>
-						)}
-						{singer.user.address_suburb}<br />
-						{countries[singer.user.address_country]?.name}<br />
-						{`${singer.user.address_state} ${singer.user.address_postcode}`}
-					</>
-				) : (
-					'No address'
-				)}
+				<StreetAddress
+					line1={singer.user.address_street_1}
+					line2={singer.user.address_street_2}
+					suburb={singer.user.address_suburb}
+					state={singer.user.address_state}
+					countryCode={singer.user.address_country}
+					postcode={singer.user.address_postcode}
+				/>
 			</DetailListItem>
 			<DetailListItem label="Profession">{singer.user.profession ?? 'None listed'}</DetailListItem>
 			<DetailListItem label="Other Skills">{singer.user.skills ?? 'None listed'}</DetailListItem>
