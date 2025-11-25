@@ -15,6 +15,7 @@ const RichTextInput = ({ value, updateFn, max = 5000 }) => {
                 HTMLAttributes: {
                     class: 'text-purple-700',
                 },
+                openOnClick: false,
             }),
         ],
         content: nl2br(value),

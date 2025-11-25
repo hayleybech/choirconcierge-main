@@ -1,3 +1,8 @@
+# 2025-11-25
+## Links in Emails
+We've now added full support for links in the rich text editor. Select the text you want to use as the label, then click the link button to add the URL.
+
+---
 # 2025-11-22
 ## New Changelog!
 This replaces a similar feature we used to have before the third-party provider went away. The new changelog is built-in to the app.
