@@ -1,9 +1,9 @@
 import React from 'react'
-import AccountForm from "./AccountForm";
 import AppHead from "../../../components/AppHead";
 import PageHeader from "../../../components/PageHeader/PageHeader";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import useRoute from "../../../hooks/useRoute";
+import AccountForm from "../../Account/AccountForm";
 
 const Edit = ({ }) => {
     const { route } = useRoute();
@@ -20,7 +20,7 @@ const Edit = ({ }) => {
                 ]}
             />
 
-            <AccountForm />
+            <AccountForm postUrl={route('central.accounts.update')} cancelUrl={route('central.dash')} />
         </>
     );
 }

@@ -8,19 +8,16 @@ import ButtonLink from '../../components/inputs/ButtonLink';
 import Button from '../../components/inputs/Button';
 import AvatarUpload from '../../components/AvatarUpload';
 import Help from '../../components/inputs/Help';
-import Select from '../../components/inputs/Select';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
 import DayInput from '../../components/inputs/Day';
 import { DateTime } from 'luxon';
 import FormWrapper from '../../components/FormWrapper';
-import useRoute from '../../hooks/useRoute';
 import MetricImperialInput from '../../components/inputs/MetricImperialInput';
 import CountrySelect from "../../components/inputs/CountrySelect";
 import StateSelect from "../../components/inputs/StateSelect";
 
-const AccountForm = ({}) => {
-	const { route } = useRoute();
+const AccountForm = ({ postUrl, cancelUrl }) => {
 	const { user } = usePage().props;
 
 	const { data, setData, post, processing, errors } = useForm({
@@ -54,7 +51,7 @@ const AccountForm = ({}) => {
 
 	function submit(e) {
 		e.preventDefault();
-		post(route('accounts.update'));
+		post(postUrl);
 	}
 
 	return (
@@ -347,7 +344,7 @@ const AccountForm = ({}) => {
 				</FormSection>
 
 				<FormFooter>
-					<ButtonLink href={route('singers.show', { singer: user.membership })}>Cancel</ButtonLink>
+					<ButtonLink href={cancelUrl}>Cancel</ButtonLink>
 					<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
 						Save
 					</Button>
