@@ -4,7 +4,6 @@ import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
 import React from 'react';
 import HeightToggle from "../components/HeightToggle";
-import {countries} from "countries-list";
 import StreetAddress from "../components/StreetAddress";
 
 export const PersonalDetailsSection = ({ singer }) => (
@@ -34,10 +33,9 @@ export const PersonalDetailsSection = ({ singer }) => (
 			<DetailListItem label="Height">
 				{singer.user.height ? <HeightToggle cm={singer.user.height} /> : 'Unknown'}
 			</DetailListItem>
-			<DetailListItem label="BHA Member ID">
+			<DetailListItem label="Association Membership Details">
 				<Icon icon="id-card" mr type="regular" className="text-gray-400" />
 				<span>{singer.user.bha_id ?? 'Unknown'}</span>
-				<span className="ml-2 text-gray-500">{`(${singer.user.bha_type})` ?? ''}</span>
 			</DetailListItem>
 			<DetailListItem label="Address">
 				<StreetAddress

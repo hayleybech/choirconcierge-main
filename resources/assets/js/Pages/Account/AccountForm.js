@@ -178,13 +178,14 @@ const AccountForm = ({ postUrl, cancelUrl }) => {
 						{errors.height && <Error>{errors.height}</Error>}
 					</div>
 					<div className="sm:col-span-3 lg:col-span-2">
-						<Label label="BHA Member ID (e.g. 1234)" forInput="bha_id" />
+						<Label label="Association Membership ID" forInput="bha_id" />
 						<TextInput
 							name="bha_id"
 							value={data.bha_id}
 							updateFn={value => setData('bha_id', value)}
 							hasErrors={!!errors['bha_id']}
 						/>
+						<Help>e.g. Barbershop Harmony Society</Help>
 						{errors.bha_id && <Error>{errors.bha_id}</Error>}
 					</div>
 
