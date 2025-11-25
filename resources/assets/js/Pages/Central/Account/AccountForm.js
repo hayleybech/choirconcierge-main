@@ -8,7 +8,6 @@ import ButtonLink from '../../../components/inputs/ButtonLink';
 import Button from '../../../components/inputs/Button';
 import AvatarUpload from '../../../components/AvatarUpload';
 import Help from '../../../components/inputs/Help';
-import Select from '../../../components/inputs/Select';
 import Form from '../../../components/Form';
 import FormFooter from '../../../components/FormFooter';
 import DayInput from '../../../components/inputs/Day';
@@ -16,6 +15,9 @@ import { DateTime } from 'luxon';
 import FormWrapper from '../../../components/FormWrapper';
 import useRoute from '../../../hooks/useRoute';
 import MetricImperialInput from '../../../components/inputs/MetricImperialInput';
+
+import CountrySelect from '../../../components/inputs/CountrySelect';
+import StateSelect from '../../../components/inputs/StateSelect';
 
 const AccountForm = ({}) => {
 	const { route } = useRoute();
@@ -46,6 +48,7 @@ const AccountForm = ({}) => {
 		address_street_2: user.address_street_2 ?? '',
 		address_suburb: user.address_suburb ?? '',
 		address_state: user.address_state ?? '',
+		address_country: user.address_country ?? '',
 		address_postcode: user.address_postcode ?? '',
 	});
 
@@ -281,7 +284,7 @@ const AccountForm = ({}) => {
 						{errors.address_street_2 && <Error>{errors.address_street_2}</Error>}
 					</div>
 
-					<div className="sm:col-span-3">
+					<div className="sm:col-span-2">
 						<Label label="Suburb / City" forInput="address_suburb" />
 						<TextInput
 							name="address_suburb"
@@ -292,28 +295,45 @@ const AccountForm = ({}) => {
 						/>
 						{errors.address_suburb && <Error>{errors.address_suburb}</Error>}
 					</div>
+					<div className="sm:col-span-2">
+						<Label label="Country" forInput="address_country" />
+						<div className="mt-1">
+							<CountrySelect
+								name="address_country"
+								defaultValue={data.address_country}
+								updateFn={value => setData({ ...data, address_country: value, address_state: '' })}
+								hasErrors={!!errors['address_country']}
+								autoComplete="country"
+							/>
+						</div>
+						{errors.address_country && <Error>{errors.address_country}</Error>}
+					</div>
 					<div className="sm:col-span-1">
 						<Label label="State / Region" forInput="address_state" />
-						<Select
-							name="address_state"
-							value={data.address_state}
-							updateFn={value => setData('address_state', value)}
-							hasErrors={!!errors['address_state']}
-							options={[
-								{ key: 'ACT', label: 'ACT' },
-								{ key: 'NSW', label: 'NSW' },
-								{ key: 'NT', label: 'NT' },
-								{ key: 'QLD', label: 'QLD' },
-								{ key: 'SA', label: 'SA' },
-								{ key: 'TAS', label: 'TAS' },
-								{ key: 'VIC', label: 'VIC' },
-								{ key: 'WA', label: 'WA' },
-							]}
-							autoComplete="address-level1"
-						/>
+						{['AU', 'CA', 'US'].includes(data.address_country) ? (
+							<div className="mt-1">
+								<StateSelect
+									country={data.address_country}
+									name="address_state"
+									defaultValue={data.address_state}
+									updateFn={value => setData('address_state', value)}
+									hasErrors={!!errors['address_state']}
+									autoComplete="address-level1"
+								/>
+							</div>
+						) : (
+							<TextInput
+								name="address_state"
+								value={data.address_state}
+								updateFn={value => setData('address_state', value)}
+								hasErrors={!!errors['address_state']}
+								autoComplete="address-level1"
+								disabled={!data.address_country}
+							/>
+						)}
 						{errors.address_state && <Error>{errors.address_state}</Error>}
 					</div>
-					<div className="sm:col-span-2">
+					<div className="sm:col-span-1">
 						<Label label="Postal Code / Zip Code" forInput="address_postcode" />
 						<TextInput
 							name="address_postcode"

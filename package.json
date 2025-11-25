@@ -47,6 +47,7 @@
         "@tiptap/starter-kit": "^2.26.1",
         "@types/snapsvg": "^0.5.8",
         "collect.js": "^4.36.1",
+        "countries-list": "^3.2.0",
         "detect-it": "^4.0.1",
         "howler": "^2.2.4",
         "luxon": "^2.5.2",
@@ -67,6 +68,7 @@
         "react-use-cookie": "^1.6.1",
         "react-zoom-pan-pinch": "^2.6.1",
         "snapsvg-cjs": "0.0.6",
+        "states-us": "^1.1.1",
         "tone": "^15.1.22",
         "ziggy-js": "^1.8.2"
     },

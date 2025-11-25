@@ -4,6 +4,7 @@ import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
 import React from 'react';
 import HeightToggle from "../components/HeightToggle";
+import {countries} from "countries-list";
 
 export const PersonalDetailsSection = ({ singer }) => (
 	<CollapsePanel>
@@ -48,7 +49,9 @@ export const PersonalDetailsSection = ({ singer }) => (
 								<br />
 							</>
 						)}
-						{`${singer.user.address_suburb}, ${singer.user.address_state} ${singer.user.address_postcode}`}
+						{singer.user.address_suburb}<br />
+						{countries[singer.user.address_country]?.name}<br />
+						{`${singer.user.address_state} ${singer.user.address_postcode}`}
 					</>
 				) : (
 					'No address'

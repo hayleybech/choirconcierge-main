@@ -51,6 +51,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string $address_street_2
  * @property string $address_suburb
  * @property string $address_state
+ * @property string $address_country
  * @property string $address_postcode
  * @property string $profession
  * @property string $skills
@@ -98,6 +99,7 @@ class User extends Authenticatable implements HasMedia
         'address_street_2',
         'address_suburb',
         'address_state',
+        'address_country',
         'address_postcode',
         'profession',
         'skills',
