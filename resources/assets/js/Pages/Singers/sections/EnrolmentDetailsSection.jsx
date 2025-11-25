@@ -32,23 +32,11 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 										colour={enrolment.voice_part.colour}
 									/>
 								)}
+							</div>
+							<div className="flex items-center gap-2">
 								<span className="text-sm text-gray-500 italic hidden md:inline">
 									<DateTag icon="pencil" date={enrolment.updated_at} label="Updated" />
 								</span>
-							</div>
-							<div className="flex items-center gap-2">
-								{/* @todo add a more specific ability check */}
-								{singer.can['update_singer'] && (
-									<Button
-										variant="danger-outline"
-										size="xs"
-										onClick={() => setDeletingEnrolment(enrolment.id)}
-									>
-										<Icon icon="trash" />
-										Delete
-									</Button>
-								)}
-
 								{/* @todo add a more specific ability check */}
 								{singer.can['update_singer'] && (
 									<Button
@@ -57,7 +45,19 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 										onClick={() => setEditingEnrolment(enrolment.id)}
 									>
 										<Icon icon="edit" />
-										Edit
+										<div className="hidden md:inline">Edit</div>
+									</Button>
+								)}
+
+								{/* @todo add a more specific ability check */}
+								{singer.can['update_singer'] && (
+									<Button
+										variant="danger-outline"
+										size="xs"
+										onClick={() => setDeletingEnrolment(enrolment.id)}
+									>
+										<Icon icon="trash" />
+										<div className="hidden md:inline">Delete</div>
 									</Button>
 								)}
 							</div>
@@ -66,7 +66,7 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 					{/* @todo add a more specific ability check */}
 					{singer.can['update_singer'] && ensembles.length > 0 && (
 						<li className="flex justify-center items-center gap-2 py-3 px-4 sm:px-6 lg:px-8">
-							<div className="text-gray-800">Add a new enrolment</div>
+							<div className="text-gray-700 text-sm">Add a new enrolment</div>
 							<Button variant="primary" size="xs" onClick={() => setCreatingEnrolment(true)}>
 								<Icon icon="plus" />
 								Create
