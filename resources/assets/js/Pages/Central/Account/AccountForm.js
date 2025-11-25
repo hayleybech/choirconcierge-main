@@ -31,7 +31,7 @@ const AccountForm = ({}) => {
 		pronouns: user.pronouns ?? '',
 
 		password_confirmation: '',
-		dob: user.dob ? DateTime.fromJSDate(new Date(user.dob)).toISODate() : null,
+		dob: user.dob ? DateTime.fromJSDate(new Date(user.dob)).toISODate() : '',
 		height: user.height ?? '',
 		profession: user.profession ?? '',
 		skills: user.skills ?? '',
@@ -74,7 +74,7 @@ const AccountForm = ({}) => {
 							value={data.first_name}
 							updateFn={value => setData('first_name', value)}
 							hasErrors={!!errors['first_name']}
-							autocomplete="given-name"
+							autoComplete="given-name"
 						/>
 						{errors.first_name && <Error>{errors.first_name}</Error>}
 					</div>
@@ -85,7 +85,7 @@ const AccountForm = ({}) => {
 							value={data.last_name}
 							updateFn={value => setData('last_name', value)}
 							hasErrors={!!errors['last_name']}
-							autocomplete="family-name"
+							autoComplete="family-name"
 						/>
 						{errors.last_name && <Error>{errors.last_name}</Error>}
 					</div>
@@ -109,7 +109,7 @@ const AccountForm = ({}) => {
 							value={data.email}
 							updateFn={value => setData('email', value)}
 							hasErrors={!!errors['email']}
-							autocomplete="email"
+							autoComplete="email"
 						/>
 						{errors.email && <Error>{errors.email}</Error>}
 					</div>
@@ -121,7 +121,7 @@ const AccountForm = ({}) => {
 							value={data.phone}
 							updateFn={value => setData('phone', value)}
 							hasErrors={!!errors['phone']}
-							autocomplete="tel"
+							autoComplete="tel"
 						/>
 						{errors.phone && <Error>{errors.phone}</Error>}
 					</div>
@@ -134,7 +134,7 @@ const AccountForm = ({}) => {
 							value={data.password}
 							updateFn={value => setData('password', value)}
 							hasErrors={!!errors['password']}
-							autocomplete="new-password"
+							autoComplete="new-password"
 						/>
 						{errors.password && <Error>{errors.password}</Error>}
 					</div>
@@ -146,7 +146,7 @@ const AccountForm = ({}) => {
 							value={data.password_confirmation}
 							updateFn={value => setData('password_confirmation', value)}
 							hasErrors={!!errors['password_confirmation']}
-							autocomplete="new-password"
+							autoComplete="new-password"
 						/>
 						{errors.password_confirmation && <Error>{errors.password_confirmation}</Error>}
 					</div>
@@ -161,7 +161,7 @@ const AccountForm = ({}) => {
 							value={data.dob}
 							updateFn={value => setData('dob', value)}
 							max={DateTime.now().toISODate()}
-							autocomplete="bday"
+							autoComplete="bday"
 						/>
 						{errors.dob && <Error>{errors.dob}</Error>}
 					</div>
@@ -264,7 +264,7 @@ const AccountForm = ({}) => {
 							value={data.address_street_1}
 							updateFn={value => setData('address_street_1', value)}
 							hasErrors={!!errors['address_street_1']}
-							autocomplete="address-line1"
+							autoComplete="address-line1"
 						/>
 						{errors.address_street_1 && <Error>{errors.address_street_1}</Error>}
 					</div>
@@ -276,7 +276,7 @@ const AccountForm = ({}) => {
 							value={data.address_street_2}
 							updateFn={value => setData('address_street_2', value)}
 							hasErrors={!!errors['address_street_2']}
-							autocomplete="address-line2"
+							autoComplete="address-line2"
 						/>
 						{errors.address_street_2 && <Error>{errors.address_street_2}</Error>}
 					</div>
@@ -288,7 +288,7 @@ const AccountForm = ({}) => {
 							value={data.address_suburb}
 							updateFn={value => setData('address_suburb', value)}
 							hasErrors={!!errors['address_suburb']}
-							autocomplete="address-level2"
+							autoComplete="address-level2"
 						/>
 						{errors.address_suburb && <Error>{errors.address_suburb}</Error>}
 					</div>
@@ -309,7 +309,7 @@ const AccountForm = ({}) => {
 								{ key: 'VIC', label: 'VIC' },
 								{ key: 'WA', label: 'WA' },
 							]}
-							autocomplete="address-level1"
+							autoComplete="address-level1"
 						/>
 						{errors.address_state && <Error>{errors.address_state}</Error>}
 					</div>
@@ -320,7 +320,7 @@ const AccountForm = ({}) => {
 							value={data.address_postcode}
 							updateFn={value => setData('address_postcode', value)}
 							hasErrors={!!errors['address_postcode']}
-							autocomplete="postal-code"
+							autoComplete="postal-code"
 						/>
 						{errors.address_postcode && <Error>{errors.address_postcode}</Error>}
 					</div>
