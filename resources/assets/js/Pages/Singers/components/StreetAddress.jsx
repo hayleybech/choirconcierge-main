@@ -15,10 +15,10 @@ const StreetAddress = ({ line1, line2, suburb, countryCode, state, postcode }) =
 	].filter(line => line);
 
 	return lines.map(line => (
-		<>
+		<React.Fragment key={line}>
 			{line}
 			<br />
-		</>
+		</React.Fragment>
 	));
 };
 
