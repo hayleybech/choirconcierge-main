@@ -2,9 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\Task;
-use App\Models\User;
 use Database\Seeders\Dummy\DummyDocumentSeeder;
 use Database\Seeders\Dummy\DummyEventSeeder;
 use Database\Seeders\Dummy\DummyFolderSeeder;

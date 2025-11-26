@@ -1,6 +1,13 @@
+# 2025-11-26
+## Custom Fields
+You can now create custom fields on member profiles! This has been one of our most requested features. We're keen to hear any feedback you have on this new feature.
+
+---
 # 2025-11-25
 ## Improved street addresses
-When editing your address in your account details, we've added the ability to select your country. We've also made it possible to input your state if you're outside of Australia. 
+When editing your address in your account details, we've added the ability to select your country. We've also made it possible to input your state if you're outside of Australia.
+
+---
 # 2025-11-25
 ## Links in Emails
 We've now added full support for links in the rich text editor. Select the text you want to use as the label, then click the link button to add the URL.

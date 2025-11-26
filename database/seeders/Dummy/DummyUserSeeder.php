@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Dummy;
 
+use App\Models\CustomField;
 use App\Models\Membership;
 use App\Models\SingerCategory;
 use App\Models\User;
@@ -18,21 +19,27 @@ class DummyUserSeeder extends Seeder
 
         // The ResetDemoSite job also tries to add an ensemble,
         // but this file runs before the rest of the ResetDemoSite job runs.
-        if(tenant()->ensembles->count() === 0) {
+        if (tenant()->ensembles->count() === 0) {
             tenant()->ensembles()->firstOrCreate(['name' => 'Hypothetical Harmony']);
         }
+
+        $custom_fields = CustomField::factory()->count(10)->create();
+        $faker = Faker::create();
 
         // Add dummy users - no roles
         User::factory()
             ->count(30)
             ->create()
-            ->each(static function (User $user) use ($singer_categories) {
-                $faker = Faker::create();
+            ->each(static function (User $user) use ($singer_categories, $faker, $custom_fields) {
 
                 // Create matching singer
-                $member = $user->memberships()->create([
-                    'onboarding_enabled' => $faker->boolean(30),
-                ]);
+                $member = Membership::factory()
+                    ->for($user)
+                    ->hasAttached($custom_fields, fn() => ['value' => $faker->words(3, true)])
+                    ->state([
+                        'onboarding_enabled' => $faker->boolean(30),
+                    ])
+                    ->create();
 
                 // Create enrolment
                 tenant()->ensembles()?->first()->enrolments()->create([

@@ -20,8 +20,9 @@ import { MembershipDetailsSection } from './sections/MembershipDetailsSection';
 import { VoicePlacementSection } from './sections/VoicePlacementSection';
 import { EnrolmentDetailsSection } from './sections/EnrolmentDetailsSection';
 import { OnboardingTaskSection } from './sections/OnboardingTaskSection';
+import CustomFieldsSection from "./sections/CustomFieldsSection";
 
-const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled }) => {
+const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFields }) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
 	const { can, user: authUser } = usePage().props;
@@ -132,6 +133,12 @@ const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled }) => {
 										ensembles={ensemblesNotEnrolled}
 									/>
 								),
+							},
+							{
+								title: 'Custom Fields',
+								show: true,
+								defaultOpen: true,
+								content: <CustomFieldsSection singer={singer} customFields={customFields} />
 							},
 						]}
 					/>
