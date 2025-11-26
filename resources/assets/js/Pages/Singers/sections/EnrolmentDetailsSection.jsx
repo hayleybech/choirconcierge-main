@@ -9,11 +9,14 @@ import Label from '../../../components/inputs/Label';
 import Select from '../../../components/inputs/Select';
 import RadioGroup from '../../../components/inputs/RadioGroup';
 import { CollapsePanelWithoutPadding } from '../../../components/CollapseGroup';
+import { useMediaQuery } from 'react-responsive';
 
 export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 	const [creatingEnrolment, setCreatingEnrolment] = useState(false);
 	const [editingEnrolment, setEditingEnrolment] = useState(null);
 	const [deletingEnrolment, setDeletingEnrolment] = useState(null);
+
+	const isXl = useMediaQuery({ query: '(min-width: 1280px)' });
 
 	return (
 		<>
@@ -35,7 +38,14 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 							</div>
 							<div className="flex items-center gap-2">
 								<span className="text-sm text-gray-500 italic hidden md:inline">
-									<DateTag icon="pencil" date={enrolment.updated_at} label="Updated" />
+									<DateTag
+										icon="pencil"
+										date={enrolment.updated_at}
+										label={isXl ? 'Updated' : ''}
+										format={isXl ? 'DATE_MED' : 'DATE_SHORT'}
+										mr={false}
+										className="flex items-center gap-x-1 xl:gap-x-1.5"
+									/>
 								</span>
 								{/* @todo add a more specific ability check */}
 								{singer.can['update_singer'] && (

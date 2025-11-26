@@ -46,10 +46,11 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Attendance> $attendances
  * @property Collection<Role> $roles
  * @property Collection<Song> $songs
+ * @property Collection<CustomField> $custom_fields
  *
  * Attributes
- * @property Carbon memberversary
- * @property boolean fee_status
+ * @property Carbon $memberversary
+ * @property boolean $fee_status
  *
  * Dynamic
  * @property string $name
@@ -191,6 +192,13 @@ class Membership extends Model
             ->withPivot(['status'])
             ->using(LearningStatus::class)
             ->as('learning')
+            ->withTimestamps();
+    }
+
+    public function customFields(): BelongsToMany
+    {
+        return $this->belongsToMany(CustomField::class, 'custom_field_entries')
+            ->using(CustomFieldEntry::class)
             ->withTimestamps();
     }
 

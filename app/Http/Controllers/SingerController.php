@@ -7,6 +7,7 @@ use App\CustomSorts\SingerStatusSort;
 use App\CustomSorts\SingerVoicePartSort;
 use App\Http\Requests\CreateSingerRequest;
 use App\Http\Requests\EditSingerRequest;
+use App\Models\CustomField;
 use App\Models\Ensemble;
 use App\Models\Placement;
 use App\Models\Role;
@@ -79,7 +80,7 @@ class SingerController extends Controller
         $singer->save();
 
         $adminRoleId = Role::where('name', 'Admin')->value('id');
-        if(!$singer->hasRole('Admin') && Arr::has($request->validated('user_roles', []), $adminRoleId)) {
+        if (!$singer->hasRole('Admin') && Arr::has($request->validated('user_roles', []), $adminRoleId)) {
             $singer->user->subscribeToAlerts();
         }
 
@@ -92,7 +93,7 @@ class SingerController extends Controller
 
     public function show(Membership $singer): InertiaResponse
     {
-		$singer->append('fee_status');
+        $singer->append('fee_status');
 
         $singer->load([
             'user',
@@ -108,14 +109,16 @@ class SingerController extends Controller
             'delete_singer' => auth()->user()?->can('delete', $singer),
             'create_placement' => auth()->user()?->can('create', [Placement::class, $singer]),
         ];
-        $singer->tasks->each(fn ($task) => $task->can = ['complete' => auth()->user()?->can('complete', $task)]);
+        $singer->tasks->each(fn($task) => $task->can = ['complete' => auth()->user()?->can('complete', $task)]);
 
         return Inertia::render('Singers/Show', [
             'singer' => $singer,
             'categories' => SingerCategory::all(),
             'voiceParts' => VoicePart::all(),
-            'ensemblesNotEnrolled' => Ensemble::whereDoesntHave('enrolments', fn(Builder $query) =>
-                $query->where('membership_id', $singer->id)
+            'customFields' => CustomField::query()
+                ->with('entries', fn($query) => $query->where('membership_id', $singer->id))
+                ->get(),
+            'ensemblesNotEnrolled' => Ensemble::whereDoesntHave('enrolments', fn(Builder $query) => $query->where('membership_id', $singer->id)
             )->get(),
         ]);
     }
@@ -133,10 +136,10 @@ class SingerController extends Controller
     public function update(Membership $singer, EditSingerRequest $request): RedirectResponse
     {
         $adminRoleId = Role::where('name', 'Admin')->value('id');
-        if($singer->hasRole('Admin') && ! Arr::has($request->validated('user_roles', []), $adminRoleId)) {
+        if ($singer->hasRole('Admin') && !Arr::has($request->validated('user_roles', []), $adminRoleId)) {
             $singer->user->unsubscribeFromAlerts();
         }
-        if(!$singer->hasRole('Admin') && Arr::has($request->validated('user_roles', []),$adminRoleId)) {
+        if (!$singer->hasRole('Admin') && Arr::has($request->validated('user_roles', []), $adminRoleId)) {
             $singer->user->subscribeToAlerts();
         }
 
@@ -186,12 +189,12 @@ class SingerController extends Controller
                     ->default([$defaultStatus]),
                 AllowedFilter::callback('enrolments.voice_part_id', fn(Builder $query, $value) => $query
                     ->whereHas('enrolments', fn(Builder $query) => $query
-                        ->where('voice_part_id','=', $value)
+                        ->where('voice_part_id', '=', $value)
                     )
                 ),
                 AllowedFilter::callback('enrolments.ensemble_id', fn(Builder $query, $value) => $query
                     ->whereHas('enrolments', fn(Builder $query) => $query
-                        ->where('ensemble_id','=', $value)
+                        ->where('ensemble_id', '=', $value)
                     )
                 ),
                 AllowedFilter::exact('roles.id'),

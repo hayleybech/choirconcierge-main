@@ -9,7 +9,9 @@ import Dialog from '../../../components/Dialog';
 import Form from '../../../components/Form';
 import Label from '../../../components/inputs/Label';
 import Error from '../../../components/inputs/Error';
-import DateTag from "../../../components/DateTag";
+import DateTag from '../../../components/DateTag';
+import { useMediaQuery } from 'react-responsive';
+import DeleteDialog from "../../../components/DeleteDialog";
 
 const examples = [
 	{ label: 'Favourite Colour', value: 'Purple', updated_at: '2025-11-25' },
@@ -23,15 +25,21 @@ const examples = [
 		updated_at: '2025-11-25',
 	},
 ];
-const CustomFieldsSection = () => {
+const CustomFieldsSection = ({ singer, customFields }) => {
 	const [showCreateDialog, setShowCreateDialog] = useState(false);
 
 	return (
 		<CollapsePanelWithoutPadding>
 			<table className="w-full">
 				<tbody className="divide-y divide-gray-200 border-b border-gray-200">
-					{examples.map(({ label, value, updated_at }) => (
-						<CustomFieldItem key={label} label={label} value={value} updated_at={updated_at} />
+					{customFields.map(({ id, name, entries }) => (
+						<CustomFieldItem
+							key={id}
+							id={id}
+							label={name}
+							value={entries[0]?.value}
+							updated_at={entries[0]?.updated_at}
+						/>
 					))}
 				</tbody>
 				<tfoot>
@@ -56,15 +64,18 @@ const CustomFieldsSection = () => {
 
 export default CustomFieldsSection;
 
-const CustomFieldItem = ({ label, value, updated_at }) => {
+const CustomFieldItem = ({ id, label, value, updated_at }) => {
 	const [isEditing, setIsEditing] = useState(false);
+	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
+
+	const isXl = useMediaQuery({ query: '(min-width: 1280px)' });
 
 	return (
 		<tr
 			key={label}
 			className="[&>td:first-child]:pl-4 [&>td:first-child]:sm:pl-6 [&>td:first-child]:lg:pl-8 [&>td:last-child]:pr-4 [&>td:last-child]:sm:pr-6 [&>td:last-child]:lg:pr-8"
 		>
-			<td className="py-3 leading-tight lg:whitespace-nowrap text-sm lg:text-base">
+			<td className="py-3 leading-tight xl:whitespace-nowrap text-sm xl:text-base">
 				<strong>{label}</strong>
 			</td>
 
@@ -84,7 +95,14 @@ const CustomFieldItem = ({ label, value, updated_at }) => {
 						{value}
 						{!!value && (
 							<span className="text-sm text-gray-500 italic hidden md:inline shrink-0">
-								<DateTag icon="pencil" date={updated_at} label="Updated" />
+								<DateTag
+									icon="pencil"
+									date={updated_at}
+									label={isXl ? 'Updated' : ''}
+									format={isXl ? 'DATE_MED' : 'DATE_SHORT'}
+									mr={false}
+									className="flex items-center gap-x-1 xl:gap-x-1.5"
+								/>
 							</span>
 						)}
 					</div>
@@ -105,10 +123,21 @@ const CustomFieldItem = ({ label, value, updated_at }) => {
 						</Button>
 					)}
 
-					<Button variant="danger-outline" size="xs">
+					<Button variant="danger-outline" size="xs" onClick={() => setDeleteDialogIsOpen(true)}>
 						<Icon icon="trash" />
 						<div className="hidden md:inline">Delete</div>
 					</Button>
+
+					<DeleteDialog
+						title="Delete Custom Field"
+						url={route('custom-fields.destroy', {id})}
+						isOpen={deleteDialogIsOpen}
+						setIsOpen={setDeleteDialogIsOpen}
+					>
+						Are you sure you want to delete this custom field?<br />
+						This will be deleted for <strong>all users.</strong><br />
+						This action cannot be undone.<br />
+					</DeleteDialog>
 				</div>
 			</td>
 		</tr>

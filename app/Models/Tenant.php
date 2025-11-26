@@ -43,6 +43,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * Relationships
  * @property Collection<Ensemble> $ensembles
  * @property Collection<Membership> $members
+ * @property Collection<CustomField> $custom_fields
  * @protected User $billingUser
  */
 class Tenant extends BaseTenant
@@ -277,6 +278,10 @@ class Tenant extends BaseTenant
 
     public function members(): HasMany {
         return $this->hasMany(Membership::class);
+    }
+
+    public function customFields(): HasMany {
+        return $this->hasMany(CustomField::class);
     }
 
     public function billingUser(): BelongsTo {
