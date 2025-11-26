@@ -198,6 +198,8 @@ class Membership extends Model
     public function customFields(): BelongsToMany
     {
         return $this->belongsToMany(CustomField::class, 'custom_field_entries')
+            ->withPivot(['id', 'value'])
+            ->as('entry')
             ->using(CustomFieldEntry::class)
             ->withTimestamps();
     }
