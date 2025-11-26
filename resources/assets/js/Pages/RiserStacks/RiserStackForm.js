@@ -12,6 +12,7 @@ import RiserStackHoldingArea from "../../components/RiserStack/RiserStackHolding
 import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import useRoute from "../../hooks/useRoute";
+import useMetricImperialPreference from "../../hooks/useMetricImperialPreference";
 
 const RiserStackForm = ({ stack, voiceParts, singers }) => {
     const { route } = useRoute();
@@ -19,7 +20,7 @@ const RiserStackForm = ({ stack, voiceParts, singers }) => {
     const { user } = usePage().props;
 
     const [showHeights, setShowHeights] = useState(false);
-    const [showImperial, setShowImperial] = useState(false);
+    const [showImperial, setShowImperial] = useMetricImperialPreference();
 
     const { data, setData, post, put, processing, errors } = useForm({
         title: stack?.title ?? '',

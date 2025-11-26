@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import classNames from '../../classNames';
 import { Switch } from '@headlessui/react';
 import TextInput from './TextInput';
 import { cmToInFt, inFtToCm } from '../../Pages/Singers/components/HeightToggle';
+import useMetricImperialPreference from "../../hooks/useMetricImperialPreference";
 
 const MetricImperialInput = ({ name, value, updateFn, hasErrors, wrapperClasses, disabled }) => {
-	const [showImperial, setShowImperial] = useState(false);
+	const [showImperial, setShowImperial] = useMetricImperialPreference();
 
 	const initialImperial = Number.isNaN(value) ? '' : cmToInFt(value);
 	const [valuesImperial, setValuesImperial] = useState(initialImperial);

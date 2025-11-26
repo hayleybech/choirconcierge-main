@@ -1,9 +1,10 @@
 import { Switch } from '@headlessui/react';
-import React, { useState } from 'react';
+import React from 'react';
 import classNames from '../../../classNames';
+import useMetricImperialPreference from "../../../hooks/useMetricImperialPreference";
 
 export const HeightToggle = props => {
-	const [showImperial, setShowImperial] = useState(false);
+	const [showImperial, setShowImperial] = useMetricImperialPreference();
 	const imperial = cmToInFt(props.cm);
 
 	return (
