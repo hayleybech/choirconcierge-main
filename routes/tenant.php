@@ -7,6 +7,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceReportController;
 use App\Http\Controllers\CompleteSingerTaskController;
 use App\Http\Controllers\CustomFieldController;
+use App\Http\Controllers\CustomFieldEntryController;
 use App\Http\Controllers\CustomiseUpcomingEventsWidgetController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\DocumentController;
@@ -131,6 +132,9 @@ Route::middleware([
         Route::post('singers/import', ImportSingerController::class)->name('singers.import');
         Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
         Route::get('singers/{singer}/tasks/{task}/complete', CompleteSingerTaskController::class)->name('task.complete');
+        Route::resource('singers.custom-fields', CustomFieldEntryController::class)
+            ->parameters(['custom-fields' => 'entry'])
+            ->only(['store', 'update']);
 
         // Custom Fields
         Route::resource('custom-fields', CustomFieldController::class)->only(['store', 'destroy']);

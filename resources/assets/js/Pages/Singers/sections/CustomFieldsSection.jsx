@@ -11,7 +11,7 @@ import Label from '../../../components/inputs/Label';
 import Error from '../../../components/inputs/Error';
 import DateTag from '../../../components/DateTag';
 import { useMediaQuery } from 'react-responsive';
-import DeleteDialog from "../../../components/DeleteDialog";
+import DeleteDialog from '../../../components/DeleteDialog';
 
 const examples = [
 	{ label: 'Favourite Colour', value: 'Purple', updated_at: '2025-11-25' },
@@ -33,13 +33,7 @@ const CustomFieldsSection = ({ singer, customFields }) => {
 			<table className="w-full">
 				<tbody className="divide-y divide-gray-200 border-b border-gray-200">
 					{customFields.map(({ id, name, entries }) => (
-						<CustomFieldItem
-							key={id}
-							id={id}
-							label={name}
-							value={entries[0]?.value}
-							updated_at={entries[0]?.updated_at}
-						/>
+						<CustomFieldItem key={id} id={id} label={name} entry={entries[0]} singer={singer} />
 					))}
 				</tbody>
 				<tfoot>
@@ -64,11 +58,30 @@ const CustomFieldsSection = ({ singer, customFields }) => {
 
 export default CustomFieldsSection;
 
-const CustomFieldItem = ({ id, label, value, updated_at }) => {
+const CustomFieldItem = ({ id, label, entry, singer }) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
 	const isXl = useMediaQuery({ query: '(min-width: 1280px)' });
+
+	const { route } = useRoute();
+
+	const { data, setData, post, put, errors } = useForm({
+		value: entry?.value ?? '',
+		customFieldId: id,
+	});
+
+	function submit(e) {
+		e.preventDefault();
+
+		entry
+			? put(route('singers.custom-fields.update', { singer, entry }), {
+					onSuccess: () => setIsEditing(false),
+			  })
+			: post(route('singers.custom-fields.store', { singer }), {
+					onSuccess: () => setIsEditing(false),
+			  });
+	}
 
 	return (
 		<tr
@@ -81,23 +94,30 @@ const CustomFieldItem = ({ id, label, value, updated_at }) => {
 
 			<td className="py-3 text-sm text-gray-700 px-3 leading-snug w-full">
 				{isEditing ? (
-					<div className="flex gap-1 items-center">
+					<form className="flex gap-1 items-center" onSubmit={e => submit(e)}>
 						<div className="-mt-1 grow">
-							<TextInput value={value} className="p-1 text-sm leading-none" wrapperClasses="mt-0" />
+							<TextInput
+								name="value"
+								value={data.value}
+								updateFn={value => setData('value', value)}
+								hasErrors={!!errors['value']}
+								className="p-1 text-sm leading-none"
+								wrapperClasses="mt-0"
+							/>
 						</div>
-						<Button variant="primary" size="xs" onClick={() => setIsEditing(prev => !prev)}>
+						<Button variant="primary" size="xs" onClick={e => submit(e)}>
 							<Icon icon="save" />
 							<div className="hidden md:inline">Save</div>
 						</Button>
-					</div>
+					</form>
 				) : (
 					<div className="flex gap-2 justify-between">
-						{value}
-						{!!value && (
+						{entry?.value}
+						{!!entry && (
 							<span className="text-sm text-gray-500 italic hidden md:inline shrink-0">
 								<DateTag
 									icon="pencil"
-									date={updated_at}
+									date={entry?.updated_at}
 									label={isXl ? 'Updated' : ''}
 									format={isXl ? 'DATE_MED' : 'DATE_SHORT'}
 									mr={false}
@@ -130,13 +150,16 @@ const CustomFieldItem = ({ id, label, value, updated_at }) => {
 
 					<DeleteDialog
 						title="Delete Custom Field"
-						url={route('custom-fields.destroy', {id})}
+						url={route('custom-fields.destroy', { custom_field: id })}
 						isOpen={deleteDialogIsOpen}
 						setIsOpen={setDeleteDialogIsOpen}
 					>
-						Are you sure you want to delete this custom field?<br />
-						This will be deleted for <strong>all users.</strong><br />
-						This action cannot be undone.<br />
+						Are you sure you want to delete this custom field?
+						<br />
+						This will be deleted for <strong>all users.</strong>
+						<br />
+						This action cannot be undone.
+						<br />
 					</DeleteDialog>
 				</div>
 			</td>
