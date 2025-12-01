@@ -7,15 +7,15 @@ import {Integrations as TracingIntegrations} from "@sentry/tracing";
 const VERSION = 'choir-concierge@2025-09-22c';
 
 Sentry.init({
-	dsn: process.env.MIX_SENTRY_DSN,
+	dsn: import.meta.env.VITE_SENTRY_DSN,
 	logErrors: true,
 	integrations: [new TracingIntegrations.BrowserTracing()],
-	tracesSampleRate: process.env.MIX_SENTRY_TRACES_SAMPLE_RATE,
+	tracesSampleRate: import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE,
 	tracingOptions: {
 		trackComponents: true,
 	},
-	release: process.env.MIX_SENTRY_ENV === 'production' ? VERSION : `VERSION:${process.env.MIX_SENTRY_ENV}`,
-	environment: process.env.MIX_SENTRY_ENV,
+	release: import.meta.env.VITE_SENTRY_ENV === 'production' ? VERSION : `VERSION:${import.meta.env.VITE_SENTRY_ENV}`,
+	environment: import.meta.env.VITE_SENTRY_ENV,
 });
 
 createInertiaApp({
