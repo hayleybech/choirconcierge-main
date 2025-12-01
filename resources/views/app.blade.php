@@ -49,9 +49,9 @@
     </script>
 
     <!-- Scripts -->
-    @vite('resources/js/manifest.js')
-    @vite('resources/js/vendor.js')
-    @vite('resources/js/app.js')
+    @vite('public/js/manifest.js')
+    @vite('public/js/vendor.js')
+    @vite('public/js/app.js')
 
 	@stack('scripts-footer-bottom')
 
