@@ -1,6 +1,6 @@
 <?php
 
 return [
-    //    'rebuild' => env('MIX_FEATURE_REBUILD', false),
-    'billing' => env('MIX_FEATURE_BILLING', false),
+    //    'rebuild' => env('VITE_FEATURE_REBUILD', false),
+    'billing' => env('VITE_FEATURE_BILLING', false),
 ];

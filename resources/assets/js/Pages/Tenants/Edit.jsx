@@ -121,7 +121,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
                     <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
 
-                {process.env.MIX_FEATURE_BILLING && (
+                {import.meta.env.VITE_FEATURE_BILLING && (
                     <>
                         <FormSection title="Billing Details">
                             <div className="sm:col-span-6">

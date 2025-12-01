@@ -49,9 +49,9 @@
     </script>
 
     <!-- Scripts -->
-    <script src="{{ mix('/js/manifest.js') }}"></script>
-    <script src="{{ mix('/js/vendor.js') }}"></script>
-    <script src="{{ mix('/js/app.js') }}"></script>
+    @vite('public/js/manifest.js')
+    @vite('public/js/vendor.js')
+    @vite('public/js/app.js')
 
 	@stack('scripts-footer-bottom')
 
