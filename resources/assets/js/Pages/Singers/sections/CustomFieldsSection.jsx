@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Button from '../../../components/inputs/Button';
 import TextInput from '../../../components/inputs/TextInput';
 import useRoute from '../../../hooks/useRoute';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import Dialog from '../../../components/Dialog';
 import Form from '../../../components/Form';
 import Label from '../../../components/inputs/Label';
@@ -13,20 +13,9 @@ import DateTag from '../../../components/DateTag';
 import { useMediaQuery } from 'react-responsive';
 import DeleteDialog from '../../../components/DeleteDialog';
 
-const examples = [
-	{ label: 'Favourite Colour', value: 'Purple', updated_at: '2025-11-25' },
-	{ label: 'Favourite Artist', value: 'John Farnham', updated_at: '2025-11-25' },
-	{ label: 'Favourite TV-Show', value: 'Stargate SG-1', updated_at: '2025-11-25' },
-	{ label: 'Blank Example', value: '', updated_at: '2025-11-25' },
-	{
-		label: 'Long Example',
-		value:
-			'"Lorem ipsum" is a placeholder text used in graphic design, publishing, and web development to show the visual form of a document or typeface without relying on meaningful content. The text is derived from a scrambled Latin-language text by Cicero, but it is not intended to be readable and has been used as a dummy text for centuries to demonstrate layouts and fonts.',
-		updated_at: '2025-11-25',
-	},
-];
 const CustomFieldsSection = ({ singer, customFields }) => {
 	const [showCreateDialog, setShowCreateDialog] = useState(false);
+	const { can } = usePage().props;
 
 	return (
 		<CollapsePanelWithoutPadding>
@@ -37,6 +26,7 @@ const CustomFieldsSection = ({ singer, customFields }) => {
 					))}
 				</tbody>
 				<tfoot>
+				{can['create_custom_field'] && (
 					<tr>
 						<td colSpan={3}>
 							<div className="flex justify-center items-center gap-2 py-3 px-4 sm:px-6 lg:px-8">
@@ -48,6 +38,7 @@ const CustomFieldsSection = ({ singer, customFields }) => {
 							</div>
 						</td>
 					</tr>
+				)}
 				</tfoot>
 			</table>
 
@@ -130,38 +121,41 @@ const CustomFieldItem = ({ id, label, entry, singer }) => {
 			</td>
 
 			<td className="py-3">
-				<div className="flex items-center justify-end gap-2">
-					{isEditing ? (
-						<Button variant="secondary" size="xs" onClick={() => setIsEditing(false)}>
-							<Icon icon="times" />
-							<div className="hidden md:inline">Cancel</div>
-						</Button>
-					) : (
-						<Button variant="primary" size="xs" onClick={() => setIsEditing(true)}>
-							<Icon icon="edit" />
-							<div className="hidden md:inline">Edit</div>
-						</Button>
-					)}
+				{can['update_custom_field_entries'] && (
 
-					<Button variant="danger-outline" size="xs" onClick={() => setDeleteDialogIsOpen(true)}>
-						<Icon icon="trash" />
-						<div className="hidden md:inline">Delete</div>
-					</Button>
+					<div className="flex items-center justify-end gap-2">
+						{isEditing ? (
+							<Button variant="secondary" size="xs" onClick={() => setIsEditing(false)}>
+								<Icon icon="times" />
+								<div className="hidden md:inline">Cancel</div>
+							</Button>
+						) : (
+							<Button variant="primary" size="xs" onClick={() => setIsEditing(true)}>
+								<Icon icon="edit" />
+								<div className="hidden md:inline">Edit</div>
+							</Button>
+						)}
 
-					<DeleteDialog
-						title="Delete Custom Field"
-						url={route('custom-fields.destroy', { custom_field: id })}
-						isOpen={deleteDialogIsOpen}
-						setIsOpen={setDeleteDialogIsOpen}
-					>
-						Are you sure you want to delete this custom field?
-						<br />
-						This will be deleted for <strong>all users.</strong>
-						<br />
-						This action cannot be undone.
-						<br />
-					</DeleteDialog>
-				</div>
+						<Button variant="danger-outline" size="xs" onClick={() => setDeleteDialogIsOpen(true)}>
+							<Icon icon="trash" />
+							<div className="hidden md:inline">Delete</div>
+						</Button>
+
+						<DeleteDialog
+							title="Delete Custom Field"
+							url={route('custom-fields.destroy', { custom_field: id })}
+							isOpen={deleteDialogIsOpen}
+							setIsOpen={setDeleteDialogIsOpen}
+						>
+							Are you sure you want to delete this custom field?
+							<br />
+							This will be deleted for <strong>all users.</strong>
+							<br />
+							This action cannot be undone.
+							<br />
+						</DeleteDialog>
+					</div>
+				)}
 			</td>
 		</tr>
 	);

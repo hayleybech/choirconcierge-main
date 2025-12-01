@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Models\Attendance;
+use App\Models\CustomField;
+use App\Models\CustomFieldEntry;
 use App\Models\Document;
 use App\Models\Event;
 use App\Models\Folder;
@@ -65,6 +67,9 @@ class HandleInertiaRequests extends Middleware
                 'list_voice_parts' => auth()->user()?->can('viewAny', VoicePart::class),
                 'list_roles' => auth()->user()?->can('viewAny', Role::class),
                 'create_role' => auth()->user()?->can('create', Role::class),
+				'create_custom_field'=> auth()->user()?->can('create', CustomField::class),
+				'list_custom_field_entries' => auth()->user()?->can('viewAny', CustomFieldEntry::class),
+				'update_custom_field_entries' => auth()->user()?->can('update', CustomFieldEntry::class),
                 'list_songs' => auth()->user()?->can('viewAny', Song::class),
                 'create_song' => auth()->user()?->can('create', Song::class),
                 'list_events' => auth()->user()?->can('viewAny', Event::class),
