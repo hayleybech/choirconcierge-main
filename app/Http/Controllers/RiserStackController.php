@@ -113,6 +113,31 @@ class RiserStackController extends Controller
             ->with(['status' => 'Riser stack deleted. ']);
     }
 
+    public function clone(RiserStack $stack): RedirectResponse
+    {
+        $this->authorize('create', RiserStack::class);
+
+        $clone = $stack->load('members')
+            ->replicate()
+            ->fill([
+                'title' => 'Copy of ' . $stack->title,
+                'created_at' => now(),
+                'update_at' => now(),
+            ]);
+
+        $clone->save();
+
+        $clone->members()->attach($stack->members
+            ->mapWithKeys(fn($member) => [$member->id => [
+                'row' => $member->position->row,
+                'column' => $member->position->column,
+            ]])->all());
+
+        return redirect()
+            ->route('stacks.show', [$clone])
+            ->with(['status' => 'Riser stack cloned. ']);
+    }
+
     /**
      * Takes the crappy array format I sent the controller from React,
      * and turns it into a format compatible with sync().
@@ -122,7 +147,7 @@ class RiserStackController extends Controller
     private function prepPositions(array $singerPositions): array
     {
         return collect($singerPositions)
-            ->mapWithKeys(fn ($item) => [
+            ->mapWithKeys(fn($item) => [
                 $item['id'] => [
                     'row' => $item['position']['row'],
                     'column' => $item['position']['column'],

@@ -180,6 +180,7 @@ Route::middleware([
 
         // Risers module
         Route::resource('stacks', RiserStackController::class);
+        Route::get('stacks/{stack}/clone', [RiserStackController::class, 'clone'])->name('stacks.clone');
 
         // Users/Team module
         Route::prefix('users')->group(static function () {

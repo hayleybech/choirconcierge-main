@@ -11,7 +11,7 @@ import { usePage } from '@inertiajs/react';
 const Show = ({ stack }) => {
     const { route } = useRoute();
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
-    const { tenant } = usePage().props;
+    const { tenant, can } = usePage().props;
 
     return (
         <>
@@ -33,8 +33,9 @@ const Show = ({ stack }) => {
                 ]}
                 actions={[
                     { label: 'Edit', icon: 'edit', url: route('stacks.edit', stack), can: 'update_stack' },
+                    { label: 'Duplicate', icon: 'copy', url: route('stacks.clone', stack), can: 'create_stack'},
                     { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_stack' },
-                ].filter(action => action.can ? stack.can[action.can] : true)}
+                ].filter(action => action.can ? stack.can[action.can] || can[action.can] : true)}
             />
 
             <DeleteDialog
