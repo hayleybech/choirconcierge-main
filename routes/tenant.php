@@ -150,6 +150,7 @@ Route::middleware([
 
         // Events module
         Route::resource('events', EventController::class);
+        Route::get('events/{event}/clone', [EventController::class, 'clone'])->name('events.clone');
         Route::resource('events.rsvps', RsvpController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('events.attendances', AttendanceController::class)->only(['index']);
         Route::resource('events.activities', EventActivityController::class)->only(['store', 'update', 'destroy']);

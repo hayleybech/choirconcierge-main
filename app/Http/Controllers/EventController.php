@@ -10,7 +10,6 @@ use App\Models\Membership;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -136,6 +135,33 @@ class EventController extends Controller
         return redirect()
             ->route('events.index')
             ->with(['status' => 'Event deleted. ']);
+    }
+
+    public function clone(Event $event): RedirectResponse
+    {
+        $this->authorize('create', Event::class);
+
+        $clone = $event
+            ->load('type')
+            ->replicate()
+            ->fill([
+                'title' => 'Copy of ' . $event->title,
+                'created_at' => now(),
+                'update_at' => now(),
+
+                'is_repeating' => false,
+                'repeat_parent_id' => null,
+                'repeat_frequency_amount' => 0,
+                'repeat_frequency_unit' => '',
+            ]);
+
+        $clone->type()->associate($event->type);
+
+        $clone->save();
+
+        return redirect()
+            ->route('events.show', [$clone])
+            ->with(['status' => 'Event cloned. ']);
     }
 
     private function getEvents(): LengthAwarePaginator
