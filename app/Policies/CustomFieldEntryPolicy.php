@@ -26,13 +26,29 @@ class CustomFieldEntryPolicy
 
         return null;
     }
+
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): ?bool
+    {
+        return $user->membership->hasAbility('custom_fields_view');
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user): bool
+    {
+        return $user->membership->hasAbility('custom_fields_view');
+    }
+
     /**
      * Determine whether the user can create models.
      */
     public function create(User $user): bool
     {
-        // @todo add permissions
-        return false;
+        return $user->membership->hasAbility('custom_fields_create');
     }
 
     /**
@@ -40,6 +56,6 @@ class CustomFieldEntryPolicy
      */
     public function update(User $user): bool
     {
-        return false;
+        return $user->membership->hasAbility('custom_fields_update');
     }
 }

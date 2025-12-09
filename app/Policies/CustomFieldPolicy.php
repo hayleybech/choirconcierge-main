@@ -33,8 +33,7 @@ class CustomFieldPolicy
      */
     public function viewAny(User $user): ?bool
     {
-        // @todo add custom field permissions
-        return false;
+        return $user->membership->hasAbility('custom_fields_view');
     }
 
     /**
@@ -42,8 +41,7 @@ class CustomFieldPolicy
      */
     public function view(User $user): bool
     {
-        // @todo add custom field permissions
-        return false;
+        return $user->membership->hasAbility('custom_fields_view');
     }
 
     /**
@@ -51,8 +49,7 @@ class CustomFieldPolicy
      */
     public function create(User $user): bool
     {
-        // @todo add custom field permissions
-        return false;
+        return $user->membership->hasAbility('custom_fields_create');
     }
 
     /**
@@ -60,7 +57,7 @@ class CustomFieldPolicy
      */
     public function update(User $user): bool
     {
-        return false;
+        return $user->membership->hasAbility('custom_fields_update');
     }
 
     /**
@@ -68,7 +65,7 @@ class CustomFieldPolicy
      */
     public function delete(User $user): bool
     {
-        return false;
+        return $user->membership->hasAbility('custom_fields_delete');
     }
 
     /**

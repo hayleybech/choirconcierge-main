@@ -56,6 +56,7 @@ const CustomFieldItem = ({ id, label, entry, singer }) => {
 	const isXl = useMediaQuery({ query: '(min-width: 1280px)' });
 
 	const { route } = useRoute();
+	const { can } = usePage().props;
 
 	const { data, setData, post, put, errors } = useForm({
 		value: entry?.value ?? '',
