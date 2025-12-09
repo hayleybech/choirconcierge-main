@@ -1,25 +1,23 @@
 import React from 'react';
 import AppHead from "../../../components/AppHead";
-import useRoute from "../../../hooks/useRoute";
-import SingerSelect from '../../../components/inputs/SingerSelect';
-import Label from '../../../components/inputs/Label';
 import { useForm, usePage } from '@inertiajs/react';
 import Form from '../../../components/Form';
 import Button from '../../../components/inputs/Button';
 import ToastFlash from '../../../components/ToastFlash';
 import Icon from '../../../components/Icon';
-import Error from '../../../components/inputs/Error';
-import DateTag from '../../../components/DateTag';
+import {DateTime} from "luxon";
 
 const CheckIn = ({ event, storeUrlSigned }) => {
     const { tenant, flash, user } = usePage().props;
 
-    const {data, setData, post, processing, errors} = useForm();
+    const {data, setData, post, processing, errors, wasSuccessful} = useForm();
 
     function submit(e) {
         e.preventDefault();
         post(storeUrlSigned);
     }
+
+    const eventIsUpcoming = DateTime.fromISO(event.start_date) > DateTime.now();
 
     return (
         <>
@@ -37,15 +35,33 @@ const CheckIn = ({ event, storeUrlSigned }) => {
                         )}
                     </div>
 
-                    <h2 className="mb-6 text-center text-3xl font-extrabold text-gray-900">Event Check-In</h2>
+                    <h2 className="mb-6 text-center text-4xl font-extrabold text-gray-900">Event Check-In</h2>
 
-                    <p className="text-center mb-2">You are checking in for:</p>
+                    {eventIsUpcoming ? (
+                        <p className="text-center mb-2 text-red-500">Check-in is closed. Come back to this page on the day of the Event.</p>
+                    ) : (
+                        <p className="text-center mb-2">You are checking in for:</p>
+                    )}
 
-                    <h3 className="mb-2 text-center text-xl font-extrabold text-gray-900">{event.title}</h3>
+                    <h3 className="mb-2 text-center text-4xl font-extrabold text-gray-900">{event.title}</h3>
 
-                    <div className="text-gray-700 text-sm flex gap-2 justify-center">
-                        <div>This page expires at:</div>
-                        <DateTag date={event.end_date} />
+                    <div className="mt-2 font-bold flex items-center justify-center text-gray-600">
+                        <Icon icon="calendar-day" type="regular" mr />
+                        {DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
+                            <span className="whitespace-nowrap">
+								{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATE_MED)}
+							</span>
+                        ) : (
+                            <div>
+								<span className="whitespace-nowrap">
+									{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATE_MED)}
+								</span>
+                                {' - '}
+                                <span className="whitespace-nowrap">
+									{DateTime.fromISO(event.end_date).toLocaleString(DateTime.DATE_MED)}
+								</span>
+                            </div>
+                        )}
                     </div>
 
                 </div>
@@ -61,7 +77,7 @@ const CheckIn = ({ event, storeUrlSigned }) => {
                                 </div>
                             </div>
 
-                            <Button variant="primary" type="submit" size="sm" className="space-x-2 w-full" disabled={processing}>
+                            <Button variant="primary" type="submit" size="sm" className="space-x-2 w-full" disabled={processing || eventIsUpcoming || wasSuccessful}>
                                 <Icon icon="check" />
                                 I'm Here
                             </Button>

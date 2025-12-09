@@ -22,18 +22,18 @@ class AttendanceController extends Controller
         $event->createMissingAttendanceRecords();
 
         $event->load([
-            'attendances' => fn ($query) => $query
+            'attendances' => fn($query) => $query
                 ->with(['member' => ['user', 'enrolments']])
-                ->whereHas('member', fn ($query) => $query->active())
+                ->whereHas('member', fn($query) => $query->active())
         ]);
 
-        $event->attendances->each(fn ($attendance) => $attendance->member->user->append('avatar_url'));
+        $event->attendances->each(fn($attendance) => $attendance->member->user->append('avatar_url'));
 
         $voice_parts = VoicePart::all()
             ->push(VoicePart::getNullVoicePart())
             ->map(function ($part) use ($event) {
                 $part->members = $event->attendances
-                    ->filter(fn ($attendance) => $attendance->member->enrolments
+                    ->filter(fn($attendance) => $attendance->member->enrolments
                         ->contains(fn(Enrolment $enrolment) => $enrolment->voice_part_id === $part->id)
                     )
                     ->values();
@@ -44,10 +44,21 @@ class AttendanceController extends Controller
         return Inertia::render('Events/Attendance/Index', [
             'event' => $event,
             'voice_parts' => $voice_parts->values(),
-            'individualCheckInUrl' => auth()->user()->can('create', Attendance::class)
-                ? URL::temporarySignedRoute('events.check-ins.index', $event->end_date, ['event' => $event])
-                : '',
+            'individualCheckInUrl' => $this->getCheckInUrl($event),
         ]);
+    }
+
+    private function getCheckInUrl(Event $event): string
+    {
+        if (!auth()->user()->can('create', Attendance::class)) {
+            return '';
+        }
+
+        if ($event->is_repeating) {
+            return URL::temporarySignedRoute('events.check-ins.index', $event->repeat_until, ['event' => $event->repeat_parent]);
+        }
+
+        return URL::temporarySignedRoute('events.check-ins.index', $event->end_date, ['event' => $event]);
     }
 
     public function update(Event $event, Membership $singer, Request $request): RedirectResponse
