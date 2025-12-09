@@ -235,6 +235,7 @@ Route::middleware([
 
         // Roles module
         Route::resource('roles', RoleController::class);
+        Route::get('roles/{role}/clone', [RoleController::class, 'clone'])->name('roles.clone');
 
         // Organisation Settings
         Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');

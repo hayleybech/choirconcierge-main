@@ -8,9 +8,12 @@ import classNames from "../../classNames";
 import DeleteDialog from "../../components/DeleteDialog";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
+import {usePage} from "@inertiajs/react";
 
 const Show = ({ role }) => {
     const { route } = useRoute();
+
+    const page = usePage();
 
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
@@ -27,10 +30,11 @@ const Show = ({ role }) => {
                 ]}
                 actions={[
                     { label: 'Edit', icon: 'edit', url: route('roles.edit', {role}), can: 'update_role' },
+                    { label: 'Duplicate', icon: 'copy', url: route('roles.clone', role), can: 'create_role'},
                     ['User', 'Admin'].includes(role.name)
                       ? null
                       :  { label: 'Delete', icon: 'trash', onClick: () => setDeleteDialogIsOpen(true), variant: 'danger-outline', can: 'delete_role' },
-                ].filter(action => !!action && (action.can ? role.can[action.can] : true))}
+                ].filter(action => !!action && (action.can ? role.can[action.can] || page.props.can[action.can] : true))}
             />
 
             <DeleteDialog

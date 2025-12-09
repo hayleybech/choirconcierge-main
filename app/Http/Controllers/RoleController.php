@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Role;
 
 ;
@@ -81,5 +82,22 @@ class RoleController extends Controller
         return redirect()
             ->route('roles.index')
             ->with(['status' => 'Role deleted.']);
+    }
+
+    public function clone(Role $role): RedirectResponse
+    {
+        $this->authorize('create', Role::class);
+
+        $clone = $role
+            ->replicate()
+            ->fill([
+                'name' => 'Copy of ' . $role->name,
+            ]);
+
+        $clone->save();
+
+        return redirect()
+            ->route('roles.show', [$clone])
+            ->with(['status' => 'Role cloned. ']);
     }
 }
