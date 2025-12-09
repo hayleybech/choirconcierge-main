@@ -136,7 +136,7 @@ const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFiel
 							},
 							{
 								title: 'Custom Fields',
-								show: true,
+								show: can['list_custom_field_entries'],
 								defaultOpen: true,
 								content: <CustomFieldsSection singer={singer} customFields={customFields} />
 							},

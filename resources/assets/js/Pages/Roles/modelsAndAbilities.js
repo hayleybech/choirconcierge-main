@@ -3,6 +3,10 @@ export const modelsAndAbilities = {
         label: 'Singers',
         abilities: ['view', 'create', 'update', 'delete'],
     },
+    custom_fields: {
+        label: 'Singer Custom Fields',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
     singer_placements: {
         label: 'Singer Placements',
         abilities: ['view', 'create', 'update'],
