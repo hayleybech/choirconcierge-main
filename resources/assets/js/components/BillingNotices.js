@@ -12,7 +12,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   // On Trial
   if(billing.onTrial) {
     return (
-      <TenantNotice variant="info">
+      <TenantNotice variant="info" cookieId="billing">
         Your organisation is on a trial until {formatDate(billing.trialEndsAt)}. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
@@ -21,7 +21,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   // On Trial - Expired
   if(billing.hasExpiredTrial) {
     return (
-      <TenantNotice variant="danger">
+      <TenantNotice variant="danger" cookieId="billing">
         Your organisation's trial has expired. Your members won't be able to log in until you purchase a subscription. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
@@ -30,7 +30,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   // Past Due
   if(billing.pastDue) {
     return (
-      <TenantNotice variant="danger">
+      <TenantNotice variant="danger" cookieId="billing">
         Your organisation's subscription is overdue. Only Admins and Accounts Team can log in. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
@@ -39,7 +39,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   // Cancelled - Grace Period
   if(billing.onGracePeriod) {
     return (
-      <TenantNotice variant="warning">
+      <TenantNotice variant="warning" cookieId="billing">
         Your organisation's subscription has been cancelled. You may keep using the app until the end of your billing period. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
@@ -48,7 +48,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   // Cancelled - Ended
   if(billing.ended) {
     return (
-      <TenantNotice variant="danger">
+      <TenantNotice variant="danger" cookieId="billing">
         Your organisation's subscription has ended. Only Admins and Accounts Team can log in. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
@@ -57,7 +57,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   // Paused - Grace Period
   if(billing.onPausedGracePeriod) {
     return (
-      <TenantNotice variant="warning">
+      <TenantNotice variant="warning" cookieId="billing">
         Your organisation's subscription has been paused. You may keep using the app until the end of your billing period. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
@@ -66,7 +66,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   // Paused - Ended
   if(billing.paused) {
     return (
-      <TenantNotice variant="danger">
+      <TenantNotice variant="danger" cookieId="billing">
         Your organisation's subscription has been paused. Only Admins and Accounts Team can log in. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
@@ -75,7 +75,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   // Active User Quota - Nearly Exceeded
   if(billing.activeUserQuota.quotaNearlyExceeded) {
     return (
-      <TenantNotice variant="info">
+      <TenantNotice variant="info" cookieId="billing">
         Your organisation's has almost exceeded its quota of active members. You may need to upgrade your plan soon. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
@@ -85,7 +85,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   if(billing.activeUserQuota.onGracePeriod) {
     // @todo better copy here
     return (
-      <TenantNotice variant="warning">
+      <TenantNotice variant="warning" cookieId="billing">
         Your organisation's has exceeded its quota of active members. The app will function normally until {formatDate(billing.activeUserQuota.gracePeriodEndsAt)}. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
@@ -94,7 +94,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   // Active User Quota - Exceeded
   if(billing.activeUserQuota.quotaExceeded) {
     return (
-      <TenantNotice variant="danger">
+      <TenantNotice variant="danger" cookieId="billing">
         Your organisation's has exceeded its quota of active members. Your members won't be able to log in until you upgrade your subscription. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
@@ -103,7 +103,7 @@ const BillingNotices = ({ billing, tenantId }) => {
   // Fallback - No valid subscription
   if(!billing.valid) {
     return (
-      <TenantNotice variant="danger">
+      <TenantNotice variant="danger" cookieId="billing">
         There is an issue with your organisation's billing. Your members won't be able to log in until you purchase a subscription. <BillingLink tenantId={tenantId} />
       </TenantNotice>
     );
