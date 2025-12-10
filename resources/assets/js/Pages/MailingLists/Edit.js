@@ -4,6 +4,7 @@ import PageHeader from "../../components/PageHeader/PageHeader";
 import AppHead from "../../components/AppHead";
 import MailingListForm from "./MailingListForm";
 import useRoute from "../../hooks/useRoute";
+import TrialAntiSpamNotice from "./TrialAntiSpamNotice";
 
 const Edit = ({ list, roles, voiceParts, singerCategories }) => {
     const { route } = useRoute();
@@ -11,6 +12,9 @@ const Edit = ({ list, roles, voiceParts, singerCategories }) => {
     return (
         <>
             <AppHead title={`Edit - ${list.title}`} />
+
+            <TrialAntiSpamNotice />
+
             <PageHeader
                 title="Edit Mailing List"
                 icon="fa-mail-bulk"
