@@ -100,7 +100,10 @@ class IncomingMessage extends Mailable implements Loggable
 
     private function authoriseSenderForGroup(UserGroup $group): bool
     {
-        if ($group->authoriseSender(User::firstWhere('email', $this->from[0]['address']))) {
+        if (
+            !$group->tenant->billing_status['onTrial'] &&
+            $group->authoriseSender(User::firstWhere('email', $this->from[0]['address']))
+        ) {
             return true;
         }
 
