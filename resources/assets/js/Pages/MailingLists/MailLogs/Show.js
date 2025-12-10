@@ -8,7 +8,6 @@ import useRoute from "../../../hooks/useRoute";
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons } from '../../../components/MailStatusTag';
-import { Link } from '@inertiajs/react';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import MailStatusDetail from '../../../components/MailStatusDetail';
 import TrialAntiSpamNotice from "../TrialAntiSpamNotice";
