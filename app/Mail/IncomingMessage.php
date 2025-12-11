@@ -100,21 +100,29 @@ class IncomingMessage extends Mailable implements Loggable
 
     private function authoriseSenderForGroup(UserGroup $group): bool
     {
-        if (
-            !$group->tenant->billing_status['onTrial'] &&
-            $group->authoriseSender(User::firstWhere('email', $this->from[0]['address']))
-        ) {
-            return true;
+        if ($group->tenant->billing_status['onTrial']) {
+            Mail::to($this->from[0]['address'])->send(new NotPermittedDuringTrialMessage($group));
+
+            MailLog::firstWhere('uid', $this->uid)->events()->create([
+                'status' => 'rejected-sender',
+                'context' => $group->title,
+            ]);
+
+            return false;
         }
 
-        Mail::to($this->from[0]['address'])->send(new NotPermittedSenderMessage($group));
+        if ($group->authoriseSender(User::firstWhere('email', $this->from[0]['address']))) {
+            Mail::to($this->from[0]['address'])->send(new NotPermittedSenderMessage($group));
 
-        MailLog::firstWhere('uid', $this->uid)->events()->create([
-            'status' => 'rejected-sender',
-            'context' => $group->title,
-        ]);
+            MailLog::firstWhere('uid', $this->uid)->events()->create([
+                'status' => 'rejected-sender',
+                'context' => $group->title,
+            ]);
 
-        return false;
+            return false;
+        }
+
+        return true;
     }
 
     public function getContent(): string
