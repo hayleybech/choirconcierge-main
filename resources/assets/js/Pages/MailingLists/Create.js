@@ -4,6 +4,7 @@ import PageHeader from "../../components/PageHeader/PageHeader";
 import AppHead from "../../components/AppHead";
 import MailingListForm from "./MailingListForm";
 import useRoute from "../../hooks/useRoute";
+import TrialAntiSpamNotice from "./TrialAntiSpamNotice";
 
 const Create = ({ roles, voiceParts, singerCategories }) => {
     const { route } = useRoute();
@@ -11,6 +12,9 @@ const Create = ({ roles, voiceParts, singerCategories }) => {
     return (
         <>
             <AppHead title="Create Mailing List" />
+
+            <TrialAntiSpamNotice />
+
             <PageHeader
                 title="Create Mailing List"
                 icon="mail-bulk"

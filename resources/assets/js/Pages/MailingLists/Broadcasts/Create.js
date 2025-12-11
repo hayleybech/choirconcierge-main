@@ -17,6 +17,7 @@ import Icon from "../../../components/Icon";
 import ErrorAlert from "../../../components/ErrorAlert";
 import FileInput from "../../../components/inputs/FileInput";
 import useRoute from "../../../hooks/useRoute";
+import TrialAntiSpamNotice from "../TrialAntiSpamNotice";
 
 const Create = ({ lists }) => {
     const { route } = useRoute();
@@ -36,6 +37,9 @@ const Create = ({ lists }) => {
     return (
         <>
             <AppHead title="Send Email"/>
+
+            <TrialAntiSpamNotice />
+
             <PageHeader
                 title="Send Email Broadcast"
                 icon="inbox-out"

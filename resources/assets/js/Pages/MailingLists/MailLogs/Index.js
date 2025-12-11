@@ -7,6 +7,7 @@ import MailLogTableMobile from './MailLogTableMobile';
 import MailLogTableDesktop from './MailLogTableDesktop';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import EmptyState from '../../../components/EmptyState';
+import TrialAntiSpamNotice from "../TrialAntiSpamNotice";
 
 const Index = ({ logs }) => {
     const { route } = useRoute();
@@ -27,6 +28,9 @@ const Index = ({ logs }) => {
     return (
         <>
             <AppHead title="Tenants" />
+
+            <TrialAntiSpamNotice />
+
             <PageHeader
                 title="Mail Logs"
                 icon="history"

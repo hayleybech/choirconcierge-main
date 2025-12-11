@@ -8,6 +8,7 @@ import DateTag from "../../components/DateTag";
 import DeleteDialog from "../../components/DeleteDialog";
 import EmptyState from "../../components/EmptyState";
 import useRoute from "../../hooks/useRoute";
+import TrialAntiSpamNotice from "./TrialAntiSpamNotice";
 
 const Show = ({ list }) => {
     const { route } = useRoute();
@@ -22,6 +23,9 @@ const Show = ({ list }) => {
     return (
         <>
             <AppHead title={`${list.title} - Mailing Lists`} />
+
+            <TrialAntiSpamNotice />
+
             <PageHeader
                 title={list.title}
                 meta={<>

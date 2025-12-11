@@ -4,8 +4,8 @@ import Icon from "./Icon";
 import Button from "./inputs/Button";
 import useCookie from "react-use-cookie";
 
-const TenantNotice = ({ variant, children }) => {
-  const [showNotices, setShowNotices] = useCookie('show-tenant-notices', 'yes');
+const TenantNotice = ({ variant, children, cookieId = 'default' }) => {
+  const [showNotices, setShowNotices] = useCookie(`show-tenant-notices-${cookieId}`, 'yes');
 
   if(showNotices === 'no') {
     return null;

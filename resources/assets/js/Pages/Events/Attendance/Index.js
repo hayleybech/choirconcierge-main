@@ -13,7 +13,6 @@ import Dialog from '../../../components/Dialog';
 import { usePage } from '@inertiajs/react';
 import QRCode from 'react-qr-code';
 import DateTag from '../../../components/DateTag';
-import ButtonLink from '../../../components/inputs/ButtonLink';
 
 const Index = ({ event, voice_parts, individualCheckInUrl }) => {
 	const [checkInDialogIsOpen, setCheckInDialogIsOpen] = useState(false);

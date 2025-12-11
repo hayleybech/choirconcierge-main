@@ -8,9 +8,9 @@ import useRoute from "../../../hooks/useRoute";
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons } from '../../../components/MailStatusTag';
-import { Link } from '@inertiajs/react';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import MailStatusDetail from '../../../components/MailStatusDetail';
+import TrialAntiSpamNotice from "../TrialAntiSpamNotice";
 const Show = ({ log }) => {
     const { route } = useRoute();
 
@@ -19,6 +19,9 @@ const Show = ({ log }) => {
     return (
         <>
             <AppHead title={`${log.subject} - Mail Logs`} />
+
+            <TrialAntiSpamNotice />
+
             <PageHeader
                 title={log.subject}
                 icon={isBroadcast ? 'satellite-dish' : "envelope"}

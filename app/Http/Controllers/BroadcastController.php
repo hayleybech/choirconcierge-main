@@ -11,7 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules\File;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Storage;
