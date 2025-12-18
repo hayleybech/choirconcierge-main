@@ -18,6 +18,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -192,8 +193,21 @@ class User extends Authenticatable implements HasMedia
 
     public function scopeBirthdays(Builder $query): Builder
     {
-        return $query->whereMonth('dob', '>=', now())
-            ->whereMonth('dob', '<=', now()->addMonth());
+        return $query
+            ->selectRaw('
+                    DATE_ADD(
+                        dob,
+                        INTERVAL IF(
+                            DATE_FORMAT(dob, "%m-%d") >= DATE_FORMAT(CURDATE(), "%m-%d"),
+                            YEAR(CURDATE()) - YEAR(dob),
+                            YEAR(CURDATE()) - YEAR(dob) + 1
+                        ) YEAR
+                    )
+                AS upcoming_birthday')
+            ->havingBetween('upcoming_birthday', [
+                DB::raw('CURDATE()'),
+                DB::raw('DATE_ADD(CURDATE(), INTERVAL 30 DAY)')
+            ]);
     }
 
     public function getBirthdayAttribute(): Carbon

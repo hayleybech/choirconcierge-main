@@ -9,6 +9,7 @@ use App\Models\Song;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -36,8 +37,13 @@ class DashController extends Controller
     {
         return Membership::query()
             ->with('user')
+            ->select('*')
             ->active()
             ->memberversaries()
+            ->havingBetween('upcoming_memberversary', [
+                DB::raw('CURDATE()'),
+                DB::raw('DATE_ADD(CURDATE(), INTERVAL 30 DAY)')
+            ])
             ->get()
             ->append('memberversary')
             ->sortBy('joined_at');
@@ -84,6 +90,7 @@ class DashController extends Controller
     {
         return User::query()
             ->whereHas('memberships', fn($query) => $query->active())
+            ->select('*')
             ->birthdays()
             ->get()
             ->append('birthday')

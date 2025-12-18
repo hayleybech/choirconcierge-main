@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -249,9 +250,20 @@ class Membership extends Model
     public function scopeMemberversaries(Builder $query): Builder
     {
         return $query
-            ->whereYear('joined_at', '<', now())
-            ->whereMonth('joined_at', '>=', now())
-            ->whereMonth('joined_at', '<=', now()->addMonth());
+                ->selectRaw('
+                    DATE_ADD(
+                        joined_at,
+                        INTERVAL IF(
+                            DATE_FORMAT(joined_at, "%m-%d") >= DATE_FORMAT(CURDATE(), "%m-%d"),
+                            YEAR(CURDATE()) - YEAR(joined_at),
+                            YEAR(CURDATE()) - YEAR(joined_at) + 1
+                        ) YEAR
+                    ) AS upcoming_memberversary
+                ')
+                ->havingBetween('upcoming_memberversary', [
+                    DB::raw('CURDATE()'),
+                    DB::raw('DATE_ADD(CURDATE(), INTERVAL 30 DAY)')
+                ]);
     }
 
     public function scopeActive(Builder $query): Builder
