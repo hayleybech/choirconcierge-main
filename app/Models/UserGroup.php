@@ -135,10 +135,11 @@ class UserGroup extends Model
     {
         [$slug, $host] = explode('@', $email);
 
-        return $query->where([
-            ['tenant_id', '=', explode('.', $host)[0]],
-            ['slug', '=', $slug],
-        ]);
+        return $query->whereHas('tenant', fn(Builder $query) => $query
+            ->whereHas('domains', fn(Builder $query) => $query
+                ->where('domain', explode('.', $host)[0])
+            )->orWhere('id', explode('.', $host)[0])
+        )->where('slug', $slug);
     }
 
     /**

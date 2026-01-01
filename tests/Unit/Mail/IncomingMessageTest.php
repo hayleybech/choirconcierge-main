@@ -3,6 +3,7 @@
 namespace Tests\Unit\Mail;
 
 use App\Mail\IncomingMessage;
+use App\Mail\NotPermittedDuringTrialMessage;
 use App\Mail\NotPermittedSenderMessage;
 use App\Models\MailLog;
 use App\Models\Tenant;
@@ -43,11 +44,11 @@ class IncomingMessageTest extends TestCase
             });
 
         $message = (new IncomingMessage())
-            ->to('music-team@test-tenant-1.'.central_domain())
+            ->to('music-team@test-tenant-1.' . central_domain())
             ->from('permitted@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -59,11 +60,12 @@ class IncomingMessageTest extends TestCase
 
         // Assert
         Mail::assertNotSent(NotPermittedSenderMessage::class);
+        Mail::assertNotSent(NotPermittedDuringTrialMessage::class);
         Mail::assertSent(IncomingMessage::class, 1);
         Mail::assertSent(IncomingMessage::class, static function ($mail) {
             $mail->build();
 
-            return $mail->hasFrom('music-team@test-tenant-1.'.central_domain()) &&
+            return $mail->hasFrom('music-team@test-tenant-1.' . central_domain()) &&
                 $mail->hasReplyTo('permitted@example.com') &&
                 $mail->hasTo('permitted@example.com');
         });
@@ -85,11 +87,11 @@ class IncomingMessageTest extends TestCase
             });
 
         $message = (new IncomingMessage())
-            ->to('music-team@test-tenant-1.'.central_domain())
+            ->to('music-team@test-tenant-1.' . central_domain())
             ->from('not-permitted@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -105,7 +107,7 @@ class IncomingMessageTest extends TestCase
         Mail::assertSent(NotPermittedSenderMessage::class, static function ($mail) {
             $mail->build();
 
-            return $mail->hasFrom('hello@test-tenant-1.'.central_domain()) &&
+            return $mail->hasFrom('hello@test-tenant-1.' . central_domain()) &&
                 $mail->hasTo('not-permitted@example.com');
         });
     }
@@ -143,11 +145,11 @@ class IncomingMessageTest extends TestCase
             });
 
         $message = (new IncomingMessage())
-            ->to('music-team@test-tenant-1.'.central_domain())
+            ->to('music-team@test-tenant-1.' . central_domain())
             ->from('permitted@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -197,11 +199,11 @@ class IncomingMessageTest extends TestCase
             });
 
         $message = (new IncomingMessage())
-            ->to(['music-team@test-tenant-1.'.central_domain(), 'membership-team@test-tenant-1.'.central_domain()])
+            ->to(['music-team@test-tenant-1.' . central_domain(), 'membership-team@test-tenant-1.' . central_domain()])
             ->from('sender@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -217,14 +219,14 @@ class IncomingMessageTest extends TestCase
         Mail::assertSent(IncomingMessage::class, static function ($mail) {
             $mail->build();
 
-            return $mail->hasFrom('music-team@test-tenant-1.'.central_domain()) &&
+            return $mail->hasFrom('music-team@test-tenant-1.' . central_domain()) &&
                 $mail->hasReplyTo('sender@example.com') &&
                 $mail->hasTo(['sender@example.com', 'recipient-1@example.com']);
         });
         Mail::assertSent(IncomingMessage::class, static function ($mail) {
             $mail->build();
 
-            return $mail->hasFrom('membership-team@test-tenant-1.'.central_domain()) &&
+            return $mail->hasFrom('membership-team@test-tenant-1.' . central_domain()) &&
                 $mail->hasReplyTo('sender@example.com') &&
                 $mail->hasTo(['sender@example.com', 'recipient-2@example.com']);
         });
@@ -268,11 +270,11 @@ class IncomingMessageTest extends TestCase
         });
 
         $message = (new IncomingMessage())
-            ->to(['music-team@test-tenant-1.'.central_domain(), 'membership-team@test-tenant-2.'.central_domain()])
+            ->to(['music-team@test-tenant-1.' . central_domain(), 'membership-team@test-tenant-2.' . central_domain()])
             ->from('sender@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -288,14 +290,14 @@ class IncomingMessageTest extends TestCase
         Mail::assertSent(IncomingMessage::class, static function ($mail) {
             $mail->build();
 
-            return $mail->hasFrom('music-team@test-tenant-1.'.central_domain()) &&
+            return $mail->hasFrom('music-team@test-tenant-1.' . central_domain()) &&
                 $mail->hasReplyTo('sender@example.com') &&
                 $mail->hasTo(['sender@example.com', 'recipient-1@example.com']);
         });
         Mail::assertSent(IncomingMessage::class, static function ($mail) {
             $mail->build();
 
-            return $mail->hasFrom('membership-team@test-tenant-2.'.central_domain()) &&
+            return $mail->hasFrom('membership-team@test-tenant-2.' . central_domain()) &&
                 $mail->hasReplyTo('sender@example.com') &&
                 $mail->hasTo(['sender@example.com', 'recipient-2@example.com']);
         });
@@ -307,7 +309,7 @@ class IncomingMessageTest extends TestCase
         // Arrange
         $this->createTestTenants()[0]
             ->run(
-                fn () => UserGroup::create([
+                fn() => UserGroup::create([
                     'title' => 'Test Group',
                     'slug' => 'test-group',
                     'list_type' => 'chat',
@@ -315,11 +317,11 @@ class IncomingMessageTest extends TestCase
             );
 
         $message = (new IncomingMessage())
-            ->to('test-group@test-tenant-1.'.central_domain())
+            ->to('test-group@test-tenant-1.' . central_domain())
             ->from('sender@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -352,11 +354,11 @@ class IncomingMessageTest extends TestCase
             });
 
         $message = (new IncomingMessage())
-            ->to(['test-group-1@test-tenant-1.'.central_domain(), 'test-group-2@test-tenant-1.'.central_domain()])
+            ->to(['test-group-1@test-tenant-1.' . central_domain(), 'test-group-2@test-tenant-1.' . central_domain()])
             ->from('sender@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -394,13 +396,13 @@ class IncomingMessageTest extends TestCase
             });
 
         $message = (new IncomingMessage())
-            ->to('test-group-1@test-tenant-1.'.central_domain())
-            ->cc('test-group-2@test-tenant-1.'.central_domain())
-            ->bcc('test-group-3@test-tenant-1.'.central_domain())
+            ->to('test-group-1@test-tenant-1.' . central_domain())
+            ->cc('test-group-2@test-tenant-1.' . central_domain())
+            ->bcc('test-group-3@test-tenant-1.' . central_domain())
             ->from('sender@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -438,13 +440,13 @@ class IncomingMessageTest extends TestCase
             });
 
         $message = (new IncomingMessage())
-            ->to(['dummy@example.com', 'test-group-1@test-tenant-1.'.central_domain()])
-            ->cc(['dummy@example.com', 'test-group-2@test-tenant-1.'.central_domain()])
-            ->bcc(['dummy@example.com', 'test-group-3@test-tenant-1.'.central_domain()])
+            ->to(['dummy@example.com', 'test-group-1@test-tenant-1.' . central_domain()])
+            ->cc(['dummy@example.com', 'test-group-2@test-tenant-1.' . central_domain()])
+            ->bcc(['dummy@example.com', 'test-group-3@test-tenant-1.' . central_domain()])
             ->from('sender@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -480,11 +482,11 @@ class IncomingMessageTest extends TestCase
         });
 
         $message = (new IncomingMessage())
-            ->to(['test-group-1@test-tenant-1.'.central_domain(), 'test-group-2@test-tenant-2.'.central_domain()])
+            ->to(['test-group-1@test-tenant-1.' . central_domain(), 'test-group-2@test-tenant-2.' . central_domain()])
             ->from('sender@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -512,11 +514,11 @@ class IncomingMessageTest extends TestCase
             });
 
         $message = (new IncomingMessage())
-            ->to(['al@test-tenant-1.'.central_domain()])
+            ->to(['al@test-tenant-1.' . central_domain()])
             ->from('sender@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -549,11 +551,11 @@ class IncomingMessageTest extends TestCase
             });
 
         $message = (new IncomingMessage())
-            ->to(['test-group-1@test-tenant-1.'.central_domain(), 'test-group-2@dummy-tenant.'.central_domain()])
+            ->to(['test-group-1@test-tenant-1.' . central_domain(), 'test-group-2@dummy-tenant.' . central_domain()])
             ->from('sender@example.com')
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -582,11 +584,11 @@ class IncomingMessageTest extends TestCase
 
         $message = (new IncomingMessage())
             ->to('dummy@example.com')
-            ->cc('test-group@test-tenant-1.'.central_domain())
-            ->from('test-group@test-tenant-1.'.central_domain())
+            ->cc('test-group@test-tenant-1.' . central_domain())
+            ->from('test-group@test-tenant-1.' . central_domain())
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -605,11 +607,11 @@ class IncomingMessageTest extends TestCase
     {
         $message = (new IncomingMessage())
             ->to('undisclosed-recipients:;')
-            ->cc('test-group@test-tenant-1.'.central_domain())
-            ->from('test-group@test-tenant-1.'.central_domain())
+            ->cc('test-group@test-tenant-1.' . central_domain())
+            ->from('test-group@test-tenant-1.' . central_domain())
             ->subject('Just a test');
 
-        $message->uid = 'inbound-'.Str::uuid();
+        $message->uid = 'inbound-' . Str::uuid();
         $message->has_attachments = false;
         $message->received_at = now();
         MailLog::createFromMessage($message)->events()->create([
@@ -629,16 +631,16 @@ class IncomingMessageTest extends TestCase
      */
     private function createTestTenants(int $numTenants = 1): Collection
     {
-        return Collection::times($numTenants, function ($index) {
-            return [
-                'test-tenant-'.$index,
-                'Test Tenant '.$index,
-                'Australia/Perth',
-            ];
-        })
+        return Collection::times($numTenants, fn($index) => [
+            'id' => 'test-tenant-' . $index,
+            'name' => 'Test Tenant ' . $index,
+            'timezone' => 'Australia/Perth',
+        ])
             ->map(function ($data) {
-                $tenant = Tenant::create(...$data);
-                $tenant->domains()->create(['domain' => $tenant->id]);
+                $tenant = Tenant::factory()
+                    ->withDomain()
+                    ->withSubscription(planId: 62775)
+                    ->create($data);
 
                 tenancy()->end();
 

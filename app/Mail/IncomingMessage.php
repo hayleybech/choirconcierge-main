@@ -100,7 +100,7 @@ class IncomingMessage extends Mailable implements Loggable
 
     private function authoriseSenderForGroup(UserGroup $group): bool
     {
-        if ($group->tenant->billing_status['onTrial']) {
+        if ($group->tenant->billing_status['onTrial'] === true) {
             Mail::to($this->from[0]['address'])->send(new NotPermittedDuringTrialMessage($group));
 
             MailLog::firstWhere('uid', $this->uid)->events()->create([
@@ -111,7 +111,7 @@ class IncomingMessage extends Mailable implements Loggable
             return false;
         }
 
-        if ($group->authoriseSender(User::firstWhere('email', $this->from[0]['address']))) {
+        if (!$group->authoriseSender(User::firstWhere('email', $this->from[0]['address']))) {
             Mail::to($this->from[0]['address'])->send(new NotPermittedSenderMessage($group));
 
             MailLog::firstWhere('uid', $this->uid)->events()->create([
@@ -121,7 +121,6 @@ class IncomingMessage extends Mailable implements Loggable
 
             return false;
         }
-
         return true;
     }
 
