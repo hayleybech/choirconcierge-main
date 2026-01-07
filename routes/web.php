@@ -34,6 +34,7 @@ Route::prefix('/app')->group(function () {
         Route::resource('tenants', Central\TenantController::class)->only(['index', 'show', 'create', 'store']);
         Route::get('tenants/{tenant}/onboarding', Central\TenantOnboardingController::class)->name('tenants.onboarding');
         Route::get('tenants/{tenant}/track-demo', Central\TrackTenantSalesDemoController::class)->name('tenants.track-demo');
+        Route::get('tenants/{tenant}/trial', [Central\TenantTrialController::class, 'update'])->name('tenants.trial.update');
 
         // Users
         Route::resource('users', Central\UserController::class)->only(['index', 'show']);
