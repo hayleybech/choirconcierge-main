@@ -17,7 +17,7 @@ const CheckIn = ({ event, storeUrlSigned }) => {
         post(storeUrlSigned);
     }
 
-    const eventIsUpcoming = DateTime.fromISO(event.start_date) > DateTime.now();
+    const eventIsToday = DateTime.fromISO(event.start_date).startOf('day').toMillis() === DateTime.now().startOf('day').toMillis();
 
     return (
         <>
@@ -37,10 +37,10 @@ const CheckIn = ({ event, storeUrlSigned }) => {
 
                     <h2 className="mb-6 text-center text-4xl font-extrabold text-gray-900">Event Check-In</h2>
 
-                    {eventIsUpcoming ? (
-                        <p className="text-center mb-2 text-red-500">Check-in is closed. Come back to this page on the day of the Event.</p>
-                    ) : (
+                    {eventIsToday ? (
                         <p className="text-center mb-2">You are checking in for:</p>
+                    ) : (
+                        <p className="text-center mb-2 text-red-500">Check-in is closed. Come back to this page on the day of the Event.</p>
                     )}
 
                     <h3 className="mb-2 text-center text-4xl font-extrabold text-gray-900">{event.title}</h3>
@@ -77,7 +77,7 @@ const CheckIn = ({ event, storeUrlSigned }) => {
                                 </div>
                             </div>
 
-                            <Button variant="primary" type="submit" size="sm" className="space-x-2 w-full" disabled={processing || eventIsUpcoming || wasSuccessful}>
+                            <Button variant="primary" type="submit" size="sm" className="space-x-2 w-full" disabled={processing || !eventIsToday || wasSuccessful}>
                                 <Icon icon="check" />
                                 I'm Here
                             </Button>
