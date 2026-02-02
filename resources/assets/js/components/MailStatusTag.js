@@ -40,17 +40,17 @@ const MailStatusTag = ({event, showLabel = true}) => (
 		<div>
             <span
 				className={classNames(
-					mailIconColours[event.status],
+					mailIconColours[event.status ?? 'bg-gray-500'],
 					'flex h-6 w-6 items-center justify-center rounded-full',
 				)}
 			>
-                <Icon icon={mailIcons[event.status]} type="regular" size="text-xs" className="text-white" />
+                <Icon icon={mailIcons[event.status ?? 'question-circle']} type="regular" size="text-xs" className="text-white" />
             </span>
 		</div>
 		{showLabel && (
 			<div className="flex min-w-0 flex-1 justify-between space-x-4 items-center">
 				<p className="text-sm text-gray-500">
-					{mailLabels[event.status]}
+					{mailLabels[event.status ?? 'Unknown status']}
 				</p>
 			</div>
 		)}
