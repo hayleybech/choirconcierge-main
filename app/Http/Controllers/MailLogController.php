@@ -14,12 +14,13 @@ class MailLogController extends Controller
     {
         $this->authorizeResource(MailLog::class);
     }
+
     public function index(): Response
     {
         return Inertia::render('MailingLists/MailLogs/Index', [
             'logs' => (
-                auth()->user()?->membership->hasRole('Admin')
-                || auth()->user()->isSuperAdmin()
+                auth()->user()->isSuperAdmin() ||
+                auth()->user()?->membership?->hasRole('Admin')
             )
                 ? self::queryLogsAdmin()
                     ->latest()
@@ -39,16 +40,18 @@ class MailLogController extends Controller
         ]);
     }
 
-    public static function queryLogsAdmin() {
+    public static function queryLogsAdmin()
+    {
         return MailLog::query()
-            ->where('to', 'like', '%@'.tenant('primary_domain').'%')
-            ->orWhere('cc', 'like', '%@'.tenant('primary_domain').'%')
-            ->orWhere('bcc', 'like', '%@'.tenant('primary_domain').'%');
+            ->where('to', 'like', '%@' . tenant('primary_domain') . '%')
+            ->orWhere('cc', 'like', '%@' . tenant('primary_domain') . '%')
+            ->orWhere('bcc', 'like', '%@' . tenant('primary_domain') . '%');
     }
 
-    public static function queryLogsAuthorisedForUser() {
+    public static function queryLogsAuthorisedForUser()
+    {
         return MailLog::query()
-            ->whereHas('events', function($query) {
+            ->whereHas('events', function ($query) {
                 $query->where('status', '=', 'group-found')
                     ->whereIn('user_group_id', self::getGroupsForUser());
             });
