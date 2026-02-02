@@ -14,8 +14,6 @@ use Inertia\Response;
 
 class SingerPlacementController extends Controller
 {
-    const PLACEMENT_TASK_ID = 2;
-
     public function create(Membership $singer): View|Response
     {
         $this->authorize('create', [Placement::class, $singer]);
@@ -35,10 +33,13 @@ class SingerPlacementController extends Controller
 
         if ($singer->onboarding_enabled) {
             // Mark matching task completed
-            //$task = $singer->tasks()->where('name', 'Voice Placement')->get();
-            $singer->tasks()->updateExistingPivot(self::PLACEMENT_TASK_ID, ['completed' => true]);
+            $placement_task = Task::query()->firstWhere('name', '=', 'Voice Placement');
 
-            event(new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer));
+            if($placement_task) {
+                $singer->tasks()->updateExistingPivot($placement_task->id, ['completed' => true]);
+
+                event(new TaskCompleted($placement_task, $singer));
+            }
         }
 
         return redirect()
