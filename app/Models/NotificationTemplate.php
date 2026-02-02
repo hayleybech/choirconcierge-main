@@ -71,6 +71,9 @@ class NotificationTemplate extends Model
     }
 
     // @todo replace with a polymorphic relationship
+    /**
+     * @return array<User>
+     */
     public function getRecipients(): array
     {
         $recipients = [];
@@ -78,13 +81,13 @@ class NotificationTemplate extends Model
         switch ($recipient_type) {
             case 'role':
                 $role = Role::find($recipient_id);
-                $recipients = $role->users->all();
+                $recipients = $role?->members()->with('user')->get()->map(fn($member) => $member->user)->all() ?? [];
                 break;
             case 'user':
                 $recipients[] = User::find($recipient_id);
                 break;
             case 'singer':
-                $recipients[] = Membership::find($recipient_id);
+                $recipients[] = Membership::find($recipient_id)->user;
                 break;
         }
 
