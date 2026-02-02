@@ -101,7 +101,7 @@ const Activity = ({log}) => {
                                               'flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-gray-100',
                                           )}
                                         >
-                                            <Icon icon={event.icon} type="regular" className="text-white text-sm" />
+                                            <Icon icon={event.icon ?? 'question'} type="regular" className="text-white text-sm" />
                                         </span>
                                     </div>
                                     <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
