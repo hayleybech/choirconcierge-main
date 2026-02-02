@@ -1,19 +1,19 @@
 import React from 'react';
-import {useForm} from "@inertiajs/react";
+import {Link, useForm} from "@inertiajs/react";
 import FormSection from "../../../components/FormSection";
 import Label from "../../../components/inputs/Label";
 import TextInput from "../../../components/inputs/TextInput";
 import RangeInput from "../../../components/inputs/RangeInput";
 import Button from "../../../components/inputs/Button";
 import Error from "../../../components/inputs/Error";
-import Select from "../../../components/inputs/Select";
 import Icon from "../../../components/Icon";
 import FormFooter from "../../../components/FormFooter";
 import Form from "../../../components/Form";
 import FormWrapper from "../../../components/FormWrapper";
 import useRoute from "../../../hooks/useRoute";
+import WarningAlert from "../../../components/WarningAlert";
 
-const PlacementForm = ({ singer, placement, voice_parts }) => {
+const PlacementForm = ({ singer, placement }) => {
     const { route } = useRoute();
 
     const { data, setData, post, put, processing, errors } = useForm({
@@ -24,7 +24,6 @@ const PlacementForm = ({ singer, placement, voice_parts }) => {
         skill_performance: placement?.skill_performance ?? 3,
         skill_sightreading: placement?.skill_sightreading ?? 3,
         voice_tone: placement?.voice_tone ?? 3,
-        voice_part_id: singer.voice_part_id ?? 0,
     });
 
     function submit(e) {
@@ -120,9 +119,9 @@ const PlacementForm = ({ singer, placement, voice_parts }) => {
                     </div>
 
                     <div className="sm:col-span-6">
-                        <Label label="Voice part" forInput="voice_part_id" />
-                        <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />
-                        {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
+                        <WarningAlert title="Voice part has moved">
+                            <p className="mb-2">Voice parts are now edited in the "Enrolments" section on the <Link className="text-purple-800 underline" href={route('singers.show', {singer})}>singer's profile</Link>.</p>
+                        </WarningAlert>
                     </div>
 
                 </FormSection>

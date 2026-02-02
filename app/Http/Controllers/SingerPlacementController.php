@@ -7,10 +7,8 @@ use App\Http\Requests\PlacementRequest;
 use App\Models\Placement;
 use App\Models\Membership;
 use App\Models\Task;
-use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -26,7 +24,6 @@ class SingerPlacementController extends Controller
 
         return Inertia::render('Singers/Placements/Create', [
             'singer' => $singer,
-            'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
         ]);
     }
 
@@ -34,7 +31,7 @@ class SingerPlacementController extends Controller
     {
         $this->authorize('create', [Placement::class, $singer]);
 
-        $singer->placement()->create($request->safe()->except('voice_part_id'));
+        $singer->placement()->create($request->validated());
 
         if ($singer->onboarding_enabled) {
             // Mark matching task completed
@@ -44,14 +41,12 @@ class SingerPlacementController extends Controller
             event(new TaskCompleted(Task::find(self::PLACEMENT_TASK_ID), $singer));
         }
 
-        $singer->update($request->safe()->only(['voice_part_id']));
-
         return redirect()
             ->route('singers.show', $singer)
             ->with(['status' => 'Voice Placement created. ']);
     }
 
-    public function edit(Membership $singer, Placement $placement, Request $request): View|Response
+    public function edit(Membership $singer, Placement $placement): View|Response
     {
         $this->authorize('update', $placement);
 
@@ -60,7 +55,6 @@ class SingerPlacementController extends Controller
         return Inertia::render('Singers/Placements/Edit', [
             'singer' => $singer,
             'placement' => $placement,
-            'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
         ]);
     }
 
@@ -68,9 +62,7 @@ class SingerPlacementController extends Controller
     {
         $this->authorize('update', $placement);
 
-        $placement->update($request->safe()->except('voice_part_id'));
-
-        $singer->update($request->safe()->only(['voice_part_id']));
+        $placement->update($request->validated());
 
         return redirect()
             ->route('singers.show', $singer)
