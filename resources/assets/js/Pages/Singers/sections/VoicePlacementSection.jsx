@@ -1,6 +1,5 @@
 import CollapsePanel from '../../../components/CollapsePanel';
 import { DetailList, DetailListItem } from '../components/DetailList';
-import VoicePartTag from '../../../components/VoicePartTag';
 import Icon from '../../../components/Icon';
 import { Progress } from '../components/Progress';
 import React from 'react';
@@ -12,10 +11,7 @@ export const VoicePlacementSection = ({ singer }) =>
 	singer.placement ? (
 		<CollapsePanel>
 			<DetailList gridCols="sm:grid-cols-2">
-				<DetailListItem label="Voice Part">
-					<VoicePartTag title={singer.voice_part.title} colour={singer.voice_part.colour} />
-				</DetailListItem>
-				<DetailListItem label="Voice Tone">
+				<DetailListItem label="Voice Tone" colClass="sm:col-span-2">
 					<Range
 						min={1}
 						max={3}
