@@ -4,7 +4,6 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Placement;
 use App\Models\Membership;
-use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -31,7 +30,6 @@ class SingerPlacementControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Placements/Create')
                 ->has('singer')
-                ->has('voice_parts')
             );
     }
 
@@ -52,7 +50,6 @@ class SingerPlacementControllerTest extends TestCase
                 ->component('Singers/Placements/Edit')
                 ->has('singer')
                 ->has('placement')
-                ->has('voice_parts')
             );
     }
 
@@ -71,7 +68,6 @@ class SingerPlacementControllerTest extends TestCase
         $response = $this->post(the_tenant_route('singers.placements.store', [$singer]), $data)
             ->assertSessionHasNoErrors();
 
-        unset($data['voice_part_id']);
         $this->assertDatabaseHas('placements', $data);
         $response->assertRedirect(the_tenant_route('singers.show', $singer));
     }
@@ -92,7 +88,6 @@ class SingerPlacementControllerTest extends TestCase
         $response = $this->put(the_tenant_route('singers.placements.update', [$singer, $singer->placement]), $data)
             ->assertSessionHasNoErrors();
 
-        unset($data['voice_part_id']);
         $this->assertDatabaseHas('placements', $data);
         $response->assertRedirect(the_tenant_route('singers.show', $singer));
     }
@@ -111,8 +106,6 @@ class SingerPlacementControllerTest extends TestCase
                         'skill_harmony' => $this->faker->numberBetween(1, 5),
                         'skill_performance' => $this->faker->numberBetween(1, 5),
                         'skill_sightreading' => $this->faker->numberBetween(1, 5),
-
-                        'voice_part_id' => VoicePart::inRandomOrder()->value('id'),
                     ];
                 },
             ],
