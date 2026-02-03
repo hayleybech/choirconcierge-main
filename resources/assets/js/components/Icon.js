@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from "../classNames";
 
-const Icon = ({ icon, type = 'solid', mr = false, ml = false, pulse = false, size = 'text-md', className = '', style = {} }) => {
+const Icon = ({ icon = 'file-exclamation', type = 'solid', mr = false, ml = false, pulse = false, size = 'text-md', className = '', style = {} }) => {
     const types = {
         solid: 'fas',
         regular: 'far',
