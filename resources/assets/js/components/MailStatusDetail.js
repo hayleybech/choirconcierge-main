@@ -78,6 +78,16 @@ const MailStatusDetail = ({log, event, isBroadcast}) => {
 			</p>
 		);
 	}
+	if (event.status === 'clone-failed') {
+		return (
+			<p className="text-sm text-gray-500">
+				Failed to send to the email address {' '}
+				<span className="font-medium text-gray-900">
+                    {event.context}
+                </span>
+			</p>
+		);
+	}
 	if (event.status === 'clones-sent') {
 		return (
 			<p className="text-sm text-gray-500">
