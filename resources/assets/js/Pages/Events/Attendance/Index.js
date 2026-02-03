@@ -171,6 +171,8 @@ const AttendanceRecord = ({ attendance, event }) => {
 	const [absentReason, setAbsentReason] = useState();
 	const [isEditing, setIsEditing] = useState(attendance.response === 'unknown');
 
+	const { props: pageProps } = usePage();
+
 	return (
 		<li className="bg-white">
 			<div className="relative px-6 py-5 flex flex-col xl:flex-row items-stretch xl:items-center gap-y-3 sm:gap-x-3 hover:bg-gray-50 justify-between">
@@ -215,6 +217,7 @@ const AttendanceRecord = ({ attendance, event }) => {
 										href={route('events.attendances.update', {
 											event,
 											singer: attendance.member.id,
+											tenant: pageProps.tenant,
 										})}
 										method="put"
 										data={{
@@ -252,6 +255,7 @@ const AttendanceRecord = ({ attendance, event }) => {
 									href={route('events.attendances.update', {
 										event,
 										singer: attendance.member.id,
+										tenant: pageProps.tenant,
 									})}
 									method="put"
 									data={{
