@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateTenantRequest;
 use App\Models\Tenant;
 use App\Models\User;
 use DateTimeZone;
@@ -16,6 +17,7 @@ use Inertia\Response;
 use Inertia\Response as InertiaResponse;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
+use Stancl\Tenancy\Database\Models\Domain;
 
 class TenantController extends Controller
 {
@@ -35,29 +37,20 @@ class TenantController extends Controller
 
 	public function create(): InertiaResponse
 	{
+
 		return Inertia::render('Central/Tenants/Create', [
 			'centralDomain' => central_domain(),
             'timezones' => DateTimeZone::listIdentifiers(),
 		]);
 	}
 
-	public function store(Request $request): RedirectResponse
+	public function store(CreateTenantRequest $request): RedirectResponse
 	{
-		$request->validate([
-			'name' => ['required', 'max:127'],
-			'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
-			'primary_domain' => ['required', 'max:127'],
-			'timezone' => ['required', Rule::in(DateTimeZone::listIdentifiers())],
-
-			'ensemble_name' => ['required', 'max:127'],
-			'ensemble_logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
-		]);
-
-		// Create tenant
+        // Create tenant
 		$tenant = Tenant::create(
-			$request->input('primary_domain'),
-			$request->input('name'),
-			$request->input('timezone'),
+			$request->validated('primary_domain'),
+			$request->validated('name'),
+			$request->validated('timezone'),
 			[
 				'created_by' => auth()->user()->id,
 			]
@@ -68,19 +61,21 @@ class TenantController extends Controller
 
 		// Create domain
 		$tenant->domains()->create([
-			'domain' => $request->input('primary_domain'),
+			'domain' => $request->validated('primary_domain'),
 			'is_primary' => true,
 		]);
 
 		// Create ensemble
 		$ensemble = $tenant->ensembles()->create([
-			'name' => $request->input('ensemble_name'),
+			'name' => $request->validated('ensemble_name'),
 		]);
 		if($request->hasFile('ensemble_logo')) {
 			$ensemble->updateLogo($request->file('ensemble_logo'), $request->file('ensemble_logo')->hashName());
 		}
 
-		return redirect()->route('central.tenants.onboarding', ['tenant' => $tenant])->with(['status' => 'Organisation created.']);
+		return redirect()
+            ->route('central.tenants.onboarding', ['tenant' => $tenant])
+            ->with(['status' => 'Organisation created.']);
 	}
 
     public function show(Tenant $tenant): Response
