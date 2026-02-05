@@ -38,33 +38,29 @@ class EventCheckInController extends Controller
          * It's important we still match an event that's today but has already ended or hasn't started yet
          * Because we have to allow early or late check-in
          */
-        $instanceToday = Event::query()
-            ->where('repeat_parent_id', $event->id)
-            ->where(fn(Builder $query) => $query
-                ->where(fn(Builder $query) => $query
-                    ->whereDate('start_date', '>=', Carbon::today()->startOfDay())
-                    ->whereDate('start_date', '<=', Carbon::today()->endOfDay())
-                )
-                ->orWhere(fn(Builder $query) => $query
-                    ->whereDate('end_date', '>=', Carbon::today()->startOfDay())
-                    ->whereDate('end_date', '<=', Carbon::today()->endOfDay())
-                )
-                ->orWhere(fn(Builder $query) => $query
-                    ->whereDate('start_date', '>=', Carbon::today()->startOfDay())
-                    ->whereDate('end_date', '<=', Carbon::today()->endOfDay())
-                )
-            )
-            ->orderBy('start_date')
-            ->first();
-
-        if ($instanceToday) {
-            return $instanceToday;
-        }
+//        $instanceToday = Event::query()
+//            ->where('repeat_parent_id', $event->id)
+//            ->where(fn(Builder $query) => $query
+//                ->where(fn(Builder $query) => $query
+//                    ->whereDate('start_date', '>=', Carbon::today()->startOfDay())
+//                    ->whereDate('start_date', '<', Carbon::tomorrow()->startOfDay())
+//                )
+//                ->orWhere(fn(Builder $query) => $query
+//                    ->whereDate('end_date', '>=', Carbon::today()->startOfDay())
+//                    ->whereDate('end_date', '<', Carbon::tomorrow()->startOfDay())
+//                )
+//            )
+//            ->orderBy('start_date')
+//            ->first();
+//
+//        if ($instanceToday) {
+//            return $instanceToday;
+//        }
 
         // If no instance currently running return the next upcoming instance
         return Event::query()
             ->where('repeat_parent_id', $event->id)
-            ->whereDay('start_date', '>=', Carbon::today())
+            ->whereDate('start_date', '>=', Carbon::today())
             ->orderBy('start_date')
             ->firstOrFail();
     }
