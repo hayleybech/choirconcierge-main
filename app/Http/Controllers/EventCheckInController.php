@@ -42,19 +42,19 @@ class EventCheckInController extends Controller
             ->where('repeat_parent_id', $event->id)
             ->where(fn(Builder $query) => $query
                 ->where(fn(Builder $query) => $query
-                    ->whereDay('start_date', '>=', Carbon::today()->startOfDay())
-                    ->whereDay('start_date', '<=', Carbon::today()->endOfDay())
+                    ->whereDate('start_date', '>=', Carbon::today()->startOfDay())
+                    ->whereDate('start_date', '<=', Carbon::today()->endOfDay())
                 )
                 ->orWhere(fn(Builder $query) => $query
-                    ->whereDay('end_date', '>=', Carbon::today()->startOfDay())
-                    ->whereDay('end_date', '<=', Carbon::today()->endOfDay())
+                    ->whereDate('end_date', '>=', Carbon::today()->startOfDay())
+                    ->whereDate('end_date', '<=', Carbon::today()->endOfDay())
                 )
                 ->orWhere(fn(Builder $query) => $query
-                    ->whereDay('start_date', '>=', Carbon::today()->startOfDay())
-                    ->whereDay('end_date', '<=', Carbon::today()->endOfDay())
+                    ->whereDate('start_date', '>=', Carbon::today()->startOfDay())
+                    ->whereDate('end_date', '<=', Carbon::today()->endOfDay())
                 )
             )
-            ->orderByDesc('start_date')
+            ->orderBy('start_date')
             ->first();
 
         if ($instanceToday) {
