@@ -10,6 +10,7 @@ import CentralLayout from '../../../Layouts/CentralLayout';
 import BillingTag from './BillingTag';
 import Badge from '../../../components/Badge';
 import { usePage } from '@inertiajs/react';
+import DomainTag from '../../../components/DomainTag';
 
 const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
 	<dl className={classNames('grid grid-cols-1 gap-x-4 gap-y-8', gridCols)}>
@@ -103,7 +104,13 @@ const ChoirDetails = ({ tenant, showSales }) => (
 			items={[
 				{
 					label: 'Domains',
-					value: tenant.domains.map(domainItem => domainItem.domain).join(),
+					value: (
+						<div className="flex gap-1 flex-wrap">
+							{tenant.domains.map(domainItem => (
+								<DomainTag>{domainItem.domain}</DomainTag>
+							))}
+						</div>
+					),
 				},
 				{
 					label: 'Timezone',
