@@ -33,20 +33,17 @@ class TenantController extends Controller
         tenant()->load('domains');
 
         $request->validate([
-                'name' => ['required', 'max:127'],
-                'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
-                'primary_domain' => [
-                    'required',
-                    'max:127',
-                    Rule::unique('domains', 'domain', '')
-                        ->where(fn(Builder $query) => $query->whereNot('tenant_id', tenant()->id))
-                ],
-                'timezone' => ['required', Rule::in(DateTimeZone::listIdentifiers())],
-
-                'ensemble_name' => ['required', 'max:127'],
-                'ensemble_logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
-            ]
-        );
+            'name' => ['required', 'max:127'],
+            'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
+            'primary_domain' => [
+                'required',
+                'max:127',
+                Rule::unique('domains', 'domain', '')
+                    ->where(fn(Builder $query) => $query->whereNot('tenant_id', tenant()->id))
+            ],
+            'timezone' => ['required', Rule::in(DateTimeZone::listIdentifiers())],
+            'billing_user_membership' => ['exists:memberships,id'],
+        ]);
 
         tenant()->update([
             ...$request->only([
