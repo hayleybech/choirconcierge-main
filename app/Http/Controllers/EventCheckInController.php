@@ -29,35 +29,7 @@ class EventCheckInController extends Controller
             return $event;
         }
 
-
-        /**
-         * Get the instance from this series where:
-         * -- the start or end date are today (one-day events or the 1st/last day of multi-day event)
-         * -- or today is between start and end date (middle day of multi-day event)
-         *
-         * It's important we still match an event that's today but has already ended or hasn't started yet
-         * Because we have to allow early or late check-in
-         */
-//        $instanceToday = Event::query()
-//            ->where('repeat_parent_id', $event->id)
-//            ->where(fn(Builder $query) => $query
-//                ->where(fn(Builder $query) => $query
-//                    ->whereDate('start_date', '>=', Carbon::today()->startOfDay())
-//                    ->whereDate('start_date', '<', Carbon::tomorrow()->startOfDay())
-//                )
-//                ->orWhere(fn(Builder $query) => $query
-//                    ->whereDate('end_date', '>=', Carbon::today()->startOfDay())
-//                    ->whereDate('end_date', '<', Carbon::tomorrow()->startOfDay())
-//                )
-//            )
-//            ->orderBy('start_date')
-//            ->first();
-//
-//        if ($instanceToday) {
-//            return $instanceToday;
-//        }
-
-        // If no instance currently running return the next upcoming instance
+        // Return the next upcoming instance
         return Event::query()
             ->where('repeat_parent_id', $event->id)
             ->whereDate('start_date', '>=', Carbon::today())
@@ -65,9 +37,21 @@ class EventCheckInController extends Controller
             ->firstOrFail();
     }
 
-    public function store(Request $request, Event $event): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        Gate::denyIf(fn(User $user) => !today()->isBetween($event->start_date->startOfDay(), $event->end_date->endOfDay()), 'There is no event at this time. ');
+        $request->validate([
+            'event_id' => 'required|exists:events,id'
+        ]);
+
+        $event = Event::findOrFail($request->input('event_id'));
+
+        Gate::denyIf(
+            fn(User $user) => !today()->isBetween(
+                $event->start_date->startOfDay(),
+                $event->end_date->endOfDay()
+            ),
+            'There is no event at this time. '
+        );
 
         $event->attendances()
             ->updateOrCreate(

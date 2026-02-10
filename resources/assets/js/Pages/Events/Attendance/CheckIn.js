@@ -10,7 +10,9 @@ import {DateTime} from "luxon";
 const CheckIn = ({ event, storeUrlSigned }) => {
     const { tenant, flash, user } = usePage().props;
 
-    const {data, setData, post, processing, errors, wasSuccessful} = useForm();
+    const {data, setData, post, processing, errors, wasSuccessful} = useForm({
+		event_id: event.id,
+	});
 
     function submit(e) {
         e.preventDefault();
