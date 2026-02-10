@@ -32,7 +32,6 @@ class CreateTenantRequest extends FormRequest
 
 			'ensemble_name' => ['required', 'max:127'],
 			'ensemble_logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
-            'blah' => ['required', 'min:10'],
         ];
     }
 }

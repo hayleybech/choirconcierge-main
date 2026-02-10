@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tenant;
 use DateTimeZone;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -31,21 +32,21 @@ class TenantController extends Controller
 
         tenant()->load('domains');
 
-        $current_primary_domain = tenant()->domains->firstWhere('is_primary')->domain
-            ?? tenant()->domains->last()->domain
-            ?? null;
+        $request->validate([
+                'name' => ['required', 'max:127'],
+                'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
+                'primary_domain' => [
+                    'required',
+                    'max:127',
+                    Rule::unique('domains', 'domain', '')
+                        ->where(fn(Builder $query) => $query->whereNot('tenant_id', tenant()->id))
+                ],
+                'timezone' => ['required', Rule::in(DateTimeZone::listIdentifiers())],
 
-//        $request->validate([
-//            'name' => ['required', 'max:127'],
-//            'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
-//            'primary_domain' => [
-//                'required',
-//                'max:127',
-//                Rule::unique(Domain::class, 'domain')->ignore($current_primary_domain->id),
-//            ],
-//            'timezone' => ['required', Rule::in(DateTimeZone::listIdentifiers())],
-//            'billing_user_membership' => ['exists:memberships,id'],
-//        ]);
+                'ensemble_name' => ['required', 'max:127'],
+                'ensemble_logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
+            ]
+        );
 
         tenant()->update([
             ...$request->only([
