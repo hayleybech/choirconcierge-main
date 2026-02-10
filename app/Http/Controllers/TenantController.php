@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Tenant;
 use DateTimeZone;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
+use Stancl\Tenancy\Database\Models\Domain;
 
 class TenantController extends Controller
 {
@@ -28,13 +30,23 @@ class TenantController extends Controller
     {
         $this->authorize('update', tenant());
 
+        tenant()->load('domains');
+
         $request->validate([
-            'name' => ['required', 'max:127'],
-            'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
-            'primary_domain' => ['required', 'max:127'],
-            'timezone' => ['required', Rule::in(DateTimeZone::listIdentifiers())],
-            'billing_user_membership' => ['exists:memberships,id'],
-        ]);
+                'name' => ['required', 'max:127'],
+                'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
+                'primary_domain' => [
+                    'required',
+                    'max:127',
+                    Rule::unique('domains', 'domain', '')
+                        ->where(fn(Builder $query) => $query->whereNot('tenant_id', tenant()->id))
+                ],
+                'timezone' => ['required', Rule::in(DateTimeZone::listIdentifiers())],
+
+                'ensemble_name' => ['required', 'max:127'],
+                'ensemble_logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
+            ]
+        );
 
         tenant()->update([
             ...$request->only([
@@ -45,7 +57,7 @@ class TenantController extends Controller
             ],
         ]);
 
-        if($request->hasFile('logo')) {
+        if ($request->hasFile('logo')) {
             tenant()->updateLogo($request->file('logo'), $request->file('logo')->hashName());
         }
 
