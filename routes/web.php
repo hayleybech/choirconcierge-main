@@ -15,9 +15,9 @@ use App\Http\Middleware\EnsureUserIsSuperAdmin;
 */
 
 // Redirect root to marketing site (only run app in /app)
-Route::domain(config('tenancy.central_domains')[0])->group(function() {
-	Route::redirect('/', config('app.public_site_url'));
-});
+//Route::domain(config('tenancy.central_domains')[0])->group(function() {
+//	Route::redirect('/', config('app.public_site_url'));
+//});
 
 Route::prefix('/app')->group(function () {
 	Auth::routes();
