@@ -54,7 +54,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'public_site_url' => 'https://www.choirconcierge.com',
+    'public_site_url' => env('PUBLIC_SITE_URL', 'https://www.choirconcierge.com'),
 
     /*
     |--------------------------------------------------------------------------
