@@ -6907,9 +6907,9 @@ pdfjs-dist@2.12.313:
   integrity sha512-1x6iXO4Qnv6Eb+YFdN5JdUzt4pAkxSp3aLAYPX93eQCyg/m7QFzXVWJHJVtoW48CI8HCXju4dSkhQZwoheL5mA==
 
 "php-parser@git+https://github.com/glayzzle/php-parser.git#27abcb2337ac6450c068ef064982dfabf77916a5":
-  version "3.0.2"
-  resolved "git+ssh://git@github.com/glayzzle/php-parser.git#27abcb2337ac6450c068ef064982dfabf77916a5"
-  integrity sha512-D9NCIZ1MJSxAMthh91nrr6CF6eRFbqvLSvSLTBdvk7amMljV8IVgGPy6ZkzG7VHuhU72oAMmv9zcLqbXUKt4Vw==
+  version "3.4.0"
+  resolved "git+ssh://git@github.com/glayzzle/php-parser.git"
+  integrity sha512-VwSKoeO1CeW4qQx5hHH6pb/hC73kTEUGpu3rp/i+7beIQjL+8zl9t712Sr9C1kAf5kVhCwyVeBjC1mzJ97jCNA==
 
 "php-parser@https://github.com/glayzzle/php-parser/tarball/master":
   version "3.2.5"
