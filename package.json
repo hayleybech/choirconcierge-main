@@ -13,7 +13,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.28.3",
-        "@prettier/plugin-php": "^0.17.1",
+        "@prettier/plugin-php": "^0.18",
         "@tailwindcss/forms": "^0.4.0",
         "@tailwindcss/typography": "^0.5.16",
         "@testing-library/jest-dom": "^5.17.0",
@@ -52,7 +52,6 @@
         "howler": "^2.2.4",
         "luxon": "^2.5.2",
         "moment": "^2.30.1",
-        "php-parser": "https://github.com/glayzzle/php-parser/tarball/master",
         "qs": "^6.14.0",
         "react": "^17.0.2",
         "react-day-picker": "^7.4.10",

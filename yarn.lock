@@ -1460,14 +1460,14 @@
   resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.11.8.tgz"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
-"@prettier/plugin-php@^0.17.1":
-  version "0.17.6"
-  resolved "https://registry.npmjs.org/@prettier/plugin-php/-/plugin-php-0.17.6.tgz"
-  integrity sha512-Nxkq+Gl8bGbutRV7e3/p5d+Bcftn75oH61RT8xzk44T5ET7fVP50pUdaOdvt704GSNr6wwmfBW8MhBz5IKt+fA==
+"@prettier/plugin-php@^0.18":
+  version "0.18.9"
+  resolved "https://registry.npmjs.org/@prettier/plugin-php/-/plugin-php-0.18.9.tgz"
+  integrity sha512-d1uE9v3JsQ9uBLWlssZhO02RLI8u8jRBFPCO5ud4VbveCpSZbDRnGpSuK3IqSWHdM/OnuySz0yWr5M9/9mINvw==
   dependencies:
-    linguist-languages "^7.5.1"
+    linguist-languages "^7.21.0"
     mem "^8.0.0"
-    php-parser "git+https://github.com/glayzzle/php-parser.git#27abcb2337ac6450c068ef064982dfabf77916a5"
+    php-parser "3.1.0-beta.11"
 
 "@remirror/core-constants@3.0.0":
   version "3.0.0"
@@ -6083,7 +6083,7 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
-linguist-languages@^7.5.1:
+linguist-languages@^7.21.0:
   version "7.31.2"
   resolved "https://registry.npmjs.org/linguist-languages/-/linguist-languages-7.31.2.tgz"
   integrity sha512-UQv5iuzEcGoYWdc/Ea2yqLiFbe8rQmIa5uD1FLwF5vBYmwbTvJlPJfHaIVtfYZTQf2wg7pzhxkwkGPP3q+v+EA==
@@ -6906,15 +6906,10 @@ pdfjs-dist@2.12.313:
   resolved "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-2.12.313.tgz"
   integrity sha512-1x6iXO4Qnv6Eb+YFdN5JdUzt4pAkxSp3aLAYPX93eQCyg/m7QFzXVWJHJVtoW48CI8HCXju4dSkhQZwoheL5mA==
 
-"php-parser@git+https://github.com/glayzzle/php-parser.git#27abcb2337ac6450c068ef064982dfabf77916a5":
-  version "3.4.0"
-  resolved "git+ssh://git@github.com/glayzzle/php-parser.git"
-  integrity sha512-VwSKoeO1CeW4qQx5hHH6pb/hC73kTEUGpu3rp/i+7beIQjL+8zl9t712Sr9C1kAf5kVhCwyVeBjC1mzJ97jCNA==
-
-"php-parser@https://github.com/glayzzle/php-parser/tarball/master":
-  version "3.2.5"
-  resolved "https://github.com/glayzzle/php-parser/tarball/master"
-  integrity sha512-RLgsjvwU59wSGp/xXeM6lEveVnl8nyCMEFRtyAvd/w6GgyBWqQuAQkhLUYnDvN56cvHbMf+UNO5+VsoLX83F2Q==
+php-parser@3.1.0-beta.11:
+  version "3.1.0-beta.11"
+  resolved "https://registry.npmjs.org/php-parser/-/php-parser-3.1.0-beta.11.tgz"
+  integrity sha512-aKhWHXun6FKa0MX+GcJtEoLPSWuGQTiEkNgckVjT95OAnKG33c+zsDQEpXx4R74PQ030YZLNq9XV7odKapbOsg==
 
 picocolors@^1.0.0, picocolors@^1.1.1, picocolors@1.1.1:
   version "1.1.1"
