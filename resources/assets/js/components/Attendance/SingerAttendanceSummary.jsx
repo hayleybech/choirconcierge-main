@@ -12,7 +12,7 @@ export const SingerAttendanceSummary = ({ attendanceSummary }) => {
 							<div className="text-3xl font-bold text-gray-900">{attendanceSummary.percentage}%</div>
 							<div className="flex flex-col items-start">
 								<span className="text-sm font-medium text-gray-700">
-									{attendanceSummary.attended} / {attendanceSummary.total} rehearsals
+									{attendanceSummary.attended} / {attendanceSummary.total} attended
 								</span>
 								<Badge
 									colour={

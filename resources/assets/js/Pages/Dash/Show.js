@@ -20,8 +20,8 @@ const Show = ({ events, eventCategories, songs, birthdays, emptyDobs, membervers
 
                 <div className="grid gap-y-6 gap-x-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
                     <div>
-						<SingerAttendanceWidget attendanceSummary={attendanceSummary} rsvpSummary={rsvpSummary} />
-                        <UpcomingEventsWidget events={events} eventCategories={eventCategories} />
+						<SingerAttendanceWidget attendanceSummary={attendanceSummary} />
+                        <UpcomingEventsWidget events={events} eventCategories={eventCategories} rsvpSummary={rsvpSummary} />
                     </div>
 
                     <div>

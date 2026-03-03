@@ -3,11 +3,10 @@ import React from 'react';
 import Icon from '../../components/Icon';
 import ButtonLink from '../../components/inputs/ButtonLink';
 import SingerAttendanceSummary from '../../components/Attendance/SingerAttendanceSummary';
-import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 import useRoute from '../../hooks/useRoute';
 import { usePage } from '@inertiajs/react';
 
-export const SingerAttendanceWidget = ({ attendanceSummary, rsvpSummary }) => {
+export const SingerAttendanceWidget = ({ attendanceSummary }) => {
 	const { route } = useRoute();
 
 	const { user: authUser } = usePage().props;
@@ -28,7 +27,6 @@ export const SingerAttendanceWidget = ({ attendanceSummary, rsvpSummary }) => {
 		>
 			<SingerAttendanceSummary attendanceSummary={attendanceSummary} />
 			<hr className="border-gray-200" />
-			<SingerRsvpSummary rsvpSummary={rsvpSummary} />
 		</Panel>
 	);
 }
