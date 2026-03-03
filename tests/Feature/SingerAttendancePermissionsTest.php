@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\SingerCategory;
 use App\Models\Membership;
 use App\Models\Role;
 use App\Models\User;
@@ -76,8 +77,9 @@ class SingerAttendancePermissionsTest extends TestCase
      */
     public function the_view_attendance_flag_is_passed_to_the_singer_profile_page(): void
     {
-        $user1 = Membership::factory()->create();
-        $user2 = Membership::factory()->create();
+        $category = SingerCategory::where('name', 'Members')->firstOrCreate();
+        $user1 = Membership::factory()->create(['singer_category_id' => $category->id]);
+        $user2 = Membership::factory()->create(['singer_category_id' => $category->id]);
 
         // User1 viewing their own profile
         $this->actingAs($user1->user);
@@ -92,8 +94,14 @@ class SingerAttendancePermissionsTest extends TestCase
             'name' => 'Reader',
             'abilities' => ['singers_view'],
         ]);
+        
         $user1->roles()->syncWithoutDetaching([$readerRole->id]);
+        $user1->unsetRelation('roles');
+        
         $this->actingAs($user1->user);
+
+        $user1->user->unsetRelation('membership');
+        
         $this->get(the_tenant_route('singers.show', [$user2]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
