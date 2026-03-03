@@ -7,7 +7,7 @@ import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 import useRoute from '../../hooks/useRoute';
 import { usePage } from '@inertiajs/react';
 
-export const SingerAttendanceWidget = ({ attendanceSummary }) => {
+export const SingerAttendanceWidget = ({ attendanceSummary, rsvpSummary }) => {
 	const { route } = useRoute();
 
 	const { user: authUser } = usePage().props;
@@ -28,7 +28,7 @@ export const SingerAttendanceWidget = ({ attendanceSummary }) => {
 		>
 			<SingerAttendanceSummary attendanceSummary={attendanceSummary} />
 			<hr className="border-gray-200" />
-			<SingerRsvpSummary attendanceSummary={attendanceSummary} />
+			<SingerRsvpSummary rsvpSummary={rsvpSummary} />
 		</Panel>
 	);
 }
