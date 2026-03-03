@@ -30,6 +30,7 @@ class DashController extends Controller
             'emptyDobs' => $this->getEmptyDobs(),
             'memberversaries' => $this->getMemberversaries()->values(),
 	        'feeStatus' => auth()->user()->membership?->fee_status,
+            'attendanceSummary' => $this->getAttendanceSummary(auth()?->user()?->membership),
         ]);
     }
 
@@ -95,5 +96,40 @@ class DashController extends Controller
             ->get()
             ->append('birthday')
             ->sortBy('birthday');
+    }
+
+    private function getAttendanceSummary(Membership $singer): array
+    {
+        if (! auth()->user()?->can('viewAttendance', $singer)) {
+            return [];
+        }
+        
+        $eightWeeksAgo = now()->subWeeks(8);
+        $rehearsalType = EventType::where('title', 'Rehearsal')->first();
+        if (!$rehearsalType) {
+            return [];
+        }
+
+        $recentRehearsalsCount = Event::where('type_id', $rehearsalType->id)
+            ->where('start_date', '>=', $eightWeeksAgo)
+            ->where('start_date', '<=', now())
+            ->count();
+
+        $attendedCount = $singer->attendances()
+            ->whereIn('response', ['present', 'late'])
+            ->whereHas('event', function ($query) use ($eightWeeksAgo, $rehearsalType) {
+                $query->where('type_id', $rehearsalType->id)
+                    ->where('start_date', '>=', $eightWeeksAgo)
+                    ->where('start_date', '<=', now());
+            })
+            ->count();
+
+        return [
+            'rehearsals_last_8_weeks' => [
+                'attended' => $attendedCount,
+                'total' => $recentRehearsalsCount,
+                'percentage' => $recentRehearsalsCount > 0 ? round(($attendedCount / $recentRehearsalsCount) * 100) : 0,
+            ],
+        ];
     }
 }

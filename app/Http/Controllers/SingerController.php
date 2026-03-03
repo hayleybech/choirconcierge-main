@@ -9,6 +9,8 @@ use App\Http\Requests\CreateSingerRequest;
 use App\Http\Requests\EditSingerRequest;
 use App\Models\CustomField;
 use App\Models\Ensemble;
+use App\Models\Event;
+use App\Models\EventType;
 use App\Models\Placement;
 use App\Models\Role;
 use App\Models\Membership;
@@ -111,39 +113,11 @@ class SingerController extends Controller
             'view_attendance' => auth()->user()?->can('viewAttendance', $singer),
         ];
 
-        if ($singer->can['view_attendance']) {
-            $eightWeeksAgo = now()->subWeeks(8);
-            $rehearsalType = \App\Models\EventType::where('title', 'Rehearsal')->first();
-
-            if ($rehearsalType) {
-                $recentRehearsalsCount = \App\Models\Event::where('type_id', $rehearsalType->id)
-                    ->where('start_date', '>=', $eightWeeksAgo)
-                    ->where('start_date', '<=', now())
-                    ->count();
-
-                $attendedCount = $singer->attendances()
-                    ->whereIn('response', ['present', 'late'])
-                    ->whereHas('event', function ($query) use ($eightWeeksAgo, $rehearsalType) {
-                        $query->where('type_id', $rehearsalType->id)
-                            ->where('start_date', '>=', $eightWeeksAgo)
-                            ->where('start_date', '<=', now());
-                    })
-                    ->count();
-
-                $singer->attendance_summary = [
-                    'rehearsals_last_8_weeks' => [
-                        'attended' => $attendedCount,
-                        'total' => $recentRehearsalsCount,
-                        'percentage' => $recentRehearsalsCount > 0 ? round(($attendedCount / $recentRehearsalsCount) * 100) : 0,
-                    ],
-                ];
-            }
-        }
-
         $singer->tasks->each(fn($task) => $task->can = ['complete' => auth()->user()?->can('complete', $task)]);
 
         return Inertia::render('Singers/Show', [
             'singer' => $singer,
+            'attendance_summary' => self::getAttendanceSummary($singer),
             'categories' => SingerCategory::all(),
             'voiceParts' => VoicePart::all(),
             'customFields' => CustomField::query()
@@ -152,6 +126,41 @@ class SingerController extends Controller
             'ensemblesNotEnrolled' => Ensemble::whereDoesntHave('enrolments', fn(Builder $query) => $query->where('membership_id', $singer->id)
             )->get(),
         ]);
+    }
+
+    private static function getAttendanceSummary(Membership $singer): array
+    {
+        if (! auth()->user()?->can('viewAttendance', $singer)) {
+            return [];
+        }
+
+        $eightWeeksAgo = now()->subWeeks(8);
+        $rehearsalType = EventType::where('title', 'Rehearsal')->first();
+        if (!$rehearsalType) {
+            return [];
+        }
+
+        $recentRehearsalsCount = Event::where('type_id', $rehearsalType->id)
+            ->where('start_date', '>=', $eightWeeksAgo)
+            ->where('start_date', '<=', now())
+            ->count();
+
+        $attendedCount = $singer->attendances()
+            ->whereIn('response', ['present', 'late'])
+            ->whereHas('event', function ($query) use ($eightWeeksAgo, $rehearsalType) {
+                $query->where('type_id', $rehearsalType->id)
+                    ->where('start_date', '>=', $eightWeeksAgo)
+                    ->where('start_date', '<=', now());
+            })
+            ->count();
+
+        return [
+            'rehearsals_last_8_weeks' => [
+                'attended' => $attendedCount,
+                'total' => $recentRehearsalsCount,
+                'percentage' => $recentRehearsalsCount > 0 ? round(($attendedCount / $recentRehearsalsCount) * 100) : 0,
+            ],
+        ];
     }
 
     public function edit(Membership $singer): InertiaResponse

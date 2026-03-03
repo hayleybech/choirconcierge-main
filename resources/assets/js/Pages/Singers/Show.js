@@ -23,7 +23,7 @@ import { OnboardingTaskSection } from './sections/OnboardingTaskSection';
 import CustomFieldsSection from "./sections/CustomFieldsSection";
 import AttendanceSection from './sections/AttendanceSection';
 
-const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFields }) => {
+const Show = ({ singer, attendance_summary, categories, voiceParts, ensemblesNotEnrolled, customFields }) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
 	const { can, user: authUser } = usePage().props;
@@ -155,7 +155,7 @@ const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFiel
 									<Icon icon="clipboard-list" />
 									View All
 								</ButtonLink>,
-								content: <AttendanceSection singer={singer} />,
+								content: <AttendanceSection attendanceSummary={attendance_summary} />,
 							},
 							{
 								title: (
