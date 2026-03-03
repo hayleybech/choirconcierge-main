@@ -1,19 +1,19 @@
 import Badge from '../Badge';
 
-export const SingerAttendanceSummary = ({ attendanceSummary }) => {
-	const summary = attendanceSummary?.attendance_last_8_weeks;
+export const SingerRsvpSummary = ({ attendanceSummary }) => {
+	const summary = attendanceSummary?.rsvps_next_8;
 
 	return (
 		<div className="py-4 px-8">
 			{summary ? (
 				<div className="flex flex-col gap-4">
 					<div>
-						<p className="text-sm text-gray-500 mb-1">Recent Rehearsal Attendance (Last 8 weeks)</p>
+						<p className="text-sm text-gray-500 mb-1">Upcoming Performance RSVPs (Next 8)</p>
 						<div className="flex items-center gap-4">
 							<div className="text-3xl font-bold text-gray-900">{summary.percentage}%</div>
 							<div className="flex flex-col items-start">
 								<span className="text-sm font-medium text-gray-700">
-									{summary.attended} / {summary.total} rehearsals
+									{summary.responded} / {summary.total} responded
 								</span>
 								<Badge
 									colour={
@@ -28,7 +28,7 @@ export const SingerAttendanceSummary = ({ attendanceSummary }) => {
 										? 'Excellent'
 										: summary.percentage >= 50
 										? 'Good'
-										: 'Needs Improvement'}
+										: 'Need to respond'}
 								</Badge>
 							</div>
 						</div>
@@ -48,10 +48,10 @@ export const SingerAttendanceSummary = ({ attendanceSummary }) => {
 					</div>
 				</div>
 			) : (
-				<p className="text-sm text-gray-500 italic">No attendance summary available for this period.</p>
+				<p className="text-sm text-gray-500 italic">No upcoming performances available for this summary.</p>
 			)}
 		</div>
 	);
 };
 
-export default SingerAttendanceSummary;
+export default SingerRsvpSummary;

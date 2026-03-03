@@ -22,6 +22,7 @@ import { EnrolmentDetailsSection } from './sections/EnrolmentDetailsSection';
 import { OnboardingTaskSection } from './sections/OnboardingTaskSection';
 import CustomFieldsSection from "./sections/CustomFieldsSection";
 import SingerAttendanceSummary from '../../components/Attendance/SingerAttendanceSummary';
+import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 
 const Show = ({ singer, attendance_summary, categories, voiceParts, ensemblesNotEnrolled, customFields }) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -155,7 +156,13 @@ const Show = ({ singer, attendance_summary, categories, voiceParts, ensemblesNot
 									<Icon icon="clipboard-list" />
 									View All
 								</ButtonLink>,
-								content: <SingerAttendanceSummary attendanceSummary={attendance_summary} />,
+								content: (
+									<>
+										<SingerAttendanceSummary attendanceSummary={attendance_summary} />
+										<hr className="border-gray-200" />
+										<SingerRsvpSummary attendanceSummary={attendance_summary} />
+									</>
+								),
 							},
 							{
 								title: (

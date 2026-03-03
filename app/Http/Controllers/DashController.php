@@ -105,31 +105,56 @@ class DashController extends Controller
         }
 
         $eightWeeksAgo = now()->subWeeks(8);
-        $rehearsalType = EventType::where('title', 'Rehearsal')->first();
-        if (!$rehearsalType) {
+        $attendanceEventType = EventType::where('title', 'Rehearsal')->first();
+        if (!$attendanceEventType) {
             return [];
         }
 
-        $recentRehearsalsCount = Event::where('type_id', $rehearsalType->id)
+        $recentEventsCount = Event::where('type_id', $attendanceEventType->id)
             ->where('start_date', '>=', $eightWeeksAgo)
             ->where('start_date', '<=', now())
             ->count();
 
         $attendedCount = $singer->attendances()
             ->whereIn('response', ['present', 'late'])
-            ->whereHas('event', function ($query) use ($eightWeeksAgo, $rehearsalType) {
-                $query->where('type_id', $rehearsalType->id)
+            ->whereHas('event', function ($query) use ($eightWeeksAgo, $attendanceEventType) {
+                $query->where('type_id', $attendanceEventType->id)
                     ->where('start_date', '>=', $eightWeeksAgo)
                     ->where('start_date', '<=', now());
             })
             ->count();
 
+        $rsvpEventType = EventType::where('title', 'Performance')->first();
+        $upcomingRsvpsSummary = null;
+        if ($rsvpEventType) {
+            $next8Events = Event::where('type_id', $rsvpEventType->id)
+                ->where('start_date', '>', now())
+                ->orderBy('start_date', 'asc')
+                ->limit(8)
+                ->get();
+
+            if ($next8Events->isNotEmpty()) {
+                $eventIds = $next8Events->pluck('id');
+                $respondedRsvpCount = $singer->rsvps()
+                    ->whereIn('event_id', $eventIds)
+                    ->whereIn('response', ['yes', 'no'])
+                    ->count();
+
+                $upcomingRsvpsSummary = [
+                    'responded' => $respondedRsvpCount,
+                    'total' => $next8Events->count(),
+                    'percentage' => round(($respondedRsvpCount / $next8Events->count()) * 100),
+                ];
+            }
+        }
+
         return [
-            'rehearsals_last_8_weeks' => [
+            'attendance_last_8_weeks' => [
                 'attended' => $attendedCount,
-                'total' => $recentRehearsalsCount,
-                'percentage' => $recentRehearsalsCount > 0 ? round(($attendedCount / $recentRehearsalsCount) * 100) : 0,
+                'total' => $recentEventsCount,
+                'percentage' => $recentEventsCount > 0 ? round(($attendedCount / $recentEventsCount) * 100) : 0,
             ],
+            'rsvps_next_8' => $upcomingRsvpsSummary,
         ];
     }
 }
