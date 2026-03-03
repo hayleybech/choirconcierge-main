@@ -11,6 +11,8 @@ import useSortFilterForm from "../../../hooks/useSortFilterForm";
 import EmptyState from "../../../components/EmptyState";
 import { Link } from '@inertiajs/react';
 import { DateTime } from 'luxon';
+import Badge from "../../../components/Badge";
+import EventType from "../../../EventType";
 
 const Index = ({ singer, attendances, eventTypes }) => {
     const { route } = useRoute();
@@ -57,7 +59,7 @@ const Index = ({ singer, attendances, eventTypes }) => {
                             description="Try expanding your filters, or maybe this singer hasn't recorded any attendance yet."
                         />
                     ) : (
-                        <div className="p-8">
+                        <div className="px-4 lg:px-8 py-8">
                             <div className="overflow-hidden bg-white shadow sm:rounded-md">
                                 <ul className="divide-y divide-gray-200">
                                     {attendances.map((attendance) => (
@@ -66,11 +68,11 @@ const Index = ({ singer, attendances, eventTypes }) => {
                                                 <div className="flex items-center px-4 py-4 sm:px-6">
                                                     <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                                                         <div className="truncate">
-                                                            <div className="flex text-sm">
+                                                            <div className="flex text-sm justify-between lg:justify-start items-center gap-1.5">
                                                                 <p className="truncate font-medium text-purple-600">{attendance.event.title}</p>
-                                                                <p className="ml-1 flex-shrink-0 font-normal text-gray-500">
-                                                                    in {attendance.event.type.title}
-                                                                </p>
+                                                                <Badge colour={new EventType(attendance.event.type.title).badgeColour}>
+                                                                    {attendance.event.type.title}
+                                                                </Badge>
                                                             </div>
                                                             <div className="mt-2 flex">
                                                                 <div className="flex items-center text-sm text-gray-500">
