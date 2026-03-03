@@ -103,7 +103,7 @@ class DashController extends Controller
         if (! auth()->user()?->can('viewAttendance', $singer)) {
             return [];
         }
-        
+
         $eightWeeksAgo = now()->subWeeks(8);
         $rehearsalType = EventType::where('title', 'Rehearsal')->first();
         if (!$rehearsalType) {
