@@ -108,6 +108,7 @@ class SingerController extends Controller
             'update_singer' => auth()->user()?->can('update', $singer),
             'delete_singer' => auth()->user()?->can('delete', $singer),
             'create_placement' => auth()->user()?->can('create', [Placement::class, $singer]),
+            'view_attendance' => auth()->user()?->can('viewAttendance', $singer),
         ];
         $singer->tasks->each(fn($task) => $task->can = ['complete' => auth()->user()?->can('complete', $task)]);
 

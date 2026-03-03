@@ -54,6 +54,19 @@ class MembershipPolicy
     }
 
     /**
+     * Determine whether the user can view the model's attendance.
+     *
+     * @param User       $user
+     * @param Membership $singer
+     *
+     * @return mixed
+     */
+    public function viewAttendance(User $user, Membership $singer)
+    {
+        return $user->membership->is($singer) || $user->membership->hasAbility('attendances_view');
+    }
+
+    /**
      * Determine whether the user can create models.
      *
      * @param User  $user

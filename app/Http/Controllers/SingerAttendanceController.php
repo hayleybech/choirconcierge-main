@@ -14,7 +14,7 @@ class SingerAttendanceController extends Controller
 {
     public function __invoke(Membership $singer): Response
     {
-        $this->authorize('view', $singer);
+        $this->authorize('viewAttendance', $singer);
 
         $attendances = QueryBuilder::for(Attendance::class)
             ->where('membership_id', $singer->id)
