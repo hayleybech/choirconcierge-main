@@ -12,7 +12,7 @@ export const AttendanceSection = ({ singer }) => {
 						<p className="text-sm text-gray-500 mb-1">Recent Rehearsal Attendance (Last 8 weeks)</p>
 						<div className="flex items-center gap-4">
 							<div className="text-3xl font-bold text-gray-900">{summary.percentage}%</div>
-							<div className="flex flex-col">
+							<div className="flex flex-col items-start">
 								<span className="text-sm font-medium text-gray-700">
 									{summary.attended} / {summary.total} rehearsals
 								</span>
