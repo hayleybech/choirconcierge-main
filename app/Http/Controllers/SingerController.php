@@ -110,6 +110,36 @@ class SingerController extends Controller
             'create_placement' => auth()->user()?->can('create', [Placement::class, $singer]),
             'view_attendance' => auth()->user()?->can('viewAttendance', $singer),
         ];
+
+        if ($singer->can['view_attendance']) {
+            $eightWeeksAgo = now()->subWeeks(8);
+            $rehearsalType = \App\Models\EventType::where('title', 'Rehearsal')->first();
+
+            if ($rehearsalType) {
+                $recentRehearsalsCount = \App\Models\Event::where('type_id', $rehearsalType->id)
+                    ->where('start_date', '>=', $eightWeeksAgo)
+                    ->where('start_date', '<=', now())
+                    ->count();
+
+                $attendedCount = $singer->attendances()
+                    ->whereIn('response', ['present', 'late'])
+                    ->whereHas('event', function ($query) use ($eightWeeksAgo, $rehearsalType) {
+                        $query->where('type_id', $rehearsalType->id)
+                            ->where('start_date', '>=', $eightWeeksAgo)
+                            ->where('start_date', '<=', now());
+                    })
+                    ->count();
+
+                $singer->attendance_summary = [
+                    'rehearsals_last_8_weeks' => [
+                        'attended' => $attendedCount,
+                        'total' => $recentRehearsalsCount,
+                        'percentage' => $recentRehearsalsCount > 0 ? round(($attendedCount / $recentRehearsalsCount) * 100) : 0,
+                    ],
+                ];
+            }
+        }
+
         $singer->tasks->each(fn($task) => $task->can = ['complete' => auth()->user()?->can('complete', $task)]);
 
         return Inertia::render('Singers/Show', [

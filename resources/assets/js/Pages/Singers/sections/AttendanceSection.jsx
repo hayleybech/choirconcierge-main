@@ -1,81 +1,58 @@
-import AttendanceTag from '../../../components/Event/AttendanceTag';
-
-import useRoute from '../../../hooks/useRoute';
-import ButtonLink from '../../../components/inputs/ButtonLink';
-import Icon from '../../../components/Icon';
 import React from 'react';
-
-const events = [
-	{ id: 1, name: 'Rehearsal 1', date: '2022-01-01', response: 'present' },
-	{ id: 2, name: 'Rehearsal 2', date: '2022-01-02', response: 'absent' },
-	{ id: 3, name: 'Rehearsal 3', date: '2022-01-03', response: 'late' },
-	{ id: 4, name: 'Rehearsal 4 with a very long title that should be cut off', date: '2022-01-04', response: 'late_deemed_absent' },
-	{ id: 5, name: 'Rehearsal 5', date: '2022-01-05', response: 'absent_apology'},
-];
-
-const responses = {
-	present: {
-		label: 'On Time',
-		colour: 'emerald',
-		icon: 'check',
-	},
-	late: {
-		label: 'Late',
-		colour: 'amber',
-		icon: 'alarm-exclamation',
-	},
-	absent: {
-		label: 'Absent',
-		colour: 'red',
-		icon: 'times',
-	},
-	absent_apology: {
-		label: 'Absent (Apology sent)',
-		colour: 'red',
-		icon: 'times',
-	},
-	late_deemed_absent: {
-		label: 'Absent (Very late)',
-		colour: 'red',
-		icon: 'times',
-	},
-	unknown: {
-		label: 'Unknown',
-		colour: 'gray',
-		icon: 'question',
-	},
-};
+import Badge from '../../../components/Badge';
 
 export const AttendanceSection = ({ singer }) => {
+	const summary = singer.attendance_summary?.rehearsals_last_8_weeks;
 
 	return (
 		<div className="py-4 px-8">
-			<div className="flex justify-between items-center mb-4">
-				<div>
-					<p>Last 8 rehearsals: 4 present (50%)</p>
-					<p>3-month average: 62%</p>
-				</div>
-			</div>
+			{summary ? (
+				<div className="flex flex-col gap-4">
+					<div>
+						<p className="text-sm text-gray-500 mb-1">Recent Rehearsal Attendance (Last 8 weeks)</p>
+						<div className="flex items-center gap-4">
+							<div className="text-3xl font-bold text-gray-900">{summary.percentage}%</div>
+							<div className="flex flex-col">
+								<span className="text-sm font-medium text-gray-700">
+									{summary.attended} / {summary.total} rehearsals
+								</span>
+								<Badge
+									colour={
+										summary.percentage >= 80
+											? 'bg-emerald-100 text-emerald-800'
+											: summary.percentage >= 50
+											? 'bg-amber-100 text-amber-800'
+											: 'bg-red-100 text-red-800'
+									}
+								>
+									{summary.percentage >= 80
+										? 'Excellent'
+										: summary.percentage >= 50
+										? 'Good'
+										: 'Needs Improvement'}
+								</Badge>
+							</div>
+						</div>
+					</div>
 
-			<h3 className="mt-4">Records:</h3>
-			<ol>
-					{events.map(event => (
-						<li key={event.id} className="flex justify-between gap-2 text-sm mb-1">
-							<span className="flex gap-2">
-								<span className="text-gray-500 shrink-0">{event.date}</span>
-								<span className="font-bold">{event.name}</span>
-							</span>
-							<AttendanceTag
-								icon={responses[event.response].icon}
-								colour={responses[event.response].colour}
-								label={responses[event.response].label}
-								className="shrink-0"
-							/>
-						</li>
-					))}
-				</ol>
-			</div>
-		);
+					<div className="w-full bg-gray-200 rounded-full h-2.5">
+						<div
+							className={`h-2.5 rounded-full ${
+								summary.percentage >= 80
+									? 'bg-emerald-600'
+									: summary.percentage >= 50
+									? 'bg-amber-500'
+									: 'bg-red-600'
+							}`}
+							style={{ width: `${summary.percentage}%` }}
+						></div>
+					</div>
+				</div>
+			) : (
+				<p className="text-sm text-gray-500 italic">No attendance summary available for this period.</p>
+			)}
+		</div>
+	);
 };
 
 export default AttendanceSection;

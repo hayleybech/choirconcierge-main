@@ -22,7 +22,6 @@ import { EnrolmentDetailsSection } from './sections/EnrolmentDetailsSection';
 import { OnboardingTaskSection } from './sections/OnboardingTaskSection';
 import CustomFieldsSection from "./sections/CustomFieldsSection";
 import AttendanceSection from './sections/AttendanceSection';
-import AttendanceSectionLarge from './sections/AttendanceSectionLarge';
 
 const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFields }) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -141,12 +140,6 @@ const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFiel
 								show: can['list_custom_field_entries'],
 								defaultOpen: true,
 								content: <CustomFieldsSection singer={singer} customFields={customFields} />,
-							},
-							{
-								title: 'Attendance',
-								show: singer.can['view_attendance'],
-								defaultOpen: true,
-								content: <AttendanceSectionLarge singer={singer} />,
 							},
 						]}
 					/>
