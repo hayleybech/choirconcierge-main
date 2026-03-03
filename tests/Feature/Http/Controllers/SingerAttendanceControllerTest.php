@@ -31,6 +31,7 @@ class SingerAttendanceControllerTest extends TestCase
                 ->component('Singers/Attendance/Index')
                 ->has('singer')
                 ->has('attendances', 1)
+                ->has('pagination')
                 ->has('eventTypes')
             );
     }

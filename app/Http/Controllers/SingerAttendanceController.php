@@ -27,11 +27,12 @@ class SingerAttendanceController extends Controller
             ])
             ->orderBy('events.start_date', 'desc')
             ->select('attendances.*')
-            ->get();
+            ->paginate(50);
 
         return Inertia::render('Singers/Attendance/Index', [
             'singer' => $singer->load('user'),
-            'attendances' => $attendances,
+            'attendances' => $attendances->items(),
+            'pagination' => $attendances->toArray(),
             'eventTypes' => EventType::all(),
         ]);
     }

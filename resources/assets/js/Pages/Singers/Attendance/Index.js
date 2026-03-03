@@ -13,8 +13,9 @@ import { Link } from '@inertiajs/react';
 import { DateTime } from 'luxon';
 import Badge from "../../../components/Badge";
 import EventType from "../../../EventType";
+import Pagination from "../../../components/Pagination";
 
-const Index = ({ singer, attendances, eventTypes }) => {
+const Index = ({ singer, attendances, eventTypes, pagination }) => {
     const { route } = useRoute();
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
@@ -59,43 +60,46 @@ const Index = ({ singer, attendances, eventTypes }) => {
                             description="Try expanding your filters, or maybe this singer hasn't recorded any attendance yet."
                         />
                     ) : (
-                        <div className="px-4 lg:px-8 py-8">
-                            <div className="overflow-hidden bg-white shadow sm:rounded-md">
-                                <ul className="divide-y divide-gray-200">
-                                    {attendances.map((attendance) => (
-                                        <li key={attendance.id}>
-                                            <Link href={route('events.show', { event: attendance.event })} className="block hover:bg-gray-50">
-                                                <div className="flex items-center px-4 py-4 sm:px-6">
-                                                    <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-                                                        <div className="truncate">
-                                                            <div className="flex text-sm justify-between lg:justify-start items-center gap-1.5">
-                                                                <p className="truncate font-medium text-purple-600">{attendance.event.title}</p>
-                                                                <Badge colour={new EventType(attendance.event.type.title).badgeColour}>
-                                                                    {attendance.event.type.title}
-                                                                </Badge>
-                                                            </div>
-                                                            <div className="mt-2 flex">
-                                                                <div className="flex items-center text-sm text-gray-500">
-                                                                    <p>
-                                                                        {DateTime.fromISO(attendance.event.start_date).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
-                                                            <AttendanceTag
-                                                                icon={attendance.icon}
-                                                                colour={attendance.colour}
-                                                                label={attendance.label}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+						<div>
+							<div className="px-4 lg:px-8 py-8">
+								<div className="overflow-hidden bg-white shadow sm:rounded-md">
+									<ul className="divide-y divide-gray-200">
+										{attendances.map((attendance) => (
+											<li key={attendance.id}>
+												<Link href={route('events.show', { event: attendance.event })} className="block hover:bg-gray-50">
+													<div className="flex items-center px-4 py-4 sm:px-6">
+														<div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
+															<div className="truncate">
+																<div className="flex text-sm justify-between lg:justify-start items-center gap-1.5">
+																	<p className="truncate font-medium text-purple-600">{attendance.event.title}</p>
+																	<Badge colour={new EventType(attendance.event.type.title).badgeColour}>
+																		{attendance.event.type.title}
+																	</Badge>
+																</div>
+																<div className="mt-2 flex">
+																	<div className="flex items-center text-sm text-gray-500">
+																		<p>
+																			{DateTime.fromISO(attendance.event.start_date).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
+																		</p>
+																	</div>
+																</div>
+															</div>
+															<div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
+																<AttendanceTag
+																	icon={attendance.icon}
+																	colour={attendance.colour}
+																	label={attendance.label}
+																/>
+															</div>
+														</div>
+													</div>
+												</Link>
+											</li>
+										))}
+									</ul>
+								</div>
+							</div>
+							<Pagination details={pagination} />
                         </div>
                     )}
                 </div>
