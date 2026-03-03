@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\Membership;
 use App\Models\Tenant;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use JMac\Testing\Traits\AdditionalAssertions;
@@ -13,7 +14,7 @@ use Laravel\Paddle\Subscription;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, AdditionalAssertions;
+    use CreatesApplication, AdditionalAssertions, RefreshDatabase;
 
     protected bool $tenancy = true;
 

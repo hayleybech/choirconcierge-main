@@ -36,3 +36,7 @@
     $bar->domains()->create(['domain' => 'bar']);
     $bar->ensembles()->create(['name' => 'The Bar Barbers']);
     ```
+
+### Testing setup
+- make a DB for tests eg choirconcierge_test
+- create `.env.testing` with DB credentials (copy `.env` first)

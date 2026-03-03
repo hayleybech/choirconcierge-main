@@ -3,7 +3,7 @@ import collect from "collect.js";
 import useRoute from "./useRoute";
 import * as qs from 'qs';
 
-const useSortFilterForm = (routeName, filters, sorts, transforms = () => {}) => {
+const useSortFilterForm = (routeParams, filters, sorts, transforms = () => {}) => {
     const { route } = useRoute();
 
     const { data, setData, get, transform } = useForm({
@@ -15,7 +15,14 @@ const useSortFilterForm = (routeName, filters, sorts, transforms = () => {}) => 
     function submit(e) {
         e?.preventDefault();
 
-        get(route(routeName));
+		// if routeParams is array, pull out params
+		// @todo refactor this hook to accept the return value from route()
+		if(typeof routeParams == 'object') {
+			get(route(routeParams[0], routeParams[1]));
+		} else {
+        	get(route(routeParams));
+		}
+
     }
 
     transform((data) => ({

@@ -21,6 +21,7 @@ import { VoicePlacementSection } from './sections/VoicePlacementSection';
 import { EnrolmentDetailsSection } from './sections/EnrolmentDetailsSection';
 import { OnboardingTaskSection } from './sections/OnboardingTaskSection';
 import CustomFieldsSection from "./sections/CustomFieldsSection";
+import AttendanceSection from './sections/AttendanceSection';
 
 const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFields }) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -138,7 +139,7 @@ const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFiel
 								title: 'Custom Fields',
 								show: can['list_custom_field_entries'],
 								defaultOpen: true,
-								content: <CustomFieldsSection singer={singer} customFields={customFields} />
+								content: <CustomFieldsSection singer={singer} customFields={customFields} />,
 							},
 						]}
 					/>
@@ -147,6 +148,15 @@ const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFiel
 				<div className="sm:col-span-1 divide-y divide-y-gray-300">
 					<CollapseGroup
 						items={[
+							{
+								title: 'Attendance',
+								show: singer.can['view_attendance'],
+								action: <ButtonLink variant="primary" size="xs" href={route('singers.attendance', { singer })}>
+									<Icon icon="clipboard-list" />
+									View All
+								</ButtonLink>,
+								content: <AttendanceSection singer={singer} />,
+							},
 							{
 								title: (
 									<div className="inline-flex flex-wrap items-baseline">
