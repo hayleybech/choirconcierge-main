@@ -37,6 +37,7 @@ use App\Http\Controllers\RsvpFromNotificationController;
 use App\Http\Controllers\Search\FindSingerController;
 use App\Http\Controllers\Search\GlobalFindUserController;
 use App\Http\Controllers\BroadcastController;
+use App\Http\Controllers\SingerAttendanceController;
 use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SongCategoryController;
 use App\Http\Controllers\TenantAssetsController;
@@ -125,6 +126,7 @@ Route::middleware([
 
         // Singers module
         Route::get('singers/export', ExportMemberController::class)->name('singers.export');
+        Route::get('singers/{singer}/attendance', [SingerAttendanceController::class, '__invoke'])->name('singers.attendance');
         Route::resource('singers', SingerController::class);
         Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
         Route::resource('singers.enrolments', EnrolmentController::class)->only(['store', 'update', 'destroy']);

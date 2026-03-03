@@ -146,7 +146,7 @@ const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFiel
 								title: 'Attendance',
 								show: true, // @todo self or attendance permission
 								defaultOpen: true,
-								content: <AttendanceSectionLarge />,
+								content: <AttendanceSectionLarge singer={singer} />,
 							},
 						]}
 					/>
@@ -158,7 +158,11 @@ const Show = ({ singer, categories, voiceParts, ensemblesNotEnrolled, customFiel
 							{
 								title: 'Attendance',
 								show: true, // @todo self or attendance permission
-								content: <AttendanceSection />,
+								action: <ButtonLink variant="primary" size="xs" href={route('singers.attendance', { singer })}>
+									<Icon icon="clipboard-list" />
+									View All
+								</ButtonLink>,
+								content: <AttendanceSection singer={singer} />,
 							},
 							{
 								title: (

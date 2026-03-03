@@ -1,5 +1,10 @@
 import AttendanceTag from '../../../components/Event/AttendanceTag';
 
+import useRoute from '../../../hooks/useRoute';
+import ButtonLink from '../../../components/inputs/ButtonLink';
+import Icon from '../../../components/Icon';
+import React from 'react';
+
 const events = [
 	{ id: 1, name: 'Rehearsal 1', date: '2022-01-01', response: 'present' },
 	{ id: 2, name: 'Rehearsal 2', date: '2022-01-02', response: 'absent' },
@@ -41,13 +46,19 @@ const responses = {
 	},
 };
 
-export const AttendanceSection = () => (
-			<div className="py-4 px-8">
-				<p>Last 8 rehearsals: 4 present (50%)</p>
-				<p>3-month average: 62%</p>
+export const AttendanceSection = ({ singer }) => {
 
-				<h3 className="mt-4">Records:</h3>
-				<ol>
+	return (
+		<div className="py-4 px-8">
+			<div className="flex justify-between items-center mb-4">
+				<div>
+					<p>Last 8 rehearsals: 4 present (50%)</p>
+					<p>3-month average: 62%</p>
+				</div>
+			</div>
+
+			<h3 className="mt-4">Records:</h3>
+			<ol>
 					{events.map(event => (
 						<li key={event.id} className="flex justify-between gap-2 text-sm mb-1">
 							<span className="flex gap-2">
@@ -65,5 +76,6 @@ export const AttendanceSection = () => (
 				</ol>
 			</div>
 		);
+};
 
 export default AttendanceSection;

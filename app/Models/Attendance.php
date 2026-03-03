@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
@@ -30,7 +31,7 @@ use Illuminate\Support\Carbon;
  */
 class Attendance extends Model
 {
-    use TenantTimezoneDates;
+    use HasFactory, TenantTimezoneDates;
 
     protected $fillable = ['membership_id', 'response', 'absent_reason', 'event_id'];
 

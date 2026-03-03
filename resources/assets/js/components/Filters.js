@@ -4,7 +4,7 @@ import Button from "./inputs/Button";
 import SectionSubtitle from "./SectionSubtitle";
 import useRoute from "../hooks/useRoute";
 
-const Filters = ({ routeName, form: { submit, data, setData }, render }) => {
+const Filters = ({ routeName, routeParams, form: { submit, data, setData }, render }) => {
     const { route } = useRoute();
 
     const firstUpdate = useRef(true);
@@ -24,7 +24,7 @@ const Filters = ({ routeName, form: { submit, data, setData }, render }) => {
             <div className="flex flex-col items-stretch space-y-4 mb-4">
                 {render(data, setData)}
 
-                <Button variant="danger-outline" href={route(routeName)} size="sm">
+                <Button variant="danger-outline" href={route(routeName, routeParams)} size="sm">
                     <Icon icon="times" />
                     Clear
                 </Button>

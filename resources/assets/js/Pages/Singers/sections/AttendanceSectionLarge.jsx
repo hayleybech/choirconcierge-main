@@ -7,6 +7,9 @@ import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import Button from '../../../components/inputs/Button';
 import Icon from '../../../components/Icon';
 
+import ButtonLink from '../../../components/inputs/ButtonLink';
+import useRoute from '../../../hooks/useRoute';
+
 const events = [
 	{ id: 1, name: 'Rehearsal 1', date: '2022-01-01', response: 'present' },
 	{ id: 2, name: 'Rehearsal 2', date: '2022-01-02', response: 'absent' },
@@ -53,7 +56,8 @@ const responses = {
 	},
 };
 
-export const AttendanceSectionLarge = () => {
+export const AttendanceSectionLarge = ({ singer }) => {
+	const { route } = useRoute();
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
 	const sorts = [];
@@ -83,13 +87,19 @@ export const AttendanceSectionLarge = () => {
 							<p>3-month average: 62%</p>
 						</div>
 
-						<Button
-							onClick={() => setShowFilters(prev => !prev)}
-							variant="secondary"
-							size="sm"
-						>
-							<Icon icon="filter" /> Filter
-						</Button>
+						<div className="flex gap-2">
+							<Button
+								onClick={() => setShowFilters(prev => !prev)}
+								variant="secondary"
+								size="sm"
+							>
+								<Icon icon="filter" /> Filter
+							</Button>
+							<ButtonLink variant="primary" size="sm" href={route('singers.attendance', { singer })}>
+								<Icon icon="clipboard-list" />
+								View All
+							</ButtonLink>
+						</div>
 					</div>
 
 					<h3 className="mt-4">Records:</h3>
