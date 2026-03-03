@@ -26,6 +26,7 @@ export const SingerAttendanceWidget = ({ attendanceSummary }) => {
 			noPadding
 		>
 			<SingerAttendanceSummary attendanceSummary={attendanceSummary} />
+			<hr className="border-gray-200" />
 		</Panel>
 	);
 }

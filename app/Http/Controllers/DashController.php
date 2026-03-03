@@ -31,6 +31,7 @@ class DashController extends Controller
             'memberversaries' => $this->getMemberversaries()->values(),
 	        'feeStatus' => auth()->user()->membership?->fee_status,
             'attendanceSummary' => $this->getAttendanceSummary(auth()?->user()?->membership),
+            'rsvpSummary' => $this->getRsvpSummary(auth()?->user()?->membership),
         ]);
     }
 
@@ -98,38 +99,70 @@ class DashController extends Controller
             ->sortBy('birthday');
     }
 
-    private function getAttendanceSummary(Membership $singer): array
+    private function getAttendanceSummary(Membership $singer): array|null
     {
         if (! auth()->user()?->can('viewAttendance', $singer)) {
-            return [];
+            return null;
         }
 
         $eightWeeksAgo = now()->subWeeks(8);
-        $rehearsalType = EventType::where('title', 'Rehearsal')->first();
-        if (!$rehearsalType) {
-            return [];
+        $eventType = EventType::where('title', 'Rehearsal')->first();
+        if (!$eventType) {
+            return null;
         }
 
-        $recentRehearsalsCount = Event::where('type_id', $rehearsalType->id)
+        $recentEventsCount = Event::where('type_id', $eventType->id)
             ->where('start_date', '>=', $eightWeeksAgo)
             ->where('start_date', '<=', now())
             ->count();
 
         $attendedCount = $singer->attendances()
             ->whereIn('response', ['present', 'late'])
-            ->whereHas('event', function ($query) use ($eightWeeksAgo, $rehearsalType) {
-                $query->where('type_id', $rehearsalType->id)
+            ->whereHas('event', function ($query) use ($eightWeeksAgo, $eventType) {
+                $query->where('type_id', $eventType->id)
                     ->where('start_date', '>=', $eightWeeksAgo)
                     ->where('start_date', '<=', now());
             })
             ->count();
 
         return [
-            'rehearsals_last_8_weeks' => [
-                'attended' => $attendedCount,
-                'total' => $recentRehearsalsCount,
-                'percentage' => $recentRehearsalsCount > 0 ? round(($attendedCount / $recentRehearsalsCount) * 100) : 0,
-            ],
+            'attended' => $attendedCount,
+            'total' => $recentEventsCount,
+            'percentage' => $recentEventsCount > 0 ? round(($attendedCount / $recentEventsCount) * 100) : 0,
+        ];
+    }
+
+    private function getRsvpSummary(Membership $singer): array|null
+    {
+        if (! auth()->user()?->can('viewAttendance', $singer)) {
+            return null;
+        }
+
+        $eventType = EventType::where('title', 'Performance')->first();
+        if (!$eventType) {
+            return null;
+        }
+
+        $next8Events = Event::where('type_id', $eventType->id)
+            ->where('start_date', '>', now())
+            ->orderBy('start_date', 'asc')
+            ->limit(8)
+            ->get();
+
+        if ($next8Events->isEmpty()) {
+            return null;
+        }
+
+        $eventIds = $next8Events->pluck('id');
+        $respondedRsvpCount = $singer->rsvps()
+            ->whereIn('event_id', $eventIds)
+            ->whereIn('response', ['yes', 'no'])
+            ->count();
+
+        return [
+            'responded' => $respondedRsvpCount,
+            'total' => $next8Events->count(),
+            'percentage' => round(($respondedRsvpCount / $next8Events->count()) * 100),
         ];
     }
 }
