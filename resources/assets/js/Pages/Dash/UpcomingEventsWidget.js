@@ -43,7 +43,17 @@ const UpcomingEventsWidget = ({ events, eventCategories, rsvpSummary }) => {
 								/>
 							</>
 						)}
-						<Button href={route('events.index')} variant="secondary" size="xs">
+						<Button
+							href={
+								route('events.index') +
+								'?filter[date]=upcoming&' +
+								tenant.widgets_upcoming_events_categories
+									.map(category => `filter[type.id][]=${category}`)
+									.join('&')
+							}
+							variant="secondary"
+							size="xs"
+						>
 							<Icon icon="list" style={{ lineHeight: '1rem' }} />
 							<span className="hidden sm:inline">View All</span>
 						</Button>
@@ -98,7 +108,9 @@ const UpcomingEventsWidget = ({ events, eventCategories, rsvpSummary }) => {
 											<div className="mt-2">
 												<p className="text-sm text-gray-500 font-bold">{event.location_name}</p>
 												<p className="text-sm text-gray-500">{event.location_address}</p>
-												{event.location_place_id && <GoogleMap placeId={event.location_place_id} />}
+												{event.location_place_id && (
+													<GoogleMap placeId={event.location_place_id} />
+												)}
 											</div>
 										)}
 									</div>
