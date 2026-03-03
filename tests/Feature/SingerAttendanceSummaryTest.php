@@ -6,7 +6,6 @@ use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Membership;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -72,9 +71,9 @@ class SingerAttendanceSummaryTest extends TestCase
         $this->get(the_tenant_route('singers.show', [$singer]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('singer.attendance_summary.rehearsals_last_8_weeks.attended', 7)
-                ->where('singer.attendance_summary.rehearsals_last_8_weeks.total', 10)
-                ->where('singer.attendance_summary.rehearsals_last_8_weeks.percentage', 70)
+                ->where('attendanceSummary.attended', 7)
+                ->where('attendanceSummary.total', 10)
+                ->where('attendanceSummary.percentage', 70)
             );
     }
 }
