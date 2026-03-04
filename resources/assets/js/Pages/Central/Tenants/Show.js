@@ -139,11 +139,6 @@ const ChoirDetails = ({ tenant, showSales }) => (
 									<br />
 								</div>
 							)}
-							{tenant.disk_usage && (
-								<p>
-									<span className="font-bold">Disk Usage:</span> {tenant.disk_usage.human}
-								</p>
-							)}
 						</div>
 					),
 				},

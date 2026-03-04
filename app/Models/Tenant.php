@@ -255,43 +255,6 @@ class Tenant extends BaseTenant
         ];
     }
 
-    public function diskUsage(): Attribute
-    {
-        return Attribute::get(function () {
-            if(! auth()->user()->isSuperAdmin) {
-                return null;
-            }
-
-            $totalSize = 0;
-            $path = 'tenant' . $this->id;
-
-            if (Storage::disk('tenant')->exists($path)) {
-                $files = Storage::disk('tenant')->allFiles($path);
-                foreach ($files as $file) {
-                    $totalSize += Storage::disk('tenant')->size($file);
-                }
-            }
-
-            return [
-                'bytes' => $totalSize,
-                'human' => $this->formatBytes($totalSize),
-            ];
-        });
-    }
-
-    private function formatBytes($bytes, $precision = 2): string
-    {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-        $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pow = min($pow, count($units) - 1);
-
-        $bytes /= (1 << (10 * $pow));
-
-        return round($bytes, $precision) . ' ' . $units[$pow];
-    }
-
 	/**
 	 * @throws Exception
 	 */

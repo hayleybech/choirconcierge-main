@@ -83,7 +83,7 @@ class TenantController extends Controller
         Gate::allowIf(fn (User $user) => $user->id === $tenant->created_by || $user->isSuperAdmin);
 
         return Inertia::render('Central/Tenants/Show', [
-            'tenant' => $tenant->append(['billing_status', 'plan', 'setup_done', 'disk_usage']),
+            'tenant' => $tenant->append(['billing_status', 'plan', 'setup_done']),
         ]);
     }
 
