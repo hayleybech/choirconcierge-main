@@ -1,21 +1,26 @@
-import {useForm} from "@inertiajs/react";
+import {useForm, usePage} from "@inertiajs/react";
 import Dialog from "./Dialog";
 import Form from "./Form";
 import Label from "./inputs/Label";
 import FileInput from "./inputs/FileInput";
 import Help from "./inputs/Help";
 import Error from "./inputs/Error";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import useRoute from "../hooks/useRoute";
-import axios from "axios";
 
 const ImportSingersDialog = ({ isOpen, setIsOpen }) => {
     const { route } = useRoute();
-    const { data, setData, post, errors, clearErrors, setError } = useForm({
+    const { props } = usePage();
+    const { data, setData, post, errors, clearErrors, setError, processing } = useForm({
         import_csv: null,
     });
     const [previewData, setPreviewData] = useState(null);
-    const [loadingPreview, setLoadingPreview] = useState(false);
+
+    useEffect(() => {
+        if (props.flash.preview) {
+            setPreviewData(props.flash.preview);
+        }
+    }, [props.flash.preview]);
 
     function getPreview(e) {
         e.preventDefault();
@@ -25,23 +30,10 @@ const ImportSingersDialog = ({ isOpen, setIsOpen }) => {
             return;
         }
 
-        setLoadingPreview(true);
-        const formData = new FormData();
-        formData.append('import_csv[0]', data.import_csv[0]);
-
-        axios.post(route('singers.import.preview'), formData)
-            .then(response => {
-                setPreviewData(response.data);
-                setLoadingPreview(false);
-            })
-            .catch(error => {
-                setLoadingPreview(false);
-                if (error.response && error.response.data.errors) {
-                    Object.keys(error.response.data.errors).forEach(key => {
-                        setError(key, error.response.data.errors[key][0]);
-                    });
-                }
-            });
+        post(route('singers.import.preview'), {
+            preserveState: true,
+            preserveScroll: true,
+        });
     }
 
     function submit(e) {
@@ -62,7 +54,7 @@ const ImportSingersDialog = ({ isOpen, setIsOpen }) => {
             okVariant="primary"
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-            processing={loadingPreview}
+            processing={processing}
         >
             <Form onSubmit={previewData ? submit : getPreview}>
                 <div className="sm:col-span-6">
@@ -122,7 +114,10 @@ const ImportSingersDialog = ({ isOpen, setIsOpen }) => {
                             <button
                                 type="button"
                                 className="mt-4 text-sm text-purple-600 underline"
-                                onClick={() => setPreviewData(null)}
+                                onClick={() => {
+                                    setPreviewData(null);
+                                    setData('import_csv', null);
+                                }}
                             >
                                 Upload a different file
                             </button>

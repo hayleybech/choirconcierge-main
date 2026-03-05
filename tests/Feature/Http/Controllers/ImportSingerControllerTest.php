@@ -244,15 +244,16 @@ class ImportSingerControllerTest extends TestCase
         $response = $this->actingAs(
             $this->createUserWithRole('Admin')
         )
-            ->postJson(the_tenant_route('singers.import.preview'), [
+            ->post(the_tenant_route('singers.import.preview'), [
                 'import_csv' => [$file],
             ]);
 
-        $response->assertOk()
-            ->assertJsonStructure([
-                'data',
-                'total',
-            ])
-            ->assertJsonCount(2, 'data'); // harmonysite-singers.csv has 2 rows of data
+        $response->assertStatus(302)
+            ->assertSessionHas('preview');
+
+        $preview = session('preview');
+        $this->assertArrayHasKey('data', $preview);
+        $this->assertArrayHasKey('total', $preview);
+        $this->assertCount(2, $preview['data']); // harmonysite-singers.csv has 2 rows of data
     }
 }
