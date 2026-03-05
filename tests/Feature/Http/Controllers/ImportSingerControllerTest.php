@@ -229,4 +229,30 @@ class ImportSingerControllerTest extends TestCase
 
         fclose($tmp);
     }
+
+    /** @test */
+    public function import_preview_returns_sample_data(): void
+    {
+        $file = new UploadedFile(
+            base_path('tests/files/harmonysite-singers.csv'),
+            'harmonysite-singers.csv',
+            'text/csv',
+            null,
+            true
+        );
+
+        $response = $this->actingAs(
+            $this->createUserWithRole('Admin')
+        )
+            ->postJson(the_tenant_route('singers.import.preview'), [
+                'import_csv' => [$file],
+            ]);
+
+        $response->assertOk()
+            ->assertJsonStructure([
+                'data',
+                'total',
+            ])
+            ->assertJsonCount(2, 'data'); // harmonysite-singers.csv has 2 rows of data
+    }
 }
