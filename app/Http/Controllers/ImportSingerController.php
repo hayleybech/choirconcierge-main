@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\HeadingRowImport;
 
 class ImportSingerController extends Controller
@@ -19,19 +20,26 @@ class ImportSingerController extends Controller
         abort_if(! Auth::user()?->isSuperAdmin && ! Auth::user()?->membership?->hasRole('Admin'), 403);
 
         $request->validate([
-            'import_csv.*' => 'required|file',
+            'import_csv' => [
+                'required',
+                'array',
+            ],
+            'import_csv.*' => [
+                'required',
+                'file',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    $lineCount = count(@file($value->getRealPath(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: []);
+                    if ($lineCount <= 1) {
+                        $fail('The uploaded file contains no data rows.');
+                    }
+                },
+            ],
         ]);
 
-        $csv = request()->file('import_csv')[0];
+        $csv = $request->file('import_csv')[0];
 
-        $rows = (new HeadingRowImport)->toArray($csv)[0];
-        $headings = $rows[0] ?? [];
-
-        // If the file only contains the header row, skip importing to avoid errors from the Excel reader
-        $lineCount = count(@file($csv->getRealPath(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: []);
-        if ($lineCount > 1) {
-            Excel::import($this->getImporter($headings), $csv);
-        }
+        $headings = (new HeadingRowImport)->toArray($csv)[0][0];
+        Excel::import($this->getImporter($headings), $csv);
 
         return redirect()
             ->route('singers.index')

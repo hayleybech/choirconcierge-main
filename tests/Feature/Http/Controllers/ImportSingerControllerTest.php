@@ -198,7 +198,7 @@ class ImportSingerControllerTest extends TestCase
     }
 
     /** @test */
-    public function blank_choirconcierge_template_can_be_imported_without_errors(): void
+    public function blank_choirconcierge_template_returns_validation_error(): void
     {
         $this->actingAs(
             $this->createUserWithRole('Admin')
@@ -225,8 +225,7 @@ class ImportSingerControllerTest extends TestCase
 
         $this->post(the_tenant_route('singers.import'), [
             'import_csv' => [$file],
-        ])->assertSessionHasNoErrors()
-          ->assertRedirect();
+        ])->assertSessionHasErrors(['import_csv.0']);
 
         fclose($tmp);
     }
