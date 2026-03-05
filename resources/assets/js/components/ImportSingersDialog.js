@@ -49,6 +49,9 @@ const ImportSingersDialog = ({ isOpen, setIsOpen }) => {
                             <li>Choir Concierge</li>
                         </ul>
                         <p className="mb-2">Contact us for info on the specific requirements of these file types.</p>
+                        <p className="mt-4">
+                            Need a template? <a className="text-purple-600 underline hover:no-underline" href={route('singers.import.template')}>Download a blank CSV template</a>
+                        </p>
                     </Help>
                     {errors.import_csv && <Error>{errors.import_csv}</Error>}
                 </div>

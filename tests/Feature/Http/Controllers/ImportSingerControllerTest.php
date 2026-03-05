@@ -196,4 +196,38 @@ class ImportSingerControllerTest extends TestCase
     {
         $this->markTestIncomplete();
     }
+
+    /** @test */
+    public function blank_choirconcierge_template_can_be_imported_without_errors(): void
+    {
+        $this->actingAs(
+            $this->createUserWithRole('Admin')
+        );
+
+        // Download the template CSV
+        $download = $this->get(the_tenant_route('singers.import.template'));
+        $download->assertOk();
+
+        $csv = $download->getContent();
+
+        // Write to a temporary file to simulate an uploaded file
+        $tmp = tmpfile();
+        $meta = stream_get_meta_data($tmp);
+        file_put_contents($meta['uri'], $csv);
+
+        $file = new UploadedFile(
+            $meta['uri'],
+            'choirconcierge-singers-template.csv',
+            'text/csv',
+            null,
+            true
+        );
+
+        $this->post(the_tenant_route('singers.import'), [
+            'import_csv' => [$file],
+        ])->assertSessionHasNoErrors()
+          ->assertRedirect();
+
+        fclose($tmp);
+    }
 }

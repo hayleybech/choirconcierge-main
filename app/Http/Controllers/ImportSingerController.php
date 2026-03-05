@@ -24,9 +24,14 @@ class ImportSingerController extends Controller
 
         $csv = request()->file('import_csv')[0];
 
-        $headings = (new HeadingRowImport)->toArray($csv)[0][0];
+        $rows = (new HeadingRowImport)->toArray($csv)[0];
+        $headings = $rows[0] ?? [];
 
-        Excel::import($this->getImporter($headings), $csv);
+        // If the file only contains the header row, skip importing to avoid errors from the Excel reader
+        $lineCount = count(@file($csv->getRealPath(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: []);
+        if ($lineCount > 1) {
+            Excel::import($this->getImporter($headings), $csv);
+        }
 
         return redirect()
             ->route('singers.index')
