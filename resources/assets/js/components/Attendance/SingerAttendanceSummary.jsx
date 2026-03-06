@@ -8,7 +8,7 @@ export const SingerAttendanceSummary = ({ attendanceSummary }) => {
 			const { user: authUser } = usePage().props;
 
 			return (
-				<div className="py-4 px-8">
+				<div className="py-4 px-4 lg:px-8">
 					{attendanceSummary ? (
 						<div className="flex flex-col gap-4">
 							<div>

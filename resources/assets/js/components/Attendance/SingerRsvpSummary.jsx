@@ -5,7 +5,7 @@ import ButtonLink from '../inputs/ButtonLink';
 
 export const SingerRsvpSummary = ({ rsvpSummary, performanceTypeId }) => {
 	return (
-		<div className="py-4 px-8">
+		<div className="py-4 px-4 lg:px-8">
 			{rsvpSummary ? (
 				<div className="flex flex-col gap-4">
 					<div>
