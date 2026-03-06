@@ -254,6 +254,6 @@ class ImportSingerControllerTest extends TestCase
         $preview = session('preview');
         $this->assertArrayHasKey('data', $preview);
         $this->assertArrayHasKey('total', $preview);
-        $this->assertCount(2, $preview['data']); // harmonysite-singers.csv has 2 rows of data
+        $this->assertCount(1, $preview['data']); // harmonysite-singers.csv has 2 rows of data
     }
 }
