@@ -54,23 +54,27 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'flash' => [
-                'message' => fn () => $request->session()->get('status'),
-                'success' => fn () => $request->session()->get('success', true),
-                'preview' => fn () => $request->session()->get('preview'),
+                'message' => fn() => $request->session()->get('status'),
+                'success' => fn() => $request->session()->get('success', true),
+                'preview' => fn() => $request->session()->get('preview'),
             ],
             'can' => [
                 'view_dash' => true,
                 'list_singers' => auth()->user()?->can('viewAny', Membership::class),
                 'create_singer' => auth()->user()?->can('create', Membership::class),
-                'import_singers' => auth()->user()?->isSuperAdmin,
-				'export_singers' => auth()->user()?->isSuperAdmin || auth()->user()?->can('create', Membership::class),
+                'import_singers' => auth()->user()?->isSuperAdmin
+                    || auth()?->user()?->membership?->hasRole('Admin')
+                    || auth()->user()?->can('create', Membership::class),
+                'export_singers' => auth()->user()?->isSuperAdmin
+                    || auth()?->user()?->membership?->hasRole('Admin')
+                    || auth()->user()?->can('create', Membership::class),
                 'create_voice_part' => auth()->user()?->can('create', VoicePart::class),
                 'list_voice_parts' => auth()->user()?->can('viewAny', VoicePart::class),
                 'list_roles' => auth()->user()?->can('viewAny', Role::class),
                 'create_role' => auth()->user()?->can('create', Role::class),
-				'create_custom_field'=> auth()->user()?->can('create', CustomField::class),
-				'list_custom_field_entries' => auth()->user()?->can('viewAny', CustomFieldEntry::class),
-				'update_custom_field_entries' => auth()->user()?->can('update', CustomFieldEntry::class),
+                'create_custom_field' => auth()->user()?->can('create', CustomField::class),
+                'list_custom_field_entries' => auth()->user()?->can('viewAny', CustomFieldEntry::class),
+                'update_custom_field_entries' => auth()->user()?->can('update', CustomFieldEntry::class),
                 'list_songs' => auth()->user()?->can('viewAny', Song::class),
                 'create_song' => auth()->user()?->can('create', Song::class),
                 'list_events' => auth()->user()?->can('viewAny', Event::class),
@@ -93,7 +97,7 @@ class HandleInertiaRequests extends Middleware
                 'list_tasks' => auth()->user()?->can('viewAny', Task::class),
                 'create_task' => auth()->user()?->can('create', Task::class),
                 'impersonate' => auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasRole('Admin'),
-	            'manage_finances' => Gate::allows('update-fees'),
+                'manage_finances' => Gate::allows('update-fees'),
                 'update_tenant' => auth()->user()?->can('update', Tenant::class),
                 'list_tenants' => auth()->user()?->isSuperAdmin,
             ],

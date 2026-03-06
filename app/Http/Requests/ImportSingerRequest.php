@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Membership;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,7 +13,9 @@ class ImportSingerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()?->user()?->isSuperAdmin || auth()?->user()?->membership?->hasRole('Admin');
+        return auth()?->user()?->isSuperAdmin
+            || auth()?->user()?->membership?->hasRole('Admin')
+            || auth()->user()?->can('create', Membership::class);
     }
 
     /**
