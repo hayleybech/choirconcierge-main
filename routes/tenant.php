@@ -25,6 +25,7 @@ use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ICalController;
 use App\Http\Controllers\ImpersonateUserController;
 use App\Http\Controllers\ImportSingerController;
+use App\Http\Controllers\ImportSingerTemplateController;
 use App\Http\Controllers\LearningStatusController;
 use App\Http\Controllers\MailboxController;
 use App\Http\Controllers\MailLogController;
@@ -132,6 +133,8 @@ Route::middleware([
         Route::resource('singers.enrolments', EnrolmentController::class)->only(['store', 'update', 'destroy']);
         Route::put('singers/{singer}/fees', UpdateSingerFeeController::class)->name('singers.fees.update');
         Route::post('singers/import', ImportSingerController::class)->name('singers.import');
+        Route::post('singers/import/preview', [ImportSingerController::class, 'preview'])->name('singers.import.preview');
+        Route::get('singers/import/template', ImportSingerTemplateController::class)->name('singers.import.template');
         Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
         Route::get('singers/{singer}/tasks/{task}/complete', CompleteSingerTaskController::class)->name('task.complete');
         Route::resource('singers.custom-fields', CustomFieldEntryController::class)

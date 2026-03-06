@@ -10,10 +10,12 @@ use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Row;
 
-class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
+class GroupanizerSingersImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsEmptyRows
 {
     private SingerCategory $activeCategory;
 
@@ -129,5 +131,14 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
         }
 
         return ($height_float < 1000) ? $height_float : $height_float / 10;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'email' => 'required|email',
+            'first_name' => 'required|max:127',
+            'last_name' => 'required|max:127',
+        ];
     }
 }

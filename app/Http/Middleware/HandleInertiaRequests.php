@@ -56,6 +56,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'message' => fn () => $request->session()->get('status'),
                 'success' => fn () => $request->session()->get('success', true),
+                'preview' => fn () => $request->session()->get('preview'),
             ],
             'can' => [
                 'view_dash' => true,

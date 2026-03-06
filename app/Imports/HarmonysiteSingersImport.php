@@ -9,10 +9,12 @@ use App\Models\VoicePart;
 use DateTime;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Row;
 
-class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
+class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsEmptyRows
 {
     private SingerCategory $activeCategory;
 
@@ -119,5 +121,14 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
     private function convert_voice_part(string $part_name): string
     {
         return explode(' ', $part_name)[0];
+    }
+
+    public function rules(): array
+    {
+        return [
+            'email_address' => 'required|email',
+            'first_name' => 'required|max:127',
+            'surname' => 'required|max:127',
+        ];
     }
 }

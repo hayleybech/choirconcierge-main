@@ -64,7 +64,7 @@ const Dialog = ({
 								</div>
 							)}
 							<div
-								className={`mt-3 text-center sm:mt-0 sm:ml-4 flex-grow ${
+								className={`mt-3 text-center sm:mt-0 sm:ml-4 flex-grow min-w-0 ${
 									icon ? 'sm:text-left' : ''
 								}`}
 							>

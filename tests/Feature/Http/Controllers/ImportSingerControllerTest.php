@@ -20,6 +20,62 @@ class ImportSingerControllerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    public function concierge_import_creates_users(): void
+    {
+        $file = new UploadedFile(
+            base_path('tests/files/concierge-singers.csv'),
+            'concierge-singers.csv',
+            'text/csv',
+            null,
+            true
+        );
+
+        $this->actingAs(
+            $this->createUserWithRole('Admin')
+        )
+            ->post(the_tenant_route('singers.import'), [
+                'import_csv' => [$file],
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        // assert user created
+        $this->assertDatabaseHas('users', [
+            'first_name' => 'Dorcas',
+            'last_name' => 'Weimann',
+            'email' => 'hayes.ozella@example.com',
+            'dob' => (new Carbon(new DateTime('1999-10-14')))->toDateTimeString(),
+            'phone' => '+1 (838) 616-6120',
+            'address_street_1' => '504 Brakus Bypass',
+            'address_street_2' => 'Apt. 710',
+            'address_suburb' => 'Casandraville',
+            'address_state' => 'OK',
+            'address_postcode' => '8000',
+            'skills' => 'Rem tenetur explicabo et ut.',
+            'height' => 39.64,
+        ]);
+
+        // assert membership created
+        $this->assertDatabaseHas('memberships', [
+            'onboarding_enabled' => false,
+            'membership_details' => 'BHA 2134',
+            'joined_at' => '1997-06-13 18:15:35',
+            'singer_category_id' => SingerCategory::firstWhere('name', 'Members')->id,
+            'user_id' => User::firstWhere('email', 'hayes.ozella@example.com')->id,
+        ]);
+
+        // assert roles assigned
+        $this->assertDatabaseHas('memberships_roles', [
+            'membership_id' => User::firstWhere('email', 'hayes.ozella@example.com')->membership->id,
+            'role_id' => Role::firstWhere('name', 'Admin')->id,
+        ]);
+        $this->assertDatabaseHas('memberships_roles', [
+            'membership_id' => User::firstWhere('email', 'hayes.ozella@example.com')->membership->id,
+            'role_id' => Role::firstWhere('name', 'Music Team')->id,
+        ]);
+    }
+
+    /** @test */
     public function groupanizer_import_creates_users(): void
     {
         $file = new UploadedFile(
@@ -39,6 +95,7 @@ class ImportSingerControllerTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertRedirect();
 
+        // assert user created
         $this->assertDatabaseHas('users', [
             'first_name' => 'Jono',
             'last_name' => 'Albertini',
@@ -53,28 +110,8 @@ class ImportSingerControllerTest extends TestCase
             'skills' => '',
             'height' => null,
         ]);
-    }
 
-    /** @test */
-    public function groupanizer_import_creates_singers_for_users(): void
-    {
-        $file = new UploadedFile(
-            base_path('tests/files/groupanizer-singers.csv'),
-            'groupanizer-singers.csv',
-            'text/csv',
-            null,
-            true
-        );
-
-        $this->actingAs(
-            $this->createUserWithRole('Admin')
-        )
-            ->post(the_tenant_route('singers.import'), [
-                'import_csv' => [$file],
-            ])
-            ->assertSessionHasNoErrors()
-            ->assertRedirect();
-
+        // assert membership created
         $this->assertDatabaseHas('memberships', [
             'onboarding_enabled' => false,
             'membership_details' => 'BHA  1945 Blenders old No 245',
@@ -82,28 +119,8 @@ class ImportSingerControllerTest extends TestCase
             'singer_category_id' => SingerCategory::firstWhere('name', 'Members')->id,
             'user_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->id,
         ]);
-    }
 
-    /** @test */
-    public function groupanizer_import_assigns_roles_to_singers(): void
-    {
-        $file = new UploadedFile(
-            base_path('tests/files/groupanizer-singers.csv'),
-            'groupanizer-singers.csv',
-            'text/csv',
-            null,
-            true
-        );
-
-        $this->actingAs(
-            $this->createUserWithRole('Admin')
-        )
-            ->post(the_tenant_route('singers.import'), [
-                'import_csv' => [$file],
-            ])
-            ->assertSessionHasNoErrors()
-            ->assertRedirect();
-
+        // assert roles assigned
         $this->assertDatabaseHas('memberships_roles', [
             'membership_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->membership->id,
             'role_id' => Role::firstWhere('name', 'Admin')->id,
@@ -140,6 +157,7 @@ class ImportSingerControllerTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertRedirect();
 
+        // assert user created
         $this->assertDatabaseHas('users', [
             'first_name' => 'Nick',
             'last_name' => 'Schurmann',
@@ -155,28 +173,8 @@ class ImportSingerControllerTest extends TestCase
             'ice_name' => '',
             'profession' => '',
         ]);
-    }
 
-    /** @test */
-    public function harmonysite_import_creates_singers_for_users(): void
-    {
-        $file = new UploadedFile(
-            base_path('tests/files/harmonysite-singers.csv'),
-            'groupanizer-singers.csv',
-            'text/csv',
-            null,
-            true
-        );
-
-        $this->actingAs(
-            $this->createUserWithRole('Admin')
-        )
-            ->post(the_tenant_route('singers.import'), [
-                'import_csv' => [$file],
-            ])
-            ->assertSessionHasNoErrors()
-            ->assertRedirect();
-
+        // assert membership created
         $this->assertDatabaseHas('memberships', [
             'user_id' => User::firstWhere('email', 'nick.s@internode.on.net')->id,
             'onboarding_enabled' => false,
@@ -195,5 +193,65 @@ class ImportSingerControllerTest extends TestCase
     public function harmonysite_import_updates_existing_users(): void
     {
         $this->markTestIncomplete();
+    }
+
+    /** @test */
+    public function blank_choirconcierge_template_returns_validation_error(): void
+    {
+        $this->actingAs(
+            $this->createUserWithRole('Admin')
+        );
+
+        // Download the template CSV
+        $download = $this->get(the_tenant_route('singers.import.template'));
+        $download->assertOk();
+
+        $csv = $download->getContent();
+
+        // Write to a temporary file to simulate an uploaded file
+        $tmp = tmpfile();
+        $meta = stream_get_meta_data($tmp);
+        file_put_contents($meta['uri'], $csv);
+
+        $file = new UploadedFile(
+            $meta['uri'],
+            'choirconcierge-singers-template.csv',
+            'text/csv',
+            null,
+            true
+        );
+
+        $this->post(the_tenant_route('singers.import'), [
+            'import_csv' => [$file],
+        ])->assertSessionHasErrors(['import_csv.0']);
+
+        fclose($tmp);
+    }
+
+    /** @test */
+    public function import_preview_returns_sample_data(): void
+    {
+        $file = new UploadedFile(
+            base_path('tests/files/harmonysite-singers.csv'),
+            'harmonysite-singers.csv',
+            'text/csv',
+            null,
+            true
+        );
+
+        $response = $this->actingAs(
+            $this->createUserWithRole('Admin')
+        )
+            ->post(the_tenant_route('singers.import.preview'), [
+                'import_csv' => [$file],
+            ]);
+
+        $response->assertStatus(302)
+            ->assertSessionHas('preview');
+
+        $preview = session('preview');
+        $this->assertArrayHasKey('data', $preview);
+        $this->assertArrayHasKey('total', $preview);
+        $this->assertCount(1, $preview['data']); // harmonysite-singers.csv has 2 rows of data
     }
 }
