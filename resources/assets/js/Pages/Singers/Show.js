@@ -24,7 +24,7 @@ import CustomFieldsSection from "./sections/CustomFieldsSection";
 import SingerAttendanceSummary from '../../components/Attendance/SingerAttendanceSummary';
 import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 
-const Show = ({ singer, attendanceSummary, rsvpSummary, categories, voiceParts, ensemblesNotEnrolled, customFields }) => {
+const Show = ({ singer, attendanceSummary, rsvpSummary, categories, voiceParts, ensemblesNotEnrolled, customFields, performanceTypeId }) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
 	const { can, user: authUser } = usePage().props;
@@ -152,15 +152,11 @@ const Show = ({ singer, attendanceSummary, rsvpSummary, categories, voiceParts, 
 							{
 								title: 'Attendance',
 								show: singer.can['view_attendance'],
-								action: <ButtonLink variant="primary" size="xs" href={route('singers.attendance', { singer })}>
-									<Icon icon="clipboard-list" />
-									View All
-								</ButtonLink>,
 								content: (
 									<>
 										<SingerAttendanceSummary attendanceSummary={attendanceSummary} />
 										<hr className="border-gray-200" />
-										<SingerRsvpSummary rsvpSummary={rsvpSummary} />
+										<SingerRsvpSummary rsvpSummary={rsvpSummary} performanceTypeId={performanceTypeId} />
 									</>
 								),
 							},

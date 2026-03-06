@@ -5,30 +5,16 @@ import ButtonLink from '../../components/inputs/ButtonLink';
 import SingerAttendanceSummary from '../../components/Attendance/SingerAttendanceSummary';
 import useRoute from '../../hooks/useRoute';
 import { usePage } from '@inertiajs/react';
+import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 
-export const SingerAttendanceWidget = ({ attendanceSummary }) => {
-	const { route } = useRoute();
-
-	const { user: authUser } = usePage().props;
-
+export const SingerAttendanceWidget = ({ attendanceSummary, rsvpSummary, performanceTypeId }) => {
 	return (
-		<Panel
-			header={
-				<div className="flex justify-between items-center">
-					<PanelTitle>Attendance</PanelTitle>
-
-					<ButtonLink variant="secondary" size="xs" href={route('singers.attendance', { singer: authUser.membership })}>
-						<Icon icon="clipboard-list" />
-						View All
-					</ButtonLink>
-				</div>
-			}
-			noPadding
-		>
+		<Panel header={<PanelTitle>Attendance</PanelTitle>} noPadding>
 			<SingerAttendanceSummary attendanceSummary={attendanceSummary} />
 			<hr className="border-gray-200" />
+			<SingerRsvpSummary rsvpSummary={rsvpSummary} performanceTypeId={performanceTypeId} />
 		</Panel>
 	);
-}
+};
 
 export default SingerAttendanceWidget;

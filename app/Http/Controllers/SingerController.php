@@ -126,6 +126,7 @@ class SingerController extends Controller
                 ->get(),
             'ensemblesNotEnrolled' => Ensemble::whereDoesntHave('enrolments', fn(Builder $query) => $query->where('membership_id', $singer->id)
             )->get(),
+            'performanceTypeId' => EventType::where('title', 'Performance')->first()?->id,
         ]);
     }
 

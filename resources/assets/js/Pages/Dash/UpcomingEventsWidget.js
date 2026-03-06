@@ -65,8 +65,6 @@ const UpcomingEventsWidget = ({ events, eventCategories, rsvpSummary }) => {
 			noPadding
 		>
 			<>
-				<SingerRsvpSummary rsvpSummary={rsvpSummary} />
-
 				{events.length > 0 ? (
 					<TableMobile>
 						{events.map(event => (

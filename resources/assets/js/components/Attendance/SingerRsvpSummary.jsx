@@ -1,12 +1,29 @@
 import Badge from '../Badge';
+import Icon from '../Icon';
+import React from 'react';
+import ButtonLink from '../inputs/ButtonLink';
 
-export const SingerRsvpSummary = ({ rsvpSummary }) => {
+export const SingerRsvpSummary = ({ rsvpSummary, performanceTypeId }) => {
 	return (
 		<div className="py-4 px-8">
 			{rsvpSummary ? (
 				<div className="flex flex-col gap-4">
 					<div>
-						<p className="text-sm text-gray-500 mb-1">Upcoming Performance RSVPs (Next 8)</p>
+						<div className="flex gap-2 justify-between mb-1 items-start">
+							<p className="text-sm text-gray-500">Upcoming Performance RSVPs (Next 8)</p>
+							<ButtonLink
+								href={
+									route('events.index') +
+									`?filter[date]=upcoming&filter[type.id][]=${performanceTypeId}`
+								}
+								variant="secondary"
+								size="xs"
+								className="shrink-0"
+							>
+								<Icon icon="list" style={{ lineHeight: '1rem' }} />
+								<span className="hidden sm:inline">View All</span>
+							</ButtonLink>
+						</div>
 						<div className="flex items-center gap-4">
 							<div className="text-3xl font-bold text-gray-900">{rsvpSummary.percentage}%</div>
 							<div className="flex flex-col items-start">

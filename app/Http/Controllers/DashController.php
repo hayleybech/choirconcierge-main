@@ -32,6 +32,7 @@ class DashController extends Controller
 	        'feeStatus' => auth()->user()->membership?->fee_status,
             'attendanceSummary' => $this->getAttendanceSummary(auth()?->user()?->membership),
             'rsvpSummary' => $this->getRsvpSummary(auth()?->user()?->membership),
+            'performanceTypeId' => EventType::where('title', 'Performance')->first()?->id,
         ]);
     }
 
