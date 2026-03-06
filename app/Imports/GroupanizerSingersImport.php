@@ -130,4 +130,13 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow
 
         return ($height_float < 1000) ? $height_float : $height_float / 10;
     }
+
+    public function rules(): array
+    {
+        return [
+            'email' => 'required|email',
+            'first_name' => 'required|max:127',
+            'last_name' => 'required|max:127',
+        ];
+    }
 }

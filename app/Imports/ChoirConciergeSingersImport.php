@@ -149,8 +149,6 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow, WithVali
             'email' => 'required|email',
             'first_name' => 'required|max:127',
             'last_name' => 'required|max:127',
-
-
         ];
     }
 }

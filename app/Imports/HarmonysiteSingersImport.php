@@ -120,4 +120,13 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow
     {
         return explode(' ', $part_name)[0];
     }
+
+    public function rules(): array
+    {
+        return [
+            'email_address' => 'required|email',
+            'first_name' => 'required|max:127',
+            'surname' => 'required|max:127',
+        ];
+    }
 }
