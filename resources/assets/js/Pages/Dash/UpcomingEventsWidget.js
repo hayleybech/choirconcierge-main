@@ -47,9 +47,11 @@ const UpcomingEventsWidget = ({ events, eventCategories, rsvpSummary }) => {
 							href={
 								route('events.index') +
 								'?filter[date]=upcoming&' +
-								tenant.widgets_upcoming_events_categories
-									.map(category => `filter[type.id][]=${category}`)
-									.join('&')
+								tenant.widgets_upcoming_events_categories?.length > 0
+									? tenant.widgets_upcoming_events_categories
+											.map(category => `filter[type.id][]=${category}`)
+											.join('&')
+									: ''
 							}
 							variant="secondary"
 							size="xs"
@@ -63,8 +65,6 @@ const UpcomingEventsWidget = ({ events, eventCategories, rsvpSummary }) => {
 			noPadding
 		>
 			<>
-				<SingerRsvpSummary rsvpSummary={rsvpSummary} />
-
 				{events.length > 0 ? (
 					<TableMobile>
 						{events.map(event => (
