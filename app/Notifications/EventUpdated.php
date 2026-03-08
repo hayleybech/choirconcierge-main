@@ -18,10 +18,10 @@ class EventUpdated extends Notification
 
     private Event $event;
 
+    private array $original;
+
     /**
      * Create a new notification instance.
-     *
-     * @param Event $event
      */
     public function __construct(Event $event, array $original)
     {

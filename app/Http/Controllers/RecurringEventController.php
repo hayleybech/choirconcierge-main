@@ -48,13 +48,14 @@ class RecurringEventController extends Controller
         if (! $event->is_repeating) {
             return back()->with(['error' => 'The server tried to edit a non-repeating event incorrectly.']);
         }
+        $original = $event->getOriginal();
 
         UpdateRecurringEvent::handle($mode, $event, Arr::except($request->validated(), 'send_notification'));
 
         if ($request->input('send_notification')) {
             Notification::send(
                 Membership::active()->with('user')->get()->map(fn ($singer) => $singer->user),
-                new EventUpdated($event)
+                new EventUpdated($event, $original)
             );
         }
 
