@@ -64,7 +64,7 @@ const Index = ({ singer, attendances, eventTypes, pagination }) => {
 							<div className="px-4 lg:px-8 py-8">
 								<div className="overflow-hidden bg-white shadow sm:rounded-md">
 									<ul className="divide-y divide-gray-200">
-										{attendances.map((attendance) => (
+										{attendances.filter(attendance => !!attendance.event).map((attendance) => (
 											<li key={attendance.id}>
 												<Link href={route('events.show', { event: attendance.event })} className="block hover:bg-gray-50">
 													<div className="flex items-center px-4 py-4 sm:px-6">
