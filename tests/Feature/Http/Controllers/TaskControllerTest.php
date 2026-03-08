@@ -7,6 +7,7 @@ use App\Models\Task;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -16,10 +17,7 @@ class TaskControllerTest extends TestCase
 {
     use WithFaker;
 
-    /**
-     * @test
-     */
-    public function create_returns_an_ok_response(): void
+    public function test_create_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -31,10 +29,7 @@ class TaskControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_to_index(): void
+    public function test_destroy_redirects_to_index(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -46,10 +41,7 @@ class TaskControllerTest extends TestCase
         $this->assertSoftDeleted($task);
     }
 
-    /**
-     * @test
-     */
-    public function index_returns_an_ok_response(): void
+    public function test_index_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -61,10 +53,7 @@ class TaskControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function show_returns_an_ok_response(): void
+    public function test_show_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -78,11 +67,8 @@ class TaskControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     * @dataProvider eventProvider
-     */
-    public function store_returns_an_ok_response($getData): void
+    #[DataProvider('eventProvider')]
+    public function test_store_returns_an_ok_response($getData): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 

@@ -14,8 +14,7 @@ class LoginControllerTest extends TestCase
 
 	protected bool $tenancy = false;
 
-    /** @test */
-    public function login_displays_the_login_form(): void
+    public function test_login_displays_the_login_form(): void
     {
         $this->get(route('login'))
             ->assertOk()
@@ -23,16 +22,14 @@ class LoginControllerTest extends TestCase
                 ->component('Auth/Login'));
     }
 
-    /** @test */
-    public function invalid_login_displays_validation_errors(): void
+    public function test_invalid_login_displays_validation_errors(): void
     {
         $this->post(route('login'), [])
             ->assertStatus(302)
             ->assertSessionHasErrors('email');
     }
 
-    /** @test */
-    public function login_authenticates_and_redirects_user(): void
+    public function test_login_authenticates_and_redirects_user(): void
     {
         $user = User::factory()->create();
 
@@ -45,8 +42,7 @@ class LoginControllerTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
-    /** @test */
-    public function logout_deauthenticates_and_redirects_user(): void
+    public function test_logout_deauthenticates_and_redirects_user(): void
     {
         // login
         $user = User::factory()->create();

@@ -17,10 +17,7 @@ class RsvpControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_back(): void
+    public function test_destroy_redirects_back(): void
     {
         $this->actingAs(Membership::factory()->create()->user);
 
@@ -36,10 +33,7 @@ class RsvpControllerTest extends TestCase
         $this->assertModelMissing($event->rsvps->first());
     }
 
-    /**
-     * @test
-     */
-    public function store_redirects_back(): void
+    public function test_store_redirects_back(): void
     {
         $this->actingAs(Membership::factory()->create()->user);
 
@@ -62,10 +56,7 @@ class RsvpControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function update_redirects_back(): void
+    public function test_update_redirects_back(): void
     {
         $this->actingAs(Membership::factory()->create()->user);
 
@@ -90,10 +81,7 @@ class RsvpControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function update_changes_the_oldest(): void
+    public function test_update_changes_the_oldest(): void
     {
         $this->actingAs(Membership::factory()->create()->user);
 

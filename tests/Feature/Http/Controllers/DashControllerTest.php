@@ -10,10 +10,7 @@ use Tests\TestCase;
  */
 class DashControllerTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function index_returns_an_ok_response(): void
+    public function test_index_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team')); // Any role is fine
 

@@ -7,6 +7,7 @@ use App\Mail\WebklexImapMessageMailableAdapter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Webklex\PHPIMAP\Address;
 use Webklex\PHPIMAP\Attribute;
@@ -22,8 +23,7 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
 
     protected bool $tenancy = false;
 
-    /** @test */
-    public function converts_message_to_mailable(): void
+    public function test_converts_message_to_mailable(): void
     {
         // Arrange
         $message = $this->mockMessage();
@@ -35,11 +35,8 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
         self::assertInstanceOf(IncomingMessage::class, $mailable);
     }
 
-    /**
-     * @test
-     * @dataProvider recipientProvider
-     */
-    public function copies_recipients($recipient_type, $count, $recipients): void
+    #[DataProvider('recipientProvider')]
+    public function test_copies_recipients($recipient_type, $count, $recipients): void
     {
         // Arrange
         $message = $this->mockMessage([$recipient_type => $recipients]);
@@ -53,8 +50,7 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
         self::assertEquals($recipients[0]->personal, $mailable->$recipient_type[0]['name']);
     }
 
-    /** @test */
-    public function copies_subject(): void
+    public function test_copies_subject(): void
     {
         // Arrange
         $message = $this->mockMessage();
@@ -66,8 +62,7 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
         self::assertEquals('A Test Subject', $mailable->subject);
     }
 
-    /** @test */
-    public function copies_text_body(): void
+    public function test_copies_text_body(): void
     {
         // Arrange
         $message = $this->mockMessage();
@@ -79,8 +74,7 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
         self::assertEquals('Hello', $mailable->content_text);
     }
 
-    /** @test */
-    public function copies_html_body(): void
+    public function test_copies_html_body(): void
     {
         // Arrange
         $message = $this->mockMessage();
@@ -132,7 +126,7 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
         });
     }
 
-    public static function recipientProvider()
+    public static function recipientProvider(): array
     {
         return [
             'single to' => [

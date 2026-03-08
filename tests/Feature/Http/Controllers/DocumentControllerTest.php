@@ -17,10 +17,7 @@ class DocumentControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_back(): void
+    public function test_destroy_redirects_back(): void
     {
         Storage::fake('tenant');
 
@@ -39,10 +36,7 @@ class DocumentControllerTest extends TestCase
         $this->assertModelMissing($folder->documents->first());
     }
 
-    /**
-     * @test
-     */
-    public function show_returns_file(): void
+    public function test_show_returns_file(): void
     {
         Storage::fake('tenant');
 
@@ -62,10 +56,7 @@ class DocumentControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function store_redirects_back(): void
+    public function test_store_redirects_back(): void
     {
         Storage::fake('tenant');
 
@@ -92,8 +83,7 @@ class DocumentControllerTest extends TestCase
         Storage::disk('tenant')->assertExists($document->getPath());
     }
 
-    /** @test */
-    public function it_can_rename_documents(): void
+    public function test_it_can_rename_documents(): void
     {
         $this->withoutExceptionHandling();
         Storage::fake('tenant');

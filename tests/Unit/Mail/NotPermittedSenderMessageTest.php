@@ -15,8 +15,7 @@ class NotPermittedSenderMessageTest extends TestCase
 
     protected bool $tenancy = false;
 
-    /** @test */
-    public function it_renders_the_correct_content()
+    public function test_it_renders_the_correct_content()
     {
         $tenant = $this->createTestTenants(2)[0];
 
@@ -36,8 +35,7 @@ class NotPermittedSenderMessageTest extends TestCase
         });
     }
 
-    /** @test */
-    public function it_uses_the_correct_from_address()
+    public function test_it_uses_the_correct_from_address()
     {
         $tenant = $this->createTestTenants(2)[0];
 

@@ -16,6 +16,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -25,10 +26,7 @@ class SingerControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function create_returns_an_ok_response(): void
+    public function test_create_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -41,10 +39,7 @@ class SingerControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_to_index(): void
+    public function test_destroy_redirects_to_index(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -56,10 +51,7 @@ class SingerControllerTest extends TestCase
         $this->assertSoftDeleted($membership);
     }
 
-    /**
-     * @test
-     */
-    public function edit_returns_an_ok_response(): void
+    public function test_edit_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -74,10 +66,7 @@ class SingerControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function index_returns_singers(): void
+    public function test_index_returns_singers(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -93,10 +82,7 @@ class SingerControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function show_returns_an_ok_response(): void
+    public function test_show_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -111,11 +97,8 @@ class SingerControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     * @dataProvider singerProvider
-     */
-    public function store_inserts_the_singer($getData): void
+    #[DataProvider('singerProvider')]
+    public function test_store_inserts_the_singer($getData): void
     {
         $task = Task::factory()->create();
         $mail = Mail::fake();
@@ -149,11 +132,8 @@ class SingerControllerTest extends TestCase
         $mail->assertSent(Welcome::class);
     }
 
-    /**
-     * @test
-     * @dataProvider singerProvider
-     */
-    public function store_creates_a_user_when_given_an_email($getData): void
+    #[DataProvider('singerProvider')]
+    public function test_store_creates_a_user_when_given_an_email($getData): void
     {
         $mail = Mail::fake();
 
@@ -182,11 +162,8 @@ class SingerControllerTest extends TestCase
         $mail->assertSent(Welcome::class);
     }
 
-    /**
-     * @test
-     * @dataProvider singerProvider
-     */
-    public function store_assigns_an_existing_user_when_given_a_user_id($getData): void
+    #[DataProvider('singerProvider')]
+    public function test_store_assigns_an_existing_user_when_given_a_user_id($getData): void
     {
         $mail = Mail::fake();
 
@@ -217,11 +194,8 @@ class SingerControllerTest extends TestCase
         $mail->assertSent(Welcome::class);
     }
 
-    /**
-     * @test
-     * @dataProvider singerProvider
-     */
-    public function store_inserts_tasks_for_prospects($getData): void
+    #[DataProvider('singerProvider')]
+    public function test_store_inserts_tasks_for_prospects($getData): void
     {
         $task = Task::factory()->create();
         $mail = Mail::fake();
@@ -243,11 +217,8 @@ class SingerControllerTest extends TestCase
         $mail->assertSent(Welcome::class);
     }
 
-    /**
-     * @test
-     * @dataProvider singerProvider
-     */
-    public function store_inserts_default_enrolment_when_org_has_only_one_ensemble($getData): void
+    #[DataProvider('singerProvider')]
+    public function test_store_inserts_default_enrolment_when_org_has_only_one_ensemble($getData): void
     {
         $ensemble = Ensemble::factory()->create([
             'tenant_id' => tenant('id'),
@@ -265,11 +236,8 @@ class SingerControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     * @dataProvider singerProvider
-     */
-    public function store_doesnt_insert_default_enrolment_when_org_has_multiple_ensembles($getData): void
+    #[DataProvider('singerProvider')]
+    public function test_store_doesnt_insert_default_enrolment_when_org_has_multiple_ensembles($getData): void
     {
         Ensemble::factory()->count(2)->create([
             'tenant_id' => tenant('id'),
@@ -286,11 +254,8 @@ class SingerControllerTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     * @dataProvider singerProvider
-     */
-    public function update_saves_the_singer_fields($getData): void
+    #[DataProvider('singerProvider')]
+    public function test_update_saves_the_singer_fields($getData): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -310,11 +275,8 @@ class SingerControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('singers.show', [$singer]));
     }
 
-    /**
-     * @test
-     * @dataProvider singerProvider
-     */
-    public function update_saves_the_singer_roles($getData): void
+    #[DataProvider('singerProvider')]
+    public function test_update_saves_the_singer_roles($getData): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -338,11 +300,8 @@ class SingerControllerTest extends TestCase
         ]);
     }
 
-	/**
-	 * @test
-	 * @dataProvider singerProvider
-	 */
-	public function update_saves_the_financial_details($getData): void
+    #[DataProvider('singerProvider')]
+	public function test_update_saves_the_financial_details($getData): void
 	{
 		$this->withoutExceptionHandling();
 

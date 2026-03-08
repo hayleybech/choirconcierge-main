@@ -11,10 +11,7 @@ use Tests\TestCase;
 
 class SingerAttendanceSummaryTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function the_attendance_summary_is_passed_to_the_singer_profile_page(): void
+    public function test_the_attendance_summary_is_passed_to_the_singer_profile_page(): void
     {
         $singer = Membership::factory()->create();
         $this->actingAs($singer->user);

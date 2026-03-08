@@ -8,6 +8,7 @@ use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -17,10 +18,7 @@ class SingerPlacementControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function create_returns_an_ok_response(): void
+    public function test_create_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -34,10 +32,7 @@ class SingerPlacementControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function edit_returns_an_ok_response(): void
+    public function test_edit_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -54,11 +49,8 @@ class SingerPlacementControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     * @dataProvider placementProvider
-     */
-    public function store_redirects_to_singer($getData): void
+    #[DataProvider('placementProvider')]
+    public function test_store_redirects_to_singer($getData): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -73,11 +65,8 @@ class SingerPlacementControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('singers.show', $singer));
     }
 
-    /**
-     * @test
-     * @dataProvider placementProvider
-     */
-    public function update_redirects_to_singer($getData): void
+    #[DataProvider('placementProvider')]
+    public function test_update_redirects_to_singer($getData): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 

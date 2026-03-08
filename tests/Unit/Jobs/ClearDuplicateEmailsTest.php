@@ -11,8 +11,7 @@ use Webklex\PHPIMAP\Message;
 
 class ClearDuplicateEmailsTest extends TestCase
 {
-    /** @test */
-    public function it_deletes_emails_where_the_cc_contains_a_group_matching_the_to_field(): void
+    public function test_it_deletes_emails_where_the_cc_contains_a_group_matching_the_to_field(): void
     {
         $mockMessage = $this->mock(Message::class, function (MockInterface $mock) {
             $mock->shouldReceive('getTo')->andReturn(new Attribute('to', [
@@ -36,8 +35,7 @@ class ClearDuplicateEmailsTest extends TestCase
         $mockMessage->shouldHaveReceived('delete');
     }
 
-    /** @test */
-    public function it_does_not_delete_emails_where_the_cc_and_to_fields_dont_match(): void
+    public function test_it_does_not_delete_emails_where_the_cc_and_to_fields_dont_match(): void
     {
         $mockMessage = $this->mock(Message::class, function (MockInterface $mock) {
             $mock->shouldReceive('getTo')->andReturn(new Attribute('to', [
@@ -59,8 +57,7 @@ class ClearDuplicateEmailsTest extends TestCase
         $mockMessage->shouldNotHaveReceived('delete');
     }
 
-    /** @test */
-    public function it_still_finds_matching_recipients_if_there_are_multiple_other_recipients(): void
+    public function test_it_still_finds_matching_recipients_if_there_are_multiple_other_recipients(): void
     {
         $mockMessage = $this->mock(Message::class, function (MockInterface $mock) {
             $mock->shouldReceive('getTo')->andReturn(new Attribute('to', [
@@ -84,8 +81,7 @@ class ClearDuplicateEmailsTest extends TestCase
         $mockMessage->shouldHaveReceived('delete');
     }
 
-    /** @test */
-    public function it_does_not_delete_emails_where_the_cc_is_empty(): void
+    public function test_it_does_not_delete_emails_where_the_cc_is_empty(): void
     {
         $mockMessage = $this->mock(Message::class, function (MockInterface $mock) {
             $mock->shouldReceive('getTo')->andReturn(new Attribute('to', [

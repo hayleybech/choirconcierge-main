@@ -7,6 +7,7 @@ use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -16,10 +17,7 @@ class FolderControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function create_returns_an_ok_response(): void
+    public function test_create_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -30,10 +28,7 @@ class FolderControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_to_index(): void
+    public function test_destroy_redirects_to_index(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -45,10 +40,7 @@ class FolderControllerTest extends TestCase
         $this->assertSoftDeleted($folder);
     }
 
-    /**
-     * @test
-     */
-    public function index_returns_an_ok_response(): void
+    public function test_index_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -60,11 +52,8 @@ class FolderControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     * @dataProvider folderProvider
-     */
-    public function store_redirects_to_index($getData): void
+    #[DataProvider('folderProvider')]
+    public function test_store_redirects_to_index($getData): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -76,11 +65,8 @@ class FolderControllerTest extends TestCase
         $this->assertDatabaseHas('folders', $data);
     }
 
-    /**
-     * @test
-     * @dataProvider folderProvider
-     */
-    public function update_redirects_to_index($getData): void
+    #[DataProvider('folderProvider')]
+    public function test_update_redirects_to_index($getData): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 

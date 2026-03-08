@@ -17,8 +17,7 @@ class UserGroupTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function get_all_recipients_returns_directly_assigned_users(): void
+    public function test_get_all_recipients_returns_directly_assigned_users(): void
     {
         $group = UserGroup::factory()->create();
 
@@ -30,8 +29,7 @@ class UserGroupTest extends TestCase
         $this->assertCount(3, $group->get_all_recipients());
     }
 
-    /** @test */
-    public function get_all_recipients_returns_users_for_roles(): void
+    public function test_get_all_recipients_returns_users_for_roles(): void
     {
         $group = UserGroup::factory()->create();
 
@@ -45,8 +43,7 @@ class UserGroupTest extends TestCase
         $this->assertCount(6, $group->get_all_recipients());
     }
 
-    /** @test */
-    public function get_all_recipients_returns_users_for_voice_parts(): void
+    public function test_get_all_recipients_returns_users_for_voice_parts(): void
     {
         $group = UserGroup::factory()->create();
 
@@ -60,8 +57,7 @@ class UserGroupTest extends TestCase
         $this->assertCount(6, $group->get_all_recipients());
     }
 
-    /** @test */
-    public function get_all_recipients_returns_users_for_categories(): void
+    public function test_get_all_recipients_returns_users_for_categories(): void
     {
         $group = UserGroup::factory()->create();
 
@@ -75,8 +71,7 @@ class UserGroupTest extends TestCase
         $this->assertCount(6, $group->get_all_recipients());
     }
 
-    /** @test */
-    public function get_all_senders_returns_directly_assigned_users(): void
+    public function test_get_all_senders_returns_directly_assigned_users(): void
     {
         $group = UserGroup::factory()->create();
 
@@ -88,8 +83,7 @@ class UserGroupTest extends TestCase
         $this->assertCount(3, $group->get_all_senders());
     }
 
-    /** @test */
-    public function get_all_senders_returns_users_for_roles(): void
+    public function test_get_all_senders_returns_users_for_roles(): void
     {
         $group = UserGroup::factory()->create();
 
@@ -103,8 +97,7 @@ class UserGroupTest extends TestCase
         $this->assertCount(6, $group->get_all_senders());
     }
 
-    /** @test */
-    public function get_all_senders_returns_users_for_voice_parts(): void
+    public function test_get_all_senders_returns_users_for_voice_parts(): void
     {
         $group = UserGroup::factory()->create();
 
@@ -118,8 +111,7 @@ class UserGroupTest extends TestCase
         $this->assertCount(6, $group->get_all_senders());
     }
 
-    /** @test */
-    public function get_all_senders_returns_users_for_categories(): void
+    public function test_get_all_senders_returns_users_for_categories(): void
     {
         $group = UserGroup::factory()->create();
 
@@ -133,8 +125,7 @@ class UserGroupTest extends TestCase
         $this->assertCount(6, $group->get_all_senders());
     }
 
-    /** @test */
-    public function get_all_recipients_works_for_the_correct_tenant(): void
+    public function test_get_all_recipients_works_for_the_correct_tenant(): void
     {
         $group = UserGroup::factory()->create();
 
@@ -150,8 +141,7 @@ class UserGroupTest extends TestCase
         $this->assertCount(3, $group->get_all_recipients());
     }
 
-    /** @test */
-    public function get_all_senders_works_for_the_correct_tenant(): void
+    public function test_get_all_senders_works_for_the_correct_tenant(): void
     {
         $group = UserGroup::factory()->create();
 

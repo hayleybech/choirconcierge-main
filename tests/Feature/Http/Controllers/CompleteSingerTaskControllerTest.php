@@ -15,10 +15,7 @@ class CompleteSingerTaskControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
-    public function invoke_returns_an_ok_response(): void
+    public function test_invoke_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 

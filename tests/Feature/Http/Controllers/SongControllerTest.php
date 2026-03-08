@@ -15,6 +15,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -24,10 +25,7 @@ class SongControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function create_returns_an_ok_response(): void
+    public function test_create_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -41,10 +39,7 @@ class SongControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_to_index(): void
+    public function test_destroy_redirects_to_index(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -56,10 +51,7 @@ class SongControllerTest extends TestCase
         $this->assertSoftDeleted($song);
     }
 
-    /**
-     * @test
-     */
-    public function edit_returns_an_ok_response(): void
+    public function test_edit_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -76,10 +68,7 @@ class SongControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function index_returns_an_ok_response(): void
+    public function test_index_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -94,10 +83,7 @@ class SongControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function show_returns_an_ok_response(): void
+    public function test_show_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -114,8 +100,7 @@ class SongControllerTest extends TestCase
             );
     }
 
-    /** @test */
-    public function show_returns_the_learning_status_for_the_user(): void
+    public function test_show_returns_the_learning_status_for_the_user(): void
     {
         $song = Song::factory()->create();
         $user = User::factory()
@@ -137,8 +122,7 @@ class SongControllerTest extends TestCase
             );
     }
 
-    /** @test */
-    public function show_returns_the_learning_summary(): void
+    public function test_show_returns_the_learning_summary(): void
     {
         $song = Song::factory()->create();
         User::factory()
@@ -160,11 +144,8 @@ class SongControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     * @dataProvider songProvider
-     */
-    public function store_redirects_to_show($getData): void
+    #[DataProvider('songProvider')]
+    public function test_store_redirects_to_show($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Music Team'));
@@ -184,11 +165,8 @@ class SongControllerTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    /**
-     * @test
-     * @dataProvider songProvider
-     */
-    public function store_sends_notification($getData): void
+    #[DataProvider('songProvider')]
+    public function test_store_sends_notification($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Music Team'));
@@ -203,11 +181,8 @@ class SongControllerTest extends TestCase
         Notification::assertSentTo(auth()->user(), SongUploaded::class);
     }
 
-    /**
-     * @test
-     * @dataProvider songProvider
-     */
-    public function update_redirects_to_show($getData): void
+    #[DataProvider('songProvider')]
+    public function test_update_redirects_to_show($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Music Team'));
@@ -227,11 +202,8 @@ class SongControllerTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    /**
-     * @test
-     * @dataProvider songProvider
-     */
-    public function update_sends_notification($getData): void
+    #[DataProvider('songProvider')]
+    public function test_update_sends_notification($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Music Team'));

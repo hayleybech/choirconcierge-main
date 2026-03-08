@@ -14,8 +14,7 @@ class UpdateMyLearningStatusControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function a_singer_can_update_their_learning_status_for_a_song(): void
+    public function test_a_singer_can_update_their_learning_status_for_a_song(): void
     {
         $song = Song::factory()->create();
         $user = User::factory()
@@ -40,8 +39,7 @@ class UpdateMyLearningStatusControllerTest extends TestCase
             ->assertRedirect(the_tenant_route('songs.show', [$song]));
     }
 
-    /** @test */
-    public function a_singer_can_reset_their_learning_status_for_a_song(): void
+    public function test_a_singer_can_reset_their_learning_status_for_a_song(): void
     {
         $song = Song::factory()->create();
         $user = User::factory()

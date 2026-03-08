@@ -13,8 +13,7 @@ class LearningStatusControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function a_music_team_member_can_view_a_learning_report_for_a_song(): void
+    public function test_a_music_team_member_can_view_a_learning_report_for_a_song(): void
     {
         $song = Song::factory()->create();
         User::factory()
@@ -36,8 +35,7 @@ class LearningStatusControllerTest extends TestCase
             );
     }
 
-    /** @test */
-    public function a_music_team_member_can_update_the_learning_status_for_a_singer(): void
+    public function test_a_music_team_member_can_update_the_learning_status_for_a_singer(): void
     {
         $song = Song::factory()->create();
         $user = User::factory()

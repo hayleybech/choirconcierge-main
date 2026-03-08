@@ -16,10 +16,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function create_returns_an_ok_response(): void
+    public function test_create_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -33,10 +30,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_to_task(): void
+    public function test_destroy_redirects_to_task(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -53,10 +47,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
         $this->assertSoftDeleted($task->notification_templates->first());
     }
 
-    /**
-     * @test
-     */
-    public function edit_returns_an_ok_response(): void
+    public function test_edit_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -77,10 +68,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function show_returns_an_ok_response(): void
+    public function test_show_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -101,10 +89,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function store_redirects_to_show(): void
+    public function tests_store_redirects_to_show(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -131,10 +116,7 @@ class TaskNotificationTemplateControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('tasks.notifications.show', [$task, $notification_template]));
     }
 
-    /**
-     * @test
-     */
-    public function update_redirects_to_show(): void
+    public function test_update_redirects_to_show(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 

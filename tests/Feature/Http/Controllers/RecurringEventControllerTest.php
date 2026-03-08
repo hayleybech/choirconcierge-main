@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Notification;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -29,10 +30,7 @@ class RecurringEventControllerTest extends TestCase
         $this->markTestSkipped();
     }
 
-    /**
-     * @test
-     */
-    public function destroy_for_single_deletes_one(): void
+    public function test_destroy_for_single_deletes_one(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -59,10 +57,7 @@ class RecurringEventControllerTest extends TestCase
         self::assertEquals($first_child->id, $first_child->repeat_parent_id);
     }
 
-    /**
-     * @test
-     */
-    public function destroy_for_all_deletes_all(): void
+    public function test_destroy_for_all_deletes_all(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -84,10 +79,7 @@ class RecurringEventControllerTest extends TestCase
         $this->assertSoftDeleted($last_child);
     }
 
-    /**
-     * @test
-     */
-    public function destroy_for_following_deletes_some(): void
+    public function test_destroy_for_following_deletes_some(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -118,11 +110,8 @@ class RecurringEventControllerTest extends TestCase
         self::assertEquals($prev_sibling->call_time, $parent->repeat_until);
     }
 
-    /**
-     * @test
-     * @dataProvider modeProvider
-     */
-    public function edit_redirects_to_correct_edit_page($mode): void
+    #[DataProvider('modeProvider')]
+    public function test_edit_redirects_to_correct_edit_page($mode): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -141,11 +130,8 @@ class RecurringEventControllerTest extends TestCase
         $response->assertRedirect($edit_urls[$mode]);
     }
 
-    /**
-     * @test
-     * @dataProvider eventProvider
-     */
-    public function update_for_single_updates_one($getData): void
+    #[DataProvider('eventProvider')]
+    public function test_update_for_single_updates_one($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
@@ -177,11 +163,8 @@ class RecurringEventControllerTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    /**
-     * @test
-     * @dataProvider repeatingEventProvider
-     */
-    public function update_for_all_updates_all($getData): void
+    #[DataProvider('repeatingEventProvider')]
+    public function test_update_for_all_updates_all($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
@@ -222,12 +205,9 @@ class RecurringEventControllerTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    /**
-     * @test
-     * @dataProvider repeatingEventProvider
-     * @todo Soft delete???
-     */
-    public function update_for_all_regenerates_all_when_dirty($getData): void
+    /** @todo Soft delete??? */
+    #[DataProvider('repeatingEventProvider')]
+    public function test_update_for_all_regenerates_all_when_dirty($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
@@ -260,11 +240,8 @@ class RecurringEventControllerTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    /**
-     * @test
-     * @dataProvider repeatingEventProvider
-     */
-    public function update_for_following_updates_some($getData): void
+    #[DataProvider('repeatingEventProvider')]
+    public function test_update_for_following_updates_some($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
@@ -325,11 +302,8 @@ class RecurringEventControllerTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    /**
-     * @test
-     * @dataProvider repeatingEventProvider
-     */
-    public function update_for_following_regenerates_some_when_dirty($getData): void
+    #[DataProvider('repeatingEventProvider')]
+    public function test_update_for_following_regenerates_some_when_dirty($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));

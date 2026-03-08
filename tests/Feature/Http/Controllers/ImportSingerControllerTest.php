@@ -19,8 +19,7 @@ class ImportSingerControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function concierge_import_creates_users(): void
+    public function test_concierge_import_creates_users(): void
     {
         $file = new UploadedFile(
             base_path('tests/files/concierge-singers.csv'),
@@ -75,8 +74,7 @@ class ImportSingerControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function groupanizer_import_creates_users(): void
+    public function test_groupanizer_import_creates_users(): void
     {
         $file = new UploadedFile(
             base_path('tests/files/groupanizer-singers.csv'),
@@ -131,14 +129,12 @@ class ImportSingerControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function groupanizer_import_updates_existing_users(): void
+    public function test_groupanizer_import_updates_existing_users(): void
     {
         $this->markTestIncomplete();
     }
 
-    /** @test */
-    public function harmonysite_import_creates_users(): void
+    public function test_harmonysite_import_creates_users(): void
     {
         $file = new UploadedFile(
             base_path('tests/files/harmonysite-singers.csv'),
@@ -183,20 +179,17 @@ class ImportSingerControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function harmonysite_import_assigns_roles_to_singers(): void
+    public function test_harmonysite_import_assigns_roles_to_singers(): void
     {
         $this->markTestIncomplete();
     }
 
-    /** @test */
-    public function harmonysite_import_updates_existing_users(): void
+    public function test_harmonysite_import_updates_existing_users(): void
     {
         $this->markTestIncomplete();
     }
 
-    /** @test */
-    public function blank_choirconcierge_template_returns_validation_error(): void
+    public function test_blank_choirconcierge_template_returns_validation_error(): void
     {
         $this->actingAs(
             $this->createUserWithRole('Admin')
@@ -228,8 +221,7 @@ class ImportSingerControllerTest extends TestCase
         fclose($tmp);
     }
 
-    /** @test */
-    public function import_preview_returns_sample_data(): void
+    public function test_import_preview_returns_sample_data(): void
     {
         $file = new UploadedFile(
             base_path('tests/files/harmonysite-singers.csv'),

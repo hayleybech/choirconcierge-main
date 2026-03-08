@@ -15,10 +15,7 @@ class UpdateSingerCategoryControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
-    public function invoke_redirects_to_index(): void
+    public function test_invoke_redirects_to_index(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 

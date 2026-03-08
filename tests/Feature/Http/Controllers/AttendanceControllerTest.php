@@ -16,10 +16,7 @@ class AttendanceControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function index_returns_an_ok_response(): void
+    public function test_index_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -33,10 +30,7 @@ class AttendanceControllerTest extends TestCase
                 ->has('voice_parts'));
     }
 
-    /**
-     * @test
-     */
-    public function update_all_redirects_to_event(): void
+    public function test_update_all_redirects_to_event(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 

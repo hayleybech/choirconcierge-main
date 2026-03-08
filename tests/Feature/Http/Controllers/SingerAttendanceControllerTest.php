@@ -11,10 +11,7 @@ use Tests\TestCase;
 
 class SingerAttendanceControllerTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function it_returns_an_ok_response(): void
+    public function test_it_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
@@ -36,10 +33,7 @@ class SingerAttendanceControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function it_can_filter_by_event_type(): void
+    public function test_it_can_filter_by_event_type(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 

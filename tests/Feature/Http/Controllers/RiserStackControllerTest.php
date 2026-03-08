@@ -7,6 +7,7 @@ use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -16,10 +17,7 @@ class RiserStackControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function create_returns_an_ok_response(): void
+    public function test_create_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -31,10 +29,7 @@ class RiserStackControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_to_index(): void
+    public function test_destroy_redirects_to_index(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -46,10 +41,7 @@ class RiserStackControllerTest extends TestCase
         $this->assertSoftDeleted($stack);
     }
 
-    /**
-     * @test
-     */
-    public function edit_returns_an_ok_response(): void
+    public function test_edit_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -64,10 +56,7 @@ class RiserStackControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function index_returns_an_ok_response(): void
+    public function test_index_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -79,10 +68,7 @@ class RiserStackControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function show_returns_an_ok_response(): void
+    public function test_show_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -96,11 +82,8 @@ class RiserStackControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     * @dataProvider stackProvider
-     */
-    public function store_redirects_to_show($getData): void
+    #[DataProvider('stackProvider')]
+    public function test_store_redirects_to_show($getData): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -125,11 +108,8 @@ class RiserStackControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('stacks.show', [$stack]));
     }
 
-    /**
-     * @test
-     * @dataProvider stackProvider
-     */
-    public function update_redirects_to_show($getData): void
+    #[DataProvider('stackProvider')]
+    public function test_update_redirects_to_show($getData): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 

@@ -7,6 +7,7 @@ use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -16,10 +17,7 @@ class VoicePartControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function create_returns_an_ok_response(): void
+    public function test_create_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -30,10 +28,7 @@ class VoicePartControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_to_index(): void
+    public function test_destroy_redirects_to_index(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -45,10 +40,7 @@ class VoicePartControllerTest extends TestCase
         $this->assertSoftDeleted($voice_part);
     }
 
-    /**
-     * @test
-     */
-    public function edit_returns_an_ok_response(): void
+    public function test_edit_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -62,10 +54,7 @@ class VoicePartControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function index_returns_an_ok_response(): void
+    public function test_index_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -77,11 +66,8 @@ class VoicePartControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     * @dataProvider voicePartProvider
-     */
-    public function store_redirects_to_show($getData): void
+    #[DataProvider('voicePartProvider')]
+    public function test_store_redirects_to_show($getData): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -94,11 +80,8 @@ class VoicePartControllerTest extends TestCase
         $this->assertDatabaseHas('voice_parts', $data);
     }
 
-    /**
-     * @test
-     * @dataProvider voicePartProvider
-     */
-    public function update_redirects_to_show($getData): void
+    #[DataProvider('voicePartProvider')]
+    public function test_update_redirects_to_show($getData): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 

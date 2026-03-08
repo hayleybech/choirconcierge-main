@@ -12,10 +12,7 @@ use Inertia\Testing\AssertableInertia;
 
 class SingerAttendancePermissionsTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function a_singer_can_view_their_own_attendance_page(): void
+    public function test_a_singer_can_view_their_own_attendance_page(): void
     {
         $singer = Membership::factory()->create();
         $this->actingAs($singer->user);
@@ -24,10 +21,7 @@ class SingerAttendancePermissionsTest extends TestCase
             ->assertOk();
     }
 
-    /**
-     * @test
-     */
-    public function a_user_with_attendance_view_ability_can_view_any_singers_attendance_page(): void
+    public function test_a_user_with_attendance_view_ability_can_view_any_singers_attendance_page(): void
     {
         $role = Role::factory()->create([
             'name' => 'Attendance Manager',
@@ -44,10 +38,7 @@ class SingerAttendancePermissionsTest extends TestCase
             ->assertOk();
     }
 
-    /**
-     * @test
-     */
-    public function an_admin_can_view_any_singers_attendance_page(): void
+    public function test_an_admin_can_view_any_singers_attendance_page(): void
     {
         $admin = $this->createUserWithRole('Admin');
         $singer = Membership::factory()->create();
@@ -58,10 +49,7 @@ class SingerAttendancePermissionsTest extends TestCase
             ->assertOk();
     }
 
-    /**
-     * @test
-     */
-    public function a_user_cannot_view_another_singers_attendance_page(): void
+    public function test_a_user_cannot_view_another_singers_attendance_page(): void
     {
         $user1 = Membership::factory()->create();
         $user2 = Membership::factory()->create();
@@ -72,10 +60,7 @@ class SingerAttendancePermissionsTest extends TestCase
             ->assertForbidden();
     }
 
-    /**
-     * @test
-     */
-    public function the_view_attendance_flag_is_passed_to_the_singer_profile_page(): void
+    public function test_the_view_attendance_flag_is_passed_to_the_singer_profile_page(): void
     {
         $category = SingerCategory::where('name', 'Members')->firstOrCreate();
         $user1 = Membership::factory()->create(['singer_category_id' => $category->id]);

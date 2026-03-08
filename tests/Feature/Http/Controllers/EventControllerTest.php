@@ -14,6 +14,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Testing\AssertableInertia;
 use Notification;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -23,10 +24,7 @@ class EventControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function create_returns_an_ok_response(): void
+    public function test_create_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -38,10 +36,7 @@ class EventControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_to_index(): void
+    public function test_destroy_redirects_to_index(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -53,10 +48,7 @@ class EventControllerTest extends TestCase
         $this->assertSoftDeleted($event);
     }
 
-    /**
-     * @test
-     */
-    public function edit_returns_an_ok_response(): void
+    public function test_edit_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -71,10 +63,7 @@ class EventControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function index_returns_an_ok_response(): void
+    public function test_index_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -87,10 +76,7 @@ class EventControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     */
-    public function show_returns_an_ok_response(): void
+    public function test_show_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -109,8 +95,7 @@ class EventControllerTest extends TestCase
             );
     }
 
-    /** @test */
-    public function it_shows_the_oldest_rsvp_for_an_event(): void
+    public function test_it_shows_the_oldest_rsvp_for_an_event(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -146,11 +131,8 @@ class EventControllerTest extends TestCase
             );
     }
 
-    /**
-     * @test
-     * @dataProvider eventProvider
-     */
-    public function store_redirects_to_show($getData): void
+    #[DataProvider('eventProvider')]
+    public function test_store_redirects_to_show($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
@@ -166,11 +148,8 @@ class EventControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('events.show', [$event]));
     }
 
-    /**
-     * @test
-     * @dataProvider eventProvider
-     */
-    public function store_sends_notification($getData): void
+    #[DataProvider('eventProvider')]
+    public function test_store_sends_notification($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
@@ -187,11 +166,10 @@ class EventControllerTest extends TestCase
     }
 
     /**
-     * @test
-     * @dataProvider eventProvider
      * @todo simplify data setup
      */
-    public function store_creates_repeat_children($getData): void
+    #[DataProvider('eventProvider')]
+    public function test_store_creates_repeat_children($getData): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -272,11 +250,8 @@ class EventControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('events.show', [$event]));
     }
 
-    /**
-     * @test
-     * @dataProvider eventProvider
-     */
-    public function update_redirects_to_show($getData): void
+    #[DataProvider('eventProvider')]
+    public function test_update_redirects_to_show($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
@@ -292,11 +267,8 @@ class EventControllerTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    /**
-     * @test
-     * @dataProvider eventProvider
-     */
-    public function update_sends_notification($getData): void
+    #[DataProvider('eventProvider')]
+    public function test_update_sends_notification($getData): void
     {
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Events Team'));
@@ -312,17 +284,17 @@ class EventControllerTest extends TestCase
         Notification::assertSentTo(auth()->user(), EventUpdated::class);
     }
 
-    public function update_single_doesnt_change_children(): void
+    public function test_update_single_doesnt_change_children(): void
     {
         self::markTestIncomplete('WIP');
     }
 
-    public function update_all_changes_childrens(): void
+    public function test_update_all_changes_childrens(): void
     {
         self::markTestIncomplete('WIP');
     }
 
-    public function update_following_changes_children(): void
+    public function test_update_following_changes_children(): void
     {
         self::markTestIncomplete('WIP');
     }

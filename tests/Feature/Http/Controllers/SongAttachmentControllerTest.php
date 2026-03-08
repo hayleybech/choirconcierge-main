@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Storage;
 use Tests\TestCase;
 
@@ -19,10 +20,7 @@ class SongAttachmentControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    /**
-     * @test
-     */
-    public function destroy_redirects_to_song(): void
+    public function test_destroy_redirects_to_song(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -40,10 +38,7 @@ class SongAttachmentControllerTest extends TestCase
         Storage::disk('tenant')->assertMissing($attachment->getPath());
     }
 
-    /**
-     * @test
-     */
-    public function show_returns_file(): void
+    public function test_show_returns_file(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -63,11 +58,8 @@ class SongAttachmentControllerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * @dataProvider attachmentProvider
-     */
-    public function store_redirects_to_song($getData): void
+    #[DataProvider('attachmentProvider')]
+    public function test_store_redirects_to_song($getData): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 
@@ -87,8 +79,7 @@ class SongAttachmentControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('songs.show', [$song]));
     }
 
-    /** @test */
-    public function update_renames_the_file(): void
+    public function test_update_renames_the_file(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
 

@@ -24,8 +24,7 @@ class IncomingMessageTest extends TestCase
 
     protected bool $tenancy = false;
 
-    /** @test */
-    public function resendToGroups_with_one_group_resends_to_sender(): void
+    public function test_resendToGroups_with_one_group_resends_to_sender(): void
     {
         // Arrange
         Mail::fake();
@@ -71,8 +70,7 @@ class IncomingMessageTest extends TestCase
         });
     }
 
-    /** @test */
-    public function resendToGroups_sends_rejection_email_when_not_permitted(): void
+    public function test_resendToGroups_sends_rejection_email_when_not_permitted(): void
     {
         // Arrange
         Mail::fake();
@@ -112,8 +110,7 @@ class IncomingMessageTest extends TestCase
         });
     }
 
-    /** @test */
-    public function resendToGroups_with_one_group_resends_to_group_members(): void
+    public function test_resendToGroups_with_one_group_resends_to_group_members(): void
     {
         // Arrange
         Mail::fake();
@@ -166,8 +163,7 @@ class IncomingMessageTest extends TestCase
         });
     }
 
-    /** @test */
-    public function resendToGroups_with_multiple_groups_from_same_tenant(): void
+    public function test_resendToGroups_with_multiple_groups_from_same_tenant(): void
     {
         // Arrange
         Mail::fake();
@@ -232,8 +228,7 @@ class IncomingMessageTest extends TestCase
         });
     }
 
-    /** @test */
-    public function resendToGroups_with_multiple_groups_from_any_tenant(): void
+    public function test_resendToGroups_with_multiple_groups_from_any_tenant(): void
     {
         // Arrange
         Mail::fake();
@@ -303,8 +298,7 @@ class IncomingMessageTest extends TestCase
         });
     }
 
-    /** @test */
-    public function getMatchingGroups_matches_one_group(): void
+    public function test_getMatchingGroups_matches_one_group(): void
     {
         // Arrange
         $this->createTestTenants()[0]
@@ -335,8 +329,7 @@ class IncomingMessageTest extends TestCase
         self::assertCount(1, $groups_found);
     }
 
-    /** @test */
-    public function getMatchingGroups_matches_groups_from_the_same_tenant(): void
+    public function test_getMatchingGroups_matches_groups_from_the_same_tenant(): void
     {
         // Arrange
         $this->createTestTenants()[0]
@@ -372,8 +365,7 @@ class IncomingMessageTest extends TestCase
         self::assertCount(2, $groups_found);
     }
 
-    /** @test */
-    public function getMatchingGroups_matches_groups_in_any_recipient_field(): void
+    public function test_getMatchingGroups_matches_groups_in_any_recipient_field(): void
     {
         // Arrange
         $this->createTestTenants()[0]
@@ -416,8 +408,7 @@ class IncomingMessageTest extends TestCase
         self::assertCount(3, $groups_found);
     }
 
-    /** @test */
-    public function getMatchingGroups_matches_groups_in_any_position_in_the_recipient_field(): void
+    public function test_getMatchingGroups_matches_groups_in_any_position_in_the_recipient_field(): void
     {
         // Arrange
         $this->createTestTenants()[0]
@@ -460,8 +451,7 @@ class IncomingMessageTest extends TestCase
         self::assertCount(3, $groups_found);
     }
 
-    /** @test */
-    public function getMatchingGroups_matches_groups_from_any_tenant(): void
+    public function test_getMatchingGroups_matches_groups_from_any_tenant(): void
     {
         // Arrange
         list($tenant_1, $tenant_2) = $this->createTestTenants(2);
@@ -500,8 +490,7 @@ class IncomingMessageTest extends TestCase
         self::assertCount(2, $groups_found);
     }
 
-    /** @test */
-    public function getMatchingGroups_only_returns_exact_matches(): void
+    public function test_getMatchingGroups_only_returns_exact_matches(): void
     {
         // Arrange
         $this->createTestTenants()[0]
@@ -532,8 +521,7 @@ class IncomingMessageTest extends TestCase
         self::assertCount(0, $groups_found);
     }
 
-    /** @test */
-    public function getMatchingGroups_checks_the_tenant_slug_before_matching(): void
+    public function test_getMatchingGroups_checks_the_tenant_slug_before_matching(): void
     {
         // Arrange
         $this->createTestTenants()[0]
@@ -569,8 +557,7 @@ class IncomingMessageTest extends TestCase
         self::assertCount(1, $groups_found);
     }
 
-    /** @test */
-    public function getMatchingGroups_rejects_groups_that_are_in_both_the_cc_and_from(): void
+    public function test_getMatchingGroups_rejects_groups_that_are_in_both_the_cc_and_from(): void
     {
         // Arrange
         $this->createTestTenants()[0]
@@ -602,8 +589,7 @@ class IncomingMessageTest extends TestCase
         self::assertCount(0, $groups_found);
     }
 
-    /** @test */
-    public function getGroupByEmail_skips_special_emails(): void
+    public function test_getGroupByEmail_skips_special_emails(): void
     {
         $message = (new IncomingMessage())
             ->to('undisclosed-recipients:;')

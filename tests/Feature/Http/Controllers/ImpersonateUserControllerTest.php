@@ -15,10 +15,7 @@ class ImpersonateUserControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
-    public function start_authenticates_as_target(): void
+    public function test_start_authenticates_as_target(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
@@ -30,10 +27,7 @@ class ImpersonateUserControllerTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
-    /**
-     * @test
-     */
-    public function stop_authenticates_as_original(): void
+    public function test_stop_authenticates_as_original(): void
     {
         // Start
         $user1 = $this->createUserWithRole('Admin');

@@ -19,8 +19,7 @@ class ProcessGroupMailboxTest extends TestCase
 
     protected bool $tenancy = false;
 
-	/** @test */
-	public function handle_resends_a_messages(): void
+	public function test_handle_resends_a_messages(): void
 	{
         $this->markTestIncomplete();
 
