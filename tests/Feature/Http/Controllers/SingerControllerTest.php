@@ -9,6 +9,7 @@ use App\Models\Membership;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\VoicePart;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
@@ -363,26 +364,26 @@ class SingerControllerTest extends TestCase
 		]);
 	}
 
-    public function singerProvider(): array
+    public static function singerProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
                     $password = Str::random(8);
 
                     return [
                         // Member
                         'onboarding_enabled' => false,
                         'onboarding_disabled' => true,
-                        'reason_for_joining' => $this->faker->sentence(),
-                        'referrer' => $this->faker->sentence(),
-                        'membership_details' => $this->faker->sentence(),
+                        'reason_for_joining' => $faker->sentence(),
+                        'referrer' => $faker->sentence(),
+                        'membership_details' => $faker->sentence(),
 
                         // User
-                        'first_name' => $this->faker->firstName(),
-                        'last_name' => $this->faker->lastName(),
-                        'email' => $this->faker->email(),
+                        'first_name' => $faker->firstName(),
+                        'last_name' => $faker->lastName(),
+                        'email' => $faker->email(),
                         'password' => $password,
                         'password_confirmation' => $password,
                     ];

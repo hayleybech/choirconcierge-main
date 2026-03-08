@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\Task;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
@@ -95,15 +96,15 @@ class TaskControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('tasks.show', $task));
     }
 
-    public function eventProvider(): array
+    public static function eventProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     return [
-                        'name' => $this->faker->sentence(3),
+                        'name' => $faker->sentence(3),
                         'role_id' => Role::where('name', 'Music Team')->value('id'),
                         'type' => 'manual',
                         'route' => 'task.complete',

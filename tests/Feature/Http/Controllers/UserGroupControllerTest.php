@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\UserGroup;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -135,17 +136,17 @@ class UserGroupControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('groups.show', [$group]));
     }
 
-    public function eventProvider(): array
+    public static function eventProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     return [
-                        'title' => $this->faker->sentence(),
-                        'slug' => $this->faker->unique()->slug(),
-                        'list_type' => $this->faker->randomElement(['public', 'chat', 'distribution']),
+                        'title' => $faker->sentence(),
+                        'slug' => $faker->unique()->slug(),
+                        'list_type' => $faker->randomElement(['public', 'chat', 'distribution']),
                     ];
                 },
             ],

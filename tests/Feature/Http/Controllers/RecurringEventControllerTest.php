@@ -376,7 +376,7 @@ class RecurringEventControllerTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    public function modeProvider(): array
+    public static function modeProvider(): array
     {
         return [
             'single' => ['single'],
@@ -385,7 +385,7 @@ class RecurringEventControllerTest extends TestCase
         ];
     }
 
-    public function eventProvider(): array
+    public static function eventProvider(): array
     {
         return [
             'randomised' => [
@@ -426,7 +426,7 @@ class RecurringEventControllerTest extends TestCase
         ];
     }
 
-    public function repeatingEventProvider(): array
+    public static function repeatingEventProvider(): array
     {
         return [
             [

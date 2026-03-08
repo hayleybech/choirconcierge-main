@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Role;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -132,16 +133,16 @@ class RoleControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('roles.show', $role));
     }
 
-    public function roleProvider(): array
+    public static function roleProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     return [
-                        'name' => $this->faker->sentence(3),
-                        'abilities' => $this->faker->randomElements(Role::ALL_ABILITIES, 20),
+                        'name' => $faker->sentence(3),
+                        'abilities' => $faker->randomElements(Role::ALL_ABILITIES, 20),
                     ];
                 },
             ],

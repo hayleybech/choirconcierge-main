@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\RiserStack;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -153,19 +154,19 @@ class RiserStackControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('stacks.show', [$stack]));
     }
 
-    public function stackProvider(): array
+    public static function stackProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     return [
-                        'title' => $this->faker->sentence(),
-                        'rows' => $this->faker->numberBetween(2, 5),
-                        'columns' => $this->faker->numberBetween(1, 8),
-                        'front_row_length' => $this->faker->numberBetween(1, 10),
-                        'front_row_on_floor' => $this->faker->boolean(),
+                        'title' => $faker->sentence(),
+                        'rows' => $faker->numberBetween(2, 5),
+                        'columns' => $faker->numberBetween(1, 8),
+                        'front_row_length' => $faker->numberBetween(1, 10),
+                        'front_row_on_floor' => $faker->boolean(),
                         'singer_positions' => [
                             [
                                 'id' => 0,

@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Placement;
 use App\Models\Membership;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -92,20 +93,20 @@ class SingerPlacementControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('singers.show', $singer));
     }
 
-    public function placementProvider(): array
+    public static function placementProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     return [
-                        'experience' => $this->faker->sentence(),
-                        'instruments' => $this->faker->sentence(),
-                        'skill_pitch' => $this->faker->numberBetween(1, 5),
-                        'skill_harmony' => $this->faker->numberBetween(1, 5),
-                        'skill_performance' => $this->faker->numberBetween(1, 5),
-                        'skill_sightreading' => $this->faker->numberBetween(1, 5),
+                        'experience' => $faker->sentence(),
+                        'instruments' => $faker->sentence(),
+                        'skill_pitch' => $faker->numberBetween(1, 5),
+                        'skill_harmony' => $faker->numberBetween(1, 5),
+                        'skill_performance' => $faker->numberBetween(1, 5),
+                        'skill_sightreading' => $faker->numberBetween(1, 5),
                     ];
                 },
             ],

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\VoicePart;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -111,16 +112,16 @@ class VoicePartControllerTest extends TestCase
         $this->assertDatabaseHas('voice_parts', $data);
     }
 
-    public function voicePartProvider(): array
+    public static function voicePartProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     return [
-                        'title' => $this->faker->word(),
-                        'colour' => $this->faker->hexColor(),
+                        'title' => $faker->word(),
+                        'colour' => $faker->hexColor(),
                     ];
                 },
             ],

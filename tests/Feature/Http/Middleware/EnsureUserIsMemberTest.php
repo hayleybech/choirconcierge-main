@@ -10,7 +10,7 @@ use function Pest\Laravel\get;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
-test('archived users cannot view site', function($category) {
+test('archived users cannot view site', function(string $category) {
     $archived = SingerCategory::where('name', $category)->first();
 
     $user = User::factory()->has(Membership::factory())->create();

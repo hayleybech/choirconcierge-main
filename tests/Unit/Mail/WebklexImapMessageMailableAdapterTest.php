@@ -132,7 +132,7 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
         });
     }
 
-    public function recipientProvider()
+    public static function recipientProvider()
     {
         return [
             'single to' => [

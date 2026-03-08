@@ -8,6 +8,7 @@ use App\Models\Rsvp;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
 use Carbon\Carbon;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
@@ -196,9 +197,11 @@ class EventControllerTest extends TestCase
 
         $date_format = 'Y-m-d H:i:s';
 
+        $faker = Factory::create();
+
         ['request' => $request_data, 'saved' => $saved_data] = $getData();
-        $total_repeats = $this->faker->numberBetween(2, 20);
-        $repeat_unit = $this->faker->randomElement(['days', 'weeks', 'months']);
+        $total_repeats = $faker->numberBetween(2, 20);
+        $repeat_unit = $faker->randomElement(['days', 'weeks', 'months']);
         $request_data = array_merge($request_data, [
             'is_repeating' => true,
             'repeat_frequency_unit' => $repeat_unit,
@@ -324,26 +327,26 @@ class EventControllerTest extends TestCase
         self::markTestIncomplete('WIP');
     }
 
-    public function eventProvider(): array
+    public static function eventProvider(): array
     {
         return [
             'randomised' => [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     $date_format = 'Y-m-d H:i:s';
-                    $call_time = Carbon::instance($this->faker->dateTimeBetween('now', '+1 year'));
+                    $call_time = Carbon::instance($faker->dateTimeBetween('now', '+1 year'));
                     $start_time = (clone $call_time)->addHour();
                     $end_time = (clone $start_time)->addHours(2);
 
                     $request_data = [
-                        'title' => $this->faker->sentence(6, true),
+                        'title' => $faker->sentence(6, true),
                         'call_time' => $call_time->format($date_format),
                         'start_date' => $start_time->format($date_format),
                         'end_date' => $end_time->format($date_format),
-                        'location_name' => $this->faker->sentence(3, true),
-                        'location_address' => $this->faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
-                        'description' => $this->faker->optional()->sentence(),
+                        'location_name' => $faker->sentence(3, true),
+                        'location_address' => $faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
+                        'description' => $faker->optional()->sentence(),
                         'type_id' => EventType::where('title', 'Rehearsal')->value('id'),
                     ];
 
@@ -365,29 +368,29 @@ class EventControllerTest extends TestCase
         ];
     }
 
-    public function repeatingEventProvider(): array
+    public static function repeatingEventProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     $date_format = 'Y-m-d H:i:s';
-                    $call_time = Carbon::instance($this->faker->dateTimeBetween('now', '+1 year'));
+                    $call_time = Carbon::instance($faker->dateTimeBetween('now', '+1 year'));
                     $start_time = (clone $call_time)->addHour();
                     $end_time = (clone $start_time)->addHours(2);
 
-                    $total_repeats = $this->faker->numberBetween(4, 20);
-                    $repeat_unit = $this->faker->randomElement(['days', 'weeks', 'months']);
+                    $total_repeats = $faker->numberBetween(4, 20);
+                    $repeat_unit = $faker->randomElement(['days', 'weeks', 'months']);
 
                     $request_data = [
-                        'title' => $this->faker->sentence(6, true),
+                        'title' => $faker->sentence(6, true),
                         'call_time' => $call_time->format($date_format),
                         'start_date' => $start_time->format($date_format),
                         'end_date' => $end_time->format($date_format),
-                        'location_name' => $this->faker->sentence(3, true),
-                        'location_address' => $this->faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
-                        'description' => $this->faker->optional()->sentence(),
+                        'location_name' => $faker->sentence(3, true),
+                        'location_address' => $faker->address(), // @todo Use random REAL address for map testing (https://github.com/nonsapiens/addressfactory)
+                        'description' => $faker->optional()->sentence(),
                         'type_id' => EventType::where('title', 'Rehearsal')->value('id'),
 
                         'is_repeating' => true,

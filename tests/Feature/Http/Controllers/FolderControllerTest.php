@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Folder;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -93,15 +94,15 @@ class FolderControllerTest extends TestCase
         $this->assertDatabaseHas('folders', $data);
     }
 
-    public function folderProvider(): array
+    public static function folderProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     return [
-                        'title' => $this->faker->sentence(),
+                        'title' => $faker->sentence(),
                     ];
                 },
             ],

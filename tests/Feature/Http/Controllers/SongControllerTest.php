@@ -10,6 +10,7 @@ use App\Models\SongStatus;
 use App\Models\User;
 use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Notification;
@@ -246,16 +247,16 @@ class SongControllerTest extends TestCase
         Notification::assertSentTo(auth()->user(), SongUpdated::class);
     }
 
-    public function songProvider(): array
+    public static function songProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     return [
-                        'title' => $this->faker->sentence(6, true),
-                        'pitch_blown' => $this->faker->numberBetween(0, count(Song::getAllPitches())),
+                        'title' => $faker->sentence(6, true),
+                        'pitch_blown' => $faker->numberBetween(0, count(Song::getAllPitches())),
                         'status' => SongStatus::where('title', 'Active')->value('id'),
                         'categories' => [SongCategory::where('title', 'General')->value('id')],
                     ];

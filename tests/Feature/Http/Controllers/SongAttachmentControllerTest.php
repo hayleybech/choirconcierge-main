@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Song;
 use App\Models\SongAttachment;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -117,16 +118,16 @@ class SongAttachmentControllerTest extends TestCase
             );
     }
 
-    public function attachmentProvider(): array
+    public static function attachmentProvider(): array
     {
         return [
             [
                 function () {
-                    $this->setUpFaker();
+                    $faker = Factory::create();
 
                     return [
                         'attachment_uploads' => [UploadedFile::fake()->create('random.mp3')],
-                        'type' => $this->faker->randomElement(['sheet-music', 'learning-tracks', 'full-mix-demo']),
+                        'type' => $faker->randomElement(['sheet-music', 'learning-tracks', 'full-mix-demo']),
                     ];
                 },
             ],
