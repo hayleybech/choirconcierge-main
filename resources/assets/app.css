@@ -26,3 +26,8 @@ body,
     margin: 0 auto;
 }
 
+/* React-Day-Picker */
+.DayPicker-Day {
+    height: 40px;
+    width: 40px;
+}
