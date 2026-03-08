@@ -5,7 +5,7 @@ import React from 'react';
 import { usePage } from '@inertiajs/react';
 
 export const SingerAttendanceSummary = ({ attendanceSummary }) => {
-			const { user: authUser } = usePage().props;
+			const { user: authUser, tenant } = usePage().props;
 
 			return (
 				<div className="py-4 px-4 lg:px-8">
@@ -17,7 +17,7 @@ export const SingerAttendanceSummary = ({ attendanceSummary }) => {
 									<ButtonLink
 										variant="secondary"
 										size="xs"
-										href={route('singers.attendance', { singer: authUser.membership })}
+										href={route('singers.attendance', { singer: authUser.membership, tenant: tenant })}
 										className="shrink-0"
 									>
 										<Icon icon="list" style={{ lineHeight: '1rem' }} />

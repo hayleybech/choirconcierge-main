@@ -45,7 +45,7 @@ const UpcomingEventsWidget = ({ events, eventCategories, rsvpSummary }) => {
 						)}
 						<Button
 							href={
-								route('events.index') +
+								route('events.index', {tenant}) +
 								'?filter[date]=upcoming&' +
 								tenant.widgets_upcoming_events_categories?.length > 0
 									? tenant.widgets_upcoming_events_categories
