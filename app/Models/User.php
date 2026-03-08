@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Mailgun\Mailgun;
 use Sentry;
-use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -244,11 +243,11 @@ class User extends Authenticatable implements HasMedia
                 $this->addMediaConversion('thumb')
                     ->width(50)
                     ->height(50)
-                    ->crop(Manipulations::CROP_CENTER, 50, 50);
+                    ->crop(50, 50);
                 $this->addMediaConversion('profile')
                     ->width(200)
                     ->height(200)
-                    ->crop(Manipulations::CROP_CENTER, 200, 200);
+                    ->crop(200, 200);
             });
     }
 
