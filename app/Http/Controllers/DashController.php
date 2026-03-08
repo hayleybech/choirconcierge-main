@@ -30,8 +30,8 @@ class DashController extends Controller
             'emptyDobs' => $this->getEmptyDobs(),
             'memberversaries' => $this->getMemberversaries()->values(),
 	        'feeStatus' => auth()->user()->membership?->fee_status,
-            'attendanceSummary' => $this->getAttendanceSummary(auth()?->user()?->membership),
-            'rsvpSummary' => $this->getRsvpSummary(auth()?->user()?->membership),
+            'attendanceSummary' => auth()?->user()?->membership ? $this->getAttendanceSummary(auth()?->user()?->membership) : null,
+            'rsvpSummary' => auth()?->user()?->membership ? $this->getRsvpSummary(auth()?->user()?->membership) : null,
             'performanceTypeId' => EventType::where('title', 'Performance')->first()?->id,
         ]);
     }
