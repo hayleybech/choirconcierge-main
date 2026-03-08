@@ -23,11 +23,11 @@ export const AudioSeekBar = ({ className }) => {
         (event) => {
             const { pageX: eventOffsetX } = event;
 
-            if (seekBarElem.current) {
+            if (seekBarElem.current && playing) {
                 const elementOffsetX = seekBarElem.current.getBoundingClientRect().left;
                 const elementWidth = seekBarElem.current.clientWidth;
                 const percent = ((eventOffsetX - elementOffsetX) / elementWidth) * 100;
-                seek(percent/100 * duration);
+                seek?.(percent/100 * duration);
             }
         },
         [duration, playing, seek]
