@@ -22,7 +22,7 @@ class EnsureUserIsMember
         }
 
         if(! auth()?->user()?->membership) {
-            abort(403);
+            return redirect('/app');
         }
 
         if(in_array(
