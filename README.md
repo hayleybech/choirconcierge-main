@@ -15,6 +15,7 @@
 - Add `NIGHTWATCH_TOKEN`
 - Add `MIX_SENTRY_DSN`
 - Enable a local provider for Outgoing mail - Uncomment Mailtrap or Herd
+- Add a Google Maps API key - events section will not work without it
 
 ### Database setup
 - `herd php artisan migrate`
