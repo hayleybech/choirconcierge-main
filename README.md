@@ -41,3 +41,9 @@
 ### Testing setup
 - make a DB for tests eg choirconcierge_test
 - create `.env.testing` with DB credentials (copy `.env` first)
+
+## Testing
+### Testing the Incoming Mailbox
+- Ensure the mailbox@test.choirconcierge.com login details are configured in the .env file
+- `herd php artisan schedule:test` - choose `ProcessGroupMailbox`
+- `herd php artisan queue:work`
