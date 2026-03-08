@@ -42,6 +42,7 @@ class CreateSingerRequest extends FormRequest
             'email' => [
                 Rule::when(empty($this->input('user_id')), [
                     'required',
+                    'email',
                     Rule::unique('users')
                         ->ignore($singer->user->id ?? ''),
                 ]),

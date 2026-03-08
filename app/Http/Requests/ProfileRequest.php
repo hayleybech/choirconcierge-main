@@ -30,6 +30,7 @@ class ProfileRequest extends FormRequest
             'pronouns' => ['max:127'],
             'email' => [
                 'required',
+                'email',
                 Rule::unique('users')
                     ->ignore(auth()->user()->id),
             ],
