@@ -11,6 +11,7 @@
 
 	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap" rel="stylesheet">
 
+    <link rel="canonical" href="{{ url()->current() }}" />
 
     <link rel="manifest" href="{{ global_asset('manifest.json') }}" />
     @include ('snippets.pwa')
