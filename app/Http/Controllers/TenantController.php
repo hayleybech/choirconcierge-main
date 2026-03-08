@@ -38,6 +38,7 @@ class TenantController extends Controller
             'primary_domain' => [
                 'required',
                 'max:127',
+                'alpha_dash',
                 Rule::unique('domains', 'domain', '')
                     ->where(fn(Builder $query) => $query->whereNot('tenant_id', tenant()->id))
             ],
