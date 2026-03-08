@@ -23,6 +23,7 @@ const DateInput = ({ name, value, updateFn, hasErrors }) => (
                         ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'
                         : 'border-gray-300 focus:ring-purple-500 focus:border-purple-500'
                 )}
+				onChange={() => {}}
             />
         </Popover.Button>
         <Transition
