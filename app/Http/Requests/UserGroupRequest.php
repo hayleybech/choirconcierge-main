@@ -30,6 +30,7 @@ class UserGroupRequest extends FormRequest
             'title' => ['required', 'max:255'],
             'slug' => [
                 'required',
+                'alpha_dash',
                 Rule::unique('user_groups')
                     ->where('tenant_id', tenant('id'))
                     ->ignore($this->group->id ?? ''),
