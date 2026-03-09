@@ -7,6 +7,7 @@ import DateTag from "../../components/DateTag";
 import DeleteDialog from "../../components/DeleteDialog";
 import useRoute from "../../hooks/useRoute";
 import { usePage } from '@inertiajs/react';
+import Badge from "../../components/Badge";
 
 const Show = ({ stack }) => {
     const { route } = useRoute();
@@ -23,6 +24,15 @@ const Show = ({ stack }) => {
                     <span>Columns: {stack.columns}</span>
                     <span>Singers on front row: {stack.front_row_length}</span>
                     <span>Front row on floor: {stack.front_row_on_floor ? 'Yes' : 'No'}</span>
+                    {stack.ensembles.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                            {stack.ensembles.map(ensemble => (
+                                <Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
+                                    {ensemble.name}
+                                </Badge>
+                            ))}
+                        </div>
+                    )}
                     <DateTag icon="pencil" date={stack.created_at} label="Created" />
                     <DateTag icon="pencil" date={stack.updated_at} label="Updated" />
                 </>}

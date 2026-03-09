@@ -50,7 +50,17 @@ class RiserStackPolicy
      */
     public function view(User $user, RiserStack $riserStack)
     {
-        return $user->membership->hasAbility('riser_stacks_view');
+        if (! $user->membership->hasAbility('riser_stacks_view')) {
+            return false;
+        }
+
+        if ($riserStack->ensembles()->exists()) {
+            return $riserStack->ensembles()
+                ->whereIn('ensembles.id', $user->membership->enrolments->pluck('ensemble_id'))
+                ->exists();
+        }
+
+        return true;
     }
 
     /**

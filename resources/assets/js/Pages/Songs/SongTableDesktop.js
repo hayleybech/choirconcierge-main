@@ -55,7 +55,7 @@ const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount }) => {
                         <TableCell>
                             <div className="space-x-1.5 space-y-1.5">
                                 {song.ensembles.map(ensemble => (
-                                    <Badge key={ensemble.id} colour="bg-blue-100 text-blue-800">{ensemble.name}</Badge>
+                                    <Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">{ensemble.name}</Badge>
                                 ))}
                             </div>
                         </TableCell>
