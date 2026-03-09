@@ -54,7 +54,7 @@ const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
                     />
                 }
                 tableDesktop={<RiserStackTableDesktop stacks={stacks} userEnsemblesCount={userEnsemblesCount} />}
-                tableMobile={<RiserStackTableMobile stacks={stacks} />}
+                tableMobile={<RiserStackTableMobile stacks={stacks} userEnsemblesCount={userEnsemblesCount} />}
                 emptyState={stacks.data.length === 0
                     ? <EmptyState
                         title="No riser stacks"

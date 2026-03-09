@@ -70,7 +70,7 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                         closeFn={() => setShowFilters(false)}
                     />
                 }
-                tableMobile={<SongTableMobile songs={songs} />}
+                tableMobile={<SongTableMobile songs={songs} userEnsemblesCount={userEnsemblesCount} />}
                 tableDesktop={<SongTableDesktop songs={songs} sortFilterForm={sortFilterForm} userEnsemblesCount={userEnsemblesCount} />}
                 emptyState={songs.data.length === 0
                     ? <EmptyState

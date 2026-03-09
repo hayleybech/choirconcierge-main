@@ -23,7 +23,7 @@ export const TableMobileLink = ({ url, onClick, children }) => (
                 {children}
             </div>
             <div>
-                <Icon icon="chevron-right" mr className="text-gray-400" />
+                <Icon icon="chevron-right" className="text-gray-400" />
             </div>
         </div>
     </Link>
