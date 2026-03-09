@@ -1,0 +1,19 @@
+{
+    "agents": [
+        "junie"
+    ],
+    "guidelines": true,
+    "herd_mcp": true,
+    "mcp": true,
+    "nightwatch_mcp": true,
+    "packages": [
+        "spatie/laravel-medialibrary"
+    ],
+    "sail": false,
+    "skills": [
+        "pest-testing",
+        "inertia-react-development",
+        "tailwindcss-development",
+        "medialibrary-development"
+    ]
+}

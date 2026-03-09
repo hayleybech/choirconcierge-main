@@ -37,6 +37,8 @@
     $bar->domains()->create(['domain' => 'bar']);
     $bar->ensembles()->create(['name' => 'The Bar Barbers']);
     ```
+### Periodic updates
+- `herd php artisan boost:update`
 
 ### Testing setup
 - make a DB for tests eg choirconcierge_test

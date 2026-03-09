@@ -1,0 +1,28 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "C:\\Users\\User\\.config\\herd\\bin\\php82\\php.exe",
+            "args": [
+                "C:\\Users\\User\\Herd\\choirconcierge\\artisan",
+                "boost:mcp"
+            ]
+        },
+        "herd": {
+            "command": "C:\\Users\\User\\.config\\herd\\bin\\php82\\php.exe",
+            "args": [
+                "C:/Users/User/.config/herd/bin/herd-mcp.phar"
+            ],
+            "env": {
+                "SITE_PATH": "C:\\Users\\User\\Herd\\choirconcierge"
+            }
+        },
+        "nightwatch": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "mcp-remote",
+                "https://nightwatch.laravel.com/mcp"
+            ]
+        }
+    }
+}
