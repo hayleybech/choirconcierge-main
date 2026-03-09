@@ -18,13 +18,14 @@ import RichTextInput from '../../components/inputs/RichTextInput';
 import FormWrapper from '../../components/FormWrapper';
 import useRoute from '../../hooks/useRoute';
 
-const SongForm = ({ categories, statuses, pitches, song }) => {
+const SongForm = ({ categories, statuses, pitches, song, ensembles }) => {
 	const { route } = useRoute();
 
 	const { data, setData, post, put, processing, errors } = useForm({
 		title: song?.title ?? '',
 		description: song?.description ?? '',
 		categories: song?.categories.map(category => category.id) ?? [],
+		ensembles: song?.ensembles.map(ensemble => ensemble.id) ?? [],
 		status: song?.status.id ?? null,
 		pitch_blown: song?.pitch_blown ?? 0,
 		show_for_prospects: song?.show_for_prospects ?? false,
@@ -69,6 +70,19 @@ const SongForm = ({ categories, statuses, pitches, song }) => {
 							updateFn={value => setData('categories', value)}
 						/>
 					</div>
+
+					{ensembles.length > 1 && (
+						<div className="sm:col-span-6">
+							<Label label="Ensembles" forInput="ensembles" />
+							<Help>Sub-groups that may view and access this song.</Help>
+							<CheckboxGroup
+								name="ensembles"
+								options={ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name }))}
+								value={data.ensembles}
+								updateFn={value => setData('ensembles', value)}
+							/>
+						</div>
+					)}
 
 					<div className="sm:col-span-6">
 						<RadioGroup

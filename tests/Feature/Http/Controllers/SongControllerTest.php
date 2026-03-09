@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Ensemble;
 use App\Models\Role;
 use App\Models\Membership;
 use App\Models\Song;
@@ -36,6 +37,7 @@ class SongControllerTest extends TestCase
                 ->has('categories')
                 ->has('statuses')
                 ->has('pitches')
+                ->has('ensembles')
             );
     }
 
@@ -65,6 +67,7 @@ class SongControllerTest extends TestCase
                 ->has('categories')
                 ->has('statuses')
                 ->has('pitches')
+                ->has('ensembles')
             );
     }
 
@@ -80,6 +83,8 @@ class SongControllerTest extends TestCase
                 ->has('statuses')
                 ->has('defaultStatuses')
                 ->has('categories')
+                ->has('totalEnsemblesCount')
+                ->has('userEnsemblesCount')
             );
     }
 
@@ -94,9 +99,89 @@ class SongControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Songs/Show')
                 ->has('song')
+                ->has('song.ensembles')
                 ->has('attachment_types')
                 ->has('status_count')
                 ->has('voice_parts_count')
+            );
+    }
+
+    public function test_user_can_view_song_in_their_ensemble(): void
+    {
+        $user = $this->createUserWithRole('User');
+        $ensemble = Ensemble::factory()->create();
+        $user->membership->enrolments()->create([
+            'ensemble_id' => $ensemble->id,
+            'voice_part_id' => \App\Models\VoicePart::factory()->create()->id,
+        ]);
+
+        $song = Song::factory()->create();
+        $song->ensembles()->attach($ensemble);
+
+        $this->actingAs($user);
+
+        $this->get(the_tenant_route('songs.show', [$song]))
+            ->assertOk();
+    }
+
+    public function test_user_cannot_view_song_in_different_ensemble(): void
+    {
+        $user = $this->createUserWithRole('User');
+        $userEnsemble = Ensemble::factory()->create();
+        $user->membership->enrolments()->create([
+            'ensemble_id' => $userEnsemble->id,
+            'voice_part_id' => \App\Models\VoicePart::factory()->create()->id,
+        ]);
+
+        $otherEnsemble = Ensemble::factory()->create();
+        $song = Song::factory()->create();
+        $song->ensembles()->attach($otherEnsemble);
+
+        $this->actingAs($user);
+
+        $this->get(the_tenant_route('songs.show', [$song]))
+            ->assertForbidden();
+    }
+
+    public function test_music_team_can_view_any_ensemble_song(): void
+    {
+        $user = $this->createUserWithRole('Music Team');
+        $ensemble = Ensemble::factory()->create();
+        $song = Song::factory()->create();
+        $song->ensembles()->attach($ensemble);
+
+        $this->actingAs($user);
+
+        $this->get(the_tenant_route('songs.show', [$song]))
+            ->assertOk();
+    }
+
+    public function test_index_filters_by_ensemble(): void
+    {
+        $user = $this->createUserWithRole('User');
+        $ensemble = Ensemble::factory()->create();
+        $user->membership->enrolments()->create([
+            'ensemble_id' => $ensemble->id,
+            'voice_part_id' => \App\Models\VoicePart::factory()->create()->id,
+        ]);
+
+        $songInEnsemble = Song::factory()->create(['title' => 'In Ensemble']);
+        $songInEnsemble->ensembles()->attach($ensemble);
+
+        $songNotInEnsemble = Song::factory()->create(['title' => 'Not In Ensemble']);
+        $otherEnsemble = Ensemble::factory()->create();
+        $songNotInEnsemble->ensembles()->attach($otherEnsemble);
+
+        $songNoEnsemble = Song::factory()->create(['title' => 'No Ensemble']);
+
+        $this->actingAs($user);
+
+        $this->get(the_tenant_route('songs.index'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('songs.data', 2)
+                ->where('songs.data.0.title', 'In Ensemble')
+                ->where('songs.data.1.title', 'No Ensemble')
             );
     }
 
@@ -150,7 +235,11 @@ class SongControllerTest extends TestCase
         Notification::fake();
         $this->actingAs($this->createUserWithRole('Music Team'));
 
+        $ensemble = Ensemble::factory()->create();
+
         $data = $getData();
+        $data['ensembles'] = [$ensemble->id];
+
         $response = $this->post(the_tenant_route('songs.store'), $data)
             ->assertSessionHasNoErrors();
 
@@ -161,6 +250,12 @@ class SongControllerTest extends TestCase
         ]);
 
         $song = Song::firstWhere('title', $data['title']);
+
+        $this->assertDatabaseHas('ensemble_song', [
+            'song_id' => $song->id,
+            'ensemble_id' => $ensemble->id,
+        ]);
+
         $response->assertRedirect(the_tenant_route('songs.show', [$song]));
         Notification::assertNothingSent();
     }
@@ -188,8 +283,11 @@ class SongControllerTest extends TestCase
         $this->actingAs($this->createUserWithRole('Music Team'));
 
         $song = Song::factory()->create();
+        $ensemble = Ensemble::factory()->create();
 
         $data = $getData();
+        $data['ensembles'] = [$ensemble->id];
+
         $response = $this->put(the_tenant_route('songs.update', [$song]), $data)
             ->assertSessionHasNoErrors();
 
@@ -198,6 +296,12 @@ class SongControllerTest extends TestCase
             'pitch_blown' => $data['pitch_blown'],
             'status_id' => $data['status'],
         ]);
+
+        $this->assertDatabaseHas('ensemble_song', [
+            'song_id' => $song->id,
+            'ensemble_id' => $ensemble->id,
+        ]);
+
         $response->assertRedirect(the_tenant_route('songs.show', [$song]));
         Notification::assertNothingSent();
     }

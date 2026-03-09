@@ -14,7 +14,7 @@ import useSortFilterForm from "../../hooks/useSortFilterForm";
 import EmptyState from "../../components/EmptyState";
 import useRoute from "../../hooks/useRoute";
 
-const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault }) => {
+const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault, userEnsemblesCount }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
     const { can } = usePage().props;
@@ -68,7 +68,7 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                     />
                 }
                 tableMobile={<SongTableMobile songs={songs} />}
-                tableDesktop={<SongTableDesktop songs={songs} sortFilterForm={sortFilterForm} />}
+                tableDesktop={<SongTableDesktop songs={songs} sortFilterForm={sortFilterForm} userEnsemblesCount={userEnsemblesCount} />}
                 emptyState={songs.data.length === 0
                     ? <EmptyState
                         title="No songs"

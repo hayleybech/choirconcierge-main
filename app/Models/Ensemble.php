@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
@@ -29,6 +29,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Enrolment> $enrolments
  * @property Collection<Membership> $members
  * @property Collection<User> $users
+ * @property Collection<Song> $songs
  */
 
 class Ensemble extends Model
@@ -46,6 +47,11 @@ class Ensemble extends Model
     public function enrolments(): HasMany
     {
         return $this->hasMany(Enrolment::class);
+    }
+
+    public function songs(): BelongsToMany
+    {
+        return $this->belongsToMany(Song::class, 'ensemble_song', 'ensemble_id', 'song_id');
     }
 
 	public function logoUrl(): Attribute

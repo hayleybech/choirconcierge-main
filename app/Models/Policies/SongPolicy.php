@@ -53,6 +53,14 @@ class SongPolicy
         if ($song->status->title === 'Pending') {
             return $user->membership->hasAbility('songs_update');
         }
+
+        if ($song->ensembles->isNotEmpty() && ! $user->membership->hasAbility('songs_update')) {
+            $userEnsembles = $user->membership->enrolments->pluck('ensemble_id');
+            if ($song->ensembles->pluck('id')->intersect($userEnsembles)->isEmpty()) {
+                return false;
+            }
+        }
+
         if (! $song->show_for_prospects) {
             return $user->membership->category->name === 'Members';
         }

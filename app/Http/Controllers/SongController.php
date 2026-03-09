@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomSorts\SongStatusSort;
 use App\Http\Requests\SongRequest;
+use App\Models\Ensemble;
 use App\Models\Membership;
 use App\Models\Song;
 use App\Models\SongCategory;
@@ -13,7 +14,6 @@ use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -41,6 +41,11 @@ class SongController extends Controller
         $includeNonAuditionSongs = auth()->user()?->isSuperAdmin || auth()->user()?->membership->category->name === 'Members';
         $showForProspectsDefault = $includeNonAuditionSongs ? [false, true] : [true];
 
+        $totalEnsemblesCount = Ensemble::count();
+        $userEnsemblesCount = (auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('songs_update'))
+            ? $totalEnsemblesCount
+            : auth()->user()?->membership?->enrolments->count() ?? 0;
+
         return Inertia::render('Songs/Index', [
             'songs' => $this->getSongs($includePending, $defaultStatuses, $includeNonAuditionSongs, $showForProspectsDefault),
             'statuses' => SongStatus::query()
@@ -50,6 +55,7 @@ class SongController extends Controller
             'defaultStatuses' => $defaultStatuses,
             'categories' => SongCategory::all()->values(),
             'showForProspectsDefault' => $showForProspectsDefault,
+            'userEnsemblesCount' => $userEnsemblesCount,
         ]);
     }
 
@@ -59,6 +65,7 @@ class SongController extends Controller
             'categories' => SongCategory::all()->values(),
             'statuses' => SongStatus::all()->values(),
             'pitches' => Song::PITCHES,
+            'ensembles' => Ensemble::all()->values(),
         ]);
     }
 
@@ -138,6 +145,7 @@ class SongController extends Controller
             'statuses' => SongStatus::all()->values(),
             'pitches' => Song::PITCHES,
             'song' => $song,
+            'ensembles' => Ensemble::all()->values(),
         ]);
     }
 
@@ -165,7 +173,18 @@ class SongController extends Controller
 
     private function getSongs(bool $includePending, array $defaultStatuses, bool $includeNonAuditionSongs, array $showForProspectsDefault): LengthAwarePaginator
     {
+        $userEnsembles = auth()->user()?->membership?->enrolments->pluck('ensemble_id');
+        $canUpdate = auth()->user()?->membership?->hasAbility('songs_update');
+
         return QueryBuilder::for(Song::class)
+            ->when(! $canUpdate && ! auth()->user()?->isSuperAdmin, function (Builder $query) use ($userEnsembles) {
+                $query->where(function (Builder $query) use ($userEnsembles) {
+                    $query->whereDoesntHave('ensembles')
+                        ->orWhereHas('ensembles', function (Builder $query) use ($userEnsembles) {
+                            $query->whereIn('ensembles.id', $userEnsembles ?? []);
+                        });
+                });
+            })
             ->allowedFilters([
                 'title',
                 AllowedFilter::exact('status.id')
