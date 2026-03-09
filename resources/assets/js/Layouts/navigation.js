@@ -51,7 +51,7 @@ const navigation = [
         route: 'stacks.index',
         icon: 'fa-people-arrows',
         can: 'list_stacks',
-        showAsActiveForRoutes: ['stacks'],
+        showAsActiveForRoutes: ['stacks.*'],
         items: [
             { name: 'Add New', route: 'stacks.create', icon: 'fa-plus-square', can: 'create_stack', showAsActiveForRoutes: ['stacks.create'], },
         ]
