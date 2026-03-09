@@ -103,7 +103,6 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination }) => {
 											<VoicePartTag
 												title={enrolment.voice_part.title}
 												colour={enrolment.voice_part.colour}
-												// py="py-0.25"
 											/>
 										)}
 									</li>

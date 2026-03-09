@@ -5,9 +5,14 @@ import Icon from "../../components/Icon";
 import DocumentForm from "./DocumentForm";
 import Button from "../../components/inputs/Button";
 import EmptyState from "../../components/EmptyState";
+import useRoute from "../../hooks/useRoute";
+import Badge from "../../components/Badge";
 
-const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, permissions }) => {
+const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, permissions, userEnsemblesCount }) => {
+    const { route } = useRoute();
     const [openFolder, setOpenFolder] = useState(0);
+
+    const showEnsemblesColumn = userEnsemblesCount > 1;
 
     return (
         <TableMobile>
@@ -22,12 +27,26 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, pe
                                         <span className="text-sm font-medium text-purple-600 truncate">{folder.title}</span>
                                     </p>
 
-                                    {permissions['folders_delete'] && (
-                                        <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline" size="sm">
-                                            <Icon icon="trash" />
-                                        </Button>
-                                    )}
+                                    <div className="flex gap-2">
+                                        {permissions['update_folder'] && (
+                                            <Button href={route('folders.edit', { folder })} variant="secondary" size="sm">
+                                                <Icon icon="edit" />
+                                            </Button>
+                                        )}
+                                        {permissions['delete_folder'] && (
+                                            <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline" size="sm">
+                                                <Icon icon="trash" />
+                                            </Button>
+                                        )}
+                                    </div>
                                 </div>
+                                {showEnsemblesColumn && folder.ensembles.length > 0 && (
+                                    <div className="mt-2 flex flex-wrap gap-1">
+                                        {folder.ensembles.map(ensemble => (
+                                            <Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">{ensemble.name}</Badge>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </a>
@@ -44,7 +63,7 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, pe
                                                     <span className="text-sm font-medium text-purple-600 truncate">{document.title}</span>
                                                 </p>
 
-                                                {permissions['documents_delete'] && (
+                                                {permissions['delete_document'] && (
                                                     <Button onClick={() => setDeletingDocument(document)} variant="danger-outline" size="sm">
                                                         <Icon icon="trash" />
                                                     </Button>

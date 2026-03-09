@@ -66,6 +66,11 @@ class Ensemble extends Model
         return $this->belongsToMany(RiserStack::class, 'ensemble_riser_stack', 'ensemble_id', 'riser_stack_id');
     }
 
+    public function folders(): BelongsToMany
+    {
+        return $this->belongsToMany(Folder::class, 'ensemble_folder', 'ensemble_id', 'folder_id');
+    }
+
 	public function logoUrl(): Attribute
 	{
 		return Attribute::get(fn () =>

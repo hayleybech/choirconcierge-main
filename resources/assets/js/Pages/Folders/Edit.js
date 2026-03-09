@@ -5,27 +5,27 @@ import AppHead from "../../components/AppHead";
 import FolderForm from "./FolderForm";
 import useRoute from "../../hooks/useRoute";
 
-const Create = ({ ensembles }) => {
+const Edit = ({ folder, ensembles }) => {
     const { route } = useRoute();
 
     return (
         <>
-            <AppHead title="Create Folder" />
+            <AppHead title="Edit Folder" />
             <PageHeader
-                title="Create Folder"
+                title="Edit Folder"
                 icon="folders"
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('dash')},
                     { name: 'Folders', url: route('folders.index')},
-                    { name: 'Create', url: route('folders.create')},
+                    { name: 'Edit', url: route('folders.edit', { folder })},
                 ]}
             />
 
-            <FolderForm ensembles={ensembles} />
+            <FolderForm folder={folder} ensembles={ensembles} />
         </>
     );
 }
 
-Create.layout = page => <TenantLayout children={page} />
+Edit.layout = page => <TenantLayout children={page} />
 
-export default Create;
+export default Edit;

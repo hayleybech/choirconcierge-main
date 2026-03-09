@@ -27,6 +27,8 @@ class FolderRequest extends FormRequest
     {
         return [
             'title' => ['required', 'max:255'],
+            'ensembles' => ['nullable', 'array'],
+            'ensembles.*' => ['exists:ensembles,id'],
         ];
     }
 }
