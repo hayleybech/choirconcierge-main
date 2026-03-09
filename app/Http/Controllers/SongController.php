@@ -46,6 +46,12 @@ class SongController extends Controller
             ? $totalEnsemblesCount
             : auth()->user()?->membership?->enrolments->count() ?? 0;
 
+        $ensembles = Ensemble::query()
+            ->when(! (auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('songs_update')), function (Builder $query) {
+                $query->whereIn('id', auth()->user()?->membership?->enrolments->pluck('ensemble_id') ?? []);
+            })
+            ->get();
+
         return Inertia::render('Songs/Index', [
             'songs' => $this->getSongs($includePending, $defaultStatuses, $includeNonAuditionSongs, $showForProspectsDefault),
             'statuses' => SongStatus::query()
@@ -56,6 +62,7 @@ class SongController extends Controller
             'categories' => SongCategory::all()->values(),
             'showForProspectsDefault' => $showForProspectsDefault,
             'userEnsemblesCount' => $userEnsemblesCount,
+            'ensembles' => $ensembles,
         ]);
     }
 
@@ -194,6 +201,7 @@ class SongController extends Controller
                 )
                     ->default($showForProspectsDefault),
                 AllowedFilter::exact('categories.id'),
+                AllowedFilter::exact('ensembles.id'),
             ])
             ->defaultSort('title')
             ->allowedSorts([

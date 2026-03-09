@@ -83,8 +83,8 @@ class SongControllerTest extends TestCase
                 ->has('statuses')
                 ->has('defaultStatuses')
                 ->has('categories')
-                ->has('totalEnsemblesCount')
                 ->has('userEnsemblesCount')
+                ->has('ensembles')
             );
     }
 
@@ -176,12 +176,22 @@ class SongControllerTest extends TestCase
 
         $this->actingAs($user);
 
+        // Test automatic filtering (user only sees what they have access to)
         $this->get(the_tenant_route('songs.index'))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('songs.data', 2)
                 ->where('songs.data.0.title', 'In Ensemble')
                 ->where('songs.data.1.title', 'No Ensemble')
+                ->has('ensembles', 1)
+            );
+
+        // Test explicit filter
+        $this->get(the_tenant_route('songs.index', ['filter' => ['ensembles.id' => [$ensemble->id]]]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('songs.data', 1)
+                ->where('songs.data.0.title', 'In Ensemble')
             );
     }
 
