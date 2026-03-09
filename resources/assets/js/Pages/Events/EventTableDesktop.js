@@ -12,17 +12,20 @@ import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 import RsvpDropdown from '../../components/Event/RsvpDropdown';
 
-const EventTableDesktop = ({ events, sortFilterForm, pagination }) => {
+const EventTableDesktop = ({ events, sortFilterForm, pagination, userEnsemblesCount }) => {
     const { route } = useRoute();
+
+    const showEnsemblesColumn = userEnsemblesCount > 1;
 
     const headings = collect({
         title: <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>,
         type: <TableHeadingSort form={sortFilterForm} sort="type-title">Type</TableHeadingSort>,
+        ensembles: showEnsemblesColumn ? 'Ensembles' : null,
         start_date: <TableHeadingSort form={sortFilterForm} sort="start_date">Event Date</TableHeadingSort>,
         location: 'Location',
         attendance: 'Attendance',
         created_at: <TableHeadingSort form={sortFilterForm} sort="created_at">Date Created</TableHeadingSort>,
-    });
+    }).filter(heading => heading !== null);
 
     return (
         <Table
@@ -38,6 +41,15 @@ const EventTableDesktop = ({ events, sortFilterForm, pagination }) => {
                     <TableCell>
                         <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>
                     </TableCell>
+                    {showEnsemblesColumn && (
+                        <TableCell>
+                            <div className="space-x-1.5 space-y-1.5">
+                                {event.ensembles.map(ensemble => (
+                                    <Badge key={ensemble.id} colour="bg-blue-100 text-blue-800">{ensemble.name}</Badge>
+                                ))}
+                            </div>
+                        </TableCell>
+                    )}
                     <TableCell>
                         <DateTag date={event.call_time} />
                     </TableCell>

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -55,6 +56,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Attendance $my_attendance
  * @property Collection<Attendance> $attendances
  * @property Collection<EventActivity> $activities
+ * @property Collection<Ensemble> $ensembles
  *
  * Relationships - Repeating Events
  * @property Event $repeat_parent
@@ -89,7 +91,7 @@ class Event extends Model
         'updated_at',
     ];
 
-    protected $with = ['type'];
+    protected $with = ['type', 'ensembles'];
 
     protected $casts = [
         'is_repeating' => 'boolean',
@@ -187,6 +189,11 @@ class Event extends Model
     public function activities(): HasMany
     {
         return $this->hasMany(EventActivity::class);
+    }
+
+    public function ensembles(): BelongsToMany
+    {
+        return $this->belongsToMany(Ensemble::class, 'ensemble_event', 'event_id', 'ensemble_id');
     }
 
     public function repeat_parent(): BelongsTo

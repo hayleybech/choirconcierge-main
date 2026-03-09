@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Rsvp;
@@ -33,6 +34,7 @@ class EventControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Events/Create')
                 ->has('types')
+                ->has('ensembles')
             );
     }
 
@@ -60,6 +62,7 @@ class EventControllerTest extends TestCase
                 ->component('Events/Edit')
                 ->has('event')
                 ->has('types')
+                ->has('ensembles')
             );
     }
 
@@ -73,25 +76,97 @@ class EventControllerTest extends TestCase
                 ->component('Events/Index')
                 ->has('events')
                 ->has('eventTypes')
+                ->has('userEnsemblesCount')
+                ->has('ensembles')
             );
     }
 
-    public function test_show_returns_an_ok_response(): void
+    public function test_user_can_view_event_in_their_ensemble(): void
     {
-        $this->actingAs($this->createUserWithRole('Events Team'));
+        $user = $this->createUserWithRole('User');
+        $ensemble = Ensemble::factory()->create();
+        $user->membership->enrolments()->create([
+            'ensemble_id' => $ensemble->id,
+            'voice_part_id' => \App\Models\VoicePart::factory()->create()->id,
+        ]);
 
         $event = Event::factory()->create();
+        $event->ensembles()->attach($ensemble);
+
+        $this->actingAs($user);
 
         $this->get(the_tenant_route('events.show', [$event]))
+            ->assertOk();
+    }
+
+    public function test_user_cannot_view_event_in_different_ensemble(): void
+    {
+        $user = $this->createUserWithRole('User');
+        $userEnsemble = Ensemble::factory()->create();
+        $user->membership->enrolments()->create([
+            'ensemble_id' => $userEnsemble->id,
+            'voice_part_id' => \App\Models\VoicePart::factory()->create()->id,
+        ]);
+
+        $otherEnsemble = Ensemble::factory()->create();
+        $event = Event::factory()->create();
+        $event->ensembles()->attach($otherEnsemble);
+
+        $this->actingAs($user);
+
+        $this->get(the_tenant_route('events.show', [$event]))
+            ->assertForbidden();
+    }
+
+    public function test_music_team_can_view_any_ensemble_event(): void
+    {
+        $user = $this->createUserWithRole('Events Team');
+        $ensemble = Ensemble::factory()->create();
+        $event = Event::factory()->create();
+        $event->ensembles()->attach($ensemble);
+
+        $this->actingAs($user);
+
+        $this->get(the_tenant_route('events.show', [$event]))
+            ->assertOk();
+    }
+
+    public function test_index_filters_by_ensemble(): void
+    {
+        $user = $this->createUserWithRole('User');
+        $ensemble = Ensemble::factory()->create();
+        $user->membership->enrolments()->create([
+            'ensemble_id' => $ensemble->id,
+            'voice_part_id' => \App\Models\VoicePart::factory()->create()->id,
+        ]);
+
+        $eventInEnsemble = Event::factory()->create(['title' => 'In Ensemble', 'start_date' => now()->addDay()]);
+        $eventInEnsemble->ensembles()->attach($ensemble);
+
+        $eventNotInEnsemble = Event::factory()->create(['title' => 'Not In Ensemble', 'start_date' => now()->addDays(2)]);
+        $otherEnsemble = Ensemble::factory()->create();
+        $eventNotInEnsemble->ensembles()->attach($otherEnsemble);
+
+        $eventNoEnsemble = Event::factory()->create(['title' => 'No Ensemble', 'start_date' => now()->addDays(3)]);
+
+        $this->actingAs($user);
+
+        // Test automatic filtering (user only sees what they have access to)
+        $this->get(the_tenant_route('events.index'))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->component('Events/Show')
-                ->has('event')
-                ->has('rsvpCount')
-                ->has('voicePartsRsvpCount')
-                ->has('attendanceCount')
-                ->has('voicePartsAttendanceCount')
-                ->has('addToCalendarLinks')
+                ->has('events', 2)
+                ->where('events.0.title', 'In Ensemble')
+                ->where('events.1.title', 'No Ensemble')
+                ->has('ensembles', 1)
+            );
+
+        // Test explicit filter
+        $this->get(the_tenant_route('events.index', ['filter' => ['ensembles.id' => [$ensemble->id]]]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('events', 1)
+                ->where('events.0.title', 'In Ensemble')
             );
     }
 
@@ -257,12 +332,19 @@ class EventControllerTest extends TestCase
         $this->actingAs($this->createUserWithRole('Events Team'));
 
         $event = Event::factory()->create();
+        $ensemble = Ensemble::factory()->create();
 
         ['request' => $request_data, 'saved' => $saved_data] = $getData();
+        $request_data['ensembles'] = [$ensemble->id];
+
         $response = $this->put(the_tenant_route('events.update', [$event]), $request_data);
 
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('events', $saved_data);
+        $this->assertDatabaseHas('ensemble_event', [
+            'event_id' => $event->id,
+            'ensemble_id' => $ensemble->id,
+        ]);
         $response->assertRedirect(the_tenant_route('events.show', [$event]));
         Notification::assertNothingSent();
     }

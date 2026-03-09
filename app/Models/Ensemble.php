@@ -30,6 +30,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Membership> $members
  * @property Collection<User> $users
  * @property Collection<Song> $songs
+ * @property Collection<Event> $events
  */
 
 class Ensemble extends Model
@@ -52,6 +53,11 @@ class Ensemble extends Model
     public function songs(): BelongsToMany
     {
         return $this->belongsToMany(Song::class, 'ensemble_song', 'ensemble_id', 'song_id');
+    }
+
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'ensemble_event', 'ensemble_id', 'event_id');
     }
 
 	public function logoUrl(): Attribute

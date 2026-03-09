@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\CustomSorts\EventTypeSort;
 use App\Http\Requests\EventRequest;
+use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Membership;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -28,11 +30,24 @@ class EventController extends Controller
 
     public function index(Request $request): Response
     {
+        $totalEnsemblesCount = Ensemble::count();
+        $userEnsemblesCount = (auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('events_update'))
+            ? $totalEnsemblesCount
+            : auth()->user()?->membership?->enrolments->count() ?? 0;
+
+        $ensembles = Ensemble::query()
+            ->when(! (auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('events_update')), function (Builder $query) {
+                $query->whereIn('id', auth()->user()?->membership?->enrolments->pluck('ensemble_id') ?? []);
+            })
+            ->get();
+
         $pagination = $this->getEvents();
         return Inertia::render('Events/Index', [
             'events' => $pagination->getCollection()->append(['is_repeat_parent', 'my_rsvp']),
             'pagination' => $pagination,
             'eventTypes' => EventType::all()->values(),
+            'userEnsemblesCount' => $userEnsemblesCount,
+            'ensembles' => $ensembles,
         ]);
     }
 
@@ -40,12 +55,17 @@ class EventController extends Controller
     {
         return Inertia::render('Events/Create', [
             'types' => EventType::all()->values(),
+            'ensembles' => Ensemble::all()->values(),
         ]);
     }
 
     public function store(EventRequest $request): RedirectResponse
     {
-        $event = Event::create($request->safe()->except('send_notification'));
+        $event = Event::create($request->safe()->except(['send_notification', 'ensembles']));
+
+        if ($request->has('ensembles')) {
+            $event->ensembles()->sync($request->input('ensembles'));
+        }
 
         if ($request->input('send_notification')) {
             Notification::send(Membership::active()->with('user')->get()->pluck('user'), new EventCreated($event));
@@ -102,6 +122,7 @@ class EventController extends Controller
             'event' => $event,
             'types' => EventType::all()->values(),
             'mode' => $request->input('mode'),
+            'ensembles' => Ensemble::all()->values(),
         ]);
     }
 
@@ -111,9 +132,13 @@ class EventController extends Controller
             return back()->with(['status' => 'The server tried to edit a repeating event incorrectly.', 'success' => false]);
         }
 
-        $event->fill($request->safe()->except('send_notification'));
+        $event->fill($request->safe()->except(['send_notification', 'ensembles']));
         $original = $event->getOriginal();
         $event->save();
+
+        if ($request->has('ensembles')) {
+            $event->ensembles()->sync($request->input('ensembles'));
+        }
 
         if($request->input('is_repeating')) {
             $event->createRepeats();
@@ -166,11 +191,23 @@ class EventController extends Controller
 
     private function getEvents(): LengthAwarePaginator
     {
+        $userEnsembles = auth()->user()?->membership?->enrolments->pluck('ensemble_id');
+        $canUpdate = auth()->user()?->membership?->hasAbility('events_update');
+
         return QueryBuilder::for(Event::class)
+            ->when(! $canUpdate && ! auth()->user()?->isSuperAdmin, function (Builder $query) use ($userEnsembles) {
+                $query->where(function (Builder $query) use ($userEnsembles) {
+                    $query->whereDoesntHave('ensembles')
+                        ->orWhereHas('ensembles', function (Builder $query) use ($userEnsembles) {
+                            $query->whereIn('ensembles.id', $userEnsembles ?? []);
+                        });
+                });
+            })
             ->allowedFilters([
                 'title',
                 AllowedFilter::exact('type.id'),
                 AllowedFilter::scope('date')->default(['upcoming']),
+                AllowedFilter::exact('ensembles.id'),
             ])
             ->with(['repeat_parent:id,call_time'])
             ->withCount([

@@ -14,7 +14,7 @@ import useSortFilterForm from "../../hooks/useSortFilterForm";
 import EmptyState from "../../components/EmptyState";
 import useRoute from "../../hooks/useRoute";
 
-const Index = ({ events, eventTypes, pagination }) => {
+const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const { can } = usePage().props;
     const { route } = useRoute();
@@ -30,6 +30,7 @@ const Index = ({ events, eventTypes, pagination }) => {
         { name: 'title', defaultValue: '' },
         { name: 'type.id', multiple: true },
         { name: 'date', defaultValue: 'upcoming' },
+        { name: 'ensembles.id', multiple: true },
     ];
 
     const transforms = (data) => ({
@@ -64,12 +65,22 @@ const Index = ({ events, eventTypes, pagination }) => {
                 filterPane={
                     <FilterSortPane
                         sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-                        filters={<EventFilters eventTypes={eventTypes} form={sortFilterForm} />}
+                        filters={<EventFilters
+                            eventTypes={eventTypes}
+                            ensembles={ensembles}
+                            userEnsemblesCount={userEnsemblesCount}
+                            form={sortFilterForm}
+                        />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }
                 tableMobile={<EventTableMobile events={events} pagination={pagination} />}
-                tableDesktop={<EventTableDesktop events={events} sortFilterForm={sortFilterForm} pagination={pagination} />}
+                tableDesktop={<EventTableDesktop
+                    events={events}
+                    sortFilterForm={sortFilterForm}
+                    pagination={pagination}
+                    userEnsemblesCount={userEnsemblesCount}
+                />}
                 emptyState={events.length === 0
                     ? <EmptyState
                         title="No events"

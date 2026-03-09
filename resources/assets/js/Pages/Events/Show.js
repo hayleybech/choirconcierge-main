@@ -80,6 +80,16 @@ const Show = ({
 						<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>
 					</div>
 
+					{event.ensembles.length > 0 && (
+						<div className="space-x-1.5 flex items-center">
+							{event.ensembles.map(ensemble => (
+								<Badge key={ensemble.id} colour="bg-blue-100 text-blue-800">
+									{ensemble.name}
+								</Badge>
+							))}
+						</div>
+					)}
+
 					{DateTime.fromISO(event.call_time) > DateTime.now() && (
 						<RsvpDropdown event={event} size="xs" />
 					)}

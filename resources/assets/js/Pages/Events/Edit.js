@@ -5,7 +5,7 @@ import AppHead from "../../components/AppHead";
 import EventForm from "./EventForm";
 import useRoute from "../../hooks/useRoute";
 
-const Edit = ({ event, types, mode }) => {
+const Edit = ({ event, types, mode, ensembles }) => {
     const { route } = useRoute();
 
     return (
@@ -22,7 +22,7 @@ const Edit = ({ event, types, mode }) => {
                 ]}
             />
 
-            <EventForm event={event} types={types} mode={mode} />
+            <EventForm event={event} types={types} mode={mode} ensembles={ensembles} />
         </>
     );
 }

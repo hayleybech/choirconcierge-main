@@ -5,7 +5,7 @@ import AppHead from "../../components/AppHead";
 import EventForm from "./EventForm";
 import useRoute from "../../hooks/useRoute";
 
-const Create = ({ types }) => {
+const Create = ({ types, ensembles }) => {
     const { route } = useRoute();
 
     return (
@@ -21,7 +21,7 @@ const Create = ({ types }) => {
                 ]}
             />
 
-            <EventForm types={types} />
+            <EventForm types={types} ensembles={ensembles} />
         </>
     );
 }
