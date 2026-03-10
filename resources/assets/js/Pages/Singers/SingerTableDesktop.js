@@ -23,16 +23,14 @@ import Pagination from '../../components/Pagination';
 import RadioGroup from '../../components/inputs/RadioGroup';
 import Badge from '../../components/Badge';
 
-const SingerTableDesktop = ({ singers, sortFilterForm, pagination }) => {
+const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles }) => {
 	const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
 	const [renewingSinger, setRenewingSinger] = useState(singers[0] ?? null);
 
 	const { can, tenant } = usePage().props;
 	const { route } = useRoute();
 
-	// @todo hide singers not in same ensemble
-	// @todo count user's ensembles instead
-	const showEnsembleColumn = tenant.ensembles.length > 1;
+	const showEnsembleColumn = (ensembles ?? tenant.ensembles).length > 1;
 
 	const headings = collect({
 		name: (

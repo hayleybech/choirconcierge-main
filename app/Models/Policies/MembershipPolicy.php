@@ -2,6 +2,7 @@
 
 namespace App\Models\Policies;
 
+use App\Models\Ensemble;
 use App\Models\Membership;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -50,7 +51,11 @@ class MembershipPolicy
      */
     public function view(User $user, Membership $singer)
     {
-        return $user->membership->is($singer) || $user->membership->hasAbility('singers_view');
+        if ($user->membership->is($singer)) {
+            return true;
+        }
+
+        return $user->membership->canSee($singer) && $user->membership->hasAbility('singers_view');
     }
 
     /**
@@ -63,7 +68,11 @@ class MembershipPolicy
      */
     public function viewAttendance(User $user, Membership $singer)
     {
-        return $user->membership->is($singer) || $user->membership->hasAbility('attendances_view');
+        if ($user->membership->is($singer)) {
+            return true;
+        }
+
+        return $user->membership->canSee($singer) && $user->membership->hasAbility('attendances_view');
     }
 
     /**

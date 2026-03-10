@@ -43,7 +43,7 @@ class PlacementPolicy
             return false;
         }
 
-        return $user->membership->hasAbility('singer_placements_view');
+        return $user->membership->canSee($placement->member) && $user->membership->hasAbility('singer_placements_view');
     }
 
     /**
@@ -59,7 +59,7 @@ class PlacementPolicy
             return false;
         }
 
-        return $user->membership->hasAbility('singer_placements_create');
+        return $user->membership->canSee($singer) && $user->membership->hasAbility('singer_placements_create');
     }
 
     /**
@@ -76,6 +76,6 @@ class PlacementPolicy
             return false;
         }
 
-        return $user->membership->hasAbility('singer_placements_update');
+        return $user->membership->canSee($placement->member) && $user->membership->hasAbility('singer_placements_update');
     }
 }

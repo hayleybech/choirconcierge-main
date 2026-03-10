@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,6 +42,25 @@ class Ensemble extends Model
 	protected $guarded = [];
 
 	protected $appends = ['logo_url'];
+    
+    public function scopeEnsembleRestricted(Builder $query): Builder
+    {
+        if (Ensemble::count() <= 1) {
+            return $query;
+        }
+
+        if (! auth()->user()?->membership) {
+            return $query;
+        }
+
+        if (auth()->user()->membership->hasAbility('singers_update')) {
+            return $query;
+        }
+
+        $userEnsembleIds = auth()->user()->membership->enrolments->pluck('ensemble_id');
+
+        return $query->whereIn('id', $userEnsembleIds);
+    }
 
 	public function organisation(): BelongsTo {
 		return $this->belongsTo(Tenant::class);

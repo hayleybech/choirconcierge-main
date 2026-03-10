@@ -67,6 +67,7 @@ class RiserStackController extends Controller
     public function create(): Response
     {
         $singers = Membership::query()
+            ->ensembleRestricted()
             ->active()
             ->with(['user', 'enrolments'])
             ->get()
@@ -118,6 +119,7 @@ class RiserStackController extends Controller
 
         // Get singers who are not already on the riser stack.
         $singers = Membership::query()
+            ->ensembleRestricted()
             ->active()
             ->with(['user', 'enrolments'])
             ->whereDoesntHave('riser_stacks', static function ($query) use ($stack) {
