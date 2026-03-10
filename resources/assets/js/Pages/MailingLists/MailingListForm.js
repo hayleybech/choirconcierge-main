@@ -16,7 +16,7 @@ import Help from "../../components/inputs/Help";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
 
-const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
+const MailingListForm = ({ list, roles = [], voiceParts = [], singerCategories = [], ensembles = [] }) => {
     const { props: pageProps } = usePage();
     const { route } = useRoute();
 
@@ -24,14 +24,16 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
         title: list?.title ?? '',
         slug: list?.slug ?? '',
         list_type: list?.list_type ?? null,
-        recipient_users: list?.recipient_users.map(user => user.id) ?? [],
-        recipient_roles: list?.recipient_roles.map(role => role.id) ?? [],
-        recipient_voice_parts: list?.recipient_voice_parts.map(part => part.id) ?? [],
-        recipient_singer_categories: list?.recipient_singer_categories.map(part => part.id) ?? [],
-        sender_users: list?.sender_users.map(user => user.id) ?? [],
-        sender_roles: list?.sender_roles.map(role => role.id) ?? [],
-        sender_voice_parts: list?.sender_voice_parts.map(part => part.id) ?? [],
-        sender_singer_categories: list?.sender_singer_categories.map(part => part.id) ?? [],
+        recipient_users: list?.recipient_users?.map(user => user.id) ?? [],
+        recipient_roles: list?.recipient_roles?.map(role => role.id) ?? [],
+        recipient_voice_parts: list?.recipient_voice_parts?.map(part => part.id) ?? [],
+        recipient_singer_categories: list?.recipient_singer_categories?.map(part => part.id) ?? [],
+        recipient_ensembles: list?.recipient_ensembles?.map(ensemble => ensemble.id) ?? [],
+        sender_users: list?.sender_users?.map(user => user.id) ?? [],
+        sender_roles: list?.sender_roles?.map(role => role.id) ?? [],
+        sender_voice_parts: list?.sender_voice_parts?.map(part => part.id) ?? [],
+        sender_singer_categories: list?.sender_singer_categories?.map(part => part.id) ?? [],
+        sender_ensembles: list?.sender_ensembles?.map(ensemble => ensemble.id) ?? [],
     });
 
     function submit(e) {
@@ -133,7 +135,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                         <Label label="Singers" />
                         <SingerSelect
                             multiple
-                            defaultValue={list?.recipient_users.map(user => ({
+                            defaultValue={list?.recipient_users?.map(user => ({
                                 value: user.id,
                                 label: user.name,
                                 name: user.name,
@@ -182,6 +184,18 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                         {errors.recipient_singer_categories && <Error>{errors.recipient_singer_categories}</Error>}
                     </fieldset>
 
+                    <fieldset className="bg-purple-100 border border-purple-700 p-4 rounded sm:col-span-6">
+                        <legend className="text-base font-medium text-purple-600 contents">Ensemble Filter</legend>
+						<Help><div className="text-purple-700">Optional: If selected, only singers in these ensembles who also match the criteria above will receive emails. </div></Help>
+                        <CheckboxGroup
+                            name="recipient_ensembles"
+                            options={ensembles}
+                            value={data.recipient_ensembles}
+                            updateFn={value => setData('recipient_ensembles', value)}
+                        />
+                        {errors.recipient_ensembles && <Error>{errors.recipient_ensembles}</Error>}
+                    </fieldset>
+
                 </FormSection>
 
                 {data.list_type === 'distribution' && (
@@ -190,7 +204,7 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                             <Label label="Singers" />
                             <SingerSelect
                                 multiple
-                                defaultValue={list?.sender_users.map(user => ({
+                                defaultValue={list?.sender_users?.map(user => ({
                                     value: user.id,
                                     label: user.name,
                                     name: user.name,
@@ -237,6 +251,18 @@ const MailingListForm = ({ list, roles, voiceParts, singerCategories }) => {
                                 updateFn={value => setData('sender_singer_categories', value)}
                             />
                             {errors.sender_singer_categories && <Error>{errors.sender_singer_categories}</Error>}
+                        </fieldset>
+
+                        <fieldset className="bg-purple-100 border border-purple-700 p-4 rounded sm:col-span-6">
+                            <legend className="text-base font-medium text-purple-600 contents">Ensemble Filter</legend>
+                            <Help><div className="text-purple-700">Optional: If selected, only people in these ensembles who also match the criteria above will be able to send emails. </div></Help>
+                            <CheckboxGroup
+                                name="sender_ensembles"
+                                options={ensembles}
+                                value={data.sender_ensembles}
+                                updateFn={value => setData('sender_ensembles', value)}
+                            />
+                            {errors.sender_ensembles && <Error>{errors.sender_ensembles}</Error>}
                         </fieldset>
                     </FormSection>
                 )}

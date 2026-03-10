@@ -66,13 +66,28 @@ const Show = ({ list }) => {
                         <SectionTitle>Recipients</SectionTitle>
                     </div>
                     <div className="h-full overflow-y-auto relative">
-                        {list.members.length > 0
+                        {list.recipient_ensembles?.length > 0 && (
+                            <div className="bg-purple-100 px-6 py-3 border-y border-purple-300">
+                                <h4 className="text-xs font-semibold text-purple-700 uppercase tracking-wider mb-1">Ensemble Filter</h4>
+                                <div className="flex flex-wrap gap-2">
+                                    {list.recipient_ensembles.map(ensemble => (
+                                        <span key={ensemble.id} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-200 text-purple-800 border border-purple-400">
+                                            {ensemble.name}
+                                        </span>
+                                    ))}
+                                </div>
+                                <p className="mt-2 text-xs text-purple-600 italic">
+                                    Only singers in these ensembles who also match the criteria below are included.
+                                </p>
+                            </div>
+                        )}
+                        {list.members?.filter(m => m.memberable_type !== 'App\\Models\\Ensemble')?.length > 0
                             ? <>
                                 <div className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
                                     <h3>Recipients</h3>
                                 </div>
                                 <ul role="list" className="relative z-0 divide-y divide-gray-200">
-                                    {list.members.map((member) => (
+                                    {list.members?.filter(m => m.memberable_type !== 'App\\Models\\Ensemble')?.map((member) => (
                                         <li key={member.id} >
                                             <div className="relative px-6 py-5 flex items-center space-x-3">
                                                 <div className="flex items-center justify-between px-4">
@@ -88,7 +103,7 @@ const Show = ({ list }) => {
                             </>
                             : <EmptyState
                                 title="No recipients"
-                                description="This mailing list has no recipients, so it won't be able to do very much. "
+                                description="This mailing list has no base recipients selected, so it won't be able to do very much. "
                                 actionDescription={list.can['update_group']
                                     ? 'To add recipients, edit this list, then assign a singer or an entire role, category or voice part.'
                                     : 'Ask your admin to finish setting up this list.'
@@ -108,14 +123,29 @@ const Show = ({ list }) => {
                         <SectionTitle>Senders</SectionTitle>
                     </div>
                     <div className="h-full overflow-y-auto relative">
-                        {list.senders.length > 0
+                        {list.sender_ensembles?.length > 0 && (
+                            <div className="bg-purple-100 px-6 py-3 border-y border-purple-300">
+                                <h4 className="text-xs font-semibold text-purple-700 uppercase tracking-wider mb-1">Ensemble Filter</h4>
+                                <div className="flex flex-wrap gap-2">
+                                    {list.sender_ensembles.map(ensemble => (
+                                        <span key={ensemble.id} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-200 text-purple-800 border border-purple-400">
+                                            {ensemble.name}
+                                        </span>
+                                    ))}
+                                </div>
+                                <p className="mt-2 text-xs text-purple-600 italic">
+                                    Only people in these ensembles who also match the criteria below are permitted to send.
+                                </p>
+                            </div>
+                        )}
+                        {list.senders?.filter(s => s.sender_type !== 'App\\Models\\Ensemble')?.length > 0
                             ? <>
                                 <div
                                     className="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
                                     <h3>Senders</h3>
                                 </div>
                                 <ul role="list" className="relative z-0 divide-y divide-gray-200">
-                                    {list.senders.map((sender) => (
+                                    {list.senders.filter(s => s.sender_type !== 'App\\Models\\Ensemble').map((sender) => (
                                         <li key={sender.id}>
                                             <div className="relative px-6 py-5 flex items-center space-x-3">
                                                 <div className="flex items-center justify-between px-4">
@@ -157,10 +187,11 @@ export default Show;
 
 const getTypeName = (type) => {
     const typeNames = {
-        'App\\\Models\\Role': 'Role',
+        'App\\Models\\Role': 'Role',
         'App\\Models\\VoicePart': 'Voice Part',
         'App\\Models\\SingerCategory': 'Singer Category',
         'App\\Models\\User': 'Singer',
+        'App\\Models\\Ensemble': 'Ensemble (Filter)',
     };
     return typeNames[type];
 };
