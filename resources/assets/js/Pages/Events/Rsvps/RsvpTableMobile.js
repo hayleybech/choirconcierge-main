@@ -16,7 +16,7 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble }) => {
                 <TableMobileListItem key={singer.id} url={route('singers.show', {singer: singer.id})}>
 					<div className="flex items-center px-4 py-4 sm:px-6 gap-4">
 						<div className="shrink-0">
-							<img className="h-10 w-10 rounded-md object-cover" src={singer.user.avatar_url} alt={singer.user.name} />
+							<img className="h-8 w-8 rounded-md object-cover" src={singer.user.avatar_url} alt={singer.user.name} />
 						</div>
 						<div className="min-w-0 flex-1">
 							<div className="flex items-center justify-between mb-1">

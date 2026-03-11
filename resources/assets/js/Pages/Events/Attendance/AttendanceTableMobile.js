@@ -2,32 +2,40 @@ import React from 'react';
 
 import TableMobile, { TableMobileListItem } from '../../../components/TableMobile';
 import Pagination from '../../../components/Pagination';
-import AttendanceTag from "../../../components/Event/AttendanceTag";
+import AttendanceRecord from '../../../components/Event/AttendanceRecord';
 import Badge from '../../../components/Badge';
 import VoicePartTag from '../../../components/VoicePartTag';
-import useRoute from "../../../hooks/useRoute";
+import useRoute from '../../../hooks/useRoute';
+import { Link } from '@inertiajs/react';
 
-const AttendanceTableMobile = ({ singers, pagination, showEnsemble }) => {
-    const { route } = useRoute();
+const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event }) => {
+	const { route } = useRoute();
 
-    return (
-        <TableMobile pagination={<Pagination details={pagination} />}>
-            {singers.map((singer) => (
-                <TableMobileListItem key={singer.id} url={route('singers.show', {singer: singer.id})}>
+	return (
+		<TableMobile pagination={<Pagination details={pagination} />}>
+			{singers.map(singer => (
+				<TableMobileListItem key={singer.id}>
 					<div className="flex items-center px-4 py-4 sm:px-6 gap-4">
 						<div className="shrink-0">
-							<img className="h-10 w-10 rounded-md object-cover" src={singer.user.avatar_url} alt={singer.user.name} />
+							<img
+								className="h-8 w-8 rounded-md object-cover"
+								src={singer.user.avatar_url}
+								alt={singer.user.name}
+							/>
 						</div>
 						<div className="min-w-0 flex-1">
-							<div className="flex items-center justify-between mb-1">
-								 <span className="text-sm font-medium text-purple-600 truncate">{singer.user.name}</span>
-								 <div className="scale-90 origin-right">
-									<AttendanceTag
-										icon={singer.attendance.icon}
-										label={singer.attendance.label}
-										colour={singer.attendance.colour}
-									/>
-								 </div>
+							<div className="flex flex-wrap items-center justify-between mb-2 gap-x-2">
+								<Link
+									href={route('singers.show', { singer })}
+									className="text-sm font-medium text-purple-600 truncate"
+								>
+									{singer.user.name}
+								</Link>
+								<AttendanceRecord
+									attendance={singer.attendance}
+									singerId={singer.id}
+									event={event}
+								/>
 							</div>
 							<div className="flex flex-wrap gap-1">
 								{singer.enrolments.map(enrolment => (
@@ -48,10 +56,10 @@ const AttendanceTableMobile = ({ singers, pagination, showEnsemble }) => {
 							</div>
 						</div>
 					</div>
-                </TableMobileListItem>
-            ))}
-        </TableMobile>
-    );
-}
+				</TableMobileListItem>
+			))}
+		</TableMobile>
+	);
+};
 
 export default AttendanceTableMobile;
