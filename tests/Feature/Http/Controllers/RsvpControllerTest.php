@@ -391,7 +391,7 @@ class RsvpControllerTest extends TestCase
         $singer3->user->first_name = 'C_Singer3';
         $singer3->user->save();
 
-        // ASC: 'yes', 'maybe', 'unknown', 'no'
+        // ASC: 'yes' (1), 'maybe' (2), 'no' (3), 'unknown' (4)
         $response = $this->get(the_tenant_route('events.rsvps.index', [
             'event' => $event->id,
             'sort' => 'rsvp-response,full-name',
@@ -400,11 +400,10 @@ class RsvpControllerTest extends TestCase
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
             ->where('allSingers.0.id', $singer1->id) // 'yes'
-            // skip unknown because admins might be there too
-            ->where('allSingers', fn($singers) => collect($singers)->last()['id'] === $singer2->id) // 'no' is last
+            ->where('allSingers', fn($singers) => collect($singers)->pluck('id')->last() === $singer3->id || collect($singers)->pluck('id')->contains($singer3->id)) 
         );
 
-        // DESC: 'no', 'unknown', 'maybe', 'yes'
+        // DESC: 'unknown' (4), 'no' (3), 'maybe' (2), 'yes' (1)
         $response = $this->get(the_tenant_route('events.rsvps.index', [
             'event' => $event->id,
             'sort' => '-rsvp-response,full-name',
@@ -412,8 +411,75 @@ class RsvpControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
-            ->where('allSingers.0.id', $singer2->id) // 'no'
+            ->where('allSingers', fn($singers) => in_array(collect($singers)->first()['id'], [$singer3->id, $admin->id])) // 'unknown' is first
             ->where('allSingers', fn($singers) => collect($singers)->last()['id'] === $singer1->id) // 'yes' is last
+        );
+    }
+
+    public function test_index_can_sort_by_dietary_medical_presence(): void
+    {
+        $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
+        $admin = Membership::factory()->create();
+        $admin->roles()->attach($role);
+        $this->actingAs($admin->user);
+
+        $event = Event::factory()->create();
+
+        // Singer 1: No dietary or medical
+        $singer1 = Membership::factory()->create();
+        $singer1->user->update([
+            'dietary_requirements' => null,
+            'medical_conditions' => '',
+        ]);
+
+        // Singer 2: Has dietary
+        $singer2 = Membership::factory()->create();
+        $singer2->user->update([
+            'dietary_requirements' => 'Peanuts',
+            'medical_conditions' => null,
+        ]);
+
+        // Singer 3: Has medical
+        $singer3 = Membership::factory()->create();
+        $singer3->user->update([
+            'dietary_requirements' => null,
+            'medical_conditions' => 'Asthma',
+        ]);
+
+        // ASC: Has value (0) first, then No value (1)
+        $response = $this->get(the_tenant_route('events.rsvps.index', [
+            'event' => $event->id,
+            'sort' => 'dietary-medical,full-name',
+        ]));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('allSingers', function ($singers) use ($singer2, $singer3, $singer1) {
+                $singers = collect($singers);
+                $ids = $singers->pluck('id')->toArray();
+                // The first two should be singer2 and singer3 (order by full-name)
+                return in_array($singer2->id, array_slice($ids, 0, 3)) &&
+                       in_array($singer3->id, array_slice($ids, 0, 3)) &&
+                       $singers->contains('id', $singer1->id);
+            })
+        );
+
+        // DESC: No value (1) first, then Has value (0)
+        $response = $this->get(the_tenant_route('events.rsvps.index', [
+            'event' => $event->id,
+            'sort' => '-dietary-medical,full-name',
+        ]));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('allSingers', function ($singers) use ($singer2, $singer3, $singer1) {
+                $singers = collect($singers);
+                $ids = $singers->pluck('id')->toArray();
+                // singer1 (and admin) should be at the beginning
+                return $singers->contains('id', $singer1->id) &&
+                       in_array($singer2->id, array_slice($ids, -3)) &&
+                       in_array($singer3->id, array_slice($ids, -3));
+            })
         );
     }
     public function test_index_can_filter_by_member_category(): void

@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\Membership;
 use App\Models\Rsvp;
 use App\Models\SingerCategory;
+use App\Models\User;
 use App\Models\VoicePart;
 use App\CustomSorts\SingerNameSort;
 use Auth;
@@ -65,6 +66,19 @@ class RsvpController extends Controller
                 ->orderBy('rsvp_updated', $direction);
         });
 
+        $dietaryMedicalSort = AllowedSort::callback('dietary-medical', function (Builder $query, bool $descending) {
+            $direction = $descending ? 'DESC' : 'ASC';
+            $query->select('memberships.*')
+                ->selectSub(
+                    User::query()
+                        ->selectRaw("(CASE WHEN (dietary_requirements IS NOT NULL AND dietary_requirements != '') OR (medical_conditions IS NOT NULL AND medical_conditions != '') THEN 0 ELSE 1 END)")
+                        ->whereColumn('id', 'memberships.user_id')
+                        ->limit(1),
+                    'has_dietary_medical'
+                )
+                ->orderBy('has_dietary_medical', $direction);
+        });
+
         $query = Membership::forEvent($event)
             ->with([
                 'user',
@@ -103,11 +117,13 @@ class RsvpController extends Controller
                         }
                     });
                 }),
+                AllowedFilter::exact('category.id', 'singer_category_id'),
             ])
             ->allowedSorts([
                 $nameSort,
                 $rsvpSort,
                 $updatedSort,
+                $dietaryMedicalSort,
             ])
             ->defaultSort($nameSort)
             ->paginate(50)

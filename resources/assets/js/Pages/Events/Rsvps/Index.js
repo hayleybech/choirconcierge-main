@@ -31,6 +31,7 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 		{ id: 'full-name', name: 'Name', default: true },
 		{ id: 'rsvp-response', name: 'RSVP Response' },
 		{ id: 'rsvp-updated', name: 'Updated' },
+		{ id: 'dietary-medical', name: 'Dietary / Medical' },
 	];
 
 	const filters = [
@@ -59,7 +60,11 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 				Updated
 			</TableHeadingSort>
 		),
-		dietary: 'Dietary / Medical',
+		dietary: (
+			<TableHeadingSort form={sortFilterForm} sort="dietary-medical">
+				Dietary / Medical
+			</TableHeadingSort>
+		),
 	});
 
 	const countsData = [
