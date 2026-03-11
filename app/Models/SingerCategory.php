@@ -50,7 +50,8 @@ class SingerCategory extends Model
             'Members' => 'members',
             'Prospects' => 'prospects',
             'Archived Prospects' => 'archived-prospects',
-            'Archived Members' => 'archived-members'
+            'Archived Members' => 'archived-members',
+            default => str($this->name)->slug()->toString(),
         };
     }
 }

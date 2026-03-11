@@ -1,11 +1,11 @@
 import React from 'react';
-import PageHeader from "../../../components/PageHeader/PageHeader";
-import TenantLayout from "../../../Layouts/TenantLayout";
-import AppHead from "../../../components/AppHead";
-import Icon from "../../../components/Icon";
-import RsvpTag from "../../../components/Event/RsvpTag";
-import Table, { TableCell } from "../../../components/Table";
-import useRoute from "../../../hooks/useRoute";
+import PageHeader from '../../../components/PageHeader/PageHeader';
+import TenantLayout from '../../../Layouts/TenantLayout';
+import AppHead from '../../../components/AppHead';
+import Icon from '../../../components/Icon';
+import RsvpTag from '../../../components/Event/RsvpTag';
+import Table, { TableCell } from '../../../components/Table';
+import useRoute from '../../../hooks/useRoute';
 import DateTag from '../../../components/DateTag';
 import collect from 'collect.js';
 import VoicePartTag from '../../../components/VoicePartTag';
@@ -21,27 +21,27 @@ import RsvpFilters from '../../../components/RsvpFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 
 const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts, ensembles, counts }) => {
-  const { route } = useRoute();
-  const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
-  
-  const showEnsemble = event.ensembles.length > 0 || totalEnsemblesCount > 1;
+	const { route } = useRoute();
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
-  const sorts = [
-    { id: 'full-name', name: 'Name', default: true },
-    { id: 'rsvp-response', name: 'RSVP Response' },
-    { id: 'rsvp-updated', name: 'Updated' },
-  ];
+	const showEnsemble = event.ensembles.length > 0 || totalEnsemblesCount > 1;
 
-  const filters = [
-    { name: 'user.name', defaultValue: '' },
-    { name: 'enrolments.voice_part_id', multiple: true },
-    { name: 'enrolments.ensemble_id', multiple: true },
-    { name: 'rsvp.response', multiple: true },
-  ];
+	const sorts = [
+		{ id: 'full-name', name: 'Name', default: true },
+		{ id: 'rsvp-response', name: 'RSVP Response' },
+		{ id: 'rsvp-updated', name: 'Updated' },
+	];
 
-  const sortFilterForm = useSortFilterForm(['events.rsvps.index', { event: event.id }], filters, sorts);
+	const filters = [
+		{ name: 'user.name', defaultValue: '' },
+		{ name: 'enrolments.voice_part_id', multiple: true },
+		{ name: 'enrolments.ensemble_id', multiple: true },
+		{ name: 'rsvp.response', multiple: true },
+	];
 
-  const headings = collect({
+	const sortFilterForm = useSortFilterForm(['events.rsvps.index', { event: event.id }], filters, sorts);
+
+	const headings = collect({
 		singer: (
 			<TableHeadingSort form={sortFilterForm} sort="full-name">
 				Name
@@ -53,22 +53,22 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 				RSVP
 			</TableHeadingSort>
 		),
-	  updated: (
+		updated: (
 			<TableHeadingSort form={sortFilterForm} sort="rsvp-updated">
 				Updated
 			</TableHeadingSort>
 		),
 		dietary: 'Dietary / Medical',
-  });
+	});
 
-  const countsData = [
-    { label: 'Going', textColour: 'text-emerald-500', icon: 'check', count: counts.yes },
-    // { label: 'Maybe', textColour: 'text-amber-500', icon: 'question', count: counts.maybe },
-    { label: 'No RSVP', textColour: 'text-red-500', icon: 'question', count: counts.unknown },
-    { label: 'Not going', textColour: 'text-gray-500', icon: 'times', count: counts.no },
-  ];
+	const countsData = [
+		{ label: 'Going', textColour: 'text-emerald-500', icon: 'check', count: counts.yes },
+		// { label: 'Maybe', textColour: 'text-amber-500', icon: 'question', count: counts.maybe },
+		{ label: 'No RSVP', textColour: 'text-red-500', icon: 'question', count: counts.unknown },
+		{ label: 'Not going', textColour: 'text-gray-500', icon: 'times', count: counts.no },
+	];
 
-  return (
+	return (
 		<>
 			<AppHead title={`RSVP List - ${event.title}`} />
 			<PageHeader
@@ -169,7 +169,7 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 											label="Updated"
 											date={singer.rsvp.updated_at}
 											format="DATETIME_SHORT"
-											className="text-gray-400 mt-1"
+											className="text-gray-400"
 										/>
 									)}
 								</TableCell>
@@ -207,9 +207,9 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 				}
 			/>
 		</>
-  );
-}
+	);
+};
 
-Index.layout = page => <TenantLayout children={page} />
+Index.layout = page => <TenantLayout children={page} />;
 
 export default Index;

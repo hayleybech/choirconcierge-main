@@ -275,7 +275,7 @@ class Membership extends Model
 
     public function scopeForEvent(Builder $query, Event $event): Builder
     {
-        return $query->active()->when($event->ensembles->isNotEmpty(), function (Builder $query) use ($event) {
+        return $query->when($event->ensembles->isNotEmpty(), function (Builder $query) use ($event) {
             $query->whereHas('enrolments', function (Builder $query) use ($event) {
                 $query->whereIn('ensemble_id', $event->ensembles->pluck('id'));
             });

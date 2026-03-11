@@ -7,6 +7,7 @@ use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\Rsvp;
+use App\Models\SingerCategory;
 use App\Models\VoicePart;
 use App\CustomSorts\SingerNameSort;
 use Auth;
@@ -45,8 +46,8 @@ class RsvpController extends Controller
                 ->orderByRaw("CASE
                     WHEN rsvp_response = 'yes' THEN 1
                     WHEN rsvp_response = 'maybe' THEN 2
-                    WHEN rsvp_response IS NULL THEN 3
-                    WHEN rsvp_response = 'no' THEN 4
+                    WHEN rsvp_response = 'no' THEN 3
+                    WHEN rsvp_response IS NULL THEN 4
                     ELSE 5
                 END $direction");
         });
@@ -71,6 +72,8 @@ class RsvpController extends Controller
                 'enrolments.ensemble',
                 'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
             ]);
+
+        $defaultCategory = SingerCategory::where('name', 'Members')->value('id');
 
         $pagination = QueryBuilder::for($query)
             ->allowedFilters([
@@ -122,9 +125,9 @@ class RsvpController extends Controller
             return $membership;
         });
 
-		return Inertia::render('Events/Rsvps/Index', [
-			'event' => $event->load('ensembles'),
-			'allSingers' => $singers,
+        return Inertia::render('Events/Rsvps/Index', [
+            'event' => $event->load('ensembles'),
+            'allSingers' => $singers,
             'pagination' => $pagination,
             'totalEnsemblesCount' => Ensemble::count(),
             'voiceParts' => VoicePart::all()->values(),

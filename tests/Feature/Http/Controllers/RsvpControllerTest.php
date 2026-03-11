@@ -6,8 +6,10 @@ use App\Models\Event;
 use App\Models\Rsvp;
 use App\Models\Role;
 use App\Models\Membership;
+use App\Models\SingerCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Inertia\Testing\AssertableInertia;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
@@ -413,5 +415,26 @@ class RsvpControllerTest extends TestCase
             ->where('allSingers.0.id', $singer2->id) // 'no'
             ->where('allSingers', fn($singers) => collect($singers)->last()['id'] === $singer1->id) // 'yes' is last
         );
+    }
+    public function test_index_can_filter_by_member_category(): void
+    {
+        $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
+        $admin = Membership::factory()->create();
+        $admin->roles()->attach($role);
+        $this->actingAs($admin->user);
+
+        $category1 = SingerCategory::factory()->create();
+        $category2 = SingerCategory::factory()->create();
+
+        $event = Event::factory()->create();
+        $singer1 = Membership::factory()->create(['singer_category_id' => $category1->id]);
+        $singer2 = Membership::factory()->create(['singer_category_id' => $category2->id]);
+
+        $this->get(the_tenant_route('events.rsvps.index', ['event' => $event, 'filter[category.id]' => $category1->id]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('allSingers', 1)
+                ->where('allSingers.0.id', $singer1->id)
+            );
     }
 }

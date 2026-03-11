@@ -250,7 +250,7 @@ class Event extends Model
 
     public function relevant_memberships(): Builder
     {
-        return Membership::forEvent($this);
+        return Membership::forEvent($this)->active();
     }
 
     public function singers_rsvp_response(string $response): Builder
