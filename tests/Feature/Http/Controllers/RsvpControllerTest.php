@@ -141,7 +141,7 @@ class RsvpControllerTest extends TestCase
         $response->assertInertia(fn ($page) => $page
             ->component('Events/Rsvps/Index')
             ->has('event')
-            ->has('singers')
+            ->has('allSingers')
         );
     }
 
@@ -174,7 +174,7 @@ class RsvpControllerTest extends TestCase
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
             ->component('Events/Rsvps/Index')
-            ->has('singers', $initialCount)
+            ->has('allSingers', $initialCount)
         );
     }
 
@@ -202,8 +202,8 @@ class RsvpControllerTest extends TestCase
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
             ->component('Events/Rsvps/Index')
-            ->has('singers', 1) // Only singer in ensemble 1
-            ->where('singers.0.user.name', $singerInEnsemble1->user->name)
+            ->has('allSingers', 1) // Only singer in ensemble 1
+            ->where('allSingers.0.user.name', $singerInEnsemble1->user->name)
         );
     }
 
@@ -254,9 +254,9 @@ class RsvpControllerTest extends TestCase
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
             ->component('Events/Rsvps/Index')
-            ->has('singers', $initialCount + 1)
-            ->where('singers.' . ($initialCount) . '.user.first_name', 'ZZZZ_UNIQUE_SINGER_NAME')
-            ->where('singers.' . ($initialCount) . '.enrolments', fn($enrolments) => count($enrolments) === 2)
+            ->has('allSingers', $initialCount + 1)
+            ->where('allSingers.' . ($initialCount) . '.user.first_name', 'ZZZZ_UNIQUE_SINGER_NAME')
+            ->where('allSingers.' . ($initialCount) . '.enrolments', fn($enrolments) => count($enrolments) === 2)
         );
     }
 
@@ -323,5 +323,95 @@ class RsvpControllerTest extends TestCase
         ]);
 
         $response->assertForbidden();
+    }
+
+    public function test_index_can_filter_by_rsvp_response(): void
+    {
+        $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
+        $admin = Membership::factory()->create();
+        $admin->roles()->attach($role);
+        $this->actingAs($admin->user);
+
+        $event = Event::factory()->create();
+
+        $singer1 = Membership::factory()->create();
+        Rsvp::create(['membership_id' => $singer1->id, 'event_id' => $event->id, 'response' => 'yes']);
+
+        $singer2 = Membership::factory()->create();
+        Rsvp::create(['membership_id' => $singer2->id, 'event_id' => $event->id, 'response' => 'no']);
+
+        $singer3 = Membership::factory()->create(); // No RSVP (unknown)
+
+        // Filter for 'yes'
+        $response = $this->get(the_tenant_route('events.rsvps.index', [
+            'event' => $event->id,
+            'filter' => ['rsvp.response' => 'yes'],
+        ]));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->has('allSingers', 1)
+            ->where('allSingers.0.id', $singer1->id)
+        );
+
+        // Filter for 'unknown'
+        $response = $this->get(the_tenant_route('events.rsvps.index', [
+            'event' => $event->id,
+            'filter' => ['rsvp.response' => 'unknown'],
+        ]));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('allSingers', fn($singers) => collect($singers)->pluck('id')->contains($singer3->id))
+        );
+    }
+
+    public function test_index_can_sort_by_rsvp_response(): void
+    {
+        $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
+        $admin = Membership::factory()->create();
+        $admin->roles()->attach($role);
+        $this->actingAs($admin->user);
+
+        $event = Event::factory()->create();
+
+        $singer1 = Membership::factory()->create();
+        $singer1->user->first_name = 'A_Singer1';
+        $singer1->user->save();
+        Rsvp::create(['membership_id' => $singer1->id, 'event_id' => $event->id, 'response' => 'yes']);
+
+        $singer2 = Membership::factory()->create();
+        $singer2->user->first_name = 'B_Singer2';
+        $singer2->user->save();
+        Rsvp::create(['membership_id' => $singer2->id, 'event_id' => $event->id, 'response' => 'no']);
+
+        $singer3 = Membership::factory()->create(); // unknown
+        $singer3->user->first_name = 'C_Singer3';
+        $singer3->user->save();
+
+        // ASC: 'yes', 'maybe', 'unknown', 'no'
+        $response = $this->get(the_tenant_route('events.rsvps.index', [
+            'event' => $event->id,
+            'sort' => 'rsvp-response,full-name',
+        ]));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('allSingers.0.id', $singer1->id) // 'yes'
+            // skip unknown because admins might be there too
+            ->where('allSingers', fn($singers) => collect($singers)->last()['id'] === $singer2->id) // 'no' is last
+        );
+
+        // DESC: 'no', 'unknown', 'maybe', 'yes'
+        $response = $this->get(the_tenant_route('events.rsvps.index', [
+            'event' => $event->id,
+            'sort' => '-rsvp-response,full-name',
+        ]));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('allSingers.0.id', $singer2->id) // 'no'
+            ->where('allSingers', fn($singers) => collect($singers)->last()['id'] === $singer1->id) // 'yes' is last
+        );
     }
 }

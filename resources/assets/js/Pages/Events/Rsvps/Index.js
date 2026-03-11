@@ -11,24 +11,55 @@ import collect from 'collect.js';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import IndexContainer from '../../../components/IndexContainer';
+import RsvpTableMobile from './RsvpTableMobile';
+import Pagination from '../../../components/Pagination';
+import useFilterPane from '../../../hooks/useFilterPane';
+import useSortFilterForm from '../../../hooks/useSortFilterForm';
+import FilterSortPane from '../../../components/FilterSortPane';
+import Sorts from '../../../components/Sorts';
+import RsvpFilters from '../../../components/RsvpFilters';
+import TableHeadingSort from '../../../components/TableHeadingSort';
 
-const Index = ({ event, singers, totalEnsemblesCount }) => {
+const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts, ensembles, counts }) => {
   const { route } = useRoute();
+  const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
   
   const showEnsemble = event.ensembles.length > 0 || totalEnsemblesCount > 1;
-  
+
+  const sorts = [
+    { id: 'full-name', name: 'Name', default: true },
+    { id: 'rsvp-response', name: 'RSVP Response' },
+  ];
+
+  const filters = [
+    { name: 'user.name', defaultValue: '' },
+    { name: 'enrolments.voice_part_id', multiple: true },
+    { name: 'enrolments.ensemble_id', multiple: true },
+    { name: 'rsvp.response', multiple: true },
+  ];
+
+  const sortFilterForm = useSortFilterForm(['events.rsvps.index', { event: event.id }], filters, sorts);
+
   const headings = collect({
-    singer: 'Singer',
-    voice_part: 'Voice Part',
-    rsvp: 'RSVP',
-    dietary: 'Dietary / Medical',
+		singer: (
+			<TableHeadingSort form={sortFilterForm} sort="full-name">
+				Name
+			</TableHeadingSort>
+		),
+		voice_part: 'Voice Part',
+		rsvp: (
+			<TableHeadingSort form={sortFilterForm} sort="rsvp-response">
+				RSVP
+			</TableHeadingSort>
+		),
+		dietary: 'Dietary / Medical',
   });
 
-  const counts = [
-    { label: 'Going', textColour: 'text-emerald-500', icon: 'check', count: singers.filter(singer => singer.rsvp.response === 'yes').length },
-    { label: 'Maybe', textColour: 'text-amber-500', icon: 'question', count: singers.filter(singer => singer.rsvp.response === 'maybe').length },
-    { label: 'No RSVP', textColour: 'text-red-500', icon: 'question', count: singers.filter(singer => singer.rsvp.response === 'unknown').length },
-    { label: 'Not going', textColour: 'text-gray-500', icon: 'times', count: singers.filter(singer => singer.rsvp.response === 'no').length },
+  const countsData = [
+    { label: 'Going', textColour: 'text-emerald-500', icon: 'check', count: counts.yes },
+    // { label: 'Maybe', textColour: 'text-amber-500', icon: 'question', count: counts.maybe },
+    { label: 'No RSVP', textColour: 'text-red-500', icon: 'question', count: counts.unknown },
+    { label: 'Not going', textColour: 'text-gray-500', icon: 'times', count: counts.no },
   ];
 
   return (
@@ -43,25 +74,39 @@ const Index = ({ event, singers, totalEnsemblesCount }) => {
 					{ name: event.title, url: route('events.show', { event }) },
 					{ name: 'RSVP List', url: route('events.rsvps.index', { event }) },
 				]}
+                actions={[
+                    filterAction,
+                ]}
+                optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
 			/>
 
-			<div className="bg-white py-4 border-b border-gray-200 flex justify-around overflow-hidden divide-x divide-gray-100">
-				{counts.map(({ label, textColour, icon, count }) => (
-					<div className="text-center flex flex-col items-center justify-center py-2 flex-1" key={label}>
-						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1`}>
+			<div className="bg-white border-b border-gray-200 grid grid-cols-3">
+				{countsData.map(({ label, textColour, icon, count }) => (
+					<div className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1" key={label}>
+						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
 							<Icon icon={icon} />
-							{label}
+                            {label}
 						</div>
-						<span className="text-2xl font-bold text-gray-900">{count}</span>
+						<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
 					</div>
 				))}
 			</div>
 
 			<IndexContainer
+                showFilters={showFilters}
+                filterPane={
+                    <FilterSortPane
+                        sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+                        filters={<RsvpFilters event={event} voiceParts={voiceParts} ensembles={ensembles} form={sortFilterForm} />}
+                        closeFn={() => setShowFilters(false)}
+                    />
+                }
+                tableMobile={<RsvpTableMobile singers={allSingers} pagination={pagination} showEnsemble={showEnsemble} />}
 				tableDesktop={
 					<Table
 						headings={headings}
-						body={singers.map(singer => (
+                        pagination={<Pagination details={pagination} />}
+						body={allSingers.map(singer => (
 							<tr key={singer.id}>
 								<TableCell>
 									<div className="flex items-center space-x-3">
