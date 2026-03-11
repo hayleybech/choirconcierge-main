@@ -19,6 +19,7 @@ import FilterSortPane from '../../../components/FilterSortPane';
 import Sorts from '../../../components/Sorts';
 import RsvpFilters from '../../../components/RsvpFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
+import { Link } from '@inertiajs/react';
 
 const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts, ensembles, counts }) => {
 	const { route } = useRoute();
@@ -133,7 +134,12 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 												alt={singer.user.name}
 											/>
 										</div>
-										<div className="text-sm font-medium text-gray-900">{singer.user.name}</div>
+										<Link
+											href={route('singers.show', { singer })}
+											className="text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
+										>
+											{singer.user.name}
+										</Link>
 									</div>
 								</TableCell>
 								<TableCell>

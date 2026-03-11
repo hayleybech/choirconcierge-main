@@ -207,7 +207,7 @@ const Index = ({
 										</div>
 										<Link
 											href={route('singers.show', { singer })}
-											className="text-sm font-medium text-purple-600"
+											className="text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
 										>
 											{singer.user.name}
 										</Link>
