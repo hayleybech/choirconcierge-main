@@ -144,4 +144,184 @@ class RsvpControllerTest extends TestCase
             ->has('singers')
         );
     }
+
+    public function test_index_shows_single_row_per_singer_even_with_multiple_enrolments(): void
+    {
+        $membership = Membership::factory()->create();
+        $role = Role::create([
+            'name' => 'Admin',
+            'abilities' => ['rsvps_view'],
+        ]);
+        $membership->roles()->attach($role);
+        $this->actingAs($membership->user);
+
+        $event = Event::factory()->create();
+        
+        $initialCount = Membership::active()->count();
+
+        // Create two enrolments for the same membership
+        \App\Models\Enrolment::factory()->create([
+            'membership_id' => $membership->id,
+            'ensemble_id' => \App\Models\Ensemble::factory()->create()->id,
+        ]);
+        \App\Models\Enrolment::factory()->create([
+            'membership_id' => $membership->id,
+            'ensemble_id' => \App\Models\Ensemble::factory()->create()->id,
+        ]);
+
+        $response = $this->get(the_tenant_route('events.rsvps.index', $event));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->component('Events/Rsvps/Index')
+            ->has('singers', $initialCount)
+        );
+    }
+
+    public function test_index_filters_singers_by_event_ensembles(): void
+    {
+        $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
+        $admin = Membership::factory()->create();
+        $admin->roles()->attach($role);
+        $this->actingAs($admin->user);
+
+        $ensemble1 = \App\Models\Ensemble::factory()->create(['name' => 'Ensemble 1']);
+        $ensemble2 = \App\Models\Ensemble::factory()->create(['name' => 'Ensemble 2']);
+
+        $singerInEnsemble1 = Membership::factory()->create();
+        \App\Models\Enrolment::factory()->create(['membership_id' => $singerInEnsemble1->id, 'ensemble_id' => $ensemble1->id]);
+
+        $singerInEnsemble2 = Membership::factory()->create();
+        \App\Models\Enrolment::factory()->create(['membership_id' => $singerInEnsemble2->id, 'ensemble_id' => $ensemble2->id]);
+
+        $event = Event::factory()->create();
+        $event->ensembles()->attach($ensemble1);
+
+        $response = $this->get(the_tenant_route('events.rsvps.index', $event));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->component('Events/Rsvps/Index')
+            ->has('singers', 1) // Only singer in ensemble 1
+            ->where('singers.0.user.name', $singerInEnsemble1->user->name)
+        );
+    }
+
+    public function test_index_returns_total_ensembles_count(): void
+    {
+        $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
+        $admin = Membership::factory()->create();
+        $admin->roles()->attach($role);
+        $this->actingAs($admin->user);
+
+        $initialCount = \App\Models\Ensemble::count();
+        \App\Models\Ensemble::factory()->count(3)->create();
+
+        $event = Event::factory()->create();
+
+        $response = $this->get(the_tenant_route('events.rsvps.index', $event));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('totalEnsemblesCount', $initialCount + 3)
+        );
+    }
+
+    public function test_index_shows_multiple_enrolments_when_event_has_no_ensembles(): void
+    {
+        $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
+        $admin = Membership::factory()->create();
+        $admin->roles()->attach($role);
+        $this->actingAs($admin->user);
+
+        $initialCount = Membership::active()->count();
+
+        $ensemble1 = \App\Models\Ensemble::factory()->create(['name' => 'Ensemble 1']);
+        $ensemble2 = \App\Models\Ensemble::factory()->create(['name' => 'Ensemble 2']);
+
+        $membership = Membership::factory()->create();
+        $user = $membership->user;
+        $user->first_name = 'ZZZZ_UNIQUE_SINGER_NAME';
+        $user->save();
+        
+        \App\Models\Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensemble1->id]);
+        \App\Models\Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensemble2->id]);
+
+        $event = Event::factory()->create(); // No ensembles
+
+        $response = $this->get(the_tenant_route('events.rsvps.index', $event));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->component('Events/Rsvps/Index')
+            ->has('singers', $initialCount + 1)
+            ->where('singers.' . ($initialCount) . '.user.first_name', 'ZZZZ_UNIQUE_SINGER_NAME')
+            ->where('singers.' . ($initialCount) . '.enrolments', fn($enrolments) => count($enrolments) === 2)
+        );
+    }
+
+    public function test_event_show_page_counts_respect_ensemble_restriction(): void
+    {
+        $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
+        $admin = Membership::factory()->create();
+        $admin->roles()->attach($role);
+        $this->actingAs($admin->user);
+
+        $ensemble1 = \App\Models\Ensemble::factory()->create(['name' => 'Ensemble 1']);
+        $ensemble2 = \App\Models\Ensemble::factory()->create(['name' => 'Ensemble 2']);
+
+        // Singer 1 in Ensemble 1
+        $singer1 = Membership::factory()->create();
+        \App\Models\Enrolment::factory()->create(['membership_id' => $singer1->id, 'ensemble_id' => $ensemble1->id]);
+
+        // Singer 2 in Ensemble 2
+        $singer2 = Membership::factory()->create();
+        \App\Models\Enrolment::factory()->create(['membership_id' => $singer2->id, 'ensemble_id' => $ensemble2->id]);
+
+        $event = Event::factory()->create();
+        $event->ensembles()->attach($ensemble1);
+
+        // RSVP for singer 1 (Going)
+        Rsvp::create([
+            'membership_id' => $singer1->id,
+            'event_id' => $event->id,
+            'response' => 'yes',
+        ]);
+
+        // RSVP for singer 2 (Going - even though they are not in the ensemble)
+        Rsvp::create([
+            'membership_id' => $singer2->id,
+            'event_id' => $event->id,
+            'response' => 'yes',
+        ]);
+
+        $response = $this->get(the_tenant_route('events.show', $event));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->component('Events/Show')
+            ->where('rsvpCount.yes', 1) // Should only count singer 1
+            ->where('rsvpCount.unknown', 0) // Admin is also a member, but if admin has no enrolment in ensemble1, they shouldn't be counted as missing either.
+        );
+    }
+
+    public function test_cannot_rsvp_to_event_if_not_in_required_ensemble(): void
+    {
+        $ensemble1 = \App\Models\Ensemble::factory()->create(['name' => 'Ensemble 1']);
+        $ensemble2 = \App\Models\Ensemble::factory()->create(['name' => 'Ensemble 2']);
+
+        $singer2 = Membership::factory()->create();
+        \App\Models\Enrolment::factory()->create(['membership_id' => $singer2->id, 'ensemble_id' => $ensemble2->id]);
+
+        $event = Event::factory()->create();
+        $event->ensembles()->attach($ensemble1);
+
+        $this->actingAs($singer2->user);
+
+        $response = $this->post(the_tenant_route('events.rsvps.store', $event), [
+            'rsvp_response' => 'yes',
+        ]);
+
+        $response->assertForbidden();
+    }
 }

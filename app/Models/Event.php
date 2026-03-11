@@ -248,9 +248,14 @@ class Event extends Model
             ->withDefault(['response' => 'unknown']);
     }
 
+    public function relevant_memberships(): Builder
+    {
+        return Membership::forEvent($this);
+    }
+
     public function singers_rsvp_response(string $response): Builder
     {
-        return Membership::active()->whereHas('rsvps', function (Builder $query) use ($response) {
+        return $this->relevant_memberships()->whereHas('rsvps', function (Builder $query) use ($response) {
             $query->where('event_id', '=', $this->id)->where('response', '=', $response);
         });
     }
@@ -260,12 +265,12 @@ class Event extends Model
         return VoicePart::withCount([
             'enrolments as singers_count' => function ($query) {
                 $query->whereHas('membership', function (Builder $query) {
-                    $query->active();
+                    $query->forEvent($this);
                 });
             },
             'enrolments as singers_going_count' => function ($query) use ($response) {
                 $query->whereHas('membership', function (Builder $query) use ($response) {
-                    $query->active()->whereHas('rsvps', function (Builder $query) use ($response) {
+                    $query->forEvent($this)->whereHas('rsvps', function (Builder $query) use ($response) {
                         $query->where('event_id', '=', $this->id)
                             ->where('response', '=', $response);
                     });
@@ -275,21 +280,21 @@ class Event extends Model
 
     public function singers_rsvp_missing(): Builder
     {
-        return Membership::active()->whereDoesntHave('rsvps', function (Builder $query) {
+        return $this->relevant_memberships()->whereDoesntHave('rsvps', function (Builder $query) {
             $query->where('event_id', '=', $this->id);
         });
     }
 
     public function singers_attendance(string $response): Builder
     {
-        return Membership::active()->whereHas('attendances', function (Builder $query) use ($response) {
+        return $this->relevant_memberships()->whereHas('attendances', function (Builder $query) use ($response) {
             $query->where('event_id', '=', $this->id)->where('response', '=', $response);
         });
     }
 
     public function singers_attendance_missing(): Builder
     {
-        return Membership::active()->whereDoesntHave('attendances', function (Builder $query) {
+        return $this->relevant_memberships()->whereDoesntHave('attendances', function (Builder $query) {
             $query->where('event_id', '=', $this->id);
         });
     }
@@ -299,12 +304,12 @@ class Event extends Model
         return VoicePart::withCount([
             'enrolments as singers_count' => function ($query) use ($response) {
                 $query->whereHas('membership', function (Builder $query) {
-                    $query->active();
+                    $query->forEvent($this);
                 });
             },
             'enrolments as singers_response_count' => function ($query) use ($response) {
                 $query->whereHas('membership', function (Builder $query) use ($response) {
-                    $query->active()->whereHas('attendances', function (Builder $query) use ($response) {
+                    $query->forEvent($this)->whereHas('attendances', function (Builder $query) use ($response) {
                         $query->where('event_id', '=', $this->id)
                             ->where('response', '=', $response);
                     });
@@ -420,7 +425,7 @@ class Event extends Model
     public function createMissingAttendanceRecords(): void
     {
         $this->attendances()->createMany(
-            Membership::active()
+            $this->relevant_memberships()
                 ->whereDoesntHave('attendances', fn ($query) => $query->where('attendances.event_id', $this->id))
                 ->pluck('id')
                 ->map(fn ($singerId) => ['membership_id' => $singerId, 'response' => 'unknown'])

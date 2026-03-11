@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Enrolment;
 use App\Models\Event;
+use App\Models\Membership;
 use App\Models\Rsvp;
 use App\Models\VoicePart;
 use Auth;
@@ -23,32 +24,42 @@ class RsvpController extends Controller
 	{
 		$this->authorize('viewAny', Rsvp::class);
 
-		$singers = Enrolment::query()
-			->with([
-                'voice_part',
-                'membership' => [
-                    'user',
-				    'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
-                ],
-			])
-            ->whereHas('membership', fn ($query) => $query->active())
+		$singers = Membership::forEvent($event)
+            ->with([
+                'user',
+                'enrolments.voice_part',
+                'enrolments.ensemble',
+                'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
+            ])
 			->get()
-            ->map(function ($singer) {
-                $singer->membership->rsvp = $singer->membership->rsvps->first() ?? Rsvp::Null();
-                return $singer;
+            ->map(function ($membership) use ($event) {
+                $membership->rsvp = $membership->rsvps->first() ?? Rsvp::Null();
+
+                if ($event->ensembles->isNotEmpty()) {
+                    $membership->setRelation('enrolments', $membership->enrolments->filter(function ($enrolment) use ($event) {
+                        return $event->ensembles->contains($enrolment->ensemble_id);
+                    }));
+                }
+
+                return $membership;
             })
-            ->sortBy('membership.user.name')
+            ->sortBy('user.name')
             ->values();
 
 		return Inertia::render('Events/Rsvps/Index', [
-			'event' => $event,
+			'event' => $event->load('ensembles'),
 			'singers' => $singers,
+            'totalEnsemblesCount' => \App\Models\Ensemble::count(),
 		]);
 	}
 
     public function store(Request $request, Event $event): RedirectResponse
     {
         $request->validate(['rsvp_response' => 'required']);
+
+        if ($event->ensembles->isNotEmpty() && !$event->relevant_memberships()->where('memberships.id', Auth::user()->membership->id)->exists()) {
+            abort(403, 'You are not eligible to RSVP for this event.');
+        }
 
         $event->rsvps()->updateOrCreate(
             ['membership_id' => Auth::user()->membership->id],
@@ -61,6 +72,10 @@ class RsvpController extends Controller
     public function update(Request $request, Event $event, Rsvp $rsvp): RedirectResponse
     {
         $request->validate(['rsvp_response' => 'required']);
+
+        if ($event->ensembles->isNotEmpty() && !$event->relevant_memberships()->where('memberships.id', Auth::user()->membership->id)->exists()) {
+            abort(403, 'You are not eligible to RSVP for this event.');
+        }
 
         $event->rsvps()->updateOrCreate(
             ['membership_id' => Auth::user()->membership->id],
