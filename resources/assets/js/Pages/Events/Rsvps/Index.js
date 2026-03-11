@@ -29,6 +29,7 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
   const sorts = [
     { id: 'full-name', name: 'Name', default: true },
     { id: 'rsvp-response', name: 'RSVP Response' },
+    { id: 'rsvp-updated', name: 'Updated' },
   ];
 
   const filters = [
@@ -50,6 +51,11 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 		rsvp: (
 			<TableHeadingSort form={sortFilterForm} sort="rsvp-response">
 				RSVP
+			</TableHeadingSort>
+		),
+	  updated: (
+			<TableHeadingSort form={sortFilterForm} sort="rsvp-updated">
+				Updated
 			</TableHeadingSort>
 		),
 		dietary: 'Dietary / Medical',
@@ -74,18 +80,19 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 					{ name: event.title, url: route('events.show', { event }) },
 					{ name: 'RSVP List', url: route('events.rsvps.index', { event }) },
 				]}
-                actions={[
-                    filterAction,
-                ]}
-                optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
+				actions={[filterAction]}
+				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 			/>
 
 			<div className="bg-white border-b border-gray-200 grid grid-cols-3">
 				{countsData.map(({ label, textColour, icon, count }) => (
-					<div className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1" key={label}>
+					<div
+						className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1"
+						key={label}
+					>
 						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
 							<Icon icon={icon} />
-                            {label}
+							{label}
 						</div>
 						<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
 					</div>
@@ -93,19 +100,28 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 			</div>
 
 			<IndexContainer
-                showFilters={showFilters}
-                filterPane={
-                    <FilterSortPane
-                        sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-                        filters={<RsvpFilters event={event} voiceParts={voiceParts} ensembles={ensembles} form={sortFilterForm} />}
-                        closeFn={() => setShowFilters(false)}
-                    />
-                }
-                tableMobile={<RsvpTableMobile singers={allSingers} pagination={pagination} showEnsemble={showEnsemble} />}
+				showFilters={showFilters}
+				filterPane={
+					<FilterSortPane
+						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+						filters={
+							<RsvpFilters
+								event={event}
+								voiceParts={voiceParts}
+								ensembles={ensembles}
+								form={sortFilterForm}
+							/>
+						}
+						closeFn={() => setShowFilters(false)}
+					/>
+				}
+				tableMobile={
+					<RsvpTableMobile singers={allSingers} pagination={pagination} showEnsemble={showEnsemble} />
+				}
 				tableDesktop={
 					<Table
 						headings={headings}
-                        pagination={<Pagination details={pagination} />}
+						pagination={<Pagination details={pagination} />}
 						body={allSingers.map(singer => (
 							<tr key={singer.id}>
 								<TableCell>
@@ -140,22 +156,22 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 									</ul>
 								</TableCell>
 								<TableCell>
-									<div className="flex flex-col">
-										<RsvpTag
-											icon={singer.rsvp.icon}
-											label={singer.rsvp.label}
-											colour={singer.rsvp.colour}
+									<RsvpTag
+										icon={singer.rsvp.icon}
+										label={singer.rsvp.label}
+										colour={singer.rsvp.colour}
+									/>
+								</TableCell>
+								<TableCell>
+									{!!singer.rsvp.updated_at && (
+										<DateTag
+											icon="pencil"
+											label="Updated"
+											date={singer.rsvp.updated_at}
+											format="DATETIME_SHORT"
+											className="text-gray-400 mt-1"
 										/>
-										{!!singer.rsvp.updated_at && (
-											<DateTag
-												icon="pencil"
-												label="Updated"
-												date={singer.rsvp.updated_at}
-												format="DATETIME_SHORT"
-												className="text-gray-400 mt-1"
-											/>
-										)}
-									</div>
+									)}
 								</TableCell>
 								<TableCell>
 									<div className="text-xs space-y-0.5">

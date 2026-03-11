@@ -50,6 +50,19 @@ class RsvpController extends Controller
                     ELSE 5
                 END $direction");
         });
+        $updatedSort = AllowedSort::callback('rsvp-updated', function (Builder $query, bool $descending) use ($event) {
+            $direction = $descending ? 'DESC' : 'ASC';
+            $query->select('memberships.*')
+                ->selectSub(
+                    Rsvp::query()
+                        ->select('updated_at')
+                        ->whereColumn('membership_id', 'memberships.id')
+                        ->where('event_id', $event->id)
+                        ->limit(1),
+                    'rsvp_updated'
+                )
+                ->orderBy('rsvp_updated', $direction);
+        });
 
         $query = Membership::forEvent($event)
             ->with([
@@ -91,6 +104,7 @@ class RsvpController extends Controller
             ->allowedSorts([
                 $nameSort,
                 $rsvpSort,
+                $updatedSort,
             ])
             ->defaultSort($nameSort)
             ->paginate(50)
