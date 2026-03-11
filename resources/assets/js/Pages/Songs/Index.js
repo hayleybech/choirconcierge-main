@@ -14,7 +14,7 @@ import useSortFilterForm from "../../hooks/useSortFilterForm";
 import EmptyState from "../../components/EmptyState";
 import useRoute from "../../hooks/useRoute";
 
-const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault }) => {
+const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault, userEnsemblesCount, ensembles }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
     const { can } = usePage().props;
@@ -30,6 +30,7 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
         { name: 'title', defaultValue: '' },
         { name: 'status.id', multiple: true, defaultValue: defaultStatuses },
         { name: 'categories.id', multiple: true },
+        { name: 'ensembles.id', multiple: true },
         { name: 'show_for_prospects', multiple: true, multipleBool: true, defaultValue: showForProspectsDefault },
     ];
 
@@ -61,14 +62,16 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
                         filters={<SongFilters
                             statuses={statuses}
                             categories={categories}
+                            ensembles={ensembles}
+                            userEnsemblesCount={userEnsemblesCount}
                             showForProspectsDefault={showForProspectsDefault}
                             form={sortFilterForm}
                         />}
                         closeFn={() => setShowFilters(false)}
                     />
                 }
-                tableMobile={<SongTableMobile songs={songs} />}
-                tableDesktop={<SongTableDesktop songs={songs} sortFilterForm={sortFilterForm} />}
+                tableMobile={<SongTableMobile songs={songs} userEnsemblesCount={userEnsemblesCount} />}
+                tableDesktop={<SongTableDesktop songs={songs} sortFilterForm={sortFilterForm} userEnsemblesCount={userEnsemblesCount} />}
                 emptyState={songs.data.length === 0
                     ? <EmptyState
                         title="No songs"

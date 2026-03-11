@@ -13,8 +13,9 @@ import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import useRoute from "../../hooks/useRoute";
 import useMetricImperialPreference from "../../hooks/useMetricImperialPreference";
+import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 
-const RiserStackForm = ({ stack, voiceParts, singers }) => {
+const RiserStackForm = ({ stack, voiceParts, singers, ensembles }) => {
     const { route } = useRoute();
 
     const { user } = usePage().props;
@@ -25,10 +26,11 @@ const RiserStackForm = ({ stack, voiceParts, singers }) => {
     const { data, setData, post, put, processing, errors } = useForm({
         title: stack?.title ?? '',
         rows: stack?.rows ?? 4,
-        columns: stack?.cols ?? 4,
+        columns: stack?.columns ?? 4,
         front_row_length: stack?.front_row_length ?? 1,
         front_row_on_floor: stack?.front_row_on_floor ?? false,
         singer_positions: stack?.members ??  [],
+        ensembles: stack?.ensembles?.map(e => e.id) ?? [],
     });
 
     function submit(e) {
@@ -134,6 +136,21 @@ const RiserStackForm = ({ stack, voiceParts, singers }) => {
                             disabled={!showHeights}
                         />
                     </div>
+
+                    {ensembles.length > 1 && (
+                        <div className="sm:col-span-6">
+                            <fieldset>
+                                <legend className="text-sm font-medium text-gray-700">Ensembles</legend>
+                                <CheckboxGroup
+                                    name="ensembles"
+                                    options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
+                                    value={data.ensembles}
+                                    updateFn={value => setData('ensembles', value)}
+                                />
+                                {errors.ensembles && <Error>{errors.ensembles}</Error>}
+                            </fieldset>
+                        </div>
+                    )}
 
                 </FormSection>
             </div>

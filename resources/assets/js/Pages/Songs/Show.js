@@ -92,11 +92,24 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
 								<SongStatusTag status={new SongStatus(song.status.slug)} withLabel />
 
 								{song.categories.length > 0 && (
-									<div className="space-x-1 5">
+									<div className="space-x-1.5 flex items-center">
 										{song.categories.map(category => (
 											<React.Fragment key={category.id}>
 												<SongCategoryTag category={category} />
 											</React.Fragment>
+										))}
+									</div>
+								)}
+
+								{song.ensembles.length > 0 && (
+									<div className="space-x-1.5 flex items-center">
+										{song.ensembles.map(ensemble => (
+											<span
+												key={ensemble.id}
+												className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800"
+											>
+												{ensemble.name}
+											</span>
 										))}
 									</div>
 								)}

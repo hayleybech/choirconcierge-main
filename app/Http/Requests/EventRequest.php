@@ -34,6 +34,8 @@ class EventRequest extends FormRequest
             'location_name' => ['nullable'],
             'location_address' => ['nullable'],
             'description' => ['nullable', 'max:5000'],
+            'ensembles' => ['nullable', 'array'],
+            'ensembles.*' => ['exists:ensembles,id'],
 
             'is_repeating' => ['boolean'],
             'repeat_frequency_unit' => ['exclude_unless:is_repeating,true', 'required'],

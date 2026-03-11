@@ -66,6 +66,7 @@ class UserGroup extends Model
             VoicePart::class => $attributes['recipient_voice_parts'] ?? [],
             User::class => $attributes['recipient_users'] ?? [],
             SingerCategory::class => $attributes['recipient_singer_categories'] ?? [],
+            Ensemble::class => $attributes['recipient_ensembles'] ?? [],
         ]);
 
         // Update senders
@@ -74,6 +75,7 @@ class UserGroup extends Model
             VoicePart::class => $attributes['sender_voice_parts'] ?? [],
             User::class => $attributes['sender_users'] ?? [],
             SingerCategory::class => $attributes['sender_singer_categories'] ?? [],
+            Ensemble::class => $attributes['sender_ensembles'] ?? [],
         ]);
 
         $group->save();
@@ -91,6 +93,7 @@ class UserGroup extends Model
             VoicePart::class => $attributes['recipient_voice_parts'] ?? [],
             User::class => $attributes['recipient_users'] ?? [],
             SingerCategory::class => $attributes['recipient_singer_categories'] ?? [],
+            Ensemble::class => $attributes['recipient_ensembles'] ?? [],
         ]);
 
         // Update senders
@@ -99,6 +102,7 @@ class UserGroup extends Model
             VoicePart::class => $attributes['sender_voice_parts'] ?? [],
             User::class => $attributes['sender_users'] ?? [],
             SingerCategory::class => $attributes['sender_singer_categories'] ?? [],
+            Ensemble::class => $attributes['sender_ensembles'] ?? [],
         ]);
 
         $this->save();
@@ -131,6 +135,11 @@ class UserGroup extends Model
         return $this->morphedByMany(SingerCategory::class, 'memberable', 'group_members', 'group_id');
     }
 
+    public function recipient_ensembles(): MorphToMany
+    {
+        return $this->morphedByMany(Ensemble::class, 'memberable', 'group_members', 'group_id');
+    }
+
     public function scopeByEmail(Builder $query, string $email): Builder
     {
         [$slug, $host] = explode('@', $email);
@@ -142,18 +151,30 @@ class UserGroup extends Model
         )->where('slug', $slug);
     }
 
-    /**
-     * @return Collection<User>
-     */
     public function get_all_recipients(): \Illuminate\Support\Collection
     {
         tenancy()->initialize($this->tenant);
 
-        return $this->recipient_users()->get()
+        $recipients = $this->recipient_users()->get()
             ->merge($this->getRoleUsers())
             ->merge($this->getPartUsers())
-            ->merge($this->getCategoryUsers())
-            ->unique();
+            ->merge($this->getCategoryUsers());
+
+        $ensembles = $this->recipient_ensembles;
+        if ($ensembles->isNotEmpty()) {
+            $ensembleUserIds = User::query()
+                ->whereHas('memberships', fn ($query) => $query
+                    ->active()
+                    ->whereHas('enrolments', fn ($query) => $query
+                        ->whereIn('ensemble_id', $ensembles->pluck('id'))
+                    )
+                )
+                ->pluck('id');
+
+            $recipients = $recipients->whereIn('id', $ensembleUserIds);
+        }
+
+        return $recipients->unique();
     }
 
     public function senders(): HasMany
@@ -179,6 +200,11 @@ class UserGroup extends Model
     public function sender_singer_categories(): MorphToMany
     {
         return $this->morphedByMany(SingerCategory::class, 'sender', 'group_senders', 'group_id');
+    }
+    
+    public function sender_ensembles(): MorphToMany
+    {
+        return $this->morphedByMany(Ensemble::class, 'sender', 'group_senders', 'group_id');
     }
 
     public function mail_log_events(): HasMany
@@ -207,11 +233,26 @@ class UserGroup extends Model
     {
         tenancy()->initialize($this->tenant);
 
-        return $this->sender_users()->get()
+        $senders = $this->sender_users()->get()
             ->merge($this->getRoleUsers('sender_roles'))
             ->merge($this->getPartUsers('sender_voice_parts'))
-            ->merge($this->getCategoryUsers('sender_singer_categories'))
-            ->unique();
+            ->merge($this->getCategoryUsers('sender_singer_categories'));
+
+        $ensembles = $this->sender_ensembles;
+        if ($ensembles->isNotEmpty()) {
+            $ensembleUserIds = User::query()
+                ->whereHas('memberships', fn ($query) => $query
+                    ->active()
+                    ->whereHas('enrolments', fn ($query) => $query
+                        ->whereIn('ensemble_id', $ensembles->pluck('id'))
+                    )
+                )
+                ->pluck('id');
+
+            $senders = $senders->whereIn('id', $ensembleUserIds);
+        }
+
+        return $senders->unique();
     }
 
     /**

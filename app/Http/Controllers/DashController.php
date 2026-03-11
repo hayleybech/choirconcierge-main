@@ -39,6 +39,7 @@ class DashController extends Controller
     private function getMemberversaries()
     {
         return Membership::query()
+            ->ensembleRestricted()
             ->with('user')
             ->select('*')
             ->active()
@@ -84,6 +85,7 @@ class DashController extends Controller
     private function getEmptyDobs()
     {
         return Membership::query()
+            ->ensembleRestricted()
             ->with('user')
             ->emptyDobs()
             ->count();
@@ -92,7 +94,7 @@ class DashController extends Controller
     private function getBirthdays()
     {
         return User::query()
-            ->whereHas('memberships', fn($query) => $query->active())
+            ->whereHas('memberships', fn($query) => $query->ensembleRestricted()->active())
             ->select('*')
             ->birthdays()
             ->get()

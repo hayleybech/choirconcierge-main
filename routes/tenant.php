@@ -181,7 +181,7 @@ Route::middleware([
         Route::resource('event-types', EventTypeController::class)->only(['index', 'store', 'update', 'destroy']);
 
         // Documents module
-        Route::resource('folders', FolderController::class)->except(['show', 'edit']);
+        Route::resource('folders', FolderController::class)->except(['show']);
         Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'update', 'destroy']);
 
         // Risers module

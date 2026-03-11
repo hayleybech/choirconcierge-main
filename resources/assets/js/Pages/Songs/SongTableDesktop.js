@@ -12,17 +12,20 @@ import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 import {useInstrument} from "../../hooks/useInstrument";
 
-const SongTableDesktop = ({ songs, sortFilterForm }) => {
+const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount }) => {
     const { route } = useRoute();
 
     const [instrument] = useInstrument();
+
+    const showEnsemblesColumn = userEnsemblesCount > 1;
 
     const headings = collect({
         title: <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>,
         status: <TableHeadingSort form={sortFilterForm} sort="status-title">Status</TableHeadingSort>,
         category: 'Category',
+        ensembles: showEnsemblesColumn ? 'Ensembles' : null,
         created_at: <TableHeadingSort form={sortFilterForm} sort="created_at">Date Created</TableHeadingSort>,
-    });
+    }).filter(heading => heading !== null);
 
     return (
         <Table
@@ -35,7 +38,7 @@ const SongTableDesktop = ({ songs, sortFilterForm }) => {
                             <div>
                                 <PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="xs" />
                             </div>
-                            <div className="ml-4">
+                            <div className="ml-4 max-w-[45ch] overflow-hidden text-ellipsis whitespace-nowrap">
                                 <Link href={route('songs.show', {song})} className="text-sm font-medium text-purple-800">{song.title}</Link>
                             </div>
                         </div>
@@ -48,6 +51,15 @@ const SongTableDesktop = ({ songs, sortFilterForm }) => {
                             {song.categories.map(category => (<Badge key={category.id}>{category.title}</Badge>))}
                         </div>
                     </TableCell>
+                    {showEnsemblesColumn && (
+                        <TableCell>
+                            <div className="space-x-1.5 space-y-1.5">
+                                {song.ensembles.map(ensemble => (
+                                    <Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">{ensemble.name}</Badge>
+                                ))}
+                            </div>
+                        </TableCell>
+                    )}
                     <TableCell>
                         <DateTag icon="pencil" date={song.created_at} />
                     </TableCell>

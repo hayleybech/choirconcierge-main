@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserGroupRequest;
+use App\Models\Ensemble;
 use App\Models\Role;
 use App\Models\SingerCategory;
 use App\Models\UserGroup;
@@ -40,6 +41,7 @@ class UserGroupController extends Controller
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'voiceParts' => VoicePart::all()->values(),
             'singerCategories' => SingerCategory::all()->values(),
+            'ensembles' => Ensemble::all()->values(),
         ]);
     }
 
@@ -59,7 +61,7 @@ class UserGroupController extends Controller
 
     public function show(UserGroup $group): Response
     {
-        $group->load('members.memberable', 'senders.sender');
+        $group->load('members.memberable', 'senders.sender', 'recipient_ensembles', 'sender_ensembles');
 
         $group->can = [
             'update_group' => auth()->user()?->can('update', $group),
@@ -74,8 +76,8 @@ class UserGroupController extends Controller
     public function edit(UserGroup $group): Response
     {
         $group->load([
-            'recipient_roles', 'recipient_voice_parts', 'recipient_singer_categories', 'recipient_users',
-            'sender_roles', 'sender_voice_parts', 'sender_singer_categories', 'sender_users',
+            'recipient_roles', 'recipient_voice_parts', 'recipient_singer_categories', 'recipient_users', 'recipient_ensembles',
+            'sender_roles', 'sender_voice_parts', 'sender_singer_categories', 'sender_users', 'sender_ensembles',
         ]);
 
         return Inertia::render('MailingLists/Edit', [
@@ -83,6 +85,7 @@ class UserGroupController extends Controller
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'voiceParts' => VoicePart::all()->values(),
             'singerCategories' => SingerCategory::all()->values(),
+            'ensembles' => Ensemble::all()->values(),
         ]);
     }
 

@@ -35,15 +35,17 @@ const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
                 />
             </fieldset>
 
-          <fieldset>
-            <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
-            <CheckboxGroup
-              name="enrolments.ensemble_id"
-              options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
-              value={data['enrolments.ensemble_id']}
-              updateFn={value => setData('enrolments.ensemble_id', value)}
-            />
-          </fieldset>
+          {ensembles.length > 1 && (
+            <fieldset>
+              <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+              <CheckboxGroup
+                name="enrolments.ensemble_id"
+                options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
+                value={data['enrolments.ensemble_id']}
+                updateFn={value => setData('enrolments.ensemble_id', value)}
+              />
+            </fieldset>
+          )}
 
             <fieldset>
                 <legend className="text-sm font-medium text-gray-700">Role</legend>

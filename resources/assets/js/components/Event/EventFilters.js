@@ -5,7 +5,7 @@ import CheckboxGroup from "../inputs/CheckboxGroup";
 import RadioGroup from "../inputs/RadioGroup";
 import Filters from "../Filters";
 
-const EventFilters = ({ eventTypes, form }) => (
+const EventFilters = ({ eventTypes, ensembles, userEnsemblesCount, form }) => (
 	<Filters
 		routeName="events.index"
 		form={form}
@@ -15,6 +15,18 @@ const EventFilters = ({ eventTypes, form }) => (
 					<Label label="Title" forInput="title" />
 					<TextInput name="title" value={data.title} updateFn={value => setData('title', value)} />
 				</div>
+
+				{userEnsemblesCount > 1 && (
+					<fieldset>
+						<legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+						<CheckboxGroup
+							name="ensembles.id"
+							options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
+							value={data['ensembles.id']}
+							updateFn={value => setData('ensembles.id', value)}
+						/>
+					</fieldset>
+				)}
 
 				<fieldset className="">
 					<legend className="text-sm font-medium text-gray-700">Type</legend>

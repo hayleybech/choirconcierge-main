@@ -33,6 +33,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Relationships
  * @property SongStatus $status
  * @property Collection<SongCategory> $categories
+ * @property Collection<Ensemble> $ensembles
  * @property Collection<SongAttachment> $attachments
  * @property Collection<Membership> $members
  *
@@ -51,7 +52,7 @@ class Song extends Model
      */
     protected $fillable = ['title', 'pitch_blown', 'show_for_prospects', 'suppress_email', 'description'];
 
-    protected $with = ['categories', 'status'];
+    protected $with = ['categories', 'status', 'ensembles'];
 
     public const PITCHES = [
         0 => 'A',
@@ -101,8 +102,9 @@ class Song extends Model
     {
         $status = SongStatus::find($attributes['status']);
         $categories = $attributes['categories'] ?? [];
+        $ensembles = $attributes['ensembles'] ?? [];
 
-        unset($attributes['status'], $attributes['categories']);
+        unset($attributes['status'], $attributes['categories'], $attributes['ensembles']);
 
         /** @var Song $song */
         $song = static::query()->create($attributes);
@@ -112,6 +114,10 @@ class Song extends Model
 
         // Attach categories
         $song->categories()->attach($categories);
+
+        // Attach ensembles
+        $song->ensembles()->attach($ensembles);
+
         $song->save();
 
         return $song;
@@ -126,7 +132,11 @@ class Song extends Model
         $status->songs()->save($this);
 
         // Attach categories
-        $this->categories()->sync($attributes['categories']);
+        $this->categories()->sync($attributes['categories'] ?? []);
+
+        // Sync ensembles
+        $this->ensembles()->sync($attributes['ensembles'] ?? []);
+
         $this->save();
 
         return true;
@@ -140,6 +150,11 @@ class Song extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(SongCategory::class, 'songs_song_categories', 'song_id', 'category_id');
+    }
+
+    public function ensembles(): BelongsToMany
+    {
+        return $this->belongsToMany(Ensemble::class, 'ensemble_song', 'song_id', 'ensemble_id');
     }
 
     public function attachments(): HasMany

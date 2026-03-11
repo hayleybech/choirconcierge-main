@@ -28,6 +28,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property Collection<Membership> $members
+ * @property Collection<Ensemble> $ensembles
  */
 class RiserStack extends Model
 {
@@ -47,5 +48,10 @@ class RiserStack extends Model
         return $this->belongsToMany(Membership::class, 'riser_stack_membership', 'riser_stack_id', 'membership_id')
             ->as('position')
             ->withPivot('row', 'column');
+    }
+
+    public function ensembles(): BelongsToMany
+    {
+        return $this->belongsToMany(Ensemble::class, 'ensemble_riser_stack', 'riser_stack_id', 'ensemble_id');
     }
 }

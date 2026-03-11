@@ -280,6 +280,46 @@ class Membership extends Model
         });
     }
 
+    public function scopeEnsembleRestricted(Builder $query): Builder
+    {
+        if (Ensemble::count() <= 1) {
+            return $query;
+        }
+
+        if (! auth()->user()?->membership) {
+            return $query;
+        }
+
+        if (auth()->user()->membership->hasAbility('singers_update')) {
+            return $query;
+        }
+
+        $userEnsembleIds = auth()->user()->membership->enrolments->pluck('ensemble_id');
+
+        return $query->whereHas('enrolments', function (Builder $query) use ($userEnsembleIds) {
+            $query->whereIn('ensemble_id', $userEnsembleIds);
+        });
+    }
+
+    public function canSee(Membership $other): bool
+    {
+        if ($this->is($other)) {
+            return true;
+        }
+
+        if ($this->hasAbility('singers_update')) {
+            return true;
+        }
+
+        if (Ensemble::count() <= 1) {
+            return true;
+        }
+
+        return $this->enrolments->pluck('ensemble_id')
+            ->intersect($other->enrolments->pluck('ensemble_id'))
+            ->isNotEmpty();
+    }
+
     public function hasAbility(string $ability): bool
     {
         return $this->roles->contains(fn(Role $role) => collect($role->abilities)->contains($ability));

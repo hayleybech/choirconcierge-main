@@ -5,7 +5,7 @@ import SongForm from "./SongForm";
 import AppHead from "../../components/AppHead";
 import useRoute from "../../hooks/useRoute";
 
-const Create = ({ categories, statuses, pitches }) => {
+const Create = ({ categories, statuses, pitches, ensembles }) => {
     const { route } = useRoute();
 
     return (
@@ -21,7 +21,7 @@ const Create = ({ categories, statuses, pitches }) => {
                 ]}
             />
 
-            <SongForm categories={categories} statuses={statuses} pitches={pitches} />
+            <SongForm categories={categories} statuses={statuses} pitches={pitches} ensembles={ensembles} />
         </>
     );
 }

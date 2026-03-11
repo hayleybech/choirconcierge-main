@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Ensemble;
 use App\Models\Enrolment;
 use App\Models\Role;
 use App\Models\Membership;
@@ -155,5 +156,97 @@ class UserGroupTest extends TestCase
         tenancy()->initialize($tenant);
 
         $this->assertCount(3, $group->get_all_senders());
+    }
+
+    public function test_get_all_recipients_filters_by_ensemble(): void
+    {
+        $group = UserGroup::factory()->create();
+
+        $role = Role::factory()->create();
+        $category = SingerCategory::factory()->create(['name' => 'Members']);
+        $ensembleA = Ensemble::factory()->create();
+        $ensembleB = Ensemble::factory()->create();
+
+        // 3 users in Role with Ensemble A
+        User::factory()->count(3)->create()->each(function($user) use ($role, $category, $ensembleA) {
+            $membership = Membership::factory()->create([
+                'user_id' => $user->id,
+                'singer_category_id' => $category->id
+            ]);
+            $membership->roles()->attach($role->id);
+            Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleA->id]);
+        });
+
+        // 2 users in Role with Ensemble B
+        User::factory()->count(2)->create()->each(function($user) use ($role, $category, $ensembleB) {
+            $membership = Membership::factory()->create([
+                'user_id' => $user->id,
+                'singer_category_id' => $category->id
+            ]);
+            $membership->roles()->attach($role->id);
+            Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleB->id]);
+        });
+
+        $group->recipient_roles()->attach($role->id);
+
+        // Without ensemble filter, should have 5 recipients
+        $this->assertEquals(5, $group->get_all_recipients()->count());
+
+        // Filter by Ensemble A
+        $group->recipient_ensembles()->attach($ensembleA->id);
+        $group->load('recipient_ensembles'); // Refresh relation cache
+
+        $this->assertEquals(3, $group->get_all_recipients()->count());
+
+        // Filter by Ensemble A and B
+        $group->recipient_ensembles()->attach($ensembleB->id);
+        $group->load('recipient_ensembles');
+        $this->assertEquals(5, $group->get_all_recipients()->count());
+    }
+
+    public function test_get_all_senders_filters_by_ensemble(): void
+    {
+        $group = UserGroup::factory()->create();
+
+        $role = Role::factory()->create();
+        $category = SingerCategory::factory()->create(['name' => 'Members']);
+        $ensembleA = Ensemble::factory()->create();
+        $ensembleB = Ensemble::factory()->create();
+
+        // 3 users in Role with Ensemble A
+        User::factory()->count(3)->create()->each(function($user) use ($role, $category, $ensembleA) {
+            $membership = Membership::factory()->create([
+                'user_id' => $user->id,
+                'singer_category_id' => $category->id
+            ]);
+            $membership->roles()->attach($role->id);
+            Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleA->id]);
+        });
+
+        // 2 users in Role with Ensemble B
+        User::factory()->count(2)->create()->each(function($user) use ($role, $category, $ensembleB) {
+            $membership = Membership::factory()->create([
+                'user_id' => $user->id,
+                'singer_category_id' => $category->id
+            ]);
+            $membership->roles()->attach($role->id);
+            Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleB->id]);
+        });
+
+        $group->sender_roles()->attach($role->id);
+
+        // Without ensemble filter, should have 5 senders
+        $this->assertEquals(5, $group->get_all_senders()->count());
+
+        // Filter by Ensemble A
+        $group->sender_ensembles()->attach($ensembleA->id);
+        $group->load('sender_ensembles'); // Refresh relation cache
+
+        $this->assertEquals(3, $group->get_all_senders()->count());
+
+        // Filter by Ensemble A and B
+        $group->sender_ensembles()->attach($ensembleB->id);
+        $group->load('sender_ensembles');
+        $this->assertEquals(5, $group->get_all_senders()->count());
     }
 }

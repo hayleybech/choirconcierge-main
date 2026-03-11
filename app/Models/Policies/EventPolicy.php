@@ -50,6 +50,13 @@ class EventPolicy
      */
     public function view(User $user, Event $event)
     {
+        if ($event->ensembles->isNotEmpty() && ! $user->membership->hasAbility('events_update')) {
+            $userEnsembles = $user->membership->enrolments->pluck('ensemble_id');
+            if ($event->ensembles->pluck('id')->intersect($userEnsembles)->isEmpty()) {
+                return false;
+            }
+        }
+
         return $user->membership->hasAbility('events_view');
     }
 

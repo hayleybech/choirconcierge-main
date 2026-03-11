@@ -68,16 +68,8 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow, WithValidat
             'joined_at' => $this->make_valid_mysql_datetime($rowArr['registration_date'] ?? null),
         ]);
 
-        // Add an enrolment to the first ensemble
-        // @todo add support for specifying which ensemble
-        $ensemble = tenant()->ensembles?->first();
-        if($ensemble) {
-            $member->enrolments()->updateOrCreate([
-                'membership_id' => $member->id,
-                'ensemble_id'   => $ensemble->id,
-                'voice_part_id' => isset($rowArr['voice_part']) ? VoicePart::firstWhere('title', $rowArr['voice_part'])->id : null,
-            ]);
-        }
+        // Add an enrolment to the ensembles
+        $this->handleEnrolments($member, $rowArr);
 
         // Add SingerCategory
         if (explode(' ', $rowArr['status'])[0] === 'Active') {
@@ -91,6 +83,59 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow, WithValidat
         $member->roles()->attach($this->userRole);
 
         $member->save();
+    }
+
+    private function handleEnrolments($member, array $rowArr): void
+    {
+        $voicePartRaw = $rowArr['voice_part'] ?? '';
+
+        if (empty($voicePartRaw)) {
+            $ensemble = tenant()->ensembles?->first();
+            if ($ensemble) {
+                $member->enrolments()->updateOrCreate([
+                    'ensemble_id' => $ensemble->id,
+                ], [
+                    'voice_part_id' => null,
+                ]);
+            }
+
+            return;
+        }
+
+        // Support for "Ensemble 1 - Alto;Ensemble 2 - Soprano"
+        if (str_contains($voicePartRaw, ';') || str_contains($voicePartRaw, ' - ')) {
+            $parts = explode(';', $voicePartRaw);
+            foreach ($parts as $part) {
+                $part = trim($part);
+                if (str_contains($part, ' - ')) {
+                    [$ensembleName, $voicePartTitle] = explode(' - ', $part, 2);
+                    $ensemble = tenant()->ensembles()->where('name', trim($ensembleName))->first();
+                    $voicePart = VoicePart::firstWhere('title', trim($voicePartTitle));
+                } else {
+                    $ensemble = tenant()->ensembles?->first();
+                    $voicePart = VoicePart::firstWhere('title', $part);
+                }
+
+                if ($ensemble) {
+                    $member->enrolments()->updateOrCreate([
+                        'ensemble_id' => $ensemble->id,
+                    ], [
+                        'voice_part_id' => $voicePart?->id,
+                    ]);
+                }
+            }
+        } else {
+            // Default behavior: just a voice part name
+            $ensemble = tenant()->ensembles?->first();
+            if ($ensemble) {
+                $voicePart = VoicePart::firstWhere('title', $voicePartRaw);
+                $member->enrolments()->updateOrCreate([
+                    'ensemble_id' => $ensemble->id,
+                ], [
+                    'voice_part_id' => $voicePart?->id,
+                ]);
+            }
+        }
     }
 
     private function make_valid_mysql_datetime(?string $datetime_raw): string

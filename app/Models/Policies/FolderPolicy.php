@@ -33,8 +33,15 @@ class FolderPolicy
         return $user->membership->hasAbility('folders_view');
     }
 
-    public function view(User $user): bool
+    public function view(User $user, Folder $folder): bool
     {
+        if ($folder->ensembles->isNotEmpty() && ! $user->membership->hasAbility('folders_update')) {
+            $userEnsembles = $user->membership->enrolments->pluck('ensemble_id');
+            if ($folder->ensembles->pluck('id')->intersect($userEnsembles)->isEmpty()) {
+                return false;
+            }
+        }
+
         return $user->membership->hasAbility('folders_view');
     }
 

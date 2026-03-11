@@ -4,6 +4,7 @@ import FormSection from "../../components/FormSection";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
+import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import RadioGroup from "../../components/inputs/RadioGroup";
 import Help from "../../components/inputs/Help";
 import ButtonLink from "../../components/inputs/ButtonLink";
@@ -20,7 +21,7 @@ import RichTextInput from "../../components/inputs/RichTextInput";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
 
-const EventForm = ({ event, types, mode }) => {
+const EventForm = ({ event, types, mode, ensembles = [] }) => {
     const { route } = useRoute();
     const { timezone_label } = usePage().props.tenant;
 
@@ -32,6 +33,7 @@ const EventForm = ({ event, types, mode }) => {
         location_icon: event?.location_icon ?? '',
         location_address: event?.location_address ?? '',
         description: event?.description ?? '',
+        ensembles: event?.ensembles?.map(ensemble => ensemble.id) ?? [],
         send_notification: !event,
         is_repeating: event?.is_repeating ?? false,
         repeat_frequency_unit: event?.repeat_frequency_unit ?? null,
@@ -201,6 +203,19 @@ const EventForm = ({ event, types, mode }) => {
                         <RichTextInput value={data.description} updateFn={value => setData(data => ({ ...data, description: value }))} />
                         {errors.description && <Error>{errors.description}</Error>}
                     </div>
+
+                    {ensembles.length > 1 && (
+                        <div className="sm:col-span-6">
+                            <Label label="Ensembles" forInput="ensembles" />
+                            <Help>Sub-groups that may view and access this event.</Help>
+                            <CheckboxGroup
+                                name="ensembles"
+                                options={ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name }))}
+                                value={data.ensembles}
+                                updateFn={value => setData('ensembles', value)}
+                            />
+                        </div>
+                    )}
 
                     <div className="sm:col-span-4 relative z-20">
                         <Label label="Start Date" forInput="start_date" />

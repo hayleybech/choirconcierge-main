@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
@@ -29,6 +30,9 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Enrolment> $enrolments
  * @property Collection<Membership> $members
  * @property Collection<User> $users
+ * @property Collection<Song> $songs
+ * @property Collection<Event> $events
+ * @property Collection<RiserStack> $riserStacks
  */
 
 class Ensemble extends Model
@@ -38,6 +42,25 @@ class Ensemble extends Model
 	protected $guarded = [];
 
 	protected $appends = ['logo_url'];
+    
+    public function scopeEnsembleRestricted(Builder $query): Builder
+    {
+        if (Ensemble::count() <= 1) {
+            return $query;
+        }
+
+        if (! auth()->user()?->membership) {
+            return $query;
+        }
+
+        if (auth()->user()->membership->hasAbility('singers_update')) {
+            return $query;
+        }
+
+        $userEnsembleIds = auth()->user()->membership->enrolments->pluck('ensemble_id');
+
+        return $query->whereIn('id', $userEnsembleIds);
+    }
 
 	public function organisation(): BelongsTo {
 		return $this->belongsTo(Tenant::class);
@@ -46,6 +69,26 @@ class Ensemble extends Model
     public function enrolments(): HasMany
     {
         return $this->hasMany(Enrolment::class);
+    }
+
+    public function songs(): BelongsToMany
+    {
+        return $this->belongsToMany(Song::class, 'ensemble_song', 'ensemble_id', 'song_id');
+    }
+
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'ensemble_event', 'ensemble_id', 'event_id');
+    }
+
+    public function riserStacks(): BelongsToMany
+    {
+        return $this->belongsToMany(RiserStack::class, 'ensemble_riser_stack', 'ensemble_id', 'riser_stack_id');
+    }
+
+    public function folders(): BelongsToMany
+    {
+        return $this->belongsToMany(Folder::class, 'ensemble_folder', 'ensemble_id', 'folder_id');
     }
 
 	public function logoUrl(): Attribute

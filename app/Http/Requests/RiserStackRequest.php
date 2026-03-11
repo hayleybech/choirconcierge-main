@@ -34,6 +34,8 @@ class RiserStackRequest extends FormRequest
             'front_row_length' => ['required', 'integer', 'min:1', 'max:255'],
             'singer_positions' => ['required'],
             'front_row_on_floor' => ['boolean'],
+            'ensembles' => ['nullable', 'array'],
+            'ensembles.*' => ['exists:ensembles,id'],
         ];
     }
 }

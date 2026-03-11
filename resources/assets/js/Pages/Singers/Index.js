@@ -71,8 +71,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
                         closeFn={() => setShowFilters(false)}
                     />
                 }
-                tableMobile={<SingerTableMobile singers={allSingers} pagination={pagination} />}
-                tableDesktop={<SingerTableDesktop singers={allSingers} sortFilterForm={sortFilterForm} pagination={pagination} />}
+                tableMobile={<SingerTableMobile singers={allSingers} pagination={pagination} ensembles={ensembles} />}
+                tableDesktop={<SingerTableDesktop singers={allSingers} sortFilterForm={sortFilterForm} pagination={pagination} ensembles={ensembles} />}
                 emptyState={allSingers.length === 0
                     ? <EmptyState
                         title="No singers"

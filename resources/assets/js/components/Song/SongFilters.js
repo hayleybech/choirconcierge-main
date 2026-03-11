@@ -4,7 +4,7 @@ import TextInput from "../inputs/TextInput";
 import CheckboxGroup from "../inputs/CheckboxGroup";
 import Filters from "../Filters";
 
-const SongFilters = ({ statuses, categories, form, showForProspectsDefault }) => (
+const SongFilters = ({ statuses, categories, ensembles, userEnsemblesCount, form, showForProspectsDefault }) => (
     <Filters
         routeName="songs.index"
         form={form}
@@ -23,6 +23,18 @@ const SongFilters = ({ statuses, categories, form, showForProspectsDefault }) =>
                     updateFn={value => setData('status.id', value)}
                 />
             </fieldset>
+
+            {userEnsemblesCount > 1 && (
+                <fieldset>
+                    <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+                    <CheckboxGroup
+                        name="ensembles.id"
+                        options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
+                        value={data['ensembles.id']}
+                        updateFn={value => setData('ensembles.id', value)}
+                    />
+                </fieldset>
+            )}
 
             {showForProspectsDefault.length > 1 && (
                 <fieldset>

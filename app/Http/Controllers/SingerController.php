@@ -50,7 +50,7 @@ class SingerController extends Controller
             'defaultStatus' => $defaultStatus,
             'voiceParts' => VoicePart::all()->values(),
             'roles' => Role::all()->values(),
-            'ensembles' => Ensemble::all()->values(),
+            'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
         ]);
     }
 
@@ -251,7 +251,10 @@ class SingerController extends Controller
     {
         $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
 
-        return QueryBuilder::for(Membership::class)
+        $query = Membership::query()
+            ->ensembleRestricted();
+
+        return QueryBuilder::for($query)
             ->with(['tasks', 'category', 'user', 'enrolments' => ['voice_part', 'ensemble'],])
             ->allowedFilters([
                 AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query

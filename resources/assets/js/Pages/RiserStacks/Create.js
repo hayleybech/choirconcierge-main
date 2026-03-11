@@ -5,7 +5,7 @@ import AppHead from "../../components/AppHead";
 import RiserStackForm from "./RiserStackForm";
 import useRoute from "../../hooks/useRoute";
 
-const Create = ({ voiceParts, singers }) => {
+const Create = ({ voiceParts, singers, ensembles }) => {
     const { route } = useRoute();
 
     return (
@@ -21,7 +21,7 @@ const Create = ({ voiceParts, singers }) => {
                 ]}
             />
 
-            <RiserStackForm voiceParts={voiceParts} singers={singers} />
+            <RiserStackForm voiceParts={voiceParts} singers={singers} ensembles={ensembles} />
         </>
     );
 }

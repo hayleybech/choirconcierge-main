@@ -2,7 +2,10 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Ensemble;
+use App\Models\Membership;
 use App\Models\RiserStack;
+use App\Models\Role;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -17,6 +20,20 @@ class RiserStackControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    protected function createUserWithRole(string $roleName): \App\Models\User
+    {
+        $role = Role::firstOrCreate(['name' => $roleName], [
+            'abilities' => $roleName === 'Music Team' 
+                ? ['riser_stacks_view', 'riser_stacks_create', 'riser_stacks_update', 'riser_stacks_delete']
+                : ['riser_stacks_view']
+        ]);
+
+        $singer = Membership::factory()->create();
+        $singer->roles()->attach([$role->id]);
+
+        return $singer->user;
+    }
+
     public function test_create_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Music Team'));
@@ -26,7 +43,131 @@ class RiserStackControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('RiserStacks/Create')
                 ->has('voiceParts')
+                ->has('ensembles')
             );
+    }
+
+    public function test_index_filters_by_ensemble(): void
+    {
+        $user = $this->createUserWithRole('Music Team');
+        $this->actingAs($user);
+
+        $ensemble1 = Ensemble::factory()->create();
+        $ensemble2 = Ensemble::factory()->create();
+
+        $stack1 = RiserStack::factory()->create();
+        $stack1->ensembles()->attach($ensemble1);
+
+        $stack2 = RiserStack::factory()->create();
+        $stack2->ensembles()->attach($ensemble2);
+
+        $this->get(the_tenant_route('stacks.index', ['filter' => ['ensembles.id' => [$ensemble1->id]]]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('stacks.data', 1)
+                ->where('stacks.data.0.id', $stack1->id)
+            );
+    }
+
+    public function test_index_hides_stacks_outside_user_ensembles_for_non_managers(): void
+    {
+        $user = $this->createUserWithRole('Members'); 
+        $this->actingAs($user);
+
+        $ensemble1 = Ensemble::factory()->create();
+        $ensemble2 = Ensemble::factory()->create();
+
+        // Enrol user in ensemble 1
+        $user->membership->enrolments()->create(['ensemble_id' => $ensemble1->id]);
+
+        $stack1 = RiserStack::factory()->create();
+        $stack1->ensembles()->attach($ensemble1);
+
+        $stack2 = RiserStack::factory()->create();
+        $stack2->ensembles()->attach($ensemble2);
+
+        $this->get(the_tenant_route('stacks.index'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('stacks.data', 1)
+                ->where('stacks.data.0.id', $stack1->id)
+            );
+    }
+
+    public function test_show_restricts_access_to_stacks_outside_user_ensembles(): void
+    {
+        $user = $this->createUserWithRole('Members');
+        $this->actingAs($user);
+
+        $ensemble1 = Ensemble::factory()->create();
+        $ensemble2 = Ensemble::factory()->create();
+
+        // Enrol user in ensemble 1
+        $user->membership->enrolments()->create(['ensemble_id' => $ensemble1->id]);
+
+        $stack1 = RiserStack::factory()->create();
+        $stack1->ensembles()->attach($ensemble1);
+
+        $stack2 = RiserStack::factory()->create();
+        $stack2->ensembles()->attach($ensemble2);
+
+        // Can view stack 1
+        $this->get(the_tenant_route('stacks.show', $stack1))->assertOk();
+
+        // Cannot view stack 2
+        $this->get(the_tenant_route('stacks.show', $stack2))->assertForbidden();
+    }
+
+    public function test_store_syncs_ensembles(): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        $ensemble = Ensemble::factory()->create();
+        $faker = Factory::create();
+
+        $data = [
+            'title' => $faker->sentence(),
+            'rows' => 4,
+            'columns' => 4,
+            'front_row_length' => 1,
+            'front_row_on_floor' => false,
+            'singer_positions' => [
+                ['id' => 1, 'position' => ['row' => 1, 'column' => 1]]
+            ],
+            'ensembles' => [$ensemble->id],
+        ];
+
+        $this->post(the_tenant_route('stacks.store'), $data)
+            ->assertSessionHasNoErrors();
+
+        $stack = RiserStack::where('title', $data['title'])->first();
+        $this->assertTrue($stack->ensembles->contains($ensemble));
+    }
+
+    public function test_update_syncs_ensembles(): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        $stack = RiserStack::factory()->create();
+        $ensemble = Ensemble::factory()->create();
+        $faker = Factory::create();
+
+        $data = [
+            'title' => $faker->sentence(),
+            'rows' => 4,
+            'columns' => 4,
+            'front_row_length' => 1,
+            'front_row_on_floor' => false,
+            'singer_positions' => [
+                ['id' => 1, 'position' => ['row' => 1, 'column' => 1]]
+            ],
+            'ensembles' => [$ensemble->id],
+        ];
+
+        $this->put(the_tenant_route('stacks.update', $stack), $data)
+            ->assertSessionHasNoErrors();
+
+        $this->assertTrue($stack->fresh()->ensembles->contains($ensemble));
     }
 
     public function test_destroy_redirects_to_index(): void
