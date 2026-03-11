@@ -65,13 +65,20 @@ class AttendanceController extends Controller
                 ->orderBy('attendance_updated', $direction);
         });
 
+        $defaultCategoryId = SingerCategory::where('name', 'Members')->value('id');
+        $filter = request()->query('filter', []);
+
         $query = Membership::forEvent($event)
             ->with([
                 'user',
                 'enrolments.voice_part',
                 'enrolments.ensemble',
+                'category',
                 'attendances' => fn($query) => $query->where('event_id', '=', $event->id),
-            ]);
+            ])
+            ->when($defaultCategoryId && !isset($filter['category.id']), function (Builder $query) use ($defaultCategoryId) {
+                $query->where('singer_category_id', $defaultCategoryId);
+            });
 
         $pagination = QueryBuilder::for($query)
             ->allowedFilters([
@@ -94,6 +101,7 @@ class AttendanceController extends Controller
                     $responses = (array) $value;
                     $query->whereHas('attendances', fn($query) => $query->where('event_id', $event->id)->whereIn('response', $responses));
                 }),
+                AllowedFilter::exact('category.id', 'singer_category_id'),
             ])
             ->allowedSorts([
                 $nameSort,
@@ -125,6 +133,7 @@ class AttendanceController extends Controller
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
             'totalEnsemblesCount' => Ensemble::count(),
+            'singerCategories' => SingerCategory::all()->values(),
             'counts' => [
                 'present' => $event->attendances()->where('response', 'present')->count(),
                 'late' => $event->attendances()->where('response', 'late')->count(),

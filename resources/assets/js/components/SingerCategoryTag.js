@@ -3,7 +3,7 @@ import Icon from "./Icon";
 
 const SingerCategoryTag = ({ status, withLabel }) => (
     <span>
-        <Icon icon={status.icon} mr className={`text-sm ${status.textColour}`} />
+        <Icon icon={status.icon} mr={withLabel} className={`text-sm ${status.textColour}`} />
         {withLabel && <span className="text-sm font-medium text-gray-500 truncate">{status.title}</span>}
     </span>
 );

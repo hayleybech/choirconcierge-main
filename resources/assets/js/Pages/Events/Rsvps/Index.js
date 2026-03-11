@@ -20,8 +20,10 @@ import Sorts from '../../../components/Sorts';
 import RsvpFilters from '../../../components/RsvpFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import { Link } from '@inertiajs/react';
+import SingerStatus from '../../../SingerStatus';
+import SingerCategoryTag from '../../../components/SingerCategoryTag';
 
-const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts, ensembles, counts }) => {
+const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts, ensembles, singerCategories, counts }) => {
 	const { route } = useRoute();
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
@@ -39,6 +41,7 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 		{ name: 'enrolments.voice_part_id', multiple: true },
 		{ name: 'enrolments.ensemble_id', multiple: true },
 		{ name: 'rsvp.response', multiple: true },
+		{ name: 'category.id', multiple: true, defaultValue: singerCategories.find(c => c.name === 'Members')?.id ? [singerCategories.find(c => c.name === 'Members').id] : [] },
 	];
 
 	const sortFilterForm = useSortFilterForm(['events.rsvps.index', { event: event.id }], filters, sorts);
@@ -116,6 +119,7 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 								voiceParts={voiceParts}
 								ensembles={ensembles}
 								form={sortFilterForm}
+								singerCategories={singerCategories}
 							/>
 						}
 						closeFn={() => setShowFilters(false)}
@@ -139,12 +143,15 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 												alt={singer.user.name}
 											/>
 										</div>
-										<Link
-											href={route('singers.show', { singer })}
-											className="text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
-										>
-											{singer.user.name}
-										</Link>
+										<div>
+											<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+											<Link
+												href={route('singers.show', { singer })}
+												className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
+											>
+												{singer.user.name}
+											</Link>
+										</div>
 									</div>
 								</TableCell>
 								<TableCell>

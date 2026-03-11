@@ -7,6 +7,8 @@ import Badge from '../../../components/Badge';
 import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
 import { Link } from '@inertiajs/react';
+import SingerStatus from '../../../SingerStatus';
+import SingerCategoryTag from '../../../components/SingerCategoryTag';
 
 const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event }) => {
 	const { route } = useRoute();
@@ -25,17 +27,16 @@ const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event }) => 
 						</div>
 						<div className="min-w-0 flex-1">
 							<div className="flex flex-wrap items-center justify-between mb-2 gap-x-2">
-								<Link
-									href={route('singers.show', { singer })}
-									className="text-sm font-medium text-purple-600 truncate"
-								>
-									{singer.user.name}
-								</Link>
-								<AttendanceRecord
-									attendance={singer.attendance}
-									singerId={singer.id}
-									event={event}
-								/>
+								<div>
+									<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+									<Link
+										href={route('singers.show', { singer })}
+										className="ml-1 text-sm font-medium text-purple-600 truncate"
+									>
+										{singer.user.name}
+									</Link>
+								</div>
+								<AttendanceRecord attendance={singer.attendance} singerId={singer.id} event={event} />
 							</div>
 							<div className="flex flex-wrap gap-1">
 								{singer.enrolments.map(enrolment => (

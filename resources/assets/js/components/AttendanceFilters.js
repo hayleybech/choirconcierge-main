@@ -4,7 +4,7 @@ import Label from "./inputs/Label";
 import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
 
-const AttendanceFilters = ({ event, voiceParts, form, ensembles }) => (
+const AttendanceFilters = ({ event, voiceParts, form, ensembles, singerCategories }) => (
     <Filters
         routeName="events.attendances.index"
         routeParams={{ event: event.id }}
@@ -14,6 +14,16 @@ const AttendanceFilters = ({ event, voiceParts, form, ensembles }) => (
                 <Label label="Name" forInput="user.name" />
                 <TextInput name="user.name" value={data['user.name']} updateFn={value => setData('user.name', value)} />
             </div>
+
+            <fieldset>
+                <legend className="text-sm font-medium text-gray-700">Singer Category</legend>
+                <CheckboxGroup
+                    name="category.id"
+                    options={singerCategories.map((category) => ({ id: category.id, name: category.name }))}
+                    value={data['category.id']}
+                    updateFn={value => setData('category.id', value)}
+                />
+            </fieldset>
 
             <fieldset>
                 <legend className="text-sm font-medium text-gray-700">Voice Part</legend>

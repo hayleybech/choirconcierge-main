@@ -503,4 +503,28 @@ class RsvpControllerTest extends TestCase
                 ->where('allSingers.0.id', $singer1->id)
             );
     }
+
+    public function test_index_defaults_to_members_category(): void
+    {
+        $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
+        $admin = Membership::factory()->create();
+        $admin->roles()->attach($role);
+        $this->actingAs($admin->user);
+
+        $membersCategory = SingerCategory::where('name', 'Members')->first();
+        $prospectsCategory = SingerCategory::where('name', 'Prospects')->first();
+
+        $event = Event::factory()->create();
+        $member = Membership::factory()->create(['singer_category_id' => $membersCategory->id]);
+        $prospect = Membership::factory()->create(['singer_category_id' => $prospectsCategory->id]);
+
+        $this->get(the_tenant_route('events.rsvps.index', ['event' => $event]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('allSingers', function ($singers) use ($membersCategory) {
+                    $categories = collect($singers)->pluck('singer_category_id')->unique();
+                    return $categories->count() === 1 && $categories->first() === $membersCategory->id;
+                })
+            );
+    }
 }

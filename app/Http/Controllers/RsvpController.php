@@ -79,15 +79,16 @@ class RsvpController extends Controller
                 ->orderBy('has_dietary_medical', $direction);
         });
 
+        $defaultCategoryId = SingerCategory::where('name', 'Members')->value('id');
+
         $query = Membership::forEvent($event)
             ->with([
                 'user',
                 'enrolments.voice_part',
                 'enrolments.ensemble',
+                'category',
                 'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
             ]);
-
-        $defaultCategory = SingerCategory::where('name', 'Members')->value('id');
 
         $pagination = QueryBuilder::for($query)
             ->allowedFilters([
@@ -117,7 +118,8 @@ class RsvpController extends Controller
                         }
                     });
                 }),
-                AllowedFilter::exact('category.id', 'singer_category_id'),
+                AllowedFilter::exact('category.id', 'singer_category_id')
+                    ->default([$defaultCategoryId]),
             ])
             ->allowedSorts([
                 $nameSort,
@@ -148,6 +150,7 @@ class RsvpController extends Controller
             'totalEnsemblesCount' => Ensemble::count(),
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
+            'singerCategories' => SingerCategory::all()->values(),
             'counts' => [
                 'yes' => $event->singers_rsvp_response('yes')->count(),
                 'maybe' => $event->singers_rsvp_response('maybe')->count(),

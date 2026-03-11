@@ -161,6 +161,27 @@ class AttendanceControllerTest extends TestCase
             );
     }
 
+    public function test_index_defaults_to_members_category(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $membersCategory = SingerCategory::where('name', 'Members')->first();
+        $prospectsCategory = SingerCategory::where('name', 'Prospects')->first();
+
+        $event = Event::factory()->create();
+        $member = Membership::factory()->create(['singer_category_id' => $membersCategory->id]);
+        $prospect = Membership::factory()->create(['singer_category_id' => $prospectsCategory->id]);
+
+        $this->get(the_tenant_route('events.attendances.index', ['event' => $event]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('allSingers', function ($singers) use ($membersCategory) {
+                    $categories = collect($singers)->pluck('singer_category_id')->unique();
+                    return $categories->count() === 1 && $categories->first() === $membersCategory->id;
+                })
+            );
+    }
+
     public function test_update_all_redirects_to_event(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
