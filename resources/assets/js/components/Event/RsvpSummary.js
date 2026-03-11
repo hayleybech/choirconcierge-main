@@ -26,13 +26,13 @@ const RsvpSummary = ({ rsvpCount, voicePartsRsvpCount }) => (
             <Tab.Panel className="py-6 px-4">
                 <div className="flex">
                     {[
-                        { label: 'Going', colour: 'emerald-500', icon: 'check', count: rsvpCount.yes },
-                        { label: 'Unknown', colour: 'red-500', icon: 'question', count: rsvpCount.unknown },
-                        { label: 'Not going', colour: 'gray-500', icon: 'times', count: rsvpCount.no },
-                    ].map(({ label, colour, icon, count}) => (
+                        { label: 'Going', textColour: 'text-emerald-500', icon: 'check', count: rsvpCount.yes },
+                        { label: 'Unknown', textColour: 'text-red-500', icon: 'question', count: rsvpCount.unknown },
+                        { label: 'Not going', textColour: 'text-gray-500', icon: 'times', count: rsvpCount.no },
+                    ].map(({ label, textColour, icon, count}) => (
                         <div className="w-1/3 text-center" key={label}>
-                            <Icon icon={icon} className={`text-${colour}`} />
-                            <p className={`font-semibold text-${colour}`}>{label}</p>
+                            <Icon icon={icon} className={textColour} />
+                            <p className={`font-semibold ${textColour}`}>{label}</p>
                             {count}
                         </div>
                     ))}

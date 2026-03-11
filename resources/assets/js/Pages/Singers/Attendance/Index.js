@@ -87,7 +87,7 @@ const Index = ({ singer, attendances, eventTypes, pagination }) => {
 															<div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
 																<AttendanceTag
 																	icon={attendance.icon}
-																	colour={attendance.colour}
+																	colour={attendance.textColour}
 																	label={attendance.label}
 																/>
 															</div>

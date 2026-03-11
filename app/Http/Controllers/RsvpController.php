@@ -25,6 +25,7 @@ class RsvpController extends Controller
 
 		$singers = Enrolment::query()
 			->with([
+                'voice_part',
                 'membership' => [
                     'user',
 				    'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
@@ -36,18 +37,12 @@ class RsvpController extends Controller
                 $singer->membership->rsvp = $singer->membership->rsvps->first() ?? Rsvp::Null();
                 return $singer;
             })
-			->groupBy('voice_part_id');
-
-		$voice_parts = VoicePart::all()
-			->push(VoicePart::getNullVoicePart())
-			->map(function ($part) use ($singers) {
-				$part->singers = $singers[$part->id === null ? "" : $part->id] ?? collect([]);
-				return $part;
-			});
+            ->sortBy('membership.user.name')
+            ->values();
 
 		return Inertia::render('Events/Rsvps/Index', [
 			'event' => $event,
-			'voiceParts' => $voice_parts->values(),
+			'singers' => $singers,
 		]);
 	}
 

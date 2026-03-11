@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Rsvp;
+use App\Models\Role;
 use App\Models\Membership;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -120,5 +121,27 @@ class RsvpControllerTest extends TestCase
             'event_id' => $event->id,
             'membership_id' => Auth::user()->membership->id,
         ]);
+    }
+
+    public function test_index_returns_flat_list_of_singers(): void
+    {
+        $membership = Membership::factory()->create();
+        $role = Role::create([
+            'name' => 'Admin',
+            'abilities' => ['rsvps_view'],
+        ]);
+        $membership->roles()->attach($role);
+        $this->actingAs($membership->user);
+
+        $event = Event::factory()->create();
+
+        $response = $this->get(the_tenant_route('events.rsvps.index', $event));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->component('Events/Rsvps/Index')
+            ->has('event')
+            ->has('singers')
+        );
     }
 }
