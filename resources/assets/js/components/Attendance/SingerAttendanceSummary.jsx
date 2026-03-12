@@ -13,7 +13,7 @@ export const SingerAttendanceSummary = ({ attendanceSummary }) => {
 						<div className="flex flex-col gap-4">
 							<div>
 								<div className="flex gap-2 justify-between items-start mb-1">
-									<p className="text-sm text-gray-500">Recent Rehearsal Attendance (Last 8 weeks)</p>
+									<p className="text-sm text-gray-500">Recent Rehearsal Attendance (Last 8)</p>
 									<ButtonLink
 										variant="secondary"
 										size="xs"

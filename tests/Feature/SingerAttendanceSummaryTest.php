@@ -18,14 +18,14 @@ class SingerAttendanceSummaryTest extends TestCase
 
         $rehearsalType = EventType::firstWhere('title', 'Rehearsal') ?? EventType::create(['title' => 'Rehearsal']);
 
-        // Create 10 rehearsals in the last 8 weeks
-        $events = Event::factory()->count(10)->create([
+        // Create 8 rehearsals in the last 8 weeks
+        $events = Event::factory()->count(8)->create([
             'type_id' => $rehearsalType->id,
             'start_date' => now()->subWeeks(2),
         ]);
 
-        // Mark singer as present for 7 of them
-        $events->take(7)->each(function ($event) use ($singer) {
+        // Mark singer as present for 6 of them
+        $events->take(6)->each(function ($event) use ($singer) {
             Attendance::factory()->create([
                 'membership_id' => $singer->id,
                 'event_id' => $event->id,
@@ -33,8 +33,8 @@ class SingerAttendanceSummaryTest extends TestCase
             ]);
         });
 
-        // Mark singer as absent for 3 of them
-        $events->skip(7)->each(function ($event) use ($singer) {
+        // Mark singer as absent for 2 of them
+        $events->skip(6)->each(function ($event) use ($singer) {
             Attendance::factory()->create([
                 'membership_id' => $singer->id,
                 'event_id' => $event->id,
@@ -42,7 +42,7 @@ class SingerAttendanceSummaryTest extends TestCase
             ]);
         });
 
-        // Create an event more than 8 weeks ago (should be ignored)
+        // Create an event more than 8 events ago (should be ignored as we limit to 8)
         $oldEvent = Event::factory()->create([
             'type_id' => $rehearsalType->id,
             'start_date' => now()->subWeeks(10),
@@ -68,9 +68,9 @@ class SingerAttendanceSummaryTest extends TestCase
         $this->get(the_tenant_route('singers.show', [$singer]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('attendanceSummary.attended', 7)
-                ->where('attendanceSummary.total', 10)
-                ->where('attendanceSummary.percentage', 70)
+                ->where('attendanceSummary.attended', 6)
+                ->where('attendanceSummary.total', 8)
+                ->where('attendanceSummary.percentage', 75)
             );
     }
 }

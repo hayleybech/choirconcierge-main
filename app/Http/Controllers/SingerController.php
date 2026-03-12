@@ -138,24 +138,26 @@ class SingerController extends Controller
             return null;
         }
 
-        $eightWeeksAgo = now()->subWeeks(8);
         $eventType = EventType::where('title', 'Rehearsal')->first();
         if (!$eventType) {
             return null;
         }
 
-        $recentEventsCount = Event::where('type_id', $eventType->id)
-            ->where('start_date', '>=', $eightWeeksAgo)
+        $recentEvents = Event::where('type_id', $eventType->id)
             ->where('start_date', '<=', now())
-            ->count();
+            ->orderByDesc('start_date')
+            ->limit(8)
+            ->get();
+
+        $recentEventsCount = $recentEvents->count();
+
+        if ($recentEventsCount === 0) {
+            return null;
+        }
 
         $attendedCount = $singer->attendances()
             ->whereIn('response', ['present', 'late'])
-            ->whereHas('event', function ($query) use ($eightWeeksAgo, $eventType) {
-                $query->where('type_id', $eventType->id)
-                    ->where('start_date', '>=', $eightWeeksAgo)
-                    ->where('start_date', '<=', now());
-            })
+            ->whereIn('event_id', $recentEvents->pluck('id'))
             ->count();
 
         return [
