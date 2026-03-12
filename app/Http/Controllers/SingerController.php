@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\CustomSorts\SingerNameSort;
-use App\CustomSorts\SingerLastNameFirstSort;
 use App\CustomSorts\SingerStatusSort;
 use App\CustomSorts\SingerVoicePartSort;
+use App\Traits\HasSingerSorts;
 use App\Http\Requests\CreateSingerRequest;
 use App\Http\Requests\EditSingerRequest;
 use App\Models\CustomField;
@@ -34,6 +33,8 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class SingerController extends Controller
 {
+    use HasSingerSorts;
+
     public function __construct()
     {
         $this->authorizeResource(Membership::class, 'singer');
@@ -250,9 +251,6 @@ class SingerController extends Controller
 
     private function getSingers(string $defaultStatus): LengthAwarePaginator
     {
-        $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
-        $lastNameFirstSort = AllowedSort::custom('last-name-first', new SingerLastNameFirstSort(), 'last_name');
-
         $query = Membership::query()
             ->ensembleRestricted();
 
@@ -286,13 +284,12 @@ class SingerController extends Controller
                 })
             ])
             ->allowedSorts([
-                $nameSort,
-                $lastNameFirstSort,
+                ...$this->singerSorts(),
                 AllowedSort::custom('status-title', new SingerStatusSort(), 'status'),
                 AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),
                 AllowedSort::field('paid_until'),
             ])
-            ->defaultSort($nameSort)
+            ->defaultSort($this->singerSorts()[0])
             ->paginate(50)->appends(request()->query());
     }
 

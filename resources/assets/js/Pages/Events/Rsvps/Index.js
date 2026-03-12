@@ -22,6 +22,7 @@ import TableHeadingSort from '../../../components/TableHeadingSort';
 import { Link } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
 import SingerCategoryTag from '../../../components/SingerCategoryTag';
+import { handleNameSort } from '../../../utils/sortHelpers';
 
 const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts, ensembles, singerCategories, counts }) => {
 	const { route } = useRoute();
@@ -49,7 +50,12 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 
 	const headings = collect({
 		singer: (
-			<TableHeadingSort form={sortFilterForm} sort="full-name">
+			<TableHeadingSort
+				form={sortFilterForm}
+				sort={['full-name', 'last-name-first']}
+				onClick={() => handleNameSort(sortFilterForm)}
+				indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+			>
 				Name
 			</TableHeadingSort>
 		),

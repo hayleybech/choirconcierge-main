@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\CustomSorts\SingerNameSort;
-use App\CustomSorts\SingerLastNameFirstSort;
 use App\Models\Attendance;
 use App\Models\Enrolment;
 use App\Models\Ensemble;
@@ -11,6 +9,7 @@ use App\Models\Event;
 use App\Models\Membership;
 use App\Models\VoicePart;
 use App\Models\SingerCategory;
+use App\Traits\HasSingerSorts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,14 +22,14 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class AttendanceController extends Controller
 {
+    use HasSingerSorts;
+
     public function index(Event $event): Response
     {
         $this->authorize('viewAny', Attendance::class);
 
         $event->createMissingAttendanceRecords();
 
-        $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
-        $lastNameFirstSort = AllowedSort::custom('last-name-first', new SingerLastNameFirstSort(), 'last_name');
         $attendanceSort = AllowedSort::callback('attendance-response', function (Builder $query, bool $descending) use ($event) {
             $direction = $descending ? 'DESC' : 'ASC';
             $query->select('memberships.*')
@@ -106,12 +105,11 @@ class AttendanceController extends Controller
                 AllowedFilter::exact('category.id', 'singer_category_id'),
             ])
             ->allowedSorts([
-                $nameSort,
-                $lastNameFirstSort,
+                ...$this->singerSorts(),
                 $attendanceSort,
                 $updatedSort,
             ])
-            ->defaultSort($nameSort)
+            ->defaultSort($this->singerSorts()[0])
             ->paginate(50)
             ->appends(request()->query());
 

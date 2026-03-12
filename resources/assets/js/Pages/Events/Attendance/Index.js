@@ -28,6 +28,7 @@ import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import SingerStatus from '../../../SingerStatus';
 import SingerCategoryTag from '../../../components/SingerCategoryTag';
+import { handleNameSort } from '../../../utils/sortHelpers';
 
 const Index = ({
 	event,
@@ -68,7 +69,12 @@ const Index = ({
 
 	const headings = collect({
 		singer: (
-			<TableHeadingSort form={sortFilterForm} sort="full-name">
+			<TableHeadingSort
+				form={sortFilterForm}
+				sort={['full-name', 'last-name-first']}
+				onClick={() => handleNameSort(sortFilterForm)}
+				indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+			>
 				Name
 			</TableHeadingSort>
 		),

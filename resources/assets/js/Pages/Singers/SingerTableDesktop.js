@@ -22,6 +22,7 @@ import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import RadioGroup from '../../components/inputs/RadioGroup';
 import Badge from '../../components/Badge';
+import { handleNameSort } from '../../utils/sortHelpers';
 
 const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles }) => {
 	const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
@@ -34,7 +35,12 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles }) 
 
 	const headings = collect({
 		name: (
-			<TableHeadingSort form={sortFilterForm} sort="full-name">
+			<TableHeadingSort
+				form={sortFilterForm}
+				sort={['full-name', 'last-name-first']}
+				onClick={() => handleNameSort(sortFilterForm)}
+				indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+			>
 				Name
 			</TableHeadingSort>
 		),
