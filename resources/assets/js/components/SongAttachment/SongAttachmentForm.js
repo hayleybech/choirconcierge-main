@@ -26,9 +26,9 @@ const SongAttachmentForm = ({ song }) => {
 
     function submit(e) {
         e.preventDefault();
-        post(route('songs.attachments.store', {song: song.id}));
-
-        reset();
+        post(route('songs.attachments.store', {song: song.id}), {
+			onSuccess: () => reset(),
+		});
     }
 
     return (

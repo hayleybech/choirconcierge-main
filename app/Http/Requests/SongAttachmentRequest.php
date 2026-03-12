@@ -30,7 +30,7 @@ class SongAttachmentRequest extends FormRequest
             'attachment_uploads' => [Rule::excludeIf(fn () => $this->isVideo()), 'required', 'array'],
             'attachment_uploads.*' => [Rule::excludeIf(fn () => $this->isVideo()), 'required', 'file'],
             'url' => [Rule::excludeIf(fn () => !$this->isVideo()), 'required', 'url', 'max:255'],
-            'title' => ['max:255'],
+            'title' => ['max:255', Rule::requiredIf(fn () => $this->isVideo())],
         ];
     }
 
