@@ -52,7 +52,15 @@ function getFilters(filters){
 const getFilterSingle = (params, name, defaultValue = '') => params.filter?.[name] ?? defaultValue;
 
 const getFilterMultiple = (params, name, defaultValue = [], bool) => !!params.filter && name in params.filter
-    ? params.filter?.[name].map(value => bool ? value === 'true' : parseInt(value))
+    ? params.filter?.[name].map(value => {
+        if (bool) {
+            return value === 'true';
+        }
+
+        const parsed = parseInt(value);
+
+        return isNaN(parsed) || parsed.toString() !== value.toString() ? value : parsed;
+    })
     : defaultValue;
 
 function getSort(defaultSort) {

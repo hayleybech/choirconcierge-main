@@ -7,18 +7,89 @@ import AttendanceTag from '../../../components/Event/AttendanceTag';
 import Icon from '../../../components/Icon';
 import TextInput from '../../../components/inputs/TextInput';
 import Label from '../../../components/inputs/Label';
-import CollapseGroup from '../../../components/CollapseGroup';
 import useRoute from '../../../hooks/useRoute';
 import Dialog from '../../../components/Dialog';
-import { usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import QRCode from 'react-qr-code';
 import DateTag from '../../../components/DateTag';
+import Table, { TableCell } from '../../../components/Table';
+import IndexContainer from '../../../components/IndexContainer';
+import AttendanceTableMobile from './AttendanceTableMobile';
+import Pagination from '../../../components/Pagination';
+import AttendanceRecord from '../../../components/Event/AttendanceRecord';
+import useFilterPane from '../../../hooks/useFilterPane';
+import useSortFilterForm from '../../../hooks/useSortFilterForm';
+import FilterSortPane from '../../../components/FilterSortPane';
+import Sorts from '../../../components/Sorts';
+import AttendanceFilters from '../../../components/AttendanceFilters';
+import TableHeadingSort from '../../../components/TableHeadingSort';
+import collect from 'collect.js';
+import VoicePartTag from '../../../components/VoicePartTag';
+import Badge from '../../../components/Badge';
+import SingerStatus from '../../../SingerStatus';
+import SingerCategoryTag from '../../../components/SingerCategoryTag';
 
-const Index = ({ event, voice_parts, individualCheckInUrl }) => {
+const Index = ({
+	event,
+	allSingers,
+	pagination,
+	totalEnsemblesCount,
+	voiceParts,
+	ensembles,
+	singerCategories,
+	counts,
+	individualCheckInUrl,
+}) => {
 	const [checkInDialogIsOpen, setCheckInDialogIsOpen] = useState(false);
 
 	const { route } = useRoute();
 	const { props: pageProps } = usePage();
+
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+
+	const showEnsemble = event.ensembles.length > 0 || totalEnsemblesCount > 1;
+
+	const sorts = [
+		{ id: 'full-name', name: 'Name', default: true },
+		{ id: 'attendance-response', name: 'Attendance Response' },
+		{ id: 'attendance-updated', name: 'Updated' },
+	];
+
+	const filters = [
+		{ name: 'user.name', defaultValue: '' },
+		{ name: 'enrolments.voice_part_id', multiple: true },
+		{ name: 'enrolments.ensemble_id', multiple: true },
+		{ name: 'attendance.response', multiple: true },
+		{ name: 'category.id', multiple: true, defaultValue: singerCategories.find(c => c.name === 'Members')?.id ? [singerCategories.find(c => c.name === 'Members').id] : [] },
+	];
+
+	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);
+
+	const headings = collect({
+		singer: (
+			<TableHeadingSort form={sortFilterForm} sort="full-name">
+				Name
+			</TableHeadingSort>
+		),
+		voice_part: 'Voice Part',
+		attendance: (
+			<TableHeadingSort form={sortFilterForm} sort="attendance-response">
+				Attendance
+			</TableHeadingSort>
+		),
+		updated: (
+			<TableHeadingSort form={sortFilterForm} sort="attendance-updated">
+				Updated
+			</TableHeadingSort>
+		),
+	});
+
+	const countsData = [
+		{ label: 'On Time', textColour: 'text-emerald-500', icon: 'check', count: counts.present },
+		{ label: 'Late', textColour: 'text-amber-500', icon: 'alarm-exclamation', count: counts.late },
+		{ label: 'Absent', textColour: 'text-red-500', icon: 'times', count: counts.absent },
+		{ label: 'Not recorded', textColour: 'text-gray-500', icon: 'question', count: counts.unknown },
+	];
 
 	return (
 		<>
@@ -45,7 +116,9 @@ const Index = ({ event, voice_parts, individualCheckInUrl }) => {
 						onClick: () => setCheckInDialogIsOpen(true),
 						can: 'create_attendance',
 					},
+					filterAction,
 				].filter(action => (action.can ? pageProps.can[action.can] : true))}
+				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 				meta={
 					<div>
 						<p className="mb-2">Use this page to manually mark everyone's attendance. </p>
@@ -82,82 +155,113 @@ const Index = ({ event, voice_parts, individualCheckInUrl }) => {
 				</div>
 			</Dialog>
 
-			<CollapseGroup
-				items={voice_parts.map(part => ({
-					title: part.title,
-					show: true,
-					defaultOpen: true,
-					content: (
-						<div key={part.id} className="relative">
-							<div className="flex justify-center flex-wrap bg-white py-4 border-b border-gray-200 gap-y-6">
-								{[
-									{
-										label: 'On Time',
-										colour: 'emerald',
-										icon: 'check',
-										count: part.members.filter(attendance => attendance.response === 'present')
-											.length,
-									},
-									{
-										label: 'Late',
-										colour: 'amber',
-										icon: 'alarm-exclamation',
-										count: part.members.filter(attendance => attendance.response === 'late').length,
-									},
-									{
-										label: 'Absent',
-										colour: 'red',
-										icon: 'times',
-										count: part.members.filter(
-											attendance =>
-												attendance.response === 'absent' ||
-												attendance.response === 'absent_apology' ||
-												attendance.response === 'late_deemed_absent'
-										).length,
-									},
-									{
-										label: 'Unknown',
-										colour: 'gray',
-										icon: 'question',
-										count: part.members.filter(attendance => attendance.response === 'unknown')
-											.length,
-									},
-								].map(({ label, colour, icon, count }) => (
-									<div
-										className="w-1/3 md:w-1/5 text-center flex flex-col items-center justify-between"
-										key={label}
-									>
-										<div className="hidden md:block">
-											<AttendanceTag
-												label={label}
-												icon={icon}
-												colour={colour}
-												size="md"
-												className="font-bold block"
+			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-4">
+				{countsData.map(({ label, textColour, icon, count }) => (
+					<div
+						className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1 border-gray-100"
+						key={label}
+					>
+						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
+							<Icon icon={icon} />
+							{label}
+						</div>
+						<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
+					</div>
+				))}
+			</div>
+
+			<IndexContainer
+				showFilters={showFilters}
+				filterPane={
+					<FilterSortPane
+						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+						filters={
+							<AttendanceFilters
+								event={event}
+								voiceParts={voiceParts}
+								ensembles={ensembles}
+								form={sortFilterForm}
+								singerCategories={singerCategories}
+							/>
+						}
+						closeFn={() => setShowFilters(false)}
+					/>
+				}
+				tableMobile={
+					<AttendanceTableMobile
+						singers={allSingers}
+						pagination={pagination}
+						showEnsemble={showEnsemble}
+						event={event}
+					/>
+				}
+				tableDesktop={
+					<Table
+						headings={headings}
+						pagination={<Pagination details={pagination} />}
+						body={allSingers.map(singer => (
+							<tr key={singer.id}>
+								<TableCell>
+									<div className="flex items-center space-x-3">
+										<div className="shrink-0">
+											<img
+												className="h-8 w-8 rounded-md object-cover"
+												src={singer.user.avatar_url}
+												alt={singer.user.name}
 											/>
 										</div>
-										<div
-											className={`flex flex-col items-center md:hidden font-bold text-${colour}-500`}
-										>
-											<Icon icon={icon} className="text-lg" />
-											{label}
+										<div>
+											<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+											<Link
+												href={route('singers.show', { singer })}
+												className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
+											>
+												{singer.user.name}
+											</Link>
 										</div>
-										{count}
 									</div>
-								))}
-							</div>
-							<ul role="list" className="relative z-0 divide-y divide-gray-200">
-								{part.members.map(attendance => (
+								</TableCell>
+								<TableCell>
+									<ul className="flex flex-col gap-1.5">
+										{singer.enrolments.map(enrolment => (
+											<li key={enrolment.id} className="flex gap-1 items-center">
+												{showEnsemble && (
+													<Badge colour="bg-purple-100 text-purple-800">
+														{enrolment.ensemble.name}
+													</Badge>
+												)}
+												{enrolment.voice_part && (
+													<VoicePartTag
+														title={enrolment.voice_part.title}
+														colour={enrolment.voice_part.colour}
+													/>
+												)}
+											</li>
+										))}
+									</ul>
+								</TableCell>
+								<TableCell>
 									<AttendanceRecord
-										key={attendance.member.id}
-										attendance={attendance}
+										attendance={singer.attendance}
+										singerId={singer.id}
 										event={event}
 									/>
-								))}
-							</ul>
-						</div>
-					),
-				}))}
+								</TableCell>
+								<TableCell>
+									{!!singer.attendance.updated_at && (
+										<DateTag
+											icon="pencil"
+											label="Updated"
+											date={singer.attendance.updated_at}
+											format="DATETIME_SHORT"
+											className="text-gray-400"
+										/>
+									)}
+								</TableCell>
+							</tr>
+						))}
+					/>
+				}
 			/>
 		</>
 	);
@@ -166,136 +270,3 @@ const Index = ({ event, voice_parts, individualCheckInUrl }) => {
 Index.layout = page => <TenantLayout children={page} />;
 
 export default Index;
-
-const AttendanceRecord = ({ attendance, event }) => {
-	const [absentReason, setAbsentReason] = useState();
-	const [isEditing, setIsEditing] = useState(attendance.response === 'unknown');
-
-	const { props: pageProps } = usePage();
-
-	return (
-		<li className="bg-white">
-			<div className="relative px-6 py-5 flex flex-col xl:flex-row items-stretch xl:items-center gap-y-3 sm:gap-x-3 hover:bg-gray-50 justify-between">
-				<div className="flex space-x-2 shrink-0 grow items-center">
-					<div className="shrink-0">
-						<img
-							className="h-12 w-12 rounded-lg"
-							src={attendance.member.user.avatar_url}
-							alt={attendance.member.user.name}
-						/>
-					</div>
-					<div className="shrink-0">
-						<p className="text-sm font-medium text-gray-900">{attendance.member.user.name}</p>
-					</div>
-				</div>
-				{isEditing ? (
-					<div className="shrink-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 items:stretch sm:items-end">
-						<div className="text-sm text-gray-700 mr-2 mb-2">Mark as:</div>
-						{[
-							{
-								response: 'present',
-								label: 'On Time',
-								icon: 'check',
-								variant: 'success-outline',
-							},
-							{
-								response: 'late',
-								label: 'Late',
-								icon: 'alarm-exclamation',
-								variant: 'warning-outline',
-							},
-							{
-								response: 'late_deemed_absent',
-								label: 'Late (Deemed Absent)',
-								icon: 'times',
-								variant: 'danger-outline',
-							},
-						].map(
-							({ response, label, icon, variant }) =>
-								attendance.response !== response && (
-									<Button
-										href={route('events.attendances.update', {
-											event,
-											singer: attendance.member.id,
-											tenant: pageProps.tenant,
-										})}
-										method="put"
-										data={{
-											response: response,
-											absent_reason: absentReason,
-										}}
-										preserveScroll
-										size="sm"
-										variant={variant}
-										key={response}
-									>
-										<Icon icon={icon} />
-										{label}
-									</Button>
-								)
-						)}
-
-						{!['absent', 'absent_apology'].includes(attendance.response) && (
-							<>
-								<div className="flex flex-col items-stretch gap-0.5 sm:gap-2">
-									<Label
-										label="Reason for absence (Optional)"
-										forInput={`absent_reason_${attendance.member.id}`}
-									/>
-									<TextInput
-										name="absent_reason"
-										id={`absent_reason_${attendance.member.id}`}
-										value={absentReason}
-										updateFn={value => setAbsentReason(value)}
-										wrapperClasses="grow"
-									/>
-								</div>
-
-								<Button
-									href={route('events.attendances.update', {
-										event,
-										singer: attendance.member.id,
-										tenant: pageProps.tenant,
-									})}
-									method="put"
-									data={{
-										response: !!absentReason ? 'absent_apology' : 'absent',
-										absent_reason: absentReason,
-									}}
-									preserveScroll
-									size="sm"
-									variant="danger-outline"
-								>
-									<Icon icon="times" />
-									Absent
-								</Button>
-							</>
-						)}
-					</div>
-				) : (
-					<div className="flex flex-col">
-						<div className="flex gap-2 items-center">
-							<AttendanceTag label={attendance.label} icon={attendance.icon} colour={attendance.colour} />
-							<Button variant="primary" size="xs" onClick={() => setIsEditing(true)}>
-								<Icon icon="edit" />
-								Change
-							</Button>
-						</div>
-						{!!attendance.updated_at && (
-							<DateTag
-								icon="pencil"
-								label="Updated"
-								date={attendance.updated_at}
-								format="DATETIME_SHORT"
-								className="text-sm text-gray-400"
-							/>
-						)}
-						{attendance.response.includes('absent') && attendance.absent_reason && (
-							<div className="text-sm text-gray-500">Reason for absence: {attendance.absent_reason}</div>
-						)}
-					</div>
-				)}
-			</div>
-		</li>
-	);
-};

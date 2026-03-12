@@ -273,6 +273,15 @@ class Membership extends Model
         });
     }
 
+    public function scopeForEvent(Builder $query, Event $event): Builder
+    {
+        return $query->when($event->ensembles->isNotEmpty(), function (Builder $query) use ($event) {
+            $query->whereHas('enrolments', function (Builder $query) use ($event) {
+                $query->whereIn('ensemble_id', $event->ensembles->pluck('id'));
+            });
+        });
+    }
+
     public function scopeRole(Builder $query, string $roleName): Builder
     {
         return $query->whereHas('roles', static function (Builder $query) use ($roleName) {
