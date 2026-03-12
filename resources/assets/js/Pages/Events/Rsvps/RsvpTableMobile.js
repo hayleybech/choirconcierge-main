@@ -9,6 +9,7 @@ import useRoute from '../../../hooks/useRoute';
 import { Link } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
 import SingerCategoryTag from '../../../components/SingerCategoryTag';
+import Icon from '../../../components/Icon';
 
 const RsvpTableMobile = ({ singers, pagination, showEnsemble }) => {
 	const { route } = useRoute();
@@ -28,13 +29,25 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble }) => {
 						<div className="min-w-0 flex-1">
 							<div className="flex items-center justify-between mb-1">
 								<div>
-									<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
-									<Link
-										href={route('singers.show', { singer })}
-										className="ml-1 text-sm font-medium text-purple-600 truncate"
-									>
-										{singer.user.name}
-									</Link>
+									<div>
+										<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+										<Link
+											href={route('singers.show', { singer })}
+											className="ml-1 text-sm font-medium text-purple-600 truncate"
+										>
+											{singer.user.name}
+										</Link>
+									</div>
+									<div className="text-sm text-gray-400">
+										<Icon icon="phone" mr className="text-gray-400 text-sm" />
+										{singer.user.phone ? (
+											<a href={`tel:${singer.user.phone}`} target="_blank">
+												{singer.user.phone}
+											</a>
+										) : (
+											'No phone'
+										)}
+									</div>
 								</div>
 								<div className="scale-90 origin-right">
 									<RsvpTag

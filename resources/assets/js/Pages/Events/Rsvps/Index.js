@@ -144,13 +144,25 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 											/>
 										</div>
 										<div>
-											<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
-											<Link
-												href={route('singers.show', { singer })}
-												className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
-											>
-												{singer.user.name}
-											</Link>
+											<div>
+												<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+												<Link
+													href={route('singers.show', { singer })}
+													className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
+												>
+													{singer.user.name}
+												</Link>
+											</div>
+											<div className="text-sm text-gray-400">
+												<Icon icon="phone" mr className="text-gray-400" />
+												{singer.user.phone ? (
+													<a href={`tel:${singer.user.phone}`} target="_blank">
+														{singer.user.phone}
+													</a>
+												) : (
+													'No phone'
+												)}
+											</div>
 										</div>
 									</div>
 								</TableCell>
