@@ -66,7 +66,8 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 								)}
 							</ActionMenu>
 						) : (
-							filteredActions.length === 2 && (
+							filteredActions.length === 2 &&
+							(filteredActions[1].label ? (
 								<Button
 									href={filteredActions[1].url}
 									onClick={filteredActions[1].onClick}
@@ -77,7 +78,11 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 									<Icon icon={filteredActions[1].icon} mr />
 									{filteredActions[1].label}
 								</Button>
-							)
+							) : (
+								<div className="sm:hidden">
+									{filteredActions[1]}
+								</div>
+							))
 						)}
 					</div>
 				</div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomField;
 use App\Models\Enrolment;
 use App\Models\Ensemble;
 use App\Models\Event;
@@ -89,6 +90,7 @@ class RsvpController extends Controller
                 'enrolments.ensemble',
                 'category',
                 'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
+                'customFields',
             ]);
 
         $pagination = QueryBuilder::for($query)
@@ -152,6 +154,7 @@ class RsvpController extends Controller
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
             'singerCategories' => SingerCategory::all()->values(),
+            'customFields' => CustomField::all()->values(),
             'counts' => [
                 'yes' => $event->singers_rsvp_response('yes')->count(),
                 'maybe' => $event->singers_rsvp_response('maybe')->count(),

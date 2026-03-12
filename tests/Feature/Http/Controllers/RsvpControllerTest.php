@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\CustomField;
 use App\Models\Event;
 use App\Models\Rsvp;
 use App\Models\Role;
@@ -524,6 +525,33 @@ class RsvpControllerTest extends TestCase
                 ->where('allSingers', function ($singers) use ($membersCategory) {
                     $categories = collect($singers)->pluck('singer_category_id')->unique();
                     return $categories->count() === 1 && $categories->first() === $membersCategory->id;
+                })
+            );
+    }
+
+    public function test_index_includes_custom_fields(): void
+    {
+        $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
+        $admin = Membership::factory()->create();
+        $admin->roles()->attach($role);
+        $admin->update([
+            'singer_category_id' => SingerCategory::where('name', 'Members')->first()->id,
+        ]);
+        $this->actingAs($admin->user);
+
+        $customField = CustomField::factory()->create(['name' => 'Custom Field 1']);
+        $admin->customFields()->attach($customField, ['value' => 'Custom value']);
+
+        $event = Event::factory()->create();
+
+        $this->get(the_tenant_route('events.rsvps.index', $event))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('Events/Rsvps/Index')
+                ->has('customFields')
+                ->where('customFields.0.name', 'Custom Field 1')
+                ->where('allSingers', function ($singers) use ($admin) {
+                    $singer = collect($singers)->firstWhere('id', $admin->id);
+                    return $singer && count($singer['custom_fields']) === 1 && $singer['custom_fields'][0]['entry']['value'] === 'Custom value';
                 })
             );
     }

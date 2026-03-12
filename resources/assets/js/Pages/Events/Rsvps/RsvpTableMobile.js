@@ -11,8 +11,10 @@ import SingerStatus from '../../../SingerStatus';
 import SingerCategoryTag from '../../../components/SingerCategoryTag';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
+import { runInContext as vislbleColumns } from 'lodash';
+import { TableCell } from '../../../components/Table';
 
-const RsvpTableMobile = ({ singers, pagination, showEnsemble }) => {
+const RsvpTableMobile = ({ singers, pagination, showEnsemble, visibleColumns, customFields }) => {
 	const { route } = useRoute();
 
 	return (
@@ -51,14 +53,16 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble }) => {
 									</div>
 								</div>
 								<div className="div">
-									<div className="scale-90 origin-right">
-										<RsvpTag
-											icon={singer.rsvp.icon}
-											label={singer.rsvp.label}
-											colour={singer.rsvp.colour}
-										/>
-									</div>
-									{!!singer.rsvp.updated_at && (
+									{visibleColumns.includes('rsvp') && (
+										<div className="scale-90 origin-right">
+											<RsvpTag
+												icon={singer.rsvp.icon}
+												label={singer.rsvp.label}
+												colour={singer.rsvp.colour}
+											/>
+										</div>
+									)}
+									{visibleColumns.includes('updated') && !!singer.rsvp.updated_at && (
 										<DateTag
 											icon="pencil"
 											date={singer.rsvp.updated_at}
@@ -69,39 +73,54 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble }) => {
 									)}
 								</div>
 							</div>
-							<div className="flex flex-wrap gap-1">
-								{singer.enrolments.map(enrolment => (
-									<div key={enrolment.id} className="flex gap-1 items-center">
-										{showEnsemble && (
-											<Badge colour="bg-purple-100 text-purple-800">
-												{enrolment.ensemble.name}
-											</Badge>
-										)}
-										{enrolment.voice_part && (
-											<VoicePartTag
-												title={enrolment.voice_part.title}
-												colour={enrolment.voice_part.colour}
-											/>
-										)}
-									</div>
-								))}
-							</div>
-							{(singer.user.dietary_requirements || singer.user.medical_conditions) && (
-								<div className="mt-2 text-[11px] text-amber-800 bg-amber-50 py-1.5 px-2 rounded space-y-0.5">
-									{singer.user.dietary_requirements && (
-										<div className="truncate">
-											<span className="font-bold uppercase text-[9px]">Dietary:</span>{' '}
-											{singer.user.dietary_requirements}
+							{visibleColumns.includes('voice_part') && (
+								<div className="flex flex-wrap gap-1">
+									{singer.enrolments.map(enrolment => (
+										<div key={enrolment.id} className="flex gap-1 items-center">
+											{showEnsemble && (
+												<Badge colour="bg-purple-100 text-purple-800">
+													{enrolment.ensemble.name}
+												</Badge>
+											)}
+											{enrolment.voice_part && (
+												<VoicePartTag
+													title={enrolment.voice_part.title}
+													colour={enrolment.voice_part.colour}
+												/>
+											)}
 										</div>
-									)}
-									{singer.user.medical_conditions && (
-										<div className="truncate">
-											<span className="font-bold uppercase text-[9px]">Medical:</span>{' '}
-											{singer.user.medical_conditions}
-										</div>
-									)}
+									))}
 								</div>
 							)}
+							{visibleColumns.includes('dietary') &&
+								(singer.user.dietary_requirements || singer.user.medical_conditions) && (
+									<div className="mt-2 text-[11px] text-amber-800 bg-amber-50 py-1.5 px-2 rounded space-y-0.5">
+										{singer.user.dietary_requirements && (
+											<div className="truncate">
+												<span className="font-bold uppercase text-[9px]">Dietary:</span>{' '}
+												{singer.user.dietary_requirements}
+											</div>
+										)}
+										{singer.user.medical_conditions && (
+											<div className="truncate">
+												<span className="font-bold uppercase text-[9px]">Medical:</span>{' '}
+												{singer.user.medical_conditions}
+											</div>
+										)}
+									</div>
+								)}
+							<div className="flex flex-col">
+								{customFields.filter(cf => visibleColumns.includes(`cf-${cf.id}`)).map(cf => {
+									const field = singer.custom_fields.find(f => f.id === cf.id);
+
+									return (
+										<div key={cf.id} className="leading-[1]">
+											<span className="text-xs text-gray-500 font-bold">{cf.name}: </span>
+											<span className="text-xs text-gray-500">{field?.entry?.value || '-'}</span>
+										</div>
+									);
+								})}
+							</div>
 						</div>
 					</div>
 				</TableMobileListItem>
