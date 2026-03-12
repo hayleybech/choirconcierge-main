@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react';
 import menuItemStyles from './menuItemStyles';
 import { Menu } from '@headlessui/react';
 
-const ActionMenuItem = ({ url, onClick, download, variant, children }) => {
+const ActionMenuItem = ({ url, onClick, download, variant, children, method }) => {
     return (
         <Menu.Item>
             {({ active }) => {
@@ -23,6 +23,7 @@ const ActionMenuItem = ({ url, onClick, download, variant, children }) => {
                             <Link
                                 href={url}
                                 className={menuItemStyles(variant, active)}
+								method={method}
                             >
                                 {children}
                             </Link>

@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import PageHeader from '../../../components/PageHeader/PageHeader';
 import TenantLayout from '../../../Layouts/TenantLayout';
-import Button from '../../../components/inputs/Button';
 import AppHead from '../../../components/AppHead';
-import AttendanceTag from '../../../components/Event/AttendanceTag';
 import Icon from '../../../components/Icon';
-import TextInput from '../../../components/inputs/TextInput';
-import Label from '../../../components/inputs/Label';
 import useRoute from '../../../hooks/useRoute';
 import Dialog from '../../../components/Dialog';
 import { Link, usePage } from '@inertiajs/react';

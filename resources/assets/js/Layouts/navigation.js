@@ -78,6 +78,16 @@ const navigation = [
             { name: 'Add New', route: 'tasks.create', icon: 'fa-plus-square', can: 'create_task', showAsActiveForRoutes: ['tasks.create'] },
         ]
     },
+    {
+        name: 'Polls',
+        route: 'polls.index',
+        icon: 'fa-poll',
+        can: 'view_dash',
+        showAsActiveForRoutes: ['polls.*'],
+        items: [
+            { name: 'Add New', route: 'polls.create', icon: 'fa-plus-square', can: 'view_dash', showAsActiveForRoutes: ['polls.create'] },
+        ]
+    },
 ];
 
 export default navigation;
