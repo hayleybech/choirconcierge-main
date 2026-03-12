@@ -50,7 +50,8 @@ const Index = ({
 	const showEnsemble = event.ensembles.length > 0 || totalEnsemblesCount > 1;
 
 	const sorts = [
-		{ id: 'full-name', name: 'Name', default: true },
+		{ id: 'full-name', name: 'First Name', default: true },
+		{ id: 'last-name-first', name: 'Last Name' },
 		{ id: 'attendance-response', name: 'Attendance Response' },
 		{ id: 'attendance-updated', name: 'Updated' },
 	];

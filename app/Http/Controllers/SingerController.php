@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CustomSorts\SingerNameSort;
+use App\CustomSorts\SingerLastNameFirstSort;
 use App\CustomSorts\SingerStatusSort;
 use App\CustomSorts\SingerVoicePartSort;
 use App\Http\Requests\CreateSingerRequest;
@@ -250,6 +251,7 @@ class SingerController extends Controller
     private function getSingers(string $defaultStatus): LengthAwarePaginator
     {
         $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
+        $lastNameFirstSort = AllowedSort::custom('last-name-first', new SingerLastNameFirstSort(), 'last_name');
 
         $query = Membership::query()
             ->ensembleRestricted();
@@ -285,6 +287,7 @@ class SingerController extends Controller
             ])
             ->allowedSorts([
                 $nameSort,
+                $lastNameFirstSort,
                 AllowedSort::custom('status-title', new SingerStatusSort(), 'status'),
                 AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),
                 AllowedSort::field('paid_until'),

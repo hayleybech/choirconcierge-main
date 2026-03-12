@@ -11,6 +11,7 @@ use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
 use App\CustomSorts\SingerNameSort;
+use App\CustomSorts\SingerLastNameFirstSort;
 use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -33,6 +34,7 @@ class RsvpController extends Controller
 		$this->authorize('viewAny', Rsvp::class);
 
         $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
+        $lastNameFirstSort = AllowedSort::custom('last-name-first', new SingerLastNameFirstSort(), 'last_name');
         $rsvpSort = AllowedSort::callback('rsvp-response', function (Builder $query, bool $descending) use ($event) {
             $direction = $descending ? 'DESC' : 'ASC';
             $query->select('memberships.*')
@@ -123,6 +125,7 @@ class RsvpController extends Controller
             ])
             ->allowedSorts([
                 $nameSort,
+                $lastNameFirstSort,
                 $rsvpSort,
                 $updatedSort,
                 $dietaryMedicalSort,

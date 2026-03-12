@@ -30,7 +30,8 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 	const showEnsemble = event.ensembles.length > 0 || totalEnsemblesCount > 1;
 
 	const sorts = [
-		{ id: 'full-name', name: 'Name', default: true },
+		{ id: 'full-name', name: 'First Name', default: true },
+		{ id: 'last-name-first', name: 'Last Name' },
 		{ id: 'rsvp-response', name: 'RSVP Response' },
 		{ id: 'rsvp-updated', name: 'Updated' },
 		{ id: 'dietary-medical', name: 'Dietary / Medical' },

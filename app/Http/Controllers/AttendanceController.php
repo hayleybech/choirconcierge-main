@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CustomSorts\SingerNameSort;
+use App\CustomSorts\SingerLastNameFirstSort;
 use App\Models\Attendance;
 use App\Models\Enrolment;
 use App\Models\Ensemble;
@@ -29,6 +30,7 @@ class AttendanceController extends Controller
         $event->createMissingAttendanceRecords();
 
         $nameSort = AllowedSort::custom('full-name', new SingerNameSort(), 'name');
+        $lastNameFirstSort = AllowedSort::custom('last-name-first', new SingerLastNameFirstSort(), 'last_name');
         $attendanceSort = AllowedSort::callback('attendance-response', function (Builder $query, bool $descending) use ($event) {
             $direction = $descending ? 'DESC' : 'ASC';
             $query->select('memberships.*')
@@ -105,6 +107,7 @@ class AttendanceController extends Controller
             ])
             ->allowedSorts([
                 $nameSort,
+                $lastNameFirstSort,
                 $attendanceSort,
                 $updatedSort,
             ])

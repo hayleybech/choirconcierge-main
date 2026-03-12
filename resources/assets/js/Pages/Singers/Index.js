@@ -22,7 +22,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
     const { route } = useRoute();
 
     const sorts = [
-        { id: 'full-name', name: 'Name', default: true },
+        { id: 'full-name', name: 'First Name', default: true },
+        { id: 'last-name-first', name: 'Last Name' },
         { id: 'status-title', name: 'Status' },
         // { id: 'part-title', name: 'Voice Part' },
         { id: 'paid_until', name: 'Paid Until' },
