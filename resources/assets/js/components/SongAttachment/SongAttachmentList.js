@@ -11,6 +11,7 @@ import Form from "../Form";
 import Label from "../inputs/Label";
 import Error from "../inputs/Error";
 import classNames from "../../classNames";
+import TextInput from "../inputs/TextInput";
 
 const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, player }) => {
     const { route } = useRoute();
@@ -135,9 +136,12 @@ function splitFilename(filename)
 
 const RenameAttachmentDialog = ({ song, attachment, setAttachment }) => {
     const { route } = useRoute();
+    const isYoutube = attachment?.type === 'youtube';
 
     const { data, setData, put, errors } = useForm({
         filename: attachment?.filepath || '',
+        url: attachment?.filepath || '',
+        title: attachment?.title || '',
     });
 
     const [name, extension] = splitFilename(data.filename);
@@ -151,20 +155,46 @@ const RenameAttachmentDialog = ({ song, attachment, setAttachment }) => {
 
     return (
         <Dialog
-            title="Rename file"
-            okLabel="Rename"
+            title={isYoutube ? "Edit YouTube Link" : "Rename file"}
+            okLabel={isYoutube ? "Update" : "Rename"}
             onOk={submit}
             okVariant="primary"
             isOpen={!!attachment}
             setIsOpen={() => setAttachment(null)}
         >
             <Form onSubmit={submit}>
-                <div className="sm:col-span-6">
-                    <Label label="New filename" forInput="filename" />
-                    <FilenameInput name="filename" value={name} extension={extension} updateFn={value => setData('filename', (value + extension))} hasErrors={ !! errors['filename'] } />
-                    {errors.filename && <Error>{errors.filename}</Error>}
-
-                </div>
+                {isYoutube ? (
+                    <div>
+                        <div>
+                            <Label label="YouTube URL" forInput="url" />
+                            <TextInput
+                                name="url"
+                                value={data.url}
+                                updateFn={value => setData('url', value)}
+                                hasErrors={ !! errors['url'] }
+                                placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                            />
+                            {errors.url && <Error>{errors.url}</Error>}
+                        </div>
+                        <div className="mt-4">
+                            <Label label="Video description" forInput="title" />
+                            <TextInput
+                                name="title"
+                                value={data.title}
+                                updateFn={value => setData('title', value)}
+                                hasErrors={ !! errors['title'] }
+                                placeholder="Never Gonna Give You Up"
+                            />
+                            {errors.title && <Error>{errors.title}</Error>}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="sm:col-span-6">
+                        <Label label="New filename" forInput="filename" />
+                        <FilenameInput name="filename" value={name} extension={extension} updateFn={value => setData('filename', (value + extension))} hasErrors={ !! errors['filename'] } />
+                        {errors.filename && <Error>{errors.filename}</Error>}
+                    </div>
+                )}
             </Form>
         </Dialog>
     )

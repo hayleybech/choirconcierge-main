@@ -53,16 +53,20 @@ class SongAttachmentController extends Controller
             ->with(['status' => 'Attachment(s) added. ']);
     }
 
-    public function update(Song $song, SongAttachment $attachment, Request $request): RedirectResponse
+    public function update(Song $song, SongAttachment $attachment, SongAttachmentRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'filename' => [
-                'bail', // Abort immediately on first failure. Abort if directory to prevent user from abusing "file exists" validation in any directory.
-                'max:255',
-                new Filename,
-                new FileDoesntExist('tenant', $attachment->getPathSong()),
-            ]
-        ]);
+        $data = $request->validated();
+
+        if ($attachment->type === 'youtube') {
+            $attachment->update([
+                'title' => $data['title'],
+                'filepath' => $data['url'],
+            ]);
+
+            return redirect()
+                ->back()
+                ->with(['status' => 'Attachment updated.']);
+        }
 
         $old_name = $attachment->filepath;
 

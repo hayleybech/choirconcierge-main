@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\FileDoesntExist;
+use App\Rules\Filename;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
@@ -25,6 +27,26 @@ class SongAttachmentRequest extends FormRequest
      */
     public function rules()
     {
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $attachment = $this->route('attachment');
+
+            if ($attachment->type === 'youtube') {
+                return [
+                    'url' => ['required', 'url', 'max:255'],
+                    'title' => ['required', 'string', 'max:255'],
+                ];
+            }
+
+            return [
+                'filename' => [
+                    'required',
+                    'max:255',
+                    new Filename,
+                    new FileDoesntExist('tenant', $attachment->getPathSong()),
+                ]
+            ];
+        }
+
         return [
             'type' => ['required', 'in:sheet-music,full-mix-demo,learning-tracks,youtube,other'],
             'attachment_uploads' => [Rule::excludeIf(fn () => $this->isVideo()), 'required', 'array'],
