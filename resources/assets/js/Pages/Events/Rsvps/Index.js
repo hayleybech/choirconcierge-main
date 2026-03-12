@@ -153,7 +153,7 @@ const Index = ({ event, allSingers, pagination, totalEnsemblesCount, voiceParts,
 													{singer.user.name}
 												</Link>
 											</div>
-											<div className="text-sm text-gray-400">
+											<div className="text-sm text-gray-500">
 												<Icon icon="phone" mr className="text-gray-400" />
 												{singer.user.phone ? (
 													<a href={`tel:${singer.user.phone}`} target="_blank">

@@ -10,6 +10,7 @@ import { Link } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
 import SingerCategoryTag from '../../../components/SingerCategoryTag';
 import Icon from '../../../components/Icon';
+import DateTag from '../../../components/DateTag';
 
 const RsvpTableMobile = ({ singers, pagination, showEnsemble }) => {
 	const { route } = useRoute();
@@ -38,7 +39,7 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble }) => {
 											{singer.user.name}
 										</Link>
 									</div>
-									<div className="text-sm text-gray-400">
+									<div className="text-sm text-gray-500">
 										<Icon icon="phone" mr className="text-gray-400 text-sm" />
 										{singer.user.phone ? (
 											<a href={`tel:${singer.user.phone}`} target="_blank">
@@ -49,12 +50,23 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble }) => {
 										)}
 									</div>
 								</div>
-								<div className="scale-90 origin-right">
-									<RsvpTag
-										icon={singer.rsvp.icon}
-										label={singer.rsvp.label}
-										colour={singer.rsvp.colour}
-									/>
+								<div className="div">
+									<div className="scale-90 origin-right">
+										<RsvpTag
+											icon={singer.rsvp.icon}
+											label={singer.rsvp.label}
+											colour={singer.rsvp.colour}
+										/>
+									</div>
+									{!!singer.rsvp.updated_at && (
+										<DateTag
+											icon="pencil"
+											date={singer.rsvp.updated_at}
+											format="DATE_SHORT"
+											className="text-gray-400 text-sm"
+											mr={false}
+										/>
+									)}
 								</div>
 							</div>
 							<div className="flex flex-wrap gap-1">
