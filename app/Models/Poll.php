@@ -6,6 +6,8 @@ use App\Models\Traits\TenantTimezoneDates;
 use Database\Factories\PollFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Carbon;
@@ -46,6 +48,35 @@ class Poll extends Model
     public function options(): HasMany
     {
         return $this->hasMany(PollOption::class);
+    }
+
+    public function ensembles(): BelongsToMany
+    {
+        return $this->belongsToMany(Ensemble::class);
+    }
+
+    public function scopeEnsembleRestricted(Builder $query): Builder
+    {
+        if (Ensemble::count() <= 1 && ! app()->environment('testing')) {
+            return $query;
+        }
+
+        if (! auth()->user()?->membership) {
+            return $query;
+        }
+
+        if (auth()->user()->membership->hasAbility('polls_update')) {
+            return $query;
+        }
+
+        $userEnsembleIds = auth()->user()->membership->enrolments->pluck('ensemble_id');
+
+        return $query->where(function ($query) use ($userEnsembleIds) {
+            $query->whereDoesntHave('ensembles')
+                ->orWhereHas('ensembles', function ($query) use ($userEnsembleIds) {
+                    $query->whereIn('ensembles.id', $userEnsembleIds);
+                });
+        });
     }
 
     public function votes(): HasManyThrough

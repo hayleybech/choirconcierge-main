@@ -103,6 +103,10 @@ class Role extends Model
         'notifications_create',
         'notifications_update',
         'notifications_delete',
+        'polls_view',
+        'polls_create',
+        'polls_update',
+        'polls_delete',
     ];
 
     public function members(): BelongsToMany

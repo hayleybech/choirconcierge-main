@@ -14,6 +14,7 @@ import RadioGroup from '../../components/inputs/RadioGroup';
 import { FancyCheckboxGroup } from '../../components/inputs/CheckboxGroup';
 import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';
+import Badge from '../../components/Badge';
 
 const Show = ({ poll, my_vote_option_ids = [] }) => {
 	const { route } = useRoute();
@@ -89,6 +90,16 @@ const Show = ({ poll, my_vote_option_ids = [] }) => {
 							<span className="font-semibold">Deadline:</span>{' '}
 							{poll.close_at ? new Date(poll.close_at).toLocaleString() : 'None'}
 						</div>
+						{poll.ensembles?.length > 0 && (
+							<div className="text-sm text-gray-600 flex flex-wrap gap-1 items-center">
+								<span className="font-semibold">Ensembles:</span>
+								{poll.ensembles.map(ensemble => (
+									<Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
+										{ensemble.name}
+									</Badge>
+								))}
+							</div>
+						)}
 						<DateTag
 							icon="pencil"
 							label="Created"

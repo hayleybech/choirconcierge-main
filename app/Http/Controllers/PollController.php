@@ -6,6 +6,7 @@ use App\Http\Requests\PollRequest;
 use App\Models\Membership;
 use App\Models\Poll;
 use App\Models\PollOption;
+use App\Models\Ensemble;
 use App\Notifications\PollCreated;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +21,8 @@ class PollController extends Controller
     {
         /** @var LengthAwarePaginator $pagination */
         $pagination = Poll::query()
-            ->with('options')
+            ->ensembleRestricted()
+            ->with(['options', 'ensembles'])
             ->withCount('votes')
             ->orderByDesc('created_at')
             ->paginate(15);
@@ -28,24 +30,37 @@ class PollController extends Controller
         return Inertia::render('Polls/Index', [
             'polls' => $pagination->getCollection(),
             'pagination' => $pagination,
+            'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('Polls/Create');
+        return Inertia::render('Polls/Create', [
+            'ensembles' => Ensemble::all(),
+        ]);
     }
 
     public function store(PollRequest $request): RedirectResponse
     {
-        $poll = Poll::create($request->safe()->except(['options', 'send_notification']));
+        $poll = Poll::create($request->safe()->except(['options', 'send_notification', 'ensemble_ids']));
 
         $options = collect($request->input('options', []))
             ->map(fn ($label) => ['label' => $label]);
         $poll->options()->createMany($options->all());
 
+        $poll->ensembles()->sync($request->input('ensemble_ids', []));
+
         if ($request->input('send_notification')) {
-            Notification::send(Membership::active()->with('user')->get()->pluck('user'), new PollCreated($poll));
+            $members = Membership::active()->with('user');
+
+            if ($request->filled('ensemble_ids')) {
+                $members->whereHas('enrolments', function ($query) use ($request) {
+                    $query->whereIn('ensemble_id', $request->input('ensemble_ids'));
+                });
+            }
+
+            Notification::send($members->get()->pluck('user'), new PollCreated($poll));
         }
 
         return redirect()->route('polls.show', [$poll])->with(['status' => 'Poll created.']);
@@ -53,7 +68,7 @@ class PollController extends Controller
 
     public function show(Poll $poll): Response
     {
-        $poll->load(['options' => fn ($q) => $q->withCount('votes')]);
+        $poll->load(['options' => fn ($q) => $q->withCount('votes'), 'ensembles']);
 
         $membership = auth()->user()?->memberships()->firstWhere('tenant_id', '=', $poll->tenant_id);
         $myVoteOptionIds = [];
@@ -72,21 +87,24 @@ class PollController extends Controller
 
     public function edit(Poll $poll): Response
     {
-        $poll->load('options');
+        $poll->load(['options', 'ensembles']);
         return Inertia::render('Polls/Edit', [
             'poll' => $poll,
+            'ensembles' => Ensemble::all(),
         ]);
     }
 
     public function update(Poll $poll, PollRequest $request): RedirectResponse
     {
-        $poll->update($request->safe()->except(['options', 'send_notification']));
+        $poll->update($request->safe()->except(['options', 'send_notification', 'ensemble_ids']));
 
         // Replace options with provided list
         $poll->options()->delete();
         $options = collect($request->input('options', []))
             ->map(fn ($label) => ['label' => $label]);
         $poll->options()->createMany($options->all());
+
+        $poll->ensembles()->sync($request->input('ensemble_ids', []));
 
         return redirect()->route('polls.show', [$poll])->with(['status' => 'Poll updated.']);
     }

@@ -17,14 +17,16 @@ import DateInput from "../../components/inputs/Date";
 import TimeInput from "../../components/inputs/Time";
 import {DateTime} from "luxon";
 import Help from "../../components/inputs/Help";
+import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 
-const Edit = ({ poll }) => {
+const Edit = ({ poll, ensembles = [] }) => {
 	const { route } = useRoute();
 	const { data, setData, post, processing, errors, transform } = useForm({
 		title: poll.title || '',
 		can_vote_multiple: !!poll.can_vote_multiple,
 		close_at: poll.close_at ? DateTime.fromISO(poll.close_at) : null,
 		options: (poll.options || []).map(o => o.label),
+		ensemble_ids: (poll.ensembles || []).map(e => e.id),
 	});
 
 	const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
@@ -128,6 +130,19 @@ const Edit = ({ poll }) => {
 								disabled={!data.close_at}
 							/>
 						</div>
+
+						{ensembles.length > 1 && (
+							<div className="sm:col-span-6">
+								<Label label="Ensembles" forInput="ensemble_ids" />
+								<Help>Only singers in these ensembles will see this poll. Leave empty for all singers.</Help>
+								<CheckboxGroup
+									name="ensemble_ids"
+									options={ensembles.map(e => ({ id: e.id, name: e.name }))}
+									value={data.ensemble_ids}
+									updateFn={v => setData('ensemble_ids', v)}
+								/>
+							</div>
+						)}
 					</FormSection>
 					<FormSection title="Options">
 						<div className="sm:col-span-6">

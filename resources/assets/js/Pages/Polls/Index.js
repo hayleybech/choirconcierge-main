@@ -3,7 +3,7 @@ import TenantLayout from '../../Layouts/TenantLayout';
 import AppHead from '../../components/AppHead';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import useRoute from '../../hooks/useRoute';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import Table, { TableCell } from '../../components/Table';
 import Pagination from '../../components/Pagination';
 import Icon from '../../components/Icon';
@@ -11,9 +11,14 @@ import collect from 'collect.js';
 import IndexContainer from '../../components/IndexContainer';
 import DateTag from '../../components/DateTag';
 import TableMobile, { TableMobileItem } from '../../components/TableMobile';
+import Badge from '../../components/Badge';
 
-const Index = ({ polls, pagination }) => {
+const Index = ({ polls, pagination, ensembles }) => {
 	const { route } = useRoute();
+
+	const { tenant } = usePage().props;
+
+	const showEnsembleColumn = (ensembles ?? tenant.ensembles).length > 1;
 
 	return (
 		<>
@@ -46,6 +51,15 @@ const Index = ({ polls, pagination }) => {
 										</span>
 									)}
 								</div>
+								{showEnsembleColumn && p.ensembles?.length > 0 && (
+									<div className="flex flex-wrap gap-1 mt-1">
+										{p.ensembles.map(e => (
+											<Badge key={e.id} colour="bg-purple-100 text-purple-800">
+												{e.name}
+											</Badge>
+										))}
+									</div>
+								)}
 							</TableMobileItem>
 						))}
 					</TableMobile>
@@ -54,11 +68,12 @@ const Index = ({ polls, pagination }) => {
 					<Table
 						headings={collect({
 							title: 'Title',
+							ensembles: 'Ensembles',
 							status: 'Status',
 							deadline: 'Deadline',
 							votes: 'Votes',
 							created_at: 'Created',
-						})}
+						}).filter((h, key) => showEnsembleColumn || key !== 'ensembles')}
 						body={polls.map(p => (
 							<tr key={p.id}>
 								<TableCell>
@@ -69,6 +84,18 @@ const Index = ({ polls, pagination }) => {
 										{p.title}
 									</Link>
 								</TableCell>
+								{showEnsembleColumn && (
+									<TableCell>
+										<div className="flex flex-wrap gap-1 max-w-[200px]">
+											{p.ensembles?.map(e => (
+												<Badge key={e.id} colour="bg-purple-100 text-purple-800">
+													{e.name}
+												</Badge>
+											)) || '-'}
+											{p.ensembles?.length === 0 && '-'}
+										</div>
+									</TableCell>
+								)}
 								<TableCell>
 									{p.is_closed ? (
 										<span className="text-gray-600 flex items-center">

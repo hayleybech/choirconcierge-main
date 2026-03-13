@@ -24,6 +24,8 @@ class PollRequest extends FormRequest
             'options' => ['required', 'array', 'min:1'],
             'options.*' => ['required', 'string', 'max:255'],
             'send_notification' => ['sometimes', 'boolean'],
+            'ensemble_ids' => ['nullable', 'array'],
+            'ensemble_ids.*' => ['exists:ensembles,id'],
         ];
     }
 }

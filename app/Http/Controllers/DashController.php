@@ -182,6 +182,7 @@ class DashController extends Controller
         }
 
         return Poll::query()
+            ->ensembleRestricted()
             ->with(['options' => fn($q) => $q->withCount('votes')])
             ->where(function (Builder $query) {
                 $query->whereNull('close_at')

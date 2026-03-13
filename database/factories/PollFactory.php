@@ -17,7 +17,9 @@ class PollFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => $this->faker->sentence(),
+            'can_vote_multiple' => false,
+            'is_closed' => false,
         ];
     }
 }
