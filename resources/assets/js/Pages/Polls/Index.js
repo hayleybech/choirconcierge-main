@@ -12,13 +12,44 @@ import IndexContainer from '../../components/IndexContainer';
 import DateTag from '../../components/DateTag';
 import TableMobile, { TableMobileItem } from '../../components/TableMobile';
 import Badge from '../../components/Badge';
+import useFilterPane from '../../hooks/useFilterPane';
+import useSortFilterForm from '../../hooks/useSortFilterForm';
+import FilterSortPane from '../../components/FilterSortPane';
+import Sorts from '../../components/Sorts';
+import PollFilters from '../../components/PollFilters';
+import TableHeadingSort from '../../components/TableHeadingSort';
 
 const Index = ({ polls, pagination, ensembles }) => {
 	const { route } = useRoute();
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
 	const { tenant } = usePage().props;
 
 	const showEnsembleColumn = (ensembles ?? tenant.ensembles).length > 1;
+
+	const sorts = [
+		{ id: 'created_at', name: 'Created', default: true },
+		{ id: 'title', name: 'Title' },
+		{ id: 'votes_count', name: 'Votes' },
+		{ id: 'close_at', name: 'Deadline' },
+	];
+
+	const filters = [
+		{ name: 'title', defaultValue: '' },
+		{ name: 'status', defaultValue: '' },
+		{ name: 'ensembles.id', multiple: true },
+	];
+
+	const sortFilterForm = useSortFilterForm('polls.index', filters, sorts);
+
+	const headings = collect({
+		title: <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>,
+		ensembles: 'Ensembles',
+		status: 'Status',
+		deadline: <TableHeadingSort form={sortFilterForm} sort="close_at">Deadline</TableHeadingSort>,
+		votes: <TableHeadingSort form={sortFilterForm} sort="votes_count">Votes</TableHeadingSort>,
+		created_at: <TableHeadingSort form={sortFilterForm} sort="created_at">Created</TableHeadingSort>,
+	}).filter((h, key) => showEnsembleColumn || key !== 'ensembles');
 
 	return (
 		<>
@@ -30,10 +61,22 @@ const Index = ({ polls, pagination, ensembles }) => {
 					{ name: 'Dashboard', url: route('dash') },
 					{ name: 'Polls', url: route('polls.index') },
 				]}
-				actions={[{ label: 'Add New', url: route('polls.create'), icon: 'plus', variant: 'primary' }]}
+				actions={[
+					{ label: 'Add New', url: route('polls.create'), icon: 'plus', variant: 'primary' },
+					filterAction,
+				]}
+				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 			/>
 
 			<IndexContainer
+				showFilters={showFilters}
+				filterPane={
+					<FilterSortPane
+						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+						filters={<PollFilters form={sortFilterForm} ensembles={ensembles} />}
+						closeFn={() => setShowFilters(false)}
+					/>
+				}
 				tableMobile={
 					<TableMobile pagination={<Pagination details={pagination} />}>
 						{polls.map(p => (
@@ -66,14 +109,7 @@ const Index = ({ polls, pagination, ensembles }) => {
 				}
 				tableDesktop={
 					<Table
-						headings={collect({
-							title: 'Title',
-							ensembles: 'Ensembles',
-							status: 'Status',
-							deadline: 'Deadline',
-							votes: 'Votes',
-							created_at: 'Created',
-						}).filter((h, key) => showEnsembleColumn || key !== 'ensembles')}
+						headings={headings}
 						body={polls.map(p => (
 							<tr key={p.id}>
 								<TableCell>
