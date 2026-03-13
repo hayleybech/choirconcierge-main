@@ -132,4 +132,13 @@ class PollController extends Controller
         $poll->update(['is_closed' => true]);
         return back()->with(['status' => 'Poll closed.']);
     }
+
+    public function open(Poll $poll): RedirectResponse
+    {
+        $poll->update([
+            'is_closed' => false,
+            'close_at' => null,
+        ]);
+        return back()->with(['status' => 'Poll re-opened.']);
+    }
 }

@@ -63,6 +63,13 @@ const Show = ({ poll, my_vote_option_ids = [] }) => {
 						icon: 'lock',
 						variant: 'secondary',
 					},
+					isClosed && {
+						label: 'Re-open Poll',
+						url: route('polls.open', { poll: poll.id }),
+						method: 'put',
+						icon: 'lock-open',
+						variant: 'secondary',
+					},
 				]}
 				meta={
 					<>

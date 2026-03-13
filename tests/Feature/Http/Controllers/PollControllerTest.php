@@ -117,4 +117,27 @@ class PollControllerTest extends TestCase
 
         $this->assertTrue($poll->fresh()->is_closed);
     }
+
+    public function test_open_sets_is_closed_false(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $poll = Poll::create([
+            'title' => 'Open me',
+            'tenant_id' => tenant('id'),
+            'can_vote_multiple' => false,
+            'is_closed' => true,
+            'close_at' => now()->subDay(),
+        ]);
+
+        $this->assertTrue($poll->is_closed);
+
+        $this->put(the_tenant_route('polls.open', [$poll]))
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $poll->refresh();
+        $this->assertFalse($poll->is_closed);
+        $this->assertNull($poll->close_at);
+    }
 }

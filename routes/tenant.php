@@ -247,6 +247,7 @@ Route::middleware([
         Route::resource('polls', PollController::class);
         Route::post('polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
         Route::put('polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');
+        Route::put('polls/{poll}/open', [PollController::class, 'open'])->name('polls.open');
 
         // Organisation Settings
         Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');
