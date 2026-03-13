@@ -93,7 +93,7 @@ class PollController extends Controller
 
     public function vote(Request $request, Poll $poll): RedirectResponse
     {
-        if ($poll->isClosed()) {
+        if ($poll->is_closed) {
             return back()->with(['status' => 'Poll is closed.', 'success' => false]);
         }
 

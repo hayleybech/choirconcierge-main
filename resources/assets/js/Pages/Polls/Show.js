@@ -20,7 +20,7 @@ const Show = ({ poll, my_vote_option_ids = [] }) => {
 	const { data, setData, post, processing, errors } = useForm({
 		option_ids: my_vote_option_ids,
 	});
-	const isClosed = poll.is_closed || (poll.close_at && new Date(poll.close_at).getTime() < Date.now());
+	const isClosed = poll.is_closed;
 
 	const toggle = id => {
 		if (poll.can_vote_multiple) {

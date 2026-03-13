@@ -5,7 +5,6 @@ import PageHeader from '../../components/PageHeader/PageHeader';
 import useRoute from '../../hooks/useRoute';
 import { useForm } from '@inertiajs/react';
 import TextInput from '../../components/inputs/TextInput';
-import CheckboxInput from '../../components/inputs/CheckboxInput';
 import Button from '../../components/inputs/Button';
 import FormWrapper from '../../components/FormWrapper';
 import Form from '../../components/Form';
@@ -14,15 +13,26 @@ import FormFooter from '../../components/FormFooter';
 import Label from '../../components/inputs/Label';
 import CheckboxWithLabel from '../../components/inputs/CheckboxWithLabel';
 import Icon from '../../components/Icon';
+import DateInput from "../../components/inputs/Date";
+import TimeInput from "../../components/inputs/Time";
+import {DateTime} from "luxon";
+import Help from "../../components/inputs/Help";
 
 const Edit = ({ poll }) => {
 	const { route } = useRoute();
-	const { data, setData, put, processing, errors } = useForm({
+	const { data, setData, put, processing, errors, transform } = useForm({
 		title: poll.title || '',
 		can_vote_multiple: !!poll.can_vote_multiple,
-		close_at: poll.close_at || '',
+		close_at: poll.close_at ? DateTime.fromSQL(poll.close_at) : null,
 		options: (poll.options || []).map(o => o.label),
 	});
+
+	const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
+
+	transform((data) => ({
+		...data,
+		close_at: data.close_at ? data.close_at.toFormat(rawDateFormat) : null,
+	}));
 
 	const updateOption = (index, value) => {
 		const next = [...data.options];
@@ -32,6 +42,26 @@ const Edit = ({ poll }) => {
 
 	const addOption = () => setData('options', [...data.options, '']);
 	const removeOption = idx => setData('options', data.options.filter((_, i) => i !== idx));
+
+	function setCloseAtDate(value) {
+		const date = DateTime.fromJSDate(value);
+		const target = data.close_at ?? DateTime.now().set({ hour: 23, minute: 59, second: 59 });
+		setData('close_at', target.set({
+			year: date.year,
+			month: date.month,
+			day: date.day,
+		}));
+	}
+
+	function setCloseAtTime(value) {
+		const time = DateTime.fromISO(value);
+		const target = data.close_at ?? DateTime.now();
+		setData('close_at', target.set({
+			hour: time.hour,
+			minute: time.minute,
+			second: 0,
+		}));
+	}
 
 	const submit = e => {
 		e.preventDefault();
@@ -76,16 +106,26 @@ const Edit = ({ poll }) => {
 							/>
 						</div>
 
-						<div className="sm:col-span-6">
+						<div className="sm:col-span-4 relative z-20">
 							<Label forInput="close_at">Deadline (optional)</Label>
-							<TextInput
+							<DateInput
 								name="close_at"
 								value={data.close_at}
-								updateFn={v => setData('close_at', v)}
-								placeholder="YYYY-MM-DD HH:MM:SS"
+								updateFn={setCloseAtDate}
 								hasErrors={!!errors.close_at}
 							/>
 							{errors.close_at && <p className="text-sm text-red-600 mt-1">{errors.close_at}</p>}
+							{data.close_at && <Help>Will close at {data.close_at.toLocaleString(DateTime.DATETIME_MED)}</Help>}
+						</div>
+
+						<div className="sm:col-span-2">
+							<Label forInput="close_at_time">Time</Label>
+							<TimeInput
+								name="close_at_time"
+								value={data.close_at?.toLocaleString(DateTime.TIME_24_SIMPLE) ?? null}
+								updateFn={setCloseAtTime}
+								disabled={!data.close_at}
+							/>
 						</div>
 					</FormSection>
 					<FormSection title="Options">

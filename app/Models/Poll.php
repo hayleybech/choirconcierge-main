@@ -70,7 +70,6 @@ class Poll extends Model
     {
         $this->attributes['is_closed'] = $value;
     }
-
     public function hasVoted(Membership $member): bool
     {
         return $this->votes()->where('membership_id', $member->id)->exists();
