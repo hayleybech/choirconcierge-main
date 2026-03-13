@@ -91,6 +91,11 @@ class Ensemble extends Model
         return $this->belongsToMany(Folder::class, 'ensemble_folder', 'ensemble_id', 'folder_id');
     }
 
+    public function polls(): BelongsToMany
+    {
+        return $this->belongsToMany(Poll::class);
+    }
+
 	public function logoUrl(): Attribute
 	{
 		return Attribute::get(fn () =>

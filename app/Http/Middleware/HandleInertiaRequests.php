@@ -12,6 +12,7 @@ use App\Models\MailLog;
 use App\Models\RiserStack;
 use App\Models\Role;
 use App\Models\Membership;
+use App\Models\Poll;
 use App\Models\Song;
 use App\Models\Task;
 use App\Models\Tenant;
@@ -96,6 +97,8 @@ class HandleInertiaRequests extends Middleware
                 'view_mail_logs' => auth()->user()?->can('viewAny', MailLog::class),
                 'list_tasks' => auth()->user()?->can('viewAny', Task::class),
                 'create_task' => auth()->user()?->can('create', Task::class),
+                'list_polls' => auth()->user()?->can('viewAny', Poll::class),
+                'create_poll' => auth()->user()?->can('create', Poll::class),
                 'impersonate' => auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasRole('Admin'),
                 'manage_finances' => Gate::allows('update-fees'),
                 'update_tenant' => auth()->user()?->can('update', Tenant::class),

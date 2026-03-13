@@ -36,6 +36,7 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 										variant={action.variant}
 										external={action.download}
 										download={action.download}
+										method={action.method}
 									>
 										<Icon icon={action.icon} mr />
 										{action.label}
@@ -58,6 +59,7 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 												onClick={action.onClick}
 												download={action.download}
 												variant={action.variant}
+												method={action.method}
 											>
 												<Icon icon={action.icon} mr />
 												{action.label}
@@ -72,6 +74,7 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 									href={filteredActions[1].url}
 									onClick={filteredActions[1].onClick}
 									variant={filteredActions[1].variant}
+									method={filteredActions[1].method}
 									size="sm"
 									className="ml-3 sm:hidden"
 								>

@@ -54,6 +54,7 @@ use App\Http\Controllers\UpdateSingerCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\VoicePartController;
+use App\Http\Controllers\PollController;
 use App\Http\Middleware\BlockMemberAccessWhenNoActiveSubscription;
 use App\Http\Middleware\EnsureUserIsMember;
 use App\Http\Middleware\NoRobots;
@@ -241,6 +242,12 @@ Route::middleware([
         // Roles module
         Route::resource('roles', RoleController::class);
         Route::get('roles/{role}/clone', [RoleController::class, 'clone'])->name('roles.clone');
+
+        // Polls module
+        Route::resource('polls', PollController::class);
+        Route::post('polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
+        Route::put('polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');
+        Route::put('polls/{poll}/open', [PollController::class, 'open'])->name('polls.open');
 
         // Organisation Settings
         Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');
