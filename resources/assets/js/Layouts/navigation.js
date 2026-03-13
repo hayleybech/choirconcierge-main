@@ -82,10 +82,10 @@ const navigation = [
         name: 'Polls',
         route: 'polls.index',
         icon: 'fa-poll',
-        can: 'view_dash',
+        can: 'list_polls',
         showAsActiveForRoutes: ['polls.*'],
         items: [
-            { name: 'Add New', route: 'polls.create', icon: 'fa-plus-square', can: 'view_dash', showAsActiveForRoutes: ['polls.create'] },
+            { name: 'Add New', route: 'polls.create', icon: 'fa-plus-square', can: 'create_poll', showAsActiveForRoutes: ['polls.create'] },
         ]
     },
 ];

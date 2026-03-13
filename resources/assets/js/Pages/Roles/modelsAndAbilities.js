@@ -63,4 +63,8 @@ export const modelsAndAbilities = {
         label: 'Task Notifications',
         abilities: ['view', 'create', 'update', 'delete'],
     },
+    polls: {
+        label: 'Polls',
+        abilities: ['view', 'create', 'update', 'delete'],
+    },
 };

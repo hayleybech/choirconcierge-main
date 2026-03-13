@@ -7,6 +7,7 @@ use App\Models\Membership;
 use App\Models\Poll;
 use App\Models\PollOption;
 use App\Models\Ensemble;
+use App\Notifications\PollCreated;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,6 +20,11 @@ use Inertia\Response;
 
 class PollController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Poll::class);
+    }
+
     public function index(): Response
     {
         $query = Poll::query()

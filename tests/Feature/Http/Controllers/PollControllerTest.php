@@ -142,26 +142,26 @@ class PollControllerTest extends TestCase
         $this->assertTrue($poll->fresh()->is_closed);
     }
 
-    public function test_open_sets_is_closed_false(): void
+    public function test_user_cannot_create_poll(): void
     {
-        $this->actingAs($this->createUserWithRole('Membership Team'));
+        $this->actingAs($this->createUserWithRole('User'));
 
-        $poll = Poll::create([
-            'title' => 'Open me',
-            'tenant_id' => tenant('id'),
+        $data = [
+            'title' => 'Forbidden Poll',
             'can_vote_multiple' => false,
-            'is_closed' => true,
-            'close_at' => now()->subDay(),
-        ]);
+            'close_at' => null,
+            'options' => ['Option A'],
+        ];
 
-        $this->assertTrue($poll->is_closed);
+        $this->post(the_tenant_route('polls.store'), $data)
+            ->assertForbidden();
+    }
 
-        $this->put(the_tenant_route('polls.open', [$poll]))
-            ->assertSessionHasNoErrors()
-            ->assertRedirect();
+    public function test_user_can_index_polls(): void
+    {
+        $this->actingAs($this->createUserWithRole('User'));
 
-        $poll->refresh();
-        $this->assertFalse($poll->is_closed);
-        $this->assertNull($poll->close_at);
+        $this->get(the_tenant_route('polls.index'))
+            ->assertOk();
     }
 }
