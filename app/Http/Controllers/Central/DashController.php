@@ -107,6 +107,7 @@ class DashController extends Controller
 
 		$amounts = \DB::table('receipts')
 			->pluck('amount')
+			->map(fn($amount) => (float) $amount)
 			->sort()
 			->values();
 
@@ -141,7 +142,7 @@ class DashController extends Controller
 			$start = Carbon::parse($firstSub->created_at);
 			$end = $lastSub->ends_at ? Carbon::parse($lastSub->ends_at) : Carbon::now();
 
-			return $end->diffInDays($start);
+			return $start->diffInDays($end);
 		})->sort()->values();
 
 		$count = $durations->count();
