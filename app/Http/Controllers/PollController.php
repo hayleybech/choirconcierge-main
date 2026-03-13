@@ -7,7 +7,9 @@ use App\Models\Membership;
 use App\Models\Poll;
 use App\Models\PollOption;
 use App\Models\Ensemble;
-use App\Notifications\PollCreated;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,13 +21,40 @@ class PollController extends Controller
 {
     public function index(): Response
     {
-        /** @var LengthAwarePaginator $pagination */
-        $pagination = Poll::query()
+        $query = Poll::query()
             ->ensembleRestricted()
             ->with(['options', 'ensembles'])
-            ->withCount('votes')
-            ->orderByDesc('created_at')
-            ->paginate(15);
+            ->withCount('votes');
+
+        /** @var LengthAwarePaginator $pagination */
+        $pagination = QueryBuilder::for($query)
+            ->allowedFilters([
+                AllowedFilter::partial('title'),
+                AllowedFilter::callback('status', function (Builder $query, $value) {
+                    if ($value === 'open') {
+                        $query->where('is_closed', false)
+                            ->where(function (Builder $query) {
+                                $query->whereNull('close_at')
+                                    ->orWhere('close_at', '>', now());
+                            });
+                    } elseif ($value === 'closed') {
+                        $query->where(function (Builder $query) {
+                            $query->where('is_closed', true)
+                                ->orWhere('close_at', '<=', now());
+                        });
+                    }
+                }),
+                AllowedFilter::exact('ensembles.id'),
+            ])
+            ->allowedSorts([
+                'title',
+                'created_at',
+                'votes_count',
+                'close_at',
+            ])
+            ->defaultSort('-created_at')
+            ->paginate(15)
+            ->appends(request()->query());
 
         return Inertia::render('Polls/Index', [
             'polls' => $pagination->getCollection(),
