@@ -3,28 +3,41 @@ import { RadioGroup as BaseRadioGroup } from '@headlessui/react'
 import classNames from "../../classNames";
 import Icon from "../Icon";
 
-const RadioGroup = ({ label, options, selected, setSelected, disabled, vertical, contentVertical = true }) => (
+const RadioGroup = ({
+	label,
+	options,
+	selected,
+	setSelected,
+	disabled,
+	vertical,
+	contentVertical = true,
+	size = 'md',
+}) => (
 	<BaseRadioGroup value={selected} onChange={setSelected}>
 		<BaseRadioGroup.Label>{label}</BaseRadioGroup.Label>
 		<div
 			className={classNames(
-				'mt-1 bg-white rounded-md -space-y-px flex text-left',
-				vertical ? 'flex-col' : 'flex-col md:flex-row'
+				'bg-white rounded-md -space-y-px flex text-left',
+				vertical ? 'flex-col' : 'flex-col md:flex-row',
+				size === 'md' && 'mt-1',
 			)}
 		>
 			{options.map((option, index) => (
 				<BaseRadioGroup.Option
-					key={option.name}
+					key={option.id || option.name}
 					value={option.id}
 					disabled={disabled ?? option.disabled ?? false}
 					className={({ checked }) =>
 						classNames(
-							'relative border p-4 flex cursor-pointer focus:outline-none grow items-center',
+							'relative border flex cursor-pointer focus:outline-none grow items-center',
 							vertical && index === 0 && 'rounded-tl-md rounded-tr-md',
 							vertical && index === options.length - 1 && 'rounded-bl-md rounded-br-md',
 							!vertical && index === 0 && 'rounded-tl-md rounded-bl-md',
 							!vertical && index === options.length - 1 && 'rounded-tr-md rounded-br-md',
-							checked ? 'bg-purple-100 border-purple-300 z-10' : 'border-gray-300'
+							checked ? 'bg-purple-100 border-purple-300 z-10' : 'border-gray-300',
+							size === 'xs' && 'p-1.5',
+							size === 'sm' && 'p-2',
+							size === 'md' && 'p-4',
 						)
 					}
 				>
@@ -51,22 +64,29 @@ const RadioGroup = ({ label, options, selected, setSelected, disabled, vertical,
 										option.colour ?? '',
 										checked && !option.colour && 'text-purple-700',
 										!checked && !option.colour && 'text-gray-900',
-										(disabled || option.disabled) && 'text-opacity-50'
+										(disabled || option.disabled) && 'text-opacity-50',
+										size === 'xs' ? 'text-base' : 'text-lg',
 									)}
 								/>
 							)}
 
 							<div
-								className={`ml-3 flex gap-1.5 w-full ${
-									contentVertical ? 'flex-col' : 'flex-row items-center justify-between'
-								}`}
+								className={classNames(
+									'flex gap-1.5 w-full',
+									contentVertical ? 'flex-col' : 'flex-row items-center justify-between',
+									size === 'xs' && 'ml-0',
+									size === 'sm' && 'ml-0',
+									size === 'md' && 'ml-3',
+								)}
 							>
 								<BaseRadioGroup.Label
 									as="span"
 									className={classNames(
-										'block text-sm font-medium',
+										'block font-medium',
 										checked ? 'text-purple-900' : 'text-gray-900',
-										(disabled || option.disabled) && 'text-opacity-50'
+
+										(disabled || option.disabled) && 'text-opacity-50',
+										size === 'xs' ? 'text-xs' : 'text-sm',
 									)}
 								>
 									{option.name}
@@ -75,9 +95,10 @@ const RadioGroup = ({ label, options, selected, setSelected, disabled, vertical,
 									<BaseRadioGroup.Description
 										as="div"
 										className={classNames(
-											'block text-sm',
+											'block',
 											checked ? 'text-purple-700' : 'text-gray-500',
-											(disabled || option.disabled) && 'text-opacity-50'
+											(disabled || option.disabled) && 'text-opacity-50',
+											size === 'xs' ? 'text-xs' : 'text-sm',
 										)}
 									>
 										{option.description}

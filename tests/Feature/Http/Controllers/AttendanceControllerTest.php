@@ -209,4 +209,28 @@ class AttendanceControllerTest extends TestCase
             'membership_id' => $singer->id,
         ]);
     }
+
+    public function test_update_redirects_to_attendance_index(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $event = Event::factory()->create();
+        $singer = Membership::factory()->create();
+
+        $attendance_response = 'present';
+        $absent_reason = $this->faker->sentence();
+        $response = $this->put(the_tenant_route('events.attendances.update', ['event' => $event, 'singer' => $singer]), [
+            'response' => $attendance_response,
+            'absent_reason' => $absent_reason,
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect(the_tenant_route('events.attendances.index', ['event' => $event]));
+        $this->assertDatabaseHas('attendances', [
+            'response' => $attendance_response,
+            'absent_reason' => $absent_reason,
+            'event_id' => $event->id,
+            'membership_id' => $singer->id,
+        ]);
+    }
 }
