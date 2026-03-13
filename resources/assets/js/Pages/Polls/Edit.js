@@ -23,7 +23,7 @@ const Edit = ({ poll }) => {
 	const { data, setData, post, processing, errors, transform } = useForm({
 		title: poll.title || '',
 		can_vote_multiple: !!poll.can_vote_multiple,
-		close_at: poll.close_at ? DateTime.fromSQL(poll.close_at) : null,
+		close_at: poll.close_at ? DateTime.fromISO(poll.close_at) : null,
 		options: (poll.options || []).map(o => o.label),
 	});
 
