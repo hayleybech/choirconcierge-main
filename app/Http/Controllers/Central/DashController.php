@@ -67,7 +67,96 @@ class DashController extends Controller
 			'tenantsOnTrial' => $this->getTenantsOnTrialCount(),
 			'tenantsTrialExpired' => $this->getTenantsTrialExpiredCount(),
 			'activeMembers' => $this->getActiveMembersCount(),
+			'trialConversionRate' => $this->getTrialConversionRate(),
+			'medianPurchaseValue' => $this->getMedianPurchaseValue(),
+			'medianRetentionTime' => $this->getMedianRetentionTime(),
 		];
+	}
+
+	private function getTrialConversionRate()
+	{
+		if(! auth()->user()->isSuperAdmin) {
+			return null;
+		}
+
+		$totalTrialed = Tenant::whereHas('customer', function($query) {
+			$query->whereNotNull('trial_ends_at');
+		})->orWhereHas('subscriptions', function($query) {
+			$query->whereNotNull('trial_ends_at');
+		})->count();
+
+		if ($totalTrialed === 0) {
+			return 0;
+		}
+
+		$converted = Tenant::whereHas('subscriptions', function($query) {
+			$query->where(function($q) {
+				$q->whereNull('trial_ends_at')
+					->orWhere('trial_ends_at', '<', Carbon::now());
+			})->where('paddle_status', 'active');
+		})->count();
+
+		return round(($converted / $totalTrialed) * 100, 2);
+	}
+
+	private function getMedianPurchaseValue()
+	{
+		if(! auth()->user()->isSuperAdmin) {
+			return null;
+		}
+
+		$amounts = \DB::table('receipts')
+			->pluck('amount')
+			->sort()
+			->values();
+
+		$count = $amounts->count();
+
+		if ($count === 0) {
+			return 0;
+		}
+
+		$middle = floor(($count - 1) / 2);
+
+		if ($count % 2) {
+			return $amounts->get($middle);
+		}
+
+		return ($amounts->get($middle) + $amounts->get($middle + 1)) / 2;
+	}
+
+	private function getMedianRetentionTime()
+	{
+		if(! auth()->user()->isSuperAdmin) {
+			return null;
+		}
+
+		$durations = Tenant::whereHas('subscriptions', function($query) {
+			$query->where('paddle_status', 'active')
+				->orWhereNotNull('ends_at');
+		})->with('subscriptions')->get()->map(function($tenant) {
+			$firstSub = $tenant->subscriptions->sortBy('created_at')->first();
+			$lastSub = $tenant->subscriptions->sortByDesc('ends_at')->first();
+
+			$start = Carbon::parse($firstSub->created_at);
+			$end = $lastSub->ends_at ? Carbon::parse($lastSub->ends_at) : Carbon::now();
+
+			return $end->diffInDays($start);
+		})->sort()->values();
+
+		$count = $durations->count();
+
+		if ($count === 0) {
+			return 0;
+		}
+
+		$middle = floor(($count - 1) / 2);
+
+		if ($count % 2) {
+			return $durations->get($middle);
+		}
+
+		return ($durations->get($middle) + $durations->get($middle + 1)) / 2;
 	}
 
 	private function getActiveTenantsCount()
