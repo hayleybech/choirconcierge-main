@@ -9,30 +9,54 @@ const LayoutTopBar = ({setShowImpersonateModal, setSidebarOpen, switchChoirMenu}
     const {can, user, impersonationActive, tenant} = usePage().props;
     const {route} = useRoute();
 
-    const userNavigation = tenant ? [
-        user.membership ? {
-            name: 'Your Profile',
-            href: route('singers.show', {singer: user.membership}),
-            icon: 'user'
-        } : null,
-        {name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit'},
-        {
-            name: 'Impersonate User',
-            action: () => setShowImpersonateModal(true),
-            icon: 'user-unlock',
-            hide: !can.impersonate || impersonationActive
-        },
-        {name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive},
-        {name: 'Organisation Settings', href: route('organisation.edit'), icon: 'cogs', hide: !can.update_tenant},
-        {name: 'Changelog', href: route('central.changelog'), icon: 'code-merge'},
-        {name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt'}
-    ] : [
-        {name: 'Edit Profile', href: route('central.accounts.edit'), icon: 'user-edit'},
-        // { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
-        // { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
-        {name: 'Changelog', href: route('central.changelog'), icon: 'code-merge'},
-        {name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt'}
-    ];
+    const userNavigation = tenant
+		? [
+				user.membership
+					? {
+							name: 'Your Profile',
+							href: route('singers.show', { singer: user.membership }),
+							icon: 'user',
+					  }
+					: null,
+				{ name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit' },
+				{
+					name: 'Impersonate User',
+					action: () => setShowImpersonateModal(true),
+					icon: 'user-unlock',
+					hide: !can.impersonate || impersonationActive,
+				},
+				{
+					name: 'Stop Impersonating',
+					href: route('impersonation.stop'),
+					icon: 'user-lock',
+					hide: !impersonationActive,
+				},
+				{
+					name: 'Organisation Settings',
+					href: route('organisation.edit'),
+					icon: 'cogs',
+					hide: !can.update_tenant,
+				},
+				{ name: 'Changelog', href: route('central.changelog'), icon: 'code-merge' },
+				{
+					name: 'Help (Email Us)',
+					action: () => navigation.navigate('mailto:hayley@choirconcierge.com'),
+					icon: 'question',
+				},
+				{ name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' },
+		  ]
+		: [
+				{ name: 'Edit Profile', href: route('central.accounts.edit'), icon: 'user-edit' },
+				// { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
+				// { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
+				{ name: 'Changelog', href: route('central.changelog'), icon: 'code-merge' },
+				{
+					name: 'Help (Email Us)',
+					action: () => navigation.navigate('mailto:hayley@choirconcierge.com'),
+					icon: 'question',
+				},
+				{ name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' },
+		  ];
 
     return (
         <div className="relative z-10 shrink-0 flex h-16 bg-white border-b border-gray-300">
