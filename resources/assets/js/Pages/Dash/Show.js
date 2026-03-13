@@ -5,6 +5,7 @@ import UpcomingEventsWidget from './UpcomingEventsWidget';
 import SongsToLearnWidget from './SongsToLearnWidget';
 import BirthdaysWidget from './BirthdaysWidget';
 import MemberversariesWidget from './MemberversariesWidget';
+import PollsWidget from './PollsWidget';
 import ErrorAlert from '../../components/ErrorAlert';
 import WarningAlert from '../../components/WarningAlert';
 import SingerAttendanceWidget from './SingerAttendanceWidget';
@@ -20,6 +21,7 @@ const Show = ({
 	attendanceSummary,
 	rsvpSummary,
 	performanceTypeId,
+	activePolls,
 }) => (
 	<>
 		<AppHead title="Dashboard" />
@@ -31,6 +33,7 @@ const Show = ({
 
 				<div className="grid gap-y-6 gap-x-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
 					<div>
+						<PollsWidget polls={activePolls} />
 						<SingerAttendanceWidget
 							attendanceSummary={attendanceSummary}
 							rsvpSummary={rsvpSummary}
