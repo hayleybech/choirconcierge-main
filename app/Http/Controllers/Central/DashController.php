@@ -68,7 +68,6 @@ class DashController extends Controller
 			'tenantsTrialExpired' => $this->getTenantsTrialExpiredCount(),
 			'activeMembers' => $this->getActiveMembersCount(),
 			'trialConversionRate' => $this->getTrialConversionRate(),
-			'medianPurchaseValue' => $this->getMedianPurchaseValue(),
 			'medianRetentionTime' => $this->getMedianRetentionTime(),
 		];
 	}
@@ -99,33 +98,6 @@ class DashController extends Controller
 		return round(($converted / $totalTrialed) * 100, 2);
 	}
 
-	private function getMedianPurchaseValue()
-	{
-		if(! auth()->user()->isSuperAdmin) {
-			return null;
-		}
-
-		$amounts = \DB::table('receipts')
-			->pluck('amount')
-			->map(fn($amount) => (float) $amount)
-			->sort()
-			->values();
-
-		$count = $amounts->count();
-
-		if ($count === 0) {
-			return 0;
-		}
-
-		$middle = floor(($count - 1) / 2);
-
-		if ($count % 2) {
-			return $amounts->get($middle);
-		}
-
-		return ($amounts->get($middle) + $amounts->get($middle + 1)) / 2;
-	}
-
 	private function getMedianRetentionTime()
 	{
 		if(! auth()->user()->isSuperAdmin) {
@@ -142,7 +114,7 @@ class DashController extends Controller
 			$start = Carbon::parse($firstSub->created_at);
 			$end = $lastSub->ends_at ? Carbon::parse($lastSub->ends_at) : Carbon::now();
 
-			return $start->diffInDays($end);
+			return $start->diffInMonths($end);
 		})->sort()->values();
 
 		$count = $durations->count();
