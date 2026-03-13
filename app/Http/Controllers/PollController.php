@@ -6,9 +6,11 @@ use App\Http\Requests\PollRequest;
 use App\Models\Membership;
 use App\Models\Poll;
 use App\Models\PollOption;
+use App\Notifications\PollCreated;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -36,11 +38,15 @@ class PollController extends Controller
 
     public function store(PollRequest $request): RedirectResponse
     {
-        $poll = Poll::create($request->safe()->except(['options']));
+        $poll = Poll::create($request->safe()->except(['options', 'send_notification']));
 
         $options = collect($request->input('options', []))
             ->map(fn ($label) => ['label' => $label]);
         $poll->options()->createMany($options->all());
+
+        if ($request->input('send_notification')) {
+            Notification::send(Membership::active()->with('user')->get()->pluck('user'), new PollCreated($poll));
+        }
 
         return redirect()->route('polls.show', [$poll])->with(['status' => 'Poll created.']);
     }
@@ -74,7 +80,7 @@ class PollController extends Controller
 
     public function update(Poll $poll, PollRequest $request): RedirectResponse
     {
-        $poll->update($request->safe()->except(['options']));
+        $poll->update($request->safe()->except(['options', 'send_notification']));
 
         // Replace options with provided list
         $poll->options()->delete();

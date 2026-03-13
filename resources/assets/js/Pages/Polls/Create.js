@@ -25,6 +25,7 @@ const Create = () => {
 		can_vote_multiple: false,
 		close_at: null,
 		options: ['', ''],
+		send_notification: true,
 	});
 
 	const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
@@ -114,7 +115,9 @@ const Create = () => {
 								hasErrors={!!errors.close_at}
 							/>
 							{errors.close_at && <p className="text-sm text-red-600 mt-1">{errors.close_at}</p>}
-							{data.close_at && <Help>Will close at {data.close_at.toLocaleString(DateTime.DATETIME_MED)}</Help>}
+							{data.close_at && (
+								<Help>Will close at {data.close_at.toLocaleString(DateTime.DATETIME_MED)}</Help>
+							)}
 						</div>
 
 						<div className="sm:col-span-2">
@@ -158,6 +161,18 @@ const Create = () => {
 								</Button>
 							</div>
 							{errors.options && <p className="text-sm text-red-600 mt-1">{errors.options}</p>}
+						</div>
+					</FormSection>
+
+					<FormSection title="Notifications">
+						<div className="sm:col-span-6">
+							<CheckboxWithLabel
+								label="Send notification to singers?"
+								id="send_notification"
+								name="send_notification"
+								checked={!!data.send_notification}
+								onChange={e => setData('send_notification', e.target.checked)}
+							/>
 						</div>
 					</FormSection>
 

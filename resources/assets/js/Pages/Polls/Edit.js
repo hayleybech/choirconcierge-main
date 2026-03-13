@@ -20,7 +20,7 @@ import Help from "../../components/inputs/Help";
 
 const Edit = ({ poll }) => {
 	const { route } = useRoute();
-	const { data, setData, put, processing, errors, transform } = useForm({
+	const { data, setData, post, processing, errors, transform } = useForm({
 		title: poll.title || '',
 		can_vote_multiple: !!poll.can_vote_multiple,
 		close_at: poll.close_at ? DateTime.fromSQL(poll.close_at) : null,
@@ -32,6 +32,7 @@ const Edit = ({ poll }) => {
 	transform((data) => ({
 		...data,
 		close_at: data.close_at ? data.close_at.toFormat(rawDateFormat) : null,
+		_method: 'PUT',
 	}));
 
 	const updateOption = (index, value) => {
@@ -65,7 +66,7 @@ const Edit = ({ poll }) => {
 
 	const submit = e => {
 		e.preventDefault();
-		put(route('polls.update', { poll: poll.id }));
+		post(route('polls.update', { poll: poll.id }));
 	};
 
 	return (

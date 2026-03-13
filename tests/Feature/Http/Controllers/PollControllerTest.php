@@ -4,7 +4,9 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Membership;
 use App\Models\Poll;
+use App\Notifications\PollCreated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -47,6 +49,28 @@ class PollControllerTest extends TestCase
         $poll = Poll::firstWhere('title', 'Where should we go?');
         $this->assertDatabaseHas('poll_options', [ 'poll_id' => $poll->id, 'label' => 'Option A' ]);
         $this->assertDatabaseHas('poll_options', [ 'poll_id' => $poll->id, 'label' => 'Option B' ]);
+    }
+
+    public function test_store_sends_notification(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+        Notification::fake();
+
+        $data = [
+            'title' => 'Notify Me',
+            'can_vote_multiple' => false,
+            'close_at' => null,
+            'options' => ['Option A', 'Option B'],
+            'send_notification' => true,
+        ];
+
+        $this->post(the_tenant_route('polls.store'), $data)
+            ->assertSessionHasNoErrors();
+
+        Notification::assertSentTo(
+            Membership::active()->with('user')->get()->pluck('user'),
+            PollCreated::class
+        );
     }
 
     public function test_vote_records_single_selection(): void
