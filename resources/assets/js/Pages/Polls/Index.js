@@ -10,6 +10,7 @@ import Icon from '../../components/Icon';
 import collect from 'collect.js';
 import IndexContainer from '../../components/IndexContainer';
 import DateTag from '../../components/DateTag';
+import TableMobile, { TableMobileItem } from '../../components/TableMobile';
 
 const Index = ({ polls, pagination }) => {
 	const { route } = useRoute();
@@ -28,6 +29,27 @@ const Index = ({ polls, pagination }) => {
 			/>
 
 			<IndexContainer
+				tableMobile={
+					<TableMobile pagination={<Pagination details={pagination} />}>
+						{polls.map(p => (
+							<TableMobileItem key={p.id} url={route('polls.show', { poll: p })}>
+								<div className="min-w-0 grid grid-cols-2 lg:gap-4 w-full pr-2">
+									<div className="text-sm font-medium text-purple-600 truncate">{p.title}</div>
+
+									{p.is_closed ? (
+										<span className="text-gray-600 flex items-center justify-end">
+											<Icon icon="lock" mr /> Closed
+										</span>
+									) : (
+										<span className="text-emerald-700 flex items-center justify-end">
+											<Icon icon="check" mr /> Open
+										</span>
+									)}
+								</div>
+							</TableMobileItem>
+						))}
+					</TableMobile>
+				}
 				tableDesktop={
 					<Table
 						headings={collect({
