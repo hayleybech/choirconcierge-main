@@ -33,7 +33,10 @@ class PollControllerTest extends TestCase
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
         $data = [
-            'title' => 'Where should we go?','can_vote_multiple' => false,'close_at' => null,
+            'title' => 'Where should we go?',
+            'description' => '<p>Please choose a destination.</p>',
+            'can_vote_multiple' => false,
+            'close_at' => null,
             'options' => ['Option A', 'Option B'],
         ];
 
@@ -43,6 +46,7 @@ class PollControllerTest extends TestCase
 
         $this->assertDatabaseHas('polls', [
             'title' => 'Where should we go?',
+            'description' => '<p>Please choose a destination.</p>',
             'tenant_id' => tenant('id'),
         ]);
 

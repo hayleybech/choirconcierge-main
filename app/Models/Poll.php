@@ -20,6 +20,7 @@ class Poll extends Model
 
     protected $fillable = [
         'title',
+        'description',
         'close_at',
         'can_vote_multiple',
         'is_closed',

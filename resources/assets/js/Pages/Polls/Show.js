@@ -15,6 +15,7 @@ import { FancyCheckboxGroup } from '../../components/inputs/CheckboxGroup';
 import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';
 import Badge from '../../components/Badge';
+import Prose from "../../components/Prose";
 
 const Show = ({ poll, my_vote_option_ids = [] }) => {
 	const { route } = useRoute();
@@ -120,6 +121,13 @@ const Show = ({ poll, my_vote_option_ids = [] }) => {
 
 			<FormWrapper>
 				<Form onSubmit={submit}>
+					{poll.description && (
+						<FormSection title="Description">
+							<div className="sm:col-span-6 prose max-w-none">
+								<Prose content={poll.description} />
+							</div>
+						</FormSection>
+					)}
 					<FormSection title="Cast your vote">
 						<div className="sm:col-span-6">
 							{poll.can_vote_multiple ? (

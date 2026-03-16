@@ -6,6 +6,7 @@ import Button from '../../components/inputs/Button';
 import RadioGroup from '../../components/inputs/RadioGroup';
 import { FancyCheckboxGroup } from '../../components/inputs/CheckboxGroup';
 import Icon from '../../components/Icon';
+import Prose from "../../components/Prose";
 
 const PollItem = ({ poll }) => {
 	const { route } = useRoute();
@@ -43,6 +44,12 @@ const PollItem = ({ poll }) => {
 					</span>
 				)}
 			</div>
+
+			{poll.description && (
+				<div className="mb-3">
+					<Prose content={poll.description} className="text-xs text-gray-600" />
+				</div>
+			)}
 
 			<form onSubmit={submit}>
 				<div className="mb-3">

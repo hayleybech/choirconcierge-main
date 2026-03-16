@@ -25,6 +25,8 @@ module.exports = {
             h1: { fontWeight: 300 },
             h2: { fontWeight: 300 },
             h3: { fontWeight: 300 },
+		  	ul: { marginTop: 0 },
+		  	'li > p': { margin: 0 },
           }
         }
       }),

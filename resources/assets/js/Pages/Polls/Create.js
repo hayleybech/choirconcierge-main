@@ -18,11 +18,13 @@ import TimeInput from "../../components/inputs/Time";
 import {DateTime} from "luxon";
 import Help from "../../components/inputs/Help";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
+import RichTextInput from "../../components/inputs/RichTextInput";
 
 const Create = ({ ensembles = [] }) => {
 	const { route } = useRoute();
 	const { data, setData, post, processing, errors, transform } = useForm({
 		title: '',
+		description: '',
 		can_vote_multiple: false,
 		close_at: null,
 		options: ['', ''],
@@ -96,6 +98,17 @@ const Create = ({ ensembles = [] }) => {
 								hasErrors={!!errors.title}
 							/>
 							{errors.title && <p className="text-sm text-red-600 mt-1">{errors.title}</p>}
+						</div>
+
+						<div className="sm:col-span-6">
+							<Label forInput="description">Description</Label>
+							<RichTextInput
+								value={data.description}
+								updateFn={v => setData('description', v)}
+								hasErrors={!!errors.description}
+								max={1000}
+							/>
+							{errors.description && <p className="text-sm text-red-600 mt-1">{errors.description}</p>}
 						</div>
 
 						<div className="sm:col-span-6">

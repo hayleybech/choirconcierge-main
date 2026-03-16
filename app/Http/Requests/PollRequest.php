@@ -18,6 +18,7 @@ class PollRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:1000'],
             'can_vote_multiple' => ['sometimes', 'boolean'],
             'close_at' => ['nullable', 'date_format:Y-m-d H:i:s'],
             'is_closed' => ['sometimes', 'boolean'],
