@@ -6,6 +6,7 @@ use Database\Seeders\Dummy\DummyDocumentSeeder;
 use Database\Seeders\Dummy\DummyEventSeeder;
 use Database\Seeders\Dummy\DummyFolderSeeder;
 use Database\Seeders\Dummy\DummyNotificationTemplateSeeder;
+use Database\Seeders\Dummy\DummyPollSeeder;
 use Database\Seeders\Dummy\DummySongSeeder;
 use Database\Seeders\Dummy\DummyTaskSeeder;
 use Database\Seeders\Dummy\DummyUserGroupSeeder;
@@ -44,5 +45,8 @@ class DummyDataSeeder extends Seeder
 
         $this->call(DummyUserGroupSeeder::class);
         $this->command?->info('Dummy MailingList (UserGroup) data seeded!');
+
+        $this->call(DummyPollSeeder::class);
+        $this->command?->info('Dummy Poll data seeded!');
     }
 }

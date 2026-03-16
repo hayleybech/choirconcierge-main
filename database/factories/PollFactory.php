@@ -18,6 +18,7 @@ class PollFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
+            'description' => $this->faker->paragraph(),
             'can_vote_multiple' => false,
             'is_closed' => false,
         ];
