@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Dummy\DummyAttendanceSeeder;
 use Database\Seeders\Dummy\DummyDocumentSeeder;
 use Database\Seeders\Dummy\DummyEventSeeder;
 use Database\Seeders\Dummy\DummyFolderSeeder;
 use Database\Seeders\Dummy\DummyNotificationTemplateSeeder;
 use Database\Seeders\Dummy\DummyPollSeeder;
+use Database\Seeders\Dummy\DummyRsvpSeeder;
 use Database\Seeders\Dummy\DummyRiserStacksSeeder;
 use Database\Seeders\Dummy\DummySongSeeder;
 use Database\Seeders\Dummy\DummyTaskSeeder;
@@ -49,6 +51,12 @@ class DummyDataSeeder extends Seeder
 
         $this->call(DummyPollSeeder::class);
         $this->command?->info('Dummy Poll data seeded!');
+
+        $this->call(DummyAttendanceSeeder::class);
+        $this->command?->info('Dummy Attendance data seeded!');
+
+        $this->call(DummyRsvpSeeder::class);
+        $this->command?->info('Dummy RSVP data seeded!');
 
         $this->call(DummyRiserStacksSeeder::class);
         $this->command?->info('Dummy RiserStack data seeded!');
