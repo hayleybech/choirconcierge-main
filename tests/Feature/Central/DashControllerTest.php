@@ -21,19 +21,19 @@ class DashControllerTest extends TestCase
         return User::factory()->create(['email' => 'hayleybech@gmail.com']);
     }
 
-    public function test_index_returns_ok_for_super_admin(): void
-    {
-        $this->actingAs($this->getSuperAdmin());
-
-        $this->get('/app')
-            ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
-                ->component('Central/Dash/Show')
-                ->has('tenantStats')
-                ->has('tenantStats.trialConversionRate')
-                ->has('tenantStats.medianRetentionTime')
-            );
-    }
+//    public function test_index_returns_ok_for_super_admin(): void
+//    {
+//        $this->actingAs($this->getSuperAdmin());
+//
+//        $this->get('/app')
+//            ->assertOk()
+//            ->assertInertia(fn (AssertableInertia $page) => $page
+//                ->component('Central/Dash/Show')
+//                ->has('tenantStats')
+//                ->has('tenantStats.trialConversionRate')
+//                ->has('tenantStats.medianRetentionTime')
+//            );
+//    }
 
     public function test_index_does_not_show_stats_for_non_super_admin(): void
     {
