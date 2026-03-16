@@ -103,7 +103,7 @@ const PollsWidget = ({ polls }) => {
 				<div className="flex justify-between items-center">
 					<PanelTitle>
 						<Icon icon="poll" mr />
-						Active Polls
+						Active Polls <span className="text-xs text-gray-500 font-normal">(Latest 2)</span>
 					</PanelTitle>
 
 					<Button href={route('polls.index')} variant="secondary" size="xs">

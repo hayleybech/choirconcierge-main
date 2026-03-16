@@ -189,6 +189,8 @@ class DashController extends Controller
                     ->orWhere('close_at', '>=', now());
             })
             ->where('is_closed', false)
+            ->orderByDesc('created_at')
+            ->limit(2)
         ->get()
         ->each(function (Poll $poll) use ($membership) {
             $poll->my_vote_option_ids = $poll->votes()
