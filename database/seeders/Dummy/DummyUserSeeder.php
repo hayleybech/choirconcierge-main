@@ -4,6 +4,7 @@ namespace Database\Seeders\Dummy;
 
 use App\Models\CustomField;
 use App\Models\Membership;
+use App\Models\Role;
 use App\Models\SingerCategory;
 use App\Models\User;
 use App\Models\VoicePart;
@@ -28,16 +29,19 @@ class DummyUserSeeder extends Seeder
 
         $voice_parts = VoicePart::pluck('id');
 
-        // Add dummy users - no roles
+        $userRole = Role::query()->firstWhere(['name' => 'User']);
+
+        // Add dummy users
         User::factory()
             ->count(30)
             ->create()
-            ->each(static function (User $user) use ($voice_parts, $singer_categories, $faker, $custom_fields) {
+            ->each(static function (User $user) use ($userRole, $voice_parts, $singer_categories, $faker, $custom_fields) {
 
                 // Create matching singer
                 $member = Membership::factory()
                     ->for($user)
                     ->hasAttached($custom_fields, fn() => ['value' => $faker->words(3, true)])
+                    ->hasAttached($userRole)
                     ->state([
                         'onboarding_enabled' => $faker->boolean(30),
                     ])
