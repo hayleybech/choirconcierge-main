@@ -5,6 +5,12 @@
 
 A new poll has been created. Please take a moment to cast your vote.
 
+ @if($poll->description)
+ ### Description
+  {{ new \Illuminate\Support\HtmlString($poll->description) }}
+ @endif
+
+
 @if($poll->close_at)
 <img src="{{ global_asset('/img/email/calendar-day.png') }}" alt="Date" height="16px"> **Closes at: {{ $poll->close_at->toDayDateTimeString() }}**
 @endif

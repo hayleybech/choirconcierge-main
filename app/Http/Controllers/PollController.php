@@ -89,7 +89,7 @@ class PollController extends Controller
         if ($request->input('send_notification')) {
             $members = Membership::active()->with('user');
 
-            if ($request->filled('ensemble_ids')) {
+            if ($request->filled('ensemble_ids') && count($request->input('ensemble_ids')) > 0) {
                 $members->whereHas('enrolments', function ($query) use ($request) {
                     $query->whereIn('ensemble_id', $request->input('ensemble_ids'));
                 });
