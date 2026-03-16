@@ -26,11 +26,13 @@ class DummyUserSeeder extends Seeder
         $custom_fields = CustomField::factory()->count(10)->create();
         $faker = Faker::create();
 
+        $voice_parts = VoicePart::pluck('id');
+
         // Add dummy users - no roles
         User::factory()
             ->count(30)
             ->create()
-            ->each(static function (User $user) use ($singer_categories, $faker, $custom_fields) {
+            ->each(static function (User $user) use ($voice_parts, $singer_categories, $faker, $custom_fields) {
 
                 // Create matching singer
                 $member = Membership::factory()
@@ -44,7 +46,7 @@ class DummyUserSeeder extends Seeder
                 // Create enrolment
                 tenant()->ensembles()?->first()->enrolments()->create([
                     'membership_id' => $member->id,
-                    'voice_part_id' => VoicePart::query()->inRandomOrder()->first()->id,
+                    'voice_part_id' => $voice_parts->random(),
                 ]);
 
                 // Attach random singer category
