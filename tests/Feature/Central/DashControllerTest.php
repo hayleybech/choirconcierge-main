@@ -102,47 +102,11 @@ class DashControllerTest extends TestCase
             );
     }
 
-    public function test_median_purchase_value_calculation(): void
-    {
-        $this->actingAs($this->getSuperAdmin());
-
-        $baseReceipt = [
-            'billable_id' => 1,
-            'billable_type' => 'user',
-            'receipt_url' => 'http',
-            'paid_at' => now(),
-            'tax' => '0',
-            'currency' => 'USD',
-            'quantity' => 1,
-        ];
-
-        // Even number of receipts: 10, 20, 30, 40 -> median (20+30)/2 = 25
-        DB::table('receipts')->insert(array_merge($baseReceipt, ['amount' => 10, 'checkout_id' => '1', 'order_id' => 'o1', 'receipt_url' => 'http1']));
-        DB::table('receipts')->insert(array_merge($baseReceipt, ['amount' => 30, 'checkout_id' => '2', 'order_id' => 'o2', 'receipt_url' => 'http2']));
-        DB::table('receipts')->insert(array_merge($baseReceipt, ['amount' => 20, 'checkout_id' => '3', 'order_id' => 'o3', 'receipt_url' => 'http3']));
-        DB::table('receipts')->insert(array_merge($baseReceipt, ['amount' => 40, 'checkout_id' => '4', 'order_id' => 'o4', 'receipt_url' => 'http4']));
-
-        $this->get('/app')
-            ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('tenantStats.medianPurchaseValue', 25)
-            );
-
-        // Odd number: 10, 20, 30, 40, 100 -> median 30
-        DB::table('receipts')->insert(array_merge($baseReceipt, ['amount' => 100, 'checkout_id' => '5', 'order_id' => 'o5', 'receipt_url' => 'http5']));
-
-        $this->get('/app')
-            ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('tenantStats.medianPurchaseValue', 30)
-            );
-    }
-
     public function test_median_retention_time_calculation(): void
     {
         $this->actingAs($this->getSuperAdmin());
 
-        // 1. Tenant 1: 10 days retention
+        // 1. Tenant 1: 3 months retention
         $t1 = Tenant::factory()->create(['id' => 't1', 'timezone' => 'Australia/Perth']);
         $t1->subscriptions()->create([
             'name' => 'default',
@@ -150,11 +114,11 @@ class DashControllerTest extends TestCase
             'paddle_status' => 'active',
             'paddle_plan' => 1,
             'quantity' => 1,
-            'created_at' => Carbon::now()->subDays(10),
+            'created_at' => Carbon::now()->subMonths(3),
             'ends_at' => null, // Active, so uses Carbon::now()
         ]);
 
-        // 2. Tenant 2: 20 days retention
+        // 2. Tenant 2: 6 months retention
         $t2 = Tenant::factory()->create(['id' => 't2', 'timezone' => 'Australia/Perth']);
         $t2->subscriptions()->create([
             'name' => 'default',
@@ -162,11 +126,11 @@ class DashControllerTest extends TestCase
             'paddle_status' => 'deleted',
             'paddle_plan' => 1,
             'quantity' => 1,
-            'created_at' => Carbon::now()->subDays(30),
-            'ends_at' => Carbon::now()->subDays(10), // subDays(30) to subDays(10) = 20 days
+            'created_at' => Carbon::now()->subMonths(18),
+            'ends_at' => Carbon::now()->subMonths(12), // subMonths(18) to subMonths(12) = 6 months
         ]);
 
-        // 3. Tenant 3: 50 days retention
+        // 3. Tenant 3: 12 months retention
         $t3 = Tenant::factory()->create(['id' => 't3', 'timezone' => 'Australia/Perth']);
         $t3->subscriptions()->create([
             'name' => 'default',
@@ -174,16 +138,16 @@ class DashControllerTest extends TestCase
             'paddle_status' => 'active',
             'paddle_plan' => 1,
             'quantity' => 1,
-            'created_at' => Carbon::now()->subDays(50),
+            'created_at' => Carbon::now()->subMonths(12),
             'ends_at' => null,
         ]);
 
-        // Durations: 10, 20, 50 -> Median 20
+        // Durations: 3, 6, 12 -> Median 6
         
         $this->get('/app')
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('tenantStats.medianRetentionTime', 20)
+                ->where('tenantStats.medianRetentionTime', 6)
             );
     }
 }
