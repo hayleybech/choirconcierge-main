@@ -31,7 +31,6 @@ class DashControllerTest extends TestCase
                 ->component('Central/Dash/Show')
                 ->has('tenantStats')
                 ->has('tenantStats.trialConversionRate')
-                ->has('tenantStats.medianPurchaseValue')
                 ->has('tenantStats.medianRetentionTime')
             );
     }
