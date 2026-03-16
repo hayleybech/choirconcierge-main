@@ -151,7 +151,7 @@ class AttendanceController extends Controller
         }
 
         if ($event->is_repeating) {
-            return URL::temporarySignedRoute('events.check-ins.index', $event->repeat_until, ['event' => $event->repeat_parent]);
+            return URL::temporarySignedRoute('events.check-ins.index', $event->repeat_until, ['event' => $event->repeat_parent_id]);
         }
 
         return URL::temporarySignedRoute('events.check-ins.index', $event->end_date, ['event' => $event]);
