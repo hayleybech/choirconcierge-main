@@ -67,7 +67,7 @@ class BroadcastController extends Controller
         SendEmailForGroup::dispatch($organisationBroadcast, $group);
 
         return redirect()
-            ->route('mail-logs.index')
+            ->route('groups.mail-logs.index')
             ->with(['status' => 'Email sent! ']);
     }
 }
