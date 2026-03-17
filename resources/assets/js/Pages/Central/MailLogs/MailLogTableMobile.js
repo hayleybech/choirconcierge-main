@@ -22,6 +22,12 @@ const MailLogTableMobile = ({ logs }) => {
                                         {!!log.has_attachments && (
                                             <Icon icon="paperclip" ml />
                                         )}
+                                        {log.opens_count > 0 && (
+                                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <Icon icon="eye" mr />
+                                                {log.opens_count}
+                                            </span>
+                                        )}
                                     </div>
                                     <MailStatusTag event={log.latest_event} showLabel={false} />
                                 </div>

@@ -16,49 +16,70 @@ const Show = ({ log }) => {
     const isBroadcast = log.uid.startsWith('broadcast');
 
     return (
-        <>
-            <AppHead title={`${log.subject} - Mail Logs`} />
-            <PageHeader
-                title={log.subject}
-                icon={isBroadcast ? 'satellite-dish' : "envelope"}
-                meta={<>
-                    <div>From: {log.from}</div>
-                    <div>To: {log.to}</div>
-                    <div>Cc: {log.cc}</div>
-                    <div>Bcc: {log.bcc}</div>
-                    <div>
-                        <Icon icon="paperclip" mr /> {log.has_attachments ? 'Has attachments' : 'No attachments'}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <DateTag icon="pencil" date={log.created_at} label="Created" />
-                        <DateTag icon="pencil" date={log.updated_at} label="Updated" />
-                    </div>
-                </>}
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('central.dash')},
-                    { name: 'Mail Logs', url: route('central.mail-logs.index')},
-                    { name: log.subject, url: route('central.mail-logs.show', {mail_log: log}) },
-                ]}
-                actions={[]}
-            />
+		<>
+			<AppHead title={`${log.subject} - Mail Logs`} />
+			<PageHeader
+				title={log.subject}
+				icon={isBroadcast ? 'satellite-dish' : 'envelope'}
+				meta={
+					<>
+						<div>
+							Opens:
+							<span className="ml-0.5 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+								<Icon icon="eye" mr />
+								<span className="font-medium">{log.opens_count}</span>
+							</span>
+						</div>
+						<div>From: {log.from}</div>
+						<div>To: {log.to}</div>
+						<div>Cc: {log.cc}</div>
+						<div>Bcc: {log.bcc}</div>
+						<div className="flex items-center gap-4">
+							<div>
+								<Icon icon="paperclip" mr />{' '}
+								{log.has_attachments ? 'Has attachments' : 'No attachments'}
+							</div>
+						</div>
+						<div className="flex items-center gap-2">
+							<DateTag icon="pencil" date={log.created_at} label="Created" />
+							<DateTag icon="pencil" date={log.updated_at} label="Updated" />
+						</div>
+					</>
+				}
+				breadcrumbs={[
+					{ name: 'Dashboard', url: route('central.dash') },
+					{ name: 'Mail Logs', url: route('central.mail-logs.index') },
+					{ name: log.subject, url: route('central.mail-logs.show', { mail_log: log }) },
+				]}
+				actions={[]}
+			/>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-3 divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
+			<div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-3 divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
+				<div className="sm:col-span-2 xl:col-span-2 divide-y divide-y-gray-300">
+					<CollapseGroup
+						items={[
+							{
+								title: 'Body',
+								show: true,
+								defaultOpen: true,
+								content: (
+									<div className="py-4 px-8">
+										<Prose content={log.body} />
+									</div>
+								),
+							},
+						]}
+					/>
+				</div>
 
-                <div className="sm:col-span-2 xl:col-span-2 divide-y divide-y-gray-300">
-                    <CollapseGroup items={[
-                        { title: 'Body', show: true, defaultOpen: true, content: <div className="py-4 px-8"><Prose content={log.body} /></div>},
-                    ]} />
-                </div>
-
-                <div className="sm:col-span-1 divide-y divide-y-gray-300">
-                    <CollapseGroup items={[
-                        { title: 'Activity', show: true, defaultOpen: true, content: <Activity log={log} />},
-                    ]} />
-                </div>
-
-            </div>
-        </>
-    );
+				<div className="sm:col-span-1 divide-y divide-y-gray-300">
+					<CollapseGroup
+						items={[{ title: 'Activity', show: true, defaultOpen: true, content: <Activity log={log} /> }]}
+					/>
+				</div>
+			</div>
+		</>
+	);
 }
 
 Show.layout = page => <CentralLayout children={page} />

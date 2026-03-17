@@ -40,6 +40,11 @@ class MailLog extends Model
         return $this->hasOne(MailLogEvent::class)->latestOfMany();
     }
 
+    public function opens(): HasMany
+    {
+        return $this->hasMany(MailLogEvent::class)->where('status', 'opened');
+    }
+
     public static function createFromMessage(Loggable $message) {
         return self::create([
             'uid' => $message->getUid(),

@@ -25,10 +25,12 @@ class MailLogController extends Controller
                 ? self::queryLogsAdmin()
                     ->latest()
                     ->with('latestEvent')
+                    ->withCount('opens')
                     ->paginate(50)
                 : self::queryLogsAuthorisedForUser()
                     ->latest()
                     ->with('latestEvent')
+                    ->withCount('opens')
                     ->paginate(50)
         ]);
     }
@@ -36,7 +38,7 @@ class MailLogController extends Controller
     public function show(MailLog $mail_log): Response
     {
         return Inertia::render('MailingLists/MailLogs/Show', [
-            'log' => $mail_log->load('events.user_group'),
+            'log' => $mail_log->load('events.user_group')->loadCount('opens'),
         ]);
     }
 

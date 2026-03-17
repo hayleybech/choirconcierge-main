@@ -15,6 +15,7 @@ const MailLogTableDesktop = ({ logs }) => {
         subject: 'Subject',
         from: 'From',
         to: 'To',
+        opens: 'Opens',
         status: 'Status',
         created_at: 'Date Created',
     });
@@ -37,6 +38,16 @@ const MailLogTableDesktop = ({ logs }) => {
                     </TableCell>
                     <TableCell>{log.from}</TableCell>
                     <TableCell>{log.to}</TableCell>
+                    <TableCell>
+                        {log.opens_count > 0 ? (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                <Icon icon="eye" mr />
+                                {log.opens_count}
+                            </span>
+                        ) : (
+                            <span className="text-gray-400 text-xs">—</span>
+                        )}
+                    </TableCell>
                     <TableCell>
                         <MailStatusTag event={log.latest_event} />
                     </TableCell>
