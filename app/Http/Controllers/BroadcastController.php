@@ -22,7 +22,7 @@ class BroadcastController extends Controller
         $this->authorize('createBroadcast', UserGroup::class);
 
         return Inertia::render('MailingLists/Broadcasts/Create', [
-            'lists' => UserGroup::with(['tenant', 'sender_roles', 'recipient_roles'])
+            'lists' => UserGroup::with(['tenant', 'sender_roles', 'recipient_roles', 'sender_ensembles', 'recipient_ensembles'])
                 ->get()
                 ->filter(fn(UserGroup $group) => $group->authoriseSender($request->user()))
                 ->values(),

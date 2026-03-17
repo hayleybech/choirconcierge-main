@@ -11,6 +11,7 @@ export const mailIconColours = {
 	'malformed-recipient': 'bg-red-500',
 	'clone-failed': 'bg-red-500',
 	'clones-sent': 'bg-emerald-500',
+	'notification-sent': 'bg-emerald-500',
 	'opened': 'bg-blue-500',
 	'send-failed': 'bg-red-500',
 };
@@ -24,6 +25,7 @@ export const mailIcons = {
 	'malformed-recipient': 'exclamation-triangle',
 	'clone-failed': 'exclamation-triangle',
 	'clones-sent': 'inbox-out',
+	'notification-sent': 'inbox-out',
 	'opened': 'envelope-open-text',
 	'send-failed': 'exclamation-circle',
 }

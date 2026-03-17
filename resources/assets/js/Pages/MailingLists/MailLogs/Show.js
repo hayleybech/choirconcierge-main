@@ -91,61 +91,75 @@ Show.layout = page => <TenantLayout children={page} />
 
 export default Show;
 
-const Activity = ({log}) => {
-    const { route } = useRoute();
+const Activity = ({ log }) => {
 
-    const isBroadcast = log.uid.startsWith('broadcast');
+	const mailType = log.uid.split('-')[0];
 
-    const events = [
-        {
-            id: 0,
-            status: 'received',
-            context: '',
-            created_at: log.received_at,
-        },
-        ...log.events,
-    ].map(event => ({
-        ...event,
-        iconColour: mailIconColours[event.status] ?? 'bg-gray-400',
-        icon: mailIcons[event.status] ?? 'question',
-    })).reverse();
+	const events = log.events;
+	if (mailType !== 'notification') {
+		events.push([
+			{
+				id: 0,
+				status: 'received',
+				context: '',
+				created_at: log.received_at,
+			},
+		]);
+	}
 
-
-    return (
-        <>
-            <div className="flow-root px-6 py-8">
-                <ul role="list" className="-mb-8">
-                    {events.map((event, eventIdx) => (
-                        <li key={event.id}>
-                            <div className="relative pb-8">
-                                {eventIdx !== events.length - 1 ? (
-                                    <div aria-hidden="true" className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-500" />
-                                ) : null}
-                                <div className="relative flex space-x-3">
-                                    <div>
-                                        <span
-                                          className={classNames(
-                                              event.iconColour,
-                                              'flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-gray-100',
-                                          )}
-                                        >
-                                            <Icon icon={event.icon ?? 'question'} type="regular" className="text-white text-sm" />
-                                        </span>
-                                    </div>
-                                    <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
-                                        <div>
-                                            <MailStatusDetail log={log} event={event} isBroadcast={isBroadcast} />
-                                        </div>
-                                        <div className="text-right text-sm whitespace-nowrap text-gray-500">
-                                            <DateTag icon="pencil" date={event.created_at} format={'DATETIME_SHORT'} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </>
-    );
-}
+	return (
+		<>
+			<div className="flow-root px-6 py-8">
+				<ul role="list" className="-mb-8">
+					{events
+						.map(event => ({
+							...event,
+							iconColour: mailIconColours[event.status] ?? 'bg-gray-400',
+							icon: mailIcons[event.status] ?? 'question',
+						}))
+						.reverse()
+						.map((event, eventIdx) => (
+							<li key={event.id}>
+								<div className="relative pb-8">
+									{eventIdx !== events.length - 1 ? (
+										<div
+											aria-hidden="true"
+											className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-500"
+										/>
+									) : null}
+									<div className="relative flex space-x-3">
+										<div>
+											<span
+												className={classNames(
+													event.iconColour,
+													'flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-gray-100'
+												)}
+											>
+												<Icon
+													icon={event.icon ?? 'question'}
+													type="regular"
+													className="text-white text-sm"
+												/>
+											</span>
+										</div>
+										<div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+											<div>
+												<MailStatusDetail log={log} event={event} mailType={mailType} />
+											</div>
+											<div className="text-right text-sm whitespace-nowrap text-gray-500">
+												<DateTag
+													icon="pencil"
+													date={event.created_at}
+													format={'DATETIME_SHORT'}
+												/>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						))}
+				</ul>
+			</div>
+		</>
+	);
+};

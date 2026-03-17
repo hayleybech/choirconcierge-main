@@ -12,7 +12,7 @@ use Illuminate\Support\HtmlString;
 
 class EventCreated extends Notification
 {
-    use Queueable;
+    use Queueable, LogsToMailLog;
 
     private Event $event;
 
@@ -48,15 +48,18 @@ class EventCreated extends Notification
         return (new MailMessage())
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
             ->subject('Event Created: ' . $this->event->title)
+            ->with(['event' => $this->event])
             ->markdown('emails.event_created', [
                 'event' => $this->event,
-                'view_url' => route('events.show', $this->event),
+                'view_url' => the_tenant_route('events.show', $this->event),
                 'going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
+                    'tenant' => tenant('id'),
                     'event' => $this->event,
                     'user' => $notifiable->id,
                     'response' => 'yes'
                 ]),
                 'not_going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
+                    'tenant' => tenant('id'),
                     'event' => $this->event,
                     'user' => $notifiable->id,
                     'response' => 'no'

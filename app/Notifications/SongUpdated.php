@@ -10,7 +10,7 @@ use Illuminate\Support\HtmlString;
 
 class SongUpdated extends Notification
 {
-    use Queueable;
+    use Queueable, LogsToMailLog;
 
     private Song $song;
 
@@ -46,11 +46,9 @@ class SongUpdated extends Notification
         return (new MailMessage())
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
             ->subject('Song Updated: '.$this->song->title)
-            ->greeting('Updated song')
-            ->line('The song, "'.$this->song->title.'", has recently been modified.')
-            ->action('View Song', route('songs.show', $this->song))
-            ->line(new HtmlString($this->song->description))
-            ->line('Enjoy!');
+            ->markdown('emails.song_updated', [
+                'song' => $this->song,
+            ]);
     }
 
     /**

@@ -11,7 +11,7 @@ use Illuminate\Support\HtmlString;
 
 class SongUploaded extends Notification
 {
-    use Queueable;
+    use Queueable, LogsToMailLog;
 
     private Song $song;
 
@@ -47,11 +47,9 @@ class SongUploaded extends Notification
         return (new MailMessage())
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
             ->subject('New song: '.$this->song->title)
-            ->greeting('New song uploaded!')
-            ->line('A new song, "'.$this->song->title.'", has been uploaded.')
-            ->action('View Song', route('songs.show', $this->song))
-            ->line(new HtmlString($this->song->description))
-            ->line('Enjoy!');
+            ->markdown('emails.song_uploaded', [
+                'song' => $this->song,
+            ]);
     }
 
     /**

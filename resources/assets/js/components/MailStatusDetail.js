@@ -1,8 +1,8 @@
 import { Link } from '@inertiajs/react';
 import React from 'react';
 
-const MailStatusDetail = ({log, event, isBroadcast}) => {
-	if (event.status === 'received' && isBroadcast) {
+const MailStatusDetail = ({log, event, mailType}) => {
+	if (event.status === 'received' && mailType === 'broadcast') {
 		return (
 			<p className="text-sm text-gray-500">
 				Broadcast created by{' '}
@@ -10,7 +10,7 @@ const MailStatusDetail = ({log, event, isBroadcast}) => {
 			</p>
 		)
 	}
-	if (event.status === 'received' && !isBroadcast) {
+	if (event.status === 'received' && mailType === 'inbound') {
 		return (
 			<p className="text-sm text-gray-500">
 				Email delivered to{' '}
@@ -88,16 +88,6 @@ const MailStatusDetail = ({log, event, isBroadcast}) => {
 			</p>
 		);
 	}
-	if (event.status === 'opened') {
-		return (
-			<p className="text-sm text-gray-500">
-				Email opened by {' '}
-				<span className="font-medium text-gray-900">
-                    {event.context}
-                </span>
-			</p>
-		);
-	}
 	if (event.status === 'clones-sent') {
 		return (
 			<p className="text-sm text-gray-500">
@@ -111,10 +101,22 @@ const MailStatusDetail = ({log, event, isBroadcast}) => {
 	if (event.status === 'send-failed') {
 		return (
 			<p className="text-sm text-gray-500">
-				A fatal error occurred while sending mail to {' '}
-				<span className="font-medium text-gray-900">
-                    {event.context}
-                </span>. Processing has been stopped.
+				A fatal error occurred while sending mail to{' '}
+				<span className="font-medium text-gray-900">{event.context}</span>. Processing has been stopped.
+			</p>
+		);
+	}
+	if (event.status === 'notification-sent') {
+		return (
+			<p className="text-sm text-gray-500">
+				A notification email was sent to <span className="font-medium text-gray-900">all recipients</span>.
+			</p>
+		);
+	}
+	if (event.status === 'opened') {
+		return (
+			<p className="text-sm text-gray-500">
+				Email opened by <span className="font-medium text-gray-900">{event.context}</span>
 			</p>
 		);
 	}
@@ -124,6 +126,14 @@ const MailStatusDetail = ({log, event, isBroadcast}) => {
 			<span className="font-medium text-gray-900">
                 {event.status}
             </span>
+			{event.context && (
+				<p>
+					{' '}With context: {' '}
+					<span className="font-medium text-gray-900">
+						{event.context}
+					</span>
+				</p>
+			)}
 		</p>
 	);
 };

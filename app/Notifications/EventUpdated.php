@@ -14,7 +14,7 @@ use Jfcherng\Diff\DiffHelper;
 
 class EventUpdated extends Notification
 {
-    use Queueable;
+    use Queueable, LogsToMailLog;
 
     private Event $event;
 
@@ -67,17 +67,20 @@ class EventUpdated extends Notification
         return (new MailMessage())
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
             ->subject('Event Updated: ' . $this->event->title)
+            ->with(['event' => $this->event])
             ->markdown('emails.event_updated', [
                 'event' => $this->event,
                 'original' => $this->original,
-                'view_url' => route('events.show', $this->event),
+                'view_url' => the_tenant_route('events.show', $this->event),
                 'description_diff' => $description_diff,
                 'going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
+                    'tenant' => tenant('id'),
                     'event' => $this->event,
                     'user' => $notifiable->id,
                     'response' => 'yes'
                 ]),
                 'not_going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
+                    'tenant' => tenant('id'),
                     'event' => $this->event,
                     'user' => $notifiable->id,
                     'response' => 'no'

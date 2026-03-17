@@ -14,7 +14,7 @@ class BroadcastRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if(tenant()->billing_status['onTrial']) {
+        if(tenant()->billing_status['onTrial'] && !tenant()->has_gratis) {
             return false;
         }
         return true;

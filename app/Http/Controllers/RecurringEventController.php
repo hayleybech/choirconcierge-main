@@ -53,10 +53,12 @@ class RecurringEventController extends Controller
         UpdateRecurringEvent::handle($mode, $event, Arr::except($request->validated(), 'send_notification'));
 
         if ($request->input('send_notification')) {
+            $notification = new EventUpdated($event, $original);
             Notification::send(
                 Membership::active()->with('user')->get()->map(fn ($singer) => $singer->user),
-                new EventUpdated($event, $original)
+                $notification
             );
+            $notification->log($event->id);
         }
 
         return redirect()

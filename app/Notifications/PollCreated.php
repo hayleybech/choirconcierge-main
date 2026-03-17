@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notification;
 
 class PollCreated extends Notification
 {
-    use Queueable;
+    use Queueable, LogsToMailLog;
 
     private Poll $poll;
 
@@ -46,9 +46,10 @@ class PollCreated extends Notification
         return (new MailMessage())
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
             ->subject('New Poll: ' . $this->poll->title)
+            ->with(['poll' => $this->poll])
             ->markdown('emails.poll_created', [
                 'poll' => $this->poll,
-                'view_url' => route('polls.show', $this->poll),
+                'view_url' => the_tenant_route('polls.show', $this->poll),
             ]);
     }
 
