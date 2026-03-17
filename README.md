@@ -22,7 +22,7 @@
 - `herd php artisan tinker`
 - Add a test tenant:
     ```
-    $test = Tenant::create('test', 'Test Music Club Pty Ltd', 'Australia/Perth');
+    $test = Tenant::create('test', 'Test Music Club Pty Ltd', 'Australia/Perth', ['has_gratis' => true]);
     $test->domains()->create(['domain' => 'test']);
     $test->ensembles()->create(['name' => 'The Test Tones']);
     $test->ensembles()->create(['name' => 'Test Tones Youth Chorus']);
