@@ -13,6 +13,7 @@ const MailLogTableDesktop = ({ logs }) => {
 
     const headings = collect({
         subject: 'Subject',
+        tenant: 'Tenant',
         from: 'From',
         to: 'To',
         opens: 'Opens',
@@ -35,6 +36,17 @@ const MailLogTableDesktop = ({ logs }) => {
                                 <Icon icon="paperclip" ml />
                             )}
                         </Link>
+                    </TableCell>
+                    <TableCell>
+                        {log.tenants.length > 0 ? (
+                            log.tenants.map((tenant) => (
+                                <div key={tenant.id} className="text-xs">
+                                    {tenant.name}
+                                </div>
+                            ))
+                        ) : (
+                            <span className="text-gray-400 text-xs">—</span>
+                        )}
                     </TableCell>
                     <TableCell>{log.from}</TableCell>
                     <TableCell>{log.to}</TableCell>

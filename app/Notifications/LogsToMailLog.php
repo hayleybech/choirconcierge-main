@@ -12,7 +12,7 @@ trait LogsToMailLog
     /**
      * Log the notification to the MailLog table.
      */
-    public function log(string $targetId): void
+    public function log(string $targetId, $notifiable = null): void
     {
         $uniqueKey = class_basename($this) . '-' . $targetId;
         $uid = 'notification-' . $uniqueKey;
@@ -22,8 +22,10 @@ trait LogsToMailLog
             return;
         }
 
-        $notifiable = new \stdClass();
-        $notifiable->id = 0; // Fake notifiable for generating mail content if needed
+        if (!$notifiable) {
+            $notifiable = new \stdClass();
+            $notifiable->id = 0; // Fake notifiable for generating mail content if needed
+        }
 
         $mailMessage = $this->toMail($notifiable);
 
@@ -45,7 +47,9 @@ trait LogsToMailLog
             'received_at' => now(),
         ]);
 
-        if (tenant('id')) {
+        if ($notifiable instanceof \App\Models\User && $notifiable->default_tenant_id) {
+            $mailLog->tenants()->attach($notifiable->default_tenant_id);
+        } elseif (tenant('id')) {
             $mailLog->tenants()->attach(tenant('id'));
         }
 

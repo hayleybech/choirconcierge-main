@@ -32,6 +32,15 @@ const Show = ({ log }) => {
 						</div>
 						<div>From: {log.from}</div>
 						<div>To: {log.to}</div>
+						{log.tenants.length > 0 && (
+							<div>
+								Tenants: {log.tenants.map((tenant, index) => (
+									<span key={tenant.id}>
+										{tenant.name}{index < log.tenants.length - 1 ? ', ' : ''}
+									</span>
+								))}
+							</div>
+						)}
 						<div>Cc: {log.cc}</div>
 						<div>Bcc: {log.bcc}</div>
 						<div className="flex items-center gap-4">

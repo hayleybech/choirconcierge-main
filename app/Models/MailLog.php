@@ -92,7 +92,7 @@ class MailLog extends Model
             });
 
             if ($tenants->isNotEmpty()) {
-                $mailLog->tenants()->attach($tenants->pluck('id'));
+                $mailLog->tenants()->syncWithoutDetaching($tenants->pluck('id'));
             }
         }
 

@@ -78,6 +78,32 @@ class MailLogRelationshipTest extends TestCase
         $this->assertEquals('subdomain-tenant', $mailLog->tenants->first()->id);
     }
 
+    public function test_notification_links_to_notifiable_tenant_if_no_current_tenant()
+    {
+        $tenant = Tenant::factory()->create(['id' => 'notif-tenant-2']);
+        $user = User::factory()->create(['default_tenant_id' => $tenant->id]);
+
+        // Ensure NO current tenancy
+        app()->forgetInstance(\Stancl\Tenancy\Contracts\Tenant::class);
+        config(['tenancy.tenant' => null]);
+
+        $notification = new class extends Notification {
+            use LogsToMailLog;
+            public function toMail($notifiable) {
+                return (new \Illuminate\Notifications\Messages\MailMessage)
+                    ->subject('Test Subject 2')
+                    ->line('Test body 2');
+            }
+        };
+
+        $notification->log('target-456', $user);
+
+        $mailLog = MailLog::where('uid', 'like', 'notification-%')->latest()->first();
+        $this->assertNotNull($mailLog);
+        $this->assertCount(1, $mailLog->tenants);
+        $this->assertEquals('notif-tenant-2', $mailLog->tenants->first()->id);
+    }
+
     public function test_migration_populates_existing_logs_with_subdomains()
     {
         // 1. Setup tenant

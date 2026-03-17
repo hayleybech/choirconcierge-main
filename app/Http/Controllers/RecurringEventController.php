@@ -54,11 +54,9 @@ class RecurringEventController extends Controller
 
         if ($request->input('send_notification')) {
             $notification = new EventUpdated($event, $original);
-            Notification::send(
-                Membership::active()->with('user')->get()->map(fn ($singer) => $singer->user),
-                $notification
-            );
-            $notification->log($event->id);
+            $recipients = Membership::active()->with('user')->get()->map(fn ($singer) => $singer->user);
+            Notification::send($recipients, $notification);
+            $notification->log($event->id, $recipients->first());
         }
 
         return redirect()

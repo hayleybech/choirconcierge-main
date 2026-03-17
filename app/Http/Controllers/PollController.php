@@ -96,8 +96,9 @@ class PollController extends Controller
             }
 
             $notification = new PollCreated($poll);
-            Notification::send($members->get()->pluck('user'), $notification);
-            $notification->log($poll->id);
+            $recipients = $members->get()->pluck('user');
+            Notification::send($recipients, $notification);
+            $notification->log($poll->id, $recipients->first());
         }
 
         return redirect()->route('polls.show', [$poll])->with(['status' => 'Poll created.']);

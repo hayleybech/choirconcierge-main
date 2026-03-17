@@ -82,8 +82,9 @@ class SongController extends Controller
 
         if ($request->input('send_notification')) {
             $notification = new SongUploaded($song);
-            Notification::send(Membership::active()->with('user')->get()->pluck('user'), $notification);
-            $notification->log($song->id);
+            $recipients = Membership::active()->with('user')->get()->pluck('user');
+            Notification::send($recipients, $notification);
+            $notification->log($song->id, $recipients->first());
         }
 
         return redirect()
@@ -164,8 +165,9 @@ class SongController extends Controller
 
         if ($request->input('send_notification')) {
             $notification = new SongUpdated($song);
-            Notification::send(Membership::active()->with('user')->get()->pluck('user'), $notification);
-            $notification->log($song->id);
+            $recipients = Membership::active()->with('user')->get()->pluck('user');
+            Notification::send($recipients, $notification);
+            $notification->log($song->id, $recipients->first());
         }
 
         return redirect()

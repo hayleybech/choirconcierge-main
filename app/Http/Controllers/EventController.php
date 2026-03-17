@@ -69,8 +69,9 @@ class EventController extends Controller
 
         if ($request->input('send_notification')) {
             $notification = new EventCreated($event);
-            Notification::send(Membership::active()->with('user')->get()->pluck('user'), $notification);
-            $notification->log($event->id);
+            $recipients = Membership::active()->with('user')->get()->pluck('user');
+            Notification::send($recipients, $notification);
+            $notification->log($event->id, $recipients->first());
         }
 
         return redirect()
@@ -148,8 +149,9 @@ class EventController extends Controller
 
         if ($request->input('send_notification')) {
             $notification = new EventUpdated($event, $original);
-            Notification::send(Membership::active()->with('user')->get()->pluck('user'), $notification);
-            $notification->log($event->id);
+            $recipients = Membership::active()->with('user')->get()->pluck('user');
+            Notification::send($recipients, $notification);
+            $notification->log($event->id, $recipients->first());
         }
 
         return redirect()
