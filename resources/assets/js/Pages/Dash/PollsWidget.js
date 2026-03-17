@@ -97,6 +97,8 @@ const PollsWidget = ({ polls }) => {
 		return null;
 	}
 
+	const { route } = useRoute();
+
 	return (
 		<Panel
 			header={
