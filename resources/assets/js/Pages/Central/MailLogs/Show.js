@@ -8,19 +8,19 @@ import useRoute from "../../../hooks/useRoute";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
-import { mailIconColours, mailIcons } from '../../../components/MailStatusTag';
+import { mailIconColours, mailIcons, mailTypeIcons } from '../../../components/MailStatusTag';
 import MailStatusDetail from '../../../components/MailStatusDetail';
 const Show = ({ log }) => {
     const { route } = useRoute();
 
-    const isBroadcast = log.uid.startsWith('broadcast');
+    const mailType = log.uid.split('-')[0];
 
     return (
 		<>
 			<AppHead title={`${log.subject} - Mail Logs`} />
 			<PageHeader
 				title={log.subject}
-				icon={isBroadcast ? 'satellite-dish' : 'envelope'}
+				icon={mailTypeIcons[mailType] ?? 'question'}
 				meta={
 					<>
 						<div>

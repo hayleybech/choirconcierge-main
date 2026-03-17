@@ -7,14 +7,14 @@ import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
-import { mailIconColours, mailIcons } from '../../../components/MailStatusTag';
+import { mailIconColours, mailIcons, mailTypeIcons } from '../../../components/MailStatusTag';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import MailStatusDetail from '../../../components/MailStatusDetail';
 import TrialAntiSpamNotice from "../TrialAntiSpamNotice";
 const Show = ({ log }) => {
     const { route } = useRoute();
 
-    const isBroadcast = log.uid.startsWith('broadcast');
+	const mailType = log.uid.split('-')[0];
 
     return (
 		<>
@@ -24,7 +24,7 @@ const Show = ({ log }) => {
 
 			<PageHeader
 				title={log.subject}
-				icon={isBroadcast ? 'satellite-dish' : 'envelope'}
+				icon={mailTypeIcons[mailType] ?? 'question'}
 				meta={
 					<>
 						<div>

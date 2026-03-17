@@ -2,6 +2,12 @@ import classNames from '../classNames';
 import Icon from './Icon';
 import React from 'react';
 
+export const mailTypeIcons = {
+	broadcast: 'satellite-dish',
+	inbound: 'envelope',
+	notification: 'bell',
+};
+
 export const mailIconColours = {
 	'received': 'bg-gray-500',
 	'pending': 'bg-gray-500',
