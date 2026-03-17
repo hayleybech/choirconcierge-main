@@ -129,7 +129,7 @@ class DashController extends Controller
 			return $durations->get($middle);
 		}
 
-		return ($durations->get($middle) + $durations->get($middle + 1)) / 2;
+		return round(($durations->get($middle) + $durations->get($middle + 1)) / 2, 2);
 	}
 
 	private function getActiveTenantsCount()
