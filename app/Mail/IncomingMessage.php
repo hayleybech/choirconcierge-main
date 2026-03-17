@@ -100,7 +100,7 @@ class IncomingMessage extends Mailable implements Loggable
 
     private function authoriseSenderForGroup(UserGroup $group): bool
     {
-        if ($group->tenant->billing_status['onTrial'] === true) {
+        if ($group->tenant->billing_status['onTrial'] === true && !$group->tenant->has_gratis) {
             Mail::to($this->from[0]['address'])->send(new NotPermittedDuringTrialMessage($group));
 
             MailLog::firstWhere('uid', $this->uid)->events()->create([
