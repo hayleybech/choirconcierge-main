@@ -51,6 +51,15 @@ class CloneMessage
             $message->cc($group->email);
         }
 
+        if (isset($message->content_html) && isset($message->uid)) {
+            $trackingPixelUrl = route('mail-logs.open', [
+                'mail_log_uid' => $message->uid,
+                'email' => encrypt($user->email),
+                'tenant' => $group->tenant_id,
+            ]);
+            $message->content_html .= '<img src="' . $trackingPixelUrl . '" width="1" height="1" style="display:none !important;" />';
+        }
+
         try {
             // Clear 'to', then put the group member as the recipient
             $message->to = [];

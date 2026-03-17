@@ -29,6 +29,7 @@ use App\Http\Controllers\ImportSingerTemplateController;
 use App\Http\Controllers\LearningStatusController;
 use App\Http\Controllers\MailboxController;
 use App\Http\Controllers\MailLogController;
+use App\Http\Controllers\MailLogOpenController;
 use App\Http\Controllers\MoveActivityController;
 use App\Http\Controllers\RecurringEventController;
 use App\Http\Controllers\RiserStackController;
@@ -107,6 +108,10 @@ Route::middleware([
 
     /** Mailbox **/
     Route::get('/mailbox/process', [MailboxController::class, 'process']);
+
+    // Mail log open tracking
+    Route::get('/mail-log/open/{mail_log_uid}/{email}', [MailLogOpenController::class, 'show'])
+        ->name('mail-logs.open');
 
     // Event Email magic links (no login required)
     Route::get('/events/{event}/email-rsvp/{user}', RsvpFromNotificationController::class)

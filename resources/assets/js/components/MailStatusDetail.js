@@ -88,6 +88,16 @@ const MailStatusDetail = ({log, event, isBroadcast}) => {
 			</p>
 		);
 	}
+	if (event.status === 'opened') {
+		return (
+			<p className="text-sm text-gray-500">
+				Email opened by {' '}
+				<span className="font-medium text-gray-900">
+                    {event.context}
+                </span>
+			</p>
+		);
+	}
 	if (event.status === 'clones-sent') {
 		return (
 			<p className="text-sm text-gray-500">

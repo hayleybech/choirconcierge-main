@@ -44,6 +44,7 @@ it('sends one copy per group recipient', function () {
         ->from('permitted@example.com')
         ->subject('Just a test');
 
+    $message->content_html = '<p>Test message</p>';
     $message->uid = 'inbound-'.Str::uuid();
     $message->has_attachments = false;
     $message->received_at = now();
@@ -57,7 +58,10 @@ it('sends one copy per group recipient', function () {
     // Assert
     Mail::assertSent(IncomingMessage::class, 3);
     Mail::assertSent(IncomingMessage::class, static function ($mail) use ($users) {
-        return $mail->hasTo($users);
+        $pixelUrlFragment = 'mail-log/open/' . $mail->uid;
+
+        return $mail->hasTo($users->first()) &&
+            str_contains($mail->content_html, $pixelUrlFragment);
     });
 });
 
