@@ -49,3 +49,4 @@
 - Ensure the mailbox@test.choirconcierge.com login details are configured in the .env file
 - `herd php artisan schedule:test` - choose `ProcessGroupMailbox`
 - `herd php artisan queue:work`
+Alternatively, visit this link: http://choirconcierge.test/test/mailbox/process
