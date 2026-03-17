@@ -15,6 +15,10 @@
 <img src="{{ global_asset('/img/email/calendar-day.png') }}" alt="Date" height="16px"> **{{ $event->start_date->toDayDateTimeString() }} - {{ $event->end_date->toDayDateTimeString() }}**
 @endif
 
+@if($event->call_time)
+  <img src="{{ global_asset('/img/email/clock-solid.png') }}" alt="Call time" height="16px"> **Call Time:** {{ $event->call_time->toTimeString() }}
+@endif
+
 @if($event->location_name || $event->location_address)
 <img src="{{ global_asset('/img/email/map-marker-alt.png') }}" alt="Location" height="16px"> @if($event->location_name)**{{ $event->location_name }}** -@endif {{ $event->location_address }}
 @endif

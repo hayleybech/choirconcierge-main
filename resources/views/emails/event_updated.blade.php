@@ -26,6 +26,16 @@
 @endif
 @endif
 
+@if($event->call_time)
+@if($event->wasChanged(['call_time']))
+<x-mail::panel class="success">
+ <img src="{{ global_asset('/img/email/clock-solid.png') }}" alt="Call time" height="16px"> **Updated Call Time Time:** {{ $event->call_time->format('h:i A') }}
+</x-mail::panel>
+@else
+<img src="{{ global_asset('/img/email/clock-solid.png') }}" alt="Call time" height="16px"> **Call Time:** {{ $event->call_time->format('h:i A') }}
+@endif
+@endif
+
 @if($event->location_name || $event->location_address)
 @if($event->wasChanged(['location_name', 'location_address']))
 <h3 class="changed-heading">Location Changed</h3>
