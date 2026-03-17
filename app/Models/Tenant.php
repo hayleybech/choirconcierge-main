@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
@@ -291,5 +292,10 @@ class Tenant extends BaseTenant
     public function paddleEmail()
     {
         return $this->billingUser?->email;
+    }
+
+    public function mailLogs(): BelongsToMany
+    {
+        return $this->belongsToMany(MailLog::class, 'mail_log_tenant');
     }
 }

@@ -45,6 +45,10 @@ trait LogsToMailLog
             'received_at' => now(),
         ]);
 
+        if (tenant('id')) {
+            $mailLog->tenants()->attach(tenant('id'));
+        }
+
         MailLogEvent::create([
             'status' => 'notification-sent',
             'mail_log_id' => $mailLog->id,

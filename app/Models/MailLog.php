@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Mail\Loggable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
@@ -28,6 +30,8 @@ use Illuminate\Support\Str;
  */
 class MailLog extends Model
 {
+    use HasFactory;
+
     protected $guarded = [];
 
     public function events(): HasMany
@@ -45,8 +49,13 @@ class MailLog extends Model
         return $this->hasMany(MailLogEvent::class)->where('status', 'opened');
     }
 
+    public function tenants(): BelongsToMany
+    {
+        return $this->belongsToMany(Tenant::class, 'mail_log_tenant');
+    }
+
     public static function createFromMessage(Loggable $message) {
-        return self::create([
+        $mailLog = self::create([
             'uid' => $message->getUid(),
             'from' => collect($message->from)
                 ->map(fn($item) => $item['address'])
@@ -65,5 +74,28 @@ class MailLog extends Model
             'has_attachments' => $message->getHasAttachments(),
             'received_at' => $message->getReceivedAt(),
         ]);
+
+        $recipients = collect($message->to)
+            ->merge($message->cc)
+            ->merge($message->bcc)
+            ->map(fn($item) => $item['address'])
+            ->filter();
+
+        if ($recipients->isNotEmpty()) {
+            $domains = $recipients->map(fn($email) => Str::after($email, '@'))->unique();
+
+            $centralDomain = central_domain();
+            $tenants = Tenant::all()->filter(function ($tenant) use ($domains, $centralDomain) {
+                return $domains->contains(function ($domain) use ($tenant, $centralDomain) {
+                    return $domain === $tenant->primary_domain . '.' . $centralDomain;
+                });
+            });
+
+            if ($tenants->isNotEmpty()) {
+                $mailLog->tenants()->attach($tenants->pluck('id'));
+            }
+        }
+
+        return $mailLog;
     }
 }

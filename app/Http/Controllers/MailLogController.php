@@ -45,9 +45,9 @@ class MailLogController extends Controller
     public static function queryLogsAdmin()
     {
         return MailLog::query()
-            ->where('to', 'like', '%@' . tenant('primary_domain') . '%')
-            ->orWhere('cc', 'like', '%@' . tenant('primary_domain') . '%')
-            ->orWhere('bcc', 'like', '%@' . tenant('primary_domain') . '%');
+            ->whereHas('tenants', function ($query) {
+                $query->where('tenants.id', tenant('id'));
+            });
     }
 
     public static function queryLogsAuthorisedForUser()
