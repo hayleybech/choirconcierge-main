@@ -107,6 +107,7 @@ const Activity = ({ log }) => {
 			context: '',
 			created_at: log.received_at,
 		});
+	}
 
 	return (
 		<>
