@@ -1,21 +1,21 @@
-import React from 'react'
-import PageHeader from "../../../components/PageHeader/PageHeader";
-import classNames from "../../../classNames";
-import AppHead from "../../../components/AppHead";
-import DateTag from "../../../components/DateTag";
-import CollapseGroup from "../../../components/CollapseGroup";
-import useRoute from "../../../hooks/useRoute";
-import CentralLayout from "../../../Layouts/CentralLayout";
+import React from 'react';
+import PageHeader from '../../../components/PageHeader/PageHeader';
+import classNames from '../../../classNames';
+import AppHead from '../../../components/AppHead';
+import DateTag from '../../../components/DateTag';
+import CollapseGroup from '../../../components/CollapseGroup';
+import useRoute from '../../../hooks/useRoute';
+import CentralLayout from '../../../Layouts/CentralLayout';
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons, mailTypeIcons } from '../../../components/MailStatusTag';
 import MailStatusDetail from '../../../components/MailStatusDetail';
 const Show = ({ log }) => {
-    const { route } = useRoute();
+	const { route } = useRoute();
 
-    const mailType = log.uid.split('-')[0];
+	const mailType = log.uid.split('-')[0];
 
-    return (
+	return (
 		<>
 			<AppHead title={`${log.subject} - Mail Logs`} />
 			<PageHeader
@@ -95,25 +95,23 @@ const Show = ({ log }) => {
 			</div>
 		</>
 	);
-}
+};
 
-Show.layout = page => <CentralLayout children={page} />
+Show.layout = page => <CentralLayout children={page} />;
 
 export default Show;
 
 const Activity = ({ log }) => {
 	const mailType = log.uid.split('-')[0];
 
-	const events = log.events;
-	if(mailType !== 'notification') {
-		events.push([
-			{
-				id: 0,
-				status: 'received',
-				context: '',
-				created_at: log.received_at,
-			},
-		]);
+	const events = [...log.events];
+	if (mailType !== 'notification') {
+		events.unshift({
+			id: 0,
+			status: 'received',
+			context: '',
+			created_at: log.received_at,
+		});
 	}
 
 	return (

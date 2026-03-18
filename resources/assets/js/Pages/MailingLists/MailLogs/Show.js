@@ -99,17 +99,14 @@ const Activity = ({ log }) => {
 
 	const mailType = log.uid.split('-')[0];
 
-	const events = log.events;
+	const events = [...log.events];
 	if (mailType !== 'notification') {
-		events.push([
-			{
-				id: 0,
-				status: 'received',
-				context: '',
-				created_at: log.received_at,
-			},
-		]);
-	}
+		events.unshift({
+			id: 0,
+			status: 'received',
+			context: '',
+			created_at: log.received_at,
+		});
 
 	return (
 		<>
