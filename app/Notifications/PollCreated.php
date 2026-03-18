@@ -8,6 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+use Illuminate\Support\HtmlString;
+
 class PollCreated extends Notification
 {
     use Queueable, LogsToMailLog;
@@ -49,6 +51,7 @@ class PollCreated extends Notification
             ->with(['poll' => $this->poll])
             ->markdown('emails.poll_created', [
                 'poll' => $this->poll,
+                'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->poll->id, $notifiable)),
                 'view_url' => the_tenant_route('polls.show', $this->poll),
             ]);
     }

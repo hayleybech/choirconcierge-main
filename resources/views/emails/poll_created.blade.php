@@ -19,6 +19,8 @@ A new poll has been created. Please take a moment to cast your vote.
  <x-mail::button-inline :url="$view_url">View Poll & Vote</x-mail::button-inline>
 </x-mail::table>
 
+{{ $tracking_pixel ?? '' }}
+
 Regards,
 {{ config('app.name') }}
 </x-mail::message>

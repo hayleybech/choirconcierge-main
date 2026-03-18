@@ -9,5 +9,7 @@ View Song
 
 {!! $song->description !!}
 
+{{ $tracking_pixel ?? '' }}
+
 Enjoy!
 @endcomponent

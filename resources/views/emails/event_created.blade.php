@@ -30,6 +30,8 @@
 ### Description
 {{ new \Illuminate\Support\HtmlString($event->description) }}
 
+{{ $tracking_pixel ?? '' }}
+
 Regards,
 {{ config('app.name') }}
 </x-mail::message>

@@ -51,6 +51,7 @@ class EventCreated extends Notification
             ->with(['event' => $this->event])
             ->markdown('emails.event_created', [
                 'event' => $this->event,
+                'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->event->id, $notifiable)),
                 'view_url' => the_tenant_route('events.show', $this->event),
                 'going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
                     'tenant' => tenant('id'),

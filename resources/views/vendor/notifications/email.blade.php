@@ -47,6 +47,8 @@
 {{ config('app.name') }}
 @endif
 
+{{ $tracking_pixel ?? '' }}
+
 {{-- Subcopy --}}
 @isset($actionText)
 @slot('subcopy')

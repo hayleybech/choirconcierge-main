@@ -49,6 +49,14 @@ class MailLog extends Model
         return $this->hasMany(MailLogEvent::class)->where('status', 'opened');
     }
 
+    /**
+     * Get the body of the email, stripping the tracking pixel to avoid triggering it when viewing in the app.
+     */
+    public function getBodyAttribute($value): string
+    {
+        return preg_replace('/<img [^>]*src="[^"]*\/mail-log\/open\/[^"]*"[^>]*>/i', '', $value);
+    }
+
     public function tenants(): BelongsToMany
     {
         return $this->belongsToMany(Tenant::class, 'mail_log_tenant');

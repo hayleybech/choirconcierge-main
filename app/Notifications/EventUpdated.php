@@ -50,8 +50,8 @@ class EventUpdated extends Notification
     {
         $description_diff = Str::of(
             DiffHelper::calculate(
-                $this->original['description'],
-                $this->event->description,
+                $this->original['description'] ?? '',
+                $this->event->description ?? '',
                 'Combined',
                 ['ignoreLineEnding' => true],
                 [
@@ -70,6 +70,7 @@ class EventUpdated extends Notification
             ->with(['event' => $this->event])
             ->markdown('emails.event_updated', [
                 'event' => $this->event,
+                'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->event->id, $notifiable)),
                 'original' => $this->original,
                 'view_url' => the_tenant_route('events.show', $this->event),
                 'description_diff' => $description_diff,

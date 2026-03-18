@@ -49,6 +49,7 @@ class SongUploaded extends Notification
             ->subject('New song: '.$this->song->title)
             ->markdown('emails.song_uploaded', [
                 'song' => $this->song,
+                'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->song->id, $notifiable)),
             ]);
     }
 

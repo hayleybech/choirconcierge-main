@@ -4,23 +4,53 @@ namespace App\Notifications;
 
 use App\Models\MailLog;
 use App\Models\MailLogEvent;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
 trait LogsToMailLog
 {
     /**
+     * Get the UID for the MailLog entry.
+     */
+    public function getMailLogUid(string $targetId): string
+    {
+        $uniqueKey = class_basename($this) . '-' . $targetId;
+        return 'notification-' . $uniqueKey;
+    }
+
+    /**
+     * Get the tracking pixel URL for the notification.
+     */
+    public function getTrackingPixel(string $targetId, $notifiable): string
+    {
+        $uid = $this->getMailLogUid($targetId);
+        $email = $notifiable->email ?? ($notifiable->user->email ?? null);
+
+        if (!$email) {
+            return '';
+        }
+
+        $trackingPixelUrl = route('mail-logs.open', [
+            'mail_log_uid' => $uid,
+            'email' => encrypt($email),
+            'tenant' => tenant('id'),
+        ]);
+
+        return '<img src="' . $trackingPixelUrl . '" width="1" height="1" style="display:none !important;" />';
+    }
+
+    /**
      * Log the notification to the MailLog table.
      */
     public function log(string $targetId, $notifiable = null): void
     {
-        $uniqueKey = class_basename($this) . '-' . $targetId;
-        $uid = 'notification-' . $uniqueKey;
+        $uid = $this->getMailLogUid($targetId);
 
         // Ensure we don't log the same event twice
-        if (MailLog::where('uid', $uid)->exists()) {
-            return;
-        }
+//        if (MailLog::where('uid', $uid)->exists()) {
+//            return;
+//        }
 
         if (!$notifiable) {
             $notifiable = new \stdClass();
@@ -47,7 +77,7 @@ trait LogsToMailLog
             'received_at' => now(),
         ]);
 
-        if ($notifiable instanceof \App\Models\User && $notifiable->default_tenant_id) {
+        if ($notifiable instanceof User && $notifiable->default_tenant_id) {
             $mailLog->tenants()->attach($notifiable->default_tenant_id);
         } elseif (tenant('id')) {
             $mailLog->tenants()->attach(tenant('id'));
@@ -73,13 +103,13 @@ trait LogsToMailLog
             return $html;
 
             // Extract the content from the "Email Body" section if possible to save space
-            if (preg_match('/<!-- Email Body -->.*?<td class="content-cell"[^>]*>(.*?)<\/td>/s', $html, $matches)) {
-                $content = trim($matches[1]);
-                // Wrap in a div to ensure base layout styles if needed
-                return '<div class="mail-log-content">' . $content . '</div>';
-            }
-
-            return $html;
+//            if (preg_match('/<!-- Email Body -->.*?<td class="content-cell"[^>]*>(.*?)<\/td>/s', $html, $matches)) {
+//                $content = trim($matches[1]);
+//                // Wrap in a div to ensure base layout styles if needed
+//                return '<div class="mail-log-content">' . $content . '</div>';
+//            }
+//
+//            return $html;
         } catch (\Exception $e) {
             return $mailMessage->introLines ? implode("\n", $mailMessage->introLines) : '';
         }
