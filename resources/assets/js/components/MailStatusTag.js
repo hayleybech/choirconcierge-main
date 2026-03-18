@@ -45,6 +45,7 @@ export const mailLabels = {
 	'malformed-recipient': 'Malformed address',
 	'clone-failed': 'Failed to send to user',
 	'clones-sent': 'Sent',
+	'notification-sent': 'Notification sent',
 	'opened': 'Opened',
 	'send-failed': 'Send failed',
 }

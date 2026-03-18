@@ -34,9 +34,11 @@ const Show = ({ log }) => {
 						<div>To: {log.to}</div>
 						{log.tenants.length > 0 && (
 							<div>
-								Tenants: {log.tenants.map((tenant, index) => (
+								Tenants:{' '}
+								{log.tenants.map((tenant, index) => (
 									<span key={tenant.id}>
-										{tenant.name}{index < log.tenants.length - 1 ? ', ' : ''}
+										{tenant.name}
+										{index < log.tenants.length - 1 ? ', ' : ''}
 									</span>
 								))}
 							</div>
@@ -73,7 +75,11 @@ const Show = ({ log }) => {
 								defaultOpen: true,
 								content: (
 									<div className="py-4 px-8">
-										<Prose content={log.body} />
+										{mailType === 'notification' ? (
+											<iframe srcDoc={log.body} width="100%" height="600" />
+										) : (
+											<Prose content={log.body} />
+										)}
 									</div>
 								),
 							},
