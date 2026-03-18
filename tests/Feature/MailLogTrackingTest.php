@@ -1,7 +1,56 @@
 <?php
 
 use App\Models\MailLog;
+use App\Models\MailLogEvent;
+use App\Models\Tenant;
 use Illuminate\Support\Facades\DB;
+
+test('tracking only records once per email', function () {
+    $tenant = Tenant::factory()->create();
+    tenancy()->initialize($tenant);
+
+    $mailLog = MailLog::create([
+        'uid' => 'notification-unique-123',
+        'from' => 'sender@example.com',
+        'to' => 'receiver@example.com',
+        'subject' => 'Unique Notification',
+        'body' => 'Body',
+        'received_at' => now(),
+    ]);
+
+    $email = 'receiver@example.com';
+    $encryptedEmail = encrypt($email);
+
+    // First open
+    $this->get(route('mail-logs.open', [
+        'tenant' => $tenant->id,
+        'mail_log_uid' => $mailLog->uid,
+        'email' => $encryptedEmail,
+    ]))->assertStatus(200);
+
+    expect($mailLog->events()->where('status', 'opened')->where('context', $email)->count())->toBe(1);
+
+    // Second open (same email)
+    $this->get(route('mail-logs.open', [
+        'tenant' => $tenant->id,
+        'mail_log_uid' => $mailLog->uid,
+        'email' => $encryptedEmail,
+    ]))->assertStatus(200);
+
+    // Still only 1
+    expect($mailLog->events()->where('status', 'opened')->where('context', $email)->count())->toBe(1);
+
+    // Open with different email
+    $otherEmail = 'other@example.com';
+    $this->get(route('mail-logs.open', [
+        'tenant' => $tenant->id,
+        'mail_log_uid' => $mailLog->uid,
+        'email' => encrypt($otherEmail),
+    ]))->assertStatus(200);
+
+    expect($mailLog->events()->where('status', 'opened')->where('context', $otherEmail)->count())->toBe(1);
+    expect($mailLog->events()->where('status', 'opened')->count())->toBe(2);
+});
 
 test('mail log body strips tracking pixel when accessed via model', function () {
     $trackingUrl = 'https://choirconcierge.test/mail-log/open/notification-123/encrypted-email';

@@ -20,7 +20,7 @@ class MailLogOpenController extends Controller
 
         if ($mailLog) {
             try {
-                $mailLog->events()->create([
+                $mailLog->events()->firstOrCreate([
                     'status' => 'opened',
                     'context' => decrypt($email),
                 ]);

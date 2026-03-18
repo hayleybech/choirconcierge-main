@@ -7,6 +7,7 @@ use App\Models\Song;
 use App\Notifications\EventCreated;
 use App\Notifications\SongUpdated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use App\Models\MailLog;
@@ -42,8 +43,8 @@ class LogSentNotificationTest extends TestCase
 
         $this->assertDatabaseHas('mail_log_events', [
             'mail_log_id' => $mailLog->id,
-            'status' => 'sent',
-            'context' => 'System notification: EventCreated',
+            'status' => 'notification-sent',
+            'context' => 'Event Created',
         ]);
     }
 
@@ -55,7 +56,7 @@ class LogSentNotificationTest extends TestCase
         $event = Event::factory()->create();
         $notification = new EventCreated($event);
 
-        \Illuminate\Support\Facades\Notification::send([$user1, $user2], $notification);
+        Notification::send([$user1, $user2], $notification);
         $notification->log($event->id);
 
         $this->assertEquals(1, MailLog::where('subject', 'Event Created: ' . $event->title)->count());
@@ -73,7 +74,7 @@ class LogSentNotificationTest extends TestCase
         $song = Song::factory()->create();
         $notification = new SongUpdated($song);
 
-        \Illuminate\Support\Facades\Notification::send([$user1, $user2], $notification);
+        Notification::send([$user1, $user2], $notification);
         $notification->log($song->id);
 
         $this->assertEquals(1, MailLog::where('subject', 'Song Updated: ' . $song->title)->count());
@@ -92,7 +93,7 @@ class LogSentNotificationTest extends TestCase
         $notification = new class extends \Illuminate\Notifications\Notification {
             public function via($notifiable) { return ['mail']; }
             public function toMail($notifiable) {
-                return (new \Illuminate\Notifications\Messages\MailMessage)
+                return (new MailMessage)
                     ->subject('Test Subject')
                     ->line('Test body');
             }
