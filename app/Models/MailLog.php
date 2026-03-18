@@ -70,7 +70,7 @@ class MailLog extends Model
                 ->map(fn($item) => $item['address'])
                 ->join(', '),
             'subject' => Str::limit($message->subject, 128-3),
-            'body' => Str::limit($message->getContent(), 5000-3),
+            'body' => $message->getContent(),
             'has_attachments' => $message->getHasAttachments(),
             'received_at' => $message->getReceivedAt(),
         ]);

@@ -42,7 +42,7 @@ trait LogsToMailLog
             'from' => "{$fromName} <{$fromAddress}>",
             'to' => 'Everyone',
             'subject' => Str::limit($mailMessage->subject, 125),
-            'body' => Str::limit($this->renderMailMessage($mailMessage), 4997),
+            'body' => $this->renderMailMessage($mailMessage),
             'has_attachments' => false, // System notifications currently don't have attachments
             'received_at' => now(),
         ]);
@@ -70,9 +70,13 @@ trait LogsToMailLog
             // Laravel's render() returns the full HTML document.
             $html = (string) $mailMessage->render();
 
+            return $html;
+
             // Extract the content from the "Email Body" section if possible to save space
             if (preg_match('/<!-- Email Body -->.*?<td class="content-cell"[^>]*>(.*?)<\/td>/s', $html, $matches)) {
-                return trim($matches[1]);
+                $content = trim($matches[1]);
+                // Wrap in a div to ensure base layout styles if needed
+                return '<div class="mail-log-content">' . $content . '</div>';
             }
 
             return $html;

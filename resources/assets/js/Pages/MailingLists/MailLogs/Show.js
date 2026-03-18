@@ -69,7 +69,11 @@ const Show = ({ log }) => {
 								defaultOpen: true,
 								content: (
 									<div className="py-4 px-8">
-										<Prose content={log.body} />
+										{mailType === 'notification' ? (
+											<iframe srcdoc={log.body} width="100%" height="600" />
+										) : (
+											<Prose content={log.body} />
+										)}
 									</div>
 								),
 							},
