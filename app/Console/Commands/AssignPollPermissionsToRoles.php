@@ -48,9 +48,13 @@ class AssignPollPermissionsToRoles extends Command
 
                     $updatedAbilities = array_unique(array_merge($abilities, $newAbilities));
 
-                    \Illuminate\Support\Facades\DB::table('roles')
-                        ->where('id', $role->id)
-                        ->update(['abilities' => json_encode(array_values($updatedAbilities))]);
+                    $encodedAbilities = json_encode(array_values($updatedAbilities));
+
+                    if ($encodedAbilities !== $role->abilities) {
+                        \Illuminate\Support\Facades\DB::table('roles')
+                            ->where('id', $role->id)
+                            ->update(['abilities' => $encodedAbilities]);
+                    }
 
                     $bar->advance();
                 }

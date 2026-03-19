@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\MailLog;
 use App\Models\Tenant;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PopulateMailLogTenants extends Command
@@ -37,43 +38,57 @@ class PopulateMailLogTenants extends Command
         $bar = $this->output->createProgressBar($totalLogs);
 
         MailLog::query()->chunkById(100, function ($logs) use ($tenants, $centralDomain, $bar) {
+            $pivotData = [];
+
+            // Pre-calculate tenant domains to avoid string concatenation in loop
+            $tenantLookup = $tenants->map(function ($tenant) use ($centralDomain) {
+                return [
+                    'id' => $tenant->id,
+                    'primary_domain' => (string) $tenant->primary_domain,
+                    'full_domain' => $tenant->primary_domain . '.' . $centralDomain,
+                ];
+            });
+
             foreach ($logs as $log) {
-                $tenantIds = collect();
+                $tenantIds = [];
 
-                collect(explode(',', $log->to))
-                    ->merge(explode(',', (string) $log->cc))
-                    ->merge(explode(',', (string) $log->bcc))
-                    ->map(fn($email) => trim($email))
-                    ->filter()
-                    ->each(function ($recipient) use ($tenantIds, $tenants, $centralDomain) {
-                        $domain = Str::of($recipient)->after('@');
+                $recipients = explode(',', $log->to . ',' . $log->cc . ',' . $log->bcc);
 
-                        $tenants->each(function ($tenant) use ($tenantIds, $domain, $centralDomain) {
+                foreach ($recipients as $recipient) {
+                    $recipient = trim($recipient);
+                    if (empty($recipient)) {
+                        continue;
+                    }
 
-                            // Subdomain
-                            $tenantDomain = $tenant->primary_domain . '.' . $centralDomain;
-                            if ((string) $domain === $tenantDomain) {
-                                $tenantIds->push($tenant->id);
-                                return;
-                            }
+                    $domain = substr(strrchr($recipient, "@"), 1);
+                    if (!$domain) {
+                        continue;
+                    }
 
-                            // Domain
-                            if ((string) $domain === $tenant->primary_domain) {
-                                $tenantIds->push($tenant->id);
-                                return;
-                            }
+                    foreach ($tenantLookup as $t) {
+                        if ($domain === $t['full_domain'] || $domain === $t['primary_domain']) {
+                            $tenantIds[] = $t['id'];
+                            continue;
+                        }
 
-                            if (Str::of((string) $domain)->explode('.')->first() === $tenant->primary_domain) {
-                                $tenantIds->push($tenant->id);
-                            }
-                        });
-                    });
+                        if (strpos($domain, '.') !== false && explode('.', $domain)[0] === $t['primary_domain']) {
+                            $tenantIds[] = $t['id'];
+                        }
+                    }
+                }
 
-                if ($tenantIds->isNotEmpty()) {
-                    $log->tenants()->syncWithoutDetaching($tenantIds->unique());
+                foreach (array_unique($tenantIds) as $tenantId) {
+                    $pivotData[] = [
+                        'mail_log_id' => $log->id,
+                        'tenant_id' => $tenantId,
+                    ];
                 }
 
                 $bar->advance();
+            }
+
+            if (! empty($pivotData)) {
+                DB::table('mail_log_tenant')->insertOrIgnore($pivotData);
             }
         });
 
