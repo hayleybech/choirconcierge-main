@@ -13,14 +13,20 @@ import RsvpDropdown from '../../components/Event/RsvpDropdown';
 import Dialog from '../../components/Dialog';
 import Label from '../../components/inputs/Label';
 import CheckboxGroup from '../../components/inputs/CheckboxGroup';
-import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 
-const UpcomingEventsWidget = ({ events, eventCategories, rsvpSummary }) => {
+const UpcomingEventsWidget = ({ events, eventCategories }) => {
 	const { can, tenant } = usePage().props;
 	const { route } = useRoute();
 
 	const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
+	const urlViewAll =
+		route('events.index', { tenant }) +
+		'?filter[date]=upcoming' +
+		(tenant.widgets_upcoming_events_categories?.length > 0
+			? '&' + tenant.widgets_upcoming_events_categories.map(category => `filter[type.id][]=${category}`).join('&')
+			: '');
+	console.log(urlViewAll);
 	return (
 		<Panel
 			header={
@@ -43,22 +49,10 @@ const UpcomingEventsWidget = ({ events, eventCategories, rsvpSummary }) => {
 								/>
 							</>
 						)}
-						<Button
-							href={
-								route('events.index', {tenant}) +
-								'?filter[date]=upcoming&' +
-								tenant.widgets_upcoming_events_categories?.length > 0
-									? tenant.widgets_upcoming_events_categories
-											.map(category => `filter[type.id][]=${category}`)
-											.join('&')
-									: ''
-							}
-							variant="secondary"
-							size="xs"
-						>
+						<ButtonLink href={urlViewAll} variant="secondary" size="xs">
 							<Icon icon="list" style={{ lineHeight: '1rem' }} />
 							<span className="hidden sm:inline">View All</span>
-						</Button>
+						</ButtonLink>
 					</div>
 				</div>
 			}
