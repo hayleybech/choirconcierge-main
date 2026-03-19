@@ -7,7 +7,7 @@ import Icon from "../../components/Icon";
 
 const Changelog = ({ logs }) => (
 	<>
-		<AppHead title="Dashboard" />
+		<AppHead title="Changelog" />
 		<div className="py-6">
 			<div className="mx-auto px-4 sm:px-6 lg:px-16">
 				<div className="mb-8">

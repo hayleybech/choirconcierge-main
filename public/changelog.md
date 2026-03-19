@@ -1,3 +1,10 @@
+# 2026-03-20
+## Email Open Tracking
+We can now track whether singers have opened your emails! From now on, new messages and broadcasts you send will start tracking when singers open them. These stats are available in the Mail Logs section.
+
+Additionally, notification emails like "Song Uploaded" are now archived in Mail Logs, meaning they can also take advantage of the new open tracking feature!
+
+---
 # 2026-03-13
 ## Polls Module
 This is the first new top-level module in a while! You can now create polls and let your members vote on them.
@@ -11,6 +18,7 @@ Singers will receive an email telling them to vote, and they can do so from the 
 ## RSVP and Attendance improvements
 We've made a number of improvements to the detailed RSVP and Attendance pages. We've updated the layout, added filtering and sorting options, and added the ability to customise which columns are visible. This should make it much easier to see who's coming, along with the information that's crucial for your group. 
 
+---
 # 2026-03-10
 ## Ensembles 1.0
 Ensembles have been available for a while, but we've just released the first complete version of this feature. 
@@ -21,16 +29,19 @@ Once you've set up your ensembles (our name for sub-groups or choirs within a mu
 ### New features
 You can now assign Songs, Events, Riser Stacks, and more (even Mailing Lists!) to Ensembles. This means that ensembles can work independently or together as needed.
 
+---
 # 2026-03-06
 ## Singer Import
 This feature has been in developer preview for some time, but is finally available! You can now import singers from a CSV file. We support exports from Groupanizer and Harmonysite, and you'll get a preview of the import before submitting. This should make it much easier for new choirs to get started.
 
+---
 # 2026-03-03
 ## Individual Attendance
 Singers can now view their own attendance history. There's a new widget on the dashboard and singer profiles showing their recent rehearsal attendance, as well as their progress toward RSVPing to upcoming events. Singers can also click through to view the entire attendance records. Management also have the ability to view this information. 
 
 This should make it much easier for singers to keep themselves accountable for their attendance!
 
+---
 # 2026-02-05
 ## Check-ins - QR Code & Kiosk
 We've added a QR code check-in feature to the app! This allows members to quickly mark themselves present to an in-person event.
@@ -40,10 +51,12 @@ There's also a kiosk option, which allows you to check in members using a shared
 
 Singers will automatically be marked as present, late or "late deemed absent" depending on when they check in.
 
+---
 # 2025-12-09
 ## Duplicate button
 We've added a duplicate button to many modules, making it easy to quickly clone Songs, Events etc.
 
+---
 # 2025-11-26
 ## Custom Fields
 You can now create custom fields on member profiles! This has been one of our most requested features. We're keen to hear any feedback you have on this new feature.
