@@ -104,7 +104,7 @@ class MailLogRelationshipTest extends TestCase
         $this->assertEquals('notif-tenant-2', $mailLog->tenants->first()->id);
     }
 
-    public function test_migration_populates_existing_logs_with_subdomains()
+    public function test_command_populates_existing_logs_with_subdomains()
     {
         // 1. Setup tenant
         $tenant = Tenant::factory()->create(['id' => 'sub-migrate-tenant']);
@@ -125,9 +125,8 @@ class MailLogRelationshipTest extends TestCase
         $this->assertCount(0, $log2->tenants);
         $this->assertCount(0, $log3->tenants);
 
-        // 3. Run migration logic
-        $migration = require base_path('database/migrations/2026_03_17_094620_populate_mail_log_tenant_for_existing_logs.php');
-        $migration->up();
+        // 3. Run command logic
+        $this->artisan('mail-logs:populate-tenants')->assertSuccessful();
 
         // 4. Verify
         $this->assertCount(1, $log1->refresh()->tenants);

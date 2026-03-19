@@ -14,37 +14,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $tenants = Tenant::all();
-        $centralDomain = central_domain();
-
-        MailLog::chunk(100, function ($logs) use ($tenants, $centralDomain) {
-            foreach ($logs as $log) {
-                $tenantIds = collect();
-
-                collect(explode(',', $log->to))
-                    ->merge(explode(',', $log->cc))
-                    ->merge(explode(',', $log->bcc))
-                    ->map(fn($email) => trim($email))
-                    ->filter()
-                    ->each(function ($recipient) use ($tenantIds, $tenants, $centralDomain) {
-                        $domain = Str::of($recipient)->after('@');
-
-                        $tenants->each(function ($tenant) use ($tenantIds, $domain, $centralDomain) {
-                            if($domain === $tenant->primary_domain) {
-                                $tenantIds->push($tenant->id);
-                                return;
-                            }
-                            if(Str::of($domain)->explode('.')->first() === $tenant->primary_domain) {
-                                $tenantIds->push($tenant->id);
-                            }
-                        });
-                    });
-
-                if ($tenantIds->isNotEmpty()) {
-                    $log->tenants()->syncWithoutDetaching($tenantIds->unique());
-                }
-            }
-        });
+        // Migrated to mail-logs:populate-tenants command to prevent production performance issues
     }
 
     /**
