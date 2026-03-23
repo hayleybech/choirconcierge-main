@@ -34,29 +34,37 @@ class EventCheckInController extends Controller
             ->where('repeat_parent_id', $event->id)
             ->whereDate('start_date', '>=', Carbon::today())
             ->orderBy('start_date')
-            ->firstOrFail();
+            ->first() ?? $event;
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Event $event, Request $request): RedirectResponse
     {
         $request->validate([
             'event_id' => 'required|exists:events,id'
         ]);
 
-        $event = Event::findOrFail($request->input('event_id'));
+        $parent = Event::findOrFail($request->input('event_id'));
+        
+        // Ensure the event ID in the URL matches the event_id in the request,
+        // or at least that they are related.
+        if ($event->id !== $parent->id && $parent->repeat_parent_id !== $event->id) {
+             abort(404);
+        }
+
+        $eventInstance = $this->getEventInstanceByTime($parent);
 
         Gate::denyIf(
             fn(User $user) => !today()->isBetween(
-                $event->start_date->startOfDay(),
-                $event->end_date->endOfDay()
+                $eventInstance->start_date->startOfDay(),
+                $eventInstance->end_date->endOfDay()
             ),
             'There is no event at this time. '
         );
 
-        $event->attendances()
+        $eventInstance->attendances()
             ->updateOrCreate(
                 ['membership_id' => $request->user()->membership->id],
-                ['response' => self::getAttendanceByEvent($event)]
+                ['response' => self::getAttendanceByEvent($eventInstance)]
             );
 
         return redirect()
