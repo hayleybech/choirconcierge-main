@@ -43,6 +43,7 @@ use App\Http\Controllers\SingerAttendanceController;
 use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SongCategoryController;
 use App\Http\Controllers\TenantAssetsController;
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UpdateSingerFeeController;
 use App\Http\Controllers\SingerPlacementController;
@@ -257,6 +258,10 @@ Route::middleware([
         // Organisation Settings
         Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');
         Route::post('/organisation', [TenantController::class, 'update'])->name('organisation.update');
+
+        // Billing portal
+        Route::get('/billing', [BillingController::class, 'index'])->name('organisation.billing');
+        Route::post('/billing/subscribe', [BillingController::class, 'subscribe'])->name('organisation.billing.subscribe');
 
         // Sub-groups aka Ensembles aka Choirs
 		Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);

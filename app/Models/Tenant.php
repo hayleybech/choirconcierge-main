@@ -16,7 +16,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use Spark\Billable;
+use Laravel\Paddle\Billable;
+use Laravel\Paddle\Subscription;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
@@ -121,7 +122,43 @@ class Tenant extends BaseTenant
 
     public function plan(): Attribute
     {
-        return Attribute::get(fn() => $this->sparkPlan());
+        return Attribute::get(function (): ?Plan {
+            $planId = $this->subscription()?->paddle_plan;
+
+            if (! $planId) {
+                return null;
+            }
+
+            $plans = config('spark.billables.tenant.plans');
+
+            foreach ($plans as $planConfig) {
+                if (($planConfig['monthly_id'] ?? null) === $planId || ($planConfig['yearly_id'] ?? null) === $planId) {
+                    $plan = new Plan($planConfig['name'], $planId);
+                    $plan->short_description = $planConfig['short_description'] ?? null;
+                    $plan->features = $planConfig['features'] ?? [];
+                    $plan->options = $planConfig['options'] ?? [];
+
+                    return $plan;
+                }
+            }
+
+            return null;
+        });
+    }
+
+    public function trialEndsAt(): ?Carbon
+    {
+        return $this->customer?->trial_ends_at;
+    }
+
+    public function hasExpiredTrial(): bool
+    {
+        return ! $this->onTrial() && $this->customer?->trial_ends_at?->isPast();
+    }
+
+    public function subscription(?string $name = 'default'): ?Subscription
+    {
+        return $this->subscriptions->firstWhere('name', $name);
     }
 
     public function billingStatus(): Attribute
@@ -225,9 +262,9 @@ class Tenant extends BaseTenant
     public function getActiveUserQuotaStatus(): array
     {
         // Load config
-        $quota = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserQuota'] : null;
-        $quotaBuffer = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserQuotaBuffer'] : null;
-        $gracePeriodDays = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserGracePeriodDays'] : null;
+        $quota = $this->plan ? $this->plan->options['activeUserQuota'] : null;
+        $quotaBuffer = $this->plan ? $this->plan->options['activeUserQuotaBuffer'] : null;
+        $gracePeriodDays = $this->plan ? $this->plan->options['activeUserGracePeriodDays'] : null;
 
         $activeUserCount = $this->members()
             ->active()
