@@ -128,8 +128,7 @@ Route::middleware([
         Route::put('/widgets/upcoming/events', CustomiseUpcomingEventsWidgetController::class)->name('widgets.upcoming-events');
 
         // Account Settings
-        Route::get('account/edit', [AccountController::class, 'edit'])->name('accounts.edit');
-        Route::post('account', [AccountController::class, 'update'])->name('accounts.update');
+        Route::singleton('account', AccountController::class)->only(['edit', 'update']);
 
         // Singers module
         Route::get('singers/export', ExportMemberController::class)->name('singers.export');

@@ -1,4 +1,7 @@
 # 2026-03-24
+## Two-Factor Authentication
+We've added two-factor authentication to the app! This is a great way to keep your account secure, as it adds an extra layer of protection to your login process. With two-factor authentication, you'll need to provide a second form of identification, such as a code sent to your phone, in addition to your password. This makes it much harder for unauthorized users to gain access to your account.
+
 ## Folder/Document Permissions
 You can now assign specific view/edit permissions for Folders in the Documents module. This gives you more control over who can access what information. The new permissions system is optional - if you leave the viewer/editor sections blank, permission will be inherited from User Roles (the "View Folder" and "Update Folder" permissions, which apply equally to all folders/documents).
 

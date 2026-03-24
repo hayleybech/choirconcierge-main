@@ -16,6 +16,7 @@ import FormWrapper from '../../components/FormWrapper';
 import MetricImperialInput from '../../components/inputs/MetricImperialInput';
 import CountrySelect from "../../components/inputs/CountrySelect";
 import StateSelect from "../../components/inputs/StateSelect";
+import Icon from '../../components/Icon';
 
 const AccountForm = ({ postUrl, cancelUrl }) => {
 	const { user } = usePage().props;
@@ -149,6 +150,19 @@ const AccountForm = ({ postUrl, cancelUrl }) => {
 							autoComplete="new-password"
 						/>
 						{errors.password_confirmation && <Error>{errors.password_confirmation}</Error>}
+					</div>
+
+					<div className="sm:col-span-6 border-t border-gray-200 mt-6 pt-6">
+						<h3 className="text-lg font-medium text-gray-900">Security</h3>
+						<p className="mt-1 text-sm text-gray-600">
+							Manage your account security settings.
+						</p>
+						<div className="mt-4">
+							<ButtonLink href={route('central.account.two-factor.show')} variant="secondary" size="sm">
+								<Icon icon="shield-alt" mr />
+								Two-Factor Authentication
+							</ButtonLink>
+						</div>
 					</div>
 				</FormSection>
 

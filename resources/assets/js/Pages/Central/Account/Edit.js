@@ -16,11 +16,11 @@ const Edit = ({ }) => {
                 icon="user-edit"
                 breadcrumbs={[
                     { name: 'Dashboard', url: route('central.dash')},
-                    { name: 'Edit Profile', url: route('central.accounts.edit')},
+                    { name: 'Edit Profile', url: route('central.account.edit')},
                 ]}
             />
 
-            <AccountForm postUrl={route('central.accounts.update')} cancelUrl={route('central.dash')} />
+            <AccountForm postUrl={route('central.account.update')} cancelUrl={route('central.dash')} />
         </>
     );
 }

@@ -16,6 +16,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^1.0",
         "jfcherng/php-diff": "^6.16",
+        "laragear/two-factor": "^3.0",
         "laravel/framework": "^11.0",
         "laravel/nightwatch": "^1.15",
         "laravel/slack-notification-channel": "^3.6",

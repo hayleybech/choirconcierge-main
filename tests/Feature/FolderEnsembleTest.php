@@ -28,7 +28,7 @@ class FolderEnsembleTest extends TestCase
         Role::updateOrCreate(['name' => 'User'], ['abilities' => []]);
     }
 
-    private function createSingerWithEnsemble(Ensemble $ensemble = null): User {
+    private function createSingerWithEnsemble(?Ensemble $ensemble = null): User {
         $membership = Membership::factory()->create();
         $membership->roles()->attach([Role::where('name', 'Singer')->valueOrFail('id')]);
         
@@ -105,6 +105,9 @@ class FolderEnsembleTest extends TestCase
         $folder->ensembles()->attach($ensemble);
         
         $user = $this->createMusicTeamUser();
+        // Add Admin role to the user so they can see all folders
+        $user->membership->roles()->attach(Role::updateOrCreate(['name' => 'Admin'], ['abilities' => ['*']])->id);
+        $user->membership->load('roles');
 
         $this->actingAs($user)
             ->get(the_tenant_route('folders.index'))
@@ -140,6 +143,13 @@ class FolderEnsembleTest extends TestCase
         $folder->ensembles()->attach($ensemble1);
         
         $user = $this->createMusicTeamUser();
+        // User must be in the ensemble to update the folder
+        $membership = $user->membership;
+        $voicePart = VoicePart::factory()->create();
+        $membership->enrolments()->create([
+            'ensemble_id' => $ensemble1->id,
+            'voice_part_id' => $voicePart->id
+        ]);
 
         $this->actingAs($user)
             ->put(the_tenant_route('folders.update', [$folder]), [

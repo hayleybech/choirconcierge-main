@@ -20,12 +20,12 @@ const Edit = ({}) => {
 					{ name: 'Dashboard', url: route('dash') },
 					{ name: 'Singers', url: route('singers.index') },
 					{ name: authUser.name, url: route('singers.show', { singer: authUser }) },
-					{ name: 'Edit Profile', url: route('accounts.edit') },
+					{ name: 'Edit Profile', url: route('account.edit') },
 				]}
 			/>
 
 			<AccountForm
-				postUrl={route('accounts.update')}
+				postUrl={route('account.update')}
 				cancelUrl={route('singers.show', { singer: authUser.membership })}
 			/>
 		</>

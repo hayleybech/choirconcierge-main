@@ -64,7 +64,7 @@ const Show = ({ singer, attendanceSummary, rsvpSummary, categories, voiceParts, 
 					{
 						label: 'Edit Profile',
 						icon: 'user-edit',
-						url: route('accounts.edit'),
+						url: route('account.edit'),
 						can: singer.user.id === authUser.id,
 						variant: 'primary',
 					},
