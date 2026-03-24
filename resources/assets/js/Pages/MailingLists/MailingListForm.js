@@ -184,17 +184,19 @@ const MailingListForm = ({ list, roles = [], voiceParts = [], singerCategories =
                         {errors.recipient_singer_categories && <Error>{errors.recipient_singer_categories}</Error>}
                     </fieldset>
 
-                    <fieldset className="bg-purple-100 border border-purple-700 p-4 rounded sm:col-span-6">
-                        <legend className="text-base font-medium text-purple-600 contents">Ensemble Filter</legend>
-						<Help><div className="text-purple-700">Optional: If selected, only singers in these ensembles who also match the criteria above will receive emails. </div></Help>
-                        <CheckboxGroup
-                            name="recipient_ensembles"
-                            options={ensembles}
-                            value={data.recipient_ensembles}
-                            updateFn={value => setData('recipient_ensembles', value)}
-                        />
-                        {errors.recipient_ensembles && <Error>{errors.recipient_ensembles}</Error>}
-                    </fieldset>
+					{ensembles.length > 1 && (
+						<fieldset className="bg-purple-100 border border-purple-700 p-4 rounded sm:col-span-6">
+							<legend className="text-base font-medium text-purple-600 contents">Ensemble Filter</legend>
+							<Help><div className="text-purple-700">Optional: If selected, only singers in these ensembles who also match the criteria above will receive emails. </div></Help>
+							<CheckboxGroup
+								name="recipient_ensembles"
+								options={ensembles}
+								value={data.recipient_ensembles}
+								updateFn={value => setData('recipient_ensembles', value)}
+							/>
+							{errors.recipient_ensembles && <Error>{errors.recipient_ensembles}</Error>}
+						</fieldset>
+					)}
 
                 </FormSection>
 
@@ -253,17 +255,19 @@ const MailingListForm = ({ list, roles = [], voiceParts = [], singerCategories =
                             {errors.sender_singer_categories && <Error>{errors.sender_singer_categories}</Error>}
                         </fieldset>
 
-                        <fieldset className="bg-purple-100 border border-purple-700 p-4 rounded sm:col-span-6">
-                            <legend className="text-base font-medium text-purple-600 contents">Ensemble Filter</legend>
-                            <Help><div className="text-purple-700">Optional: If selected, only people in these ensembles who also match the criteria above will be able to send emails. </div></Help>
-                            <CheckboxGroup
-                                name="sender_ensembles"
-                                options={ensembles}
-                                value={data.sender_ensembles}
-                                updateFn={value => setData('sender_ensembles', value)}
-                            />
-                            {errors.sender_ensembles && <Error>{errors.sender_ensembles}</Error>}
-                        </fieldset>
+						{ensembles.length > 1 && (
+							<fieldset className="bg-purple-100 border border-purple-700 p-4 rounded sm:col-span-6">
+								<legend className="text-base font-medium text-purple-600 contents">Ensemble Filter</legend>
+								<Help><div className="text-purple-700">Optional: If selected, only people in these ensembles who also match the criteria above will be able to send emails. </div></Help>
+								<CheckboxGroup
+									name="sender_ensembles"
+									options={ensembles}
+									value={data.sender_ensembles}
+									updateFn={value => setData('sender_ensembles', value)}
+								/>
+								{errors.sender_ensembles && <Error>{errors.sender_ensembles}</Error>}
+							</fieldset>
+						)}
                     </FormSection>
                 )}
 

@@ -3,6 +3,7 @@
 namespace App\Models\Policies;
 
 use App\Models\Document;
+use App\Models\Folder;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -35,25 +36,37 @@ class DocumentPolicy
 
     public function view(User $user, Document $document): bool
     {
-        if (! $user->can('view', $document->folder)) {
-            return false;
+        if ($user->can('view', $document->folder)) {
+            return true;
         }
 
         return $user->membership->hasAbility('documents_view');
     }
 
-    public function create(User $user): bool
+    public function create(User $user, ?Folder $folder = null): bool
     {
+        if ($folder && $user->can('update', $folder)) {
+            return true;
+        }
+
         return $user->membership->hasAbility('documents_create');
     }
 
-    public function update(User $user): bool
+    public function update(User $user, ?Document $document = null): bool
     {
+        if ($document && $user->can('update', $document->folder)) {
+            return true;
+        }
+
         return $user->membership->hasAbility('documents_create');
     }
 
-    public function delete(User $user): bool
+    public function delete(User $user, ?Document $document = null): bool
     {
+        if ($document && $user->can('update', $document->folder)) {
+            return true;
+        }
+
         return $user->membership->hasAbility('documents_delete');
     }
 
