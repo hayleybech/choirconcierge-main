@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from '../../classNames';
 
-const CheckboxInput = ({ id, name, value, checked, onChange, className, disabled }) => (
+const CheckboxInput = ({ id, name, value, checked, onChange, className, disabled, ...props }) => (
 	<input
 		id={id}
 		name={name}
@@ -14,6 +14,7 @@ const CheckboxInput = ({ id, name, value, checked, onChange, className, disabled
 			disabled ? 'bg-gray-200 text-purple-400 ' : 'text-purple-600',
 			className
 		)}
+		{...props}
 	/>
 );
 

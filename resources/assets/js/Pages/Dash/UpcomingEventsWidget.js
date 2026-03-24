@@ -26,7 +26,7 @@ const UpcomingEventsWidget = ({ events, eventCategories }) => {
 		(tenant.widgets_upcoming_events_categories?.length > 0
 			? '&' + tenant.widgets_upcoming_events_categories.map(category => `filter[type.id][]=${category}`).join('&')
 			: '');
-	console.log(urlViewAll);
+
 	return (
 		<Panel
 			header={

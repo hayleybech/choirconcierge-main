@@ -116,7 +116,7 @@ const Show = ({
 					event.is_repeating
 						? { label: 'Edit', icon: 'edit', onClick: () => setEditDialogIsOpen(true), can: 'update_event' }
 						: { label: 'Edit', icon: 'edit', url: route('events.edit', { event }), can: 'update_event' },
-					{ label: 'Duplicate', icon: 'copy', url: route('events.clone', event), can: 'create_event'},
+					{ label: 'Duplicate', icon: 'copy', url: route('events.clone', {event}), can: 'create_event'},
 					{
 						label: 'Delete',
 						icon: 'trash',
