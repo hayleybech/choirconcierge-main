@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Laragear\TwoFactor\Facades\Auth2FA;
 use Tests\TestCase;
@@ -86,16 +87,20 @@ class TwoFactorAuthenticationTest extends TestCase
         $user = User::factory()->create();
         $user->createTwoFactorAuth();
         $user->refresh();
-        $user->confirmTwoFactorAuth($user->twoFactorAuth->makeCode());
+        $code = $user->twoFactorAuth->makeCode();
+        $user->confirmTwoFactorAuth($code);
 
         // Use the same time as makeCode will use
-        $at = now();
-        $code = $user->twoFactorAuth->makeCode($at);
+        $at = Carbon::now()->addMinutes(2);
+        Carbon::setTestNow($at);
+        $code = $user->makeTwoFactorCode($at);
 
         $response = $this->withSession(['2fa.id' => $user->id])
             ->post(route('auth.2fa.challenge'), [
                 'code' => $code,
             ]);
+
+        Carbon::setTestNow();
 
         if ($response->isRedirect('/') || $response->isRedirect('/login')) {
             $this->fail('OTP validation failed: ' . json_encode(session('errors')?->getMessages()));
@@ -113,7 +118,7 @@ class TwoFactorAuthenticationTest extends TestCase
         $user->refresh();
         $user->confirmTwoFactorAuth($user->twoFactorAuth->makeCode());
         
-        $recoveryCode = $user->getRecoveryCodes()[0];
+        $recoveryCode = $user->getRecoveryCodes()[0]['code'];
 
         $response = $this->withSession(['2fa.id' => $user->id])
             ->post(route('auth.2fa.challenge'), [

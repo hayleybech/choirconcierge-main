@@ -18,7 +18,6 @@
     <env name="QUERY_DETECTOR_ENABLED" value="false"/>
     <env name="LARAVEL_PAGE_SPEED_ENABLE" value="false"/>
     <env name="MAIL_MAILER" value="log"/>
-    <env name="TENANCY_CENTRAL_DOMAIN" value="localhost"/>
   </php>
   <source>
     <include>

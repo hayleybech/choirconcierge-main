@@ -36,11 +36,7 @@ class DocumentPolicy
 
     public function view(User $user, Document $document): bool
     {
-        if ($user->can('view', $document->folder)) {
-            return true;
-        }
-
-        return $user->membership->hasAbility('documents_view');
+        return $user->can('view', $document->folder);
     }
 
     public function create(User $user, ?Folder $folder = null): bool
