@@ -28,6 +28,8 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Laragear\TwoFactor\Contracts\TwoFactorAuthenticatable;
+use Laragear\TwoFactor\TwoFactorAuthentication;
 
 // http://alexsears.com/article/adding-roles-to-laravel-users/
 // https://medium.com/@ezp127/laravel-5-4-native-user-authentication-role-authorization-3dbae4049c8a
@@ -76,9 +78,9 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Membership $membership
  * @property Tenant $default_tenant
  */
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
 {
-    use Notifiable, InteractsWithMedia, SoftDeletes, HasFactory, TenantTimezoneDates;
+    use Notifiable, InteractsWithMedia, SoftDeletes, HasFactory, TenantTimezoneDates, TwoFactorAuthentication;
 
     /**
      * The attributes that are mass assignable.

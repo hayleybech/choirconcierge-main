@@ -18,7 +18,7 @@ const LayoutTopBar = ({setShowImpersonateModal, setSidebarOpen, switchChoirMenu}
 							icon: 'user',
 					  }
 					: null,
-				{ name: 'Edit Profile', href: route('accounts.edit'), icon: 'user-edit' },
+				{ name: 'Edit Profile', href: route('account.edit'), icon: 'user-edit' },
 				{
 					name: 'Impersonate User',
 					action: () => setShowImpersonateModal(true),
@@ -46,7 +46,7 @@ const LayoutTopBar = ({setShowImpersonateModal, setSidebarOpen, switchChoirMenu}
 				{ name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' },
 		  ]
 		: [
-				{ name: 'Edit Profile', href: route('central.accounts.edit'), icon: 'user-edit' },
+				{ name: 'Edit Profile', href: route('central.account.edit'), icon: 'user-edit' },
 				// { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
 				// { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
 				{ name: 'Changelog', href: route('central.changelog'), icon: 'code-merge' },

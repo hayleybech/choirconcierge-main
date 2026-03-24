@@ -19,6 +19,12 @@ Route::redirect('/', config('app.public_site_url'));
 Route::prefix('/app')->group(function () {
 	Auth::routes();
 
+    // Two-Factor Authentication Challenge
+    Route::get('/two-factor-challenge', [App\Http\Controllers\Auth\TwoFactorChallengeController::class, 'create'])->name('auth.2fa.challenge');
+    Route::post('/two-factor-challenge', [App\Http\Controllers\Auth\TwoFactorChallengeController::class, 'store']);
+
+    Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
+
 	// Switch organisation
 	Route::get('/switch-choir/{newTenant}', [Central\SwitchTenantController::class, 'start'])->name('tenants.switch.start');
 
@@ -37,8 +43,16 @@ Route::prefix('/app')->group(function () {
         Route::resource('users', Central\UserController::class)->only(['index', 'show']);
 
 		// Account Settings
-		Route::get('account/edit', [Central\AccountController::class, 'edit'])->name('accounts.edit');
-		Route::post('account', [Central\AccountController::class, 'update'])->name('accounts.update');
+		Route::singleton('account', Central\AccountController::class)->only(['edit', 'update']);
+
+        // Two-Factor Authentication
+        Route::name('account.')->prefix('account')->group(function () {
+            Route::post('/two-factor/regenerate', [App\Http\Controllers\TwoFactorController::class, 'regenerate'])->name('two-factor.regenerate');
+            Route::singleton('two-factor', App\Http\Controllers\TwoFactorController::class)->creatable()->only(['show', 'store', 'destroy']);
+        });
+//        Route::get('account/two-factor', [App\Http\Controllers\TwoFactorController::class, 'index'])->name('accounts.two-factor');
+//        Route::post('account/two-factor', [App\Http\Controllers\TwoFactorController::class, 'store']);
+//        Route::delete('account/two-factor', [App\Http\Controllers\TwoFactorController::class, 'destroy']);
 
         // Roadmap
         Route::get('changelog', Central\ChangelogController::class)->name('changelog');

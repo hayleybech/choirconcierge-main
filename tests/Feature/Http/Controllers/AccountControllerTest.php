@@ -19,7 +19,7 @@ uses(RefreshDatabase::class, WithFaker::class);
 test('edit@ renders the template', function() {
     actingAs(User::factory()->has(Membership::factory())->create());
 
-    get(the_tenant_route('accounts.edit'))
+    get(the_tenant_route('account.edit'))
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('Account/Edit')
@@ -30,7 +30,7 @@ test('update@ saves the user details', function ($data) {
     $user = User::factory()->has(Membership::factory())->create();
     actingAs($user);
 
-    post(the_tenant_route('accounts.update'), $data)
+    post(the_tenant_route('account.update'), $data)
         ->assertSessionHasNoErrors()
         ->assertRedirect(the_tenant_route('singers.show', $user->membership));
 
@@ -41,7 +41,7 @@ test('update@ saves the user password', function ($data) {
     $user = User::factory()->has(Membership::factory())->create();
     actingAs($user);
 
-    post(the_tenant_route('accounts.update'), $data)
+    post(the_tenant_route('account.update'), $data)
         ->assertSessionHasNoErrors()
         ->assertRedirect(the_tenant_route('singers.show', $user->membership));
 
