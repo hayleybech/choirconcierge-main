@@ -39,7 +39,7 @@ class DashControllerTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['email' => 'not-admin@example.com']));
 
-        $this->get('/app')
+        $this->get(route('central.dash'))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('tenantStats', null)
@@ -95,7 +95,7 @@ class DashControllerTest extends TestCase
         // Total converted = 2
         // Rate = 2/4 * 100 = 50.0
 
-        $this->get('/app')
+        $this->get(route('central.dash'))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('tenantStats.trialConversionRate', 50)
@@ -144,7 +144,7 @@ class DashControllerTest extends TestCase
 
         // Durations: 3, 6, 12 -> Median 6
         
-        $this->get('/app')
+        $this->get(route('central.dash'))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('tenantStats.medianRetentionTime', 6)
