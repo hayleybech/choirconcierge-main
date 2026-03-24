@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FolderRequest;
 use App\Models\Ensemble;
 use App\Models\Folder;
+use App\Models\Role;
+use App\Models\SingerCategory;
+use App\Models\VoicePart;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -19,19 +22,28 @@ class FolderController extends Controller
 
     public function index(): Response
     {
-        $userEnsembles = auth()->user()?->membership?->enrolments->pluck('ensemble_id');
-        $canUpdate = auth()->user()?->membership?->hasAbility('folders_update');
+        $user = auth()->user();
+        $userEnsembles = $user?->membership?->enrolments->pluck('ensemble_id');
 
         $folders = Folder::with([
             'documents' => static function ($query) {
                 $query->orderBy('title'); // documents by document title
             },
         ])
-            ->when(! $canUpdate && ! auth()->user()?->isSuperAdmin, function (Builder $query) use ($userEnsembles) {
+            ->when(! $user->membership->hasRole('Admin') && ! $user?->isSuperAdmin, function (Builder $query) use ($user, $userEnsembles) {
                 $query->where(function (Builder $query) use ($userEnsembles) {
                     $query->whereDoesntHave('ensembles')
                         ->orWhereHas('ensembles', function (Builder $query) use ($userEnsembles) {
                             $query->whereIn('ensembles.id', $userEnsembles ?? []);
+                        });
+                })
+                ->where(function (Builder $query) use ($user) {
+                    $query->whereDoesntHave('viewers')
+                        ->orWhere(function (Builder $query) use ($user) {
+                            $query->whereHas('viewer_users', fn($q) => $q->where('users.id', $user->id))
+                                ->orWhereHas('viewer_roles', fn($q) => $q->whereIn('roles.id', $user->membership->roles->pluck('id')))
+                                ->orWhereHas('viewer_voice_parts', fn($q) => $q->whereIn('voice_parts.id', $user->membership->enrolments->pluck('voice_part_id')))
+                                ->orWhereHas('viewer_singer_categories', fn($q) => $q->where('singer_categories.id', $user->membership->singer_category_id));
                         });
                 });
             })
@@ -39,12 +51,12 @@ class FolderController extends Controller
             ->get(); // folders by folder title
 
         $totalEnsemblesCount = Ensemble::count();
-        $userEnsemblesCount = (auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('folders_update'))
+        $userEnsemblesCount = ($user?->isSuperAdmin || $user->membership->hasRole('Admin'))
             ? $totalEnsemblesCount
-            : auth()->user()?->membership?->enrolments->count() ?? 0;
+            : $user?->membership?->enrolments->count() ?? 0;
 
         $ensembles = Ensemble::query()
-            ->when(! (auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('folders_update')), function (Builder $query) {
+            ->when(! ($user?->isSuperAdmin || $user->membership->hasRole('Admin')), function (Builder $query) {
                 $query->whereIn('id', auth()->user()?->membership?->enrolments->pluck('ensemble_id') ?? []);
             })
             ->get();
@@ -60,6 +72,9 @@ class FolderController extends Controller
     {
         return Inertia::render('Folders/Create', [
             'ensembles' => Ensemble::all()->values(),
+            'roles' => Role::where('name', '!=', 'User')->get()->values(),
+            'voiceParts' => VoicePart::all()->values(),
+            'singerCategories' => SingerCategory::all()->values(),
         ]);
     }
 
@@ -80,9 +95,17 @@ class FolderController extends Controller
 
     public function edit(Folder $folder): Response
     {
+        $folder->load([
+            'viewer_users', 'viewer_roles', 'viewer_voice_parts', 'viewer_singer_categories',
+            'editor_users', 'editor_roles', 'editor_voice_parts', 'editor_singer_categories',
+        ]);
+
         return Inertia::render('Folders/Edit', [
             'folder' => $folder,
             'ensembles' => Ensemble::all()->values(),
+            'roles' => Role::where('name', '!=', 'User')->get()->values(),
+            'voiceParts' => VoicePart::all()->values(),
+            'singerCategories' => SingerCategory::all()->values(),
         ]);
     }
 
