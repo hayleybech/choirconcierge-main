@@ -5,7 +5,6 @@ import Label from '../../components/inputs/Label';
 import TextInput from '../../components/inputs/TextInput';
 import Button from '../../components/inputs/Button';
 import Error from '../../components/inputs/Error';
-import BlankLayout from '../../Layouts/BlankLayout';
 
 const TwoFactorChallenge = () => {
 	const [recovery, setRecovery] = useState(false);
@@ -29,15 +28,19 @@ const TwoFactorChallenge = () => {
 	return (
 		<div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
 			<AppHead title="Two-Factor Challenge" />
-			
+
+			<div className="sm:mx-auto sm:w-full sm:max-w-md">
+				<img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
+
+				<h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Two-Factor Authentication</h2>
+			</div>
+
 			<div className="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-				<h2 className="text-xl font-semibold text-center mb-6">Two-Factor Authentication</h2>
-				
+
 				<p className="mb-4 text-sm text-gray-600">
-					{recovery 
+					{recovery
 						? 'Please confirm access to your account by entering one of your emergency recovery codes.'
-						: 'Please confirm access to your account by entering the authentication code provided by your authenticator application.'
-					}
+						: 'Please confirm access to your account by entering the authentication code provided by your authenticator application.'}
 				</p>
 
 				<form onSubmit={submit}>
@@ -63,7 +66,7 @@ const TwoFactorChallenge = () => {
 								name="safe_device"
 								checked={data.safe_device}
 								onChange={e => setData('safe_device', e.target.checked)}
-								className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+								className="rounded border-gray-300 text-purple-600 shadow-sm focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
 							/>
 							<span className="ml-2 text-sm text-gray-600">Remember this device</span>
 						</label>
@@ -84,15 +87,15 @@ const TwoFactorChallenge = () => {
 					)}
 
 					<div className="flex items-center justify-end mt-4">
-						<button 
-							type="button" 
+						<button
+							type="button"
 							className="text-sm text-gray-600 hover:text-gray-900 underline cursor-pointer mr-4"
 							onClick={toggleRecovery}
 						>
 							{recovery ? 'Use an authentication code' : 'Use a recovery code'}
 						</button>
 
-						<Button variant="primary" type="submit" disabled={processing}>
+						<Button variant="primary" type="submit" size="sm" disabled={processing}>
 							Log in
 						</Button>
 					</div>
@@ -101,7 +104,5 @@ const TwoFactorChallenge = () => {
 		</div>
 	);
 };
-
-TwoFactorChallenge.layout = page => <BlankLayout children={page} />;
 
 export default TwoFactorChallenge;

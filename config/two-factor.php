@@ -99,7 +99,7 @@ return [
     'login' => [
         'view' => 'two-factor::login',
         'key' => '_2fa_login',
-        'flash' => true,
+        'flash' => false,
     ],
 
     /*

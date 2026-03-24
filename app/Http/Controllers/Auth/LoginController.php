@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
-use Laragear\TwoFactor\Facades\Auth2FA;
 
 class LoginController extends Controller
 {
@@ -40,7 +40,7 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function showLoginForm()
+    public function showLoginForm(): \Inertia\Response
     {
         return Inertia::render('Auth/Login');
     }
@@ -48,12 +48,9 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
-    public function login(Request $request)
+    public function login(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $this->validateLogin($request);
 
@@ -70,11 +67,29 @@ class LoginController extends Controller
         $credentials = $this->credentials($request);
         $remember = $request->filled('remember');
 
-        // Use Auth2FA to handle the login attempt.
-        // If 2FA is needed, it will set session data.
-        $result = Auth2FA::attempt($credentials, $remember);
+        // Manually validate credentials without logging in.
+        if (\Auth::validate($credentials)) {
+            $user = \Auth::getProvider()->retrieveByCredentials($credentials);
 
-        if ($result === true) {
+            if ($user->hasTwoFactorEnabled()) {
+                // If the user has a safe device, we can bypass 2FA.
+                if (config('two-factor.safe_devices.enabled') && $user->isSafeDevice($request)) {
+                    \Auth::login($user, $remember);
+                    return $this->sendLoginResponse($request);
+                }
+
+                // Store user ID and remember flag in session for the challenge.
+                session()->put([
+                    '2fa.id' => $user->getKey(),
+                    '2fa.remember' => $remember,
+                ]);
+
+                return redirect()->route('auth.2fa.challenge');
+            }
+
+            // Standard login if 2FA is not enabled.
+            \Auth::login($user, $remember);
+
             if ($request->hasSession()) {
                 $request->session()->put('auth.password_confirmed_at', time());
             }
@@ -82,14 +97,12 @@ class LoginController extends Controller
             return $this->sendLoginResponse($request);
         }
 
-        if ($result === false) {
-            $this->incrementLoginAttempts($request);
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
 
-            return $this->sendFailedLoginResponse($request);
-        }
-
-        // If we reach here, 2FA is required. Redirect to our Inertia challenge route.
-        return redirect()->route('auth.2fa.challenge');
+        return $this->sendFailedLoginResponse($request);
     }
 
     public function loggedOut(Request $request)

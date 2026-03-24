@@ -18,7 +18,7 @@ class TwoFactorAuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get(route('central.account.two-factor'));
+        $response = $this->actingAs($user)->get(route('central.account.two-factor.show'));
 
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page
@@ -33,13 +33,13 @@ class TwoFactorAuthenticationTest extends TestCase
         $user = User::factory()->create();
         
         // Generate secret first as index does
-        $this->actingAs($user)->get(route('central.account.two-factor'));
+        $this->actingAs($user)->get(route('central.account.two-factor.show'));
         
         $user->refresh();
         $secret = $user->twoFactorAuth;
         $code = $secret->makeCode();
 
-        $response = $this->actingAs($user)->post(route('central.account.two-factor'), [
+        $response = $this->actingAs($user)->post(route('central.account.two-factor.store'), [
             'code' => $code,
         ]);
 
@@ -56,7 +56,7 @@ class TwoFactorAuthenticationTest extends TestCase
 
         $this->assertTrue($user->hasTwoFactorEnabled());
 
-        $response = $this->actingAs($user)->delete(route('central.account.two-factor'));
+        $response = $this->actingAs($user)->delete(route('central.account.two-factor.destroy'));
 
         $response->assertRedirect();
         $this->assertFalse($user->fresh()->hasTwoFactorEnabled());
@@ -88,15 +88,20 @@ class TwoFactorAuthenticationTest extends TestCase
         $user->refresh();
         $user->confirmTwoFactorAuth($user->twoFactorAuth->makeCode());
 
-        session(['2fa.id' => $user->id]);
+        // Use the same time as makeCode will use
+        $at = now();
+        $code = $user->twoFactorAuth->makeCode($at);
 
-        $code = $user->twoFactorAuth->makeCode();
+        $response = $this->withSession(['2fa.id' => $user->id])
+            ->post(route('auth.2fa.challenge'), [
+                'code' => $code,
+            ]);
 
-        $response = $this->post(route('auth.2fa.challenge'), [
-            'code' => $code,
-        ]);
+        if ($response->isRedirect('/') || $response->isRedirect('/login')) {
+            $this->fail('OTP validation failed: ' . json_encode(session('errors')?->getMessages()));
+        }
 
-        $response->assertRedirect(config('auth.redirectTo', '/app/default-dash'));
+        $response->assertRedirect('/app/default-dash');
         $this->assertTrue(auth()->check());
         $this->assertEquals($user->id, auth()->id());
     }
@@ -110,13 +115,12 @@ class TwoFactorAuthenticationTest extends TestCase
         
         $recoveryCode = $user->getRecoveryCodes()[0];
 
-        session(['2fa.id' => $user->id]);
+        $response = $this->withSession(['2fa.id' => $user->id])
+            ->post(route('auth.2fa.challenge'), [
+                'recovery_code' => $recoveryCode,
+            ]);
 
-        $response = $this->post(route('auth.2fa.challenge'), [
-            'recovery_code' => $recoveryCode,
-        ]);
-
-        $response->assertRedirect(config('auth.redirectTo', '/app/default-dash'));
+        $response->assertRedirect('/app/default-dash');
         $this->assertTrue(auth()->check());
         $this->assertEquals($user->id, auth()->id());
     }

@@ -16,6 +16,7 @@ import FormWrapper from '../../components/FormWrapper';
 import MetricImperialInput from '../../components/inputs/MetricImperialInput';
 import CountrySelect from "../../components/inputs/CountrySelect";
 import StateSelect from "../../components/inputs/StateSelect";
+import Icon from '../../components/Icon';
 
 const AccountForm = ({ postUrl, cancelUrl }) => {
 	const { user } = usePage().props;
@@ -157,7 +158,8 @@ const AccountForm = ({ postUrl, cancelUrl }) => {
 							Manage your account security settings.
 						</p>
 						<div className="mt-4">
-							<ButtonLink href={route('central.account.two-factor.show')} variant="secondary">
+							<ButtonLink href={route('central.account.two-factor.show')} variant="secondary" size="sm">
+								<Icon icon="shield-alt" mr />
 								Two-Factor Authentication
 							</ButtonLink>
 						</div>

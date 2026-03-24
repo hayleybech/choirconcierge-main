@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Laragear\TwoFactor\Facades\Auth2FA;
+
+use App\Models\User;
 
 class TwoFactorChallengeController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -25,12 +25,9 @@ class TwoFactorChallengeController extends Controller
     }
 
     /**
-     * Show the two factor challenge view.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Inertia\Response
+     * Show the two-factor challenge view.
      */
-    public function create(Request $request): Response
+    public function create(Request $request): RedirectResponse|Response
     {
         if (!$request->session()->has('2fa.id')) {
             return redirect()->route('login');
@@ -40,12 +37,9 @@ class TwoFactorChallengeController extends Controller
     }
 
     /**
-     * Attempt to authenticate a new session using the two factor authentication code.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return mixed
+     * Attempt to authenticate a new session using the two-factor authentication code.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'code' => 'nullable|string',
@@ -53,14 +47,24 @@ class TwoFactorChallengeController extends Controller
             'safe_device' => 'boolean',
         ]);
 
-        if ($request->recovery_code) {
-            $user = Auth2FA::confirmRecovery($request->recovery_code, $request->safe_device);
-        } else {
-            $user = Auth2FA::confirm($request->code, $request->safe_device);
+        $userId = $request->session()->get('2fa.id');
+
+        if (!$userId) {
+            return redirect()->route('login');
         }
 
-        if ($user) {
-            return redirect()->intended(config('auth.redirectTo', '/app/default-dash'));
+        $user = User::findOrFail($userId);
+
+        if ($user->validateTwoFactorCode($request->code ?? $request->recovery_code, $request->has('recovery_code'))) {
+            if ($request->safe_device && config('two-factor.safe_devices.enabled')) {
+                $user->addSafeDevice($request);
+            }
+
+            \Auth::login($user, $request->session()->get('2fa.remember', false));
+
+            $request->session()->forget(['2fa.id', '2fa.remember']);
+
+            return redirect()->to('/app/default-dash');
         }
 
         return back()->withErrors(['code' => 'The provided two-factor authentication code was invalid.']);

@@ -50,11 +50,8 @@ Route::prefix('/app')->group(function () {
             Route::post('/two-factor/regenerate', [App\Http\Controllers\TwoFactorController::class, 'regenerate'])->name('two-factor.regenerate');
             Route::singleton('two-factor', App\Http\Controllers\TwoFactorController::class)->creatable()->only(['show', 'store', 'destroy']);
         });
-//        Route::get('account/two-factor', [App\Http\Controllers\TwoFactorController::class, 'index'])->name('accounts.two-factor');
-//        Route::post('account/two-factor', [App\Http\Controllers\TwoFactorController::class, 'store']);
-//        Route::delete('account/two-factor', [App\Http\Controllers\TwoFactorController::class, 'destroy']);
 
-        // Roadmap
+        // Changelog
         Route::get('changelog', Central\ChangelogController::class)->name('changelog');
 	});
 });
