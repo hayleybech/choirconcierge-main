@@ -1,3 +1,7 @@
+# 2026-03-24
+## Folder/Document Permissions
+You can now assign specific view/edit permissions for Folders in the Documents module. This gives you more control over who can access what information. The new permissions system is optional - if you leave the viewer/editor sections blank, permission will be inherited from User Roles (the "View Folder" and "Update Folder" permissions, which apply equally to all folders/documents).
+
 # 2026-03-20
 ## Email Open Tracking
 We can now track whether singers have opened your emails! From now on, new messages and broadcasts you send will start tracking when singers open them. These stats are available in the Mail Logs section.
