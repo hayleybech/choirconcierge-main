@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { usePage } from '@inertiajs/react';
 import TenantLayout from "../../Layouts/TenantLayout";
 import PageHeader from "../../components/PageHeader/PageHeader";
 import AppHead from "../../components/AppHead";
@@ -15,10 +16,10 @@ const formatDate = (date, format = 'DATE_MED') => (
 );
 
 const Billing = ({ plans, tenant, termsUrl }) => {
-    const { route } = useRoute();
-    const { plan, billing_status: billing } = tenant;
+	const { route } = useRoute();
+	const { plan, billing_status: billing } = tenant;
 
-    return (
+	return (
 		<>
 			<AppHead title="Billing" />
 			<PageHeader
@@ -149,15 +150,14 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 											</ul>
 										</div>
 										<div className="p-6 bg-gray-50 border-t border-gray-100">
-											<Button
-												href={route('organisation.billing.subscribe', { plan: p.id })}
-												method="post"
+											<a
+												href="#!"
 												variant={isCurrent ? 'secondary' : 'primary'}
-												className="w-full justify-center"
-												disabled={isCurrent}
+												className="paddle_button !w-full !justify-center !inline-flex !items-center !gap-x-1.5 !border !shadow-sm !font-medium !focus:outline-none !focus:ring-2 !focus:ring-offset-2 !focus:ring-purple-500 !bg-purple-600 !border-transparent !text-white !hover:bg-purple-700 !hover:from-purple-600 !hover:to-purple-500 !py-2 !px-4 !text-md !rounded-md !box-border !bg-gradient-to-b !from-purple-500 !to-purple-600"
+												data-override={p.payLink}
 											>
 												{isCurrent ? 'Current Plan' : 'Subscribe'}
-											</Button>
+											</a>
 										</div>
 									</div>
 								);
@@ -193,7 +193,7 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 			</div>
 		</>
 	);
-}
+};
 
 Billing.layout = page => <TenantLayout children={page} />
 

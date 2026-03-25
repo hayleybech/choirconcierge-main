@@ -21,6 +21,8 @@
         @include ('snippets.tagmanagerhead')
     @endif
 
+    @paddleJS
+
 </head>
 <body>
     @if (App::environment('production'))

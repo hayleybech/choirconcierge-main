@@ -107,6 +107,10 @@ class HandleInertiaRequests extends Middleware
             'googleApiKey' => config('services.google.key'),
             'tenant' => tenancy()?->tenant?->load('ensembles')->append('billing_status'), // billing status needed for global alerts
             'user' => auth()->user(),
+            'paddle' => [
+                'vendor_id' => (int) config('cashier.vendor_id'),
+                'sandbox' => (bool) config('cashier.sandbox'),
+            ],
             'impersonationActive' => session()->has('impersonation:active'),
             'userChoirs' => $this->getUserChoirs(),
         ]);

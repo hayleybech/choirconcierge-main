@@ -19,6 +19,11 @@ class BillingController extends Controller
             'features' => $plan['features'],
             'quota' => $plan['options']['activeUserQuota'],
             'id' => $plan['yearly_id'],
+            'payLink' => tenant()->subscribed('default')
+                ? null
+                : tenant()->newSubscription('default', $plan['yearly_id'])
+                    ->returnTo(route('organisation.billing'))
+                    ->create(),
         ]);
 
         return Inertia::render('Tenants/Billing', [
@@ -32,12 +37,24 @@ class BillingController extends Controller
     {
         $this->authorize('update', tenant());
 
-        $planId = $request->input('plan');
+        $planId = (int) $request->input('plan');
+        $tenant = tenant();
 
-        // This would typically redirect to a Paddle checkout
-        // For now, we'll return a redirect with a message as a placeholder
-        // In a real scenario, you'd use $request->tenant()->newSubscription('default', $planId)->checkout();
-        
-        return redirect()->back()->with('status', 'Redirection to payment provider (Paddle) would happen here for plan: ' . $planId);
+        if ($tenant->subscribed('default')) {
+            try {
+                $tenant->subscription('default')->swap($planId);
+                return redirect()->back()->with('status', 'Subscription swapped successfully!');
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['plan' => $e->getMessage()]);
+            }
+        }
+
+        if (config('cashier.vendor_id') && config('cashier.vendor_id') !== 'your-paddle-vendor-id') {
+            $payLink = $tenant->newSubscription('default', $planId)
+                ->returnTo(route('organisation.billing'))
+                ->create();
+        }
+
+        return redirect()->back();
     }
 }
