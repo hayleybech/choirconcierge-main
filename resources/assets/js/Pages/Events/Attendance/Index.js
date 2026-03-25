@@ -8,7 +8,7 @@ import Dialog from '../../../components/Dialog';
 import { Link, usePage } from '@inertiajs/react';
 import QRCode from 'react-qr-code';
 import DateTag from '../../../components/DateTag';
-import Table, { TableCell } from '../../../components/Table';
+import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
 import IndexContainer from '../../../components/IndexContainer';
 import AttendanceTableMobile from './AttendanceTableMobile';
 import Pagination from '../../../components/Pagination';
@@ -65,25 +65,31 @@ const Index = ({
 
 	const headings = collect({
 		singer: (
-			<TableHeadingSort
-				form={sortFilterForm}
-				sort={['full-name', 'last-name-first']}
-				onClick={() => handleNameSort(sortFilterForm)}
-				indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
-			>
-				Name
-			</TableHeadingSort>
+			<TableHeading>
+				<TableHeadingSort
+					form={sortFilterForm}
+					sort={['full-name', 'last-name-first']}
+					onClick={() => handleNameSort(sortFilterForm)}
+					indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+				>
+					Name
+				</TableHeadingSort>
+			</TableHeading>
 		),
-		voice_part: 'Voice Part',
+		voice_part: <TableHeading>Voice Part</TableHeading>,
 		attendance: (
-			<TableHeadingSort form={sortFilterForm} sort="attendance-response">
-				Attendance
-			</TableHeadingSort>
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="attendance-response">
+					Attendance
+				</TableHeadingSort>
+			</TableHeading>
 		),
 		updated: (
-			<TableHeadingSort form={sortFilterForm} sort="attendance-updated">
-				Updated
-			</TableHeadingSort>
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="attendance-updated">
+					Updated
+				</TableHeadingSort>
+			</TableHeading>
 		),
 	});
 
@@ -199,71 +205,74 @@ const Index = ({
 					/>
 				}
 				tableDesktop={
-					<Table
-						headings={headings}
-						pagination={<Pagination details={pagination} />}
-						body={allSingers.map(singer => (
-							<tr key={singer.id}>
-								<TableCell>
-									<div className="flex items-center space-x-3">
-										<div className="shrink-0">
-											<img
-												className="h-8 w-8 rounded-md object-cover"
-												src={singer.user.avatar_url}
-												alt={singer.user.name}
-											/>
+					<Table pagination={<Pagination details={pagination} />}>
+						<THead>
+							<tr>{headings.values().toArray()}</tr>
+						</THead>
+						<TBody>
+							{allSingers.map(singer => (
+								<tr key={singer.id}>
+									<TableCell>
+										<div className="flex items-center space-x-3">
+											<div className="shrink-0">
+												<img
+													className="h-8 w-8 rounded-md object-cover"
+													src={singer.user.avatar_url}
+													alt={singer.user.name}
+												/>
+											</div>
+											<div>
+												<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+												<Link
+													href={route('singers.show', { singer })}
+													className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
+												>
+													{singer.user.name}
+												</Link>
+											</div>
 										</div>
-										<div>
-											<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
-											<Link
-												href={route('singers.show', { singer })}
-												className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
-											>
-												{singer.user.name}
-											</Link>
-										</div>
-									</div>
-								</TableCell>
-								<TableCell>
-									<ul className="flex flex-col gap-1.5">
-										{singer.enrolments.map(enrolment => (
-											<li key={enrolment.id} className="flex gap-1 items-center">
-												{showEnsemble && (
-													<Badge colour="bg-purple-100 text-purple-800">
-														{enrolment.ensemble.name}
-													</Badge>
-												)}
-												{enrolment.voice_part && (
-													<VoicePartTag
-														title={enrolment.voice_part.title}
-														colour={enrolment.voice_part.colour}
-													/>
-												)}
-											</li>
-										))}
-									</ul>
-								</TableCell>
-								<TableCell>
-									<AttendanceRecord
-										attendance={singer.attendance}
-										singerId={singer.id}
-										event={event}
-									/>
-								</TableCell>
-								<TableCell>
-									{!!singer.attendance.updated_at && (
-										<DateTag
-											icon="pencil"
-											label="Updated"
-											date={singer.attendance.updated_at}
-											format="DATETIME_SHORT"
-											className="text-gray-400"
+									</TableCell>
+									<TableCell>
+										<ul className="flex flex-col gap-1.5">
+											{singer.enrolments.map(enrolment => (
+												<li key={enrolment.id} className="flex gap-1 items-center">
+													{showEnsemble && (
+														<Badge colour="bg-purple-100 text-purple-800">
+															{enrolment.ensemble.name}
+														</Badge>
+													)}
+													{enrolment.voice_part && (
+														<VoicePartTag
+															title={enrolment.voice_part.title}
+															colour={enrolment.voice_part.colour}
+														/>
+													)}
+												</li>
+											))}
+										</ul>
+									</TableCell>
+									<TableCell>
+										<AttendanceRecord
+											attendance={singer.attendance}
+											singerId={singer.id}
+											event={event}
 										/>
-									)}
-								</TableCell>
-							</tr>
-						))}
-					/>
+									</TableCell>
+									<TableCell>
+										{!!singer.attendance.updated_at && (
+											<DateTag
+												icon="pencil"
+												label="Updated"
+												date={singer.attendance.updated_at}
+												format="DATETIME_SHORT"
+												className="text-gray-400"
+											/>
+										)}
+									</TableCell>
+								</tr>
+							))}
+						</TBody>
+					</Table>
 				}
 			/>
 		</>

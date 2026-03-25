@@ -4,7 +4,7 @@ import AppHead from '../../components/AppHead';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import useRoute from '../../hooks/useRoute';
 import { Link, usePage } from '@inertiajs/react';
-import Table, { TableCell } from '../../components/Table';
+import Table, { TableCell, THead, TBody, TableHeading } from '../../components/Table';
 import Pagination from '../../components/Pagination';
 import Icon from '../../components/Icon';
 import collect from 'collect.js';
@@ -43,12 +43,28 @@ const Index = ({ polls, pagination, ensembles }) => {
 	const sortFilterForm = useSortFilterForm('polls.index', filters, sorts);
 
 	const headings = collect({
-		title: <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>,
-		ensembles: 'Ensembles',
-		status: 'Status',
-		deadline: <TableHeadingSort form={sortFilterForm} sort="close_at">Deadline</TableHeadingSort>,
-		votes: <TableHeadingSort form={sortFilterForm} sort="votes_count">Votes</TableHeadingSort>,
-		created_at: <TableHeadingSort form={sortFilterForm} sort="created_at">Created</TableHeadingSort>,
+		title: (
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>
+			</TableHeading>
+		),
+		ensembles: <TableHeading>Ensembles</TableHeading>,
+		status: <TableHeading>Status</TableHeading>,
+		deadline: (
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="close_at">Deadline</TableHeadingSort>
+			</TableHeading>
+		),
+		votes: (
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="votes_count">Votes</TableHeadingSort>
+			</TableHeading>
+		),
+		created_at: (
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="created_at">Created</TableHeadingSort>
+			</TableHeading>
+		),
 	}).filter((h, key) => showEnsembleColumn || key !== 'ensembles');
 
 	return (
@@ -108,55 +124,58 @@ const Index = ({ polls, pagination, ensembles }) => {
 					</TableMobile>
 				}
 				tableDesktop={
-					<Table
-						headings={headings}
-						body={polls.map(p => (
-							<tr key={p.id}>
-								<TableCell>
-									<Link
-										href={route('polls.show', { poll: p.id })}
-										className="hover:underline text-purple-700"
-									>
-										{p.title}
-									</Link>
-								</TableCell>
-								{showEnsembleColumn && (
+					<Table pagination={<Pagination details={pagination} />}>
+						<THead>
+							<tr>{headings.values().toArray()}</tr>
+						</THead>
+						<TBody>
+							{polls.map(p => (
+								<tr key={p.id}>
 									<TableCell>
-										<div className="flex flex-wrap gap-1 max-w-[200px]">
-											{p.ensembles?.map(e => (
-												<Badge key={e.id} colour="bg-purple-100 text-purple-800">
-													{e.name}
-												</Badge>
-											)) || '-'}
-											{p.ensembles?.length === 0 && '-'}
-										</div>
+										<Link
+											href={route('polls.show', { poll: p.id })}
+											className="hover:underline text-purple-700"
+										>
+											{p.title}
+										</Link>
 									</TableCell>
-								)}
-								<TableCell>
-									{p.is_closed ? (
-										<span className="text-gray-600 flex items-center">
-											<Icon icon="lock" mr /> Closed
-										</span>
-									) : (
-										<span className="text-emerald-700 flex items-center">
-											<Icon icon="check" mr /> Open
-										</span>
+									{showEnsembleColumn && (
+										<TableCell>
+											<div className="flex flex-wrap gap-1 max-w-[200px]">
+												{p.ensembles?.map(e => (
+													<Badge key={e.id} colour="bg-purple-100 text-purple-800">
+														{e.name}
+													</Badge>
+												)) || '-'}
+												{p.ensembles?.length === 0 && '-'}
+											</div>
+										</TableCell>
 									)}
-								</TableCell>
-								<TableCell>{p.close_at ? new Date(p.close_at).toLocaleString() : '-'}</TableCell>
-								<TableCell>{p.votes_count ?? 0}</TableCell>
-								<TableCell>
-									<DateTag
-										icon="pencil"
-										date={p.created_at}
-										format="DATE_SHORT"
-										className="text-gray-400"
-									/>
-								</TableCell>
-							</tr>
-						))}
-						pagination={<Pagination details={pagination} />}
-					/>
+									<TableCell>
+										{p.is_closed ? (
+											<span className="text-gray-600 flex items-center">
+												<Icon icon="lock" mr /> Closed
+											</span>
+										) : (
+											<span className="text-emerald-700 flex items-center">
+												<Icon icon="check" mr /> Open
+											</span>
+										)}
+									</TableCell>
+									<TableCell>{p.close_at ? new Date(p.close_at).toLocaleString() : '-'}</TableCell>
+									<TableCell>{p.votes_count ?? 0}</TableCell>
+									<TableCell>
+										<DateTag
+											icon="pencil"
+											date={p.created_at}
+											format="DATE_SHORT"
+											className="text-gray-400"
+										/>
+									</TableCell>
+								</tr>
+							))}
+						</TBody>
+					</Table>
 				}
 			/>
 		</>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import VoicePartTag from '../../components/VoicePartTag';
 import SingerCategoryTag from '../../components/SingerCategoryTag';
-import Table, { TableCell } from '../../components/Table';
+import Table, { TableCell, THead, TBody, TableHeading } from '../../components/Table';
 import Icon from '../../components/Icon';
 import SingerStatus from '../../SingerStatus';
 import FeeStatus from '../../components/FeeStatus';
@@ -35,118 +35,127 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles }) 
 
 	const headings = collect({
 		name: (
-			<TableHeadingSort
-				form={sortFilterForm}
-				sort={['full-name', 'last-name-first']}
-				onClick={() => handleNameSort(sortFilterForm)}
-				indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
-			>
-				Name
-			</TableHeadingSort>
+			<TableHeading>
+				<TableHeadingSort
+					form={sortFilterForm}
+					sort={['full-name', 'last-name-first']}
+					onClick={() => handleNameSort(sortFilterForm)}
+					indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+				>
+					Name
+				</TableHeadingSort>
+			</TableHeading>
 		),
-		part: showEnsembleColumn ? 'Ensembles' : 'Voice Part',
+		part: <TableHeading>{showEnsembleColumn ? 'Ensembles' : 'Voice Part'}</TableHeading>,
 		status: (
-			<TableHeadingSort form={sortFilterForm} sort="status-title">
-				Status
-			</TableHeadingSort>
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="status-title">
+					Status
+				</TableHeadingSort>
+			</TableHeading>
 		),
-		email: 'Email',
+		email: <TableHeading>Email</TableHeading>,
 		fees: (
-			<TableHeadingSort form={sortFilterForm} sort="paid_until">
-				Fees
-			</TableHeadingSort>
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="paid_until">
+					Fees
+				</TableHeadingSort>
+			</TableHeading>
 		),
 	}).filter((item, key) => key !== 'fees' || can['manage_finances']);
 
 	return (
 		<>
-			<Table
-				pagination={<Pagination details={pagination} />}
-				headings={headings}
-				body={singers.map(singer => (
-					<tr key={singer.id}>
-						<TableCell>
-							<div className="flex items-center">
-								<div className="shrink-0 h-10 w-10">
-									<img
-										className="h-10 w-10 rounded-md"
-										src={singer.user.avatar_url}
-										alt={singer.user.name}
-									/>
-								</div>
-								<div className="ml-4">
-									<Link
-										href={route('singers.show', { singer: singer.id })}
-										className="text-sm font-medium text-purple-800"
-									>
-										{singer.user.name}
-									</Link>
-									<div>
-										<Icon icon="phone" mr className="text-gray-400" />
-										{singer.user.phone ? (
-											<a href={`tel:${singer.user.phone}`} target="_blank">
-												{singer.user.phone}
-											</a>
-										) : (
-											'No phone'
-										)}
-									</div>
-								</div>
-							</div>
-						</TableCell>
-						<TableCell>
-							<ul className="flex flex-col gap-1.5">
-								{singer.enrolments.map(enrolment => (
-									<li key={enrolment.id} className="flex gap-1 items-center mb-2">
-										{showEnsembleColumn && (
-											<Badge colour="bg-purple-100 text-purple-800">
-												{enrolment.ensemble.name}
-											</Badge>
-										)}
-										{enrolment.voice_part && (
-											<VoicePartTag
-												title={enrolment.voice_part.title}
-												colour={enrolment.voice_part.colour}
-											/>
-										)}
-									</li>
-								))}
-							</ul>
-						</TableCell>
-						<TableCell>
-							<SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />
-						</TableCell>
-						<TableCell>
-							<Icon icon="envelope" mr className="text-gray-400" />
-							<a href={`mailto:${singer.user.email}`} target="_blank">
-								{singer.user.email}
-							</a>
-						</TableCell>
-						{can['manage_finances'] && (
+			<Table pagination={<Pagination details={pagination} />}>
+				<THead>
+					<tr>{headings.values().toArray()}</tr>
+				</THead>
+				<TBody>
+					{singers.map(singer => (
+						<tr key={singer.id}>
 							<TableCell>
-								<FeeStatus status={singer.fee_status} />
-
-								{singer.paid_until && (
-									<div className="text-sm text-gray-500 italic mb-2">
-										<DateTag date={singer.paid_until} />
+								<div className="flex items-center">
+									<div className="shrink-0 h-10 w-10">
+										<img
+											className="h-10 w-10 rounded-md"
+											src={singer.user.avatar_url}
+											alt={singer.user.name}
+										/>
 									</div>
-								)}
-
-								<Button
-									variant="secondary"
-									size="xs"
-									onClick={() => {
-										setRenewingSinger(singer);
-										setFeeDialogIsOpen(true);
-									}}
-								>
-									Renew Fees
-								</Button>
+									<div className="ml-4">
+										<Link
+											href={route('singers.show', { singer: singer.id })}
+											className="text-sm font-medium text-purple-800"
+										>
+											{singer.user.name}
+										</Link>
+										<div>
+											<Icon icon="phone" mr className="text-gray-400" />
+											{singer.user.phone ? (
+												<a href={`tel:${singer.user.phone}`} target="_blank">
+													{singer.user.phone}
+												</a>
+											) : (
+												'No phone'
+											)}
+										</div>
+									</div>
+								</div>
 							</TableCell>
-						)}
-					</tr>
-				))}
-			/>
+							<TableCell>
+								<ul className="flex flex-col gap-1.5">
+									{singer.enrolments.map(enrolment => (
+										<li key={enrolment.id} className="flex gap-1 items-center mb-2">
+											{showEnsembleColumn && (
+												<Badge colour="bg-purple-100 text-purple-800">
+													{enrolment.ensemble.name}
+												</Badge>
+											)}
+											{enrolment.voice_part && (
+												<VoicePartTag
+													title={enrolment.voice_part.title}
+													colour={enrolment.voice_part.colour}
+												/>
+											)}
+										</li>
+									))}
+								</ul>
+							</TableCell>
+							<TableCell>
+								<SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />
+							</TableCell>
+							<TableCell>
+								<Icon icon="envelope" mr className="text-gray-400" />
+								<a href={`mailto:${singer.user.email}`} target="_blank">
+									{singer.user.email}
+								</a>
+							</TableCell>
+							{can['manage_finances'] && (
+								<TableCell>
+									<FeeStatus status={singer.fee_status} />
+
+									{singer.paid_until && (
+										<div className="text-sm text-gray-500 italic mb-2">
+											<DateTag date={singer.paid_until} />
+										</div>
+									)}
+
+									<Button
+										variant="secondary"
+										size="xs"
+										onClick={() => {
+											setRenewingSinger(singer);
+											setFeeDialogIsOpen(true);
+										}}
+									>
+										Renew Fees
+									</Button>
+								</TableCell>
+							)}
+						</tr>
+					))}
+				</TBody>
+			</Table>
 			<RenewFeesDialog isOpen={feeDialogIsOpen} setIsOpen={setFeeDialogIsOpen} singer={renewingSinger} />
 		</>
 	);

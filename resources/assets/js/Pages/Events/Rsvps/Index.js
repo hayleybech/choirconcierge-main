@@ -5,7 +5,7 @@ import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import Icon from '../../../components/Icon';
 import RsvpTag from '../../../components/Event/RsvpTag';
-import Table, { TableCell } from '../../../components/Table';
+import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
 import useRoute from '../../../hooks/useRoute';
 import DateTag from '../../../components/DateTag';
 import collect from 'collect.js';
@@ -179,48 +179,56 @@ const Index = ({
 
 	const headings = collect({
 		singer: (
-			<TableHeadingSort
-				form={sortFilterForm}
-				sort={['full-name', 'last-name-first']}
-				onClick={() => handleNameSort(sortFilterForm)}
-				indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
-			>
-				Name
-			</TableHeadingSort>
+			<TableHeading>
+				<TableHeadingSort
+					form={sortFilterForm}
+					sort={['full-name', 'last-name-first']}
+					onClick={() => handleNameSort(sortFilterForm)}
+					indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+				>
+					Name
+				</TableHeadingSort>
+			</TableHeading>
 		),
 	});
 
 	if (visibleColumns.includes('voice_part')) {
-		headings.put('voice_part', 'Voice Part');
+		headings.put('voice_part', <TableHeading>Voice Part</TableHeading>);
 	}
 	if (visibleColumns.includes('rsvp')) {
 		headings.put(
 			'rsvp',
-			<TableHeadingSort form={sortFilterForm} sort="rsvp-response">
-				RSVP
-			</TableHeadingSort>
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="rsvp-response">
+					RSVP
+				</TableHeadingSort>
+			</TableHeading>
 		);
 	}
 	if (visibleColumns.includes('updated')) {
 		headings.put(
 			'updated',
-			<TableHeadingSort form={sortFilterForm} sort="rsvp-updated">
-				Updated
-			</TableHeadingSort>
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="rsvp-updated">
+					Updated
+				</TableHeadingSort>
+			</TableHeading>
 		);
 	}
 	if (visibleColumns.includes('dietary')) {
 		headings.put(
 			'dietary',
-			<TableHeadingSort form={sortFilterForm} sort="dietary-medical">
-				Dietary / Medical
-			</TableHeadingSort>
+			<TableHeading>
+				<TableHeadingSort form={sortFilterForm} sort="dietary-medical">
+					Dietary / Medical
+				</TableHeadingSort>
+			</TableHeading>
 		);
 	}
 
 	customFields.forEach(cf => {
 		if (visibleColumns.includes(`cf-${cf.id}`)) {
-			headings.put(`cf-${cf.id}`, cf.name);
+			headings.put(`cf-${cf.id}`, <TableHeading>{cf.name}</TableHeading>);
 		}
 	});
 
@@ -289,11 +297,13 @@ const Index = ({
 					/>
 				}
 				tableDesktop={
-					<Table
-						headings={headings}
-						pagination={<Pagination details={pagination} />}
-						body={allSingers.map(singer => (
-							<tr key={singer.id}>
+					<Table pagination={<Pagination details={pagination} />}>
+						<THead>
+							<tr>{headings.values().toArray()}</tr>
+						</THead>
+						<TBody>
+							{allSingers.map(singer => (
+								<tr key={singer.id}>
 								{visibleColumns.includes('singer') && (
 									<TableCell>
 										<div className="flex items-center space-x-3">
@@ -416,11 +426,12 @@ const Index = ({
 								})}
 							</tr>
 						))}
-					/>
-				}
-			/>
-		</>
-	);
+					</TBody>
+				</Table>
+			}
+		/>
+	</>
+);
 };
 
 Index.layout = page => <TenantLayout children={page} />;

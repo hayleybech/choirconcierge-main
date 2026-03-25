@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Table, {TableCell} from "../Table";
+import Table, {TableCell, THead, TBody, TableHeading} from "../Table";
 import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
@@ -18,16 +18,18 @@ const EventScheduleDesktop = ({ event }) => {
     const [editingActivity, setEditingActivity] = useState(0);
 
     const headings = collect({
-        title: 'Title',
-        duration: 'Duration',
-        actions: 'Actions',
+        title: <TableHeading>Title</TableHeading>,
+        duration: <TableHeading>Duration</TableHeading>,
+        actions: <TableHeading>Actions</TableHeading>,
     }).filter((item, key) => key !== 'actions' || event.can.update_event);
 
     return (
         <>
-            <Table
-                headings={headings}
-                body={<>
+            <Table>
+                <THead>
+                    <tr>{headings.values().toArray()}</tr>
+                </THead>
+                <TBody>
                     {event.activities.map((activity, index) => (
                         <tr key={activity.id}>
                             <TableCell>
@@ -97,8 +99,8 @@ const EventScheduleDesktop = ({ event }) => {
                         </TableCell>
                         {event.can.update_event && <TableCell />}
                     </tr>
-                </>}
-            />
+                </TBody>
+            </Table>
             <DeleteDialog
                 title="Delete Activity"
                 url={deletingActivityId ? route('events.activities.destroy', {event, activity: deletingActivityId}) : '#'}

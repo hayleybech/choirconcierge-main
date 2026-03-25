@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from "@inertiajs/react";
 import {DateTime} from "luxon";
-import Table, {TableCell} from "../../components/Table";
+import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
 import Badge from "../../components/Badge";
 import DateTag from "../../components/DateTag";
 import EventType from "../../EventType";
@@ -18,64 +18,83 @@ const EventTableDesktop = ({ events, sortFilterForm, pagination, userEnsemblesCo
     const showEnsemblesColumn = userEnsemblesCount > 1;
 
     const headings = collect({
-        title: <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>,
-        type: <TableHeadingSort form={sortFilterForm} sort="type-title">Type</TableHeadingSort>,
-        ensembles: showEnsemblesColumn ? 'Ensembles' : null,
-        start_date: <TableHeadingSort form={sortFilterForm} sort="start_date">Event Date</TableHeadingSort>,
-        location: 'Location',
-        attendance: 'Attendance',
-        created_at: <TableHeadingSort form={sortFilterForm} sort="created_at">Date Created</TableHeadingSort>,
+        title: (
+            <TableHeading>
+                <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>
+            </TableHeading>
+        ),
+        type: (
+            <TableHeading>
+                <TableHeadingSort form={sortFilterForm} sort="type-title">Type</TableHeadingSort>
+            </TableHeading>
+        ),
+        ensembles: showEnsemblesColumn ? <TableHeading>Ensembles</TableHeading> : null,
+        start_date: (
+            <TableHeading>
+                <TableHeadingSort form={sortFilterForm} sort="start_date">Event Date</TableHeadingSort>
+            </TableHeading>
+        ),
+        location: <TableHeading>Location</TableHeading>,
+        attendance: <TableHeading>Attendance</TableHeading>,
+        created_at: (
+            <TableHeading>
+                <TableHeadingSort form={sortFilterForm} sort="created_at">Date Created</TableHeadingSort>
+            </TableHeading>
+        ),
     }).filter(heading => heading !== null);
 
     return (
-        <Table
-            headings={headings}
-            body={events.map((event) => (
-                <tr key={event.id}>
-                    <TableCell>
-                        <Link href={route('events.show', {event})} className="text-sm font-medium text-purple-800">
-                            {event.title}
-                            {event.is_repeating && <Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />}
-                        </Link>
-                    </TableCell>
-                    <TableCell>
-                        <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>
-                    </TableCell>
-                    {showEnsemblesColumn && (
+        <Table pagination={<Pagination details={pagination} />}>
+            <THead>
+                <tr>{headings.values().toArray()}</tr>
+            </THead>
+            <TBody>
+                {events.map((event) => (
+                    <tr key={event.id}>
                         <TableCell>
-                            <div className="space-x-1.5 space-y-1.5">
-                                {event.ensembles.map(ensemble => (
-                                    <Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">{ensemble.name}</Badge>
-                                ))}
+                            <Link href={route('events.show', {event})} className="text-sm font-medium text-purple-800">
+                                {event.title}
+                                {event.is_repeating && <Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />}
+                            </Link>
+                        </TableCell>
+                        <TableCell>
+                            <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>
+                        </TableCell>
+                        {showEnsemblesColumn && (
+                            <TableCell>
+                                <div className="space-x-1.5 space-y-1.5">
+                                    {event.ensembles.map(ensemble => (
+                                        <Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">{ensemble.name}</Badge>
+                                    ))}
+                                </div>
+                            </TableCell>
+                        )}
+                        <TableCell>
+                            <DateTag date={event.call_time} />
+                        </TableCell>
+                        <TableCell>
+                            {event.location_name}
+                        </TableCell>
+                        <TableCell>
+                            <div className="flex gap-2 items-center">
+                                <div>
+                                    {DateTime.fromJSDate(new Date(event.call_time)) < DateTime.now()
+                                        ? <p>{event.present_count}&nbsp;present</p>
+                                        : <p>{event.going_count}&nbsp;going</p>
+                                    }
+                                </div>
+                                {DateTime.fromJSDate(new Date(event.call_time)) > DateTime.now() && (
+                                    <RsvpDropdown event={event} size="xs" />
+                                )}
                             </div>
                         </TableCell>
-                    )}
-                    <TableCell>
-                        <DateTag date={event.call_time} />
-                    </TableCell>
-                    <TableCell>
-                        {event.location_name}
-                    </TableCell>
-                    <TableCell>
-                        <div className="flex gap-2 items-center">
-                            <div>
-                                {DateTime.fromJSDate(new Date(event.call_time)) < DateTime.now()
-                                    ? <p>{event.present_count}&nbsp;present</p>
-                                    : <p>{event.going_count}&nbsp;going</p>
-                                }
-                            </div>
-                            {DateTime.fromJSDate(new Date(event.call_time)) > DateTime.now() && (
-                                <RsvpDropdown event={event} size="xs" />
-                            )}
-                        </div>
-                    </TableCell>
-                    <TableCell>
-                        <DateTag date={event.created_at} />
-                    </TableCell>
-                </tr>
-            ))}
-            pagination={<Pagination details={pagination} />}
-        />
+                        <TableCell>
+                            <DateTag date={event.created_at} />
+                        </TableCell>
+                    </tr>
+                ))}
+            </TBody>
+        </Table>
     );
 }
 
