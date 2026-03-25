@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import React, { useEffect, useRef, useState } from 'react';
+
 import TenantLayout from "../../Layouts/TenantLayout";
 import SongTableDesktop from "./SongTableDesktop";
 import SongTableMobile from "./SongTableMobile";
@@ -15,11 +16,22 @@ import EmptyState from "../../components/EmptyState";
 import useRoute from "../../hooks/useRoute";
 import BulkEditSongsModal from "./BulkEditSongsModal";
 import { useMediaQuery } from 'react-responsive';
+import { useInstrument } from '../../hooks/useInstrument';
 
 const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault, userEnsemblesCount, ensembles }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const [selectedSongIds, setSelectedSongIds] = useState([]);
     const [showBulkEditModal, setShowBulkEditModal] = useState(false);
+	const refSelectAll = useRef(null);
+	const [isSelectionModeMobile, setIsSelectionModeMobile] = useState(false);
+
+	useEffect(() => {
+		if(!refSelectAll.current){
+			return;
+		}
+
+		refSelectAll.current.indeterminate = (selectedSongIds.length > 0 && selectedSongIds.length < songs.data.length);
+	}, [selectedSongIds, refSelectAll, selectedSongIds.length, songs.data.length]);
 
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
@@ -73,10 +85,18 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
 			disabled: selectedSongIds.length === 0,
 			hideOnMobile: true,
 		},
+		{
+			label: isSelectionModeMobile ? 'Cancel Selection' : 'Select Multiple',
+			icon: 'check-square',
+			onClick: () => setIsSelectionModeMobile(!isSelectionModeMobile),
+			variant: 'secondary',
+			hideOnDesktop: true,
+		},
         { label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
-        filterAction,
+		filterAction,
     ].filter(action => action.can ? can[action.can] : true)
-	.filter(action => !action.hideOnMobile || isDesktop);
+	.filter(action => !action.hideOnMobile || isDesktop)
+	.filter(action => !action.hideOnDesktop || !isDesktop);
 	// @todo replace this yucky mobile hack
 
     return (
@@ -120,6 +140,9 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
 						clearSelections={clearSelections}
 						setShowBulkEditModal={setShowBulkEditModal}
 						toggleAllSongs={toggleAllSongs}
+						refSelectAll={refSelectAll}
+						isSelectionMode={isSelectionModeMobile}
+						setIsSelectionMode={setIsSelectionModeMobile}
 					/>
 				}
 				tableDesktop={
@@ -130,6 +153,7 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
 						selectedSongIds={selectedSongIds}
 						toggleSongSelection={toggleSongSelection}
 						toggleAllSongs={toggleAllSongs}
+						refSelectAll={refSelectAll}
 					/>
 				}
 				emptyState={

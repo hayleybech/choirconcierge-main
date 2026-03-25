@@ -19,57 +19,57 @@ const SongTableMobile = ({
 	clearSelections,
 	setShowBulkEditModal,
 	toggleAllSongs,
+	refSelectAll,
+	isSelectionMode,
+	setIsSelectionMode,
 }) => {
 	const { route } = useRoute();
-	const [isSelectionMode, setIsSelectionMode] = useState(false);
 
 	const [instrument] = useInstrument();
 
 	return (
 		<div>
-			<div className="px-4 py-2 border-b border-gray-200 bg-white flex gap-1 justify-between">
-				<div className="flex">
-					{isSelectionMode && (
-						<div className="items-center flex">
-							<CheckboxInput
-								checked={selectedSongIds.length === songs.data.length && songs.data.length > 0}
-								onChange={() => toggleAllSongs()}
-							/>
-						</div>
-					)}
-				</div>
+			{isSelectionMode && (
+			<div className="px-4 py-2 border-b border-gray-200 flex gap-1 bg-gray-50">
 
-				<div className="flex gap-1">
-					{selectedSongIds.length > 0 && (
-						<Button
-							size="xs"
-							variant="secondary"
-							onClick={() => setShowBulkEditModal(true)}
-							disabled={selectedSongIds.length === 0}
-							className="gap-1"
-						>
-							<Icon icon="pencil" />
-							Bulk Edit {selectedSongIds.length > 0 ? `(${selectedSongIds.length})` : ''}
-						</Button>
-					)}
+				<div className="items-center flex mr-3">
+					<CheckboxInput
+						ref={refSelectAll}
+						checked={selectedSongIds.length === songs.data.length && songs.data.length > 0}
+						onChange={() => toggleAllSongs()}
+					/>
+				</div>
+				<Button
+					size="xs"
+					variant={isSelectionMode ? 'primary' : 'secondary'}
+					onClick={
+						isSelectionMode
+							? () => {
+									clearSelections();
+									setIsSelectionMode(false);
+							  }
+							: () => setIsSelectionMode(true)
+					}
+					className="gap-1"
+				>
+					<Icon icon={isSelectionMode ? 'times' : 'check-square'} />
+					{isSelectionMode ? 'Cancel' : 'Select Multiple'}
+				</Button>
+				{selectedSongIds.length > 0 && (
 					<Button
 						size="xs"
-						variant={isSelectionMode ? 'primary' : 'secondary'}
-						onClick={
-							isSelectionMode
-								? () => {
-										clearSelections();
-										setIsSelectionMode(false);
-								  }
-								: () => setIsSelectionMode(true)
-						}
+						variant="secondary"
+						onClick={() => setShowBulkEditModal(true)}
+						disabled={selectedSongIds.length === 0}
 						className="gap-1"
 					>
-						<Icon icon={isSelectionMode ? 'times' : 'check-square'} />
-						{isSelectionMode ? 'Cancel' : 'Select Multiple'}
+						<Icon icon="pencil" />
+						Edit {selectedSongIds.length > 0 ? `(${selectedSongIds.length})` : ''}
 					</Button>
-				</div>
+				)}
+
 			</div>
+			)}
 			<TableMobile pagination={<Pagination details={songs} />}>
 				{songs.data.map(song => (
 					<TableMobileListItem key={song.id}>
@@ -84,7 +84,7 @@ const SongTableMobile = ({
 							)}
 							<div className="flex-1 min-w-0">
 								<div className="flex">
-									<div className="shrink-0 py-3 pl-4 flex">
+									<div className="shrink-0 py-3 pl-4 flex items-center">
 										<PitchButton
 											instrument={instrument}
 											note={song.pitch.split('/')[0]}

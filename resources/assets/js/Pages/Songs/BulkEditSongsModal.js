@@ -62,6 +62,7 @@ const BulkEditSongsModal = ({ isOpen, setIsOpen, selectedSongIds, statuses, cate
 						selected={data.status_id}
 						setSelected={value => setData('status_id', value)}
 						vertical
+						size="sm"
 					/>
 					<Help>Songs are hidden from general members when they are "Pending".</Help>
 					{errors.status && <Error>{errors.status}</Error>}

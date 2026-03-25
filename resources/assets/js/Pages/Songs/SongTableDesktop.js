@@ -12,19 +12,28 @@ import Pagination from '../../components/Pagination';
 import { useInstrument } from '../../hooks/useInstrument';
 import CheckboxInput from '../../components/inputs/CheckboxInput';
 
-const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, selectedSongIds, toggleSongSelection, toggleAllSongs }) => {
-    const { route } = useRoute();
+const SongTableDesktop = ({
+	songs,
+	sortFilterForm,
+	userEnsemblesCount,
+	selectedSongIds,
+	toggleSongSelection,
+	toggleAllSongs,
+	refSelectAll,
+}) => {
+	const { route } = useRoute();
 
-    const [instrument] = useInstrument();
+	const [instrument] = useInstrument();
 
-    const showEnsemblesColumn = userEnsemblesCount > 1;
+	const showEnsemblesColumn = userEnsemblesCount > 1;
 
-    return (
+	return (
 		<Table pagination={<Pagination details={songs} />}>
 			<THead>
 				<tr>
 					<TableHeading className="w-4 pr-0">
 						<CheckboxInput
+							ref={refSelectAll}
 							checked={selectedSongIds.length === songs.data.length && songs.data.length > 0}
 							onChange={toggleAllSongs}
 						/>
@@ -101,6 +110,6 @@ const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, selectedS
 			</TBody>
 		</Table>
 	);
-}
+};
 
 export default SongTableDesktop;
