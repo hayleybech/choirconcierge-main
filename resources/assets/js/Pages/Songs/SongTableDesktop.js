@@ -11,8 +11,9 @@ import TableHeadingSort from "../../components/TableHeadingSort";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 import {useInstrument} from "../../hooks/useInstrument";
+import CheckboxInput from "../../components/inputs/CheckboxInput";
 
-const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount }) => {
+const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, selectedSongIds, toggleSongSelection, toggleAllSongs }) => {
     const { route } = useRoute();
 
     const [instrument] = useInstrument();
@@ -20,6 +21,12 @@ const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount }) => {
     const showEnsemblesColumn = userEnsemblesCount > 1;
 
     const headings = collect({
+        selection: (
+            <CheckboxInput
+                checked={selectedSongIds.length === songs.data.length && songs.data.length > 0}
+                onChange={toggleAllSongs}
+            />
+        ),
         title: <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>,
         status: <TableHeadingSort form={sortFilterForm} sort="status-title">Status</TableHeadingSort>,
         category: 'Category',
@@ -32,7 +39,13 @@ const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount }) => {
             pagination={<Pagination details={songs} />}
             headings={headings}
             body={songs.data.map((song) => (
-                <tr key={song.id}>
+                <tr key={song.id} className={selectedSongIds.includes(song.id) ? 'bg-purple-50' : ''}>
+                    <TableCell className="w-4 pr-0">
+                        <CheckboxInput
+                            checked={selectedSongIds.includes(song.id)}
+                            onChange={() => toggleSongSelection(song.id)}
+                        />
+                    </TableCell>
                     <TableCell>
                         <div className="flex items-center">
                             <div>

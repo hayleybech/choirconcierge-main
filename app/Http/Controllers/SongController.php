@@ -184,6 +184,45 @@ class SongController extends Controller
             ->with(['status' => 'Song deleted. ']);
     }
 
+    public function bulkUpdate(Request $request): RedirectResponse
+    {
+        // @todo fix incorrect authz - handle in policy, ensure Admin can update. 
+        if (auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('songs_update')) {
+            // Authorized
+        } else {
+            abort(403);
+        }
+
+        $request->validate([
+            'song_ids' => 'required|array',
+            'song_ids.*' => 'exists:songs,id',
+            'status_id' => 'nullable|exists:song_statuses,id',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:song_categories,id',
+            'ensemble_ids' => 'nullable|array',
+            'ensemble_ids.*' => 'exists:ensembles,id',
+        ]);
+
+        $songs = Song::whereIn('id', $request->song_ids)->get();
+
+//        @todo eliminate n+1 update query.
+//        Song::whereIn()->update([);
+
+        foreach ($songs as $song) {
+            $updateData = [
+                'status' => $request->input('status_id') ?? $song->status_id,
+                'categories' => $request->has('category_ids') ? $request->category_ids : $song->categories->pluck('id')->toArray(),
+                'ensembles' => $request->has('ensemble_ids') ? $request->ensemble_ids : $song->ensembles->pluck('id')->toArray(),
+            ];
+
+            $song->update($updateData);
+        }
+
+        return redirect()
+            ->route('songs.index')
+            ->with(['status' => count($songs) . ' songs updated. ']);
+    }
+
     private function getSongs(bool $includePending, array $defaultStatuses, bool $includeNonAuditionSongs, array $showForProspectsDefault): LengthAwarePaginator
     {
         $userEnsembles = auth()->user()?->membership?->enrolments->pluck('ensemble_id');

@@ -333,6 +333,44 @@ class SongControllerTest extends TestCase
         Notification::assertSentTo(auth()->user(), SongUpdated::class);
     }
 
+    public function test_bulk_update_updates_multiple_songs(): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        $songs = Song::factory()->count(3)->create();
+        $status = SongStatus::first();
+        $category = SongCategory::first();
+        $ensemble = Ensemble::factory()->create(['name' => 'Bulk Updated Ensemble']);
+
+        $data = [
+            'song_ids' => $songs->pluck('id')->toArray(),
+            'status_id' => $status->id,
+            'category_ids' => [$category->id],
+            'ensemble_ids' => [$ensemble->id],
+        ];
+
+        $this->post(the_tenant_route('songs.bulk-update'), $data)
+            ->assertRedirect(the_tenant_route('songs.index'))
+            ->assertSessionHas('status', '3 songs updated. ');
+
+        foreach ($songs as $song) {
+            $this->assertDatabaseHas('songs', [
+                'id' => $song->id,
+                'status_id' => $status->id,
+            ]);
+
+            $this->assertDatabaseHas('songs_song_categories', [
+                'song_id' => $song->id,
+                'category_id' => $category->id,
+            ]);
+
+            $this->assertDatabaseHas('ensemble_song', [
+                'song_id' => $song->id,
+                'ensemble_id' => $ensemble->id,
+            ]);
+        }
+    }
+
     public static function songProvider(): array
     {
         return [

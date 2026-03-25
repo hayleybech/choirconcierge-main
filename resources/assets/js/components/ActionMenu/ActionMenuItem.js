@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react';
 import menuItemStyles from './menuItemStyles';
 import { Menu } from '@headlessui/react';
 
-const ActionMenuItem = ({ url, onClick, download, variant, children, method }) => {
+const ActionMenuItem = ({ url, onClick, download, variant, children, method, disabled }) => {
     return (
         <Menu.Item>
             {({ active }) => {
@@ -11,8 +11,8 @@ const ActionMenuItem = ({ url, onClick, download, variant, children, method }) =
                     if (download) {
                         return (
                             <a
-                                href={url}
-                                className={menuItemStyles(variant, active)}
+                                href={disabled ? undefined: url}
+                                className={menuItemStyles(variant, active, disabled)}
                                 download={download}
                             >
                                 {children}
@@ -21,8 +21,8 @@ const ActionMenuItem = ({ url, onClick, download, variant, children, method }) =
                     } else {
                         return (
                             <Link
-                                href={url}
-                                className={menuItemStyles(variant, active)}
+                                href={disabled ? undefined : url}
+                                className={menuItemStyles(variant, active, disabled)}
 								method={method}
                             >
                                 {children}
@@ -32,8 +32,8 @@ const ActionMenuItem = ({ url, onClick, download, variant, children, method }) =
                 } else {
                     return (
                         <button
-                            onClick={onClick}
-                            className={menuItemStyles(variant, active)}
+                            onClick={disabled ? undefined : onClick}
+                            className={menuItemStyles(variant, active, disabled)}
                         >
                             {children}
                         </button>

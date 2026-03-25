@@ -150,6 +150,7 @@ Route::middleware([
         Route::resource('custom-fields', CustomFieldController::class)->only(['store', 'destroy']);
 
         // Songs module
+        Route::post('songs/bulk-update', [SongController::class, 'bulkUpdate'])->name('songs.bulk-update');
         Route::resource('songs', SongController::class);
         Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('employee');
         Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
