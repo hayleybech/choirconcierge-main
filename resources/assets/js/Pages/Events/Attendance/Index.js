@@ -19,7 +19,6 @@ import FilterSortPane from '../../../components/FilterSortPane';
 import Sorts from '../../../components/Sorts';
 import AttendanceFilters from '../../../components/AttendanceFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
-import collect from 'collect.js';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import SingerStatus from '../../../SingerStatus';
@@ -62,36 +61,6 @@ const Index = ({
 	];
 
 	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);
-
-	const headings = collect({
-		singer: (
-			<TableHeading>
-				<TableHeadingSort
-					form={sortFilterForm}
-					sort={['full-name', 'last-name-first']}
-					onClick={() => handleNameSort(sortFilterForm)}
-					indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
-				>
-					Name
-				</TableHeadingSort>
-			</TableHeading>
-		),
-		voice_part: <TableHeading>Voice Part</TableHeading>,
-		attendance: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="attendance-response">
-					Attendance
-				</TableHeadingSort>
-			</TableHeading>
-		),
-		updated: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="attendance-updated">
-					Updated
-				</TableHeadingSort>
-			</TableHeading>
-		),
-	});
 
 	const countsData = [
 		{ label: 'On Time', textColour: 'text-emerald-500', icon: 'check', count: counts.present },
@@ -207,7 +176,29 @@ const Index = ({
 				tableDesktop={
 					<Table pagination={<Pagination details={pagination} />}>
 						<THead>
-							<tr>{headings.values().toArray()}</tr>
+							<tr>
+								<TableHeading>
+									<TableHeadingSort
+										form={sortFilterForm}
+										sort={['full-name', 'last-name-first']}
+										onClick={() => handleNameSort(sortFilterForm)}
+										indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+									>
+										Name
+									</TableHeadingSort>
+								</TableHeading>
+								<TableHeading>Voice Part</TableHeading>
+								<TableHeading>
+									<TableHeadingSort form={sortFilterForm} sort="attendance-response">
+										Attendance
+									</TableHeadingSort>
+								</TableHeading>
+								<TableHeading>
+									<TableHeadingSort form={sortFilterForm} sort="attendance-updated">
+										Updated
+									</TableHeadingSort>
+								</TableHeading>
+							</tr>
 						</THead>
 						<TBody>
 							{allSingers.map(singer => (

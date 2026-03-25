@@ -4,7 +4,6 @@ import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 import {Link} from "@inertiajs/react";
-import collect from "collect.js";
 import EditScheduleItemDialog from "../EditScheduleItemDialog";
 import useRoute from "../../hooks/useRoute";
 
@@ -17,17 +16,15 @@ const EventScheduleDesktop = ({ event }) => {
     const [editDialogIsOpen, setEditDialogIsOpen] = useState(false);
     const [editingActivity, setEditingActivity] = useState(0);
 
-    const headings = collect({
-        title: <TableHeading>Title</TableHeading>,
-        duration: <TableHeading>Duration</TableHeading>,
-        actions: <TableHeading>Actions</TableHeading>,
-    }).filter((item, key) => key !== 'actions' || event.can.update_event);
-
     return (
         <>
             <Table>
                 <THead>
-                    <tr>{headings.values().toArray()}</tr>
+                    <tr>
+                        <TableHeading>Title</TableHeading>
+                        <TableHeading>Duration</TableHeading>
+                        {event.can.update_event && <TableHeading>Actions</TableHeading>}
+                    </tr>
                 </THead>
                 <TBody>
                     {event.activities.map((activity, index) => (

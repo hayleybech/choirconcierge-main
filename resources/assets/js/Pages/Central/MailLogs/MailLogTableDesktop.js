@@ -1,6 +1,5 @@
 import React from 'react';
 import Table, {TableCell, THead, TBody, TableHeading} from "../../../components/Table";
-import collect from "collect.js";
 import DateTag from "../../../components/DateTag";
 import {Link} from "@inertiajs/react";
 import useRoute from "../../../hooks/useRoute";
@@ -11,20 +10,18 @@ import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag'
 const MailLogTableDesktop = ({ logs }) => {
     const { route } = useRoute();
 
-    const headings = collect({
-        subject: <TableHeading>Subject</TableHeading>,
-        tenant: <TableHeading>Tenant</TableHeading>,
-        from: <TableHeading>From</TableHeading>,
-        to: <TableHeading>To</TableHeading>,
-        opens: <TableHeading>Opens</TableHeading>,
-        status: <TableHeading>Status</TableHeading>,
-        created_at: <TableHeading>Date Created</TableHeading>,
-    });
-
     return (
 		<Table pagination={<Pagination details={logs} />}>
 			<THead>
-				<tr>{headings.values().toArray()}</tr>
+				<tr>
+					<TableHeading>Subject</TableHeading>
+					<TableHeading>Tenant</TableHeading>
+					<TableHeading>From</TableHeading>
+					<TableHeading>To</TableHeading>
+					<TableHeading>Opens</TableHeading>
+					<TableHeading>Status</TableHeading>
+					<TableHeading>Date Created</TableHeading>
+				</tr>
 			</THead>
 			<TBody>
 				{logs.data.map(log => {

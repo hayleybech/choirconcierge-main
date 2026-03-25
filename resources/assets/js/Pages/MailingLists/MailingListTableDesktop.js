@@ -3,19 +3,11 @@ import {Link} from "@inertiajs/react";
 import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
-import collect from "collect.js";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 
 const MailingListTableDesktop = ({ lists }) => {
     const { route } = useRoute();
-
-    const headings = collect({
-        title: <TableHeading>Title</TableHeading>,
-        type: <TableHeading>Type</TableHeading>,
-        address: <TableHeading>Address</TableHeading>,
-        created: <TableHeading>Created</TableHeading>,
-    });
 
     const list_type_labels = {
       chat: 'Chat',
@@ -26,7 +18,12 @@ const MailingListTableDesktop = ({ lists }) => {
     return (
         <Table pagination={<Pagination details={lists} />}>
             <THead>
-                <tr>{headings.values().toArray()}</tr>
+                <tr>
+                    <TableHeading>Title</TableHeading>
+                    <TableHeading>Type</TableHeading>
+                    <TableHeading>Address</TableHeading>
+                    <TableHeading>Created</TableHeading>
+                </tr>
             </THead>
             <TBody>
                 {lists.data.map((list) => (

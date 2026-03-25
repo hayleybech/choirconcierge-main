@@ -1,6 +1,5 @@
 import React from 'react';
 import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
-import collect from 'collect.js';
 import DateTag from '../../../components/DateTag';
 import { Link } from '@inertiajs/react';
 import ButtonLink from '../../../components/inputs/ButtonLink';
@@ -14,31 +13,25 @@ import DomainTag from '../../../components/DomainTag';
 const TenantTableDesktop = ({ tenants, sortFilterForm, pagination }) => {
 	const { route } = useRoute();
 
-	const headings = collect({
-		name: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="id">
-					Organisation Name
-				</TableHeadingSort>
-			</TableHeading>
-		),
-		domains: <TableHeading>Domains</TableHeading>,
-		timezone: <TableHeading>Timezone</TableHeading>,
-		renews_at: <TableHeading>Billing</TableHeading>,
-		created_at: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="created_at">
-					Date Created
-				</TableHeadingSort>
-			</TableHeading>
-		),
-		actions: <TableHeading>Actions</TableHeading>,
-	});
-
 	return (
 		<Table pagination={<Pagination details={pagination} />}>
 			<THead>
-				<tr>{headings.values().toArray()}</tr>
+				<tr>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="id">
+							Organisation Name
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>Domains</TableHeading>
+					<TableHeading>Timezone</TableHeading>
+					<TableHeading>Billing</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="created_at">
+							Date Created
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>Actions</TableHeading>
+				</tr>
 			</THead>
 			<TBody>
 				{tenants.map(tenant => (

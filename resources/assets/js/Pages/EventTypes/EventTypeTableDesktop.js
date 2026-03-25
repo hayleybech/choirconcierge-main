@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, usePage } from "@inertiajs/react";
 import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
-import collect from "collect.js";
 import useRoute from "../../hooks/useRoute";
 import Button from "../../components/inputs/Button";
 import Icon from "../../components/Icon";
@@ -11,16 +10,14 @@ const EventTypeTableDesktop = ({ categories, showEditCategory, showDeleteCategor
 
     const { can } = usePage().props;
 
-    const headings = collect({
-        name: <TableHeading>Name</TableHeading>,
-        events: <TableHeading>Events</TableHeading>,
-        actions: <TableHeading>Actions</TableHeading>,
-    })
-
     return (
 		<Table>
 			<THead>
-				<tr>{headings.values().toArray()}</tr>
+				<tr>
+					<TableHeading>Name</TableHeading>
+					<TableHeading>Events</TableHeading>
+					<TableHeading>Actions</TableHeading>
+				</tr>
 			</THead>
 			<TBody>
 				{categories.map(category => (

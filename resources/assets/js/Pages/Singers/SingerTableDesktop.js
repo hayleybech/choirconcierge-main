@@ -16,7 +16,6 @@ import Error from '../../components/inputs/Error';
 import Help from '../../components/inputs/Help';
 import ButtonGroup from '../../components/inputs/ButtonGroup';
 import DateTag from '../../components/DateTag';
-import collect from 'collect.js';
 import TableHeadingSort from '../../components/TableHeadingSort';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
@@ -33,42 +32,36 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles }) 
 
 	const showEnsembleColumn = (ensembles ?? tenant.ensembles).length > 1;
 
-	const headings = collect({
-		name: (
-			<TableHeading>
-				<TableHeadingSort
-					form={sortFilterForm}
-					sort={['full-name', 'last-name-first']}
-					onClick={() => handleNameSort(sortFilterForm)}
-					indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
-				>
-					Name
-				</TableHeadingSort>
-			</TableHeading>
-		),
-		part: <TableHeading>{showEnsembleColumn ? 'Ensembles' : 'Voice Part'}</TableHeading>,
-		status: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="status-title">
-					Status
-				</TableHeadingSort>
-			</TableHeading>
-		),
-		email: <TableHeading>Email</TableHeading>,
-		fees: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="paid_until">
-					Fees
-				</TableHeadingSort>
-			</TableHeading>
-		),
-	}).filter((item, key) => key !== 'fees' || can['manage_finances']);
-
 	return (
 		<>
 			<Table pagination={<Pagination details={pagination} />}>
 				<THead>
-					<tr>{headings.values().toArray()}</tr>
+					<tr>
+						<TableHeading>
+							<TableHeadingSort
+								form={sortFilterForm}
+								sort={['full-name', 'last-name-first']}
+								onClick={() => handleNameSort(sortFilterForm)}
+								indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+							>
+								Name
+							</TableHeadingSort>
+						</TableHeading>
+						<TableHeading>{showEnsembleColumn ? 'Ensembles' : 'Voice Part'}</TableHeading>
+						<TableHeading>
+							<TableHeadingSort form={sortFilterForm} sort="status-title">
+								Status
+							</TableHeadingSort>
+						</TableHeading>
+						<TableHeading>Email</TableHeading>
+						{can['manage_finances'] && (
+							<TableHeading>
+								<TableHeadingSort form={sortFilterForm} sort="paid_until">
+									Fees
+								</TableHeadingSort>
+							</TableHeading>
+						)}
+					</tr>
 				</THead>
 				<TBody>
 					{singers.map(singer => (

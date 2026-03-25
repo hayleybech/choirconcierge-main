@@ -1,21 +1,18 @@
 import React from 'react';
 import {Link} from "@inertiajs/react";
 import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
-import collect from "collect.js";
 import useRoute from "../../hooks/useRoute";
 
 const RoleTableDesktop = ({ roles }) => {
     const { route } = useRoute();
 
-    const headings = collect({
-        name: <TableHeading>Name</TableHeading>,
-        singers: <TableHeading>Singers</TableHeading>,
-    })
-
     return (
         <Table>
             <THead>
-                <tr>{headings.values().toArray()}</tr>
+                <tr>
+                    <TableHeading>Name</TableHeading>
+                    <TableHeading>Singers</TableHeading>
+                </tr>
             </THead>
             <TBody>
                 {roles.map((role) => (

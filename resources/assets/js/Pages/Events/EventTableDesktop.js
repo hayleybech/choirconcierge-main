@@ -5,7 +5,6 @@ import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Tab
 import Badge from "../../components/Badge";
 import DateTag from "../../components/DateTag";
 import EventType from "../../EventType";
-import collect from "collect.js";
 import TableHeadingSort from "../../components/TableHeadingSort";
 import Icon from "../../components/Icon";
 import useRoute from "../../hooks/useRoute";
@@ -17,36 +16,26 @@ const EventTableDesktop = ({ events, sortFilterForm, pagination, userEnsemblesCo
 
     const showEnsemblesColumn = userEnsemblesCount > 1;
 
-    const headings = collect({
-        title: (
-            <TableHeading>
-                <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>
-            </TableHeading>
-        ),
-        type: (
-            <TableHeading>
-                <TableHeadingSort form={sortFilterForm} sort="type-title">Type</TableHeadingSort>
-            </TableHeading>
-        ),
-        ensembles: showEnsemblesColumn ? <TableHeading>Ensembles</TableHeading> : null,
-        start_date: (
-            <TableHeading>
-                <TableHeadingSort form={sortFilterForm} sort="start_date">Event Date</TableHeadingSort>
-            </TableHeading>
-        ),
-        location: <TableHeading>Location</TableHeading>,
-        attendance: <TableHeading>Attendance</TableHeading>,
-        created_at: (
-            <TableHeading>
-                <TableHeadingSort form={sortFilterForm} sort="created_at">Date Created</TableHeadingSort>
-            </TableHeading>
-        ),
-    }).filter(heading => heading !== null);
-
     return (
         <Table pagination={<Pagination details={pagination} />}>
             <THead>
-                <tr>{headings.values().toArray()}</tr>
+                <tr>
+                    <TableHeading>
+                        <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>
+                    </TableHeading>
+                    <TableHeading>
+                        <TableHeadingSort form={sortFilterForm} sort="type-title">Type</TableHeadingSort>
+                    </TableHeading>
+                    {showEnsemblesColumn && <TableHeading>Ensembles</TableHeading>}
+                    <TableHeading>
+                        <TableHeadingSort form={sortFilterForm} sort="start_date">Event Date</TableHeadingSort>
+                    </TableHeading>
+                    <TableHeading>Location</TableHeading>
+                    <TableHeading>Attendance</TableHeading>
+                    <TableHeading>
+                        <TableHeadingSort form={sortFilterForm} sort="created_at">Date Created</TableHeadingSort>
+                    </TableHeading>
+                </tr>
             </THead>
             <TBody>
                 {events.map((event) => (

@@ -8,7 +8,6 @@ import RsvpTag from '../../../components/Event/RsvpTag';
 import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
 import useRoute from '../../../hooks/useRoute';
 import DateTag from '../../../components/DateTag';
-import collect from 'collect.js';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import IndexContainer from '../../../components/IndexContainer';
@@ -177,61 +176,6 @@ const Index = ({
 
 	const sortFilterForm = useSortFilterForm(['events.rsvps.index', { event: event.id }], filters, sorts);
 
-	const headings = collect({
-		singer: (
-			<TableHeading>
-				<TableHeadingSort
-					form={sortFilterForm}
-					sort={['full-name', 'last-name-first']}
-					onClick={() => handleNameSort(sortFilterForm)}
-					indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
-				>
-					Name
-				</TableHeadingSort>
-			</TableHeading>
-		),
-	});
-
-	if (visibleColumns.includes('voice_part')) {
-		headings.put('voice_part', <TableHeading>Voice Part</TableHeading>);
-	}
-	if (visibleColumns.includes('rsvp')) {
-		headings.put(
-			'rsvp',
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="rsvp-response">
-					RSVP
-				</TableHeadingSort>
-			</TableHeading>
-		);
-	}
-	if (visibleColumns.includes('updated')) {
-		headings.put(
-			'updated',
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="rsvp-updated">
-					Updated
-				</TableHeadingSort>
-			</TableHeading>
-		);
-	}
-	if (visibleColumns.includes('dietary')) {
-		headings.put(
-			'dietary',
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="dietary-medical">
-					Dietary / Medical
-				</TableHeadingSort>
-			</TableHeading>
-		);
-	}
-
-	customFields.forEach(cf => {
-		if (visibleColumns.includes(`cf-${cf.id}`)) {
-			headings.put(`cf-${cf.id}`, <TableHeading>{cf.name}</TableHeading>);
-		}
-	});
-
 	const countsData = [
 		{ label: 'Going', textColour: 'text-emerald-500', icon: 'check', count: counts.yes },
 		// { label: 'Maybe', textColour: 'text-amber-500', icon: 'question', count: counts.maybe },
@@ -299,7 +243,49 @@ const Index = ({
 				tableDesktop={
 					<Table pagination={<Pagination details={pagination} />}>
 						<THead>
-							<tr>{headings.values().toArray()}</tr>
+							<tr>
+								{visibleColumns.includes('singer') && (
+									<TableHeading>
+										<TableHeadingSort
+											form={sortFilterForm}
+											sort={['full-name', 'last-name-first']}
+											onClick={() => handleNameSort(sortFilterForm)}
+											indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+										>
+											Name
+										</TableHeadingSort>
+									</TableHeading>
+								)}
+								{visibleColumns.includes('voice_part') && (
+									<TableHeading>Voice Part</TableHeading>
+								)}
+								{visibleColumns.includes('rsvp') && (
+									<TableHeading>
+										<TableHeadingSort form={sortFilterForm} sort="rsvp-response">
+											RSVP
+										</TableHeadingSort>
+									</TableHeading>
+								)}
+								{visibleColumns.includes('updated') && (
+									<TableHeading>
+										<TableHeadingSort form={sortFilterForm} sort="rsvp-updated">
+											Updated
+										</TableHeadingSort>
+									</TableHeading>
+								)}
+								{visibleColumns.includes('dietary') && (
+									<TableHeading>
+										<TableHeadingSort form={sortFilterForm} sort="dietary-medical">
+											Dietary / Medical
+										</TableHeadingSort>
+									</TableHeading>
+								)}
+								{customFields
+									.filter(cf => visibleColumns.includes(`cf-${cf.id}`))
+									.map(cf => (
+										<TableHeading key={cf.id}>{cf.name}</TableHeading>
+									))}
+							</tr>
 						</THead>
 						<TBody>
 							{allSingers.map(singer => (

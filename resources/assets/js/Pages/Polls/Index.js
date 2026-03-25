@@ -7,7 +7,6 @@ import { Link, usePage } from '@inertiajs/react';
 import Table, { TableCell, THead, TBody, TableHeading } from '../../components/Table';
 import Pagination from '../../components/Pagination';
 import Icon from '../../components/Icon';
-import collect from 'collect.js';
 import IndexContainer from '../../components/IndexContainer';
 import DateTag from '../../components/DateTag';
 import TableMobile, { TableMobileItem } from '../../components/TableMobile';
@@ -41,31 +40,6 @@ const Index = ({ polls, pagination, ensembles }) => {
 	];
 
 	const sortFilterForm = useSortFilterForm('polls.index', filters, sorts);
-
-	const headings = collect({
-		title: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>
-			</TableHeading>
-		),
-		ensembles: <TableHeading>Ensembles</TableHeading>,
-		status: <TableHeading>Status</TableHeading>,
-		deadline: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="close_at">Deadline</TableHeadingSort>
-			</TableHeading>
-		),
-		votes: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="votes_count">Votes</TableHeadingSort>
-			</TableHeading>
-		),
-		created_at: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="created_at">Created</TableHeadingSort>
-			</TableHeading>
-		),
-	}).filter((h, key) => showEnsembleColumn || key !== 'ensembles');
 
 	return (
 		<>
@@ -126,7 +100,22 @@ const Index = ({ polls, pagination, ensembles }) => {
 				tableDesktop={
 					<Table pagination={<Pagination details={pagination} />}>
 						<THead>
-							<tr>{headings.values().toArray()}</tr>
+							<tr>
+								<TableHeading>
+									<TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>
+								</TableHeading>
+								{showEnsembleColumn && <TableHeading>Ensembles</TableHeading>}
+								<TableHeading>Status</TableHeading>
+								<TableHeading>
+									<TableHeadingSort form={sortFilterForm} sort="close_at">Deadline</TableHeadingSort>
+								</TableHeading>
+								<TableHeading>
+									<TableHeadingSort form={sortFilterForm} sort="votes_count">Votes</TableHeadingSort>
+								</TableHeading>
+								<TableHeading>
+									<TableHeadingSort form={sortFilterForm} sort="created_at">Created</TableHeadingSort>
+								</TableHeading>
+							</tr>
 						</THead>
 						<TBody>
 							{polls.map(p => (

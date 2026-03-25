@@ -11,7 +11,6 @@ import Form from "../../components/Form";
 import Label from "../../components/inputs/Label";
 import Error from "../../components/inputs/Error";
 import TextInput from "../../components/inputs/TextInput";
-import collect from "collect.js";
 import EmptyState from "../../components/EmptyState";
 import useRoute from "../../hooks/useRoute";
 import Badge from "../../components/Badge";
@@ -24,18 +23,18 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
 
     const showEnsemblesColumn = userEnsemblesCount > 1;
 
-    const headings = collect({
-        title: <TableHeading>Title</TableHeading>,
-        ensembles: showEnsemblesColumn ? <TableHeading>Ensembles</TableHeading> : null,
-        created: <TableHeading>Created</TableHeading>,
-        delete: <TableHeading>Delete</TableHeading>,
-    }).filter((item, key) => (key !== 'delete' ||  permissions['delete_folder'] || permissions['delete_document']) && item !== null);
-
     return (
         <>
             <Table>
                 <THead>
-                    <tr>{headings.values().toArray()}</tr>
+                    <tr>
+                        <TableHeading>Title</TableHeading>
+                        {showEnsemblesColumn && <TableHeading>Ensembles</TableHeading>}
+                        <TableHeading>Created</TableHeading>
+                        {(permissions['delete_folder'] || permissions['delete_document']) && (
+                            <TableHeading>Delete</TableHeading>
+                        )}
+                    </tr>
                 </THead>
                 <TBody>
                     {folders.map((folder) => (

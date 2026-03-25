@@ -3,22 +3,19 @@ import {Link} from "@inertiajs/react";
 import Swatch from "../../components/Swatch";
 import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
 import DateTag from "../../components/DateTag";
-import collect from "collect.js";
 import useRoute from "../../hooks/useRoute";
 
 const VoicePartTableDesktop = ({ voiceParts }) => {
     const { route } = useRoute();
 
-    const headings = collect({
-        title: <TableHeading>Name</TableHeading>,
-        singers: <TableHeading>Singers</TableHeading>,
-        created: <TableHeading>Created</TableHeading>,
-    })
-
     return (
         <Table>
             <THead>
-                <tr>{headings.values().toArray()}</tr>
+                <tr>
+                    <TableHeading>Name</TableHeading>
+                    <TableHeading>Singers</TableHeading>
+                    <TableHeading>Created</TableHeading>
+                </tr>
             </THead>
             <TBody>
                 {voiceParts.map((voicePart) => (

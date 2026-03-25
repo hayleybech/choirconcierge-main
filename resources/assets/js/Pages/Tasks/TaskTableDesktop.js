@@ -2,24 +2,21 @@ import React from 'react';
 import {Link} from "@inertiajs/react";
 import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
 import DateTag from "../../components/DateTag";
-import collect from "collect.js";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 
 const TaskTableDesktop = ({ tasks }) => {
     const { route } = useRoute();
 
-    const headings = collect({
-        title: <TableHeading>Title</TableHeading>,
-        role: <TableHeading>Role</TableHeading>,
-        type: <TableHeading>Type</TableHeading>,
-        created: <TableHeading>Created</TableHeading>,
-    });
-
     return (
         <Table pagination={<Pagination details={tasks} />}>
             <THead>
-                <tr>{headings.values().toArray()}</tr>
+                <tr>
+                    <TableHeading>Title</TableHeading>
+                    <TableHeading>Role</TableHeading>
+                    <TableHeading>Type</TableHeading>
+                    <TableHeading>Created</TableHeading>
+                </tr>
             </THead>
             <TBody>
                 {tasks.data.map((task) => (

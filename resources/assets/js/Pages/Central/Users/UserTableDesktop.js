@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
 import Icon from '../../../components/Icon';
-import collect from 'collect.js';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import useRoute from '../../../hooks/useRoute';
 import Pagination from '../../../components/Pagination';
@@ -12,27 +11,21 @@ const UserTableDesktop = ({ users, sortFilterForm, pagination }) => {
 	const { can } = usePage().props;
 	const { route } = useRoute();
 
-	const headings = collect({
-		name: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="full-name">
-					Name
-				</TableHeadingSort>
-			</TableHeading>
-		),
-		tenants: <TableHeading>Tenants</TableHeading>,
-		email: (
-			<TableHeading>
-				<TableHeadingSort form={sortFilterForm} sort="email">Email</TableHeadingSort>
-			</TableHeading>
-		),
-	}).filter((item, key) => key !== 'fees' || can['manage_finances']);
-
 	return (
 		<>
 			<Table pagination={<Pagination details={pagination} />}>
 				<THead>
-					<tr>{headings.values().toArray()}</tr>
+					<tr>
+						<TableHeading>
+							<TableHeadingSort form={sortFilterForm} sort="full-name">
+								Name
+							</TableHeadingSort>
+						</TableHeading>
+						<TableHeading>Tenants</TableHeading>
+						<TableHeading>
+							<TableHeadingSort form={sortFilterForm} sort="email">Email</TableHeadingSort>
+						</TableHeading>
+					</tr>
 				</THead>
 				<TBody>
 					{users.map(user => (
