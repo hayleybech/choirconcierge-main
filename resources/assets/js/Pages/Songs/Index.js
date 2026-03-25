@@ -1,105 +1,68 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 
-import TenantLayout from "../../Layouts/TenantLayout";
-import SongTableDesktop from "./SongTableDesktop";
-import SongTableMobile from "./SongTableMobile";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import {usePage} from "@inertiajs/react";
-import SongFilters from "../../components/Song/SongFilters";
-import IndexContainer from "../../components/IndexContainer";
-import useFilterPane from "../../hooks/useFilterPane";
-import FilterSortPane from "../../components/FilterSortPane";
-import Sorts from "../../components/Sorts";
-import useSortFilterForm from "../../hooks/useSortFilterForm";
-import EmptyState from "../../components/EmptyState";
-import useRoute from "../../hooks/useRoute";
-import BulkEditSongsModal from "./BulkEditSongsModal";
+import TenantLayout from '../../Layouts/TenantLayout';
+import SongTableDesktop from './SongTableDesktop';
+import SongTableMobile from './SongTableMobile';
+import PageHeader from '../../components/PageHeader/PageHeader';
+import AppHead from '../../components/AppHead';
+import { usePage } from '@inertiajs/react';
+import SongFilters from '../../components/Song/SongFilters';
+import IndexContainer from '../../components/IndexContainer';
+import useFilterPane from '../../hooks/useFilterPane';
+import FilterSortPane from '../../components/FilterSortPane';
+import Sorts from '../../components/Sorts';
+import useSortFilterForm from '../../hooks/useSortFilterForm';
+import EmptyState from '../../components/EmptyState';
+import useRoute from '../../hooks/useRoute';
+import BulkEditSongsModal from './BulkEditSongsModal';
 import { useMediaQuery } from 'react-responsive';
-import { useInstrument } from '../../hooks/useInstrument';
+import useBulkEdit from '../../hooks/useBulkEdit';
 
-const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsDefault, userEnsemblesCount, ensembles }) => {
-    const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
-    const [selectedSongIds, setSelectedSongIds] = useState([]);
-    const [showBulkEditModal, setShowBulkEditModal] = useState(false);
-	const refSelectAll = useRef(null);
-	const [isSelectionModeMobile, setIsSelectionModeMobile] = useState(false);
-
-	useEffect(() => {
-		if(!refSelectAll.current){
-			return;
-		}
-
-		refSelectAll.current.indeterminate = (selectedSongIds.length > 0 && selectedSongIds.length < songs.data.length);
-	}, [selectedSongIds, refSelectAll, selectedSongIds.length, songs.data.length]);
+const Index = ({
+	songs,
+	statuses,
+	defaultStatuses,
+	categories,
+	showForProspectsDefault,
+	userEnsemblesCount,
+	ensembles,
+}) => {
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const bulkEdit = useBulkEdit(songs.data);
 
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
-    const { can } = usePage().props;
-    const { route } = useRoute();
+	const { can } = usePage().props;
+	const { route } = useRoute();
 
-    const sorts = [
-        { id: 'title', name: 'Title', default: true },
-        { id: 'created_at', name: 'Date Created' },
-        { id: 'status-title', name: 'Status' },
-    ];
+	const sorts = [
+		{ id: 'title', name: 'Title', default: true },
+		{ id: 'created_at', name: 'Date Created' },
+		{ id: 'status-title', name: 'Status' },
+	];
 
-    const filters = [
-        { name: 'title', defaultValue: '' },
-        { name: 'status.id', multiple: true, defaultValue: defaultStatuses },
-        { name: 'categories.id', multiple: true },
-        { name: 'ensembles.id', multiple: true },
-        { name: 'show_for_prospects', multiple: true, multipleBool: true, defaultValue: showForProspectsDefault },
-    ];
+	const filters = [
+		{ name: 'title', defaultValue: '' },
+		{ name: 'status.id', multiple: true, defaultValue: defaultStatuses },
+		{ name: 'categories.id', multiple: true },
+		{ name: 'ensembles.id', multiple: true },
+		{ name: 'show_for_prospects', multiple: true, multipleBool: true, defaultValue: showForProspectsDefault },
+	];
 
-    const sortFilterForm = useSortFilterForm('songs.index', filters, sorts);
+	const sortFilterForm = useSortFilterForm('songs.index', filters, sorts);
 
-    const toggleSongSelection = (songId) => {
-        setSelectedSongIds(prev =>
-            prev.includes(songId)
-                ? prev.filter(id => id !== songId)
-                : [...prev, songId]
-        );
-    };
-
-    const toggleAllSongs = () => {
-        if (selectedSongIds.length === songs.data.length) {
-            setSelectedSongIds([]);
-        } else {
-            setSelectedSongIds(songs.data.map(song => song.id));
-        }
-    };
-
-	const clearSelections = () => {
-		setSelectedSongIds([]);
-	};
-
-
-    const actions = [
-        { label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary', can: 'create_song' },
-		{
-			label: `Bulk Edit ${selectedSongIds.length > 0 ? `(${selectedSongIds.length})` : ''}`,
-			icon: 'pencil',
-			onClick: () => setShowBulkEditModal(true),
-			variant: 'secondary',
-			disabled: selectedSongIds.length === 0,
-			hideOnMobile: true,
-		},
-		{
-			label: isSelectionModeMobile ? 'Cancel Selection' : 'Select Multiple',
-			icon: 'check-square',
-			onClick: () => setIsSelectionModeMobile(!isSelectionModeMobile),
-			variant: 'secondary',
-			hideOnDesktop: true,
-		},
-        { label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
+	const actions = [
+		{ label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary', can: 'create_song' },
+		{ label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
+		...bulkEdit.actions,
 		filterAction,
-    ].filter(action => action.can ? can[action.can] : true)
-	.filter(action => !action.hideOnMobile || isDesktop)
-	.filter(action => !action.hideOnDesktop || !isDesktop);
+	]
+		.filter(action => (action.can ? can[action.can] : true))
+		.filter(action => !action.hideOnMobile || isDesktop)
+		.filter(action => !action.hideOnDesktop || !isDesktop);
 	// @todo replace this yucky mobile hack
 
-    return (
+	return (
 		<>
 			<AppHead title="Songs" />
 			<PageHeader
@@ -132,28 +95,14 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
 					/>
 				}
 				tableMobile={
-					<SongTableMobile
-						songs={songs}
-						userEnsemblesCount={userEnsemblesCount}
-						selectedSongIds={selectedSongIds}
-						toggleSongSelection={toggleSongSelection}
-						clearSelections={clearSelections}
-						setShowBulkEditModal={setShowBulkEditModal}
-						toggleAllSongs={toggleAllSongs}
-						refSelectAll={refSelectAll}
-						isSelectionMode={isSelectionModeMobile}
-						setIsSelectionMode={setIsSelectionModeMobile}
-					/>
+					<SongTableMobile songs={songs} userEnsemblesCount={userEnsemblesCount} bulkEdit={bulkEdit} />
 				}
 				tableDesktop={
 					<SongTableDesktop
 						songs={songs}
 						sortFilterForm={sortFilterForm}
 						userEnsemblesCount={userEnsemblesCount}
-						selectedSongIds={selectedSongIds}
-						toggleSongSelection={toggleSongSelection}
-						toggleAllSongs={toggleAllSongs}
-						refSelectAll={refSelectAll}
+						bulkEdit={bulkEdit}
 					/>
 				}
 				emptyState={
@@ -176,19 +125,19 @@ const Index = ({ songs, statuses, defaultStatuses, categories, showForProspectsD
 			/>
 
 			<BulkEditSongsModal
-				isOpen={showBulkEditModal}
-				setIsOpen={setShowBulkEditModal}
-				selectedSongIds={selectedSongIds}
+				isOpen={bulkEdit.showModal}
+				setIsOpen={bulkEdit.setShowModal}
+				selectedSongIds={bulkEdit.selectedIds}
+				onSuccess={() => bulkEdit.setSelectedIds([])}
 				statuses={statuses}
 				categories={categories}
 				ensembles={ensembles}
 				userEnsemblesCount={userEnsemblesCount}
-				onSuccess={() => setSelectedSongIds([])}
 			/>
 		</>
 	);
-}
+};
 
-Index.layout = page => <TenantLayout children={page} />
+Index.layout = page => <TenantLayout children={page} />;
 
 export default Index;

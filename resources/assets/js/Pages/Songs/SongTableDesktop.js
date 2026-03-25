@@ -12,15 +12,7 @@ import Pagination from '../../components/Pagination';
 import { useInstrument } from '../../hooks/useInstrument';
 import CheckboxInput from '../../components/inputs/CheckboxInput';
 
-const SongTableDesktop = ({
-	songs,
-	sortFilterForm,
-	userEnsemblesCount,
-	selectedSongIds,
-	toggleSongSelection,
-	toggleAllSongs,
-	refSelectAll,
-}) => {
+const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, bulkEdit }) => {
 	const { route } = useRoute();
 
 	const [instrument] = useInstrument();
@@ -33,9 +25,9 @@ const SongTableDesktop = ({
 				<tr>
 					<TableHeading className="w-4 pr-0">
 						<CheckboxInput
-							ref={refSelectAll}
-							checked={selectedSongIds.length === songs.data.length && songs.data.length > 0}
-							onChange={toggleAllSongs}
+							ref={bulkEdit.refSelectAll}
+							checked={bulkEdit.selectedIds.length === songs.data.length && songs.data.length > 0}
+							onChange={bulkEdit.toggleAll}
 						/>
 					</TableHeading>
 					<TableHeading>
@@ -59,11 +51,11 @@ const SongTableDesktop = ({
 			</THead>
 			<TBody>
 				{songs.data.map(song => (
-					<tr key={song.id} className={selectedSongIds.includes(song.id) ? 'bg-purple-50' : ''}>
+					<tr key={song.id} className={bulkEdit.selectedIds.includes(song.id) ? 'bg-purple-50' : ''}>
 						<TableCell className="w-4 pr-0">
 							<CheckboxInput
-								checked={selectedSongIds.includes(song.id)}
-								onChange={() => toggleSongSelection(song.id)}
+								checked={bulkEdit.selectedIds.includes(song.id)}
+								onChange={() => bulkEdit.toggleSelection(song.id)}
 							/>
 						</TableCell>
 						<TableCell>
