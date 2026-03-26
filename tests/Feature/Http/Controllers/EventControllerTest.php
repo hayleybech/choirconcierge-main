@@ -381,6 +381,52 @@ class EventControllerTest extends TestCase
         self::markTestIncomplete('WIP');
     }
 
+    public function test_bulk_update_updates_multiple_events(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $events = Event::factory()->count(3)->create();
+        $type = EventType::first();
+        $ensemble = Ensemble::factory()->create(['name' => 'Bulk Updated Ensemble']);
+
+        $data = [
+            'event_ids' => $events->pluck('id')->toArray(),
+            'event_type_id' => $type->id,
+            'ensemble_ids' => [$ensemble->id],
+        ];
+
+        $this->post(the_tenant_route('events.bulk-update'), $data)
+            ->assertRedirect(the_tenant_route('events.index'))
+            ->assertSessionHas('status', '3 events updated. ');
+
+        foreach ($events as $event) {
+            $this->assertDatabaseHas('events', [
+                'id' => $event->id,
+                'type_id' => $type->id,
+            ]);
+
+            $this->assertDatabaseHas('ensemble_event', [
+                'event_id' => $event->id,
+                'ensemble_id' => $ensemble->id,
+            ]);
+        }
+    }
+
+    public function test_bulk_update_is_forbidden_for_unauthorized_users(): void
+    {
+        $this->actingAs($this->createUserWithRole('User'));
+
+        $events = Event::factory()->count(3)->create();
+
+        $data = [
+            'event_ids' => $events->pluck('id')->toArray(),
+            'event_type_id' => EventType::first()->id,
+        ];
+
+        $this->post(the_tenant_route('events.bulk-update'), $data)
+            ->assertForbidden();
+    }
+
     public static function eventProvider(): array
     {
         return [

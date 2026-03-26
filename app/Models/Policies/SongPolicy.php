@@ -88,7 +88,7 @@ class SongPolicy
      *
      * @return mixed
      */
-    public function update(User $user, Song $song)
+    public function update(User $user, ?Song $song = null)
     {
         return $user->membership->hasAbility('songs_update');
     }

@@ -4,7 +4,6 @@ import PageHeader from '../../components/PageHeader/PageHeader';
 import AppHead from '../../components/AppHead';
 import EventTableDesktop from './EventTableDesktop';
 import EventTableMobile from './EventTableMobile';
-import { usePage } from '@inertiajs/react';
 import EventFilters from '../../components/Event/EventFilters';
 import IndexContainer from '../../components/IndexContainer';
 import FilterSortPane from '../../components/FilterSortPane';
@@ -14,17 +13,13 @@ import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import BulkEditEventsModal from './BulkEditEventsModal';
-import { useMediaQuery } from 'react-responsive';
 import useBulkEdit from '../../hooks/useBulkEdit';
 
-const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }) => {
+const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles, can }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
-	const bulkEdit = useBulkEdit(events.data || events);
-
-	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
-
-	const { can } = usePage().props;
 	const { route } = useRoute();
+
+	const bulkEdit = useBulkEdit(events.data, can.update_event);
 
 	const sorts = [
 		{ id: 'title', name: 'Title' },
@@ -61,13 +56,12 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }
 			url: route('events.reports.attendance'),
 			can: 'list_attendances',
 		},
-		...bulkEdit.actions,
-		filterAction,
 		{ label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
+		bulkEdit.action,
+		filterAction,
 	]
-		.filter(action => (action.can ? can[action.can] : true))
-		.filter(action => !action.hideOnMobile || isDesktop)
-		.filter(action => !action.hideOnDesktop || !isDesktop);
+		.filter(action => !!action)
+		.filter(action => (action.can ? can[action.can] : true));
 
 	return (
 		<>

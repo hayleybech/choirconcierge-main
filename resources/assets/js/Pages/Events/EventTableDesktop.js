@@ -1,7 +1,14 @@
 import React from 'react';
 import {Link} from "@inertiajs/react";
 import {DateTime} from "luxon";
-import Table, {TableCell, THead, TBody, TableHeading, TableSelectAll} from "../../components/Table";
+import Table, {
+    TableCell,
+    THead,
+    TBody,
+    TableHeading,
+    TableSelectAll,
+    TableCellSelect, TItemRow,
+} from "../../components/Table";
 import Badge from "../../components/Badge";
 import DateTag from "../../components/DateTag";
 import EventType from "../../EventType";
@@ -10,7 +17,6 @@ import Icon from "../../components/Icon";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 import RsvpDropdown from '../../components/Event/RsvpDropdown';
-import CheckboxInput from '../../components/inputs/CheckboxInput';
 
 const EventTableDesktop = ({ events, sortFilterForm, pagination, userEnsemblesCount, bulkEdit }) => {
     const { route } = useRoute();
@@ -41,13 +47,8 @@ const EventTableDesktop = ({ events, sortFilterForm, pagination, userEnsemblesCo
             </THead>
             <TBody>
                 {events.map((event) => (
-                    <tr key={event.id} className={bulkEdit.selectedIds.includes(event.id) ? 'bg-purple-50' : ''}>
-                        <TableCell className="w-4 pr-0">
-                            <CheckboxInput
-                                checked={bulkEdit.selectedIds.includes(event.id)}
-                                onChange={() => bulkEdit.toggleSelection(event.id)}
-                            />
-                        </TableCell>
+                    <TItemRow key={event.id} bulkEdit={bulkEdit} value={event.id}>
+                        <TableCellSelect bulkEdit={bulkEdit} value={event.id} />
                         <TableCell>
                             <Link href={route('events.show', {event})} className="text-sm font-medium text-purple-800">
                                 {event.title}
@@ -88,7 +89,7 @@ const EventTableDesktop = ({ events, sortFilterForm, pagination, userEnsemblesCo
                         <TableCell>
                             <DateTag date={event.created_at} />
                         </TableCell>
-                    </tr>
+                    </TItemRow>
                 ))}
             </TBody>
         </Table>

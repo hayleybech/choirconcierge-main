@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import SongStatusTag from '../../components/SongStatusTag';
 import PitchButton from '../../components/PitchButton';
-import Table, { TableCell, TableHeading, TableSelectAll, TBody, THead } from '../../components/Table';
+import Table, { TableCell, TableHeading, TableSelectAll, TBody, THead, TableCellSelect } from '../../components/Table';
 import Badge from '../../components/Badge';
 import DateTag from '../../components/DateTag';
 import SongStatus from '../../SongStatus';
@@ -10,7 +10,6 @@ import TableHeadingSort from '../../components/TableHeadingSort';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import { useInstrument } from '../../hooks/useInstrument';
-import CheckboxInput from '../../components/inputs/CheckboxInput';
 
 const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, bulkEdit }) => {
 	const { route } = useRoute();
@@ -46,12 +45,7 @@ const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, bulkEdit 
 			<TBody>
 				{songs.data.map(song => (
 					<tr key={song.id} className={bulkEdit.selectedIds.includes(song.id) ? 'bg-purple-50' : ''}>
-						<TableCell className="w-4 pr-0">
-							<CheckboxInput
-								checked={bulkEdit.selectedIds.includes(song.id)}
-								onChange={() => bulkEdit.toggleSelection(song.id)}
-							/>
-						</TableCell>
+						<TableCellSelect bulkEdit={bulkEdit} value={song.id} />
 						<TableCell>
 							<div className="flex items-center">
 								<div>

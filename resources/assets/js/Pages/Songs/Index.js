@@ -5,7 +5,6 @@ import SongTableDesktop from './SongTableDesktop';
 import SongTableMobile from './SongTableMobile';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import AppHead from '../../components/AppHead';
-import { usePage } from '@inertiajs/react';
 import SongFilters from '../../components/Song/SongFilters';
 import IndexContainer from '../../components/IndexContainer';
 import useFilterPane from '../../hooks/useFilterPane';
@@ -15,7 +14,6 @@ import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import BulkEditSongsModal from './BulkEditSongsModal';
-import { useMediaQuery } from 'react-responsive';
 import useBulkEdit from '../../hooks/useBulkEdit';
 
 const Index = ({
@@ -26,14 +24,13 @@ const Index = ({
 	showForProspectsDefault,
 	userEnsemblesCount,
 	ensembles,
+
+	can,
 }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
-	const bulkEdit = useBulkEdit(songs.data);
-
-	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
-
-	const { can } = usePage().props;
 	const { route } = useRoute();
+
+	const bulkEdit = useBulkEdit(songs.data, can.update_song);
 
 	const sorts = [
 		{ id: 'title', name: 'Title', default: true },
@@ -54,13 +51,11 @@ const Index = ({
 	const actions = [
 		{ label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary', can: 'create_song' },
 		{ label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
-		...bulkEdit.actions,
+		bulkEdit.action,
 		filterAction,
 	]
-		.filter(action => (action.can ? can[action.can] : true))
-		.filter(action => !action.hideOnMobile || isDesktop)
-		.filter(action => !action.hideOnDesktop || !isDesktop);
-	// @todo replace this yucky mobile hack
+		.filter(action => !!action)
+		.filter(action => (action.can ? can[action.can] : true));
 
 	return (
 		<>

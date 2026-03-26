@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
-const useBulkEdit = (items = []) => {
+const useBulkEdit = (items = [], canUpdate = false) => {
 	const [selectedIds, setSelectedIds] = useState([]);
 	const [showModal, setShowModal] = useState(false);
 	const [isSelectionModeMobile, setIsSelectionModeMobile] = useState(false);
 	const refSelectAll = useRef(null);
+
+	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
 	useEffect(() => {
 		if (!refSelectAll.current) {
@@ -29,23 +32,22 @@ const useBulkEdit = (items = []) => {
 
 	const toggleSelectionModeMobile = () => setIsSelectionModeMobile(prev => !prev);
 
-	const actions = [
-		{
-			label: `Edit ${selectedIds.length > 0 ? `(${selectedIds.length})` : ''}`,
-			icon: 'pencil',
-			onClick: () => setShowModal(true),
-			variant: 'secondary',
-			disabled: selectedIds.length === 0,
-			hideOnMobile: true,
-		},
-		{
-			label: isSelectionModeMobile ? 'Cancel Selection' : 'Select Multiple',
-			icon: 'check-square',
-			onClick: () => toggleSelectionModeMobile(),
-			variant: 'secondary',
-			hideOnDesktop: true,
-		},
-	];
+	const action = canUpdate
+		? isDesktop
+			? {
+					label: `Edit ${selectedIds.length > 0 ? `(${selectedIds.length})` : ''}`,
+					icon: 'pencil',
+					onClick: () => setShowModal(true),
+					variant: 'secondary',
+					disabled: selectedIds.length === 0,
+			  }
+			: {
+					label: isSelectionModeMobile ? 'Cancel Selection' : 'Select Multiple',
+					icon: 'check-square',
+					onClick: () => toggleSelectionModeMobile(),
+					variant: 'secondary',
+			  }
+		: null;
 
 	return {
 		selectedIds,
@@ -59,7 +61,8 @@ const useBulkEdit = (items = []) => {
 		toggleAll,
 		clearSelections,
 		toggleSelectionModeMobile,
-		actions,
+		action,
+		canUpdate,
 	};
 };
 

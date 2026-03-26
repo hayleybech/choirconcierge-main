@@ -197,7 +197,7 @@ class EventController extends Controller
 
     public function bulkUpdate(Request $request): RedirectResponse
     {
-        $this->authorize('create', Event::class);
+        $this->authorize('update', Event::class);
 
         $request->validate([
             'event_ids' => 'required|array',

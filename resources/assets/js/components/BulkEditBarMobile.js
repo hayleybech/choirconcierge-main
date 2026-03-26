@@ -4,7 +4,7 @@ import Button from './inputs/Button';
 import Icon from './Icon';
 
 const BulkEditBarMobile = ({ totalItems, bulkEdit }) => {
-	if (!bulkEdit.isSelectionModeMobile) {
+	if (!bulkEdit.canUpdate || !bulkEdit.isSelectionModeMobile) {
 		return null;
 	}
 

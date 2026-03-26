@@ -186,12 +186,7 @@ class SongController extends Controller
 
     public function bulkUpdate(Request $request): RedirectResponse
     {
-        // @todo fix incorrect authz - handle in policy, ensure Admin can update.
-        if (auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('songs_update')) {
-            // Authorized
-        } else {
-            abort(403);
-        }
+        $this->authorize('update', Song::class);
 
         $request->validate([
             'song_ids' => 'required|array',

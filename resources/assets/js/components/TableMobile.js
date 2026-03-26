@@ -40,7 +40,7 @@ export const TableMobileSelectableLink = ({ url, onClick, bulkEdit, value, child
 );
 
 export const TableMobileSelect = ({ bulkEdit, value }) => {
-	if (!bulkEdit.isSelectionModeMobile) {
+	if (!bulkEdit.canUpdate || !bulkEdit.isSelectionModeMobile) {
 		return null;
 	}
 

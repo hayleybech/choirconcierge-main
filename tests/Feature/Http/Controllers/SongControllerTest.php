@@ -371,6 +371,21 @@ class SongControllerTest extends TestCase
         }
     }
 
+    public function test_bulk_update_is_forbidden_for_unauthorized_users(): void
+    {
+        $this->actingAs($this->createUserWithRole('User'));
+
+        $songs = Song::factory()->count(3)->create();
+
+        $data = [
+            'song_ids' => $songs->pluck('id')->toArray(),
+            'status_id' => SongStatus::first()->id,
+        ];
+
+        $this->post(the_tenant_route('songs.bulk-update'), $data)
+            ->assertForbidden();
+    }
+
     public static function songProvider(): array
     {
         return [
