@@ -1,4 +1,5 @@
 import React from "react";
+import CheckboxInput from './inputs/CheckboxInput';
 
 export const TableHeading = ({ colSpan, children, className }) => (
     <th
@@ -19,6 +20,16 @@ export const TableCell = ({ colSpan, children, className }) => (
 export const THead = ({ children }) => <thead className="bg-gray-50">{children}</thead>;
 
 export const TBody = ({ children }) => <tbody className="bg-white divide-y divide-gray-200">{children}</tbody>;
+
+export const TableSelectAll = ({bulkEdit, totalItems}) => (
+	<TableHeading className="w-4 pr-0">
+		<CheckboxInput
+			ref={bulkEdit.refSelectAll}
+			checked={bulkEdit.selectedIds.length === totalItems && totalItems > 0}
+			onChange={bulkEdit.toggleAll}
+		/>
+	</TableHeading>
+);
 
 const Table = ({ children, pagination }) => (
     <div className="-my-2 overflow-x-auto">

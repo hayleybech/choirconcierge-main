@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import SongStatusTag from '../../components/SongStatusTag';
 import PitchButton from '../../components/PitchButton';
-import Table, { TableCell, TableHeading, TBody, THead } from '../../components/Table';
+import Table, { TableCell, TableHeading, TableSelectAll, TBody, THead } from '../../components/Table';
 import Badge from '../../components/Badge';
 import DateTag from '../../components/DateTag';
 import SongStatus from '../../SongStatus';
@@ -23,13 +23,7 @@ const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, bulkEdit 
 		<Table pagination={<Pagination details={songs} />}>
 			<THead>
 				<tr>
-					<TableHeading className="w-4 pr-0">
-						<CheckboxInput
-							ref={bulkEdit.refSelectAll}
-							checked={bulkEdit.selectedIds.length === songs.data.length && songs.data.length > 0}
-							onChange={bulkEdit.toggleAll}
-						/>
-					</TableHeading>
+					<TableSelectAll bulkEdit={bulkEdit} totalItems={songs.data.length} />
 					<TableHeading>
 						<TableHeadingSort form={sortFilterForm} sort="title">
 							Title
