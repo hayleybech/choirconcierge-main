@@ -203,24 +203,30 @@ class SongController extends Controller
             'ensemble_ids.*' => 'exists:ensembles,id',
         ]);
 
-        $songs = Song::whereIn('id', $request->song_ids)->get();
+        $songIds = $request->input('song_ids');
 
-//        @todo eliminate n+1 update query.
-//        Song::whereIn()->update([);
+        if ($request->filled('status_id')) {
+            Song::whereIn('id', $songIds)->update(['status_id' => $request->status_id]);
+        }
 
-        foreach ($songs as $song) {
-            $updateData = [
-                'status' => $request->input('status_id') ?? $song->status_id,
-                'categories' => $request->has('category_ids') ? $request->category_ids : $song->categories->pluck('id')->toArray(),
-                'ensembles' => $request->has('ensemble_ids') ? $request->ensemble_ids : $song->ensembles->pluck('id')->toArray(),
-            ];
+        if ($request->has('category_ids')) {
+            $categoryIds = $request->input('category_ids');
+            foreach ($songIds as $songId) {
+                // We can use the song ID directly without fetching the model.
+                (new Song(['id' => $songId]))->setRawAttributes(['id' => $songId], true)->categories()->sync($categoryIds);
+            }
+        }
 
-            $song->update($updateData);
+        if ($request->has('ensemble_ids')) {
+            $ensembleIds = $request->input('ensemble_ids');
+            foreach ($songIds as $songId) {
+                (new Song(['id' => $songId]))->setRawAttributes(['id' => $songId], true)->ensembles()->sync($ensembleIds);
+            }
         }
 
         return redirect()
             ->route('songs.index')
-            ->with(['status' => count($songs) . ' songs updated. ']);
+            ->with(['status' => count($songIds) . ' songs updated. ']);
     }
 
     private function getSongs(bool $includePending, array $defaultStatuses, bool $includeNonAuditionSongs, array $showForProspectsDefault): LengthAwarePaginator

@@ -207,23 +207,22 @@ class EventController extends Controller
             'ensemble_ids.*' => 'exists:ensembles,id',
         ]);
 
-        $events = Event::whereIn('id', $request->event_ids)->get();
+        $eventIds = $request->input('event_ids');
 
-        foreach ($events as $event) {
-            if ($request->filled('event_type_id')) {
-                $event->type_id = $request->event_type_id;
-            }
+        if ($request->filled('event_type_id')) {
+            Event::whereIn('id', $eventIds)->update(['type_id' => $request->event_type_id]);
+        }
 
-            $event->save();
-
-            if ($request->has('ensemble_ids')) {
-                $event->ensembles()->sync($request->ensemble_ids);
+        if ($request->has('ensemble_ids')) {
+            $ensembleIds = $request->input('ensemble_ids');
+            foreach ($eventIds as $eventId) {
+                (new Event(['id' => $eventId]))->setRawAttributes(['id' => $eventId], true)->ensembles()->sync($ensembleIds);
             }
         }
 
         return redirect()
             ->route('events.index')
-            ->with(['status' => count($events) . ' events updated. ']);
+            ->with(['status' => count($eventIds) . ' events updated. ']);
     }
 
     private function getEvents(): LengthAwarePaginator
