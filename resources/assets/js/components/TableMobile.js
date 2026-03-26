@@ -11,9 +11,13 @@ export const TableMobileItem = ({ url, children }) => (
 
 export const TableMobileListItem = ({ children }) => <li className="flex flex-col relative">{children}</li>;
 
-export const TableMobileLink = ({ url, onClick, children }) => (
-	<Link href={url} onClick={onClick} className="block hover:bg-gray-50 flex-grow min-w-0">
-		<div className="flex items-center px-4 py-4 sm:px-6">
+export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4', children }) => (
+	<Link
+		href={url}
+		onClick={onClick}
+		className={`block flex-grow min-w-0 ${active ? 'bg-purple-50' : 'hover:bg-gray-50'} ${padding}`}
+	>
+		<div className="flex items-center pr-4 py-4 sm:px-6">
 			<div className="flex-1 flex items-center justify-between min-w-0 w-full">{children}</div>
 			<div>
 				<Icon icon="chevron-right" className="text-gray-400" />
@@ -24,7 +28,7 @@ export const TableMobileLink = ({ url, onClick, children }) => (
 
 export const TableMobileSelectableLink = ({ url, onClick, bulkEdit, value, children }) => (
 	<TableMobileLink
-		href={bulkEdit.isSelectionModeMobile ? null : url}
+		url={bulkEdit.isSelectionModeMobile ? null : url}
 		onClick={
 			bulkEdit.isSelectionModeMobile
 				? e => {
@@ -34,6 +38,8 @@ export const TableMobileSelectableLink = ({ url, onClick, bulkEdit, value, child
 				  }
 				: onClick
 		}
+		active={bulkEdit.selectedIds.includes(value)}
+		className={bulkEdit.isSelectionModeMobile ? 'pl-11' : 'pl-4'}
 	>
 		{children}
 	</TableMobileLink>
@@ -45,7 +51,7 @@ export const TableMobileSelect = ({ bulkEdit, value }) => {
 	}
 
 	return (
-		<div className="pl-4 flex">
+		<div className="flex absolute top-0 bottom-0 px-4 items-center">
 			<CheckboxInput
 				checked={bulkEdit.selectedIds.includes(value)}
 				onChange={() => bulkEdit.toggleSelection(value)}

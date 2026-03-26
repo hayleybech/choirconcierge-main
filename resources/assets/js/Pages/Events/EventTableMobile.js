@@ -3,13 +3,13 @@ import TableMobile, {
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
-} from "../../components/TableMobile";
-import Badge from "../../components/Badge";
-import {DateTime} from "luxon";
-import Icon from "../../components/Icon";
-import DateTag from "../../components/DateTag";
-import EventType from "../../EventType";
-import useRoute from "../../hooks/useRoute";
+} from '../../components/TableMobile';
+import Badge from '../../components/Badge';
+import { DateTime } from 'luxon';
+import Icon from '../../components/Icon';
+import DateTag from '../../components/DateTag';
+import EventType from '../../EventType';
+import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import BulkEditBarMobile from '../../components/BulkEditBarMobile';
 
@@ -22,15 +22,15 @@ const EventTableMobile = ({ events, userEnsemblesCount, bulkEdit }) => {
 			<TableMobile pagination={<Pagination details={events} />}>
 				{events.data.map(event => (
 					<TableMobileListItem key={event.id}>
-						<div className="flex items-center">
-							<TableMobileSelect bulkEdit={bulkEdit} value={event.id} />
+						<TableMobileSelect bulkEdit={bulkEdit} value={event.id} />
+						<TableMobileSelectableLink
+							url={route('events.show', { event })}
+							bulkEdit={bulkEdit}
+							value={event.id}
+						>
 							<div className="flex-1 min-w-0">
-								<TableMobileSelectableLink
-									url={route('events.show', { event })}
-									bulkEdit={bulkEdit}
-									value={event.id}
-								>
-									<div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
+								<div className="flex items-center">
+									<div className="min-w-0 flex-1 lg:grid lg:grid-cols-2 lg:gap-4">
 										<div className="flex items-center justify-between">
 											<p className="flex items-center min-w-0 mr-1.5">
 												<span className="text-sm font-medium text-purple-600 truncate">
@@ -63,18 +63,22 @@ const EventTableMobile = ({ events, userEnsemblesCount, bulkEdit }) => {
 											</p>
 										</div>
 									</div>
-								</TableMobileSelectableLink>
+								</div>
 								{userEnsemblesCount > 1 && event.ensembles.length > 0 && (
-									<div className="mt-2 flex gap-1 flex-wrap pl-4 mb-3">
+									<div className="mt-2 flex gap-1 flex-wrap mb-3">
 										{event.ensembles.map(ensemble => (
-											<Badge key={ensemble.id} colour="bg-purple-100 text-purple-800 truncate" display="">
+											<Badge
+												key={ensemble.id}
+												colour="bg-purple-100 text-purple-800 truncate"
+												display=""
+											>
 												{ensemble.name}
 											</Badge>
 										))}
 									</div>
 								)}
 							</div>
-						</div>
+						</TableMobileSelectableLink>
 					</TableMobileListItem>
 				))}
 			</TableMobile>

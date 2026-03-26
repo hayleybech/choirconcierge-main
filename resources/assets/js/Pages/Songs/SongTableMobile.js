@@ -24,36 +24,35 @@ const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit }) => {
 			<TableMobile pagination={<Pagination details={songs} />}>
 				{songs.data.map(song => (
 					<TableMobileListItem key={song.id}>
-						<div className="flex items-center">
-							<TableMobileSelect bulkEdit={bulkEdit} value={song.id} />
+						<TableMobileSelect bulkEdit={bulkEdit} value={song.id} />
+						<TableMobileSelectableLink
+							url={route('songs.show', { song })}
+							bulkEdit={bulkEdit}
+							value={song.id}
+						>
 							<div className="flex-1 min-w-0">
 								<div className="flex">
-									<div className="shrink-0 py-3 pl-4 flex items-center">
+									<div className="shrink-0 flex items-center">
 										<PitchButton
 											instrument={instrument}
 											note={song.pitch.split('/')[0]}
 											size="xs"
+											disabled={bulkEdit.isSelectionModeMobile}
 										/>
 									</div>
-									<TableMobileSelectableLink
-										url={route('songs.show', { song })}
-										bulkEdit={bulkEdit}
-										value={song.id}
-									>
-										<div className="min-w-0 flex-1 lg:grid lg:grid-cols-2 lg:gap-4">
-											<div className="flex items-center justify-between">
-												<div className="flex items-center min-w-0 mr-1.5">
-													<SongStatusTag status={new SongStatus(song.status.slug)} />
-													<span className="text-sm font-medium text-purple-600 truncate">
-														{song.title}
-													</span>
-												</div>
+									<div className="min-w-0 flex-1 lg:grid lg:grid-cols-2 lg:gap-4">
+										<div className="flex items-center justify-between">
+											<div className="flex items-center min-w-0 mr-1.5 px-4">
+												<SongStatusTag status={new SongStatus(song.status.slug)} />
+												<span className="text-sm font-medium text-purple-600 truncate">
+													{song.title}
+												</span>
 											</div>
 										</div>
-									</TableMobileSelectableLink>
+									</div>
 								</div>
 								{userEnsemblesCount > 1 && song.ensembles.length > 0 && (
-									<div className="-mt-2 flex gap-1 flex-wrap mb-3 pl-4">
+									<div className="mt-2 flex gap-1 flex-wrap pl-4">
 										{song.ensembles.map(ensemble => (
 											<Badge
 												key={ensemble.id}
@@ -66,7 +65,7 @@ const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit }) => {
 									</div>
 								)}
 							</div>
-						</div>
+						</TableMobileSelectableLink>
 					</TableMobileListItem>
 				))}
 			</TableMobile>
