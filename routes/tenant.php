@@ -160,6 +160,7 @@ Route::middleware([
         Route::resource('song-categories', SongCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 
         // Events module
+        Route::post('events/bulk-update', [EventController::class, 'bulkUpdate'])->name('events.bulk-update');
         Route::resource('events', EventController::class);
         Route::get('events/{event}/clone', [EventController::class, 'clone'])->name('events.clone');
         Route::resource('events.rsvps', RsvpController::class)->only(['index', 'store', 'update', 'destroy']);

@@ -195,6 +195,37 @@ class EventController extends Controller
             ->with(['status' => 'Event cloned. ']);
     }
 
+    public function bulkUpdate(Request $request): RedirectResponse
+    {
+        $this->authorize('create', Event::class);
+
+        $request->validate([
+            'event_ids' => 'required|array',
+            'event_ids.*' => 'exists:events,id',
+            'event_type_id' => 'nullable|exists:event_types,id',
+            'ensemble_ids' => 'nullable|array',
+            'ensemble_ids.*' => 'exists:ensembles,id',
+        ]);
+
+        $events = Event::whereIn('id', $request->event_ids)->get();
+
+        foreach ($events as $event) {
+            if ($request->filled('event_type_id')) {
+                $event->type_id = $request->event_type_id;
+            }
+
+            $event->save();
+
+            if ($request->has('ensemble_ids')) {
+                $event->ensembles()->sync($request->ensemble_ids);
+            }
+        }
+
+        return redirect()
+            ->route('events.index')
+            ->with(['status' => count($events) . ' events updated. ']);
+    }
+
     private function getEvents(): LengthAwarePaginator
     {
         $userEnsembles = auth()->user()?->membership?->enrolments->pluck('ensemble_id');

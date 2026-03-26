@@ -13,9 +13,16 @@ import Sorts from '../../components/Sorts';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
+import BulkEditEventsModal from './BulkEditEventsModal';
+import { useMediaQuery } from 'react-responsive';
+import useBulkEdit from '../../hooks/useBulkEdit';
 
 const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const bulkEdit = useBulkEdit(events.data || events);
+
+	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
+
 	const { can } = usePage().props;
 	const { route } = useRoute();
 
@@ -39,6 +46,29 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }
 
 	const sortFilterForm = useSortFilterForm('events.index', filters, sorts, transforms);
 
+	const actions = [
+		{
+			label: 'Add New',
+			icon: 'calendar-plus',
+			url: route('events.create'),
+			variant: 'primary',
+			can: 'create_event',
+		},
+		{ label: 'Event Types', icon: 'tags', url: route('event-types.index'), can: 'list_events' },
+		{
+			label: 'Attendance Report',
+			icon: 'analytics',
+			url: route('events.reports.attendance'),
+			can: 'list_attendances',
+		},
+		...bulkEdit.actions,
+		filterAction,
+		{ label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
+	]
+		.filter(action => (action.can ? can[action.can] : true))
+		.filter(action => !action.hideOnMobile || isDesktop)
+		.filter(action => !action.hideOnDesktop || !isDesktop);
+
 	return (
 		<>
 			<AppHead title="Events" />
@@ -49,24 +79,7 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }
 					{ name: 'Dashboard', url: route('dash') },
 					{ name: 'Events', url: route('events.index') },
 				]}
-				actions={[
-					{
-						label: 'Add New',
-						icon: 'calendar-plus',
-						url: route('events.create'),
-						variant: 'primary',
-						can: 'create_event',
-					},
-					{ label: 'Event Types', icon: 'tags', url: route('event-types.index'), can: 'list_events' },
-					{
-						label: 'Attendance Report',
-						icon: 'analytics',
-						url: route('events.reports.attendance'),
-						can: 'list_attendances',
-					},
-					filterAction,
-					{ label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
-				].filter(action => (action.can ? can[action.can] : true))}
+				actions={actions}
 				meta={<div>Calendar Sync URL: {route('events.feed')}</div>}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 			/>
@@ -88,7 +101,12 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }
 					/>
 				}
 				tableMobile={
-					<EventTableMobile events={events} pagination={pagination} userEnsemblesCount={userEnsemblesCount} />
+					<EventTableMobile
+						events={events}
+						pagination={pagination}
+						userEnsemblesCount={userEnsemblesCount}
+						bulkEdit={bulkEdit}
+					/>
 				}
 				tableDesktop={
 					<EventTableDesktop
@@ -96,6 +114,7 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }
 						sortFilterForm={sortFilterForm}
 						pagination={pagination}
 						userEnsemblesCount={userEnsemblesCount}
+						bulkEdit={bulkEdit}
 					/>
 				}
 				emptyState={
@@ -114,6 +133,16 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }
 						/>
 					) : null
 				}
+			/>
+
+			<BulkEditEventsModal
+				isOpen={bulkEdit.showModal}
+				setIsOpen={bulkEdit.setShowModal}
+				selectedEventIds={bulkEdit.selectedIds}
+				onSuccess={() => bulkEdit.setSelectedIds([])}
+				eventTypes={eventTypes}
+				ensembles={ensembles}
+				userEnsemblesCount={userEnsemblesCount}
 			/>
 		</>
 	);

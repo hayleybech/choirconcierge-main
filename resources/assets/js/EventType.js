@@ -4,21 +4,25 @@ class EventType {
             badgeColour: 'bg-orange-400/50',
             dotColour: 'bg-orange-400',
             borderColour: 'border-orange-400',
+			iconColour: 'text-orange-400',
         },
         'Rehearsal': {
             badgeColour: 'bg-lime-400/50',
             dotColour: 'bg-lime-400',
             borderColour: 'border-lime-400',
+			iconColour: 'text-lime-400',
         },
         'Social Event': {
             badgeColour: 'bg-sky-400/50',
             dotColour: 'bg-sky-400',
             borderColour: 'border-sky-400',
+			iconColour: 'text-sky-400',
         },
         'Other': {
             badgeColour: 'bg-gray-400/50',
             dotColour: 'bg-gray-400',
             borderColour: 'border-gray-400',
+			iconColour: 'text-gray-400',
         },
     };
 
@@ -31,6 +35,8 @@ class EventType {
     get badgeColour() { return EventType.types[this.title]?.badgeColour ?? 'bg-gray-400/50'; }
     get dotColour() { return EventType.types[this.title]?.dotColour ?? 'bg-gray-400'; }
     get borderColour() { return EventType.types[this.title]?.borderColour ?? 'border-gray-400'; }
+
+	get iconColour() { return EventType.types[this.title]?.iconColour ?? 'text-gray-400'; }
 }
 
 export default EventType;
