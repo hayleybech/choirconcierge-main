@@ -18,16 +18,16 @@ import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 import RsvpDropdown from '../../components/Event/RsvpDropdown';
 
-const EventTableDesktop = ({ events, sortFilterForm, pagination, userEnsemblesCount, bulkEdit }) => {
+const EventTableDesktop = ({ events, sortFilterForm, userEnsemblesCount, bulkEdit }) => {
     const { route } = useRoute();
 
     const showEnsemblesColumn = userEnsemblesCount > 1;
 
     return (
-        <Table pagination={<Pagination details={pagination} />}>
+        <Table pagination={<Pagination details={events} />}>
             <THead>
                 <tr>
-                    <TableSelectAll bulkEdit={bulkEdit} totalItems={events.length} />
+                    <TableSelectAll bulkEdit={bulkEdit} totalItems={events.data.length} />
                     <TableHeading>
                         <TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort>
                     </TableHeading>
@@ -46,7 +46,7 @@ const EventTableDesktop = ({ events, sortFilterForm, pagination, userEnsemblesCo
                 </tr>
             </THead>
             <TBody>
-                {events.map((event) => (
+                {events.data.map((event) => (
                     <TItemRow key={event.id} bulkEdit={bulkEdit} value={event.id}>
                         <TableCellSelect bulkEdit={bulkEdit} value={event.id} />
                         <TableCell>

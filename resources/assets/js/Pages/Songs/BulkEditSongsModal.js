@@ -19,11 +19,6 @@ const BulkEditSongsModal = ({ isOpen, setIsOpen, selectedSongIds, statuses, cate
         ensemble_ids: [],
     });
 
-    // Update song_ids whenever selectedSongIds change
-    React.useEffect(() => {
-        setData('song_ids', selectedSongIds);
-    }, [selectedSongIds]);
-
     const handleOk = (e) => {
         e.preventDefault();
         post(route('songs.bulk-update'), {

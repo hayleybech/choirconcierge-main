@@ -13,14 +13,14 @@ import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 import BulkEditBarMobile from '../../components/BulkEditBarMobile';
 
-const EventTableMobile = ({ events, pagination, userEnsemblesCount, bulkEdit }) => {
+const EventTableMobile = ({ events, userEnsemblesCount, bulkEdit }) => {
 	const { route } = useRoute();
 
 	return (
 		<div>
-			<BulkEditBarMobile totalItems={events.length} bulkEdit={bulkEdit} />
-			<TableMobile pagination={<Pagination details={pagination} />}>
-				{events.map(event => (
+			<BulkEditBarMobile totalItems={events.data.length} bulkEdit={bulkEdit} />
+			<TableMobile pagination={<Pagination details={events} />}>
+				{events.data.map(event => (
 					<TableMobileListItem key={event.id}>
 						<div className="flex items-center">
 							<TableMobileSelect bulkEdit={bulkEdit} value={event.id} />

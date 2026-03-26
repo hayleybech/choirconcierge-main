@@ -18,11 +18,6 @@ const BulkEditEventsModal = ({ isOpen, setIsOpen, selectedEventIds, eventTypes, 
         ensemble_ids: [],
     });
 
-    // Update event_ids whenever selectedEventIds change
-    React.useEffect(() => {
-        setData('event_ids', selectedEventIds);
-    }, [selectedEventIds]);
-
     const handleOk = (e) => {
         e.preventDefault();
         post(route('events.bulk-update'), {

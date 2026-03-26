@@ -128,6 +128,7 @@ const Index = ({
 				categories={categories}
 				ensembles={ensembles}
 				userEnsemblesCount={userEnsemblesCount}
+				key={bulkEdit.selectedIds}
 			/>
 		</>
 	);

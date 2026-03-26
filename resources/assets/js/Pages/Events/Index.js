@@ -15,7 +15,7 @@ import useRoute from '../../hooks/useRoute';
 import BulkEditEventsModal from './BulkEditEventsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 
-const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles, can }) => {
+const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const { route } = useRoute();
 
@@ -97,7 +97,6 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles, 
 				tableMobile={
 					<EventTableMobile
 						events={events}
-						pagination={pagination}
 						userEnsemblesCount={userEnsemblesCount}
 						bulkEdit={bulkEdit}
 					/>
@@ -106,13 +105,12 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles, 
 					<EventTableDesktop
 						events={events}
 						sortFilterForm={sortFilterForm}
-						pagination={pagination}
 						userEnsemblesCount={userEnsemblesCount}
 						bulkEdit={bulkEdit}
 					/>
 				}
 				emptyState={
-					events.length === 0 ? (
+					events.data.length === 0 ? (
 						<EmptyState
 							title="No events"
 							actionDescription={
@@ -133,6 +131,7 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles, 
 				isOpen={bulkEdit.showModal}
 				setIsOpen={bulkEdit.setShowModal}
 				selectedEventIds={bulkEdit.selectedIds}
+				key={bulkEdit.selectedIds}
 				onSuccess={() => bulkEdit.setSelectedIds([])}
 				eventTypes={eventTypes}
 				ensembles={ensembles}
