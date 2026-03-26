@@ -1,7 +1,11 @@
 import React from 'react';
 import PitchButton from '../../components/PitchButton';
 import SongStatusTag from '../../components/SongStatusTag';
-import TableMobile, { TableMobileListItem, TableMobileSelect, TableMobileSelectableLink } from '../../components/TableMobile';
+import TableMobile, {
+	TableMobileListItem,
+	TableMobileSelect,
+	TableMobileSelectableLink,
+} from '../../components/TableMobile';
 import SongStatus from '../../SongStatus';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
@@ -31,7 +35,11 @@ const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit }) => {
 											size="xs"
 										/>
 									</div>
-									<TableMobileSelectableLink url={route('songs.show', { song })}>
+									<TableMobileSelectableLink
+										url={route('songs.show', { song })}
+										bulkEdit={bulkEdit}
+										value={song.id}
+									>
 										<div className="min-w-0 flex-1 lg:grid lg:grid-cols-2 lg:gap-4">
 											<div className="flex items-center justify-between">
 												<div className="flex items-center min-w-0 mr-1.5">

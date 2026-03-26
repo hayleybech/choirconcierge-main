@@ -37,7 +37,7 @@ const BulkEditBarMobile = ({ totalItems, bulkEdit }) => {
 				<Button
 					size="xs"
 					variant="secondary"
-					onClick={() => bulkEdit.showModal(true)}
+					onClick={() => bulkEdit.setShowModal(true)}
 					disabled={bulkEdit.selectedIds.length === 0}
 					className="gap-1"
 				>

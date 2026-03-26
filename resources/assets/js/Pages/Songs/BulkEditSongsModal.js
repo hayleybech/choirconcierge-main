@@ -38,7 +38,7 @@ const BulkEditSongsModal = ({ isOpen, setIsOpen, selectedSongIds, statuses, cate
 
     return (
 		<Dialog
-			title={`Bulk Edit ${selectedSongIds.length} Songs`}
+			title={`Edit ${selectedSongIds.length} Songs`}
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 			okLabel="Update Songs"
