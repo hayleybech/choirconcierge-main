@@ -161,6 +161,54 @@ class PollControllerTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_bulk_update_can_update_is_closed(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $poll1 = Poll::create(['title' => 'Poll 1', 'tenant_id' => tenant('id'), 'is_closed' => false]);
+        $poll2 = Poll::create(['title' => 'Poll 2', 'tenant_id' => tenant('id'), 'is_closed' => false]);
+
+        $this->post(the_tenant_route('polls.bulk-update'), [
+            'poll_ids' => [$poll1->id, $poll2->id],
+            'is_closed' => true,
+        ])->assertSessionHasNoErrors();
+
+        $this->assertTrue($poll1->fresh()->is_closed);
+        $this->assertTrue($poll2->fresh()->is_closed);
+    }
+
+    public function test_bulk_update_does_not_update_is_closed_if_not_provided(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $poll1 = Poll::create(['title' => 'Poll 1', 'tenant_id' => tenant('id'), 'is_closed' => false]);
+        $poll2 = Poll::create(['title' => 'Poll 2', 'tenant_id' => tenant('id'), 'is_closed' => true]);
+
+        $this->post(the_tenant_route('polls.bulk-update'), [
+            'poll_ids' => [$poll1->id, $poll2->id],
+            // is_closed is omitted
+        ])->assertSessionHasNoErrors();
+
+        $this->assertFalse($poll1->fresh()->is_closed);
+        $this->assertTrue($poll2->fresh()->is_closed);
+    }
+
+    public function test_bulk_update_does_not_update_is_closed_if_null(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $poll1 = Poll::create(['title' => 'Poll 1', 'tenant_id' => tenant('id'), 'is_closed' => false]);
+        $poll2 = Poll::create(['title' => 'Poll 2', 'tenant_id' => tenant('id'), 'is_closed' => true]);
+
+        $this->post(the_tenant_route('polls.bulk-update'), [
+            'poll_ids' => [$poll1->id, $poll2->id],
+            'is_closed' => null,
+        ])->assertSessionHasNoErrors();
+
+        $this->assertFalse($poll1->fresh()->is_closed);
+        $this->assertTrue($poll2->fresh()->is_closed);
+    }
+
     public function test_user_can_index_polls(): void
     {
         $this->actingAs($this->createUserWithRole('User'));

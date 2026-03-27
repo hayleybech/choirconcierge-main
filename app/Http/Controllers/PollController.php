@@ -147,6 +147,45 @@ class PollController extends Controller
         return redirect()->route('polls.show', [$poll])->with(['status' => 'Poll updated.']);
     }
 
+    public function bulkUpdate(Request $request): RedirectResponse
+    {
+        $this->authorize('viewAny', Poll::class);
+        $this->authorize('update', Poll::class);
+
+        $data = $request->validate([
+            'poll_ids' => ['required', 'array'],
+            'poll_ids.*' => ['exists:polls,id'],
+            'is_closed' => ['nullable', 'sometimes', 'boolean'],
+            'close_at' => ['nullable', 'sometimes', 'date_format:Y-m-d H:i:s'],
+            'ensemble_ids' => ['nullable', 'sometimes', 'array'],
+            'ensemble_ids.*' => ['exists:ensembles,id'],
+        ]);
+
+        $polls = Poll::whereIn('id', $data['poll_ids'])->get();
+
+        foreach ($polls as $poll) {
+            $updateData = [];
+            if (! is_null($data['is_closed'])) {
+                $updateData['is_closed'] = $data['is_closed'];
+            }
+            if (! is_null($data['close_at'] ?? null)) {
+                $updateData['close_at'] = $data['close_at'];
+            }
+
+            if (!empty($updateData)) {
+                $poll->update($updateData);
+            }
+
+            if ($request->has('ensemble_ids')) {
+                $poll->ensembles()->sync($data['ensemble_ids']);
+            }
+        }
+
+        return redirect()
+            ->route('polls.index')
+            ->with(['status' => count($data['poll_ids']) . ' polls updated.']);
+    }
+
     public function destroy(Poll $poll): RedirectResponse
     {
         $poll->delete();

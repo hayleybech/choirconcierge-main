@@ -103,6 +103,7 @@ class HandleInertiaRequests extends Middleware
                 'create_task' => auth()->user()?->can('create', Task::class),
                 'list_polls' => auth()->user()?->can('viewAny', Poll::class),
                 'create_poll' => auth()->user()?->can('create', Poll::class),
+                'update_poll' => auth()->user()?->can('update', Poll::class),
                 'impersonate' => auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasRole('Admin'),
                 'manage_finances' => Gate::allows('update-fees'),
                 'update_tenant' => auth()->user()?->can('update', Tenant::class),

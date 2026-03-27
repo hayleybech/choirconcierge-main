@@ -79,7 +79,7 @@ class PollPolicy
      *
      * @return mixed
      */
-    public function update(User $user, Poll $poll)
+    public function update(User $user, ?Poll $poll = null)
     {
         return $user->membership->hasAbility('polls_update');
     }

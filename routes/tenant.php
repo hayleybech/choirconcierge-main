@@ -252,6 +252,7 @@ Route::middleware([
         Route::get('roles/{role}/clone', [RoleController::class, 'clone'])->name('roles.clone');
 
         // Polls module
+        Route::post('polls/bulk-update', [PollController::class, 'bulkUpdate'])->name('polls.bulk-update');
         Route::resource('polls', PollController::class);
         Route::post('polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
         Route::put('polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');
