@@ -28,16 +28,16 @@ export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4', childr
 	</Link>
 );
 
-export const TableMobileSelectableLink = ({ url, onClick, bulkEdit, value, children }) => {
+export const TableMobileSelectableLink = ({ url, bulkEdit, value, children }) => {
 	const onLongPress = () => {
-		if (bulkEdit.canUpdate && !bulkEdit.isSelectionModeMobile) {
-			bulkEdit.setIsSelectionModeMobile(true);
+		if (bulkEdit.canUpdate && !bulkEdit.isActiveMobile) {
 			bulkEdit.toggleSelection(value);
 		}
 	};
 
 	const handleClick = e => {
-		if (bulkEdit.isSelectionModeMobile) {
+		if (bulkEdit.isActiveMobile) {
+
 			bulkEdit.toggleSelection(value);
 			if (e && e.preventDefault) {
 				e.preventDefault();
@@ -45,20 +45,16 @@ export const TableMobileSelectableLink = ({ url, onClick, bulkEdit, value, child
 			return false;
 		}
 
-		if (onClick) {
-			onClick(e);
-		} else if (url && (!e || !e.defaultPrevented)) {
-			router.visit(url);
-		}
+		return true;
 	};
 
 	const longPressProps = useLongPress(onLongPress, handleClick);
 
 	return (
 		<TableMobileLink
-			url={bulkEdit.isSelectionModeMobile ? '' : url}
+			url={bulkEdit.isActiveMobile ? '' : url}
 			active={bulkEdit.selectedIds.includes(value)}
-			padding={bulkEdit.isSelectionModeMobile ? 'pl-11' : 'pl-4'}
+			padding={bulkEdit.isActiveMobile ? 'pl-11 transition-[padding]' : 'pl-4 transition-[padding]'}
 			{...longPressProps}
 		>
 			{children}
@@ -67,7 +63,7 @@ export const TableMobileSelectableLink = ({ url, onClick, bulkEdit, value, child
 };
 
 export const TableMobileSelect = ({ bulkEdit, value }) => {
-	if (!bulkEdit.canUpdate || !bulkEdit.isSelectionModeMobile) {
+	if (!bulkEdit.canUpdate || !bulkEdit.isActiveMobile) {
 		return null;
 	}
 
@@ -80,6 +76,30 @@ export const TableMobileSelect = ({ bulkEdit, value }) => {
 		</div>
 	);
 };
+
+export const TableMobileHeader = ({ bulkEdit, children }) => (
+	<div className="px-4 py-1 border-b border-gray-200 flex gap-1 items-center justify-between bg-gray-50 relative">
+		<div className="flex items-center">
+			{bulkEdit.isActiveMobile && (
+				<div className="pr-2 absolute left-4 flex">
+					<CheckboxInput
+						ref={bulkEdit.refSelectAll}
+						checked={bulkEdit.selectedIds.length === bulkEdit.totalItems && bulkEdit.totalItems > 0}
+						onChange={() => bulkEdit.toggleAll()}
+					/>
+				</div>
+			)}
+			<div className={`text-gray-500 text-sm transition-[padding] ${bulkEdit.isActiveMobile > 0 ? 'pl-7' : 'pl-0'}`}>
+				{bulkEdit.noun}s
+			</div>
+		</div>
+
+		<div>
+			{children}
+		</div>
+	</div>
+);
+
 const TableMobile = ({ children, pagination }) => (
 	<div>
 		<ul className="divide-y divide-gray-200">{children}</ul>

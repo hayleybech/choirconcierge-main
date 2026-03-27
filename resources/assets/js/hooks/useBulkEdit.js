@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-const useBulkEdit = (items = [], canUpdate = false, canDelete = false) => {
+const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'Item') => {
 	const [selectedIds, setSelectedIds] = useState([]);
-	const [showModal, setShowModal] = useState(false);
+	const [showEditModal, setShowEditModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [isSelectionModeMobile, setIsSelectionModeMobile] = useState(false);
+	const [isForcedMobile, setIsForcedMobile] = useState(false);
 	const [lastSelectedId, setLastSelectedId] = useState(null);
 	const refSelectAll = useRef(null);
 
@@ -59,55 +59,42 @@ const useBulkEdit = (items = [], canUpdate = false, canDelete = false) => {
 
 	const clearSelections = () => setSelectedIds([]);
 
-	const toggleSelectionModeMobile = () => setIsSelectionModeMobile(prev => !prev);
+	const isActiveMobile = isForcedMobile || selectedIds.length > 0;
 
-	const action = canUpdate
-		? isDesktop
-			? {
-					label: `Edit ${selectedIds.length > 0 ? `(${selectedIds.length})` : ''}`,
-					icon: 'pencil',
-					onClick: () => setShowModal(true),
-					variant: 'secondary',
-					disabled: selectedIds.length === 0,
-			  }
-			: {
-					label: isSelectionModeMobile ? 'Cancel Selection' : 'Select Multiple',
-					icon: 'check-square',
-					onClick: () => toggleSelectionModeMobile(),
-					variant: 'secondary',
-			  }
-		: null;
-
-	const deleteAction =
-		canDelete && (isDesktop || isSelectionModeMobile)
-			? {
-					label: `Delete ${selectedIds.length > 0 ? `(${selectedIds.length})` : ''}`,
-					icon: 'trash',
-					onClick: () => setShowDeleteModal(true),
-					variant: 'danger-solid',
-					disabled: selectedIds.length === 0,
-			  }
-			: null;
+	const action = canUpdate &&
+		!isDesktop && {
+			label: isActiveMobile ? 'Cancel Selection' : `Select ${noun}s`,
+			icon: 'check-square',
+			onClick: () => {
+				if (isActiveMobile) {
+					setIsForcedMobile(false);
+					setSelectedIds([]);
+				} else {
+					setIsForcedMobile(true);
+				}
+			},
+			variant: 'secondary',
+		};
 
 	return {
 		selectedIds,
 		setSelectedIds,
-		showModal,
-		setShowModal,
+		showEditModal,
+		setShowEditModal,
 		showDeleteModal,
 		setShowDeleteModal,
 		refSelectAll,
-		isSelectionModeMobile,
-		setIsSelectionModeMobile,
+		setIsForcedMobile,
+		isActiveMobile,
 		toggleSelection,
 		handleRowClick,
 		toggleAll,
 		clearSelections,
-		toggleSelectionModeMobile,
 		action,
-		deleteAction,
 		canUpdate,
 		canDelete,
+		totalItems: items.length,
+		noun,
 	};
 };
 

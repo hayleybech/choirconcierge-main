@@ -1,16 +1,32 @@
 import React from 'react';
-import TableMobile, {TableMobileItem, TableMobileListItem, TableMobileSelect, TableMobileSelectableLink } from "../../components/TableMobile";
+
+import TableMobile, {
+	TableMobileHeader,
+	TableMobileListItem,
+	TableMobileSelect,
+	TableMobileSelectableLink,
+} from '../../components/TableMobile';
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 import Badge from '../../components/Badge';
-import BulkEditBarMobile from '../../components/BulkEditBarMobile';
+import Icon from '../../components/Icon';
+import Button from '../../components/inputs/Button';
 
-const RiserStackTableMobile = ({ stacks, userEnsemblesCount, bulkEdit }) => {
+const RiserStackTableMobile = ({ stacks, userEnsemblesCount, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
     const { route } = useRoute();
 
     return (
 		<div>
-			<BulkEditBarMobile totalItems={stacks.data.length} bulkEdit={bulkEdit} />
+			<TableMobileHeader bulkEdit={bulkEdit}>
+				<Button
+					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
+					size="xs"
+					onClick={() => setShowFilters(prev => !prev)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={stacks} />} bulkEdit={bulkEdit}>
 				{stacks.data.map(stack => (
 					<TableMobileListItem key={stack.id}>
@@ -24,7 +40,9 @@ const RiserStackTableMobile = ({ stacks, userEnsemblesCount, bulkEdit }) => {
 								<div>
 									<div className="flex items-center justify-between">
 										<p className="flex items-center min-w-0 mr-1.5">
-											<span className="text-sm font-medium text-purple-600 truncate">{stack.title}</span>
+											<span className="text-sm font-medium text-purple-600 truncate">
+												{stack.title}
+											</span>
 										</p>
 									</div>
 								</div>

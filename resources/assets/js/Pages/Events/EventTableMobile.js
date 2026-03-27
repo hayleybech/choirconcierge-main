@@ -1,5 +1,7 @@
 import React from 'react';
+
 import TableMobile, {
+	TableMobileHeader,
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
@@ -11,14 +13,23 @@ import DateTag from '../../components/DateTag';
 import EventType from '../../EventType';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
-import BulkEditBarMobile from '../../components/BulkEditBarMobile';
+import Button from '../../components/inputs/Button';
 
-const EventTableMobile = ({ events, userEnsemblesCount, bulkEdit }) => {
+const EventTableMobile = ({ events, userEnsemblesCount, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
 	const { route } = useRoute();
 
 	return (
 		<div>
-			<BulkEditBarMobile totalItems={events.data.length} bulkEdit={bulkEdit} />
+			<TableMobileHeader bulkEdit={bulkEdit}>
+				<Button
+					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
+					size="xs"
+					onClick={() => setShowFilters(prev => !prev)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={events} />}>
 				{events.data.map(event => (
 					<TableMobileListItem key={event.id}>

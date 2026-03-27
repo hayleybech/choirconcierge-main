@@ -14,6 +14,8 @@ const buttonStyles = (variant = 'secondary', size = 'md', disabled, extra) => cl
     variant === 'success-outline' ? 'bg-white border-emerald-300 text-emerald-500 hover:bg-emerald-100' : '',
     variant === 'success-solid' ? 'bg-emerald-600 border-transparent text-white hover:bg-emerald-700' : '',
     variant === 'clear' ? 'border-transparent shadow-none text-gray-700 hover:text-purple-500' : '',
+    variant === 'clear-v2' ? 'border-transparent shadow-none text-gray-700 hover:bg-white' : '',
+    variant === 'clear-inverse' ? 'border-transparent shadow-none text-gray-100 hover:bg-gray-600' : '',
     disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : '',
     size === 'md' ? 'py-2 px-4 text-md rounded-md' : '',
     size === 'sm' && (variant !== 'clear' && variant !== 'danger-clear') ? 'py-1.5 px-3 text-sm rounded' : '',

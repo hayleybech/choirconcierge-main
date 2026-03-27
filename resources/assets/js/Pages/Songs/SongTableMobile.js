@@ -2,6 +2,7 @@ import React from 'react';
 import PitchButton from '../../components/PitchButton';
 import SongStatusTag from '../../components/SongStatusTag';
 import TableMobile, {
+	TableMobileHeader,
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
@@ -11,16 +12,26 @@ import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import { useInstrument } from '../../hooks/useInstrument';
 import Badge from '../../components/Badge';
-import BulkEditBarMobile from '../../components/BulkEditBarMobile';
+import Button from '../../components/inputs/Button';
+import Icon from '../../components/Icon';
 
-const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit }) => {
+const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
 	const { route } = useRoute();
 
 	const [instrument] = useInstrument();
 
 	return (
 		<div>
-			<BulkEditBarMobile totalItems={songs.data.length} bulkEdit={bulkEdit} />
+			<TableMobileHeader bulkEdit={bulkEdit}>
+				<Button
+					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
+					size="xs"
+					onClick={() => setShowFilters(prev => !prev)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={songs} />}>
 				{songs.data.map(song => (
 					<TableMobileListItem key={song.id}>
@@ -37,7 +48,7 @@ const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit }) => {
 											instrument={instrument}
 											note={song.pitch.split('/')[0]}
 											size="xs"
-											disabled={bulkEdit.isSelectionModeMobile}
+											disabled={bulkEdit.isActiveMobile}
 										/>
 									</div>
 									<div className="min-w-0 flex-1 lg:grid lg:grid-cols-2 lg:gap-4">

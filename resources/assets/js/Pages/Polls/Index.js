@@ -3,7 +3,7 @@ import TenantLayout from '../../Layouts/TenantLayout';
 import AppHead from '../../components/AppHead';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import useRoute from '../../hooks/useRoute';
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import Table, {
 	TableCell,
 	THead,
@@ -17,7 +17,11 @@ import Pagination from '../../components/Pagination';
 import Icon from '../../components/Icon';
 import IndexContainer from '../../components/IndexContainer';
 import DateTag from '../../components/DateTag';
-import TableMobile, { TableMobileSelect, TableMobileSelectableLink, TableMobileListItem } from '../../components/TableMobile';
+import TableMobile, {
+	TableMobileSelect,
+	TableMobileSelectableLink,
+	TableMobileListItem, TableMobileHeader,
+} from '../../components/TableMobile';
 import Badge from '../../components/Badge';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
@@ -29,6 +33,7 @@ import useBulkEdit from '../../hooks/useBulkEdit';
 import BulkEditBarMobile from '../../components/BulkEditBarMobile';
 import BulkEditPollsModal from './BulkEditPollsModal';
 import Dialog from '../../components/Dialog';
+import Button from '../../components/inputs/Button';
 
 const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 	const { route } = useRoute();
@@ -51,21 +56,17 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 
 	const sortFilterForm = useSortFilterForm('polls.index', filters, sorts);
 
-	const bulkEdit = useBulkEdit(polls, can.update_poll, can.delete_poll);
+	const bulkEdit = useBulkEdit(polls, can.update_poll, can.delete_poll, 'Poll');
 
-	const actions = [
-		{ label: 'Add New', url: route('polls.create'), icon: 'plus', variant: 'primary' },
-	];
+	const actions = [{ label: 'Add New', url: route('polls.create'), icon: 'plus', variant: 'primary' }];
 
-	if (bulkEdit.action) {
+	if(bulkEdit.action) {
 		actions.push(bulkEdit.action);
 	}
 
-	if (bulkEdit.deleteAction) {
-		actions.push(bulkEdit.deleteAction);
+	if(filterAction) {
+		actions.push(filterAction);
 	}
-
-	actions.push(filterAction);
 
 	return (
 		<>
@@ -93,13 +94,13 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 				onOk={() => {
 					bulkEdit.setSelectedIds([]);
 					bulkEdit.setShowDeleteModal(false);
-					bulkEdit.setIsSelectionModeMobile(false);
+					bulkEdit.setIsForcedMobile(false);
 				}}
 			>
 				Are you sure you want to delete the selected polls? This action cannot be undone.
 			</Dialog>
 
-			<BulkEditBarMobile totalItems={polls.length} bulkEdit={bulkEdit} noun="poll" />
+			<BulkEditBarMobile bulkEdit={bulkEdit} />
 
 			<IndexContainer
 				showFilters={showFilters}
@@ -111,45 +112,57 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 					/>
 				}
 				tableMobile={
-					<TableMobile pagination={<Pagination details={pagination} />}>
-						{polls.map(p => (
-							<TableMobileListItem key={p.id}>
-								<TableMobileSelect bulkEdit={bulkEdit} value={p.id} />
-								<TableMobileSelectableLink
-									url={route('polls.show', { poll: p.id })}
-									bulkEdit={bulkEdit}
-									value={p.id}
-								>
-									<div className="w-full">
-										<div className="min-w-0 grid grid-cols-2 lg:gap-4 w-full pr-2">
-											<div className="text-sm font-medium text-purple-600 truncate">
-												{p.title}
-											</div>
+					<div>
+						<TableMobileHeader bulkEdit={bulkEdit}>
+							<Button
+								variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
+								size="xs"
+								onClick={() => setShowFilters(prev => !prev)}
+							>
+								<Icon icon="filter" mr />
+								Filter/Sort
+							</Button>
+						</TableMobileHeader>
+						<TableMobile pagination={<Pagination details={pagination} />}>
+							{polls.map(p => (
+								<TableMobileListItem key={p.id}>
+									<TableMobileSelect bulkEdit={bulkEdit} value={p.id} />
+									<TableMobileSelectableLink
+										url={route('polls.show', { poll: p.id })}
+										bulkEdit={bulkEdit}
+										value={p.id}
+									>
+										<div className="w-full">
+											<div className="min-w-0 grid grid-cols-2 lg:gap-4 w-full pr-2">
+												<div className="text-sm font-medium text-purple-600 truncate">
+													{p.title}
+												</div>
 
-											{p.is_closed ? (
-												<span className="text-gray-600 flex items-center justify-end text-sm">
-													<Icon icon="lock" mr /> Closed
-												</span>
-											) : (
-												<span className="text-emerald-700 flex items-center justify-end text-sm">
-													<Icon icon="check" mr /> Open
-												</span>
+												{p.is_closed ? (
+													<span className="text-gray-600 flex items-center justify-end text-sm">
+														<Icon icon="lock" mr /> Closed
+													</span>
+												) : (
+													<span className="text-emerald-700 flex items-center justify-end text-sm">
+														<Icon icon="check" mr /> Open
+													</span>
+												)}
+											</div>
+											{showEnsembleColumn && p.ensembles?.length > 0 && (
+												<div className="flex flex-wrap gap-1 mt-1">
+													{p.ensembles.map(e => (
+														<Badge key={e.id} colour="bg-purple-100 text-purple-800">
+															{e.name}
+														</Badge>
+													))}
+												</div>
 											)}
 										</div>
-										{showEnsembleColumn && p.ensembles?.length > 0 && (
-											<div className="flex flex-wrap gap-1 mt-1">
-												{p.ensembles.map(e => (
-													<Badge key={e.id} colour="bg-purple-100 text-purple-800">
-														{e.name}
-													</Badge>
-												))}
-											</div>
-										)}
-									</div>
-								</TableMobileSelectableLink>
-							</TableMobileListItem>
-						))}
-					</TableMobile>
+									</TableMobileSelectableLink>
+								</TableMobileListItem>
+							))}
+						</TableMobile>
+					</div>
 				}
 				tableDesktop={
 					<Table pagination={<Pagination details={pagination} />}>
@@ -234,8 +247,8 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 			/>
 
 			<BulkEditPollsModal
-				isOpen={bulkEdit.showModal}
-				setIsOpen={bulkEdit.setShowModal}
+				isOpen={bulkEdit.showEditModal}
+				setIsOpen={bulkEdit.setShowEditModal}
 				selectedPollIds={bulkEdit.selectedIds}
 				key={bulkEdit.selectedIds}
 				ensembles={ensembles ?? tenant.ensembles}

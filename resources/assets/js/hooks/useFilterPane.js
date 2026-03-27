@@ -15,12 +15,12 @@ const useFilterPane = () => {
             key.includes('filter') || key.includes('sort')
         );
 
-    let filterAction = {
+    let filterAction = isDesktop ? {
         label: <span>Filter<span className="inline md:hidden">/Sort</span></span>,
         icon: 'filter',
         onClick: () => setShowFilters(! showFilters),
         variant: hasNonDefaultFilters ? 'success-solid' : 'secondary',
-    };
+    } : null;
 
     return [showFilters, setShowFilters, filterAction, hasNonDefaultFilters];
 };

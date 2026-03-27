@@ -16,6 +16,7 @@ import useRoute from '../../hooks/useRoute';
 import BulkEditSongsModal from './BulkEditSongsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
+import BulkEditBar from '../../components/BulkEditBarMobile';
 
 const Index = ({
 	songs,
@@ -31,7 +32,7 @@ const Index = ({
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const { route } = useRoute();
 
-	const bulkEdit = useBulkEdit(songs.data, can.update_song, can.delete_song);
+	const bulkEdit = useBulkEdit(songs.data, can.update_song, can.delete_song, 'Song');
 
 	const sorts = [
 		{ id: 'title', name: 'Title', default: true },
@@ -85,11 +86,13 @@ const Index = ({
 				onOk={() => {
 					bulkEdit.setSelectedIds([]);
 					bulkEdit.setShowDeleteModal(false);
-					bulkEdit.setIsSelectionModeMobile(false);
+					bulkEdit.setIsForcedMobile(false);
 				}}
 			>
 				Are you sure you want to delete the selected songs? This action cannot be undone.
 			</Dialog>
+
+			<BulkEditBar bulkEdit={bulkEdit} />
 
 			<IndexContainer
 				showFilters={showFilters}
@@ -110,7 +113,13 @@ const Index = ({
 					/>
 				}
 				tableMobile={
-					<SongTableMobile songs={songs} userEnsemblesCount={userEnsemblesCount} bulkEdit={bulkEdit} />
+					<SongTableMobile
+						songs={songs}
+						userEnsemblesCount={userEnsemblesCount}
+						bulkEdit={bulkEdit}
+						hasNonDefaultFilters={hasNonDefaultFilters}
+						setShowFilters={setShowFilters}
+					/>
 				}
 				tableDesktop={
 					<SongTableDesktop
@@ -140,8 +149,8 @@ const Index = ({
 			/>
 
 			<BulkEditSongsModal
-				isOpen={bulkEdit.showModal}
-				setIsOpen={bulkEdit.setShowModal}
+				isOpen={bulkEdit.showEditModal}
+				setIsOpen={bulkEdit.setShowEditModal}
 				selectedSongIds={bulkEdit.selectedIds}
 				onSuccess={() => bulkEdit.setSelectedIds([])}
 				statuses={statuses}

@@ -15,13 +15,14 @@ import RiserStackFilters from "../../components/RiserStack/RiserStackFilters";
 import useBulkEdit from "../../hooks/useBulkEdit";
 import Dialog from "../../components/Dialog";
 import BulkEditRiserStacksModal from "./BulkEditRiserStacksModal";
+import BulkEditBar from '../../components/BulkEditBarMobile';
 
 const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const { can } = usePage().props;
     const { route } = useRoute();
 
-    const bulkEdit = useBulkEdit(stacks.data, can.update_stack && ensembles.length > 1, can.delete_stack);
+    const bulkEdit = useBulkEdit(stacks.data, can.update_stack && ensembles.length > 1, can.delete_stack, 'Stack');
 
     const filters = [
         { name: 'ensembles.id', multiple: true },
@@ -48,7 +49,6 @@ const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
 						can: 'create_stack',
 					},
 					bulkEdit.action,
-					bulkEdit.deleteAction,
 					filterAction,
 				].filter(action => (action?.can ? can[action.can] : !!action))}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
@@ -66,11 +66,13 @@ const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
 				onOk={() => {
 					bulkEdit.setSelectedIds([]);
 					bulkEdit.setShowDeleteModal(false);
-					bulkEdit.setIsSelectionModeMobile(false);
+					bulkEdit.setIsForcedMobile(false);
 				}}
 			>
 				Are you sure you want to delete the selected riser stacks? This action cannot be undone.
 			</Dialog>
+
+			<BulkEditBar bulkEdit={bulkEdit} />
 
 			<IndexContainer
 				showFilters={showFilters}
@@ -98,6 +100,8 @@ const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
 						stacks={stacks}
 						userEnsemblesCount={userEnsemblesCount}
 						bulkEdit={bulkEdit}
+						hasNonDefaultFilters={hasNonDefaultFilters}
+						setShowFilters={setShowFilters}
 					/>
 				}
 				emptyState={
@@ -120,8 +124,8 @@ const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
 			/>
 
 			<BulkEditRiserStacksModal
-				isOpen={bulkEdit.showModal}
-				setIsOpen={bulkEdit.setShowModal}
+				isOpen={bulkEdit.showEditModal}
+				setIsOpen={bulkEdit.setShowEditModal}
 				selectedStackIds={bulkEdit.selectedIds}
 				key={bulkEdit.selectedIds}
 				onSuccess={() => bulkEdit.setSelectedIds([])}

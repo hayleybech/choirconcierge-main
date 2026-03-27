@@ -3,42 +3,32 @@ import CheckboxInput from './inputs/CheckboxInput';
 import Button from './inputs/Button';
 import Icon from './Icon';
 
-const BulkEditBarMobile = ({ totalItems, bulkEdit, noun = 'item' }) => {
-	if (!bulkEdit.canUpdate || !bulkEdit.isSelectionModeMobile) {
+const BulkEditBarMobile = ({ bulkEdit }) => {
+	if (!bulkEdit.canUpdate || bulkEdit.selectedIds.length === 0) {
 		return null;
 	}
 
 	return (
-		<div className="px-4 py-2 border-b border-gray-200 flex gap-1 bg-gray-50">
-			<div className="items-center flex mr-3">
-				<CheckboxInput
-					ref={bulkEdit.refSelectAll}
-					checked={bulkEdit.selectedIds.length === totalItems && totalItems > 0}
-					onChange={() => bulkEdit.toggleAll()}
-				/>
-			</div>
+		<div className="px-2 py-2 border-b border-gray-200 flex gap-0,5 bg-gray-700 text-white fixed z-10 bottom-4 lg:bottom-8 left-1/2 transform -translate-x-1/2 rounded-xl shadow-xl">
 			<Button
 				size="xs"
-				variant="clear"
-				onClick={
-					bulkEdit.isSelectionModeMobile
-						? () => {
-								bulkEdit.clearSelections();
-								bulkEdit.setIsSelectionModeMobile(false);
-						  }
-						: () => bulkEdit.setIsSelectionModeMobile(true)
-				}
+				variant="clear-inverse"
+				onClick={() => {
+					bulkEdit.clearSelections();
+					bulkEdit.setIsForcedMobile(false);
+				}}
 				className="gap-1"
 			>
 				<Icon icon="times" />
-				{bulkEdit.selectedIds.length} {noun}{bulkEdit.selectedIds.length === 1 ? '' : 's'}
+				{bulkEdit.selectedIds.length}&nbsp;{bulkEdit.noun}
+				{bulkEdit.selectedIds.length === 1 ? '' : 's'}
 			</Button>
 			{bulkEdit.selectedIds.length > 0 && (
 				<>
 					<Button
 						size="xs"
-						variant="secondary"
-						onClick={() => bulkEdit.setShowModal(true)}
+						variant="clear-inverse"
+						onClick={() => bulkEdit.setShowEditModal(true)}
 						disabled={bulkEdit.selectedIds.length === 0}
 						className="gap-1"
 					>
@@ -48,7 +38,7 @@ const BulkEditBarMobile = ({ totalItems, bulkEdit, noun = 'item' }) => {
 					{bulkEdit.canDelete && (
 						<Button
 							size="xs"
-							variant="danger-solid"
+							variant="clear-inverse"
 							onClick={() => bulkEdit.setShowDeleteModal(true)}
 							disabled={bulkEdit.selectedIds.length === 0}
 							className="gap-1"

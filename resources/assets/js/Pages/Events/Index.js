@@ -15,12 +15,13 @@ import useRoute from '../../hooks/useRoute';
 import BulkEditEventsModal from './BulkEditEventsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
+import BulkEditBar from '../../components/BulkEditBarMobile';
 
 const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const { route } = useRoute();
 
-	const bulkEdit = useBulkEdit(events.data, can.update_event, can.delete_event);
+	const bulkEdit = useBulkEdit(events.data, can.update_event, can.delete_event, 'Event');
 
 	const sorts = [
 		{ id: 'title', name: 'Title' },
@@ -59,7 +60,6 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 		},
 		{ label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
 		bulkEdit.action,
-		bulkEdit.deleteAction,
 		filterAction,
 	]
 		.filter(action => !!action)
@@ -92,11 +92,13 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 				onOk={() => {
 					bulkEdit.setSelectedIds([]);
 					bulkEdit.setShowDeleteModal(false);
-					bulkEdit.setIsSelectionModeMobile(false);
+					bulkEdit.setIsForcedMobile(false);
 				}}
 			>
 				Are you sure you want to delete the selected events? This action cannot be undone.
 			</Dialog>
+
+			<BulkEditBar bulkEdit={bulkEdit} />
 
 			<IndexContainer
 				showFilters={showFilters}
@@ -119,6 +121,8 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 						events={events}
 						userEnsemblesCount={userEnsemblesCount}
 						bulkEdit={bulkEdit}
+						setShowFilters={setShowFilters}
+						hasNonDefaultFilters={hasNonDefaultFilters}
 					/>
 				}
 				tableDesktop={
@@ -148,8 +152,8 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 			/>
 
 			<BulkEditEventsModal
-				isOpen={bulkEdit.showModal}
-				setIsOpen={bulkEdit.setShowModal}
+				isOpen={bulkEdit.showEditModal}
+				setIsOpen={bulkEdit.setShowEditModal}
 				selectedEventIds={bulkEdit.selectedIds}
 				key={bulkEdit.selectedIds}
 				onSuccess={() => bulkEdit.setSelectedIds([])}
