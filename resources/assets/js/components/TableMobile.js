@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import Icon from './Icon';
 import CheckboxInput from './inputs/CheckboxInput';
+import useLongPress from '../hooks/useLongPress';
 
 export const TableMobileItem = ({ url, children }) => (
 	<TableMobileListItem>
@@ -11,11 +12,12 @@ export const TableMobileItem = ({ url, children }) => (
 
 export const TableMobileListItem = ({ children }) => <li className="flex flex-col relative">{children}</li>;
 
-export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4', children }) => (
+export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4', children, ...props }) => (
 	<Link
 		href={url}
 		onClick={onClick}
 		className={`block flex-grow min-w-0 ${active ? 'bg-purple-50' : 'hover:bg-gray-50'} ${padding}`}
+		{...props}
 	>
 		<div className="flex items-center pr-4 py-4 sm:px-6">
 			<div className="flex-1 flex items-center justify-between min-w-0 w-full">{children}</div>
@@ -26,24 +28,43 @@ export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4', childr
 	</Link>
 );
 
-export const TableMobileSelectableLink = ({ url, onClick, bulkEdit, value, children }) => (
-	<TableMobileLink
-		url={bulkEdit.isSelectionModeMobile ? null : url}
-		onClick={
-			bulkEdit.isSelectionModeMobile
-				? e => {
-						bulkEdit.toggleSelection(value);
-						e.preventDefault();
-						return false;
-				  }
-				: onClick
+export const TableMobileSelectableLink = ({ url, onClick, bulkEdit, value, children }) => {
+	const onLongPress = () => {
+		if (bulkEdit.canUpdate && !bulkEdit.isSelectionModeMobile) {
+			bulkEdit.setIsSelectionModeMobile(true);
+			bulkEdit.toggleSelection(value);
 		}
-		active={bulkEdit.selectedIds.includes(value)}
-		padding={bulkEdit.isSelectionModeMobile ? 'pl-11' : 'pl-4'}
-	>
-		{children}
-	</TableMobileLink>
-);
+	};
+
+	const handleClick = e => {
+		if (bulkEdit.isSelectionModeMobile) {
+			bulkEdit.toggleSelection(value);
+			if (e && e.preventDefault) {
+				e.preventDefault();
+			}
+			return false;
+		}
+
+		if (onClick) {
+			onClick(e);
+		} else if (url && (!e || !e.defaultPrevented)) {
+			router.visit(url);
+		}
+	};
+
+	const longPressProps = useLongPress(onLongPress, handleClick);
+
+	return (
+		<TableMobileLink
+			url={bulkEdit.isSelectionModeMobile ? '' : url}
+			active={bulkEdit.selectedIds.includes(value)}
+			padding={bulkEdit.isSelectionModeMobile ? 'pl-11' : 'pl-4'}
+			{...longPressProps}
+		>
+			{children}
+		</TableMobileLink>
+	);
+};
 
 export const TableMobileSelect = ({ bulkEdit, value }) => {
 	if (!bulkEdit.canUpdate || !bulkEdit.isSelectionModeMobile) {
