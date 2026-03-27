@@ -185,6 +185,7 @@ Route::middleware([
         Route::resource('events.kiosk-check-ins', EventCheckInKioskController::class)->only(['index', 'store']);
 
         Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
+        Route::post('events/{event}/attendances/bulk', [AttendanceController::class, 'bulkUpdate'])->name('events.attendances.bulkUpdate');
         Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
         Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
 

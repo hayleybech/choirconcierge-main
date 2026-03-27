@@ -4,7 +4,7 @@ import Button from './inputs/Button';
 import Icon from './Icon';
 import { plural } from '../util';
 
-const BulkEditBar = ({ bulkEdit }) => {
+const BulkEditBar = ({ bulkEdit, actions }) => {
 	const show = bulkEdit.isAllowed && bulkEdit.selectedIds.length > 0;
 
 	return (
@@ -18,7 +18,7 @@ const BulkEditBar = ({ bulkEdit }) => {
 			leaveFrom="translate-y-0 opacity-100"
 			leaveTo="translate-y-20 opacity-0"
 		>
-			<div className="px-2 py-2 border-b border-gray-200 flex gap-0.5 bg-gray-700 text-white fixed z-10 bottom-4 lg:bottom-8 left-1/2 transform -translate-x-1/2 rounded-xl shadow-xl">
+			<div className="px-2 py-2 border-b border-gray-200 flex gap-0.5 bg-gray-700 text-white fixed z-50 bottom-4 lg:bottom-8 left-1/2 transform -translate-x-1/2 rounded-xl shadow-xl">
 			<Button
 				size="xs"
 				variant="clear-inverse"
@@ -33,7 +33,8 @@ const BulkEditBar = ({ bulkEdit }) => {
 			</Button>
 			{bulkEdit.selectedIds.length > 0 && (
 				<>
-					{bulkEdit.canUpdate && (
+					{actions}
+					{bulkEdit.canUpdate && !bulkEdit.hideEdit && (
 						<Button
 							size="xs"
 							variant="clear-inverse"

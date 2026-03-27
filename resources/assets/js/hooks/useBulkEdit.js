@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { plural } from '../util';
 
-const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'Item') => {
+const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'Item', hideEdit = false) => {
 	const [selectedIds, setSelectedIds] = useState([]);
 	const [showEditModal, setShowEditModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -99,6 +99,7 @@ const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'I
 		totalItems: items.length,
 		isAllowed,
 		noun,
+		hideEdit,
 	};
 };
 

@@ -1,23 +1,21 @@
 import React from 'react';
 
-import TableMobile, { TableMobileHeader, TableMobileListItem } from '../../../components/TableMobile';
+import TableMobile, {
+	TableMobileHeader,
+	TableMobileListItem,
+	TableMobileSelect,
+	TableMobileSelectableLink,
+} from '../../../components/TableMobile';
 import Pagination from '../../../components/Pagination';
 import AttendanceRecord from '../../../components/Event/AttendanceRecord';
 import Badge from '../../../components/Badge';
 import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
-import { Link } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
 import SingerCategoryTag from '../../../components/SingerCategoryTag';
 
-const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event }) => {
+const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event, bulkEdit }) => {
 	const { route } = useRoute();
-	const bulkEdit = {
-		isActiveMobile: false,
-		noun: 'Singer',
-		selectedIds: [],
-		totalItems: singers.length,
-	};
 
 	return (
 		<div>
@@ -25,7 +23,12 @@ const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event }) => 
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{singers.map(singer => (
 					<TableMobileListItem key={singer.id}>
-						<div className="flex items-center px-4 py-4 sm:px-6 gap-4">
+						<TableMobileSelect bulkEdit={bulkEdit} value={singer.id} />
+						<TableMobileSelectableLink
+							bulkEdit={bulkEdit}
+							value={singer.id}
+							url={route('singers.show', { singer })}
+						>
 							<div className="shrink-0">
 								<img
 									className="h-8 w-8 rounded-md object-cover"
@@ -37,12 +40,9 @@ const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event }) => 
 								<div className="flex flex-wrap items-center justify-between mb-2 gap-x-2">
 									<div>
 										<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
-										<Link
-											href={route('singers.show', { singer })}
-											className="ml-1 text-sm font-medium text-purple-600 truncate"
-										>
+										<span className="ml-1 text-sm font-medium text-purple-600 truncate">
 											{singer.user.name}
-										</Link>
+										</span>
 									</div>
 									<AttendanceRecord
 										attendance={singer.attendance}
@@ -68,7 +68,7 @@ const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event }) => 
 									))}
 								</div>
 							</div>
-						</div>
+						</TableMobileSelectableLink>
 					</TableMobileListItem>
 				))}
 			</TableMobile>

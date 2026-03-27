@@ -199,4 +199,28 @@ class AttendanceController extends Controller
             ->route('events.show', ['event' => $event])
             ->with(['status' => 'Attendance recorded.']);
     }
+    public function bulkUpdate(Event $event, Request $request): RedirectResponse
+    {
+        $this->authorize('create', Attendance::class);
+
+        $request->validate([
+            'singer_ids' => ['required', 'array'],
+            'singer_ids.*' => ['exists:memberships,id'],
+            'response' => ['required', 'in:unknown,absent,absent_apology,late,late_deemed_absent,present'],
+        ]);
+
+        $singerIds = $request->input('singer_ids');
+        $response = $request->input('response');
+
+        foreach ($singerIds as $singerId) {
+            $event->attendances()->updateOrCreate(
+                ['membership_id' => $singerId],
+                ['response' => $response]
+            );
+        }
+
+        return redirect()
+            ->route('events.attendances.index', ['event' => $event])
+            ->with(['status' => 'Attendance updated for ' . count($singerIds) . ' singers.']);
+    }
 }
