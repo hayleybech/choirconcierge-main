@@ -99,7 +99,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 				Are you sure you want to delete the selected polls? This action cannot be undone.
 			</Dialog>
 
-			<BulkEditBarMobile totalItems={polls.length} bulkEdit={bulkEdit} />
+			<BulkEditBarMobile totalItems={polls.length} bulkEdit={bulkEdit} noun="poll" />
 
 			<IndexContainer
 				showFilters={showFilters}

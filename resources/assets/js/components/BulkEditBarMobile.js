@@ -3,7 +3,7 @@ import CheckboxInput from './inputs/CheckboxInput';
 import Button from './inputs/Button';
 import Icon from './Icon';
 
-const BulkEditBarMobile = ({ totalItems, bulkEdit }) => {
+const BulkEditBarMobile = ({ totalItems, bulkEdit, noun = 'item' }) => {
 	if (!bulkEdit.canUpdate || !bulkEdit.isSelectionModeMobile) {
 		return null;
 	}
@@ -19,7 +19,7 @@ const BulkEditBarMobile = ({ totalItems, bulkEdit }) => {
 			</div>
 			<Button
 				size="xs"
-				variant={bulkEdit.isSelectionModeMobile ? 'primary' : 'secondary'}
+				variant="clear"
 				onClick={
 					bulkEdit.isSelectionModeMobile
 						? () => {
@@ -30,8 +30,8 @@ const BulkEditBarMobile = ({ totalItems, bulkEdit }) => {
 				}
 				className="gap-1"
 			>
-				<Icon icon={bulkEdit.isSelectionModeMobile ? 'times' : 'check-square'} />
-				{bulkEdit.isSelectionModeMobile ? 'Cancel' : 'Select Multiple'}
+				<Icon icon="times" />
+				{bulkEdit.selectedIds.length} {noun}{bulkEdit.selectedIds.length === 1 ? '' : 's'}
 			</Button>
 			{bulkEdit.selectedIds.length > 0 && (
 				<>
@@ -43,7 +43,7 @@ const BulkEditBarMobile = ({ totalItems, bulkEdit }) => {
 						className="gap-1"
 					>
 						<Icon icon="pencil" />
-						Edit {bulkEdit.selectedIds.length > 0 ? `(${bulkEdit.selectedIds.length})` : ''}
+						Edit
 					</Button>
 					{bulkEdit.canDelete && (
 						<Button
@@ -54,7 +54,7 @@ const BulkEditBarMobile = ({ totalItems, bulkEdit }) => {
 							className="gap-1"
 						>
 							<Icon icon="trash" />
-							Delete {bulkEdit.selectedIds.length > 0 ? `(${bulkEdit.selectedIds.length})` : ''}
+							Delete
 						</Button>
 					)}
 				</>
