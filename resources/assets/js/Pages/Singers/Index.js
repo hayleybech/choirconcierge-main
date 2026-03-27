@@ -17,7 +17,7 @@ import useRoute from "../../hooks/useRoute";
 import BulkEditSingersModal from './BulkEditSingersModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
-import BulkEditBar from '../../components/BulkEditBarMobile';
+import BulkEditBar from '../../components/BulkEditBar';
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -85,7 +85,6 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 						can: 'export_singers',
 					},
 					bulkEdit.action,
-					bulkEdit.deleteAction,
 					filterAction,
 				].filter(action => (action?.can ? can[action.can] : !!action))}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}

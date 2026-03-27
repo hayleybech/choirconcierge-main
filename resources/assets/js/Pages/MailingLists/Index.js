@@ -4,16 +4,18 @@ import PageHeader from '../../components/PageHeader/PageHeader';
 import AppHead from '../../components/AppHead';
 import MailingListTableDesktop from './MailingListTableDesktop';
 import MailingListTableMobile from './MailingListTableMobile';
-import { usePage } from '@inertiajs/react';
 import EmptyState from '../../components/EmptyState';
 import IndexContainer from '../../components/IndexContainer';
 import useRoute from '../../hooks/useRoute';
-import TenantNotice from '../../components/TenantNotice';
 import TrialAntiSpamNotice from "./TrialAntiSpamNotice";
+import useBulkEdit from '../../hooks/useBulkEdit';
+import Dialog from '../../components/Dialog';
+import BulkEditBar from '../../components/BulkEditBar';
 
-const Index = ({ lists }) => {
-	const { can } = usePage().props;
+const Index = ({ lists, can }) => {
 	const { route } = useRoute();
+
+	const bulkEdit = useBulkEdit(lists.data, false, can.delete_group, 'List');
 
 	return (
 		<>
@@ -43,12 +45,33 @@ const Index = ({ lists }) => {
 						variant: 'secondary',
 						can: 'create_broadcast',
 					},
-				].filter(action => (action.can ? can[action.can] : true))}
+					bulkEdit.action,
+				].filter(action => (action?.can ? can[action.can] : !!action))}
 			/>
 
+			<Dialog
+				title={`Delete ${bulkEdit.selectedIds.length} Mailing Lists?`}
+				isOpen={bulkEdit.showDeleteModal}
+				setIsOpen={bulkEdit.setShowDeleteModal}
+				okLabel="Delete"
+				okVariant="danger-solid"
+				okMethod="post"
+				data={{ group_ids: bulkEdit.selectedIds }}
+				okUrl={route('groups.bulk-destroy')}
+				onOk={() => {
+					bulkEdit.setSelectedIds([]);
+					bulkEdit.setShowDeleteModal(false);
+					bulkEdit.setIsForcedMobile(false);
+				}}
+			>
+				Are you sure you want to delete the selected mailing lists? This action cannot be undone.
+			</Dialog>
+
+			<BulkEditBar bulkEdit={bulkEdit} />
+
 			<IndexContainer
-				tableDesktop={<MailingListTableDesktop lists={lists} />}
-				tableMobile={<MailingListTableMobile lists={lists} />}
+				tableDesktop={<MailingListTableDesktop lists={lists} bulkEdit={bulkEdit} />}
+				tableMobile={<MailingListTableMobile lists={lists} bulkEdit={bulkEdit} />}
 				emptyState={
 					lists.data.length === 0 ? (
 						<EmptyState

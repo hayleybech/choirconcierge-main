@@ -20,7 +20,7 @@ export const TableCell = ({ colSpan, children, className }) => (
 export const TItemRow = ({ bulkEdit, value, children }) => {
 	const props = {};
 
-	if (bulkEdit.canUpdate && bulkEdit.handleRowClick) {
+	if (bulkEdit.isAllowed && bulkEdit.handleRowClick) {
 		props.onClick = event => {
 			if (event.target.closest('a, button, input')) {
 				return;
@@ -45,7 +45,7 @@ export const THead = ({ children }) => <thead className="bg-gray-50">{children}<
 export const TBody = ({ children }) => <tbody className="bg-white divide-y divide-gray-200">{children}</tbody>;
 
 export const TableSelectAll = ({ bulkEdit, totalItems }) => {
-	if (!bulkEdit.canUpdate) {
+	if (!bulkEdit.isAllowed) {
 		return null;
 	}
 
@@ -61,7 +61,7 @@ export const TableSelectAll = ({ bulkEdit, totalItems }) => {
 };
 
 export const TableCellSelect = ({ bulkEdit, value }) => {
-	if (!bulkEdit.canUpdate) {
+	if (!bulkEdit.isAllowed) {
 		return null;
 	}
 

@@ -238,6 +238,7 @@ Route::middleware([
 
         // Mailing Lists (User Groups) module
         Route::prefix('groups')->name('groups.')->group(function () {
+            Route::post('bulk-destroy', [UserGroupController::class, 'bulkDestroy'])->name('bulk-destroy');
             Route::resource('mail-logs', MailLogController::class)->only(['index', 'show'])->middleware(EnsureUserIsMember::class);
         });
         Route::get('/groups/broadcasts/create', [BroadcastController::class, 'create'])->name('groups.broadcasts.create');

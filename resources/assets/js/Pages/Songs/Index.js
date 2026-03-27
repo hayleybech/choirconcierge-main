@@ -16,7 +16,7 @@ import useRoute from '../../hooks/useRoute';
 import BulkEditSongsModal from './BulkEditSongsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
-import BulkEditBar from '../../components/BulkEditBarMobile';
+import BulkEditBar from '../../components/BulkEditBar';
 
 const Index = ({
 	songs,
@@ -54,7 +54,6 @@ const Index = ({
 		{ label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary', can: 'create_song' },
 		{ label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
 		bulkEdit.action,
-		bulkEdit.deleteAction,
 		filterAction,
 	]
 		.filter(action => !!action)

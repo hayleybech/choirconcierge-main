@@ -1,10 +1,9 @@
 import React from 'react';
-import CheckboxInput from './inputs/CheckboxInput';
 import Button from './inputs/Button';
 import Icon from './Icon';
 
-const BulkEditBarMobile = ({ bulkEdit }) => {
-	if (!bulkEdit.canUpdate || bulkEdit.selectedIds.length === 0) {
+const BulkEditBar = ({ bulkEdit }) => {
+	if (!bulkEdit.isAllowed || bulkEdit.selectedIds.length === 0) {
 		return null;
 	}
 
@@ -25,16 +24,18 @@ const BulkEditBarMobile = ({ bulkEdit }) => {
 			</Button>
 			{bulkEdit.selectedIds.length > 0 && (
 				<>
-					<Button
-						size="xs"
-						variant="clear-inverse"
-						onClick={() => bulkEdit.setShowEditModal(true)}
-						disabled={bulkEdit.selectedIds.length === 0}
-						className="gap-1"
-					>
-						<Icon icon="pencil" />
-						Edit
-					</Button>
+					{bulkEdit.canUpdate && (
+						<Button
+							size="xs"
+							variant="clear-inverse"
+							onClick={() => bulkEdit.setShowEditModal(true)}
+							disabled={bulkEdit.selectedIds.length === 0}
+							className="gap-1"
+						>
+							<Icon icon="pencil" />
+							Edit
+						</Button>
+					)}
 					{bulkEdit.canDelete && (
 						<Button
 							size="xs"
@@ -53,4 +54,4 @@ const BulkEditBarMobile = ({ bulkEdit }) => {
 	);
 };
 
-export default BulkEditBarMobile;
+export default BulkEditBar;

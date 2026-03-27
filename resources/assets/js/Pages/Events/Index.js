@@ -15,7 +15,7 @@ import useRoute from '../../hooks/useRoute';
 import BulkEditEventsModal from './BulkEditEventsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
-import BulkEditBar from '../../components/BulkEditBarMobile';
+import BulkEditBar from '../../components/BulkEditBar';
 
 const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();

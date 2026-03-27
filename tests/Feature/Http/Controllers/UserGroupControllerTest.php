@@ -43,6 +43,21 @@ class UserGroupControllerTest extends TestCase
         $this->assertSoftDeleted($group);
     }
 
+    public function test_bulk_destroy_redirects_to_index(): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
+
+        $groups = UserGroup::factory()->count(3)->create();
+
+        $this->post(the_tenant_route('groups.bulk-destroy'), [
+            'group_ids' => $groups->pluck('id')->toArray(),
+        ])->assertRedirect(the_tenant_route('groups.index'));
+
+        foreach ($groups as $group) {
+            $this->assertSoftDeleted($group);
+        }
+    }
+
     public function test_edit_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));

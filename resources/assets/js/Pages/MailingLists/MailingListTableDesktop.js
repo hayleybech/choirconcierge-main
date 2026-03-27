@@ -1,12 +1,12 @@
 import React from 'react';
 import {Link} from "@inertiajs/react";
-import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
+import Table, {TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellSelect, TItemRow} from "../../components/Table";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 
-const MailingListTableDesktop = ({ lists }) => {
+const MailingListTableDesktop = ({ lists, bulkEdit }) => {
     const { route } = useRoute();
 
     const list_type_labels = {
@@ -19,6 +19,7 @@ const MailingListTableDesktop = ({ lists }) => {
         <Table pagination={<Pagination details={lists} />}>
             <THead>
                 <tr>
+                    <TableSelectAll bulkEdit={bulkEdit} totalItems={lists.data.length} />
                     <TableHeading>Title</TableHeading>
                     <TableHeading>Type</TableHeading>
                     <TableHeading>Address</TableHeading>
@@ -27,7 +28,8 @@ const MailingListTableDesktop = ({ lists }) => {
             </THead>
             <TBody>
                 {lists.data.map((list) => (
-                    <tr key={list.id}>
+                    <TItemRow key={list.id} bulkEdit={bulkEdit} value={list.id}>
+                        <TableCellSelect bulkEdit={bulkEdit} value={list.id} />
                         <TableCell>
                             <Link href={route('groups.show', {group: list.id})} className="text-sm font-medium text-purple-800">
                                 {list.title}
@@ -42,7 +44,7 @@ const MailingListTableDesktop = ({ lists }) => {
                         <TableCell>
                             <DateTag icon="pencil" date={list.created_at} />
                         </TableCell>
-                    </tr>
+                    </TItemRow>
                 ))}
             </TBody>
         </Table>

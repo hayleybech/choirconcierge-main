@@ -15,7 +15,7 @@ import RiserStackFilters from "../../components/RiserStack/RiserStackFilters";
 import useBulkEdit from "../../hooks/useBulkEdit";
 import Dialog from "../../components/Dialog";
 import BulkEditRiserStacksModal from "./BulkEditRiserStacksModal";
-import BulkEditBar from '../../components/BulkEditBarMobile';
+import BulkEditBar from '../../components/BulkEditBar';
 
 const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();

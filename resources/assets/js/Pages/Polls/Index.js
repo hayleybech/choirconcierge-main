@@ -30,7 +30,7 @@ import Sorts from '../../components/Sorts';
 import PollFilters from '../../components/PollFilters';
 import TableHeadingSort from '../../components/TableHeadingSort';
 import useBulkEdit from '../../hooks/useBulkEdit';
-import BulkEditBarMobile from '../../components/BulkEditBarMobile';
+import BulkEditBar from '../../components/BulkEditBar';
 import BulkEditPollsModal from './BulkEditPollsModal';
 import Dialog from '../../components/Dialog';
 import Button from '../../components/inputs/Button';
@@ -100,7 +100,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 				Are you sure you want to delete the selected polls? This action cannot be undone.
 			</Dialog>
 
-			<BulkEditBarMobile bulkEdit={bulkEdit} />
+			<BulkEditBar bulkEdit={bulkEdit} />
 
 			<IndexContainer
 				showFilters={showFilters}

@@ -30,7 +30,7 @@ export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4', childr
 
 export const TableMobileSelectableLink = ({ url, bulkEdit, value, children }) => {
 	const onLongPress = () => {
-		if (bulkEdit.canUpdate && !bulkEdit.isActiveMobile) {
+		if (bulkEdit.isAllowed && !bulkEdit.isActiveMobile) {
 			bulkEdit.toggleSelection(value);
 		}
 	};
@@ -63,7 +63,7 @@ export const TableMobileSelectableLink = ({ url, bulkEdit, value, children }) =>
 };
 
 export const TableMobileSelect = ({ bulkEdit, value }) => {
-	if (!bulkEdit.canUpdate || !bulkEdit.isActiveMobile) {
+	if (!bulkEdit.isAllowed || !bulkEdit.isActiveMobile) {
 		return null;
 	}
 

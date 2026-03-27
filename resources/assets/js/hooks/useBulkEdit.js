@@ -61,7 +61,7 @@ const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'I
 
 	const isActiveMobile = isForcedMobile || selectedIds.length > 0;
 
-	const action = canUpdate &&
+	const action = canUpdate || canDelete &&
 		!isDesktop && {
 			label: isActiveMobile ? 'Cancel Selection' : `Select ${noun}s`,
 			icon: 'check-square',
@@ -94,6 +94,7 @@ const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'I
 		canUpdate,
 		canDelete,
 		totalItems: items.length,
+		isAllowed: canUpdate || canDelete,
 		noun,
 	};
 };
