@@ -251,6 +251,27 @@ class SingerController extends Controller
             ->with(['status' => 'Singer deleted. ']);
     }
 
+    public function bulkUpdate(Request $request): RedirectResponse
+    {
+        $this->authorize('update', Membership::class);
+
+        $request->validate([
+            'singer_ids' => 'required|array',
+            'singer_ids.*' => 'exists:memberships,id',
+            'singer_category_id' => 'required|exists:singer_categories,id',
+        ]);
+
+        $singerIds = $request->input('singer_ids');
+
+        Membership::whereIn('id', $singerIds)->update([
+            'singer_category_id' => $request->input('singer_category_id'),
+        ]);
+
+        return redirect()
+            ->route('singers.index')
+            ->with(['status' => count($singerIds) . ' singers updated. ']);
+    }
+
     private function getSingers(string $defaultStatus): LengthAwarePaginator
     {
         $query = Membership::query()

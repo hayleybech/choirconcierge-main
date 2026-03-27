@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import VoicePartTag from '../../components/VoicePartTag';
 import SingerCategoryTag from '../../components/SingerCategoryTag';
-import Table, { TableCell, THead, TBody, TableHeading } from '../../components/Table';
+import Table, { TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellSelect, TItemRow } from '../../components/Table';
 import Icon from '../../components/Icon';
 import SingerStatus from '../../SingerStatus';
 import FeeStatus from '../../components/FeeStatus';
@@ -23,7 +23,7 @@ import RadioGroup from '../../components/inputs/RadioGroup';
 import Badge from '../../components/Badge';
 import { handleNameSort } from '../../utils/sortHelpers';
 
-const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles }) => {
+const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bulkEdit }) => {
 	const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
 	const [renewingSinger, setRenewingSinger] = useState(singers[0] ?? null);
 
@@ -37,6 +37,7 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles }) 
 			<Table pagination={<Pagination details={pagination} />}>
 				<THead>
 					<tr>
+						<TableSelectAll bulkEdit={bulkEdit} totalItems={singers.length} />
 						<TableHeading>
 							<TableHeadingSort
 								form={sortFilterForm}
@@ -65,7 +66,8 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles }) 
 				</THead>
 				<TBody>
 					{singers.map(singer => (
-						<tr key={singer.id}>
+						<TItemRow key={singer.id} bulkEdit={bulkEdit} value={singer.id}>
+							<TableCellSelect bulkEdit={bulkEdit} value={singer.id} />
 							<TableCell>
 								<div className="flex items-center">
 									<div className="shrink-0 h-10 w-10">
@@ -145,7 +147,7 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles }) 
 									</Button>
 								</TableCell>
 							)}
-						</tr>
+						</TItemRow>
 					))}
 				</TBody>
 			</Table>

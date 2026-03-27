@@ -133,6 +133,7 @@ Route::middleware([
         // Singers module
         Route::get('singers/export', ExportMemberController::class)->name('singers.export');
         Route::get('singers/{singer}/attendance', [SingerAttendanceController::class, '__invoke'])->name('singers.attendance');
+        Route::post('singers/bulk-update', [SingerController::class, 'bulkUpdate'])->name('singers.bulk-update');
         Route::resource('singers', SingerController::class);
         Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
         Route::resource('singers.enrolments', EnrolmentController::class)->only(['store', 'update', 'destroy']);

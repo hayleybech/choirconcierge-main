@@ -95,7 +95,7 @@ class MembershipPolicy
      *
      * @return mixed
      */
-    public function update(User $user, Membership $singer)
+    public function update(User $user, ?Membership $singer = null)
     {
         return $user->membership->hasAbility('singers_update');
     }

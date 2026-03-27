@@ -14,12 +14,16 @@ import useSortFilterForm from "../../hooks/useSortFilterForm";
 import EmptyState from "../../components/EmptyState";
 import ImportSingersDialog from "../../components/ImportSingersDialog";
 import useRoute from "../../hooks/useRoute";
+import BulkEditSingersModal from './BulkEditSingersModal';
+import useBulkEdit from '../../hooks/useBulkEdit';
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const [showImportDialog, setShowImportDialog] = useState(false);
     const { can } = usePage().props;
     const { route } = useRoute();
+
+    const bulkEdit = useBulkEdit(allSingers, can.update_singer);
 
     const sorts = [
         { id: 'full-name', name: 'First Name', default: true },
@@ -56,8 +60,9 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
                     { label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
                     { label: 'Import Singers', icon: 'file-import', onClick: () => setShowImportDialog(true), can: 'import_singers'},
                     { label: 'Export Singers', icon: 'file-export', url: route('singers.export'), download: true, can: 'export_singers'},
+                    bulkEdit.action,
                     filterAction,
-                ].filter(action => action.can ? can[action.can] : true)}
+                ].filter(action => action?.can ? can[action.can] : !!action)}
                 optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
             />
 
@@ -72,8 +77,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
                         closeFn={() => setShowFilters(false)}
                     />
                 }
-                tableMobile={<SingerTableMobile singers={allSingers} pagination={pagination} ensembles={ensembles} />}
-                tableDesktop={<SingerTableDesktop singers={allSingers} sortFilterForm={sortFilterForm} pagination={pagination} ensembles={ensembles} />}
+                tableMobile={<SingerTableMobile singers={allSingers} pagination={pagination} ensembles={ensembles} bulkEdit={bulkEdit} />}
+                tableDesktop={<SingerTableDesktop singers={allSingers} sortFilterForm={sortFilterForm} pagination={pagination} ensembles={ensembles} bulkEdit={bulkEdit} />}
                 emptyState={allSingers.length === 0
                     ? <EmptyState
                         title="No singers"
@@ -88,6 +93,15 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
                     />
                     : null
                 }
+            />
+
+            <BulkEditSingersModal
+                isOpen={bulkEdit.showModal}
+                setIsOpen={bulkEdit.setShowModal}
+                selectedSingerIds={bulkEdit.selectedIds}
+                key={bulkEdit.selectedIds}
+                onSuccess={() => bulkEdit.setSelectedIds([])}
+                statuses={statuses}
             />
         </>
     );

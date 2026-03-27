@@ -39,7 +39,7 @@ export const TableMobileSelectableLink = ({ url, onClick, bulkEdit, value, child
 				: onClick
 		}
 		active={bulkEdit.selectedIds.includes(value)}
-		className={bulkEdit.isSelectionModeMobile ? 'pl-11' : 'pl-4'}
+		padding={bulkEdit.isSelectionModeMobile ? 'pl-11' : 'pl-4'}
 	>
 		{children}
 	</TableMobileLink>
