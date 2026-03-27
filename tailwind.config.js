@@ -18,6 +18,10 @@ module.exports = {
         'brand-blue': '#21a7eb',
       },
       width: { '250px': '250px' },
+      transitionTimingFunction: {
+        'in-back': 'cubic-bezier(0.36, 0, 0.66, -0.56)',
+        'out-back': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+      },
       typography: (theme) => ({
         DEFAULT: {
           css: {
