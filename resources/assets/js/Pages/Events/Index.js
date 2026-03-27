@@ -14,12 +14,13 @@ import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import BulkEditEventsModal from './BulkEditEventsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
+import Dialog from '../../components/Dialog';
 
 const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const { route } = useRoute();
 
-	const bulkEdit = useBulkEdit(events.data, can.update_event);
+	const bulkEdit = useBulkEdit(events.data, can.update_event, can.delete_event);
 
 	const sorts = [
 		{ id: 'title', name: 'Title' },
@@ -58,6 +59,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 		},
 		{ label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
 		bulkEdit.action,
+		bulkEdit.deleteAction,
 		filterAction,
 	]
 		.filter(action => !!action)
@@ -77,6 +79,24 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 				meta={<div>Calendar Sync URL: {route('events.feed')}</div>}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 			/>
+
+			<Dialog
+				title={`Delete ${bulkEdit.selectedIds.length} Events?`}
+				isOpen={bulkEdit.showDeleteModal}
+				setIsOpen={bulkEdit.setShowDeleteModal}
+				okLabel="Delete"
+				okVariant="danger-solid"
+				okMethod="post"
+				data={{ event_ids: bulkEdit.selectedIds }}
+				okUrl={route('events.bulk-destroy')}
+				onOk={() => {
+					bulkEdit.setSelectedIds([]);
+					bulkEdit.setShowDeleteModal(false);
+					bulkEdit.setIsSelectionModeMobile(false);
+				}}
+			>
+				Are you sure you want to delete the selected events? This action cannot be undone.
+			</Dialog>
 
 			<IndexContainer
 				showFilters={showFilters}

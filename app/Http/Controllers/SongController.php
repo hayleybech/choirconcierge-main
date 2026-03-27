@@ -224,6 +224,24 @@ class SongController extends Controller
             ->with(['status' => count($songIds) . ' songs updated. ']);
     }
 
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $this->authorize('delete', Song::class);
+
+        $request->validate([
+            'song_ids' => 'required|array',
+            'song_ids.*' => 'exists:songs,id',
+        ]);
+
+        $songIds = $request->input('song_ids');
+
+        Song::whereIn('id', $songIds)->delete();
+
+        return redirect()
+            ->route('songs.index')
+            ->with(['status' => count($songIds) . ' songs deleted. ']);
+    }
+
     private function getSongs(bool $includePending, array $defaultStatuses, bool $includeNonAuditionSongs, array $showForProspectsDefault): LengthAwarePaginator
     {
         $userEnsembles = auth()->user()?->membership?->enrolments->pluck('ensemble_id');

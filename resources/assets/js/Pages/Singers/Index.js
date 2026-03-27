@@ -16,6 +16,7 @@ import ImportSingersDialog from "../../components/ImportSingersDialog";
 import useRoute from "../../hooks/useRoute";
 import BulkEditSingersModal from './BulkEditSingersModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
+import Dialog from '../../components/Dialog';
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -23,7 +24,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
     const { can } = usePage().props;
     const { route } = useRoute();
 
-    const bulkEdit = useBulkEdit(allSingers, can.update_singer);
+    const bulkEdit = useBulkEdit(allSingers, can.update_singer, can.delete_singer);
 
     const sorts = [
         { id: 'full-name', name: 'First Name', default: true },
@@ -61,10 +62,29 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
                     { label: 'Import Singers', icon: 'file-import', onClick: () => setShowImportDialog(true), can: 'import_singers'},
                     { label: 'Export Singers', icon: 'file-export', url: route('singers.export'), download: true, can: 'export_singers'},
                     bulkEdit.action,
+                    bulkEdit.deleteAction,
                     filterAction,
                 ].filter(action => action?.can ? can[action.can] : !!action)}
                 optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
             />
+
+            <Dialog
+                title={`Delete ${bulkEdit.selectedIds.length} Singers?`}
+                isOpen={bulkEdit.showDeleteModal}
+                setIsOpen={bulkEdit.setShowDeleteModal}
+                okLabel="Delete"
+                okVariant="danger-solid"
+                okMethod="post"
+                data={{ singer_ids: bulkEdit.selectedIds }}
+                okUrl={route('singers.bulk-destroy')}
+                onOk={() => {
+                    bulkEdit.setSelectedIds([]);
+                    bulkEdit.setShowDeleteModal(false);
+                    bulkEdit.setIsSelectionModeMobile(false);
+                }}
+            >
+                Are you sure you want to delete the selected singers? This will also delete their user accounts if they are not members of any other choir. This action cannot be undone.
+            </Dialog>
 
             <ImportSingersDialog isOpen={showImportDialog} setIsOpen={setShowImportDialog} />
 

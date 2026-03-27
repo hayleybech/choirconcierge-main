@@ -34,16 +34,30 @@ const BulkEditBarMobile = ({ totalItems, bulkEdit }) => {
 				{bulkEdit.isSelectionModeMobile ? 'Cancel' : 'Select Multiple'}
 			</Button>
 			{bulkEdit.selectedIds.length > 0 && (
-				<Button
-					size="xs"
-					variant="secondary"
-					onClick={() => bulkEdit.setShowModal(true)}
-					disabled={bulkEdit.selectedIds.length === 0}
-					className="gap-1"
-				>
-					<Icon icon="pencil" />
-					Edit {bulkEdit.selectedIds.length > 0 ? `(${bulkEdit.selectedIds.length})` : ''}
-				</Button>
+				<>
+					<Button
+						size="xs"
+						variant="secondary"
+						onClick={() => bulkEdit.setShowModal(true)}
+						disabled={bulkEdit.selectedIds.length === 0}
+						className="gap-1"
+					>
+						<Icon icon="pencil" />
+						Edit {bulkEdit.selectedIds.length > 0 ? `(${bulkEdit.selectedIds.length})` : ''}
+					</Button>
+					{bulkEdit.canDelete && (
+						<Button
+							size="xs"
+							variant="danger-solid"
+							onClick={() => bulkEdit.setShowDeleteModal(true)}
+							disabled={bulkEdit.selectedIds.length === 0}
+							className="gap-1"
+						>
+							<Icon icon="trash" />
+							Delete {bulkEdit.selectedIds.length > 0 ? `(${bulkEdit.selectedIds.length})` : ''}
+						</Button>
+					)}
+				</>
 			)}
 		</div>
 	);

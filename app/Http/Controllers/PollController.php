@@ -186,6 +186,23 @@ class PollController extends Controller
             ->with(['status' => count($data['poll_ids']) . ' polls updated.']);
     }
 
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $this->authorize('viewAny', Poll::class);
+        $this->authorize('delete', Poll::class);
+
+        $data = $request->validate([
+            'poll_ids' => ['required', 'array'],
+            'poll_ids.*' => ['exists:polls,id'],
+        ]);
+
+        Poll::whereIn('id', $data['poll_ids'])->delete();
+
+        return redirect()
+            ->route('polls.index')
+            ->with(['status' => count($data['poll_ids']) . ' polls deleted.']);
+    }
+
     public function destroy(Poll $poll): RedirectResponse
     {
         $poll->delete();

@@ -15,6 +15,7 @@ import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import BulkEditSongsModal from './BulkEditSongsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
+import Dialog from '../../components/Dialog';
 
 const Index = ({
 	songs,
@@ -30,7 +31,7 @@ const Index = ({
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const { route } = useRoute();
 
-	const bulkEdit = useBulkEdit(songs.data, can.update_song);
+	const bulkEdit = useBulkEdit(songs.data, can.update_song, can.delete_song);
 
 	const sorts = [
 		{ id: 'title', name: 'Title', default: true },
@@ -52,6 +53,7 @@ const Index = ({
 		{ label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary', can: 'create_song' },
 		{ label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
 		bulkEdit.action,
+		bulkEdit.deleteAction,
 		filterAction,
 	]
 		.filter(action => !!action)
@@ -70,6 +72,24 @@ const Index = ({
 				actions={actions}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 			/>
+
+			<Dialog
+				title={`Delete ${bulkEdit.selectedIds.length} Songs?`}
+				isOpen={bulkEdit.showDeleteModal}
+				setIsOpen={bulkEdit.setShowDeleteModal}
+				okLabel="Delete"
+				okVariant="danger-solid"
+				okMethod="post"
+				data={{ song_ids: bulkEdit.selectedIds }}
+				okUrl={route('songs.bulk-destroy')}
+				onOk={() => {
+					bulkEdit.setSelectedIds([]);
+					bulkEdit.setShowDeleteModal(false);
+					bulkEdit.setIsSelectionModeMobile(false);
+				}}
+			>
+				Are you sure you want to delete the selected songs? This action cannot be undone.
+			</Dialog>
 
 			<IndexContainer
 				showFilters={showFilters}

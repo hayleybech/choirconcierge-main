@@ -92,7 +92,7 @@ class PollPolicy
      *
      * @return mixed
      */
-    public function delete(User $user, Poll $poll)
+    public function delete(User $user, ?Poll $poll = null)
     {
         return $user->membership->hasAbility('polls_delete');
     }

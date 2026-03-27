@@ -28,6 +28,7 @@ import TableHeadingSort from '../../components/TableHeadingSort';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import BulkEditBarMobile from '../../components/BulkEditBarMobile';
 import BulkEditPollsModal from './BulkEditPollsModal';
+import Dialog from '../../components/Dialog';
 
 const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 	const { route } = useRoute();
@@ -50,7 +51,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 
 	const sortFilterForm = useSortFilterForm('polls.index', filters, sorts);
 
-	const bulkEdit = useBulkEdit(polls, can.update_poll);
+	const bulkEdit = useBulkEdit(polls, can.update_poll, can.delete_poll);
 
 	const actions = [
 		{ label: 'Add New', url: route('polls.create'), icon: 'plus', variant: 'primary' },
@@ -58,6 +59,10 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 
 	if (bulkEdit.action) {
 		actions.push(bulkEdit.action);
+	}
+
+	if (bulkEdit.deleteAction) {
+		actions.push(bulkEdit.deleteAction);
 	}
 
 	actions.push(filterAction);
@@ -75,6 +80,24 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 				actions={actions}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 			/>
+
+			<Dialog
+				title={`Delete ${bulkEdit.selectedIds.length} Polls?`}
+				isOpen={bulkEdit.showDeleteModal}
+				setIsOpen={bulkEdit.setShowDeleteModal}
+				okLabel="Delete"
+				okVariant="danger-solid"
+				okMethod="post"
+				data={{ poll_ids: bulkEdit.selectedIds }}
+				okUrl={route('polls.bulk-destroy')}
+				onOk={() => {
+					bulkEdit.setSelectedIds([]);
+					bulkEdit.setShowDeleteModal(false);
+					bulkEdit.setIsSelectionModeMobile(false);
+				}}
+			>
+				Are you sure you want to delete the selected polls? This action cannot be undone.
+			</Dialog>
 
 			<BulkEditBarMobile totalItems={polls.length} bulkEdit={bulkEdit} />
 

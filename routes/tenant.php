@@ -134,6 +134,7 @@ Route::middleware([
         Route::get('singers/export', ExportMemberController::class)->name('singers.export');
         Route::get('singers/{singer}/attendance', [SingerAttendanceController::class, '__invoke'])->name('singers.attendance');
         Route::post('singers/bulk-update', [SingerController::class, 'bulkUpdate'])->name('singers.bulk-update');
+        Route::post('singers/bulk-destroy', [SingerController::class, 'bulkDestroy'])->name('singers.bulk-destroy');
         Route::resource('singers', SingerController::class);
         Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
         Route::resource('singers.enrolments', EnrolmentController::class)->only(['store', 'update', 'destroy']);
@@ -152,6 +153,7 @@ Route::middleware([
 
         // Songs module
         Route::post('songs/bulk-update', [SongController::class, 'bulkUpdate'])->name('songs.bulk-update');
+        Route::post('songs/bulk-destroy', [SongController::class, 'bulkDestroy'])->name('songs.bulk-destroy');
         Route::resource('songs', SongController::class);
         Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('employee');
         Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
@@ -162,6 +164,7 @@ Route::middleware([
 
         // Events module
         Route::post('events/bulk-update', [EventController::class, 'bulkUpdate'])->name('events.bulk-update');
+        Route::post('events/bulk-destroy', [EventController::class, 'bulkDestroy'])->name('events.bulk-destroy');
         Route::resource('events', EventController::class);
         Route::get('events/{event}/clone', [EventController::class, 'clone'])->name('events.clone');
         Route::resource('events.rsvps', RsvpController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -194,6 +197,7 @@ Route::middleware([
 
         // Risers module
         Route::post('stacks/bulk-update', [RiserStackController::class, 'bulkUpdate'])->name('stacks.bulk-update');
+        Route::post('stacks/bulk-destroy', [RiserStackController::class, 'bulkDestroy'])->name('stacks.bulk-destroy');
         Route::resource('stacks', RiserStackController::class);
         Route::get('stacks/{stack}/clone', [RiserStackController::class, 'clone'])->name('stacks.clone');
 
@@ -253,6 +257,7 @@ Route::middleware([
 
         // Polls module
         Route::post('polls/bulk-update', [PollController::class, 'bulkUpdate'])->name('polls.bulk-update');
+        Route::post('polls/bulk-destroy', [PollController::class, 'bulkDestroy'])->name('polls.bulk-destroy');
         Route::resource('polls', PollController::class);
         Route::post('polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
         Route::put('polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');

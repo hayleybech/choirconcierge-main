@@ -223,6 +223,24 @@ class EventController extends Controller
             ->with(['status' => count($eventIds) . ' events updated. ']);
     }
 
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $this->authorize('delete', Event::class);
+
+        $request->validate([
+            'event_ids' => 'required|array',
+            'event_ids.*' => 'exists:events,id',
+        ]);
+
+        $eventIds = $request->input('event_ids');
+
+        Event::whereIn('id', $eventIds)->delete();
+
+        return redirect()
+            ->route('events.index')
+            ->with(['status' => count($eventIds) . ' events deleted.']);
+    }
+
     private function getEvents(): LengthAwarePaginator
     {
         $userEnsembles = auth()->user()?->membership?->enrolments->pluck('ensemble_id');

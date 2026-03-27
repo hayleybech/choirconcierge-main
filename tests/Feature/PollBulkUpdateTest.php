@@ -115,3 +115,38 @@ test('cannot bulk update polls without permission', function () {
         ])
         ->assertForbidden();
 });
+
+test('can bulk delete polls', function () {
+    $user = createMusicTeamUserForBulk();
+    $polls = Poll::factory()->count(3)->create();
+    $pollIds = $polls->pluck('id')->toArray();
+
+    $this->actingAs($user)
+        ->post(the_tenant_route('polls.bulk-destroy'), [
+            'poll_ids' => $pollIds,
+        ])
+        ->assertRedirect(the_tenant_route('polls.index'));
+
+    foreach ($pollIds as $pollId) {
+        expect(Poll::find($pollId))->toBeNull();
+    }
+});
+
+test('cannot bulk delete polls without permission', function () {
+    $membership = Membership::factory()->create();
+    $membership->roles()->attach([Role::where('name', 'Singer')->valueOrFail('id')]);
+    $user = $membership->user;
+
+    $polls = Poll::factory()->count(2)->create();
+    $pollIds = $polls->pluck('id')->toArray();
+
+    $this->actingAs($user)
+        ->post(the_tenant_route('polls.bulk-destroy'), [
+            'poll_ids' => $pollIds,
+        ])
+        ->assertForbidden();
+
+    foreach ($pollIds as $pollId) {
+        expect(Poll::find($pollId))->not->toBeNull();
+    }
+});

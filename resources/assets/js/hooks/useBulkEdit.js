@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-const useBulkEdit = (items = [], canUpdate = false) => {
+const useBulkEdit = (items = [], canUpdate = false, canDelete = false) => {
 	const [selectedIds, setSelectedIds] = useState([]);
 	const [showModal, setShowModal] = useState(false);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [isSelectionModeMobile, setIsSelectionModeMobile] = useState(false);
 	const [lastSelectedId, setLastSelectedId] = useState(null);
 	const refSelectAll = useRef(null);
@@ -77,11 +78,24 @@ const useBulkEdit = (items = [], canUpdate = false) => {
 			  }
 		: null;
 
+	const deleteAction =
+		canDelete && (isDesktop || isSelectionModeMobile)
+			? {
+					label: `Delete ${selectedIds.length > 0 ? `(${selectedIds.length})` : ''}`,
+					icon: 'trash',
+					onClick: () => setShowDeleteModal(true),
+					variant: 'danger-solid',
+					disabled: selectedIds.length === 0,
+			  }
+			: null;
+
 	return {
 		selectedIds,
 		setSelectedIds,
 		showModal,
 		setShowModal,
+		showDeleteModal,
+		setShowDeleteModal,
 		refSelectAll,
 		isSelectionModeMobile,
 		setIsSelectionModeMobile,
@@ -91,7 +105,9 @@ const useBulkEdit = (items = [], canUpdate = false) => {
 		clearSelections,
 		toggleSelectionModeMobile,
 		action,
+		deleteAction,
 		canUpdate,
+		canDelete,
 	};
 };
 

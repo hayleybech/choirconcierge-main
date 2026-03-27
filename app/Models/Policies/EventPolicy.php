@@ -93,7 +93,7 @@ class EventPolicy
      *
      * @return mixed
      */
-    public function delete(User $user, Event $event)
+    public function delete(User $user, ?Event $event = null)
     {
         return $user->membership->hasAbility('events_delete');
     }

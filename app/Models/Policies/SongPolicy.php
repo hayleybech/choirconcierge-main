@@ -101,7 +101,7 @@ class SongPolicy
      *
      * @return mixed
      */
-    public function delete(User $user, Song $song)
+    public function delete(User $user, ?Song $song = null)
     {
         return $user->membership->hasAbility('songs_delete');
     }

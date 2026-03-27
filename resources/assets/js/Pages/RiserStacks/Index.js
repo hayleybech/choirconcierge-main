@@ -13,6 +13,7 @@ import useSortFilterForm from "../../hooks/useSortFilterForm";
 import FilterSortPane from "../../components/FilterSortPane";
 import RiserStackFilters from "../../components/RiserStack/RiserStackFilters";
 import useBulkEdit from "../../hooks/useBulkEdit";
+import Dialog from "../../components/Dialog";
 import BulkEditRiserStacksModal from "./BulkEditRiserStacksModal";
 
 const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
@@ -20,7 +21,7 @@ const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
     const { can } = usePage().props;
     const { route } = useRoute();
 
-    const bulkEdit = useBulkEdit(stacks.data, can.update_stack && ensembles.length > 1);
+    const bulkEdit = useBulkEdit(stacks.data, can.update_stack && ensembles.length > 1, can.delete_stack);
 
     const filters = [
         { name: 'ensembles.id', multiple: true },
@@ -47,10 +48,29 @@ const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
 						can: 'create_stack',
 					},
 					bulkEdit.action,
+					bulkEdit.deleteAction,
 					filterAction,
 				].filter(action => (action?.can ? can[action.can] : !!action))}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 			/>
+
+			<Dialog
+				title={`Delete ${bulkEdit.selectedIds.length} Riser Stacks?`}
+				isOpen={bulkEdit.showDeleteModal}
+				setIsOpen={bulkEdit.setShowDeleteModal}
+				okLabel="Delete"
+				okVariant="danger-solid"
+				okMethod="post"
+				data={{ stack_ids: bulkEdit.selectedIds }}
+				okUrl={route('stacks.bulk-destroy')}
+				onOk={() => {
+					bulkEdit.setSelectedIds([]);
+					bulkEdit.setShowDeleteModal(false);
+					bulkEdit.setIsSelectionModeMobile(false);
+				}}
+			>
+				Are you sure you want to delete the selected riser stacks? This action cannot be undone.
+			</Dialog>
 
 			<IndexContainer
 				showFilters={showFilters}

@@ -216,6 +216,24 @@ class RiserStackController extends Controller
             ->with(['status' => count($stackIds) . ' riser stacks updated. ']);
     }
 
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $this->authorize('delete', RiserStack::class);
+
+        $request->validate([
+            'stack_ids' => 'required|array',
+            'stack_ids.*' => 'exists:riser_stacks,id',
+        ]);
+
+        $stackIds = $request->input('stack_ids');
+
+        RiserStack::whereIn('id', $stackIds)->delete();
+
+        return redirect()
+            ->route('stacks.index')
+            ->with(['status' => count($stackIds) . ' riser stacks deleted.']);
+    }
+
     private function prepPositions(array $singerPositions): array
     {
         return collect($singerPositions)
