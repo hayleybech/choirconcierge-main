@@ -17,9 +17,28 @@ export const TableCell = ({ colSpan, children, className }) => (
 	</td>
 );
 
-export const TItemRow = ({ bulkEdit, value, children }) => (
-	<tr className={bulkEdit.selectedIds.includes(value) ? 'bg-purple-50' : ''}>{children}</tr>
-);
+export const TItemRow = ({ bulkEdit, value, children }) => {
+	const props = {};
+
+	if (bulkEdit.canUpdate && bulkEdit.handleRowClick) {
+		props.onClick = event => {
+			if (event.target.closest('a, button, input')) {
+				return;
+			}
+			bulkEdit.handleRowClick(value, event);
+		};
+		props.onMouseDown = event => {
+			if (event.shiftKey) {
+				event.preventDefault();
+			}
+		};
+		props.className = 'cursor-pointer ';
+	}
+
+	props.className = (props.className || '') + (bulkEdit.selectedIds.includes(value) ? 'bg-purple-50' : '');
+
+	return <tr {...props}>{children}</tr>;
+};
 
 export const THead = ({ children }) => <thead className="bg-gray-50">{children}</thead>;
 
@@ -51,6 +70,7 @@ export const TableCellSelect = ({ bulkEdit, value }) => {
 			<CheckboxInput
 				checked={bulkEdit.selectedIds.includes(value)}
 				onChange={() => bulkEdit.toggleSelection(value)}
+				onClick={event => event.stopPropagation()}
 			/>
 		</TableCell>
 	);

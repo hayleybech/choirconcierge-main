@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import SongStatusTag from '../../components/SongStatusTag';
 import PitchButton from '../../components/PitchButton';
-import Table, { TableCell, TableHeading, TableSelectAll, TBody, THead, TableCellSelect } from '../../components/Table';
+import Table, { TableCell, TableHeading, TableSelectAll, TBody, THead, TableCellSelect, TItemRow } from '../../components/Table';
 import Badge from '../../components/Badge';
 import DateTag from '../../components/DateTag';
 import SongStatus from '../../SongStatus';
@@ -44,7 +44,7 @@ const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, bulkEdit 
 			</THead>
 			<TBody>
 				{songs.data.map(song => (
-					<tr key={song.id} className={bulkEdit.selectedIds.includes(song.id) ? 'bg-purple-50' : ''}>
+					<TItemRow key={song.id} bulkEdit={bulkEdit} value={song.id}>
 						<TableCellSelect bulkEdit={bulkEdit} value={song.id} />
 						<TableCell>
 							<div className="flex items-center">
@@ -85,7 +85,7 @@ const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, bulkEdit 
 						<TableCell>
 							<DateTag icon="pencil" date={song.created_at} />
 						</TableCell>
-					</tr>
+					</TItemRow>
 				))}
 			</TBody>
 		</Table>
