@@ -190,6 +190,32 @@ class RiserStackController extends Controller
      *
      * @todo Convert the riser position data within the React component.
      */
+    public function bulkUpdate(Request $request): RedirectResponse
+    {
+        $this->authorize('viewAny', RiserStack::class);
+        $this->authorize('create', RiserStack::class);
+
+        $request->validate([
+            'stack_ids' => 'required|array',
+            'stack_ids.*' => 'exists:riser_stacks,id',
+            'ensemble_ids' => 'required|array',
+            'ensemble_ids.*' => 'exists:ensembles,id',
+        ]);
+
+        $stackIds = $request->input('stack_ids');
+        $ensembleIds = $request->input('ensemble_ids');
+
+        $stacks = RiserStack::whereIn('id', $stackIds)->get();
+
+        foreach ($stacks as $stack) {
+            $stack->ensembles()->sync($ensembleIds);
+        }
+
+        return redirect()
+            ->route('stacks.index')
+            ->with(['status' => count($stackIds) . ' riser stacks updated. ']);
+    }
+
     private function prepPositions(array $singerPositions): array
     {
         return collect($singerPositions)

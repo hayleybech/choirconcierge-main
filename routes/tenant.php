@@ -193,6 +193,7 @@ Route::middleware([
         Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'update', 'destroy']);
 
         // Risers module
+        Route::post('stacks/bulk-update', [RiserStackController::class, 'bulkUpdate'])->name('stacks.bulk-update');
         Route::resource('stacks', RiserStackController::class);
         Route::get('stacks/{stack}/clone', [RiserStackController::class, 'clone'])->name('stacks.clone');
 

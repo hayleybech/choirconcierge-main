@@ -94,6 +94,7 @@ class HandleInertiaRequests extends Middleware
                 'delete_document' => auth()->user()?->can('delete', Document::class),
                 'list_stacks' => auth()->user()?->can('viewAny', RiserStack::class),
                 'create_stack' => auth()->user()?->can('create', RiserStack::class),
+                'update_stack' => auth()->user()?->can('update', RiserStack::class),
                 'list_groups' => auth()->user()?->can('viewAny', UserGroup::class),
                 'create_group' => auth()->user()?->can('create', UserGroup::class),
                 'create_broadcast' => auth()->user()?->can('createBroadcast', UserGroup::class),
