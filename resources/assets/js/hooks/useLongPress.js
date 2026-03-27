@@ -45,7 +45,7 @@ const useLongPress = (onLongPress, onClick, { delay = 500, shouldPreventDefault 
 	);
 
 	const preventDefault = event => {
-		if (!event.cancelable) {
+		if (!event.cancelable || !isLongPressActive.current) {
 			return;
 		}
 		event.preventDefault();
