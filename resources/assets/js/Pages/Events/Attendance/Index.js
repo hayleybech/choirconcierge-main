@@ -95,7 +95,7 @@ const Index = ({
 						can: 'create_attendance',
 					},
 					filterAction,
-				].filter(action => (action.can ? pageProps.can[action.can] : true))}
+				].filter(action => (action?.can ? pageProps.can[action.can] : !!action))}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 				meta={
 					<div>

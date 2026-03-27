@@ -3,6 +3,7 @@ import { Link, router } from '@inertiajs/react';
 import Icon from './Icon';
 import CheckboxInput from './inputs/CheckboxInput';
 import useLongPress from '../hooks/useLongPress';
+import { plural } from '../util';
 
 export const TableMobileItem = ({ url, children }) => (
 	<TableMobileListItem>
@@ -76,7 +77,6 @@ export const TableMobileSelect = ({ bulkEdit, value }) => {
 		</div>
 	);
 };
-
 export const TableMobileHeader = ({ bulkEdit, children }) => (
 	<div className="px-4 py-1 border-b border-gray-200 flex gap-1 items-center justify-between bg-gray-50 relative">
 		<div className="flex items-center">
@@ -90,7 +90,7 @@ export const TableMobileHeader = ({ bulkEdit, children }) => (
 				</div>
 			)}
 			<div className={`text-gray-500 text-sm transition-[padding] ${bulkEdit.isActiveMobile > 0 ? 'pl-7' : 'pl-0'}`}>
-				{bulkEdit.noun}s
+				{plural(bulkEdit.noun)}
 			</div>
 		</div>
 

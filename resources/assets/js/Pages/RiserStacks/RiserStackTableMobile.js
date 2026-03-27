@@ -49,7 +49,7 @@ const RiserStackTableMobile = ({ stacks, userEnsemblesCount, bulkEdit, hasNonDef
 								{userEnsemblesCount > 1 && stack.ensembles.length > 0 && (
 									<div className="mt-2 flex gap-1 flex-wrap">
 										{stack.ensembles.map(ensemble => (
-											<Badge colour="bg-purple-100 text-purple-800 truncate" display="">
+											<Badge key={ensemble.name} colour="bg-purple-100 text-purple-800 truncate" display="">
 												{ensemble.name}
 											</Badge>
 										))}

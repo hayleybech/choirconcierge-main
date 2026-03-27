@@ -1,5 +1,5 @@
 import React from 'react';
-import TableMobile, {TableMobileLink} from "../../../components/TableMobile";
+import TableMobile, {TableMobileHeader, TableMobileLink} from "../../../components/TableMobile";
 import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import Pagination from '../../../components/Pagination';
@@ -7,9 +7,17 @@ import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag'
 
 const MailLogTableMobile = ({ logs }) => {
     const { route } = useRoute();
+    const bulkEdit = {
+        isActiveMobile: false,
+        noun: 'Mail Log',
+        selectedIds: [],
+        totalItems: logs.data.length,
+    };
 
     return (
-        <TableMobile pagination={<Pagination details={logs} />}>
+        <div>
+            <TableMobileHeader bulkEdit={bulkEdit} />
+            <TableMobile pagination={<Pagination details={logs} />}>
             {logs.data.map((log) => {
 				const mailType = log.uid.split('-')[0];
 				return (
@@ -36,7 +44,8 @@ const MailLogTableMobile = ({ logs }) => {
 						</TableMobileLink>
 					</li>
 				);})}
-        </TableMobile>
+            </TableMobile>
+        </div>
     );
 }
 

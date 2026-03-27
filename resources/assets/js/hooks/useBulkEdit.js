@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { plural } from '../util';
 
 const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'Item') => {
 	const [selectedIds, setSelectedIds] = useState([]);
@@ -61,9 +62,11 @@ const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'I
 
 	const isActiveMobile = isForcedMobile || selectedIds.length > 0;
 
-	const action = canUpdate || canDelete &&
+	const isAllowed = canUpdate || canDelete;
+
+	const action = isAllowed &&
 		!isDesktop && {
-			label: isActiveMobile ? 'Cancel Selection' : `Select ${noun}s`,
+			label: isActiveMobile ? 'Cancel Selection' : `Select ${plural(noun)}`,
 			icon: 'check-square',
 			onClick: () => {
 				if (isActiveMobile) {
@@ -94,7 +97,7 @@ const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'I
 		canUpdate,
 		canDelete,
 		totalItems: items.length,
-		isAllowed: canUpdate || canDelete,
+		isAllowed,
 		noun,
 	};
 };

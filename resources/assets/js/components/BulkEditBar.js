@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from './inputs/Button';
 import Icon from './Icon';
+import { plural } from '../util';
 
 const BulkEditBar = ({ bulkEdit }) => {
 	if (!bulkEdit.isAllowed || bulkEdit.selectedIds.length === 0) {
@@ -19,8 +20,7 @@ const BulkEditBar = ({ bulkEdit }) => {
 				className="gap-1"
 			>
 				<Icon icon="times" />
-				{bulkEdit.selectedIds.length}&nbsp;{bulkEdit.noun}
-				{bulkEdit.selectedIds.length === 1 ? '' : 's'}
+				{bulkEdit.selectedIds.length}&nbsp;{plural(bulkEdit.noun, bulkEdit.selectedIds.length)}
 			</Button>
 			{bulkEdit.selectedIds.length > 0 && (
 				<>
