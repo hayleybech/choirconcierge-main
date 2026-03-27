@@ -155,18 +155,18 @@ class EventControllerTest extends TestCase
         $this->get(the_tenant_route('events.index'))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->has('events', 2)
-                ->where('events.0.title', 'In Ensemble')
-                ->where('events.1.title', 'No Ensemble')
+                ->has('events.data', 2)
+                ->where('events.data.0.title', 'In Ensemble')
+                ->where('events.data.1.title', 'No Ensemble')
                 ->has('ensembles', 1)
             );
 
         // Test explicit filter
-        $this->get(the_tenant_route('events.index', ['filter' => ['ensembles.id' => [$ensemble->id]]]))
+        $this->get(the_tenant_route('events.index', ['filter' => ['ensembles.id' => $ensemble->id]]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->has('events', 1)
-                ->where('events.0.title', 'In Ensemble')
+                ->has('events.data', 1)
+                ->where('events.data.0.title', 'In Ensemble')
             );
     }
 
