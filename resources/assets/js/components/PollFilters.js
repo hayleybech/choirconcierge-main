@@ -25,7 +25,7 @@ const PollFilters = ({ form, ensembles }) => (
 					<RadioGroup
 						name="status"
 						label={
-							<div className="flex items-center justify-between">
+							<div className="flex items-center justify-between mb-2">
 								<Label label="Status" />
 								<FilterActions
 									onClear={() => setData('status', '')}
@@ -40,6 +40,7 @@ const PollFilters = ({ form, ensembles }) => (
 						selected={data.status}
 						setSelected={value => setData('status', value)}
 						vertical
+						size="xs"
 					/>
 				</fieldset>
 

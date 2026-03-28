@@ -86,7 +86,7 @@ const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
                 <RadioGroup
                     name="fee_status"
                     label={
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between mb-2">
                             <Label label="Fee Status" />
                             <FilterActions
                                 onClear={() => setData('fee_status', '')}
@@ -102,6 +102,7 @@ const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
                     selected={data.fee_status}
                     setSelected={value => setData('fee_status', value)}
                     vertical
+					size="xs"
                 />
             </fieldset>
         </>)}
