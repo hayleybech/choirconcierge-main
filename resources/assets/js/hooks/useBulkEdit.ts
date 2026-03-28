@@ -1,14 +1,55 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, MutableRefObject, Dispatch, SetStateAction } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { plural } from '../util';
 
-const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'Item', hideEdit = false) => {
-	const [selectedIds, setSelectedIds] = useState([]);
-	const [showEditModal, setShowEditModal] = useState(false);
-	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [isForcedMobile, setIsForcedMobile] = useState(false);
-	const [lastSelectedId, setLastSelectedId] = useState(null);
-	const refSelectAll = useRef(null);
+interface Item {
+	id: number | string;
+	[key: string]: any;
+}
+
+interface Action {
+	label: string;
+	icon: string;
+	onClick: () => void;
+	variant: string;
+}
+
+export interface UseBulkEditReturn {
+	selectedIds: (number | string)[];
+	setSelectedIds: Dispatch<SetStateAction<(number | string)[]>>;
+	showEditModal: boolean;
+	setShowEditModal: Dispatch<SetStateAction<boolean>>;
+	showDeleteModal: boolean;
+	setShowDeleteModal: Dispatch<SetStateAction<boolean>>;
+	refSelectAll: MutableRefObject<HTMLInputElement | null>;
+	setIsForcedMobile: Dispatch<SetStateAction<boolean>>;
+	isActiveMobile: boolean;
+	toggleSelection: (id: number | string) => void;
+	handleRowClick: (id: number | string, event: React.MouseEvent | React.KeyboardEvent | any) => void;
+	toggleAll: () => void;
+	clearSelections: () => void;
+	action: Action | false;
+	canUpdate: boolean;
+	canDelete: boolean;
+	totalItems: number;
+	isAllowed: boolean;
+	noun: string;
+	hideEdit: boolean;
+}
+
+const useBulkEdit = (
+	items: Item[] = [],
+	canUpdate: boolean = false,
+	canDelete: boolean = false,
+	noun: string = 'Item',
+	hideEdit: boolean = false
+): UseBulkEditReturn => {
+	const [selectedIds, setSelectedIds] = useState<(number | string)[]>([]);
+	const [showEditModal, setShowEditModal] = useState<boolean>(false);
+	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+	const [isForcedMobile, setIsForcedMobile] = useState<boolean>(false);
+	const [lastSelectedId, setLastSelectedId] = useState<number | string | null>(null);
+	const refSelectAll = useRef<HTMLInputElement | null>(null);
 
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
@@ -20,12 +61,12 @@ const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'I
 		refSelectAll.current.indeterminate = selectedIds.length > 0 && selectedIds.length < items.length;
 	}, [selectedIds, items.length]);
 
-	const toggleSelection = id => {
+	const toggleSelection = (id: number | string): void => {
 		setSelectedIds(prev => (prev.includes(id) ? prev.filter(selectedId => selectedId !== id) : [...prev, id]));
 		setLastSelectedId(id);
 	};
 
-	const handleRowClick = (id, event) => {
+	const handleRowClick = (id: number | string, event: React.MouseEvent | any): void => {
 		if (event.ctrlKey || event.metaKey) {
 			toggleSelection(id);
 			return;
@@ -50,7 +91,7 @@ const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'I
 		setLastSelectedId(id);
 	};
 
-	const toggleAll = () => {
+	const toggleAll = (): void => {
 		if (selectedIds.length === items.length) {
 			setSelectedIds([]);
 		} else {
@@ -58,13 +99,13 @@ const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'I
 		}
 	};
 
-	const clearSelections = () => setSelectedIds([]);
+	const clearSelections = (): void => setSelectedIds([]);
 
 	const isActiveMobile = isForcedMobile || selectedIds.length > 0;
 
 	const isAllowed = canUpdate || canDelete;
 
-	const action = isAllowed &&
+	const action: Action | false = (isAllowed &&
 		!isDesktop && {
 			label: isActiveMobile ? 'Cancel Selection' : `Select ${plural(noun)}`,
 			icon: 'check-square',
@@ -77,7 +118,7 @@ const useBulkEdit = (items = [], canUpdate = false, canDelete = false, noun = 'I
 				}
 			},
 			variant: 'secondary',
-		};
+		}) as Action | false;
 
 	return {
 		selectedIds,
