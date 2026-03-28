@@ -1,41 +1,51 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import {DateTime} from "luxon";
-import AttendanceTag from "../../components/Event/AttendanceTag";
-import useRoute from "../../hooks/useRoute";
-import useFilterPane from "../../hooks/useFilterPane";
-import FilterSortPane from "../../components/FilterSortPane";
-import AttendanceReportFilters from "./AttendanceReportFilters";
-import useSortFilterForm from "../../hooks/useSortFilterForm";
-import EmptyState from "../../components/EmptyState";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import PageHeader from '../../components/PageHeader/PageHeader';
+import AppHead from '../../components/AppHead';
+import { DateTime } from 'luxon';
+import AttendanceTag from '../../components/Event/AttendanceTag';
+import useRoute from '../../hooks/useRoute';
+import useFilterPane from '../../hooks/useFilterPane';
+import FilterSortPane from '../../components/FilterSortPane';
+import AttendanceReportFilters from './AttendanceReportFilters';
+import useSortFilterForm from '../../hooks/useSortFilterForm';
+import EmptyState from '../../components/EmptyState';
 import { Link } from '@inertiajs/react';
+import Button from '../../components/inputs/Button';
+import Icon from '../../components/Icon';
+import { TableMobileHeader } from '../../components/TableMobile';
 
 const AttendanceReport = ({
-  events,
-  eventTypes,
-  defaultEventType,
-  defaultStartsAfter,
-  defaultStartsBefore,
-  voiceParts,
-  numSingers,
-  avgSingersPerEvent,
-  avgEventsPerSinger
+	events,
+	eventTypes,
+	defaultEventType,
+	defaultStartsAfter,
+	defaultStartsBefore,
+	voiceParts,
+	numSingers,
+	avgSingersPerEvent,
+	avgEventsPerSinger,
 }) => {
-    const { route } = useRoute();
-    const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const { route } = useRoute();
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
-    const sorts = [];
-    const filters = [
-      { name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
-      { name: 'starts_after', defaultValue: defaultStartsAfter },
-      { name: 'starts_before', defaultValue: defaultStartsBefore },
-    ];
+	const sorts = [];
+	const filters = [
+		{ name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
+		{ name: 'starts_after', defaultValue: defaultStartsAfter },
+		{ name: 'starts_before', defaultValue: defaultStartsBefore },
+	];
 
-    const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
+	const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
 
-    return (
+	const bulkEdit = {
+		isActiveMobile: false,
+		noun: 'Attendance',
+		selectedIds: [],
+		totalItems: events.length,
+	};
+
+	return (
 		<>
 			<AppHead title="Attendance Report" />
 			<PageHeader
@@ -64,6 +74,17 @@ const AttendanceReport = ({
 						/>
 					</div>
 				)}
+				<TableMobileHeader bulkEdit={bulkEdit}>
+					<Button
+						variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
+						size="xs"
+						onClick={() => setShowFilters(prev => !prev)}
+					>
+						<Icon icon="filter" mr />
+						Filter/Sort
+					</Button>
+				</TableMobileHeader>
+
 				<div className="grow lg:overflow-x-auto">
 					{events.length === 0 && (
 						<EmptyState
@@ -154,7 +175,9 @@ const AttendanceReport = ({
 																/>
 															</div>
 
-															<span className="text-sm md:text-base">{singer.user.name}</span>
+															<span className="text-sm md:text-base">
+																{singer.user.name}
+															</span>
 														</Link>
 													</th>
 													{events
@@ -175,7 +198,9 @@ const AttendanceReport = ({
 															</td>
 														))}
 													<td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-5">
-														<div className="text-sm md:text-base">{singer.percentPresent}%</div>
+														<div className="text-sm md:text-base">
+															{singer.percentPresent}%
+														</div>
 														<div className="text-xs hidden md:block">
 															{singer.timesPresent}&nbsp;/&nbsp;{events.length}
 														</div>
@@ -210,15 +235,14 @@ const AttendanceReport = ({
 			</div>
 		</>
 	);
-}
+};
 
-AttendanceReport.layout = page => <TenantLayout children={page} />
+AttendanceReport.layout = page => <TenantLayout children={page} />;
 
 export default AttendanceReport;
 
-const getAttendanceBySingerAndEvent = (singer, event) => singer.attendances.filter((attendance) => attendance.event_id === event.id)[0] ?? null;
+const getAttendanceBySingerAndEvent = (singer, event) =>
+	singer.attendances.filter(attendance => attendance.event_id === event.id)[0] ?? null;
 
 const truncateString = (string = '', maxLength = 50) =>
-	string.length > maxLength
-		? `${string.substring(0, maxLength)}…`
-		: string
+	string.length > maxLength ? `${string.substring(0, maxLength)}…` : string;
