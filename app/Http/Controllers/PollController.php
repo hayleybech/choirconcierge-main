@@ -8,6 +8,7 @@ use App\Models\Poll;
 use App\Models\PollOption;
 use App\Models\Ensemble;
 use App\Notifications\PollCreated;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,7 +31,9 @@ class PollController extends Controller
         $query = Poll::query()
             ->ensembleRestricted()
             ->with(['options', 'ensembles'])
-            ->withCount('votes');
+            ->withCount(['votes' => function ($query) {
+                $query->select(DB::raw('count(distinct membership_id)'));
+            }]);
 
         /** @var LengthAwarePaginator $pagination */
         $pagination = QueryBuilder::for($query)

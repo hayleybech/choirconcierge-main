@@ -39,7 +39,12 @@ const PollItem = ({ poll }) => {
 	return (
 		<div className="border-b last:border-b-0 pb-4 mb-4 last:pb-0 last:mb-0">
 			<div className="flex justify-between items-start mb-2 gap-1">
-				<h3 className="text-sm font-bold text-gray-900">{poll.title}</h3>
+				<h3 className="text-sm font-bold text-gray-900">
+					{poll.title}
+					<span className="ml-1 text-xs text-gray-500 font-normal">
+						({poll.votes_count ?? 0} {poll.votes_count === 1 ? 'singer' : 'singers'} voted)
+					</span>
+				</h3>
 				{poll.close_at && (
 					<span className="text-xs text-gray-500 text-right">
 						Closes: {new Date(poll.close_at).toLocaleDateString()}

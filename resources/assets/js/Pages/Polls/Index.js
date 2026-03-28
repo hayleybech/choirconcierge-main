@@ -44,7 +44,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 	const sorts = [
 		{ id: 'created_at', name: 'Created', default: true },
 		{ id: 'title', name: 'Title' },
-		{ id: 'votes_count', name: 'Votes' },
+		{ id: 'votes_count', name: 'Voted' },
 		{ id: 'close_at', name: 'Deadline' },
 	];
 
@@ -183,7 +183,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 								</TableHeading>
 								<TableHeading>
 									<TableHeadingSort form={sortFilterForm} sort="votes_count">
-										Votes
+										Voted
 									</TableHeadingSort>
 								</TableHeading>
 								<TableHeading>
