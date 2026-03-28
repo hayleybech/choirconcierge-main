@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import SwitchChoirMenu from "./SwitchChoirMenu";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
@@ -35,8 +35,9 @@ describe('SwitchChoirMenu', () => {
     const button = screen.getByRole('button', { name: 'Choir Number 2' });
     expect(button).toBeInTheDocument();
 
-    await userEvent.click(button);
-    screen.debug();
+	await act(async () => {
+		await userEvent.click(button);
+	})
     await waitFor(() => expect(screen.getByRole('menu')).toBeInTheDocument());
 
     expect(screen.getByRole('menuitem', {name: 'Choir Number 1'})).toBeInTheDocument();
