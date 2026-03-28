@@ -4,6 +4,7 @@ import TextInput from "../inputs/TextInput";
 import CheckboxGroup from "../inputs/CheckboxGroup";
 import RadioGroup from "../inputs/RadioGroup";
 import Filters from "../Filters";
+import FilterActions from "../inputs/FilterActions";
 
 const EventFilters = ({ eventTypes, ensembles, userEnsemblesCount, form }) => (
 	<Filters
@@ -18,18 +19,31 @@ const EventFilters = ({ eventTypes, ensembles, userEnsemblesCount, form }) => (
 
 				{userEnsemblesCount > 1 && (
 					<fieldset>
-						<legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+						<div className="flex items-center justify-between">
+							<legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+							<FilterActions
+								onSelectAll={() => setData('ensembles.id', ensembles.map(ensemble => ensemble.id))}
+								onClear={() => setData('ensembles.id', [])}
+							/>
+						</div>
 						<CheckboxGroup
 							name="ensembles.id"
 							options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
 							value={data['ensembles.id']}
 							updateFn={value => setData('ensembles.id', value)}
+							size="xs"
 						/>
 					</fieldset>
 				)}
 
 				<fieldset className="">
-					<legend className="text-sm font-medium text-gray-700">Type</legend>
+					<div className="flex items-center justify-between">
+						<legend className="text-sm font-medium text-gray-700">Type</legend>
+						<FilterActions
+							onSelectAll={() => setData('type.id', eventTypes.map(type => type.id))}
+							onClear={() => setData('type.id', [])}
+						/>
+					</div>
 					<CheckboxGroup
 						name="type.id"
 						options={eventTypes.map(type => ({ id: type.id, name: type.title }))}
@@ -40,11 +54,18 @@ const EventFilters = ({ eventTypes, ensembles, userEnsemblesCount, form }) => (
 
 				<div>
 					<RadioGroup
-						label={<Label label="Date" />}
+						label={
+							<div className="flex items-center justify-between mb-2">
+								<Label label="Date" />
+								<FilterActions
+									onClear={() => setData('date', 'all')}
+								/>
+							</div>
+						}
 						options={[
-							{ id: 'all', name: 'All' },
-							{ id: 'upcoming', name: 'Upcoming' },
-							{ id: 'past', name: 'Past' },
+							{ id: 'all', name: 'All', icon: 'exchange' },
+							{ id: 'upcoming', name: 'Upcoming', icon: 'arrow-from-left' },
+							{ id: 'past', name: 'Past', icon: 'arrow-from-right' },
 						]}
 						selected={data.date}
 						setSelected={value => {
@@ -60,6 +81,7 @@ const EventFilters = ({ eventTypes, ensembles, userEnsemblesCount, form }) => (
 							}
 						}}
 						vertical
+						size="xs"
 					/>
 				</div>
 			</>

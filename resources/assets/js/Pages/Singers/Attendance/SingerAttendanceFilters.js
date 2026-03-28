@@ -2,6 +2,7 @@ import React from 'react';
 import CheckboxGroup from "../../../components/inputs/CheckboxGroup";
 import Filters from "../../../components/Filters";
 import DateInput from "../../../components/inputs/Date";
+import FilterActions from "../../../components/inputs/FilterActions";
 
 const SingerAttendanceFilters = ({ eventTypes, form, singer }) => (
     <Filters
@@ -10,7 +11,13 @@ const SingerAttendanceFilters = ({ eventTypes, form, singer }) => (
         form={form}
         render={(data, setData) => (<>
             <fieldset>
-                <legend className="text-sm font-medium text-gray-700">Event Type</legend>
+                <div className="flex items-center justify-between">
+                    <legend className="text-sm font-medium text-gray-700">Event Type</legend>
+                    <FilterActions
+                        onSelectAll={() => setData('type.id', eventTypes.map(type => type.id))}
+                        onClear={() => setData('type.id', [])}
+                    />
+                </div>
                 <CheckboxGroup
                     name="type.id"
                     options={eventTypes.map((type) => ({ id: type.id, name: type.title }))}

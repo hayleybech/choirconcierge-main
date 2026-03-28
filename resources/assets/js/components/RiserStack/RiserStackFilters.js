@@ -1,6 +1,7 @@
 import React from 'react';
 import CheckboxGroup from "../inputs/CheckboxGroup";
 import Filters from "../Filters";
+import FilterActions from "../inputs/FilterActions";
 
 const RiserStackFilters = ({ ensembles, userEnsemblesCount, form }) => (
     <Filters
@@ -9,7 +10,13 @@ const RiserStackFilters = ({ ensembles, userEnsemblesCount, form }) => (
         render={(data, setData) => (<>
             {userEnsemblesCount > 1 && (
                 <fieldset>
-                    <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+                    <div className="flex items-center justify-between">
+                        <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+                        <FilterActions
+                            onSelectAll={() => setData('ensembles.id', ensembles.map(ensemble => ensemble.id))}
+                            onClear={() => setData('ensembles.id', [])}
+                        />
+                    </div>
                     <CheckboxGroup
                         name="ensembles.id"
                         options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}

@@ -4,6 +4,7 @@ import Label from './inputs/Label';
 import TextInput from './inputs/TextInput';
 import CheckboxGroup from './inputs/CheckboxGroup';
 import RadioGroup from './inputs/RadioGroup';
+import FilterActions from './inputs/FilterActions';
 
 const PollFilters = ({ form, ensembles }) => (
 	<Filters
@@ -23,7 +24,14 @@ const PollFilters = ({ form, ensembles }) => (
 				<fieldset>
 					<RadioGroup
 						name="status"
-						label={<Label label="Status" />}
+						label={
+							<div className="flex items-center justify-between">
+								<Label label="Status" />
+								<FilterActions
+									onClear={() => setData('status', '')}
+								/>
+							</div>
+						}
 						options={[
 							{ id: '', name: 'All', icon: 'poll' },
 							{ id: 'open', name: 'Open', icon: 'check', colour: 'text-emerald-500' },
@@ -37,7 +45,13 @@ const PollFilters = ({ form, ensembles }) => (
 
 				{ensembles.length > 1 && (
 					<fieldset>
-						<legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+						<div className="flex items-center justify-between">
+							<legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+							<FilterActions
+								onSelectAll={() => setData('ensembles.id', ensembles.map(ensemble => ensemble.id))}
+								onClear={() => setData('ensembles.id', [])}
+							/>
+						</div>
 						<CheckboxGroup
 							name="ensembles.id"
 							options={ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name }))}

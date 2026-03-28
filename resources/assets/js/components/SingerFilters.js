@@ -4,6 +4,7 @@ import Label from "./inputs/Label";
 import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
 import RadioGroup from "./inputs/RadioGroup";
+import FilterActions from "./inputs/FilterActions";
 
 const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
     <Filters
@@ -16,7 +17,13 @@ const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
             </div>
 
             <fieldset>
-                <legend className="text-sm font-medium text-gray-700">Status</legend>
+                <div className="flex items-center justify-between">
+                    <legend className="text-sm font-medium text-gray-700">Status</legend>
+                    <FilterActions
+                        onSelectAll={() => setData('category.id', statuses.map(status => status.id))}
+                        onClear={() => setData('category.id', [])}
+                    />
+                </div>
                 <CheckboxGroup
                     name="category.id"
                     options={statuses.map((status) => ({ id: status.id, name: status.name }))}
@@ -26,7 +33,13 @@ const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
             </fieldset>
 
             <fieldset>
-                <legend className="text-sm font-medium text-gray-700">Voice Part</legend>
+                <div className="flex items-center justify-between">
+                    <legend className="text-sm font-medium text-gray-700">Voice Part</legend>
+                    <FilterActions
+                        onSelectAll={() => setData('enrolments.voice_part_id', voiceParts.map(part => part.id))}
+                        onClear={() => setData('enrolments.voice_part_id', [])}
+                    />
+                </div>
                 <CheckboxGroup
                     name="enrolments.voice_part_id"
                     options={voiceParts.map((part) => ({ id: part.id, name: part.title }))}
@@ -37,7 +50,13 @@ const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
 
           {ensembles.length > 1 && (
             <fieldset>
-              <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+              <div className="flex items-center justify-between">
+                <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+                <FilterActions
+                    onSelectAll={() => setData('enrolments.ensemble_id', ensembles.map(ensemble => ensemble.id))}
+                    onClear={() => setData('enrolments.ensemble_id', [])}
+                />
+              </div>
               <CheckboxGroup
                 name="enrolments.ensemble_id"
                 options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
@@ -48,7 +67,13 @@ const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
           )}
 
             <fieldset>
-                <legend className="text-sm font-medium text-gray-700">Role</legend>
+                <div className="flex items-center justify-between">
+                    <legend className="text-sm font-medium text-gray-700">Role</legend>
+                    <FilterActions
+                        onSelectAll={() => setData('roles.id', roles.map(role => role.id))}
+                        onClear={() => setData('roles.id', [])}
+                    />
+                </div>
                 <CheckboxGroup
                     name="roles.id"
                     options={roles.map((role) => ({ id: role.id, name: role.name }))}
@@ -60,7 +85,14 @@ const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
             <fieldset>
                 <RadioGroup
                     name="fee_status"
-                    label={<Label label="Fee Status" />}
+                    label={
+                        <div className="flex items-center justify-between">
+                            <Label label="Fee Status" />
+                            <FilterActions
+                                onClear={() => setData('fee_status', '')}
+                            />
+                        </div>
+                    }
                     options={[
                         { id: 'paid', name: 'Paid', icon: 'check-circle', colour: 'green-500', textColour: 'text-green-500' },
                         { id: 'expires-soon', name: 'Expires Soon', icon: 'exclamation-triangle', colour: 'orange-500', textColour: 'text-orange-500' },

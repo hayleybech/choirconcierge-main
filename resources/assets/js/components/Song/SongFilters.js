@@ -3,6 +3,7 @@ import Label from "../inputs/Label";
 import TextInput from "../inputs/TextInput";
 import CheckboxGroup from "../inputs/CheckboxGroup";
 import Filters from "../Filters";
+import FilterActions from "../inputs/FilterActions";
 
 const SongFilters = ({ statuses, categories, ensembles, userEnsemblesCount, form, showForProspectsDefault }) => (
     <Filters
@@ -15,7 +16,13 @@ const SongFilters = ({ statuses, categories, ensembles, userEnsemblesCount, form
             </div>
 
             <fieldset>
-                <legend className="text-sm font-medium text-gray-700">Status</legend>
+                <div className="flex items-center justify-between">
+                    <legend className="text-sm font-medium text-gray-700">Status</legend>
+                    <FilterActions
+                        onSelectAll={() => setData('status.id', statuses.map(status => status.id))}
+                        onClear={() => setData('status.id', [])}
+                    />
+                </div>
                 <CheckboxGroup
                     name="status.id"
                     options={statuses.map((status) => ({ id: status.id, name: status.title }))}
@@ -26,7 +33,13 @@ const SongFilters = ({ statuses, categories, ensembles, userEnsemblesCount, form
 
             {userEnsemblesCount > 1 && (
                 <fieldset>
-                    <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+                    <div className="flex items-center justify-between">
+                        <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+                        <FilterActions
+                            onSelectAll={() => setData('ensembles.id', ensembles.map(ensemble => ensemble.id))}
+                            onClear={() => setData('ensembles.id', [])}
+                        />
+                    </div>
                     <CheckboxGroup
                         name="ensembles.id"
                         options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
@@ -38,7 +51,13 @@ const SongFilters = ({ statuses, categories, ensembles, userEnsemblesCount, form
 
             {showForProspectsDefault.length > 1 && (
                 <fieldset>
-                    <legend className="text-sm font-medium text-gray-700">Audition Songs</legend>
+                    <div className="flex items-center justify-between">
+                        <legend className="text-sm font-medium text-gray-700">Audition Songs</legend>
+                        <FilterActions
+                            onSelectAll={() => setData('show_for_prospects', [false, true])}
+                            onClear={() => setData('show_for_prospects', [])}
+                        />
+                    </div>
                     <CheckboxGroup
                         name="show_for_prospects"
                         options={[{ id: false, name: 'Non-Audition Songs' }, { id: true, name: 'Audition Songs' }]}
@@ -49,7 +68,13 @@ const SongFilters = ({ statuses, categories, ensembles, userEnsemblesCount, form
             )}
 
             <fieldset>
-                <legend className="text-sm font-medium text-gray-700">Category</legend>
+                <div className="flex items-center justify-between">
+                    <legend className="text-sm font-medium text-gray-700">Category</legend>
+                    <FilterActions
+                        onSelectAll={() => setData('categories.id', categories.map(category => category.id))}
+                        onClear={() => setData('categories.id', [])}
+                    />
+                </div>
                 <CheckboxGroup
                     name="categories.id"
                     options={categories.map((category) => ({ id: category.id, name: category.title }))}
