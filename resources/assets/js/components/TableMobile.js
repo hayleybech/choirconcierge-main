@@ -55,7 +55,7 @@ export const TableMobileSelectableLink = ({ url, bulkEdit, value, children }) =>
 		<TableMobileLink
 			url={bulkEdit.isActiveMobile ? '' : url}
 			active={bulkEdit.selectedIds.includes(value)}
-			padding={bulkEdit.isActiveMobile ? 'pl-11 transition-[padding]' : 'pl-4 transition-[padding]'}
+			padding={bulkEdit.isActiveMobile ? 'pl-11 transition-[padding] ease-out' : 'pl-4 transition-[padding] ease-out'}
 			{...longPressProps}
 		>
 			{children}
@@ -89,7 +89,7 @@ export const TableMobileHeader = ({ bulkEdit, children }) => (
 					/>
 				</div>
 			)}
-			<div className={`text-gray-500 text-sm transition-[padding] ${bulkEdit.isActiveMobile? 'pl-7' : 'pl-0'}`}>
+			<div className={`text-gray-500 text-sm transition-[padding] ease-out ${bulkEdit.isActiveMobile? 'pl-7' : 'pl-0'}`}>
 				{plural(bulkEdit.noun)}
 			</div>
 		</div>
