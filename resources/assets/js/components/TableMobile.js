@@ -69,7 +69,7 @@ export const TableMobileSelect = ({ bulkEdit, value }) => {
 	}
 
 	return (
-		<div className="flex absolute top-0 bottom-0 px-4 items-center">
+		<div className="flex absolute top-0 bottom-0 px-4 items-center z-10">
 			<CheckboxInput
 				checked={bulkEdit.selectedIds.includes(value)}
 				onChange={() => bulkEdit.toggleSelection(value)}
@@ -89,7 +89,7 @@ export const TableMobileHeader = ({ bulkEdit, children }) => (
 					/>
 				</div>
 			)}
-			<div className={`text-gray-500 text-sm transition-[padding] ${bulkEdit.isActiveMobile > 0 ? 'pl-7' : 'pl-0'}`}>
+			<div className={`text-gray-500 text-sm transition-[padding] ${bulkEdit.isActiveMobile? 'pl-7' : 'pl-0'}`}>
 				{plural(bulkEdit.noun)}
 			</div>
 		</div>

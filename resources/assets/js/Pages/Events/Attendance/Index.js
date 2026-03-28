@@ -87,11 +87,11 @@ const Index = ({
 	const bulkActions = (
 		<>
 			<Button size="xs" variant="clear-inverse" onClick={() => bulkUpdateAttendance('present')}>
-				<Icon icon="check" mr className="text-emerald-500" />
-				On Time
+				<Icon icon="check" className="text-emerald-500" />
+				Present
 			</Button>
 			<Button size="xs" variant="clear-inverse" onClick={() => bulkUpdateAttendance('absent')}>
-				<Icon icon="times" mr className="text-red-500" />
+				<Icon icon="times" className="text-red-500" />
 				Absent
 			</Button>
 			<Menu as="div" className="relative flex">
@@ -113,7 +113,7 @@ const Index = ({
 							{({ active }) => (
 								<button
 									onClick={() => bulkUpdateAttendance('late')}
-									className={menuItemStyles('secondary', active, '!py-1.5 text-xs')}
+									className={menuItemStyles('secondary', active, '', 'xs')}
 								>
 									<Icon icon="alarm-exclamation" mr className="text-amber-500" />
 									Late
@@ -124,7 +124,7 @@ const Index = ({
 							{({ active }) => (
 								<button
 									onClick={() => bulkUpdateAttendance('late_deemed_absent')}
-									className={menuItemStyles('secondary', active, '!py-1.5 text-xs')}
+									className={menuItemStyles('secondary', active, '', 'xs')}
 								>
 									<Icon icon="times" mr className="text-red-500" />
 									Late (Deemed Absent)
