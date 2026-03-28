@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Panel, { PanelTitle } from '../../components/Panel';
 import { useForm } from '@inertiajs/react';
 import useRoute from '../../hooks/useRoute';
@@ -13,6 +13,8 @@ const PollItem = ({ poll }) => {
 	const { data, setData, post, processing } = useForm({
 		option_ids: poll.my_vote_option_ids || [],
 	});
+
+	const [isExpanded, setIsExpanded] = useState(false);
 
 	const isClosed = poll.is_closed;
 
@@ -47,7 +49,18 @@ const PollItem = ({ poll }) => {
 
 			{poll.description && (
 				<div className="mb-3">
-					<Prose content={poll.description} className="text-xs text-gray-600" />
+					<div className={!isExpanded ? 'line-clamp-3' : ''}>
+						<Prose content={poll.description} className="text-xs text-gray-600" />
+					</div>
+					{poll.description.length > 200 && (
+						<button
+							type="button"
+							className="text-xs text-purple-600 hover:text-purple-800 font-bold mt-1"
+							onClick={() => setIsExpanded(!isExpanded)}
+						>
+							{isExpanded ? 'Less' : 'More'}
+						</button>
+					)}
 				</div>
 			)}
 
