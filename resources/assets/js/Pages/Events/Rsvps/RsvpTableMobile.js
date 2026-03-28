@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import TableMobile, { TableMobileHeader, TableMobileListItem } from '../../../components/TableMobile';
 import Pagination from '../../../components/Pagination';
@@ -15,6 +15,12 @@ import Button from '../../../components/inputs/Button';
 
 const RsvpTableMobile = ({ singers, pagination, showEnsemble, visibleColumns, customFields, columnsMenu, hasNonDefaultFilters, setShowFilters }) => {
 	const { route } = useRoute();
+	const [expandedSingers, setExpandedSingers] = useState([]);
+
+	const toggleExpanded = (id, e) => {
+		e.preventDefault();
+		setExpandedSingers(prev => (prev.includes(id) ? prev.filter(sId => sId !== id) : [...prev, id]));
+	};
 
 	const bulkEdit = {
 		isActiveMobile: false,
@@ -114,17 +120,23 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble, visibleColumns, cu
 									(singer.user.dietary_requirements || singer.user.medical_conditions) && (
 										<div className="mt-2 text-[11px] text-amber-800 bg-amber-50 py-1.5 px-2 rounded space-y-0.5">
 											{singer.user.dietary_requirements && (
-												<div className="truncate">
+												<div className={expandedSingers.includes(singer.id) ? '' : 'truncate'}>
 													<span className="font-bold uppercase text-[9px]">Dietary:</span>{' '}
 													{singer.user.dietary_requirements}
 												</div>
 											)}
 											{singer.user.medical_conditions && (
-												<div className="truncate">
+												<div className={expandedSingers.includes(singer.id) ? '' : 'truncate'}>
 													<span className="font-bold uppercase text-[9px]">Medical:</span>{' '}
 													{singer.user.medical_conditions}
 												</div>
 											)}
+											<button
+												onClick={e => toggleExpanded(singer.id, e)}
+												className="text-[9px] font-bold uppercase text-purple-600 hover:text-purple-800 underline hover:no-underline"
+											>
+												{expandedSingers.includes(singer.id) ? 'Show Less' : 'Show More'}
+											</button>
 										</div>
 									)}
 								<div className="flex flex-col">
