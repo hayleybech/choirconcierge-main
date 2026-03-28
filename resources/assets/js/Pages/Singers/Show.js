@@ -20,11 +20,20 @@ import { MembershipDetailsSection } from './sections/MembershipDetailsSection';
 import { VoicePlacementSection } from './sections/VoicePlacementSection';
 import { EnrolmentDetailsSection } from './sections/EnrolmentDetailsSection';
 import { OnboardingTaskSection } from './sections/OnboardingTaskSection';
-import CustomFieldsSection from "./sections/CustomFieldsSection";
+import CustomFieldsSection from './sections/CustomFieldsSection';
 import SingerAttendanceSummary from '../../components/Attendance/SingerAttendanceSummary';
 import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 
-const Show = ({ singer, attendanceSummary, rsvpSummary, categories, voiceParts, ensemblesNotEnrolled, customFields, performanceTypeId }) => {
+const Show = ({
+	singer,
+	attendanceSummary,
+	rsvpSummary,
+	categories,
+	voiceParts,
+	ensemblesNotEnrolled,
+	customFields,
+	performanceTypeId,
+}) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
 	const { can, user: authUser } = usePage().props;
@@ -154,9 +163,16 @@ const Show = ({ singer, attendanceSummary, rsvpSummary, categories, voiceParts, 
 								show: singer.can['view_attendance'],
 								content: (
 									<>
-										<SingerAttendanceSummary attendanceSummary={attendanceSummary} />
+										<div className="py-4 px-4 lg:px-8">
+											<SingerAttendanceSummary attendanceSummary={attendanceSummary} />
+										</div>
 										<hr className="border-gray-200" />
-										<SingerRsvpSummary rsvpSummary={rsvpSummary} performanceTypeId={performanceTypeId} />
+										<div className="py-4 px-4 lg:px-8">
+											<SingerRsvpSummary
+												rsvpSummary={rsvpSummary}
+												performanceTypeId={performanceTypeId}
+											/>
+										</div>
 									</>
 								),
 							},
