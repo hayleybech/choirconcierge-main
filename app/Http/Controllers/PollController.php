@@ -165,7 +165,7 @@ class PollController extends Controller
 
         foreach ($polls as $poll) {
             $updateData = [];
-            if (! is_null($data['is_closed'])) {
+            if (! is_null($data['is_closed'] ?? null)) {
                 $updateData['is_closed'] = $data['is_closed'];
             }
             if (! is_null($data['close_at'] ?? null)) {
