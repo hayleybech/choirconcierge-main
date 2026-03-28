@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import Table, {TableCell} from "../Table";
+import Table, {TableCell, THead, TBody, TableHeading} from "../Table";
 import Button from "../inputs/Button";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 import {Link} from "@inertiajs/react";
-import collect from "collect.js";
 import EditScheduleItemDialog from "../EditScheduleItemDialog";
 import useRoute from "../../hooks/useRoute";
 
@@ -17,17 +16,17 @@ const EventScheduleDesktop = ({ event }) => {
     const [editDialogIsOpen, setEditDialogIsOpen] = useState(false);
     const [editingActivity, setEditingActivity] = useState(0);
 
-    const headings = collect({
-        title: 'Title',
-        duration: 'Duration',
-        actions: 'Actions',
-    }).filter((item, key) => key !== 'actions' || event.can.update_event);
-
     return (
         <>
-            <Table
-                headings={headings}
-                body={<>
+            <Table>
+                <THead>
+                    <tr>
+                        <TableHeading>Title</TableHeading>
+                        <TableHeading>Duration</TableHeading>
+                        {event.can.update_event && <TableHeading>Actions</TableHeading>}
+                    </tr>
+                </THead>
+                <TBody>
                     {event.activities.map((activity, index) => (
                         <tr key={activity.id}>
                             <TableCell>
@@ -97,8 +96,8 @@ const EventScheduleDesktop = ({ event }) => {
                         </TableCell>
                         {event.can.update_event && <TableCell />}
                     </tr>
-                </>}
-            />
+                </TBody>
+            </Table>
             <DeleteDialog
                 title="Delete Activity"
                 url={deletingActivityId ? route('events.activities.destroy', {event, activity: deletingActivityId}) : '#'}

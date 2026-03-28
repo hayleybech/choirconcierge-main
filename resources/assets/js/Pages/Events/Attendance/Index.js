@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
+
 import PageHeader from '../../../components/PageHeader/PageHeader';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
@@ -8,7 +9,7 @@ import Dialog from '../../../components/Dialog';
 import { Link, usePage } from '@inertiajs/react';
 import QRCode from 'react-qr-code';
 import DateTag from '../../../components/DateTag';
-import Table, { TableCell } from '../../../components/Table';
+import Table, { TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellSelect, TItemRow } from '../../../components/Table';
 import IndexContainer from '../../../components/IndexContainer';
 import AttendanceTableMobile from './AttendanceTableMobile';
 import Pagination from '../../../components/Pagination';
@@ -19,12 +20,17 @@ import FilterSortPane from '../../../components/FilterSortPane';
 import Sorts from '../../../components/Sorts';
 import AttendanceFilters from '../../../components/AttendanceFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
-import collect from 'collect.js';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import SingerStatus from '../../../SingerStatus';
 import SingerCategoryTag from '../../../components/SingerCategoryTag';
 import { handleNameSort } from '../../../utils/sortHelpers';
+import useBulkEdit from '../../../hooks/useBulkEdit';
+import BulkEditBar from '../../../components/BulkEditBar';
+import Button from '../../../components/inputs/Button';
+import { Menu, Transition } from '@headlessui/react';
+import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
+import { router } from '@inertiajs/react';
 
 const Index = ({
 	event,
@@ -63,29 +69,73 @@ const Index = ({
 
 	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);
 
-	const headings = collect({
-		singer: (
-			<TableHeadingSort
-				form={sortFilterForm}
-				sort={['full-name', 'last-name-first']}
-				onClick={() => handleNameSort(sortFilterForm)}
-				indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
-			>
-				Name
-			</TableHeadingSort>
-		),
-		voice_part: 'Voice Part',
-		attendance: (
-			<TableHeadingSort form={sortFilterForm} sort="attendance-response">
-				Attendance
-			</TableHeadingSort>
-		),
-		updated: (
-			<TableHeadingSort form={sortFilterForm} sort="attendance-updated">
-				Updated
-			</TableHeadingSort>
-		),
-	});
+	const bulkEdit = useBulkEdit(allSingers, pageProps.can.create_attendance, false, 'Singer', true);
+
+	const bulkUpdateAttendance = response => {
+		router.post(
+			route('events.attendances.bulkUpdate', { event }),
+			{
+				singer_ids: bulkEdit.selectedIds,
+				response,
+			},
+			{
+				onSuccess: () => bulkEdit.clearSelections(),
+			}
+		);
+	};
+
+	const bulkActions = (
+		<>
+			<Button size="xs" variant="clear-inverse" onClick={() => bulkUpdateAttendance('present')}>
+				<Icon icon="check" className="text-emerald-500" />
+				Present
+			</Button>
+			<Button size="xs" variant="clear-inverse" onClick={() => bulkUpdateAttendance('absent')}>
+				<Icon icon="times" className="text-red-500" />
+				Absent
+			</Button>
+			<Menu as="div" className="relative flex">
+				<Menu.Button className="flex items-center px-3 py-1.5 text-xs font-medium rounded-md hover:bg-gray-600 focus:outline-none transition ease-in-out duration-150">
+					More
+					<Icon icon="chevron-up" ml className="text-[10px]" />
+				</Menu.Button>
+				<Transition
+					as={Fragment}
+					enter="transition ease-out duration-100"
+					enterFrom="transform opacity-0 scale-95"
+					enterTo="transform opacity-100 scale-100"
+					leave="transition ease-in duration-75"
+					leaveFrom="transform opacity-100 scale-100"
+					leaveTo="transform opacity-0 scale-95"
+				>
+					<Menu.Items className="origin-bottom-right absolute right-0 bottom-full mb-4 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+						<Menu.Item>
+							{({ active }) => (
+								<button
+									onClick={() => bulkUpdateAttendance('late')}
+									className={menuItemStyles('secondary', active, '', 'xs')}
+								>
+									<Icon icon="alarm-exclamation" mr className="text-amber-500" />
+									Late
+								</button>
+							)}
+						</Menu.Item>
+						<Menu.Item>
+							{({ active }) => (
+								<button
+									onClick={() => bulkUpdateAttendance('late_deemed_absent')}
+									className={menuItemStyles('secondary', active, '', 'xs')}
+								>
+									<Icon icon="times" mr className="text-red-500" />
+									Late (Deemed Absent)
+								</button>
+							)}
+						</Menu.Item>
+					</Menu.Items>
+				</Transition>
+			</Menu>
+		</>
+	);
 
 	const countsData = [
 		{ label: 'On Time', textColour: 'text-emerald-500', icon: 'check', count: counts.present },
@@ -120,7 +170,8 @@ const Index = ({
 						can: 'create_attendance',
 					},
 					filterAction,
-				].filter(action => (action.can ? pageProps.can[action.can] : true))}
+					bulkEdit.action,
+				].filter(action => (action?.can ? pageProps.can[action.can] : !!action))}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 				meta={
 					<div>
@@ -157,6 +208,8 @@ const Index = ({
 					<p className="break-all text-xs">{individualCheckInUrl}</p>
 				</div>
 			</Dialog>
+
+			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
 
 			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-4">
 				{countsData.map(({ label, textColour, icon, count }) => (
@@ -196,74 +249,102 @@ const Index = ({
 						pagination={pagination}
 						showEnsemble={showEnsemble}
 						event={event}
+						bulkEdit={bulkEdit}
 					/>
 				}
 				tableDesktop={
-					<Table
-						headings={headings}
-						pagination={<Pagination details={pagination} />}
-						body={allSingers.map(singer => (
-							<tr key={singer.id}>
-								<TableCell>
-									<div className="flex items-center space-x-3">
-										<div className="shrink-0">
-											<img
-												className="h-8 w-8 rounded-md object-cover"
-												src={singer.user.avatar_url}
-												alt={singer.user.name}
-											/>
-										</div>
-										<div>
-											<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
-											<Link
-												href={route('singers.show', { singer })}
-												className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
-											>
-												{singer.user.name}
-											</Link>
-										</div>
-									</div>
-								</TableCell>
-								<TableCell>
-									<ul className="flex flex-col gap-1.5">
-										{singer.enrolments.map(enrolment => (
-											<li key={enrolment.id} className="flex gap-1 items-center">
-												{showEnsemble && (
-													<Badge colour="bg-purple-100 text-purple-800">
-														{enrolment.ensemble.name}
-													</Badge>
-												)}
-												{enrolment.voice_part && (
-													<VoicePartTag
-														title={enrolment.voice_part.title}
-														colour={enrolment.voice_part.colour}
-													/>
-												)}
-											</li>
-										))}
-									</ul>
-								</TableCell>
-								<TableCell>
-									<AttendanceRecord
-										attendance={singer.attendance}
-										singerId={singer.id}
-										event={event}
-									/>
-								</TableCell>
-								<TableCell>
-									{!!singer.attendance.updated_at && (
-										<DateTag
-											icon="pencil"
-											label="Updated"
-											date={singer.attendance.updated_at}
-											format="DATETIME_SHORT"
-											className="text-gray-400"
-										/>
-									)}
-								</TableCell>
+					<Table pagination={<Pagination details={pagination} />}>
+						<THead>
+							<tr>
+								<TableSelectAll bulkEdit={bulkEdit} totalItems={allSingers.length} />
+								<TableHeading>
+									<TableHeadingSort
+										form={sortFilterForm}
+										sort={['full-name', 'last-name-first']}
+										onClick={() => handleNameSort(sortFilterForm)}
+										indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+									>
+										Name
+									</TableHeadingSort>
+								</TableHeading>
+								<TableHeading>Voice Part</TableHeading>
+								<TableHeading>
+									<TableHeadingSort form={sortFilterForm} sort="attendance-response">
+										Attendance
+									</TableHeadingSort>
+								</TableHeading>
+								<TableHeading>
+									<TableHeadingSort form={sortFilterForm} sort="attendance-updated">
+										Updated
+									</TableHeadingSort>
+								</TableHeading>
 							</tr>
-						))}
-					/>
+						</THead>
+						<TBody>
+							{allSingers.map(singer => (
+								<TItemRow key={singer.id} bulkEdit={bulkEdit} value={singer.id}>
+									<TableCellSelect bulkEdit={bulkEdit} value={singer.id} />
+									<TableCell>
+										<div className="flex items-center space-x-3">
+											<div className="shrink-0">
+												<img
+													className="h-8 w-8 rounded-md object-cover"
+													src={singer.user.avatar_url}
+													alt={singer.user.name}
+												/>
+											</div>
+											<div>
+												<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+												<Link
+													href={route('singers.show', { singer })}
+													className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
+												>
+													{singer.user.name}
+												</Link>
+											</div>
+										</div>
+									</TableCell>
+									<TableCell>
+										<ul className="flex flex-col gap-1.5">
+											{singer.enrolments.map(enrolment => (
+												<li key={enrolment.id} className="flex gap-1 items-center">
+													{showEnsemble && (
+														<Badge colour="bg-purple-100 text-purple-800">
+															{enrolment.ensemble.name}
+														</Badge>
+													)}
+													{enrolment.voice_part && (
+														<VoicePartTag
+															title={enrolment.voice_part.title}
+															colour={enrolment.voice_part.colour}
+														/>
+													)}
+												</li>
+											))}
+										</ul>
+									</TableCell>
+									<TableCell>
+										<AttendanceRecord
+											attendance={singer.attendance}
+											singerId={singer.id}
+											event={event}
+										/>
+									</TableCell>
+									<TableCell>
+										{!!singer.attendance.updated_at && (
+											<DateTag
+												icon="pencil"
+												label="Updated"
+												date={singer.attendance.updated_at}
+												format="DATETIME_SHORT"
+												className="text-gray-400"
+											/>
+										)}
+									</TableCell>
+								</TItemRow>
+							))}
+						</TBody>
+					</Table>
 				}
 			/>
 		</>

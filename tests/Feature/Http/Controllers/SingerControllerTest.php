@@ -9,6 +9,7 @@ use App\Models\Membership;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\VoicePart;
+use App\Models\SingerCategory;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -322,6 +323,27 @@ class SingerControllerTest extends TestCase
 			'paid_until' => $expiryDate,
 		]);
 	}
+
+    public function test_bulk_update_saves_the_category(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $singers = Membership::factory()->count(3)->create();
+        $category = SingerCategory::factory()->create();
+
+        $this->post(the_tenant_route('singers.bulk-update'), [
+            'singer_ids' => $singers->pluck('id')->all(),
+            'singer_category_id' => $category->id,
+        ])->assertRedirect(route('singers.index'))
+          ->assertSessionHasNoErrors();
+
+        foreach ($singers as $singer) {
+            $this->assertDatabaseHas('memberships', [
+                'id' => $singer->id,
+                'singer_category_id' => $category->id,
+            ]);
+        }
+    }
 
     public static function singerProvider(): array
     {

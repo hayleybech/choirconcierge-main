@@ -155,18 +155,18 @@ class EventControllerTest extends TestCase
         $this->get(the_tenant_route('events.index'))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->has('events', 2)
-                ->where('events.0.title', 'In Ensemble')
-                ->where('events.1.title', 'No Ensemble')
+                ->has('events.data', 2)
+                ->where('events.data.0.title', 'In Ensemble')
+                ->where('events.data.1.title', 'No Ensemble')
                 ->has('ensembles', 1)
             );
 
         // Test explicit filter
-        $this->get(the_tenant_route('events.index', ['filter' => ['ensembles.id' => [$ensemble->id]]]))
+        $this->get(the_tenant_route('events.index', ['filter' => ['ensembles.id' => $ensemble->id]]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->has('events', 1)
-                ->where('events.0.title', 'In Ensemble')
+                ->has('events.data', 1)
+                ->where('events.data.0.title', 'In Ensemble')
             );
     }
 
@@ -379,6 +379,52 @@ class EventControllerTest extends TestCase
     public function test_update_following_changes_children(): void
     {
         self::markTestIncomplete('WIP');
+    }
+
+    public function test_bulk_update_updates_multiple_events(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $events = Event::factory()->count(3)->create();
+        $type = EventType::first();
+        $ensemble = Ensemble::factory()->create(['name' => 'Bulk Updated Ensemble']);
+
+        $data = [
+            'event_ids' => $events->pluck('id')->toArray(),
+            'event_type_id' => $type->id,
+            'ensemble_ids' => [$ensemble->id],
+        ];
+
+        $this->post(the_tenant_route('events.bulk-update'), $data)
+            ->assertRedirect(the_tenant_route('events.index'))
+            ->assertSessionHas('status', '3 events updated. ');
+
+        foreach ($events as $event) {
+            $this->assertDatabaseHas('events', [
+                'id' => $event->id,
+                'type_id' => $type->id,
+            ]);
+
+            $this->assertDatabaseHas('ensemble_event', [
+                'event_id' => $event->id,
+                'ensemble_id' => $ensemble->id,
+            ]);
+        }
+    }
+
+    public function test_bulk_update_is_forbidden_for_unauthorized_users(): void
+    {
+        $this->actingAs($this->createUserWithRole('User'));
+
+        $events = Event::factory()->count(3)->create();
+
+        $data = [
+            'event_ids' => $events->pluck('id')->toArray(),
+            'event_type_id' => EventType::first()->id,
+        ];
+
+        $this->post(the_tenant_route('events.bulk-update'), $data)
+            ->assertForbidden();
     }
 
     public static function eventProvider(): array

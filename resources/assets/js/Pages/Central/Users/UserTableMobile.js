@@ -1,5 +1,5 @@
 import React from 'react';
-import TableMobile, { TableMobileItem } from '../../../components/TableMobile';
+import TableMobile, { TableMobileHeader, TableMobileItem } from '../../../components/TableMobile';
 import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import Pagination from '../../../components/Pagination';
@@ -7,9 +7,17 @@ import { Link } from '@inertiajs/react';
 
 const UserTableMobile = ({ users, pagination }) => {
 	const { route } = useRoute();
+	const bulkEdit = {
+		isActiveMobile: false,
+		noun: 'User',
+		selectedIds: [],
+		totalItems: users.length,
+	};
 
 	return (
-		<TableMobile pagination={<Pagination details={pagination} />}>
+		<div>
+			<TableMobileHeader bulkEdit={bulkEdit} />
+			<TableMobile pagination={<Pagination details={pagination} />}>
 			{users.map(user => (
 				<TableMobileItem key={user.id}>
 				{/*<TableMobileItem key={user.id} url={route('central.users.show', { singer: user.id })}>*/}
@@ -52,7 +60,8 @@ const UserTableMobile = ({ users, pagination }) => {
 					</div>
 				</TableMobileItem>
 			))}
-		</TableMobile>
+			</TableMobile>
+		</div>
 	);
 };
 

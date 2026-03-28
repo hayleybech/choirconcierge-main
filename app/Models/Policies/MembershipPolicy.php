@@ -95,7 +95,7 @@ class MembershipPolicy
      *
      * @return mixed
      */
-    public function update(User $user, Membership $singer)
+    public function update(User $user, ?Membership $singer = null)
     {
         return $user->membership->hasAbility('singers_update');
     }
@@ -108,9 +108,9 @@ class MembershipPolicy
      *
      * @return mixed
      */
-    public function delete(User $user, Membership $singer)
+    public function delete(User $user, ?Membership $singer = null)
     {
-        if ($user->membership->is($singer)) {
+        if ($singer && $user->membership->is($singer)) {
             return false;
         }
 

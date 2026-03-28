@@ -13,6 +13,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.28.3",
+        "@babel/preset-typescript": "^7.28.5",
         "@prettier/plugin-php": "^0.18",
         "@tailwindcss/forms": "^0.4.0",
         "@tailwindcss/typography": "^0.5.16",
@@ -20,6 +21,7 @@
         "@testing-library/react": "^12.1.2",
         "autoprefixer": "^10.4.21",
         "axios": "^1.11.0",
+        "babel-jest": "^30.3.0",
         "babel-loader": "^8.4.1",
         "create-pwa": "^2.7.0",
         "jest": "^27.0.6",

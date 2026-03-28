@@ -126,4 +126,20 @@ class UserGroupController extends Controller
             ->route('groups.index')
             ->with(['status' => 'Group deleted. ']);
     }
+
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $this->authorize('delete', UserGroup::class);
+
+        $data = $request->validate([
+            'group_ids' => ['required', 'array'],
+            'group_ids.*' => ['exists:user_groups,id'],
+        ]);
+
+        UserGroup::whereIn('id', $data['group_ids'])->delete();
+
+        return redirect()
+            ->route('groups.index')
+            ->with(['status' => count($data['group_ids']) . ' groups deleted.']);
+    }
 }

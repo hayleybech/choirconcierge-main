@@ -26,8 +26,9 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 						</div>
 					</div>
 					<div className="mt-5 flex sm:flex-row-reverse lg:mt-0 lg:ml-4">
+						{/* Desktop */}
 						{filteredActions.map((action, key) => (
-							<span className={key === 0 ? 'sm:ml-3' : 'hidden sm:block ml-3'} key={key}>
+							<span className="hidden sm:block ml-3" key={key}>
 								{action.label ? (
 									<Button
 										href={action.url}
@@ -37,6 +38,7 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 										external={action.download}
 										download={action.download}
 										method={action.method}
+										disabled={action.disabled}
 									>
 										<Icon icon={action.icon} mr />
 										{action.label}
@@ -47,8 +49,47 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 							</span>
 						))}
 
-						{/* Dropdown */}
-						{filteredActions.length > 2 ? (
+						{/* Mobile - Always show first button */}
+						{!!filteredActions[0]?.label ? (
+							<Button
+								href={filteredActions[0].url}
+								onClick={filteredActions[0].onClick}
+								variant={filteredActions[0].variant}
+								method={filteredActions[0].method}
+								disabled={filteredActions[0].disabled}
+								size="sm"
+								className="ml-3 sm:hidden"
+							>
+								<Icon icon={filteredActions[0].icon} mr />
+								{filteredActions[0].label}
+							</Button>
+						) : (
+							<div className="sm:hidden">{filteredActions[0]}</div>
+						)}
+						{/* Mobile - Show second button if exactly 2 buttons */}
+						{filteredActions.length === 2 && (
+							<>
+								{!!filteredActions[1]?.label ? (
+									<Button
+										href={filteredActions[1].url}
+										onClick={filteredActions[1].onClick}
+										variant={filteredActions[1].variant}
+										method={filteredActions[1].method}
+										disabled={filteredActions[1].disabled}
+										size="sm"
+										className="ml-3 sm:hidden"
+									>
+										<Icon icon={filteredActions[1].icon} mr />
+										{filteredActions[1].label}
+									</Button>
+								) : (
+									<div className="sm:hidden">{filteredActions[1]}</div>
+								)}
+							</>
+						)}
+
+						{/* Mobile - Overflow Dropdown */}
+						{filteredActions.length > 2 && (
 							<ActionMenu optionsVariant={optionsVariant}>
 								{filteredActions.map(
 									(action, key) =>
@@ -60,6 +101,7 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 												download={action.download}
 												variant={action.variant}
 												method={action.method}
+												disabled={action.disabled}
 											>
 												<Icon icon={action.icon} mr />
 												{action.label}
@@ -67,25 +109,6 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 										)
 								)}
 							</ActionMenu>
-						) : (
-							filteredActions.length === 2 &&
-							(filteredActions[1].label ? (
-								<Button
-									href={filteredActions[1].url}
-									onClick={filteredActions[1].onClick}
-									variant={filteredActions[1].variant}
-									method={filteredActions[1].method}
-									size="sm"
-									className="ml-3 sm:hidden"
-								>
-									<Icon icon={filteredActions[1].icon} mr />
-									{filteredActions[1].label}
-								</Button>
-							) : (
-								<div className="sm:hidden">
-									{filteredActions[1]}
-								</div>
-							))
 						)}
 					</div>
 				</div>

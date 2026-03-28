@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import TableMobile from "../../components/TableMobile";
+import TableMobile, { TableMobileHeader } from "../../components/TableMobile";
 import FolderIcon from "../../components/FolderIcon";
 import Icon from "../../components/Icon";
 import DocumentForm from "./DocumentForm";
@@ -14,18 +14,27 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, pe
 
     const showEnsemblesColumn = userEnsemblesCount > 1;
 
+    const bulkEdit = {
+        isActiveMobile: false,
+        noun: 'Folder',
+        selectedIds: [],
+        totalItems: folders.length,
+    };
+
     return (
-        <TableMobile>
+        <div>
+            <TableMobileHeader bulkEdit={bulkEdit} />
+            <TableMobile>
             {folders.map((folder) => (
                 <li key={folder.id}>
                     <a href="#" onClick={() => setOpenFolder(folder.id === openFolder ? 0 : folder.id)} className="block hover:bg-gray-50">
-                        <div className="flex items-center px-4 py-4 sm:px-6">
+                        <div className="flex items-center py-4 sm:px-6">
                             <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
                                 <div className="flex items-center justify-between">
-                                    <p className="flex items-center min-w-0 mr-1.5">
+                                    <div className="flex items-center min-w-0 mr-1.5">
                                         <Icon icon={folder.id === openFolder ? 'folder-open' : 'folder'} mr className="text-purple-500" />
                                         <span className="text-sm font-medium text-purple-600 truncate">{folder.title}</span>
-                                    </p>
+                                    </div>
 
                                     <div className="flex gap-2">
                                         {permissions['update_folder'] && (
@@ -54,14 +63,14 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, pe
                         <TableMobile>
                             {folder.documents.map((document) => (
                                 <a href={document.download_url} download={document.title} target="_blank" key={document.id} className="block hover:bg-gray-50">
-                                    <div className="flex items-center px-4 py-4 sm:px-6">
+                                    <div className="flex items-center py-4 sm:px-6">
                                         <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
                                             <div className="flex items-center justify-between">
-                                                <p className="flex items-center min-w-0 mr-1.5">
+                                                <div className="flex items-center min-w-0 mr-1.5">
                                                     <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" mr />
                                                     <FolderIcon icon={document.icon} />
                                                     <span className="text-sm font-medium text-purple-600 truncate">{document.title}</span>
-                                                </p>
+                                                </div>
 
                                                 {permissions['delete_document'] && (
                                                     <Button onClick={() => setDeletingDocument(document)} variant="danger-outline" size="sm">
@@ -92,7 +101,8 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, pe
                     )}
                 </li>
             ))}
-        </TableMobile>
+            </TableMobile>
+        </div>
     );
 }
 

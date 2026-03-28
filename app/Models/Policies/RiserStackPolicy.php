@@ -83,7 +83,7 @@ class RiserStackPolicy
      *
      * @return mixed
      */
-    public function update(User $user, RiserStack $riserStack)
+    public function update(User $user, ?RiserStack $riserStack = null)
     {
         return $user->membership->hasAbility('riser_stacks_update');
     }
@@ -96,7 +96,7 @@ class RiserStackPolicy
      *
      * @return mixed
      */
-    public function delete(User $user, RiserStack $riserStack)
+    public function delete(User $user, ?RiserStack $riserStack = null)
     {
         return $user->membership->hasAbility('riser_stacks_delete');
     }

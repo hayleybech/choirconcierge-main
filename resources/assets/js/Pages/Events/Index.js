@@ -4,7 +4,6 @@ import PageHeader from '../../components/PageHeader/PageHeader';
 import AppHead from '../../components/AppHead';
 import EventTableDesktop from './EventTableDesktop';
 import EventTableMobile from './EventTableMobile';
-import { usePage } from '@inertiajs/react';
 import EventFilters from '../../components/Event/EventFilters';
 import IndexContainer from '../../components/IndexContainer';
 import FilterSortPane from '../../components/FilterSortPane';
@@ -13,11 +12,16 @@ import Sorts from '../../components/Sorts';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
+import BulkEditEventsModal from './BulkEditEventsModal';
+import useBulkEdit from '../../hooks/useBulkEdit';
+import Dialog from '../../components/Dialog';
+import BulkEditBar from '../../components/BulkEditBar';
 
-const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }) => {
+const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
-	const { can } = usePage().props;
 	const { route } = useRoute();
+
+	const bulkEdit = useBulkEdit(events.data, can.update_event, can.delete_event, 'Event');
 
 	const sorts = [
 		{ id: 'title', name: 'Title' },
@@ -39,6 +43,28 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }
 
 	const sortFilterForm = useSortFilterForm('events.index', filters, sorts, transforms);
 
+	const actions = [
+		{
+			label: 'Add New',
+			icon: 'calendar-plus',
+			url: route('events.create'),
+			variant: 'primary',
+			can: 'create_event',
+		},
+		{ label: 'Event Types', icon: 'tags', url: route('event-types.index'), can: 'list_events' },
+		{
+			label: 'Attendance Report',
+			icon: 'analytics',
+			url: route('events.reports.attendance'),
+			can: 'list_attendances',
+		},
+		{ label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
+		bulkEdit.action,
+		filterAction,
+	]
+		.filter(action => !!action)
+		.filter(action => (action.can ? can[action.can] : true));
+
 	return (
 		<>
 			<AppHead title="Events" />
@@ -49,27 +75,30 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }
 					{ name: 'Dashboard', url: route('dash') },
 					{ name: 'Events', url: route('events.index') },
 				]}
-				actions={[
-					{
-						label: 'Add New',
-						icon: 'calendar-plus',
-						url: route('events.create'),
-						variant: 'primary',
-						can: 'create_event',
-					},
-					{ label: 'Event Types', icon: 'tags', url: route('event-types.index'), can: 'list_events' },
-					{
-						label: 'Attendance Report',
-						icon: 'analytics',
-						url: route('events.reports.attendance'),
-						can: 'list_attendances',
-					},
-					filterAction,
-					{ label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
-				].filter(action => (action.can ? can[action.can] : true))}
+				actions={actions}
 				meta={<div>Calendar Sync URL: {route('events.feed')}</div>}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 			/>
+
+			<Dialog
+				title={`Delete ${bulkEdit.selectedIds.length} Events?`}
+				isOpen={bulkEdit.showDeleteModal}
+				setIsOpen={bulkEdit.setShowDeleteModal}
+				okLabel="Delete"
+				okVariant="danger-solid"
+				okMethod="post"
+				data={{ event_ids: bulkEdit.selectedIds }}
+				okUrl={route('events.bulk-destroy')}
+				onOk={() => {
+					bulkEdit.setSelectedIds([]);
+					bulkEdit.setShowDeleteModal(false);
+					bulkEdit.setIsForcedMobile(false);
+				}}
+			>
+				Are you sure you want to delete the selected events? This action cannot be undone.
+			</Dialog>
+
+			<BulkEditBar bulkEdit={bulkEdit} />
 
 			<IndexContainer
 				showFilters={showFilters}
@@ -88,18 +117,24 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }
 					/>
 				}
 				tableMobile={
-					<EventTableMobile events={events} pagination={pagination} userEnsemblesCount={userEnsemblesCount} />
+					<EventTableMobile
+						events={events}
+						userEnsemblesCount={userEnsemblesCount}
+						bulkEdit={bulkEdit}
+						setShowFilters={setShowFilters}
+						hasNonDefaultFilters={hasNonDefaultFilters}
+					/>
 				}
 				tableDesktop={
 					<EventTableDesktop
 						events={events}
 						sortFilterForm={sortFilterForm}
-						pagination={pagination}
 						userEnsemblesCount={userEnsemblesCount}
+						bulkEdit={bulkEdit}
 					/>
 				}
 				emptyState={
-					events.length === 0 ? (
+					events.data.length === 0 ? (
 						<EmptyState
 							title="No events"
 							actionDescription={
@@ -114,6 +149,17 @@ const Index = ({ events, eventTypes, pagination, userEnsemblesCount, ensembles }
 						/>
 					) : null
 				}
+			/>
+
+			<BulkEditEventsModal
+				isOpen={bulkEdit.showEditModal}
+				setIsOpen={bulkEdit.setShowEditModal}
+				selectedEvents={events.data.filter(e => bulkEdit.selectedIds.includes(e.id))}
+				key={bulkEdit.selectedIds}
+				onSuccess={() => bulkEdit.setSelectedIds([])}
+				eventTypes={eventTypes}
+				ensembles={ensembles}
+				userEnsemblesCount={userEnsemblesCount}
 			/>
 		</>
 	);
