@@ -83,7 +83,7 @@ const Show = ({ poll, my_vote_option_ids = [] }) => {
 								</span>
 							) : (
 								<span className="text-emerald-700 flex items-center">
-									<Icon icon="check" mr /> Open
+									<Icon icon="lock-open" mr /> Open
 								</span>
 							)}
 						</div>

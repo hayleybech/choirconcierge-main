@@ -85,7 +85,7 @@ const BulkEditPollsModal = ({ isOpen, setIsOpen, selectedPollIds, ensembles, onS
 					<RadioGroup
 						label={<Label label="Status" />}
 						options={[
-							{ id: '0', name: 'Open', icon: 'check', colour: 'text-emerald-700' },
+							{ id: '0', name: 'Open', icon: 'lock-open', colour: 'text-emerald-700' },
 							{ id: '1', name: 'Closed', icon: 'lock', colour: 'text-gray-700' },
 						]}
 						selected={data.is_closed === null ? null : data.is_closed ? '1' : '0'}

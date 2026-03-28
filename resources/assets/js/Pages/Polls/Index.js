@@ -144,7 +144,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 													</span>
 												) : (
 													<span className="text-emerald-700 flex items-center justify-end text-sm">
-														<Icon icon="check" mr /> Open
+														<Icon icon="lock-open" mr /> Open
 													</span>
 												)}
 											</div>
@@ -225,7 +225,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 											</span>
 										) : (
 											<span className="text-emerald-700 flex items-center">
-												<Icon icon="check" mr /> Open
+												<Icon icon="lock-open" mr /> Open
 											</span>
 										)}
 									</TableCell>
