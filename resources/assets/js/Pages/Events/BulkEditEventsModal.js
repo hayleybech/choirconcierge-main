@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import Dialog from "../../components/Dialog";
 import Label from "../../components/inputs/Label";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
@@ -8,9 +8,13 @@ import Help from '../../components/inputs/Help';
 import RadioGroup from '../../components/inputs/RadioGroup';
 import Error from '../../components/inputs/Error';
 import EventType from '../../EventType';
+import WarningAlert from '../../components/WarningAlert';
 
-const BulkEditEventsModal = ({ isOpen, setIsOpen, selectedEventIds, eventTypes, ensembles, userEnsemblesCount, onSuccess }) => {
+const BulkEditEventsModal = ({ isOpen, setIsOpen, selectedEvents, eventTypes, ensembles, userEnsemblesCount, onSuccess }) => {
     const { route } = useRoute();
+
+    const selectedEventIds = useMemo(() => selectedEvents.map(e => e.id), [selectedEvents]);
+    const hasRecurringEvents = useMemo(() => selectedEvents.some(e => e.is_repeating || e.repeat_parent_id), [selectedEvents]);
 
     const { data, setData, post, processing, reset, errors } = useForm({
         event_ids: selectedEventIds,
@@ -32,7 +36,7 @@ const BulkEditEventsModal = ({ isOpen, setIsOpen, selectedEventIds, eventTypes, 
 
     return (
 		<Dialog
-			title={`Edit ${selectedEventIds.length} Events`}
+			title={`Edit ${selectedEvents.length} Events`}
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 			okLabel="Update Events"
@@ -42,6 +46,11 @@ const BulkEditEventsModal = ({ isOpen, setIsOpen, selectedEventIds, eventTypes, 
 			okVariant="primary"
 		>
 			<div className="space-y-6 text-left">
+				{hasRecurringEvents && (
+					<WarningAlert title="Recurring events selected">
+						One or more selected events are part of a recurring series. Bulk editing will convert these into single, independent events.
+					</WarningAlert>
+				)}
 
 				<div className="sm:col-span-6">
 					<RadioGroup

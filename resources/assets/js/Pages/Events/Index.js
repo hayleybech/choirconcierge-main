@@ -154,7 +154,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 			<BulkEditEventsModal
 				isOpen={bulkEdit.showEditModal}
 				setIsOpen={bulkEdit.setShowEditModal}
-				selectedEventIds={bulkEdit.selectedIds}
+				selectedEvents={events.data.filter(e => bulkEdit.selectedIds.includes(e.id))}
 				key={bulkEdit.selectedIds}
 				onSuccess={() => bulkEdit.setSelectedIds([])}
 				eventTypes={eventTypes}

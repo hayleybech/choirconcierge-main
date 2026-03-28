@@ -10,6 +10,7 @@ use App\Models\EventType;
 use App\Models\Membership;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
+use App\Services\UpdateSingleEventStrategy;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -208,7 +209,26 @@ class EventController extends Controller
         $eventIds = $request->input('event_ids');
 
         if ($request->filled('event_type_id')) {
-            Event::whereIn('id', $eventIds)->update(['type_id' => $request->event_type_id]);
+            $updateData = ['type_id' => $request->event_type_id];
+
+            $recurringEvents = Event::whereIn('id', $eventIds)
+                ->where(function (Builder $query) {
+                    $query->where('is_repeating', true);
+                })
+                ->with(['repeat_children'])
+                ->get();
+
+            $singleEventIds = array_diff($eventIds, $recurringEvents->pluck('id')->toArray());
+            if (!empty($singleEventIds)) {
+                Event::whereIn('id', $singleEventIds)->update($updateData);
+            }
+
+            if ($recurringEvents->isNotEmpty()) {
+                $strategy = new UpdateSingleEventStrategy();
+                foreach ($recurringEvents as $event) {
+                    $strategy->handle($event, $updateData);
+                }
+            }
         }
 
         if ($request->has('ensemble_ids')) {
