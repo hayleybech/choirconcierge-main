@@ -207,6 +207,7 @@ class AttendanceControllerTest extends TestCase
             'absent_reason' => $absent_reason,
             'event_id' => $event->id,
             'membership_id' => $singer->id,
+            'source' => 'manual',
         ]);
     }
 
@@ -231,6 +232,7 @@ class AttendanceControllerTest extends TestCase
             'absent_reason' => $absent_reason,
             'event_id' => $event->id,
             'membership_id' => $singer->id,
+            'source' => 'manual',
         ]);
     }
 }

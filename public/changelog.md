@@ -1,3 +1,7 @@
+# 2026-03-29
+## Attendance Report Emails
+Your team (anyone with the "view attendance" permission) will now receive an automated email after Kiosk / QR-Code events, with a quick summary of the attendance for the event.
+---
 # 2026-03-27
 ## Bulk Editing
 You can now select multiple items in a list and edit them in bulk. This feature is available on larger modules like Songs, Events, etc, and should save you a bunch of time!

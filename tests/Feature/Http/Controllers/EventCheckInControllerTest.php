@@ -39,6 +39,7 @@ class EventCheckInControllerTest extends TestCase
         $this->assertDatabaseHas('attendances', [
             'membership_id' => $membership->id,
             'event_id' => $event->id,
+            'source' => 'qr-code',
         ]);
     }
 
@@ -70,6 +71,7 @@ class EventCheckInControllerTest extends TestCase
         $this->assertDatabaseHas('attendances', [
             'membership_id' => $membership->id,
             'event_id' => $event->id,
+            'source' => 'qr-code',
         ]);
     }
 }

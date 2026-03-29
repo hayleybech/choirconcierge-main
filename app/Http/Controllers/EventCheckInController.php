@@ -64,7 +64,10 @@ class EventCheckInController extends Controller
         $eventInstance->attendances()
             ->updateOrCreate(
                 ['membership_id' => $request->user()->membership->id],
-                ['response' => self::getAttendanceByEvent($eventInstance)]
+                [
+                    'response' => self::getAttendanceByEvent($eventInstance),
+                    'source' => 'qr-code',
+                ]
             );
 
         return redirect()

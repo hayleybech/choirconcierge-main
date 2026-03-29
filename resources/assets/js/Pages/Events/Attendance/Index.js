@@ -32,6 +32,13 @@ import { Menu, Transition } from '@headlessui/react';
 import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
 import { router } from '@inertiajs/react';
 
+const sourceLabels = {
+	kiosk: 'Kiosk',
+	'qr-code': 'QR Code',
+	'after-event': 'Auto',
+	manual: 'Manual',
+};
+
 const Index = ({
 	event,
 	allSingers,
@@ -164,7 +171,7 @@ const Index = ({
 						can: 'create_attendance',
 					},
 					{
-						label: 'Individual Check-In',
+						label: 'QR Code',
 						icon: 'qrcode',
 						onClick: () => setCheckInDialogIsOpen(true),
 						can: 'create_attendance',
@@ -175,17 +182,27 @@ const Index = ({
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 				meta={
 					<div>
-						<p className="mb-2">Use this page to manually mark everyone's attendance. </p>
+						<p className="mb-2">We offer three ways to track attendance: </p>
+						<ul className="list-disc list-inside ml-4 mb-4 [&>li]:mb-1">
+							<li>
+								<strong>Manual</strong> attendance tracking on this page
+							</li>
+							<li>
+								<strong>Kiosk</strong> check-in for shared device use
+							</li>
+							<li>
+								<strong>QR Code</strong> check-in for individual use
+							</li>
+						</ul>
 						<p className="mb-2">
-							The kiosk page allows singers to mark themselves off from a shared device, while the
-							individual check-in page allows singers to use their own device by scanning a QR code. Both
-							check-in pages automatically mark singers as late after the call time, or absent 20 minutes
-							later.
+							Both device check-in pages automatically mark singers as late after the call time, or absent
+							20 minutes later.
 						</p>
 						<p className="mb-2">
-							If attendance was recorded during the event (either manually here or using the kiosk),
-							remaining singers will automatically be marked absent once the event ends.
+							If attendance was partially recorded during the event (either manually here or using the
+							kiosk), remaining singers will automatically be marked absent once the event ends.
 						</p>
+						<p className="mb-2">The check-in pages also send an attendance report after each event.</p>
 					</div>
 				}
 			/>
@@ -332,13 +349,23 @@ const Index = ({
 									</TableCell>
 									<TableCell>
 										{!!singer.attendance.updated_at && (
-											<DateTag
-												icon="pencil"
-												label="Updated"
-												date={singer.attendance.updated_at}
-												format="DATETIME_SHORT"
-												className="text-gray-400"
-											/>
+											<div className="flex flex-col">
+												<DateTag
+													icon="pencil"
+													label="Updated"
+													date={singer.attendance.updated_at}
+													format="DATETIME_SHORT"
+													className="text-gray-400"
+												/>
+												{singer.attendance.source && (
+													<div className="text-[10px] uppercase tracking-wider text-gray-400 mt-0.5 flex items-center gap-1">
+														<Icon icon="info-circle" className="text-[9px]" />
+														Via{' '}
+														{sourceLabels[singer.attendance.source] ||
+															singer.attendance.source}
+													</div>
+												)}
+											</div>
 										)}
 									</TableCell>
 								</TItemRow>

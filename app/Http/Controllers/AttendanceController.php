@@ -171,6 +171,7 @@ class AttendanceController extends Controller
                 [
                     'response' => $request->input('response'),
                     'absent_reason' => $request->input('absent_reason'),
+                    'source' => 'manual',
                 ]
             );
 
@@ -191,6 +192,7 @@ class AttendanceController extends Controller
                 [
                     'response' => $response,
                     'absent_reason' => $absent_reason[$membership_id],
+                    'source' => 'manual',
                 ],
             );
         }
@@ -215,7 +217,10 @@ class AttendanceController extends Controller
         foreach ($singerIds as $singerId) {
             $event->attendances()->updateOrCreate(
                 ['membership_id' => $singerId],
-                ['response' => $response]
+                [
+                    'response' => $response,
+                    'source' => 'manual',
+                ]
             );
         }
 
