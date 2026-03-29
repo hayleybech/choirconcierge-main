@@ -1,23 +1,38 @@
-import React, {useState} from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import FolderTableDesktop from "./FolderTableDesktop";
-import FolderTableMobile from "./FolderTableMobile";
-import {usePage} from "@inertiajs/react";
-import DeleteDialog from "../../components/DeleteDialog";
-import EmptyState from "../../components/EmptyState";
-import IndexContainer from "../../components/IndexContainer";
-import useRoute from "../../hooks/useRoute";
+import React, { useState } from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import PageHeader from '../../components/PageHeader/PageHeader';
+import AppHead from '../../components/AppHead';
+import FolderTableDesktop from './FolderTableDesktop';
+import FolderTableMobile from './FolderTableMobile';
+import { usePage, useForm } from '@inertiajs/react';
+import DeleteDialog from '../../components/DeleteDialog';
+import EmptyState from '../../components/EmptyState';
+import IndexContainer from '../../components/IndexContainer';
+import useRoute from '../../hooks/useRoute';
+import DocumentFilters from './DocumentFilters';
+import useSortFilterForm from '../../hooks/useSortFilterForm';
+import useFilterPane from '../../hooks/useFilterPane';
+import FilterSortPane from '../../components/FilterSortPane';
+import Sorts from '../../components/Sorts';
 
-const Index = ({ folders, userEnsemblesCount, ensembles }) => {
-    const { can } = usePage().props;
-    const { route } = useRoute();
+const Index = ({ folders, documents, userEnsemblesCount, ensembles, can }) => {
+	const { route } = useRoute();
 
-    const [deletingFolder, setDeletingFolder] = useState(null);
-    const [deletingDocument, setDeletingDocument] = useState(null);
+	const [deletingFolder, setDeletingFolder] = useState(null);
+	const [deletingDocument, setDeletingDocument] = useState(null);
 
-    return (
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+
+	const sorts = [
+		{ id: 'title', name: 'Title', default: true },
+		{ id: 'created_at', name: 'Date Created' },
+	];
+
+	const filters = [{ name: 'title', defaultValue: '' }];
+
+	const sortFilterForm = useSortFilterForm('folders.index', filters, sorts);
+
+	return (
 		<>
 			<AppHead title="Documents" />
 			<PageHeader
@@ -35,22 +50,37 @@ const Index = ({ folders, userEnsemblesCount, ensembles }) => {
 						variant: 'primary',
 						can: 'create_folder',
 					},
-				].filter(action => (action.can ? can[action.can] : true))}
+					filterAction,
+				].filter(action => (action?.can ? can[action.can] : !!action))}
 			/>
 
 			<IndexContainer
+				showFilters={showFilters}
+				filterPane={
+					<FilterSortPane
+						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+						filters={<DocumentFilters form={sortFilterForm} />}
+						closeFn={() => setShowFilters(false)}
+					/>
+				}
 				tableDesktop={
 					<FolderTableDesktop
 						folders={folders}
+						documents={documents}
+						isFiltered={!!hasNonDefaultFilters}
 						setDeletingFolder={setDeletingFolder}
 						setDeletingDocument={setDeletingDocument}
 						permissions={can}
 						userEnsemblesCount={userEnsemblesCount}
+						sortFilterForm={sortFilterForm}
 					/>
 				}
 				tableMobile={
 					<FolderTableMobile
 						folders={folders}
+						documents={documents}
+						setShowFilters={setShowFilters}
+						isFiltered={!!hasNonDefaultFilters}
 						setDeletingFolder={setDeletingFolder}
 						setDeletingDocument={setDeletingDocument}
 						permissions={can}
@@ -58,17 +88,21 @@ const Index = ({ folders, userEnsemblesCount, ensembles }) => {
 					/>
 				}
 				emptyState={
-					folders.length === 0 ? (
+					folders.length === 0 && documents.length === 0 ? (
 						<EmptyState
-							title="No folders"
-							description="Looks like you don't have any folders or documents yet. This is a great place to store meeting minutes, your constitution, or other important files."
+							title={hasNonDefaultFilters ? 'No results found' : 'No folders'}
+							description={
+								hasNonDefaultFilters
+									? "We couldn't find any folders or documents matching your search. "
+									: "Looks like you don't have any folders or documents yet. This is a great place to store meeting minutes, your constitution, or other important files."
+							}
 							actionDescription={
-								can['create_folder']
+								can['create_folder'] && !hasNonDefaultFilters
 									? 'Get started by adding a folder, then upload some documents to the folder.'
 									: null
 							}
 							icon="folders"
-							href={can['create_folder'] ? route('folders.create') : null}
+							href={can['create_folder'] && !hasNonDefaultFilters ? route('folders.create') : null}
 							actionLabel="Add Folder"
 							actionIcon="folder-plus"
 						/>
@@ -104,8 +138,8 @@ const Index = ({ folders, userEnsemblesCount, ensembles }) => {
 			</DeleteDialog>
 		</>
 	);
-}
+};
 
-Index.layout = page => <TenantLayout children={page} />
+Index.layout = page => <TenantLayout children={page} />;
 
 export default Index;

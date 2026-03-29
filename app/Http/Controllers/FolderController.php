@@ -8,10 +8,14 @@ use App\Models\Folder;
 use App\Models\Role;
 use App\Models\SingerCategory;
 use App\Models\VoicePart;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Document;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class FolderController extends Controller
 {
@@ -20,16 +24,18 @@ class FolderController extends Controller
         $this->authorizeResource(Folder::class);
     }
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $user = auth()->user();
         $userEnsembles = $user?->membership?->enrolments->pluck('ensemble_id');
 
-        $folders = Folder::with([
-            'documents' => static function ($query) {
-                $query->orderBy('title'); // documents by document title
-            },
-        ])
+        $folders = QueryBuilder::for(Folder::class)
+            ->with([
+                'documents' => static function ($query) {
+                    $query->orderBy('title'); // documents by document title
+                },
+                'ensembles',
+            ])
             ->when(! $user->membership->hasRole('Admin') && ! $user?->isSuperAdmin, function (Builder $query) use ($user, $userEnsembles) {
                 $query->where(function (Builder $query) use ($userEnsembles) {
                     $query->whereDoesntHave('ensembles')
@@ -47,8 +53,40 @@ class FolderController extends Controller
                         });
                 });
             })
-            ->orderBy('title')
-            ->get(); // folders by folder title
+            ->allowedFilters([
+                AllowedFilter::partial('title'),
+            ])
+            ->allowedSorts(['title', 'created_at'])
+            ->defaultSort('title')
+            ->get();
+
+        $documents = collect();
+        if ($request->filled('filter.title')) {
+            $documents = QueryBuilder::for(Document::class)
+                ->allowedFilters([
+                    AllowedFilter::partial('title'),
+                ])
+                ->whereHas('folder', function (Builder $query) use ($user, $userEnsembles) {
+                    $query->when(! $user->membership->hasRole('Admin') && ! $user?->isSuperAdmin, function (Builder $query) use ($user, $userEnsembles) {
+                        $query->where(function (Builder $query) use ($userEnsembles) {
+                            $query->whereDoesntHave('ensembles')
+                                ->orWhereHas('ensembles', function (Builder $query) use ($userEnsembles) {
+                                    $query->whereIn('ensembles.id', $userEnsembles ?? []);
+                                });
+                        })
+                        ->where(function (Builder $query) use ($user) {
+                            $query->whereDoesntHave('viewers')
+                                ->orWhere(function (Builder $query) use ($user) {
+                                    $query->whereHas('viewer_users', fn($q) => $q->where('users.id', $user->id))
+                                        ->orWhereHas('viewer_roles', fn($q) => $q->whereIn('roles.id', $user->membership->roles->pluck('id')))
+                                        ->orWhereHas('viewer_voice_parts', fn($q) => $q->whereIn('voice_parts.id', $user->membership->enrolments->pluck('voice_part_id')))
+                                        ->orWhereHas('viewer_singer_categories', fn($q) => $q->where('singer_categories.id', $user->membership->singer_category_id));
+                                });
+                        });
+                    });
+                })
+                ->get();
+        }
 
         $totalEnsemblesCount = Ensemble::count();
         $userEnsemblesCount = ($user?->isSuperAdmin || $user->membership->hasRole('Admin'))
@@ -63,8 +101,10 @@ class FolderController extends Controller
 
         return Inertia::render('Folders/Index', [
             'folders' => $folders->values(),
+            'documents' => $documents->values(),
             'userEnsemblesCount' => $userEnsemblesCount,
             'ensembles' => $ensembles,
+            'filters' => $request->only(['filter', 'sort']),
         ]);
     }
 

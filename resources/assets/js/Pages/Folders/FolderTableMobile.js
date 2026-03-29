@@ -1,15 +1,12 @@
 import React, {useState} from 'react';
 import TableMobile, { TableMobileHeader } from "../../components/TableMobile";
-import FolderIcon from "../../components/FolderIcon";
 import Icon from "../../components/Icon";
 import DocumentForm from "./DocumentForm";
 import Button from "../../components/inputs/Button";
 import EmptyState from "../../components/EmptyState";
-import useRoute from "../../hooks/useRoute";
-import Badge from "../../components/Badge";
+import {DocumentRowMobile, FolderRowMobile} from "./FolderTableRows";
 
-const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, permissions, userEnsemblesCount }) => {
-    const { route } = useRoute();
+const FolderTableMobile = ({ folders, documents, isFiltered, setShowFilters, setDeletingFolder, setDeletingDocument, permissions, userEnsemblesCount }) => {
     const [openFolder, setOpenFolder] = useState(0);
 
     const showEnsemblesColumn = userEnsemblesCount > 1;
@@ -18,69 +15,60 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, pe
         isActiveMobile: false,
         noun: 'Folder',
         selectedIds: [],
-        totalItems: folders.length,
+        totalItems: folders.length + (documents ? documents.length : 0),
     };
 
     return (
         <div>
-            <TableMobileHeader bulkEdit={bulkEdit} />
+            <TableMobileHeader bulkEdit={bulkEdit}>
+				<Button
+					variant={isFiltered ? 'success-outline' : 'clear-v2'}
+					size="xs"
+					onClick={() => setShowFilters(prev => !prev)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
             <TableMobile>
+            {isFiltered && documents.length > 0 && (
+                <>
+                    <li className="bg-gray-50 px-4 py-2 font-semibold text-gray-700 text-sm">
+                        Matching Documents
+                    </li>
+                    {documents.map((document) => (
+                        <DocumentRowMobile
+                            key={`doc-${document.id}`}
+                            document={document}
+                            permissions={permissions}
+                            setDeletingDocument={setDeletingDocument}
+                        />
+                    ))}
+                    <li className="bg-gray-50 px-4 py-2 font-semibold text-gray-700 text-sm">
+                        Folders
+                    </li>
+                </>
+            )}
             {folders.map((folder) => (
-                <li key={folder.id}>
-                    <a href="#" onClick={() => setOpenFolder(folder.id === openFolder ? 0 : folder.id)} className="block hover:bg-gray-50">
-                        <div className="flex items-center py-4 sm:px-6">
-                            <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center min-w-0 mr-1.5">
-                                        <Icon icon={folder.id === openFolder ? 'folder-open' : 'folder'} mr className="text-purple-500" />
-                                        <span className="text-sm font-medium text-purple-600 truncate">{folder.title}</span>
-                                    </div>
-
-                                    <div className="flex gap-2">
-                                        {permissions['update_folder'] && (
-                                            <Button href={route('folders.edit', { folder })} variant="secondary" size="sm">
-                                                <Icon icon="edit" />
-                                            </Button>
-                                        )}
-                                        {permissions['delete_folder'] && (
-                                            <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline" size="sm">
-                                                <Icon icon="trash" />
-                                            </Button>
-                                        )}
-                                    </div>
-                                </div>
-                                {showEnsemblesColumn && folder.ensembles.length > 0 && (
-                                    <div className="mt-2 flex flex-wrap gap-1">
-                                        {folder.ensembles.map(ensemble => (
-                                            <Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">{ensemble.name}</Badge>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </a>
+                <React.Fragment key={folder.id}>
+                    <FolderRowMobile
+                        folder={folder}
+                        isOpen={folder.id === openFolder}
+                        toggleOpen={() => setOpenFolder(folder.id === openFolder ? 0 : folder.id)}
+                        showEnsemblesColumn={showEnsemblesColumn}
+                        permissions={permissions}
+                        setDeletingFolder={setDeletingFolder}
+                    />
                     {folder.id === openFolder && (
                         <TableMobile>
                             {folder.documents.map((document) => (
-                                <a href={document.download_url} download={document.title} target="_blank" key={document.id} className="block hover:bg-gray-50">
-                                    <div className="flex items-center py-4 sm:px-6">
-                                        <div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex items-center min-w-0 mr-1.5">
-                                                    <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" mr />
-                                                    <FolderIcon icon={document.icon} />
-                                                    <span className="text-sm font-medium text-purple-600 truncate">{document.title}</span>
-                                                </div>
-
-                                                {permissions['delete_document'] && (
-                                                    <Button onClick={() => setDeletingDocument(document)} variant="danger-outline" size="sm">
-                                                        <Icon icon="trash" />
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
+                                <DocumentRowMobile
+                                    key={document.id}
+                                    document={document}
+                                    permissions={permissions}
+                                    setDeletingDocument={setDeletingDocument}
+                                    isInsideFolder
+                                />
                             ))}
                             {folder.documents.length === 0 && (
                                 <EmptyState
@@ -99,7 +87,7 @@ const FolderTableMobile = ({ folders, setDeletingFolder, setDeletingDocument, pe
                             )}
                         </TableMobile>
                     )}
-                </li>
+                </React.Fragment>
             ))}
             </TableMobile>
         </div>

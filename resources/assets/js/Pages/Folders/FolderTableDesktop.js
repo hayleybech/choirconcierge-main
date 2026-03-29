@@ -1,10 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
-import FolderIcon from "../../components/FolderIcon";
-import Icon from "../../components/Icon";
-import DateTag from "../../components/DateTag";
 import DocumentForm from "./DocumentForm";
-import Button from "../../components/inputs/Button";
 import {useForm} from "@inertiajs/react";
 import Dialog from "../../components/Dialog";
 import Form from "../../components/Form";
@@ -13,13 +9,13 @@ import Error from "../../components/inputs/Error";
 import TextInput from "../../components/inputs/TextInput";
 import EmptyState from "../../components/EmptyState";
 import useRoute from "../../hooks/useRoute";
-import Badge from "../../components/Badge";
+import TableHeadingSort from "../../components/TableHeadingSort";
+import {DocumentRowDesktop, FolderRowDesktop} from "./FolderTableRows";
 
-const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, permissions, userEnsemblesCount }) => {
-    const { route } = useRoute();
+const FolderTableDesktop = ({ folders, documents, isFiltered, setDeletingFolder, setDeletingDocument, permissions, userEnsemblesCount, sortFilterForm }) => {
     const [openFolder, setOpenFolder] = useState(0);
     const [renameDocumentIsOpen, setRenameDocumentIsOpen] = useState(false);
-    const [renamingDocument, setRenamingDocument] = useState({ folder: folders[0], document: folders[0].documents[0] });
+    const [renamingDocument, setRenamingDocument] = useState({ folder: folders[0], document: folders[0]?.documents?.[0] });
 
     const showEnsemblesColumn = userEnsemblesCount > 1;
 
@@ -28,96 +24,72 @@ const FolderTableDesktop = ({ folders, setDeletingFolder, setDeletingDocument, p
             <Table>
                 <THead>
                     <tr>
-                        <TableHeading>Title</TableHeading>
+                        <TableHeading>
+                            <TableHeadingSort form={sortFilterForm} sort="title">
+                                Title
+                            </TableHeadingSort>
+                        </TableHeading>
                         {showEnsemblesColumn && <TableHeading>Ensembles</TableHeading>}
-                        <TableHeading>Created</TableHeading>
+                        <TableHeading>
+                            <TableHeadingSort form={sortFilterForm} sort="created_at">
+                                Created
+                            </TableHeadingSort>
+                        </TableHeading>
                         {(permissions['delete_folder'] || permissions['delete_document']) && (
                             <TableHeading>Delete</TableHeading>
                         )}
                     </tr>
                 </THead>
                 <TBody>
-                    {folders.map((folder) => (
-                        <React.Fragment key={folder.id}>
-                            <tr>
-                                <TableCell>
-                                    <a
-                                        href="#"
-                                        className="text-purple-600"
-                                        onClick={() => setOpenFolder(folder.id === openFolder ? 0 : folder.id)}
-                                    >
-                                        <Icon icon={folder.id === openFolder ? 'folder-open' : 'folder'} mr className="text-purple-500" />
-                                        {folder.title}
-                                    </a>
-                                </TableCell>
-                                {showEnsemblesColumn && (
-                                    <TableCell>
-                                        <div className="space-x-1.5 space-y-1.5">
-                                            {folder.ensembles.map(ensemble => (
-                                                <Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">{ensemble.name}</Badge>
-                                            ))}
-                                        </div>
-                                    </TableCell>
-                                )}
-                                <TableCell>
-                                    <DateTag icon="pencil" date={folder.created_at} />
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-2">
-                                        {permissions['update_folder'] && (
-                                            <Button
-                                                href={route('folders.edit', { folder })}
-                                                variant="secondary"
-                                                size="xs"
-                                                className="ml-2"
-                                            >
-                                                <Icon icon="edit" />
-                                                Edit
-                                            </Button>
-                                        )}
-                                        {permissions['delete_folder'] && (
-                                            <Button onClick={() => setDeletingFolder(folder)} variant="danger-outline" size="xs">
-                                                <Icon icon="times" /> Delete
-                                            </Button>
-                                        )}
-                                    </div>
+                    {isFiltered && documents.length > 0 && (
+                        <>
+                            <tr className="bg-gray-50">
+                                <TableCell colSpan={showEnsemblesColumn ? 4 : 3} className="py-2 px-4 font-semibold text-gray-700">
+                                    Matching Documents
                                 </TableCell>
                             </tr>
+                            {documents.map((document) => (
+                                <DocumentRowDesktop
+                                    key={`doc-${document.id}`}
+                                    document={document}
+                                    folder={{id: document.folder_id}}
+                                    permissions={permissions}
+                                    setRenamingDocument={setRenamingDocument}
+                                    setRenameDocumentIsOpen={setRenameDocumentIsOpen}
+                                    setDeletingDocument={setDeletingDocument}
+                                    showEnsemblesColumn={showEnsemblesColumn}
+                                />
+                            ))}
+                            <tr className="bg-gray-50">
+                                <TableCell colSpan={showEnsemblesColumn ? 4 : 3} className="py-2 px-4 font-semibold text-gray-700">
+                                    Matching Folders
+                                </TableCell>
+                            </tr>
+                        </>
+                    )}
+                    {folders.map((folder) => (
+                        <React.Fragment key={folder.id}>
+                            <FolderRowDesktop
+                                folder={folder}
+                                isOpen={folder.id === openFolder}
+                                toggleOpen={() => setOpenFolder(folder.id === openFolder ? 0 : folder.id)}
+                                showEnsemblesColumn={showEnsemblesColumn}
+                                permissions={permissions}
+                                setDeletingFolder={setDeletingFolder}
+                            />
                             {folder.id === openFolder && <>
                                 {folder.documents.map((document) => (
-                                    <tr key={document.id}>
-                                        <TableCell>
-                                            <a href={document.download_url} download={document.title} target="_blank" className="text-purple-600">
-                                                <Icon icon="level-up-alt" className="fa-rotate-90 text-purple-500" />
-                                                <FolderIcon icon={document.icon} />
-                                                {document.title}
-                                            </a>
-                                        </TableCell>
-                                        {showEnsemblesColumn && <TableCell />}
-                                        <TableCell>
-                                            <DateTag icon="pencil" date={document.created_at} />
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center gap-2">
-                                                {permissions['update_document'] && (
-                                                    <Button
-                                                        variant="secondary"
-                                                        size="xs"
-                                                        className="ml-2"
-                                                        onClick={() => { setRenamingDocument({folder, document}); setRenameDocumentIsOpen(true); }}
-                                                    >
-                                                        <Icon icon="edit" />
-                                                        Rename
-                                                    </Button>
-                                                )}
-                                                {permissions['delete_document'] && (
-                                                    <Button onClick={() => setDeletingDocument(document)} variant="danger-outline" size="xs">
-                                                        <Icon icon="times" /> Delete
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        </TableCell>
-                                    </tr>
+                                    <DocumentRowDesktop
+                                        key={document.id}
+                                        document={document}
+                                        folder={folder}
+                                        permissions={permissions}
+                                        setRenamingDocument={setRenamingDocument}
+                                        setRenameDocumentIsOpen={setRenameDocumentIsOpen}
+                                        setDeletingDocument={setDeletingDocument}
+                                        showEnsemblesColumn={showEnsemblesColumn}
+                                        isInsideFolder
+                                    />
                                 ))}
                                 {folder.documents.length === 0 && (
                                     <tr>
