@@ -121,6 +121,7 @@ class HandleInertiaRequests extends Middleware
             'user' => auth()->user(),
             'impersonationActive' => session()->has('impersonation:active'),
             'userChoirs' => $this->getUserChoirs(),
+            'isWebView' => $request->attributes->get('isWebView')
         ]);
     }
 

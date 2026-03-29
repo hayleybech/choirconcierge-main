@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\DetectWebView;
 use App\Http\Middleware\SetFeatureFlags;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Routing\Middleware\ValidateSignature;
@@ -21,6 +22,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
+        DetectWebView::class,
     ];
 
     /**
