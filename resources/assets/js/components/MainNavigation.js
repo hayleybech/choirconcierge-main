@@ -13,6 +13,7 @@ const MainNavigation = ({ navigation, closeSidebar }) => {
                 <div key={item.name}>
                     <Link
                         href={route(item.route)}
+                        data-tour={item.name.toLowerCase()}
                         className={classNames(
                             item.active ? 'bg-purple-800 text-white' : 'text-white text-opacity-80 hover:bg-white hover:bg-opacity-90 hover:text-brand-purple-dark',
                             'group flex items-center px-2 py-2 text-base uppercase font-bold rounded-md'

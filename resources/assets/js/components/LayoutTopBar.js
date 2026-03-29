@@ -4,8 +4,9 @@ import {Menu, Transition} from "@headlessui/react";
 import classNames from "../classNames";
 import {Link, usePage} from "@inertiajs/react";
 import useRoute from "../hooks/useRoute";
+import { HelpMenu } from './HelpMenu';
 
-const LayoutTopBar = ({setShowImpersonateModal, setSidebarOpen, switchChoirMenu}) => {
+const LayoutTopBar = ({setShowImpersonateModal, setSidebarOpen, startTour, switchChoirMenu}) => {
     const {can, user, impersonationActive, tenant} = usePage().props;
     const {route} = useRoute();
 
@@ -37,24 +38,12 @@ const LayoutTopBar = ({setShowImpersonateModal, setSidebarOpen, switchChoirMenu}
 					icon: 'cogs',
 					hide: !can.update_tenant,
 				},
-				{ name: 'Changelog', href: route('central.changelog'), icon: 'code-merge' },
-				{
-					name: 'Help (Email Us)',
-					action: () => navigation.navigate('mailto:hayley@choirconcierge.com'),
-					icon: 'question',
-				},
 				{ name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' },
 		  ]
 		: [
 				{ name: 'Edit Profile', href: route('central.account.edit'), icon: 'user-edit' },
 				// { name: 'Impersonate User', action: () => setShowImpersonateModal(true), icon: 'user-unlock', hide: !can.impersonate || impersonationActive },
 				// { name: 'Stop Impersonating', href: route('impersonation.stop'), icon: 'user-lock', hide: !impersonationActive },
-				{ name: 'Changelog', href: route('central.changelog'), icon: 'code-merge' },
-				{
-					name: 'Help (Email Us)',
-					action: () => navigation.navigate('mailto:hayley@choirconcierge.com'),
-					icon: 'question',
-				},
 				{ name: 'Sign out', href: route('logout'), method: 'POST', icon: 'sign-out-alt' },
 		  ];
 
@@ -75,6 +64,8 @@ const LayoutTopBar = ({setShowImpersonateModal, setSidebarOpen, switchChoirMenu}
                     </div>
                 </div>
                 <div className="ml-4 flex items-center lg:ml-6">
+                    {/* Help dropdown */}
+                    <HelpMenu startTour={startTour} />
 
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-3 relative">

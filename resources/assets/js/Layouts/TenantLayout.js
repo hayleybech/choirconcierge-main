@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import navigation from "./navigation";
@@ -17,6 +17,7 @@ import BillingNotices from "../components/BillingNotices";
 import TenantNotice from "../components/TenantNotice";
 import {ErrorBoundary} from "@sentry/react";
 import OuterPageErrorFallback from "./OuterPageErrorFallback";
+import OnboardingTour from '../components/OnboardingTour';
 
 export default function TenantLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -49,12 +50,19 @@ export default function TenantLayout({ children }) {
         })),
     });
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
+    const [runTour, setRunTour] = useState(false);
 
     usePromptBeforeUnload(player.fileName || player.showFullscreen);
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
-    const { can, userChoirs, errors, flash, tenant } = usePage().props;
+    const { can, userChoirs, errors, flash, tenant, showOnboardingTour } = usePage().props;
+
+    useEffect(() => {
+        if (showOnboardingTour) {
+            setRunTour(true);
+        }
+    }, [showOnboardingTour]);
 
     const navFiltered = navigation
         .filter((item) => can[item.can])
@@ -85,6 +93,7 @@ export default function TenantLayout({ children }) {
                       <LayoutTopBar
                           setSidebarOpen={setSidebarOpen}
                           setShowImpersonateModal={setShowImpersonateModal}
+                          startTour={() => setRunTour(true)}
                           switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
                         />
                     )}
@@ -115,6 +124,8 @@ export default function TenantLayout({ children }) {
                 <ToastFlash errors={errors} flash={flash} />
 
                 <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
+
+                <OnboardingTour run={runTour} onTourEnd={() => setRunTour(false)} />
             </div>
         </PlayerContext.Provider>
     )

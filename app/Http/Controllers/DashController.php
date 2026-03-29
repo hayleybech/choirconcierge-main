@@ -35,6 +35,7 @@ class DashController extends Controller
             'rsvpSummary' => auth()?->user()?->membership ? $this->getRsvpSummary(auth()?->user()?->membership) : null,
             'performanceTypeId' => EventType::where('title', 'Performance')->first()?->id,
             'activePolls' => $this->getActivePolls(),
+            'showOnboardingTour' => request()->has('tour'),
         ]);
     }
 
