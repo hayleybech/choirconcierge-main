@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 use Mailgun\Mailgun;
 use Sentry;
 use Spatie\MediaLibrary\HasMedia;
@@ -80,7 +81,7 @@ use Laragear\TwoFactor\TwoFactorAuthentication;
  */
 class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
 {
-    use Notifiable, InteractsWithMedia, SoftDeletes, HasFactory, TenantTimezoneDates, TwoFactorAuthentication;
+    use Notifiable, InteractsWithMedia, SoftDeletes, HasFactory, TenantTimezoneDates, TwoFactorAuthentication, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
