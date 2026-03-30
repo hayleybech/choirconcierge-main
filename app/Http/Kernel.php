@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AuthenticateWithTokenForWeb;
 use App\Http\Middleware\DetectWebView;
 use App\Http\Middleware\SetFeatureFlags;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -41,6 +42,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
             SetFeatureFlags::class,
+            AuthenticateWithTokenForWeb::class
         ],
 
         'api' => ['throttle:60,1', 'bindings'],
