@@ -24,6 +24,7 @@ Route::post('/sanctum/token', function (Request $request) {
         'email' => 'required|email',
         'password' => 'required',
         'device_name' => 'required',
+        'code' => 'nullable|string',
     ]);
 
     $user = User::where('email', $request->email)->first();
@@ -32,6 +33,18 @@ Route::post('/sanctum/token', function (Request $request) {
         throw ValidationException::withMessages([
             'email' => ['The provided credentials are incorrect.'],
         ]);
+    }
+
+    if ($user->hasTwoFactorEnabled()) {
+        if (! $request->code) {
+            return response()->json(['message' => 'Two-factor authentication required.'], 403);
+        }
+
+        if (! $user->validateTwoFactorCode($request->code) && ! $user->validateTwoFactorCode($request->code, true)) {
+            throw ValidationException::withMessages([
+                'code' => ['The provided two-factor authentication code was invalid.'],
+            ]);
+        }
     }
 
     return $user->createToken($request->device_name)->plainTextToken;
