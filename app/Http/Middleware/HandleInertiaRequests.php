@@ -117,7 +117,7 @@ class HandleInertiaRequests extends Middleware
                 'list_tenants' => auth()->user()?->isSuperAdmin,
             ],
             'googleApiKey' => config('services.google.key'),
-            'tenant' => tenancy()?->tenant?->load('ensembles')->append('billing_status'), // billing status needed for global alerts
+            'tenant' => tenancy()?->tenant?->loadMissing('ensembles')->append('billing_status'), // billing status needed for global alerts
             'user' => auth()->user(),
             'impersonationActive' => session()->has('impersonation:active'),
             'userChoirs' => $this->getUserChoirs(),
@@ -128,7 +128,7 @@ class HandleInertiaRequests extends Middleware
     private function getUserChoirs()
     {
         return session()->has('impersonation:active')
-            ? collect([tenant()?->load('domains')])->filter()
+            ? collect([tenant()?->loadMissing('domains')])->filter()
             : auth()->user()
                 ?->memberships()
                 ->withoutTenancy()

@@ -100,7 +100,7 @@ class Tenant extends BaseTenant
 
     public function getPrimaryDomainAttribute(): ?string
     {
-        $this->load('domains');
+        $this->loadMissing('domains');
 
         return $this->domains->firstWhere('is_primary')->domain
             ?? $this->domains->last()->domain
@@ -126,7 +126,7 @@ class Tenant extends BaseTenant
 
     public function billingStatus(): Attribute
     {
-        $this->load(['subscriptions', 'customer']);
+        $this->loadMissing(['subscriptions', 'customer']);
         $activeUserQuotaStatus = $this->getActiveUserQuotaStatus();
 
         return Attribute::get(fn () => [
