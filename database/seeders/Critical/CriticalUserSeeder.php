@@ -320,7 +320,7 @@ class CriticalUserSeeder extends Seeder
 	    /*
 		 * STEP 2 - Insert Membership Statuses (Singer Categories)
 		 */
-        DB::table('singer_categories')->insert([
+        DB::table('singer_statuses')->insert([
             [
                 'tenant_id' => tenant('id'),
                 'name' => 'Prospects',

@@ -35,16 +35,16 @@ class FolderRequest extends FormRequest
             'viewer_roles.*' => ['exists:roles,id'],
             'viewer_voice_parts' => ['nullable', 'array'],
             'viewer_voice_parts.*' => ['exists:voice_parts,id'],
-            'viewer_singer_categories' => ['nullable', 'array'],
-            'viewer_singer_categories.*' => ['exists:singer_categories,id'],
+            'viewer_singer_statuses' => ['nullable', 'array'],
+            'viewer_singer_statuses.*' => ['exists:singer_statuses,id'],
             'editor_users' => ['nullable', 'array'],
             'editor_users.*' => ['exists:users,id'],
             'editor_roles' => ['nullable', 'array'],
             'editor_roles.*' => ['exists:roles,id'],
             'editor_voice_parts' => ['nullable', 'array'],
             'editor_voice_parts.*' => ['exists:voice_parts,id'],
-            'editor_singer_categories' => ['nullable', 'array'],
-            'editor_singer_categories.*' => ['exists:singer_categories,id'],
+            'editor_singer_statuses' => ['nullable', 'array'],
+            'editor_singer_statuses.*' => ['exists:singer_statuses,id'],
         ];
     }
 }

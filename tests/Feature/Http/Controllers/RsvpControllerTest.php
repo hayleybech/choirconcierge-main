@@ -7,7 +7,7 @@ use App\Models\Event;
 use App\Models\Rsvp;
 use App\Models\Role;
 use App\Models\Membership;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -483,21 +483,23 @@ class RsvpControllerTest extends TestCase
             })
         );
     }
-    public function test_index_can_filter_by_member_category(): void
+    public function test_index_can_filter_by_member_status(): void
     {
         $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
         $admin = Membership::factory()->create();
         $admin->roles()->attach($role);
         $this->actingAs($admin->user);
 
-        $category1 = SingerCategory::factory()->create();
-        $category2 = SingerCategory::factory()->create();
+        $status1 = SingerStatus::factory()->create();
+        $status2 = SingerStatus::factory()->create();
 
         $event = Event::factory()->create();
-        $singer1 = Membership::factory()->create(['singer_category_id' => $category1->id]);
-        $singer2 = Membership::factory()->create(['singer_category_id' => $category2->id]);
+        $singer1 = Membership::factory()->create();
+        $singer1->statuses()->attach($status1);
+        $singer2 = Membership::factory()->create();
+        $singer2->statuses()->attach($status2);
 
-        $this->get(the_tenant_route('events.rsvps.index', ['event' => $event, 'filter[category.id]' => $category1->id]))
+        $this->get(the_tenant_route('events.rsvps.index', ['event' => $event, 'filter[status.id]' => $status1->id]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('allSingers', 1)
@@ -505,26 +507,26 @@ class RsvpControllerTest extends TestCase
             );
     }
 
-    public function test_index_defaults_to_members_category(): void
+    public function test_index_defaults_to_members_status(): void
     {
         $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
         $admin = Membership::factory()->create();
         $admin->roles()->attach($role);
         $this->actingAs($admin->user);
 
-        $membersCategory = SingerCategory::where('name', 'Members')->first();
-        $prospectsCategory = SingerCategory::where('name', 'Prospects')->first();
+        $memberStatus = SingerStatus::where('name', 'Members')->first();
+        $prospectStatus = SingerStatus::where('name', 'Prospects')->first();
 
         $event = Event::factory()->create();
-        $member = Membership::factory()->create(['singer_category_id' => $membersCategory->id]);
-        $prospect = Membership::factory()->create(['singer_category_id' => $prospectsCategory->id]);
+        $member = Membership::factory()->create();
+        $member->statuses()->sync($memberStatus);
+        $prospect = Membership::factory()->create();
+        $prospect->statuses()->sync($prospectStatus);
 
         $this->get(the_tenant_route('events.rsvps.index', ['event' => $event]))
-            ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('allSingers', function ($singers) use ($membersCategory) {
-                    $categories = collect($singers)->pluck('singer_category_id')->unique();
-                    return $categories->count() === 1 && $categories->first() === $membersCategory->id;
+                ->where('allSingers', function ($singers) use ($memberStatus) {
+                    return collect($singers)->every(fn($s) => $s['status']['id'] === $memberStatus->id);
                 })
             );
     }
@@ -534,9 +536,7 @@ class RsvpControllerTest extends TestCase
         $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
         $admin = Membership::factory()->create();
         $admin->roles()->attach($role);
-        $admin->update([
-            'singer_category_id' => SingerCategory::where('name', 'Members')->first()->id,
-        ]);
+        $admin->statuses()->attach(SingerStatus::where('name', 'Members')->first());
         $this->actingAs($admin->user);
 
         $customField = CustomField::factory()->create(['name' => 'Custom Field 1']);

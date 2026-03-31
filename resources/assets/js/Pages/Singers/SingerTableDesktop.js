@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import VoicePartTag from '../../components/VoicePartTag';
-import SingerCategoryTag from '../../components/SingerCategoryTag';
-import Table, { TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellSelect, TItemRow } from '../../components/Table';
+import SingerStatusTag from '../../components/SingerStatusTag';
+import Table, {
+	TableCell,
+	THead,
+	TBody,
+	TableHeading,
+	TableSelectAll,
+	TableCellSelect,
+	TItemRow,
+} from '../../components/Table';
 import Icon from '../../components/Icon';
 import SingerStatus from '../../SingerStatus';
 import FeeStatus from '../../components/FeeStatus';
@@ -117,7 +125,7 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bu
 								</ul>
 							</TableCell>
 							<TableCell>
-								<SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />
+								<SingerStatusTag status={new SingerStatus(singer.status?.slug)} withLabel />
 							</TableCell>
 							<TableCell>
 								<Icon icon="envelope" mr className="text-gray-400" />

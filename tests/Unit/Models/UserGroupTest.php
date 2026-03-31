@@ -6,7 +6,7 @@ use App\Models\Ensemble;
 use App\Models\Enrolment;
 use App\Models\Role;
 use App\Models\Membership;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UserGroup;
@@ -62,12 +62,12 @@ class UserGroupTest extends TestCase
     {
         $group = UserGroup::factory()->create();
 
-        $categories = SingerCategory::factory()
-            ->has(Membership::factory()->count(3), 'members')
+        $statuses = SingerStatus::factory()
+            ->has(Membership::factory()->count(3), 'memberships')
             ->count(2)
             ->create();
 
-        $group->recipient_singer_categories()->attach($categories->pluck('id'));
+        $group->recipient_singer_statuses()->attach($statuses->pluck('id'));
 
         $this->assertCount(6, $group->get_all_recipients());
     }
@@ -116,12 +116,12 @@ class UserGroupTest extends TestCase
     {
         $group = UserGroup::factory()->create();
 
-        $categories = SingerCategory::factory()
-            ->has(Membership::factory()->count(3), 'members')
+        $statuses = SingerStatus::factory()
+            ->has(Membership::factory()->count(3), 'memberships')
             ->count(2)
             ->create();
 
-        $group->sender_singer_categories()->attach($categories->pluck('id'));
+        $group->sender_singer_statuses()->attach($statuses->pluck('id'));
 
         $this->assertCount(6, $group->get_all_senders());
     }
@@ -163,26 +163,26 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $role = Role::factory()->create();
-        $category = SingerCategory::factory()->create(['name' => 'Members']);
+        $status = SingerStatus::factory()->create(['name' => 'Members']);
         $ensembleA = Ensemble::factory()->create();
         $ensembleB = Ensemble::factory()->create();
 
         // 3 users in Role with Ensemble A
-        User::factory()->count(3)->create()->each(function($user) use ($role, $category, $ensembleA) {
+        User::factory()->count(3)->create()->each(function($user) use ($role, $status, $ensembleA) {
             $membership = Membership::factory()->create([
                 'user_id' => $user->id,
-                'singer_category_id' => $category->id
             ]);
+            $membership->statuses()->attach($status);
             $membership->roles()->attach($role->id);
             Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleA->id]);
         });
 
         // 2 users in Role with Ensemble B
-        User::factory()->count(2)->create()->each(function($user) use ($role, $category, $ensembleB) {
+        User::factory()->count(2)->create()->each(function($user) use ($role, $status, $ensembleB) {
             $membership = Membership::factory()->create([
                 'user_id' => $user->id,
-                'singer_category_id' => $category->id
             ]);
+            $membership->statuses()->attach($status);
             $membership->roles()->attach($role->id);
             Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleB->id]);
         });
@@ -209,26 +209,26 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $role = Role::factory()->create();
-        $category = SingerCategory::factory()->create(['name' => 'Members']);
+        $status = SingerStatus::factory()->create(['name' => 'Members']);
         $ensembleA = Ensemble::factory()->create();
         $ensembleB = Ensemble::factory()->create();
 
         // 3 users in Role with Ensemble A
-        User::factory()->count(3)->create()->each(function($user) use ($role, $category, $ensembleA) {
+        User::factory()->count(3)->create()->each(function($user) use ($role, $status, $ensembleA) {
             $membership = Membership::factory()->create([
                 'user_id' => $user->id,
-                'singer_category_id' => $category->id
             ]);
+            $membership->statuses()->attach($status);
             $membership->roles()->attach($role->id);
             Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleA->id]);
         });
 
         // 2 users in Role with Ensemble B
-        User::factory()->count(2)->create()->each(function($user) use ($role, $category, $ensembleB) {
+        User::factory()->count(2)->create()->each(function($user) use ($role, $status, $ensembleB) {
             $membership = Membership::factory()->create([
                 'user_id' => $user->id,
-                'singer_category_id' => $category->id
             ]);
+            $membership->statuses()->attach($status);
             $membership->roles()->attach($role->id);
             Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleB->id]);
         });

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
- * Class Singer
+ * Class Membership
  *
  * Columns
  * @property int $id
@@ -32,14 +33,12 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $deleted_at
  * @property Carbon $joined_at
  * @property Carbon $paid_until
- * @property int $singer_category_id
- * @property int $user_id
- * @property int $tenant_id
  *
  * Relationships
  * @property Collection<Task> $tasks
  * @property Placement $placement
- * @property SingerCategory $category
+ * @property SingerStatus $status
+ * @property Collection<SingerStatus> $statuses
  * @property Collection<Enrolment> $enrolments
  * @property User $user
  * @property Collection<RiserStack> $riser_stacks
@@ -69,7 +68,6 @@ class Membership extends Model
         'membership_details',
         'joined_at',
         'paid_until',
-        'singer_category_id',
     ];
 
     protected $with = [];
@@ -125,8 +123,8 @@ class Membership extends Model
 
     public function initOnboarding(): void
     {
-        $category_name = $this->onboarding_enabled ? 'Prospects' : 'Members';
-        $this->category()->associate(SingerCategory::firstWhere('name', '=', $category_name));
+        $status_name = $this->onboarding_enabled ? 'Prospects' : 'Members';
+        $this->statuses()->attach(SingerStatus::firstWhere('name', '=', $status_name));
 
         if (!$this->onboarding_enabled) {
             return;
@@ -150,9 +148,23 @@ class Membership extends Model
         return $this->hasOne(Placement::class);
     }
 
-    public function category(): BelongsTo
+    public function status(): HasOneThrough
     {
-        return $this->belongsTo(SingerCategory::class, 'singer_category_id');
+        return $this->hasOneThrough(
+            SingerStatus::class,
+            MembershipSingerStatus::class,
+            'membership_id',
+            'id',
+            'id',
+            'singer_status_id'
+        )->orderByDesc('membership_singer_status.id');
+    }
+
+    public function statuses(): BelongsToMany
+    {
+        return $this->belongsToMany(SingerStatus::class, 'membership_singer_status')
+            ->using(MembershipSingerStatus::class)
+            ->withTimestamps();
     }
 
     public function enrolments(): HasMany
@@ -239,8 +251,13 @@ class Membership extends Model
     public function scopeEmptyDobs(Builder $query): Builder
     {
         return $query
-            ->whereHas('category', static function (Builder $query) {
-                return $query->whereIn('name', ['Members', 'Prospects']);
+            ->whereHas('status', static function (Builder $query) {
+                return $query->whereIn('name', ['Members', 'Prospects'])
+                    ->where('membership_singer_status.id', function($sub) {
+                        $sub->selectRaw('max(id)')
+                            ->from('membership_singer_status')
+                            ->whereColumn('membership_id', 'memberships.id');
+                    });
             })
             ->whereHas('user', static function (Builder $query) {
                 return $query->whereNull('dob');
@@ -268,8 +285,13 @@ class Membership extends Model
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->whereHas('category', static function (Builder $query) {
-            $query->where('name', '=', 'Members');
+        return $query->whereHas('status', static function (Builder $query) {
+            $query->where('name', '=', 'Members')
+                ->where('membership_singer_status.id', function($sub) {
+                    $sub->selectRaw('max(id)')
+                        ->from('membership_singer_status')
+                        ->whereColumn('membership_id', 'memberships.id');
+                });
         });
     }
 

@@ -5,7 +5,7 @@ namespace Database\Seeders\Dummy;
 use App\Models\Ensemble;
 use App\Models\Membership;
 use App\Models\RiserStack;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use Illuminate\Database\Seeder;
 
 class DummyRiserStacksSeeder extends Seeder
@@ -21,7 +21,7 @@ class DummyRiserStacksSeeder extends Seeder
             return;
         }
 
-        $active_id = SingerCategory::firstWhere('name', 'Members')->id;
+        $active_id = SingerStatus::firstWhere('name', 'Members')->id;
 
         RiserStack::factory()
             ->count(5)

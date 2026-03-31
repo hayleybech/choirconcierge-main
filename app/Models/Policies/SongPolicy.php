@@ -62,7 +62,7 @@ class SongPolicy
         }
 
         if (! $song->show_for_prospects) {
-            return $user->membership->category->name === 'Members';
+            return $user->membership->status->name === 'Members';
         }
 
         return $user->membership->hasAbility('songs_view');

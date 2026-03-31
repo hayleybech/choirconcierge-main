@@ -26,7 +26,7 @@ class EnsureUserIsMember
         }
 
         if(in_array(
-            auth()?->user()?->membership?->category->name, [
+            auth()?->user()?->membership?->status?->name, [
             'Archived Members',
             'Archived Prospects',
         ])) {

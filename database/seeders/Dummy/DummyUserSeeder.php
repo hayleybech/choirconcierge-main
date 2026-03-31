@@ -5,7 +5,7 @@ namespace Database\Seeders\Dummy;
 use App\Models\CustomField;
 use App\Models\Membership;
 use App\Models\Role;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use Faker\Factory as Faker;
@@ -16,7 +16,7 @@ class DummyUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $singer_categories = SingerCategory::all();
+        $singer_statuses = SingerStatus::all();
 
         // The ResetDemoSite job also tries to add an ensemble,
         // but this file runs before the rest of the ResetDemoSite job runs.
@@ -35,7 +35,7 @@ class DummyUserSeeder extends Seeder
         User::factory()
             ->count(30)
             ->create()
-            ->each(static function (User $user) use ($userRole, $voice_parts, $singer_categories, $faker, $custom_fields) {
+            ->each(static function (User $user) use ($userRole, $voice_parts, $singer_statuses, $faker, $custom_fields) {
 
                 // Create matching singer
                 $member = Membership::factory()
@@ -53,8 +53,8 @@ class DummyUserSeeder extends Seeder
                     'voice_part_id' => $voice_parts->random(),
                 ]);
 
-                // Attach random singer category
-                self::attachRandomSingerCategory($member, $singer_categories);
+                // Attach random singer status
+                self::attachRandomSingerStatus($member, $singer_statuses);
 
                 // Generate placement for singer
                 // @todo Seed voice placement
@@ -64,10 +64,9 @@ class DummyUserSeeder extends Seeder
             });
     }
 
-    public static function attachRandomSingerCategory(Membership $member, Collection $categories): void
+    public static function attachRandomSingerStatus(Membership $member, Collection $statuses): void
     {
-        $category = $categories->random(1)->first();
-        $member->category()->associate($category);
-        $member->save();
+        $status = $statuses->random(1)->first();
+        $member->statuses()->attach($status);
     }
 }

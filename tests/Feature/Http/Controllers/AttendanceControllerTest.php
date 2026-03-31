@@ -6,7 +6,7 @@ use App\Models\Enrolment;
 use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\Membership;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -40,7 +40,7 @@ class AttendanceControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        SingerCategory::factory()->create(['name' => 'Members']);
+        SingerStatus::factory()->create(['name' => 'Members']);
 
         $event = Event::factory()->create();
         $singer1 = Membership::factory()->create();
@@ -59,7 +59,7 @@ class AttendanceControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        SingerCategory::factory()->create(['name' => 'Members']);
+        SingerStatus::factory()->create(['name' => 'Members']);
 
         $event = Event::factory()->create();
         $singer1 = Membership::factory()->create();
@@ -79,7 +79,7 @@ class AttendanceControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        SingerCategory::factory()->create(['name' => 'Members']);
+        SingerStatus::factory()->create(['name' => 'Members']);
 
         $event = Event::factory()->create();
         $singer1 = Membership::factory()->create();
@@ -112,7 +112,7 @@ class AttendanceControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        SingerCategory::factory()->create(['name' => 'Members']);
+        SingerStatus::factory()->create(['name' => 'Members']);
 
         $event = Event::factory()->create();
         $singer1 = Membership::factory()->create(); // present
@@ -142,18 +142,20 @@ class AttendanceControllerTest extends TestCase
             );
     }
 
-    public function test_index_can_filter_by_member_category(): void
+    public function test_index_can_filter_by_member_status(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        $category1 = SingerCategory::factory()->create();
-        $category2 = SingerCategory::factory()->create();
+        $status1 = SingerStatus::factory()->create();
+        $status2 = SingerStatus::factory()->create();
 
         $event = Event::factory()->create();
-        $singer1 = Membership::factory()->create(['singer_category_id' => $category1->id]);
-        $singer2 = Membership::factory()->create(['singer_category_id' => $category2->id]);
+        $singer1 = Membership::factory()->create();
+        $singer1->statuses()->attach($status1);
+        $singer2 = Membership::factory()->create();
+        $singer2->statuses()->attach($status2);
 
-        $this->get(the_tenant_route('events.attendances.index', ['event' => $event, 'filter[category.id]' => $category1->id]))
+        $this->get(the_tenant_route('events.attendances.index', ['event' => $event, 'filter[status.id]' => $status1->id]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('allSingers', 1)
@@ -161,23 +163,23 @@ class AttendanceControllerTest extends TestCase
             );
     }
 
-    public function test_index_defaults_to_members_category(): void
+    public function test_index_defaults_to_members_status(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        $membersCategory = SingerCategory::where('name', 'Members')->first();
-        $prospectsCategory = SingerCategory::where('name', 'Prospects')->first();
+        $memberStatus = SingerStatus::where('name', 'Members')->first();
+        $prospectStatus = SingerStatus::where('name', 'Prospects')->first();
 
         $event = Event::factory()->create();
-        $member = Membership::factory()->create(['singer_category_id' => $membersCategory->id]);
-        $prospect = Membership::factory()->create(['singer_category_id' => $prospectsCategory->id]);
+        $member = Membership::factory()->create();
+        $member->statuses()->sync($memberStatus);
+        $prospect = Membership::factory()->create();
+        $prospect->statuses()->sync($prospectStatus);
 
         $this->get(the_tenant_route('events.attendances.index', ['event' => $event]))
-            ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('allSingers', function ($singers) use ($membersCategory) {
-                    $categories = collect($singers)->pluck('singer_category_id')->unique();
-                    return $categories->count() === 1 && $categories->first() === $membersCategory->id;
+                ->where('allSingers', function ($singers) use ($memberStatus) {
+                    return collect($singers)->every(fn($s) => $s['status']['id'] === $memberStatus->id);
                 })
             );
     }

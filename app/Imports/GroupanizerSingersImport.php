@@ -3,7 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Role;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use DateTime;
@@ -17,17 +17,17 @@ use Maatwebsite\Excel\Row;
 
 class GroupanizerSingersImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsEmptyRows
 {
-    private SingerCategory $activeCategory;
+    private SingerStatus $activeStatus;
 
-    private SingerCategory $archivedCategory;
+    private SingerStatus $archivedStatus;
 
     /** @var Collection<Role> */
     private Collection $roles;
 
     public function __construct()
     {
-        $this->activeCategory = SingerCategory::firstWhere('name', 'Members');
-        $this->archivedCategory = SingerCategory::firstWhere('name', 'Archived Members');
+        $this->activeStatus = SingerStatus::firstWhere('name', 'Members');
+        $this->archivedStatus = SingerStatus::firstWhere('name', 'Archived Members');
 
         $this->roles = Role::all();
     }
@@ -91,13 +91,13 @@ class GroupanizerSingersImport implements OnEachRow, WithHeadingRow, WithValidat
         }
         $member->roles()->syncWithoutDetaching($roles_to_add);
 
-        // Add SingerCategory
+        // Add SingerStatus
         if (in_array('Inactive Member', $roles_list, true)) {
-            $category = $this->archivedCategory;
+            $status = $this->archivedStatus;
         } else {
-            $category = $this->activeCategory;
+            $status = $this->activeStatus;
         }
-        $member->category()->associate($category);
+        $member->statuses()->attach($status);
 
         $member->save();
     }

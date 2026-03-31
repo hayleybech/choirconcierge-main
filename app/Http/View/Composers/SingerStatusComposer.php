@@ -2,10 +2,10 @@
 
 namespace App\Http\View\Composers;
 
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use Illuminate\Contracts\View\View;
 
-class SingerCategoryComposer
+class SingerStatusComposer
 {
     private $categories;
 
@@ -15,7 +15,7 @@ class SingerCategoryComposer
     public function getCategories()
     {
         if (! $this->categories) {
-            $categories_all = SingerCategory::all();
+            $categories_all = SingerStatus::all();
             $this->categories = $categories_all->mapWithKeys(static function ($category) {
                 return [$category['id'] => $category['name']];
             });
@@ -26,6 +26,6 @@ class SingerCategoryComposer
 
     public function compose(View $view): View
     {
-        return $view->with('singer_categories', $this->getCategories());
+        return $view->with('singer_statuses', $this->getCategories());
     }
 }

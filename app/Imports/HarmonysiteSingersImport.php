@@ -3,7 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Role;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use DateTime;
@@ -16,16 +16,16 @@ use Maatwebsite\Excel\Row;
 
 class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsEmptyRows
 {
-    private SingerCategory $activeCategory;
+    private SingerStatus $activeStatus;
 
-    private SingerCategory $archivedCategory;
+    private SingerStatus $archivedStatus;
 
     private Role $userRole;
 
     public function __construct()
     {
-        $this->activeCategory = SingerCategory::firstWhere('name', 'Members');
-        $this->archivedCategory = SingerCategory::firstWhere('name', 'Archived Members');
+        $this->activeStatus = SingerStatus::firstWhere('name', 'Members');
+        $this->archivedStatus = SingerStatus::firstWhere('name', 'Archived Members');
 
         $this->userRole = Role::firstWhere('name', 'User');
     }
@@ -71,13 +71,13 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow, WithValidat
         // Add an enrolment to the ensembles
         $this->handleEnrolments($member, $rowArr);
 
-        // Add SingerCategory
+        // Add SingerStatus
         if (explode(' ', $rowArr['status'])[0] === 'Active') {
-            $category = $this->activeCategory;
+            $status = $this->activeStatus;
         } else {
-            $category = $this->archivedCategory;
+            $status = $this->archivedStatus;
         }
-        $member->category()->associate($category);
+        $member->statuses()->attach($status);
 
         // Add User Role
         $member->roles()->attach($this->userRole);

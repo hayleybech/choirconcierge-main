@@ -12,7 +12,7 @@ const BulkEditSingersModal = ({ isOpen, setIsOpen, selectedSingerIds, statuses, 
 
     const { data, setData, post, processing, reset, errors } = useForm({
         singer_ids: selectedSingerIds,
-        singer_category_id: statuses[0]?.id,
+        singer_status_id: statuses[0]?.id,
     });
 
     const handleOk = (e) => {
@@ -41,7 +41,7 @@ const BulkEditSingersModal = ({ isOpen, setIsOpen, selectedSingerIds, statuses, 
 			<div className="space-y-6 text-left">
 				<div className="sm:col-span-6">
 					<RadioGroup
-						label={<Label label="Category" />}
+						label={<Label label="Status" />}
 						options={statuses.map(status => ({
 							id: status.id,
 							name: status.name,
@@ -49,12 +49,12 @@ const BulkEditSingersModal = ({ isOpen, setIsOpen, selectedSingerIds, statuses, 
 							colour: (new SingerStatus(status.slug)).textColour,
 							icon: (new SingerStatus(status.slug)).icon,
 						}))}
-						selected={data.singer_category_id}
-						setSelected={value => setData('singer_category_id', value)}
+						selected={data.singer_status_id}
+						setSelected={value => setData('singer_status_id', value)}
 						vertical
 						size="sm"
 					/>
-					{errors.singer_category_id && <Error>{errors.singer_category_id}</Error>}
+					{errors.singer_status_id && <Error>{errors.singer_status_id}</Error>}
 				</div>
 			</div>
 		</Dialog>

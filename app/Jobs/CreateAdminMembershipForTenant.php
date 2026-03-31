@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Membership;
 use App\Models\Role;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -47,11 +47,14 @@ class CreateAdminMembershipForTenant implements ShouldQueue
 					->where('name', 'Admin')
 					->valueOrFail('id'),
 			],
-		    'singer_category_id' => SingerCategory::query()
-			    ->where('tenant_id', $this->tenant->id)
-			    ->where('name', '=', 'Members')
-			    ->valueOrFail('id')
 		]);
+
+        $statusId = SingerStatus::query()
+            ->where('tenant_id', $this->tenant->id)
+            ->where('name', '=', 'Members')
+            ->valueOrFail('id');
+        
+        $member->statuses()->attach($statusId);
 
 	    $this->tenant->members()->save($member);
 

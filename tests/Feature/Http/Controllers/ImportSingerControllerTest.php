@@ -3,7 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Role;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use DateTime;
@@ -59,8 +59,12 @@ class ImportSingerControllerTest extends TestCase
             'onboarding_enabled' => false,
             'membership_details' => 'BHA 2134',
             'joined_at' => '1997-06-13 18:15:35',
-            'singer_category_id' => SingerCategory::firstWhere('name', 'Members')->id,
             'user_id' => User::firstWhere('email', 'hayes.ozella@example.com')->id,
+        ]);
+
+        $this->assertDatabaseHas('membership_singer_status', [
+            'membership_id' => User::firstWhere('email', 'hayes.ozella@example.com')->membership->id,
+            'singer_status_id' => SingerStatus::firstWhere('name', 'Members')->id,
         ]);
 
         // assert roles assigned
@@ -114,8 +118,12 @@ class ImportSingerControllerTest extends TestCase
             'onboarding_enabled' => false,
             'membership_details' => 'BHA  1945 Blenders old No 245',
             'joined_at' => '2007-01-31 00:00:00',
-            'singer_category_id' => SingerCategory::firstWhere('name', 'Members')->id,
             'user_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->id,
+        ]);
+
+        $this->assertDatabaseHas('membership_singer_status', [
+            'membership_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->membership->id,
+            'singer_status_id' => SingerStatus::firstWhere('name', 'Members')->id,
         ]);
 
         // assert roles assigned
@@ -175,7 +183,11 @@ class ImportSingerControllerTest extends TestCase
             'user_id' => User::firstWhere('email', 'nick.s@internode.on.net')->id,
             'onboarding_enabled' => false,
             'joined_at' => '2015-07-17 00:00:00',
-            'singer_category_id' => SingerCategory::firstWhere('name', 'Members')->id,
+        ]);
+
+        $this->assertDatabaseHas('membership_singer_status', [
+            'membership_id' => User::firstWhere('email', 'nick.s@internode.on.net')->membership->id,
+            'singer_status_id' => SingerStatus::firstWhere('name', 'Members')->id,
         ]);
     }
 

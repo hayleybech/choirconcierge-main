@@ -30,11 +30,11 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Role> $viewer_roles
  * @property Collection<VoicePart> $viewer_voice_parts
  * @property Collection<User> $viewer_users
- * @property Collection<SingerCategory> $viewer_singer_categories
+ * @property Collection<SingerStatus> $viewer_singer_statuses
  * @property Collection<Role> $editor_roles
  * @property Collection<VoicePart> $editor_voice_parts
  * @property Collection<User> $editor_users
- * @property Collection<SingerCategory> $editor_singer_categories
+ * @property Collection<SingerStatus> $editor_singer_statuses
  */
 class Folder extends Model
 {
@@ -66,7 +66,7 @@ class Folder extends Model
             Role::class => $attributes['viewer_roles'] ?? [],
             VoicePart::class => $attributes['viewer_voice_parts'] ?? [],
             User::class => $attributes['viewer_users'] ?? [],
-            SingerCategory::class => $attributes['viewer_singer_categories'] ?? [],
+            SingerStatus::class => $attributes['viewer_singer_statuses'] ?? [],
         ]);
 
         // Sync editors
@@ -74,7 +74,7 @@ class Folder extends Model
             Role::class => $attributes['editor_roles'] ?? [],
             VoicePart::class => $attributes['editor_voice_parts'] ?? [],
             User::class => $attributes['editor_users'] ?? [],
-            SingerCategory::class => $attributes['editor_singer_categories'] ?? [],
+            SingerStatus::class => $attributes['editor_singer_statuses'] ?? [],
         ]);
 
         return $folder;
@@ -92,7 +92,7 @@ class Folder extends Model
             Role::class => $attributes['viewer_roles'] ?? [],
             VoicePart::class => $attributes['viewer_voice_parts'] ?? [],
             User::class => $attributes['viewer_users'] ?? [],
-            SingerCategory::class => $attributes['viewer_singer_categories'] ?? [],
+            SingerStatus::class => $attributes['viewer_singer_statuses'] ?? [],
         ]);
 
         // Sync editors
@@ -100,7 +100,7 @@ class Folder extends Model
             Role::class => $attributes['editor_roles'] ?? [],
             VoicePart::class => $attributes['editor_voice_parts'] ?? [],
             User::class => $attributes['editor_users'] ?? [],
-            SingerCategory::class => $attributes['editor_singer_categories'] ?? [],
+            SingerStatus::class => $attributes['editor_singer_statuses'] ?? [],
         ]);
 
         return true;
@@ -126,9 +126,9 @@ class Folder extends Model
         return $this->morphedByMany(User::class, 'viewer', 'folder_viewers', 'folder_id');
     }
 
-    public function viewer_singer_categories(): MorphToMany
+    public function viewer_singer_statuses(): MorphToMany
     {
-        return $this->morphedByMany(SingerCategory::class, 'viewer', 'folder_viewers', 'folder_id');
+        return $this->morphedByMany(SingerStatus::class, 'viewer', 'folder_viewers', 'folder_id');
     }
 
     public function editors(): HasMany
@@ -151,9 +151,9 @@ class Folder extends Model
         return $this->morphedByMany(User::class, 'editor', 'folder_editors', 'folder_id');
     }
 
-    public function editor_singer_categories(): MorphToMany
+    public function editor_singer_statuses(): MorphToMany
     {
-        return $this->morphedByMany(SingerCategory::class, 'editor', 'folder_editors', 'folder_id');
+        return $this->morphedByMany(SingerStatus::class, 'editor', 'folder_editors', 'folder_id');
     }
 
     public function documents(): HasMany
@@ -174,7 +174,7 @@ class Folder extends Model
         $viewers = $this->viewer_users()->get()
             ->merge($this->getRoleUsers('viewer_roles'))
             ->merge($this->getPartUsers('viewer_voice_parts'))
-            ->merge($this->getCategoryUsers('viewer_singer_categories'));
+            ->merge($this->getStatusUsers('viewer_singer_statuses'));
 
         $ensembles = $this->ensembles;
         if ($ensembles->isNotEmpty()) {
@@ -201,7 +201,7 @@ class Folder extends Model
         $editors = $this->editor_users()->get()
             ->merge($this->getRoleUsers('editor_roles'))
             ->merge($this->getPartUsers('editor_voice_parts'))
-            ->merge($this->getCategoryUsers('editor_singer_categories'));
+            ->merge($this->getStatusUsers('editor_singer_statuses'));
 
         $ensembles = $this->ensembles;
         if ($ensembles->isNotEmpty()) {
@@ -307,15 +307,15 @@ class Folder extends Model
             ->get();
     }
 
-    private function getCategoryUsers(string $recipientType): Collection
+    private function getStatusUsers(string $recipientType): Collection
     {
-        $cat_ids = $this->$recipientType()
+        $status_ids = $this->$recipientType()
             ->get()
             ->pluck('id');
 
         return User::query()
             ->whereHas('memberships', fn ($singer_query) =>
-            $singer_query->whereIn('singer_category_id', $cat_ids)
+            $singer_query->whereHas('statuses', fn ($query) => $query->whereIn('singer_statuses.id', $status_ids))
             )
             ->get();
     }

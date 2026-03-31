@@ -165,8 +165,13 @@ class DashController extends Controller
             return null;
         }
 
-        return Membership::whereHas('category', function ($query) {
-            $query->where('name', 'Members');
+        return Membership::whereHas('status', function ($query) {
+            $query->where('name', 'Members')
+                ->where('membership_singer_status.id', function($sub) {
+                    $sub->selectRaw('max(id)')
+                        ->from('membership_singer_status')
+                        ->whereColumn('membership_id', 'memberships.id');
+                });
         })->whereHas('tenant', function ($query) {
             $query->active();
         })->count();

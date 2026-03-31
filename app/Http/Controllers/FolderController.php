@@ -6,7 +6,7 @@ use App\Http\Requests\FolderRequest;
 use App\Models\Ensemble;
 use App\Models\Folder;
 use App\Models\Role;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\VoicePart;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,7 +49,7 @@ class FolderController extends Controller
                             $query->whereHas('viewer_users', fn($q) => $q->where('users.id', $user->id))
                                 ->orWhereHas('viewer_roles', fn($q) => $q->whereIn('roles.id', $user->membership->roles->pluck('id')))
                                 ->orWhereHas('viewer_voice_parts', fn($q) => $q->whereIn('voice_parts.id', $user->membership->enrolments->pluck('voice_part_id')))
-                                ->orWhereHas('viewer_singer_categories', fn($q) => $q->where('singer_categories.id', $user->membership->singer_category_id));
+                                ->orWhereHas('viewer_singer_statuses', fn($q) => $q->where('singer_statuses.id', $user->membership->status?->id));
                         });
                 });
             })
@@ -80,7 +80,7 @@ class FolderController extends Controller
                                     $query->whereHas('viewer_users', fn($q) => $q->where('users.id', $user->id))
                                         ->orWhereHas('viewer_roles', fn($q) => $q->whereIn('roles.id', $user->membership->roles->pluck('id')))
                                         ->orWhereHas('viewer_voice_parts', fn($q) => $q->whereIn('voice_parts.id', $user->membership->enrolments->pluck('voice_part_id')))
-                                        ->orWhereHas('viewer_singer_categories', fn($q) => $q->where('singer_categories.id', $user->membership->singer_category_id));
+                                        ->orWhereHas('viewer_singer_statuses', fn($q) => $q->where('singer_statuses.id', $user->membership->status?->id));
                                 });
                         });
                     });
@@ -114,7 +114,7 @@ class FolderController extends Controller
             'ensembles' => Ensemble::all()->values(),
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'voiceParts' => VoicePart::all()->values(),
-            'singerCategories' => SingerCategory::all()->values(),
+            'singerStatuses' => SingerStatus::all()->values(),
         ]);
     }
 
@@ -136,8 +136,8 @@ class FolderController extends Controller
     public function edit(Folder $folder): Response
     {
         $folder->load([
-            'viewer_users', 'viewer_roles', 'viewer_voice_parts', 'viewer_singer_categories',
-            'editor_users', 'editor_roles', 'editor_voice_parts', 'editor_singer_categories',
+            'viewer_users', 'viewer_roles', 'viewer_voice_parts', 'viewer_singer_statuses',
+            'editor_users', 'editor_roles', 'editor_voice_parts', 'editor_singer_statuses',
         ]);
 
         return Inertia::render('Folders/Edit', [
@@ -145,7 +145,7 @@ class FolderController extends Controller
             'ensembles' => Ensemble::all()->values(),
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'voiceParts' => VoicePart::all()->values(),
-            'singerCategories' => SingerCategory::all()->values(),
+            'singerStatuses' => SingerStatus::all()->values(),
         ]);
     }
 

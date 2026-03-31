@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\Membership;
 use App\Models\Role;
 use App\Models\User;
@@ -62,9 +62,11 @@ class SingerAttendancePermissionsTest extends TestCase
 
     public function test_the_view_attendance_flag_is_passed_to_the_singer_profile_page(): void
     {
-        $category = SingerCategory::where('name', 'Members')->firstOrCreate();
-        $user1 = Membership::factory()->create(['singer_category_id' => $category->id]);
-        $user2 = Membership::factory()->create(['singer_category_id' => $category->id]);
+        $category = SingerStatus::where('name', 'Members')->firstOrCreate();
+        $user1 = Membership::factory()->create();
+        $user1->statuses()->attach($category);
+        $user2 = Membership::factory()->create();
+        $user2->statuses()->attach($category);
 
         // User1 viewing their own profile
         $this->actingAs($user1->user);

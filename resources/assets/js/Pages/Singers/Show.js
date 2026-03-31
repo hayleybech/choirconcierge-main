@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import VoicePartTag from '../../components/VoicePartTag';
-import SingerCategoryTag from '../../components/SingerCategoryTag';
+import SingerStatusTag from '../../components/SingerStatusTag';
 import ButtonLink from '../../components/inputs/ButtonLink';
 import Dialog from '../../components/Dialog';
 import RadioGroup from '../../components/inputs/RadioGroup';
@@ -23,12 +23,13 @@ import { OnboardingTaskSection } from './sections/OnboardingTaskSection';
 import CustomFieldsSection from './sections/CustomFieldsSection';
 import SingerAttendanceSummary from '../../components/Attendance/SingerAttendanceSummary';
 import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
+import { MembershipHistorySection } from './sections/MembershipHistorySection';
 
 const Show = ({
 	singer,
 	attendanceSummary,
 	rsvpSummary,
-	categories,
+	statuses,
 	voiceParts,
 	ensemblesNotEnrolled,
 	customFields,
@@ -60,7 +61,7 @@ const Show = ({
 								/>
 							</div>
 						)}
-						<SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />
+						<SingerStatusTag status={new SingerStatus(singer.status?.slug)} withLabel />
 						<DateTag date={singer.joined_at} label="Joined" />
 					</>
 				}
@@ -114,7 +115,7 @@ const Show = ({
 				isOpen={moveDialogIsOpen}
 				setIsOpen={setMoveDialogIsOpen}
 				singer={singer}
-				categories={categories}
+				statuses={statuses}
 			/>
 
 			<div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
@@ -194,6 +195,11 @@ const Show = ({
 								show: singer.can['create_placement'],
 								content: <VoicePlacementSection singer={singer} />,
 							},
+							{
+								title: 'Membership History',
+								show: 	can['view_member_history'],
+								content: <MembershipHistorySection singer={singer} />,
+							}
 						]}
 					/>
 				</div>
@@ -221,36 +227,36 @@ const EditSingerPlacementButton = ({ singer }) => {
 	);
 };
 
-const MoveSingerDialog = ({ isOpen, setIsOpen, singer, categories }) => {
+const MoveSingerDialog = ({ isOpen, setIsOpen, singer, statuses }) => {
 	const { route } = useRoute();
 
-	const [selectedCategory, setSelectedCategory] = useState(singer.category.id ?? 0);
+	const [selectedStatus, setSelectedStatus] = useState(singer.status?.singer_status_id ?? 0);
 
 	return (
 		<Dialog
 			title="Move Singer"
 			okLabel="Move"
-			okUrl={route('singers.categories.update', { singer })}
+			okUrl={route('singers.statuses.update', { singer })}
 			okVariant="primary"
 			okMethod="get"
-			data={{ move_category: selectedCategory.id }}
+			data={{ move_status: selectedStatus.id }}
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 		>
 			<p className="mb-2">
-				Are you sure you want to move this singer? This will move them to the selected stage of your onboarding
-				process. This can be undone, however, it may trigger some onboarding emails, which cannot be undone.
+				Are you sure you want to move this singer? This will move them to the selected status. 
+				This can be undone, however, it may trigger some onboarding emails, which cannot be undone.
 			</p>
 			<RadioGroup
-				label="Select a new category"
-				options={categories.map(category => ({
-					id: category,
-					name: SingerStatus.statuses[category.slug].title,
-					colour: SingerStatus.statuses[category.slug].textColour,
-					icon: SingerStatus.statuses[category.slug].icon,
+				label="Select a new status"
+				options={statuses.map(status => ({
+					id: status,
+					name: SingerStatus.statuses[status.slug].title,
+					colour: SingerStatus.statuses[status.slug].textColour,
+					icon: SingerStatus.statuses[status.slug].icon,
 				}))}
-				selected={selectedCategory}
-				setSelected={setSelectedCategory}
+				selected={selectedStatus}
+				setSelected={setSelectedStatus}
 				vertical
 			/>
 		</Dialog>

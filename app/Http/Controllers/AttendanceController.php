@@ -8,7 +8,7 @@ use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\VoicePart;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Traits\HasSingerSorts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -66,7 +66,7 @@ class AttendanceController extends Controller
                 ->orderBy('attendance_updated', $direction);
         });
 
-        $defaultCategoryId = SingerCategory::where('name', 'Members')->value('id');
+        $defaultStatusId = SingerStatus::where('name', 'Members')->value('id');
         $filter = request()->query('filter', []);
 
         $query = Membership::forEvent($event)
@@ -74,11 +74,17 @@ class AttendanceController extends Controller
                 'user',
                 'enrolments.voice_part',
                 'enrolments.ensemble',
-                'category',
+                'status',
                 'attendances' => fn($query) => $query->where('event_id', '=', $event->id),
             ])
-            ->when($defaultCategoryId && !isset($filter['category.id']), function (Builder $query) use ($defaultCategoryId) {
-                $query->where('singer_category_id', $defaultCategoryId);
+            ->when($defaultStatusId && !isset($filter['status.id']), function (Builder $query) use ($defaultStatusId) {
+                $query->whereHas('status', fn($q) => $q->where('singer_statuses.id', $defaultStatusId)
+                    ->where('membership_singer_status.id', function($sub) {
+                        $sub->selectRaw('max(id)')
+                            ->from('membership_singer_status')
+                            ->whereColumn('membership_id', 'memberships.id');
+                    })
+                );
             });
 
         $pagination = QueryBuilder::for($query)
@@ -102,7 +108,14 @@ class AttendanceController extends Controller
                     $responses = (array) $value;
                     $query->whereHas('attendances', fn($query) => $query->where('event_id', $event->id)->whereIn('response', $responses));
                 }),
-                AllowedFilter::exact('category.id', 'singer_category_id'),
+                AllowedFilter::callback('status.id', fn($query, $value) => $query->whereHas('status', fn($q) => $q
+                    ->whereIn('singer_statuses.id', (array)$value)
+                    ->where('membership_singer_status.id', function($sub) {
+                        $sub->selectRaw('max(id)')
+                            ->from('membership_singer_status')
+                            ->whereColumn('membership_id', 'memberships.id');
+                    })
+                )),
             ])
             ->allowedSorts([
                 ...$this->singerSorts(),
@@ -134,7 +147,7 @@ class AttendanceController extends Controller
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
             'totalEnsemblesCount' => Ensemble::count(),
-            'singerCategories' => SingerCategory::all()->values(),
+            'singerStatuses' => SingerStatus::all()->values(),
             'counts' => [
                 'present' => $event->attendances()->where('response', 'present')->count(),
                 'late' => $event->attendances()->where('response', 'late')->count(),

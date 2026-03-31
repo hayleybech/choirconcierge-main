@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
@@ -124,7 +124,7 @@ class UserController extends Controller
         return Response::json($formatted_results);
     }
 
-    public function findSingerCategories(Request $request): JsonResponse
+    public function findSingerStatuses(Request $request): JsonResponse
     {
         $term = trim($request->q);
 
@@ -133,7 +133,7 @@ class UserController extends Controller
         }
 
         $formatted_results = [];
-        $cats = SingerCategory::where('name', 'like', "%$term%")
+        $cats = SingerStatus::where('name', 'like', "%$term%")
             ->limit(5)
             ->get();
 

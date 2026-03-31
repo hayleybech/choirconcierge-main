@@ -86,6 +86,7 @@ class FolderControllerTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Folders/Create')
+                ->has('singerStatuses')
             );
     }
 

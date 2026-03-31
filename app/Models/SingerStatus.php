@@ -5,14 +5,14 @@ namespace App\Models;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
- * Class SingerCategory
+ * Class SingerStatus
  *
  * Columns
  * @property int $id
@@ -21,12 +21,12 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $updated_at
  *
  * Relationships
- * @property Collection<Membership> $members
+ * @property Collection<Membership> $memberships
  *
  * Attributes
  * @property string $colour
  */
-class SingerCategory extends Model
+class SingerStatus extends Model
 {
     use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
 
@@ -39,9 +39,9 @@ class SingerCategory extends Model
         'Archived Members' => 'emerald-700',
     ];
 
-    public function members(): HasMany
+    public function memberships(): BelongsToMany
     {
-        return $this->hasMany(Membership::class);
+        return $this->belongsToMany(Membership::class, 'membership_singer_status')->withTimestamps();
     }
 
     public function getSlugAttribute(): string

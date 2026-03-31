@@ -8,7 +8,7 @@ use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\Rsvp;
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use App\Traits\HasSingerSorts;
@@ -81,14 +81,14 @@ class RsvpController extends Controller
                 ->orderBy('has_dietary_medical', $direction);
         });
 
-        $defaultCategoryId = SingerCategory::where('name', 'Members')->value('id');
+        $defaultStatusId = SingerStatus::where('name', 'Members')->value('id');
 
         $query = Membership::forEvent($event)
             ->with([
                 'user',
                 'enrolments.voice_part',
                 'enrolments.ensemble',
-                'category',
+                'status',
                 'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
                 'customFields',
             ]);
@@ -121,8 +121,15 @@ class RsvpController extends Controller
                         }
                     });
                 }),
-                AllowedFilter::exact('category.id', 'singer_category_id')
-                    ->default([$defaultCategoryId]),
+                AllowedFilter::callback('status.id', fn($query, $value) => $query->whereHas('status', fn($q) => $q
+                    ->whereIn('singer_statuses.id', (array)$value)
+                    ->where('membership_singer_status.id', function($sub) {
+                        $sub->selectRaw('max(id)')
+                            ->from('membership_singer_status')
+                            ->whereColumn('membership_id', 'memberships.id');
+                    })
+                ))
+                    ->default([$defaultStatusId]),
             ])
             ->allowedSorts([
                 ...$this->singerSorts(),
@@ -153,7 +160,7 @@ class RsvpController extends Controller
             'totalEnsemblesCount' => Ensemble::count(),
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
-            'singerCategories' => SingerCategory::all()->values(),
+            'singerStatuses' => SingerStatus::all()->values(),
             'customFields' => CustomField::all()->values(),
             'counts' => [
                 'yes' => $event->singers_rsvp_response('yes')->count(),

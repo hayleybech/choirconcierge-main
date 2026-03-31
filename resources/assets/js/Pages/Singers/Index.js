@@ -37,7 +37,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 
     const filters = [
         { name: 'user.name', defaultValue: '' },
-        { name: 'category.id', multiple: true, defaultValue: [defaultStatus] },
+        { name: 'status.id', multiple: true, defaultValue: [defaultStatus] },
         { name: 'enrolments.voice_part_id', multiple: true },
         { name: 'roles.id', multiple: true },
         { name: 'fee_status', defaultValue: '' },
