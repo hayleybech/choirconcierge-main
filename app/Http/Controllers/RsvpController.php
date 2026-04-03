@@ -8,7 +8,7 @@ use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\Rsvp;
-use App\Models\SingerStatus;
+use App\Enums\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use App\Traits\HasSingerSorts;
@@ -81,7 +81,7 @@ class RsvpController extends Controller
                 ->orderBy('has_dietary_medical', $direction);
         });
 
-        $defaultStatusId = SingerStatus::where('name', 'Members')->value('id');
+        $defaultStatus = SingerStatus::MEMBERS->value;
 
         $query = Membership::forEvent($event)
             ->with([
@@ -121,15 +121,15 @@ class RsvpController extends Controller
                         }
                     });
                 }),
-                AllowedFilter::callback('status.id', fn($query, $value) => $query->whereHas('status', fn($q) => $q
-                    ->whereIn('singer_statuses.id', (array)$value)
-                    ->where('membership_singer_status.id', function($sub) {
+                AllowedFilter::callback('status', fn($query, $value) => $query->whereHas('statuses', fn($q) => $q
+                    ->whereIn('status', (array)$value)
+                    ->where('id', function($sub) {
                         $sub->selectRaw('max(id)')
                             ->from('membership_singer_status')
                             ->whereColumn('membership_id', 'memberships.id');
                     })
                 ))
-                    ->default([$defaultStatusId]),
+                    ->default([$defaultStatus]),
             ])
             ->allowedSorts([
                 ...$this->singerSorts(),
@@ -160,7 +160,11 @@ class RsvpController extends Controller
             'totalEnsemblesCount' => Ensemble::count(),
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
-            'singerStatuses' => SingerStatus::all()->values(),
+            'singerStatuses' => array_map(fn($s) => [
+                'id' => $s->value,
+                'name' => $s->label(),
+                'slug' => $s->value,
+            ], SingerStatus::cases()),
             'customFields' => CustomField::all()->values(),
             'counts' => [
                 'yes' => $event->singers_rsvp_response('yes')->count(),

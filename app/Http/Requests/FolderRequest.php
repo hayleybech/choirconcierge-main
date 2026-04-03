@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Models\Folder;
+use App\Enums\SingerStatus;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FolderRequest extends FormRequest
@@ -36,7 +38,7 @@ class FolderRequest extends FormRequest
             'viewer_voice_parts' => ['nullable', 'array'],
             'viewer_voice_parts.*' => ['exists:voice_parts,id'],
             'viewer_singer_statuses' => ['nullable', 'array'],
-            'viewer_singer_statuses.*' => ['exists:singer_statuses,id'],
+            'viewer_singer_statuses.*' => [Rule::enum(SingerStatus::class)],
             'editor_users' => ['nullable', 'array'],
             'editor_users.*' => ['exists:users,id'],
             'editor_roles' => ['nullable', 'array'],
@@ -44,7 +46,7 @@ class FolderRequest extends FormRequest
             'editor_voice_parts' => ['nullable', 'array'],
             'editor_voice_parts.*' => ['exists:voice_parts,id'],
             'editor_singer_statuses' => ['nullable', 'array'],
-            'editor_singer_statuses.*' => ['exists:singer_statuses,id'],
+            'editor_singer_statuses.*' => [Rule::enum(SingerStatus::class)],
         ];
     }
 }

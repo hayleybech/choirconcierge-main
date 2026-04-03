@@ -8,7 +8,7 @@ use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\VoicePart;
-use App\Models\SingerStatus;
+use App\Enums\SingerStatus;
 use App\Traits\HasSingerSorts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -66,7 +66,7 @@ class AttendanceController extends Controller
                 ->orderBy('attendance_updated', $direction);
         });
 
-        $defaultStatusId = SingerStatus::where('name', 'Members')->value('id');
+        $defaultStatus = SingerStatus::MEMBERS->value;
         $filter = request()->query('filter', []);
 
         $query = Membership::forEvent($event)
@@ -74,12 +74,12 @@ class AttendanceController extends Controller
                 'user',
                 'enrolments.voice_part',
                 'enrolments.ensemble',
-                'status',
+                'statuses',
                 'attendances' => fn($query) => $query->where('event_id', '=', $event->id),
             ])
-            ->when($defaultStatusId && !isset($filter['status.id']), function (Builder $query) use ($defaultStatusId) {
-                $query->whereHas('status', fn($q) => $q->where('singer_statuses.id', $defaultStatusId)
-                    ->where('membership_singer_status.id', function($sub) {
+            ->when($defaultStatus && !isset($filter['status']), function (Builder $query) use ($defaultStatus) {
+                $query->whereHas('statuses', fn($q) => $q->where('status', $defaultStatus)
+                    ->where('id', function($sub) {
                         $sub->selectRaw('max(id)')
                             ->from('membership_singer_status')
                             ->whereColumn('membership_id', 'memberships.id');
@@ -108,9 +108,9 @@ class AttendanceController extends Controller
                     $responses = (array) $value;
                     $query->whereHas('attendances', fn($query) => $query->where('event_id', $event->id)->whereIn('response', $responses));
                 }),
-                AllowedFilter::callback('status.id', fn($query, $value) => $query->whereHas('status', fn($q) => $q
-                    ->whereIn('singer_statuses.id', (array)$value)
-                    ->where('membership_singer_status.id', function($sub) {
+                AllowedFilter::callback('status', fn($query, $value) => $query->whereHas('statuses', fn($q) => $q
+                    ->whereIn('status', (array) $value)
+                    ->where('id', function($sub) {
                         $sub->selectRaw('max(id)')
                             ->from('membership_singer_status')
                             ->whereColumn('membership_id', 'memberships.id');
@@ -147,7 +147,11 @@ class AttendanceController extends Controller
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
             'totalEnsemblesCount' => Ensemble::count(),
-            'singerStatuses' => SingerStatus::all()->values(),
+            'singerStatuses' => array_map(fn($s) => [
+                'id' => $s->value,
+                'name' => $s->label(),
+                'slug' => $s->value,
+            ], SingerStatus::cases()),
             'counts' => [
                 'present' => $event->attendances()->where('response', 'present')->count(),
                 'late' => $event->attendances()->where('response', 'late')->count(),

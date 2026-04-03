@@ -165,8 +165,8 @@ class DashController extends Controller
             return null;
         }
 
-        return Membership::whereHas('status', function ($query) {
-            $query->where('name', 'Members')
+        return Membership::whereHas('statuses', function ($query) {
+            $query->where('status', \App\Enums\SingerStatus::MEMBERS->value)
                 ->where('membership_singer_status.id', function($sub) {
                     $sub->selectRaw('max(id)')
                         ->from('membership_singer_status')

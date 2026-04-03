@@ -12,7 +12,7 @@ const BulkEditSingersModal = ({ isOpen, setIsOpen, selectedSingerIds, statuses, 
 
     const { data, setData, post, processing, reset, errors } = useForm({
         singer_ids: selectedSingerIds,
-        singer_status_id: statuses[0]?.id,
+        status: statuses[0]?.id,
     });
 
     const handleOk = (e) => {
@@ -49,12 +49,12 @@ const BulkEditSingersModal = ({ isOpen, setIsOpen, selectedSingerIds, statuses, 
 							colour: (new SingerStatus(status.slug)).textColour,
 							icon: (new SingerStatus(status.slug)).icon,
 						}))}
-						selected={data.singer_status_id}
-						setSelected={value => setData('singer_status_id', value)}
+						selected={data.status}
+						setSelected={value => setData('status', value)}
 						vertical
 						size="sm"
 					/>
-					{errors.singer_status_id && <Error>{errors.singer_status_id}</Error>}
+					{errors.status && <Error>{errors.status}</Error>}
 				</div>
 			</div>
 		</Dialog>

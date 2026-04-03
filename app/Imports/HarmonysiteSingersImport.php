@@ -2,8 +2,8 @@
 
 namespace App\Imports;
 
+use App\Enums\SingerStatus;
 use App\Models\Role;
-use App\Models\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use DateTime;
@@ -24,8 +24,8 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow, WithValidat
 
     public function __construct()
     {
-        $this->activeStatus = SingerStatus::firstWhere('name', 'Members');
-        $this->archivedStatus = SingerStatus::firstWhere('name', 'Archived Members');
+        $this->activeStatus = SingerStatus::MEMBERS;
+        $this->archivedStatus = SingerStatus::ARCHIVED_MEMBERS;
 
         $this->userRole = Role::firstWhere('name', 'User');
     }
@@ -77,7 +77,7 @@ class HarmonysiteSingersImport implements OnEachRow, WithHeadingRow, WithValidat
         } else {
             $status = $this->archivedStatus;
         }
-        $member->statuses()->attach($status);
+        $member->statuses()->create(['status' => $status->value]);
 
         // Add User Role
         $member->roles()->attach($this->userRole);

@@ -20,15 +20,15 @@ const SingerFilters = ({ statuses, voiceParts, roles, form, ensembles }) => (
                 <div className="flex items-center justify-between">
                     <legend className="text-sm font-medium text-gray-700">Status</legend>
                     <FilterActions
-                        onSelectAll={() => setData('status.id', statuses.map(status => status.id))}
-                        onClear={() => setData('status.id', [])}
+                        onSelectAll={() => setData('status', statuses.map(status => status.id))}
+                        onClear={() => setData('status', [])}
                     />
                 </div>
                 <CheckboxGroup
-                    name="status.id"
+                    name="status"
                     options={statuses.map((status) => ({ id: status.id, name: status.name }))}
-                    value={data['status.id']}
-                    updateFn={value => setData('status.id', value)}
+                    value={data['status']}
+                    updateFn={value => setData('status', value)}
                 />
             </fieldset>
 

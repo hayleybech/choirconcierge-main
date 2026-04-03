@@ -1,0 +1,11 @@
+### POST request to get Sanctum token
+POST https://choirconcierge.test/api/sanctum/token
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "hayleybech@gmail.com",
+  "password": "*tokra1#",
+  "device_name": "PhpStorm",
+  "code": ""
+}

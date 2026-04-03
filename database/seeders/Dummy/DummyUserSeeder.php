@@ -5,7 +5,7 @@ namespace Database\Seeders\Dummy;
 use App\Models\CustomField;
 use App\Models\Membership;
 use App\Models\Role;
-use App\Models\SingerStatus;
+use App\Enums\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use Faker\Factory as Faker;
@@ -16,7 +16,7 @@ class DummyUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $singer_statuses = SingerStatus::all();
+        $singer_statuses = SingerStatus::cases();
 
         // The ResetDemoSite job also tries to add an ensemble,
         // but this file runs before the rest of the ResetDemoSite job runs.
@@ -64,9 +64,9 @@ class DummyUserSeeder extends Seeder
             });
     }
 
-    public static function attachRandomSingerStatus(Membership $member, Collection $statuses): void
+    public static function attachRandomSingerStatus(Membership $member, array $statuses): void
     {
-        $status = $statuses->random(1)->first();
-        $member->statuses()->attach($status);
+        $status = $statuses[array_rand($statuses)];
+        $member->statuses()->create(['status' => $status->value]);
     }
 }

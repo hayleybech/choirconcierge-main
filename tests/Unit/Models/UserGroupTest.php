@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use App\Enums\SingerStatus as SingerStatusEnum;
 use App\Models\Ensemble;
 use App\Models\Enrolment;
 use App\Models\Role;
@@ -62,12 +63,16 @@ class UserGroupTest extends TestCase
     {
         $group = UserGroup::factory()->create();
 
-        $statuses = SingerStatus::factory()
-            ->has(Membership::factory()->count(3), 'memberships')
-            ->count(2)
-            ->create();
+        $statusValues = [SingerStatusEnum::MEMBERS->value, SingerStatusEnum::PROSPECTS->value];
+        foreach ($statusValues as $status) {
+            $group->recipient_singer_statuses()->create(['memberable_id' => $status, 'memberable_type' => SingerStatus::class]);
+        }
 
-        $group->recipient_singer_statuses()->attach($statuses->pluck('id'));
+        foreach ($statusValues as $statusValue) {
+            User::factory()->count(3)->create()->each(function($user) use ($statusValue) {
+                $user->membership->statuses()->create(['status' => $statusValue]);
+            });
+        }
 
         $this->assertCount(6, $group->get_all_recipients());
     }
@@ -116,12 +121,16 @@ class UserGroupTest extends TestCase
     {
         $group = UserGroup::factory()->create();
 
-        $statuses = SingerStatus::factory()
-            ->has(Membership::factory()->count(3), 'memberships')
-            ->count(2)
-            ->create();
+        $statusValues = [SingerStatusEnum::MEMBERS->value, SingerStatusEnum::PROSPECTS->value];
+        foreach ($statusValues as $status) {
+            $group->sender_singer_statuses()->create(['sender_id' => $status, 'sender_type' => SingerStatus::class]);
+        }
 
-        $group->sender_singer_statuses()->attach($statuses->pluck('id'));
+        foreach ($statusValues as $statusValue) {
+            User::factory()->count(3)->create()->each(function($user) use ($statusValue) {
+                $user->membership->statuses()->create(['status' => $statusValue]);
+            });
+        }
 
         $this->assertCount(6, $group->get_all_senders());
     }
@@ -163,26 +172,26 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $role = Role::factory()->create();
-        $status = SingerStatus::factory()->create(['name' => 'Members']);
+        $statusValue = SingerStatusEnum::MEMBERS->value;
         $ensembleA = Ensemble::factory()->create();
         $ensembleB = Ensemble::factory()->create();
 
         // 3 users in Role with Ensemble A
-        User::factory()->count(3)->create()->each(function($user) use ($role, $status, $ensembleA) {
+        User::factory()->count(3)->create()->each(function($user) use ($role, $statusValue, $ensembleA) {
             $membership = Membership::factory()->create([
                 'user_id' => $user->id,
             ]);
-            $membership->statuses()->attach($status);
+            $membership->statuses()->create(['status' => $statusValue]);
             $membership->roles()->attach($role->id);
             Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleA->id]);
         });
 
         // 2 users in Role with Ensemble B
-        User::factory()->count(2)->create()->each(function($user) use ($role, $status, $ensembleB) {
+        User::factory()->count(2)->create()->each(function($user) use ($role, $statusValue, $ensembleB) {
             $membership = Membership::factory()->create([
                 'user_id' => $user->id,
             ]);
-            $membership->statuses()->attach($status);
+            $membership->statuses()->create(['status' => $statusValue]);
             $membership->roles()->attach($role->id);
             Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleB->id]);
         });
@@ -209,26 +218,26 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $role = Role::factory()->create();
-        $status = SingerStatus::factory()->create(['name' => 'Members']);
+        $statusValue = SingerStatusEnum::MEMBERS->value;
         $ensembleA = Ensemble::factory()->create();
         $ensembleB = Ensemble::factory()->create();
 
         // 3 users in Role with Ensemble A
-        User::factory()->count(3)->create()->each(function($user) use ($role, $status, $ensembleA) {
+        User::factory()->count(3)->create()->each(function($user) use ($role, $statusValue, $ensembleA) {
             $membership = Membership::factory()->create([
                 'user_id' => $user->id,
             ]);
-            $membership->statuses()->attach($status);
+            $membership->statuses()->create(['status' => $statusValue]);
             $membership->roles()->attach($role->id);
             Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleA->id]);
         });
 
         // 2 users in Role with Ensemble B
-        User::factory()->count(2)->create()->each(function($user) use ($role, $status, $ensembleB) {
+        User::factory()->count(2)->create()->each(function($user) use ($role, $statusValue, $ensembleB) {
             $membership = Membership::factory()->create([
                 'user_id' => $user->id,
             ]);
-            $membership->statuses()->attach($status);
+            $membership->statuses()->create(['status' => $statusValue]);
             $membership->roles()->attach($role->id);
             Enrolment::factory()->create(['membership_id' => $membership->id, 'ensemble_id' => $ensembleB->id]);
         });

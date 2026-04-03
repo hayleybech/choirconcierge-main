@@ -2,7 +2,7 @@
 
 namespace App\Http\View\Composers;
 
-use App\Models\SingerStatus;
+use App\Enums\SingerStatus;
 use Illuminate\Contracts\View\View;
 
 class SingerStatusComposer
@@ -15,9 +15,8 @@ class SingerStatusComposer
     public function getCategories()
     {
         if (! $this->categories) {
-            $categories_all = SingerStatus::all();
-            $this->categories = $categories_all->mapWithKeys(static function ($category) {
-                return [$category['id'] => $category['name']];
+            $this->categories = collect(SingerStatus::cases())->mapWithKeys(static function ($category) {
+                return [$category->value => $category->label()];
             });
         }
 

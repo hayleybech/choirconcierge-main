@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SingerStatus;
 use App\Models\Role;
-use App\Models\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use Illuminate\Contracts\View\View;
@@ -133,14 +133,14 @@ class UserController extends Controller
         }
 
         $formatted_results = [];
-        $cats = SingerStatus::where('name', 'like', "%$term%")
-            ->limit(5)
-            ->get();
+        $cats = collect(SingerStatus::cases())
+            ->filter(fn($status) => str_contains(strtolower($status->label()), strtolower($term)))
+            ->take(5);
 
         foreach ($cats as $cat) {
             $formatted_results[] = [
-                'id' => $cat->id,
-                'text' => $cat->name,
+                'id' => $cat->value,
+                'text' => $cat->label(),
             ];
         }
 

@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\SingerStatus;
 use App\Models\Membership;
-use App\Models\SingerStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,8 +26,7 @@ class MembershipFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (Membership $membership) {
-            $statusId = SingerStatus::where('name', 'Members')->value('id') ?? SingerStatus::factory()->create(['name' => 'Members'])->id;
-            $membership->statuses()->attach($statusId);
+            $membership->statuses()->create(['status' => SingerStatus::MEMBERS->value]);
         });
     }
 }

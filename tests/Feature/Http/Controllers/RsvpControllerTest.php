@@ -7,7 +7,7 @@ use App\Models\Event;
 use App\Models\Rsvp;
 use App\Models\Role;
 use App\Models\Membership;
-use App\Models\SingerStatus;
+use App\Enums\SingerStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -490,16 +490,16 @@ class RsvpControllerTest extends TestCase
         $admin->roles()->attach($role);
         $this->actingAs($admin->user);
 
-        $status1 = SingerStatus::factory()->create();
-        $status2 = SingerStatus::factory()->create();
+        $status1 = SingerStatus::MEMBERS->value;
+        $status2 = SingerStatus::PROSPECTS->value;
 
         $event = Event::factory()->create();
         $singer1 = Membership::factory()->create();
-        $singer1->statuses()->attach($status1);
+        $singer1->statuses()->create(['status' => $status1]);
         $singer2 = Membership::factory()->create();
-        $singer2->statuses()->attach($status2);
+        $singer2->statuses()->create(['status' => $status2]);
 
-        $this->get(the_tenant_route('events.rsvps.index', ['event' => $event, 'filter[status.id]' => $status1->id]))
+        $this->get(the_tenant_route('events.rsvps.index', ['event' => $event, 'filter[status]' => $status1]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('allSingers', 1)
@@ -514,19 +514,19 @@ class RsvpControllerTest extends TestCase
         $admin->roles()->attach($role);
         $this->actingAs($admin->user);
 
-        $memberStatus = SingerStatus::where('name', 'Members')->first();
-        $prospectStatus = SingerStatus::where('name', 'Prospects')->first();
+        $memberStatus = SingerStatus::MEMBERS->value;
+        $prospectStatus = SingerStatus::PROSPECTS->value;
 
         $event = Event::factory()->create();
         $member = Membership::factory()->create();
-        $member->statuses()->sync($memberStatus);
+        $member->statuses()->create(['status' => $memberStatus]);
         $prospect = Membership::factory()->create();
-        $prospect->statuses()->sync($prospectStatus);
+        $prospect->statuses()->create(['status' => $prospectStatus]);
 
         $this->get(the_tenant_route('events.rsvps.index', ['event' => $event]))
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('allSingers', function ($singers) use ($memberStatus) {
-                    return collect($singers)->every(fn($s) => $s['status']['id'] === $memberStatus->id);
+                    return collect($singers)->every(fn($s) => $s['status'] === $memberStatus);
                 })
             );
     }
@@ -536,7 +536,7 @@ class RsvpControllerTest extends TestCase
         $role = Role::create(['name' => 'Admin', 'abilities' => ['rsvps_view']]);
         $admin = Membership::factory()->create();
         $admin->roles()->attach($role);
-        $admin->statuses()->attach(SingerStatus::where('name', 'Members')->first());
+        $admin->statuses()->create(['status' => SingerStatus::MEMBERS->value]);
         $this->actingAs($admin->user);
 
         $customField = CustomField::factory()->create(['name' => 'Custom Field 1']);

@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Models\Membership;
 use App\Models\Role;
-use App\Models\SingerStatus;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -49,12 +48,7 @@ class CreateAdminMembershipForTenant implements ShouldQueue
 			],
 		]);
 
-        $statusId = SingerStatus::query()
-            ->where('tenant_id', $this->tenant->id)
-            ->where('name', '=', 'Members')
-            ->valueOrFail('id');
-        
-        $member->statuses()->attach($statusId);
+        $member->statuses()->create(['status' => \App\Enums\SingerStatus::MEMBERS->value]);
 
 	    $this->tenant->members()->save($member);
 

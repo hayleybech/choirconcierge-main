@@ -230,7 +230,7 @@ const EditSingerPlacementButton = ({ singer }) => {
 const MoveSingerDialog = ({ isOpen, setIsOpen, singer, statuses }) => {
 	const { route } = useRoute();
 
-	const [selectedStatus, setSelectedStatus] = useState(singer.status?.singer_status_id ?? 0);
+	const [selectedStatus, setSelectedStatus] = useState(statuses.find(status => status.slug === singer.status) ?? 0);
 
 	return (
 		<Dialog

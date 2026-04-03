@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CustomSorts\SingerStatusSort;
+use App\Enums\SingerStatus;
 use App\CustomSorts\SingerVoicePartSort;
 use App\Traits\HasSingerSorts;
 use App\Http\Requests\CreateSingerRequest;
@@ -14,7 +14,6 @@ use App\Models\EventType;
 use App\Models\Placement;
 use App\Models\Role;
 use App\Models\Membership;
-use App\Models\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -42,13 +41,17 @@ class SingerController extends Controller
 
     public function index(Request $request): InertiaResponse
     {
-        $defaultStatus = SingerStatus::all()->firstWhere('name', 'Members')->id;
+        $defaultStatus = SingerStatus::MEMBERS->value;
 
         $pagination = $this->getSingers($defaultStatus);
         return Inertia::render('Singers/Index', [
             'allSingers' => $pagination->getCollection()->append('fee_status'),
             'pagination' => $pagination,
-            'statuses' => SingerStatus::all()->values(),
+            'statuses' => array_map(fn($s) => [
+                'id' => $s->value,
+                'name' => $s->label(),
+                'slug' => $s->value,
+            ], SingerStatus::cases()),
             'defaultStatus' => $defaultStatus,
             'voiceParts' => VoicePart::all()->values(),
             'roles' => Role::all()->values(),
@@ -102,7 +105,6 @@ class SingerController extends Controller
         $singer->load([
             'user',
             'enrolments' => ['voice_part', 'ensemble'],
-            'status',
             'statuses',
             'roles',
             'placement',
@@ -122,7 +124,11 @@ class SingerController extends Controller
             'singer' => $singer,
             'attendanceSummary' => self::getAttendanceSummary($singer),
             'rsvpSummary' => self::getRsvpSummary($singer),
-            'statuses' => SingerStatus::all(),
+            'statuses' => array_map(fn($s) => [
+                'id' => $s->value,
+                'name' => $s->label(),
+                'slug' => $s->value,
+            ], SingerStatus::cases()),
             'voiceParts' => VoicePart::all(),
             'customFields' => CustomField::query()
                 ->with('entries', fn($query) => $query->where('membership_id', $singer->id))
@@ -204,7 +210,7 @@ class SingerController extends Controller
 
     public function edit(Membership $singer): InertiaResponse
     {
-        $singer->load('user', 'status', 'roles');
+        $singer->load('user', 'statuses', 'roles');
 
         return Inertia::render('Singers/Edit', [
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
@@ -259,15 +265,15 @@ class SingerController extends Controller
         $request->validate([
             'singer_ids' => 'required|array',
             'singer_ids.*' => 'exists:memberships,id',
-            'singer_status_id' => 'required|exists:singer_statuses,id',
+            'status' => ['required', \Illuminate\Validation\Rule::enum(SingerStatus::class)],
         ]);
 
         $singerIds = $request->input('singer_ids');
-        $statusId = $request->input('singer_status_id');
+        $status = $request->input('status');
 
         $memberships = Membership::whereIn('id', $singerIds)->get();
         foreach ($memberships as $membership) {
-            $membership->statuses()->attach($statusId);
+            $membership->statuses()->create(['status' => $status]);
         }
 
         return redirect()
@@ -298,7 +304,7 @@ class SingerController extends Controller
             ->ensembleRestricted();
 
         return QueryBuilder::for($query)
-            ->with(['tasks', 'status', 'user', 'enrolments' => ['voice_part', 'ensemble'],])
+            ->with(['tasks', 'statuses', 'user', 'enrolments' => ['voice_part', 'ensemble'],])
             ->allowedFilters([
                 AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query
                     ->whereHas('user', fn(Builder $query) => $query
@@ -306,8 +312,8 @@ class SingerController extends Controller
                         ->orWhereRaw('email LIKE LOWER(?)', ["%$value%"])
                     )),
                 AllowedFilter::callback('status.id', fn(Builder $query, $value) => $query
-                    ->whereHas('status', fn(Builder $query) => $query
-                        ->whereIn('singer_statuses.id', (array) $value)
+                    ->whereHas('statuses', fn(Builder $query) => $query
+                        ->whereIn('status', (array) $value)
                         ->where('membership_singer_status.id', function($sub) {
                             $sub->selectRaw('max(id)')
                                 ->from('membership_singer_status')
@@ -336,7 +342,7 @@ class SingerController extends Controller
             ])
             ->allowedSorts([
                 ...$this->singerSorts(),
-                AllowedSort::custom('status-title', new SingerStatusSort(), 'status'),
+                AllowedSort::custom('status-title', new \App\CustomSorts\SingerStatusSort(), 'status'),
                 AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),
                 AllowedSort::field('paid_until'),
             ])

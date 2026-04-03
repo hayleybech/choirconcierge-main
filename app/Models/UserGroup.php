@@ -130,9 +130,10 @@ class UserGroup extends Model
         return $this->morphedByMany(User::class, 'memberable', 'group_members', 'group_id');
     }
 
-    public function recipient_singer_statuses(): MorphToMany
+    public function recipient_singer_statuses(): HasMany
     {
-        return $this->morphedByMany(SingerStatus::class, 'memberable', 'group_members', 'group_id');
+        return $this->hasMany(GroupMember::class, 'group_id')
+            ->where('memberable_type', SingerStatus::class);
     }
 
     public function recipient_ensembles(): MorphToMany
@@ -197,9 +198,10 @@ class UserGroup extends Model
         return $this->morphedByMany(User::class, 'sender', 'group_senders', 'group_id');
     }
 
-    public function sender_singer_statuses(): MorphToMany
+    public function sender_singer_statuses(): HasMany
     {
-        return $this->morphedByMany(SingerStatus::class, 'sender', 'group_senders', 'group_id');
+        return $this->hasMany(GroupSender::class, 'group_id')
+            ->where('sender_type', SingerStatus::class);
     }
     
     public function sender_ensembles(): MorphToMany
@@ -355,15 +357,16 @@ class UserGroup extends Model
 
     private function getStatusUsers(string $recipientType = 'recipient_singer_statuses'): \Illuminate\Support\Collection
     {
-        $status_ids = $this->$recipientType()
+        $idCol = str_contains($recipientType, 'sender') ? 'sender_id' : 'memberable_id';
+        $status_slugs = $this->$recipientType()
             ->get()
-            ->pluck('id');
+            ->pluck($idCol);
 
         return User::query()
             ->whereHas('memberships', fn ($singer_query) =>
-                $singer_query->whereHas('status', fn ($query) => $query
-                    ->whereIn('singer_statuses.id', $status_ids)
-                    ->where('membership_singer_status.id', function($sub) {
+                $singer_query->whereHas('statuses', fn ($query) => $query
+                    ->whereIn('membership_singer_status.status', $status_slugs)
+                    ->where('id', function($sub) {
                         $sub->selectRaw('max(id)')
                             ->from('membership_singer_status')
                             ->whereColumn('membership_id', 'memberships.id');

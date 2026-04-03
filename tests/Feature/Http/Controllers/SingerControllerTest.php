@@ -9,7 +9,7 @@ use App\Models\Membership;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\VoicePart;
-use App\Models\SingerStatus;
+use App\Enums\SingerStatus;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -329,18 +329,18 @@ class SingerControllerTest extends TestCase
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
         $singers = Membership::factory()->count(3)->create();
-        $status = SingerStatus::factory()->create();
+        $statusValue = \App\Enums\SingerStatus::PROSPECTS->value;
 
         $this->post(the_tenant_route('singers.bulk-update'), [
             'singer_ids' => $singers->pluck('id')->all(),
-            'singer_status_id' => $status->id,
+            'status' => $statusValue,
         ])->assertRedirect(route('singers.index'))
           ->assertSessionHasNoErrors();
 
         foreach ($singers as $singer) {
             $this->assertDatabaseHas('membership_singer_status', [
                 'membership_id' => $singer->id,
-                'singer_status_id' => $status->id,
+                'status' => $statusValue,
             ]);
         }
     }

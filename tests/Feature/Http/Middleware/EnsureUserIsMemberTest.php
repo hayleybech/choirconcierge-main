@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Membership;
-use App\Models\SingerStatus;
+use App\Enums\SingerStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -11,10 +11,10 @@ use function Pest\Laravel\get;
 uses(RefreshDatabase::class, WithFaker::class);
 
 test('archived users cannot view site', function(string $status) {
-    $archived = SingerStatus::where('name', $status)->first();
+    $statusValue = SingerStatus::fromName($status)->value;
 
     $user = User::factory()->has(Membership::factory())->create();
-    $user->membership->status()->attach($archived);
+    $user->membership->statuses()->create(['status' => $statusValue]);
     $user->membership->save();
 
     actingAs($user);

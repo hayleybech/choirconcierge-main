@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SingerStatus;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -74,7 +75,7 @@ class Membership extends Model
 
     public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'joined_at' => 'datetime', 'paid_until' => 'datetime'];
 
-    protected $appends = [];
+    protected $appends = ['status'];
 
     public $notify_channels = ['mail'];
 
@@ -123,8 +124,8 @@ class Membership extends Model
 
     public function initOnboarding(): void
     {
-        $status_name = $this->onboarding_enabled ? 'Prospects' : 'Members';
-        $this->statuses()->attach(SingerStatus::firstWhere('name', '=', $status_name));
+        $status = $this->onboarding_enabled ? SingerStatus::PROSPECTS : SingerStatus::MEMBERS;
+        $this->statuses()->create(['status' => $status->value]);
 
         if (!$this->onboarding_enabled) {
             return;
@@ -148,23 +149,16 @@ class Membership extends Model
         return $this->hasOne(Placement::class);
     }
 
-    public function status(): HasOneThrough
+    protected function status(): Attribute
     {
-        return $this->hasOneThrough(
-            SingerStatus::class,
-            MembershipSingerStatus::class,
-            'membership_id',
-            'id',
-            'id',
-            'singer_status_id'
-        )->orderByDesc('membership_singer_status.id');
+        return Attribute::make(
+            get: fn () => $this->statuses()->latest('id')->first()?->status,
+        );
     }
 
-    public function statuses(): BelongsToMany
+    public function statuses(): HasMany
     {
-        return $this->belongsToMany(SingerStatus::class, 'membership_singer_status')
-            ->using(MembershipSingerStatus::class)
-            ->withTimestamps();
+        return $this->hasMany(MembershipSingerStatus::class);
     }
 
     public function enrolments(): HasMany
@@ -251,8 +245,8 @@ class Membership extends Model
     public function scopeEmptyDobs(Builder $query): Builder
     {
         return $query
-            ->whereHas('status', static function (Builder $query) {
-                return $query->whereIn('name', ['Members', 'Prospects'])
+            ->whereHas('statuses', static function (Builder $query) {
+                return $query->whereIn('status', [SingerStatus::MEMBERS->value, SingerStatus::PROSPECTS->value])
                     ->where('membership_singer_status.id', function($sub) {
                         $sub->selectRaw('max(id)')
                             ->from('membership_singer_status')
@@ -285,8 +279,8 @@ class Membership extends Model
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->whereHas('status', static function (Builder $query) {
-            $query->where('name', '=', 'Members')
+        return $query->whereHas('statuses', static function (Builder $query) {
+            $query->where('status', '=', SingerStatus::MEMBERS->value)
                 ->where('membership_singer_status.id', function($sub) {
                     $sub->selectRaw('max(id)')
                         ->from('membership_singer_status')

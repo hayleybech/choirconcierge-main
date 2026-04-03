@@ -2,8 +2,8 @@
 
 namespace App\CustomSorts;
 
-use App\Models\SingerStatus;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\Sorts\Sort;
 
 class SingerStatusSort implements Sort
@@ -13,10 +13,10 @@ class SingerStatusSort implements Sort
         return $query
             ->addSubSelect(
                 'status_title',
-                SingerStatus::select('name')
-                    ->join('membership_singer_status', 'singer_statuses.id', '=', 'membership_singer_status.singer_status_id')
-                    ->whereColumn('membership_singer_status.membership_id', 'memberships.id')
-                    ->orderByDesc('membership_singer_status.id')
+                DB::table('membership_singer_status')
+                    ->select('status')
+                    ->whereColumn('membership_id', 'memberships.id')
+                    ->orderByDesc('id')
                     ->limit(1)
             )
             ->orderBy('status_title', $descending ? 'desc' : 'asc');

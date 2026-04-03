@@ -126,9 +126,10 @@ class Folder extends Model
         return $this->morphedByMany(User::class, 'viewer', 'folder_viewers', 'folder_id');
     }
 
-    public function viewer_singer_statuses(): MorphToMany
+    public function viewer_singer_statuses(): HasMany
     {
-        return $this->morphedByMany(SingerStatus::class, 'viewer', 'folder_viewers', 'folder_id');
+        return $this->hasMany(FolderViewer::class, 'folder_id')
+            ->where('viewer_type', SingerStatus::class);
     }
 
     public function editors(): HasMany
@@ -151,9 +152,10 @@ class Folder extends Model
         return $this->morphedByMany(User::class, 'editor', 'folder_editors', 'folder_id');
     }
 
-    public function editor_singer_statuses(): MorphToMany
+    public function editor_singer_statuses(): HasMany
     {
-        return $this->morphedByMany(SingerStatus::class, 'editor', 'folder_editors', 'folder_id');
+        return $this->hasMany(FolderEditor::class, 'folder_id')
+            ->where('editor_type', SingerStatus::class);
     }
 
     public function documents(): HasMany
@@ -309,13 +311,20 @@ class Folder extends Model
 
     private function getStatusUsers(string $recipientType): Collection
     {
-        $status_ids = $this->$recipientType()
+        $idCol = str_contains($recipientType, 'editor') ? 'editor_id' : 'viewer_id';
+        $status_slugs = $this->$recipientType()
             ->get()
-            ->pluck('id');
+            ->pluck($idCol);
 
         return User::query()
             ->whereHas('memberships', fn ($singer_query) =>
-            $singer_query->whereHas('statuses', fn ($query) => $query->whereIn('singer_statuses.id', $status_ids))
+                $singer_query->whereHas('statuses', fn ($query) => $query->whereIn('membership_singer_status.status', $status_slugs)
+                    ->where('id', function($sub) {
+                        $sub->selectRaw('max(id)')
+                            ->from('membership_singer_status')
+                            ->whereColumn('membership_id', 'memberships.id');
+                    })
+                )
             )
             ->get();
     }

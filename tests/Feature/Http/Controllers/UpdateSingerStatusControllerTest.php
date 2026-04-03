@@ -3,7 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Membership;
-use App\Models\SingerStatus;
+use App\Enums\SingerStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -21,11 +21,11 @@ class UpdateSingerStatusControllerTest extends TestCase
 
         $singer = Membership::factory()->create();
 
-        $newStatusId = SingerStatus::where('id', '!=', $singer->status->id)->inRandomOrder()->value('id');
+        $newStatus = SingerStatus::PROSPECTS->value;
         $response = $this->get(
-            the_tenant_route('singers.statuses.update', [$singer]).'?move_status='.$newStatusId,
+            the_tenant_route('singers.statuses.update', [$singer]).'?move_status='.$newStatus,
             [
-                'move_status' => $newStatusId,
+                'move_status' => $newStatus,
             ],
         );
 
@@ -33,9 +33,9 @@ class UpdateSingerStatusControllerTest extends TestCase
         $response->assertRedirect();
         $this->assertDatabaseHas('membership_singer_status', [
             'membership_id' => $singer->id,
-            'singer_status_id' => $newStatusId,
+            'status' => $newStatus,
         ]);
 
-        $this->assertEquals($newStatusId, $singer->fresh()->status->id);
+        $this->assertEquals($newStatus, $singer->fresh()->status->value);
     }
 }

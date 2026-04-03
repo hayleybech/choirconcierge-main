@@ -125,7 +125,7 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bu
 								</ul>
 							</TableCell>
 							<TableCell>
-								<SingerStatusTag status={new SingerStatus(singer.status?.slug)} withLabel />
+								<SingerStatusTag status={new SingerStatus(singer.status)} withLabel />
 							</TableCell>
 							<TableCell>
 								<Icon icon="envelope" mr className="text-gray-400" />

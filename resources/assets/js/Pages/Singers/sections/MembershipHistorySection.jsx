@@ -7,8 +7,8 @@ import React from 'react';
 export const MembershipHistorySection = ({ singer }) => (
 			<CollapsePanel>
 				<ul className="">
-					{singer.statuses.toReversed().map((status, idx) => (
-						<li key={status.pivot.id}>
+					{singer.statuses.toReversed().map((historyRecord, idx) => (
+						<li key={historyRecord.id}>
 							<div className="relative pb-6">
 								{idx !== singer.statuses.length - 1 ? (
 									<div
@@ -19,13 +19,13 @@ export const MembershipHistorySection = ({ singer }) => (
 								<div className="relative flex h-6 items-center justify-between">
 									<div className="flex items-center">
 										<div className="rounded-full border bg-gray-100 border-gray-100 size-8 flex items-center">
-											<SingerStatusTag status={new SingerStatus(status.slug)} />{' '}
+											<SingerStatusTag status={historyRecord.status} />{' '}
 										</div>
 										<span className="text-sm text-gray-700">
-											{new SingerStatus(status.slug).title}
+											{new SingerStatus(historyRecord.status).title}
 										</span>
 									</div>
-									<DateTag date={status.pivot.created_at} className="text-xs text-gray-400" />{' '}
+									<DateTag date={historyRecord.created_at} className="text-xs text-gray-400" />{' '}
 								</div>
 							</div>
 						</li>

@@ -317,35 +317,6 @@ class CriticalUserSeeder extends Seeder
             ],
         ]);
 
-	    /*
-		 * STEP 2 - Insert Membership Statuses (Singer Categories)
-		 */
-        DB::table('singer_statuses')->insert([
-            [
-                'tenant_id' => tenant('id'),
-                'name' => 'Prospects',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'tenant_id' => tenant('id'),
-                'name' => 'Archived Prospects',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'tenant_id' => tenant('id'),
-                'name' => 'Members',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'tenant_id' => tenant('id'),
-                'name' => 'Archived Members',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-        ]);
 
         /*
          * STEP 3 - Insert Default Voice Parts

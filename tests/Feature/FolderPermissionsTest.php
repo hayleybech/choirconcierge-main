@@ -6,7 +6,7 @@ use App\Models\Membership;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\VoicePart;
-use App\Models\SingerStatus;
+use App\Enums\SingerStatus;
 use function Pest\Laravel\actingAs;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -19,12 +19,12 @@ beforeEach(function () {
     Role::updateOrCreate(['name' => 'User'], ['abilities' => []]);
 });
 
-function createSinger(array $roles = ['Singer'], ?Ensemble $ensemble = null, ?SingerStatus $status = null): User {
-    if (!$status) {
-        $status = SingerStatus::updateOrCreate(['name' => 'Members']);
+function createSinger(array $roles = ['Singer'], ?Ensemble $ensemble = null, ?string $statusValue = null): User {
+    if (!$statusValue) {
+        $statusValue = SingerStatus::MEMBERS->value;
     }
     $membership = Membership::factory()->create();
-    $membership->statuses()->attach($status);
+    $membership->statuses()->create(['status' => $statusValue]);
     $membership->roles()->attach(Role::whereIn('name', $roles)->pluck('id'));
     
     if ($ensemble) {
@@ -125,7 +125,7 @@ it('syncs all permission types when creating folder', function () {
     $viewerUser = User::factory()->create();
     $editorRole = Role::where('name', 'Singer')->first();
     $voicePart = VoicePart::factory()->create();
-    $status = SingerStatus::factory()->create();
+    $statusValue = SingerStatus::MEMBERS->value;
     
     actingAs($user)
         ->post(the_tenant_route('folders.store'), [
@@ -133,7 +133,7 @@ it('syncs all permission types when creating folder', function () {
             'viewer_users' => [$viewerUser->id],
             'editor_roles' => [$editorRole->id],
             'viewer_voice_parts' => [$voicePart->id],
-            'editor_singer_statuses' => [$status->id],
+            'editor_singer_statuses' => [$statusValue],
         ])
         ->assertRedirect(the_tenant_route('folders.index'));
         
@@ -145,5 +145,5 @@ it('syncs all permission types when creating folder', function () {
     expect($folder->viewer_voice_parts)->toHaveCount(1);
     expect($folder->viewer_voice_parts->first()->id)->toBe($voicePart->id);
     expect($folder->editor_singer_statuses)->toHaveCount(1);
-    expect($folder->editor_singer_statuses->first()->id)->toBe($status->id);
+    expect($folder->editor_singer_statuses->first()->editor_id)->toBe($statusValue);
 });

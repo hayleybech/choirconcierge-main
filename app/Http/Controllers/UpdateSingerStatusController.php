@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SingerStatus;
 use App\Models\Membership;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UpdateSingerStatusController extends Controller
 {
@@ -12,12 +14,11 @@ class UpdateSingerStatusController extends Controller
     {
         $this->authorize('create', $singer);
 
-        $request->validate(['move_status' => 'required|numeric|gt:0']);
+        $request->validate(['move_status' => ['required', Rule::enum(SingerStatus::class)]]);
 
-        $statusId = $request->input('move_status', 0);
+        $status = $request->input('move_status');
 
-        // Attach to Prospects status
-        $singer->statuses()->attach($statusId);
+        $singer->statuses()->create(['status' => $status]);
 
         return redirect()
             ->back()

@@ -3,7 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Role;
-use App\Models\SingerStatus;
+use App\Enums\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use DateTime;
@@ -64,7 +64,7 @@ class ImportSingerControllerTest extends TestCase
 
         $this->assertDatabaseHas('membership_singer_status', [
             'membership_id' => User::firstWhere('email', 'hayes.ozella@example.com')->membership->id,
-            'singer_status_id' => SingerStatus::firstWhere('name', 'Members')->id,
+            'status' => SingerStatus::MEMBERS->value,
         ]);
 
         // assert roles assigned
@@ -123,7 +123,7 @@ class ImportSingerControllerTest extends TestCase
 
         $this->assertDatabaseHas('membership_singer_status', [
             'membership_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->membership->id,
-            'singer_status_id' => SingerStatus::firstWhere('name', 'Members')->id,
+            'status' => SingerStatus::MEMBERS->value,
         ]);
 
         // assert roles assigned
@@ -187,7 +187,7 @@ class ImportSingerControllerTest extends TestCase
 
         $this->assertDatabaseHas('membership_singer_status', [
             'membership_id' => User::firstWhere('email', 'nick.s@internode.on.net')->membership->id,
-            'singer_status_id' => SingerStatus::firstWhere('name', 'Members')->id,
+            'status' => SingerStatus::MEMBERS->value,
         ]);
     }
 

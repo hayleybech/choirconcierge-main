@@ -2,8 +2,8 @@
 
 namespace App\Imports;
 
+use App\Enums\SingerStatus;
 use App\Models\Role;
-use App\Models\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use DateTime;
@@ -26,8 +26,8 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow, WithVali
 
     public function __construct()
     {
-        $this->activeStatus = SingerStatus::firstWhere('name', 'Members');
-        $this->archivedStatus = SingerStatus::firstWhere('name', 'Archived Members');
+        $this->activeStatus = SingerStatus::MEMBERS;
+        $this->archivedStatus = SingerStatus::ARCHIVED_MEMBERS;
 
         $this->roles = Role::all();
     }
@@ -107,7 +107,7 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow, WithVali
         } else {
             $status = $this->activeStatus;
         }
-        $member->statuses()->attach($status);
+        $member->statuses()->create(['status' => $status->value]);
 
         $member->save();
     }
