@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a236af9f8aa80268ef3105afa3f42437",
+    "content-hash": "76aae41d182a647b7ff813b4e5b4c65b",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -3182,83 +3182,6 @@
                 "source": "https://github.com/laravel/slack-notification-channel/tree/v3.7.0"
             },
             "time": "2025-11-20T17:26:07+00:00"
-        },
-        {
-            "name": "laravel/spark-paddle",
-            "version": "v4.1.1",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:laravel/spark-paddle.git",
-                "reference": "5d856f7dd6ccf606ec9d10ca017d016e2847df55"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://spark.laravel.com/dist/laravel/spark-paddle/laravel-spark-paddle-5d856f7dd6ccf606ec9d10ca017d016e2847df55-zip-69608f.zip",
-                "reference": "5d856f7dd6ccf606ec9d10ca017d016e2847df55",
-                "shasum": "1d902af8f295e475290fb724cb21895554a865d4"
-            },
-            "require": {
-                "ext-bcmath": "*",
-                "ext-json": "*",
-                "illuminate/contracts": "^9.0|^10.0|^11.0",
-                "inertiajs/inertia-laravel": "^0.5.1|^0.6.4|^1.0",
-                "laravel/cashier-paddle": "^1.10",
-                "php": "^8.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^7.0|^8.0|^9.0",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^9.5|^10.4"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.x-dev"
-                },
-                "laravel": {
-                    "providers": [
-                        "Spark\\SparkServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Spark\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Spark\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "csfix": [
-                    "php-cs-fixer fix src database routes tests --config=.php_cs"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "Laravel Spark provides scaffolding for Laravel SaaS applications.",
-            "keywords": [
-                "billing",
-                "laravel",
-                "paddle",
-                "saas",
-                "scaffolding"
-            ],
-            "support": {
-                "source": "https://github.com/laravel/spark-paddle/tree/v4.1.1",
-                "issues": "https://github.com/laravel/spark-paddle/issues"
-            },
-            "time": "2024-03-07T16:28:52+00:00"
         },
         {
             "name": "laravel/telescope",
