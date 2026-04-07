@@ -22,7 +22,7 @@ class BillingController extends Controller
             'payLink' => tenant()->subscribed('default')
                 ? null
                 : tenant()->newSubscription('default', $plan['yearly_id'])
-                    ->returnTo(route('organisation.billing'))
+                    ->returnTo(route('organisation.billing', ['tenant' => tenant()]))
                     ->create(),
         ]);
 
@@ -51,7 +51,7 @@ class BillingController extends Controller
 
         if (config('cashier.vendor_id') && config('cashier.vendor_id') !== 'your-paddle-vendor-id') {
             $payLink = $tenant->newSubscription('default', $planId)
-                ->returnTo(route('organisation.billing'))
+                ->returnTo(route('organisation.billing', ['tenant' => $tenant]))
                 ->create();
         }
 
