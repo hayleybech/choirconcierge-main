@@ -261,7 +261,7 @@ Route::middleware([
 
         // Billing portal
         Route::get('/billing', [BillingController::class, 'index'])->name('organisation.billing');
-        Route::post('/billing/subscribe', [BillingController::class, 'subscribe'])->name('organisation.billing.subscribe');
+        Route::get('/billing/swap', [BillingController::class, 'swap'])->name('organisation.billing.swap');
 
         // Sub-groups aka Ensembles aka Choirs
 		Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);

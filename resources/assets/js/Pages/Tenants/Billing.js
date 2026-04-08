@@ -1,23 +1,23 @@
-import React, { useEffect } from 'react';
-import { usePage } from '@inertiajs/react';
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import useRoute from "../../hooks/useRoute";
-import Panel, { PanelTitle } from "../../components/Panel";
-import Icon from "../../components/Icon";
-import Button from "../../components/inputs/Button";
-import BillingTag from "../Central/Tenants/BillingTag";
-import classNames from "../../classNames";
-import { DateTime } from "luxon";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import PageHeader from '../../components/PageHeader/PageHeader';
+import AppHead from '../../components/AppHead';
+import useRoute from '../../hooks/useRoute';
+import Panel, { PanelTitle } from '../../components/Panel';
+import Icon from '../../components/Icon';
+import BillingTag from '../Central/Tenants/BillingTag';
+import classNames from '../../classNames';
+import { DateTime } from 'luxon';
+import resolveConfig from 'tailwindcss/resolveConfig';
+import tailwindConfig from '../../../../../tailwind.config';
 
-const formatDate = (date, format = 'DATE_MED') => (
-    DateTime.fromJSDate(new Date(date)).toLocaleString(DateTime[format])
-);
+const formatDate = (date, format = 'DATE_MED') => DateTime.fromJSDate(new Date(date)).toLocaleString(DateTime[format]);
 
 const Billing = ({ plans, tenant, termsUrl }) => {
 	const { route } = useRoute();
 	const { plan, billing_status: billing } = tenant;
+
+	const tw = resolveConfig(tailwindConfig);
 
 	return (
 		<>
@@ -114,10 +114,8 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 									<div
 										key={p.id}
 										className={classNames(
-											'flex flex-col border rounded-xl bg-white shadow-sm overflow-hidden',
-											isCurrent
-												? 'border-purple-500 ring-2 ring-purple-500 ring-opacity-50'
-												: 'border-gray-200'
+											'flex flex-col border-2 rounded-xl bg-white shadow-sm overflow-hidden',
+											isCurrent ? 'border-purple-500' : 'border-gray-200'
 										)}
 									>
 										{isCurrent && (
@@ -150,14 +148,41 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 											</ul>
 										</div>
 										<div className="p-6 bg-gray-50 border-t border-gray-100">
-											<a
-												href="#!"
-												variant={isCurrent ? 'secondary' : 'primary'}
-												className="paddle_button !w-full !justify-center !inline-flex !items-center !gap-x-1.5 !border !shadow-sm !font-medium !focus:outline-none !focus:ring-2 !focus:ring-offset-2 !focus:ring-purple-500 !bg-purple-600 !border-transparent !text-white !hover:bg-purple-700 !hover:from-purple-600 !hover:to-purple-500 !py-2 !px-4 !text-md !rounded-md !box-border !bg-gradient-to-b !from-purple-500 !to-purple-600"
-												data-override={p.payLink}
-											>
-												{isCurrent ? 'Current Plan' : 'Subscribe'}
-											</a>
+											{isCurrent ? (
+												<div className="text-sm uppercase text-gray-700 font-bold px-4 text-center">
+													Current Plan
+												</div>
+											) : (
+												<>
+													{billing.onTrial ? (
+														<div className="text-sm text-gray-700 font-bold px-4 text-center">
+															Can't swap during trial
+														</div>
+													) : (
+														<a
+															href={
+																plan
+																	? route('organisation.billing.swap', { plan: p.id })
+																	: '#!'
+															}
+															className={classNames(
+																'!w-full !justify-center !inline-flex !items-center !gap-x-1.5 !border !focus:outline-none !focus:ring-2 !focus:ring-offset-2 !border-transparent !py-2 !px-4 !text-md !rounded-md !box-border',
+																'!focus:ring-purple-500 !bg-purple-600 !text-white hover:bg-purple-700 hover:from-purple-700 hover:to-purple-700 hover:bg-gradient-to-b !bg-gradient-to-b !from-purple-500 !to-purple-500',
+																!plan && 'paddle_button'
+															)}
+															style={{
+																textShadow: 'none',
+																fontFamily: 'Lato, Arial, Helvetica, sans-serif',
+																fontSize: '14px',
+																fontWeight: 'normal',
+															}}
+															data-override={p.payLink}
+														>
+															{!!plan ? 'Swap Plan' : 'Subscribe'}
+														</a>
+													)}
+												</>
+											)}
 										</div>
 									</div>
 								);
@@ -195,6 +220,6 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 	);
 };
 
-Billing.layout = page => <TenantLayout children={page} />
+Billing.layout = page => <TenantLayout children={page} />;
 
 export default Billing;

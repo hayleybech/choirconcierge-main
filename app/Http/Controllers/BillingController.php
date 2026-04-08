@@ -33,28 +33,27 @@ class BillingController extends Controller
         ]);
     }
 
-    public function subscribe(Request $request): RedirectResponse
+    public function swap(Request $request): RedirectResponse
     {
         $this->authorize('update', tenant());
 
         $planId = (int) $request->input('plan');
         $tenant = tenant();
 
-        if ($tenant->subscribed('default')) {
-            try {
-                $tenant->subscription('default')->swap($planId);
-                return redirect()->back()->with('status', 'Subscription swapped successfully!');
-            } catch (\Exception $e) {
-                return redirect()->back()->withErrors(['plan' => $e->getMessage()]);
-            }
+        if (!$tenant->subscribed('default')) {
+            return redirect()->back()->withErrors(['plan' => 'You must be subscribed to a plan to swap plans.']);
         }
 
-        if (config('cashier.vendor_id') && config('cashier.vendor_id') !== 'your-paddle-vendor-id') {
-            $payLink = $tenant->newSubscription('default', $planId)
-                ->returnTo(route('organisation.billing', ['tenant' => $tenant]))
-                ->create();
+        if($tenant->onTrial()) {
+            return redirect()->back()->withErrors(['plan' => 'You must cannot switch plans during your free trial period.']);
         }
 
-        return redirect()->back();
+        try {
+            $tenant->subscription('default')->swap($planId);
+            return redirect()->back()->with('status', 'Subscription swapped successfully!');
+        } catch (\Exception $e) {
+            dd($e);
+            return redirect()->back()->withErrors(['plan' => 'Failed to swap plans. Please try again later.']);
+        }
     }
 }

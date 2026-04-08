@@ -123,7 +123,7 @@ class Tenant extends BaseTenant
     public function plan(): Attribute
     {
         return Attribute::get(function (): ?Plan {
-            $planId = $this->subscription()?->paddle_plan;
+            $planId = (string) $this->subscription()?->paddle_plan;
 
             if (! $planId) {
                 return null;
@@ -148,12 +148,12 @@ class Tenant extends BaseTenant
 
     public function trialEndsAt(): ?Carbon
     {
-        return $this->customer?->trial_ends_at;
+        return $this->subscription()->trial_ends_at ?? $this->customer?->trial_ends_at;
     }
 
     public function hasExpiredTrial(): bool
     {
-        return ! $this->onTrial() && $this->customer?->trial_ends_at?->isPast();
+        return ! $this->onTrial() && $this->trialEndsAt()?->isPast() ?? false;
     }
 
     public function subscription(?string $name = 'default'): ?Subscription
@@ -178,7 +178,8 @@ class Tenant extends BaseTenant
             'onPausedGracePeriod' => $this->subscription()?->onPausedGracePeriod() ?? false,
             'paused' => $this->subscription()?->paused() ?? false,
             'pastDue' => $this->subscription()?->pastDue() ?? false,
-			'hasGratis' => $this->has_gratis,
+			'hasGratis' => false,
+//			'hasGratis' => $this->has_gratis,
 
             'activeUserQuota' => $activeUserQuotaStatus,
         ]);
