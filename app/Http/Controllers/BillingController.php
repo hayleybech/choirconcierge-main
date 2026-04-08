@@ -56,4 +56,39 @@ class BillingController extends Controller
             return redirect()->back()->withErrors(['plan' => 'Failed to swap plans. Please try again later.']);
         }
     }
+    public function cancel(Request $request): RedirectResponse
+    {
+        $this->authorize('update', tenant());
+
+        try {
+            tenant()->subscription('default')->cancel();
+            return redirect()->back()->with('status', 'Subscription cancelled successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['subscription' => 'Failed to cancel subscription. Please try again later.']);
+        }
+    }
+
+    public function pause(Request $request): RedirectResponse
+    {
+        $this->authorize('update', tenant());
+
+        try {
+            tenant()->subscription('default')->pause();
+            return redirect()->back()->with('status', 'Subscription paused successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['subscription' => 'Failed to pause subscription. Please try again later.']);
+        }
+    }
+
+    public function unpause(Request $request): RedirectResponse
+    {
+        $this->authorize('update', tenant());
+
+        try {
+            tenant()->subscription('default')->unpause();
+            return redirect()->back()->with('status', 'Subscription unpaused successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['subscription' => 'Failed to unpause subscription. Please try again later.']);
+        }
+    }
 }

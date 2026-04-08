@@ -10,6 +10,7 @@ import classNames from '../../classNames';
 import { DateTime } from 'luxon';
 import resolveConfig from 'tailwindcss/resolveConfig';
 import tailwindConfig from '../../../../../tailwind.config';
+import ButtonLink from '../../components/inputs/ButtonLink';
 
 const formatDate = (date, format = 'DATE_MED') => DateTime.fromJSDate(new Date(date)).toLocaleString(DateTime[format]);
 
@@ -39,7 +40,50 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 						header={
 							<div className="flex justify-between items-center">
 								<PanelTitle>Current Subscription</PanelTitle>
-								<BillingTag billing={billing} />
+								<div className="flex items-center gap-4">
+									<div className="flex gap-2 leading-[1]">
+										{!billing.onTrial && !billing.paused && !billing.onPausedGracePeriod && !billing.onGracePeriod && (
+											<ButtonLink
+												href={route('organisation.billing.pause')}
+												variant="secondary"
+												size="xs"
+											>
+												<Icon icon="pause" size="xs" />
+												Pause
+											</ButtonLink>
+										)}
+										{(billing.paused || billing.onPausedGracePeriod) && (
+											<>
+												<ButtonLink
+													href={route('organisation.billing.unpause')}
+													variant="primary"
+													size="xs"
+												>
+													<Icon icon="play" size="xs" />
+													Unpause
+												</ButtonLink>
+												<ButtonLink
+													href={route('organisation.billing.cancel')}
+													variant="danger-outline"
+													size="xs"
+													onClick={e => {
+														if (
+															!confirm(
+																'Are you sure you want to cancel your subscription?'
+															)
+														) {
+															e.preventDefault();
+														}
+													}}
+												>
+													<Icon icon="times" size="xs" />
+													Cancel
+												</ButtonLink>
+											</>
+										)}
+									</div>
+									<BillingTag billing={billing} />
+								</div>
 							</div>
 						}
 					>

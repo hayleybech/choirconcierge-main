@@ -170,16 +170,15 @@ class Tenant extends BaseTenant
             'valid' => $this->onTrial()
                 || $this->has_gratis
                 || ($this->subscription()?->valid() && ! $activeUserQuotaStatus['quotaExceeded']),
-            'onTrial' => $this->onTrial(),
-            'trialEndsAt' => $this->onTrial() ? $this->trialEndsAt() : null,
+            'onTrial' => !$this->has_gratis && $this->onTrial(),
+            'trialEndsAt' => !$this->has_gratis && $this->onTrial() ? $this->trialEndsAt() : null,
             'hasExpiredTrial' => $this->hasExpiredTrial(),
             'onGracePeriod' => $this->subscription()?->onGracePeriod() ?? false,
             'ended' => $this->subscription()?->ended() ?? false,
             'onPausedGracePeriod' => $this->subscription()?->onPausedGracePeriod() ?? false,
             'paused' => $this->subscription()?->paused() ?? false,
             'pastDue' => $this->subscription()?->pastDue() ?? false,
-			'hasGratis' => false,
-//			'hasGratis' => $this->has_gratis,
+			'hasGratis' => $this->has_gratis,
 
             'activeUserQuota' => $activeUserQuotaStatus,
         ]);
