@@ -21,7 +21,7 @@ import Icon from '../../components/Icon';
 const AccountForm = ({ postUrl, cancelUrl }) => {
 	const { user } = usePage().props;
 
-	const { data, setData, patch, processing, errors } = useForm({
+	const { data, setData, post, processing, errors, transform } = useForm({
 		first_name: user.first_name,
 		last_name: user.last_name,
 		avatar: null,
@@ -52,7 +52,15 @@ const AccountForm = ({ postUrl, cancelUrl }) => {
 
 	function submit(e) {
 		e.preventDefault();
-		patch(postUrl);
+
+        transform(data => ({
+            ...data,
+            _method: 'PUT',
+        }));
+
+		post(postUrl, {
+            forceFormData: true,
+        });
 	}
 
 	return (

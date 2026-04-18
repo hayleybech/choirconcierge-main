@@ -3,9 +3,11 @@ use App\Models\Membership;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia;
 use function Pest\Laravel\actingAs;
@@ -51,6 +53,33 @@ test('update@ saves the user password', function ($data) {
     $user->refresh();
     expect(Hash::check($data['password'], $user->password))->toBeTrue();
 })->with('profiles');
+
+test('update@ can upload an avatar using POST with method spoofing', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->has(Membership::factory())->create([
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'john@example.com',
+    ]);
+    actingAs($user);
+
+    $file = UploadedFile::fake()->image('avatar.jpg');
+
+    $response = $this->post(the_tenant_route('account.update'), [
+        '_method' => 'PUT',
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'john@example.com',
+        'avatar' => $file,
+    ]);
+
+    $response->assertSessionHasNoErrors();
+    $response->assertRedirect(the_tenant_route('singers.show', $user->membership));
+
+    $user->refresh();
+    expect($user->getMedia('avatar'))->not->toBeEmpty();
+});
 
 dataset('profiles', [
     function () {
