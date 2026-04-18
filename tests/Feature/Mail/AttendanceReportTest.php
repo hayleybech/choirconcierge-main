@@ -40,6 +40,7 @@ class AttendanceReportTest extends TestCase
             'event_id' => $event->id,
             'membership_id' => $singer1->id,
             'response' => 'absent',
+            'absent_reason' => 'Sick',
         ]);
 
         $singer2 = Membership::factory()->create();
@@ -53,6 +54,7 @@ class AttendanceReportTest extends TestCase
             'event_id' => $event->id,
             'membership_id' => $singer2->id,
             'response' => 'absent_apology',
+            'absent_reason' => 'Work',
         ]);
 
         $singer3 = Membership::factory()->create();
@@ -77,6 +79,13 @@ class AttendanceReportTest extends TestCase
         $this->assertStringContainsString('Alto', $html);
         $this->assertStringContainsString('Anna Alto', $html);
         $this->assertStringContainsString('Abby Alto 2', $html);
+
+        // Assertions for new requirements
+        $this->assertStringContainsString('Absent', $html);
+        $this->assertStringContainsString('Sick', $html);
+        $this->assertStringContainsString('Absent (With Apology)', $html);
+        $this->assertStringContainsString('Work', $html);
+        $this->assertStringContainsString('Late (Deemed Absent)', $html);
 
         // Verify order: Alto before Soprano (alphabetical)
         $sopranoPos = strpos($html, 'Soprano');

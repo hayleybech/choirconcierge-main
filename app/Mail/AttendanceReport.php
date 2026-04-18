@@ -46,7 +46,9 @@ class AttendanceReport extends Mailable
                 $query->where('event_id', $this->event->id)
                     ->whereIn('response', ['absent', 'absent_apology', 'late_deemed_absent']);
             })
-            ->with(['user', 'enrolments.voice_part', 'enrolments.ensemble'])
+            ->with(['user', 'enrolments.voice_part', 'enrolments.ensemble', 'attendances' => function ($query) {
+                $query->where('event_id', $this->event->id);
+            }])
             ->get();
 
         $ensembleIds = $this->event->ensembles->pluck('id');

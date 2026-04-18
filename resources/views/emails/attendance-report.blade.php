@@ -34,9 +34,17 @@ The following attendance has been recorded for **{{ $event->title }}**:
 @foreach($voice_parts as $title => $data)
 <h4 style="margin-bottom: 8px;">{{ $title }}</h4>
 @foreach($data['singers'] as $membership)
+@php
+    $attendance = $membership->attendances->first();
+@endphp
 <div style="display: flex; align-items: center; margin-bottom: 4px;">
     <img src="{{ $membership->user->getAvatarUrl('thumb') }}" width="24" height="24" style="border-radius: 5px; margin-right: 8px;" alt="{{ $membership->user->name }}">
-    <span>{{ $membership->user->name }}</span>
+    <span>
+        <strong>{{ $membership->user->name }}</strong>
+        @if($attendance)
+            <br><small style="color: #64748b;">{{ $attendance->label }}@if($attendance->absent_reason) &middot; {{ $attendance->absent_reason }}@endif</small>
+        @endif
+    </span>
 </div>
 @endforeach
 @endforeach
