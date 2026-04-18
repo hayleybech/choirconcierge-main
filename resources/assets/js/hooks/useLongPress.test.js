@@ -67,4 +67,64 @@ describe('useLongPress', () => {
 
 		expect(preventDefault).toHaveBeenCalled();
 	});
+
+	it('should NOT call onLongPress if dragged', () => {
+		const onLongPress = jest.fn();
+		const onClick = jest.fn();
+		const { getByTestId } = render(<TestComponent onLongPress={onLongPress} onClick={onClick} />);
+		const target = getByTestId('target');
+
+		const touchStartEvent = new Event('touchstart', { bubbles: true, cancelable: true });
+		// Mock coordinates
+		touchStartEvent.touches = [{ clientX: 10, clientY: 10 }];
+		target.dispatchEvent(touchStartEvent);
+
+		const touchMoveEvent = new Event('touchmove', { bubbles: true, cancelable: true });
+		touchMoveEvent.touches = [{ clientX: 50, clientY: 50 }]; // Moved 40px
+		target.dispatchEvent(touchMoveEvent);
+
+		act(() => {
+			jest.advanceTimersByTime(600);
+		});
+
+		expect(onLongPress).not.toHaveBeenCalled();
+	});
+
+	it('should NOT call onLongPress if mouse dragged', () => {
+		const onLongPress = jest.fn();
+		const onClick = jest.fn();
+		const { getByTestId } = render(<TestComponent onLongPress={onLongPress} onClick={onClick} />);
+		const target = getByTestId('target');
+
+		const mouseDownEvent = new MouseEvent('mousedown', { bubbles: true, cancelable: true, clientX: 10, clientY: 10 });
+		target.dispatchEvent(mouseDownEvent);
+
+		const mouseMoveEvent = new MouseEvent('mousemove', { bubbles: true, cancelable: true, clientX: 50, clientY: 50 });
+		target.dispatchEvent(mouseMoveEvent);
+
+		act(() => {
+			jest.advanceTimersByTime(600);
+		});
+
+		expect(onLongPress).not.toHaveBeenCalled();
+	});
+
+	it('should NOT call onLongPress if slightly moved but below threshold', () => {
+		const onLongPress = jest.fn();
+		const onClick = jest.fn();
+		const { getByTestId } = render(<TestComponent onLongPress={onLongPress} onClick={onClick} />);
+		const target = getByTestId('target');
+
+		const mouseDownEvent = new MouseEvent('mousedown', { bubbles: true, cancelable: true, clientX: 10, clientY: 10 });
+		target.dispatchEvent(mouseDownEvent);
+
+		const mouseMoveEvent = new MouseEvent('mousemove', { bubbles: true, cancelable: true, clientX: 15, clientY: 15 }); // Moved ~7px
+		target.dispatchEvent(mouseMoveEvent);
+
+		act(() => {
+			jest.advanceTimersByTime(600);
+		});
+
+		expect(onLongPress).toHaveBeenCalled();
+	});
 });
