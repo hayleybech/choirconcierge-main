@@ -38,7 +38,7 @@ The following attendance has been recorded for **{{ $event->title }}**:
     $attendance = $membership->attendances->first();
 @endphp
 <div style="display: flex; align-items: center; margin-bottom: 4px;">
-    <img src="{{ $membership->user->getAvatarUrl('thumb') }}" width="24" height="24" style="border-radius: 5px; margin-right: 8px;" alt="{{ $membership->user->name }}">
+    <img src="{{ url($membership->user->getAvatarUrl('thumb')) }}" width="24" height="24" style="border-radius: 5px; margin-right: 8px;" alt="{{ $membership->user->name }}">
     <span>
         <strong>{{ $membership->user->name }}</strong>
         @if($attendance)
