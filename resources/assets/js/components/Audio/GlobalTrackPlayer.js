@@ -21,7 +21,7 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
                     <Icon icon="times" />
                 </Button>
 
-                <div className="flex flex-col sm:flex-row items-center text-center sm:text-left mb-2 sm:mb-0 sm:mr-8 min-w-0">
+                <div className="flex flex-col sm:flex-row items-center text-center sm:text-left mb-2 sm:mb-0 sm:mr-8 min-w-0 grow">
                     <Link href={route('songs.show', {song: songId})} className="text-sm text-purple-800 sm:mr-4 w-full truncate">{songTitle}</Link>
                     <span className="text-gray-600 text-xs truncate w-full">{fileName}</span>
                 </div>

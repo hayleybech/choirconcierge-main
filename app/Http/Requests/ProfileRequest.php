@@ -24,7 +24,7 @@ class ProfileRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        if ($this->has('email')) {
+        if ($this->has('email') && $this->email !== null) {
             $this->merge([
                 'email' => str($this->email)->trim()->lower()->toString(),
             ]);

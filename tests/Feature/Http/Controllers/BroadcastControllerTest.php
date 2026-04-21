@@ -37,7 +37,7 @@ it('dispatches a job to send the email', function () {
         'list' => $group->id,
         'subject' => 'this is a test',
         'body' => 'test body',
-    ])->assertSessionHasNoErrors();
+    ])->assertRedirect(route('groups.mail-logs.index'));
 
     Queue::assertPushed(SendEmailForGroup::class, function (SendEmailForGroup $job) use ($user, $group) {
         return $job->group->is($group)
@@ -62,7 +62,7 @@ it('stores attachments in temporary storage', function () {
         'subject' => 'this is a test',
         'body' => 'test body',
         'attachments' => $files,
-    ])->assertSessionHasNoErrors();
+    ])->assertRedirect(route('groups.mail-logs.index'));
 
     Storage::disk('temp')->assertExists("broadcasts/{$files[0]->hashName()}");
     Storage::disk('temp')->assertExists("broadcasts/{$files[1]->hashName()}");
@@ -73,7 +73,7 @@ it('stores attachments in temporary storage', function () {
             && $job->message->fileMeta[0]['hashName'] === $files[0]->hashName()
             && $job->message->fileMeta[1]['hashName'] === $files[1]->hashName();
     });
-})->skip('broken after LC migration / L10 update');
+});
 
 function createGroup(User $user): UserGroup
 {

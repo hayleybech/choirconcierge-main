@@ -27,6 +27,8 @@
     $test->ensembles()->create(['name' => 'The Test Tones']);
     $test->ensembles()->create(['name' => 'Test Tones Youth Chorus']);
   ```
+  or
+- `herd php artisan app:create-test-tenant`
 - (Optional) Add more test tenants:
     ```
     $foo = Tenant::create('foo', 'Foo Fandango Pty Ltd', 'Australia/Brisbane');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Http\Requests\BroadcastRequest;
 use App\Jobs\SendEmailForGroup;
 use App\Mail\OrganisationBroadcast;
@@ -10,7 +11,6 @@ use App\Models\UserGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Storage;
@@ -59,7 +59,7 @@ class BroadcastController extends Controller
             ],
             [
                 'status' => 'group-found',
-                'context' => $group->title,
+                'context' => Str::limit($group->title, 64),
                 'user_group_id' => $group->id,
             ],
         ]);
