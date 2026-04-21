@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
-import navigation from "./navigation";
 import {usePage} from '@inertiajs/react';
 import GlobalTrackPlayer from "../components/Audio/GlobalTrackPlayer";
 import { PlayerContext } from '../contexts/player-context';
@@ -54,7 +53,7 @@ export default function TenantLayout({ children }) {
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
-    const { can, userChoirs, errors, flash, tenant } = usePage().props;
+    const { can, userChoirs, errors, flash, tenant, navigation } = usePage().props;
 
     const navFiltered = navigation
         .filter((item) => can[item.can])

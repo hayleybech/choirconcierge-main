@@ -5,7 +5,6 @@ import {usePage} from '@inertiajs/react';
 import LayoutTopBar from "../components/LayoutTopBar";
 import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
-import centralNavigation from "./centralNavigation";
 import useRoute from "../hooks/useRoute";
 import SwitchChoirMenu from "../components/SwitchChoirMenu";
 import OuterPageErrorFallback from "./OuterPageErrorFallback";
@@ -19,9 +18,9 @@ export default function CentralLayout({ children }) {
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
-    const { can, userChoirs, errors, flash } = usePage().props;
+    const { can, userChoirs, errors, flash, navigation } = usePage().props;
 
-    const navFiltered = centralNavigation
+    const navFiltered = navigation
         .filter((item) => can[item.can])
         .map((item) => {
             item.active = item.showAsActiveForRoutes.some((routeName) => route().current(routeName));
