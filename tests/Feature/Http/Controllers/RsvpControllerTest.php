@@ -526,7 +526,7 @@ class RsvpControllerTest extends TestCase
         $this->get(the_tenant_route('events.rsvps.index', ['event' => $event]))
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('allSingers', function ($singers) use ($memberStatus) {
-                    return collect($singers)->every(fn($s) => $s['status'] === $memberStatus);
+                    return collect($singers)->every(fn($s) => $s['status']['status'] === $memberStatus);
                 })
             );
     }

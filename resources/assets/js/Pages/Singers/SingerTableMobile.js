@@ -48,7 +48,7 @@ const SingerTableMobile = ({ singers, pagination, bulkEdit, hasNonDefaultFilters
 								<div>
 									<div className="flex items-center justify-between">
 										<p className="flex items-center min-w-0 mr-1.5">
-											<SingerStatusTag status={new SingerStatus(singer.status?.slug)} />
+											<SingerStatusTag status={new SingerStatus(singer.status.status)} />
 											<span className="text-sm font-medium text-purple-600 truncate">
 												{singer.user.name}
 											</span>

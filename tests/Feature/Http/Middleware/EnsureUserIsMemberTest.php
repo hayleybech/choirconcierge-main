@@ -13,9 +13,10 @@ uses(RefreshDatabase::class, WithFaker::class);
 test('archived users cannot view site', function(string $status) {
     $statusValue = SingerStatus::fromName($status)->value;
 
-    $user = User::factory()->has(Membership::factory())->create();
-    $user->membership->statuses()->create(['status' => $statusValue]);
-    $user->membership->save();
+    $user = User::factory()->create();
+    $membership = Membership::factory()->for($user)->create();
+    $membership->statuses()->create(['status' => $statusValue]);
+    $membership->save();
 
     actingAs($user);
 

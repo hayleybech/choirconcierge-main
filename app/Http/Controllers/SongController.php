@@ -38,7 +38,7 @@ class SongController extends Controller
             ->get();
         $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
 
-        $includeNonAuditionSongs = auth()->user()?->isSuperAdmin || auth()->user()?->membership->status->name === 'Members';
+        $includeNonAuditionSongs = auth()->user()?->isSuperAdmin || auth()->user()?->membership->status->status === \App\Enums\SingerStatus::MEMBERS;
         $showForProspectsDefault = $includeNonAuditionSongs ? [false, true] : [true];
 
         $totalEnsemblesCount = Ensemble::count();

@@ -151,7 +151,7 @@ class Membership extends Model
 
     public function status(): HasOne
     {
-        return $this->hasOne(MembershipStatus::class)->latestOfMany('id', 'statuses');
+        return $this->hasOne(MembershipStatus::class)->latestOfMany();
     }
 
     public function statuses(): HasMany

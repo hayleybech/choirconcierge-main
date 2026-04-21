@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Enums\SingerStatus;
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class MembershipStatus extends Pivot
+class MembershipStatus extends Model
 {
+    protected $guarded = [];
+
     protected $table = 'membership_status';
 
     protected $casts = [

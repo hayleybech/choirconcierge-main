@@ -36,6 +36,6 @@ class UpdateSingerStatusControllerTest extends TestCase
             'status' => $newStatus,
         ]);
 
-        $this->assertEquals($newStatus, $singer->fresh()->status->value);
+        $this->assertEquals($newStatus, $singer->fresh()->status->status->value);
     }
 }

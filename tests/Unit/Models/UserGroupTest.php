@@ -68,13 +68,17 @@ class UserGroupTest extends TestCase
             $group->recipient_singer_statuses()->create(['memberable_id' => $status, 'memberable_type' => SingerStatus::class]);
         }
 
+        User::query()->delete();
+
         foreach ($statusValues as $statusValue) {
             User::factory()->count(3)->create()->each(function($user) use ($statusValue) {
-                $user->membership->statuses()->create(['status' => $statusValue]);
+                $membership = Membership::factory()->for($user)->create();
+                $membership->statuses()->delete();
+                $membership->statuses()->create(['status' => $statusValue]);
             });
         }
 
-        $this->assertCount(6, $group->get_all_recipients());
+        $this->assertEquals(6, $group->get_all_recipients()->count(), 'Found recipients: ' . $group->get_all_recipients()->pluck('id')->implode(', '));
     }
 
     public function test_get_all_senders_returns_directly_assigned_users(): void
@@ -126,13 +130,17 @@ class UserGroupTest extends TestCase
             $group->sender_singer_statuses()->create(['sender_id' => $status, 'sender_type' => SingerStatus::class]);
         }
 
+        User::query()->delete();
+
         foreach ($statusValues as $statusValue) {
             User::factory()->count(3)->create()->each(function($user) use ($statusValue) {
-                $user->membership->statuses()->create(['status' => $statusValue]);
+                $membership = Membership::factory()->for($user)->create();
+                $membership->statuses()->delete();
+                $membership->statuses()->create(['status' => $statusValue]);
             });
         }
 
-        $this->assertCount(6, $group->get_all_senders());
+        $this->assertEquals(6, $group->get_all_senders()->count());
     }
 
     public function test_get_all_recipients_works_for_the_correct_tenant(): void
