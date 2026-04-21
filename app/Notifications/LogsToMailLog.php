@@ -69,7 +69,7 @@ trait LogsToMailLog
 
         $mailLog = MailLog::create([
             'uid' => $uid,
-            'from' => "{$fromName} <{$fromAddress}>",
+            'from' => Str::limit("{$fromName} <{$fromAddress}>", 254),
             'to' => 'Everyone',
             'subject' => Str::limit($mailMessage->subject, 125),
             'body' => $this->renderMailMessage($mailMessage),

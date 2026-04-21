@@ -5,6 +5,7 @@ namespace App\Mail;
 use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
+use Illuminate\Support\Str;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 
@@ -17,7 +18,7 @@ class CloneMessage
 
         MailLog::firstWhere('uid', $message->uid)->events()->create([
             'status' => 'clones-sent',
-            'context' => $group->title,
+            'context' => Str::limit($group->title, 64),
         ]);
     }
 
@@ -70,7 +71,7 @@ class CloneMessage
         } catch (\Throwable $exception) {
             MailLog::firstWhere('uid', $message->uid)->events()->create([
                 'status' => 'clone-failed',
-                'context' => $user->email,
+                'context' => Str::limit($user->email, 64),
             ]);
 
             throw $exception;
