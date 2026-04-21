@@ -6,9 +6,9 @@ use App\Enums\SingerStatus;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class MembershipSingerStatus extends Pivot
+class MembershipStatus extends Pivot
 {
-    protected $table = 'membership_singer_status';
+    protected $table = 'membership_status';
 
     protected $casts = [
         'status' => SingerStatus::class,

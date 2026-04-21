@@ -89,8 +89,8 @@ class RsvpController extends Controller
                 'enrolments.voice_part',
                 'enrolments.ensemble',
                 'status',
-                'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
                 'customFields',
+                'rsvps' => fn($query) => $query->where('event_id', '=', $event->id),
             ]);
 
         $pagination = QueryBuilder::for($query)
@@ -121,15 +121,11 @@ class RsvpController extends Controller
                         }
                     });
                 }),
-                AllowedFilter::callback('status', fn($query, $value) => $query->whereHas('statuses', fn($q) => $q
-                    ->whereIn('status', (array)$value)
-                    ->where('id', function($sub) {
-                        $sub->selectRaw('max(id)')
-                            ->from('membership_singer_status')
-                            ->whereColumn('membership_id', 'memberships.id');
-                    })
-                ))
-                    ->default([$defaultStatus]),
+                AllowedFilter::callback('status.id', function (Builder $query, $value) {
+                    $query->whereHas('status', fn($q) => $q
+                        ->whereIn('status', (array) $value)
+                    );
+                })->default([$defaultStatus]),
             ])
             ->allowedSorts([
                 ...$this->singerSorts(),

@@ -150,11 +150,11 @@ class AttendanceControllerTest extends TestCase
         $singer2 = Membership::factory()->create();
         $singer2->statuses()->create(['status' => $status2]);
 
-        $this->get(the_tenant_route('events.attendance.index', ['event' => $event, 'filter[status]' => $status1]))
+        $this->get(the_tenant_route('events.attendances.index', ['event' => $event, 'filter[status.id]' => $status2]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('allSingers', 1)
-                ->where('allSingers.0.id', $singer1->id)
+                ->where('allSingers.0.id', $singer2->id)
             );
     }
 
@@ -166,15 +166,32 @@ class AttendanceControllerTest extends TestCase
         $prospectStatus = SingerStatus::PROSPECTS->value;
 
         $event = Event::factory()->create();
+
+        // Create a member
         $member = Membership::factory()->create();
         $member->statuses()->create(['status' => $memberStatus]);
+
+        // Create a prospect
         $prospect = Membership::factory()->create();
         $prospect->statuses()->create(['status' => $prospectStatus]);
 
-        $this->get(the_tenant_route('events.attendance.index', ['event' => $event]))
+        $this->get(the_tenant_route('events.attendances.index', ['event' => $event]))
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('allSingers', function ($singers) use ($memberStatus) {
-                    return collect($singers)->every(fn($s) => $s['status'] === $memberStatus);
+                ->where('allSingers', function ($singers) use ($memberStatus, $member, $prospect) {
+                    $singerIds = collect($singers)->pluck('id');
+
+                    // Should contain the member
+                    if (!$singerIds->contains($member->id)) {
+                        return false;
+                    }
+
+                    // Should NOT contain the prospect
+                    if ($singerIds->contains($prospect->id)) {
+                        return false;
+                    }
+
+                    // All returned singers should have the member status
+                    return collect($singers)->every(fn($s) => $s['status']['status'] === $memberStatus);
                 })
             );
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Central;
 
+use App\Enums\SingerStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Membership;
@@ -165,13 +166,8 @@ class DashController extends Controller
             return null;
         }
 
-        return Membership::whereHas('statuses', function ($query) {
-            $query->where('status', \App\Enums\SingerStatus::MEMBERS->value)
-                ->where('membership_singer_status.id', function($sub) {
-                    $sub->selectRaw('max(id)')
-                        ->from('membership_singer_status')
-                        ->whereColumn('membership_id', 'memberships.id');
-                });
+        return Membership::whereHas('status', function ($query) {
+            $query->where('status', SingerStatus::MEMBERS->value);
         })->whereHas('tenant', function ($query) {
             $query->active();
         })->count();

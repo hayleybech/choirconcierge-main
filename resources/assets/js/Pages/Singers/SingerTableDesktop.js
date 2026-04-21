@@ -22,7 +22,6 @@ import Label from '../../components/inputs/Label';
 import DayInput from '../../components/inputs/Day';
 import Error from '../../components/inputs/Error';
 import Help from '../../components/inputs/Help';
-import ButtonGroup from '../../components/inputs/ButtonGroup';
 import DateTag from '../../components/DateTag';
 import TableHeadingSort from '../../components/TableHeadingSort';
 import useRoute from '../../hooks/useRoute';
@@ -125,7 +124,7 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bu
 								</ul>
 							</TableCell>
 							<TableCell>
-								<SingerStatusTag status={new SingerStatus(singer.status)} withLabel />
+								<SingerStatusTag status={new SingerStatus(singer.status.status)} withLabel />
 							</TableCell>
 							<TableCell>
 								<Icon icon="envelope" mr className="text-gray-400" />

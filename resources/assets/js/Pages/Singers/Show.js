@@ -61,7 +61,7 @@ const Show = ({
 								/>
 							</div>
 						)}
-						<SingerStatusTag status={new SingerStatus(singer.status?.slug)} withLabel />
+						<SingerStatusTag status={new SingerStatus(singer.status.status)} withLabel />
 						<DateTag date={singer.joined_at} label="Joined" />
 					</>
 				}

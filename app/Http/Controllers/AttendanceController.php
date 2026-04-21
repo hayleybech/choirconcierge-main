@@ -67,25 +67,15 @@ class AttendanceController extends Controller
         });
 
         $defaultStatus = SingerStatus::MEMBERS->value;
-        $filter = request()->query('filter', []);
 
         $query = Membership::forEvent($event)
             ->with([
                 'user',
                 'enrolments.voice_part',
                 'enrolments.ensemble',
-                'statuses',
+                'status',
                 'attendances' => fn($query) => $query->where('event_id', '=', $event->id),
-            ])
-            ->when($defaultStatus && !isset($filter['status']), function (Builder $query) use ($defaultStatus) {
-                $query->whereHas('statuses', fn($q) => $q->where('status', $defaultStatus)
-                    ->where('id', function($sub) {
-                        $sub->selectRaw('max(id)')
-                            ->from('membership_singer_status')
-                            ->whereColumn('membership_id', 'memberships.id');
-                    })
-                );
-            });
+            ]);
 
         $pagination = QueryBuilder::for($query)
             ->allowedFilters([
@@ -108,14 +98,11 @@ class AttendanceController extends Controller
                     $responses = (array) $value;
                     $query->whereHas('attendances', fn($query) => $query->where('event_id', $event->id)->whereIn('response', $responses));
                 }),
-                AllowedFilter::callback('status', fn($query, $value) => $query->whereHas('statuses', fn($q) => $q
-                    ->whereIn('status', (array) $value)
-                    ->where('id', function($sub) {
-                        $sub->selectRaw('max(id)')
-                            ->from('membership_singer_status')
-                            ->whereColumn('membership_id', 'memberships.id');
-                    })
-                )),
+                AllowedFilter::callback('status.id', function (Builder $query, $value) {
+                    $query->whereHas('status', fn($q) => $q
+                        ->whereIn('status', (array) $value)
+                    );
+                })->default([$defaultStatus]),
             ])
             ->allowedSorts([
                 ...$this->singerSorts(),

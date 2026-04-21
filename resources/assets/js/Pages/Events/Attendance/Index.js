@@ -46,7 +46,7 @@ const Index = ({
 	totalEnsemblesCount,
 	voiceParts,
 	ensembles,
-	singerCategories: singerStatuses,
+	singerStatuses,
 	counts,
 	individualCheckInUrl,
 }) => {
@@ -311,7 +311,7 @@ const Index = ({
 												/>
 											</div>
 											<div>
-												<SingerStatusTag status={new SingerStatus(singer.status.slug)} />
+												<SingerStatusTag status={new SingerStatus(singer.status.status)} />
 												<Link
 													href={route('singers.show', { singer })}
 													className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"

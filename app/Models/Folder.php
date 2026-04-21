@@ -318,13 +318,7 @@ class Folder extends Model
 
         return User::query()
             ->whereHas('memberships', fn ($singer_query) =>
-                $singer_query->whereHas('statuses', fn ($query) => $query->whereIn('membership_singer_status.status', $status_slugs)
-                    ->where('id', function($sub) {
-                        $sub->selectRaw('max(id)')
-                            ->from('membership_singer_status')
-                            ->whereColumn('membership_id', 'memberships.id');
-                    })
-                )
+                $singer_query->whereHas('status', fn ($query) => $query->whereIn('membership_status.status', $status_slugs))
             )
             ->get();
     }

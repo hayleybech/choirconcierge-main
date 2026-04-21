@@ -13,7 +13,7 @@ class SingerStatusSort implements Sort
         return $query
             ->addSubSelect(
                 'status_title',
-                DB::table('membership_singer_status')
+                DB::table('membership_status')
                     ->select('status')
                     ->whereColumn('membership_id', 'memberships.id')
                     ->orderByDesc('id')

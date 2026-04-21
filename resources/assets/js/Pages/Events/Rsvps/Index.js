@@ -231,7 +231,7 @@ const Index = ({
 												<div>
 													<div>
 														<SingerStatusTag
-															status={new SingerStatus(singer.status.slug)}
+															status={new SingerStatus(singer.status.status)}
 														/>
 														<Link
 															href={route('singers.show', { singer })}

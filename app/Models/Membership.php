@@ -71,11 +71,11 @@ class Membership extends Model
         'paid_until',
     ];
 
-    protected $with = [];
+    protected $with = ['status'];
 
     public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'joined_at' => 'datetime', 'paid_until' => 'datetime'];
 
-    protected $appends = ['status'];
+    protected $appends = [];
 
     public $notify_channels = ['mail'];
 
@@ -149,16 +149,14 @@ class Membership extends Model
         return $this->hasOne(Placement::class);
     }
 
-    protected function status(): Attribute
+    public function status(): HasOne
     {
-        return Attribute::make(
-            get: fn () => $this->statuses()->latest('id')->first()?->status,
-        );
+        return $this->hasOne(MembershipStatus::class)->latestOfMany('id', 'statuses');
     }
 
     public function statuses(): HasMany
     {
-        return $this->hasMany(MembershipSingerStatus::class);
+        return $this->hasMany(MembershipStatus::class);
     }
 
     public function enrolments(): HasMany
@@ -245,13 +243,8 @@ class Membership extends Model
     public function scopeEmptyDobs(Builder $query): Builder
     {
         return $query
-            ->whereHas('statuses', static function (Builder $query) {
-                return $query->whereIn('status', [SingerStatus::MEMBERS->value, SingerStatus::PROSPECTS->value])
-                    ->where('membership_singer_status.id', function($sub) {
-                        $sub->selectRaw('max(id)')
-                            ->from('membership_singer_status')
-                            ->whereColumn('membership_id', 'memberships.id');
-                    });
+            ->whereHas('status', static function (Builder $query) {
+                return $query->whereIn('status', [SingerStatus::MEMBERS->value, SingerStatus::PROSPECTS->value]);
             })
             ->whereHas('user', static function (Builder $query) {
                 return $query->whereNull('dob');
@@ -279,13 +272,8 @@ class Membership extends Model
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->whereHas('statuses', static function (Builder $query) {
-            $query->where('status', '=', SingerStatus::MEMBERS->value)
-                ->where('membership_singer_status.id', function($sub) {
-                    $sub->selectRaw('max(id)')
-                        ->from('membership_singer_status')
-                        ->whereColumn('membership_id', 'memberships.id');
-                });
+        return $query->whereHas('status', static function (Builder $query) {
+            $query->where('status', '=', SingerStatus::MEMBERS->value);
         });
     }
 

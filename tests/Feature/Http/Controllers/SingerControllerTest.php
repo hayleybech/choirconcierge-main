@@ -338,7 +338,7 @@ class SingerControllerTest extends TestCase
           ->assertSessionHasNoErrors();
 
         foreach ($singers as $singer) {
-            $this->assertDatabaseHas('membership_singer_status', [
+            $this->assertDatabaseHas('membership_status', [
                 'membership_id' => $singer->id,
                 'status' => $statusValue,
             ]);

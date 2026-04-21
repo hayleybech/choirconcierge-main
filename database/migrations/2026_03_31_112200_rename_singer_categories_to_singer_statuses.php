@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::rename('singer_categories', 'singer_statuses');
 
-        Schema::create('membership_singer_status', function (Blueprint $blueprint) {
+        Schema::create('membership_status', function (Blueprint $blueprint) {
             $blueprint->id();
             $blueprint->unsignedInteger('membership_id');
             $blueprint->unsignedInteger('singer_status_id');
@@ -27,7 +27,7 @@ return new class extends Migration
         // Migrate data
         $memberships = DB::table('memberships')->whereNotNull('singer_category_id')->get();
         foreach ($memberships as $membership) {
-            DB::table('membership_singer_status')->insert([
+            DB::table('membership_status')->insert([
                 'membership_id' => $membership->id,
                 'singer_status_id' => $membership->singer_category_id,
                 'created_at' => $membership->created_at,
@@ -50,7 +50,7 @@ return new class extends Migration
         });
 
         // Migrate back (lossy if many statuses exist, but take the latest)
-        $statuses = DB::table('membership_singer_status')
+        $statuses = DB::table('membership_status')
             ->orderBy('created_at', 'desc')
             ->get();
         
@@ -60,7 +60,7 @@ return new class extends Migration
                 ->update(['singer_category_id' => $status->singer_status_id]);
         }
 
-        Schema::dropIfExists('membership_singer_status');
+        Schema::dropIfExists('membership_status');
         Schema::rename('singer_statuses', 'singer_categories');
     }
 };

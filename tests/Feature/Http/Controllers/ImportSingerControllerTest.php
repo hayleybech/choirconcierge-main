@@ -62,7 +62,7 @@ class ImportSingerControllerTest extends TestCase
             'user_id' => User::firstWhere('email', 'hayes.ozella@example.com')->id,
         ]);
 
-        $this->assertDatabaseHas('membership_singer_status', [
+        $this->assertDatabaseHas('membership_status', [
             'membership_id' => User::firstWhere('email', 'hayes.ozella@example.com')->membership->id,
             'status' => SingerStatus::MEMBERS->value,
         ]);
@@ -121,7 +121,7 @@ class ImportSingerControllerTest extends TestCase
             'user_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->id,
         ]);
 
-        $this->assertDatabaseHas('membership_singer_status', [
+        $this->assertDatabaseHas('membership_status', [
             'membership_id' => User::firstWhere('email', 'jonoalbo7@gmail.com')->membership->id,
             'status' => SingerStatus::MEMBERS->value,
         ]);
@@ -185,7 +185,7 @@ class ImportSingerControllerTest extends TestCase
             'joined_at' => '2015-07-17 00:00:00',
         ]);
 
-        $this->assertDatabaseHas('membership_singer_status', [
+        $this->assertDatabaseHas('membership_status', [
             'membership_id' => User::firstWhere('email', 'nick.s@internode.on.net')->membership->id,
             'status' => SingerStatus::MEMBERS->value,
         ]);

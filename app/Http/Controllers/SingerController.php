@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Mailgun\Mailgun;
@@ -105,6 +106,7 @@ class SingerController extends Controller
         $singer->load([
             'user',
             'enrolments' => ['voice_part', 'ensemble'],
+            'status',
             'statuses',
             'roles',
             'placement',
@@ -141,7 +143,7 @@ class SingerController extends Controller
 
     private static function getAttendanceSummary(Membership $singer): array|null
     {
-        if (! auth()->user()?->can('viewAttendance', $singer)) {
+        if (!auth()->user()?->can('viewAttendance', $singer)) {
             return null;
         }
 
@@ -176,7 +178,7 @@ class SingerController extends Controller
 
     private static function getRsvpSummary(Membership $singer): array|null
     {
-        if (! auth()->user()?->can('viewAttendance', $singer)) {
+        if (!auth()->user()?->can('viewAttendance', $singer)) {
             return null;
         }
 
@@ -210,7 +212,7 @@ class SingerController extends Controller
 
     public function edit(Membership $singer): InertiaResponse
     {
-        $singer->load('user', 'statuses', 'roles');
+        $singer->load('user', 'status', 'roles');
 
         return Inertia::render('Singers/Edit', [
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
@@ -265,16 +267,15 @@ class SingerController extends Controller
         $request->validate([
             'singer_ids' => 'required|array',
             'singer_ids.*' => 'exists:memberships,id',
-            'status' => ['required', \Illuminate\Validation\Rule::enum(SingerStatus::class)],
+            'status' => ['required', Rule::enum(SingerStatus::class)],
         ]);
 
         $singerIds = $request->input('singer_ids');
         $status = $request->input('status');
 
-        $memberships = Membership::whereIn('id', $singerIds)->get();
-        foreach ($memberships as $membership) {
-            $membership->statuses()->create(['status' => $status]);
-        }
+        Membership::whereIn('id', $singerIds)
+            ->get()
+            ->each(fn($membership) => $membership->statuses()->create(['status' => $status]));
 
         return redirect()
             ->route('singers.index')
@@ -304,7 +305,7 @@ class SingerController extends Controller
             ->ensembleRestricted();
 
         return QueryBuilder::for($query)
-            ->with(['tasks', 'statuses', 'user', 'enrolments' => ['voice_part', 'ensemble'],])
+            ->with(['tasks', 'status', 'user', 'enrolments' => ['voice_part', 'ensemble'],])
             ->allowedFilters([
                 AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query
                     ->whereHas('user', fn(Builder $query) => $query
@@ -312,13 +313,8 @@ class SingerController extends Controller
                         ->orWhereRaw('email LIKE LOWER(?)', ["%$value%"])
                     )),
                 AllowedFilter::callback('status.id', fn(Builder $query, $value) => $query
-                    ->whereHas('statuses', fn(Builder $query) => $query
-                        ->whereIn('status', (array) $value)
-                        ->where('membership_singer_status.id', function($sub) {
-                            $sub->selectRaw('max(id)')
-                                ->from('membership_singer_status')
-                                ->whereColumn('membership_id', 'memberships.id');
-                        })
+                    ->whereHas('status', fn(Builder $query) => $query
+                        ->whereIn('status', (array)$value)
                     ))
                     ->default([$defaultStatus]),
                 AllowedFilter::callback('enrolments.voice_part_id', fn(Builder $query, $value) => $query

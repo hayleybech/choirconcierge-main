@@ -499,11 +499,11 @@ class RsvpControllerTest extends TestCase
         $singer2 = Membership::factory()->create();
         $singer2->statuses()->create(['status' => $status2]);
 
-        $this->get(the_tenant_route('events.rsvps.index', ['event' => $event, 'filter[status]' => $status1]))
+        $this->get(the_tenant_route('events.rsvps.index', ['event' => $event, 'filter[status.id]' => $status2]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('allSingers', 1)
-                ->where('allSingers.0.id', $singer1->id)
+                ->where('allSingers.0.id', $singer2->id)
             );
     }
 

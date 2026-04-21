@@ -12,9 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Update membership_singer_status
-        if (!Schema::hasColumn('membership_singer_status', 'status')) {
-            Schema::table('membership_singer_status', function (Blueprint $table) {
+        // 1. Update membership_status
+        if (!Schema::hasColumn('membership_status', 'status')) {
+            Schema::table('membership_status', function (Blueprint $table) {
                 $table->string('status')->nullable()->after('membership_id');
             });
         }
@@ -30,11 +30,11 @@ return new class extends Migration
                     'Archived Members' => 'archived-members',
                     default => str($status->name)->slug()->toString(),
                 };
-                DB::table('membership_singer_status')->where('singer_status_id', $status->id)->update(['status' => $slug]);
+                DB::table('membership_status')->where('singer_status_id', $status->id)->update(['status' => $slug]);
             }
         }
 
-        Schema::table('membership_singer_status', function (Blueprint $table) {
+        Schema::table('membership_status', function (Blueprint $table) {
             $table->dropForeign(['singer_status_id']);
             $table->dropColumn('singer_status_id');
         });
@@ -109,15 +109,15 @@ return new class extends Migration
             ]);
         }
 
-        Schema::table('membership_singer_status', function (Blueprint $table) {
+        Schema::table('membership_status', function (Blueprint $table) {
             $table->unsignedBigInteger('singer_status_id')->nullable()->after('membership_id');
         });
 
         foreach ($insertedIds as $slug => $id) {
-            DB::table('membership_singer_status')->where('status', $slug)->update(['singer_status_id' => $id]);
+            DB::table('membership_status')->where('status', $slug)->update(['singer_status_id' => $id]);
         }
 
-        Schema::table('membership_singer_status', function (Blueprint $table) {
+        Schema::table('membership_status', function (Blueprint $table) {
             $table->dropColumn('status');
         });
 

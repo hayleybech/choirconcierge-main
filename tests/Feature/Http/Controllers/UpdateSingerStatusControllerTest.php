@@ -31,7 +31,7 @@ class UpdateSingerStatusControllerTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
-        $this->assertDatabaseHas('membership_singer_status', [
+        $this->assertDatabaseHas('membership_status', [
             'membership_id' => $singer->id,
             'status' => $newStatus,
         ]);
