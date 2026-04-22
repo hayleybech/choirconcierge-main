@@ -35,7 +35,9 @@ return new class extends Migration
         }
 
         Schema::table('membership_status', function (Blueprint $table) {
-            $table->dropForeign(['singer_status_id']);
+            if (collect(DB::select("SHOW INDEXES FROM membership_status"))->pluck('Key_name')->contains('membership_status_singer_status_id_foreign')) {
+                $table->dropForeign(['singer_status_id']);
+            }
             $table->dropColumn('singer_status_id');
         });
 

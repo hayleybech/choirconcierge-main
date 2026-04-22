@@ -21,7 +21,7 @@ return new class extends Migration
             $blueprint->timestamps();
 
             $blueprint->foreign('membership_id')->references('id')->on('memberships')->onDelete('cascade');
-            $blueprint->foreign('singer_status_id')->references('id')->on('singer_statuses')->onDelete('cascade');
+            // $blueprint->foreign('singer_status_id')->references('id')->on('singer_statuses')->onDelete('cascade');
         });
 
         // Migrate data
