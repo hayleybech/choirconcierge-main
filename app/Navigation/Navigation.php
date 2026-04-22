@@ -4,45 +4,59 @@ namespace App\Navigation;
 
 class Navigation
 {
-    public function get(): array
+    public function get(bool $app = false): array
     {
-        if (tenancy()->initialized === false) {
-            return [
-                [
-                    'name' => 'Dashboard',
-                    'route' => 'central.dash',
-                    'icon' => 'fa-chart-line',
-                    'can' => 'view_dash',
-                    'showAsActiveForRoutes' => ['central.dash'],
-                    'items' => []
-                ],
-                [
-                    'name' => 'Tenants',
-                    'route' => 'central.tenants.index',
-                    'icon' => 'building',
-                    'can' => 'list_tenants',
-                    'showAsActiveForRoutes' => ['central.tenants.*'],
-                    'items' => []
-                ],
-                [
-                    'name' => 'Users',
-                    'route' => 'central.users.index',
-                    'icon' => 'users',
-                    'can' => 'list_tenants',
-                    'showAsActiveForRoutes' => ['central.users.*'],
-                    'items' => []
-                ],
-                [
-                    'name' => 'Mail Logs',
-                    'route' => 'central.mail-logs.index',
-                    'icon' => 'history',
-                    'can' => 'list_tenants',
-                    'showAsActiveForRoutes' => ['central.mail-logs.*'],
-                    'items' => []
-                ],
-            ];
+        $items = tenancy()->initialized === false
+            ? $this->centralItems()
+            : $this->tenantItems();
+
+        if ($app) {
+            return $this->transformForApp($items);
         }
 
+        return $items;
+    }
+
+    protected function centralItems(): array
+    {
+        return [
+            [
+                'name' => 'Dashboard',
+                'route' => 'central.dash',
+                'icon' => 'fa-chart-line',
+                'can' => 'view_dash',
+                'showAsActiveForRoutes' => ['central.dash'],
+                'items' => []
+            ],
+            [
+                'name' => 'Tenants',
+                'route' => 'central.tenants.index',
+                'icon' => 'building',
+                'can' => 'list_tenants',
+                'showAsActiveForRoutes' => ['central.tenants.*'],
+                'items' => []
+            ],
+            [
+                'name' => 'Users',
+                'route' => 'central.users.index',
+                'icon' => 'users',
+                'can' => 'list_tenants',
+                'showAsActiveForRoutes' => ['central.users.*'],
+                'items' => []
+            ],
+            [
+                'name' => 'Mail Logs',
+                'route' => 'central.mail-logs.index',
+                'icon' => 'history',
+                'can' => 'list_tenants',
+                'showAsActiveForRoutes' => ['central.mail-logs.*'],
+                'items' => []
+            ],
+        ];
+    }
+
+    protected function tenantItems(): array
+    {
         return [
             [
                 'name' => 'Dashboard',
@@ -141,5 +155,48 @@ class Navigation
                 ]
             ],
         ];
+    }
+
+    protected function transformForApp(array $items): array
+    {
+        return array_map(function ($item) {
+            if (isset($item['route'])) {
+                $item['url'] = $this->generateUrl($item['route']);
+                unset($item['route']);
+            }
+
+            if (isset($item['can'])) {
+                $item['can'] = auth()->user()?->can($item['can']) ?? false;
+            }
+
+            if (isset($item['showAsActiveForRoutes'])) {
+                $item['showAsActiveForRoutes'] = array_map(function ($routeName) {
+                    return $this->generateUrl($routeName);
+                }, $item['showAsActiveForRoutes']);
+            }
+
+            if (isset($item['items']) && !empty($item['items'])) {
+                $item['items'] = $this->transformForApp($item['items']);
+            }
+
+            return $item;
+        }, $items);
+    }
+
+    protected function generateUrl(string $route): string
+    {
+        if (str_contains($route, '*')) {
+            $route = str_replace('.*', '.index', $route);
+        }
+
+        try {
+            if (tenancy()->initialized) {
+                return the_tenant_route($route, [], false);
+            }
+
+            return route($route, [], false);
+        } catch (\Exception $e) {
+            return $route;
+        }
     }
 }
