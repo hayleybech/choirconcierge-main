@@ -22,7 +22,7 @@ class MembersExport implements FromQuery, WithMapping, WithHeadings
 				'user',
 				'enrolments' => ['ensemble', 'voice_part'],
 				'roles',
-				'category',
+				'status',
 			]);
 	}
 
@@ -69,7 +69,7 @@ class MembersExport implements FromQuery, WithMapping, WithHeadings
 				->join(', '),
 
 			// Status
-			$membership->category->name,
+			$membership->status->name,
 
 			// Membership
 			$membership->onboarding_enabled ? 'Yes' : 'No',

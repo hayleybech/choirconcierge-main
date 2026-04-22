@@ -14,7 +14,7 @@ import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
 import SingerSelect from "../../components/inputs/SingerSelect";
 
-const FolderForm = ({ folder, ensembles, roles, voiceParts, singerCategories }) => {
+const FolderForm = ({ folder, ensembles, roles, voiceParts, singerStatuses }) => {
     const { route } = useRoute();
 
     const { data, setData, post, put, processing, errors } = useForm({
@@ -23,11 +23,11 @@ const FolderForm = ({ folder, ensembles, roles, voiceParts, singerCategories }) 
         viewer_users: folder?.viewer_users?.map(user => user.id) ?? [],
         viewer_roles: folder?.viewer_roles?.map(role => role.id) ?? [],
         viewer_voice_parts: folder?.viewer_voice_parts?.map(part => part.id) ?? [],
-        viewer_singer_categories: folder?.viewer_singer_categories?.map(cat => cat.id) ?? [],
+        viewer_singer_statuses: folder?.viewer_singer_statuses?.map(cat => cat.id) ?? [],
         editor_users: folder?.editor_users?.map(user => user.id) ?? [],
         editor_roles: folder?.editor_roles?.map(role => role.id) ?? [],
         editor_voice_parts: folder?.editor_voice_parts?.map(part => part.id) ?? [],
-        editor_singer_categories: folder?.editor_singer_categories?.map(cat => cat.id) ?? [],
+        editor_singer_statuses: folder?.editor_singer_statuses?.map(cat => cat.id) ?? [],
     });
 
     function submit(e) {
@@ -109,14 +109,14 @@ const FolderForm = ({ folder, ensembles, roles, voiceParts, singerCategories }) 
                     </fieldset>
 
                     <fieldset className="sm:col-span-6">
-                        <legend className="text-base font-medium text-gray-900">Singer Categories</legend>
+                        <legend className="text-base font-medium text-gray-900">Singer Statuses</legend>
                         <CheckboxGroup
-                            name="viewer_singer_categories"
-                            options={singerCategories}
-                            value={data.viewer_singer_categories}
-                            updateFn={value => setData('viewer_singer_categories', value)}
+                            name="viewer_singer_statuses"
+                            options={singerStatuses}
+                            value={data.viewer_singer_statuses}
+                            updateFn={value => setData('viewer_singer_statuses', value)}
                         />
-                        {errors.viewer_singer_categories && <Error>{errors.viewer_singer_categories}</Error>}
+                        {errors.viewer_singer_statuses && <Error>{errors.viewer_singer_statuses}</Error>}
                     </fieldset>
                 </FormSection>
 
@@ -161,14 +161,14 @@ const FolderForm = ({ folder, ensembles, roles, voiceParts, singerCategories }) 
                     </fieldset>
 
                     <fieldset className="sm:col-span-6">
-                        <legend className="text-base font-medium text-gray-900">Singer Categories</legend>
+                        <legend className="text-base font-medium text-gray-900">Singer Statuses</legend>
                         <CheckboxGroup
-                            name="editor_singer_categories"
-                            options={singerCategories}
-                            value={data.editor_singer_categories}
-                            updateFn={value => setData('editor_singer_categories', value)}
+                            name="editor_singer_statuses"
+                            options={singerStatuses}
+                            value={data.editor_singer_statuses}
+                            updateFn={value => setData('editor_singer_statuses', value)}
                         />
-                        {errors.editor_singer_categories && <Error>{errors.editor_singer_categories}</Error>}
+                        {errors.editor_singer_statuses && <Error>{errors.editor_singer_statuses}</Error>}
                     </fieldset>
                 </FormSection>
 

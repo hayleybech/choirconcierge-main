@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\SingerCategory;
+use App\Enums\SingerStatus;
 use App\Models\Membership;
 use App\Models\Role;
 use App\Models\User;
@@ -12,6 +12,7 @@ use Inertia\Testing\AssertableInertia;
 
 class SingerAttendancePermissionsTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_a_singer_can_view_their_own_attendance_page(): void
     {
         $singer = Membership::factory()->create();
@@ -62,9 +63,11 @@ class SingerAttendancePermissionsTest extends TestCase
 
     public function test_the_view_attendance_flag_is_passed_to_the_singer_profile_page(): void
     {
-        $category = SingerCategory::where('name', 'Members')->firstOrCreate();
-        $user1 = Membership::factory()->create(['singer_category_id' => $category->id]);
-        $user2 = Membership::factory()->create(['singer_category_id' => $category->id]);
+        $statusValue = SingerStatus::MEMBERS->value;
+        $user1 = Membership::factory()->create();
+        $user1->statuses()->create(['status' => $statusValue]);
+        $user2 = Membership::factory()->create();
+        $user2->statuses()->create(['status' => $statusValue]);
 
         // User1 viewing their own profile
         $this->actingAs($user1->user);

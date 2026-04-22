@@ -20,15 +20,15 @@ const RsvpFilters = ({ event, voiceParts, form, ensembles, singerCategories }) =
                 <div className="flex items-center justify-between">
                     <legend className="text-sm font-medium text-gray-700">Singer Category</legend>
                     <FilterActions
-                        onSelectAll={() => setData('category.id', singerCategories.map(category => category.id))}
-                        onClear={() => setData('category.id', [])}
+                        onSelectAll={() => setData('status.id', singerCategories.map(category => category.id))}
+                        onClear={() => setData('status.id', [])}
                     />
                 </div>
                 <CheckboxGroup
                     name="category.id"
                     options={singerCategories.map((category) => ({ id: category.id, name: category.name }))}
-                    value={data['category.id']}
-                    updateFn={value => setData('category.id', value)}
+                    value={data['status.id']}
+                    updateFn={value => setData('status.id', value)}
                 />
             </fieldset>
 

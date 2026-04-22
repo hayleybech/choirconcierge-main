@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SingerStatus;
 use App\Models\Membership;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
-class UpdateSingerCategoryController extends Controller
+class UpdateSingerStatusController extends Controller
 {
     public function __invoke(Membership $singer, Request $request): RedirectResponse
     {
         $this->authorize('create', $singer);
 
-        $request->validate(['move_category' => 'required|numeric|gt:0']);
+        $request->validate(['move_status' => ['required', Rule::enum(SingerStatus::class)]]);
 
-        $category = $request->input('move_category', 0);
+        $status = $request->input('move_status');
 
-        // Attach to Prospects category
-        $singer->category()->associate($category);
-        $singer->save();
+        $singer->statuses()->create(['status' => $status]);
 
         return redirect()
             ->back()

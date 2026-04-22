@@ -3,7 +3,7 @@
 use App\Imports\ChoirConciergeSingersImport;
 use App\Models\Ensemble;
 use App\Models\Enrolment;
-use App\Models\SingerCategory;
+use App\Enums\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,10 +18,6 @@ beforeEach(function () {
     VoicePart::factory()->create(['title' => 'Alto']);
     VoicePart::factory()->create(['title' => 'Tenor']);
     VoicePart::factory()->create(['title' => 'Bass']);
-
-    // Seed singer categories
-    SingerCategory::factory()->create(['name' => 'Members']);
-    SingerCategory::factory()->create(['name' => 'Archived Members']);
 
     // Seed ensembles
     Ensemble::factory()->create(['name' => 'Ensemble 1']);

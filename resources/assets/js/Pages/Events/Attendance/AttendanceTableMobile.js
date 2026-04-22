@@ -12,7 +12,7 @@ import Badge from '../../../components/Badge';
 import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
 import SingerStatus from '../../../SingerStatus';
-import SingerCategoryTag from '../../../components/SingerCategoryTag';
+import SingerStatusTag from '../../../components/SingerStatusTag';
 
 const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event, bulkEdit }) => {
 	const { route } = useRoute();
@@ -50,7 +50,7 @@ const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event, bulkE
 										}`}
 									>
 										<div>
-											<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+											<SingerStatusTag status={new SingerStatus(singer.status.status)} />
 											<span className="ml-1 text-sm font-medium text-purple-600 truncate">
 												{singer.user.name}
 											</span>

@@ -8,7 +8,7 @@ use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\VoicePart;
-use App\Models\SingerCategory;
+use App\Enums\SingerStatus;
 use App\Traits\HasSingerSorts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -66,20 +66,16 @@ class AttendanceController extends Controller
                 ->orderBy('attendance_updated', $direction);
         });
 
-        $defaultCategoryId = SingerCategory::where('name', 'Members')->value('id');
-        $filter = request()->query('filter', []);
+        $defaultStatus = SingerStatus::MEMBERS->value;
 
         $query = Membership::forEvent($event)
             ->with([
                 'user',
                 'enrolments.voice_part',
                 'enrolments.ensemble',
-                'category',
+                'status',
                 'attendances' => fn($query) => $query->where('event_id', '=', $event->id),
-            ])
-            ->when($defaultCategoryId && !isset($filter['category.id']), function (Builder $query) use ($defaultCategoryId) {
-                $query->where('singer_category_id', $defaultCategoryId);
-            });
+            ]);
 
         $pagination = QueryBuilder::for($query)
             ->allowedFilters([
@@ -102,7 +98,11 @@ class AttendanceController extends Controller
                     $responses = (array) $value;
                     $query->whereHas('attendances', fn($query) => $query->where('event_id', $event->id)->whereIn('response', $responses));
                 }),
-                AllowedFilter::exact('category.id', 'singer_category_id'),
+                AllowedFilter::callback('status.id', function (Builder $query, $value) {
+                    $query->whereHas('status', fn($q) => $q
+                        ->whereIn('status', (array) $value)
+                    );
+                })->default([$defaultStatus]),
             ])
             ->allowedSorts([
                 ...$this->singerSorts(),
@@ -134,7 +134,11 @@ class AttendanceController extends Controller
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
             'totalEnsemblesCount' => Ensemble::count(),
-            'singerCategories' => SingerCategory::all()->values(),
+            'singerStatuses' => array_map(fn($s) => [
+                'id' => $s->value,
+                'name' => $s->label(),
+                'slug' => $s->value,
+            ], SingerStatus::cases()),
             'counts' => [
                 'present' => $event->attendances()->where('response', 'present')->count(),
                 'late' => $event->attendances()->where('response', 'late')->count(),

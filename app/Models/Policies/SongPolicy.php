@@ -2,6 +2,7 @@
 
 namespace App\Models\Policies;
 
+use App\Enums\SingerStatus;
 use App\Models\Song;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -62,7 +63,7 @@ class SongPolicy
         }
 
         if (! $song->show_for_prospects) {
-            return $user->membership->category->name === 'Members';
+            return $user->membership->status->status === SingerStatus::MEMBERS;
         }
 
         return $user->membership->hasAbility('songs_view');

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SingerStatus;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -19,7 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
- * Class Singer
+ * Class Membership
  *
  * Columns
  * @property int $id
@@ -32,14 +34,12 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Carbon $deleted_at
  * @property Carbon $joined_at
  * @property Carbon $paid_until
- * @property int $singer_category_id
- * @property int $user_id
- * @property int $tenant_id
  *
  * Relationships
  * @property Collection<Task> $tasks
  * @property Placement $placement
- * @property SingerCategory $category
+ * @property SingerStatus $status
+ * @property Collection<SingerStatus> $statuses
  * @property Collection<Enrolment> $enrolments
  * @property User $user
  * @property Collection<RiserStack> $riser_stacks
@@ -69,10 +69,9 @@ class Membership extends Model
         'membership_details',
         'joined_at',
         'paid_until',
-        'singer_category_id',
     ];
 
-    protected $with = [];
+    protected $with = ['status'];
 
     public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'joined_at' => 'datetime', 'paid_until' => 'datetime'];
 
@@ -125,8 +124,8 @@ class Membership extends Model
 
     public function initOnboarding(): void
     {
-        $category_name = $this->onboarding_enabled ? 'Prospects' : 'Members';
-        $this->category()->associate(SingerCategory::firstWhere('name', '=', $category_name));
+        $status = $this->onboarding_enabled ? SingerStatus::PROSPECTS : SingerStatus::MEMBERS;
+        $this->statuses()->create(['status' => $status->value]);
 
         if (!$this->onboarding_enabled) {
             return;
@@ -150,9 +149,14 @@ class Membership extends Model
         return $this->hasOne(Placement::class);
     }
 
-    public function category(): BelongsTo
+    public function status(): HasOne
     {
-        return $this->belongsTo(SingerCategory::class, 'singer_category_id');
+        return $this->hasOne(MembershipStatus::class)->latestOfMany();
+    }
+
+    public function statuses(): HasMany
+    {
+        return $this->hasMany(MembershipStatus::class);
     }
 
     public function enrolments(): HasMany
@@ -239,8 +243,8 @@ class Membership extends Model
     public function scopeEmptyDobs(Builder $query): Builder
     {
         return $query
-            ->whereHas('category', static function (Builder $query) {
-                return $query->whereIn('name', ['Members', 'Prospects']);
+            ->whereHas('status', static function (Builder $query) {
+                return $query->whereIn('status', [SingerStatus::MEMBERS->value, SingerStatus::PROSPECTS->value]);
             })
             ->whereHas('user', static function (Builder $query) {
                 return $query->whereNull('dob');
@@ -268,8 +272,8 @@ class Membership extends Model
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->whereHas('category', static function (Builder $query) {
-            $query->where('name', '=', 'Members');
+        return $query->whereHas('status', static function (Builder $query) {
+            $query->where('status', '=', SingerStatus::MEMBERS->value);
         });
     }
 

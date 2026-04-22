@@ -3,15 +3,15 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Membership;
-use App\Models\SingerCategory;
+use App\Enums\SingerStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\UpdateSingerCategoryController
+ * @see \App\Http\Controllers\UpdateSingerStatusController
  */
-class UpdateSingerCategoryControllerTest extends TestCase
+class UpdateSingerStatusControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -21,19 +21,21 @@ class UpdateSingerCategoryControllerTest extends TestCase
 
         $singer = Membership::factory()->create();
 
-        $new_category_id = SingerCategory::inRandomOrder()->value('id');
+        $newStatus = SingerStatus::PROSPECTS->value;
         $response = $this->get(
-            the_tenant_route('singers.categories.update', [$singer]).'?move_category='.$new_category_id,
+            the_tenant_route('singers.statuses.update', [$singer]).'?move_status='.$newStatus,
             [
-                'move_category' => $new_category_id,
+                'move_status' => $newStatus,
             ],
         );
 
         $response->assertSessionHasNoErrors();
         $response->assertRedirect();
-        $this->assertDatabaseHas('memberships', [
-            'id' => $singer->id,
-            'singer_category_id' => $new_category_id,
+        $this->assertDatabaseHas('membership_status', [
+            'membership_id' => $singer->id,
+            'status' => $newStatus,
         ]);
+
+        $this->assertEquals($newStatus, $singer->fresh()->status->status->value);
     }
 }

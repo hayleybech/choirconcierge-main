@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import VoicePartTag from '../../components/VoicePartTag';
-import SingerCategoryTag from '../../components/SingerCategoryTag';
-import Table, { TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellSelect, TItemRow } from '../../components/Table';
+import SingerStatusTag from '../../components/SingerStatusTag';
+import Table, {
+	TableCell,
+	THead,
+	TBody,
+	TableHeading,
+	TableSelectAll,
+	TableCellSelect,
+	TItemRow,
+} from '../../components/Table';
 import Icon from '../../components/Icon';
 import SingerStatus from '../../SingerStatus';
 import FeeStatus from '../../components/FeeStatus';
@@ -14,7 +22,6 @@ import Label from '../../components/inputs/Label';
 import DayInput from '../../components/inputs/Day';
 import Error from '../../components/inputs/Error';
 import Help from '../../components/inputs/Help';
-import ButtonGroup from '../../components/inputs/ButtonGroup';
 import DateTag from '../../components/DateTag';
 import TableHeadingSort from '../../components/TableHeadingSort';
 import useRoute from '../../hooks/useRoute';
@@ -117,7 +124,7 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bu
 								</ul>
 							</TableCell>
 							<TableCell>
-								<SingerCategoryTag status={new SingerStatus(singer.category.slug)} withLabel />
+								<SingerStatusTag status={new SingerStatus(singer.status.status)} withLabel />
 							</TableCell>
 							<TableCell>
 								<Icon icon="envelope" mr className="text-gray-400" />

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Http\View\Composers\SingerCategoryComposer;
+use App\Http\View\Composers\SingerStatusComposer;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
 
         Schema::defaultStringLength(191);
 
-        View::composer('*', SingerCategoryComposer::class);
+        View::composer('*', SingerStatusComposer::class);
 
         TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
 
@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(SingerCategoryComposer::class);
+        $this->app->singleton(SingerStatusComposer::class);
 
         if ($this->app->environment() !== 'production') {
             $this->app->register(IdeHelperServiceProvider::class);

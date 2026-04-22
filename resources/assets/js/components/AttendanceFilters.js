@@ -5,7 +5,7 @@ import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
 import FilterActions from "./inputs/FilterActions";
 
-const AttendanceFilters = ({ event, voiceParts, form, ensembles, singerCategories }) => (
+const AttendanceFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => (
     <Filters
         routeName="events.attendances.index"
         routeParams={{ event: event.id }}
@@ -18,17 +18,17 @@ const AttendanceFilters = ({ event, voiceParts, form, ensembles, singerCategorie
 
             <fieldset>
                 <div className="flex items-center justify-between">
-                    <legend className="text-sm font-medium text-gray-700">Singer Category</legend>
+                    <legend className="text-sm font-medium text-gray-700">Singer Status</legend>
                     <FilterActions
-                        onSelectAll={() => setData('category.id', singerCategories.map(category => category.id))}
-                        onClear={() => setData('category.id', [])}
+                        onSelectAll={() => setData('status.id', singerStatuses.map(status => status.id))}
+                        onClear={() => setData('status.id', [])}
                     />
                 </div>
                 <CheckboxGroup
-                    name="category.id"
-                    options={singerCategories.map((category) => ({ id: category.id, name: category.name }))}
-                    value={data['category.id']}
-                    updateFn={value => setData('category.id', value)}
+                    name="status.id"
+                    options={singerStatuses.map((status) => ({ id: status.id, name: status.name }))}
+                    value={data['status.id']}
+                    updateFn={value => setData('status.id', value)}
                 />
             </fieldset>
 

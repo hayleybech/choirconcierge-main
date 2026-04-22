@@ -18,7 +18,7 @@ class TenantFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->word,
+            'id' => $this->faker->unique()->lexify('??????'),
             'name' => $this->faker->sentence,
         ];
     }

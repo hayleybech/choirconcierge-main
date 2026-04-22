@@ -8,10 +8,10 @@ import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
 import { Link } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
-import SingerCategoryTag from '../../../components/SingerCategoryTag';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
 import Button from '../../../components/inputs/Button';
+import SingerStatusTag from '../../../components/SingerStatusTag';
 
 const RsvpTableMobile = ({ singers, pagination, showEnsemble, visibleColumns, customFields, columnsMenu, hasNonDefaultFilters, setShowFilters }) => {
 	const { route } = useRoute();
@@ -57,7 +57,7 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble, visibleColumns, cu
 								<div className="flex items-center justify-between mb-1">
 									<div>
 										<div>
-											<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+											<SingerStatusTag status={new SingerStatus(singer.status.status)} />
 											<Link
 												href={route('singers.show', { singer })}
 												className="ml-1 text-sm font-medium text-purple-600 truncate"

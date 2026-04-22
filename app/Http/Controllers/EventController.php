@@ -142,7 +142,7 @@ class EventController extends Controller
             $event->ensembles()->sync($request->input('ensembles'));
         }
 
-        if ($request->input('is_repeating')) {
+        if ($request->input('is_repeating') && !$event->isRepeatDirty()) {
             $event->createRepeats();
         }
 

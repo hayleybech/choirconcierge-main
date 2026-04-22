@@ -1,5 +1,5 @@
 import React from 'react';
-import SingerCategoryTag from "../../components/SingerCategoryTag";
+import SingerStatusTag from '../../components/SingerStatusTag';
 import VoicePartTag from '../../components/VoicePartTag';
 import TableMobile, {
 	TableMobileHeader,
@@ -7,16 +7,16 @@ import TableMobile, {
 	TableMobileSelect,
 	TableMobileSelectableLink,
 } from '../../components/TableMobile';
-import Icon from "../../components/Icon";
-import SingerStatus from "../../SingerStatus";
-import useRoute from "../../hooks/useRoute";
+import Icon from '../../components/Icon';
+import SingerStatus from '../../SingerStatus';
+import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import Button from '../../components/inputs/Button';
 
 const SingerTableMobile = ({ singers, pagination, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
-    const { route } = useRoute();
+	const { route } = useRoute();
 
-    return (
+	return (
 		<div>
 			<TableMobileHeader bulkEdit={bulkEdit}>
 				<Button
@@ -48,7 +48,7 @@ const SingerTableMobile = ({ singers, pagination, bulkEdit, hasNonDefaultFilters
 								<div>
 									<div className="flex items-center justify-between">
 										<p className="flex items-center min-w-0 mr-1.5">
-											<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+											<SingerStatusTag status={new SingerStatus(singer.status.status)} />
 											<span className="text-sm font-medium text-purple-600 truncate">
 												{singer.user.name}
 											</span>
@@ -84,6 +84,6 @@ const SingerTableMobile = ({ singers, pagination, bulkEdit, hasNonDefaultFilters
 			</TableMobile>
 		</div>
 	);
-}
+};
 
 export default SingerTableMobile;
