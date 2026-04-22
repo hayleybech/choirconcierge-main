@@ -12,7 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('singer_categories', 'singer_statuses');
+        if (Schema::hasTable('singer_categories') && !Schema::hasTable('singer_statuses')) {
+            Schema::rename('singer_categories', 'singer_statuses');
+        }
     }
 
     /**
@@ -20,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('singer_statuses', 'singer_categories');
+        if (Schema::hasTable('singer_statuses') && !Schema::hasTable('singer_categories')) {
+            Schema::rename('singer_statuses', 'singer_categories');
+        }
     }
 };
