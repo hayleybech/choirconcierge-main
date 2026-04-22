@@ -26,9 +26,9 @@ class EnsureUserIsMember
         }
 
         if(in_array(
-            auth()?->user()?->membership?->category->name, [
-            'Archived Members',
-            'Archived Prospects',
+            auth()?->user()?->membership?->status?->status, [
+            \App\Enums\SingerStatus::ARCHIVED_MEMBERS,
+            \App\Enums\SingerStatus::ARCHIVED_PROSPECTS,
         ])) {
             abort(403);
         }

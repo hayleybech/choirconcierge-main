@@ -51,7 +51,7 @@ use App\Http\Controllers\SongController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskNotificationTemplateController;
 use App\Http\Controllers\UpdateMyLearningStatusController;
-use App\Http\Controllers\UpdateSingerCategoryController;
+use App\Http\Controllers\UpdateSingerStatusController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\VoicePartController;
@@ -142,7 +142,7 @@ Route::middleware([
         Route::post('singers/import', ImportSingerController::class)->name('singers.import');
         Route::post('singers/import/preview', [ImportSingerController::class, 'preview'])->name('singers.import.preview');
         Route::get('singers/import/template', ImportSingerTemplateController::class)->name('singers.import.template');
-        Route::get('singers/{singer}/category/update', UpdateSingerCategoryController::class)->name('singers.categories.update');
+        Route::get('singers/{singer}/status/update', UpdateSingerStatusController::class)->name('singers.statuses.update');
         Route::get('singers/{singer}/tasks/{task}/complete', CompleteSingerTaskController::class)->name('task.complete');
         Route::resource('singers.custom-fields', CustomFieldEntryController::class)
             ->parameters(['custom-fields' => 'entry'])
@@ -213,7 +213,7 @@ Route::middleware([
                 Route::get('/find', 'findUsers')->name('findUsers');
                 Route::get('/roles/find', 'findRoles')->name('findRoles');
                 Route::get('/voice-parts/find', 'findVoiceParts')->name('findVoiceParts');
-                Route::get('/singer-categories/find', 'findSingerCategories')->name('findSingerCategories');
+                Route::get('/singer-status/find', 'findSingerStatuses')->name('findSingerStatuses');
 
                 // Attach/Detach role from a user
                 Route::get('{user}/roles/{role}/detach', 'detachRole')->name('users.detachrole');

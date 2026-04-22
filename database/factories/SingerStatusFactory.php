@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\SingerCategory;
+use App\Models\SingerStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class SingerCategoryFactory extends Factory
+class SingerStatusFactory extends Factory
 {
     public function definition(): array
     {

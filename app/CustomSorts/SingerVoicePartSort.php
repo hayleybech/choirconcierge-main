@@ -2,7 +2,6 @@
 
 namespace App\CustomSorts;
 
-use App\Models\SingerCategory;
 use App\Models\VoicePart;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\Sorts\Sort;

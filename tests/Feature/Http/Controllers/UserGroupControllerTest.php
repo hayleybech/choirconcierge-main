@@ -27,7 +27,7 @@ class UserGroupControllerTest extends TestCase
                 ->component('MailingLists/Create')
                 ->has('roles')
                 ->has('voiceParts')
-                ->has('singerCategories')
+                ->has('singerStatuses')
             );
     }
 
@@ -71,7 +71,7 @@ class UserGroupControllerTest extends TestCase
                 ->has('list')
                 ->has('roles')
                 ->has('voiceParts')
-                ->has('singerCategories')
+                ->has('singerStatuses')
             );
     }
 

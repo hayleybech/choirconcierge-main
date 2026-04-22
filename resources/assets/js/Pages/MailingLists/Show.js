@@ -105,7 +105,7 @@ const Show = ({ list }) => {
                                 title="No recipients"
                                 description="This mailing list has no base recipients selected, so it won't be able to do very much. "
                                 actionDescription={list.can['update_group']
-                                    ? 'To add recipients, edit this list, then assign a singer or an entire role, category or voice part.'
+                                    ? 'To add recipients, edit this list, then assign a singer or an entire role, status or voice part.'
                                     : 'Ask your admin to finish setting up this list.'
                                 }
                                 icon="inbox-in"
@@ -163,7 +163,7 @@ const Show = ({ list }) => {
                                 title="No senders"
                                 description="This type of mailing list needs permitted senders to be assigned (a Chat type list just assumes the recipients are the senders). "
                                 actionDescription={list.can['update_group']
-                                    ? 'To add senders, edit this list, then assign a singer or an entire role, category or voice part.'
+                                    ? 'To add senders, edit this list, then assign a singer or an entire role, status or voice part.'
                                     : 'Ask your admin to finish setting up this list.'
                                 }
                                 icon="inbox-out"

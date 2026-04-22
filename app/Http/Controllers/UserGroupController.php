@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserGroupRequest;
 use App\Models\Ensemble;
 use App\Models\Role;
-use App\Models\SingerCategory;
+use App\Enums\SingerStatus;
 use App\Models\UserGroup;
 use App\Models\VoicePart;
 use Illuminate\Http\RedirectResponse;
@@ -40,7 +40,11 @@ class UserGroupController extends Controller
         return Inertia::render('MailingLists/Create', [
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'voiceParts' => VoicePart::all()->values(),
-            'singerCategories' => SingerCategory::all()->values(),
+            'singerStatuses' => array_map(fn($s) => [
+                'id' => $s->value,
+                'name' => $s->label(),
+                'slug' => $s->value,
+            ], SingerStatus::cases()),
             'ensembles' => Ensemble::all()->values(),
         ]);
     }
@@ -76,15 +80,19 @@ class UserGroupController extends Controller
     public function edit(UserGroup $group): Response
     {
         $group->load([
-            'recipient_roles', 'recipient_voice_parts', 'recipient_singer_categories', 'recipient_users', 'recipient_ensembles',
-            'sender_roles', 'sender_voice_parts', 'sender_singer_categories', 'sender_users', 'sender_ensembles',
+            'recipient_roles', 'recipient_voice_parts', 'recipient_singer_statuses', 'recipient_users', 'recipient_ensembles',
+            'sender_roles', 'sender_voice_parts', 'sender_singer_statuses', 'sender_users', 'sender_ensembles',
         ]);
 
         return Inertia::render('MailingLists/Edit', [
             'list' => $group,
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'voiceParts' => VoicePart::all()->values(),
-            'singerCategories' => SingerCategory::all()->values(),
+            'singerStatuses' => array_map(fn($s) => [
+                'id' => $s->value,
+                'name' => $s->label(),
+                'slug' => $s->value,
+            ], SingerStatus::cases()),
             'ensembles' => Ensemble::all()->values(),
         ]);
     }

@@ -9,7 +9,7 @@ use App\Models\Membership;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\VoicePart;
-use App\Models\SingerCategory;
+use App\Enums\SingerStatus;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -94,7 +94,7 @@ class SingerControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Singers/Show')
                 ->has('singer')
-                ->has('categories')
+                ->has('statuses')
             );
     }
 
@@ -324,23 +324,23 @@ class SingerControllerTest extends TestCase
 		]);
 	}
 
-    public function test_bulk_update_saves_the_category(): void
+    public function test_bulk_update_saves_the_status(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
         $singers = Membership::factory()->count(3)->create();
-        $category = SingerCategory::factory()->create();
+        $statusValue = \App\Enums\SingerStatus::PROSPECTS->value;
 
         $this->post(the_tenant_route('singers.bulk-update'), [
             'singer_ids' => $singers->pluck('id')->all(),
-            'singer_category_id' => $category->id,
+            'status' => $statusValue,
         ])->assertRedirect(route('singers.index'))
           ->assertSessionHasNoErrors();
 
         foreach ($singers as $singer) {
-            $this->assertDatabaseHas('memberships', [
-                'id' => $singer->id,
-                'singer_category_id' => $category->id,
+            $this->assertDatabaseHas('membership_status', [
+                'membership_id' => $singer->id,
+                'status' => $statusValue,
             ]);
         }
     }

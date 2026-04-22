@@ -62,11 +62,11 @@ class UserControllerTest extends TestCase
         ]);
     }
 
-    public function test_find_singer_categories_returns_an_ok_response(): void
+    public function test_find_singer_statuses_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
 
-        $response = $this->get(the_tenant_route('findSingerCategories', ['q' => 'mem']));
+        $response = $this->get(the_tenant_route('findSingerStatuses', ['q' => 'mem']));
 
         $response->assertOk();
         $response->assertJson([

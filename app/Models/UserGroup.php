@@ -31,13 +31,13 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Collection<Role> $recipient_roles
  * @property Collection<User> $recipient_users
  * @property Collection<VoicePart> $recipient_voice_parts
- * @property Collection<SingerCategory> $recipient_singer_categories
+ * @property Collection<SingerStatus> $recipient_singer_categories
  *
  * @property Collection<GroupSender> $senders
  * @property Collection<Role> $sender_roles
  * @property Collection<User> $sender_users
  * @property Collection<VoicePart> $sender_voice_parts
- * @property Collection<SingerCategory> $sender_singer_categories
+ * @property Collection<SingerStatus> $sender_singer_categories
  *
  * Attributes
  * @property string $email
@@ -65,7 +65,7 @@ class UserGroup extends Model
             Role::class => $attributes['recipient_roles'] ?? [],
             VoicePart::class => $attributes['recipient_voice_parts'] ?? [],
             User::class => $attributes['recipient_users'] ?? [],
-            SingerCategory::class => $attributes['recipient_singer_categories'] ?? [],
+            SingerStatus::class => $attributes['recipient_singer_statuses'] ?? [],
             Ensemble::class => $attributes['recipient_ensembles'] ?? [],
         ]);
 
@@ -74,7 +74,7 @@ class UserGroup extends Model
             Role::class => $attributes['sender_roles'] ?? [],
             VoicePart::class => $attributes['sender_voice_parts'] ?? [],
             User::class => $attributes['sender_users'] ?? [],
-            SingerCategory::class => $attributes['sender_singer_categories'] ?? [],
+            SingerStatus::class => $attributes['sender_singer_statuses'] ?? [],
             Ensemble::class => $attributes['sender_ensembles'] ?? [],
         ]);
 
@@ -92,7 +92,7 @@ class UserGroup extends Model
             Role::class => $attributes['recipient_roles'] ?? [],
             VoicePart::class => $attributes['recipient_voice_parts'] ?? [],
             User::class => $attributes['recipient_users'] ?? [],
-            SingerCategory::class => $attributes['recipient_singer_categories'] ?? [],
+            SingerStatus::class => $attributes['recipient_singer_statuses'] ?? [],
             Ensemble::class => $attributes['recipient_ensembles'] ?? [],
         ]);
 
@@ -101,7 +101,7 @@ class UserGroup extends Model
             Role::class => $attributes['sender_roles'] ?? [],
             VoicePart::class => $attributes['sender_voice_parts'] ?? [],
             User::class => $attributes['sender_users'] ?? [],
-            SingerCategory::class => $attributes['sender_singer_categories'] ?? [],
+            SingerStatus::class => $attributes['sender_singer_statuses'] ?? [],
             Ensemble::class => $attributes['sender_ensembles'] ?? [],
         ]);
 
@@ -130,9 +130,10 @@ class UserGroup extends Model
         return $this->morphedByMany(User::class, 'memberable', 'group_members', 'group_id');
     }
 
-    public function recipient_singer_categories(): MorphToMany
+    public function recipient_singer_statuses(): HasMany
     {
-        return $this->morphedByMany(SingerCategory::class, 'memberable', 'group_members', 'group_id');
+        return $this->hasMany(GroupMember::class, 'group_id')
+            ->where('memberable_type', SingerStatus::class);
     }
 
     public function recipient_ensembles(): MorphToMany
@@ -158,7 +159,7 @@ class UserGroup extends Model
         $recipients = $this->recipient_users()->get()
             ->merge($this->getRoleUsers())
             ->merge($this->getPartUsers())
-            ->merge($this->getCategoryUsers());
+            ->merge($this->getStatusUsers());
 
         $ensembles = $this->recipient_ensembles;
         if ($ensembles->isNotEmpty()) {
@@ -197,9 +198,10 @@ class UserGroup extends Model
         return $this->morphedByMany(User::class, 'sender', 'group_senders', 'group_id');
     }
 
-    public function sender_singer_categories(): MorphToMany
+    public function sender_singer_statuses(): HasMany
     {
-        return $this->morphedByMany(SingerCategory::class, 'sender', 'group_senders', 'group_id');
+        return $this->hasMany(GroupSender::class, 'group_id')
+            ->where('sender_type', SingerStatus::class);
     }
     
     public function sender_ensembles(): MorphToMany
@@ -236,7 +238,7 @@ class UserGroup extends Model
         $senders = $this->sender_users()->get()
             ->merge($this->getRoleUsers('sender_roles'))
             ->merge($this->getPartUsers('sender_voice_parts'))
-            ->merge($this->getCategoryUsers('sender_singer_categories'));
+            ->merge($this->getStatusUsers('sender_singer_statuses'));
 
         $ensembles = $this->sender_ensembles;
         if ($ensembles->isNotEmpty()) {
@@ -353,15 +355,18 @@ class UserGroup extends Model
             ->get();
     }
 
-    private function getCategoryUsers(string $recipientType = 'recipient_singer_categories'): \Illuminate\Support\Collection
+    private function getStatusUsers(string $recipientType = 'recipient_singer_statuses'): \Illuminate\Support\Collection
     {
-        $cat_ids = $this->$recipientType()
+        $idCol = str_contains($recipientType, 'sender') ? 'sender_id' : 'memberable_id';
+        $status_slugs = $this->$recipientType()
             ->get()
-            ->pluck('id');
+            ->pluck($idCol);
 
         return User::query()
             ->whereHas('memberships', fn ($singer_query) =>
-                $singer_query->whereIn('singer_category_id', $cat_ids)
+                $singer_query->whereHas('status', fn ($query) => $query
+                    ->whereIn('membership_status.status', $status_slugs)
+                )
             )
             ->get();
     }

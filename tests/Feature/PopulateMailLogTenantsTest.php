@@ -50,8 +50,6 @@ test('it populates mail log tenants based on recipient domains', function () {
 });
 
 test('it handles legacy domain formats', function () {
-    $centralDomain = central_domain();
-    
     $tenant = Tenant::factory()->create(['id' => 'legacy-tenant']);
     $tenant->domains()->create(['domain' => 'legacy', 'is_primary' => true]);
 

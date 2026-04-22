@@ -16,7 +16,7 @@ import Help from "../../components/inputs/Help";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
 
-const MailingListForm = ({ list, roles = [], voiceParts = [], singerCategories = [], ensembles = [] }) => {
+const MailingListForm = ({ list, roles = [], voiceParts = [], singerStatuses = [], ensembles = [] }) => {
     const { props: pageProps } = usePage();
     const { route } = useRoute();
 
@@ -27,12 +27,12 @@ const MailingListForm = ({ list, roles = [], voiceParts = [], singerCategories =
         recipient_users: list?.recipient_users?.map(user => user.id) ?? [],
         recipient_roles: list?.recipient_roles?.map(role => role.id) ?? [],
         recipient_voice_parts: list?.recipient_voice_parts?.map(part => part.id) ?? [],
-        recipient_singer_categories: list?.recipient_singer_categories?.map(part => part.id) ?? [],
+        recipient_singer_statuses: list?.recipient_singer_statuses?.map(part => part.id) ?? [],
         recipient_ensembles: list?.recipient_ensembles?.map(ensemble => ensemble.id) ?? [],
         sender_users: list?.sender_users?.map(user => user.id) ?? [],
         sender_roles: list?.sender_roles?.map(role => role.id) ?? [],
         sender_voice_parts: list?.sender_voice_parts?.map(part => part.id) ?? [],
-        sender_singer_categories: list?.sender_singer_categories?.map(part => part.id) ?? [],
+        sender_singer_statuses: list?.sender_singer_statuses?.map(part => part.id) ?? [],
         sender_ensembles: list?.sender_ensembles?.map(ensemble => ensemble.id) ?? [],
     });
 
@@ -174,14 +174,14 @@ const MailingListForm = ({ list, roles = [], voiceParts = [], singerCategories =
                     </fieldset>
 
                     <fieldset className="sm:col-span-6">
-                        <legend className="text-base font-medium text-gray-900">Singer Categories</legend>
+                        <legend className="text-base font-medium text-gray-900">Singer Statuses</legend>
                         <CheckboxGroup
-                            name="recipient_singer_categories"
-                            options={singerCategories}
-                            value={data.recipient_singer_categories}
-                            updateFn={value => setData('recipient_singer_categories', value)}
+                            name="recipient_singer_statuses"
+                            options={singerStatuses}
+                            value={data.recipient_singer_statuses}
+                            updateFn={value => setData('recipient_singer_statuses', value)}
                         />
-                        {errors.recipient_singer_categories && <Error>{errors.recipient_singer_categories}</Error>}
+                        {errors.recipient_singer_statuses && <Error>{errors.recipient_singer_statuses}</Error>}
                     </fieldset>
 
 					{ensembles.length > 1 && (
@@ -245,14 +245,14 @@ const MailingListForm = ({ list, roles = [], voiceParts = [], singerCategories =
                         </fieldset>
 
                         <fieldset className="sm:col-span-6">
-                            <legend className="text-base font-medium text-gray-900">Singer Categories</legend>
+                            <legend className="text-base font-medium text-gray-900">Singer Statuses</legend>
                             <CheckboxGroup
-                                name="sender_singer_categories"
-                                options={singerCategories}
-                                value={data.sender_singer_categories}
-                                updateFn={value => setData('sender_singer_categories', value)}
+                                name="sender_singer_statuses"
+                                options={singerStatuses}
+                                value={data.sender_singer_statuses}
+                                updateFn={value => setData('sender_singer_statuses', value)}
                             />
-                            {errors.sender_singer_categories && <Error>{errors.sender_singer_categories}</Error>}
+                            {errors.sender_singer_statuses && <Error>{errors.sender_singer_statuses}</Error>}
                         </fieldset>
 
 						{ensembles.length > 1 && (

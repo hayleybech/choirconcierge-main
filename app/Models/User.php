@@ -119,7 +119,7 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
      */
     protected $hidden = ['password', 'remember_token'];
 
-    protected $with = ['media', 'membership.roles'];
+    protected $with = ['media', 'membership.roles', 'membership.status'];
 
     public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'last_login' => 'datetime', 'dob' => 'datetime'];
 

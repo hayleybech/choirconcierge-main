@@ -23,7 +23,7 @@ import TableHeadingSort from '../../../components/TableHeadingSort';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import SingerStatus from '../../../SingerStatus';
-import SingerCategoryTag from '../../../components/SingerCategoryTag';
+import SingerStatusTag from '../../../components/SingerStatusTag';
 import { handleNameSort } from '../../../utils/sortHelpers';
 import useBulkEdit from '../../../hooks/useBulkEdit';
 import BulkEditBar from '../../../components/BulkEditBar';
@@ -46,7 +46,7 @@ const Index = ({
 	totalEnsemblesCount,
 	voiceParts,
 	ensembles,
-	singerCategories,
+	singerStatuses,
 	counts,
 	individualCheckInUrl,
 }) => {
@@ -71,7 +71,7 @@ const Index = ({
 		{ name: 'enrolments.voice_part_id', multiple: true },
 		{ name: 'enrolments.ensemble_id', multiple: true },
 		{ name: 'attendance.response', multiple: true },
-		{ name: 'category.id', multiple: true, defaultValue: singerCategories.find(c => c.name === 'Members')?.id ? [singerCategories.find(c => c.name === 'Members').id] : [] },
+		{ name: 'status.id', multiple: true, defaultValue: singerStatuses.find(c => c.name === 'Members')?.id ? [singerStatuses.find(c => c.name === 'Members').id] : [] },
 	];
 
 	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);
@@ -254,7 +254,7 @@ const Index = ({
 								voiceParts={voiceParts}
 								ensembles={ensembles}
 								form={sortFilterForm}
-								singerCategories={singerCategories}
+								singerStatuses={singerStatuses}
 							/>
 						}
 						closeFn={() => setShowFilters(false)}
@@ -311,7 +311,7 @@ const Index = ({
 												/>
 											</div>
 											<div>
-												<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
+												<SingerStatusTag status={new SingerStatus(singer.status.status)} />
 												<Link
 													href={route('singers.show', { singer })}
 													className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"

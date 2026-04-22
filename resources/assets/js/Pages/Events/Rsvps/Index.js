@@ -21,7 +21,7 @@ import RsvpFilters from '../../../components/RsvpFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import { Link } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
-import SingerCategoryTag from '../../../components/SingerCategoryTag';
+import SingerStatusTag from '../../../components/SingerStatusTag';
 import { handleNameSort } from '../../../utils/sortHelpers';
 import Button from '../../../components/inputs/Button';
 import CheckboxInput from '../../../components/inputs/CheckboxInput';
@@ -35,7 +35,7 @@ const Index = ({
 	totalEnsemblesCount,
 	voiceParts,
 	ensembles,
-	singerCategories,
+	singerStatuses,
 	counts,
 	customFields,
 }) => {
@@ -73,10 +73,10 @@ const Index = ({
 		{ name: 'enrolments.ensemble_id', multiple: true },
 		{ name: 'rsvp.response', multiple: true },
 		{
-			name: 'category.id',
+			name: 'status.id',
 			multiple: true,
-			defaultValue: singerCategories.find(c => c.name === 'Members')?.id
-				? [singerCategories.find(c => c.name === 'Members').id]
+			defaultValue: singerStatuses.find(c => c.name === 'Members')?.id
+				? [singerStatuses.find(c => c.name === 'Members').id]
 				: [],
 		},
 	];
@@ -152,7 +152,7 @@ const Index = ({
 								voiceParts={voiceParts}
 								ensembles={ensembles}
 								form={sortFilterForm}
-								singerCategories={singerCategories}
+								singerCategories={singerStatuses}
 							/>
 						}
 						closeFn={() => setShowFilters(false)}
@@ -230,8 +230,8 @@ const Index = ({
 												</div>
 												<div>
 													<div>
-														<SingerCategoryTag
-															status={new SingerStatus(singer.category.slug)}
+														<SingerStatusTag
+															status={new SingerStatus(singer.status.status)}
 														/>
 														<Link
 															href={route('singers.show', { singer })}
@@ -356,7 +356,16 @@ Index.layout = page => <TenantLayout children={page} />;
 
 export default Index;
 
-const ColumnsMenu = ({ size = 'sm', variant="secondary", visibleColumns, setVisibleColumns, defaultColumns, toggleColumn, fields, customFields }) => (
+const ColumnsMenu = ({
+	size = 'sm',
+	variant = 'secondary',
+	visibleColumns,
+	setVisibleColumns,
+	defaultColumns,
+	toggleColumn,
+	fields,
+	customFields,
+}) => (
 	<Menu as="div" className="relative inline-block text-left ml-3">
 		<Menu.Button as={Button} variant={variant} size={size}>
 			<Icon icon="columns" mr />
