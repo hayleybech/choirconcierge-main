@@ -53,7 +53,7 @@ export default function TenantLayout({ children }) {
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
-    const { can, userChoirs, errors, flash, tenant, navigation } = usePage().props;
+    const { can, userChoirs, errors, flash, tenant, navigation, isWebView } = usePage().props;
 
     const navFiltered = navigation
         .filter((item) => can[item.can])
@@ -80,7 +80,7 @@ export default function TenantLayout({ children }) {
                 )}
 
                 <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                    {player.showFullscreen || (
+                    {!isWebView && !player.showFullscreen && (
                       <LayoutTopBar
                           setSidebarOpen={setSidebarOpen}
                           setShowImpersonateModal={setShowImpersonateModal}

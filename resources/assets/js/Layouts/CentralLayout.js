@@ -18,7 +18,7 @@ export default function CentralLayout({ children }) {
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
-    const { can, userChoirs, errors, flash, navigation } = usePage().props;
+    const { can, userChoirs, errors, flash, navigation, isWebView } = usePage().props;
 
     const navFiltered = navigation
         .filter((item) => can[item.can])
@@ -46,11 +46,13 @@ export default function CentralLayout({ children }) {
             )}
 
             <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                <LayoutTopBar
-                  setSidebarOpen={setSidebarOpen}
-                  setShowImpersonateModal={setShowImpersonateModal}
-                  switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} />}
-                />
+                {!isWebView && (
+                    <LayoutTopBar
+                        setSidebarOpen={setSidebarOpen}
+                        setShowImpersonateModal={setShowImpersonateModal}
+                        switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} />}
+                    />
+                )}
 
                 <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
                     <ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
