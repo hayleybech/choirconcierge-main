@@ -35,7 +35,17 @@ return new class extends Migration
         }
 
         Schema::table('membership_status', function (Blueprint $table) {
-            if (collect(DB::select("SHOW INDEXES FROM membership_status"))->pluck('Key_name')->contains('membership_status_singer_status_id_foreign')) {
+            $foreignKeys = collect(DB::select(
+                "SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+                 WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND CONSTRAINT_NAME = ?",
+                [
+                    DB::connection()->getDatabaseName(),
+                    DB::getTablePrefix() . 'membership_status',
+                    'membership_status_singer_status_id_foreign'
+                ]
+            ));
+
+            if ($foreignKeys->isNotEmpty()) {
                 $table->dropForeign(['singer_status_id']);
             }
             $table->dropColumn('singer_status_id');
