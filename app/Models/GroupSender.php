@@ -22,7 +22,7 @@ use Illuminate\Support\Carbon;
  *
  * Relationships
  * @property UserGroup $group
- * @property User|Role|VoicePart|SingerStatus $sender
+ * @property User|Role|VoicePart|\App\Enums\SingerStatus $sender
  */
 class GroupSender extends Model
 {

@@ -152,7 +152,7 @@ const Index = ({
 								voiceParts={voiceParts}
 								ensembles={ensembles}
 								form={sortFilterForm}
-								singerCategories={singerStatuses}
+								singerStatuses={singerStatuses}
 							/>
 						}
 						closeFn={() => setShowFilters(false)}

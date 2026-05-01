@@ -165,6 +165,75 @@ class FolderControllerTest extends TestCase
             );
     }
 
+    public function test_full_flow_of_all_relationships_for_folders(): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
+
+        $role = \App\Models\Role::factory()->create();
+        $voicePart = \App\Models\VoicePart::factory()->create();
+        $user = \App\Models\User::factory()->create();
+        $status = SingerStatus::PROSPECTS;
+
+        $data = [
+            'title' => 'Full Flow Folder',
+            'viewer_roles' => [$role->id],
+            'viewer_voice_parts' => [$voicePart->id],
+            'viewer_users' => [$user->id],
+            'viewer_singer_statuses' => [$status->value],
+            'editor_roles' => [$role->id],
+            'editor_voice_parts' => [$voicePart->id],
+            'editor_users' => [$user->id],
+            'editor_singer_statuses' => [$status->value],
+        ];
+
+        // 1. Store
+        $this->post(the_tenant_route('folders.store'), $data)
+            ->assertRedirect(the_tenant_route('folders.index'));
+
+        $folder = Folder::where('title', 'Full Flow Folder')->first();
+        $this->assertNotNull($folder);
+
+        // Verify Database Viewers
+        $this->assertDatabaseHas('folder_viewers', ['folder_id' => $folder->id, 'viewer_id' => $role->id, 'viewer_type' => \App\Models\Role::class]);
+        $this->assertDatabaseHas('folder_viewers', ['folder_id' => $folder->id, 'viewer_id' => $voicePart->id, 'viewer_type' => \App\Models\VoicePart::class]);
+        $this->assertDatabaseHas('folder_viewers', ['folder_id' => $folder->id, 'viewer_id' => $user->id, 'viewer_type' => \App\Models\User::class]);
+        $this->assertDatabaseHas('folder_viewers', ['folder_id' => $folder->id, 'viewer_id' => $status->value, 'viewer_type' => SingerStatus::class]);
+
+        // Verify Database Editors
+        $this->assertDatabaseHas('folder_editors', ['folder_id' => $folder->id, 'editor_id' => $role->id, 'editor_type' => \App\Models\Role::class]);
+        $this->assertDatabaseHas('folder_editors', ['folder_id' => $folder->id, 'editor_id' => $voicePart->id, 'editor_type' => \App\Models\VoicePart::class]);
+        $this->assertDatabaseHas('folder_editors', ['folder_id' => $folder->id, 'editor_id' => $user->id, 'editor_type' => \App\Models\User::class]);
+        $this->assertDatabaseHas('folder_editors', ['folder_id' => $folder->id, 'editor_id' => $status->value, 'editor_type' => SingerStatus::class]);
+
+        // 2. Edit - Verify Display
+        $this->get(the_tenant_route('folders.edit', $folder))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('folder.viewer_roles', 1)
+                ->has('folder.viewer_voice_parts', 1)
+                ->has('folder.viewer_users', 1)
+                ->has('folder.viewer_singer_statuses', 1)
+                ->has('folder.editor_roles', 1)
+                ->has('folder.editor_voice_parts', 1)
+                ->has('folder.editor_users', 1)
+                ->has('folder.editor_singer_statuses', 1)
+            );
+
+        // 3. Update - Clear some and change others
+        $newData = $data;
+        unset($newData['viewer_roles']);
+        $newData['viewer_users'] = [];
+        $newData['title'] = 'Updated Full Flow Folder';
+
+        $this->put(the_tenant_route('folders.update', $folder), $newData)
+            ->assertRedirect(the_tenant_route('folders.index'));
+
+        $folder->refresh();
+        $this->assertEquals('Updated Full Flow Folder', $folder->title);
+        $this->assertCount(0, $folder->viewer_roles);
+        $this->assertCount(0, $folder->viewer_users);
+        $this->assertCount(1, $folder->viewer_voice_parts); // Should remain
+    }
+
     #[DataProvider('folderProvider')]
     public function test_update_redirects_to_index($getData): void
     {
