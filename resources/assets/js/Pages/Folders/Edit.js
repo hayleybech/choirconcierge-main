@@ -5,7 +5,7 @@ import AppHead from '../../components/AppHead';
 import FolderForm from './FolderForm';
 import useRoute from '../../hooks/useRoute';
 
-const Edit = ({ folder, ensembles, roles, voiceParts, singerCategories }) => {
+const Edit = ({ folder, ensembles, roles, voiceParts, singerStatuses }) => {
 	const { route } = useRoute();
 
 	return (
@@ -26,7 +26,7 @@ const Edit = ({ folder, ensembles, roles, voiceParts, singerCategories }) => {
 				ensembles={ensembles}
 				roles={roles}
 				voiceParts={voiceParts}
-				singerCategories={singerCategories}
+				singerStatuses={singerStatuses}
 			/>
 		</>
 	);
