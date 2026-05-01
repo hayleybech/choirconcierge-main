@@ -22,7 +22,7 @@ class MailLogController extends Controller
     public function show(MailLog $mail_log): Response
     {
         return Inertia::render('Central/MailLogs/Show', [
-            'log' => $mail_log->load(['events.user_group', 'tenants'])->loadCount('opens'),
+            'log' => $mail_log->load(['events.user_group.tenant', 'tenants'])->loadCount('opens'),
         ]);
     }
 }

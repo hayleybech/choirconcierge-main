@@ -12,6 +12,7 @@ class UserGroupFactory extends Factory
             'title' => $this->faker->sentence(),
             'slug' => $this->faker->unique()->slug(),
             'list_type' => $this->faker->randomElement(['public', 'chat', 'distribution']),
+            'tenant_id' => 'test',
             'created_at' => now(),
             'updated_at' => now(),
         ];
