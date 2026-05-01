@@ -31,13 +31,17 @@ class GroupSender extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['sender_id', 'sender_type'];
+    protected $fillable = ['group_id', 'sender_id', 'sender_type'];
 
     /**
      * Get all of the sender models (users, roles etc).
      */
     public function sender(): MorphTo
     {
+        if (in_array($this->sender_type, ['App\Enums\SingerStatus', \App\Enums\SingerStatus::class, 'SingerStatus'])) {
+            return $this->morphTo('sender', User::class, 'sender_id', 'id')->whereRaw('1 = 0');
+        }
+
         return $this->morphTo();
     }
 

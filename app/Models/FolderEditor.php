@@ -16,13 +16,17 @@ class FolderEditor extends Model
      *
      * @var array
      */
-    protected $fillable = ['editor_id', 'editor_type'];
+    protected $fillable = ['folder_id', 'editor_id', 'editor_type'];
 
     /**
      * Get all of the editor models (users, roles etc).
      */
     public function editor(): MorphTo
     {
+        if (in_array($this->editor_type, ['App\Enums\SingerStatus', \App\Enums\SingerStatus::class, 'SingerStatus'])) {
+            return $this->morphTo('editor', User::class, 'editor_id', 'id')->whereRaw('1 = 0');
+        }
+
         return $this->morphTo();
     }
 

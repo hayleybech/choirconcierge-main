@@ -94,11 +94,20 @@ class UserGroupControllerTest extends TestCase
 
         $group = UserGroup::factory()->create();
 
+        // Add a SingerStatus member to the group
+        \App\Models\GroupMember::create([
+            'group_id' => $group->id,
+            'memberable_id' => SingerStatus::MEMBERS->value,
+            'memberable_type' => SingerStatus::class,
+        ]);
+
         $this->get(the_tenant_route('groups.show', ['group' => $group]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('MailingLists/Show')
                 ->has('list')
+                ->has('list.members', 1)
+                ->where('list.members.0.memberable.name', SingerStatus::MEMBERS->label())
             );
     }
 

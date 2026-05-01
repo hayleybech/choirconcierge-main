@@ -65,7 +65,24 @@ class UserGroupController extends Controller
 
     public function show(UserGroup $group): Response
     {
-        $group->load('members.memberable', 'senders.sender', 'recipient_ensembles', 'sender_ensembles');
+        $group->load(['members' => function ($query) {
+            $query->where('memberable_type', '!=', SingerStatus::class);
+        }, 'members.memberable', 'senders' => function ($query) {
+            $query->where('sender_type', '!=', SingerStatus::class);
+        }, 'senders.sender', 'recipient_ensembles', 'sender_ensembles', 'recipient_singer_statuses', 'sender_singer_statuses']);
+
+        // Manually add SingerStatus members to the members and senders collections for the frontend
+        $group->recipient_singer_statuses->each(function ($member) use ($group) {
+            $status = SingerStatus::tryFrom($member->memberable_id);
+            $member->memberable = (object) ['name' => $status?->label() ?? $member->memberable_id];
+            $group->members->push($member);
+        });
+
+        $group->sender_singer_statuses->each(function ($sender) use ($group) {
+            $status = SingerStatus::tryFrom($sender->sender_id);
+            $sender->sender = (object) ['name' => $status?->label() ?? $sender->sender_id];
+            $group->senders->push($sender);
+        });
 
         $group->can = [
             'update_group' => auth()->user()?->can('update', $group),
