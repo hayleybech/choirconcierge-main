@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\UserGroup;
+use App\Enums\SingerStatus;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -114,6 +115,45 @@ class UserGroupControllerTest extends TestCase
 
         $group = UserGroup::firstWhere('title', $data['title']);
         $response->assertRedirect(the_tenant_route('groups.show', [$group]));
+    }
+
+    public function test_can_save_and_display_singer_statuses_for_user_groups(): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
+
+        $statusValue = SingerStatus::PROSPECTS->value;
+
+        // 1. POST request to create a user group with singer statuses
+        $this->post(the_tenant_route('groups.store'), [
+            'title' => 'Test Group',
+            'slug' => 'test-group',
+            'list_type' => 'distribution',
+            'recipient_singer_statuses' => [$statusValue],
+            'sender_singer_statuses' => [$statusValue],
+        ])
+            ->assertRedirect(); // Usually redirects to show page
+
+        $group = UserGroup::where('title', 'Test Group')->first();
+        $this->assertNotNull($group);
+
+        // Verify it's saved in the database
+        $this->assertDatabaseHas('group_members', [
+            'group_id' => $group->id,
+            'memberable_id' => $statusValue,
+            'memberable_type' => SingerStatus::class,
+        ]);
+        $this->assertDatabaseHas('group_senders', [
+            'group_id' => $group->id,
+            'sender_id' => $statusValue,
+            'sender_type' => SingerStatus::class,
+        ]);
+
+        // 2. GET request to edit the group and verify Inertia data
+        $this->get(the_tenant_route('groups.edit', $group))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('list.recipient_singer_statuses.0.memberable_id', $statusValue)
+                ->where('list.sender_singer_statuses.0.sender_id', $statusValue)
+            );
     }
 
     #[DataProvider('eventProvider')]

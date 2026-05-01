@@ -27,12 +27,12 @@ const MailingListForm = ({ list, roles = [], voiceParts = [], singerStatuses = [
         recipient_users: list?.recipient_users?.map(user => user.id) ?? [],
         recipient_roles: list?.recipient_roles?.map(role => role.id) ?? [],
         recipient_voice_parts: list?.recipient_voice_parts?.map(part => part.id) ?? [],
-        recipient_singer_statuses: list?.recipient_singer_statuses?.map(part => part.id) ?? [],
+        recipient_singer_statuses: list?.recipient_singer_statuses?.map(status => status.memberable_id) ?? [],
         recipient_ensembles: list?.recipient_ensembles?.map(ensemble => ensemble.id) ?? [],
         sender_users: list?.sender_users?.map(user => user.id) ?? [],
         sender_roles: list?.sender_roles?.map(role => role.id) ?? [],
         sender_voice_parts: list?.sender_voice_parts?.map(part => part.id) ?? [],
-        sender_singer_statuses: list?.sender_singer_statuses?.map(part => part.id) ?? [],
+        sender_singer_statuses: list?.sender_singer_statuses?.map(status => status.sender_id) ?? [],
         sender_ensembles: list?.sender_ensembles?.map(ensemble => ensemble.id) ?? [],
     });
 

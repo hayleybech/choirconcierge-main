@@ -6,7 +6,7 @@ import MailingListForm from "./MailingListForm";
 import useRoute from "../../hooks/useRoute";
 import TrialAntiSpamNotice from "./TrialAntiSpamNotice";
 
-const Edit = ({ list, roles, voiceParts, singerCategories, ensembles }) => {
+const Edit = ({ list, roles, voiceParts, singerStatuses, ensembles }) => {
     const { route } = useRoute();
 
     return (
@@ -26,7 +26,7 @@ const Edit = ({ list, roles, voiceParts, singerCategories, ensembles }) => {
                 ]}
             />
 
-            <MailingListForm list={list} roles={roles} voiceParts={voiceParts} singerCategories={singerCategories} ensembles={ensembles} />
+            <MailingListForm list={list} roles={roles} voiceParts={voiceParts} singerStatuses={singerStatuses} ensembles={ensembles} />
         </>
     );
 }

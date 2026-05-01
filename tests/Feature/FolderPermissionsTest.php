@@ -147,3 +147,23 @@ it('syncs all permission types when creating folder', function () {
     expect($folder->editor_singer_statuses)->toHaveCount(1);
     expect($folder->editor_singer_statuses->first()->editor_id)->toBe($statusValue);
 });
+
+it('allows specific singer statuses to view folder', function () {
+    $folder = Folder::factory()->create();
+    $status = SingerStatus::MEMBERS;
+    $allowedUser = createSinger(['Singer'], null, $status->value);
+    $disallowedUser = createSinger(['Singer'], null, SingerStatus::PROSPECTS->value);
+
+    $folder->viewer_singer_statuses()->create([
+        'viewer_id' => $status->value,
+        'viewer_type' => SingerStatus::class,
+    ]);
+
+    actingAs($allowedUser)
+        ->get(the_tenant_route('folders.index'))
+        ->assertInertia(fn ($page) => $page->has('folders', 1));
+
+    actingAs($disallowedUser)
+        ->get(the_tenant_route('folders.index'))
+        ->assertInertia(fn ($page) => $page->has('folders', 0));
+});

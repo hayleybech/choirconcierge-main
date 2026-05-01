@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Document;
 use App\Models\Folder;
+use App\Enums\SingerStatus;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -125,6 +126,43 @@ class FolderControllerTest extends TestCase
             ->assertRedirect(the_tenant_route('folders.index'));
 
         $this->assertDatabaseHas('folders', $data);
+    }
+
+    public function test_can_save_and_display_singer_statuses_for_folders(): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
+
+        $statusValue = SingerStatus::MEMBERS->value;
+
+        // 1. POST request to create a folder with singer statuses
+        $this->post(the_tenant_route('folders.store'), [
+            'title' => 'Test Folder',
+            'viewer_singer_statuses' => [$statusValue],
+            'editor_singer_statuses' => [$statusValue],
+        ])
+            ->assertRedirect(the_tenant_route('folders.index'));
+
+        $folder = Folder::where('title', 'Test Folder')->first();
+        $this->assertNotNull($folder);
+
+        // Verify it's saved in the database
+        $this->assertDatabaseHas('folder_viewers', [
+            'folder_id' => $folder->id,
+            'viewer_id' => $statusValue,
+            'viewer_type' => SingerStatus::class,
+        ]);
+        $this->assertDatabaseHas('folder_editors', [
+            'folder_id' => $folder->id,
+            'editor_id' => $statusValue,
+            'editor_type' => SingerStatus::class,
+        ]);
+
+        // 2. GET request to edit the folder and verify Inertia data
+        $this->get(the_tenant_route('folders.edit', $folder))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('folder.viewer_singer_statuses.0.viewer_id', $statusValue)
+                ->where('folder.editor_singer_statuses.0.editor_id', $statusValue)
+            );
     }
 
     #[DataProvider('folderProvider')]
