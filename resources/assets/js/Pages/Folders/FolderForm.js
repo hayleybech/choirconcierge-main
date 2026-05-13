@@ -68,7 +68,7 @@ const FolderForm = ({ folder, ensembles, roles, voiceParts, singerStatuses }) =>
 					)}
                 </FormSection>
 
-                <FormSection title="Viewing Permissions" description={`Specify who can view this folder. If none are selected, all members ${ensembles.length > 1 && '(within any selected ensembles) '}can view. `}>
+                <FormSection title="Viewing Permissions" description={`Specify who can view this folder. If none are selected, all members ${ensembles.length > 1 ? '(within any selected ensembles) ' : ''}can view. `}>
                     <div className="sm:col-span-6">
                         <Label label="Specific Singers" />
                         <SingerSelect
