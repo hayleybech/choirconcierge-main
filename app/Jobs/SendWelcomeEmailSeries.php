@@ -42,9 +42,7 @@ class SendWelcomeEmailSeries implements ShouldQueue
 	    $ownerUser = User::findOrFail($this->tenant->created_by);
 
 		// Part 1
-        SendTenantWelcomePart1::dispatch($ownerUser)
-            ->onConnection('database')
-            ->onQueue('delayed');
+        SendTenantWelcomePart1::dispatch($ownerUser);
 
 		// Part 2
         SendTenantWelcomePart2::dispatch($ownerUser, $this->tenant->had_demo ?? false)
