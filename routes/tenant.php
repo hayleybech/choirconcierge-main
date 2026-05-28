@@ -95,181 +95,186 @@ Route::middleware([
 	InitializeTenancyByPath::class,
     SetTenantRouteParam::class,
     NoRobots::class,
-    BlockMemberAccessWhenNoActiveSubscription::class,
 ])->prefix('/{tenant}')->group(function () {
-
-    // Tenant asset - path version as path tenancy isn't supported by the library
-    Route::get('/tenancy/assets/{path?}', [TenantAssetsController::class, 'asset'])
-        ->where('path', '(.*)')
-        ->name('tenancy.asset');
 
     // Public calendar feed
     Route::get('/events-ical', [ICalController::class, 'index'])->name('events.feed');
 
-    /** Mailbox **/
-    Route::get('/mailbox/process', [MailboxController::class, 'process']);
-
-    // Mail log open tracking
-    Route::get('/mail-log/open/{mail_log_uid}/{email}', [MailLogOpenController::class, 'show'])
-        ->name('mail-logs.open');
-
-    // Event Email magic links (no login required)
-    Route::get('/events/{event}/email-rsvp/{user}', RsvpFromNotificationController::class)
-        ->name('events.rsvp-from-email')
-        ->middleware('signed');
-
     Route::middleware([
-        'auth',
-        EnsureUserIsMember::class
+        BlockMemberAccessWhenNoActiveSubscription::class,
+
     ])->group(function() {
+        // Tenant asset - path version as path tenancy isn't supported by the library
+        Route::get('/tenancy/assets/{path?}', [TenantAssetsController::class, 'asset'])
+            ->where('path', '(.*)')
+            ->name('tenancy.asset');
 
-        // Dashboard
-        Route::get('/', [DashController::class, 'index'])->name('dash');
-        Route::put('/widgets/upcoming/events', CustomiseUpcomingEventsWidgetController::class)->name('widgets.upcoming-events');
 
-        // Account Settings
-        Route::singleton('account', AccountController::class)->only(['edit', 'update']);
+        /** Mailbox **/
+        Route::get('/mailbox/process', [MailboxController::class, 'process']);
 
-        // Singers module
-        Route::get('singers/export', ExportMemberController::class)->name('singers.export');
-        Route::get('singers/{singer}/attendance', [SingerAttendanceController::class, '__invoke'])->name('singers.attendance');
-        Route::post('singers/bulk-update', [SingerController::class, 'bulkUpdate'])->name('singers.bulk-update');
-        Route::post('singers/bulk-destroy', [SingerController::class, 'bulkDestroy'])->name('singers.bulk-destroy');
-        Route::resource('singers', SingerController::class);
-        Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
-        Route::resource('singers.enrolments', EnrolmentController::class)->only(['store', 'update', 'destroy']);
-        Route::put('singers/{singer}/fees', UpdateSingerFeeController::class)->name('singers.fees.update');
-        Route::post('singers/import', ImportSingerController::class)->name('singers.import');
-        Route::post('singers/import/preview', [ImportSingerController::class, 'preview'])->name('singers.import.preview');
-        Route::get('singers/import/template', ImportSingerTemplateController::class)->name('singers.import.template');
-        Route::get('singers/{singer}/status/update', UpdateSingerStatusController::class)->name('singers.statuses.update');
-        Route::get('singers/{singer}/tasks/{task}/complete', CompleteSingerTaskController::class)->name('task.complete');
-        Route::resource('singers.custom-fields', CustomFieldEntryController::class)
-            ->parameters(['custom-fields' => 'entry'])
-            ->only(['store', 'update']);
+        // Mail log open tracking
+        Route::get('/mail-log/open/{mail_log_uid}/{email}', [MailLogOpenController::class, 'show'])
+            ->name('mail-logs.open');
 
-        // Custom Fields
-        Route::resource('custom-fields', CustomFieldController::class)->only(['store', 'destroy']);
+        // Event Email magic links (no login required)
+        Route::get('/events/{event}/email-rsvp/{user}', RsvpFromNotificationController::class)
+            ->name('events.rsvp-from-email')
+            ->middleware('signed');
 
-        // Songs module
-        Route::post('songs/bulk-update', [SongController::class, 'bulkUpdate'])->name('songs.bulk-update');
-        Route::post('songs/bulk-destroy', [SongController::class, 'bulkDestroy'])->name('songs.bulk-destroy');
-        Route::resource('songs', SongController::class);
-        Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('employee');
-        Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
-        Route::resource('songs.singers', LearningStatusController::class)->only(['index', 'update']);
+        Route::middleware([
+            'auth',
+            EnsureUserIsMember::class
+        ])->group(function() {
 
-        // Song Categories module
-        Route::resource('song-categories', SongCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+            // Dashboard
+            Route::get('/', [DashController::class, 'index'])->name('dash');
+            Route::put('/widgets/upcoming/events', CustomiseUpcomingEventsWidgetController::class)->name('widgets.upcoming-events');
 
-        // Events module
-        Route::post('events/bulk-update', [EventController::class, 'bulkUpdate'])->name('events.bulk-update');
-        Route::post('events/bulk-destroy', [EventController::class, 'bulkDestroy'])->name('events.bulk-destroy');
-        Route::resource('events', EventController::class);
-        Route::get('events/{event}/clone', [EventController::class, 'clone'])->name('events.clone');
-        Route::resource('events.rsvps', RsvpController::class)->only(['index', 'store', 'update', 'destroy']);
-        Route::resource('events.attendances', AttendanceController::class)->only(['index']);
-        Route::resource('events.activities', EventActivityController::class)->only(['store', 'update', 'destroy']);
-        Route::post('events/{event}/activities/{activity}/move', MoveActivityController::class)->name('events.activities.move');
-        Route::get('events/calendar/month', EventCalendarController::class)->name('events.calendar.month');
-        Route::controller(RecurringEventController::class)
-            ->prefix('events/{event}/recurring/')
-            ->name('events.recurring.')
-            ->group(function () {
-                Route::get('edit/{mode}', 'edit')->name('edit');
-                Route::put('{mode}', 'update')->name('update');
-                Route::get('delete/{mode}', 'destroy')->name('delete');
+            // Account Settings
+            Route::singleton('account', AccountController::class)->only(['edit', 'update']);
+
+            // Singers module
+            Route::get('singers/export', ExportMemberController::class)->name('singers.export');
+            Route::get('singers/{singer}/attendance', [SingerAttendanceController::class, '__invoke'])->name('singers.attendance');
+            Route::post('singers/bulk-update', [SingerController::class, 'bulkUpdate'])->name('singers.bulk-update');
+            Route::post('singers/bulk-destroy', [SingerController::class, 'bulkDestroy'])->name('singers.bulk-destroy');
+            Route::resource('singers', SingerController::class);
+            Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
+            Route::resource('singers.enrolments', EnrolmentController::class)->only(['store', 'update', 'destroy']);
+            Route::put('singers/{singer}/fees', UpdateSingerFeeController::class)->name('singers.fees.update');
+            Route::post('singers/import', ImportSingerController::class)->name('singers.import');
+            Route::post('singers/import/preview', [ImportSingerController::class, 'preview'])->name('singers.import.preview');
+            Route::get('singers/import/template', ImportSingerTemplateController::class)->name('singers.import.template');
+            Route::get('singers/{singer}/status/update', UpdateSingerStatusController::class)->name('singers.statuses.update');
+            Route::get('singers/{singer}/tasks/{task}/complete', CompleteSingerTaskController::class)->name('task.complete');
+            Route::resource('singers.custom-fields', CustomFieldEntryController::class)
+                ->parameters(['custom-fields' => 'entry'])
+                ->only(['store', 'update']);
+
+            // Custom Fields
+            Route::resource('custom-fields', CustomFieldController::class)->only(['store', 'destroy']);
+
+            // Songs module
+            Route::post('songs/bulk-update', [SongController::class, 'bulkUpdate'])->name('songs.bulk-update');
+            Route::post('songs/bulk-destroy', [SongController::class, 'bulkDestroy'])->name('songs.bulk-destroy');
+            Route::resource('songs', SongController::class);
+            Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('employee');
+            Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
+            Route::resource('songs.singers', LearningStatusController::class)->only(['index', 'update']);
+
+            // Song Categories module
+            Route::resource('song-categories', SongCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+
+            // Events module
+            Route::post('events/bulk-update', [EventController::class, 'bulkUpdate'])->name('events.bulk-update');
+            Route::post('events/bulk-destroy', [EventController::class, 'bulkDestroy'])->name('events.bulk-destroy');
+            Route::resource('events', EventController::class);
+            Route::get('events/{event}/clone', [EventController::class, 'clone'])->name('events.clone');
+            Route::resource('events.rsvps', RsvpController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::resource('events.attendances', AttendanceController::class)->only(['index']);
+            Route::resource('events.activities', EventActivityController::class)->only(['store', 'update', 'destroy']);
+            Route::post('events/{event}/activities/{activity}/move', MoveActivityController::class)->name('events.activities.move');
+            Route::get('events/calendar/month', EventCalendarController::class)->name('events.calendar.month');
+            Route::controller(RecurringEventController::class)
+                ->prefix('events/{event}/recurring/')
+                ->name('events.recurring.')
+                ->group(function () {
+                    Route::get('edit/{mode}', 'edit')->name('edit');
+                    Route::put('{mode}', 'update')->name('update');
+                    Route::get('delete/{mode}', 'destroy')->name('delete');
+                });
+
+            Route::resource('events.check-ins', EventCheckInController::class)->only(['index', 'store'])->middleware('signed');
+            Route::resource('events.kiosk-check-ins', EventCheckInKioskController::class)->only(['index', 'store']);
+
+            Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
+            Route::post('events/{event}/attendances/bulk', [AttendanceController::class, 'bulkUpdate'])->name('events.attendances.bulkUpdate');
+            Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
+            Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
+
+            // Event Categories module
+            Route::resource('event-types', EventTypeController::class)->only(['index', 'store', 'update', 'destroy']);
+
+            // Documents module
+            Route::resource('folders', FolderController::class)->except(['show']);
+            Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'update', 'destroy']);
+
+            // Risers module
+            Route::post('stacks/bulk-update', [RiserStackController::class, 'bulkUpdate'])->name('stacks.bulk-update');
+            Route::post('stacks/bulk-destroy', [RiserStackController::class, 'bulkDestroy'])->name('stacks.bulk-destroy');
+            Route::resource('stacks', RiserStackController::class);
+            Route::get('stacks/{stack}/clone', [RiserStackController::class, 'clone'])->name('stacks.clone');
+
+            // Users/Team module
+            Route::prefix('users')->group(static function () {
+
+                Route::controller(UserController::class)->group(function () {
+                    // Index
+                    Route::get('/', 'index')->name('users.index');
+
+                    // AJAX Search
+                    Route::get('/find', 'findUsers')->name('findUsers');
+                    Route::get('/roles/find', 'findRoles')->name('findRoles');
+                    Route::get('/voice-parts/find', 'findVoiceParts')->name('findVoiceParts');
+                    Route::get('/singer-status/find', 'findSingerStatuses')->name('findSingerStatuses');
+
+                    // Attach/Detach role from a user
+                    Route::get('{user}/roles/{role}/detach', 'detachRole')->name('users.detachrole');
+                    Route::post('{user}/role', 'addRoles')->name('users.addroles');
+                });
+
+
+                // User Impersonation
+                Route::get('{user}/impersonate', [ImpersonateUserController::class, 'start'])->name('users.impersonate');
+                Route::get('/impersonation/stop', [ImpersonateUserController::class, 'stop'])->name('impersonation.stop');
             });
 
-        Route::resource('events.check-ins', EventCheckInController::class)->only(['index', 'store'])->middleware('signed');
-        Route::resource('events.kiosk-check-ins', EventCheckInKioskController::class)->only(['index', 'store']);
-
-        Route::put('events/{event}/attendances/{singer}', [AttendanceController::class, 'update'])->name('events.attendances.update');
-        Route::post('events/{event}/attendances/bulk', [AttendanceController::class, 'bulkUpdate'])->name('events.attendances.bulkUpdate');
-        Route::post('events/{event}/attendances', [AttendanceController::class, 'updateAll'])->name('events.attendances.updateAll');
-        Route::get('events/reports/attendance', AttendanceReportController::class)->name('events.reports.attendance');
-
-        // Event Categories module
-        Route::resource('event-types', EventTypeController::class)->only(['index', 'store', 'update', 'destroy']);
-
-        // Documents module
-        Route::resource('folders', FolderController::class)->except(['show']);
-        Route::resource('folders.documents', DocumentController::class)->only(['store', 'show', 'update', 'destroy']);
-
-        // Risers module
-        Route::post('stacks/bulk-update', [RiserStackController::class, 'bulkUpdate'])->name('stacks.bulk-update');
-        Route::post('stacks/bulk-destroy', [RiserStackController::class, 'bulkDestroy'])->name('stacks.bulk-destroy');
-        Route::resource('stacks', RiserStackController::class);
-        Route::get('stacks/{stack}/clone', [RiserStackController::class, 'clone'])->name('stacks.clone');
-
-        // Users/Team module
-        Route::prefix('users')->group(static function () {
-
-            Route::controller(UserController::class)->group(function () {
-                // Index
-                Route::get('/', 'index')->name('users.index');
-
-                // AJAX Search
-                Route::get('/find', 'findUsers')->name('findUsers');
-                Route::get('/roles/find', 'findRoles')->name('findRoles');
-                Route::get('/voice-parts/find', 'findVoiceParts')->name('findVoiceParts');
-                Route::get('/singer-status/find', 'findSingerStatuses')->name('findSingerStatuses');
-
-                // Attach/Detach role from a user
-                Route::get('{user}/roles/{role}/detach', 'detachRole')->name('users.detachrole');
-                Route::post('{user}/role', 'addRoles')->name('users.addroles');
+            // Search APIs
+            Route::prefix('find')->name('find.')->group(function () {
+                Route::get('/singers', FindSingerController::class)->name('singers');
+                Route::get('/songs/{keyword}', FindSongController::class)->name('songs');
             });
 
+            // Global Search APIs
+            Route::prefix('find')->group(function () {
+                Route::get('/users', GlobalFindUserController::class)->name('global-find.users');
+            });
 
-            // User Impersonation
-            Route::get('{user}/impersonate', [ImpersonateUserController::class, 'start'])->name('users.impersonate');
-            Route::get('/impersonation/stop', [ImpersonateUserController::class, 'stop'])->name('impersonation.stop');
+            // Mailing Lists (User Groups) module
+            Route::prefix('groups')->name('groups.')->group(function () {
+                Route::post('bulk-destroy', [UserGroupController::class, 'bulkDestroy'])->name('bulk-destroy');
+                Route::resource('mail-logs', MailLogController::class)->only(['index', 'show'])->middleware(EnsureUserIsMember::class);
+            });
+            Route::get('/groups/broadcasts/create', [BroadcastController::class, 'create'])->name('groups.broadcasts.create');
+            Route::post('/groups/broadcasts', [BroadcastController::class, 'store'])->name('groups.broadcasts.store');
+            Route::resource('groups', UserGroupController::class);
+
+            // Tasks module
+            Route::resource('tasks', TaskController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+            Route::resource('tasks.notifications', TaskNotificationTemplateController::class)->except('index');
+
+            // Voice Parts module
+            Route::resource('voice-parts', VoicePartController::class)->except(['show']);
+
+            // Roles module
+            Route::resource('roles', RoleController::class);
+            Route::get('roles/{role}/clone', [RoleController::class, 'clone'])->name('roles.clone');
+
+            // Polls module
+            Route::post('polls/bulk-update', [PollController::class, 'bulkUpdate'])->name('polls.bulk-update');
+            Route::post('polls/bulk-destroy', [PollController::class, 'bulkDestroy'])->name('polls.bulk-destroy');
+            Route::resource('polls', PollController::class);
+            Route::post('polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
+            Route::put('polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');
+            Route::put('polls/{poll}/open', [PollController::class, 'open'])->name('polls.open');
+
+            // Organisation Settings
+            Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');
+            Route::post('/organisation', [TenantController::class, 'update'])->name('organisation.update');
+
+            // Sub-groups aka Ensembles aka Choirs
+            Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);
         });
-
-        // Search APIs
-        Route::prefix('find')->name('find.')->group(function () {
-            Route::get('/singers', FindSingerController::class)->name('singers');
-            Route::get('/songs/{keyword}', FindSongController::class)->name('songs');
-        });
-
-        // Global Search APIs
-        Route::prefix('find')->group(function () {
-            Route::get('/users', GlobalFindUserController::class)->name('global-find.users');
-        });
-
-        // Mailing Lists (User Groups) module
-        Route::prefix('groups')->name('groups.')->group(function () {
-            Route::post('bulk-destroy', [UserGroupController::class, 'bulkDestroy'])->name('bulk-destroy');
-            Route::resource('mail-logs', MailLogController::class)->only(['index', 'show'])->middleware(EnsureUserIsMember::class);
-        });
-        Route::get('/groups/broadcasts/create', [BroadcastController::class, 'create'])->name('groups.broadcasts.create');
-        Route::post('/groups/broadcasts', [BroadcastController::class, 'store'])->name('groups.broadcasts.store');
-        Route::resource('groups', UserGroupController::class);
-
-        // Tasks module
-        Route::resource('tasks', TaskController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
-        Route::resource('tasks.notifications', TaskNotificationTemplateController::class)->except('index');
-
-        // Voice Parts module
-        Route::resource('voice-parts', VoicePartController::class)->except(['show']);
-
-        // Roles module
-        Route::resource('roles', RoleController::class);
-        Route::get('roles/{role}/clone', [RoleController::class, 'clone'])->name('roles.clone');
-
-        // Polls module
-        Route::post('polls/bulk-update', [PollController::class, 'bulkUpdate'])->name('polls.bulk-update');
-        Route::post('polls/bulk-destroy', [PollController::class, 'bulkDestroy'])->name('polls.bulk-destroy');
-        Route::resource('polls', PollController::class);
-        Route::post('polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
-        Route::put('polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');
-        Route::put('polls/{poll}/open', [PollController::class, 'open'])->name('polls.open');
-
-        // Organisation Settings
-        Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');
-        Route::post('/organisation', [TenantController::class, 'update'])->name('organisation.update');
-
-        // Sub-groups aka Ensembles aka Choirs
-		Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);
     });
 });
