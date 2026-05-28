@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\IncomingMailbox;
 use App\Mail\IncomingMessage;
+use App\Mail\MessageTooLargeMessage;
 use App\Mail\WebklexImapMessageMailableAdapter;
 use App\Models\MailLog;
 use Illuminate\Bus\Queueable;
@@ -12,6 +13,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Webklex\PHPIMAP\Message;
 
 /**
@@ -41,6 +44,35 @@ class ProcessGroupMailbox implements ShouldQueue
             ->each(function (Message $message) {
 
                 if ($this->isDuplicateEmail($message) || MailLog::query()->where('uid', $message->getUid())->exists()) {
+                    $message->delete();
+
+                    return;
+                }
+
+                // Reject messages larger than 5 MB
+                if ($message->getSize() >= 5 * 1024 * 1024) {
+                    $fromAddress = $message->getFrom()->first()->mail;
+
+                    Mail::to($fromAddress)->send(new MessageTooLargeMessage());
+
+                    $log = MailLog::create([
+                        'uid' => $message->getUid(),
+                        'from' => Str::limit($fromAddress, 254),
+                        'to' => Str::limit(collect($message->getTo())->map(fn($to) => $to->mail)->join(', '), 512),
+                        'subject' => Str::limit($message->getSubject()->first(), 125),
+                        'body' => 'Message rejected: size too large ('.$message->getSize().' bytes)',
+                        'size' => $message->getSize(),
+                        'has_attachments' => $message->hasAttachments(),
+                        'received_at' => $message->getDate()->first(),
+                    ]);
+
+                    $log->events()->create([
+                        'status' => 'rejected-too-large',
+                        'context' => 'Size: '.$message->getSize().' bytes',
+                    ]);
+
+                    Log::info(sprintf('Rejected oversized inbound message from <%s> (%s bytes)', $fromAddress, $message->getSize()));
+
                     $message->delete();
 
                     return;
