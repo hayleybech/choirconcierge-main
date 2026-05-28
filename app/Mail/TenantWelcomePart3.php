@@ -11,7 +11,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TenantWelcomePart3 extends Mailable implements ShouldQueue
+class TenantWelcomePart3 extends Mailable
 {
     use Queueable, SerializesModels;
 
