@@ -50,6 +50,14 @@ const Show = ({ log }) => {
 								<Icon icon="paperclip" mr />{' '}
 								{log.has_attachments ? 'Has attachments' : 'No attachments'}
 							</div>
+							{log.size > 0 && (
+								<div>
+									<Icon icon="hdd" mr />{' '}
+									{log.size < 1024 * 1024
+										? `${(log.size / 1024).toFixed(1)} KB`
+										: `${(log.size / (1024 * 1024)).toFixed(1)} MB`}
+								</div>
+							)}
 						</div>
 						<div className="flex items-center gap-2">
 							<DateTag icon="pencil" date={log.created_at} label="Created" />
