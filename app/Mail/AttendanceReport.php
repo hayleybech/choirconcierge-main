@@ -5,7 +5,6 @@ namespace App\Mail;
 use App\Models\Event;
 use App\Models\VoicePart;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
