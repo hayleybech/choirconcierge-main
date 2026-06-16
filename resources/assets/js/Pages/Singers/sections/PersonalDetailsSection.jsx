@@ -3,8 +3,8 @@ import { DetailList, DetailListItem } from '../components/DetailList';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
 import React from 'react';
-import HeightToggle from "../components/HeightToggle";
-import StreetAddress from "../components/StreetAddress";
+import HeightToggle from '../components/HeightToggle';
+import StreetAddress from '../components/StreetAddress';
 
 export const PersonalDetailsSection = ({ singer }) => (
 	<CollapsePanel>
@@ -28,7 +28,14 @@ export const PersonalDetailsSection = ({ singer }) => (
 				</p>
 			</DetailListItem>
 			<DetailListItem label="Date of Birth">
-				{singer.user.dob ? <DateTag date={singer.user.dob} /> : 'No date of birth'}
+				{singer.user.dob ? (
+					<div className="flex items-center gap-1">
+						<DateTag date={singer.user.dob} />
+						<span className="text-gray-500">({singer.user.age} years old)</span>
+					</div>
+				) : (
+					'No date of birth'
+				)}
 			</DetailListItem>
 			<DetailListItem label="Height">
 				{singer.user.height ? <HeightToggle cm={singer.user.height} /> : 'Unknown'}
