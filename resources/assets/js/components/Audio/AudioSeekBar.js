@@ -1,36 +1,30 @@
 import React, {
     useCallback,
-    useEffect,
+    useContext,
     useRef,
-    useState,
 } from "react"
-import { useAudioPlayer, useAudioPosition } from "react-use-audio-player"
+import { PlayerContext } from "../../contexts/player-context";
 
 export const AudioSeekBar = ({ className }) => {
-    const { duration, seek, percentComplete } = useAudioPosition({
-        highRefreshRate: true
-    })
-    const { playing } = useAudioPlayer();
-    const [barWidth, setBarWidth] = useState("0%");
+    const player = useContext(PlayerContext);
+    const { duration, position, seek } = player;
+    const percentComplete = duration > 0 ? (position / duration) * 100 : 0;
+    const barWidth = `${percentComplete}%`;
 
     const seekBarElem = useRef(null);
-
-    useEffect(() => {
-        setBarWidth(`${percentComplete}%`);
-    }, [percentComplete]);
 
     const goTo = useCallback(
         (event) => {
             const { pageX: eventOffsetX } = event;
 
-            if (seekBarElem.current && playing) {
+            if (seekBarElem.current && duration > 0) {
                 const elementOffsetX = seekBarElem.current.getBoundingClientRect().left;
                 const elementWidth = seekBarElem.current.clientWidth;
-                const percent = ((eventOffsetX - elementOffsetX) / elementWidth) * 100;
-                seek?.(percent/100 * duration);
+                const percent = ((eventOffsetX - elementOffsetX) / elementWidth);
+                seek(percent * duration);
             }
         },
-        [duration, playing, seek]
+        [duration, seek]
     );
 
     return (

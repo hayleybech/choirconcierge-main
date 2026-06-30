@@ -1,10 +1,10 @@
-import React, {useState} from 'react'
+import React, {useState, useRef, useEffect, useCallback} from 'react'
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import {usePage} from '@inertiajs/react';
 import GlobalTrackPlayer from "../components/Audio/GlobalTrackPlayer";
 import { PlayerContext } from '../contexts/player-context';
-import { AudioPlayerProvider } from "react-use-audio-player"
+import { Howl } from 'howler';
 import ImpersonateUserModal from "../components/ImpersonateUserModal";
 import LayoutTopBar from "../components/LayoutTopBar";
 import ToastFlash from "../components/ToastFlash";
@@ -21,32 +21,146 @@ export default function TenantLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { route } = useRoute();
 
-    const [player, setPlayer] = useState({
+    const [playerState, setPlayerState] = useState({
         songTitle: null,
         songId: 0,
         fileName: null,
         src: null,
-        play: (attachment) => setPlayer(oldState => ({
-            ...oldState,
-            songTitle: attachment.song.title,
-            songId: attachment.song.id,
-            fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
-            src: attachment.download_url,
-        })),
-        stop: () => setPlayer({
-            ...player,
+        playing: false,
+        loading: false,
+        duration: 0,
+        position: 0,
+        volume: 1,
+        showFullscreen: false,
+    });
+
+    const howlRef = useRef(null);
+    const requestRef = useRef(null);
+
+    const updatePosition = useCallback(() => {
+        if (howlRef.current && howlRef.current.playing()) {
+            const currentPos = howlRef.current.seek();
+            if (typeof currentPos === 'number') {
+                setPlayerState(prev => ({ ...prev, position: currentPos }));
+            }
+            requestRef.current = requestAnimationFrame(updatePosition);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (playerState.playing) {
+            requestRef.current = requestAnimationFrame(updatePosition);
+        } else {
+            cancelAnimationFrame(requestRef.current);
+        }
+        return () => cancelAnimationFrame(requestRef.current);
+    }, [playerState.playing, updatePosition]);
+
+    const stop = useCallback(() => {
+        if (howlRef.current) {
+            howlRef.current.stop();
+            howlRef.current.unload();
+            howlRef.current = null;
+        }
+        setPlayerState(prev => ({
+            ...prev,
             songTitle: null,
             songId: 0,
             fileName: null,
             src: null,
-        }),
+            playing: false,
+            loading: false,
+            duration: 0,
+            position: 0,
+        }));
+    }, []);
 
-        showFullscreen: false,
-        setShowFullscreen: (value) => setPlayer(oldState => ({
-            ...oldState,
-            showFullscreen: value,
-        })),
-    });
+    const play = useCallback((attachment) => {
+        if (howlRef.current) {
+            howlRef.current.stop();
+            howlRef.current.unload();
+        }
+
+        const src = attachment.download_url;
+        setPlayerState(prev => ({
+            ...prev,
+            songTitle: attachment.song.title,
+            songId: attachment.song.id,
+            fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
+            src: src,
+            loading: true,
+            playing: false,
+            position: 0,
+        }));
+
+        howlRef.current = new Howl({
+            src: [src],
+            html5: true,
+            volume: playerState.volume,
+            onload: () => {
+                setPlayerState(prev => ({
+                    ...prev,
+                    loading: false,
+                    duration: howlRef.current.duration(),
+                }));
+            },
+            onplay: () => setPlayerState(prev => ({ ...prev, playing: true, loading: false })),
+            onpause: () => setPlayerState(prev => ({ ...prev, playing: false })),
+            onstop: () => setPlayerState(prev => ({ ...prev, playing: false, position: 0 })),
+            onend: () => setPlayerState(prev => ({ ...prev, playing: false, position: 0 })),
+            onloaderror: () => setPlayerState(prev => ({ ...prev, loading: false })),
+            onplayerror: () => {
+                howlRef.current.once('unlock', () => howlRef.current.play());
+            }
+        });
+
+        howlRef.current.play();
+    }, [playerState.volume]);
+
+    const pause = useCallback(() => {
+        if (howlRef.current) {
+            howlRef.current.pause();
+        }
+    }, []);
+
+    const togglePlayPause = useCallback(() => {
+        if (!howlRef.current) return;
+        if (howlRef.current.playing()) {
+            howlRef.current.pause();
+        } else {
+            howlRef.current.play();
+        }
+    }, []);
+
+    const seek = useCallback((pos) => {
+        if (howlRef.current) {
+            howlRef.current.seek(pos);
+            setPlayerState(prev => ({ ...prev, position: pos }));
+        }
+    }, []);
+
+    const setVolume = useCallback((vol) => {
+        if (howlRef.current) {
+            howlRef.current.volume(vol);
+        }
+        setPlayerState(prev => ({ ...prev, volume: vol }));
+    }, []);
+
+    const setShowFullscreen = useCallback((value) => {
+        setPlayerState(prev => ({ ...prev, showFullscreen: value }));
+    }, []);
+
+    const player = {
+        ...playerState,
+        play,
+        pause,
+        togglePlayPause,
+        stop,
+        seek,
+        setVolume,
+        setShowFullscreen,
+    };
+
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 
     usePromptBeforeUnload(player.fileName || player.showFullscreen);
@@ -88,27 +202,25 @@ export default function TenantLayout({ children }) {
                         />
                     )}
 
-                    <AudioPlayerProvider>
-                        <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
-                            {tenant.id === 'demo' && (
-                              <TenantNotice variant="warning">
-                                  This demo site is cleared once per week.
-                              </TenantNotice>
-                            )}
+                    <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
+                        {tenant.id === 'demo' && (
+                          <TenantNotice variant="warning">
+                              This demo site is cleared once per week.
+                          </TenantNotice>
+                        )}
 
-                            {process.env.MIX_FEATURE_BILLING && tenant.id !== 'demo' && (can.manage_finances || can.update_tenant) && (
-                                <BillingNotices billing={tenant.billing_status} tenantId={tenant.id} />
-                            )}
+                        {process.env.MIX_FEATURE_BILLING && tenant.id !== 'demo' && (can.manage_finances || can.update_tenant) && (
+                            <BillingNotices billing={tenant.billing_status} tenantId={tenant.id} />
+                        )}
 
-                            <ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
-                                {children}
-                            </ErrorBoundary>
-                        </main>
+                        <ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
+                            {children}
+                        </ErrorBoundary>
+                    </main>
 
-                        {player.fileName &&
-                            <GlobalTrackPlayer songTitle={player.songTitle} songId={player.songId} fileName={player.fileName} close={player.stop} />
-                        }
-                    </AudioPlayerProvider>
+                    {player.fileName &&
+                        <GlobalTrackPlayer songTitle={player.songTitle} songId={player.songId} fileName={player.fileName} close={player.stop} />
+                    }
                 </div>
 
                 <ToastFlash errors={errors} flash={flash} />

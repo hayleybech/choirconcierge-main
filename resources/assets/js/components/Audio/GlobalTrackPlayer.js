@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Button from "../inputs/Button";
-import { useAudioPlayer } from "react-use-audio-player"
+import { PlayerContext } from '../../contexts/player-context';
 import {AudioTimeLabel} from "./AudioTimeLabel";
 import {AudioSeekBar} from "./AudioSeekBar";
 import {AudioVolumeButton} from "./AudioVolumeButton";
@@ -11,8 +11,7 @@ import useRoute from "../../hooks/useRoute";
 
 const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
     const { route } = useRoute();
-
-    const { togglePlayPause, ready, loading, playing, stop } = useAudioPlayer();
+    const player = useContext(PlayerContext);
 
     return (
         <div className="relative z-10 shrink-0 h-auto sm:h-12 bg-white border-t border-gray-300 flex flex-col sm:flex-row items-center justify-between py-2 px-2 sm:pl-6">
@@ -26,14 +25,14 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
                     <span className="text-gray-600 text-xs truncate w-full">{fileName}</span>
                 </div>
 
-                <Button variant="clear" size="xs" onClick={() => {stop(); close();}} className="sm:hidden shrink-0">
+                <Button variant="clear" size="xs" onClick={() => {player.stop(); close();}} className="sm:hidden shrink-0">
                     <Icon icon="times" />
                 </Button>
             </div>
             <div className="flex items-center space-x-2 grow w-full sm:w-auto">
-                {loading && <LoadingSpinner />}
-                <Button variant="clear" size="xs" onClick={togglePlayPause} disabled={!ready}>
-                    {playing ? <Icon icon="pause" /> : <Icon icon="play" />}
+                {player.loading && <LoadingSpinner />}
+                <Button variant="clear" size="xs" onClick={player.togglePlayPause} disabled={player.loading}>
+                    {player.playing ? <Icon icon="pause" /> : <Icon icon="play" />}
                 </Button>
                 <div className="flex items-center space-x-1.5 grow">
                     <AudioTimeLabel show="elapsed" />
@@ -42,7 +41,7 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
                 </div>
                 <AudioVolumeButton />
 
-                <Button variant="clear" size="xs" onClick={() => {stop(); close();}} className="hidden sm:inline-flex -mr-2">
+                <Button variant="clear" size="xs" onClick={() => {player.stop(); close();}} className="hidden sm:inline-flex -mr-2">
                     <Icon icon="times" />
                 </Button>
             </div>

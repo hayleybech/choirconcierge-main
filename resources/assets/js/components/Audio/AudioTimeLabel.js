@@ -1,7 +1,8 @@
-import React from 'react';
-import { useAudioPosition } from "react-use-audio-player"
+import React, { useContext } from 'react';
+import { PlayerContext } from "../../contexts/player-context";
 
 const formatTime = (seconds) => {
+    if (isNaN(seconds) || seconds === null) return "0:00";
     const floored = Math.floor(seconds);
     let from = 14;
     let length = 5;
@@ -15,16 +16,17 @@ const formatTime = (seconds) => {
 }
 
 export const AudioTimeLabel = ({ show = 'both' }) => {
-    const {duration, position} = useAudioPosition({highRefreshRate: true});
-    if (duration === Infinity) return null;
-    const elapsed = typeof position === "number" ? position : 0;
+    const player = useContext(PlayerContext);
+
+    if (player.duration === Infinity || player.duration === 0) return null;
+    const elapsed = typeof player.position === "number" ? player.position : 0;
 
     return (
         <div className="text-gray-500 text-xs">
             {{
                 'elapsed': formatTime(elapsed),
-                'length': formatTime(duration),
-                'both': `${formatTime(elapsed)}/${formatTime(duration)}`,
+                'length': formatTime(player.duration),
+                'both': `${formatTime(elapsed)}/${formatTime(player.duration)}`,
             }[show]}
         </div>
     );
