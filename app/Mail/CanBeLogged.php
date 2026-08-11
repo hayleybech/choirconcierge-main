@@ -11,6 +11,7 @@ trait CanBeLogged
     public bool $has_attachments;
 
     public Carbon $received_at;
+    public int $size;
 
     public function getUid(): string {
         return $this->uid;
@@ -23,5 +24,9 @@ trait CanBeLogged
 
     public function getReceivedAt(): Carbon {
         return $this->received_at;
+    }
+
+    public function getSize(): int {
+        return $this->size;
     }
 }
