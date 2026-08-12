@@ -11,7 +11,7 @@ trait CanBeLogged
     public bool $has_attachments;
 
     public Carbon $received_at;
-    public int $size;
+    public int $size = 0;
 
     public function getUid(): string {
         return $this->uid;
