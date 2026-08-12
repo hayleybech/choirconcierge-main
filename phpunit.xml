@@ -1,31 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" bootstrap="vendor/autoload.php"
-         colors="true" processIsolation="false" stopOnFailure="false" cacheResult="true"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" cacheDirectory=".phpunit.cache"
-         backupStaticProperties="false">
-    <testsuites>
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
-        </testsuite>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
-    </testsuites>
-    <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="CACHE_DRIVER" value="array"/>
-        <env name="SESSION_DRIVER" value="array"/>
-        <env name="QUEUE_DRIVER" value="sync"/>
-        <env name="TELESCOPE_ENABLED" value="false"/>
-        <env name="DEBUGBAR_ENABLED" value="false"/>
-        <env name="QUERY_DETECTOR_ENABLED" value="false"/>
-        <env name="LARAVEL_PAGE_SPEED_ENABLE" value="false"/>
-        <env name="MAIL_MAILER" value="log"/>
-        <env name="PHPUNIT_STOP_ON_FAILURE" value="false"/>
-    </php>
-    <source>
-        <include>
-            <directory suffix=".php">./app</directory>
-        </include>
-    </source>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" bootstrap="vendor/autoload.php" colors="true" processIsolation="false" stopOnFailure="true" cacheResult="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
+  <testsuites>
+    <testsuite name="Feature">
+      <directory suffix="Test.php">./tests/Feature</directory>
+    </testsuite>
+    <testsuite name="Unit">
+      <directory suffix="Test.php">./tests/Unit</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <env name="APP_ENV" value="testing"/>
+    <env name="CACHE_DRIVER" value="array"/>
+    <env name="SESSION_DRIVER" value="array"/>
+    <env name="QUEUE_DRIVER" value="sync"/>
+    <env name="TELESCOPE_ENABLED" value="false"/>
+    <env name="DEBUGBAR_ENABLED" value="false"/>
+    <env name="QUERY_DETECTOR_ENABLED" value="false"/>
+    <env name="LARAVEL_PAGE_SPEED_ENABLE" value="false"/>
+    <env name="MAIL_MAILER" value="log"/>
+  </php>
+  <source>
+    <include>
+      <directory suffix=".php">./app</directory>
+    </include>
+  </source>
 </phpunit>
