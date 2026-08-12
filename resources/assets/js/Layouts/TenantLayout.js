@@ -30,6 +30,7 @@ export default function TenantLayout({ children }) {
 		loading: false,
 		duration: 0,
 		volume: 1,
+		rate: 1,
 		showFullscreen: false,
 	});
 
@@ -133,6 +134,13 @@ export default function TenantLayout({ children }) {
 		setPlayerState(prev => ({ ...prev, volume: vol }));
 	}, []);
 
+	const setRate = useCallback(rate => {
+		if (howlRef.current) {
+			howlRef.current.rate(rate);
+		}
+		setPlayerState(prev => ({ ...prev, rate }));
+	}, []);
+
 	const setShowFullscreen = useCallback(value => {
 		setPlayerState(prev => ({ ...prev, showFullscreen: value }));
 	}, []);
@@ -145,6 +153,7 @@ export default function TenantLayout({ children }) {
 		stop,
 		seek,
 		setVolume,
+		setRate,
 		setShowFullscreen,
 	};
 

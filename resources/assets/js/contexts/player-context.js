@@ -15,6 +15,8 @@ export const PlayerContext = React.createContext({
 	stop: () => {},
 	seek: pos => {},
 	setVolume: vol => {},
+	rate: 1,
+	setRate: rate => {},
 	showFullscreen: false,
 	setShowFullscreen: value => {},
 });
