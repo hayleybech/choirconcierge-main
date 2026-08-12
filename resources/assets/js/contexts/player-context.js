@@ -19,4 +19,5 @@ export const PlayerContext = React.createContext({
 	setRate: rate => {},
 	showFullscreen: false,
 	setShowFullscreen: value => {},
+	getPosition: () => 0,
 });

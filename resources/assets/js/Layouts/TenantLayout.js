@@ -4,7 +4,7 @@ import SidebarMobile from '../components/SidebarMobile';
 import { usePage } from '@inertiajs/react';
 import GlobalTrackPlayer from '../components/Audio/GlobalTrackPlayer';
 import { PlayerContext } from '../contexts/player-context';
-import { Howl } from 'howler';
+import * as Tone from 'tone';
 import ImpersonateUserModal from '../components/ImpersonateUserModal';
 import LayoutTopBar from '../components/LayoutTopBar';
 import ToastFlash from '../components/ToastFlash';
@@ -34,14 +34,62 @@ export default function TenantLayout({ children }) {
 		showFullscreen: false,
 	});
 
-	const howlRef = useRef(null);
+	const playerRef = useRef(null); // Tone.Player instance
+	const pitchShiftRef = useRef(null); // Tone.PitchShift node (persists across tracks)
+	const startedAtRef = useRef(null); // AudioContext time when current playback segment began
+	const startOffsetRef = useRef(0); // Buffer offset (seconds) at the start of current segment
+	const rateRef = useRef(1); // Current playback rate
+	const volumeRef = useRef(1); // Current volume (0–1)
+	const endTimeoutRef = useRef(null); // setTimeout handle for end-of-track detection
+
+	// Lazily creates a PitchShift node connected to the destination and reuses it across tracks.
+	const getPitchShift = useCallback(() => {
+		if (!pitchShiftRef.current) {
+			pitchShiftRef.current = new Tone.PitchShift({ pitch: 0, windowSize: 0.3 }).toDestination();
+		}
+		return pitchShiftRef.current;
+	}, []);
+
+	const clearEndTimeout = useCallback(() => {
+		if (endTimeoutRef.current) {
+			clearTimeout(endTimeoutRef.current);
+			endTimeoutRef.current = null;
+		}
+	}, []);
+
+	// Schedule a timeout to mark playback as ended when the track finishes naturally.
+	// Reads current values from refs so it can be called without capturing closure state.
+	const scheduleEnd = useCallback(() => {
+		clearEndTimeout();
+		const duration = playerRef.current?.buffer?.duration ?? 0;
+		if (!duration || startedAtRef.current === null) return;
+		const remaining = (duration - startOffsetRef.current) / rateRef.current;
+		endTimeoutRef.current = setTimeout(() => {
+			startOffsetRef.current = 0;
+			startedAtRef.current = null;
+			setPlayerState(prev => ({ ...prev, playing: false }));
+		}, remaining * 1000);
+	}, [clearEndTimeout]);
+
+	// Returns current playback position in seconds by computing elapsed time from refs.
+	const getPosition = useCallback(() => {
+		if (startedAtRef.current !== null) {
+			const elapsed = (Tone.now() - startedAtRef.current) * rateRef.current;
+			const duration = playerRef.current?.buffer?.duration ?? 0;
+			return Math.min(startOffsetRef.current + elapsed, duration);
+		}
+		return startOffsetRef.current;
+	}, []);
 
 	const stop = useCallback(() => {
-		if (howlRef.current) {
-			howlRef.current.stop();
-			howlRef.current.unload();
-			howlRef.current = null;
+		clearEndTimeout();
+		if (playerRef.current) {
+			playerRef.current.stop();
+			playerRef.current.dispose();
+			playerRef.current = null;
 		}
+		startedAtRef.current = null;
+		startOffsetRef.current = 0;
 		setPlayerState(prev => ({
 			...prev,
 			songTitle: null,
@@ -52,94 +100,132 @@ export default function TenantLayout({ children }) {
 			loading: false,
 			duration: 0,
 		}));
-		// setPosition(0);
-	}, []);
+	}, [clearEndTimeout]);
 
 	const play = useCallback(
-		attachment => {
-			if (howlRef.current) {
-				howlRef.current.stop();
-				howlRef.current.unload();
+		async attachment => {
+			clearEndTimeout();
+			if (playerRef.current) {
+				playerRef.current.stop();
+				playerRef.current.dispose();
 			}
+			playerRef.current = null;
+			startedAtRef.current = null;
+			startOffsetRef.current = 0;
 
 			const src = attachment.download_url;
-			// setPosition(0);
 			setPlayerState(prev => ({
 				...prev,
 				songTitle: attachment.song.title,
 				songId: attachment.song.id,
 				fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
-				src: src,
+				src,
 				loading: true,
 				playing: false,
 			}));
 
-			howlRef.current = new Howl({
-				src: [src],
-				volume: playerState.volume,
-				onload: () => {
-					setPlayerState(prev => ({
-						...prev,
-						loading: false,
-						duration: howlRef.current.duration(),
-					}));
-				},
-				onplay: () => setPlayerState(prev => ({ ...prev, playing: true, loading: false })),
-				onpause: () => setPlayerState(prev => ({ ...prev, playing: false })),
-				onstop: () => {
-					setPlayerState(prev => ({ ...prev, playing: false }));
-					// setPosition(0);
-				},
-				onend: () => {
-					setPlayerState(prev => ({ ...prev, playing: false }));
-					// setPosition(0);
-				},
-				onloaderror: () => setPlayerState(prev => ({ ...prev, loading: false })),
-				onplayerror: () => {
-					howlRef.current.once('unlock', () => howlRef.current.play());
-				},
-			});
+			await Tone.start();
 
-			howlRef.current.play();
+			const tonePlayer = new Tone.Player({
+				url: src,
+				autostart: false,
+				onload: () => {
+					if (playerRef.current !== tonePlayer) return;
+					const duration = tonePlayer.buffer.duration;
+					tonePlayer.playbackRate = rateRef.current;
+					tonePlayer.volume.value = Tone.gainToDb(volumeRef.current);
+					tonePlayer.start();
+					startedAtRef.current = Tone.now();
+					startOffsetRef.current = 0;
+					setPlayerState(prev => ({ ...prev, loading: false, playing: true, duration }));
+					scheduleEnd();
+				},
+				onerror: () => {
+					if (playerRef.current !== tonePlayer) return;
+					setPlayerState(prev => ({ ...prev, loading: false }));
+				},
+			}).connect(getPitchShift());
+
+			playerRef.current = tonePlayer;
 		},
-		[playerState.volume]
+		[clearEndTimeout, scheduleEnd, getPitchShift]
 	);
 
 	const pause = useCallback(() => {
-		if (howlRef.current) {
-			howlRef.current.pause();
-		}
-	}, []);
+		if (!playerRef.current || startedAtRef.current === null) return;
+		clearEndTimeout();
+		const elapsed = (Tone.now() - startedAtRef.current) * rateRef.current;
+		const duration = playerRef.current.buffer?.duration ?? Infinity;
+		startOffsetRef.current = Math.min(startOffsetRef.current + elapsed, duration);
+		startedAtRef.current = null;
+		playerRef.current.stop();
+		setPlayerState(prev => ({ ...prev, playing: false }));
+	}, [clearEndTimeout]);
 
 	const togglePlayPause = useCallback(() => {
-		if (!howlRef.current) return;
-		if (howlRef.current.playing()) {
-			howlRef.current.pause();
+		if (!playerRef.current) return;
+		if (startedAtRef.current !== null) {
+			clearEndTimeout();
+			const elapsed = (Tone.now() - startedAtRef.current) * rateRef.current;
+			const duration = playerRef.current.buffer?.duration ?? Infinity;
+			startOffsetRef.current = Math.min(startOffsetRef.current + elapsed, duration);
+			startedAtRef.current = null;
+			playerRef.current.stop();
+			setPlayerState(prev => ({ ...prev, playing: false }));
 		} else {
-			howlRef.current.play();
+			const offset = startOffsetRef.current;
+			playerRef.current.start(Tone.now(), offset);
+			startedAtRef.current = Tone.now();
+			scheduleEnd();
+			setPlayerState(prev => ({ ...prev, playing: true }));
 		}
-	}, []);
+	}, [clearEndTimeout, scheduleEnd]);
 
-	const seek = useCallback(pos => {
-		if (howlRef.current) {
-			howlRef.current.seek(pos);
-			// setPosition(pos);
-		}
-	}, []);
+	const seek = useCallback(
+		pos => {
+			if (!playerRef.current) return;
+			clearEndTimeout();
+			if (startedAtRef.current !== null) {
+				playerRef.current.stop();
+				playerRef.current.start(Tone.now(), pos);
+				startedAtRef.current = Tone.now();
+				startOffsetRef.current = pos;
+				scheduleEnd();
+			} else {
+				startOffsetRef.current = pos;
+			}
+		},
+		[clearEndTimeout, scheduleEnd]
+	);
 
 	const setVolume = useCallback(vol => {
-		if (howlRef.current) {
-			howlRef.current.volume(vol);
+		volumeRef.current = vol;
+		if (playerRef.current) {
+			playerRef.current.volume.value = Tone.gainToDb(vol);
 		}
 		setPlayerState(prev => ({ ...prev, volume: vol }));
 	}, []);
 
-	const setRate = useCallback(rate => {
-		if (howlRef.current) {
-			howlRef.current.rate(rate);
-		}
-		setPlayerState(prev => ({ ...prev, rate }));
-	}, []);
+	const setRate = useCallback(
+		rate => {
+			if (playerRef.current) {
+				if (startedAtRef.current !== null) {
+					// Snap the tracked offset to the current position before changing rate
+					// so future position calculations use the right baseline.
+					const elapsed = (Tone.now() - startedAtRef.current) * rateRef.current;
+					startOffsetRef.current = startOffsetRef.current + elapsed;
+					startedAtRef.current = Tone.now();
+				}
+				playerRef.current.playbackRate = rate;
+			}
+			rateRef.current = rate;
+			// Counteract the pitch shift caused by speed change: rate r shifts pitch by log₂(r) octaves.
+			getPitchShift().pitch = -Math.log2(rate) * 12;
+			scheduleEnd();
+			setPlayerState(prev => ({ ...prev, rate }));
+		},
+		[scheduleEnd, getPitchShift]
+	);
 
 	const setShowFullscreen = useCallback(value => {
 		setPlayerState(prev => ({ ...prev, showFullscreen: value }));
@@ -155,6 +241,7 @@ export default function TenantLayout({ children }) {
 		setVolume,
 		setRate,
 		setShowFullscreen,
+		getPosition,
 	};
 
 	const [showImpersonateModal, setShowImpersonateModal] = useState(false);
@@ -223,7 +310,6 @@ export default function TenantLayout({ children }) {
 							songId={player.songId}
 							fileName={player.fileName}
 							close={player.stop}
-							howlRef={howlRef}
 						/>
 					)}
 				</div>

@@ -3,7 +3,7 @@ import Button from '../inputs/Button';
 import { Popover } from '@headlessui/react';
 import { PlayerContext } from '../../contexts/player-context';
 
-const RATES = [0.5, 0.75, 1, 1.25, 1.5, 2];
+const RATES = [0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3];
 
 export const AudioTempoButton = () => {
 	const { rate, setRate } = useContext(PlayerContext);

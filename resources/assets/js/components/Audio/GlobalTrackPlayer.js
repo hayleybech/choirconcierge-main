@@ -11,7 +11,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import useRoute from "../../hooks/useRoute";
 import { AudioTempoButton } from './AudioTempoButton';
 
-const GlobalTrackPlayer = ({ songTitle, songId, fileName, close, howlRef }) => {
+const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
     const { route } = useRoute();
     const player = useContext(PlayerContext);
 
@@ -20,13 +20,8 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close, howlRef }) => {
 	const [position, setPosition] = React.useState(0);
 
 	const updatePosition = useCallback(() => {
-		if (howlRef.current) {
-			const currentPos = howlRef.current.seek();
-			if (typeof currentPos === 'number') {
-				setPosition(currentPos);
-			}
-		}
-	}, []);
+		setPosition(player.getPosition());
+	}, [player.getPosition]);
 
 	useEffect(() => {
 		if (player.playing) {
