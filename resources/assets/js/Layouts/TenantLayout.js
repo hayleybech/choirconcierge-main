@@ -95,7 +95,6 @@ export default function TenantLayout({ children }) {
 
         howlRef.current = new Howl({
             src: [src],
-            html5: true,
             volume: playerState.volume,
             onload: () => {
                 setPlayerState(prev => ({
