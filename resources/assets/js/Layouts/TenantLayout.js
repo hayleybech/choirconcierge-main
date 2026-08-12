@@ -4,7 +4,7 @@ import SidebarMobile from '../components/SidebarMobile';
 import { usePage } from '@inertiajs/react';
 import GlobalTrackPlayer from '../components/Audio/GlobalTrackPlayer';
 import { PlayerContext } from '../contexts/player-context';
-import * as Tone from 'tone';
+import { PitchShifter } from 'soundtouchjs';
 import ImpersonateUserModal from '../components/ImpersonateUserModal';
 import LayoutTopBar from '../components/LayoutTopBar';
 import ToastFlash from '../components/ToastFlash';
@@ -34,62 +34,45 @@ export default function TenantLayout({ children }) {
 		showFullscreen: false,
 	});
 
-	const playerRef = useRef(null); // Tone.Player instance
-	const pitchShiftRef = useRef(null); // Tone.PitchShift node (persists across tracks)
-	const startedAtRef = useRef(null); // AudioContext time when current playback segment began
-	const startOffsetRef = useRef(0); // Buffer offset (seconds) at the start of current segment
-	const rateRef = useRef(1); // Current playback rate
-	const volumeRef = useRef(1); // Current volume (0–1)
-	const endTimeoutRef = useRef(null); // setTimeout handle for end-of-track detection
+	const audioCtxRef = useRef(null);    // native AudioContext, created once on first play
+	const shifterRef = useRef(null);     // PitchShifter instance (SoundTouch wrapper)
+	const gainNodeRef = useRef(null);    // GainNode for volume, sits between shifter and destination
+	const bufferRef = useRef(null);      // decoded AudioBuffer (needed for duration and seek math)
+	const isPlayingRef = useRef(false);  // true while audio is audible (false when paused or stopped)
+	const pausedTimeRef = useRef(0);     // timePlayed snapshot taken at pause, used for resume/display
+	const rateRef = useRef(1);           // current playback rate, applied to new PitchShifter on load
+	const volumeRef = useRef(1);         // current volume (0–1)
+	const playIdRef = useRef(0);         // incremented on each play() call to cancel stale async loads
 
-	// Lazily creates a PitchShift node connected to the destination and reuses it across tracks.
-	const getPitchShift = useCallback(() => {
-		if (!pitchShiftRef.current) {
-			pitchShiftRef.current = new Tone.PitchShift({ pitch: 0, windowSize: 0.3 }).toDestination();
+	const getAudioContext = useCallback(async () => {
+		if (!audioCtxRef.current) {
+			audioCtxRef.current = new AudioContext();
 		}
-		return pitchShiftRef.current;
+		if (audioCtxRef.current.state === 'suspended') {
+			await audioCtxRef.current.resume();
+		}
+		return audioCtxRef.current;
 	}, []);
 
-	const clearEndTimeout = useCallback(() => {
-		if (endTimeoutRef.current) {
-			clearTimeout(endTimeoutRef.current);
-			endTimeoutRef.current = null;
-		}
-	}, []);
-
-	// Schedule a timeout to mark playback as ended when the track finishes naturally.
-	// Reads current values from refs so it can be called without capturing closure state.
-	const scheduleEnd = useCallback(() => {
-		clearEndTimeout();
-		const duration = playerRef.current?.buffer?.duration ?? 0;
-		if (!duration || startedAtRef.current === null) return;
-		const remaining = (duration - startOffsetRef.current) / rateRef.current;
-		endTimeoutRef.current = setTimeout(() => {
-			startOffsetRef.current = 0;
-			startedAtRef.current = null;
-			setPlayerState(prev => ({ ...prev, playing: false }));
-		}, remaining * 1000);
-	}, [clearEndTimeout]);
-
-	// Returns current playback position in seconds by computing elapsed time from refs.
 	const getPosition = useCallback(() => {
-		if (startedAtRef.current !== null) {
-			const elapsed = (Tone.now() - startedAtRef.current) * rateRef.current;
-			const duration = playerRef.current?.buffer?.duration ?? 0;
-			return Math.min(startOffsetRef.current + elapsed, duration);
+		if (isPlayingRef.current && shifterRef.current) {
+			return shifterRef.current.timePlayed;
 		}
-		return startOffsetRef.current;
-	}, []);
+		return pausedTimeRef.current;
+	}, [getAudioContext]);
 
 	const stop = useCallback(() => {
-		clearEndTimeout();
-		if (playerRef.current) {
-			playerRef.current.stop();
-			playerRef.current.dispose();
-			playerRef.current = null;
+		isPlayingRef.current = false;
+		if (shifterRef.current) {
+			shifterRef.current.node.disconnect();
+			shifterRef.current = null;
 		}
-		startedAtRef.current = null;
-		startOffsetRef.current = 0;
+		if (gainNodeRef.current) {
+			gainNodeRef.current.disconnect();
+			gainNodeRef.current = null;
+		}
+		bufferRef.current = null;
+		pausedTimeRef.current = 0;
 		setPlayerState(prev => ({
 			...prev,
 			songTitle: null,
@@ -100,132 +83,125 @@ export default function TenantLayout({ children }) {
 			loading: false,
 			duration: 0,
 		}));
-	}, [clearEndTimeout]);
+	}, []);
 
-	const play = useCallback(
-		async attachment => {
-			clearEndTimeout();
-			if (playerRef.current) {
-				playerRef.current.stop();
-				playerRef.current.dispose();
-			}
-			playerRef.current = null;
-			startedAtRef.current = null;
-			startOffsetRef.current = 0;
+	const play = useCallback(async attachment => {
+		const playId = ++playIdRef.current;
 
-			const src = attachment.download_url;
-			setPlayerState(prev => ({
-				...prev,
-				songTitle: attachment.song.title,
-				songId: attachment.song.id,
-				fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
-				src,
-				loading: true,
-				playing: false,
-			}));
+		isPlayingRef.current = false;
+		if (shifterRef.current) {
+			shifterRef.current.node.disconnect();
+			shifterRef.current = null;
+		}
+		if (gainNodeRef.current) {
+			gainNodeRef.current.disconnect();
+			gainNodeRef.current = null;
+		}
+		bufferRef.current = null;
+		pausedTimeRef.current = 0;
 
-			await Tone.start();
+		const src = attachment.download_url;
+		setPlayerState(prev => ({
+			...prev,
+			songTitle: attachment.song.title,
+			songId: attachment.song.id,
+			fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
+			src,
+			loading: true,
+			playing: false,
+		}));
 
-			const tonePlayer = new Tone.Player({
-				url: src,
-				autostart: false,
-				onload: () => {
-					if (playerRef.current !== tonePlayer) return;
-					const duration = tonePlayer.buffer.duration;
-					tonePlayer.playbackRate = rateRef.current;
-					tonePlayer.volume.value = Tone.gainToDb(volumeRef.current);
-					tonePlayer.start();
-					startedAtRef.current = Tone.now();
-					startOffsetRef.current = 0;
-					setPlayerState(prev => ({ ...prev, loading: false, playing: true, duration }));
-					scheduleEnd();
-				},
-				onerror: () => {
-					if (playerRef.current !== tonePlayer) return;
-					setPlayerState(prev => ({ ...prev, loading: false }));
-				},
-			}).connect(getPitchShift());
+		const audioContext = await getAudioContext();
 
-			playerRef.current = tonePlayer;
-		},
-		[clearEndTimeout, scheduleEnd, getPitchShift]
-	);
+		let arrayBuffer;
+		try {
+			const response = await fetch(src);
+			arrayBuffer = await response.arrayBuffer();
+		} catch {
+			if (playId === playIdRef.current) setPlayerState(prev => ({ ...prev, loading: false }));
+			return;
+		}
+		if (playId !== playIdRef.current) return;
+
+		let audioBuffer;
+		try {
+			audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+		} catch {
+			if (playId === playIdRef.current) setPlayerState(prev => ({ ...prev, loading: false }));
+			return;
+		}
+		if (playId !== playIdRef.current) return;
+
+		bufferRef.current = audioBuffer;
+
+		const onEnd = () => {
+			if (!isPlayingRef.current) return;
+			isPlayingRef.current = false;
+			pausedTimeRef.current = 0;
+			setPlayerState(prev => ({ ...prev, playing: false }));
+		};
+
+		const shifter = new PitchShifter(audioContext, audioBuffer, 4096, onEnd);
+		shifter.tempo = rateRef.current;
+		shifterRef.current = shifter;
+
+		const gainNode = audioContext.createGain();
+		gainNode.gain.value = volumeRef.current;
+		gainNodeRef.current = gainNode;
+
+		shifter.node.connect(gainNode);
+		gainNode.connect(audioContext.destination);
+
+		isPlayingRef.current = true;
+		setPlayerState(prev => ({ ...prev, loading: false, playing: true, duration: audioBuffer.duration }));
+	}, []);
 
 	const pause = useCallback(() => {
-		if (!playerRef.current || startedAtRef.current === null) return;
-		clearEndTimeout();
-		const elapsed = (Tone.now() - startedAtRef.current) * rateRef.current;
-		const duration = playerRef.current.buffer?.duration ?? Infinity;
-		startOffsetRef.current = Math.min(startOffsetRef.current + elapsed, duration);
-		startedAtRef.current = null;
-		playerRef.current.stop();
+		if (!shifterRef.current || !isPlayingRef.current) return;
+		isPlayingRef.current = false;
+		pausedTimeRef.current = shifterRef.current.timePlayed;
+		gainNodeRef.current.gain.value = 0;
 		setPlayerState(prev => ({ ...prev, playing: false }));
-	}, [clearEndTimeout]);
+	}, []);
 
 	const togglePlayPause = useCallback(() => {
-		if (!playerRef.current) return;
-		if (startedAtRef.current !== null) {
-			clearEndTimeout();
-			const elapsed = (Tone.now() - startedAtRef.current) * rateRef.current;
-			const duration = playerRef.current.buffer?.duration ?? Infinity;
-			startOffsetRef.current = Math.min(startOffsetRef.current + elapsed, duration);
-			startedAtRef.current = null;
-			playerRef.current.stop();
+		if (!shifterRef.current) return;
+		if (isPlayingRef.current) {
+			isPlayingRef.current = false;
+			pausedTimeRef.current = shifterRef.current.timePlayed;
+			gainNodeRef.current.gain.value = 0;
 			setPlayerState(prev => ({ ...prev, playing: false }));
 		} else {
-			const offset = startOffsetRef.current;
-			playerRef.current.start(Tone.now(), offset);
-			startedAtRef.current = Tone.now();
-			scheduleEnd();
+			shifterRef.current.percentagePlayed = pausedTimeRef.current / bufferRef.current.duration;
+			gainNodeRef.current.gain.value = volumeRef.current;
+			isPlayingRef.current = true;
 			setPlayerState(prev => ({ ...prev, playing: true }));
 		}
-	}, [clearEndTimeout, scheduleEnd]);
+	}, []);
 
-	const seek = useCallback(
-		pos => {
-			if (!playerRef.current) return;
-			clearEndTimeout();
-			if (startedAtRef.current !== null) {
-				playerRef.current.stop();
-				playerRef.current.start(Tone.now(), pos);
-				startedAtRef.current = Tone.now();
-				startOffsetRef.current = pos;
-				scheduleEnd();
-			} else {
-				startOffsetRef.current = pos;
-			}
-		},
-		[clearEndTimeout, scheduleEnd]
-	);
+	const seek = useCallback(pos => {
+		if (!shifterRef.current || !bufferRef.current) return;
+		shifterRef.current.percentagePlayed = pos / bufferRef.current.duration;
+		if (!isPlayingRef.current) {
+			pausedTimeRef.current = pos;
+		}
+	}, []);
 
 	const setVolume = useCallback(vol => {
 		volumeRef.current = vol;
-		if (playerRef.current) {
-			playerRef.current.volume.value = Tone.gainToDb(vol);
+		if (gainNodeRef.current && isPlayingRef.current) {
+			gainNodeRef.current.gain.value = vol;
 		}
 		setPlayerState(prev => ({ ...prev, volume: vol }));
 	}, []);
 
-	const setRate = useCallback(
-		rate => {
-			if (playerRef.current) {
-				if (startedAtRef.current !== null) {
-					// Snap the tracked offset to the current position before changing rate
-					// so future position calculations use the right baseline.
-					const elapsed = (Tone.now() - startedAtRef.current) * rateRef.current;
-					startOffsetRef.current = startOffsetRef.current + elapsed;
-					startedAtRef.current = Tone.now();
-				}
-				playerRef.current.playbackRate = rate;
-			}
-			rateRef.current = rate;
-			// Counteract the pitch shift caused by speed change: rate r shifts pitch by log₂(r) octaves.
-			getPitchShift().pitch = -Math.log2(rate) * 12;
-			scheduleEnd();
-			setPlayerState(prev => ({ ...prev, rate }));
-		},
-		[scheduleEnd, getPitchShift]
-	);
+	const setRate = useCallback(rate => {
+		rateRef.current = rate;
+		if (shifterRef.current) {
+			shifterRef.current.tempo = rate;
+		}
+		setPlayerState(prev => ({ ...prev, rate }));
+	}, []);
 
 	const setShowFullscreen = useCallback(value => {
 		setPlayerState(prev => ({ ...prev, showFullscreen: value }));
