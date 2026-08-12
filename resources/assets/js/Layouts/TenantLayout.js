@@ -1,231 +1,228 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react'
-import SidebarDesktop from "../components/SidebarDesktop";
-import SidebarMobile from "../components/SidebarMobile";
-import {usePage} from '@inertiajs/react';
-import GlobalTrackPlayer from "../components/Audio/GlobalTrackPlayer";
+import React, { useState, useRef, useCallback } from 'react';
+import SidebarDesktop from '../components/SidebarDesktop';
+import SidebarMobile from '../components/SidebarMobile';
+import { usePage } from '@inertiajs/react';
+import GlobalTrackPlayer from '../components/Audio/GlobalTrackPlayer';
 import { PlayerContext } from '../contexts/player-context';
 import { Howl } from 'howler';
-import ImpersonateUserModal from "../components/ImpersonateUserModal";
-import LayoutTopBar from "../components/LayoutTopBar";
-import ToastFlash from "../components/ToastFlash";
-import {useMediaQuery} from "react-responsive";
-import usePromptBeforeUnload from "../hooks/usePromptBeforeUnload";
-import useRoute from "../hooks/useRoute";
-import SwitchChoirMenu from "../components/SwitchChoirMenu";
-import BillingNotices from "../components/BillingNotices";
-import TenantNotice from "../components/TenantNotice";
-import {ErrorBoundary} from "@sentry/react";
-import OuterPageErrorFallback from "./OuterPageErrorFallback";
+import ImpersonateUserModal from '../components/ImpersonateUserModal';
+import LayoutTopBar from '../components/LayoutTopBar';
+import ToastFlash from '../components/ToastFlash';
+import { useMediaQuery } from 'react-responsive';
+import usePromptBeforeUnload from '../hooks/usePromptBeforeUnload';
+import useRoute from '../hooks/useRoute';
+import SwitchChoirMenu from '../components/SwitchChoirMenu';
+import BillingNotices from '../components/BillingNotices';
+import TenantNotice from '../components/TenantNotice';
+import { ErrorBoundary } from '@sentry/react';
+import OuterPageErrorFallback from './OuterPageErrorFallback';
 
 export default function TenantLayout({ children }) {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { route } = useRoute();
+	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const { route } = useRoute();
 
-    const [playerState, setPlayerState] = useState({
-        songTitle: null,
-        songId: 0,
-        fileName: null,
-        src: null,
-        playing: false,
-        loading: false,
-        duration: 0,
-        position: 0,
-        volume: 1,
-        showFullscreen: false,
-    });
+	const [playerState, setPlayerState] = useState({
+		songTitle: null,
+		songId: 0,
+		fileName: null,
+		src: null,
+		playing: false,
+		loading: false,
+		duration: 0,
+		volume: 1,
+		showFullscreen: false,
+	});
 
-    const howlRef = useRef(null);
-    const requestRef = useRef(null);
+	const howlRef = useRef(null);
 
-    const updatePosition = useCallback(() => {
-        if (howlRef.current && howlRef.current.playing()) {
-            const currentPos = howlRef.current.seek();
-            if (typeof currentPos === 'number') {
-                setPlayerState(prev => ({ ...prev, position: currentPos }));
-            }
-            requestRef.current = requestAnimationFrame(updatePosition);
-        }
-    }, []);
+	const stop = useCallback(() => {
+		if (howlRef.current) {
+			howlRef.current.stop();
+			howlRef.current.unload();
+			howlRef.current = null;
+		}
+		setPlayerState(prev => ({
+			...prev,
+			songTitle: null,
+			songId: 0,
+			fileName: null,
+			src: null,
+			playing: false,
+			loading: false,
+			duration: 0,
+		}));
+		// setPosition(0);
+	}, []);
 
-    useEffect(() => {
-        if (playerState.playing) {
-            requestRef.current = requestAnimationFrame(updatePosition);
-        } else {
-            cancelAnimationFrame(requestRef.current);
-        }
-        return () => cancelAnimationFrame(requestRef.current);
-    }, [playerState.playing, updatePosition]);
+	const play = useCallback(
+		attachment => {
+			if (howlRef.current) {
+				howlRef.current.stop();
+				howlRef.current.unload();
+			}
 
-    const stop = useCallback(() => {
-        if (howlRef.current) {
-            howlRef.current.stop();
-            howlRef.current.unload();
-            howlRef.current = null;
-        }
-        setPlayerState(prev => ({
-            ...prev,
-            songTitle: null,
-            songId: 0,
-            fileName: null,
-            src: null,
-            playing: false,
-            loading: false,
-            duration: 0,
-            position: 0,
-        }));
-    }, []);
+			const src = attachment.download_url;
+			// setPosition(0);
+			setPlayerState(prev => ({
+				...prev,
+				songTitle: attachment.song.title,
+				songId: attachment.song.id,
+				fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
+				src: src,
+				loading: true,
+				playing: false,
+			}));
 
-    const play = useCallback((attachment) => {
-        if (howlRef.current) {
-            howlRef.current.stop();
-            howlRef.current.unload();
-        }
+			howlRef.current = new Howl({
+				src: [src],
+				volume: playerState.volume,
+				onload: () => {
+					setPlayerState(prev => ({
+						...prev,
+						loading: false,
+						duration: howlRef.current.duration(),
+					}));
+				},
+				onplay: () => setPlayerState(prev => ({ ...prev, playing: true, loading: false })),
+				onpause: () => setPlayerState(prev => ({ ...prev, playing: false })),
+				onstop: () => {
+					setPlayerState(prev => ({ ...prev, playing: false }));
+					// setPosition(0);
+				},
+				onend: () => {
+					setPlayerState(prev => ({ ...prev, playing: false }));
+					// setPosition(0);
+				},
+				onloaderror: () => setPlayerState(prev => ({ ...prev, loading: false })),
+				onplayerror: () => {
+					howlRef.current.once('unlock', () => howlRef.current.play());
+				},
+			});
 
-        const src = attachment.download_url;
-        setPlayerState(prev => ({
-            ...prev,
-            songTitle: attachment.song.title,
-            songId: attachment.song.id,
-            fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
-            src: src,
-            loading: true,
-            playing: false,
-            position: 0,
-        }));
+			howlRef.current.play();
+		},
+		[playerState.volume]
+	);
 
-        howlRef.current = new Howl({
-            src: [src],
-            volume: playerState.volume,
-            onload: () => {
-                setPlayerState(prev => ({
-                    ...prev,
-                    loading: false,
-                    duration: howlRef.current.duration(),
-                }));
-            },
-            onplay: () => setPlayerState(prev => ({ ...prev, playing: true, loading: false })),
-            onpause: () => setPlayerState(prev => ({ ...prev, playing: false })),
-            onstop: () => setPlayerState(prev => ({ ...prev, playing: false, position: 0 })),
-            onend: () => setPlayerState(prev => ({ ...prev, playing: false, position: 0 })),
-            onloaderror: () => setPlayerState(prev => ({ ...prev, loading: false })),
-            onplayerror: () => {
-                howlRef.current.once('unlock', () => howlRef.current.play());
-            }
-        });
+	const pause = useCallback(() => {
+		if (howlRef.current) {
+			howlRef.current.pause();
+		}
+	}, []);
 
-        howlRef.current.play();
-    }, [playerState.volume]);
+	const togglePlayPause = useCallback(() => {
+		if (!howlRef.current) return;
+		if (howlRef.current.playing()) {
+			howlRef.current.pause();
+		} else {
+			howlRef.current.play();
+		}
+	}, []);
 
-    const pause = useCallback(() => {
-        if (howlRef.current) {
-            howlRef.current.pause();
-        }
-    }, []);
+	const seek = useCallback(pos => {
+		if (howlRef.current) {
+			howlRef.current.seek(pos);
+			// setPosition(pos);
+		}
+	}, []);
 
-    const togglePlayPause = useCallback(() => {
-        if (!howlRef.current) return;
-        if (howlRef.current.playing()) {
-            howlRef.current.pause();
-        } else {
-            howlRef.current.play();
-        }
-    }, []);
+	const setVolume = useCallback(vol => {
+		if (howlRef.current) {
+			howlRef.current.volume(vol);
+		}
+		setPlayerState(prev => ({ ...prev, volume: vol }));
+	}, []);
 
-    const seek = useCallback((pos) => {
-        if (howlRef.current) {
-            howlRef.current.seek(pos);
-            setPlayerState(prev => ({ ...prev, position: pos }));
-        }
-    }, []);
+	const setShowFullscreen = useCallback(value => {
+		setPlayerState(prev => ({ ...prev, showFullscreen: value }));
+	}, []);
 
-    const setVolume = useCallback((vol) => {
-        if (howlRef.current) {
-            howlRef.current.volume(vol);
-        }
-        setPlayerState(prev => ({ ...prev, volume: vol }));
-    }, []);
+	const player = {
+		...playerState,
+		play,
+		pause,
+		togglePlayPause,
+		stop,
+		seek,
+		setVolume,
+		setShowFullscreen,
+	};
 
-    const setShowFullscreen = useCallback((value) => {
-        setPlayerState(prev => ({ ...prev, showFullscreen: value }));
-    }, []);
+	const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 
-    const player = {
-        ...playerState,
-        play,
-        pause,
-        togglePlayPause,
-        stop,
-        seek,
-        setVolume,
-        setShowFullscreen,
-    };
+	usePromptBeforeUnload(player.fileName || player.showFullscreen);
 
-    const [showImpersonateModal, setShowImpersonateModal] = useState(false);
+	const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 
-    usePromptBeforeUnload(player.fileName || player.showFullscreen);
+	const { can, userChoirs, errors, flash, tenant, navigation } = usePage().props;
 
-    const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
+	const navFiltered = navigation
+		.filter(item => can[item.can])
+		.map(item => {
+			item.active = item.showAsActiveForRoutes.some(routeName => route().current(routeName));
+			item.items = item.items
+				.filter(subItem => can[subItem.can])
+				.map(subItem => {
+					subItem.active = subItem.showAsActiveForRoutes.some(routeName => route().current(routeName));
+					return subItem;
+				});
+			return item;
+		});
 
-    const { can, userChoirs, errors, flash, tenant, navigation } = usePage().props;
+	return (
+		<PlayerContext.Provider value={player}>
+			<div className="h-screen flex overflow-hidden bg-gray-100">
+				{isMobile ? (
+					<SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
+				) : (
+					<div className="flex shrink-0">
+						<SidebarDesktop navigation={navFiltered} />
+					</div>
+				)}
 
-    const navFiltered = navigation
-        .filter((item) => can[item.can])
-        .map((item) => {
-            item.active = item.showAsActiveForRoutes.some((routeName) => route().current(routeName));
-            item.items = item.items
-                .filter((subItem) => can[subItem.can])
-                .map((subItem) => {
-                    subItem.active = subItem.showAsActiveForRoutes.some((routeName) => route().current(routeName));
-                    return subItem;
-                });
-            return item;
-        })
+				<div className="flex flex-col w-0 flex-1 overflow-hidden">
+					{player.showFullscreen || (
+						<LayoutTopBar
+							setSidebarOpen={setSidebarOpen}
+							setShowImpersonateModal={setShowImpersonateModal}
+							switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
+						/>
+					)}
 
-    return (
-        <PlayerContext.Provider value={player}>
-            <div className="h-screen flex overflow-hidden bg-gray-100">
-                {isMobile ? (
-                    <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
-                ) : (
-                    <div className="flex shrink-0">
-                        <SidebarDesktop navigation={navFiltered} />
-                    </div>
-                )}
+					<main
+						className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none"
+						scroll-region="true"
+					>
+						{tenant.id === 'demo' && (
+							<TenantNotice variant="warning">This demo site is cleared once per week.</TenantNotice>
+						)}
 
-                <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                    {player.showFullscreen || (
-                      <LayoutTopBar
-                          setSidebarOpen={setSidebarOpen}
-                          setShowImpersonateModal={setShowImpersonateModal}
-                          switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
-                        />
-                    )}
+						{process.env.MIX_FEATURE_BILLING &&
+							tenant.id !== 'demo' &&
+							(can.manage_finances || can.update_tenant) && (
+								<BillingNotices billing={tenant.billing_status} tenantId={tenant.id} />
+							)}
 
-                    <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
-                        {tenant.id === 'demo' && (
-                          <TenantNotice variant="warning">
-                              This demo site is cleared once per week.
-                          </TenantNotice>
-                        )}
+						<ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
+							{children}
+						</ErrorBoundary>
+					</main>
 
-                        {process.env.MIX_FEATURE_BILLING && tenant.id !== 'demo' && (can.manage_finances || can.update_tenant) && (
-                            <BillingNotices billing={tenant.billing_status} tenantId={tenant.id} />
-                        )}
+					{player.fileName && (
+						<GlobalTrackPlayer
+							songTitle={player.songTitle}
+							songId={player.songId}
+							fileName={player.fileName}
+							close={player.stop}
+							howlRef={howlRef}
+						/>
+					)}
+				</div>
 
-                        <ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
-                            {children}
-                        </ErrorBoundary>
-                    </main>
+				<ToastFlash errors={errors} flash={flash} />
 
-                    {player.fileName &&
-                        <GlobalTrackPlayer songTitle={player.songTitle} songId={player.songId} fileName={player.fileName} close={player.stop} />
-                    }
-                </div>
-
-                <ToastFlash errors={errors} flash={flash} />
-
-                <ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
-            </div>
-        </PlayerContext.Provider>
-    )
+				<ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
+			</div>
+		</PlayerContext.Provider>
+	);
 }

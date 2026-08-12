@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
+
 import Button from "../inputs/Button";
 import { PlayerContext } from '../../contexts/player-context';
 import {AudioTimeLabel} from "./AudioTimeLabel";
@@ -9,9 +10,31 @@ import {Link} from "@inertiajs/react";
 import LoadingSpinner from "../LoadingSpinner";
 import useRoute from "../../hooks/useRoute";
 
-const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
+const GlobalTrackPlayer = ({ songTitle, songId, fileName, close, howlRef }) => {
     const { route } = useRoute();
     const player = useContext(PlayerContext);
+
+	const intervalRef = React.useRef(null);
+
+	const [position, setPosition] = React.useState(0);
+
+	const updatePosition = useCallback(() => {
+		if (howlRef.current) {
+			const currentPos = howlRef.current.seek();
+			if (typeof currentPos === 'number') {
+				setPosition(currentPos);
+			}
+		}
+	}, []);
+
+	useEffect(() => {
+		if (player.playing) {
+			intervalRef.current = setInterval(updatePosition, 500);
+		} else {
+			clearInterval(intervalRef.current);
+		}
+		return () => clearInterval(intervalRef.current);
+	}, [player.playing, updatePosition]);
 
     return (
         <div className="relative z-10 shrink-0 h-auto sm:h-12 bg-white border-t border-gray-300 flex flex-col sm:flex-row items-center justify-between py-2 px-2 sm:pl-6">
@@ -35,9 +58,9 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
                     {player.playing ? <Icon icon="pause" /> : <Icon icon="play" />}
                 </Button>
                 <div className="flex items-center space-x-1.5 grow">
-                    <AudioTimeLabel show="elapsed" />
-                    <AudioSeekBar />
-                    <AudioTimeLabel show="length" />
+                    <AudioTimeLabel show="elapsed" position={position} />
+                    <AudioSeekBar position={position} />
+                    <AudioTimeLabel show="length" position={position} />
                 </div>
                 <AudioVolumeButton />
 
