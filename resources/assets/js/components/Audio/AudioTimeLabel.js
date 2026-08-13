@@ -3,16 +3,13 @@ import { PlayerContext } from '../../contexts/player-context';
 
 const formatTime = seconds => {
 	if (isNaN(seconds) || seconds === null) return '0:00';
-	const floored = Math.floor(seconds);
-	let from = 14;
-	let length = 5;
-	// Display hours only if necessary.
-	if (floored >= 3600) {
-		from = 11;
-		length = 8;
-	}
-
-	return new Date(floored * 1000).toISOString().substr(from, length);
+	const s = Math.floor(seconds);
+	const h = Math.floor(s / 3600);
+	const m = Math.floor((s % 3600) / 60);
+	const sec = s % 60;
+	const mm = String(m).padStart(2, '0');
+	const ss = String(sec).padStart(2, '0');
+	return h > 0 ? `${h}:${mm}:${ss}` : `${m}:${ss}`;
 };
 
 export const AudioTimeLabel = ({ show = 'both', position }) => {

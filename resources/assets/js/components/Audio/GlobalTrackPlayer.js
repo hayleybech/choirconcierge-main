@@ -2,21 +2,20 @@ import React, { useCallback, useContext, useEffect } from 'react';
 
 import Button from "../inputs/Button";
 import { PlayerContext } from '../../contexts/player-context';
-import {AudioTimeLabel} from "./AudioTimeLabel";
-import {AudioSeekBar} from "./AudioSeekBar";
-import {AudioVolumeButton} from "./AudioVolumeButton";
+import { AudioTimeLabel } from "./AudioTimeLabel";
+import { AudioSeekBar } from "./AudioSeekBar";
+import { AudioVolumeButton } from "./AudioVolumeButton";
 import Icon from "../Icon";
-import {Link} from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import LoadingSpinner from "../LoadingSpinner";
 import useRoute from "../../hooks/useRoute";
 import { AudioTempoButton } from './AudioTempoButton';
 
 const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
-    const { route } = useRoute();
-    const player = useContext(PlayerContext);
+	const { route } = useRoute();
+	const player = useContext(PlayerContext);
 
 	const intervalRef = React.useRef(null);
-
 	const [position, setPosition] = React.useState(0);
 
 	const updatePosition = useCallback(() => {
@@ -32,7 +31,7 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 		return () => clearInterval(intervalRef.current);
 	}, [player.playing, updatePosition]);
 
-    return (
+	return (
 		<div className="relative z-10 shrink-0 h-auto sm:h-12 bg-white border-t border-gray-300 flex flex-col sm:flex-row items-center justify-between py-2 px-2 sm:pl-6">
 			<div className="flex flex-row items-start w-full min-w-0">
 				<Button variant="clear" size="xs" disabled className="invisible sm:hidden shrink-0">
@@ -49,15 +48,7 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 					<span className="text-gray-600 text-xs truncate w-full">{fileName}</span>
 				</div>
 
-				<Button
-					variant="clear"
-					size="xs"
-					onClick={() => {
-						player.stop();
-						close();
-					}}
-					className="sm:hidden shrink-0"
-				>
+				<Button variant="clear" size="xs" onClick={close} className="sm:hidden shrink-0">
 					<Icon icon="times" />
 				</Button>
 			</div>
@@ -74,20 +65,12 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 				<AudioTempoButton />
 				<AudioVolumeButton />
 
-				<Button
-					variant="clear"
-					size="xs"
-					onClick={() => {
-						player.stop();
-						close();
-					}}
-					className="hidden sm:inline-flex -mr-2"
-				>
+				<Button variant="clear" size="xs" onClick={close} className="hidden sm:inline-flex -mr-2">
 					<Icon icon="times" />
 				</Button>
 			</div>
 		</div>
 	);
-}
+};
 
 export default GlobalTrackPlayer;

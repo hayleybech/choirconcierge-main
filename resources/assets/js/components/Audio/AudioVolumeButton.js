@@ -6,20 +6,18 @@ import tailwindConfig from '../../../../../tailwind.config'
 import Icon from "../Icon";
 import { PlayerContext } from "../../contexts/player-context";
 
+const PURPLE_500 = resolveConfig(tailwindConfig).theme.colors.purple[500] ?? '#7c3aed';
+
 export const AudioVolumeButton = () => {
-    const player = useContext(PlayerContext);
-    const { volume, setVolume } = player;
-    const fullConfig = resolveConfig(tailwindConfig);
+    const { volume, setVolume } = useContext(PlayerContext);
 
     const handleChange = useCallback(
         (slider) => {
-            const volValue = parseFloat(
-                (Number(slider.target.value) / 100).toFixed(2)
-            )
-            return setVolume(volValue);
+            const volValue = parseFloat((Number(slider.target.value) / 100).toFixed(2));
+            setVolume(volValue);
         },
         [setVolume]
-    )
+    );
 
     return (
         <Popover className="relative">
@@ -30,16 +28,16 @@ export const AudioVolumeButton = () => {
                 <div className="flex items-center space-x-2">
                     <Icon icon="volume-down" className="text-gray-700" />
                     <input
-                         type="range"
-                         min={0}
-                         max={100}
-                         onChange={handleChange}
-                         defaultValue={volume * 100}
-                         style={{ accentColor: fullConfig.theme.colors.purple[500] ?? '#ff0000' }}
+                        type="range"
+                        min={0}
+                        max={100}
+                        value={Math.round(volume * 100)}
+                        onChange={handleChange}
+                        style={{ accentColor: PURPLE_500 }}
                     />
                     <Icon icon="volume-up" className="text-gray-700" />
                 </div>
             </Popover.Panel>
         </Popover>
-    )
+    );
 }

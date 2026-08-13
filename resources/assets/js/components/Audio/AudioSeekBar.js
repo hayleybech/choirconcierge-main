@@ -10,7 +10,7 @@ export const AudioSeekBar = ({ position, className }) => {
 
 	const goTo = useCallback(
 		event => {
-			const { pageX: eventOffsetX } = event;
+			const { clientX: eventOffsetX } = event;
 
 			if (seekBarElem.current && duration > 0) {
 				const elementOffsetX = seekBarElem.current.getBoundingClientRect().left;

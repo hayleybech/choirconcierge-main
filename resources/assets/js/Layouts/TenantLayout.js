@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import SidebarDesktop from '../components/SidebarDesktop';
 import SidebarMobile from '../components/SidebarMobile';
 import { usePage } from '@inertiajs/react';
@@ -43,6 +43,7 @@ export default function TenantLayout({ children }) {
 	const rateRef = useRef(1);           // current playback rate, applied to new PitchShifter on load
 	const volumeRef = useRef(1);         // current volume (0–1)
 	const playIdRef = useRef(0);         // incremented on each play() call to cancel stale async loads
+	const abortCtrlRef = useRef(null);   // AbortController for the in-flight fetch
 
 	const getAudioContext = useCallback(async () => {
 		if (!audioCtxRef.current) {
@@ -59,9 +60,10 @@ export default function TenantLayout({ children }) {
 			return shifterRef.current.timePlayed;
 		}
 		return pausedTimeRef.current;
-	}, [getAudioContext]);
+	}, []);
 
-	const stop = useCallback(() => {
+	// Disconnect and nullify the current shifter + gain node.
+	const teardown = useCallback(() => {
 		isPlayingRef.current = false;
 		if (shifterRef.current) {
 			shifterRef.current.node.disconnect();
@@ -73,6 +75,17 @@ export default function TenantLayout({ children }) {
 		}
 		bufferRef.current = null;
 		pausedTimeRef.current = 0;
+	}, []);
+
+	// Silence audio and snapshot the playhead position.
+	const doPause = useCallback(() => {
+		isPlayingRef.current = false;
+		pausedTimeRef.current = shifterRef.current.timePlayed;
+		gainNodeRef.current.gain.value = 0;
+	}, []);
+
+	const stop = useCallback(() => {
+		teardown();
 		setPlayerState(prev => ({
 			...prev,
 			songTitle: null,
@@ -83,22 +96,18 @@ export default function TenantLayout({ children }) {
 			loading: false,
 			duration: 0,
 		}));
-	}, []);
+	}, [teardown]);
 
 	const play = useCallback(async attachment => {
 		const playId = ++playIdRef.current;
 
-		isPlayingRef.current = false;
-		if (shifterRef.current) {
-			shifterRef.current.node.disconnect();
-			shifterRef.current = null;
+		if (abortCtrlRef.current) {
+			abortCtrlRef.current.abort();
 		}
-		if (gainNodeRef.current) {
-			gainNodeRef.current.disconnect();
-			gainNodeRef.current = null;
-		}
-		bufferRef.current = null;
-		pausedTimeRef.current = 0;
+		const abortCtrl = new AbortController();
+		abortCtrlRef.current = abortCtrl;
+
+		teardown();
 
 		const src = attachment.download_url;
 		setPlayerState(prev => ({
@@ -115,7 +124,7 @@ export default function TenantLayout({ children }) {
 
 		let arrayBuffer;
 		try {
-			const response = await fetch(src);
+			const response = await fetch(src, { signal: abortCtrl.signal });
 			arrayBuffer = await response.arrayBuffer();
 		} catch {
 			if (playId === playIdRef.current) setPlayerState(prev => ({ ...prev, loading: false }));
@@ -154,22 +163,18 @@ export default function TenantLayout({ children }) {
 
 		isPlayingRef.current = true;
 		setPlayerState(prev => ({ ...prev, loading: false, playing: true, duration: audioBuffer.duration }));
-	}, []);
+	}, [teardown, getAudioContext]);
 
 	const pause = useCallback(() => {
 		if (!shifterRef.current || !isPlayingRef.current) return;
-		isPlayingRef.current = false;
-		pausedTimeRef.current = shifterRef.current.timePlayed;
-		gainNodeRef.current.gain.value = 0;
+		doPause();
 		setPlayerState(prev => ({ ...prev, playing: false }));
-	}, []);
+	}, [doPause]);
 
 	const togglePlayPause = useCallback(() => {
 		if (!shifterRef.current) return;
 		if (isPlayingRef.current) {
-			isPlayingRef.current = false;
-			pausedTimeRef.current = shifterRef.current.timePlayed;
-			gainNodeRef.current.gain.value = 0;
+			doPause();
 			setPlayerState(prev => ({ ...prev, playing: false }));
 		} else {
 			shifterRef.current.percentagePlayed = pausedTimeRef.current / bufferRef.current.duration;
@@ -177,7 +182,7 @@ export default function TenantLayout({ children }) {
 			isPlayingRef.current = true;
 			setPlayerState(prev => ({ ...prev, playing: true }));
 		}
-	}, []);
+	}, [doPause]);
 
 	const seek = useCallback(pos => {
 		if (!shifterRef.current || !bufferRef.current) return;
@@ -207,7 +212,7 @@ export default function TenantLayout({ children }) {
 		setPlayerState(prev => ({ ...prev, showFullscreen: value }));
 	}, []);
 
-	const player = {
+	const player = useMemo(() => ({
 		...playerState,
 		play,
 		pause,
@@ -218,7 +223,7 @@ export default function TenantLayout({ children }) {
 		setRate,
 		setShowFullscreen,
 		getPosition,
-	};
+	}), [playerState, play, pause, togglePlayPause, stop, seek, setVolume, setRate, setShowFullscreen, getPosition]);
 
 	const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 
