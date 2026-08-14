@@ -10,6 +10,7 @@ import { Link } from "@inertiajs/react";
 import LoadingSpinner from "../LoadingSpinner";
 import useRoute from "../../hooks/useRoute";
 import { AudioTempoButton } from './AudioTempoButton';
+import { AudioPitchButton } from './AudioPitchButton';
 
 const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 	const { route } = useRoute();
@@ -63,6 +64,7 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 					<AudioTimeLabel show="length" position={position} />
 				</div>
 				<AudioTempoButton />
+				<AudioPitchButton />
 				<AudioVolumeButton />
 
 				<Button variant="clear" size="xs" onClick={close} className="hidden sm:inline-flex -mr-2">

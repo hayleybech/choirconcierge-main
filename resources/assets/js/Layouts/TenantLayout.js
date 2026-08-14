@@ -31,6 +31,7 @@ export default function TenantLayout({ children }) {
 		duration: 0,
 		volume: 1,
 		rate: 1,
+		pitch: 0,
 		showFullscreen: false,
 	});
 
@@ -41,6 +42,7 @@ export default function TenantLayout({ children }) {
 	const isPlayingRef = useRef(false);  // true while audio is audible (false when paused or stopped)
 	const pausedTimeRef = useRef(0);     // timePlayed snapshot taken at pause, used for resume/display
 	const rateRef = useRef(1);           // current playback rate, applied to new PitchShifter on load
+	const pitchRef = useRef(0);          // current pitch offset in semitones, applied to new PitchShifter on load
 	const volumeRef = useRef(1);         // current volume (0–1)
 	const playIdRef = useRef(0);         // incremented on each play() call to cancel stale async loads
 	const abortCtrlRef = useRef(null);   // AbortController for the in-flight fetch
@@ -152,6 +154,7 @@ export default function TenantLayout({ children }) {
 
 		const shifter = new PitchShifter(audioContext, audioBuffer, 4096, onEnd);
 		shifter.tempo = rateRef.current;
+		shifter.pitch = Math.pow(2, pitchRef.current / 12);
 		shifterRef.current = shifter;
 
 		const gainNode = audioContext.createGain();
@@ -208,6 +211,14 @@ export default function TenantLayout({ children }) {
 		setPlayerState(prev => ({ ...prev, rate }));
 	}, []);
 
+	const setPitch = useCallback(semitones => {
+		pitchRef.current = semitones;
+		if (shifterRef.current) {
+			shifterRef.current.pitch = Math.pow(2, semitones / 12);
+		}
+		setPlayerState(prev => ({ ...prev, pitch: semitones }));
+	}, []);
+
 	const setShowFullscreen = useCallback(value => {
 		setPlayerState(prev => ({ ...prev, showFullscreen: value }));
 	}, []);
@@ -221,9 +232,10 @@ export default function TenantLayout({ children }) {
 		seek,
 		setVolume,
 		setRate,
+		setPitch,
 		setShowFullscreen,
 		getPosition,
-	}), [playerState, play, pause, togglePlayPause, stop, seek, setVolume, setRate, setShowFullscreen, getPosition]);
+	}), [playerState, play, pause, togglePlayPause, stop, seek, setVolume, setRate, setPitch, setShowFullscreen, getPosition]);
 
 	const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 
