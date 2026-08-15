@@ -4,13 +4,11 @@ import Button from "../inputs/Button";
 import { PlayerContext } from '../../contexts/player-context';
 import { AudioTimeLabel } from "./AudioTimeLabel";
 import { AudioSeekBar } from "./AudioSeekBar";
-import { AudioVolumeButton } from "./AudioVolumeButton";
 import Icon from "../Icon";
 import { Link } from "@inertiajs/react";
 import LoadingSpinner from "../LoadingSpinner";
 import useRoute from "../../hooks/useRoute";
-import { AudioTempoButton } from './AudioTempoButton';
-import { AudioPitchButton } from './AudioPitchButton';
+import { AudioToolsButton } from './AudioToolsButton';
 
 const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 	const { route } = useRoute();
@@ -63,9 +61,7 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 					<AudioSeekBar position={position} />
 					<AudioTimeLabel show="length" position={position} />
 				</div>
-				<AudioTempoButton />
-				<AudioPitchButton />
-				<AudioVolumeButton />
+				<AudioToolsButton />
 
 				<Button variant="clear" size="xs" onClick={close} className="hidden sm:inline-flex -mr-2">
 					<Icon icon="times" />
