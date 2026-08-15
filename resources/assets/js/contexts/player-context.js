@@ -15,7 +15,7 @@ export const PlayerContext = React.createContext({
 	stop: () => {},
 	seek: pos => {},
 	setVolume: vol => {},
-	rate: 1,
+	rate: 100,
 	setRate: rate => {},
 	pitch: 0,
 	setPitch: pitch => {},

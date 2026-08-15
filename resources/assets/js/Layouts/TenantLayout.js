@@ -30,7 +30,7 @@ export default function TenantLayout({ children }) {
 		loading: false,
 		duration: 0,
 		volume: 1,
-		rate: 1,
+		rate: 100,
 		pitch: 0,
 		showFullscreen: false,
 	});
@@ -41,7 +41,7 @@ export default function TenantLayout({ children }) {
 	const bufferRef = useRef(null);      // decoded AudioBuffer (needed for duration and seek math)
 	const isPlayingRef = useRef(false);  // true while audio is audible (false when paused or stopped)
 	const pausedTimeRef = useRef(0);     // timePlayed snapshot taken at pause, used for resume/display
-	const rateRef = useRef(1);           // current playback rate, applied to new PitchShifter on load
+	const rateRef = useRef(100);           // current playback rate, applied to new PitchShifter on load
 	const pitchRef = useRef(0);          // current pitch offset in semitones, applied to new PitchShifter on load
 	const volumeRef = useRef(1);         // current volume (0–1)
 	const playIdRef = useRef(0);         // incremented on each play() call to cancel stale async loads
@@ -153,7 +153,7 @@ export default function TenantLayout({ children }) {
 		};
 
 		const shifter = new PitchShifter(audioContext, audioBuffer, 4096, onEnd);
-		shifter.tempo = rateRef.current;
+		shifter.tempo = rateRef.current / 100;
 		shifter.pitch = Math.pow(2, pitchRef.current / 12);
 		shifterRef.current = shifter;
 
@@ -206,7 +206,7 @@ export default function TenantLayout({ children }) {
 	const setRate = useCallback(rate => {
 		rateRef.current = rate;
 		if (shifterRef.current) {
-			shifterRef.current.tempo = rate;
+			shifterRef.current.tempo = rate / 100;
 		}
 		setPlayerState(prev => ({ ...prev, rate }));
 	}, []);

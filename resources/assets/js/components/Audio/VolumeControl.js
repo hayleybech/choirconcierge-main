@@ -24,6 +24,7 @@ export const VolumeControl = () => {
 					max={100}
 					value={Math.round(volume * 100)}
 					onChange={handleChange}
+					className="flex-grow"
 					style={{ accentColor: PURPLE_500 }}
 				/>
 				<Icon icon="volume-up" className="text-gray-700" />
