@@ -7,7 +7,9 @@ use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Stancl\Tenancy\Controllers\TenantAssetsController;
@@ -31,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
         TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
 
         Paginator::useBootstrap();
+
+        if(App::isLocal()) {
+            URL::forceRootUrl(config('app.url'));
+        }
     }
 
     /**

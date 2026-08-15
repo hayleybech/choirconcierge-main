@@ -103,6 +103,7 @@ it('removes the group as its own cc if the group is a distribution', function ()
     $message->uid = 'inbound-'.Str::uuid();
     $message->has_attachments = false;
     $message->received_at = now();
+    $message->content_html = '<p>Test message</p>';
     MailLog::createFromMessage($message)->events()->create([
         'status' => 'pending',
     ]);

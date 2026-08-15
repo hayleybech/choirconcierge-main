@@ -30,6 +30,13 @@ const MailLogTableMobile = ({ logs }) => {
 											<Icon icon={mailTypeIcons[mailType] ?? 'question'} mr />
 											{log.subject}
 											{!!log.has_attachments && <Icon icon="paperclip" ml />}
+											{log.size > 0 && (
+												<span className="ml-2 text-xs text-gray-400">
+													{log.size < 1024 * 1024
+														? `${(log.size / 1024).toFixed(1)} KB`
+														: `${(log.size / (1024 * 1024)).toFixed(1)} MB`}
+												</span>
+											)}
 											{log.opens_count > 0 && (
 												<span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
 													<Icon icon="eye" mr />

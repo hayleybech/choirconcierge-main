@@ -37,7 +37,6 @@ class TenantController extends Controller
 
 	public function create(): InertiaResponse
 	{
-
 		return Inertia::render('Central/Tenants/Create', [
 			'centralDomain' => central_domain(),
             'timezones' => DateTimeZone::listIdentifiers(),

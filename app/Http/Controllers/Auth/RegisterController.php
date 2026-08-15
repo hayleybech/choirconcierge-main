@@ -37,7 +37,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest')->except('showRegistrationForm');
     }
 
 	/**
@@ -68,6 +68,10 @@ class RegisterController extends Controller
 
 	public function showRegistrationForm()
 	{
+		if (auth()->check()) {
+			return redirect()->route('central.tenants.create');
+		}
+
 		return Inertia::render('Auth/Register');
 	}
 }

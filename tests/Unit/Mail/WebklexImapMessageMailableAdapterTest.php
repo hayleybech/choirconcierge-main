@@ -123,6 +123,7 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
             $mock->shouldReceive('getHTMLBody')->andReturn('<html>Hello</html>');
             $mock->shouldReceive('getAttachments')->andReturn(new AttachmentCollection([]));
             $mock->shouldReceive('hasAttachments')->andReturn(false);
+            $mock->shouldReceive('getSize')->andReturn(1024);
         });
     }
 
