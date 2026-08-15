@@ -30,6 +30,7 @@ export default function TenantLayout({ children }) {
 		loading: false,
 		duration: 0,
 		volume: 1,
+		pan: 0,
 		rate: 100,
 		pitch: 0,
 		showFullscreen: false,
@@ -37,13 +38,15 @@ export default function TenantLayout({ children }) {
 
 	const audioCtxRef = useRef(null);    // native AudioContext, created once on first play
 	const shifterRef = useRef(null);     // PitchShifter instance (SoundTouch wrapper)
-	const gainNodeRef = useRef(null);    // GainNode for volume, sits between shifter and destination
+	const gainNodeRef = useRef(null);    // GainNode for volume
+	const panNodeRef = useRef(null);
 	const bufferRef = useRef(null);      // decoded AudioBuffer (needed for duration and seek math)
 	const isPlayingRef = useRef(false);  // true while audio is audible (false when paused or stopped)
 	const pausedTimeRef = useRef(0);     // timePlayed snapshot taken at pause, used for resume/display
 	const rateRef = useRef(100);           // current playback rate, applied to new PitchShifter on load
 	const pitchRef = useRef(0);          // current pitch offset in semitones, applied to new PitchShifter on load
 	const volumeRef = useRef(1);         // current volume (0–1)
+	const panRef = useRef(0);         // current pan (-1 to 1)
 	const playIdRef = useRef(0);         // incremented on each play() call to cancel stale async loads
 	const abortCtrlRef = useRef(null);   // AbortController for the in-flight fetch
 
@@ -74,6 +77,10 @@ export default function TenantLayout({ children }) {
 		if (gainNodeRef.current) {
 			gainNodeRef.current.disconnect();
 			gainNodeRef.current = null;
+		}
+		if(panNodeRef.current) {
+			panNodeRef.current.disconnect();
+			panNodeRef.current = null;
 		}
 		bufferRef.current = null;
 		pausedTimeRef.current = 0;
@@ -160,9 +167,14 @@ export default function TenantLayout({ children }) {
 		const gainNode = audioContext.createGain();
 		gainNode.gain.value = volumeRef.current;
 		gainNodeRef.current = gainNode;
-
 		shifter.node.connect(gainNode);
-		gainNode.connect(audioContext.destination);
+
+		const panner = audioContext.createStereoPanner();
+		panner.pan.value = panRef.current;
+		panNodeRef.current = panner;
+		gainNode.connect(panner);
+
+		panner.connect(audioContext.destination);
 
 		isPlayingRef.current = true;
 		setPlayerState(prev => ({ ...prev, loading: false, playing: true, duration: audioBuffer.duration }));
@@ -182,6 +194,7 @@ export default function TenantLayout({ children }) {
 		} else {
 			shifterRef.current.percentagePlayed = pausedTimeRef.current / bufferRef.current.duration;
 			gainNodeRef.current.gain.value = volumeRef.current;
+			panNodeRef.current.pan.value = panRef.current;
 			isPlayingRef.current = true;
 			setPlayerState(prev => ({ ...prev, playing: true }));
 		}
@@ -201,6 +214,15 @@ export default function TenantLayout({ children }) {
 			gainNodeRef.current.gain.value = vol;
 		}
 		setPlayerState(prev => ({ ...prev, volume: vol }));
+	}, []);
+
+	const setPan = useCallback(pan => {
+		panRef.current = pan;
+		if (panNodeRef.current && isPlayingRef.current) {
+			panNodeRef.current.pan.value = pan;
+			console.log('pan', pan);
+		}
+		setPlayerState(prev => ({ ...prev, pan }));
 	}, []);
 
 	const setRate = useCallback(rate => {
@@ -231,11 +253,12 @@ export default function TenantLayout({ children }) {
 		stop,
 		seek,
 		setVolume,
+		setPan,
 		setRate,
 		setPitch,
 		setShowFullscreen,
 		getPosition,
-	}), [playerState, play, pause, togglePlayPause, stop, seek, setVolume, setRate, setPitch, setShowFullscreen, getPosition]);
+	}), [playerState, play, pause, togglePlayPause, stop, seek, setVolume, setPan, setRate, setPitch, setShowFullscreen, getPosition]);
 
 	const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 
