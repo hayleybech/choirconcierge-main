@@ -208,6 +208,10 @@ export default function TenantLayout({ children }) {
 		}
 	}, []);
 
+	const jumpBack = useCallback(() => {
+		seek(Math.max(0, getPosition() - 10));
+	}, [seek, getPosition]);
+
 	const setVolume = useCallback(vol => {
 		volumeRef.current = vol;
 		if (gainNodeRef.current && isPlayingRef.current) {
@@ -252,13 +256,14 @@ export default function TenantLayout({ children }) {
 		togglePlayPause,
 		stop,
 		seek,
+		jumpBack,
 		setVolume,
 		setPan,
 		setRate,
 		setPitch,
 		setShowFullscreen,
 		getPosition,
-	}), [playerState, play, pause, togglePlayPause, stop, seek, setVolume, setPan, setRate, setPitch, setShowFullscreen, getPosition]);
+	}), [playerState, play, pause, togglePlayPause, stop, seek, jumpBack, setVolume, setPan, setRate, setPitch, setShowFullscreen, getPosition]);
 
 	const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 

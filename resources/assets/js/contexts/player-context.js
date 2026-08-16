@@ -15,6 +15,7 @@ export const PlayerContext = React.createContext({
 	togglePlayPause: () => {},
 	stop: () => {},
 	seek: pos => {},
+	jumpBack: () => {},
 	setVolume: vol => {},
 	setPan: pan => {},
 	rate: 100,

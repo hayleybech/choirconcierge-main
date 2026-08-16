@@ -9,10 +9,10 @@ import { PanControl } from './PanControl';
 
 export const AudioToolsButton = () => (
 	<Popover className="relative">
-		<Popover.Button as={Button} variant="clear" size="xs" className="tabular-nums w-12 text-xs">
-			<Icon icon="sliders-v" />
+		<Popover.Button as={Button} variant="clear" size="xs" className="tabular-nums w-12">
+			<Icon icon="sliders-v" size="text-lg" />
 		</Popover.Button>
-		<Popover.Panel className="absolute bottom-full space-y-4 right-0 bg-white rounded border border-gray-200 shadow-lg py-4 min-w-max w-[400px] max-w-[calc(100vw_-_16px)] px-3">
+		<Popover.Panel className="absolute bottom-full mb-2 space-y-4 right-0 bg-white rounded border border-gray-200 shadow-lg py-4 min-w-max w-[400px] max-w-[calc(100vw_-_16px)] px-3">
 			<div>
 				<VolumeControl />
 			</div>

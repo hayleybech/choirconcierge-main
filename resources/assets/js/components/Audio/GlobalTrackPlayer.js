@@ -1,14 +1,15 @@
 import React, { useCallback, useContext, useEffect } from 'react';
 
-import Button from "../inputs/Button";
+import Button from '../inputs/Button';
 import { PlayerContext } from '../../contexts/player-context';
-import { AudioTimeLabel } from "./AudioTimeLabel";
-import { AudioSeekBar } from "./AudioSeekBar";
-import Icon from "../Icon";
-import { Link } from "@inertiajs/react";
-import LoadingSpinner from "../LoadingSpinner";
-import useRoute from "../../hooks/useRoute";
+import { AudioTimeLabel } from './AudioTimeLabel';
+import { AudioSeekBar } from './AudioSeekBar';
+import Icon from '../Icon';
+import { Link } from '@inertiajs/react';
+import LoadingSpinner from '../LoadingSpinner';
+import useRoute from '../../hooks/useRoute';
 import { AudioToolsButton } from './AudioToolsButton';
+import { JumpBackButton } from './JumpBackButton';
 
 const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 	const { route } = useRoute();
@@ -51,11 +52,12 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 					<Icon icon="times" />
 				</Button>
 			</div>
-			<div className="flex items-center space-x-2 grow w-full sm:w-auto">
+			<div className="flex items-center space-x-1 grow w-full sm:w-auto">
 				{player.loading && <LoadingSpinner />}
 				<Button variant="clear" size="xs" onClick={player.togglePlayPause} disabled={player.loading}>
-					{player.playing ? <Icon icon="pause" /> : <Icon icon="play" />}
+					{player.playing ? <Icon icon="pause" size="text-lg" /> : <Icon icon="play" size="text-lg" />}
 				</Button>
+				<JumpBackButton />
 				<div className="flex items-center space-x-1.5 grow">
 					<AudioTimeLabel show="elapsed" position={position} />
 					<AudioSeekBar position={position} />
