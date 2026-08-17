@@ -1,4 +1,3 @@
-import {useAudioPlayer} from "react-use-audio-player";
 import Button from "../inputs/Button";
 import React, {useState} from "react";
 import Icon from "../Icon";
@@ -19,13 +18,8 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [deletingAttachmentId, setDeletingAttachmentId] = useState(0);
     const [attachmentToRename, setAttachmentToRename] = useState(null);
-    const { load } = useAudioPlayer();
 
     const play = (attachment) => {
-        load({
-            src: attachment.download_url,
-            autoplay: true,
-        });
         player.play(attachment);
     };
 

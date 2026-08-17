@@ -1,9 +1,28 @@
-import React from "react";
+import React from 'react';
 
 export const PlayerContext = React.createContext({
-    player: {
-        title: null,
-        src: null,
-        play: () => {},
-    },
+	songTitle: null,
+	songId: 0,
+	fileName: null,
+	src: null,
+	playing: false,
+	loading: false,
+	duration: 0,
+	volume: 1,
+	pan: 0,
+	play: attachment => {},
+	pause: () => {},
+	togglePlayPause: () => {},
+	stop: () => {},
+	seek: pos => {},
+	jumpBack: () => {},
+	setVolume: vol => {},
+	setPan: pan => {},
+	rate: 100,
+	setRate: rate => {},
+	pitch: 0,
+	setPitch: pitch => {},
+	showFullscreen: false,
+	setShowFullscreen: value => {},
+	getPosition: () => 0,
 });
