@@ -7,6 +7,7 @@ import {Menu, Transition} from '@headlessui/react';
 import buttonStyles from '../inputs/buttonStyles';
 import {DateTime} from "luxon";
 import {useKonami} from "react-konami-code";
+import { MetronomeButton } from '../Audio/MetronomeButton';
 
 const PdfToolbar = ({ isFullscreen, closeFullscreen, openFullscreen, zoomIn, zoomOut, pitch, instrument, setInstrument }) => {
 	const [showPitchBar, setShowPitchBar] = useState(false);
@@ -30,6 +31,8 @@ const PdfToolbar = ({ isFullscreen, closeFullscreen, openFullscreen, zoomIn, zoo
 					</Button>
 
 					<InstrumentMenu instrument={instrument} setInstrument={setInstrument} />
+
+					<MetronomeButton />
 				</div>
 
 				<Button
