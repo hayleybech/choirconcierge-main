@@ -1,3 +1,18 @@
+# 2026-08-18
+## Audio Player 2.0
+We've just launched a new version of the audio player! We've added a lot of new and highly-requested features, including:
+
+### Tempo & Pitch Correction
+You can now change the key of your learning tracks, and practice at other tempos.
+
+### Pan Control
+You can now pan the track to the left or right, which is ideal for tracks where your part is off-centre. When practicing, try moving the pan just a bit and singing along with it, then panning a little bit more. By the end, your part will be almost silent, and you'll be singing confidently with the other parts!
+
+### Jump Back Button
+If you find seek bars a bit fiddly especially on mobile, you might prefer to use the new "Jump Back" button. Each press goes back 10 seconds.
+
+These features have been planned for a long time, but required a rewrite of the audio engine to make them possible. We're so excited to have you try them out! Please let us know if you have any ideas for future practice tools.
+---
 # 2026-03-29
 ## Attendance Report Emails
 Your team (anyone with the "view attendance" permission) will now receive an automated email after Kiosk / QR-Code events, with a quick summary of the attendance for the event.
