@@ -2,7 +2,7 @@ import classNames from '../../classNames';
 
 const buttonStyles = (variant = 'secondary', size = 'md', disabled: boolean, extra: string) => classNames(
     extra,
-    'inline-flex justify-center items-center gap-x-1.5 border shadow-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500',
+    'inline-flex justify-center items-center gap-x-1.5 border shadow-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 group',
     variant === 'primary' ? 'bg-purple-600 border-transparent text-white hover:bg-purple-700' : '',
     variant === 'secondary' ? 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100' : '',
     variant === 'dark' ? 'bg-gray-800 border-gray-300 text-white hover:bg-gray-700' : '',

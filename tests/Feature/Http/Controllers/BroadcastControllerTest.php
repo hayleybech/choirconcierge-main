@@ -73,7 +73,30 @@ it('stores attachments in temporary storage', function () {
             && $job->message->fileMeta[0]['hashName'] === $files[0]->hashName()
             && $job->message->fileMeta[1]['hashName'] === $files[1]->hashName();
     });
-})->skip('flaky: data too long for column "context"');
+});
+
+it('logs the size of the broadcast', function () {
+    $user = $this->actingAsRole('Music Team');
+
+    $group = createGroup($user);
+
+    $file = UploadedFile::fake()->create('test.txt', 100); // 100 KB
+
+    $body = 'test body';
+    $expectedSize = (100 * 1024) + strlen($body);
+
+    $this->post(the_tenant_route('groups.broadcasts.store'), [
+        'list' => $group->id,
+        'subject' => 'this is a test',
+        'body' => $body,
+        'attachments' => [$file],
+    ])->assertRedirect(route('groups.mail-logs.index'));
+
+    $this->assertDatabaseHas('mail_logs', [
+        'subject' => 'this is a test',
+        'size' => $expectedSize,
+    ]);
+});
 
 function createGroup(User $user): UserGroup
 {

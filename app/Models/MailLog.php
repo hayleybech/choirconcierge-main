@@ -23,6 +23,7 @@ use Illuminate\Support\Str;
  * @property string $bcc Max email length according to intl standard
  * @property string $subject Max length is arbitrary
  * @property string $body Max length is arbitrary, but matches the max length for sending broadcasts
+ * @property int $size Size in bytes
  * @property boolean $has_attachments
  * @property Carbon $received_at The date the email arrived in the mailbox
  * @property Carbon $created_at
@@ -79,6 +80,7 @@ class MailLog extends Model
                 ->join(', '), 254),
             'subject' => Str::limit($message->subject, 128-3),
             'body' => $message->getContent(),
+            'size' => $message->getSize(),
             'has_attachments' => $message->getHasAttachments(),
             'received_at' => $message->getReceivedAt(),
         ]);

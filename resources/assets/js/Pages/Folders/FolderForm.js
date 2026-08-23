@@ -23,11 +23,11 @@ const FolderForm = ({ folder, ensembles, roles, voiceParts, singerStatuses }) =>
         viewer_users: folder?.viewer_users?.map(user => user.id) ?? [],
         viewer_roles: folder?.viewer_roles?.map(role => role.id) ?? [],
         viewer_voice_parts: folder?.viewer_voice_parts?.map(part => part.id) ?? [],
-        viewer_singer_statuses: folder?.viewer_singer_statuses?.map(cat => cat.id) ?? [],
+        viewer_singer_statuses: folder?.viewer_singer_statuses?.map(cat => cat.viewer_id) ?? [],
         editor_users: folder?.editor_users?.map(user => user.id) ?? [],
         editor_roles: folder?.editor_roles?.map(role => role.id) ?? [],
         editor_voice_parts: folder?.editor_voice_parts?.map(part => part.id) ?? [],
-        editor_singer_statuses: folder?.editor_singer_statuses?.map(cat => cat.id) ?? [],
+        editor_singer_statuses: folder?.editor_singer_statuses?.map(cat => cat.editor_id) ?? [],
     });
 
     function submit(e) {
@@ -68,7 +68,7 @@ const FolderForm = ({ folder, ensembles, roles, voiceParts, singerStatuses }) =>
 					)}
                 </FormSection>
 
-                <FormSection title="Viewing Permissions" description={`Specify who can view this folder. If none are selected, all members ${ensembles.length > 1 && '(within any selected ensembles) '}can view. `}>
+                <FormSection title="Viewing Permissions" description={`Specify who can view this folder. If none are selected, all members ${ensembles.length > 1 ? '(within any selected ensembles) ' : ''}can view. `}>
                     <div className="sm:col-span-6">
                         <Label label="Specific Singers" />
                         <SingerSelect

@@ -8618,6 +8618,11 @@ sockjs@^0.3.24:
     uuid "^8.3.2"
     websocket-driver "^0.7.4"
 
+soundtouchjs@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npmjs.org/soundtouchjs/-/soundtouchjs-0.3.0.tgz"
+  integrity sha512-P/+SwnIE4BLrMbYK8aB8+GfXRfLv3+BV8HFMrEqOuF0F9BsI3sKEN1T+kY/JqiVURcCQgr50BC8D/uVzE/GozQ==
+
 source-list-map@^2.0.0:
   version "2.0.1"
   resolved "https://registry.npmjs.org/source-list-map/-/source-list-map-2.0.1.tgz"

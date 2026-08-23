@@ -13,4 +13,5 @@ interface Loggable
     public function getReceivedAt(): Carbon;
 
     public function getContent(): string;
+    public function getSize(): int;
 }

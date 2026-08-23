@@ -43,12 +43,26 @@ const MailStatusDetail = ({log, event, mailType}) => {
 			<p className="text-sm text-gray-500">
 				A recipient matches group{' '}
 				<Link
-					href={route('groups.show', {group: event.user_group, tenant: event.user_group.tenant_id})}
+					href={route('groups.show', { group: event.user_group, tenant: event.user_group.tenant_id })}
 					className="font-medium text-purple-600 hover:text-purple-800 focus:text-purple-800"
 				>
 					{event.user_group?.title ?? event.context}
-				</Link>
-				{' '}in our email system.
+				</Link>{' '}
+				in our email system.
+			</p>
+		);
+	}
+	if (event.status === 'group-empty') {
+		return (
+			<p className="text-sm text-gray-500">
+				The group {' '}
+				<Link
+					href={route('groups.show', { group: event.user_group, tenant: event.user_group.tenant_id })}
+					className="font-medium text-purple-600 hover:text-purple-800 focus:text-purple-800"
+				>
+					{event.user_group?.title ?? event.context}
+				</Link>{' '}
+				appears to contain no users. Please check the group settings.
 			</p>
 		);
 	}

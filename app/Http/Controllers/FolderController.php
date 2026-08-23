@@ -49,7 +49,7 @@ class FolderController extends Controller
                             $query->whereHas('viewer_users', fn($q) => $q->where('users.id', $user->id))
                                 ->orWhereHas('viewer_roles', fn($q) => $q->whereIn('roles.id', $user->membership->roles->pluck('id')))
                                 ->orWhereHas('viewer_voice_parts', fn($q) => $q->whereIn('voice_parts.id', $user->membership->enrolments->pluck('voice_part_id')))
-                                ->orWhereHas('viewer_singer_statuses', fn($q) => $q->where('viewer_id', $user->membership->status?->value));
+                                ->orWhereHas('viewer_singer_statuses', fn($q) => $q->where('viewer_id', $user->membership->status?->status->value));
                         });
                 });
             })
@@ -80,7 +80,7 @@ class FolderController extends Controller
                                     $query->whereHas('viewer_users', fn($q) => $q->where('users.id', $user->id))
                                         ->orWhereHas('viewer_roles', fn($q) => $q->whereIn('roles.id', $user->membership->roles->pluck('id')))
                                         ->orWhereHas('viewer_voice_parts', fn($q) => $q->whereIn('voice_parts.id', $user->membership->enrolments->pluck('voice_part_id')))
-                                        ->orWhereHas('viewer_singer_statuses', fn($q) => $q->where('viewer_id', $user->membership->status?->value));
+                                        ->orWhereHas('viewer_singer_statuses', fn($q) => $q->where('viewer_id', $user->membership->status?->status->value));
                                 });
                         });
                     });

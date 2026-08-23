@@ -40,6 +40,7 @@ class BroadcastController extends Controller
             ->map(fn (UploadedFile $file) => [
                 'hashName' => $file->hashName(),
                 'originalName' => $file->getClientOriginalName(),
+                'size' => $file->getSize(),
             ]);
 
         $organisationBroadcast = new OrganisationBroadcast(
@@ -49,6 +50,7 @@ class BroadcastController extends Controller
             $request->user(),
             $fileMeta,
             'broadcast-' . Str::uuid(),
+            (int) $fileMeta->sum('size') + strlen($request->input('body')),
         );
 
         $mailLog = MailLog::createFromMessage($organisationBroadcast);
@@ -59,7 +61,7 @@ class BroadcastController extends Controller
             ],
             [
                 'status' => 'group-found',
-                'context' => Str::limit($group->title, 64),
+                'context' => Str::limit($group->title, 64-3),
                 'user_group_id' => $group->id,
             ],
         ]);

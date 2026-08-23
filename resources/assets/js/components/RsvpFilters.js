@@ -5,7 +5,7 @@ import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
 import FilterActions from "./inputs/FilterActions";
 
-const RsvpFilters = ({ event, voiceParts, form, ensembles, singerCategories }) => (
+const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => (
     <Filters
         routeName="events.rsvps.index"
         routeParams={{ event: event.id }}
@@ -18,15 +18,15 @@ const RsvpFilters = ({ event, voiceParts, form, ensembles, singerCategories }) =
 
             <fieldset>
                 <div className="flex items-center justify-between">
-                    <legend className="text-sm font-medium text-gray-700">Singer Category</legend>
+                    <legend className="text-sm font-medium text-gray-700">Singer Status</legend>
                     <FilterActions
-                        onSelectAll={() => setData('status.id', singerCategories.map(category => category.id))}
+                        onSelectAll={() => setData('status.id', singerStatuses.map(status => status.id))}
                         onClear={() => setData('status.id', [])}
                     />
                 </div>
                 <CheckboxGroup
-                    name="category.id"
-                    options={singerCategories.map((category) => ({ id: category.id, name: category.name }))}
+                    name="status.id"
+                    options={singerStatuses.map((status) => ({ id: status.id, name: status.name }))}
                     value={data['status.id']}
                     updateFn={value => setData('status.id', value)}
                 />

@@ -69,6 +69,7 @@
         "react-use-cookie": "^1.6.1",
         "react-zoom-pan-pinch": "^2.6.1",
         "snapsvg-cjs": "0.0.6",
+        "soundtouchjs": "^0.3.0",
         "states-us": "^1.1.1",
         "tone": "^15.1.22",
         "ziggy-js": "^1.8.2"

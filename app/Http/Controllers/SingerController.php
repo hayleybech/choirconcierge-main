@@ -312,7 +312,7 @@ class SingerController extends Controller
                         ->whereRaw('CONCAT(first_name, ?, last_name) LIKE LOWER(?)', [' ', "%$value%"])
                         ->orWhereRaw('email LIKE LOWER(?)', ["%$value%"])
                     )),
-                AllowedFilter::callback('status.id', fn(Builder $query, $value) => $query
+                AllowedFilter::callback('status', fn(Builder $query, $value) => $query
                     ->whereHas('status', fn(Builder $query) => $query
                         ->whereIn('status', (array)$value)
                     ))

@@ -55,6 +55,5 @@ The following attendance has been recorded for **{{ $event->title }}**:
 View Full Report
 </x-mail::button>
 
-Thanks,<br>
-{{ config('app.name') }}
+<small>This email is triggered automatically for QR Code and Kiosk events. It is sent to members with the "View Attendance" permission.</small>
 </x-mail::message>

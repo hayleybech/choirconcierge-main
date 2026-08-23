@@ -2,12 +2,11 @@
 
 namespace Tests\Unit\Models;
 
-use App\Enums\SingerStatus as SingerStatusEnum;
-use App\Models\Ensemble;
+use App\Enums\SingerStatus;
 use App\Models\Enrolment;
+use App\Models\Ensemble;
 use App\Models\Role;
 use App\Models\Membership;
-use App\Models\SingerStatus;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UserGroup;
@@ -63,7 +62,7 @@ class UserGroupTest extends TestCase
     {
         $group = UserGroup::factory()->create();
 
-        $statusValues = [SingerStatusEnum::MEMBERS->value, SingerStatusEnum::PROSPECTS->value];
+        $statusValues = [SingerStatus::MEMBERS->value, SingerStatus::PROSPECTS->value];
         foreach ($statusValues as $status) {
             $group->recipient_singer_statuses()->create(['memberable_id' => $status, 'memberable_type' => SingerStatus::class]);
         }
@@ -125,7 +124,7 @@ class UserGroupTest extends TestCase
     {
         $group = UserGroup::factory()->create();
 
-        $statusValues = [SingerStatusEnum::MEMBERS->value, SingerStatusEnum::PROSPECTS->value];
+        $statusValues = [SingerStatus::MEMBERS->value, SingerStatus::PROSPECTS->value];
         foreach ($statusValues as $status) {
             $group->sender_singer_statuses()->create(['sender_id' => $status, 'sender_type' => SingerStatus::class]);
         }
@@ -180,7 +179,7 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $role = Role::factory()->create();
-        $statusValue = SingerStatusEnum::MEMBERS->value;
+        $statusValue = SingerStatus::MEMBERS->value;
         $ensembleA = Ensemble::factory()->create();
         $ensembleB = Ensemble::factory()->create();
 
@@ -226,7 +225,7 @@ class UserGroupTest extends TestCase
         $group = UserGroup::factory()->create();
 
         $role = Role::factory()->create();
-        $statusValue = SingerStatusEnum::MEMBERS->value;
+        $statusValue = SingerStatus::MEMBERS->value;
         $ensembleA = Ensemble::factory()->create();
         $ensembleB = Ensemble::factory()->create();
 

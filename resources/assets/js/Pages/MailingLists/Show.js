@@ -93,7 +93,7 @@ const Show = ({ list }) => {
                                                 <div className="flex items-center justify-between px-4">
                                                     <span className="text-sm font-medium truncate">
                                                         {`${getTypeName(member.memberable_type)}: `}
-                                                        {member?.memberable.name ?? member?.memberable.title ?? 'Recipient not found'}
+                                                        {member?.memberable?.name ?? member?.memberable?.title ?? member.memberable_id}
                                                     </span>
                                                 </div>
                                             </div>
@@ -151,7 +151,7 @@ const Show = ({ list }) => {
                                                 <div className="flex items-center justify-between px-4">
                                                     <span className="text-sm font-medium truncate">
                                                         {`${getTypeName(sender.sender_type)}: `}
-                                                        {sender?.sender.name ?? sender?.sender.title ?? 'Sender not found'}
+                                                        {sender?.sender?.name ?? sender?.sender?.title ?? sender.sender_id}
                                                     </span>
                                                 </div>
                                             </div>
@@ -192,6 +192,7 @@ const getTypeName = (type) => {
         'App\\Models\\SingerCategory': 'Singer Category',
         'App\\Models\\User': 'Singer',
         'App\\Models\\Ensemble': 'Ensemble (Filter)',
+        'App\\Enums\\SingerStatus': 'Singer Status',
     };
     return typeNames[type];
 };

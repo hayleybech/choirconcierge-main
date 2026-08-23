@@ -21,5 +21,3 @@ const PitchScale = ({ instrument }) => (
 );
 
 export default PitchScale;
-
-const rotate = (arr, n = 1) => [...arr.slice(n, arr.length), ...arr.slice(0, n)];

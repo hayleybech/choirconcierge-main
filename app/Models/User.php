@@ -123,7 +123,7 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
 
     public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'last_login' => 'datetime', 'dob' => 'datetime'];
 
-    protected $appends = ['name', 'avatar_url', 'profile_avatar_url', 'bha_type'];
+    protected $appends = ['name', 'avatar_url', 'profile_avatar_url', 'bha_type', 'age'];
 
     public $notify_channels = ['database', 'mail'];
 
@@ -222,6 +222,11 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
     public function getNameAttribute(): string
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function getAgeAttribute(): ?int
+    {
+        return $this->dob?->age;
     }
 
     public function bhaType(): Attribute

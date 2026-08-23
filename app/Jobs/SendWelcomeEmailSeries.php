@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Mail\TenantWelcomePart1;
-use App\Mail\TenantWelcomePart2;
-use App\Mail\TenantWelcomePart3;
+use App\Jobs\SendTenantWelcomePart1;
+use App\Jobs\SendTenantWelcomePart2;
+use App\Jobs\SendTenantWelcomePart3;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -42,15 +42,18 @@ class SendWelcomeEmailSeries implements ShouldQueue
 	    $ownerUser = User::findOrFail($this->tenant->created_by);
 
 		// Part 1
-	    Mail::to($ownerUser)
-		    ->send(new TenantWelcomePart1($ownerUser));
+        SendTenantWelcomePart1::dispatch($ownerUser);
 
 		// Part 2
-	    Mail::to($ownerUser)
-		    ->later(now()->addDays(7), new TenantWelcomePart2($ownerUser, $this->tenant->had_demo ?? false));
+        SendTenantWelcomePart2::dispatch($ownerUser, $this->tenant->had_demo ?? false)
+            ->delay(now()->addDays(7))
+            ->onConnection('database')
+            ->onQueue('delayed');
 
 	    // Part 3
-	    Mail::to($ownerUser)
-		    ->later(now()->addDays(25), new TenantWelcomePart3($ownerUser, $this->tenant->had_demo ?? false));
+        SendTenantWelcomePart3::dispatch($ownerUser, $this->tenant->had_demo ?? false)
+            ->delay(now()->addDays(25))
+            ->onConnection('database')
+            ->onQueue('delayed');
     }
 }

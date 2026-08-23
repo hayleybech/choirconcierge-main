@@ -17,6 +17,7 @@ const MailLogTableDesktop = ({ logs }) => {
 					<TableHeading>Subject</TableHeading>
 					<TableHeading>From</TableHeading>
 					<TableHeading>To</TableHeading>
+					<TableHeading>Size</TableHeading>
 					<TableHeading>Opens</TableHeading>
 					<TableHeading>Status</TableHeading>
 					<TableHeading>Date Created</TableHeading>
@@ -41,6 +42,17 @@ const MailLogTableDesktop = ({ logs }) => {
 							</TableCell>
 							<TableCell>{log.from}</TableCell>
 							<TableCell>{log.to}</TableCell>
+							<TableCell className="whitespace-nowrap">
+								{log.size ? (
+									<span className="text-gray-500 text-xs">
+										{log.size < 1024 * 1024
+											? `${(log.size / 1024).toFixed(1)} KB`
+											: `${(log.size / (1024 * 1024)).toFixed(1)} MB`}
+									</span>
+								) : (
+									<span className="text-gray-400 text-xs">—</span>
+								)}
+							</TableCell>
 							<TableCell>
 								{log.opens_count > 0 ? (
 									<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
