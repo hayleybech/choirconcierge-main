@@ -4,9 +4,9 @@ namespace App\Navigation;
 
 class Navigation
 {
-    public function get(bool $app = false): array
+    public function get(bool $useCentralMenu, bool $app = false): array
     {
-        $items = tenancy()->initialized === false
+        $items = $useCentralMenu
             ? $this->centralItems()
             : $this->tenantItems();
 

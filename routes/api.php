@@ -50,8 +50,12 @@ Route::post('/sanctum/token', function (Request $request) {
 
     return response()->json([
         'token' => $user->createToken($request->device_name)->plainTextToken,
-        'navigation' => (new Navigation())->get(true),
+        'navigation' => (new Navigation())->get(false, true),
         'tenant' => $user->defaultTenant?->primary_domain
             ?? $user->memberships()->latest()->first()?->tenant?->primary_domain,
     ]);
+});
+
+Route::get('/navigation', function () {
+    return response()->json((new Navigation())->get(false, true));
 });
