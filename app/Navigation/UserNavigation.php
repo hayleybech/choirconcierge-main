@@ -8,27 +8,24 @@ class UserNavigation
 {
     public function get(?string $tenant, bool $forApi = false): array
     {
-        $items = $tenant && Tenant::find($tenant)
-            ? $this->tenantItems($forApi)
-            : $this->centralItems($forApi);
-
-        $items = array_values(array_filter($items));
-
-        if ($forApi) {
-            $items = array_values(array_filter($items, fn($item) => !isset($item['action']) && (!isset($item['hide']) || $item['hide'] === false)));
-
-            return array_map(fn(array $item): array => $this->transformForApi($item, $tenant), $items);
-        }
-
-        return $items;
+        $tenantModel = $tenant ? Tenant::find($tenant) : null;
+        return collect($tenantModel
+            ? $this->tenantItems($forApi, $tenantModel)
+            : $this->centralItems($forApi))
+            ->filter()
+            ->when($forApi, fn($items) => $items
+                ->reject(fn($item) => ($item['hide'] ?? false) || isset($item['action']))
+                ->map(fn($item) => $this->transformForApi($item, $tenant)))
+            ->values()
+            ->toArray();
     }
 
-    protected function tenantItems(bool $forApi): array
+    protected function tenantItems(bool $forApi, ?Tenant $tenant): array
     {
         $user = auth()->user();
-        $membership = $user?->membership;
+        $membership = $tenant ? $user?->memberships()->firstWhere('tenant_id', $tenant->id) : null;
         $impersonationActive = session()->has('impersonation:active');
-        $canImpersonate = $user?->isSuperAdmin || $user?->membership?->hasRole('Admin');
+        $canImpersonate = $user?->isSuperAdmin || $membership?->hasRole('Admin');
         $canUpdateTenant = $user?->can('update', [Tenant::class, null]);
 
         return [
@@ -65,8 +62,6 @@ class UserNavigation
                 'name' => 'Changelog',
                 'route' => 'central.changelog',
                 'icon' => 'code-merge',
-                // @todo add back in once support for central is added to app?
-                'hide' => $forApi,
             ],
             [
                 'name' => 'Help (Email Us)',
