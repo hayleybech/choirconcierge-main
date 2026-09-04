@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Navigation\Navigation;
+use App\Navigation\UserNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -48,14 +49,32 @@ Route::post('/sanctum/token', function (Request $request) {
         }
     }
 
+    $tenant = $user->defaultTenant
+        ?? $user->memberships()->latest()->first()?->tenant;
+
     return response()->json([
         'token' => $user->createToken($request->device_name)->plainTextToken,
-        'navigation' => (new Navigation())->get(false, true),
-        'tenant' => $user->defaultTenant?->primary_domain
-            ?? $user->memberships()->latest()->first()?->tenant?->primary_domain,
+        'navigation' => (new Navigation())->get($tenant->id, true),
+        'tenant' => $tenant?->primary_domain,
+        'user' => $user->setVisible([
+            'id', 'name', 'email', 'avatar_url',
+        ])->toJson(),
     ]);
 });
 
-Route::get('/navigation', function () {
-    return response()->json((new Navigation())->get(false, true));
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/navigation/{tenant}', function (Request $request) {
+        return response()->json((new Navigation())->get($request->tenant, true));
+    });
+
+    Route::get('/user/navigation/{tenant}', function (Request $request) {
+        $user = $request->user();
+
+        return response()->json([
+            'avatar_url' => $user->avatar_url,
+            'navigation' => (new UserNavigation())->get($request->tenant, true),
+        ]);
+    });
 });
+

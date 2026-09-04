@@ -2,16 +2,18 @@
 
 namespace App\Navigation;
 
+use App\Models\Tenant;
+
 class Navigation
 {
-    public function get(bool $useCentralMenu, bool $app = false): array
+    public function get(?string $tenant, bool $forApi = false): array
     {
-        $items = $useCentralMenu
-            ? $this->centralItems()
-            : $this->tenantItems();
+        $items = $tenant && Tenant::find($tenant)
+            ? $this->tenantItems()
+            : $this->centralItems();
 
-        if ($app) {
-            return $this->transformForApp($items);
+        if ($forApi) {
+            return $this->transformForApi($items, $tenant);
         }
 
         return $items;
@@ -157,44 +159,33 @@ class Navigation
         ];
     }
 
-    protected function transformForApp(array $items): array
+    protected function transformForApi(array $items, string $tenant): array
     {
-        return array_map(function ($item) {
+        return array_map(function ($item) use ($tenant) {
             if (isset($item['route'])) {
-                $item['url'] = $this->generateUrl($item['route']);
-                unset($item['route']);
+                $item['url'] = $this->generateUrl(
+                    $item['route'],
+                    $tenant ? ['tenant' => $tenant, ...$item['params'] ?? []] : $item['params'] ?? []
+                );
+                unset($item['params']);
             }
 
             if (isset($item['can'])) {
                 $item['can'] = auth()->user()?->can($item['can']) ?? false;
             }
 
-            if (isset($item['showAsActiveForRoutes'])) {
-                $item['showAsActiveForRoutes'] = array_map(function ($routeName) {
-                    return $this->generateUrl($routeName);
-                }, $item['showAsActiveForRoutes']);
-            }
-
             if (isset($item['items']) && !empty($item['items'])) {
-                $item['items'] = $this->transformForApp($item['items']);
+                $item['items'] = $this->transformForApi($item['items'],$tenant);
             }
 
             return $item;
         }, $items);
     }
 
-    protected function generateUrl(string $route): string
+    protected function generateUrl(string $route, array $params = []): string
     {
-        if (str_contains($route, '*')) {
-            $route = str_replace('.*', '.index', $route);
-        }
-
         try {
-            if (tenancy()->initialized) {
-                return the_tenant_route($route, [], false);
-            }
-
-            return route($route, [], false);
+            return route($route, $params, false);
         } catch (\Exception $e) {
             return $route;
         }
