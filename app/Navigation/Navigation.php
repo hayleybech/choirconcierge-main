@@ -125,15 +125,20 @@ class Navigation
                 ]
             ],
             [
-                'name' => 'Mailing Lists',
-                'route' => 'groups.index',
+                'name' => 'Communications',
+                'route' => 'communications.index',
+                'can' => 'create_broadcast',
                 'icon' => 'fa-mail-bulk',
-                'can' => 'list_groups',
-                'showAsActiveForRoutes' => ['groups.*'],
+                'showAsActiveForRoutes' => ['communications.*', 'groups.*'],
                 'items' => [
-                    ['name' => 'Add New', 'route' => 'groups.create', 'icon' => 'fa-plus-square', 'can' => 'create_group', 'showAsActiveForRoutes' => ['groups.create']],
-                    ['name' => 'Send Broadcast', 'route' => 'groups.broadcasts.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['groups.broadcasts.create']],
-                    ['name' => 'Logs', 'route' => 'groups.mail-logs.index', 'icon' => 'history', 'can' => 'view_mail_logs', 'showAsActiveForRoutes' => ['groups.mail-logs.*']],
+                    ['name' => 'Send Broadcast', 'route' => 'communications.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['communications.create']],
+                    [
+                        'name' => 'Mailing Lists',
+                        'route' => 'groups.index',
+                        'icon' => 'fa-at',
+                        'can' => 'list_groups',
+                        'showAsActiveForRoutes' => ['groups.index'],
+                    ]
                 ]
             ],
             [
@@ -175,7 +180,7 @@ class Navigation
             }
 
             if (isset($item['items']) && !empty($item['items'])) {
-                $item['items'] = $this->transformForApi($item['items'],$tenant);
+                $item['items'] = $this->transformForApi($item['items'], $tenant);
             }
 
             return $item;

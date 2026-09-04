@@ -28,6 +28,7 @@ const Index = ({ lists, can }) => {
 				icon="mail-bulk"
 				breadcrumbs={[
 					{ name: 'Dashboard', url: route('dash') },
+					{ name: 'Communications', url: route('communications.index') },
 					{ name: 'Mailing Lists', url: route('groups.index') },
 				]}
 				actions={[
@@ -41,7 +42,7 @@ const Index = ({ lists, can }) => {
 					{
 						label: 'Send Broadcast',
 						icon: 'inbox-out',
-						url: route('groups.broadcasts.create'),
+						url: route('communications.create'),
 						variant: 'secondary',
 						can: 'create_broadcast',
 					},
