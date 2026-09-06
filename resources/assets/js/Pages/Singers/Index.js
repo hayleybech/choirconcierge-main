@@ -18,6 +18,7 @@ import BulkEditSingersModal from './BulkEditSingersModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
+import { usePhoneBreadcrumb } from '../../lib/reactNative';
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -45,6 +46,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
     ];
 
     const sortFilterForm = useSortFilterForm('singers.index', filters, sorts);
+
+	usePhoneBreadcrumb('Singers', []);
 
     return (
 		<>

@@ -24,6 +24,7 @@ import CustomFieldsSection from './sections/CustomFieldsSection';
 import SingerAttendanceSummary from '../../components/Attendance/SingerAttendanceSummary';
 import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 import { MembershipHistorySection } from './sections/MembershipHistorySection';
+import { usePhoneBreadcrumb } from '../../lib/reactNative';
 
 const Show = ({
 	singer,
@@ -39,6 +40,9 @@ const Show = ({
 	const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
 	const { can, user: authUser } = usePage().props;
 	const { route } = useRoute();
+
+
+	usePhoneBreadcrumb(singer.user.name, [{ name: 'Singers', url: route('singers.index')}]);
 
 	return (
 		<>

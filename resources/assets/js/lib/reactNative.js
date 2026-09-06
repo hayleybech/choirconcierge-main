@@ -28,3 +28,15 @@ export const onMessageFromRN = message => {
 
 	RNEvents.emit(action, payload);
 };
+
+export const usePhoneBreadcrumb = (title, breadcrumbs) => {
+	useEffect(() => {
+			sendMessageToRN({
+				action: 'setPageBreadcrumbs',
+				payload: {
+					title,
+					breadcrumbs,
+				}
+			});
+		}, []);
+};
