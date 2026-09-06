@@ -12,6 +12,9 @@ test('navigation returns route names and string permissions by default', functio
     expect($data[0])->toHaveKey('route');
     expect($data[0])->not->toHaveKey('url');
     expect($data[0]['can'])->toBeString();
+
+    $apiData = $navigation->get(null, true);
+    expect($apiData[0]['showAsActiveForUrls'])->toBe(['/app']);
 });
 
 test('navigation returns urls and boolean permissions for the api', function () {
@@ -26,7 +29,7 @@ test('navigation returns urls and boolean permissions for the api', function () 
     Gate::define('view_dash', fn () => true);
 
     $navigation = new Navigation();
-    $data = $navigation->get(forApi: true);
+    $data = $navigation->get('test', true);
 
     expect($data)->toBeArray();
     
@@ -43,8 +46,8 @@ test('navigation returns urls and boolean permissions for the api', function () 
     expect($dashboard['can'])->toBeBool();
     expect($dashboard['can'])->toBeTrue();
     
-    expect($dashboard['showAsActiveForRoutes'])->toBeArray();
-    expect($dashboard['showAsActiveForRoutes'][0])->toBe('dash');
+    expect($dashboard['showAsActiveForUrls'])->toBeArray();
+    expect($dashboard['showAsActiveForUrls'][0])->toBe('/test');
 });
 
 test('navigation converts nested item urls for the api', function () {
@@ -56,7 +59,7 @@ test('navigation converts nested item urls for the api', function () {
     $this->actingAs($user);
 
     $navigation = new Navigation();
-    $data = $navigation->get(forApi: true);
+    $data = $navigation->get('test-2', true);
     
     $singers = collect($data)->firstWhere('name', 'Singers');
     expect($singers)->not->toBeNull();
@@ -69,7 +72,7 @@ test('navigation converts nested item urls for the api', function () {
     expect($addNew['url'])->toContain('/test-2');
 });
 
-test('navigation preserves showAsActiveForRoutes route names for the api', function () {
+test('navigation converts showAsActiveForRoutes to showAsActiveForUrls for the api', function () {
     $tenant = \App\Models\Tenant::create('test-3', 'Test 3', 'Australia/Perth');
     $tenant->domains()->create(['domain' => 'test-3']);
     tenancy()->initialize($tenant);
@@ -78,8 +81,13 @@ test('navigation preserves showAsActiveForRoutes route names for the api', funct
     $this->actingAs($user);
 
     $navigation = new Navigation();
-    $data = $navigation->get(forApi: true);
+    $data = $navigation->get('test-3', true);
     
     $singers = collect($data)->firstWhere('name', 'Singers');
-    expect($singers['showAsActiveForRoutes'])->toContain('singers.*');
+    expect($singers)->not->toHaveKey('showAsActiveForRoutes');
+    expect($singers['showAsActiveForUrls'])->toBe([
+        '/test-3/singers*',
+        '/test-3/voice-parts*',
+        '/test-3/roles*',
+    ]);
 });

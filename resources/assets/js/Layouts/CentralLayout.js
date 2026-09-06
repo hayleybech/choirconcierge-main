@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import {usePage} from '@inertiajs/react';
@@ -9,12 +9,17 @@ import useRoute from "../hooks/useRoute";
 import SwitchChoirMenu from "../components/SwitchChoirMenu";
 import OuterPageErrorFallback from "./OuterPageErrorFallback";
 import {ErrorBoundary} from "@sentry/react";
+import { router } from '@inertiajs/react';
+import { useRNHandler } from '../lib/reactNative';
 
 export default function CentralLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { route } = useRoute();
 
     const [showImpersonateModal, setShowImpersonateModal] = useState(false);
+
+    const handleRNNavigation = useCallback(payload => router.get(payload.url), []);
+    useRNHandler('navigation', handleRNNavigation);
 
     const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
 

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
+
 import SidebarDesktop from '../components/SidebarDesktop';
 import SidebarMobile from '../components/SidebarMobile';
 import { usePage } from '@inertiajs/react';
@@ -16,10 +17,15 @@ import BillingNotices from '../components/BillingNotices';
 import TenantNotice from '../components/TenantNotice';
 import { ErrorBoundary } from '@sentry/react';
 import OuterPageErrorFallback from './OuterPageErrorFallback';
+import { router } from '@inertiajs/react';
+import { useRNHandler } from '../lib/reactNative';
 
 export default function TenantLayout({ children }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const { route } = useRoute();
+
+	const handleRNNavigation = useCallback(payload => router.get(payload.url), []);
+	useRNHandler('navigation', handleRNNavigation);
 
 	const { can, userChoirs, errors, flash, tenant, navigation, isWebView } = usePage().props;
 
@@ -38,19 +44,19 @@ export default function TenantLayout({ children }) {
 		showFullscreen: false,
 	});
 
-	const audioCtxRef = useRef(null);    // native AudioContext, created once on first play
-	const shifterRef = useRef(null);     // PitchShifter instance (SoundTouch wrapper)
-	const gainNodeRef = useRef(null);    // GainNode for volume
+	const audioCtxRef = useRef(null); // native AudioContext, created once on first play
+	const shifterRef = useRef(null); // PitchShifter instance (SoundTouch wrapper)
+	const gainNodeRef = useRef(null); // GainNode for volume
 	const panNodeRef = useRef(null);
-	const bufferRef = useRef(null);      // decoded AudioBuffer (needed for duration and seek math)
-	const isPlayingRef = useRef(false);  // true while audio is audible (false when paused or stopped)
-	const pausedTimeRef = useRef(0);     // timePlayed snapshot taken at pause, used for resume/display
-	const rateRef = useRef(100);           // current playback rate, applied to new PitchShifter on load
-	const pitchRef = useRef(0);          // current pitch offset in semitones, applied to new PitchShifter on load
-	const volumeRef = useRef(1);         // current volume (0–1)
-	const panRef = useRef(0);         // current pan (-1 to 1)
-	const playIdRef = useRef(0);         // incremented on each play() call to cancel stale async loads
-	const abortCtrlRef = useRef(null);   // AbortController for the in-flight fetch
+	const bufferRef = useRef(null); // decoded AudioBuffer (needed for duration and seek math)
+	const isPlayingRef = useRef(false); // true while audio is audible (false when paused or stopped)
+	const pausedTimeRef = useRef(0); // timePlayed snapshot taken at pause, used for resume/display
+	const rateRef = useRef(100); // current playback rate, applied to new PitchShifter on load
+	const pitchRef = useRef(0); // current pitch offset in semitones, applied to new PitchShifter on load
+	const volumeRef = useRef(1); // current volume (0–1)
+	const panRef = useRef(0); // current pan (-1 to 1)
+	const playIdRef = useRef(0); // incremented on each play() call to cancel stale async loads
+	const abortCtrlRef = useRef(null); // AbortController for the in-flight fetch
 
 	const getAudioContext = useCallback(async () => {
 		if (!audioCtxRef.current) {
@@ -80,7 +86,7 @@ export default function TenantLayout({ children }) {
 			gainNodeRef.current.disconnect();
 			gainNodeRef.current = null;
 		}
-		if(panNodeRef.current) {
+		if (panNodeRef.current) {
 			panNodeRef.current.disconnect();
 			panNodeRef.current = null;
 		}
@@ -109,78 +115,81 @@ export default function TenantLayout({ children }) {
 		}));
 	}, [teardown]);
 
-	const play = useCallback(async attachment => {
-		const playId = ++playIdRef.current;
+	const play = useCallback(
+		async attachment => {
+			const playId = ++playIdRef.current;
 
-		if (abortCtrlRef.current) {
-			abortCtrlRef.current.abort();
-		}
-		const abortCtrl = new AbortController();
-		abortCtrlRef.current = abortCtrl;
+			if (abortCtrlRef.current) {
+				abortCtrlRef.current.abort();
+			}
+			const abortCtrl = new AbortController();
+			abortCtrlRef.current = abortCtrl;
 
-		teardown();
+			teardown();
 
-		const src = attachment.download_url;
-		setPlayerState(prev => ({
-			...prev,
-			songTitle: attachment.song.title,
-			songId: attachment.song.id,
-			fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
-			src,
-			loading: true,
-			playing: false,
-		}));
+			const src = attachment.download_url;
+			setPlayerState(prev => ({
+				...prev,
+				songTitle: attachment.song.title,
+				songId: attachment.song.id,
+				fileName: attachment.title !== '' ? attachment.title : attachment.filepath,
+				src,
+				loading: true,
+				playing: false,
+			}));
 
-		const audioContext = await getAudioContext();
+			const audioContext = await getAudioContext();
 
-		let arrayBuffer;
-		try {
-			const response = await fetch(src, { signal: abortCtrl.signal });
-			arrayBuffer = await response.arrayBuffer();
-		} catch {
-			if (playId === playIdRef.current) setPlayerState(prev => ({ ...prev, loading: false }));
-			return;
-		}
-		if (playId !== playIdRef.current) return;
+			let arrayBuffer;
+			try {
+				const response = await fetch(src, { signal: abortCtrl.signal });
+				arrayBuffer = await response.arrayBuffer();
+			} catch {
+				if (playId === playIdRef.current) setPlayerState(prev => ({ ...prev, loading: false }));
+				return;
+			}
+			if (playId !== playIdRef.current) return;
 
-		let audioBuffer;
-		try {
-			audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-		} catch {
-			if (playId === playIdRef.current) setPlayerState(prev => ({ ...prev, loading: false }));
-			return;
-		}
-		if (playId !== playIdRef.current) return;
+			let audioBuffer;
+			try {
+				audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+			} catch {
+				if (playId === playIdRef.current) setPlayerState(prev => ({ ...prev, loading: false }));
+				return;
+			}
+			if (playId !== playIdRef.current) return;
 
-		bufferRef.current = audioBuffer;
+			bufferRef.current = audioBuffer;
 
-		const onEnd = () => {
-			if (!isPlayingRef.current) return;
-			isPlayingRef.current = false;
-			pausedTimeRef.current = 0;
-			setPlayerState(prev => ({ ...prev, playing: false }));
-		};
+			const onEnd = () => {
+				if (!isPlayingRef.current) return;
+				isPlayingRef.current = false;
+				pausedTimeRef.current = 0;
+				setPlayerState(prev => ({ ...prev, playing: false }));
+			};
 
-		const shifter = new PitchShifter(audioContext, audioBuffer, 4096, onEnd);
-		shifter.tempo = rateRef.current / 100;
-		shifter.pitch = Math.pow(2, pitchRef.current / 12);
-		shifterRef.current = shifter;
+			const shifter = new PitchShifter(audioContext, audioBuffer, 4096, onEnd);
+			shifter.tempo = rateRef.current / 100;
+			shifter.pitch = Math.pow(2, pitchRef.current / 12);
+			shifterRef.current = shifter;
 
-		const gainNode = audioContext.createGain();
-		gainNode.gain.value = volumeRef.current;
-		gainNodeRef.current = gainNode;
-		shifter.node.connect(gainNode);
+			const gainNode = audioContext.createGain();
+			gainNode.gain.value = volumeRef.current;
+			gainNodeRef.current = gainNode;
+			shifter.node.connect(gainNode);
 
-		const panner = audioContext.createStereoPanner();
-		panner.pan.value = panRef.current;
-		panNodeRef.current = panner;
-		gainNode.connect(panner);
+			const panner = audioContext.createStereoPanner();
+			panner.pan.value = panRef.current;
+			panNodeRef.current = panner;
+			gainNode.connect(panner);
 
-		panner.connect(audioContext.destination);
+			panner.connect(audioContext.destination);
 
-		isPlayingRef.current = true;
-		setPlayerState(prev => ({ ...prev, loading: false, playing: true, duration: audioBuffer.duration }));
-	}, [teardown, getAudioContext]);
+			isPlayingRef.current = true;
+			setPlayerState(prev => ({ ...prev, loading: false, playing: true, duration: audioBuffer.duration }));
+		},
+		[teardown, getAudioContext]
+	);
 
 	const pause = useCallback(() => {
 		if (!shifterRef.current || !isPlayingRef.current) return;
@@ -251,21 +260,38 @@ export default function TenantLayout({ children }) {
 		setPlayerState(prev => ({ ...prev, showFullscreen: value }));
 	}, []);
 
-	const player = useMemo(() => ({
-		...playerState,
-		play,
-		pause,
-		togglePlayPause,
-		stop,
-		seek,
-		jumpBack,
-		setVolume,
-		setPan,
-		setRate,
-		setPitch,
-		setShowFullscreen,
-		getPosition,
-	}), [playerState, play, pause, togglePlayPause, stop, seek, jumpBack, setVolume, setPan, setRate, setPitch, setShowFullscreen, getPosition]);
+	const player = useMemo(
+		() => ({
+			...playerState,
+			play,
+			pause,
+			togglePlayPause,
+			stop,
+			seek,
+			jumpBack,
+			setVolume,
+			setPan,
+			setRate,
+			setPitch,
+			setShowFullscreen,
+			getPosition,
+		}),
+		[
+			playerState,
+			play,
+			pause,
+			togglePlayPause,
+			stop,
+			seek,
+			jumpBack,
+			setVolume,
+			setPan,
+			setRate,
+			setPitch,
+			setShowFullscreen,
+			getPosition,
+		]
+	);
 
 	const [showImpersonateModal, setShowImpersonateModal] = useState(false);
 

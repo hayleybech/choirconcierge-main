@@ -6,14 +6,15 @@ use App\Models\Tenant;
 
 class Navigation
 {
-    public function get(?string $tenant, bool $forApi = false): array
+    public function get(?string $tenant = null, bool $forApi = false): array
     {
         $items = $tenant && Tenant::find($tenant)
             ? $this->tenantItems()
             : $this->centralItems();
 
         if ($forApi) {
-            return $this->transformForApi($items, $tenant);
+            $return = $this->transformForApi($items, $tenant);
+            return $return;
         }
 
         return $items;
@@ -137,7 +138,7 @@ class Navigation
                         'route' => 'groups.index',
                         'icon' => 'fa-at',
                         'can' => 'list_groups',
-                        'showAsActiveForRoutes' => ['groups.index'],
+                        'showAsActiveForRoutes' => ['groups.*'],
                     ]
                 ]
             ],
@@ -164,7 +165,7 @@ class Navigation
         ];
     }
 
-    protected function transformForApi(array $items, string $tenant): array
+    protected function transformForApi(array $items, ?string $tenant): array
     {
         return array_map(function ($item) use ($tenant) {
             if (isset($item['route'])) {
@@ -179,12 +180,44 @@ class Navigation
                 $item['can'] = auth()->user()?->can($item['can']) ?? false;
             }
 
+            if (isset($item['showAsActiveForRoutes'])) {
+                $item['showAsActiveForUrls'] = $this->convertActiveRoutesToUrls(
+                    $item['showAsActiveForRoutes'],
+                    $tenant
+                );
+                unset($item['showAsActiveForRoutes']);
+            }
+
             if (isset($item['items']) && !empty($item['items'])) {
                 $item['items'] = $this->transformForApi($item['items'], $tenant);
             }
 
             return $item;
         }, $items);
+    }
+
+    /**
+     * @param array<int, string> $routes
+     * @return array<int, string>
+     */
+    protected function convertActiveRoutesToUrls(array $routes, ?string $tenant): array
+    {
+        return array_map(function (string $route) use ($tenant): string {
+            $hasWildcard = str_ends_with($route, '.*');
+            $route = $hasWildcard ? substr($route, 0, -2) : $route;
+
+            if ($route === 'dash' && $tenant !== null) {
+                return '/' . $tenant;
+            }
+
+            if ($route === 'central.dash') {
+                return '/app';
+            }
+
+            $url = '/' . ($tenant ? $tenant . '/' : '') . str_replace('.', '/', $route);
+
+            return $hasWildcard ? $url . '*' : $url;
+        }, $routes);
     }
 
     protected function generateUrl(string $route, array $params = []): string
