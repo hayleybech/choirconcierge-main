@@ -3,13 +3,13 @@ import PageHeader from '../../../components/PageHeader/PageHeader';
 import classNames from '../../../classNames';
 import AppHead from '../../../components/AppHead';
 import DateTag from '../../../components/DateTag';
-import CollapseGroup from '../../../components/CollapseGroup';
 import useRoute from '../../../hooks/useRoute';
 import CentralLayout from '../../../Layouts/CentralLayout';
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons, mailTypeIcons } from '../../../components/MailStatusTag';
 import MailStatusDetail from '../../../components/MailStatusDetail';
+import SectionLayout from '../../Singers/SectionLayout';
 const Show = ({ log }) => {
 	const { route } = useRoute();
 
@@ -73,34 +73,30 @@ const Show = ({ log }) => {
 				actions={[]}
 			/>
 
-			<div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-3 divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
-				<div className="sm:col-span-2 xl:col-span-2 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[
-							{
-								title: 'Body',
-								show: true,
-								defaultOpen: true,
-								content: (
-									<div className="py-4 px-8">
-										{mailType === 'notification' ? (
-											<iframe srcDoc={log.body} width="100%" height="600" />
-										) : (
-											<Prose content={log.body} />
-										)}
-									</div>
-								),
-							},
-						]}
-					/>
-				</div>
-
-				<div className="sm:col-span-1 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[{ title: 'Activity', show: true, defaultOpen: true, content: <Activity log={log} /> }]}
-					/>
-				</div>
-			</div>
+			<SectionLayout
+				columns={[
+					[
+						{
+							title: 'Message',
+							content: (
+								<div className="py-4 px-8 bg-gray-50">
+									{mailType === 'notification' ? (
+										<iframe srcDoc={log.body} width="100%" height="600" />
+									) : (
+										<Prose content={log.body} />
+									)}
+								</div>
+							),
+						},
+					],
+					[
+						{
+							title: 'Activity',
+							content: <Activity log={log} />,
+						},
+					],
+				]}
+			/>
 		</>
 	);
 };
@@ -124,7 +120,7 @@ const Activity = ({ log }) => {
 
 	return (
 		<>
-			<div className="flow-root px-6 py-8">
+			<div className="flow-root px-6 py-8 bg-gray-50">
 				<ul role="list" className="-mb-8">
 					{events
 						.map(event => ({

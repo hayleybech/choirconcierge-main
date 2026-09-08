@@ -11,7 +11,9 @@ export const TableMobileItem = ({ url, children }) => (
 	</TableMobileListItem>
 );
 
-export const TableMobileListItem = ({ children }) => <li className="flex flex-col relative">{children}</li>;
+export const TableMobileListItem = ({ children, className = '' }) => (
+	<li className={`flex flex-col relative ${className}`}>{children}</li>
+);
 
 export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4', children, ...props }) => (
 	<Link

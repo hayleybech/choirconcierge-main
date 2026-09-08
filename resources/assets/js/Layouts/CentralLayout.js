@@ -21,7 +21,7 @@ export default function CentralLayout({ children }) {
     const handleRNNavigation = useCallback(payload => router.get(payload.url), []);
     useRNHandler('navigation', handleRNNavigation);
 
-    const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
+    const isMobileOrTablet = useMediaQuery({ query: '(max-width: 1279px)' });
 
     const { can, userChoirs, errors, flash, navigation, isWebView } = usePage().props;
 
@@ -40,7 +40,7 @@ export default function CentralLayout({ children }) {
 
     return (
         <div className="h-screen flex overflow-hidden bg-gray-100">
-            {isMobile ? (
+            {isMobileOrTablet ? (
                 <>
                     <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
                 </>

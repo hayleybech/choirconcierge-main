@@ -26,4 +26,4 @@ const CollapseGroup = ({ items }) =>
 
 export default CollapseGroup;
 
-export const CollapsePanelWithoutPadding = ({ children }) => <div className="bg-gray-100">{children}</div>;
+export const CollapsePanelWithoutPadding = ({ children }) => <div className="bg-gray-50">{children}</div>;

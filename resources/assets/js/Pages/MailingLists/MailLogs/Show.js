@@ -3,7 +3,6 @@ import PageHeader from "../../../components/PageHeader/PageHeader";
 import classNames from "../../../classNames";
 import AppHead from "../../../components/AppHead";
 import DateTag from "../../../components/DateTag";
-import CollapseGroup from "../../../components/CollapseGroup";
 import useRoute from "../../../hooks/useRoute";
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
@@ -11,6 +10,7 @@ import { mailIconColours, mailIcons, mailTypeIcons } from '../../../components/M
 import TenantLayout from '../../../Layouts/TenantLayout';
 import MailStatusDetail from '../../../components/MailStatusDetail';
 import TrialAntiSpamNotice from "../TrialAntiSpamNotice";
+import SectionLayout from '../../Singers/SectionLayout';
 const Show = ({ log }) => {
     const { route } = useRoute();
 
@@ -36,8 +36,8 @@ const Show = ({ log }) => {
 						</div>
 						<div>From: {log.from}</div>
 						<div>To: {log.to}</div>
-						<div>Cc: {log.cc}</div>
-						<div>Bcc: {log.bcc}</div>
+						{log.cc && <div>Cc: {log.cc}</div>}
+						{log.bcc && <div>Bcc: {log.bcc}</div>}
 						<div className="flex items-center gap-4">
 							<div>
 								<Icon icon="paperclip" mr />{' '}
@@ -66,34 +66,30 @@ const Show = ({ log }) => {
 				actions={[]}
 			/>
 
-			<div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-3 divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
-				<div className="sm:col-span-2 xl:col-span-2 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[
-							{
-								title: 'Body',
-								show: true,
-								defaultOpen: true,
-								content: (
-									<div className="py-4 px-8">
-										{mailType === 'notification' ? (
-											<iframe srcdoc={log.body} width="100%" height="600" />
-										) : (
-											<Prose content={log.body} />
-										)}
-									</div>
-								),
-							},
-						]}
-					/>
-				</div>
-
-				<div className="sm:col-span-1 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[{ title: 'Activity', show: true, defaultOpen: true, content: <Activity log={log} /> }]}
-					/>
-				</div>
-			</div>
+			<SectionLayout
+				columns={[
+					[
+						{
+							title: 'Message',
+							content: (
+								<div className="py-4 px-8 bg-gray-50">
+									{mailType === 'notification' ? (
+										<iframe srcdoc={log.body} width="100%" height="600" />
+									) : (
+										<Prose content={log.body} />
+									)}
+								</div>
+							),
+						},
+					],
+					[
+						{
+							title: 'Activity',
+							content: <Activity log={log} />,
+						},
+					],
+				]}
+			/>
 		</>
 	);
 }
@@ -118,7 +114,7 @@ const Activity = ({ log }) => {
 
 	return (
 		<>
-			<div className="flow-root px-6 py-8">
+			<div className="flow-root px-6 py-8 bg-gray-50">
 				<ul role="list" className="-mb-8">
 					{events
 						.map(event => ({
@@ -151,11 +147,11 @@ const Activity = ({ log }) => {
 												/>
 											</span>
 										</div>
-										<div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+										<div className="flex flex-col md:flex-row lg:flex-col xl:flex-row min-w-0 flex-1 justify-between gap-x-4 gap-y-2 pt-1.5">
 											<div>
 												<MailStatusDetail log={log} event={event} mailType={mailType} />
 											</div>
-											<div className="text-right text-sm whitespace-nowrap text-gray-500">
+											<div className="md:text-right lg:text-left xl:text-right text-sm whitespace-nowrap text-gray-500">
 												<DateTag
 													icon="pencil"
 													date={event.created_at}

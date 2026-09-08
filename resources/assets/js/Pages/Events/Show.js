@@ -15,12 +15,13 @@ import DeleteDialog from '../../components/DeleteDialog';
 import Prose from '../../components/Prose';
 import ButtonLink from '../../components/inputs/ButtonLink';
 import CollapsePanel from '../../components/CollapsePanel';
-import CollapseGroup from '../../components/CollapseGroup';
+import SectionLayout, { SectionLayoutSubtitle } from '../Singers/SectionLayout';
 import EventType from '../../EventType';
 import EventSchedule from '../../components/Event/EventSchedule';
 import useRoute from '../../hooks/useRoute';
 import { DateTime } from 'luxon';
 import RsvpDropdown from '../../components/Event/RsvpDropdown';
+import AddToCalendarDropdown from '../../components/Event/AddToCalendarDropdown';
 
 const Show = ({
 	event,
@@ -48,65 +49,54 @@ const Show = ({
 						)}
 					</>
 				}
-				meta={<>
-
-					{DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
-						<div className="text-lg font-bold">
-							<Icon icon="calendar-day" type="regular" mr className="text-gray-500" />
-							<span>
-								{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}
-							</span>
-							{' - '}
-							<span>
-								{DateTime.fromISO(event.end_date).toLocaleString(DateTime.TIME_SIMPLE)}
-							</span>
-						</div>
-					) : (
-						<div className="text-lg font-bold flex items-center">
-							<Icon icon="calendar-day" type="regular" mr />
-							<div>
-								<span className="whitespace-nowrap">
-									{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}
-								</span>
+				meta={
+					<>
+						{DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
+							<div className="text-lg font-bold">
+								<Icon icon="calendar-day" type="regular" mr className="text-gray-500" />
+								<span>{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}</span>
 								{' - '}
-								<span className="whitespace-nowrap">
-									{DateTime.fromISO(event.end_date).toLocaleString(DateTime.DATETIME_MED)}
-								</span>
+								<span>{DateTime.fromISO(event.end_date).toLocaleString(DateTime.TIME_SIMPLE)}</span>
 							</div>
-						</div>
-					)}
+						) : (
+							<div className="text-lg font-bold flex items-center">
+								<Icon icon="calendar-day" type="regular" mr />
+								<div>
+									<span className="whitespace-nowrap">
+										{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}
+									</span>
+									{' - '}
+									<span className="whitespace-nowrap">
+										{DateTime.fromISO(event.end_date).toLocaleString(DateTime.DATETIME_MED)}
+									</span>
+								</div>
+							</div>
+						)}
 
-					<div>
-						<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>
-					</div>
+						<DateTag label="Arrive" date={event.call_time} format="TIME_SIMPLE" />
 
-					{event.ensembles.length > 0 && (
-						<div className="space-x-1.5 flex items-center">
-							{event.ensembles.map(ensemble => (
-								<Badge key={ensemble.id} colour="bg-blue-100 text-blue-800">
-									{ensemble.name}
-								</Badge>
-							))}
-						</div>
-					)}
-
-					{DateTime.fromISO(event.call_time) > DateTime.now() && (
-						<RsvpDropdown event={event} size="xs" />
-					)}
-
-					<DateTag label="Arrive" date={event.call_time} format="TIME_SIMPLE" />
-
-					{event.is_repeating && (
 						<div>
-							<Icon icon="repeat" mr className="text-gray-400" /> Repeat every {event.repeat_frequency_unit} until{' '}
-							{DateTime.fromISO(event.repeat_until).toLocaleString(DateTime.DATE_MED)}
+							<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>
 						</div>
-					)}
-					<div className="flex items-center gap-2">
-						<DateTag icon="pencil" date={event.created_at} label="Created" />
-						<DateTag icon="pencil" date={event.updated_at} label="Updated" />
-					</div>
-				</>}
+
+						{event.ensembles.length > 0 && (
+							<div className="space-x-1.5 flex items-center">
+								{event.ensembles.map(ensemble => (
+									<Badge key={ensemble.id} colour="bg-blue-100 text-blue-800">
+										{ensemble.name}
+									</Badge>
+								))}
+							</div>
+						)}
+
+						<div className="gap-1.5 grid sm:inline-flex grid-cols-2">
+							{DateTime.fromISO(event.call_time) > DateTime.now() && (
+								<RsvpDropdown event={event} size="sm" />
+							)}
+							<AddToCalendarDropdown urls={addToCalendarLinks} size="sm" />
+						</div>
+					</>
+				}
 				breadcrumbs={[
 					{ name: 'Dashboard', url: route('dash') },
 					{ name: 'Events', url: route('events.index') },
@@ -116,7 +106,7 @@ const Show = ({
 					event.is_repeating
 						? { label: 'Edit', icon: 'edit', onClick: () => setEditDialogIsOpen(true), can: 'update_event' }
 						: { label: 'Edit', icon: 'edit', url: route('events.edit', { event }), can: 'update_event' },
-					{ label: 'Duplicate', icon: 'copy', url: route('events.clone', {event}), can: 'create_event'},
+					{ label: 'Duplicate', icon: 'copy', url: route('events.clone', { event }), can: 'create_event' },
 					{
 						label: 'Delete',
 						icon: 'trash',
@@ -138,81 +128,129 @@ const Show = ({
 
 			<EditRepeatingEventDialog isOpen={editDialogIsOpen} setIsOpen={setEditDialogIsOpen} event={event} />
 
-			<div className="flex flex-col sm:grid sm:grid-cols-2 xl:grid-cols-4 h-full divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
-				<div className="sm:col-span-1 xl:col-span-3 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[
-							{
-								title: 'Description',
-								show: true,
-								defaultOpen: event.description?.length > 0,
-								content: (
-									<EventDescription
-										description={event.description}
-										timezone={pageProps.tenant.timezone_label}
-									/>
-								),
-							},
-							{
-								title: 'Location',
-								show: true,
-								defaultOpen: true,
-								content: <EventLocation event={event} />,
-							},
-							{ title: 'Schedule', show: true, content: <EventSchedule event={event} /> },
-						]}
-					/>
-				</div>
+			<SectionLayout
+				gridClassName="grid-cols-1 h-full divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 md:grid-cols-3 xl:grid-cols-4"
+				columnClassNames={[
+					'sm:col-span-1 md:col-span-2 xl:col-span-3 divide-y divide-gray-300',
+					'sm:col-span-1 divide-y divide-gray-300',
+				]}
+				columns={[
+					[
+						{
+							title: 'Summary',
+							show: true,
+							defaultOpen: event.description?.length > 0,
+							content: <EventSummary event={event} timezone={pageProps.tenant.timezone_label} />,
+						},
+						{
+							title: 'Location',
+							show: true,
+							defaultOpen: true,
+							content: <EventLocation event={event} />,
+						},
+						{ title: 'Schedule', show: true, content: <EventSchedule event={event} /> },
+					],
+					[
+						{
+							title: 'Attendance',
+							key: 'Attendance',
+							hideTitleOnDesktop: true,
+							show: true,
+							content: (
+								<>
+									<div className="py-2 px-4 bg-gray-100 border-b border-gray-200">
+										<h3 className="font-semibold text-gray-700">My Attendance</h3>
+									</div>
+									<MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />
+									{pageProps.can['list_attendances'] && (
+										<>
+											<hr className="border-gray-200" />
+											<div className="py-2 px-4 bg-gray-100 border-b border-gray-200 flex items-center justify-between gap-2">
+												<h3 className="font-semibold text-gray-700">RSVPs</h3>
+												<ViewRsvpsButton event={event} />
+											</div>
 
-				<div className="sm:col-span-1 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[
-							{
-								title: 'My Attendance',
-								show: true,
-								content: <MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />,
-							},
-							{
-								title: 'RSVPs',
-								show: pageProps.can['list_attendances'],
-								action: <ViewRsvpsButton event={event} />,
-								content: (
-									<RsvpSummary
-										event={event}
-										rsvpCount={rsvpCount}
-										voicePartsRsvpCount={voicePartsRsvpCount}
-									/>
-								),
-							},
-							{
-								title: 'Attendance',
-								show: pageProps.can['create_attendance'],
-								action: <EditAttendanceButton event={event} />,
-								content: (
-									<AttendanceSummary
-										event={event}
-										attendanceCount={attendanceCount}
-										voicePartsAttendanceCount={voicePartsAttendanceCount}
-									/>
-								),
-							},
-						]}
-					/>
-				</div>
-			</div>
+											<RsvpSummary
+												event={event}
+												rsvpCount={rsvpCount}
+												voicePartsRsvpCount={voicePartsRsvpCount}
+											/>
+										</>
+									)}
+									{pageProps.can['create_attendance'] && (
+										<>
+											<hr className="border-gray-200" />
+											<div className="py-2 px-4 bg-gray-100 border-b border-gray-200 flex items-center justify-between gap-2">
+												<h3 className="font-semibold text-gray-700">Attendance</h3>
+												<EditAttendanceButton event={event} />
+											</div>
+
+											<AttendanceSummary
+												event={event}
+												attendanceCount={attendanceCount}
+												voicePartsAttendanceCount={voicePartsAttendanceCount}
+											/>
+										</>
+									)}
+								</>
+							),
+						},
+					],
+				]}
+			/>
 		</>
 	);
+
 };
 
 Show.layout = page => <TenantLayout children={page} />;
 
 export default Show;
 
-const EventDescription = ({ description, timezone }) => (
+const EventSummary = ({ event, timezone }) => (
 	<CollapsePanel>
-		<Prose content={description} className="mb-8" />
+		<h3 className="pt-4 font-semibold text-gray-700">Date/Time</h3>
 
+		{DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
+			<div className="font-bold">
+				<Icon icon="calendar-day" type="regular" mr className="text-gray-500" />
+				<span>{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}</span>
+				{' - '}
+				<span>{DateTime.fromISO(event.end_date).toLocaleString(DateTime.TIME_SIMPLE)}</span>
+			</div>
+		) : (
+			<div className="font-bold flex items-center">
+				<Icon icon="calendar-day" type="regular" mr />
+				<div>
+					<span className="whitespace-nowrap">
+						{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}
+					</span>
+					{' - '}
+					<span className="whitespace-nowrap">
+						{DateTime.fromISO(event.end_date).toLocaleString(DateTime.DATETIME_MED)}
+					</span>
+				</div>
+			</div>
+		)}
+
+		<DateTag label="Arrive" date={event.call_time} format="TIME_SIMPLE" />
+
+		{event.is_repeating && (
+			<div>
+				<Icon icon="repeat" mr className="text-gray-400" /> Repeat every {event.repeat_frequency_unit} until{' '}
+				{DateTime.fromISO(event.repeat_until).toLocaleString(DateTime.DATE_MED)}
+			</div>
+		)}
 		<p className="text-sm text-gray-500 my-2">Choir's Timezone: {timezone}</p>
+
+		<h3 className="pt-4 font-semibold text-gray-700">Description</h3>
+		<Prose content={event.description} className="mb-8" />
+
+		<div className="flex items-center justify-between gap-2 text-sm text-gray-500">
+			<DateTag icon="pencil" date={event.created_at} label="Created" />
+			<DateTag icon="pencil" date={event.updated_at} label="Updated" />
+		</div>
+
 	</CollapsePanel>
 );
 

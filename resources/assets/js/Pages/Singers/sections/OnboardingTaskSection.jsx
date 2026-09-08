@@ -10,6 +10,10 @@ export const OnboardingTaskSection = ({ singer }) => {
 	return (
 		<CollapsePanel>
 			<nav className="flex" aria-label="Progress">
+				<p className="text-sm text-gray-500 truncate">
+					Onboarding is {singer.onboarding_enabled ? 'enabled' : 'disabled'} for this singer.
+				</p>
+
 				<ol role="list" className="space-y-6">
 					{singer.tasks.map((task, index, tasks) => (
 						<li key={index}>

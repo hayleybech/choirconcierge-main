@@ -27,15 +27,16 @@ const CustomFieldsSection = ({ singer, customFields }) => {
 				</tbody>
 				<tfoot>
 				{can['create_custom_field'] && (
-					<tr>
-						<td colSpan={3}>
-							<div className="flex justify-center items-center gap-2 py-3 px-4 sm:px-6 lg:px-8">
-								<div className="text-gray-700 text-sm">Add a new custom field</div>
-								<Button variant="primary" size="xs" onClick={() => setShowCreateDialog(true)}>
+					<tr className="bg-gray-50 hover:bg-purple-100 cursor-pointer" onClick={() => setShowCreateDialog(true)}>
+						<td colSpan={3} className="p-0">
+							<Button
+								variant="clear"
+								size="sm"
+								className="w-full justify-start px-6 py-5 text-purple-600"
+							>
 									<Icon icon="plus" />
-									Create
+									Add custom field
 								</Button>
-							</div>
 						</td>
 					</tr>
 				)}

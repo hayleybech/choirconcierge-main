@@ -6,7 +6,7 @@ import Icon from "../Icon";
 
 const AttendanceSummary = ({ attendanceCount, voicePartsAttendanceCount }) => (
     <Tab.Group>
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 bg-gray-50">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Tab.List className="-mb-px flex">
                     {['By Status', 'By Voice Part'].map(label => (
@@ -23,7 +23,7 @@ const AttendanceSummary = ({ attendanceCount, voicePartsAttendanceCount }) => (
             </div>
         </div>
         <Tab.Panels>
-            <Tab.Panel className="py-6 px-4">
+            <Tab.Panel className="py-6 px-4 bg-gray-50">
                 <div className="flex flex-wrap space-y-3">
                     {[
                         { label: 'On Time', colour: 'emerald-500', icon: 'check', count: attendanceCount.present },
@@ -41,7 +41,7 @@ const AttendanceSummary = ({ attendanceCount, voicePartsAttendanceCount }) => (
                 <p className="text-gray-500 text-sm text-center mt-2">{attendanceCount.absent_apology} provided reasons for absences.</p>
                 <p className="text-gray-500 text-sm text-center mt-2">{attendanceCount.late_deemed_absent} arrived late enough to be deemed absent.</p>
             </Tab.Panel>
-            <Tab.Panel className="py-6 px-4">
+            <Tab.Panel className="py-6 px-4 bg-gray-50">
                 <p>
                     <span className="text-emerald-500 font-semibold mb-4">
                         <Icon icon="check" mr />

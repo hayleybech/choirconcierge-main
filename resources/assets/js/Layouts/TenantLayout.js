@@ -297,7 +297,7 @@ export default function TenantLayout({ children }) {
 
 	usePromptBeforeUnload(player.fileName || player.showFullscreen);
 
-	const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
+	const isMobileOrTablet = useMediaQuery({ query: '(max-width: 1279px)' });
 
 	const navFiltered = navigation
 		.filter(item => can[item.can])
@@ -315,7 +315,7 @@ export default function TenantLayout({ children }) {
 	return (
 		<PlayerContext.Provider value={player}>
 			<div className="h-screen flex overflow-hidden bg-gray-100">
-				{isMobile ? (
+				{isMobileOrTablet ? (
 					<SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
 				) : (
 					<div className="flex shrink-0">

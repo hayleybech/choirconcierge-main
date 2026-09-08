@@ -57,19 +57,21 @@ const Show = ({ stack }) => {
                 Are you sure you want to delete this riser stack? This action cannot be undone.
             </DeleteDialog>
 
-            <RiserStackEditor
-                rows={parseInt(stack.rows)}
-                columns={parseInt(stack.columns)}
-                spotsOnFrontRow={parseInt(stack.front_row_length)}
-                frontRowOnFloor={stack.front_row_on_floor}
-                singerPositions={stack.members}
-                width={1000}
-                height={500}
-                setSelectedSinger={() => {}}
-                removeSingerFromHoldingArea={() => {}}
-                selectedSinger={null}
-                setPositions={() => {}}
-            />
+            <div className="w-full max-w-full overflow-x-auto">
+                <RiserStackEditor
+                    rows={parseInt(stack.rows)}
+                    columns={parseInt(stack.columns)}
+                    spotsOnFrontRow={parseInt(stack.front_row_length)}
+                    frontRowOnFloor={stack.front_row_on_floor}
+                    singerPositions={stack.members}
+                    width={1000}
+                    height={500}
+                    setSelectedSinger={() => {}}
+                    removeSingerFromHoldingArea={() => {}}
+                    selectedSinger={null}
+                    setPositions={() => {}}
+                />
+            </div>
         </>
     );
 }

@@ -49,4 +49,21 @@ class LearningStatusController extends Controller
 
         return redirect()->route('songs.singers.index', $song);
     }
+
+    public function bulkUpdate(Song $song, Request $request)
+    {
+        $this->authorize('update', $song);
+
+        $validated = $request->validate([
+            'singer_ids' => ['required', 'array'],
+            'singer_ids.*' => ['integer', 'exists:memberships,id'],
+        ]);
+
+        $song->members()
+            ->whereIn('memberships.id', $validated['singer_ids'])
+            ->get()
+            ->each(fn (Membership $singer) => $song->members()->updateExistingPivot($singer->id, ['status' => 'performance-ready']));
+
+        return redirect()->route('songs.singers.index', $song);
+    }
 }
