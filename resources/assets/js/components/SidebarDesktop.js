@@ -2,8 +2,10 @@ import {Link} from "@inertiajs/react";
 import React from "react";
 import MainNavigation from "./MainNavigation";
 import useRoute from "../hooks/useRoute";
+import SwitchChoirMenu from "./SwitchChoirMenu";
+import UserMenu from "./UserMenu";
 
-const SidebarDesktop = ({ navigation }) => {
+const SidebarDesktop = ({ navigation, choirs, tenant, setShowImpersonateModal }) => {
     const { route } = useRoute();
 
     return (
@@ -14,8 +16,11 @@ const SidebarDesktop = ({ navigation }) => {
                     <img src="/img/vibrant/logo.svg" alt="Choir Concierge" className="h-12 w-auto" />
                 </Link>
 
+                <div className="mb-5"><SwitchChoirMenu choirs={choirs} tenant={tenant} /></div>
+
                 <div className="flex-1 flex flex-col">
                     <MainNavigation navigation={navigation} />
+                    <div className="px-4"><UserMenu setShowImpersonateModal={setShowImpersonateModal} /></div>
                 </div>
             </div>
 

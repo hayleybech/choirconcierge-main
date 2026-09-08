@@ -12,7 +12,6 @@ import ToastFlash from '../components/ToastFlash';
 import { useMediaQuery } from 'react-responsive';
 import usePromptBeforeUnload from '../hooks/usePromptBeforeUnload';
 import useRoute from '../hooks/useRoute';
-import SwitchChoirMenu from '../components/SwitchChoirMenu';
 import BillingNotices from '../components/BillingNotices';
 import TenantNotice from '../components/TenantNotice';
 import { ErrorBoundary } from '@sentry/react';
@@ -316,10 +315,10 @@ export default function TenantLayout({ children }) {
 		<PlayerContext.Provider value={player}>
 			<div className="h-screen flex overflow-hidden bg-gray-100">
 				{isMobileOrTablet ? (
-					<SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
+					<SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} choirs={userChoirs} tenant={tenant} setShowImpersonateModal={setShowImpersonateModal} />
 				) : (
 					<div className="flex shrink-0">
-						<SidebarDesktop navigation={navFiltered} />
+						<SidebarDesktop navigation={navFiltered} choirs={userChoirs} tenant={tenant} setShowImpersonateModal={setShowImpersonateModal} />
 					</div>
 				)}
 
@@ -327,8 +326,6 @@ export default function TenantLayout({ children }) {
 					{!isWebView && !player.showFullscreen && (
 						<LayoutTopBar
 							setSidebarOpen={setSidebarOpen}
-							setShowImpersonateModal={setShowImpersonateModal}
-							switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
 						/>
 					)}
 

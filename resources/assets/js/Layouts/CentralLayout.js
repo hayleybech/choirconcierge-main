@@ -6,7 +6,6 @@ import LayoutTopBar from "../components/LayoutTopBar";
 import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
 import useRoute from "../hooks/useRoute";
-import SwitchChoirMenu from "../components/SwitchChoirMenu";
 import OuterPageErrorFallback from "./OuterPageErrorFallback";
 import {ErrorBoundary} from "@sentry/react";
 import { router } from '@inertiajs/react';
@@ -42,11 +41,11 @@ export default function CentralLayout({ children }) {
         <div className="h-screen flex overflow-hidden bg-gray-100">
             {isMobileOrTablet ? (
                 <>
-                    <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
+                    <SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} choirs={userChoirs} setShowImpersonateModal={setShowImpersonateModal} />
                 </>
             ) : (
                 <div className="flex shrink-0">
-                    <SidebarDesktop navigation={navFiltered} />
+                    <SidebarDesktop navigation={navFiltered} choirs={userChoirs} setShowImpersonateModal={setShowImpersonateModal} />
                 </div>
             )}
 
@@ -54,8 +53,6 @@ export default function CentralLayout({ children }) {
                 {!isWebView && (
                     <LayoutTopBar
                         setSidebarOpen={setSidebarOpen}
-                        setShowImpersonateModal={setShowImpersonateModal}
-                        switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} />}
                     />
                 )}
 
