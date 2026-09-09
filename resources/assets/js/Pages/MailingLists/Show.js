@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader2 } from '../../components/PageHeader/PageHeader';
+import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
+import { PageHeading } from '../../components/PageHeader/PageHeading';
+import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import Button from '../../components/inputs/Button';
 import AppHead from '../../components/AppHead';
 import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';
@@ -10,9 +15,19 @@ import useRoute from '../../hooks/useRoute';
 import TrialAntiSpamNotice from './TrialAntiSpamNotice';
 import SectionLayout from '../Singers/SectionLayout';
 
-const Show = ({ list }) => {
+const Show = ({ list, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
+	const actions = [
+		{ label: 'Edit', icon: 'edit', url: route('groups.edit', { group: list }), can: 'update_group' },
+		{
+			label: 'Delete',
+			icon: 'trash',
+			onClick: () => setDeleteDialogIsOpen(true),
+			variant: 'danger-outline',
+			can: 'delete_group',
+		},
+	].filter(action => list.can[action.can]);
 
 	const list_type_labels = {
 		chat: 'Chat',
@@ -26,41 +41,82 @@ const Show = ({ list }) => {
 
 			<TrialAntiSpamNotice />
 
-			<PageHeader
-				title={list.title}
-				meta={
-					<>
-						<div>
-							<Icon icon={list.type_icon} mr className="text-gray-400" />
-							{list_type_labels[list.list_type]}
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<div className="flex justify-between grow">
+					<PageTopNavigation
+						backUrl={route('groups.index')}
+						breadcrumbs={[
+							{ name: 'Communications', url: route('communications.index') },
+							{ name: 'Mailing Lists', url: route('groups.index') },
+						]}
+					>
+						<PageTopBarTitle title={list.title} />
+					</PageTopNavigation>
+					<PageActionsMenu>
+						{actions.map(action => (
+							<ActionMenuItem
+								key={action.label}
+								url={action.url}
+								onClick={action.onClick}
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</div>
+			</PageTopBar>
+			<PageHeader2>
+				<div className="lg:flex lg:items-center lg:justify-between">
+					<div className="flex-1 min-w-0">
+						<div className="hidden lg:block">
+							<Breadcrumbs
+								breadcrumbs={[
+									{ name: 'Communications', url: route('communications.index') },
+									{ name: 'Mailing Lists', url: route('groups.index') },
+									{ name: list.title, url: route('groups.show', { group: list }) },
+								]}
+								showLastChevron={false}
+							/>
 						</div>
-						<div>
-							<strong>{list.email.split('@')[0]}@</strong>
-							<span className="text-gray-500">{list.email.split('@')[1]}</span>
+						<PageHeading>
+							<span className="flex items-center">
+								<Icon icon={list.type_icon} mr />
+								{list.title}
+							</span>
+						</PageHeading>
+						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
+							<div>
+								<Icon icon={list.type_icon} mr className="text-gray-400" />
+								{list_type_labels[list.list_type]}
+							</div>
+							<div>
+								<strong>{list.email.split('@')[0]}@</strong>
+								<span className="text-gray-500">{list.email.split('@')[1]}</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<DateTag icon="pencil" date={list.created_at} label="Created" />
+								<DateTag icon="pencil" date={list.updated_at} label="Updated" />
+							</div>
 						</div>
-						<div className="flex items-center gap-2">
-							<DateTag icon="pencil" date={list.created_at} label="Created" />
-							<DateTag icon="pencil" date={list.updated_at} label="Updated" />
-						</div>
-					</>
-				}
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Communications', url: route('communications.index') },
-					{ name: 'Mailing Lists', url: route('groups.index') },
-					{ name: list.title, url: route('groups.show', { group: list }) },
-				]}
-				actions={[
-					{ label: 'Edit', icon: 'edit', url: route('groups.edit', { group: list }), can: 'update_group' },
-					{
-						label: 'Delete',
-						icon: 'trash',
-						onClick: () => setDeleteDialogIsOpen(true),
-						variant: 'danger-outline',
-						can: 'delete_group',
-					},
-				].filter(action => (action.can ? list.can[action.can] : true))}
-			/>
+					</div>
+					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
+						{actions.map(action => (
+							<Button
+								key={action.label}
+								href={action.url}
+								onClick={action.onClick}
+								size="sm"
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</Button>
+						))}
+					</div>
+				</div>
+			</PageHeader2>
 
 			<DeleteDialog
 				title="Delete Mailing Lists"

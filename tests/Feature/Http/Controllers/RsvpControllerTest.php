@@ -207,6 +207,8 @@ class RsvpControllerTest extends TestCase
             ->component('Events/Rsvps/Index')
             ->has('allSingers', 1) // Only singer in ensemble 1
             ->where('allSingers.0.user.name', $singerInEnsemble1->user->name)
+            ->has('allSingers.0.enrolments', 1)
+            ->where('allSingers.0.enrolments.0.ensemble_id', $ensemble1->id)
         );
     }
 

@@ -323,11 +323,11 @@ export default function TenantLayout({ children }) {
 				)}
 
 				<div className="flex flex-col w-0 flex-1 overflow-hidden">
-					{!isWebView && !player.showFullscreen && (
-						<LayoutTopBar
-							setSidebarOpen={setSidebarOpen}
-						/>
-					)}
+					{/*{!isWebView && !player.showFullscreen && (*/}
+					{/*	<LayoutTopBar*/}
+					{/*		setSidebarOpen={setSidebarOpen}*/}
+					{/*	/>*/}
+					{/*)}*/}
 
 					<main
 						className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none"
@@ -344,7 +344,8 @@ export default function TenantLayout({ children }) {
 							)}
 
 						<ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
-							{children}
+							{/* @todo REVIEW THIS */}
+							{React.isValidElement(children) ? React.cloneElement(children, {setSidebarOpen}) : children}
 						</ErrorBoundary>
 					</main>
 

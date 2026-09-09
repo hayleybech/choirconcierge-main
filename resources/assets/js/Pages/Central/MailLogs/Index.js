@@ -29,10 +29,6 @@ const Index = ({ logs }) => {
             <PageHeader
                 title="Mail Logs"
                 icon="history"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('central.dash')},
-                    { name: 'Mail Logs', url: route('central.mail-logs.index')},
-                ]}
                 // actions={[
                 //     filterAction,
                 // ]}

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader2 } from '../../components/PageHeader/PageHeader';
 import VoicePartTag from '../../components/VoicePartTag';
 import SingerStatusTag from '../../components/SingerStatusTag';
 import ButtonLink from '../../components/inputs/ButtonLink';
@@ -27,8 +27,8 @@ import { usePhoneBreadcrumb } from '../../lib/reactNative';
 import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
 import { PageHeading } from '../../components/PageHeader/PageHeading';
 import Button from '../../components/inputs/Button';
-import ActionMenu from '../../components/ActionMenu/ActionMenu';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
 
 const Show = ({
 	singer,
@@ -39,6 +39,7 @@ const Show = ({
 	ensemblesNotEnrolled,
 	customFields,
 	performanceTypeId,
+	setSidebarOpen,
 }) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const [moveDialogIsOpen, setMoveDialogIsOpen] = useState(false);
@@ -83,8 +84,33 @@ const Show = ({
 		<>
 			<AppHead title={`${singer.user.name} - Singers`} />
 
-			{/* PAGE HEADER */}
-			<div className="py-6 bg-white border-b border-gray-300 px-4 sm:px-6 md:px-8">
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<div className="flex justify-between grow">
+					<PageTopNavigation backUrl={route('singers.index')} breadcrumbs={[{ name: 'Singers', url: route('singers.index') }]}>
+						<PageTopBarTitle title={singer.user.name} />
+					</PageTopNavigation>
+
+					<PageActionsMenu>
+						{filteredActions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								download={action.download}
+								variant={action.variant}
+								method={action.method}
+								disabled={action.disabled}
+							>
+								<Icon icon={action.icon} mr />
+
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</div>
+			</PageTopBar>
+
+			<PageHeader2>
 				<div className="lg:flex lg:items-center lg:justify-between">
 					<div className="flex sm:items-center">
 						{singer.user.profile_avatar_url && (
@@ -95,13 +121,15 @@ const Show = ({
 							/>
 						)}
 						<div className="flex-1 min-w-0">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Dashboard', url: route('dash') },
-									{ name: 'Singers', url: route('singers.index') },
-									{ name: singer.user.name, url: route('singers.show', { singer }) },
-								]}
-							/>
+							<div className="hidden lg:block">
+								<Breadcrumbs
+									breadcrumbs={[
+										{ name: 'Singers', url: route('singers.index') },
+										{ name: singer.user.name, url: route('singers.show', { singer }) },
+									]}
+									showLastChevron={false}
+								/>
+							</div>
 							<PageHeading>
 								<span className="flex flex-col lg:flex-row lg:items-center gap-x-1.5">
 									{singer.user.name}{' '}
@@ -124,94 +152,27 @@ const Show = ({
 							</div>
 						</div>
 					</div>
-					<div className="mt-2 sm:mt-5 flex sm:flex-row-reverse lg:mt-0 lg:ml-4 gap-3">
+					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
 						{/* Desktop */}
 						{filteredActions.map((action, key) => (
-							<span className="hidden lg:block" key={key}>
-								{action.label ? (
-									<Button
-										href={action.url}
-										onClick={action.onClick}
-										size="sm"
-										variant={action.variant}
-										external={action.download}
-										download={action.download}
-										method={action.method}
-										disabled={action.disabled}
-									>
-										<Icon icon={action.icon} mr />
-										{action.label}
-									</Button>
-								) : (
-									action
-								)}
-							</span>
-						))}
-
-						{/* Mobile - Always show first button */}
-						{!!filteredActions[0]?.label ? (
 							<Button
-								href={filteredActions[0].url}
-								onClick={filteredActions[0].onClick}
-								variant={filteredActions[0].variant}
-								method={filteredActions[0].method}
-								disabled={filteredActions[0].disabled}
+								key={action.label}
+								href={action.url}
+								onClick={action.onClick}
 								size="sm"
-								className="lg:hidden"
+								variant={action.variant}
+								external={action.download}
+								download={action.download}
+								method={action.method}
+								disabled={action.disabled}
 							>
-								<Icon icon={filteredActions[0].icon} mr />
-								{filteredActions[0].label}
+								<Icon icon={action.icon} mr />
+								{action.label}
 							</Button>
-						) : (
-							<div className="lg:hidden">{filteredActions[0]}</div>
-						)}
-						{/* Mobile - Show second button if exactly 2 buttons */}
-						{filteredActions.length === 2 && (
-							<>
-								{!!filteredActions[1]?.label ? (
-									<Button
-										href={filteredActions[1].url}
-										onClick={filteredActions[1].onClick}
-										variant={filteredActions[1].variant}
-										method={filteredActions[1].method}
-										disabled={filteredActions[1].disabled}
-										size="sm"
-										className="lg:hidden"
-									>
-										<Icon icon={filteredActions[1].icon} mr />
-										{filteredActions[1].label}
-									</Button>
-								) : (
-									<div className="lg:hidden">{filteredActions[1]}</div>
-								)}
-							</>
-						)}
-
-						{/* Mobile - Overflow Dropdown */}
-						{filteredActions.length > 2 && (
-							<ActionMenu optionsVariant="secondary">
-								{filteredActions.map(
-									(action, key) =>
-										key > 0 && (
-											<ActionMenuItem
-												key={key}
-												url={action.url}
-												onClick={action.onClick}
-												download={action.download}
-												variant={action.variant}
-												method={action.method}
-												disabled={action.disabled}
-											>
-												<Icon icon={action.icon} mr />
-												{action.label}
-											</ActionMenuItem>
-										)
-								)}
-							</ActionMenu>
-						)}
+						))}
 					</div>
 				</div>
-			</div>
+			</PageHeader2>
 
 			<DeleteDialog
 				title="Delete Singer"

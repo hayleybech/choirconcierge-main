@@ -42,7 +42,6 @@ const Create = ({ centralDomain, timezones }) => {
             <PageHeader
                 title="Create Organisation"
                 breadcrumbs={[
-                    { name: 'Dashboard', url: route('central.dash')},
                     { name: 'Organisations', url: route('central.tenants.index')},
                     { name: 'Create', url: route('central.tenants.create') },
                 ]}

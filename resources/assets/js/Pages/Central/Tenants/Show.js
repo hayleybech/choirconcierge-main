@@ -49,7 +49,6 @@ const Show = ({ tenant }) => {
 					</>
 				}
 				breadcrumbs={[
-					{ name: 'Dashboard', url: route('central.dash') },
 					{ name: 'Tenants', url: route('central.tenants.index') },
 					{ name: tenant.name, url: route('central.tenants.show', { tenant }) },
 				]}

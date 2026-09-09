@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader2 } from '../../components/PageHeader/PageHeader';
+import { PageHeading } from '../../components/PageHeader/PageHeading';
+import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import Icon from '../../components/Icon';
+import Button from '../../components/inputs/Button';
 import AppHead from '../../components/AppHead';
 import FolderTableDesktop from './FolderTableDesktop';
 import FolderTableMobile from './FolderTableMobile';
@@ -15,7 +20,7 @@ import useFilterPane from '../../hooks/useFilterPane';
 import FilterSortPane from '../../components/FilterSortPane';
 import Sorts from '../../components/Sorts';
 
-const Index = ({ folders, documents, userEnsemblesCount, ensembles, can }) => {
+const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSidebarOpen }) => {
 	const { route } = useRoute();
 
 	const [deletingFolder, setDeletingFolder] = useState(null);
@@ -31,28 +36,61 @@ const Index = ({ folders, documents, userEnsemblesCount, ensembles, can }) => {
 	const filters = [{ name: 'title', defaultValue: '' }];
 
 	const sortFilterForm = useSortFilterForm('folders.index', filters, sorts);
+	const actions = [
+		{
+			label: 'Add Folder',
+			icon: 'folder-plus',
+			url: route('folders.create'),
+			variant: 'primary',
+			can: 'create_folder',
+		},
+		filterAction,
+	].filter(action => (action?.can ? can[action.can] : !!action));
 
 	return (
 		<>
 			<AppHead title="Documents" />
-			<PageHeader
-				title="Documents"
-				icon="folders"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Documents', url: route('folders.index') },
-				]}
-				actions={[
-					{
-						label: 'Add Folder',
-						icon: 'folder-plus',
-						url: route('folders.create'),
-						variant: 'primary',
-						can: 'create_folder',
-					},
-					filterAction,
-				].filter(action => (action?.can ? can[action.can] : !!action))}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<div className="flex justify-between grow">
+					<PageTopBarTitle title="Documents" />
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</div>
+			</PageTopBar>
+			<PageHeader2>
+				<div className="lg:flex lg:items-center lg:justify-between">
+					<div className="flex-1 min-w-0">
+						<PageHeading>
+							<Icon icon="folders" type="solid" className="mr-2" /> Documents
+						</PageHeading>
+					</div>
+					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
+						{actions.map(action => (
+							<Button
+								key={action.label}
+								href={action.url}
+								onClick={action.onClick}
+								size="sm"
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</Button>
+						))}
+					</div>
+				</div>
+			</PageHeader2>
 
 			<IndexContainer
 				showFilters={showFilters}

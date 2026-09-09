@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
+import { PageHeader2 } from "../../components/PageHeader/PageHeader";
+import { PageHeading } from '../../components/PageHeader/PageHeading';
 import SingerTableDesktop from "./SingerTableDesktop";
 import SingerTableMobile from "./SingerTableMobile";
 import AppHead from "../../components/AppHead";
@@ -19,8 +20,12 @@ import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import { usePhoneBreadcrumb } from '../../lib/reactNative';
+import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import Icon from '../../components/Icon';
+import Button from '../../components/inputs/Button';
 
-const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination }) => {
+const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination, setSidebarOpen }) => {
     const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
     const [showImportDialog, setShowImportDialog] = useState(false);
     const { can } = usePage().props;
@@ -47,51 +52,95 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 
     const sortFilterForm = useSortFilterForm('singers.index', filters, sorts);
 
+    const actions = [
+
+        {
+            label: 'Add New',
+            icon: 'user-plus',
+            url: route('singers.create'),
+            variant: 'primary',
+            can: 'create_singer',
+        },
+        {
+            label: 'Voice Parts',
+            icon: 'users-class',
+            url: route('voice-parts.index'),
+            can: 'list_voice_parts',
+        },
+        { label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
+        {
+            label: 'Import Singers',
+            icon: 'file-import',
+            onClick: () => setShowImportDialog(true),
+            can: 'import_singers',
+        },
+        {
+            label: 'Export Singers',
+            icon: 'file-export',
+            url: route('singers.export'),
+            download: true,
+            can: 'export_singers',
+        },
+        bulkEdit.action,
+        filterAction,
+    ].filter(action => (action?.can ? can[action.can] : !!action));
+
 	usePhoneBreadcrumb('Singers', []);
 
     return (
-		<>
+        <>
 			<AppHead title="Singers" />
-			<PageHeader
-				title="Singers"
-				icon="users"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Singers', url: route('singers.index') },
-				]}
-				actions={[
-					{
-						label: 'Add New',
-						icon: 'user-plus',
-						url: route('singers.create'),
-						variant: 'primary',
-						can: 'create_singer',
-					},
-					{
-						label: 'Voice Parts',
-						icon: 'users-class',
-						url: route('voice-parts.index'),
-						can: 'list_voice_parts',
-					},
-					{ label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
-					{
-						label: 'Import Singers',
-						icon: 'file-import',
-						onClick: () => setShowImportDialog(true),
-						can: 'import_singers',
-					},
-					{
-						label: 'Export Singers',
-						icon: 'file-export',
-						url: route('singers.export'),
-						download: true,
-						can: 'export_singers',
-					},
-					bulkEdit.action,
-					filterAction,
-				].filter(action => (action?.can ? can[action.can] : !!action))}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<div className="flex justify-between grow">
+					<PageTopBarTitle title="Singers" />
+
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								download={action.download}
+								variant={action.variant}
+								method={action.method}
+								disabled={action.disabled}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</div>
+			</PageTopBar>
+
+			<PageHeader2>
+				<div className="lg:flex lg:items-center lg:justify-between">
+					<PageHeading>
+						<Icon icon="users" type="solid" className="mr-2" /> Singers
+					</PageHeading>
+					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
+						{actions.map((action, key) => (
+							<React.Fragment key={key}>
+								{action.label ? (
+									<Button
+										href={action.url}
+										onClick={action.onClick}
+										size="sm"
+										variant={action.variant}
+										external={action.download}
+										download={action.download}
+										method={action.method}
+										disabled={action.disabled}
+									>
+										<Icon icon={action.icon} mr />
+										{action.label}
+									</Button>
+								) : action}
+							</React.Fragment>
+						))}
+					</div>
+				</div>
+			</PageHeader2>
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Singers?`}

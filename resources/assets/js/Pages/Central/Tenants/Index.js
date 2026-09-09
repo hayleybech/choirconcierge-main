@@ -35,10 +35,6 @@ const Index = ({ tenants, pagination }) => {
             <PageHeader
                 title="Tenants"
                 icon="building"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('central.dash')},
-                    { name: 'Tenants', url: route('central.tenants.index')},
-                ]}
                 actions={[
                     filterAction,
                 ]}

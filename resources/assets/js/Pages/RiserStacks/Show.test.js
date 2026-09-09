@@ -5,10 +5,11 @@ import Show from './Show';
 
 jest.mock('@inertiajs/react', () => ({
     usePage: jest.fn(),
+    Link: ({ children, ...props }) => <a {...props}>{children}</a>,
 }));
 
 jest.mock('../../Layouts/TenantLayout', () => ({ children }) => <div>{children}</div>);
-jest.mock('../../components/PageHeader/PageHeader', () => () => null);
+jest.mock('../../components/PageHeader/PageHeader', () => ({ PageHeader2: ({ children }) => <div>{children}</div> }));
 jest.mock('../../components/AppHead', () => () => null);
 jest.mock('../../components/DateTag', () => () => null);
 jest.mock('../../components/DeleteDialog', () => () => null);

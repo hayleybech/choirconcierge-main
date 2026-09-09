@@ -66,7 +66,6 @@ const Show = ({ log }) => {
 					</>
 				}
 				breadcrumbs={[
-					{ name: 'Dashboard', url: route('central.dash') },
 					{ name: 'Mail Logs', url: route('central.mail-logs.index') },
 					{ name: log.subject, url: route('central.mail-logs.show', { mail_log: log }) },
 				]}

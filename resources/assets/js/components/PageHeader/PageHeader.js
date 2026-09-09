@@ -6,6 +6,7 @@ import ActionMenuItem from '../ActionMenu/ActionMenuItem';
 import ActionMenu from '../ActionMenu/ActionMenu';
 import { PageHeading } from './PageHeading';
 
+/** @deprecated */
 const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optionsVariant }) => {
 	const filteredActions = actions.filter(action => !!action);
 
@@ -14,7 +15,7 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 			<div className="lg:flex lg:items-center lg:justify-between">
 				{image && <img src={image} alt={title} className="h-32 rounded-md mb-3 lg:mb-0 mr-6" />}
 				<div className="flex-1 min-w-0">
-					<Breadcrumbs breadcrumbs={breadcrumbs} />
+					{breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
 					<PageHeading>
 						{icon && <Icon icon={icon} type="solid" className="mr-2" />}
 						<span>{title}</span>
@@ -116,3 +117,7 @@ const PageHeader = ({ title, image, icon, meta, breadcrumbs, actions = [], optio
 };
 
 export default PageHeader;
+
+export const PageHeader2 = ({ children }) => (
+	<div className="pt-12 pb-6 bg-white border-b border-gray-300 px-4 sm:px-6 md:px-8">{children}</div>
+);

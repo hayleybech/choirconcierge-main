@@ -14,10 +14,6 @@ const Edit = ({ }) => {
             <PageHeader
                 title="Edit Profile"
                 icon="user-edit"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('central.dash')},
-                    { name: 'Edit Profile', url: route('central.account.edit')},
-                ]}
             />
 
             <AccountForm postUrl={route('central.account.update')} cancelUrl={route('central.dash')} />

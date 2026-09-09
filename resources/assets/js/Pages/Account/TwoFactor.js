@@ -52,7 +52,6 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes }) => {
 				title="Two-Factor Authentication"
 				icon="shield-alt"
 				breadcrumbs={[
-					{ name: 'Dashboard', url: route('central.dash') },
 					{ name: 'Edit Profile', url: route('central.account.edit') },
 					{ name: 'Two-Factor Authentication', url: route('central.account.two-factor.show') },
 				]}

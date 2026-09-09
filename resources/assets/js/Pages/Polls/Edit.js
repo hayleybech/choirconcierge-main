@@ -1,7 +1,10 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
 import AppHead from '../../components/AppHead';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader2 } from '../../components/PageHeader/PageHeader';
+import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
+import { PageHeading } from '../../components/PageHeader/PageHeading';
+import PageTopBar, { PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
 import useRoute from '../../hooks/useRoute';
 import { useForm } from '@inertiajs/react';
 import TextInput from '../../components/inputs/TextInput';
@@ -13,14 +16,14 @@ import FormFooter from '../../components/FormFooter';
 import Label from '../../components/inputs/Label';
 import CheckboxWithLabel from '../../components/inputs/CheckboxWithLabel';
 import Icon from '../../components/Icon';
-import DateInput from "../../components/inputs/Date";
-import TimeInput from "../../components/inputs/Time";
-import {DateTime} from "luxon";
-import Help from "../../components/inputs/Help";
-import CheckboxGroup from "../../components/inputs/CheckboxGroup";
-import RichTextInput from "../../components/inputs/RichTextInput";
+import DateInput from '../../components/inputs/Date';
+import TimeInput from '../../components/inputs/Time';
+import { DateTime } from 'luxon';
+import Help from '../../components/inputs/Help';
+import CheckboxGroup from '../../components/inputs/CheckboxGroup';
+import RichTextInput from '../../components/inputs/RichTextInput';
 
-const Edit = ({ poll, ensembles = [] }) => {
+const Edit = ({ poll, ensembles = [], setSidebarOpen }) => {
 	const { route } = useRoute();
 	const { data, setData, post, processing, errors, transform } = useForm({
 		title: poll.title || '',
@@ -33,7 +36,7 @@ const Edit = ({ poll, ensembles = [] }) => {
 
 	const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
 
-	transform((data) => ({
+	transform(data => ({
 		...data,
 		close_at: data.close_at ? data.close_at.toFormat(rawDateFormat) : null,
 		_method: 'PUT',
@@ -46,26 +49,36 @@ const Edit = ({ poll, ensembles = [] }) => {
 	};
 
 	const addOption = () => setData('options', [...data.options, '']);
-	const removeOption = idx => setData('options', data.options.filter((_, i) => i !== idx));
+	const removeOption = idx =>
+		setData(
+			'options',
+			data.options.filter((_, i) => i !== idx)
+		);
 
 	function setCloseAtDate(value) {
 		const date = DateTime.fromJSDate(value);
 		const target = data.close_at ?? DateTime.now().set({ hour: 23, minute: 59, second: 59 });
-		setData('close_at', target.set({
-			year: date.year,
-			month: date.month,
-			day: date.day,
-		}));
+		setData(
+			'close_at',
+			target.set({
+				year: date.year,
+				month: date.month,
+				day: date.day,
+			})
+		);
 	}
 
 	function setCloseAtTime(value) {
 		const time = DateTime.fromISO(value);
 		const target = data.close_at ?? DateTime.now();
-		setData('close_at', target.set({
-			hour: time.hour,
-			minute: time.minute,
-			second: 0,
-		}));
+		setData(
+			'close_at',
+			target.set({
+				hour: time.hour,
+				minute: time.minute,
+				second: 0,
+			})
+		);
 	}
 
 	const submit = e => {
@@ -76,16 +89,37 @@ const Edit = ({ poll, ensembles = [] }) => {
 	return (
 		<>
 			<AppHead title={`Edit ${poll.title}`} />
-			<PageHeader
-				title={`Edit Poll`}
-				icon="fa-poll"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Polls', url: route('polls.index') },
-					{ name: poll.title, url: route('polls.show', { poll: poll.id }) },
-					{ name: 'Edit', url: route('polls.edit', { poll: poll.id }) },
-				]}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation
+					backUrl={route('polls.show', { poll: poll.id })}
+					breadcrumbs={[
+						{ name: 'Polls', url: route('polls.index') },
+						{ name: poll.title, url: route('polls.show', { poll: poll.id }) },
+					]}
+				>
+					<PageTopBarTitle title="Edit Poll" />
+				</PageTopNavigation>
+			</PageTopBar>
+			<PageHeader2>
+				<div className="lg:flex lg:items-center lg:justify-between">
+					<div className="flex-1 min-w-0">
+						<div className="hidden lg:block">
+							<Breadcrumbs
+								breadcrumbs={[
+									{ name: 'Polls', url: route('polls.index') },
+									{ name: poll.title, url: route('polls.show', { poll: poll.id }) },
+									{ name: 'Edit', url: route('polls.edit', { poll: poll.id }) },
+								]}
+								showLastChevron={false}
+							/>
+						</div>
+						<PageHeading>
+							<Icon icon="poll" type="solid" className="mr-2" />
+							Edit Poll
+						</PageHeading>
+					</div>
+				</div>
+			</PageHeader2>
 
 			<FormWrapper>
 				<Form onSubmit={submit}>
@@ -131,7 +165,9 @@ const Edit = ({ poll, ensembles = [] }) => {
 								hasErrors={!!errors.close_at}
 							/>
 							{errors.close_at && <p className="text-sm text-red-600 mt-1">{errors.close_at}</p>}
-							{data.close_at && <Help>Will close at {data.close_at.toLocaleString(DateTime.DATETIME_MED)}</Help>}
+							{data.close_at && (
+								<Help>Will close at {data.close_at.toLocaleString(DateTime.DATETIME_MED)}</Help>
+							)}
 						</div>
 
 						<div className="sm:col-span-2">
@@ -147,7 +183,9 @@ const Edit = ({ poll, ensembles = [] }) => {
 						{ensembles.length > 1 && (
 							<div className="sm:col-span-6">
 								<Label label="Ensembles" forInput="ensemble_ids" />
-								<Help>Only singers in these ensembles will see this poll. Leave empty for all singers.</Help>
+								<Help>
+									Only singers in these ensembles will see this poll. Leave empty for all singers.
+								</Help>
 								<CheckboxGroup
 									name="ensemble_ids"
 									options={ensembles.map(e => ({ id: e.id, name: e.name }))}

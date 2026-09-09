@@ -1,6 +1,10 @@
 import React, { Fragment, useState } from 'react';
 
-import PageHeader from '../../../components/PageHeader/PageHeader';
+import { PageHeader2 } from '../../../components/PageHeader/PageHeader';
+import Breadcrumbs from '../../../components/PageHeader/Breadcrumbs';
+import { PageHeading } from '../../../components/PageHeader/PageHeading';
+import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../../components/PageTopBar';
+import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import Icon from '../../../components/Icon';
@@ -9,7 +13,15 @@ import Dialog from '../../../components/Dialog';
 import { Link, usePage } from '@inertiajs/react';
 import QRCode from 'react-qr-code';
 import DateTag from '../../../components/DateTag';
-import Table, { TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellSelect, TItemRow } from '../../../components/Table';
+import Table, {
+	TableCell,
+	THead,
+	TBody,
+	TableHeading,
+	TableSelectAll,
+	TableCellSelect,
+	TItemRow,
+} from '../../../components/Table';
 import IndexContainer from '../../../components/IndexContainer';
 import AttendanceTableMobile from './AttendanceTableMobile';
 import Pagination from '../../../components/Pagination';
@@ -33,10 +45,10 @@ import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
 import { router } from '@inertiajs/react';
 
 const sourceLabels = {
-	kiosk: 'Kiosk',
+	'kiosk': 'Kiosk',
 	'qr-code': 'QR Code',
 	'after-event': 'Auto',
-	manual: 'Manual',
+	'manual': 'Manual',
 };
 
 const Index = ({
@@ -49,6 +61,7 @@ const Index = ({
 	singerStatuses,
 	counts,
 	individualCheckInUrl,
+	setSidebarOpen,
 }) => {
 	const [checkInDialogIsOpen, setCheckInDialogIsOpen] = useState(false);
 
@@ -71,12 +84,29 @@ const Index = ({
 		{ name: 'enrolments.voice_part_id', multiple: true },
 		{ name: 'enrolments.ensemble_id', multiple: true },
 		{ name: 'attendance.response', multiple: true },
-		{ name: 'status.id', multiple: true, defaultValue: singerStatuses.find(c => c.name === 'Members')?.id ? [singerStatuses.find(c => c.name === 'Members').id] : [] },
+		{
+			name: 'status.id',
+			multiple: true,
+			defaultValue: singerStatuses.find(c => c.name === 'Members')?.id
+				? [singerStatuses.find(c => c.name === 'Members').id]
+				: [],
+		},
 	];
 
 	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);
 
 	const bulkEdit = useBulkEdit(allSingers, pageProps.can.create_attendance, false, 'Singer', true);
+	const pageActions = [
+		{
+			label: 'Kiosk',
+			icon: 'calendar-check',
+			url: route('events.kiosk-check-ins.index', { event }),
+			can: 'create_attendance',
+		},
+		{ label: 'QR Code', icon: 'qrcode', onClick: () => setCheckInDialogIsOpen(true), can: 'create_attendance' },
+		filterAction,
+		bulkEdit.action,
+	].filter(action => (action?.can ? pageProps.can[action.can] : !!action));
 
 	const bulkUpdateAttendance = response => {
 		router.post(
@@ -154,58 +184,94 @@ const Index = ({
 	return (
 		<>
 			<AppHead title={`Attendance List - ${event.title}`} />
-			<PageHeader
-				title="Attendance List"
-				icon="calendar"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Events', url: route('events.index') },
-					{ name: event.title, url: route('events.show', { event }) },
-					{ name: 'Attendance List', url: route('events.attendances.index', { event }) },
-				]}
-				actions={[
-					{
-						label: 'Kiosk',
-						icon: 'calendar-check',
-						url: route('events.kiosk-check-ins.index', { event }),
-						can: 'create_attendance',
-					},
-					{
-						label: 'QR Code',
-						icon: 'qrcode',
-						onClick: () => setCheckInDialogIsOpen(true),
-						can: 'create_attendance',
-					},
-					filterAction,
-					bulkEdit.action,
-				].filter(action => (action?.can ? pageProps.can[action.can] : !!action))}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-				meta={
-					<div>
-						<p className="mb-2">We offer three ways to track attendance: </p>
-						<ul className="list-disc list-inside ml-4 mb-4 [&>li]:mb-1">
-							<li>
-								<strong>Manual</strong> attendance tracking on this page
-							</li>
-							<li>
-								<strong>Kiosk</strong> check-in for shared device use
-							</li>
-							<li>
-								<strong>QR Code</strong> check-in for individual use
-							</li>
-						</ul>
-						<p className="mb-2">
-							Both device check-in pages automatically mark singers as late after the call time, or absent
-							20 minutes later.
-						</p>
-						<p className="mb-2">
-							If attendance was partially recorded during the event (either manually here or using the
-							kiosk), remaining singers will automatically be marked absent once the event ends.
-						</p>
-						<p className="mb-2">The check-in pages also send an attendance report after each event.</p>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<div className="flex justify-between grow">
+					<PageTopNavigation
+						backUrl={route('events.show', { event })}
+						breadcrumbs={[
+							{ name: 'Events', url: route('events.index') },
+							{ name: event.title, url: route('events.show', { event }) },
+						]}
+					>
+						<PageTopBarTitle title="Attendance List" />
+					</PageTopNavigation>
+					<PageActionsMenu>
+						{pageActions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</div>
+			</PageTopBar>
+			<PageHeader2>
+				<div className="lg:flex lg:items-center lg:justify-between">
+					<div className="flex-1 min-w-0">
+						<div className="hidden lg:block">
+							<Breadcrumbs
+								breadcrumbs={[
+									{ name: 'Events', url: route('events.index') },
+									{ name: event.title, url: route('events.show', { event }) },
+									{ name: 'Attendance List', url: route('events.attendances.index', { event }) },
+								]}
+								showLastChevron={false}
+							/>
+						</div>
+						<PageHeading>
+							<Icon icon="calendar" type="solid" className="mr-2" />
+							Attendance List
+						</PageHeading>
+						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
+							<div>
+								<p className="mb-2">We offer three ways to track attendance: </p>
+								<ul className="list-disc list-inside ml-4 mb-4 [&>li]:mb-1">
+									<li>
+										<strong>Manual</strong> attendance tracking on this page
+									</li>
+									<li>
+										<strong>Kiosk</strong> check-in for shared device use
+									</li>
+									<li>
+										<strong>QR Code</strong> check-in for individual use
+									</li>
+								</ul>
+								<p className="mb-2">
+									Both device check-in pages automatically mark singers as late after the call time,
+									or absent 20 minutes later.
+								</p>
+								<p className="mb-2">
+									If attendance was partially recorded during the event (either manually here or using
+									the kiosk), remaining singers will automatically be marked absent once the event
+									ends.
+								</p>
+								<p className="mb-2">
+									The check-in pages also send an attendance report after each event.
+								</p>
+							</div>
+						</div>
 					</div>
-				}
-			/>
+					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
+						{pageActions.map((action) => (
+							<Button
+								key={action.label}
+								href={action.url}
+								onClick={action.onClick}
+								size="sm"
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</Button>
+						))}
+					</div>
+				</div>
+			</PageHeader2>
 
 			<Dialog
 				title="Individual Check-In Link"

@@ -1,7 +1,10 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
 import AppHead from '../../components/AppHead';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader2 } from '../../components/PageHeader/PageHeader';
+import { PageHeading } from '../../components/PageHeader/PageHeading';
+import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import useRoute from '../../hooks/useRoute';
 import { Link } from '@inertiajs/react';
 import Table, {
@@ -20,7 +23,8 @@ import DateTag from '../../components/DateTag';
 import TableMobile, {
 	TableMobileSelect,
 	TableMobileSelectableLink,
-	TableMobileListItem, TableMobileHeader,
+	TableMobileListItem,
+	TableMobileHeader,
 } from '../../components/TableMobile';
 import Badge from '../../components/Badge';
 import useFilterPane from '../../hooks/useFilterPane';
@@ -35,7 +39,7 @@ import BulkEditPollsModal from './BulkEditPollsModal';
 import Dialog from '../../components/Dialog';
 import Button from '../../components/inputs/Button';
 
-const Index = ({ polls, pagination, ensembles, can, tenant }) => {
+const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
@@ -60,27 +64,58 @@ const Index = ({ polls, pagination, ensembles, can, tenant }) => {
 
 	const actions = [{ label: 'Add New', url: route('polls.create'), icon: 'plus', variant: 'primary' }];
 
-	if(bulkEdit.action) {
+	if (bulkEdit.action) {
 		actions.push(bulkEdit.action);
 	}
 
-	if(filterAction) {
+	if (filterAction) {
 		actions.push(filterAction);
 	}
 
 	return (
 		<>
 			<AppHead title="Polls" />
-			<PageHeader
-				title="Polls"
-				icon="poll"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Polls', url: route('polls.index') },
-				]}
-				actions={actions}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<div className="flex justify-between grow">
+					<PageTopBarTitle title="Polls" />
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</div>
+			</PageTopBar>
+			<PageHeader2>
+				<div className="lg:flex lg:items-center lg:justify-between">
+					<div className="flex-1 min-w-0">
+						<PageHeading>
+							<Icon icon="poll" type="solid" className="mr-2" /> Polls
+						</PageHeading>
+					</div>
+					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
+						{actions.map(action => (
+							<Button
+								key={action.label}
+								href={action.url}
+								onClick={action.onClick}
+								size="sm"
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</Button>
+						))}
+					</div>
+				</div>
+			</PageHeader2>
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Polls?`}

@@ -33,10 +33,6 @@ const Index = ({ users, pagination }) => {
 			<PageHeader
 				title="Users"
 				icon="users"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('central.dash') },
-					{ name: 'Users', url: route('central.users.index') },
-				]}
 				actions={[filterAction]}
 				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
 			/>

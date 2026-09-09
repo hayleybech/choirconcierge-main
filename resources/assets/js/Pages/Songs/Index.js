@@ -3,7 +3,12 @@ import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
 import SongTableDesktop from './SongTableDesktop';
 import SongTableMobile from './SongTableMobile';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader2 } from '../../components/PageHeader/PageHeader';
+import { PageHeading } from '../../components/PageHeader/PageHeading';
+import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import Button from '../../components/inputs/Button';
+import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import SongFilters from '../../components/Song/SongFilters';
 import IndexContainer from '../../components/IndexContainer';
@@ -28,6 +33,7 @@ const Index = ({
 	ensembles,
 
 	can,
+	setSidebarOpen,
 }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const { route } = useRoute();
@@ -62,16 +68,48 @@ const Index = ({
 	return (
 		<>
 			<AppHead title="Songs" />
-			<PageHeader
-				title="Songs"
-				icon="list-music"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Songs', url: route('songs.index') },
-				]}
-				actions={actions}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<div className="flex justify-between grow">
+					<PageTopBarTitle title="Songs" />
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</div>
+			</PageTopBar>
+			<PageHeader2>
+				<div className="lg:flex lg:items-center lg:justify-between">
+					<div className="flex-1 min-w-0">
+						<PageHeading>
+							<Icon icon="list-music" type="solid" className="mr-2" />
+							Songs
+						</PageHeading>
+					</div>
+					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
+						{actions.map(action => (
+							<Button
+								key={action.label}
+								href={action.url}
+								onClick={action.onClick}
+								size="sm"
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</Button>
+						))}
+					</div>
+				</div>
+			</PageHeader2>
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Songs?`}

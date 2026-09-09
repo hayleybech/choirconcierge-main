@@ -158,6 +158,26 @@ class AttendanceControllerTest extends TestCase
             );
     }
 
+    public function test_index_serializes_filtered_enrolments_as_an_array(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $ensemble = Ensemble::factory()->create();
+        $event = Event::factory()->create();
+        $event->ensembles()->attach($ensemble);
+        $singer = Membership::factory()->create();
+        $enrolment = Enrolment::factory()->create([
+            'membership_id' => $singer->id,
+            'ensemble_id' => $ensemble->id,
+        ]);
+
+        $this->get(the_tenant_route('events.attendances.index', [$event]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('allSingers.0.enrolments', 1)
+                ->where('allSingers.0.enrolments.0.id', $enrolment->id)
+            );
+    }
+
     public function test_index_defaults_to_members_status(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));

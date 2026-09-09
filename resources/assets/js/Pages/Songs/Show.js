@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader2 } from '../../components/PageHeader/PageHeader';
+import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
+import { PageHeading } from '../../components/PageHeader/PageHeading';
+import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import SongStatusTag from '../../components/SongStatusTag';
 import PitchButton from '../../components/PitchButton';
 import SongAttachmentList from '../../components/SongAttachment/SongAttachmentList';
@@ -17,6 +21,7 @@ import SongStatus from '../../SongStatus';
 import Icon from '../../components/Icon';
 import Prose from '../../components/Prose';
 import ButtonLink from '../../components/inputs/ButtonLink';
+import Button from '../../components/inputs/Button';
 import CollapsePanel from '../../components/CollapsePanel';
 import SectionLayout from '../Singers/SectionLayout';
 import EmptyState from '../../components/EmptyState';
@@ -24,7 +29,7 @@ import useRoute from '../../hooks/useRoute';
 import { useInstrument } from '../../hooks/useInstrument';
 import { shouldShowSheetMusicColumn } from './showSheetMusic';
 
-const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
+const Show = ({ song, attachment_types, status_count, voice_parts_count, setSidebarOpen }) => {
 	const { route } = useRoute();
 
 	const player = useContext(PlayerContext);
@@ -36,6 +41,16 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
 	const isCompactDesktop = useMediaQuery({ query: '(min-width: 1024px) and (max-width: 1279px)' });
 
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
+	const actions = [
+		{ label: 'Edit', icon: 'edit', url: route('songs.edit', { song }), can: song.can.update_song },
+		{
+			label: 'Delete',
+			icon: 'trash',
+			onClick: () => setDeleteDialogIsOpen(true),
+			variant: 'danger-outline',
+			can: song.can.delete_song,
+		},
+	].filter(action => action.can);
 	const [currentPdf, setCurrentPdf] = useState(() => {
 		if (isMobile || isCompactDesktop) {
 			return null;
@@ -86,68 +101,96 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count }) => {
 				/>
 			) : (
 				<>
-					<PageHeader
-						title={song.title}
-						meta={
-							<>
-								<SongStatusTag status={new SongStatus(song.status.slug)} withLabel />
-
-								{song.categories.length > 0 && (
-									<div className="space-x-1.5 flex items-center">
-										{song.categories.map(category => (
-											<React.Fragment key={category.id}>
-												<SongCategoryTag category={category} />
-											</React.Fragment>
-										))}
-									</div>
-								)}
-
-								{song.ensembles.length > 0 && (
-									<div className="space-x-1.5 flex items-center">
-										{song.ensembles.map(ensemble => (
-											<span
-												key={ensemble.id}
-												className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800"
-											>
-												{ensemble.name}
-											</span>
-										))}
-									</div>
-								)}
-
-								<div className="flex items-center gap-2">
-									<DateTag icon="pencil" date={song.created_at} label="Created" />
-									<DateTag icon="pencil" date={song.updated_at} label="Updated" />
+					<PageTopBar setSidebarOpen={setSidebarOpen}>
+						<div className="flex justify-between grow">
+							<PageTopNavigation
+								backUrl={route('songs.index')}
+								breadcrumbs={[{ name: 'Songs', url: route('songs.index') }]}
+							>
+								<PageTopBarTitle title={song.title} />
+							</PageTopNavigation>
+							<PageActionsMenu>
+								{actions.map((action, key) => (
+									<ActionMenuItem
+										key={key}
+										url={action.url}
+										onClick={action.onClick}
+										variant={action.variant}
+									>
+										<Icon icon={action.icon} mr />
+										{action.label}
+									</ActionMenuItem>
+								))}
+							</PageActionsMenu>
+						</div>
+					</PageTopBar>
+					<PageHeader2>
+						<div className="lg:flex lg:items-center lg:justify-between">
+							<div className="flex-1 min-w-0">
+								<div className="hidden lg:block">
+									<Breadcrumbs
+										breadcrumbs={[
+											{ name: 'Songs', url: route('songs.index') },
+											{ name: song.title, url: route('songs.show', { song }) },
+										]}
+										showLastChevron={false}
+									/>
 								</div>
-
-								{!!song.show_for_prospects && (
-									<div>
-										<Icon icon="microphone-stand" mr className="text-sm text-emerald-500" />
-										<span className="text-sm font-medium text-gray-500 truncate">
-											Audition Song
-										</span>
+								<PageHeading>{song.title}</PageHeading>
+								<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
+									<PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="sm" />
+									<SongStatusTag status={new SongStatus(song.status.slug)} withLabel />
+									{song.categories.length > 0 && (
+										<div className="space-x-1.5 flex items-center">
+											{song.categories.map(category => (
+												<React.Fragment key={category.id}>
+													<SongCategoryTag category={category} />
+												</React.Fragment>
+											))}
+										</div>
+									)}
+									{song.ensembles.length > 0 && (
+										<div className="space-x-1.5 flex items-center">
+											{song.ensembles.map(ensemble => (
+												<span
+													key={ensemble.id}
+													className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800"
+												>
+													{ensemble.name}
+												</span>
+											))}
+										</div>
+									)}
+									<div className="flex items-center gap-2">
+										<DateTag icon="pencil" date={song.created_at} label="Created" />
+										<DateTag icon="pencil" date={song.updated_at} label="Updated" />
 									</div>
-								)}
-							</>
-						}
-						breadcrumbs={[
-							{ name: 'Dashboard', url: route('dash') },
-							{ name: 'Songs', url: route('songs.index') },
-							{ name: song.title, url: route('songs.show', { song }) },
-						]}
-						actions={[
-							<PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="sm" />,
-							{ label: 'Edit', icon: 'edit', url: route('songs.edit', { song }), can: 'update_song' },
-							{
-								label: 'Delete',
-								icon: 'trash',
-								onClick: () => setDeleteDialogIsOpen(true),
-								variant: 'danger-outline',
-								can: 'delete_song',
-							},
-						].filter(action => (action.can ? song.can[action.can] : true))}
-					/>
-
+									{!!song.show_for_prospects && (
+										<div>
+											<Icon icon="microphone-stand" mr className="text-sm text-emerald-500" />
+											<span className="text-sm font-medium text-gray-500 truncate">
+												Audition Song
+											</span>
+										</div>
+									)}
+								</div>
+							</div>
+							<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
+								{actions.map((action, key) => (
+									<Button
+										key={key}
+										href={action.url}
+										onClick={action.onClick}
+										size="sm"
+										variant={action.variant}
+									>
+										<Icon icon={action.icon} mr />
+										{action.label}
+									</Button>
+								))}
+							</div>
+						</div>
+					</PageHeader2>
 					<DeleteDialog
 						title="Delete Song"
 						url={route('songs.destroy', { song })}

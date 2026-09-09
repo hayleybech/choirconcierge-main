@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader2 } from '../../components/PageHeader/PageHeader';
+import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
+import { PageHeading } from '../../components/PageHeader/PageHeading';
+import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import Button from '../../components/inputs/Button';
 import AppHead from '../../components/AppHead';
 import DateTag from '../../components/DateTag';
 import Badge from '../../components/Badge';
@@ -15,7 +20,7 @@ import DeleteDialog from '../../components/DeleteDialog';
 import Prose from '../../components/Prose';
 import ButtonLink from '../../components/inputs/ButtonLink';
 import CollapsePanel from '../../components/CollapsePanel';
-import SectionLayout, { SectionLayoutSubtitle } from '../Singers/SectionLayout';
+import SectionLayout from '../Singers/SectionLayout';
 import EventType from '../../EventType';
 import EventSchedule from '../../components/Event/EventSchedule';
 import useRoute from '../../hooks/useRoute';
@@ -30,92 +35,138 @@ const Show = ({
 	attendanceCount,
 	voicePartsAttendanceCount,
 	addToCalendarLinks,
+	setSidebarOpen,
 }) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const [editDialogIsOpen, setEditDialogIsOpen] = useState(false);
 
 	const { route } = useRoute();
 	const { props: pageProps } = usePage();
+	const actions = [
+		{
+			label: 'Edit',
+			icon: 'edit',
+			url: event.is_repeating ? undefined : route('events.edit', { event }),
+			onClick: event.is_repeating ? () => setEditDialogIsOpen(true) : undefined,
+			can: 'update_event',
+		},
+		{ label: 'Duplicate', icon: 'copy', url: route('events.clone', { event }), can: 'create_event' },
+		{
+			label: 'Delete',
+			icon: 'trash',
+			onClick: () => setDeleteDialogIsOpen(true),
+			variant: 'danger-outline',
+			can: 'delete_event',
+		},
+	].filter(action => event.can[action.can] || pageProps.can[action.can]);
 
 	return (
 		<>
 			<AppHead title={`${event.title} - Events`} />
-			<PageHeader
-				title={
-					<>
-						{event.title}
-						{event.is_repeating && (
-							<Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />
-						)}
-					</>
-				}
-				meta={
-					<>
-						{DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
-							<div className="text-lg font-bold">
-								<Icon icon="calendar-day" type="regular" mr className="text-gray-500" />
-								<span>{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}</span>
-								{' - '}
-								<span>{DateTime.fromISO(event.end_date).toLocaleString(DateTime.TIME_SIMPLE)}</span>
-							</div>
-						) : (
-							<div className="text-lg font-bold flex items-center">
-								<Icon icon="calendar-day" type="regular" mr />
-								<div>
-									<span className="whitespace-nowrap">
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<div className="flex justify-between grow">
+					<PageTopNavigation
+						breadcrumbs={[{ name: 'Events', url: route('events.index') }]}
+						backUrl={route('events.index')}
+					>
+						<PageTopBarTitle title={event.title} />
+					</PageTopNavigation>
+					<PageActionsMenu>
+						{actions.map(action => (
+							<ActionMenuItem
+								key={action.label}
+								url={action.url}
+								onClick={action.onClick}
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</div>
+			</PageTopBar>
+			<PageHeader2>
+				<div className="lg:flex lg:items-center lg:justify-between">
+					<div className="flex-1 min-w-0">
+						<div className="hidden lg:block">
+							<Breadcrumbs
+								breadcrumbs={[
+									{ name: 'Events', url: route('events.index') },
+									{ name: event.title, url: route('events.show', { event }) },
+								]}
+								showLastChevron={false}
+							/>
+						</div>
+						<PageHeading>
+							<span className="flex items-center">
+								{event.title}
+								{event.is_repeating && (
+									<Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />
+								)}
+							</span>
+						</PageHeading>
+						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
+							{DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
+								<div className="text-lg font-bold">
+									<Icon icon="calendar-day" type="regular" mr className="text-gray-500" />
+									<span>
 										{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}
 									</span>
 									{' - '}
-									<span className="whitespace-nowrap">
-										{DateTime.fromISO(event.end_date).toLocaleString(DateTime.DATETIME_MED)}
-									</span>
+									<span>{DateTime.fromISO(event.end_date).toLocaleString(DateTime.TIME_SIMPLE)}</span>
 								</div>
-							</div>
-						)}
-
-						<DateTag label="Arrive" date={event.call_time} format="TIME_SIMPLE" />
-
-						<div>
-							<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>
-						</div>
-
-						{event.ensembles.length > 0 && (
-							<div className="space-x-1.5 flex items-center">
-								{event.ensembles.map(ensemble => (
-									<Badge key={ensemble.id} colour="bg-blue-100 text-blue-800">
-										{ensemble.name}
-									</Badge>
-								))}
-							</div>
-						)}
-
-						<div className="gap-1.5 grid sm:inline-flex grid-cols-2">
-							{DateTime.fromISO(event.call_time) > DateTime.now() && (
-								<RsvpDropdown event={event} size="sm" />
+							) : (
+								<div className="text-lg font-bold flex items-center">
+									<Icon icon="calendar-day" type="regular" mr />
+									<div>
+										<span className="whitespace-nowrap">
+											{DateTime.fromISO(event.start_date).toLocaleString(DateTime.DATETIME_MED)}
+										</span>
+										{' - '}
+										<span className="whitespace-nowrap">
+											{DateTime.fromISO(event.end_date).toLocaleString(DateTime.DATETIME_MED)}
+										</span>
+									</div>
+								</div>
 							)}
-							<AddToCalendarDropdown urls={addToCalendarLinks} size="sm" />
+							<DateTag label="Arrive" date={event.call_time} format="TIME_SIMPLE" />
+							<div>
+								<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>
+							</div>
+							{event.ensembles.length > 0 && (
+								<div className="space-x-1.5 flex items-center">
+									{event.ensembles.map(ensemble => (
+										<Badge key={ensemble.id} colour="bg-blue-100 text-blue-800">
+											{ensemble.name}
+										</Badge>
+									))}
+								</div>
+							)}
+							<div className="gap-1.5 grid sm:inline-flex grid-cols-2">
+								{DateTime.fromISO(event.call_time) > DateTime.now() && (
+									<RsvpDropdown event={event} size="sm" />
+								)}
+								<AddToCalendarDropdown urls={addToCalendarLinks} size="sm" />
+							</div>
 						</div>
-					</>
-				}
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Events', url: route('events.index') },
-					{ name: event.title, url: route('events.show', { event }) },
-				]}
-				actions={[
-					event.is_repeating
-						? { label: 'Edit', icon: 'edit', onClick: () => setEditDialogIsOpen(true), can: 'update_event' }
-						: { label: 'Edit', icon: 'edit', url: route('events.edit', { event }), can: 'update_event' },
-					{ label: 'Duplicate', icon: 'copy', url: route('events.clone', { event }), can: 'create_event' },
-					{
-						label: 'Delete',
-						icon: 'trash',
-						onClick: () => setDeleteDialogIsOpen(true),
-						variant: 'danger-outline',
-						can: 'delete_event',
-					},
-				].filter(action => (action.can ? event.can[action.can] || pageProps.can[action.can] : true))}
-			/>
+					</div>
+					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
+						{actions.map(action => (
+							<Button
+								key={action.label}
+								href={action.url}
+								onClick={action.onClick}
+								size="sm"
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</Button>
+						))}
+					</div>
+				</div>
+			</PageHeader2>
 
 			<DeleteDialog
 				title="Delete Event"
@@ -200,7 +251,6 @@ const Show = ({
 			/>
 		</>
 	);
-
 };
 
 Show.layout = page => <TenantLayout children={page} />;
@@ -250,7 +300,6 @@ const EventSummary = ({ event, timezone }) => (
 			<DateTag icon="pencil" date={event.created_at} label="Created" />
 			<DateTag icon="pencil" date={event.updated_at} label="Updated" />
 		</div>
-
 	</CollapsePanel>
 );
 

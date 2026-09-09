@@ -1,62 +1,86 @@
-import React from 'react'
-import PageHeader from "../../../components/PageHeader/PageHeader";
-import AppHead from "../../../components/AppHead";
-import IndexContainer from "../../../components/IndexContainer";
-import useRoute from "../../../hooks/useRoute";
+import React from 'react';
+import { PageHeader2 } from '../../../components/PageHeader/PageHeader';
+import { PageHeading } from '../../../components/PageHeader/PageHeading';
+import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../../components/PageTopBar';
+import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
+import Button from '../../../components/inputs/Button';
+import Icon from '../../../components/Icon';
+import AppHead from '../../../components/AppHead';
+import IndexContainer from '../../../components/IndexContainer';
+import useRoute from '../../../hooks/useRoute';
 import MailLogTableMobile from './MailLogTableMobile';
 import MailLogTableDesktop from './MailLogTableDesktop';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import EmptyState from '../../../components/EmptyState';
-import TrialAntiSpamNotice from "../TrialAntiSpamNotice";
+import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 
-const Index = ({ logs, can }) => {
-    const { route } = useRoute();
+const Index = ({ logs, can, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    // const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	// const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
-    // const sorts = [
-    //     { id: 'id', name: 'Organisation Name', default: true },
-    //     { id: 'created_at', name: 'Date Created' },
-    // ];
-    //
-    // const filters = [
-    //     { name: 'id', defaultValue: '' },
-    // ]
-    //
-    // const sortFilterForm = useSortFilterForm('central.tenants.index', filters, sorts);
+	// const sorts = [
+	//     { id: 'id', name: 'Organisation Name', default: true },
+	//     { id: 'created_at', name: 'Date Created' },
+	// ];
+	//
+	// const filters = [
+	//     { name: 'id', defaultValue: '' },
+	// ]
+	//
+	// const sortFilterForm = useSortFilterForm('central.tenants.index', filters, sorts);
 
-    return (
+	const actions = [
+		{
+			label: 'Send Broadcast',
+			icon: 'inbox-out',
+			url: route('communications.create'),
+			variant: 'primary',
+			can: 'create_broadcast',
+		},
+		{
+			label: 'Mailing lists',
+			icon: 'at',
+			url: route('groups.index'),
+			variant: 'secondary',
+			can: 'list_groups',
+		},
+	].filter(action => (action?.can ? can[action.can] : !!action));
+
+	return (
 		<>
 			<AppHead title="Tenants" />
 
 			<TrialAntiSpamNotice />
 
-			<PageHeader
-				title="Communications"
-				icon="mail-bulk"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Communications', url: route('communications.index') },
-				]}
-				actions={[
-					{
-						label: 'Send Broadcast',
-						icon: 'inbox-out',
-						url: route('communications.create'),
-						variant: 'primary',
-						can: 'create_broadcast',
-					},
-					{
-						label: 'Mailing lists',
-						icon: 'at',
-						url: route('groups.index'),
-						variant: 'secondary',
-						can: 'list_groups',
-					},
-				//     filterAction,
-				].filter(action => (action?.can ? can[action.can] : !!action))}
-				// optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<div className="flex justify-between grow">
+					<PageTopBarTitle title="Communications" />
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem key={key} url={action.url} variant={action.variant}>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</div>
+			</PageTopBar>
+			<PageHeader2>
+				<div className="lg:flex lg:items-center lg:justify-between">
+					<PageHeading>
+						<Icon icon="mail-bulk" type="solid" className="mr-2" /> Communications
+					</PageHeading>
+					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
+						{actions.map(action => (
+							<Button key={action.label} href={action.url} size="sm" variant={action.variant}>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</Button>
+						))}
+					</div>
+				</div>
+			</PageHeader2>
 
 			<IndexContainer
 				// showFilters={showFilters}
@@ -87,8 +111,8 @@ const Index = ({ logs, can }) => {
 			/>
 		</>
 	);
-}
+};
 
-Index.layout = page => <TenantLayout children={page} />
+Index.layout = page => <TenantLayout children={page} />;
 
 export default Index;
