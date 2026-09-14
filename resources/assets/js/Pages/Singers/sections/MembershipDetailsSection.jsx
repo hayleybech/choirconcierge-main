@@ -1,4 +1,4 @@
-import CollapsePanel from '../../../components/CollapsePanel';
+import SimplePanel from '../../../components/SimplePanel';
 import { DetailList, DetailListItem } from '../components/DetailList';
 import Badge from '../../../components/Badge';
 import FeeStatus from '../../../components/FeeStatus';
@@ -8,7 +8,7 @@ import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
 
 export const MembershipDetailsSection = ({ singer, can }) => (
-			<CollapsePanel>
+			<SimplePanel>
 				<div className="flex flex-col sm:flex-row">
 					<DetailList gridCols="grid-cols-2 md:grid-cols-4">
 						<DetailListItem label="Membership Status">
@@ -85,5 +85,5 @@ export const MembershipDetailsSection = ({ singer, can }) => (
 						</div>
 					)}
 				</div>
-			</CollapsePanel>
+			</SimplePanel>
 		);

@@ -24,7 +24,7 @@ import EditRepeatingEventDialog from '../../components/Event/EditRepeatingEventD
 import DeleteDialog from '../../components/DeleteDialog';
 import Prose from '../../components/Prose';
 import ButtonLink from '../../components/inputs/ButtonLink';
-import CollapsePanel from '../../components/CollapsePanel';
+import SimplePanel from '../../components/SimplePanel';
 import SectionLayout from '../Singers/SectionLayout';
 import EventType from '../../EventType';
 import EventSchedule from '../../components/Event/EventSchedule';
@@ -182,13 +182,11 @@ const Show = ({
 						{
 							title: 'Summary',
 							show: true,
-							defaultOpen: event.description?.length > 0,
 							content: <EventSummary event={event} timezone={pageProps.tenant.timezone_label} />,
 						},
 						{
 							title: 'Location',
 							show: true,
-							defaultOpen: true,
 							content: <EventLocation event={event} />,
 						},
 						{ title: 'Schedule', show: true, content: <EventSchedule event={event} /> },
@@ -250,7 +248,7 @@ Show.layout = page => <TenantLayout children={page} />;
 export default Show;
 
 const EventSummary = ({ event, timezone }) => (
-	<CollapsePanel>
+	<SimplePanel>
 		<h3 className="pt-4 font-semibold text-gray-700">Date/Time</h3>
 
 		{DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
@@ -292,18 +290,18 @@ const EventSummary = ({ event, timezone }) => (
 			<DateTag icon="pencil" date={event.created_at} label="Created" />
 			<DateTag icon="pencil" date={event.updated_at} label="Updated" />
 		</div>
-	</CollapsePanel>
+	</SimplePanel>
 );
 
 const EventLocation = ({ event }) => (
-	<CollapsePanel>
+	<SimplePanel>
 		<p>
 			<strong>{event.location_name}</strong>
 		</p>
 		<p className="mb-8">{event.location_address}</p>
 
 		<GoogleMap placeId={event.location_place_id} />
-	</CollapsePanel>
+	</SimplePanel>
 );
 
 const ViewRsvpsButton = ({ event }) => {

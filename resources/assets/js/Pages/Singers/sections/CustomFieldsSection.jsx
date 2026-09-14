@@ -1,4 +1,3 @@
-import { CollapsePanelWithoutPadding } from '../../../components/CollapseGroup';
 import Icon from '../../../components/Icon';
 import React, { useState } from 'react';
 import Button from '../../../components/inputs/Button';
@@ -12,13 +11,14 @@ import Error from '../../../components/inputs/Error';
 import DateTag from '../../../components/DateTag';
 import { useMediaQuery } from 'react-responsive';
 import DeleteDialog from '../../../components/DeleteDialog';
+import { SimplePanelWithoutPadding } from '../../../components/SimplePanel';
 
 const CustomFieldsSection = ({ singer, customFields }) => {
 	const [showCreateDialog, setShowCreateDialog] = useState(false);
 	const { can } = usePage().props;
 
 	return (
-		<CollapsePanelWithoutPadding>
+		<SimplePanelWithoutPadding>
 			<table className="w-full">
 				<tbody className="divide-y divide-gray-200 border-b border-gray-200">
 					{customFields.map(({ id, name, entries }) => (
@@ -44,7 +44,7 @@ const CustomFieldsSection = ({ singer, customFields }) => {
 			</table>
 
 			<CreateCustomFieldDialog isOpen={showCreateDialog} setIsOpen={setShowCreateDialog} />
-		</CollapsePanelWithoutPadding>
+		</SimplePanelWithoutPadding>
 	);
 };
 

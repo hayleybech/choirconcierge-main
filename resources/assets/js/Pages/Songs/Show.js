@@ -27,12 +27,11 @@ import Icon from '../../components/Icon';
 import Prose from '../../components/Prose';
 import ButtonLink from '../../components/inputs/ButtonLink';
 import Button from '../../components/inputs/Button';
-import CollapsePanel from '../../components/CollapsePanel';
+import SimplePanel from '../../components/SimplePanel';
 import SectionLayout from '../Singers/SectionLayout';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import { useInstrument } from '../../hooks/useInstrument';
-import { shouldShowSheetMusicColumn } from './showSheetMusic';
 
 const Show = ({ song, attachment_types, status_count, voice_parts_count, setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -223,11 +222,7 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 							[
 								{
 									key: 'Sheet Music',
-									show: shouldShowSheetMusicColumn({
-										isDesktop,
-										isCompactDesktop,
-										isFullscreen: player.showFullscreen,
-									}),
+									show: isDesktop && !isCompactDesktop && !player.showFullscreen,
 									showOnMobile: false,
 									collapsible: false,
 									content: !!currentPdf ? (
@@ -295,7 +290,6 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 								{
 									title: 'Description',
 									show: true,
-									defaultOpen: song.description?.length > 0,
 									content: <SongDescription description={song.description} />,
 								},
 							],
@@ -312,9 +306,9 @@ Show.layout = page => <TenantLayout children={page} />;
 export default Show;
 
 const SongDescription = ({ description }) => (
-	<CollapsePanel>
+	<SimplePanel>
 		<Prose content={description ?? 'No description'} className="mb-8" />
-	</CollapsePanel>
+	</SimplePanel>
 );
 
 const EditLearningSummaryButton = ({ song }) => {

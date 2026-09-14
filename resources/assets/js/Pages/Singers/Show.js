@@ -193,19 +193,16 @@ const Show = ({
 						{
 							title: 'About',
 							show: true,
-							defaultOpen: true,
 							content: <PersonalDetailsSection singer={singer} />,
 						},
 						{
 							title: 'Membership',
 							show: true,
-							defaultOpen: true,
 							content: <MembershipDetailsSection singer={singer} can={can} />,
 						},
 						{
 							title: 'Enrolments',
 							show: true,
-							defaultOpen: true,
 							content: (
 								<EnrolmentDetailsSection
 									singer={singer}
@@ -217,7 +214,6 @@ const Show = ({
 						{
 							title: 'Custom Fields',
 							show: can['list_custom_field_entries'],
-							defaultOpen: true,
 							content: <CustomFieldsSection singer={singer} customFields={customFields} />,
 						},
 					],

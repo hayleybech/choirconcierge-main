@@ -1,7 +1,6 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
 import { useMediaQuery } from 'react-responsive';
-import CollapseGroup from '../../components/CollapseGroup';
 import classNames from '../../classNames';
 
 const SectionLayout = ({

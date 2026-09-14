@@ -15,8 +15,8 @@ import Icon from '../../../components/Icon';
 import classNames from '../../../classNames';
 import AppHead from '../../../components/AppHead';
 import DateTag from '../../../components/DateTag';
-import CollapsePanel from '../../../components/CollapsePanel';
-import CollapseGroup from '../../../components/CollapseGroup';
+import SimplePanel from '../../../components/SimplePanel';
+import SectionLayout from '../../Singers/SectionLayout';
 import useRoute from '../../../hooks/useRoute';
 import CentralLayout from '../../../Layouts/CentralLayout';
 import BillingTag from './BillingTag';
@@ -108,20 +108,16 @@ const Show = ({ tenant, setSidebarOpen }) => {
 				</PageHeaderActions>
 			</PageHeader>
 
-			<div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
-				<div className="sm:col-span-2 xl:col-span-3 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[
-							{
-								title: 'Choir Details',
-								show: true,
-								defaultOpen: true,
-								content: <ChoirDetails tenant={tenant} showSales={can.list_tenants} />,
-							},
-						]}
-					/>
-				</div>
-			</div>
+			<SectionLayout
+				columns={[
+					[
+						{
+							title: 'Choir Details',
+							content: <ChoirDetails tenant={tenant} showSales={can.list_tenants} />,
+						},
+					],
+				]}
+			/>
 		</>
 	);
 };
@@ -131,7 +127,7 @@ Show.layout = page => <CentralLayout children={page} />;
 export default Show;
 
 const ChoirDetails = ({ tenant, showSales }) => (
-	<CollapsePanel>
+	<SimplePanel>
 		<DetailList
 			items={[
 				{
@@ -187,5 +183,5 @@ const ChoirDetails = ({ tenant, showSales }) => (
 					: undefined,
 			].filter(item => !!item)}
 		/>
-	</CollapsePanel>
+	</SimplePanel>
 );

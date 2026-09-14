@@ -1,5 +1,5 @@
 import useRoute from '../../../hooks/useRoute';
-import CollapsePanel from '../../../components/CollapsePanel';
+import SimplePanel from '../../../components/SimplePanel';
 import Icon from '../../../components/Icon';
 import ButtonLink from '../../../components/inputs/ButtonLink';
 import React from 'react';
@@ -8,7 +8,7 @@ export const OnboardingTaskSection = ({ singer }) => {
 	const { route } = useRoute();
 
 	return (
-		<CollapsePanel>
+		<SimplePanel>
 			<nav className="flex" aria-label="Progress">
 				<p className="text-sm text-gray-500 truncate">
 					Onboarding is {singer.onboarding_enabled ? 'enabled' : 'disabled'} for this singer.
@@ -64,6 +64,6 @@ export const OnboardingTaskSection = ({ singer }) => {
 					))}
 				</ol>
 			</nav>
-		</CollapsePanel>
+		</SimplePanel>
 	);
 };

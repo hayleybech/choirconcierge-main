@@ -8,8 +8,8 @@ import Dialog from '../../../components/Dialog';
 import Label from '../../../components/inputs/Label';
 import Select from '../../../components/inputs/Select';
 import RadioGroup from '../../../components/inputs/RadioGroup';
-import { CollapsePanelWithoutPadding } from '../../../components/CollapseGroup';
 import { useMediaQuery } from 'react-responsive';
+import { SimplePanelWithoutPadding } from '../../../components/SimplePanel';
 
 export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 	const [creatingEnrolment, setCreatingEnrolment] = useState(false);
@@ -20,7 +20,7 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 
 	return (
 		<>
-			<CollapsePanelWithoutPadding>
+			<SimplePanelWithoutPadding>
 				<ul className="divide-y divide-gray-200">
 					{singer.enrolments.map(enrolment => (
 						<li
@@ -88,7 +88,7 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 						</li>
 					)}
 				</ul>
-			</CollapsePanelWithoutPadding>
+			</SimplePanelWithoutPadding>
 
 			{singer.can['update_singer'] && (
 				<>
