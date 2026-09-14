@@ -76,15 +76,15 @@ export const PageTopNavigation = ({ breadcrumbs, title, children }) => {
 	});
 
 	return (
-		<div className="flex grow h-full">
+		<div className="flex h-full min-w-0 grow overflow-hidden">
 			{breadcrumbs?.length > 1 && isMobile && <BackButton url={breadcrumbs[0].url} className="sm:hidden" />}
-			<div className="flex items-center grow pl-3">
+			<div className="flex min-w-0 grow items-center overflow-hidden pl-3">
 				{breadcrumbs?.length > 1 && !isMobile && (
 					<Breadcrumbs breadcrumbs={breadcrumbs?.slice(0, -1)} className="mr-3" />
 				)}
 				<PageTopBarTitle>{breadcrumbs?.[breadcrumbs.length - 1]?.name ?? title}</PageTopBarTitle>
 
-				<div className="flex items-center grow justify-end pl-2 gap-3">{children}</div>
+				<div className="flex shrink-0 items-center justify-end gap-3 pl-2">{children}</div>
 			</div>
 		</div>
 	);
@@ -92,7 +92,7 @@ export const PageTopNavigation = ({ breadcrumbs, title, children }) => {
 
 /** Use by itself for Tier 1 pages */
 export const PageTopBarTitle = ({ children }) => (
-	<h1 className="truncate text-base font-semibold text-gray-900">{children}</h1>
+	<h1 className="min-w-0 flex-1 truncate text-base font-semibold text-gray-900">{children}</h1>
 );
 
 export const PageTopBarContent = ({ children }) => (
