@@ -17,7 +17,7 @@ import { mailIconColours, mailIcons, mailTypeIcons } from '../../../components/M
 import TenantLayout from '../../../Layouts/TenantLayout';
 import MailStatusDetail from '../../../components/MailStatusDetail';
 import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
-import SectionLayout from '../../Singers/SectionLayout';
+import SectionLayout from '../../../components/SectionLayout';
 const Show = ({ log, setSidebarOpen }) => {
 	const { route } = useRoute();
 
@@ -79,27 +79,34 @@ const Show = ({ log, setSidebarOpen }) => {
 			</PageHeader>
 
 			<SectionLayout
-				columns={[
-					[
-						{
-							title: 'Message',
-							content: (
-								<div className="py-4 px-8 bg-gray-50">
-									{mailType === 'notification' ? (
-										<iframe srcdoc={log.body} width="100%" height="600" />
-									) : (
-										<Prose content={log.body} />
-									)}
-								</div>
-							),
-						},
+				layout={{
+					className: 'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0',
+					columns: [
+						{ id: 'main', className: 'sm:col-span-1' },
+						{ id: 'aside', className: 'sm:col-span-1' },
 					],
-					[
-						{
-							title: 'Activity',
-							content: <Activity log={log} />,
-						},
-					],
+				}}
+				sections={[
+					{
+						id: 'message',
+						column: 'main',
+						title: 'Message',
+						content: (
+							<div className="py-4 px-8 bg-gray-50">
+								{mailType === 'notification' ? (
+									<iframe srcdoc={log.body} width="100%" height="600" />
+								) : (
+									<Prose content={log.body} />
+								)}
+							</div>
+						),
+					},
+					{
+						id: 'activity',
+						column: 'aside',
+						title: 'Activity',
+						content: <Activity log={log} />,
+					},
 				]}
 			/>
 		</>

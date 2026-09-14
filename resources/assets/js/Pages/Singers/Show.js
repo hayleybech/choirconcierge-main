@@ -20,7 +20,7 @@ import DateTag from '../../components/DateTag';
 import DeleteDialog from '../../components/DeleteDialog';
 import Pronouns from '../../components/Pronouns';
 import SingerStatus from '../../SingerStatus';
-import SectionLayout from './SectionLayout';
+import SectionLayout from '../../components/SectionLayout';
 import useRoute from '../../hooks/useRoute';
 import { PersonalDetailsSection } from './sections/PersonalDetailsSection';
 import { MembershipDetailsSection } from './sections/MembershipDetailsSection';
@@ -95,25 +95,25 @@ const Show = ({
 			<AppHead title={`${singer.user.name} - Singers`} />
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 
-					<PageActionsMenu>
-						{filteredActions.map((action, key) => (
-							<ActionMenuItem
-								key={key}
-								url={action.url}
-								onClick={action.onClick}
-								download={action.download}
-								variant={action.variant}
-								method={action.method}
-								disabled={action.disabled}
-							>
-								<Icon icon={action.icon} mr />
+				<PageActionsMenu>
+					{filteredActions.map((action, key) => (
+						<ActionMenuItem
+							key={key}
+							url={action.url}
+							onClick={action.onClick}
+							download={action.download}
+							variant={action.variant}
+							method={action.method}
+							disabled={action.disabled}
+						>
+							<Icon icon={action.icon} mr />
 
-								{action.label}
-							</ActionMenuItem>
-						))}
-					</PageActionsMenu>
+							{action.label}
+						</ActionMenuItem>
+					))}
+				</PageActionsMenu>
 			</PageTopBar>
 
 			<PageHeader>
@@ -188,66 +188,84 @@ const Show = ({
 			/>
 
 			<SectionLayout
-				columns={[
-					[
-						{
-							title: 'About',
-							show: true,
-							content: <PersonalDetailsSection singer={singer} />,
-						},
-						{
-							title: 'Membership',
-							show: true,
-							content: <MembershipDetailsSection singer={singer} can={can} />,
-						},
-						{
-							title: 'Enrolments',
-							show: true,
-							content: (
-								<EnrolmentDetailsSection
-									singer={singer}
-									voiceParts={voiceParts}
-									ensembles={ensemblesNotEnrolled}
-								/>
-							),
-						},
-						{
-							title: 'Custom Fields',
-							show: can['list_custom_field_entries'],
-							content: <CustomFieldsSection singer={singer} customFields={customFields} />,
-						},
+				layout={{
+					className:
+						'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0 xl:grid-cols-4',
+					columns: [
+						{ id: 'main', className: 'sm:col-span-2 xl:col-span-3 divide-y divide-gray-300' },
+						{ id: 'aside', className: 'sm:col-span-1 divide-y divide-gray-300' },
 					],
-					[
-						{
-							title: 'Attendance',
-							show: singer.can['view_attendance'],
-							content: (
-								<>
-									<div className="py-4 px-4 lg:px-8 bg-gray-50">
-										<SingerAttendanceSummary attendanceSummary={attendanceSummary} />
-									</div>
-									<hr className="border-gray-200" />
-									<div className="py-4 px-4 lg:px-8 bg-gray-50">
-										<SingerRsvpSummary
-											rsvpSummary={rsvpSummary}
-											performanceTypeId={performanceTypeId}
-										/>
-									</div>
-								</>
-							),
-						},
-						{
-							title: 'Onboarding',
-							show: can['list_tasks'] && singer.onboarding_enabled === 1,
-							content: <OnboardingTaskSection singer={singer} />,
-						},
-						{
-							title: 'Musicianship',
-							action: singer.placement ? <EditSingerPlacementButton singer={singer} /> : null,
-							show: singer.can['create_placement'],
-							content: <VoicePlacementSection singer={singer} />,
-						},
-					],
+				}}
+				sections={[
+					{
+						id: 'about',
+						column: 'main',
+						title: 'About',
+						show: true,
+						content: <PersonalDetailsSection singer={singer} />,
+					},
+					{
+						id: 'membership',
+						column: 'main',
+						title: 'Membership',
+						show: true,
+						content: <MembershipDetailsSection singer={singer} can={can} />,
+					},
+					{
+						id: 'enrolments',
+						column: 'main',
+						title: 'Enrolments',
+						show: true,
+						content: (
+							<EnrolmentDetailsSection
+								singer={singer}
+								voiceParts={voiceParts}
+								ensembles={ensemblesNotEnrolled}
+							/>
+						),
+					},
+					{
+						id: 'custom-fields',
+						column: 'main',
+						title: 'Custom Fields',
+						show: can['list_custom_field_entries'],
+						content: <CustomFieldsSection singer={singer} customFields={customFields} />,
+					},
+					{
+						id: 'attendance',
+						column: 'aside',
+						title: 'Attendance',
+						show: singer.can['view_attendance'],
+						content: (
+							<>
+								<div className="py-4 px-4 lg:px-8 bg-gray-50">
+									<SingerAttendanceSummary attendanceSummary={attendanceSummary} />
+								</div>
+								<hr className="border-gray-200" />
+								<div className="py-4 px-4 lg:px-8 bg-gray-50">
+									<SingerRsvpSummary
+										rsvpSummary={rsvpSummary}
+										performanceTypeId={performanceTypeId}
+									/>
+								</div>
+							</>
+						),
+					},
+					{
+						id: 'onboarding',
+						column: 'aside',
+						title: 'Onboarding',
+						show: can['list_tasks'] && singer.onboarding_enabled === 1,
+						content: <OnboardingTaskSection singer={singer} />,
+					},
+					{
+						id: 'musicianship',
+						column: 'aside',
+						title: 'Musicianship',
+						action: singer.placement ? <EditSingerPlacementButton singer={singer} /> : null,
+						show: singer.can['create_placement'],
+						content: <VoicePlacementSection singer={singer} />,
+					},
 				]}
 			/>
 		</>

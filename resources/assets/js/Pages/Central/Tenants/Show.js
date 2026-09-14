@@ -16,7 +16,7 @@ import classNames from '../../../classNames';
 import AppHead from '../../../components/AppHead';
 import DateTag from '../../../components/DateTag';
 import SimplePanel from '../../../components/SimplePanel';
-import SectionLayout from '../../Singers/SectionLayout';
+import SectionLayout from '../../../components/SectionLayout';
 import useRoute from '../../../hooks/useRoute';
 import CentralLayout from '../../../Layouts/CentralLayout';
 import BillingTag from './BillingTag';
@@ -109,13 +109,17 @@ const Show = ({ tenant, setSidebarOpen }) => {
 			</PageHeader>
 
 			<SectionLayout
-				columns={[
-					[
+				layout={{
+					className: 'grid-cols-1 divide-y divide-gray-300',
+					columns: [{ className: '' }],
+				}}
+				sections={[
 						{
+							id: 'choir-details',
+							column: 0,
 							title: 'Choir Details',
 							content: <ChoirDetails tenant={tenant} showSales={can.list_tenants} />,
 						},
-					],
 				]}
 			/>
 		</>

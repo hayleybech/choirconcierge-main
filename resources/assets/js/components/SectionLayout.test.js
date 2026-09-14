@@ -7,30 +7,29 @@ jest.mock('react-responsive', () => ({
 	useMediaQuery: jest.fn(),
 }));
 
-describe('SingerSectionLayout', () => {
-	const columns = [
-		[
-			{ title: 'Personal Details', content: <div>Personal content</div> },
-			{ title: 'Membership Details', content: <div>Membership content</div> },
-		],
-		[
-			{ title: 'Attendance', content: <div>Attendance content</div> },
-			{
-				title: 'Desktop only',
-				showOnMobile: false,
-				collapsible: false,
-				content: <div>Desktop content</div>,
-			},
-			{ title: 'Hidden', show: false, content: <div>Hidden content</div> },
-		],
+describe('SectionLayout', () => {
+	const sections = [
+		{ id: 'personal', column: 0, title: 'Personal Details', content: <div>Personal content</div> },
+		{ id: 'membership', column: 0, title: 'Membership Details', content: <div>Membership content</div> },
+		{ id: 'attendance', column: 1, title: 'Attendance', content: <div>Attendance content</div> },
+		{
+			id: 'desktop-only',
+			column: 1,
+			title: 'Desktop only',
+			showOnMobile: false,
+			content: <div>Desktop content</div>,
+		},
+		{ id: 'hidden', column: 1, title: 'Hidden', show: false, content: <div>Hidden content</div> },
 	];
+	const layout = {
+		className: 'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0 xl:grid-cols-4',
+		columns: [{ className: 'sm:col-span-2' }, { className: 'sm:col-span-1' }],
+	};
 
 	it('renders only the desktop layout on desktop', () => {
 		useMediaQuery.mockReturnValue(true);
 
-		render(
-			<SectionLayout columns={columns} />
-		);
+		render(<SectionLayout sections={sections} layout={layout} />);
 
 		expect(screen.queryAllByRole('tab')).toHaveLength(0);
 		expect(screen.getAllByRole('heading')).toHaveLength(4);
@@ -43,7 +42,7 @@ describe('SingerSectionLayout', () => {
 	it('renders only the mobile layout on mobile', () => {
 		useMediaQuery.mockReturnValue(false);
 
-		render(<SectionLayout columns={columns} />);
+		render(<SectionLayout sections={sections} layout={layout} />);
 
 		const tabs = screen.getAllByRole('tab');
 		expect(tabs).toHaveLength(3);

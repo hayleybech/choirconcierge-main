@@ -10,7 +10,7 @@ export const PageHeader = ({ children }) => (
 );
 
 /** Wrapper for page header desktop actions */
-export const PageHeaderActions = ({ children }) => <div className="hidden lg:flex mt-0 lg:ml-4 gap-3">{children}</div>;
+export const PageHeaderActions = ({ children }) => <div className="hidden xl:flex mt-0 lg:ml-4 gap-3">{children}</div>;
 
 /** Wrapper for page header meta items */
 export const PageHeaderMeta = ({ children }) => (
@@ -20,7 +20,7 @@ export const PageHeaderMeta = ({ children }) => (
 );
 
 export const PageHeaderBreadcrumbs = ({ breadcrumbs }) => (
-	<div className="hidden lg:block">
+	<div className="hidden xl:block">
 		<Breadcrumbs breadcrumbs={breadcrumbs} showLastChevron={false} />
 	</div>
 );

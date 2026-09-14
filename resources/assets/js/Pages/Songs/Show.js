@@ -28,7 +28,7 @@ import Prose from '../../components/Prose';
 import ButtonLink from '../../components/inputs/ButtonLink';
 import Button from '../../components/inputs/Button';
 import SimplePanel from '../../components/SimplePanel';
-import SectionLayout from '../Singers/SectionLayout';
+import SectionLayout from '../../components/SectionLayout';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import { useInstrument } from '../../hooks/useInstrument';
@@ -193,18 +193,20 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 					</DeleteDialog>
 
 					<SectionLayout
-						gridClassName="grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 xl:grid-cols-4 lg:overflow-y-auto"
-						columnClassNames={[
-							'sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch',
-							'hidden xl:block sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-hidden',
-							'sm:col-span-1 sm:order-2 xl:order-3',
-						]}
-						columns={[
-							[
+						layout={{
+							className: 'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 xl:grid-cols-4 lg:overflow-y-auto',
+							columns: [
+								{ id: 'attachments', className: 'sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch' },
+								{ id: 'viewer', className: 'hidden xl:block sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-hidden' },
+								{ id: 'details', className: 'sm:col-span-1 sm:order-2 xl:order-3' },
+							],
+						}}
+						sections={[
 								{
+									id: 'attachments',
+									column: 'attachments',
 									title: 'Attachments',
 									hideTitleOnDesktop: true,
-									key: 'attachments',
 									show: true,
 									content: (
 										<>
@@ -218,13 +220,11 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 										</>
 									),
 								},
-							],
-							[
 								{
-									key: 'Sheet Music',
+									id: 'sheet-music',
+									column: 'viewer',
 									show: isDesktop && !isCompactDesktop && !player.showFullscreen,
 									showOnMobile: false,
-									collapsible: false,
 									content: !!currentPdf ? (
 										<Pdf
 											filename={currentPdf?.download_url}
@@ -254,9 +254,9 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 										/>
 									),
 								},
-							],
-							[
 								{
+									id: 'learning',
+									column: 'details',
 									title: 'Learning',
 									hideTitleOnDesktop: true,
 									show: true,
@@ -288,11 +288,12 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 									),
 								},
 								{
+									id: 'description',
+									column: 'details',
 									title: 'Description',
 									show: true,
 									content: <SongDescription description={song.description} />,
 								},
-							],
 						]}
 					/>
 				</>

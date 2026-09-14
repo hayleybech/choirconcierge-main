@@ -25,7 +25,7 @@ import DeleteDialog from '../../components/DeleteDialog';
 import Prose from '../../components/Prose';
 import ButtonLink from '../../components/inputs/ButtonLink';
 import SimplePanel from '../../components/SimplePanel';
-import SectionLayout from '../Singers/SectionLayout';
+import SectionLayout from '../../components/SectionLayout';
 import EventType from '../../EventType';
 import EventSchedule from '../../components/Event/EventSchedule';
 import useRoute from '../../hooks/useRoute';
@@ -172,29 +172,33 @@ const Show = ({
 			<EditRepeatingEventDialog isOpen={editDialogIsOpen} setIsOpen={setEditDialogIsOpen} event={event} />
 
 			<SectionLayout
-				gridClassName="grid-cols-1 h-full divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 md:grid-cols-3 xl:grid-cols-4"
-				columnClassNames={[
-					'sm:col-span-1 md:col-span-2 xl:col-span-3 divide-y divide-gray-300',
-					'sm:col-span-1 divide-y divide-gray-300',
-				]}
-				columns={[
-					[
+				layout={{
+					className: 'grid-cols-1 h-full divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 md:grid-cols-3 xl:grid-cols-4',
+					columns: [
+						{ id: 'main', className: 'sm:col-span-1 md:col-span-2 xl:col-span-3 divide-y divide-gray-300' },
+						{ id: 'aside', className: 'sm:col-span-1 divide-y divide-gray-300' },
+					],
+				}}
+				sections={[
 						{
+							id: 'summary',
+							column: 'main',
 							title: 'Summary',
 							show: true,
 							content: <EventSummary event={event} timezone={pageProps.tenant.timezone_label} />,
 						},
 						{
+							id: 'location',
+							column: 'main',
 							title: 'Location',
 							show: true,
 							content: <EventLocation event={event} />,
 						},
-						{ title: 'Schedule', show: true, content: <EventSchedule event={event} /> },
-					],
-					[
+						{ id: 'schedule', column: 'main', title: 'Schedule', show: true, content: <EventSchedule event={event} /> },
 						{
+							id: 'attendance',
+							column: 'aside',
 							title: 'Attendance',
-							key: 'Attendance',
 							hideTitleOnDesktop: true,
 							show: true,
 							content: (
@@ -236,7 +240,6 @@ const Show = ({
 								</>
 							),
 						},
-					],
 				]}
 			/>
 		</>

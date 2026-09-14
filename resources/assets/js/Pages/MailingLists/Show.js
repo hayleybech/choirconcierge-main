@@ -18,7 +18,7 @@ import DeleteDialog from '../../components/DeleteDialog';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import TrialAntiSpamNotice from './TrialAntiSpamNotice';
-import SectionLayout from '../Singers/SectionLayout';
+import SectionLayout from '../../components/SectionLayout';
 
 const Show = ({ list, setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -116,11 +116,14 @@ const Show = ({ list, setSidebarOpen }) => {
 			</DeleteDialog>
 
 			<SectionLayout
-				gridClassName="grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0"
-				columnClassNames={['sm:col-span-1', 'sm:col-span-1']}
-				columns={[
-					[
+				layout={{
+					className: 'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0',
+					columns: [{ id: 'recipients', className: 'sm:col-span-1' }, { id: 'senders', className: 'sm:col-span-1' }],
+				}}
+				sections={[
 						{
+							id: 'recipients',
+							column: 'recipients',
 							title: 'Recipients',
 							content: (
 								<div className="h-full overflow-y-auto relative">
@@ -185,12 +188,11 @@ const Show = ({ list, setSidebarOpen }) => {
 								</div>
 							),
 						},
-					],
-
 					...(list.list_type === 'distribution'
 						? [
-								[
-									{
+								{
+										id: 'senders',
+										column: 'senders',
 										title: 'Senders',
 										content: (
 											<div className="h-full overflow-y-auto relative">
@@ -256,8 +258,7 @@ const Show = ({ list, setSidebarOpen }) => {
 												)}
 											</div>
 										),
-									},
-								],
+								},
 						  ]
 						: []),
 				]}

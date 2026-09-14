@@ -17,7 +17,7 @@ import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons, mailTypeIcons } from '../../../components/MailStatusTag';
 import MailStatusDetail from '../../../components/MailStatusDetail';
-import SectionLayout from '../../Singers/SectionLayout';
+import SectionLayout from '../../../components/SectionLayout';
 const Show = ({ log, setSidebarOpen }) => {
 	const { route } = useRoute();
 
@@ -88,9 +88,14 @@ const Show = ({ log, setSidebarOpen }) => {
 			</PageHeader>
 
 			<SectionLayout
-				columns={[
-					[
+				layout={{
+					className: 'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0',
+					columns: [{ className: 'sm:col-span-1' }, { className: 'sm:col-span-1' }],
+				}}
+				sections={[
 						{
+							id: 'message',
+							column: 0,
 							title: 'Message',
 							content: (
 								<div className="py-4 px-8 bg-gray-50">
@@ -102,13 +107,12 @@ const Show = ({ log, setSidebarOpen }) => {
 								</div>
 							),
 						},
-					],
-					[
 						{
+							id: 'activity',
+							column: 1,
 							title: 'Activity',
 							content: <Activity log={log} />,
 						},
-					],
 				]}
 			/>
 		</>
