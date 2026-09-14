@@ -1,10 +1,13 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
 import AppHead from '../../components/AppHead';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import useRoute from '../../hooks/useRoute';
 import { useForm } from '@inertiajs/react';
 import TextInput from '../../components/inputs/TextInput';
@@ -86,36 +89,26 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 		post(route('polls.store'));
 	};
 
+	const breadcrumbs = [
+		{ name: 'Polls', url: route('polls.index') },
+		{ name: 'Create Poll', url: route('polls.create') },
+	];
+
 	return (
 		<>
 			<AppHead title="Create Poll" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation
-					backUrl={route('polls.index')}
-					breadcrumbs={[{ name: 'Polls', url: route('polls.index') }]}
-				>
-					<PageTopBarTitle title="Create Poll" />
-				</PageTopNavigation>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Polls', url: route('polls.index') },
-									{ name: 'Create', url: route('polls.create') },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="poll" type="solid" className="mr-2" />
-							Create Poll
-						</PageHeading>
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="poll" type="solid" className="mr-2" />
+						Create Poll
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
 			<FormWrapper>
 				<Form onSubmit={submit}>

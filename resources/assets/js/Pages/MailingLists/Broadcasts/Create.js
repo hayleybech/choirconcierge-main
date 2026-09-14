@@ -1,9 +1,12 @@
 import React from 'react';
 import TenantLayout from '../../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../../components/PageHeader/PageHeading';
-import PageTopBar, { PageTopBarTitle, PageTopNavigation } from '../../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import AppHead from '../../../components/AppHead';
 import Label from '../../../components/inputs/Label';
 import TextInput from '../../../components/inputs/TextInput';
@@ -37,6 +40,11 @@ const Create = ({ lists, setSidebarOpen }) => {
 		post(route('communications.store'));
 	}
 
+	const breadcrumbs = [
+		{ name: 'Communications', url: route('communications.index') },
+		{ name: 'Send Email Broadcast', url: route('communications.create') },
+	];
+
 	return (
 		<>
 			<AppHead title="Send Email" />
@@ -44,32 +52,17 @@ const Create = ({ lists, setSidebarOpen }) => {
 			<TrialAntiSpamNotice />
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation
-					backUrl={route('communications.index')}
-					breadcrumbs={[{ name: 'Communications', url: route('communications.index') }]}
-				>
-					<PageTopBarTitle title="Send Email Broadcast" />
-				</PageTopNavigation>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Communications', url: route('communications.index') },
-									{ name: 'Send Email', url: route('communications.create') },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="inbox-out" type="solid" className="mr-2" />
-							Send Email Broadcast
-						</PageHeading>
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="inbox-out" type="solid" className="mr-2" />
+						Send Email Broadcast
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
 			<div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:w-full">
 				{lists.length > 0 ? (

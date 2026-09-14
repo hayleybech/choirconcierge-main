@@ -1,9 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import SongStatusTag from '../../components/SongStatusTag';
 import PitchButton from '../../components/PitchButton';
@@ -85,6 +90,10 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 		};
 	}, []);
 
+	const breadcrumbs = [
+		{ name: 'Songs', url: route('songs.index') },
+		{ name: song.title, url: route('songs.show', { song }) },
+	];
 	return (
 		<>
 			<AppHead title={`${song.title} - Songs`} />
@@ -102,95 +111,78 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 			) : (
 				<>
 					<PageTopBar setSidebarOpen={setSidebarOpen}>
-						<div className="flex justify-between grow">
-							<PageTopNavigation
-								backUrl={route('songs.index')}
-								breadcrumbs={[{ name: 'Songs', url: route('songs.index') }]}
-							>
-								<PageTopBarTitle title={song.title} />
-							</PageTopNavigation>
-							<PageActionsMenu>
-								{actions.map((action, key) => (
-									<ActionMenuItem
-										key={key}
-										url={action.url}
-										onClick={action.onClick}
-										variant={action.variant}
-									>
-										<Icon icon={action.icon} mr />
-										{action.label}
-									</ActionMenuItem>
-								))}
-							</PageActionsMenu>
-						</div>
+						<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+						<PageActionsMenu>
+							{actions.map((action, key) => (
+								<ActionMenuItem
+									key={key}
+									url={action.url}
+									onClick={action.onClick}
+									variant={action.variant}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</ActionMenuItem>
+							))}
+						</PageActionsMenu>
 					</PageTopBar>
-					<PageHeader2>
-						<div className="lg:flex lg:items-center lg:justify-between">
-							<div className="flex-1 min-w-0">
-								<div className="hidden lg:block">
-									<Breadcrumbs
-										breadcrumbs={[
-											{ name: 'Songs', url: route('songs.index') },
-											{ name: song.title, url: route('songs.show', { song }) },
-										]}
-										showLastChevron={false}
-									/>
-								</div>
-								<PageHeading>{song.title}</PageHeading>
-								<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
-									<PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="sm" />
-									<SongStatusTag status={new SongStatus(song.status.slug)} withLabel />
-									{song.categories.length > 0 && (
-										<div className="space-x-1.5 flex items-center">
-											{song.categories.map(category => (
-												<React.Fragment key={category.id}>
-													<SongCategoryTag category={category} />
-												</React.Fragment>
-											))}
-										</div>
-									)}
-									{song.ensembles.length > 0 && (
-										<div className="space-x-1.5 flex items-center">
-											{song.ensembles.map(ensemble => (
-												<span
-													key={ensemble.id}
-													className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800"
-												>
-													{ensemble.name}
-												</span>
-											))}
-										</div>
-									)}
-									<div className="flex items-center gap-2">
-										<DateTag icon="pencil" date={song.created_at} label="Created" />
-										<DateTag icon="pencil" date={song.updated_at} label="Updated" />
+					<PageHeader>
+						<PageHeaderContent>
+							<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+							<PageHeaderTitle>{song.title}</PageHeaderTitle>
+							<PageHeaderMeta>
+								<PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="sm" />
+								<SongStatusTag status={new SongStatus(song.status.slug)} withLabel />
+								{song.categories.length > 0 && (
+									<div className="space-x-1.5 flex items-center">
+										{song.categories.map(category => (
+											<React.Fragment key={category.id}>
+												<SongCategoryTag category={category} />
+											</React.Fragment>
+										))}
 									</div>
-									{!!song.show_for_prospects && (
-										<div>
-											<Icon icon="microphone-stand" mr className="text-sm text-emerald-500" />
-											<span className="text-sm font-medium text-gray-500 truncate">
-												Audition Song
+								)}
+								{song.ensembles.length > 0 && (
+									<div className="space-x-1.5 flex items-center">
+										{song.ensembles.map(ensemble => (
+											<span
+												key={ensemble.id}
+												className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800"
+											>
+												{ensemble.name}
 											</span>
-										</div>
-									)}
+										))}
+									</div>
+								)}
+								<div className="flex items-center gap-2">
+									<DateTag icon="pencil" date={song.created_at} label="Created" />
+									<DateTag icon="pencil" date={song.updated_at} label="Updated" />
 								</div>
-							</div>
-							<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-								{actions.map((action, key) => (
-									<Button
-										key={key}
-										href={action.url}
-										onClick={action.onClick}
-										size="sm"
-										variant={action.variant}
-									>
-										<Icon icon={action.icon} mr />
-										{action.label}
-									</Button>
-								))}
-							</div>
-						</div>
-					</PageHeader2>
+								{!!song.show_for_prospects && (
+									<div>
+										<Icon icon="microphone-stand" mr className="text-sm text-emerald-500" />
+										<span className="text-sm font-medium text-gray-500 truncate">
+											Audition Song
+										</span>
+									</div>
+								)}
+							</PageHeaderMeta>
+						</PageHeaderContent>
+						<PageHeaderActions>
+							{actions.map((action, key) => (
+								<Button
+									key={key}
+									href={action.url}
+									onClick={action.onClick}
+									size="sm"
+									variant={action.variant}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeader>
 					<DeleteDialog
 						title="Delete Song"
 						url={route('songs.destroy', { song })}

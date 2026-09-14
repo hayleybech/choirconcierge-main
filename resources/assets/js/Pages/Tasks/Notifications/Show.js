@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import AppHead from '../../../components/AppHead';
-import { PageHeader2 } from '../../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import Button from '../../../components/inputs/Button';
 import Icon from '../../../components/Icon';
@@ -35,20 +40,20 @@ const Show = ({ task, notification, setSidebarOpen }) => {
 		},
 	].filter(action => action.can);
 
+	const breadcrumbs = [
+		{ name: 'Onboarding', url: route('tasks.index') },
+		{ name: task.name, url: route('tasks.show', { task }) },
+		{
+			name: notification.subject,
+			url: route('tasks.notifications.show', { task, notification }),
+		},
+	];
+
 	return (
 		<>
 			<AppHead title={`${notification.subject} - Task Notifications for "${task.name}"`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('tasks.show', { task })}
-						breadcrumbs={[
-							{ name: 'Onboarding', url: route('tasks.index') },
-							{ name: task.name, url: route('tasks.show', { task }) },
-						]}
-					>
-						<PageTopBarTitle title={notification.subject} />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					<PageActionsMenu>
 						{actions.map(action => (
 							<ActionMenuItem
@@ -62,51 +67,36 @@ const Show = ({ task, notification, setSidebarOpen }) => {
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Onboarding', url: route('tasks.index') },
-									{ name: task.name, url: route('tasks.show', { task }) },
-									{
-										name: notification.subject,
-										url: route('tasks.notifications.show', { task, notification }),
-									},
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="bell" type="solid" className="mr-2" />
-							{notification.subject}
-						</PageHeading>
-						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
-							<div>Recipients: {notification.recipients}</div>
-							<div>Delay: {notification.delay}</div>
-							<DateTag icon="pencil" date={notification.created_at} label="Created" />
-							<DateTag icon="pencil" date={notification.updated_at} label="Updated" />
-						</div>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button
-								key={action.label}
-								href={action.url}
-								onClick={action.onClick}
-								size="sm"
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="bell" type="solid" className="mr-2" />
+						{notification.subject}
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<div>Recipients: {notification.recipients}</div>
+						<div>Delay: {notification.delay}</div>
+						<DateTag icon="pencil" date={notification.created_at} label="Created" />
+						<DateTag icon="pencil" date={notification.updated_at} label="Updated" />
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<DeleteDialog
 				title="Delete Notifications"

@@ -1,9 +1,12 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import Icon from '../../components/Icon';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import Label from '../../components/inputs/Label';
@@ -56,43 +59,28 @@ const Edit = ({ roles, singer, setSidebarOpen }) => {
 		setData('paid_until', data.paid_until?.plus(diff) ?? DateTime.now().plus(diff));
 	}
 
+	const breadcrumbs = [
+		{ name: 'Singers', url: route('singers.index') },
+		{ name: singer.user.name, url: route('singers.show', { singer }) },
+		{ name: 'Edit Membership', url: route('singers.edit', { singer }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`Edit Membership - ${singer.user.name}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('singers.show', { singer })}
-						breadcrumbs={[
-							{ name: 'Singers', url: route('singers.index') },
-							{ name: singer.user.name, url: route('singers.show', { singer }) },
-						]}
-					>
-						<PageTopBarTitle title="Edit Membership" />
-					</PageTopNavigation>
-				</div>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 			</PageTopBar>
 
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Singers', url: route('singers.index') },
-									{ name: singer.user.name, url: route('singers.show', { singer }) },
-									{ name: 'Edit Membership', url: route('singers.edit', { singer }) },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="users" type="solid" className="mr-2" />
-							Edit Membership
-						</PageHeading>
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="users" type="solid" className="mr-2" />
+						Edit Membership
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
 			<FormWrapper>
 				<Form onSubmit={submit}>

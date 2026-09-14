@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/Button';
 import Icon from '../../components/Icon';
@@ -27,17 +31,16 @@ const Index = ({ categories, setSidebarOpen }) => {
 	const [creatingCategory, setCreatingCategory] = useState(false);
 	const [deletingCategory, setDeletingCategory] = useState(null);
 
+	const breadcrumbs = [
+		{ name: 'Events', url: route('events.index') },
+		{ name: 'Event Types', url: route('event-types.index') },
+	];
+
 	return (
 		<>
 			<AppHead title="Event Types" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('events.index')}
-						breadcrumbs={[{ name: 'Events', url: route('events.index') }]}
-					>
-						<PageTopBarTitle title="Event Types" />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					{can.create_event && (
 						<PageActionsMenu>
 							<ActionMenuItem onClick={() => setCreatingCategory(true)} variant="primary">
@@ -46,35 +49,24 @@ const Index = ({ categories, setSidebarOpen }) => {
 							</ActionMenuItem>
 						</PageActionsMenu>
 					)}
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Events', url: route('events.index') },
-									{ name: 'Event Types', url: route('event-types.index') },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="tags" type="solid" className="mr-2" />
-							Event Types
-						</PageHeading>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{can.create_event && (
-							<Button onClick={() => setCreatingCategory(true)} size="sm" variant="primary">
-								<Icon icon="plus" mr />
-								Add New
-							</Button>
-						)}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="tags" type="solid" className="mr-2" />
+						Event Types
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{can.create_event && (
+						<Button onClick={() => setCreatingCategory(true)} size="sm" variant="primary">
+							<Icon icon="plus" mr />
+							Add New
+						</Button>
+					)}
+				</PageHeaderActions>
+			</PageHeader>
 
 			{/* Desktop Table */}
 			<div className="hidden lg:flex flex-col">

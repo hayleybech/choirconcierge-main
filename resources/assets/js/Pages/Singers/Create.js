@@ -1,110 +1,104 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import {useForm} from "@inertiajs/react";
-import Label from "../../components/inputs/Label";
-import TextInput from "../../components/inputs/TextInput";
-import DetailToggle from "../../components/inputs/DetailToggle";
-import Error from "../../components/inputs/Error";
-import Help from "../../components/inputs/Help";
-import FormSection from "../../components/FormSection";
-import Button from "../../components/inputs/Button";
-import ButtonLink from "../../components/inputs/ButtonLink";
-import CheckboxGroup from "../../components/inputs/CheckboxGroup";
-import { PageHeader2 } from "../../components/PageHeader/PageHeader";
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import AppHead from "../../components/AppHead";
-import Form from "../../components/Form";
-import FormFooter from "../../components/FormFooter";
-import GlobalUserSelect from "../../components/inputs/GlobalUserSelect";
-import DayInput from "../../components/inputs/Day";
-import {DateTime} from "luxon";
-import FormWrapper from "../../components/FormWrapper";
-import useRoute from "../../hooks/useRoute";
-import PageTopBar, { PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import { useForm } from '@inertiajs/react';
+import Label from '../../components/inputs/Label';
+import TextInput from '../../components/inputs/TextInput';
+import DetailToggle from '../../components/inputs/DetailToggle';
+import Error from '../../components/inputs/Error';
+import Help from '../../components/inputs/Help';
+import FormSection from '../../components/FormSection';
+import Button from '../../components/inputs/Button';
+import ButtonLink from '../../components/inputs/ButtonLink';
+import CheckboxGroup from '../../components/inputs/CheckboxGroup';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import AppHead from '../../components/AppHead';
+import Form from '../../components/Form';
+import FormFooter from '../../components/FormFooter';
+import GlobalUserSelect from '../../components/inputs/GlobalUserSelect';
+import DayInput from '../../components/inputs/Day';
+import { DateTime } from 'luxon';
+import FormWrapper from '../../components/FormWrapper';
+import useRoute from '../../hooks/useRoute';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import Icon from '../../components/Icon';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
 
-const Create = ({voice_parts, roles, setSidebarOpen}) => {
-    const { route } = useRoute();
+const Create = ({ voice_parts, roles, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    const { data, setData, post, processing, errors } = useForm({
-        create: true,
+	const { data, setData, post, processing, errors } = useForm({
+		create: true,
 
-        user_id: null,
-        first_name: '',
-        last_name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
+		user_id: null,
+		first_name: '',
+		last_name: '',
+		email: '',
+		password: '',
+		password_confirmation: '',
 
-        voice_part_id: 0,
-        reason_for_joining: '',
-        referrer: '',
-        membership_details: '',
+		voice_part_id: 0,
+		reason_for_joining: '',
+		referrer: '',
+		membership_details: '',
 
-        onboarding_disabled: false,
-        joined_at: undefined,
-        user_roles: [],
-    });
+		onboarding_disabled: false,
+		joined_at: undefined,
+		user_roles: [],
+	});
 
-    function submit(e) {
-        e.preventDefault();
-        post(route('singers.store'));
-    }
+	function submit(e) {
+		e.preventDefault();
+		post(route('singers.store'));
+	}
 
-    function setUser(value) {
-        if(typeof value === 'string') {
-            setData({
-                ...data,
-                email: value,
-                user_id: null,
-            }, value);
-            return;
-        }
+	function setUser(value) {
+		if (typeof value === 'string') {
+			setData(
+				{
+					...data,
+					email: value,
+					user_id: null,
+				},
+				value
+			);
+			return;
+		}
 
-        if(typeof value !== 'number') {
-            return;
-        }
+		if (typeof value !== 'number') {
+			return;
+		}
 
-        setData({
-            ...data,
-            user_id: value,
-            email: null,
-        });
-    }
+		setData({
+			...data,
+			user_id: value,
+			email: null,
+		});
+	}
 
-    return (
+	const breadcrumbs = [
+		{ name: 'Singers', url: route('singers.index') },
+		{ name: 'Create Singer', url: route('singers.create') },
+	];
+
+	return (
 		<>
 			<AppHead title="Add Singer" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('singers.index')}
-						breadcrumbs={[{ name: 'Singers', url: route('singers.index') }]}
-					>
-						<PageTopBarTitle title="Create Singer" />
-					</PageTopNavigation>
-				</div>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 			</PageTopBar>
 
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Singers', url: route('singers.index') },
-									{ name: 'Create', url: route('singers.create') },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="users" type="solid" className="mr-2" /> Create Singer
-						</PageHeading>
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="users" type="solid" className="mr-2" /> Create Singer
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
 			<FormWrapper>
 				<Form onSubmit={submit}>
@@ -263,8 +257,8 @@ const Create = ({voice_parts, roles, setSidebarOpen}) => {
 			</FormWrapper>
 		</>
 	);
-}
+};
 
-Create.layout = page => <TenantLayout children={page} />
+Create.layout = page => <TenantLayout children={page} />;
 
 export default Create;

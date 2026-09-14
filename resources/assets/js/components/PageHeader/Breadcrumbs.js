@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import Icon from '../Icon';
 
-const Breadcrumbs = ({ breadcrumbs, showLastChevron = true }) => (
-	<nav className="hidden sm:flex" aria-label="Breadcrumb">
+const Breadcrumbs = ({ breadcrumbs, className, showLastChevron = true }) => (
+	<nav aria-label="Breadcrumb" className={className}>
 		<ol className="flex items-center gap-3">
 			{breadcrumbs.map(({ name, url }, index) => (
 				<li key={index}>

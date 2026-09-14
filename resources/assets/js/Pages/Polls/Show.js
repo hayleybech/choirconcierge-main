@@ -1,10 +1,15 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
 import AppHead from '../../components/AppHead';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import useRoute from '../../hooks/useRoute';
 import { useForm } from '@inertiajs/react';
@@ -61,17 +66,16 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 		post(route('polls.vote', { poll: poll.id }));
 	};
 
+	const breadcrumbs = [
+		{ name: 'Polls', url: route('polls.index') },
+		{ name: poll.title, url: route('polls.show', { poll: poll.id }) },
+	];
+
 	return (
 		<>
 			<AppHead title={poll.title} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('polls.index')}
-						breadcrumbs={[{ name: 'Polls', url: route('polls.index') }]}
-					>
-						<PageTopBarTitle title={poll.title} />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					<PageActionsMenu>
 						{actions.map((action, key) => (
 							<ActionMenuItem key={key} url={action.url} method={action.method} variant={action.variant}>
@@ -80,83 +84,72 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Polls', url: route('polls.index') },
-									{ name: poll.title, url: route('polls.show', { poll: poll.id }) },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="poll" type="solid" className="mr-2" />
-							{poll.title}
-						</PageHeading>
-						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
-							<div className="text-sm text-gray-600 flex gap-1">
-								<span className="font-semibold">Status:</span>
-								{poll.is_closed ? (
-									<span className="text-gray-600 flex items-center">
-										<Icon icon="lock" mr /> Closed
-									</span>
-								) : (
-									<span className="text-emerald-700 flex items-center">
-										<Icon icon="lock-open" mr /> Open
-									</span>
-								)}
-							</div>
-							<div className="text-sm text-gray-600">
-								<span className="font-semibold">Deadline:</span>{' '}
-								{poll.close_at ? new Date(poll.close_at).toLocaleString() : 'None'}
-							</div>
-							{poll.ensembles?.length > 0 && (
-								<div className="text-sm text-gray-600 flex flex-wrap gap-1 items-center">
-									<span className="font-semibold">Ensembles:</span>
-									{poll.ensembles.map(ensemble => (
-										<Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
-											{ensemble.name}
-										</Badge>
-									))}
-								</div>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="poll" type="solid" className="mr-2" />
+						{poll.title}
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<div className="text-sm text-gray-600 flex gap-1">
+							<span className="font-semibold">Status:</span>
+							{poll.is_closed ? (
+								<span className="text-gray-600 flex items-center">
+									<Icon icon="lock" mr /> Closed
+								</span>
+							) : (
+								<span className="text-emerald-700 flex items-center">
+									<Icon icon="lock-open" mr /> Open
+								</span>
 							)}
-							<DateTag
-								icon="pencil"
-								label="Created"
-								date={poll.created_at}
-								format="DATETIME_SHORT"
-								className="text-gray-400"
-							/>
-							<DateTag
-								icon="pencil"
-								label="Updated"
-								date={poll.updated_at}
-								format="DATETIME_SHORT"
-								className="text-gray-400"
-							/>
 						</div>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button
-								key={action.label}
-								href={action.url}
-								method={action.method}
-								size="sm"
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+						<div className="text-sm text-gray-600">
+							<span className="font-semibold">Deadline:</span>{' '}
+							{poll.close_at ? new Date(poll.close_at).toLocaleString() : 'None'}
+						</div>
+						{poll.ensembles?.length > 0 && (
+							<div className="text-sm text-gray-600 flex flex-wrap gap-1 items-center">
+								<span className="font-semibold">Ensembles:</span>
+								{poll.ensembles.map(ensemble => (
+									<Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
+										{ensemble.name}
+									</Badge>
+								))}
+							</div>
+						)}
+						<DateTag
+							icon="pencil"
+							label="Created"
+							date={poll.created_at}
+							format="DATETIME_SHORT"
+							className="text-gray-400"
+						/>
+						<DateTag
+							icon="pencil"
+							label="Updated"
+							date={poll.updated_at}
+							format="DATETIME_SHORT"
+							className="text-gray-400"
+						/>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							method={action.method}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<FormWrapper>
 				<Form onSubmit={submit}>

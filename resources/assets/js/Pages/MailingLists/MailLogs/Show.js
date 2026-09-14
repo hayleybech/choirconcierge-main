@@ -1,8 +1,12 @@
 import React from 'react';
-import { PageHeader2 } from '../../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../../components/PageHeader/PageHeading';
-import PageTopBar, { PageTopBarTitle, PageTopNavigation } from '../../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import classNames from '../../../classNames';
 import AppHead from '../../../components/AppHead';
 import DateTag from '../../../components/DateTag';
@@ -19,6 +23,11 @@ const Show = ({ log, setSidebarOpen }) => {
 
 	const mailType = log.uid.split('-')[0];
 
+	const breadcrumbs = [
+		{ name: 'Communications', url: route('communications.index') },
+		{ name: log.subject, url: route('communications.show', { mail_log: log }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`${log.subject} - Mail Logs`} />
@@ -26,63 +35,48 @@ const Show = ({ log, setSidebarOpen }) => {
 			<TrialAntiSpamNotice />
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation
-					backUrl={route('communications.index')}
-					breadcrumbs={[{ name: 'Communications', url: route('communications.index') }]}
-				>
-					<PageTopBarTitle title={log.subject} />
-				</PageTopNavigation>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Communications', url: route('communications.index') },
-									{ name: log.subject, url: route('communications.show', { mail_log: log }) },
-								]}
-								showLastChevron={false}
-							/>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon={mailTypeIcons[mailType] ?? 'question'} type="solid" className="mr-2" />
+						{log.subject}
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<div>
+							Opens:{' '}
+							<span className="ml-0.5 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+								<Icon icon="eye" mr />
+								<span className="font-medium">{log.opens_count}</span>
+							</span>
 						</div>
-						<PageHeading>
-							<Icon icon={mailTypeIcons[mailType] ?? 'question'} type="solid" className="mr-2" />
-							{log.subject}
-						</PageHeading>
-						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
+						<div>From: {log.from}</div>
+						<div>To: {log.to}</div>
+						{log.cc && <div>Cc: {log.cc}</div>}
+						{log.bcc && <div>Bcc: {log.bcc}</div>}
+						<div className="flex items-center gap-4">
 							<div>
-								Opens:{' '}
-								<span className="ml-0.5 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-									<Icon icon="eye" mr />
-									<span className="font-medium">{log.opens_count}</span>
-								</span>
+								<Icon icon="paperclip" mr />
+								{log.has_attachments ? 'Has attachments' : 'No attachments'}
 							</div>
-							<div>From: {log.from}</div>
-							<div>To: {log.to}</div>
-							{log.cc && <div>Cc: {log.cc}</div>}
-							{log.bcc && <div>Bcc: {log.bcc}</div>}
-							<div className="flex items-center gap-4">
+							{log.size > 0 && (
 								<div>
-									<Icon icon="paperclip" mr />
-									{log.has_attachments ? 'Has attachments' : 'No attachments'}
+									<Icon icon="hdd" mr />
+									{log.size < 1024 * 1024
+										? `${(log.size / 1024).toFixed(1)} KB`
+										: `${(log.size / (1024 * 1024)).toFixed(1)} MB`}
 								</div>
-								{log.size > 0 && (
-									<div>
-										<Icon icon="hdd" mr />
-										{log.size < 1024 * 1024
-											? `${(log.size / 1024).toFixed(1)} KB`
-											: `${(log.size / (1024 * 1024)).toFixed(1)} MB`}
-									</div>
-								)}
-							</div>
-							<div className="flex items-center gap-2">
-								<DateTag icon="pencil" date={log.created_at} label="Created" />
-								<DateTag icon="pencil" date={log.updated_at} label="Updated" />
-							</div>
+							)}
 						</div>
-					</div>
-				</div>
-			</PageHeader2>
+						<div className="flex items-center gap-2">
+							<DateTag icon="pencil" date={log.created_at} label="Created" />
+							<DateTag icon="pencil" date={log.updated_at} label="Updated" />
+						</div>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+			</PageHeader>
 
 			<SectionLayout
 				columns={[

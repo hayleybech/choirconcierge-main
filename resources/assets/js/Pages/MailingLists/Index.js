@@ -1,8 +1,13 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/Button';
 import Icon from '../../components/Icon';
@@ -33,6 +38,11 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 		bulkEdit.action,
 	].filter(action => (action?.can ? can[action.can] : !!action));
 
+	const breadcrumbs = [
+		{ name: 'Communications', url: route('communications.index') },
+		{ name: 'Mailing Lists', url: route('groups.index') },
+	];
+
 	return (
 		<>
 			<AppHead title="Mailing Lists" />
@@ -40,8 +50,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 			<TrialAntiSpamNotice />
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopBarTitle title="Mailing Lists" />
+				<PageTopNavigation breadcrumbs={breadcrumbs}>
 					<PageActionsMenu>
 						{actions.map(action => (
 							<ActionMenuItem
@@ -55,31 +64,32 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
+				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<PageHeading>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
 						<Icon icon="mail-bulk" type="solid" className="mr-2" />
 						Mailing Lists
-					</PageHeading>
+					</PageHeaderTitle>
+				</PageHeaderContent>
 
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button
-								key={action.label}
-								href={action.url}
-								onClick={action.onClick}
-								size="sm"
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Mailing Lists?`}

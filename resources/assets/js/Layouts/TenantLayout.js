@@ -18,6 +18,7 @@ import { ErrorBoundary } from '@sentry/react';
 import OuterPageErrorFallback from './OuterPageErrorFallback';
 import { router } from '@inertiajs/react';
 import { useRNHandler } from '../lib/reactNative';
+import { SidebarProvider } from '../contexts/sidebar-context';
 
 export default function TenantLayout({ children }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -313,6 +314,7 @@ export default function TenantLayout({ children }) {
 
 	return (
 		<PlayerContext.Provider value={player}>
+			<SidebarProvider setSidebarOpen={setSidebarOpen}>
 			<div className="h-screen flex overflow-hidden bg-gray-100">
 				{isMobileOrTablet ? (
 					<SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} choirs={userChoirs} tenant={tenant} setShowImpersonateModal={setShowImpersonateModal} />
@@ -344,8 +346,7 @@ export default function TenantLayout({ children }) {
 							)}
 
 						<ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
-							{/* @todo REVIEW THIS */}
-							{React.isValidElement(children) ? React.cloneElement(children, {setSidebarOpen}) : children}
+							{children}
 						</ErrorBoundary>
 					</main>
 
@@ -363,6 +364,7 @@ export default function TenantLayout({ children }) {
 
 				<ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
 			</div>
+			</SidebarProvider>
 		</PlayerContext.Provider>
 	);
 }

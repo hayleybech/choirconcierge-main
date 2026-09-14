@@ -1,5 +1,13 @@
 import React from 'react';
-import PageHeader from '../../components/PageHeader/PageHeader';
+
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import { useForm, router } from '@inertiajs/react';
 import useRoute from '../../hooks/useRoute';
@@ -14,14 +22,14 @@ import CentralLayout from '../../Layouts/CentralLayout';
 import classNames from '../../classNames';
 import DateTag from '../../components/DateTag';
 
-const TwoFactor = ({ enabled, qr_code, recovery_codes }) => {
+const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 	const { route } = useRoute();
 
 	const { data, setData, post, processing, errors, reset } = useForm({
 		code: '',
 	});
 
-	const enableTwoFactor = (e) => {
+	const enableTwoFactor = e => {
 		e.preventDefault();
 		post(route('central.account.two-factor.store'), {
 			preserveScroll: true,
@@ -39,23 +47,36 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes }) => {
 
 	const regenerateRecoveryCodes = () => {
 		if (confirm('Are you sure you want to regenerate recovery codes? Your old codes will no longer work.')) {
-			router.post(route('central.account.two-factor.regenerate'), {}, {
-				preserveScroll: true,
-			});
+			router.post(
+				route('central.account.two-factor.regenerate'),
+				{},
+				{
+					preserveScroll: true,
+				}
+			);
 		}
 	};
+
+	const breadcrumbs = [
+		{ name: 'Edit Profile', url: route('central.account.edit') },
+		{ name: 'Two-Factor Authentication', url: route('central.account.two-factor.show') },
+	];
 
 	return (
 		<>
 			<AppHead title="Two-Factor Authentication" />
-			<PageHeader
-				title="Two-Factor Authentication"
-				icon="shield-alt"
-				breadcrumbs={[
-					{ name: 'Edit Profile', url: route('central.account.edit') },
-					{ name: 'Two-Factor Authentication', url: route('central.account.two-factor.show') },
-				]}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs} />
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="shield-alt" type="solid" className="mr-2" />
+						Two-Factor Authentication
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
 			<FormWrapper>
 				{!enabled && (
@@ -66,11 +87,15 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes }) => {
 						>
 							<div className="sm:col-span-6">
 								<p className="text-sm text-gray-600 mb-4">
-									To enable two-factor authentication, scan the following QR code using your phone's authenticator application (e.g. Google Authenticator, Authy).
+									To enable two-factor authentication, scan the following QR code using your phone's
+									authenticator application (e.g. Google Authenticator, Authy).
 								</p>
-								
-								<div className="mb-4 p-4 bg-white inline-block rounded-lg shadow-sm border border-gray-200" dangerouslySetInnerHTML={{ __html: qr_code }} />
-								
+
+								<div
+									className="mb-4 p-4 bg-white inline-block rounded-lg shadow-sm border border-gray-200"
+									dangerouslySetInnerHTML={{ __html: qr_code }}
+								/>
+
 								<div className="mb-4">
 									<Label label="Authentication Code" forInput="code" />
 									<TextInput
@@ -101,14 +126,22 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes }) => {
 						>
 							<div className="sm:col-span-6">
 								<p className="text-sm text-gray-600 mb-4">
-									Two-factor authentication is currently active. If you lose your phone, you can use one of the recovery codes below to log in.
+									Two-factor authentication is currently active. If you lose your phone, you can use
+									one of the recovery codes below to log in.
 								</p>
-								
+
 								<div className="grid grid-cols-2 gap-2 mb-4 p-4 bg-gray-50 rounded border border-gray-200 font-mono text-sm">
-									{recovery_codes.map(({code, used_at}, index) => (
+									{recovery_codes.map(({ code, used_at }, index) => (
 										<div key={index} className="flex gap-1">
 											<pre className={classNames(!!used_at && 'line-through')}>{code}</pre>
-											{used_at && <DateTag date={used_at} format="DATETIME_SHORT" className="text-gray-400 text-xs" label="Used at" />}
+											{used_at && (
+												<DateTag
+													date={used_at}
+													format="DATETIME_SHORT"
+													className="text-gray-400 text-xs"
+													label="Used at"
+												/>
+											)}
 										</div>
 									))}
 								</div>

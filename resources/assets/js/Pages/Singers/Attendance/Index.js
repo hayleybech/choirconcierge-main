@@ -1,9 +1,13 @@
 import React from 'react';
 import TenantLayout from '../../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../../components/Icon';
 import Button from '../../../components/inputs/Button';
@@ -31,20 +35,17 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 
 	const sortFilterForm = useSortFilterForm(['singers.attendance', { singer }], filters, sorts);
 
+	const breadcrumbs = [
+		{ name: 'Singers', url: route('singers.index') },
+		{ name: singer.user.name, url: route('singers.show', { singer }) },
+		{ name: 'Attendance Records', url: route('singers.attendance', { singer }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`Attendance - ${singer.user.name}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('singers.show', { singer })}
-						breadcrumbs={[
-							{ name: 'Singers', url: route('singers.index') },
-							{ name: singer.user.name, url: route('singers.show', { singer }) },
-						]}
-					>
-						<PageTopBarTitle title="Attendance Records" />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					{filterAction && (
 						<PageActionsMenu>
 							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
@@ -53,37 +54,25 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 							</ActionMenuItem>
 						</PageActionsMenu>
 					)}
-				</div>
 			</PageTopBar>
 
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Singers', url: route('singers.index') },
-									{ name: singer.user.name, url: route('singers.show', { singer }) },
-									{ name: 'Attendance', url: route('singers.attendance', { singer }) },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="calendar-check" type="solid" className="mr-2" />
-							Attendance Records
-						</PageHeading>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{filterAction && (
-							<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
-								<Icon icon="filter" mr />
-								Filter
-							</Button>
-						)}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="calendar-check" type="solid" className="mr-2" />
+						Attendance Records
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{filterAction && (
+						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+							<Icon icon="filter" mr />
+							Filter
+						</Button>
+					)}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<IndexContainer
 				showFilters={showFilters}

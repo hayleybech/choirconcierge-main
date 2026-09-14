@@ -10,6 +10,7 @@ import OuterPageErrorFallback from "./OuterPageErrorFallback";
 import {ErrorBoundary} from "@sentry/react";
 import { router } from '@inertiajs/react';
 import { useRNHandler } from '../lib/reactNative';
+import { SidebarProvider } from '../contexts/sidebar-context';
 
 export default function CentralLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -38,6 +39,7 @@ export default function CentralLayout({ children }) {
         })
 
     return (
+        <SidebarProvider setSidebarOpen={setSidebarOpen}>
         <div className="h-screen flex overflow-hidden bg-gray-100">
             {isMobileOrTablet ? (
                 <>
@@ -50,11 +52,11 @@ export default function CentralLayout({ children }) {
             )}
 
             <div className="flex flex-col w-0 flex-1 overflow-hidden">
-                {!isWebView && (
-                    <LayoutTopBar
-                        setSidebarOpen={setSidebarOpen}
-                    />
-                )}
+                {/*{!isWebView && (*/}
+                {/*    <LayoutTopBar*/}
+                {/*        setSidebarOpen={setSidebarOpen}*/}
+                {/*    />*/}
+                {/*)}*/}
 
                 <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
                     <ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
@@ -67,5 +69,6 @@ export default function CentralLayout({ children }) {
 
             {/*<ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />*/}
         </div>
+        </SidebarProvider>
     )
 }

@@ -1,5 +1,13 @@
 import React from 'react'
-import PageHeader from "../../../components/PageHeader/PageHeader";
+
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from "../../../components/PageTopBar";
+import Icon from "../../../components/Icon";
 import AppHead from "../../../components/AppHead";
 import useRoute from "../../../hooks/useRoute";
 import CentralLayout from "../../../Layouts/CentralLayout";
@@ -18,7 +26,7 @@ import ButtonLink from "../../../components/inputs/ButtonLink";
 import Button from "../../../components/inputs/Button";
 import FormWrapper from "../../../components/FormWrapper";
 
-const Create = ({ centralDomain, timezones }) => {
+const Create = ({ centralDomain, timezones, setSidebarOpen }) => {
     const { route } = useRoute();
 
     const { data, setData, post, processing, errors } = useForm({
@@ -39,13 +47,23 @@ const Create = ({ centralDomain, timezones }) => {
     return (
         <>
             <AppHead title="Create Organisation" />
-            <PageHeader
-                title="Create Organisation"
-                breadcrumbs={[
+            <PageTopBar setSidebarOpen={setSidebarOpen}>
+                <PageTopNavigation breadcrumbs={[
                     { name: 'Organisations', url: route('central.tenants.index')},
                     { name: 'Create', url: route('central.tenants.create') },
-                ]}
-            />
+                ]} />
+            </PageTopBar>
+            <PageHeader>
+                <PageHeaderContent>
+                    <PageHeaderBreadcrumbs breadcrumbs={[
+                        { name: 'Organisations', url: route('central.tenants.index')},
+                        { name: 'Create', url: route('central.tenants.create') },
+                    ]} />
+                    <PageHeaderTitle>
+                        <Icon icon="building" type="solid" className="mr-2" /> Create Organisation
+                    </PageHeaderTitle>
+                </PageHeaderContent>
+            </PageHeader>
 
             <FormWrapper>
                 <Form onSubmit={submit}>

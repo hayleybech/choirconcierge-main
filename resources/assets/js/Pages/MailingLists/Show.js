@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/Button';
 import AppHead from '../../components/AppHead';
@@ -35,6 +40,12 @@ const Show = ({ list, setSidebarOpen }) => {
 		distribution: 'Mailout',
 	};
 
+	const breadcrumbs = [
+		{ name: 'Communications', url: route('communications.index') },
+		{ name: 'Mailing Lists', url: route('groups.index') },
+		{ name: list.title, url: route('groups.show', { group: list }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`${list.title} - Mailing Lists`} />
@@ -42,16 +53,7 @@ const Show = ({ list, setSidebarOpen }) => {
 			<TrialAntiSpamNotice />
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('groups.index')}
-						breadcrumbs={[
-							{ name: 'Communications', url: route('communications.index') },
-							{ name: 'Mailing Lists', url: route('groups.index') },
-						]}
-					>
-						<PageTopBarTitle title={list.title} />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					<PageActionsMenu>
 						{actions.map(action => (
 							<ActionMenuItem
@@ -65,58 +67,44 @@ const Show = ({ list, setSidebarOpen }) => {
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Communications', url: route('communications.index') },
-									{ name: 'Mailing Lists', url: route('groups.index') },
-									{ name: list.title, url: route('groups.show', { group: list }) },
-								]}
-								showLastChevron={false}
-							/>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon={list.type_icon} mr />
+						{list.title}
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<div>
+							<Icon icon={list.type_icon} mr className="text-gray-400" />
+							{list_type_labels[list.list_type]}
 						</div>
-						<PageHeading>
-							<span className="flex items-center">
-								<Icon icon={list.type_icon} mr />
-								{list.title}
-							</span>
-						</PageHeading>
-						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
-							<div>
-								<Icon icon={list.type_icon} mr className="text-gray-400" />
-								{list_type_labels[list.list_type]}
-							</div>
-							<div>
-								<strong>{list.email.split('@')[0]}@</strong>
-								<span className="text-gray-500">{list.email.split('@')[1]}</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<DateTag icon="pencil" date={list.created_at} label="Created" />
-								<DateTag icon="pencil" date={list.updated_at} label="Updated" />
-							</div>
+						<div>
+							<strong>{list.email.split('@')[0]}@</strong>
+							<span className="text-gray-500">{list.email.split('@')[1]}</span>
 						</div>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button
-								key={action.label}
-								href={action.url}
-								onClick={action.onClick}
-								size="sm"
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+						<div className="flex items-center gap-2">
+							<DateTag icon="pencil" date={list.created_at} label="Created" />
+							<DateTag icon="pencil" date={list.updated_at} label="Updated" />
+						</div>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<DeleteDialog
 				title="Delete Mailing Lists"

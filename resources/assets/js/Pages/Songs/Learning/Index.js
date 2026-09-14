@@ -1,8 +1,12 @@
 import React from 'react';
-import { PageHeader2 } from '../../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
@@ -30,20 +34,17 @@ const Index = ({ song, voiceParts, setSidebarOpen }) => {
 		);
 	};
 
+	const breadcrumbs = [
+		{ name: 'Songs', url: route('songs.index') },
+		{ name: song.title, url: route('songs.show', { song }) },
+		{ name: 'Learning Status List', url: route('songs.singers.index', { song }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`Learning Status List - ${song.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('songs.show', { song })}
-						breadcrumbs={[
-							{ name: 'Songs', url: route('songs.index') },
-							{ name: song.title, url: route('songs.show', { song }) },
-						]}
-					>
-						<PageTopBarTitle title="Learning Status List" />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					{actions.length > 0 && (
 						<PageActionsMenu>
 							{actions.map((action, key) => (
@@ -59,42 +60,30 @@ const Index = ({ song, voiceParts, setSidebarOpen }) => {
 							))}
 						</PageActionsMenu>
 					)}
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Songs', url: route('songs.index') },
-									{ name: song.title, url: route('songs.show', { song }) },
-									{ name: 'Learning Status List', url: route('songs.singers.index', { song }) },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="list-music" type="solid" className="mr-2" />
-							Learning Status List
-						</PageHeading>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button
-								key={action.label}
-								href={action.url}
-								onClick={action.onClick}
-								size="sm"
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="list-music" type="solid" className="mr-2" />
+						Learning Status List
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<BulkEditBar
 				bulkEdit={bulkEdit}

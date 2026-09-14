@@ -1,8 +1,12 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/Button';
 import Icon from '../../components/Icon';
@@ -22,8 +26,7 @@ const Index = ({ tasks, setSidebarOpen }) => {
 		<>
 			<AppHead title="Onboarding" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopBarTitle title="Onboarding" />
+				<PageTopNavigation title="Onboarding">
 					<PageActionsMenu>
 						{can.create_task && (
 							<ActionMenuItem url={route('tasks.create')} variant="primary">
@@ -32,25 +35,23 @@ const Index = ({ tasks, setSidebarOpen }) => {
 							</ActionMenuItem>
 						)}
 					</PageActionsMenu>
-				</div>
+				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<PageHeading>
-							<Icon icon="tasks" type="solid" className="mr-2" /> Onboarding Tasks
-						</PageHeading>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{can.create_task && (
-							<Button href={route('tasks.create')} size="sm" variant="primary">
-								<Icon icon="plus" mr />
-								Add New
-							</Button>
-						)}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderTitle>
+						<Icon icon="tasks" type="solid" className="mr-2" /> Onboarding Tasks
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{can.create_task && (
+						<Button href={route('tasks.create')} size="sm" variant="primary">
+							<Icon icon="plus" mr />
+							Add New
+						</Button>
+					)}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<IndexContainer
 				tableDesktop={<TaskTableDesktop tasks={tasks} />}

@@ -1,8 +1,13 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/Button';
@@ -74,8 +79,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can, setSide
 		<>
 			<AppHead title="Events" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopBarTitle title="Events" />
+				<PageTopNavigation title="Events">
 					<PageActionsMenu>
 						{actions.map((action, key) => (
 							<ActionMenuItem
@@ -92,39 +96,37 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can, setSide
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
+				</PageTopNavigation>
 			</PageTopBar>
 
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<PageHeading>
-							<Icon icon="calendar" type="solid" className="mr-2" /> Events
-						</PageHeading>
-						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
-							<div>Calendar Sync URL: {route('events.feed')}</div>
-						</div>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button
-								key={action.label}
-								href={action.url}
-								onClick={action.onClick}
-								size="sm"
-								variant={action.variant}
-								external={action.download}
-								download={action.download}
-								method={action.method}
-								disabled={action.disabled}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderTitle>
+						<Icon icon="calendar" type="solid" className="mr-2" /> Events
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<div>Calendar Sync URL: {route('events.feed')}</div>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+							external={action.download}
+							download={action.download}
+							method={action.method}
+							disabled={action.disabled}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Events?`}

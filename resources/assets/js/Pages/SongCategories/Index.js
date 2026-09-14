@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/Button';
 import Icon from '../../components/Icon';
@@ -36,17 +40,16 @@ const Index = ({ categories, setSidebarOpen }) => {
 		},
 	].filter(action => action.can);
 
+	const breadcrumbs = [
+		{ name: 'Songs', url: route('songs.index') },
+		{ name: 'Song Categories', url: route('song-categories.index') },
+	];
+
 	return (
 		<>
 			<AppHead title="Song Categories" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('songs.index')}
-						breadcrumbs={[{ name: 'Songs', url: route('songs.index') }]}
-					>
-						<PageTopBarTitle title="Song Categories" />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					{actions.length > 0 && (
 						<PageActionsMenu>
 							{actions.map(action => (
@@ -57,35 +60,24 @@ const Index = ({ categories, setSidebarOpen }) => {
 							))}
 						</PageActionsMenu>
 					)}
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Songs', url: route('songs.index') },
-									{ name: 'Song Categories', url: route('song-categories.index') },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="tags" type="solid" className="mr-2" />
-							Song Categories
-						</PageHeading>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button key={action.label} onClick={action.onClick} size="sm" variant={action.variant}>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="tags" type="solid" className="mr-2" />
+						Song Categories
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button key={action.label} onClick={action.onClick} size="sm" variant={action.variant}>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			{/* Desktop Table */}
 			<div className="hidden lg:flex flex-col">

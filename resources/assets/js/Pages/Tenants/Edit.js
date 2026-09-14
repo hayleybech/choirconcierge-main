@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageTopBarTitle } from '../../components/PageTopBar';
+import { PageHeader, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import { useForm } from '@inertiajs/react';
 import Label from '../../components/inputs/Label';
 import TextInput from '../../components/inputs/TextInput';
@@ -31,14 +30,14 @@ const Edit = ({ organisation, centralDomain, timezones, setSidebarOpen }) => {
 		<>
 			<AppHead title="Organisation Settings" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopBarTitle title="Organisation Settings" />
+				<PageTopNavigation title="Organisation Settings" />
 			</PageTopBar>
-			<PageHeader2>
-				<PageHeading>
+			<PageHeader>
+				<PageHeaderTitle>
 					<Icon icon="cogs" type="solid" className="mr-2" />
 					Organisation Settings
-				</PageHeading>
-			</PageHeader2>
+				</PageHeaderTitle>
+			</PageHeader>
 
 			<EditForm organisation={organisation} centralDomain={centralDomain} timezones={timezones} />
 			<EnsemblesList organisation={organisation} />

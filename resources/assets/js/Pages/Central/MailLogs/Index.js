@@ -1,5 +1,8 @@
 import React from 'react'
-import PageHeader from "../../../components/PageHeader/PageHeader";
+
+import { PageHeader, PageHeaderContent, PageHeaderTitle } from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from "../../../components/PageTopBar";
+import Icon from "../../../components/Icon";
 import AppHead from "../../../components/AppHead";
 import IndexContainer from "../../../components/IndexContainer";
 import useRoute from "../../../hooks/useRoute";
@@ -7,7 +10,7 @@ import CentralLayout from "../../../Layouts/CentralLayout";
 import MailLogTableMobile from './MailLogTableMobile';
 import MailLogTableDesktop from './MailLogTableDesktop';
 
-const Index = ({ logs }) => {
+const Index = ({ logs, setSidebarOpen }) => {
     const { route } = useRoute();
 
     // const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -25,15 +28,17 @@ const Index = ({ logs }) => {
 
     return (
         <>
-            <AppHead title="Tenants" />
-            <PageHeader
-                title="Mail Logs"
-                icon="history"
-                // actions={[
-                //     filterAction,
-                // ]}
-                // optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
-            />
+            <AppHead title="Mail Logs" />
+            <PageTopBar setSidebarOpen={setSidebarOpen}>
+                <PageTopNavigation title="Mail Logs" />
+            </PageTopBar>
+            <PageHeader>
+                <PageHeaderContent>
+                    <PageHeaderTitle>
+                        <Icon icon="history" type="solid" className="mr-2" /> Mail Logs
+                    </PageHeaderTitle>
+                </PageHeaderContent>
+            </PageHeader>
 
             <IndexContainer
                 // showFilters={showFilters}

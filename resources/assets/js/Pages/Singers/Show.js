@@ -1,6 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
 import VoicePartTag from '../../components/VoicePartTag';
 import SingerStatusTag from '../../components/SingerStatusTag';
 import ButtonLink from '../../components/inputs/ButtonLink';
@@ -24,11 +31,9 @@ import CustomFieldsSection from './sections/CustomFieldsSection';
 import SingerAttendanceSummary from '../../components/Attendance/SingerAttendanceSummary';
 import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 import { usePhoneBreadcrumb } from '../../lib/reactNative';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
 import Button from '../../components/inputs/Button';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 
 const Show = ({
 	singer,
@@ -80,15 +85,17 @@ const Show = ({
 		.filter(action => action.can === true || singer.can[action.can])
 		.filter(action => !!action);
 
+	const breadcrumbs = [
+		{ name: 'Singers', url: route('singers.index') },
+		{ name: singer.user.name, url: route('singers.show', { singer }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`${singer.user.name} - Singers`} />
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation backUrl={route('singers.index')} breadcrumbs={[{ name: 'Singers', url: route('singers.index') }]}>
-						<PageTopBarTitle title={singer.user.name} />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 
 					<PageActionsMenu>
 						{filteredActions.map((action, key) => (
@@ -107,72 +114,61 @@ const Show = ({
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
 			</PageTopBar>
 
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex sm:items-center">
-						{singer.user.profile_avatar_url && (
-							<img
-								src={singer.user.profile_avatar_url}
-								alt={singer.user.name}
-								className="h-32 rounded-md mb-3 lg:mb-0 mr-6"
-							/>
-						)}
-						<div className="flex-1 min-w-0">
-							<div className="hidden lg:block">
-								<Breadcrumbs
-									breadcrumbs={[
-										{ name: 'Singers', url: route('singers.index') },
-										{ name: singer.user.name, url: route('singers.show', { singer }) },
-									]}
-									showLastChevron={false}
-								/>
-							</div>
-							<PageHeading>
-								<span className="flex flex-col lg:flex-row lg:items-center gap-x-1.5">
-									{singer.user.name}{' '}
-									{singer.user.pronouns && <Pronouns pronouns={singer.user.pronouns} />}
-								</span>
-							</PageHeading>
+			<PageHeader>
+				<div className="flex sm:items-center">
+					{singer.user.profile_avatar_url && (
+						<img
+							src={singer.user.profile_avatar_url}
+							alt={singer.user.name}
+							className="h-32 rounded-md mb-3 lg:mb-0 mr-6"
+						/>
+					)}
+					<PageHeaderContent>
+						<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+						<PageHeaderTitle>
+							<span className="flex flex-col lg:flex-row lg:items-center gap-x-1.5">
+								{singer.user.name}{' '}
+								{singer.user.pronouns && <Pronouns pronouns={singer.user.pronouns} />}
+							</span>
+						</PageHeaderTitle>
 
-							<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
-								{singer.enrolments.length === 1 && singer.enrolments?.[0]?.voice_part && (
-									<div>
-										<VoicePartTag
-											key={singer.enrolments[0].id}
-											title={singer.enrolments[0].voice_part.title}
-											colour={singer.enrolments[0].voice_part.colour}
-										/>
-									</div>
-								)}
-								<SingerStatusTag status={new SingerStatus(singer.status.status)} withLabel />
-								<DateTag date={singer.joined_at} label="Joined" className="hidden lg:block" />
-							</div>
-						</div>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{/* Desktop */}
-						{filteredActions.map((action, key) => (
-							<Button
-								key={action.label}
-								href={action.url}
-								onClick={action.onClick}
-								size="sm"
-								variant={action.variant}
-								external={action.download}
-								download={action.download}
-								method={action.method}
-								disabled={action.disabled}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
+						<PageHeaderMeta>
+							{singer.enrolments.length === 1 && singer.enrolments?.[0]?.voice_part && (
+								<div>
+									<VoicePartTag
+										key={singer.enrolments[0].id}
+										title={singer.enrolments[0].voice_part.title}
+										colour={singer.enrolments[0].voice_part.colour}
+									/>
+								</div>
+							)}
+							<SingerStatusTag status={new SingerStatus(singer.status.status)} withLabel />
+							<DateTag date={singer.joined_at} label="Joined" className="hidden lg:block" />
+						</PageHeaderMeta>
+					</PageHeaderContent>
 				</div>
-			</PageHeader2>
+				<PageHeaderActions>
+					{/* Desktop */}
+					{filteredActions.map((action, key) => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+							external={action.download}
+							download={action.download}
+							method={action.method}
+							disabled={action.disabled}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<DeleteDialog
 				title="Delete Singer"

@@ -1,5 +1,13 @@
 import React from 'react';
-import PageHeader from '../../../components/PageHeader/PageHeader';
+
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import classNames from '../../../classNames';
 import AppHead from '../../../components/AppHead';
 import DateTag from '../../../components/DateTag';
@@ -10,18 +18,29 @@ import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons, mailTypeIcons } from '../../../components/MailStatusTag';
 import MailStatusDetail from '../../../components/MailStatusDetail';
 import SectionLayout from '../../Singers/SectionLayout';
-const Show = ({ log }) => {
+const Show = ({ log, setSidebarOpen }) => {
 	const { route } = useRoute();
 
 	const mailType = log.uid.split('-')[0];
+	const breadcrumbs = [
+		{ name: 'Mail Logs', url: route('central.mail-logs.index') },
+		{ name: log.subject, url: route('central.mail-logs.show', { mail_log: log }) },
+	];
 
 	return (
 		<>
 			<AppHead title={`${log.subject} - Mail Logs`} />
-			<PageHeader
-				title={log.subject}
-				icon={mailTypeIcons[mailType] ?? 'question'}
-				meta={
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs} />
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon={mailTypeIcons[mailType] ?? 'question'} type="solid" className="mr-2" />
+						{log.subject}
+					</PageHeaderTitle>
+					<PageHeaderMeta>
 					<>
 						<div>
 							Opens:
@@ -63,14 +82,10 @@ const Show = ({ log }) => {
 							<DateTag icon="pencil" date={log.created_at} label="Created" />
 							<DateTag icon="pencil" date={log.updated_at} label="Updated" />
 						</div>
-					</>
-				}
-				breadcrumbs={[
-					{ name: 'Mail Logs', url: route('central.mail-logs.index') },
-					{ name: log.subject, url: route('central.mail-logs.show', { mail_log: log }) },
-				]}
-				actions={[]}
-			/>
+						</>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+			</PageHeader>
 
 			<SectionLayout
 				columns={[

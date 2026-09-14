@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/Button';
 import Icon from '../../components/Icon';
@@ -31,17 +36,16 @@ const Show = ({ stack, setSidebarOpen }) => {
 		},
 	].filter(action => stack.can[action.can] || can[action.can]);
 
+	const breadcrumbs = [
+		{ name: 'Riser Stacks', url: route('stacks.index') },
+		{ name: stack.title, url: route('stacks.show', { tenant, stack }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`${stack.title} - Riser Stacks`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('stacks.index')}
-						breadcrumbs={[{ name: 'Riser Stacks', url: route('stacks.index') }]}
-					>
-						<PageTopBarTitle title={stack.title} />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					<PageActionsMenu>
 						{actions.map((action, key) => (
 							<ActionMenuItem
@@ -55,60 +59,49 @@ const Show = ({ stack, setSidebarOpen }) => {
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Riser Stacks', url: route('stacks.index') },
-									{ name: stack.title, url: route('stacks.show', { tenant, stack }) },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<span className="flex items-center">
-								<Icon icon="people-arrows" type="solid" className="mr-2" />
-								{stack.title}
-							</span>
-						</PageHeading>
-						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
-							<span>Rows: {stack.rows}</span>
-							<span>Columns: {stack.columns}</span>
-							<span>Singers on front row: {stack.front_row_length}</span>
-							<span>Front row on floor: {stack.front_row_on_floor ? 'Yes' : 'No'}</span>
-							{stack.ensembles.length > 0 && (
-								<div className="flex flex-wrap gap-1">
-									{stack.ensembles.map(ensemble => (
-										<Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
-											{ensemble.name}
-										</Badge>
-									))}
-								</div>
-							)}
-							<DateTag icon="pencil" date={stack.created_at} label="Created" />
-							<DateTag icon="pencil" date={stack.updated_at} label="Updated" />
-						</div>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button
-								key={action.label}
-								href={action.url}
-								onClick={action.onClick}
-								size="sm"
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<span className="flex items-center">
+							<Icon icon="people-arrows" type="solid" className="mr-2" />
+							{stack.title}
+						</span>
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<span>Rows: {stack.rows}</span>
+						<span>Columns: {stack.columns}</span>
+						<span>Singers on front row: {stack.front_row_length}</span>
+						<span>Front row on floor: {stack.front_row_on_floor ? 'Yes' : 'No'}</span>
+						{stack.ensembles.length > 0 && (
+							<div className="flex flex-wrap gap-1">
+								{stack.ensembles.map(ensemble => (
+									<Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
+										{ensemble.name}
+									</Badge>
+								))}
+							</div>
+						)}
+						<DateTag icon="pencil" date={stack.created_at} label="Created" />
+						<DateTag icon="pencil" date={stack.updated_at} label="Updated" />
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 			<DeleteDialog
 				title="Delete Riser Stack"
 				url={route('stacks.destroy', { stack })}

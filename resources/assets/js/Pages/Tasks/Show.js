@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import AppHead from '../../components/AppHead';
 import Icon from '../../components/Icon';
@@ -21,17 +26,16 @@ const Show = ({ task, setSidebarOpen }) => {
 
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 
+	const breadcrumbs = [
+		{ name: 'Onboarding', url: route('tasks.index') },
+		{ name: task.name, url: route('tasks.show', { task }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`${task.name} - Tasks`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('tasks.index')}
-						breadcrumbs={[{ name: 'Onboarding', url: route('tasks.index') }]}
-					>
-						<PageTopBarTitle title={task.name} />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					<PageActionsMenu>
 						{task.can.delete_task && (
 							<ActionMenuItem onClick={() => setDeleteDialogIsOpen(true)} variant="danger-outline">
@@ -40,44 +44,33 @@ const Show = ({ task, setSidebarOpen }) => {
 							</ActionMenuItem>
 						)}
 					</PageActionsMenu>
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Onboarding', url: route('tasks.index') },
-									{ name: task.name, url: route('tasks.show', { task }) },
-								]}
-								showLastChevron={false}
-							/>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="tasks" type="solid" className="mr-2" />
+						{task.name}
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<div>{task.role.name}</div>
+						<div>
+							{task.type[0].toUpperCase() + task.type.slice(1)}
+							{task.type === 'form' && <span className="text-xs ml-1.5">({task.route})</span>}
 						</div>
-						<PageHeading>
-							<Icon icon="tasks" type="solid" className="mr-2" />
-							{task.name}
-						</PageHeading>
-						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
-							<div>{task.role.name}</div>
-							<div>
-								{task.type[0].toUpperCase() + task.type.slice(1)}
-								{task.type === 'form' && <span className="text-xs ml-1.5">({task.route})</span>}
-							</div>
-							<DateTag icon="pencil" date={task.created_at} label="Created" />
-							<DateTag icon="pencil" date={task.updated_at} label="Updated" />
-						</div>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{task.can.delete_task && (
-							<ButtonLink onClick={() => setDeleteDialogIsOpen(true)} variant="danger-outline" size="sm">
-								<Icon icon="trash" mr />
-								Delete
-							</ButtonLink>
-						)}
-					</div>
-				</div>
-			</PageHeader2>
+						<DateTag icon="pencil" date={task.created_at} label="Created" />
+						<DateTag icon="pencil" date={task.updated_at} label="Updated" />
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{task.can.delete_task && (
+						<ButtonLink onClick={() => setDeleteDialogIsOpen(true)} variant="danger-outline" size="sm">
+							<Icon icon="trash" mr />
+							Delete
+						</ButtonLink>
+					)}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<DeleteDialog
 				title="Delete Task"

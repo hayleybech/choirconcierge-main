@@ -1,8 +1,12 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/Button';
@@ -42,8 +46,7 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 		<>
 			<AppHead title="Riser Stacks" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopBarTitle title="Riser Stacks" />
+				<PageTopNavigation title="Riser Stacks">
 					<PageActionsMenu>
 						{actions.map((action, key) => (
 							<ActionMenuItem
@@ -57,31 +60,29 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
+				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<PageHeading>
-							<Icon icon="people-arrows" type="solid" className="mr-2" /> Riser Stacks
-						</PageHeading>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button
-								key={action.label}
-								href={action.url}
-								onClick={action.onClick}
-								size="sm"
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderTitle>
+						<Icon icon="people-arrows" type="solid" className="mr-2" /> Riser Stacks
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Riser Stacks?`}

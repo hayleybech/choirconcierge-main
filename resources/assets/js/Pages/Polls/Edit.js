@@ -1,10 +1,13 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
 import AppHead from '../../components/AppHead';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import useRoute from '../../hooks/useRoute';
 import { useForm } from '@inertiajs/react';
 import TextInput from '../../components/inputs/TextInput';
@@ -86,40 +89,27 @@ const Edit = ({ poll, ensembles = [], setSidebarOpen }) => {
 		post(route('polls.update', { poll: poll.id }));
 	};
 
+	const breadcrumbs = [
+		{ name: 'Polls', url: route('polls.index') },
+		{ name: poll.title, url: route('polls.show', { poll: poll.id }) },
+		{ name: 'Edit Poll', url: route('polls.edit', { poll: poll.id }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`Edit ${poll.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation
-					backUrl={route('polls.show', { poll: poll.id })}
-					breadcrumbs={[
-						{ name: 'Polls', url: route('polls.index') },
-						{ name: poll.title, url: route('polls.show', { poll: poll.id }) },
-					]}
-				>
-					<PageTopBarTitle title="Edit Poll" />
-				</PageTopNavigation>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Polls', url: route('polls.index') },
-									{ name: poll.title, url: route('polls.show', { poll: poll.id }) },
-									{ name: 'Edit', url: route('polls.edit', { poll: poll.id }) },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="poll" type="solid" className="mr-2" />
-							Edit Poll
-						</PageHeading>
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="poll" type="solid" className="mr-2" />
+						Edit Poll
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
 			<FormWrapper>
 				<Form onSubmit={submit}>

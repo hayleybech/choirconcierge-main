@@ -1,9 +1,13 @@
 import React, { useState, Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { PageHeader2 } from '../../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
@@ -115,20 +119,17 @@ const Index = ({
 
 	const columnsAction = isDesktop ? columnsMenu : null;
 
+	const breadcrumbs = [
+		{ name: 'Events', url: route('events.index') },
+		{ name: event.title, url: route('events.show', { event }) },
+		{ name: 'RSVP List', url: route('events.rsvps.index', { event }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`RSVP List - ${event.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('events.show', { event })}
-						breadcrumbs={[
-							{ name: 'Events', url: route('events.index') },
-							{ name: event.title, url: route('events.show', { event }) },
-						]}
-					>
-						<PageTopBarTitle title="RSVP List" />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					{filterAction && (
 						<PageActionsMenu>
 							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
@@ -137,37 +138,25 @@ const Index = ({
 							</ActionMenuItem>
 						</PageActionsMenu>
 					)}
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Events', url: route('events.index') },
-									{ name: event.title, url: route('events.show', { event }) },
-									{ name: 'RSVP List', url: route('events.rsvps.index', { event }) },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="calendar" type="solid" className="mr-2" />
-							RSVP List
-						</PageHeading>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{filterAction && (
-							<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
-								<Icon icon="filter" mr />
-								Filter
-							</Button>
-						)}
-						{columnsMenu}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="calendar" type="solid" className="mr-2" />
+						RSVP List
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{filterAction && (
+						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+							<Icon icon="filter" mr />
+							Filter
+						</Button>
+					)}
+					{columnsMenu}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<div className="bg-white border-b border-gray-200 grid grid-cols-3">
 				{countsData.map(({ label, textColour, icon, count }) => (

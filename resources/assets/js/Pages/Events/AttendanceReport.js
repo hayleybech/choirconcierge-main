@@ -1,9 +1,14 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import AppHead from '../../components/AppHead';
 import { DateTime } from 'luxon';
@@ -50,17 +55,16 @@ const AttendanceReport = ({
 		totalItems: events.length,
 	};
 
+	const breadcrumbs = [
+		{ name: 'Events', url: route('events.index') },
+		{ name: 'Attendance Report', url: route('events.reports.attendance') },
+	];
+
 	return (
 		<>
 			<AppHead title="Attendance Report" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('events.index')}
-						breadcrumbs={[{ name: 'Events', url: route('events.index') }]}
-					>
-						<PageTopBarTitle title="Attendance Report" />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					{filterAction && (
 						<PageActionsMenu>
 							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
@@ -69,39 +73,28 @@ const AttendanceReport = ({
 							</ActionMenuItem>
 						</PageActionsMenu>
 					)}
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Events', url: route('events.index') },
-									{ name: 'Attendance Report', url: route('events.reports.attendance') },
-								]}
-								showLastChevron={false}
-							/>
-						</div>
-						<PageHeading>
-							<Icon icon="analytics" type="solid" className="mr-2" />
-							Attendance Report
-						</PageHeading>
-						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
-							<div>Avg. singers per event: {avgSingersPerEvent}</div>
-							<div>Avg. events per singer: {avgEventsPerSinger}</div>
-						</div>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{filterAction && (
-							<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
-								<Icon icon="filter" mr />
-								Filter
-							</Button>
-						)}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="analytics" type="solid" className="mr-2" />
+						Attendance Report
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<div>Avg. singers per event: {avgSingersPerEvent}</div>
+						<div>Avg. events per singer: {avgEventsPerSinger}</div>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{filterAction && (
+						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+							<Icon icon="filter" mr />
+							Filter
+						</Button>
+					)}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<div className="flex flex-col overflow-auto lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300 h-full">
 				{showFilters && (

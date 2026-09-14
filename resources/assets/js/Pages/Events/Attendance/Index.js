@@ -1,9 +1,14 @@
 import React, { Fragment, useState } from 'react';
 
-import { PageHeader2 } from '../../../components/PageHeader/PageHeader';
-import Breadcrumbs from '../../../components/PageHeader/Breadcrumbs';
-import { PageHeading } from '../../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle, PageTopNavigation } from '../../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
@@ -181,20 +186,17 @@ const Index = ({
 		{ label: 'Not recorded', textColour: 'text-gray-500', icon: 'question', count: counts.unknown },
 	];
 
+	const breadcrumbs = [
+		{ name: 'Events', url: route('events.index') },
+		{ name: event.title, url: route('events.show', { event }) },
+		{ name: 'Attendance List', url: route('events.attendances.index', { event }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`Attendance List - ${event.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopNavigation
-						backUrl={route('events.show', { event })}
-						breadcrumbs={[
-							{ name: 'Events', url: route('events.index') },
-							{ name: event.title, url: route('events.show', { event }) },
-						]}
-					>
-						<PageTopBarTitle title="Attendance List" />
-					</PageTopNavigation>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 					<PageActionsMenu>
 						{pageActions.map((action, key) => (
 							<ActionMenuItem
@@ -208,70 +210,55 @@ const Index = ({
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<div className="hidden lg:block">
-							<Breadcrumbs
-								breadcrumbs={[
-									{ name: 'Events', url: route('events.index') },
-									{ name: event.title, url: route('events.show', { event }) },
-									{ name: 'Attendance List', url: route('events.attendances.index', { event }) },
-								]}
-								showLastChevron={false}
-							/>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="calendar" type="solid" className="mr-2" />
+						Attendance List
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<div>
+							<p className="mb-2">We offer three ways to track attendance: </p>
+							<ul className="list-disc list-inside ml-4 mb-4 [&>li]:mb-1">
+								<li>
+									<strong>Manual</strong> attendance tracking on this page
+								</li>
+								<li>
+									<strong>Kiosk</strong> check-in for shared device use
+								</li>
+								<li>
+									<strong>QR Code</strong> check-in for individual use
+								</li>
+							</ul>
+							<p className="mb-2">
+								Both device check-in pages automatically mark singers as late after the call time, or
+								absent 20 minutes later.
+							</p>
+							<p className="mb-2">
+								If attendance was partially recorded during the event (either manually here or using the
+								kiosk), remaining singers will automatically be marked absent once the event ends.
+							</p>
+							<p className="mb-2">The check-in pages also send an attendance report after each event.</p>
 						</div>
-						<PageHeading>
-							<Icon icon="calendar" type="solid" className="mr-2" />
-							Attendance List
-						</PageHeading>
-						<div className="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-2 gap-2 sm:gap-6 text-sm sm:items-center text-gray-500">
-							<div>
-								<p className="mb-2">We offer three ways to track attendance: </p>
-								<ul className="list-disc list-inside ml-4 mb-4 [&>li]:mb-1">
-									<li>
-										<strong>Manual</strong> attendance tracking on this page
-									</li>
-									<li>
-										<strong>Kiosk</strong> check-in for shared device use
-									</li>
-									<li>
-										<strong>QR Code</strong> check-in for individual use
-									</li>
-								</ul>
-								<p className="mb-2">
-									Both device check-in pages automatically mark singers as late after the call time,
-									or absent 20 minutes later.
-								</p>
-								<p className="mb-2">
-									If attendance was partially recorded during the event (either manually here or using
-									the kiosk), remaining singers will automatically be marked absent once the event
-									ends.
-								</p>
-								<p className="mb-2">
-									The check-in pages also send an attendance report after each event.
-								</p>
-							</div>
-						</div>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{pageActions.map((action) => (
-							<Button
-								key={action.label}
-								href={action.url}
-								onClick={action.onClick}
-								size="sm"
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{pageActions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<Dialog
 				title="Individual Check-In Link"

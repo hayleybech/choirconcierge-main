@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader2 } from '../../components/PageHeader/PageHeader';
-import { PageHeading } from '../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../components/PageTopBar';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/Button';
@@ -51,8 +55,7 @@ const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSide
 		<>
 			<AppHead title="Documents" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopBarTitle title="Documents" />
+				<PageTopNavigation title="Documents">
 					<PageActionsMenu>
 						{actions.map((action, key) => (
 							<ActionMenuItem
@@ -66,31 +69,29 @@ const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSide
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
+				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<div className="flex-1 min-w-0">
-						<PageHeading>
-							<Icon icon="folders" type="solid" className="mr-2" /> Documents
-						</PageHeading>
-					</div>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button
-								key={action.label}
-								href={action.url}
-								onClick={action.onClick}
-								size="sm"
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderTitle>
+						<Icon icon="folders" type="solid" className="mr-2" /> Documents
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<IndexContainer
 				showFilters={showFilters}

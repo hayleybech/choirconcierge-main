@@ -3,14 +3,20 @@ import { Link } from '@inertiajs/react';
 import { Menu, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
 import Breadcrumbs from './PageHeader/Breadcrumbs';
+import { useMediaQuery } from 'react-responsive';
+import { useSidebar } from '../contexts/sidebar-context';
 
-const PageTopBar = ({ setSidebarOpen, children }) => (
-	<div className="relative z-10 flex h-12 shrink-0 items-center justify-between border-b border-gray-300 bg-white lg:hidden">
-		<DrawerOpenButton setOpen={setSidebarOpen} />
+const PageTopBar = ({ children }) => {
+	const { setSidebarOpen } = useSidebar();
 
-		{children}
-	</div>
-);
+	return (
+		<div className="relative z-10 flex h-12 shrink-0 items-center justify-between border-b border-gray-300 bg-white lg:hidden">
+			<DrawerOpenButton setOpen={setSidebarOpen} />
+
+			{children}
+		</div>
+	);
+};
 
 export default PageTopBar;
 
@@ -64,17 +70,31 @@ export const PageActionsMenu = ({ children }) => (
  * Use for Tier 2+ pages
  * Usually paired with PageTopBarTitle
  */
-export const PageTopNavigation = ({ breadcrumbs, backUrl, children }) => (
-	<div className="flex">
-		<BackButton url={backUrl} className="sm:hidden" />
-		<div className="flex items-center ml-4 gap-3">
-			<Breadcrumbs breadcrumbs={breadcrumbs} />
-			{children}
+export const PageTopNavigation = ({ breadcrumbs, title, children }) => {
+	const isMobile = useMediaQuery({
+		query: '(max-width: 639px)',
+	});
+
+	return (
+		<div className="flex grow h-full">
+			{breadcrumbs?.length > 1 && isMobile && <BackButton url={breadcrumbs[0].url} className="sm:hidden" />}
+			<div className="flex items-center grow pl-3">
+				{breadcrumbs?.length > 1 && !isMobile && (
+					<Breadcrumbs breadcrumbs={breadcrumbs?.slice(0, -1)} className="mr-3" />
+				)}
+				<PageTopBarTitle>{breadcrumbs?.[breadcrumbs.length - 1]?.name ?? title}</PageTopBarTitle>
+
+				<div className="flex items-center grow justify-end pl-2 gap-3">{children}</div>
+			</div>
 		</div>
-	</div>
-);
+	);
+};
 
 /** Use by itself for Tier 1 pages */
-export const PageTopBarTitle = ({ title }) => (
-	<h1 className="truncate text-base font-semibold text-gray-900">{title}</h1>
+export const PageTopBarTitle = ({ children }) => (
+	<h1 className="truncate text-base font-semibold text-gray-900">{children}</h1>
+);
+
+export const PageTopBarContent = ({ children }) => (
+	<div className="flex items-center grow justify-between pl-2 gap-3">{children}</div>
 );

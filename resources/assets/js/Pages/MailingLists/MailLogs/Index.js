@@ -1,7 +1,6 @@
 import React from 'react';
-import { PageHeader2 } from '../../../components/PageHeader/PageHeader';
-import { PageHeading } from '../../../components/PageHeader/PageHeading';
-import PageTopBar, { PageActionsMenu, PageTopBarTitle } from '../../../components/PageTopBar';
+import { PageHeader, PageHeaderActions, PageHeaderTitle } from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import Button from '../../../components/inputs/Button';
 import Icon from '../../../components/Icon';
@@ -54,8 +53,7 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 			<TrialAntiSpamNotice />
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<div className="flex justify-between grow">
-					<PageTopBarTitle title="Communications" />
+				<PageTopNavigation title="Communications">
 					<PageActionsMenu>
 						{actions.map((action, key) => (
 							<ActionMenuItem key={key} url={action.url} variant={action.variant}>
@@ -64,23 +62,21 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 							</ActionMenuItem>
 						))}
 					</PageActionsMenu>
-				</div>
+				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader2>
-				<div className="lg:flex lg:items-center lg:justify-between">
-					<PageHeading>
-						<Icon icon="mail-bulk" type="solid" className="mr-2" /> Communications
-					</PageHeading>
-					<div className="hidden lg:flex mt-0 lg:ml-4 gap-3">
-						{actions.map(action => (
-							<Button key={action.label} href={action.url} size="sm" variant={action.variant}>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</Button>
-						))}
-					</div>
-				</div>
-			</PageHeader2>
+			<PageHeader>
+				<PageHeaderTitle>
+					<Icon icon="mail-bulk" type="solid" className="mr-2" /> Communications
+				</PageHeaderTitle>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button key={action.label} href={action.url} size="sm" variant={action.variant}>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<IndexContainer
 				// showFilters={showFilters}
