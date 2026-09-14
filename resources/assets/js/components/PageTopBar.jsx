@@ -7,10 +7,10 @@ import { useMediaQuery } from 'react-responsive';
 import { useSidebar } from '../contexts/sidebar-context';
 
 const PageTopBar = ({ children }) => {
-	const { setSidebarOpen } = useSidebar();
+	const { setSidebarOpen } = useSidebar()
 
 	return (
-		<div className="relative z-10 flex h-12 shrink-0 items-center justify-between border-b border-gray-300 bg-white lg:hidden">
+		<div className="relative z-10 flex h-12 shrink-0 items-center justify-between border-b border-gray-300 bg-white xl:hidden">
 			<DrawerOpenButton setOpen={setSidebarOpen} />
 
 			{children}
@@ -44,27 +44,32 @@ export const BackButton = ({ url, className }) => (
 	</Link>
 );
 
-export const PageActionsMenu = ({ children }) => (
-	<Menu as="div" className="relative ml-3 mr-2 shrink-0">
-		<Menu.Button className="flex h-10 w-10 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
-			<span className="sr-only">Open actions</span>
-			<Icon icon="ellipsis-v" />
-		</Menu.Button>
-		<Transition
-			as={Fragment}
-			enter="transition ease-out duration-100"
-			enterFrom="opacity-0 scale-95"
-			enterTo="opacity-100 scale-100"
-			leave="transition ease-in duration-75"
-			leaveFrom="opacity-100 scale-100"
-			leaveTo="opacity-0 scale-95"
-		>
-			<Menu.Items className="absolute right-0 z-20 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-				{children}
-			</Menu.Items>
-		</Transition>
-	</Menu>
-);
+export const PageActionsMenu = ({ children }) => {
+	if(!children?.length > 0) {
+		return null;
+	}
+	return (
+		<Menu as="div" className="relative ml-3 mr-2 shrink-0">
+			<Menu.Button className="flex h-10 w-10 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500">
+				<span className="sr-only">Open actions</span>
+				<Icon icon="ellipsis-v" />
+			</Menu.Button>
+			<Transition
+				as={Fragment}
+				enter="transition ease-out duration-100"
+				enterFrom="opacity-0 scale-95"
+				enterTo="opacity-100 scale-100"
+				leave="transition ease-in duration-75"
+				leaveFrom="opacity-100 scale-100"
+				leaveTo="opacity-0 scale-95"
+			>
+				<Menu.Items className="absolute right-0 z-20 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+					{children}
+				</Menu.Items>
+			</Transition>
+		</Menu>
+	);
+}
 
 /**
  * Use for Tier 2+ pages
@@ -76,9 +81,9 @@ export const PageTopNavigation = ({ breadcrumbs, title, children }) => {
 	});
 
 	return (
-		<div className="flex h-full min-w-0 grow overflow-hidden">
+		<div className="flex h-full min-w-0 grow">
 			{breadcrumbs?.length > 1 && isMobile && <BackButton url={breadcrumbs[0].url} className="sm:hidden" />}
-			<div className="flex min-w-0 grow items-center overflow-hidden pl-3">
+			<div className="flex min-w-0 grow items-center pl-3">
 				{breadcrumbs?.length > 1 && !isMobile && (
 					<Breadcrumbs breadcrumbs={breadcrumbs?.slice(0, -1)} className="mr-3" />
 				)}
