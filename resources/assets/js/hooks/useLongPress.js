@@ -5,6 +5,7 @@ const useLongPress = (onLongPress, onClick, { delay = 500, shouldPreventDefault 
 	const target = useRef();
 	const isTouch = useRef(false);
 	const isLongPressActive = useRef(false);
+	const hasMoved = useRef(false);
 	const startPos = useRef({ x: 0, y: 0 });
 
 	const start = useCallback(
@@ -28,6 +29,7 @@ const useLongPress = (onLongPress, onClick, { delay = 500, shouldPreventDefault 
 				event.target.addEventListener('touchend', preventDefault, { passive: false });
 				target.current = event.target;
 			}
+			hasMoved.current = false;
 			isLongPressActive.current = false;
 			timeout.current = setTimeout(() => {
 				onLongPress(event);
@@ -54,6 +56,7 @@ const useLongPress = (onLongPress, onClick, { delay = 500, shouldPreventDefault 
 			const distance = Math.sqrt(Math.pow(x - startPos.current.x, 2) + Math.pow(y - startPos.current.y, 2));
 
 			if (distance > 10) {
+				hasMoved.current = true;
 				clearTimeout(timeout.current);
 				timeout.current = null;
 			}
@@ -68,9 +71,11 @@ const useLongPress = (onLongPress, onClick, { delay = 500, shouldPreventDefault 
 				timeout.current = null;
 			}
 
-			if (shouldTriggerClick && !isLongPressActive.current && onClick) {
+			if (shouldTriggerClick && !hasMoved.current && !isLongPressActive.current && onClick) {
 				onClick(event);
 			}
+
+			hasMoved.current = false;
 
 			if (shouldPreventDefault && target.current) {
 				target.current.removeEventListener('touchend', preventDefault);
