@@ -332,11 +332,11 @@ export default function TenantLayout({ children }) {
 					{/*)}*/}
 
 					<main
-						className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none"
+						className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none pt-[47px] xl:pt-0"
 						scroll-region="true"
 					>
 						{tenant.id === 'demo' && (
-							<TenantNotice variant="warning" global>This demo site is cleared once per week.</TenantNotice>
+							<TenantNotice variant="warning">This demo site is cleared once per week.</TenantNotice>
 						)}
 
 						{process.env.MIX_FEATURE_BILLING &&

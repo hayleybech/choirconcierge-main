@@ -58,7 +58,7 @@ export default function CentralLayout({ children }) {
                 {/*    />*/}
                 {/*)}*/}
 
-                <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
+                <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none pt-[47px] xl:pt-0" scroll-region="true">
                     <ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
                         {children}
                     </ErrorBoundary>
