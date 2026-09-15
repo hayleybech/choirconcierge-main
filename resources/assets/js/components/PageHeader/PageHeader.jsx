@@ -2,7 +2,7 @@ import React from 'react';
 import Breadcrumbs from './Breadcrumbs';
 
 export const PageHeader = ({ children }) => (
-	<div className="pt-6 pb-6 bg-white border-b border-gray-300 px-4 sm:px-6 md:px-8">
+	<div className="pt-16 xl:pt-6 pb-6 bg-white border-b border-gray-300 px-4 sm:px-6 md:px-8">
 		<div className="lg:flex lg:items-center lg:justify-between">
 			{children}
 		</div>

@@ -10,7 +10,7 @@ const PageTopBar = ({ children }) => {
 	const { setSidebarOpen } = useSidebar()
 
 	return (
-		<div className="relative z-10 flex h-12 shrink-0 items-center justify-between border-b border-gray-300 bg-white xl:hidden">
+		<div className="fixed left-0 right-0 z-10 flex h-12 shrink-0 items-center justify-between border-b border-gray-300 bg-white xl:hidden">
 			<DrawerOpenButton setOpen={setSidebarOpen} />
 
 			{children}
