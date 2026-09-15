@@ -336,7 +336,7 @@ export default function TenantLayout({ children }) {
 						scroll-region="true"
 					>
 						{tenant.id === 'demo' && (
-							<TenantNotice variant="warning">This demo site is cleared once per week.</TenantNotice>
+							<TenantNotice variant="warning" global>This demo site is cleared once per week.</TenantNotice>
 						)}
 
 						{process.env.MIX_FEATURE_BILLING &&
