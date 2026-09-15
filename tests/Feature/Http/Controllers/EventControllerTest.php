@@ -99,6 +99,20 @@ class EventControllerTest extends TestCase
             ->assertOk();
     }
 
+    public function test_event_show_includes_the_self_check_in_url_for_attendance_managers(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $event = Event::factory()->create();
+
+        $this->get(the_tenant_route('events.show', [$event]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('Events/Show')
+                ->where('individualCheckInUrl', fn ($url) => str_contains($url, '/events/' . $event->id . '/check-ins'))
+            );
+    }
+
     public function test_user_cannot_view_event_in_different_ensemble(): void
     {
         $user = $this->createUserWithRole('User');

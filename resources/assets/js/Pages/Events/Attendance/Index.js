@@ -14,9 +14,8 @@ import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
-import Dialog from '../../../components/Dialog';
 import { Link, usePage } from '@inertiajs/react';
-import QRCode from 'react-qr-code';
+import SelfCheckInDialog from '../../../components/Event/SelfCheckInDialog';
 import DateTag from '../../../components/DateTag';
 import Table, {
 	TableCell,
@@ -103,12 +102,12 @@ const Index = ({
 	const bulkEdit = useBulkEdit(allSingers, pageProps.can.create_attendance, false, 'Singer', true);
 	const pageActions = [
 		{
-			label: 'Kiosk',
+			label: 'Launch Kiosk',
 			icon: 'calendar-check',
 			url: route('events.kiosk-check-ins.index', { event }),
 			can: 'create_attendance',
 		},
-		{ label: 'QR Code', icon: 'qrcode', onClick: () => setCheckInDialogIsOpen(true), can: 'create_attendance' },
+		{ label: 'Get Check-In Link', icon: 'qrcode', onClick: () => setCheckInDialogIsOpen(true), can: 'create_attendance' },
 		filterAction,
 		bulkEdit.action,
 	].filter(action => (action?.can ? pageProps.can[action.can] : !!action));
@@ -260,24 +259,11 @@ const Index = ({
 				</PageHeaderActions>
 			</PageHeader>
 
-			<Dialog
-				title="Individual Check-In Link"
+			<SelfCheckInDialog
+				individualCheckInUrl={individualCheckInUrl}
 				isOpen={checkInDialogIsOpen}
 				setIsOpen={setCheckInDialogIsOpen}
-				icon={null}
-			>
-				<div className="w-full">
-					<p className="font-bold mb-2">Let singers check themselves in!</p>
-					<p className="mb-2">
-						They can scan this QR code while logged in to gain temporary access to the check-in page.
-					</p>
-
-					<div className="mb-2 flex justify-center">
-						<QRCode value={individualCheckInUrl} />
-					</div>
-					<p className="break-all text-xs">{individualCheckInUrl}</p>
-				</div>
-			</Dialog>
+			/>
 
 			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
 

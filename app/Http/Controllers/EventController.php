@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomSorts\EventTypeSort;
 use App\Http\Requests\EventRequest;
+use App\Models\Attendance;
 use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\EventType;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -90,6 +92,7 @@ class EventController extends Controller
 
         return Inertia::render('Events/Show', [
             'event' => $event,
+            'individualCheckInUrl' => $this->getCheckInUrl($event),
             'rsvpCount' => [
                 'yes' => $event->singers_rsvp_response('yes')->count(),
                 'no' => $event->singers_rsvp_response('no')->count(),
@@ -116,6 +119,19 @@ class EventController extends Controller
                 'ics' => $event->add_to_calendar_link?->ics(),
             ],
         ]);
+    }
+
+    private function getCheckInUrl(Event $event): string
+    {
+        if (! auth()->user()->can('create', Attendance::class)) {
+            return '';
+        }
+
+        if ($event->is_repeating) {
+            return URL::temporarySignedRoute('events.check-ins.index', $event->repeat_until, ['event' => $event->repeat_parent_id]);
+        }
+
+        return URL::temporarySignedRoute('events.check-ins.index', $event->end_date, ['event' => $event]);
     }
 
     public function edit(Event $event, Request $request): Response

@@ -32,6 +32,7 @@ import useRoute from '../../hooks/useRoute';
 import { DateTime } from 'luxon';
 import RsvpDropdown from '../../components/Event/RsvpDropdown';
 import AddToCalendarDropdown from '../../components/Event/AddToCalendarDropdown';
+import SelfCheckInDialog from '../../components/Event/SelfCheckInDialog';
 
 const Show = ({
 	event,
@@ -40,10 +41,12 @@ const Show = ({
 	attendanceCount,
 	voicePartsAttendanceCount,
 	addToCalendarLinks,
+	individualCheckInUrl,
 	setSidebarOpen,
 }) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const [editDialogIsOpen, setEditDialogIsOpen] = useState(false);
+	const [checkInDialogIsOpen, setCheckInDialogIsOpen] = useState(false);
 
 	const { route } = useRoute();
 	const { props: pageProps } = usePage();
@@ -60,9 +63,17 @@ const Show = ({
 			label: 'Delete',
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
+
 			variant: 'danger-outline',
 			can: 'delete_event',
 		},
+		{
+			label: 'Launch Kiosk',
+			icon: 'calendar-check',
+			url: route('events.kiosk-check-ins.index', { event }),
+			can: 'create_attendance',
+		},
+		{ label: 'Show QR Code', icon: 'qrcode', onClick: () => setCheckInDialogIsOpen(true), can: 'create_attendance' },
 	].filter(action => event.can[action.can] || pageProps.can[action.can]);
 
 	const breadcrumbs = [
@@ -170,6 +181,12 @@ const Show = ({
 			</DeleteDialog>
 
 			<EditRepeatingEventDialog isOpen={editDialogIsOpen} setIsOpen={setEditDialogIsOpen} event={event} />
+
+			<SelfCheckInDialog
+				individualCheckInUrl={individualCheckInUrl}
+				isOpen={checkInDialogIsOpen}
+				setIsOpen={setCheckInDialogIsOpen}
+			/>
 
 			<SectionLayout
 				layout={{
