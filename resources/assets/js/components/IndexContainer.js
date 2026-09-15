@@ -1,7 +1,8 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import { Transition } from '@headlessui/react';
 import { useMediaQuery } from 'react-responsive';
-import Dialog from './Dialog';
+import FilterDialog from './FilterDialog';
 
 const IndexContainer = ({ tableDesktop, tableMobile, emptyState, filterPane, showFilters }) => {
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
@@ -14,11 +15,23 @@ const IndexContainer = ({ tableDesktop, tableMobile, emptyState, filterPane, sho
 	return (
 		<div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300">
 			{isDesktop ? (
-				showFilters && <div className="lg:w-1/5 xl:w-1/6 lg:z-10">{filterPane}</div>
+				<Transition show={showFilters} as={Fragment}>
+					<Transition.Child
+						as={Fragment}
+						enter="transform transition ease-out duration-300"
+						enterFrom="-translate-x-full"
+						enterTo="translate-x-0"
+						leave="transform transition ease-in duration-200"
+						leaveFrom="translate-x-0"
+						leaveTo="-translate-x-full"
+					>
+						<div className="lg:w-1/5 xl:w-1/6 lg:z-10">{filterPane}</div>
+					</Transition.Child>
+				</Transition>
 			) : (
-				<Dialog isOpen={isMobileFilterOpen} setIsOpen={setIsMobileFilterOpen} icon="">
+				<FilterDialog isOpen={isMobileFilterOpen} setIsOpen={setIsMobileFilterOpen}>
 					{filterPane}
-				</Dialog>
+				</FilterDialog>
 			)}
 			<div className="grow lg:overflow-x-auto">
 				{emptyState ? (

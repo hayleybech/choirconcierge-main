@@ -1,6 +1,4 @@
 import React from 'react';
-import SectionHeader from './SectionHeader';
-import SectionTitle from './SectionTitle';
 import Button from './inputs/Button';
 import Icon from './Icon';
 import { useMediaQuery } from 'react-responsive';

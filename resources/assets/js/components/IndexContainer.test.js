@@ -25,6 +25,8 @@ describe('IndexContainer', () => {
 		expect(screen.getByRole('dialog')).toBeTruthy();
 		expect(screen.getByText('Filter controls')).toBeTruthy();
 		expect(screen.getByText('Mobile table')).toBeTruthy();
+		expect(screen.getByRole('dialog').className).toContain('fixed inset-0');
+		expect(screen.queryByText('Cancel')).toBeNull();
 	});
 
 	it('keeps filters in the sidebar on desktop', () => {
@@ -36,10 +38,13 @@ describe('IndexContainer', () => {
 				filterPane={<div>Filter controls</div>}
 				tableDesktop={<div>Desktop table</div>}
 			/>
-		);
+			);
 
 		expect(screen.queryByRole('dialog')).toBeNull();
-		expect(screen.getByText('Filter controls')).toBeTruthy();
+		const filterPane = screen.getByText('Filter controls').parentElement;
+
+		expect(filterPane).toBeTruthy();
+		expect(filterPane.className).toContain('lg:w-1/5');
 		expect(screen.getByText('Desktop table')).toBeTruthy();
 	});
 });
