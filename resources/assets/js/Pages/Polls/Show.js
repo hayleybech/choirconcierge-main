@@ -1,7 +1,16 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
 import AppHead from '../../components/AppHead';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import useRoute from '../../hooks/useRoute';
 import { useForm } from '@inertiajs/react';
 import Button from '../../components/inputs/Button';
@@ -15,14 +24,31 @@ import { FancyCheckboxGroup } from '../../components/inputs/CheckboxGroup';
 import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';
 import Badge from '../../components/Badge';
-import Prose from "../../components/Prose";
+import Prose from '../../components/Prose';
 
-const Show = ({ poll, my_vote_option_ids = [] }) => {
+const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 	const { route } = useRoute();
 	const { data, setData, post, processing, errors } = useForm({
 		option_ids: my_vote_option_ids,
 	});
 	const isClosed = poll.is_closed;
+	const actions = [
+		{ label: 'Edit', url: route('polls.edit', { poll: poll.id }), icon: 'pencil', variant: 'secondary' },
+		!isClosed && {
+			label: 'Close Poll',
+			url: route('polls.close', { poll: poll.id }),
+			method: 'put',
+			icon: 'lock',
+			variant: 'secondary',
+		},
+		isClosed && {
+			label: 'Re-open Poll',
+			url: route('polls.open', { poll: poll.id }),
+			method: 'put',
+			icon: 'lock-open',
+			variant: 'secondary',
+		},
+	].filter(Boolean);
 
 	const toggle = id => {
 		if (poll.can_vote_multiple) {
@@ -40,43 +66,35 @@ const Show = ({ poll, my_vote_option_ids = [] }) => {
 		post(route('polls.vote', { poll: poll.id }));
 	};
 
+	const breadcrumbs = [
+		{ name: 'Polls', url: route('polls.index') },
+		{ name: poll.title, url: route('polls.show', { poll: poll.id }) },
+	];
+
 	return (
 		<>
 			<AppHead title={poll.title} />
-			<PageHeader
-				title={poll.title}
-				icon="fa-poll"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Polls', url: route('polls.index') },
-					{ name: poll.title, url: route('polls.show', { poll: poll.id }) },
-				]}
-				actions={[
-					{
-						label: 'Edit',
-						url: route('polls.edit', { poll: poll.id }),
-						icon: 'pencil',
-						variant: 'secondary',
-					},
-					!isClosed && {
-						label: 'Close Poll',
-						url: route('polls.close', { poll: poll.id }),
-						method: 'put',
-						icon: 'lock',
-						variant: 'secondary',
-					},
-					isClosed && {
-						label: 'Re-open Poll',
-						url: route('polls.open', { poll: poll.id }),
-						method: 'put',
-						icon: 'lock-open',
-						variant: 'secondary',
-					},
-				]}
-				meta={
-					<>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem key={key} url={action.url} method={action.method} variant={action.variant}>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="poll" type="solid" className="mr-2" />
+						{poll.title}
+					</PageHeaderTitle>
+					<PageHeaderMeta>
 						<div className="text-sm text-gray-600 flex gap-1">
-							<span className="font-semibold">Status:</span>{' '}
+							<span className="font-semibold">Status:</span>
 							{poll.is_closed ? (
 								<span className="text-gray-600 flex items-center">
 									<Icon icon="lock" mr /> Closed
@@ -115,9 +133,23 @@ const Show = ({ poll, my_vote_option_ids = [] }) => {
 							format="DATETIME_SHORT"
 							className="text-gray-400"
 						/>
-					</>
-				}
-			/>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							method={action.method}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<FormWrapper>
 				<Form onSubmit={submit}>

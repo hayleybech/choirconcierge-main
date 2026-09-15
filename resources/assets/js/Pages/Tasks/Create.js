@@ -1,31 +1,46 @@
-import React from 'react'
-import AppHead from "../../components/AppHead";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import TenantLayout from "../../Layouts/TenantLayout";
-import TaskForm from "./TaskForm";
-import useRoute from "../../hooks/useRoute";
+import React from 'react';
+import AppHead from '../../components/AppHead';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
+import TenantLayout from '../../Layouts/TenantLayout';
+import TaskForm from './TaskForm';
+import useRoute from '../../hooks/useRoute';
 
-const Create = ({ roles }) => {
-    const { route } = useRoute();
+const Create = ({ roles, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    return (
-        <>
-            <AppHead title="Create Task" />
-            <PageHeader
-                title="Create Task"
-                icon="tasks"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Tasks', url: route('tasks.index')},
-                    { name: 'Create', url: route('tasks.create') },
-                ]}
-            />
+	const breadcrumbs = [
+		{ name: 'Onboarding', url: route('tasks.index') },
+		{ name: 'Create Task', url: route('tasks.create') },
+	];
 
-            <TaskForm roles={roles} />
-        </>
-    );
-}
+	return (
+		<>
+			<AppHead title="Create Task" />
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="tasks" type="solid" className="mr-2" />
+						Create Task
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
-Create.layout = page => <TenantLayout children={page} />
+			<TaskForm roles={roles} />
+		</>
+	);
+};
+
+Create.layout = page => <TenantLayout children={page} />;
 
 export default Create;

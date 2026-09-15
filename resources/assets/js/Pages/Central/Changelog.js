@@ -1,21 +1,27 @@
 import React from 'react';
 import AppHead from '../../components/AppHead';
 import CentralLayout from '../../Layouts/CentralLayout';
+import { PageHeader, PageHeaderContent, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
 import Panel from '../../components/Panel';
 import classNames from '../../classNames';
-import Icon from "../../components/Icon";
 
-const Changelog = ({ logs }) => (
+const Changelog = ({ logs, setSidebarOpen }) => (
 	<>
 		<AppHead title="Changelog" />
+		<PageTopBar setSidebarOpen={setSidebarOpen}>
+			<PageTopNavigation title="Changelog" />
+		</PageTopBar>
+		<PageHeader>
+			<PageHeaderContent>
+				<PageHeaderTitle>
+					<Icon icon="code-merge" type="solid" className="mr-2" /> Changelog
+				</PageHeaderTitle>
+			</PageHeaderContent>
+		</PageHeader>
 		<div className="py-6">
 			<div className="mx-auto px-4 sm:px-6 lg:px-16">
-				<div className="mb-8">
-					<h1 className="text-2xl font-semibold text-gray-900 mb-2">
-						<Icon icon="code-merge" mr /> Changelog
-					</h1>
-				</div>
-
 				<Panel>
 					<ul role="list" className="space-y-6">
 						{logs.map(({ date, heading, content }, index) => (

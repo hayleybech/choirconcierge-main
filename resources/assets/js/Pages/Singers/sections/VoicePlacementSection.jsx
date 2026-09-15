@@ -1,4 +1,4 @@
-import CollapsePanel from '../../../components/CollapsePanel';
+import SimplePanel from '../../../components/SimplePanel';
 import { DetailList, DetailListItem } from '../components/DetailList';
 import Icon from '../../../components/Icon';
 import { Progress } from '../components/Progress';
@@ -9,7 +9,7 @@ import ButtonLink from '../../../components/inputs/ButtonLink';
 
 export const VoicePlacementSection = ({ singer }) =>
 	singer.placement ? (
-		<CollapsePanel>
+		<SimplePanel>
 			<DetailList gridCols="sm:grid-cols-2">
 				<DetailListItem label="Voice Tone" colClass="sm:col-span-2">
 					<Range
@@ -35,7 +35,7 @@ export const VoicePlacementSection = ({ singer }) =>
 				<DetailListItem label="Experience">{singer.placement.experience ?? 'None listed'}</DetailListItem>
 				<DetailListItem label="Instruments">{singer.placement.instruments ?? 'None listed'}</DetailListItem>
 			</DetailList>
-		</CollapsePanel>
+		</SimplePanel>
 	) : (
 		<VoicePlacementEmptyState singer={singer} />
 	);

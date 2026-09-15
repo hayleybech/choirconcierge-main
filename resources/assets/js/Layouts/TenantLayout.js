@@ -12,13 +12,13 @@ import ToastFlash from '../components/ToastFlash';
 import { useMediaQuery } from 'react-responsive';
 import usePromptBeforeUnload from '../hooks/usePromptBeforeUnload';
 import useRoute from '../hooks/useRoute';
-import SwitchChoirMenu from '../components/SwitchChoirMenu';
 import BillingNotices from '../components/BillingNotices';
 import TenantNotice from '../components/TenantNotice';
 import { ErrorBoundary } from '@sentry/react';
 import OuterPageErrorFallback from './OuterPageErrorFallback';
 import { router } from '@inertiajs/react';
 import { useRNHandler } from '../lib/reactNative';
+import { SidebarProvider } from '../contexts/sidebar-context';
 
 export default function TenantLayout({ children }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -297,7 +297,7 @@ export default function TenantLayout({ children }) {
 
 	usePromptBeforeUnload(player.fileName || player.showFullscreen);
 
-	const isMobile = useMediaQuery({ query: '(max-width: 1023px)' });
+	const isMobileOrTablet = useMediaQuery({ query: '(max-width: 1279px)' });
 
 	const navFiltered = navigation
 		.filter(item => can[item.can])
@@ -314,23 +314,22 @@ export default function TenantLayout({ children }) {
 
 	return (
 		<PlayerContext.Provider value={player}>
+			<SidebarProvider setSidebarOpen={setSidebarOpen}>
 			<div className="h-screen flex overflow-hidden bg-gray-100">
-				{isMobile ? (
-					<SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} />
+				{isMobileOrTablet ? (
+					<SidebarMobile navigation={navFiltered} open={sidebarOpen} setOpen={setSidebarOpen} choirs={userChoirs} tenant={tenant} setShowImpersonateModal={setShowImpersonateModal} />
 				) : (
 					<div className="flex shrink-0">
-						<SidebarDesktop navigation={navFiltered} />
+						<SidebarDesktop navigation={navFiltered} choirs={userChoirs} tenant={tenant} setShowImpersonateModal={setShowImpersonateModal} />
 					</div>
 				)}
 
 				<div className="flex flex-col w-0 flex-1 overflow-hidden">
-					{!isWebView && !player.showFullscreen && (
-						<LayoutTopBar
-							setSidebarOpen={setSidebarOpen}
-							setShowImpersonateModal={setShowImpersonateModal}
-							switchChoirMenu={<SwitchChoirMenu choirs={userChoirs} tenant={tenant} />}
-						/>
-					)}
+					{/*{!isWebView && !player.showFullscreen && (*/}
+					{/*	<LayoutTopBar*/}
+					{/*		setSidebarOpen={setSidebarOpen}*/}
+					{/*	/>*/}
+					{/*)}*/}
 
 					<main
 						className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none"
@@ -365,6 +364,7 @@ export default function TenantLayout({ children }) {
 
 				<ImpersonateUserModal isOpen={showImpersonateModal} setIsOpen={setShowImpersonateModal} />
 			</div>
+			</SidebarProvider>
 		</PlayerContext.Provider>
 	);
 }

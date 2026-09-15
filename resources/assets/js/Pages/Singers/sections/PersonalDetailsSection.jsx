@@ -1,4 +1,4 @@
-import CollapsePanel from '../../../components/CollapsePanel';
+import SimplePanel from '../../../components/SimplePanel';
 import { DetailList, DetailListItem } from '../components/DetailList';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
@@ -7,7 +7,7 @@ import HeightToggle from '../components/HeightToggle';
 import StreetAddress from '../components/StreetAddress';
 
 export const PersonalDetailsSection = ({ singer }) => (
-	<CollapsePanel>
+	<SimplePanel>
 		<DetailList>
 			<DetailListItem label="Contact Details" colClass="sm:col-span-2 xl:col-span-1">
 				<p>
@@ -85,5 +85,5 @@ export const PersonalDetailsSection = ({ singer }) => (
 				</span>
 			</DetailListItem>
 		</DetailList>
-	</CollapsePanel>
+	</SimplePanel>
 );

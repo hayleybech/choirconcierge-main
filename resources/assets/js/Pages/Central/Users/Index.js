@@ -1,5 +1,15 @@
 import React from 'react';
-import PageHeader from '../../../components/PageHeader/PageHeader';
+
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
+import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
+import Icon from '../../../components/Icon';
+import Button from '../../../components/inputs/Button';
 import AppHead from '../../../components/AppHead';
 import IndexContainer from '../../../components/IndexContainer';
 import useRoute from '../../../hooks/useRoute';
@@ -12,10 +22,10 @@ import FilterSortPane from '../../../components/FilterSortPane';
 import Sorts from '../../../components/Sorts';
 import UserFilters from './UserFilters';
 
-const Index = ({ users, pagination }) => {
+const Index = ({ users, pagination, setSidebarOpen }) => {
 	const { route } = useRoute();
 
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters, filterAction] = useFilterPane();
 	//
 	const sorts = [
 		{ id: 'full-name', name: 'Name', default: true },
@@ -30,16 +40,33 @@ const Index = ({ users, pagination }) => {
 	return (
 		<>
 			<AppHead title="Users" />
-			<PageHeader
-				title="Users"
-				icon="users"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('central.dash') },
-					{ name: 'Users', url: route('central.users.index') },
-				]}
-				actions={[filterAction]}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation title="Users">
+					{filterAction && (
+						<PageActionsMenu>
+							<ActionMenuItem {...filterAction}>
+								<Icon icon={filterAction.icon} mr />
+								{filterAction.label}
+							</ActionMenuItem>
+						</PageActionsMenu>
+					)}
+				</PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderTitle>
+						<Icon icon="users" type="solid" className="mr-2" /> Users
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{filterAction && (
+						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+							<Icon icon={filterAction.icon} mr />
+							{filterAction.label}
+						</Button>
+					)}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<IndexContainer
 				showFilters={showFilters}

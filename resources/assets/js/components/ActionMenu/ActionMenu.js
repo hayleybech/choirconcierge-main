@@ -5,7 +5,7 @@ import buttonStyles from '../inputs/buttonStyles';
 import Icon from '../Icon';
 
 const ActionMenu = ({ children, optionsVariant }) => (
-    <Menu as="span" className="ml-3 relative sm:hidden z-20">
+    <Menu as="span" className="relative lg:hidden z-20">
         <Menu.Button className={buttonStyles(optionsVariant, 'sm')}>
             Options
             <Icon icon="chevron-down" type="light" ml className="-mr-1 text-sm" />

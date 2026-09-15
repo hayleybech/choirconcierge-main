@@ -1,4 +1,3 @@
-import { CollapsePanelWithoutPadding } from '../../../components/CollapseGroup';
 import Icon from '../../../components/Icon';
 import React, { useState } from 'react';
 import Button from '../../../components/inputs/Button';
@@ -12,13 +11,14 @@ import Error from '../../../components/inputs/Error';
 import DateTag from '../../../components/DateTag';
 import { useMediaQuery } from 'react-responsive';
 import DeleteDialog from '../../../components/DeleteDialog';
+import { SimplePanelWithoutPadding } from '../../../components/SimplePanel';
 
 const CustomFieldsSection = ({ singer, customFields }) => {
 	const [showCreateDialog, setShowCreateDialog] = useState(false);
 	const { can } = usePage().props;
 
 	return (
-		<CollapsePanelWithoutPadding>
+		<SimplePanelWithoutPadding>
 			<table className="w-full">
 				<tbody className="divide-y divide-gray-200 border-b border-gray-200">
 					{customFields.map(({ id, name, entries }) => (
@@ -27,15 +27,16 @@ const CustomFieldsSection = ({ singer, customFields }) => {
 				</tbody>
 				<tfoot>
 				{can['create_custom_field'] && (
-					<tr>
-						<td colSpan={3}>
-							<div className="flex justify-center items-center gap-2 py-3 px-4 sm:px-6 lg:px-8">
-								<div className="text-gray-700 text-sm">Add a new custom field</div>
-								<Button variant="primary" size="xs" onClick={() => setShowCreateDialog(true)}>
+					<tr className="bg-gray-50 hover:bg-purple-100 cursor-pointer" onClick={() => setShowCreateDialog(true)}>
+						<td colSpan={3} className="p-0">
+							<Button
+								variant="clear"
+								size="sm"
+								className="w-full justify-start px-6 py-5 text-purple-600"
+							>
 									<Icon icon="plus" />
-									Create
+									Add custom field
 								</Button>
-							</div>
 						</td>
 					</tr>
 				)}
@@ -43,7 +44,7 @@ const CustomFieldsSection = ({ singer, customFields }) => {
 			</table>
 
 			<CreateCustomFieldDialog isOpen={showCreateDialog} setIsOpen={setShowCreateDialog} />
-		</CollapsePanelWithoutPadding>
+		</SimplePanelWithoutPadding>
 	);
 };
 

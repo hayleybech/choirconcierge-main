@@ -11,6 +11,7 @@ import Label from "../inputs/Label";
 import Error from "../inputs/Error";
 import classNames from "../../classNames";
 import TextInput from "../inputs/TextInput";
+import SongAttachmentForm from './SongAttachmentForm';
 
 const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, player }) => {
     const { route } = useRoute();
@@ -18,6 +19,7 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
     const [deletingAttachmentId, setDeletingAttachmentId] = useState(0);
     const [attachmentToRename, setAttachmentToRename] = useState(null);
+    const [addAttachmentDialogIsOpen, setAddAttachmentDialogIsOpen] = useState(false);
 
     const play = (attachment) => {
         player.play(attachment);
@@ -100,6 +102,30 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
                         </ul>
                     </div>
                 ))}
+
+                {Object.keys(attachmentTypes).length === 0 && (
+                    <ul role="list" className="relative z-0 divide-y divide-gray-200">
+                        <li className="bg-white px-6 py-5 text-sm text-gray-500">
+                            This song does not have any attachments yet.
+                        </li>
+                    </ul>
+                )}
+
+                {song.can['update_song'] && (
+                    <ul role="list" className="relative z-0 divide-y divide-gray-200">
+                        <li className="bg-white hover:bg-purple-100">
+                            <Button
+                                variant="clear"
+                                size="sm"
+                                className="w-full justify-start px-6 py-5 text-purple-600"
+                                onClick={() => setAddAttachmentDialogIsOpen(true)}
+                            >
+                                <Icon icon="plus" />
+                                Add attachment
+                            </Button>
+                        </li>
+                    </ul>
+                )}
             </nav>
 
             <DeleteDialog
@@ -114,6 +140,11 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
             </DeleteDialog>
 
             <RenameAttachmentDialog song={song} attachment={attachmentToRename} setAttachment={setAttachmentToRename} key={attachmentToRename?.id} />
+            <SongAttachmentForm
+                song={song}
+                isOpen={addAttachmentDialogIsOpen}
+                setIsOpen={setAddAttachmentDialogIsOpen}
+            />
         </>
     );
 }

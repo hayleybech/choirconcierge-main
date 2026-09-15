@@ -1,54 +1,68 @@
-import React from 'react'
-import TenantLayout from "../../../Layouts/TenantLayout";
-import PageHeader from "../../../components/PageHeader/PageHeader";
-import AppHead from "../../../components/AppHead";
-import Label from "../../../components/inputs/Label";
-import TextInput from "../../../components/inputs/TextInput";
-import Error from "../../../components/inputs/Error";
-import {useForm} from "@inertiajs/react";
-import Form from "../../../components/Form";
-import FormSection from "../../../components/FormSection";
-import RichTextInput from "../../../components/inputs/RichTextInput";
-import ButtonLink from "../../../components/inputs/ButtonLink";
-import Button from "../../../components/inputs/Button";
-import FormFooter from "../../../components/FormFooter";
-import MailingListSelect from "../../../components/inputs/MailingListSelect";
-import Icon from "../../../components/Icon";
-import ErrorAlert from "../../../components/ErrorAlert";
-import FileInput from "../../../components/inputs/FileInput";
-import useRoute from "../../../hooks/useRoute";
-import TrialAntiSpamNotice from "../TrialAntiSpamNotice";
+import React from 'react';
+import TenantLayout from '../../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
+import AppHead from '../../../components/AppHead';
+import Label from '../../../components/inputs/Label';
+import TextInput from '../../../components/inputs/TextInput';
+import Error from '../../../components/inputs/Error';
+import { useForm } from '@inertiajs/react';
+import Form from '../../../components/Form';
+import FormSection from '../../../components/FormSection';
+import RichTextInput from '../../../components/inputs/RichTextInput';
+import ButtonLink from '../../../components/inputs/ButtonLink';
+import Button from '../../../components/inputs/Button';
+import FormFooter from '../../../components/FormFooter';
+import MailingListSelect from '../../../components/inputs/MailingListSelect';
+import Icon from '../../../components/Icon';
+import ErrorAlert from '../../../components/ErrorAlert';
+import FileInput from '../../../components/inputs/FileInput';
+import useRoute from '../../../hooks/useRoute';
+import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 
-const Create = ({ lists }) => {
-    const { route } = useRoute();
+const Create = ({ lists, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    const {data, setData, post, processing, errors, progress} = useForm({
-        subject: '',
-        body: '',
-        list: null,
-        attachments: [],
-    });
+	const { data, setData, post, processing, errors, progress } = useForm({
+		subject: '',
+		body: '',
+		list: null,
+		attachments: [],
+	});
 
-    function submit(e) {
-        e.preventDefault();
-        post(route('communications.store'));
-    }
+	function submit(e) {
+		e.preventDefault();
+		post(route('communications.store'));
+	}
 
-    return (
+	const breadcrumbs = [
+		{ name: 'Communications', url: route('communications.index') },
+		{ name: 'Send Email Broadcast', url: route('communications.create') },
+	];
+
+	return (
 		<>
 			<AppHead title="Send Email" />
 
 			<TrialAntiSpamNotice />
 
-			<PageHeader
-				title="Send Email Broadcast"
-				icon="inbox-out"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Communications', url: route('communications.index') },
-					{ name: 'Send Email', url: route('communications.create') },
-				]}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="inbox-out" type="solid" className="mr-2" />
+						Send Email Broadcast
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
 			<div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:w-full">
 				{lists.length > 0 ? (
@@ -131,8 +145,8 @@ const Create = ({ lists }) => {
 			</div>
 		</>
 	);
-}
+};
 
-Create.layout = page => <TenantLayout children={page} />
+Create.layout = page => <TenantLayout children={page} />;
 
 export default Create;

@@ -1,34 +1,52 @@
-import React from 'react'
-import PageHeader from "../../../components/PageHeader/PageHeader";
-import classNames from "../../../classNames";
-import AppHead from "../../../components/AppHead";
-import DateTag from "../../../components/DateTag";
-import CollapseGroup from "../../../components/CollapseGroup";
-import useRoute from "../../../hooks/useRoute";
+import React from 'react';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
+import classNames from '../../../classNames';
+import AppHead from '../../../components/AppHead';
+import DateTag from '../../../components/DateTag';
+import useRoute from '../../../hooks/useRoute';
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons, mailTypeIcons } from '../../../components/MailStatusTag';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import MailStatusDetail from '../../../components/MailStatusDetail';
-import TrialAntiSpamNotice from "../TrialAntiSpamNotice";
-const Show = ({ log }) => {
-    const { route } = useRoute();
+import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
+import SectionLayout from '../../../components/SectionLayout';
+const Show = ({ log, setSidebarOpen }) => {
+	const { route } = useRoute();
 
 	const mailType = log.uid.split('-')[0];
 
-    return (
+	const breadcrumbs = [
+		{ name: 'Communications', url: route('communications.index') },
+		{ name: log.subject, url: route('communications.show', { mail_log: log }) },
+	];
+
+	return (
 		<>
 			<AppHead title={`${log.subject} - Mail Logs`} />
 
 			<TrialAntiSpamNotice />
 
-			<PageHeader
-				title={log.subject}
-				icon={mailTypeIcons[mailType] ?? 'question'}
-				meta={
-					<>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon={mailTypeIcons[mailType] ?? 'question'} type="solid" className="mr-2" />
+						{log.subject}
+					</PageHeaderTitle>
+					<PageHeaderMeta>
 						<div>
-							Opens:
+							Opens:{' '}
 							<span className="ml-0.5 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
 								<Icon icon="eye" mr />
 								<span className="font-medium">{log.opens_count}</span>
@@ -36,16 +54,16 @@ const Show = ({ log }) => {
 						</div>
 						<div>From: {log.from}</div>
 						<div>To: {log.to}</div>
-						<div>Cc: {log.cc}</div>
-						<div>Bcc: {log.bcc}</div>
+						{log.cc && <div>Cc: {log.cc}</div>}
+						{log.bcc && <div>Bcc: {log.bcc}</div>}
 						<div className="flex items-center gap-4">
 							<div>
-								<Icon icon="paperclip" mr />{' '}
+								<Icon icon="paperclip" mr />
 								{log.has_attachments ? 'Has attachments' : 'No attachments'}
 							</div>
 							{log.size > 0 && (
 								<div>
-									<Icon icon="hdd" mr />{' '}
+									<Icon icon="hdd" mr />
 									{log.size < 1024 * 1024
 										? `${(log.size / 1024).toFixed(1)} KB`
 										: `${(log.size / (1024 * 1024)).toFixed(1)} MB`}
@@ -56,54 +74,50 @@ const Show = ({ log }) => {
 							<DateTag icon="pencil" date={log.created_at} label="Created" />
 							<DateTag icon="pencil" date={log.updated_at} label="Updated" />
 						</div>
-					</>
-				}
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Communications', url: route('communications.index') },
-					{ name: log.subject, url: route('communications.show', { mail_log: log }) },
+					</PageHeaderMeta>
+				</PageHeaderContent>
+			</PageHeader>
+
+			<SectionLayout
+				layout={{
+					className: 'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0',
+					columns: [
+						{ id: 'main', className: 'sm:col-span-1' },
+						{ id: 'aside', className: 'sm:col-span-1' },
+					],
+				}}
+				sections={[
+					{
+						id: 'message',
+						column: 'main',
+						title: 'Message',
+						content: (
+							<div className="py-4 px-8 bg-gray-50">
+								{mailType === 'notification' ? (
+									<iframe srcdoc={log.body} width="100%" height="600" />
+								) : (
+									<Prose content={log.body} />
+								)}
+							</div>
+						),
+					},
+					{
+						id: 'activity',
+						column: 'aside',
+						title: 'Activity',
+						content: <Activity log={log} />,
+					},
 				]}
-				actions={[]}
 			/>
-
-			<div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-3 divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
-				<div className="sm:col-span-2 xl:col-span-2 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[
-							{
-								title: 'Body',
-								show: true,
-								defaultOpen: true,
-								content: (
-									<div className="py-4 px-8">
-										{mailType === 'notification' ? (
-											<iframe srcdoc={log.body} width="100%" height="600" />
-										) : (
-											<Prose content={log.body} />
-										)}
-									</div>
-								),
-							},
-						]}
-					/>
-				</div>
-
-				<div className="sm:col-span-1 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[{ title: 'Activity', show: true, defaultOpen: true, content: <Activity log={log} /> }]}
-					/>
-				</div>
-			</div>
 		</>
 	);
-}
+};
 
-Show.layout = page => <TenantLayout children={page} />
+Show.layout = page => <TenantLayout children={page} />;
 
 export default Show;
 
 const Activity = ({ log }) => {
-
 	const mailType = log.uid.split('-')[0];
 
 	const events = [...log.events];
@@ -118,7 +132,7 @@ const Activity = ({ log }) => {
 
 	return (
 		<>
-			<div className="flow-root px-6 py-8">
+			<div className="flow-root px-6 py-8 bg-gray-50">
 				<ul role="list" className="-mb-8">
 					{events
 						.map(event => ({
@@ -151,11 +165,11 @@ const Activity = ({ log }) => {
 												/>
 											</span>
 										</div>
-										<div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+										<div className="flex flex-col md:flex-row lg:flex-col xl:flex-row min-w-0 flex-1 justify-between gap-x-4 gap-y-2 pt-1.5">
 											<div>
 												<MailStatusDetail log={log} event={event} mailType={mailType} />
 											</div>
-											<div className="text-right text-sm whitespace-nowrap text-gray-500">
+											<div className="md:text-right lg:text-left xl:text-right text-sm whitespace-nowrap text-gray-500">
 												<DateTag
 													icon="pencil"
 													date={event.created_at}

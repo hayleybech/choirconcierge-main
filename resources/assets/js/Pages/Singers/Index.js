@@ -1,97 +1,142 @@
-import React, {useState} from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import SingerTableDesktop from "./SingerTableDesktop";
-import SingerTableMobile from "./SingerTableMobile";
-import AppHead from "../../components/AppHead";
-import {usePage} from "@inertiajs/react";
-import IndexContainer from "../../components/IndexContainer";
-import SingerFilters from "../../components/SingerFilters";
-import useFilterPane from "../../hooks/useFilterPane";
-import FilterSortPane from "../../components/FilterSortPane";
-import Sorts from "../../components/Sorts";
-import useSortFilterForm from "../../hooks/useSortFilterForm";
-import EmptyState from "../../components/EmptyState";
-import ImportSingersDialog from "../../components/ImportSingersDialog";
-import useRoute from "../../hooks/useRoute";
+import React, { useState } from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import { PageHeader, PageHeaderActions, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
+import SingerTableDesktop from './SingerTableDesktop';
+import SingerTableMobile from './SingerTableMobile';
+import AppHead from '../../components/AppHead';
+import { usePage } from '@inertiajs/react';
+import IndexContainer from '../../components/IndexContainer';
+import SingerFilters from '../../components/SingerFilters';
+import useFilterPane from '../../hooks/useFilterPane';
+import FilterSortPane from '../../components/FilterSortPane';
+import Sorts from '../../components/Sorts';
+import useSortFilterForm from '../../hooks/useSortFilterForm';
+import EmptyState from '../../components/EmptyState';
+import ImportSingersDialog from '../../components/ImportSingersDialog';
+import useRoute from '../../hooks/useRoute';
 import BulkEditSingersModal from './BulkEditSingersModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import { usePhoneBreadcrumb } from '../../lib/reactNative';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import Icon from '../../components/Icon';
+import Button from '../../components/inputs/Button';
 
-const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination }) => {
-    const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
-    const [showImportDialog, setShowImportDialog] = useState(false);
-    const { can } = usePage().props;
-    const { route } = useRoute();
+const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination, setSidebarOpen }) => {
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showImportDialog, setShowImportDialog] = useState(false);
+	const { can } = usePage().props;
+	const { route } = useRoute();
 
-    const bulkEdit = useBulkEdit(allSingers, can.update_singer, can.delete_singer, 'Singer');
+	const bulkEdit = useBulkEdit(allSingers, can.update_singer, can.delete_singer, 'Singer');
 
-    const sorts = [
-        { id: 'full-name', name: 'First Name', default: true },
-        { id: 'last-name-first', name: 'Last Name' },
-        { id: 'status-title', name: 'Status' },
-        // { id: 'part-title', name: 'Voice Part' },
-        { id: 'paid_until', name: 'Paid Until' },
-    ];
+	const sorts = [
+		{ id: 'full-name', name: 'First Name', default: true },
+		{ id: 'last-name-first', name: 'Last Name' },
+		{ id: 'status-title', name: 'Status' },
+		// { id: 'part-title', name: 'Voice Part' },
+		{ id: 'paid_until', name: 'Paid Until' },
+	];
 
-    const filters = [
-        { name: 'user.name', defaultValue: '' },
-        { name: 'status', multiple: true, defaultValue: [defaultStatus] },
-        { name: 'enrolments.voice_part_id', multiple: true },
-        { name: 'roles.id', multiple: true },
-        { name: 'fee_status', defaultValue: '' },
-        { name: 'enrolments.ensemble_id', multiple: true },
-    ];
+	const filters = [
+		{ name: 'user.name', defaultValue: '' },
+		{ name: 'status', multiple: true, defaultValue: [defaultStatus] },
+		{ name: 'enrolments.voice_part_id', multiple: true },
+		{ name: 'roles.id', multiple: true },
+		{ name: 'fee_status', defaultValue: '' },
+		{ name: 'enrolments.ensemble_id', multiple: true },
+	];
 
-    const sortFilterForm = useSortFilterForm('singers.index', filters, sorts);
+	const sortFilterForm = useSortFilterForm('singers.index', filters, sorts);
+
+	const actions = [
+		{
+			label: 'Add New',
+			icon: 'user-plus',
+			url: route('singers.create'),
+			variant: 'primary',
+			can: 'create_singer',
+		},
+		{
+			label: 'Voice Parts',
+			icon: 'users-class',
+			url: route('voice-parts.index'),
+			can: 'list_voice_parts',
+		},
+		{ label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
+		{
+			label: 'Import Singers',
+			icon: 'file-import',
+			onClick: () => setShowImportDialog(true),
+			can: 'import_singers',
+		},
+		{
+			label: 'Export Singers',
+			icon: 'file-export',
+			url: route('singers.export'),
+			download: true,
+			can: 'export_singers',
+		},
+		bulkEdit.action,
+		filterAction,
+	].filter(action => (action?.can ? can[action.can] : !!action));
 
 	usePhoneBreadcrumb('Singers', []);
 
-    return (
+	return (
 		<>
 			<AppHead title="Singers" />
-			<PageHeader
-				title="Singers"
-				icon="users"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Singers', url: route('singers.index') },
-				]}
-				actions={[
-					{
-						label: 'Add New',
-						icon: 'user-plus',
-						url: route('singers.create'),
-						variant: 'primary',
-						can: 'create_singer',
-					},
-					{
-						label: 'Voice Parts',
-						icon: 'users-class',
-						url: route('voice-parts.index'),
-						can: 'list_voice_parts',
-					},
-					{ label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
-					{
-						label: 'Import Singers',
-						icon: 'file-import',
-						onClick: () => setShowImportDialog(true),
-						can: 'import_singers',
-					},
-					{
-						label: 'Export Singers',
-						icon: 'file-export',
-						url: route('singers.export'),
-						download: true,
-						can: 'export_singers',
-					},
-					bulkEdit.action,
-					filterAction,
-				].filter(action => (action?.can ? can[action.can] : !!action))}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation title="Singers">
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								download={action.download}
+								variant={action.variant}
+								method={action.method}
+								disabled={action.disabled}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</PageTopNavigation>
+			</PageTopBar>
+
+			<PageHeader>
+				<PageHeaderTitle>
+					<Icon icon="users" type="solid" className="mr-2" /> Singers
+				</PageHeaderTitle>
+				<PageHeaderActions>
+					{actions.map((action, key) => (
+						<React.Fragment key={key}>
+							{action.label ? (
+								<Button
+									href={action.url}
+									onClick={action.onClick}
+									size="sm"
+									variant={action.variant}
+									external={action.download}
+									download={action.download}
+									method={action.method}
+									disabled={action.disabled}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							) : (
+								action
+							)}
+						</React.Fragment>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Singers?`}
@@ -180,8 +225,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 			/>
 		</>
 	);
-}
+};
 
-Index.layout = page => <TenantLayout children={page} />
+Index.layout = page => <TenantLayout children={page} />;
 
 export default Index;

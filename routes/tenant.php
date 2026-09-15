@@ -162,6 +162,7 @@ Route::middleware([
             Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('employee');
             Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
             Route::resource('songs.singers', LearningStatusController::class)->only(['index', 'update']);
+            Route::post('songs/{song}/singers/bulk-update', [LearningStatusController::class, 'bulkUpdate'])->name('songs.singers.bulk-update');
 
             // Song Categories module
             Route::resource('song-categories', SongCategoryController::class)->only(['index', 'store', 'update', 'destroy']);

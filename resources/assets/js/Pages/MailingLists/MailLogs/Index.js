@@ -1,62 +1,82 @@
-import React from 'react'
-import PageHeader from "../../../components/PageHeader/PageHeader";
-import AppHead from "../../../components/AppHead";
-import IndexContainer from "../../../components/IndexContainer";
-import useRoute from "../../../hooks/useRoute";
+import React from 'react';
+import { PageHeader, PageHeaderActions, PageHeaderTitle } from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
+import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
+import Button from '../../../components/inputs/Button';
+import Icon from '../../../components/Icon';
+import AppHead from '../../../components/AppHead';
+import IndexContainer from '../../../components/IndexContainer';
+import useRoute from '../../../hooks/useRoute';
 import MailLogTableMobile from './MailLogTableMobile';
 import MailLogTableDesktop from './MailLogTableDesktop';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import EmptyState from '../../../components/EmptyState';
-import TrialAntiSpamNotice from "../TrialAntiSpamNotice";
+import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 
-const Index = ({ logs, can }) => {
-    const { route } = useRoute();
+const Index = ({ logs, can, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    // const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	// const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
-    // const sorts = [
-    //     { id: 'id', name: 'Organisation Name', default: true },
-    //     { id: 'created_at', name: 'Date Created' },
-    // ];
-    //
-    // const filters = [
-    //     { name: 'id', defaultValue: '' },
-    // ]
-    //
-    // const sortFilterForm = useSortFilterForm('central.tenants.index', filters, sorts);
+	// const sorts = [
+	//     { id: 'id', name: 'Organisation Name', default: true },
+	//     { id: 'created_at', name: 'Date Created' },
+	// ];
+	//
+	// const filters = [
+	//     { name: 'id', defaultValue: '' },
+	// ]
+	//
+	// const sortFilterForm = useSortFilterForm('central.tenants.index', filters, sorts);
 
-    return (
+	const actions = [
+		{
+			label: 'Send Broadcast',
+			icon: 'inbox-out',
+			url: route('communications.create'),
+			variant: 'primary',
+			can: 'create_broadcast',
+		},
+		{
+			label: 'Mailing lists',
+			icon: 'at',
+			url: route('groups.index'),
+			variant: 'secondary',
+			can: 'list_groups',
+		},
+	].filter(action => (action?.can ? can[action.can] : !!action));
+
+	return (
 		<>
 			<AppHead title="Tenants" />
 
 			<TrialAntiSpamNotice />
 
-			<PageHeader
-				title="Communications"
-				icon="mail-bulk"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Communications', url: route('communications.index') },
-				]}
-				actions={[
-					{
-						label: 'Send Broadcast',
-						icon: 'inbox-out',
-						url: route('communications.create'),
-						variant: 'primary',
-						can: 'create_broadcast',
-					},
-					{
-						label: 'Mailing lists',
-						icon: 'at',
-						url: route('groups.index'),
-						variant: 'secondary',
-						can: 'list_groups',
-					},
-				//     filterAction,
-				].filter(action => (action?.can ? can[action.can] : !!action))}
-				// optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation title="Communications">
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem key={key} url={action.url} variant={action.variant}>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderTitle>
+					<Icon icon="mail-bulk" type="solid" className="mr-2" /> Communications
+				</PageHeaderTitle>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button key={action.label} href={action.url} size="sm" variant={action.variant}>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<IndexContainer
 				// showFilters={showFilters}
@@ -87,8 +107,8 @@ const Index = ({ logs, can }) => {
 			/>
 		</>
 	);
-}
+};
 
-Index.layout = page => <TenantLayout children={page} />
+Index.layout = page => <TenantLayout children={page} />;
 
 export default Index;

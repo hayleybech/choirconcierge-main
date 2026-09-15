@@ -2,14 +2,14 @@ import React from 'react';
 import Button from "../inputs/Button";
 import LearningStatusTag from "./LearningStatusTag";
 import LearningStatus from "../../LearningStatus";
-import CollapsePanel from "../CollapsePanel";
+import SimplePanel from "../SimplePanel";
 import useRoute from "../../hooks/useRoute";
 
 const MyLearningStatus = ({ song }) => {
     const { route } = useRoute();
 
     return (
-        <CollapsePanel>
+        <SimplePanel>
             <LearningStatusTag status={new LearningStatus(song.my_learning.status)} />
 
             {song.my_learning.status === 'not-started' && (
@@ -34,7 +34,7 @@ const MyLearningStatus = ({ song }) => {
                   I'm Still Learning
                 </Button>
             )}
-        </CollapsePanel>
+        </SimplePanel>
     );
 }
 
