@@ -18,7 +18,5 @@ test('user navigation adds urls while preserving route names for the api', funct
     expect($data[0])->toHaveKey('route', 'central.account.edit');
     expect($data[0]['url'])->toContain('/app/account/edit');
 
-    $help = collect($data)->firstWhere('name', 'Help (Email Us)');
-
-    expect($help['url'])->toBe('mailto:hayley@choirconcierge.com');
+    expect(collect($data)->firstWhere('name', 'Help (Email Us)'))->toBeNull();
 });
