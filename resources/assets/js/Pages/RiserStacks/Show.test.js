@@ -9,7 +9,20 @@ jest.mock('@inertiajs/react', () => ({
 }));
 
 jest.mock('../../Layouts/TenantLayout', () => ({ children }) => <div>{children}</div>);
-jest.mock('../../components/PageHeader/PageHeader', () => ({ PageHeader2: ({ children }) => <div>{children}</div> }));
+jest.mock('../../components/PageTopBar', () => ({
+    __esModule: true,
+    default: ({ children }) => <div>{children}</div>,
+    PageActionsMenu: ({ children }) => <div>{children}</div>,
+    PageTopNavigation: () => null,
+}));
+jest.mock('../../components/PageHeader/PageHeader', () => ({
+    PageHeader: ({ children }) => <div>{children}</div>,
+    PageHeaderActions: ({ children }) => <div>{children}</div>,
+    PageHeaderBreadcrumbs: () => null,
+    PageHeaderContent: ({ children }) => <div>{children}</div>,
+    PageHeaderMeta: ({ children }) => <div>{children}</div>,
+    PageHeaderTitle: ({ children }) => <div>{children}</div>,
+}));
 jest.mock('../../components/AppHead', () => () => null);
 jest.mock('../../components/DateTag', () => () => null);
 jest.mock('../../components/DeleteDialog', () => () => null);
