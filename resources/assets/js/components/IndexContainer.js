@@ -4,7 +4,7 @@ import { Transition } from '@headlessui/react';
 import { useMediaQuery } from 'react-responsive';
 import FilterDialog from './FilterDialog';
 
-const IndexContainer = ({ tableDesktop, tableMobile, emptyState, filterPane, showFilters }) => {
+const IndexContainer = ({ tableDesktop, tableMobile, emptyState, filterPane, showFilters = false }) => {
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 	const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(showFilters);
 

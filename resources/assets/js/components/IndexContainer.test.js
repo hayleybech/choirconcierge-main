@@ -47,4 +47,11 @@ describe('IndexContainer', () => {
 		expect(filterPane.className).toContain('lg:w-1/5');
 		expect(screen.getByText('Desktop table')).toBeTruthy();
 	});
+
+	it('does not open a filter dialog when filters are not configured', () => {
+		render(<IndexContainer tableMobile={<div>Mobile table</div>} />);
+
+		expect(screen.queryByRole('dialog')).toBeNull();
+		expect(screen.getByText('Mobile table')).toBeTruthy();
+	});
 });
