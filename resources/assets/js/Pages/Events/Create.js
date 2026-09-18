@@ -1,31 +1,46 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import EventForm from "./EventForm";
-import useRoute from "../../hooks/useRoute";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
+import AppHead from '../../components/AppHead';
+import EventForm from './EventForm';
+import useRoute from '../../hooks/useRoute';
 
-const Create = ({ types, ensembles }) => {
-    const { route } = useRoute();
+const Create = ({ types, ensembles, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    return (
-        <>
-            <AppHead title="Create Event" />
-            <PageHeader
-                title="Create Event"
-                icon="calendar-plus"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Events', url: route('events.index')},
-                    { name: 'Create', url: route('events.create')},
-                ]}
-            />
+	const breadcrumbs = [
+		{ name: 'Events', url: route('events.index') },
+		{ name: 'Create Event', url: route('events.create') },
+	];
 
-            <EventForm types={types} ensembles={ensembles} />
-        </>
-    );
-}
+	return (
+		<>
+			<AppHead title="Create Event" />
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="calendar-plus" type="solid" className="mr-2" />
+						Create Event
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
-Create.layout = page => <TenantLayout children={page} />
+			<EventForm types={types} ensembles={ensembles} />
+		</>
+	);
+};
+
+Create.layout = page => <TenantLayout children={page} />;
 
 export default Create;

@@ -1,6 +1,16 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import Icon from '../../components/Icon';
+import Button from '../../components/inputs/Button';
 import AppHead from '../../components/AppHead';
 import EventTableDesktop from './EventTableDesktop';
 import EventTableMobile from './EventTableMobile';
@@ -17,7 +27,7 @@ import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 
-const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
+const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can, setSidebarOpen }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const { route } = useRoute();
 
@@ -68,17 +78,55 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can }) => {
 	return (
 		<>
 			<AppHead title="Events" />
-			<PageHeader
-				title="Events"
-				icon="calendar"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Events', url: route('events.index') },
-				]}
-				actions={actions}
-				meta={<div>Calendar Sync URL: {route('events.feed')}</div>}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation title="Events">
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								download={action.download}
+								variant={action.variant}
+								method={action.method}
+								disabled={action.disabled}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</PageTopNavigation>
+			</PageTopBar>
+
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderTitle>
+						<Icon icon="calendar" type="solid" className="mr-2" /> Events
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<div>Calendar Sync URL: {route('events.feed')}</div>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+							external={action.download}
+							download={action.download}
+							method={action.method}
+							disabled={action.disabled}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Events?`}

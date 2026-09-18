@@ -22,7 +22,7 @@ const MailLogTableMobile = ({ logs }) => {
 				const mailType = log.uid.split('-')[0];
 				return (
 					<li key={log.id} className="flex">
-						<TableMobileLink url={route('groups.mail-logs.show', { mail_log: log })}>
+						<TableMobileLink url={route('communications.show', { mail_log: log })}>
 							<div className="block hover:bg-gray-50 flex-grow min-w-0 text-gray-500">
 								<div className="flex items-center pr-2">
 									<div className="flex-1 flex items-center justify-between min-w-0 w-full gap-2">

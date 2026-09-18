@@ -4,9 +4,12 @@ import {Link} from "@inertiajs/react";
 import MainNavigation from "./MainNavigation";
 import Icon from "./Icon";
 import useRoute from "../hooks/useRoute";
+import SwitchChoirMenu from "./SwitchChoirMenu";
+import UserMenu from "./UserMenu";
 
-const SidebarMobile = ({ navigation, open, setOpen }) => {
+const SidebarMobile = ({ navigation, open, setOpen, choirs, tenant, setShowImpersonateModal }) => {
     const { route } = useRoute();
+    const [userMenuOpen, setUserMenuOpen] = React.useState(false);
 
     return (
         <Transition.Root show={open} as={Fragment}>
@@ -57,11 +60,41 @@ const SidebarMobile = ({ navigation, open, setOpen }) => {
                             <img src="/img/vibrant/logo.svg" alt="Choir Concierge" className="h-10 w-auto" />
                         </Link>
 
-                        <div className="flex-1 h-0 overflow-y-auto">
-                            <MainNavigation navigation={navigation} closeSidebar={() => setOpen(false)} />
+                        <div className="shrink-0 mb-4"><SwitchChoirMenu choirs={choirs} tenant={tenant} mobile /></div>
+
+                        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+                            <MainNavigation navigation={navigation} closeSidebar={() => setOpen(false)} onOpenUserMenu={() => setUserMenuOpen(true)} />
                         </div>
                     </div>
                 </Transition.Child>
+                <Transition.Root show={userMenuOpen} as={Fragment}>
+                    <Dialog as="div" className="fixed inset-0 z-50 flex" onClose={() => setUserMenuOpen(false)}>
+                        <Transition.Child
+                            as={Fragment}
+                            enter="transition-opacity ease-linear duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="transition-opacity ease-linear duration-300"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            <Dialog.Overlay className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+                        </Transition.Child>
+                        <Transition.Child
+                            as={Fragment}
+                            enter="transition ease-in-out duration-300 transform"
+                            enterFrom="-translate-x-full"
+                            enterTo="translate-x-0"
+                            leave="transition ease-in-out duration-300 transform"
+                            leaveFrom="translate-x-0"
+                            leaveTo="-translate-x-full"
+                        >
+                            <div className="relative z-10 flex w-full max-w-xs flex-col bg-gray-50 pt-5 pb-4">
+                                <UserMenu mobile onBack={() => setUserMenuOpen(false)} onClose={() => setOpen(false)} setShowImpersonateModal={setShowImpersonateModal} />
+                            </div>
+                        </Transition.Child>
+                    </Dialog>
+                </Transition.Root>
                 <div className="shrink-0 w-14" aria-hidden="true">
                     {/* Dummy element to force sidebar to shrink to fit close icon */}
                 </div>

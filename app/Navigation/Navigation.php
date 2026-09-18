@@ -2,47 +2,64 @@
 
 namespace App\Navigation;
 
+use App\Models\Tenant;
+
 class Navigation
 {
-    public function get(): array
+    public function get(?string $tenant = null, bool $forApi = false): array
     {
-        if (tenancy()->initialized === false) {
-            return [
-                [
-                    'name' => 'Dashboard',
-                    'route' => 'central.dash',
-                    'icon' => 'fa-chart-line',
-                    'can' => 'view_dash',
-                    'showAsActiveForRoutes' => ['central.dash'],
-                    'items' => []
-                ],
-                [
-                    'name' => 'Tenants',
-                    'route' => 'central.tenants.index',
-                    'icon' => 'building',
-                    'can' => 'list_tenants',
-                    'showAsActiveForRoutes' => ['central.tenants.*'],
-                    'items' => []
-                ],
-                [
-                    'name' => 'Users',
-                    'route' => 'central.users.index',
-                    'icon' => 'users',
-                    'can' => 'list_tenants',
-                    'showAsActiveForRoutes' => ['central.users.*'],
-                    'items' => []
-                ],
-                [
-                    'name' => 'Mail Logs',
-                    'route' => 'central.mail-logs.index',
-                    'icon' => 'history',
-                    'can' => 'list_tenants',
-                    'showAsActiveForRoutes' => ['central.mail-logs.*'],
-                    'items' => []
-                ],
-            ];
+        $items = $tenant && Tenant::find($tenant)
+            ? $this->tenantItems()
+            : $this->centralItems();
+
+        if ($forApi) {
+            $return = $this->transformForApi($items, $tenant);
+            return $return;
         }
 
+        return $items;
+    }
+
+    protected function centralItems(): array
+    {
+        return [
+            [
+                'name' => 'Dashboard',
+                'route' => 'central.dash',
+                'icon' => 'fa-chart-line',
+                'can' => 'view_dash',
+                'showAsActiveForRoutes' => ['central.dash'],
+                'items' => []
+            ],
+            [
+                'name' => 'Tenants',
+                'route' => 'central.tenants.index',
+                'icon' => 'building',
+                'can' => 'list_tenants',
+                'showAsActiveForRoutes' => ['central.tenants.*'],
+                'items' => []
+            ],
+            [
+                'name' => 'Users',
+                'route' => 'central.users.index',
+                'icon' => 'users',
+                'can' => 'list_tenants',
+                'showAsActiveForRoutes' => ['central.users.*'],
+                'items' => []
+            ],
+            [
+                'name' => 'Mail Logs',
+                'route' => 'central.mail-logs.index',
+                'icon' => 'history',
+                'can' => 'list_tenants',
+                'showAsActiveForRoutes' => ['central.mail-logs.*'],
+                'items' => []
+            ],
+        ];
+    }
+
+    protected function tenantItems(): array
+    {
         return [
             [
                 'name' => 'Dashboard',
@@ -109,15 +126,20 @@ class Navigation
                 ]
             ],
             [
-                'name' => 'Mailing Lists',
-                'route' => 'groups.index',
+                'name' => 'Communications',
+                'route' => 'communications.index',
+                'can' => 'create_broadcast',
                 'icon' => 'fa-mail-bulk',
-                'can' => 'list_groups',
-                'showAsActiveForRoutes' => ['groups.*'],
+                'showAsActiveForRoutes' => ['communications.*', 'groups.*'],
                 'items' => [
-                    ['name' => 'Add New', 'route' => 'groups.create', 'icon' => 'fa-plus-square', 'can' => 'create_group', 'showAsActiveForRoutes' => ['groups.create']],
-                    ['name' => 'Send Broadcast', 'route' => 'groups.broadcasts.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['groups.broadcasts.create']],
-                    ['name' => 'Logs', 'route' => 'groups.mail-logs.index', 'icon' => 'history', 'can' => 'view_mail_logs', 'showAsActiveForRoutes' => ['groups.mail-logs.*']],
+                    ['name' => 'Send Broadcast', 'route' => 'communications.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['communications.create']],
+                    [
+                        'name' => 'Mailing Lists',
+                        'route' => 'groups.index',
+                        'icon' => 'fa-at',
+                        'can' => 'list_groups',
+                        'showAsActiveForRoutes' => ['groups.*'],
+                    ]
                 ]
             ],
             [
@@ -141,5 +163,69 @@ class Navigation
                 ]
             ],
         ];
+    }
+
+    protected function transformForApi(array $items, ?string $tenant): array
+    {
+        return array_map(function ($item) use ($tenant) {
+            if (isset($item['route'])) {
+                $item['url'] = $this->generateUrl(
+                    $item['route'],
+                    $tenant ? ['tenant' => $tenant, ...$item['params'] ?? []] : $item['params'] ?? []
+                );
+                unset($item['params']);
+            }
+
+            if (isset($item['can'])) {
+                $item['can'] = auth()->user()?->can($item['can']) ?? false;
+            }
+
+            if (isset($item['showAsActiveForRoutes'])) {
+                $item['showAsActiveForUrls'] = $this->convertActiveRoutesToUrls(
+                    $item['showAsActiveForRoutes'],
+                    $tenant
+                );
+                unset($item['showAsActiveForRoutes']);
+            }
+
+            if (isset($item['items']) && !empty($item['items'])) {
+                $item['items'] = $this->transformForApi($item['items'], $tenant);
+            }
+
+            return $item;
+        }, $items);
+    }
+
+    /**
+     * @param array<int, string> $routes
+     * @return array<int, string>
+     */
+    protected function convertActiveRoutesToUrls(array $routes, ?string $tenant): array
+    {
+        return array_map(function (string $route) use ($tenant): string {
+            $hasWildcard = str_ends_with($route, '.*');
+            $route = $hasWildcard ? substr($route, 0, -2) : $route;
+
+            if ($route === 'dash' && $tenant !== null) {
+                return '/' . $tenant;
+            }
+
+            if ($route === 'central.dash') {
+                return '/app';
+            }
+
+            $url = '/' . ($tenant ? $tenant . '/' : '') . str_replace('.', '/', $route);
+
+            return $hasWildcard ? $url . '*' : $url;
+        }, $routes);
+    }
+
+    protected function generateUrl(string $route, array $params = []): string
+    {
+        try {
+            return route($route, $params, false);
+        } catch (\Exception $e) {
+            return $route;
+        }
     }
 }

@@ -162,6 +162,7 @@ Route::middleware([
             Route::resource('songs.attachments', SongAttachmentController::class)->only(['store', 'show', 'update', 'destroy'])->middleware('employee');
             Route::post('songs/{song}/my-learning', UpdateMyLearningStatusController::class)->name('songs.my-learning.update');
             Route::resource('songs.singers', LearningStatusController::class)->only(['index', 'update']);
+            Route::post('songs/{song}/singers/bulk-update', [LearningStatusController::class, 'bulkUpdate'])->name('songs.singers.bulk-update');
 
             // Song Categories module
             Route::resource('song-categories', SongCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -244,10 +245,12 @@ Route::middleware([
             // Mailing Lists (User Groups) module
             Route::prefix('groups')->name('groups.')->group(function () {
                 Route::post('bulk-destroy', [UserGroupController::class, 'bulkDestroy'])->name('bulk-destroy');
-                Route::resource('mail-logs', MailLogController::class)->only(['index', 'show'])->middleware(EnsureUserIsMember::class);
             });
-            Route::get('/groups/broadcasts/create', [BroadcastController::class, 'create'])->name('groups.broadcasts.create');
-            Route::post('/groups/broadcasts', [BroadcastController::class, 'store'])->name('groups.broadcasts.store');
+            Route::get('/communications/create', [BroadcastController::class, 'create'])->name('communications.create');
+            Route::post('/communications', [BroadcastController::class, 'store'])->name('communications.store');
+            Route::resource('communications', MailLogController::class)->only(['index', 'show'])->middleware(EnsureUserIsMember::class)->parameters([
+                'communications' => 'mail_log',
+            ]);
             Route::resource('groups', UserGroupController::class);
 
             // Tasks module

@@ -1,3 +1,15 @@
+# 2026-09-18
+## Sitewide Layout Improvements
+We've made substantial changes to some of the core aspects of the sites layout, with a specific focus on mobile. We also managed to fix a few minor annoyances along the way!
+- New tabbed layouts on mobile for key pages like Singer profiles, Events, and Songs. 
+- Improved use of space on many key pages, especially on mobile.
+- Improved layout on tablet devices.
+- Revamped column layout for the Song Learning Status page (similar to RSVP and Attendance listings for an Event) with sortable columns and bulk selection tools.
+- Improved the Add Attachment form.
+- Improved filter/sort view on mobile.
+- Added quick access to the Kiosk and QR Code features from an Event.
+- Tweaked scrolling when viewing riser stacks.
+---
 # 2026-08-18
 ## Audio Player 2.0
 We've just launched a new version of the audio player! We've added a lot of new and highly-requested features, including:
@@ -79,12 +91,12 @@ You can re-use the QR code for a recurring event, meaning for rehearsals you can
 
 There's also a kiosk option, which allows you to check in members using a shared tablet. Log in, go to the event kiosk, then hand the tablet to the member to mark themself as present.
 
-Singers will automatically be marked as present, late or "late deemed absent" depending on when they check in.
+Singers will automatically be marked as present, late, or "late deemed absent" depending on when they check in.
 
 ---
 # 2025-12-09
 ## Duplicate button
-We've added a duplicate button to many modules, making it easy to quickly clone Songs, Events etc.
+We've added a duplicate button to many modules, making it easy to quickly clone Songs, Events, etc.
 
 ---
 # 2025-11-26

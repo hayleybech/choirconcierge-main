@@ -1,58 +1,88 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import RiserStackTableDesktop from "./RiserStackTableDesktop";
-import RiserStackTableMobile from "./RiserStackTableMobile";
-import {usePage} from "@inertiajs/react";
-import IndexContainer from "../../components/IndexContainer";
-import EmptyState from "../../components/EmptyState";
-import useRoute from "../../hooks/useRoute";
-import useFilterPane from "../../hooks/useFilterPane";
-import useSortFilterForm from "../../hooks/useSortFilterForm";
-import FilterSortPane from "../../components/FilterSortPane";
-import RiserStackFilters from "../../components/RiserStack/RiserStackFilters";
-import useBulkEdit from "../../hooks/useBulkEdit";
-import Dialog from "../../components/Dialog";
-import BulkEditRiserStacksModal from "./BulkEditRiserStacksModal";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import Icon from '../../components/Icon';
+import Button from '../../components/inputs/Button';
+import AppHead from '../../components/AppHead';
+import RiserStackTableDesktop from './RiserStackTableDesktop';
+import RiserStackTableMobile from './RiserStackTableMobile';
+import { usePage } from '@inertiajs/react';
+import IndexContainer from '../../components/IndexContainer';
+import EmptyState from '../../components/EmptyState';
+import useRoute from '../../hooks/useRoute';
+import useFilterPane from '../../hooks/useFilterPane';
+import useSortFilterForm from '../../hooks/useSortFilterForm';
+import FilterSortPane from '../../components/FilterSortPane';
+import RiserStackFilters from '../../components/RiserStack/RiserStackFilters';
+import useBulkEdit from '../../hooks/useBulkEdit';
+import Dialog from '../../components/Dialog';
+import BulkEditRiserStacksModal from './BulkEditRiserStacksModal';
 import BulkEditBar from '../../components/BulkEditBar';
 
-const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
-    const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
-    const { can } = usePage().props;
-    const { route } = useRoute();
+const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const { can } = usePage().props;
+	const { route } = useRoute();
 
-    const bulkEdit = useBulkEdit(stacks.data, can.update_stack && ensembles.length > 1, can.delete_stack, 'Stack');
+	const bulkEdit = useBulkEdit(stacks.data, can.update_stack && ensembles.length > 1, can.delete_stack, 'Stack');
 
-    const filters = [
-        { name: 'ensembles.id', multiple: true },
-    ];
+	const filters = [{ name: 'ensembles.id', multiple: true }];
 
-    const sortFilterForm = useSortFilterForm('stacks.index', filters, []);
+	const sortFilterForm = useSortFilterForm('stacks.index', filters, []);
+	const actions = [
+		{ label: 'Add New', icon: 'plus', url: route('stacks.create'), variant: 'primary', can: 'create_stack' },
+		bulkEdit.action,
+		filterAction,
+	].filter(action => (action?.can ? can[action.can] : !!action));
 
-    return (
+	return (
 		<>
 			<AppHead title="Riser Stacks" />
-			<PageHeader
-				title="Riser Stacks"
-				icon="people-arrows"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Riser Stacks', url: route('stacks.index') },
-				]}
-				actions={[
-					{
-						label: 'Add New',
-						icon: 'plus',
-						url: route('stacks.create'),
-						variant: 'primary',
-						can: 'create_stack',
-					},
-					bulkEdit.action,
-					filterAction,
-				].filter(action => (action?.can ? can[action.can] : !!action))}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation title="Riser Stacks">
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderTitle>
+						<Icon icon="people-arrows" type="solid" className="mr-2" /> Riser Stacks
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Riser Stacks?`}
@@ -133,8 +163,8 @@ const Index = ({ stacks, ensembles, userEnsemblesCount }) => {
 			/>
 		</>
 	);
-}
+};
 
-Index.layout = page => <TenantLayout children={page} />
+Index.layout = page => <TenantLayout children={page} />;
 
 export default Index;

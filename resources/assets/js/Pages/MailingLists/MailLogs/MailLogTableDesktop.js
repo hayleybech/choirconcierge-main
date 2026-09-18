@@ -30,7 +30,7 @@ const MailLogTableDesktop = ({ logs }) => {
 						<tr key={log.id}>
 							<TableCell>
 								<Link
-									href={route('groups.mail-logs.show', { mail_log: log })}
+									href={route('communications.show', { mail_log: log })}
 									className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
 								>
 									<Icon icon={mailTypeIcons[mailType] ?? 'question'} mr />

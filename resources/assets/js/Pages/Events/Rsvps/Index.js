@@ -1,6 +1,14 @@
 import React, { useState, Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import PageHeader from '../../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
+import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import Icon from '../../../components/Icon';
@@ -38,6 +46,7 @@ const Index = ({
 	singerStatuses,
 	counts,
 	customFields,
+	setSidebarOpen,
 }) => {
 	const { route } = useRoute();
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -110,21 +119,44 @@ const Index = ({
 
 	const columnsAction = isDesktop ? columnsMenu : null;
 
+	const breadcrumbs = [
+		{ name: 'Events', url: route('events.index') },
+		{ name: event.title, url: route('events.show', { event }) },
+		{ name: 'RSVP List', url: route('events.rsvps.index', { event }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`RSVP List - ${event.title}`} />
-			<PageHeader
-				title="RSVP List"
-				icon="calendar"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Events', url: route('events.index') },
-					{ name: event.title, url: route('events.show', { event }) },
-					{ name: 'RSVP List', url: route('events.rsvps.index', { event }) },
-				]}
-				actions={[filterAction, columnsAction]}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+					{filterAction && (
+						<PageActionsMenu>
+							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
+								<Icon icon="filter" mr />
+								Filter
+							</ActionMenuItem>
+						</PageActionsMenu>
+					)}
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="calendar" type="solid" className="mr-2" />
+						RSVP List
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{filterAction && (
+						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+							<Icon icon="filter" mr />
+							Filter
+						</Button>
+					)}
+					{columnsMenu}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<div className="bg-white border-b border-gray-200 grid grid-cols-3">
 				{countsData.map(({ label, textColour, icon, count }) => (

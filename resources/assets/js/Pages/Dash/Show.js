@@ -9,6 +9,9 @@ import PollsWidget from './PollsWidget';
 import ErrorAlert from '../../components/ErrorAlert';
 import WarningAlert from '../../components/WarningAlert';
 import SingerAttendanceWidget from './SingerAttendanceWidget';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import { PageHeader, PageHeaderContent, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
+import Icon from '../../components/Icon';
 
 const Show = ({
 	events,
@@ -22,12 +25,23 @@ const Show = ({
 	rsvpSummary,
 	performanceTypeId,
 	activePolls,
+	setSidebarOpen,
 }) => (
 	<>
 		<AppHead title="Dashboard" />
+		<PageTopBar setSidebarOpen={setSidebarOpen}>
+			<PageTopNavigation title="Dashboard" />
+		</PageTopBar>
+		<PageHeader>
+			<PageHeaderContent>
+				<PageHeaderTitle>
+					<Icon icon="tachometer-alt" type="solid" className="mr-2" /> Dashboard
+				</PageHeaderTitle>
+			</PageHeaderContent>
+		</PageHeader>
+
 		<div className="py-6">
 			<div className="mx-auto px-4 sm:px-6 lg:px-16">
-				<h1 className="text-2xl font-semibold text-gray-900 mb-8">Dashboard</h1>
 
 				<FeeStatusWarning status={feeStatus} />
 

@@ -120,7 +120,7 @@ class AttendanceController extends Controller
             if ($event->ensembles->isNotEmpty()) {
                 $membership->setRelation('enrolments', $membership->enrolments->filter(function ($enrolment) use ($event) {
                     return $event->ensembles->contains($enrolment->ensemble_id);
-                }));
+                })->values());
             }
 
             return $membership;

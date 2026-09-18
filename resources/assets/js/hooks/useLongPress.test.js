@@ -88,6 +88,7 @@ describe('useLongPress', () => {
 		});
 
 		expect(onLongPress).not.toHaveBeenCalled();
+		expect(onClick).not.toHaveBeenCalled();
 	});
 
 	it('should NOT call onLongPress if mouse dragged', () => {
@@ -107,6 +108,7 @@ describe('useLongPress', () => {
 		});
 
 		expect(onLongPress).not.toHaveBeenCalled();
+		expect(onClick).not.toHaveBeenCalled();
 	});
 
 	it('should NOT call onLongPress if slightly moved but below threshold', () => {

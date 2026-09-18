@@ -5,7 +5,7 @@ import DeleteDialog from "../DeleteDialog";
 import {Link} from "@inertiajs/react";
 import useRoute from "../../hooks/useRoute";
 
-const EventScheduleMobile = ({ event }) => {
+const EventScheduleMobile = ({ event, onAddActivity }) => {
     const { route } = useRoute();
 
     const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
@@ -45,6 +45,19 @@ const EventScheduleMobile = ({ event }) => {
                         </div>
                     </li>
                 ))}
+                {event.can.update_event && (
+                    <li className="bg-white hover:bg-purple-100">
+                        <Button
+                            variant="clear"
+                            size="sm"
+                            className="w-full justify-start px-6 py-5 text-purple-600"
+                            onClick={onAddActivity}
+                        >
+                            <Icon icon="plus" />
+                            Add activity
+                        </Button>
+                    </li>
+                )}
                 <li className="bg-gray-50 font-bold">
                     <div className="px-6 py-4 flex justify-between items-center space-x-3">
                         <div className="text-gray-500">

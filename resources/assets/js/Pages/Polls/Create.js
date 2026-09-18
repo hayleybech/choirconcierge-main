@@ -1,7 +1,13 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
 import AppHead from '../../components/AppHead';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import useRoute from '../../hooks/useRoute';
 import { useForm } from '@inertiajs/react';
 import TextInput from '../../components/inputs/TextInput';
@@ -13,14 +19,14 @@ import FormSection from '../../components/FormSection';
 import Label from '../../components/inputs/Label';
 import CheckboxWithLabel from '../../components/inputs/CheckboxWithLabel';
 import Icon from '../../components/Icon';
-import DateInput from "../../components/inputs/Date";
-import TimeInput from "../../components/inputs/Time";
-import {DateTime} from "luxon";
-import Help from "../../components/inputs/Help";
-import CheckboxGroup from "../../components/inputs/CheckboxGroup";
-import RichTextInput from "../../components/inputs/RichTextInput";
+import DateInput from '../../components/inputs/Date';
+import TimeInput from '../../components/inputs/Time';
+import { DateTime } from 'luxon';
+import Help from '../../components/inputs/Help';
+import CheckboxGroup from '../../components/inputs/CheckboxGroup';
+import RichTextInput from '../../components/inputs/RichTextInput';
 
-const Create = ({ ensembles = [] }) => {
+const Create = ({ ensembles = [], setSidebarOpen }) => {
 	const { route } = useRoute();
 	const { data, setData, post, processing, errors, transform } = useForm({
 		title: '',
@@ -34,7 +40,7 @@ const Create = ({ ensembles = [] }) => {
 
 	const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
 
-	transform((data) => ({
+	transform(data => ({
 		...data,
 		close_at: data.close_at ? data.close_at.toFormat(rawDateFormat) : null,
 	}));
@@ -46,26 +52,36 @@ const Create = ({ ensembles = [] }) => {
 	};
 
 	const addOption = () => setData('options', [...data.options, '']);
-	const removeOption = idx => setData('options', data.options.filter((_, i) => i !== idx));
+	const removeOption = idx =>
+		setData(
+			'options',
+			data.options.filter((_, i) => i !== idx)
+		);
 
 	function setCloseAtDate(value) {
 		const date = DateTime.fromJSDate(value);
 		const target = data.close_at ?? DateTime.now().set({ hour: 23, minute: 59, second: 59 });
-		setData('close_at', target.set({
-			year: date.year,
-			month: date.month,
-			day: date.day,
-		}));
+		setData(
+			'close_at',
+			target.set({
+				year: date.year,
+				month: date.month,
+				day: date.day,
+			})
+		);
 	}
 
 	function setCloseAtTime(value) {
 		const time = DateTime.fromISO(value);
 		const target = data.close_at ?? DateTime.now();
-		setData('close_at', target.set({
-			hour: time.hour,
-			minute: time.minute,
-			second: 0,
-		}));
+		setData(
+			'close_at',
+			target.set({
+				hour: time.hour,
+				minute: time.minute,
+				second: 0,
+			})
+		);
 	}
 
 	const submit = e => {
@@ -73,18 +89,26 @@ const Create = ({ ensembles = [] }) => {
 		post(route('polls.store'));
 	};
 
+	const breadcrumbs = [
+		{ name: 'Polls', url: route('polls.index') },
+		{ name: 'Create Poll', url: route('polls.create') },
+	];
+
 	return (
 		<>
 			<AppHead title="Create Poll" />
-			<PageHeader
-				title="Create Poll"
-				icon="fa-poll"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Polls', url: route('polls.index') },
-					{ name: 'Create', url: route('polls.create') },
-				]}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="poll" type="solid" className="mr-2" />
+						Create Poll
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
 			<FormWrapper>
 				<Form onSubmit={submit}>
@@ -148,7 +172,9 @@ const Create = ({ ensembles = [] }) => {
 						{ensembles.length > 1 && (
 							<div className="sm:col-span-6">
 								<Label label="Ensembles" forInput="ensemble_ids" />
-								<Help>Only singers in these ensembles will see this poll. Leave empty for all singers.</Help>
+								<Help>
+									Only singers in these ensembles will see this poll. Leave empty for all singers.
+								</Help>
 								<CheckboxGroup
 									name="ensemble_ids"
 									options={ensembles.map(e => ({ id: e.id, name: e.name }))}

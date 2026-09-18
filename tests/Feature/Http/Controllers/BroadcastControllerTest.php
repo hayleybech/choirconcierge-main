@@ -20,7 +20,7 @@ it('has a send email page', function () {
 
     createGroup($user);
 
-    $this->get(the_tenant_route('groups.broadcasts.create'))
+    $this->get(the_tenant_route('communications.create'))
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('MailingLists/Broadcasts/Create')
@@ -33,11 +33,11 @@ it('dispatches a job to send the email', function () {
 
     $group = createGroup($user);
 
-    $this->post(the_tenant_route('groups.broadcasts.store'), [
+    $this->post(the_tenant_route('communications.store'), [
         'list' => $group->id,
         'subject' => 'this is a test',
         'body' => 'test body',
-    ])->assertRedirect(route('groups.mail-logs.index'));
+    ])->assertRedirect(route('communications.index'));
 
     Queue::assertPushed(SendEmailForGroup::class, function (SendEmailForGroup $job) use ($user, $group) {
         return $job->group->is($group)
@@ -57,12 +57,12 @@ it('stores attachments in temporary storage', function () {
         UploadedFile::fake()->create('test2.txt'),
     ];
 
-    $this->post(the_tenant_route('groups.broadcasts.store'), [
+    $this->post(the_tenant_route('communications.store'), [
         'list' => $group->id,
         'subject' => 'this is a test',
         'body' => 'test body',
         'attachments' => $files,
-    ])->assertRedirect(route('groups.mail-logs.index'));
+    ])->assertRedirect(route('communications.index'));
 
     Storage::disk('temp')->assertExists("broadcasts/{$files[0]->hashName()}");
     Storage::disk('temp')->assertExists("broadcasts/{$files[1]->hashName()}");
@@ -85,12 +85,12 @@ it('logs the size of the broadcast', function () {
     $body = 'test body';
     $expectedSize = (100 * 1024) + strlen($body);
 
-    $this->post(the_tenant_route('groups.broadcasts.store'), [
+    $this->post(the_tenant_route('communications.store'), [
         'list' => $group->id,
         'subject' => 'this is a test',
         'body' => $body,
         'attachments' => [$file],
-    ])->assertRedirect(route('groups.mail-logs.index'));
+    ])->assertRedirect(route('communications.index'));
 
     $this->assertDatabaseHas('mail_logs', [
         'subject' => 'this is a test',

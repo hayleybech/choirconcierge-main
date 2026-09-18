@@ -19,6 +19,7 @@ use App\Models\Tenant;
 use App\Models\UserGroup;
 use App\Models\VoicePart;
 use App\Navigation\Navigation;
+use App\Navigation\UserNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Middleware;
@@ -125,7 +126,8 @@ class HandleInertiaRequests extends Middleware
             'impersonationActive' => session()->has('impersonation:active'),
             'userChoirs' => $this->getUserChoirs(),
             'isWebView' => $request->attributes->get('isWebView'),
-            'navigation' => (new Navigation())->get(),
+            'navigation' => (new Navigation())->get(tenancy()->initialized ? tenant()->id : null),
+            'userNavigation' => (new UserNavigation())->get(tenancy()->initialized ? tenant()->id : null),
         ]);
     }
 

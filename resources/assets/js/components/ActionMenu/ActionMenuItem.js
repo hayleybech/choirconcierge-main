@@ -20,14 +20,15 @@ const ActionMenuItem = ({ url, onClick, download, variant, children, method, dis
                         );
                     } else {
                         return (
-                            <Link
-                                href={disabled ? undefined : url}
-                                className={menuItemStyles(variant, active, disabled)}
+							<Link
+								href={disabled ? undefined : url}
+								className={menuItemStyles(variant, active, disabled)}
 								method={method}
-                            >
-                                {children}
-                            </Link>
-                        );
+								as={method ? 'button' : 'a'}
+							>
+								{children}
+							</Link>
+						);
                     }
                 } else {
                     return (

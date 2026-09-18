@@ -1,194 +1,264 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import {useForm} from "@inertiajs/react";
-import Label from "../../components/inputs/Label";
-import TextInput from "../../components/inputs/TextInput";
-import DetailToggle from "../../components/inputs/DetailToggle";
-import Error from "../../components/inputs/Error";
-import Select from "../../components/inputs/Select";
-import Help from "../../components/inputs/Help";
-import FormSection from "../../components/FormSection";
-import Button from "../../components/inputs/Button";
-import ButtonLink from "../../components/inputs/ButtonLink";
-import CheckboxGroup from "../../components/inputs/CheckboxGroup";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import Form from "../../components/Form";
-import FormFooter from "../../components/FormFooter";
-import GlobalUserSelect from "../../components/inputs/GlobalUserSelect";
-import DayInput from "../../components/inputs/Day";
-import {DateTime} from "luxon";
-import FormWrapper from "../../components/FormWrapper";
-import useRoute from "../../hooks/useRoute";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import { useForm } from '@inertiajs/react';
+import Label from '../../components/inputs/Label';
+import TextInput from '../../components/inputs/TextInput';
+import DetailToggle from '../../components/inputs/DetailToggle';
+import Error from '../../components/inputs/Error';
+import Help from '../../components/inputs/Help';
+import FormSection from '../../components/FormSection';
+import Button from '../../components/inputs/Button';
+import ButtonLink from '../../components/inputs/ButtonLink';
+import CheckboxGroup from '../../components/inputs/CheckboxGroup';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import AppHead from '../../components/AppHead';
+import Form from '../../components/Form';
+import FormFooter from '../../components/FormFooter';
+import GlobalUserSelect from '../../components/inputs/GlobalUserSelect';
+import DayInput from '../../components/inputs/Day';
+import { DateTime } from 'luxon';
+import FormWrapper from '../../components/FormWrapper';
+import useRoute from '../../hooks/useRoute';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
 
-const Create = ({voice_parts, roles}) => {
-    const { route } = useRoute();
+const Create = ({ voice_parts, roles, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    const { data, setData, post, processing, errors } = useForm({
-        create: true,
+	const { data, setData, post, processing, errors } = useForm({
+		create: true,
 
-        user_id: null,
-        first_name: '',
-        last_name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
+		user_id: null,
+		first_name: '',
+		last_name: '',
+		email: '',
+		password: '',
+		password_confirmation: '',
 
-        voice_part_id: 0,
-        reason_for_joining: '',
-        referrer: '',
-        membership_details: '',
+		voice_part_id: 0,
+		reason_for_joining: '',
+		referrer: '',
+		membership_details: '',
 
-        onboarding_disabled: false,
-        joined_at: undefined,
-        user_roles: [],
-    });
+		onboarding_disabled: false,
+		joined_at: undefined,
+		user_roles: [],
+	});
 
-    function submit(e) {
-        e.preventDefault();
-        post(route('singers.store'));
-    }
+	function submit(e) {
+		e.preventDefault();
+		post(route('singers.store'));
+	}
 
-    function setUser(value) {
-        if(typeof value === 'string') {
-            setData({
-                ...data,
-                email: value,
-                user_id: null,
-            }, value);
-            return;
-        }
+	function setUser(value) {
+		if (typeof value === 'string') {
+			setData(
+				{
+					...data,
+					email: value,
+					user_id: null,
+				},
+				value
+			);
+			return;
+		}
 
-        if(typeof value !== 'number') {
-            return;
-        }
+		if (typeof value !== 'number') {
+			return;
+		}
 
-        setData({
-            ...data,
-            user_id: value,
-            email: null,
-        });
-    }
+		setData({
+			...data,
+			user_id: value,
+			email: null,
+		});
+	}
 
-    return (
-        <>
-            <AppHead title="Add Singer" />
-            <PageHeader
-                title={'Create Singer'}
-                icon="fa-users"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Singers', url: route('singers.index')},
-                    { name: 'Create', url: route('singers.create')},
-                ]}
-            />
+	const breadcrumbs = [
+		{ name: 'Singers', url: route('singers.index') },
+		{ name: 'Create Singer', url: route('singers.create') },
+	];
 
-            <FormWrapper>
-                <Form onSubmit={submit}>
+	return (
+		<>
+			<AppHead title="Add Singer" />
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
 
-                    <FormSection title="User Details" description=" Link a new or existing user account with this singer.">
-                        <div className="sm:col-span-6">
-                            <Label label="Email address" />
-                            <GlobalUserSelect updateFn={setUser} />
-                            {errors.email && <Error>{errors.email}</Error>}
-                            {errors.user_id && <Error>{errors.user_id}</Error>}
-                        </div>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="users" type="solid" className="mr-2" /> Create Singer
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
-                        {data.email && <>
-                            <div className="sm:col-span-3">
-                                <Label label="First name" forInput="first_name" />
-                                <TextInput name="first_name" autoComplete="given-name" value={data.first_name} updateFn={value => setData('first_name', value)} hasErrors={ !! errors['first_name'] } />
-                                {errors.first_name && <Error>{errors.first_name}</Error>}
-                            </div>
+			<FormWrapper>
+				<Form onSubmit={submit}>
+					<FormSection
+						title="User Details"
+						description=" Link a new or existing user account with this singer."
+					>
+						<div className="sm:col-span-6">
+							<Label label="Email address" />
+							<GlobalUserSelect updateFn={setUser} />
+							{errors.email && <Error>{errors.email}</Error>}
+							{errors.user_id && <Error>{errors.user_id}</Error>}
+						</div>
 
-                            <div className="sm:col-span-3">
-                                <Label label="Last name" forInput="last_name" />
-                                <TextInput name="last_name" autoComplete="family-name" value={data.last_name} updateFn={value => setData('last_name', value)} hasErrors={ !! errors['last_name'] } />
-                                {errors.last_name && <Error>{errors.last_name}</Error>}
-                            </div>
+						{data.email && (
+							<>
+								<div className="sm:col-span-3">
+									<Label label="First name" forInput="first_name" />
+									<TextInput
+										name="first_name"
+										autoComplete="given-name"
+										value={data.first_name}
+										updateFn={value => setData('first_name', value)}
+										hasErrors={!!errors['first_name']}
+									/>
+									{errors.first_name && <Error>{errors.first_name}</Error>}
+								</div>
 
-                            <div className="sm:col-span-3">
-                                <Label label="Password" forInput="password" />
-                                <TextInput type="password" name="password" value={data.password} updateFn={value => setData('password', value)} hasErrors={ !! errors['password'] } />
-                                <Help>You may leave this blank and update it later.</Help>
-                                {errors.password && <Error>{errors.password}</Error>}
-                            </div>
+								<div className="sm:col-span-3">
+									<Label label="Last name" forInput="last_name" />
+									<TextInput
+										name="last_name"
+										autoComplete="family-name"
+										value={data.last_name}
+										updateFn={value => setData('last_name', value)}
+										hasErrors={!!errors['last_name']}
+									/>
+									{errors.last_name && <Error>{errors.last_name}</Error>}
+								</div>
 
-                            <div className="sm:col-span-3">
-                                <Label label="Confirm password" forInput="password_confirmation" />
-                                <TextInput type="password" name="password_confirmation" value={data.password_confirmation} updateFn={value => setData('password_confirmation', value)} hasErrors={ !! errors['password_confirmation'] } />
-                                {errors.password_confirmation && <Error>{errors.password_confirmation}</Error>}
-                            </div>
-                        </>}
-                    </FormSection>
+								<div className="sm:col-span-3">
+									<Label label="Password" forInput="password" />
+									<TextInput
+										type="password"
+										name="password"
+										value={data.password}
+										updateFn={value => setData('password', value)}
+										hasErrors={!!errors['password']}
+									/>
+									<Help>You may leave this blank and update it later.</Help>
+									{errors.password && <Error>{errors.password}</Error>}
+								</div>
 
-                    <FormSection title="Singer Details" description="Start adding information about the singer's membership.">
-                        {/*<div className="sm:col-span-6">*/}
-                        {/*    <Label label="Voice part" forInput="voice_part_id" />*/}
-                        {/*    <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />*/}
-                        {/*    {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}*/}
-                        {/*</div>*/}
+								<div className="sm:col-span-3">
+									<Label label="Confirm password" forInput="password_confirmation" />
+									<TextInput
+										type="password"
+										name="password_confirmation"
+										value={data.password_confirmation}
+										updateFn={value => setData('password_confirmation', value)}
+										hasErrors={!!errors['password_confirmation']}
+									/>
+									{errors.password_confirmation && <Error>{errors.password_confirmation}</Error>}
+								</div>
+							</>
+						)}
+					</FormSection>
 
-                        <div className="sm:col-span-6">
-                            <Label label="Why are you joining?" forInput="reason_for_joining" />
-                            <TextInput name="reason_for_joining" value={data.reason_for_joining} updateFn={value => setData('reason_for_joining', value)} hasErrors={ !! errors['reason_for_joining'] } />
-                            {errors.reason_for_joining && <Error>{errors.reason_for_joining}</Error>}
-                        </div>
+					<FormSection
+						title="Singer Details"
+						description="Start adding information about the singer's membership."
+					>
+						{/*<div className="sm:col-span-6">*/}
+						{/*    <Label label="Voice part" forInput="voice_part_id" />*/}
+						{/*    <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />*/}
+						{/*    {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}*/}
+						{/*</div>*/}
 
-                        <div className="sm:col-span-6">
-                            <Label label="Where did you hear about us?" forInput="referrer" />
-                            <TextInput name="referrer" value={data.referrer} updateFn={value => setData('referrer', value)} hasErrors={ !! errors['referrer'] } />
-                            {errors.referrer && <Error>{errors.referrer}</Error>}
-                        </div>
+						<div className="sm:col-span-6">
+							<Label label="Why are you joining?" forInput="reason_for_joining" />
+							<TextInput
+								name="reason_for_joining"
+								value={data.reason_for_joining}
+								updateFn={value => setData('reason_for_joining', value)}
+								hasErrors={!!errors['reason_for_joining']}
+							/>
+							{errors.reason_for_joining && <Error>{errors.reason_for_joining}</Error>}
+						</div>
 
-                        <div className="sm:col-span-6">
-                            <Label label="Notes / Membership Details" forInput="membership_details" />
-                            <TextInput name="membership_details" value={data.membership_details} updateFn={value => setData('membership_details', value)} hasErrors={ !! errors['membership_details'] } />
-                            {errors.membership_details && <Error>{errors.membership_details}</Error>}
-                        </div>
+						<div className="sm:col-span-6">
+							<Label label="Where did you hear about us?" forInput="referrer" />
+							<TextInput
+								name="referrer"
+								value={data.referrer}
+								updateFn={value => setData('referrer', value)}
+								hasErrors={!!errors['referrer']}
+							/>
+							{errors.referrer && <Error>{errors.referrer}</Error>}
+						</div>
 
-                        <div className="sm:col-span-6">
-                            <DetailToggle
-                                label="Is this an existing member?"
-                                description="Onboarding will be disabled when adding an existing singer."
-                                value={data.onboarding_disabled}
-                                updateFn={value => setData('onboarding_disabled',  value)}
-                            />
-                        </div>
-                    </FormSection>
+						<div className="sm:col-span-6">
+							<Label label="Notes / Membership Details" forInput="membership_details" />
+							<TextInput
+								name="membership_details"
+								value={data.membership_details}
+								updateFn={value => setData('membership_details', value)}
+								hasErrors={!!errors['membership_details']}
+							/>
+							{errors.membership_details && <Error>{errors.membership_details}</Error>}
+						</div>
 
-                    {data.onboarding_disabled && (
-                    <FormSection title="Existing Member Details">
-                        <div className="sm:col-span-6">
-                            <Label label="Joined" forInput="joined_at" />
-                            <DayInput
-                                name="joined_at"
-                                hasErrors={ !! errors.joined_at }
-                                value={data.joined_at}
-                                updateFn={value => setData('joined_at', value)}
-                                max={DateTime.now().toISODate()}
-                            />
-                            {errors.joined_at && <Error>{errors.joined_at}</Error>}
-                        </div>
+						<div className="sm:col-span-6">
+							<DetailToggle
+								label="Is this an existing member?"
+								description="Onboarding will be disabled when adding an existing singer."
+								value={data.onboarding_disabled}
+								updateFn={value => setData('onboarding_disabled', value)}
+							/>
+						</div>
+					</FormSection>
 
-                        <fieldset className="mt-6 sm:col-span-6">
-                            <legend className="text-base font-medium text-gray-900">Roles</legend>
-                            <CheckboxGroup name={"user_roles"} options={roles} value={data.user_roles} updateFn={value => setData('user_roles', value)} />
-                            {errors.user_roles && <Error>{errors.user_roles}</Error>}
-                        </fieldset>
-                    </FormSection>
-                    )}
+					{data.onboarding_disabled && (
+						<FormSection title="Existing Member Details">
+							<div className="sm:col-span-6">
+								<Label label="Joined" forInput="joined_at" />
+								<DayInput
+									name="joined_at"
+									hasErrors={!!errors.joined_at}
+									value={data.joined_at}
+									updateFn={value => setData('joined_at', value)}
+									max={DateTime.now().toISODate()}
+								/>
+								{errors.joined_at && <Error>{errors.joined_at}</Error>}
+							</div>
 
-                    <FormFooter>
-                        <ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
-                        <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-                    </FormFooter>
-                </Form>
-            </FormWrapper>
-        </>
-    );
-}
+							<fieldset className="mt-6 sm:col-span-6">
+								<legend className="text-base font-medium text-gray-900">Roles</legend>
+								<CheckboxGroup
+									name={'user_roles'}
+									options={roles}
+									value={data.user_roles}
+									updateFn={value => setData('user_roles', value)}
+								/>
+								{errors.user_roles && <Error>{errors.user_roles}</Error>}
+							</fieldset>
+						</FormSection>
+					)}
 
-Create.layout = page => <TenantLayout children={page} />
+					<FormFooter>
+						<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
+						<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+							Save
+						</Button>
+					</FormFooter>
+				</Form>
+			</FormWrapper>
+		</>
+	);
+};
+
+Create.layout = page => <TenantLayout children={page} />;
 
 export default Create;

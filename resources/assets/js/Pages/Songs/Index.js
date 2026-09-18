@@ -3,7 +3,16 @@ import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
 import SongTableDesktop from './SongTableDesktop';
 import SongTableMobile from './SongTableMobile';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import Button from '../../components/inputs/Button';
+import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import SongFilters from '../../components/Song/SongFilters';
 import IndexContainer from '../../components/IndexContainer';
@@ -28,6 +37,7 @@ const Index = ({
 	ensembles,
 
 	can,
+	setSidebarOpen,
 }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const { route } = useRoute();
@@ -62,16 +72,45 @@ const Index = ({
 	return (
 		<>
 			<AppHead title="Songs" />
-			<PageHeader
-				title="Songs"
-				icon="list-music"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Songs', url: route('songs.index') },
-				]}
-				actions={actions}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation title="Songs">
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderTitle>
+						<Icon icon="list-music" type="solid" className="mr-2" />
+						Songs
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Songs?`}

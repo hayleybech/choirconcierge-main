@@ -1,6 +1,15 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import AppHead from '../../components/AppHead';
 import { DateTime } from 'luxon';
 import AttendanceTag from '../../components/Event/AttendanceTag';
@@ -25,6 +34,7 @@ const AttendanceReport = ({
 	numSingers,
 	avgSingersPerEvent,
 	avgEventsPerSinger,
+	setSidebarOpen,
 }) => {
 	const { route } = useRoute();
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -45,25 +55,46 @@ const AttendanceReport = ({
 		totalItems: events.length,
 	};
 
+	const breadcrumbs = [
+		{ name: 'Events', url: route('events.index') },
+		{ name: 'Attendance Report', url: route('events.reports.attendance') },
+	];
+
 	return (
 		<>
 			<AppHead title="Attendance Report" />
-			<PageHeader
-				title="Attendance Report"
-				icon="analytics"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Events', url: route('events.index') },
-					{ name: 'Attendance Report', url: route('events.reports.attendance') },
-				]}
-				meta={
-					<>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+					{filterAction && (
+						<PageActionsMenu>
+							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
+								<Icon icon="filter" mr />
+								Filter
+							</ActionMenuItem>
+						</PageActionsMenu>
+					)}
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="analytics" type="solid" className="mr-2" />
+						Attendance Report
+					</PageHeaderTitle>
+					<PageHeaderMeta>
 						<div>Avg. singers per event: {avgSingersPerEvent}</div>
 						<div>Avg. events per singer: {avgEventsPerSinger}</div>
-					</>
-				}
-				actions={[filterAction]}
-			/>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{filterAction && (
+						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+							<Icon icon="filter" mr />
+							Filter
+						</Button>
+					)}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<div className="flex flex-col overflow-auto lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300 h-full">
 				{showFilters && (

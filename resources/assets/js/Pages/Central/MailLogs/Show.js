@@ -1,27 +1,46 @@
 import React from 'react';
-import PageHeader from '../../../components/PageHeader/PageHeader';
+
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import classNames from '../../../classNames';
 import AppHead from '../../../components/AppHead';
 import DateTag from '../../../components/DateTag';
-import CollapseGroup from '../../../components/CollapseGroup';
 import useRoute from '../../../hooks/useRoute';
 import CentralLayout from '../../../Layouts/CentralLayout';
 import Prose from '../../../components/Prose';
 import Icon from '../../../components/Icon';
 import { mailIconColours, mailIcons, mailTypeIcons } from '../../../components/MailStatusTag';
 import MailStatusDetail from '../../../components/MailStatusDetail';
-const Show = ({ log }) => {
+import SectionLayout from '../../../components/SectionLayout';
+const Show = ({ log, setSidebarOpen }) => {
 	const { route } = useRoute();
 
 	const mailType = log.uid.split('-')[0];
+	const breadcrumbs = [
+		{ name: 'Mail Logs', url: route('central.mail-logs.index') },
+		{ name: log.subject, url: route('central.mail-logs.show', { mail_log: log }) },
+	];
 
 	return (
 		<>
 			<AppHead title={`${log.subject} - Mail Logs`} />
-			<PageHeader
-				title={log.subject}
-				icon={mailTypeIcons[mailType] ?? 'question'}
-				meta={
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs} />
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon={mailTypeIcons[mailType] ?? 'question'} type="solid" className="mr-2" />
+						{log.subject}
+					</PageHeaderTitle>
+					<PageHeaderMeta>
 					<>
 						<div>
 							Opens:
@@ -63,44 +82,39 @@ const Show = ({ log }) => {
 							<DateTag icon="pencil" date={log.created_at} label="Created" />
 							<DateTag icon="pencil" date={log.updated_at} label="Updated" />
 						</div>
-					</>
-				}
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('central.dash') },
-					{ name: 'Mail Logs', url: route('central.mail-logs.index') },
-					{ name: log.subject, url: route('central.mail-logs.show', { mail_log: log }) },
+						</>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+			</PageHeader>
+
+			<SectionLayout
+				layout={{
+					className: 'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0',
+					columns: [{ className: 'sm:col-span-1' }, { className: 'sm:col-span-1' }],
+				}}
+				sections={[
+						{
+							id: 'message',
+							column: 0,
+							title: 'Message',
+							content: (
+								<div className="py-4 px-8 bg-gray-50">
+									{mailType === 'notification' ? (
+										<iframe srcDoc={log.body} width="100%" height="600" />
+									) : (
+										<Prose content={log.body} />
+									)}
+								</div>
+							),
+						},
+						{
+							id: 'activity',
+							column: 1,
+							title: 'Activity',
+							content: <Activity log={log} />,
+						},
 				]}
-				actions={[]}
 			/>
-
-			<div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-3 divide-y divide-gray-300 sm:divide-y-0 sm:divide-x">
-				<div className="sm:col-span-2 xl:col-span-2 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[
-							{
-								title: 'Body',
-								show: true,
-								defaultOpen: true,
-								content: (
-									<div className="py-4 px-8">
-										{mailType === 'notification' ? (
-											<iframe srcDoc={log.body} width="100%" height="600" />
-										) : (
-											<Prose content={log.body} />
-										)}
-									</div>
-								),
-							},
-						]}
-					/>
-				</div>
-
-				<div className="sm:col-span-1 divide-y divide-y-gray-300">
-					<CollapseGroup
-						items={[{ title: 'Activity', show: true, defaultOpen: true, content: <Activity log={log} /> }]}
-					/>
-				</div>
-			</div>
 		</>
 	);
 };
@@ -124,7 +138,7 @@ const Activity = ({ log }) => {
 
 	return (
 		<>
-			<div className="flow-root px-6 py-8">
+			<div className="flow-root px-6 py-8 bg-gray-50">
 				<ul role="list" className="-mb-8">
 					{events
 						.map(event => ({
