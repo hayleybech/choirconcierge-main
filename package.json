@@ -15,8 +15,9 @@
         "@babel/core": "^7.28.3",
         "@babel/preset-typescript": "^7.28.5",
         "@prettier/plugin-php": "^0.18",
-        "@tailwindcss/forms": "^0.4.0",
-        "@tailwindcss/typography": "^0.5.16",
+        "@tailwindcss/forms": "^0.5.11",
+        "@tailwindcss/postcss": "^4.3.3",
+        "@tailwindcss/typography": "^0.5.20",
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^12.1.2",
         "autoprefixer": "^10.4.21",
@@ -31,7 +32,7 @@
         "postcss": "^8.5.6",
         "prettier": "^1.19.1",
         "resolve-url-loader": "^3.1.5",
-        "tailwindcss": "^3.4.17",
+        "tailwindcss": "^4.3.3",
         "ts-loader": "^7.0.5",
         "typescript": "^5.8.3",
         "webpack-cli": "^4.5.0"
@@ -72,8 +73,8 @@
         "soundtouchjs": "^0.3.0",
         "states-us": "^1.1.1",
         "tone": "^15.1.22",
-        "ziggy-js": "^1.8.2",
-		"webpack": "5.102.1"
+        "webpack": "5.102.1",
+        "ziggy-js": "^1.8.2"
     },
     "overridesComments": {
         "react-google-places-autocomplete": "this override can be removed when upgrading to react 19"

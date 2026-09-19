@@ -107,7 +107,7 @@ const UserMenu = ({mobile = false, onOpen, onBack, onClose, setShowImpersonateMo
                 <Icon icon="chevron-up" className="shrink-0" />
             </Menu.Button>
             <Transition as={Fragment} enter="transition ease-out duration-100" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="transition ease-in duration-75" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
-                <Menu.Items className="absolute bottom-full left-0 z-20 mb-2 w-full origin-bottom-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute bottom-full left-0 z-20 mb-2 w-full origin-bottom-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
                     <UserMenuItems setShowImpersonateModal={setShowImpersonateModal} />
                 </Menu.Items>
             </Transition>

@@ -49,11 +49,9 @@ PERFORMANCE OF THIS SOFTWARE.
 
 /*! ./useMediaQuery */
 
-/*! countries-list v3.2.0 by Annexare | MIT */
+/*! countries-list v3.4.1 by Annexare | MIT */
 
 /*! css-mediaquery */
-
-/*! https://mths.be/cssesc v3.0.0 by @mathias */
 
 /*! hyphenate-style-name */
 

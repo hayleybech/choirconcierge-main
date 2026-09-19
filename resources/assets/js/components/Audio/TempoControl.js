@@ -1,14 +1,12 @@
 import React, { useContext } from 'react';
 import { PlayerContext } from '../../contexts/player-context';
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '../../../../../tailwind.config';
 import Label from '../inputs/Label';
 import Button from '../inputs/Button';
 import Icon from '../Icon';
 
 import clamp from 'lodash/clamp';
 
-const PURPLE_500 = resolveConfig(tailwindConfig).theme.colors.purple[500] ?? '#7c3aed';
+const PURPLE_500 = 'var(--color-purple-500)';
 
 const MIN_RATE = 50;
 const MAX_RATE = 150;

@@ -1,5 +1,3 @@
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '../../../../../tailwind.config';
 import Label from '../inputs/Label';
 import React, { useContext } from 'react';
 import { PlayerContext } from '../../contexts/player-context';
@@ -8,7 +6,7 @@ import Button from '../inputs/Button';
 
 import clamp from 'lodash/clamp';
 
-const PURPLE_500 = resolveConfig(tailwindConfig).theme.colors.purple[500] ?? '#7c3aed';
+const PURPLE_500 = 'var(--color-purple-500)';
 
 const MIN_PITCH = -12;
 const MAX_PITCH = 12;

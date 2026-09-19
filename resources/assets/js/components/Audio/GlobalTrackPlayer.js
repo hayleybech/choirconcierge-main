@@ -65,7 +65,7 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 				</div>
 				<AudioToolsButton />
 
-				<Button variant="clear" size="xs" onClick={close} className="hidden sm:inline-flex -mr-2">
+				<Button variant="clear" size="xs" onClick={close} className="max-sm:hidden sm:inline-flex -mr-2">
 					<Icon icon="times" />
 				</Button>
 			</div>

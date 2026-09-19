@@ -24,7 +24,7 @@ const Calendar = ({ days, month }) => {
                     <CalendarMenuMobile />
                 </div>
             </header>
-            <div className="shadow ring-1 ring-black ring-opacity-5 lg:flex lg:flex-auto lg:flex-col">
+            <div className="shadow ring-1 ring-black/5 lg:flex lg:flex-auto lg:flex-col">
                 <DayHeadings />
                 <div className="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
                     <div className="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px">
@@ -100,7 +100,7 @@ const ViewMenu = () => (
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
             >
-                <Menu.Items className="focus:outline-none absolute right-0 mt-3 w-36 origin-top-right overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                <Menu.Items className="focus:outline-none absolute right-0 mt-3 w-36 origin-top-right overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black/5">
                     <div className="py-1">
                         <Menu.Item>
                             {({ active }) => (
@@ -180,7 +180,7 @@ const CalendarMenuMobile = () => {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
             >
-                <Menu.Items className="focus:outline-none absolute right-0 mt-3 w-36 origin-top-right divide-y divide-gray-100 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                <Menu.Items className="focus:outline-none absolute right-0 mt-3 w-36 origin-top-right divide-y divide-gray-100 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black/5">
                     <div className="py-1">
                         <Menu.Item>
                             {({ active }) => (
@@ -379,7 +379,7 @@ const MobileEventList = ({ selectedDay }) => {
                 <time dateTime={selectedDay.date}>{DateTime.fromISO(selectedDay.date).toFormat('cccc, LLL d')}</time>
             </h2>
 
-            <ol className="divide-y divide-gray-100 overflow-hidden rounded-lg bg-white text-sm shadow ring-1 ring-black ring-opacity-5">
+            <ol className="divide-y divide-gray-100 overflow-hidden rounded-lg bg-white text-sm shadow ring-1 ring-black/5">
                 {selectedDay.events.map((event) => (
                     <li key={event.id} className="">
 

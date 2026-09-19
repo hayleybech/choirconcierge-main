@@ -10,7 +10,7 @@ const PageTopBar = ({ children }) => {
 	const { setSidebarOpen } = useSidebar()
 
 	return (
-		<div className="sticky top-0 left-0 right-0 z-10 flex h-[47px] shrink-0 items-center justify-between border-b border-gray-300 bg-white xl:hidden">
+		<div className="sticky top-0 left-0 right-0 z-40 flex h-[47px] shrink-0 items-center justify-between border-b border-gray-300 bg-white xl:hidden">
 			<DrawerOpenButton setOpen={setSidebarOpen} />
 
 			{children}
@@ -63,7 +63,7 @@ export const PageActionsMenu = ({ children }) => {
 				leaveFrom="opacity-100 scale-100"
 				leaveTo="opacity-0 scale-95"
 			>
-				<Menu.Items className="absolute right-0 z-20 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+				<Menu.Items className="absolute right-0 z-20 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
 					{children}
 				</Menu.Items>
 			</Transition>

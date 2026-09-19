@@ -1,11 +1,9 @@
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '../../../../../tailwind.config';
 import React, { useCallback, useContext } from 'react';
 import { PlayerContext } from '../../contexts/player-context';
 import Label from '../inputs/Label';
 import Icon from '../Icon';
 
-const PURPLE_500 = resolveConfig(tailwindConfig).theme.colors.purple[500] ?? '#7c3aed';
+const PURPLE_500 = 'var(--color-purple-500)';
 export const VolumeControl = () => {
 	const { volume, setVolume } = useContext(PlayerContext);
 
