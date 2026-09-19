@@ -23,8 +23,6 @@ it('renders the billing page', function () {
     $membership->roles()->attach($role);
 
     $tenant->run(function () use ($user, $tenant) {
-        Gate::before(fn () => true);
-
         $this->actingAs($user);
 
         config(['spark.billables.tenant.plans' => []]);
@@ -58,15 +56,121 @@ it('blocks non-admins from billing page', function () {
     });
 });
 
-it('swaps the plan if already subscribed', function () {
-    Gate::before(fn () => true);
-
-    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+it('blocks demo tenant from billing page', function () {
+    $tenant = Tenant::withoutEvents(fn () => Tenant::factory()->create([
+        'id' => 'demo',
+        'timezone' => 'UTC',
+    ]));
     $user = User::factory()->create();
-    Membership::factory()->create([
+    $membership = Membership::factory()->create([
         'tenant_id' => $tenant->id,
         'user_id' => $user->id,
     ]);
+    $role = Role::firstOrCreate(['name' => 'Admin']);
+    $membership->roles()->attach($role);
+
+    $tenant->run(function () use ($user, $tenant) {
+        config(['features.billing' => false]);
+
+        $this->actingAs($user)
+            ->get(route('organisation.billing', ['tenant' => $tenant->id]))
+            ->assertForbidden();
+    });
+});
+
+it('allows accounts team to access billing page', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    $membership = Membership::factory()->create([
+        'tenant_id' => $tenant->id,
+        'user_id' => $user->id,
+    ]);
+    $role = Role::firstOrCreate(['name' => 'Accounts Team']);
+    $membership->roles()->attach($role);
+
+    $tenant->run(function () use ($user, $tenant) {
+        $this->actingAs($user);
+
+        config(['spark.billables.tenant.plans' => []]);
+        config(['features.billing' => false]);
+
+        $this->get(route('organisation.billing', ['tenant' => $tenant->id]))
+            ->assertOk();
+    });
+});
+
+it('allows billing user to access billing page', function () {
+    $user = User::factory()->create();
+    $tenant = Tenant::factory()->create([
+        'timezone' => 'UTC',
+        'billing_user_id' => $user->id,
+    ]);
+    $membership = Membership::factory()->create([
+        'tenant_id' => $tenant->id,
+        'user_id' => $user->id,
+    ]);
+    // No specific role, but is billing user
+
+    $tenant->run(function () use ($user, $tenant) {
+        $this->actingAs($user);
+
+        config(['spark.billables.tenant.plans' => []]);
+        config(['features.billing' => false]);
+
+        $this->get(route('organisation.billing', ['tenant' => $tenant->id]))
+            ->assertOk();
+    });
+});
+
+it('fails plan eligibility check if too many active users', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    $membership = Membership::factory()->create([
+        'tenant_id' => $tenant->id,
+        'user_id' => $user->id,
+    ]);
+    $role = Role::firstOrCreate(['name' => 'Admin']);
+    $membership->roles()->attach($role);
+
+    $planId = 54321;
+
+    // Mock active user count to be higher than plan quota
+    $tenant->run(function () use ($user, $tenant, $planId) {
+        config(['spark.billables.tenant.plans' => [
+            [
+                'yearly_id' => $planId,
+                'options' => ['activeUserQuota' => 5]
+            ]
+        ]]);
+
+        $mockTenant = mock(Tenant::class . '[getAttribute]');
+        $mockTenant->setRawAttributes($tenant->getAttributes());
+        $mockTenant->exists = true;
+        $mockTenant->shouldReceive('getAttribute')->with('billing_status')->andReturn([
+            'activeUserQuota' => ['activeUserCount' => 10]
+        ]);
+        // Also need to mock other attributes that might be accessed
+        $mockTenant->shouldReceive('getAttribute')->with('id')->andReturn($tenant->id);
+        $mockTenant->shouldReceive('getAttribute')->with('billingUser')->andReturn($tenant->billingUser);
+
+        app()->instance(Tenant::class, $mockTenant);
+        app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
+
+        $this->actingAs($user)
+            ->get(route('organisation.billing.swap', ['tenant' => $tenant->id, 'plan' => $planId]))
+            ->assertSessionHasErrors(['plan' => 'This plan supports up to 5 active users, but your organisation has 10.']);
+    });
+});
+
+it('swaps the plan if already subscribed', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    $membership = Membership::factory()->create([
+        'tenant_id' => $tenant->id,
+        'user_id' => $user->id,
+    ]);
+    $role = Role::firstOrCreate(['name' => 'Admin']);
+    $membership->roles()->attach($role);
 
     $planId = 54321;
 
@@ -93,14 +197,14 @@ it('swaps the plan if already subscribed', function () {
 });
 
 it('pauses the subscription', function () {
-    Gate::before(fn () => true);
-
     $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
     $user = User::factory()->create();
-    Membership::factory()->create([
+    $membership = Membership::factory()->create([
         'tenant_id' => $tenant->id,
         'user_id' => $user->id,
     ]);
+    $role = Role::firstOrCreate(['name' => 'Admin']);
+    $membership->roles()->attach($role);
 
     $tenant->run(function () use ($user, $tenant) {
         $subscription = mock(Subscription::class);
@@ -122,14 +226,14 @@ it('pauses the subscription', function () {
 });
 
 it('unpauses the subscription', function () {
-    Gate::before(fn () => true);
-
     $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
     $user = User::factory()->create();
-    Membership::factory()->create([
+    $membership = Membership::factory()->create([
         'tenant_id' => $tenant->id,
         'user_id' => $user->id,
     ]);
+    $role = Role::firstOrCreate(['name' => 'Admin']);
+    $membership->roles()->attach($role);
 
     $tenant->run(function () use ($user, $tenant) {
         $subscription = mock(Subscription::class);
@@ -151,14 +255,14 @@ it('unpauses the subscription', function () {
 });
 
 it('cancels the subscription', function () {
-    Gate::before(fn () => true);
-
     $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
     $user = User::factory()->create();
-    Membership::factory()->create([
+    $membership = Membership::factory()->create([
         'tenant_id' => $tenant->id,
         'user_id' => $user->id,
     ]);
+    $role = Role::firstOrCreate(['name' => 'Admin']);
+    $membership->roles()->attach($role);
 
     $tenant->run(function () use ($user, $tenant) {
         $subscription = mock(Subscription::class);

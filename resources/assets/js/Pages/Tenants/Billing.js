@@ -45,7 +45,7 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 								<PanelTitle>Current Subscription</PanelTitle>
 								<div className="flex items-center gap-4">
 									<div className="flex gap-2 leading-[1]">
-										{!billing.onTrial && !billing.paused && !billing.onPausedGracePeriod && !billing.onGracePeriod && (
+										{!billing.hasGratis && !billing.onTrial && !billing.paused && !billing.onPausedGracePeriod && !billing.onGracePeriod && (
 											<ButtonLink
 												href={route('organisation.billing.pause')}
 												variant="secondary"
@@ -198,6 +198,17 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 											{isCurrent ? (
 												<div className="text-sm uppercase text-gray-700 font-bold px-4 text-center">
 													Current Plan
+												</div>
+											) : !p.eligible ? (
+												<div>
+													{/*<button*/}
+													{/*	type="button"*/}
+													{/*	disabled*/}
+													{/*	className="!w-full !justify-center !inline-flex !items-center !gap-x-1.5 !border !border-transparent !py-2 !px-4 !text-md !rounded-md !box-border !bg-gray-300 !text-gray-500 cursor-not-allowed"*/}
+													{/*>*/}
+													{/*	{plan ? 'Swap Plan' : 'Subscribe'}*/}
+													{/*</button>*/}
+													<p className="mt-2 text-xs text-red-600 text-center">{p.eligibilityReason}</p>
 												</div>
 											) : (
 												<>
