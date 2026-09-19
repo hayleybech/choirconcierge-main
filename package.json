@@ -72,7 +72,8 @@
         "soundtouchjs": "^0.3.0",
         "states-us": "^1.1.1",
         "tone": "^15.1.22",
-        "ziggy-js": "^1.8.2"
+        "ziggy-js": "^1.8.2",
+		"webpack": "5.102.1"
     },
     "overridesComments": {
         "react-google-places-autocomplete": "this override can be removed when upgrading to react 19"
