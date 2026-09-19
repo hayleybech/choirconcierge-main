@@ -82,7 +82,9 @@ export const PageTopNavigation = ({ breadcrumbs, title, children }) => {
 
 	return (
 		<div className="flex h-full min-w-0 grow">
-			{breadcrumbs?.length > 1 && isMobile && <BackButton url={breadcrumbs[0].url} className="sm:hidden" />}
+			{breadcrumbs?.length > 1 && isMobile && (
+				<BackButton url={breadcrumbs[breadcrumbs.length - 2].url} className="sm:hidden" />
+			)}
 			<div className="flex min-w-0 grow items-center pl-3">
 				{breadcrumbs?.length > 1 && !isMobile && (
 					<Breadcrumbs breadcrumbs={breadcrumbs?.slice(0, -1)} className="mr-3" />

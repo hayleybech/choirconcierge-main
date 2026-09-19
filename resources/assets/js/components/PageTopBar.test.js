@@ -3,6 +3,12 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { PageTopBarTitle, PageTopNavigation, default as PageTopBar } from './PageTopBar';
 import { SidebarProvider } from '../contexts/sidebar-context';
 
+jest.mock('react-responsive', () => ({
+	useMediaQuery: jest.fn(),
+}));
+
+import { useMediaQuery } from 'react-responsive';
+
 const renderWithSidebar = (ui, setSidebarOpen = jest.fn()) =>
 	render(<SidebarProvider setSidebarOpen={setSidebarOpen}>{ui}</SidebarProvider>);
 
@@ -18,6 +24,10 @@ describe('PageTopBar', () => {
 });
 
 describe('PageTopNavigation', () => {
+	beforeEach(() => {
+		useMediaQuery.mockReturnValue(false);
+	});
+
 	it('uses the parent breadcrumbs for desktop navigation', () => {
 		render(
 			<PageTopNavigation
@@ -29,6 +39,24 @@ describe('PageTopNavigation', () => {
 		);
 
 		expect(screen.getByRole('link', { name: 'Singers' }).getAttribute('href')).toBe('/singers');
+	});
+
+	it('uses the direct parent for mobile back navigation', () => {
+		useMediaQuery.mockReturnValue(true);
+
+		render(
+			<PageTopNavigation
+				breadcrumbs={[
+					{ name: 'Choirs', url: '/choirs' },
+					{ name: 'Singers', url: '/choirs/1/singers' },
+					{ name: 'Jane Doe', url: '/choirs/1/singers/1' },
+				]}
+			/>
+		);
+
+		expect(screen.getByRole('link', { name: 'Back to parent page' }).getAttribute('href')).toBe(
+			'/choirs/1/singers'
+		);
 	});
 
 	it('uses the last breadcrumb as the title and omits it from navigation', () => {
