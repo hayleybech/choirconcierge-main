@@ -32,13 +32,17 @@ class GroupMember extends Model
      *
      * @var array
      */
-    protected $fillable = ['memberable_id', 'memberable_type'];
+    protected $fillable = ['group_id', 'memberable_id', 'memberable_type'];
 
     /**
      * Get all of the member models (users, roles etc).
      */
     public function memberable(): MorphTo
     {
+        if (in_array($this->memberable_type, ['App\Enums\SingerStatus', \App\Enums\SingerStatus::class, 'SingerStatus'])) {
+            return $this->morphTo('memberable', User::class, 'memberable_id', 'id')->whereRaw('1 = 0');
+        }
+
         return $this->morphTo();
     }
 

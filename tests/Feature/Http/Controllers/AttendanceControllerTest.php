@@ -6,8 +6,7 @@ use App\Models\Enrolment;
 use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\Membership;
-use App\Models\SingerCategory;
-use App\Models\VoicePart;
+use App\Enums\SingerStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
@@ -40,7 +39,6 @@ class AttendanceControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        SingerCategory::factory()->create(['name' => 'Members']);
 
         $event = Event::factory()->create();
         $singer1 = Membership::factory()->create();
@@ -59,7 +57,6 @@ class AttendanceControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        SingerCategory::factory()->create(['name' => 'Members']);
 
         $event = Event::factory()->create();
         $singer1 = Membership::factory()->create();
@@ -79,7 +76,6 @@ class AttendanceControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        SingerCategory::factory()->create(['name' => 'Members']);
 
         $event = Event::factory()->create();
         $singer1 = Membership::factory()->create();
@@ -112,7 +108,6 @@ class AttendanceControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        SingerCategory::factory()->create(['name' => 'Members']);
 
         $event = Event::factory()->create();
         $singer1 = Membership::factory()->create(); // present
@@ -142,42 +137,81 @@ class AttendanceControllerTest extends TestCase
             );
     }
 
-    public function test_index_can_filter_by_member_category(): void
+    public function test_index_can_filter_by_member_status(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        $category1 = SingerCategory::factory()->create();
-        $category2 = SingerCategory::factory()->create();
+        $status1 = SingerStatus::MEMBERS->value;
+        $status2 = SingerStatus::PROSPECTS->value;
 
         $event = Event::factory()->create();
-        $singer1 = Membership::factory()->create(['singer_category_id' => $category1->id]);
-        $singer2 = Membership::factory()->create(['singer_category_id' => $category2->id]);
+        $singer1 = Membership::factory()->create();
+        $singer1->statuses()->create(['status' => $status1]);
+        $singer2 = Membership::factory()->create();
+        $singer2->statuses()->create(['status' => $status2]);
 
-        $this->get(the_tenant_route('events.attendances.index', ['event' => $event, 'filter[category.id]' => $category1->id]))
+        $this->get(the_tenant_route('events.attendances.index', ['event' => $event, 'filter[status.id]' => $status2]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('allSingers', 1)
-                ->where('allSingers.0.id', $singer1->id)
+                ->where('allSingers.0.id', $singer2->id)
             );
     }
 
-    public function test_index_defaults_to_members_category(): void
+    public function test_index_serializes_filtered_enrolments_as_an_array(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        $membersCategory = SingerCategory::where('name', 'Members')->first();
-        $prospectsCategory = SingerCategory::where('name', 'Prospects')->first();
+        $ensemble = Ensemble::factory()->create();
+        $event = Event::factory()->create();
+        $event->ensembles()->attach($ensemble);
+        $singer = Membership::factory()->create();
+        $enrolment = Enrolment::factory()->create([
+            'membership_id' => $singer->id,
+            'ensemble_id' => $ensemble->id,
+        ]);
+
+        $this->get(the_tenant_route('events.attendances.index', [$event]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('allSingers.0.enrolments', 1)
+                ->where('allSingers.0.enrolments.0.id', $enrolment->id)
+            );
+    }
+
+    public function test_index_defaults_to_members_status(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $memberStatus = SingerStatus::MEMBERS->value;
+        $prospectStatus = SingerStatus::PROSPECTS->value;
 
         $event = Event::factory()->create();
-        $member = Membership::factory()->create(['singer_category_id' => $membersCategory->id]);
-        $prospect = Membership::factory()->create(['singer_category_id' => $prospectsCategory->id]);
+
+        // Create a member
+        $member = Membership::factory()->create();
+        $member->statuses()->create(['status' => $memberStatus]);
+
+        // Create a prospect
+        $prospect = Membership::factory()->create();
+        $prospect->statuses()->create(['status' => $prospectStatus]);
 
         $this->get(the_tenant_route('events.attendances.index', ['event' => $event]))
-            ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('allSingers', function ($singers) use ($membersCategory) {
-                    $categories = collect($singers)->pluck('singer_category_id')->unique();
-                    return $categories->count() === 1 && $categories->first() === $membersCategory->id;
+                ->where('allSingers', function ($singers) use ($memberStatus, $member, $prospect) {
+                    $singerIds = collect($singers)->pluck('id');
+
+                    // Should contain the member
+                    if (!$singerIds->contains($member->id)) {
+                        return false;
+                    }
+
+                    // Should NOT contain the prospect
+                    if ($singerIds->contains($prospect->id)) {
+                        return false;
+                    }
+
+                    // All returned singers should have the member status
+                    return collect($singers)->every(fn($s) => $s['status']['status'] === $memberStatus);
                 })
             );
     }
@@ -207,6 +241,7 @@ class AttendanceControllerTest extends TestCase
             'absent_reason' => $absent_reason,
             'event_id' => $event->id,
             'membership_id' => $singer->id,
+            'source' => 'manual',
         ]);
     }
 
@@ -231,6 +266,7 @@ class AttendanceControllerTest extends TestCase
             'absent_reason' => $absent_reason,
             'event_id' => $event->id,
             'membership_id' => $singer->id,
+            'source' => 'manual',
         ]);
     }
 }

@@ -58,4 +58,27 @@ class LearningStatusControllerTest extends TestCase
             'status' => 'performance-ready',
         ]);
     }
+
+    public function test_a_music_team_member_can_bulk_update_learning_statuses(): void
+    {
+        $song = Song::factory()->create();
+        $users = User::factory()
+            ->count(2)
+            ->has(Membership::factory()->hasAttached($song, ['status' => 'assessment-ready']))
+            ->create();
+
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        $this->post(the_tenant_route('songs.singers.bulk-update', [$song]), [
+            'singer_ids' => $users->map(fn (User $user) => $user->membership->id)->all(),
+        ])->assertRedirect(the_tenant_route('songs.singers.index', $song));
+
+        foreach ($users as $user) {
+            $this->assertDatabaseHas('membership_song', [
+                'song_id' => $song->id,
+                'membership_id' => $user->membership->id,
+                'status' => 'performance-ready',
+            ]);
+        }
+    }
 }

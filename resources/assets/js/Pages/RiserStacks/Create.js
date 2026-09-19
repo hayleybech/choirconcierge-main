@@ -1,31 +1,46 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import RiserStackForm from "./RiserStackForm";
-import useRoute from "../../hooks/useRoute";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
+import AppHead from '../../components/AppHead';
+import RiserStackForm from './RiserStackForm';
+import useRoute from '../../hooks/useRoute';
 
-const Create = ({ voiceParts, singers, ensembles }) => {
-    const { route } = useRoute();
+const Create = ({ voiceParts, singers, ensembles, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    return (
-        <>
-            <AppHead title="Create Riser Stack" />
-            <PageHeader
-                title="Create Riser Stack"
-                icon="fa-people-arrows"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Riser Stacks', url: route('stacks.index')},
-                    { name: 'Create', url: route('stacks.create')},
-                ]}
-            />
+	const breadcrumbs = [
+		{ name: 'Riser Stacks', url: route('stacks.index') },
+		{ name: 'Create Riser Stack', url: route('stacks.create') },
+	];
 
-            <RiserStackForm voiceParts={voiceParts} singers={singers} ensembles={ensembles} />
-        </>
-    );
-}
+	return (
+		<>
+			<AppHead title="Create Riser Stack" />
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="people-arrows" type="solid" className="mr-2" />
+						Create Riser Stack
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
-Create.layout = page => <TenantLayout children={page} />
+			<RiserStackForm voiceParts={voiceParts} singers={singers} ensembles={ensembles} />
+		</>
+	);
+};
+
+Create.layout = page => <TenantLayout children={page} />;
 
 export default Create;

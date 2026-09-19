@@ -1,5 +1,5 @@
 import React from 'react';
-import TableMobile, {TableMobileLink} from "../../../components/TableMobile";
+import TableMobile, {TableMobileHeader, TableMobileLink} from "../../../components/TableMobile";
 import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import Pagination from '../../../components/Pagination';
@@ -7,9 +7,17 @@ import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag'
 
 const MailLogTableMobile = ({ logs }) => {
     const { route } = useRoute();
+    const bulkEdit = {
+        isActiveMobile: false,
+        noun: 'Mail Log',
+        selectedIds: [],
+        totalItems: logs.data.length,
+    };
 
     return (
-        <TableMobile pagination={<Pagination details={logs} />}>
+        <div>
+            <TableMobileHeader bulkEdit={bulkEdit} />
+            <TableMobile pagination={<Pagination details={logs} />}>
             {logs.data.map((log) => {
 				const mailType = log.uid.split('-')[0];
 				return (
@@ -22,6 +30,13 @@ const MailLogTableMobile = ({ logs }) => {
 											<Icon icon={mailTypeIcons[mailType] ?? 'question'} mr />
 											{log.subject}
 											{!!log.has_attachments && <Icon icon="paperclip" ml />}
+											{log.size > 0 && (
+												<span className="ml-2 text-xs text-gray-400">
+													{log.size < 1024 * 1024
+														? `${(log.size / 1024).toFixed(1)} KB`
+														: `${(log.size / (1024 * 1024)).toFixed(1)} MB`}
+												</span>
+											)}
 											{log.opens_count > 0 && (
 												<span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
 													<Icon icon="eye" mr />
@@ -36,7 +51,8 @@ const MailLogTableMobile = ({ logs }) => {
 						</TableMobileLink>
 					</li>
 				);})}
-        </TableMobile>
+            </TableMobile>
+        </div>
     );
 }
 

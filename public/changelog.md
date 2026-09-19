@@ -1,3 +1,45 @@
+# 2026-09-18
+## Sitewide Layout Improvements
+We've made substantial changes to some of the core aspects of the sites layout, with a specific focus on mobile. We also managed to fix a few minor annoyances along the way!
+- New tabbed layouts on mobile for key pages like Singer profiles, Events, and Songs. 
+- Improved use of space on many key pages, especially on mobile.
+- Improved layout on tablet devices.
+- Revamped column layout for the Song Learning Status page (similar to RSVP and Attendance listings for an Event) with sortable columns and bulk selection tools.
+- Improved the Add Attachment form.
+- Improved filter/sort view on mobile.
+- Added quick access to the Kiosk and QR Code features from an Event.
+- Tweaked scrolling when viewing riser stacks.
+---
+# 2026-08-18
+## Audio Player 2.0
+We've just launched a new version of the audio player! We've added a lot of new and highly-requested features, including:
+
+### Tempo & Pitch Correction
+You can now change the key of your learning tracks, and practice at other tempos.
+
+### Pan Control
+You can now pan the track to the left or right, which is ideal for tracks where your part is off-centre. When practicing, try moving the pan just a bit and singing along with it, then panning a little bit more. By the end, your part will be almost silent, and you'll be singing confidently with the other parts!
+
+### Jump Back Button
+If you find seek bars a bit fiddly especially on mobile, you might prefer to use the new "Jump Back" button. Each press goes back 10 seconds.
+
+These features have been planned for a long time, but required a rewrite of the audio engine to make them possible. We're so excited to have you try them out! Please let us know if you have any ideas for future practice tools.
+---
+# 2026-03-29
+## Attendance Report Emails
+Your team (anyone with the "view attendance" permission) will now receive an automated email after Kiosk / QR-Code events, with a quick summary of the attendance for the event.
+---
+# 2026-03-27
+## Bulk Editing
+You can now select multiple items in a list and edit them in bulk. This feature is available on larger modules like Songs, Events, etc, and should save you a bunch of time!
+---
+# 2026-03-24
+## Two-Factor Authentication
+We've added two-factor authentication to the app! This is a great way to keep your account secure, as it adds an extra layer of protection to your login process. With two-factor authentication, you'll need to provide a second form of identification, such as a code sent to your phone, in addition to your password. This makes it much harder for unauthorized users to gain access to your account.
+
+## Folder/Document Permissions
+You can now assign specific view/edit permissions for Folders in the Documents module. This gives you more control over who can access what information. The new permissions system is optional - if you leave the viewer/editor sections blank, permission will be inherited from User Roles (the "View Folder" and "Update Folder" permissions, which apply equally to all folders/documents).
+---
 # 2026-03-20
 ## Email Open Tracking
 We can now track whether singers have opened your emails! From now on, new messages and broadcasts you send will start tracking when singers open them. These stats are available in the Mail Logs section.
@@ -49,12 +91,12 @@ You can re-use the QR code for a recurring event, meaning for rehearsals you can
 
 There's also a kiosk option, which allows you to check in members using a shared tablet. Log in, go to the event kiosk, then hand the tablet to the member to mark themself as present.
 
-Singers will automatically be marked as present, late or "late deemed absent" depending on when they check in.
+Singers will automatically be marked as present, late, or "late deemed absent" depending on when they check in.
 
 ---
 # 2025-12-09
 ## Duplicate button
-We've added a duplicate button to many modules, making it easy to quickly clone Songs, Events etc.
+We've added a duplicate button to many modules, making it easy to quickly clone Songs, Events, etc.
 
 ---
 # 2025-11-26

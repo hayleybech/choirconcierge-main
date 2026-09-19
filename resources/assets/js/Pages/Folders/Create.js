@@ -1,31 +1,46 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import FolderForm from "./FolderForm";
-import useRoute from "../../hooks/useRoute";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
+import AppHead from '../../components/AppHead';
+import FolderForm from './FolderForm';
+import useRoute from '../../hooks/useRoute';
 
-const Create = ({ ensembles }) => {
-    const { route } = useRoute();
+const Create = ({ ensembles, roles, voiceParts, singerStatuses, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    return (
-        <>
-            <AppHead title="Create Folder" />
-            <PageHeader
-                title="Create Folder"
-                icon="folders"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Folders', url: route('folders.index')},
-                    { name: 'Create', url: route('folders.create')},
-                ]}
-            />
+	const breadcrumbs = [
+		{ name: 'Documents', url: route('folders.index') },
+		{ name: 'Create Folder', url: route('folders.create') },
+	];
 
-            <FolderForm ensembles={ensembles} />
-        </>
-    );
-}
+	return (
+		<>
+			<AppHead title="Create Folder" />
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="folder-plus" type="solid" className="mr-2" />
+						Create Folder
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
-Create.layout = page => <TenantLayout children={page} />
+			<FolderForm ensembles={ensembles} roles={roles} voiceParts={voiceParts} singerStatuses={singerStatuses} />
+		</>
+	);
+};
+
+Create.layout = page => <TenantLayout children={page} />;
 
 export default Create;

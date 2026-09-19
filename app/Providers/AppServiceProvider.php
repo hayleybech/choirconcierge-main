@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
-use App\Http\View\Composers\SingerCategoryComposer;
+use App\Http\View\Composers\SingerStatusComposer;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Stancl\Tenancy\Controllers\TenantAssetsController;
@@ -26,11 +28,15 @@ class AppServiceProvider extends ServiceProvider
 
         Schema::defaultStringLength(191);
 
-        View::composer('*', SingerCategoryComposer::class);
+        View::composer('*', SingerStatusComposer::class);
 
         TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomainOrSubdomain::class;
 
         Paginator::useBootstrap();
+
+        if(App::isLocal()) {
+            URL::forceRootUrl(config('app.url'));
+        }
     }
 
     /**
@@ -40,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(SingerCategoryComposer::class);
+        $this->app->singleton(SingerStatusComposer::class);
 
         if ($this->app->environment() !== 'production') {
             $this->app->register(IdeHelperServiceProvider::class);

@@ -19,9 +19,11 @@ const TableHeadingSort = ({ form: { submit, data, setData }, sort, children, onC
     return (
         <button
             onClick={onClick ?? (() => setData(data => ({ ...data, sort, sortDir: sortDir === 'asc' ? 'desc' : 'asc' })))}
-            className="group text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            className="group text-left text-xs font-medium text-gray-500 uppercase tracking-wider flex items-center"
         >
-            {children}
+			<span className="shrink-0">
+            	{children}
+			</span>
             {isActive && indicator && (
                 <span className="ml-1 text-[10px] text-gray-400 font-normal normal-case">
                     ({indicator})

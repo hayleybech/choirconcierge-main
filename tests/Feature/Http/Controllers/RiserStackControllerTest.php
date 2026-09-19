@@ -223,6 +223,29 @@ class RiserStackControllerTest extends TestCase
             );
     }
 
+    public function test_bulk_update_syncs_ensembles_to_multiple_stacks(): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        $stacks = RiserStack::factory()->count(3)->create();
+        $ensembles = Ensemble::factory()->count(2)->create();
+
+        $data = [
+            'stack_ids' => $stacks->pluck('id')->toArray(),
+            'ensemble_ids' => $ensembles->pluck('id')->toArray(),
+        ];
+
+        $this->post(the_tenant_route('stacks.bulk-update'), $data)
+            ->assertRedirect(the_tenant_route('stacks.index'))
+            ->assertSessionHasNoErrors();
+
+        foreach ($stacks as $stack) {
+            $this->assertEquals(2, $stack->fresh()->ensembles()->count());
+            $this->assertTrue($stack->fresh()->ensembles->contains($ensembles[0]));
+            $this->assertTrue($stack->fresh()->ensembles->contains($ensembles[1]));
+        }
+    }
+
     #[DataProvider('stackProvider')]
     public function test_store_redirects_to_show($getData): void
     {

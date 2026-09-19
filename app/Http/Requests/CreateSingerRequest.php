@@ -20,7 +20,10 @@ class CreateSingerRequest extends FormRequest
 
     public function prepareForValidation()
     {
-        $this->merge(['onboarding_enabled' => ! $this->input('onboarding_disabled')]);
+        $this->merge([
+            'onboarding_enabled' => ! $this->input('onboarding_disabled'),
+            'email' => str($this->email)->trim()->lower()->toString(),
+        ]);
     }
 
     /**
@@ -34,6 +37,7 @@ class CreateSingerRequest extends FormRequest
 
         $userRules = [
             'user_id' => [
+                'nullable',
                 Rule::when(! empty($this->input('user_id')), [
                     Rule::exists('users', 'id'),
                     new UserUniqueForOrganisation,

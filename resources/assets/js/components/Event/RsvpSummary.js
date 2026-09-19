@@ -6,7 +6,7 @@ import Icon from "../Icon";
 
 const RsvpSummary = ({ rsvpCount, voicePartsRsvpCount }) => (
     <Tab.Group>
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 bg-gray-50">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Tab.List className="-mb-px flex">
                     {['By Status', 'By Voice Part'].map(label => (
@@ -23,7 +23,7 @@ const RsvpSummary = ({ rsvpCount, voicePartsRsvpCount }) => (
             </div>
         </div>
         <Tab.Panels>
-            <Tab.Panel className="py-6 px-4">
+            <Tab.Panel className="py-6 px-4 bg-gray-50">
                 <div className="flex">
                     {[
                         { label: 'Going', textColour: 'text-emerald-500', icon: 'check', count: rsvpCount.yes },
@@ -38,7 +38,7 @@ const RsvpSummary = ({ rsvpCount, voicePartsRsvpCount }) => (
                     ))}
                 </div>
             </Tab.Panel>
-            <Tab.Panel className="py-6 px-4">
+            <Tab.Panel className="py-6 px-4 bg-gray-50">
                 <p className="text-emerald-500 font-semibold mb-4">
                     <Icon icon="check" mr />
                     Going

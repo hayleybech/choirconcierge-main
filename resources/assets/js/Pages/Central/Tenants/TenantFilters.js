@@ -3,6 +3,7 @@ import Label from "../../../components/inputs/Label";
 import TextInput from "../../../components/inputs/TextInput";
 import Filters from "../../../components/Filters";
 import RadioGroup from "../../../components/inputs/RadioGroup";
+import FilterActions from "../../../components/inputs/FilterActions";
 
 const TenantFilters = ({ form }) => (
     <Filters
@@ -17,7 +18,14 @@ const TenantFilters = ({ form }) => (
             <fieldset>
                 <RadioGroup
                     name="billing_status"
-                    label={<Label label="Billing Status" />}
+                    label={
+                        <div className="flex items-center justify-between">
+                            <Label label="Billing Status" />
+                            <FilterActions
+                                onClear={() => setData('billing_status', '')}
+                            />
+                        </div>
+                    }
                     options={[
                         { id: 'active', name: 'Active', icon: 'check-circle', colour: 'green-500', textColour: 'text-green-500' },
                         { id: 'subscribed', name: 'Subscribed', icon: 'usd-circle', colour: 'green-500', textColour: 'text-green-500' },

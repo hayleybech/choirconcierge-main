@@ -7,6 +7,7 @@ use App\Jobs\ClearTemporaryBroadcastFiles;
 use App\Jobs\MarkAbsencesAfterEvents;
 use App\Jobs\ProcessGroupMailbox;
 use App\Jobs\ResetDemoSite;
+use App\Jobs\SendAttendanceReports;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -58,6 +59,9 @@ class Kernel extends ConsoleKernel
             ->thenPing(config('app.heartbeats.reset_demo_site'));
 
         $schedule->job(MarkAbsencesAfterEvents::class)
+            ->hourly();
+
+        $schedule->job(SendAttendanceReports::class)
             ->hourly();
     }
 

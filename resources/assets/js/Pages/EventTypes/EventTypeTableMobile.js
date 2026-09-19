@@ -1,5 +1,5 @@
 import React from 'react';
-import TableMobile, { TableMobileListItem } from '../../components/TableMobile';
+import TableMobile, { TableMobileHeader, TableMobileListItem } from '../../components/TableMobile';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/Button';
 import { Link, usePage } from '@inertiajs/react';
@@ -9,8 +9,17 @@ const EventTypeTableMobile = ({ categories, showEditCategory, showDeleteCategory
 	const { can } = usePage().props;
 	const { route } = useRoute();
 
+	const bulkEdit = {
+		isActiveMobile: false,
+		noun: 'Event Type',
+		selectedIds: [],
+		totalItems: categories.length,
+	};
+
 	return (
-		<TableMobile>
+		<div>
+			<TableMobileHeader bulkEdit={bulkEdit} />
+			<TableMobile>
 			{categories.map(category => (
 				<TableMobileListItem key={category.id}>
 					<div className="flex items-center justify-between px-4 py-4 sm:px-6 gap-2">
@@ -41,7 +50,8 @@ const EventTypeTableMobile = ({ categories, showEditCategory, showDeleteCategory
 					</div>
 				</TableMobileListItem>
 			))}
-		</TableMobile>
+			</TableMobile>
+		</div>
 	);
 };
 

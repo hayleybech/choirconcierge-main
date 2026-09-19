@@ -10,8 +10,7 @@ use Tests\TestCase;
 
 class EventCheckInControllerTest extends TestCase
 {
-    /** @test */
-    public function it_can_check_in_to_an_event()
+    public function test_it_can_check_in_to_an_event()
     {
         $user = User::factory()->create();
         $membership = Membership::factory()->for($user)->create();
@@ -40,11 +39,11 @@ class EventCheckInControllerTest extends TestCase
         $this->assertDatabaseHas('attendances', [
             'membership_id' => $membership->id,
             'event_id' => $event->id,
+            'source' => 'qr-code',
         ]);
     }
 
-    /** @test */
-    public function it_falls_back_to_parent_if_repeating_event_has_no_upcoming_children()
+    public function test_it_falls_back_to_parent_if_repeating_event_has_no_upcoming_children()
     {
         $user = User::factory()->create();
         $membership = Membership::factory()->for($user)->create();
@@ -72,6 +71,7 @@ class EventCheckInControllerTest extends TestCase
         $this->assertDatabaseHas('attendances', [
             'membership_id' => $membership->id,
             'event_id' => $event->id,
+            'source' => 'qr-code',
         ]);
     }
 }

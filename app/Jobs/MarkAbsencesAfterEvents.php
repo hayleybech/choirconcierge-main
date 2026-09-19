@@ -26,16 +26,28 @@ class MarkAbsencesAfterEvents implements ShouldQueue
      */
     public function handle(): void
     {
-        $targeted_event_ids = Event::query()
+        Event::query()
+            ->with('tenant')
             ->whereBetween('end_date', [now()->subHour()->subMinutes(30), now()])
-                ->whereHas('attendances', function (Builder $query) {
-                    $query->where('response', '!=', 'unknown');
-                })
-            ->pluck('id');
+            ->whereHas('attendances', function (Builder $query) {
+                $query->where('response', '!=', 'unknown');
+            })
+            ->get()
+            ->groupBy('tenant_id')
+            ->each(function ($events, $tenantId) {
+                tenancy()->initialize($tenantId);
 
-        Attendance::query()
-            ->whereIn('event_id', $targeted_event_ids)
-            ->where('response', '=', 'unknown')
-            ->update(['response' => 'absent']);
+                $events->each(function (Event $event) {
+                    Attendance::query()
+                        ->where('event_id', $event->id)
+                        ->where('response', '=', 'unknown')
+                        ->update([
+                            'response' => 'absent',
+                            'source' => 'after-event',
+                        ]);
+                });
+
+                tenancy()->end();
+            });
     }
 }

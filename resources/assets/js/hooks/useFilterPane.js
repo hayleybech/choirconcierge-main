@@ -3,7 +3,7 @@ import {useMediaQuery} from "react-responsive";
 
 const useFilterPane = () => {
     const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
-    const [showFilters, setShowFiltersState] = useState(() => localStorage.getItem('showFilters') === 'true' ?? isDesktop);
+    const [showFilters, setShowFiltersState] = useState(() => isDesktop && (localStorage.getItem('showFilters') === 'true' ?? isDesktop));
 
     const setShowFilters = (value) => {
         setShowFiltersState(value);
@@ -15,12 +15,12 @@ const useFilterPane = () => {
             key.includes('filter') || key.includes('sort')
         );
 
-    let filterAction = {
+    let filterAction = isDesktop ? {
         label: <span>Filter<span className="inline md:hidden">/Sort</span></span>,
         icon: 'filter',
         onClick: () => setShowFilters(! showFilters),
         variant: hasNonDefaultFilters ? 'success-solid' : 'secondary',
-    };
+    } : null;
 
     return [showFilters, setShowFilters, filterAction, hasNonDefaultFilters];
 };

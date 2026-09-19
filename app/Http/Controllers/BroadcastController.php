@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Http\Requests\BroadcastRequest;
 use App\Jobs\SendEmailForGroup;
 use App\Mail\OrganisationBroadcast;
@@ -10,7 +11,6 @@ use App\Models\UserGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Storage;
@@ -40,6 +40,7 @@ class BroadcastController extends Controller
             ->map(fn (UploadedFile $file) => [
                 'hashName' => $file->hashName(),
                 'originalName' => $file->getClientOriginalName(),
+                'size' => $file->getSize(),
             ]);
 
         $organisationBroadcast = new OrganisationBroadcast(
@@ -49,6 +50,7 @@ class BroadcastController extends Controller
             $request->user(),
             $fileMeta,
             'broadcast-' . Str::uuid(),
+            (int) $fileMeta->sum('size') + strlen($request->input('body')),
         );
 
         $mailLog = MailLog::createFromMessage($organisationBroadcast);
@@ -59,7 +61,7 @@ class BroadcastController extends Controller
             ],
             [
                 'status' => 'group-found',
-                'context' => $group->title,
+                'context' => Str::limit($group->title, 64-3),
                 'user_group_id' => $group->id,
             ],
         ]);
@@ -67,7 +69,7 @@ class BroadcastController extends Controller
         SendEmailForGroup::dispatch($organisationBroadcast, $group);
 
         return redirect()
-            ->route('groups.mail-logs.index')
+            ->route('communications.index')
             ->with(['status' => 'Email sent! ']);
     }
 }

@@ -46,7 +46,7 @@ const Dialog = ({
 					leaveFrom="opacity-100 translate-y-0 sm:scale-100"
 					leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
 				>
-					<div className="relative z-30 inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6">
+					<div className="relative z-30 inline-block w-full max-w-xl align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:p-6">
 						<div className="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
 							<button
 								type="button"
@@ -57,14 +57,14 @@ const Dialog = ({
 								<Icon icon="times" type="light" className="text-xl" />
 							</button>
 						</div>
-						<div className="sm:flex sm:items-start">
+						<div className="sm:flex sm:items-start sm:gap-4">
 							{icon && (
 								<div className="mx-auto shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
 									<Icon icon={icon} type="regular" className="text-red-600 text-xl" />
 								</div>
 							)}
 							<div
-								className={`mt-3 text-center sm:mt-0 sm:ml-4 flex-grow min-w-0 ${
+								className={`mt-3 text-center sm:mt-0 flex-grow min-w-0 ${
 									icon ? 'sm:text-left' : ''
 								}`}
 							>

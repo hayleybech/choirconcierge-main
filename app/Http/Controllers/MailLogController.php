@@ -38,7 +38,7 @@ class MailLogController extends Controller
     public function show(MailLog $mail_log): Response
     {
         return Inertia::render('MailingLists/MailLogs/Show', [
-            'log' => $mail_log->load('events.user_group')->loadCount('opens'),
+            'log' => $mail_log->load('events.user_group.tenant')->loadCount('opens'),
         ]);
     }
 

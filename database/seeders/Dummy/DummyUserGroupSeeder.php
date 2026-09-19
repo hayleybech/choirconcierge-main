@@ -12,6 +12,7 @@ class DummyUserGroupSeeder extends Seeder
     {
         UserGroup::factory()
             ->count(10)
+            ->state(['tenant_id' => 'test'])
             ->create();
     }
 }

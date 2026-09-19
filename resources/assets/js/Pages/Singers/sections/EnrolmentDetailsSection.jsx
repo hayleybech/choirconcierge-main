@@ -8,8 +8,8 @@ import Dialog from '../../../components/Dialog';
 import Label from '../../../components/inputs/Label';
 import Select from '../../../components/inputs/Select';
 import RadioGroup from '../../../components/inputs/RadioGroup';
-import { CollapsePanelWithoutPadding } from '../../../components/CollapseGroup';
 import { useMediaQuery } from 'react-responsive';
+import { SimplePanelWithoutPadding } from '../../../components/SimplePanel';
 
 export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 	const [creatingEnrolment, setCreatingEnrolment] = useState(false);
@@ -20,7 +20,7 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 
 	return (
 		<>
-			<CollapsePanelWithoutPadding>
+			<SimplePanelWithoutPadding>
 				<ul className="divide-y divide-gray-200">
 					{singer.enrolments.map(enrolment => (
 						<li
@@ -75,16 +75,20 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 					))}
 					{/* @todo add a more specific ability check */}
 					{singer.can['update_singer'] && ensembles.length > 0 && (
-						<li className="flex justify-center items-center gap-2 py-3 px-4 sm:px-6 lg:px-8">
-							<div className="text-gray-700 text-sm">Add a new enrolment</div>
-							<Button variant="primary" size="xs" onClick={() => setCreatingEnrolment(true)}>
+						<li className="bg-gray-50 hover:bg-purple-100">
+							<Button
+								variant="clear"
+								size="sm"
+								className="w-full justify-start px-6 py-5 text-purple-600"
+								onClick={() => setCreatingEnrolment(true)}
+							>
 								<Icon icon="plus" />
-								Create
+								Add enrolment
 							</Button>
 						</li>
 					)}
 				</ul>
-			</CollapsePanelWithoutPadding>
+			</SimplePanelWithoutPadding>
 
 			{singer.can['update_singer'] && (
 				<>

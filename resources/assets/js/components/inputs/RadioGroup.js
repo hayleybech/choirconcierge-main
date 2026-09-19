@@ -63,7 +63,7 @@ const RadioGroup = ({
 										option.textColour ?? '',
 										option.colour ?? '',
 										checked && !option.colour && 'text-purple-700',
-										!checked && !option.colour && 'text-gray-900',
+										!checked && (!option.colour && !option.textColour) && 'text-gray-900',
 										(disabled || option.disabled) && 'text-opacity-50',
 										size === 'xs' ? 'text-base' : 'text-lg',
 									)}

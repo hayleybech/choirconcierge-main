@@ -22,12 +22,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 use Mailgun\Mailgun;
 use Sentry;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Laragear\TwoFactor\Contracts\TwoFactorAuthenticatable;
+use Laragear\TwoFactor\TwoFactorAuthentication;
 
 // http://alexsears.com/article/adding-roles-to-laravel-users/
 // https://medium.com/@ezp127/laravel-5-4-native-user-authentication-role-authorization-3dbae4049c8a
@@ -76,9 +79,9 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Membership $membership
  * @property Tenant $default_tenant
  */
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
 {
-    use Notifiable, InteractsWithMedia, SoftDeletes, HasFactory, TenantTimezoneDates;
+    use Notifiable, InteractsWithMedia, SoftDeletes, HasFactory, TenantTimezoneDates, TwoFactorAuthentication, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -116,11 +119,11 @@ class User extends Authenticatable implements HasMedia
      */
     protected $hidden = ['password', 'remember_token'];
 
-    protected $with = ['media', 'membership.roles'];
+    protected $with = ['media', 'membership.roles', 'membership.status'];
 
     public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'last_login' => 'datetime', 'dob' => 'datetime'];
 
-    protected $appends = ['name', 'avatar_url', 'profile_avatar_url', 'bha_type'];
+    protected $appends = ['name', 'avatar_url', 'profile_avatar_url', 'bha_type', 'age'];
 
     public $notify_channels = ['database', 'mail'];
 
@@ -219,6 +222,11 @@ class User extends Authenticatable implements HasMedia
     public function getNameAttribute(): string
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function getAgeAttribute(): ?int
+    {
+        return $this->dob?->age;
     }
 
     public function bhaType(): Attribute

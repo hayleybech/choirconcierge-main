@@ -13,11 +13,15 @@ class DocumentController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Document::class, 'document');
+        $this->authorizeResource(Document::class, 'document', [
+            'except' => ['store'],
+        ]);
     }
 
     public function store(Folder $folder, DocumentRequest $request): RedirectResponse
     {
+        $this->authorize('create', [Document::class, $folder]);
+
         $files = $request->file('document_uploads');
         foreach ($files as $file) {
             $folder->documents()->create([

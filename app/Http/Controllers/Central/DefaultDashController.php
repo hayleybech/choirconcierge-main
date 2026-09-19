@@ -28,7 +28,7 @@ class DefaultDashController extends Controller
     private function getUserChoirs(): Collection
     {
         return session()->has('impersonation:active')
-            ? collect([tenant()->load('domains')])
+            ? collect([tenant()->loadMissing('domains')])
             : auth()->user()
                 ?->memberships()
                 ->withoutTenancy()

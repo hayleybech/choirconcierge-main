@@ -1,32 +1,47 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import RoleForm from "./RoleForm";
-import useRoute from "../../hooks/useRoute";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
+import AppHead from '../../components/AppHead';
+import RoleForm from './RoleForm';
+import useRoute from '../../hooks/useRoute';
 
-const Create = () => {
-    const { route } = useRoute();
+const Create = ({ setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    return (
-        <>
-            <AppHead title="Create Role" />
-            <PageHeader
-                title="Create Role"
-                icon="user-tag"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Singers', url: route('singers.index')},
-                    { name: 'Roles', url: route('roles.index')},
-                    { name: 'Create', url: route('roles.create')},
-                ]}
-            />
+	const breadcrumbs = [
+		{ name: 'Singers', url: route('singers.index') },
+		{ name: 'Roles', url: route('roles.index') },
+		{ name: 'Create Role', url: route('roles.create') },
+	];
 
-            <RoleForm />
-        </>
-    );
-}
+	return (
+		<>
+			<AppHead title="Create Role" />
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="user-tag" type="solid" className="mr-2" />
+						Create Role
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
-Create.layout = page => <TenantLayout children={page} />
+			<RoleForm />
+		</>
+	);
+};
+
+Create.layout = page => <TenantLayout children={page} />;
 
 export default Create;

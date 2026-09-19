@@ -1,7 +1,6 @@
 import React from "react";
 
 jest.mock('@inertiajs/react', () => {
-	console.log('gloabl mock');
 	const { forwardRef } = jest.requireActual('react');
 
 	return {

@@ -17,7 +17,7 @@ class TenantController extends Controller
     {
         $this->authorize('update', tenant());
 
-        $tenant = tenant()->load(['domains', 'ensembles', 'billingUser'])->append(['primary_domain', 'plan']);
+        $tenant = tenant()->loadMissing(['domains', 'ensembles', 'billingUser'])->append(['primary_domain', 'plan']);
 
         return Inertia::render('Tenants/Edit', [
             'organisation' => $tenant,
@@ -30,7 +30,7 @@ class TenantController extends Controller
     {
         $this->authorize('update', tenant());
 
-        tenant()->load('domains');
+        tenant()->loadMissing('domains');
 
         $request->validate([
             'name' => ['required', 'max:127'],

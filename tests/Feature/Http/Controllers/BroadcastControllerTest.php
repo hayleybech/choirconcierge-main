@@ -20,7 +20,7 @@ it('has a send email page', function () {
 
     createGroup($user);
 
-    $this->get(the_tenant_route('groups.broadcasts.create'))
+    $this->get(the_tenant_route('communications.create'))
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('MailingLists/Broadcasts/Create')
@@ -33,11 +33,11 @@ it('dispatches a job to send the email', function () {
 
     $group = createGroup($user);
 
-    $this->post(the_tenant_route('groups.broadcasts.store'), [
+    $this->post(the_tenant_route('communications.store'), [
         'list' => $group->id,
         'subject' => 'this is a test',
         'body' => 'test body',
-    ])->assertSessionHasNoErrors();
+    ])->assertRedirect(route('communications.index'));
 
     Queue::assertPushed(SendEmailForGroup::class, function (SendEmailForGroup $job) use ($user, $group) {
         return $job->group->is($group)
@@ -57,12 +57,12 @@ it('stores attachments in temporary storage', function () {
         UploadedFile::fake()->create('test2.txt'),
     ];
 
-    $this->post(the_tenant_route('groups.broadcasts.store'), [
+    $this->post(the_tenant_route('communications.store'), [
         'list' => $group->id,
         'subject' => 'this is a test',
         'body' => 'test body',
         'attachments' => $files,
-    ])->assertSessionHasNoErrors();
+    ])->assertRedirect(route('communications.index'));
 
     Storage::disk('temp')->assertExists("broadcasts/{$files[0]->hashName()}");
     Storage::disk('temp')->assertExists("broadcasts/{$files[1]->hashName()}");
@@ -73,7 +73,30 @@ it('stores attachments in temporary storage', function () {
             && $job->message->fileMeta[0]['hashName'] === $files[0]->hashName()
             && $job->message->fileMeta[1]['hashName'] === $files[1]->hashName();
     });
-})->skip('broken after LC migration / L10 update');
+});
+
+it('logs the size of the broadcast', function () {
+    $user = $this->actingAsRole('Music Team');
+
+    $group = createGroup($user);
+
+    $file = UploadedFile::fake()->create('test.txt', 100); // 100 KB
+
+    $body = 'test body';
+    $expectedSize = (100 * 1024) + strlen($body);
+
+    $this->post(the_tenant_route('communications.store'), [
+        'list' => $group->id,
+        'subject' => 'this is a test',
+        'body' => $body,
+        'attachments' => [$file],
+    ])->assertRedirect(route('communications.index'));
+
+    $this->assertDatabaseHas('mail_logs', [
+        'subject' => 'this is a test',
+        'size' => $expectedSize,
+    ]);
+});
 
 function createGroup(User $user): UserGroup
 {

@@ -1,31 +1,53 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import FolderForm from "./FolderForm";
-import useRoute from "../../hooks/useRoute";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
+import AppHead from '../../components/AppHead';
+import FolderForm from './FolderForm';
+import useRoute from '../../hooks/useRoute';
 
-const Edit = ({ folder, ensembles }) => {
-    const { route } = useRoute();
+const Edit = ({ folder, ensembles, roles, voiceParts, singerStatuses, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    return (
-        <>
-            <AppHead title="Edit Folder" />
-            <PageHeader
-                title="Edit Folder"
-                icon="folders"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Folders', url: route('folders.index')},
-                    { name: 'Edit', url: route('folders.edit', { folder })},
-                ]}
-            />
+	const breadcrumbs = [
+		{ name: 'Documents', url: route('folders.index') },
+		{ name: folder.title, url: route('folders.edit', { folder }) },
+		{ name: 'Edit Folder', url: route('folders.edit', { folder }) },
+	];
 
-            <FolderForm folder={folder} ensembles={ensembles} />
-        </>
-    );
-}
+	return (
+		<>
+			<AppHead title="Edit Folder" />
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="folder-edit" type="solid" className="mr-2" />
+						Edit Folder
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
-Edit.layout = page => <TenantLayout children={page} />
+			<FolderForm
+				folder={folder}
+				ensembles={ensembles}
+				roles={roles}
+				voiceParts={voiceParts}
+				singerStatuses={singerStatuses}
+			/>
+		</>
+	);
+};
+
+Edit.layout = page => <TenantLayout children={page} />;
 
 export default Edit;
