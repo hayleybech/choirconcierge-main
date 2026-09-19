@@ -1,59 +1,100 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import {DateTime} from "luxon";
-import AttendanceTag from "../../components/Event/AttendanceTag";
-import useRoute from "../../hooks/useRoute";
-import useFilterPane from "../../hooks/useFilterPane";
-import FilterSortPane from "../../components/FilterSortPane";
-import AttendanceReportFilters from "./AttendanceReportFilters";
-import useSortFilterForm from "../../hooks/useSortFilterForm";
-import EmptyState from "../../components/EmptyState";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import AppHead from '../../components/AppHead';
+import { DateTime } from 'luxon';
+import AttendanceTag from '../../components/Event/AttendanceTag';
+import useRoute from '../../hooks/useRoute';
+import useFilterPane from '../../hooks/useFilterPane';
+import FilterSortPane from '../../components/FilterSortPane';
+import AttendanceReportFilters from './AttendanceReportFilters';
+import useSortFilterForm from '../../hooks/useSortFilterForm';
+import EmptyState from '../../components/EmptyState';
 import { Link } from '@inertiajs/react';
+import Button from '../../components/inputs/Button';
+import Icon from '../../components/Icon';
+import { TableMobileHeader } from '../../components/TableMobile';
 
 const AttendanceReport = ({
-  events,
-  eventTypes,
-  defaultEventType,
-  defaultStartsAfter,
-  defaultStartsBefore,
-  voiceParts,
-  numSingers,
-  avgSingersPerEvent,
-  avgEventsPerSinger
+	events,
+	eventTypes,
+	defaultEventType,
+	defaultStartsAfter,
+	defaultStartsBefore,
+	voiceParts,
+	numSingers,
+	avgSingersPerEvent,
+	avgEventsPerSinger,
+	setSidebarOpen,
 }) => {
-    const { route } = useRoute();
-    const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const { route } = useRoute();
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
-    const sorts = [];
-    const filters = [
-      { name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
-      { name: 'starts_after', defaultValue: defaultStartsAfter },
-      { name: 'starts_before', defaultValue: defaultStartsBefore },
-    ];
+	const sorts = [];
+	const filters = [
+		{ name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
+		{ name: 'starts_after', defaultValue: defaultStartsAfter },
+		{ name: 'starts_before', defaultValue: defaultStartsBefore },
+	];
 
-    const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
+	const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
 
-    return (
+	const bulkEdit = {
+		isActiveMobile: false,
+		noun: 'Attendance',
+		selectedIds: [],
+		totalItems: events.length,
+	};
+
+	const breadcrumbs = [
+		{ name: 'Events', url: route('events.index') },
+		{ name: 'Attendance Report', url: route('events.reports.attendance') },
+	];
+
+	return (
 		<>
 			<AppHead title="Attendance Report" />
-			<PageHeader
-				title="Attendance Report"
-				icon="analytics"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Events', url: route('events.index') },
-					{ name: 'Attendance Report', url: route('events.reports.attendance') },
-				]}
-				meta={
-					<>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+					{filterAction && (
+						<PageActionsMenu>
+							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
+								<Icon icon="filter" mr />
+								Filter
+							</ActionMenuItem>
+						</PageActionsMenu>
+					)}
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="analytics" type="solid" className="mr-2" />
+						Attendance Report
+					</PageHeaderTitle>
+					<PageHeaderMeta>
 						<div>Avg. singers per event: {avgSingersPerEvent}</div>
 						<div>Avg. events per singer: {avgEventsPerSinger}</div>
-					</>
-				}
-				actions={[filterAction]}
-			/>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{filterAction && (
+						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+							<Icon icon="filter" mr />
+							Filter
+						</Button>
+					)}
+				</PageHeaderActions>
+			</PageHeader>
 
 			<div className="flex flex-col overflow-auto lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300 h-full">
 				{showFilters && (
@@ -64,161 +105,183 @@ const AttendanceReport = ({
 						/>
 					</div>
 				)}
-				<div className="grow lg:overflow-x-auto">
-					{events.length === 0 && (
-						<EmptyState
-							icon="calendar"
-							title="No events found"
-							description="Try expanding your filters, or maybe you haven't recorded any attendance yet."
-						/>
-					)}
 
-					<div className=" pb-8 pr-8">
-						{events.length > 0 && numSingers === 0 && (
+				<div className="flex flex-col grow lg:overflow-x-auto">
+					<div className="lg:hidden">
+						<TableMobileHeader bulkEdit={bulkEdit}>
+							<Button
+								variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
+								size="xs"
+								onClick={() => setShowFilters(prev => !prev)}
+							>
+								<Icon icon="filter" mr />
+								Filter/Sort
+							</Button>
+						</TableMobileHeader>
+					</div>
+
+					<div>
+						{events.length === 0 && (
 							<EmptyState
-								icon="users"
-								title="No singers found"
+								icon="calendar"
+								title="No events found"
 								description="Try expanding your filters, or maybe you haven't recorded any attendance yet."
 							/>
 						)}
-						{events.length > 0 && numSingers > 0 && (
-							<table className="bg-white h-full">
-								<thead className="h-full">
-									<tr className="h-full">
-										<th />
-										{events.map(event => (
-											<th key={event.id} className="border border-gray-300 align-bottom h-full">
-												<Link
-													href={route('events.show', { event })}
-													className="flex px-2 md:px-2 py-3 md:py-5 justify-center transform rotate-180 text-purple-800 hover:bg-purple-100 hover:text-purple-600 h-full"
+
+						<div className=" pb-8 pr-8">
+							{events.length > 0 && numSingers === 0 && (
+								<EmptyState
+									icon="users"
+									title="No singers found"
+									description="Try expanding your filters, or maybe you haven't recorded any attendance yet."
+								/>
+							)}
+							{events.length > 0 && numSingers > 0 && (
+								<table className="bg-white h-full">
+									<thead className="h-full">
+										<tr className="h-full">
+											<th />
+											{events.map(event => (
+												<th
+													key={event.id}
+													className="border border-gray-300 align-bottom h-full"
 												>
+													<Link
+														href={route('events.show', { event })}
+														className="flex px-2 md:px-2 py-3 md:py-5 justify-center transform rotate-180 text-purple-800 hover:bg-purple-100 hover:text-purple-600 h-full"
+													>
+														<div
+															className="text-ellipsis overflow-hidden text-sm text-left"
+															style={{ writingMode: 'vertical-lr' }}
+														>
+															{truncateString(event.title, 30)}
+														</div>
+													</Link>
+												</th>
+											))}
+											<th className="px-2 md:px-2 py-3 md:py-5 border border-gray-300 align-bottom bg-gray-100">
+												<div className="flex justify-center transform rotate-180">
 													<div
 														className="text-ellipsis overflow-hidden text-sm text-left"
 														style={{ writingMode: 'vertical-lr' }}
 													>
-														{truncateString(event.title, 30)}
+														Events Present
 													</div>
-												</Link>
-											</th>
-										))}
-										<th className="px-2 md:px-2 py-3 md:py-5 border border-gray-300 align-bottom bg-gray-100">
-											<div className="flex justify-center transform rotate-180">
-												<div
-													className="text-ellipsis overflow-hidden text-sm text-left"
-													style={{ writingMode: 'vertical-lr' }}
-												>
-													Events Present
 												</div>
-											</div>
-										</th>
-									</tr>
-									<tr>
-										<th />
-										{events.map(event => (
-											<th
-												key={event.id}
-												className="font-medium text-gray-500 text-xs md:text-sm whitespace-nowrap border border-gray-300 px-1 md:px-5 py-2 md:py-3"
-											>
-												{DateTime.fromISO(event.start_date).toFormat('y')}
-												<br />
-												{DateTime.fromISO(event.start_date).toFormat('MM-dd')}
-												<br />
 											</th>
-										))}
-										<td className="border border-gray-300 bg-gray-100">&nbsp;</td>
-									</tr>
-								</thead>
-								<tbody>
-									{voiceParts.map(voicePart => (
-										<React.Fragment key={voicePart.id}>
-											<tr>
+										</tr>
+										<tr>
+											<th />
+											{events.map(event => (
 												<th
-													colSpan="100000"
-													className="text-left px-3 md:px-5 py-2 md:py-3 text-sm md:text-base bg-gray-100 border border-gray-300"
+													key={event.id}
+													className="font-medium text-gray-500 text-xs md:text-sm whitespace-nowrap border border-gray-300 px-1 md:px-5 py-2 md:py-3"
 												>
-													{voicePart.title}
+													{DateTime.fromISO(event.start_date).toFormat('y')}
+													<br />
+													{DateTime.fromISO(event.start_date).toFormat('MM-dd')}
+													<br />
 												</th>
-											</tr>
-											{voicePart.members.map(singer => (
-												<tr key={singer.id}>
-													<th className="text-left whitespace-nowrap border border-gray-300">
-														<Link
-															href={route('singers.show', { singer })}
-															className="flex flex-nowrap items-center px-3 md:px-5 py-2 md:py-3 gap-2 md:gap-3 hover:bg-purple-100 hover:text-purple-600 text-purple-800"
-														>
-															<div className="shrink-0 h-6 md:h-8 w-6 md:w-8">
-																<img
-																	className="h-6 w-6 md:h-8 md: md:w-8 rounded-sm md:rounded-md"
-																	src={singer.user.avatar_url}
-																	alt={singer.user.name}
-																/>
-															</div>
-
-															<span className="text-sm md:text-base">{singer.user.name}</span>
-														</Link>
-													</th>
-													{events
-														.map(event => getAttendanceBySingerAndEvent(singer, event))
-														.map((attendance, key) => (
-															<td
-																className="border border-gray-300 text-center"
-																key={key}
-															>
-																{attendance ? (
-																	<AttendanceTag
-																		icon={attendance.icon}
-																		colour={attendance.colour}
-																	/>
-																) : (
-																	<AttendanceTag icon="question" colour="gray" />
-																)}
-															</td>
-														))}
-													<td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-5">
-														<div className="text-sm md:text-base">{singer.percentPresent}%</div>
-														<div className="text-xs hidden md:block">
-															{singer.timesPresent}&nbsp;/&nbsp;{events.length}
-														</div>
-													</td>
-												</tr>
 											))}
-										</React.Fragment>
-									))}
-								</tbody>
-								<tfoot>
-									<tr>
-										<th className="border border-gray-300 bg-gray-100 text-left px-2 md:px-2 py-3 md:py-3 text-xs md:text-base">
-											Singers Present
-										</th>
-										{events.map(event => (
-											<td
-												className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-3"
-												key={event.id}
-											>
-												<div className="text-sm md:text-base">{event.percentPresent}%</div>
-												<div className="text-xs hidden md:block">
-													{event.singersPresent} / {numSingers}
-												</div>
-											</td>
+											<td className="border border-gray-300 bg-gray-100">&nbsp;</td>
+										</tr>
+									</thead>
+									<tbody>
+										{voiceParts.map(voicePart => (
+											<React.Fragment key={voicePart.id}>
+												<tr>
+													<th
+														colSpan="100000"
+														className="text-left px-3 md:px-5 py-2 md:py-3 text-sm md:text-base bg-gray-100 border border-gray-300"
+													>
+														{voicePart.title}
+													</th>
+												</tr>
+												{voicePart.members.map(singer => (
+													<tr key={singer.id}>
+														<th className="text-left whitespace-nowrap border border-gray-300">
+															<Link
+																href={route('singers.show', { singer })}
+																className="flex flex-nowrap items-center px-3 md:px-5 py-2 md:py-3 gap-2 md:gap-3 hover:bg-purple-100 hover:text-purple-600 text-purple-800"
+															>
+																<div className="shrink-0 h-6 md:h-8 w-6 md:w-8">
+																	<img
+																		className="h-6 w-6 md:h-8 md: md:w-8 rounded-sm md:rounded-md"
+																		src={singer.user.avatar_url}
+																		alt={singer.user.name}
+																	/>
+																</div>
+
+																<span className="text-sm md:text-base">
+																	{singer.user.name}
+																</span>
+															</Link>
+														</th>
+														{events
+															.map(event => getAttendanceBySingerAndEvent(singer, event))
+															.map((attendance, key) => (
+																<td
+																	className="border border-gray-300 text-center"
+																	key={key}
+																>
+																	{attendance ? (
+																		<AttendanceTag
+																			icon={attendance.icon}
+																			colour={attendance.colour}
+																		/>
+																	) : (
+																		<AttendanceTag icon="question" colour="gray" />
+																	)}
+																</td>
+															))}
+														<td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-5">
+															<div className="text-sm md:text-base">
+																{singer.percentPresent}%
+															</div>
+															<div className="text-xs hidden md:block">
+																{singer.timesPresent}&nbsp;/&nbsp;{events.length}
+															</div>
+														</td>
+													</tr>
+												))}
+											</React.Fragment>
 										))}
-									</tr>
-								</tfoot>
-							</table>
-						)}
+									</tbody>
+									<tfoot>
+										<tr>
+											<th className="border border-gray-300 bg-gray-100 text-left px-2 md:px-2 py-3 md:py-3 text-xs md:text-base">
+												Singers Present
+											</th>
+											{events.map(event => (
+												<td
+													className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-3"
+													key={event.id}
+												>
+													<div className="text-sm md:text-base">{event.percentPresent}%</div>
+													<div className="text-xs hidden md:block">
+														{event.singersPresent} / {numSingers}
+													</div>
+												</td>
+											))}
+										</tr>
+									</tfoot>
+								</table>
+							)}
+						</div>
 					</div>
 				</div>
 			</div>
 		</>
 	);
-}
+};
 
-AttendanceReport.layout = page => <TenantLayout children={page} />
+AttendanceReport.layout = page => <TenantLayout children={page} />;
 
 export default AttendanceReport;
 
-const getAttendanceBySingerAndEvent = (singer, event) => singer.attendances.filter((attendance) => attendance.event_id === event.id)[0] ?? null;
+const getAttendanceBySingerAndEvent = (singer, event) =>
+	singer.attendances.filter(attendance => attendance.event_id === event.id)[0] ?? null;
 
 const truncateString = (string = '', maxLength = 50) =>
-	string.length > maxLength
-		? `${string.substring(0, maxLength)}…`
-		: string
+	string.length > maxLength ? `${string.substring(0, maxLength)}…` : string;

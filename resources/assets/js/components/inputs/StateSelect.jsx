@@ -33,7 +33,6 @@ const countryStateOptions = {
 };
 
 const StateSelect = ({ country, defaultValue, updateFn, ...rest }) => {
-	console.log({statesUsa});
 	if (!country in countryStateOptions) {
 		return null;
 	}

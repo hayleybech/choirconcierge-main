@@ -35,11 +35,17 @@ class FolderPolicy
 
     public function view(User $user, Folder $folder): bool
     {
+        // Must be in one of the ensembles if they are specified
         if ($folder->ensembles->isNotEmpty() && ! $user->membership->hasAbility('folders_update')) {
             $userEnsembles = $user->membership->enrolments->pluck('ensemble_id');
             if ($folder->ensembles->pluck('id')->intersect($userEnsembles)->isEmpty()) {
                 return false;
             }
+        }
+
+        // If specific viewers are specified, user must be one of them
+        if ($folder->viewers->isNotEmpty()) {
+            return $folder->get_all_viewers()->contains($user);
         }
 
         return $user->membership->hasAbility('folders_view');
@@ -50,14 +56,33 @@ class FolderPolicy
         return $user->membership->hasAbility('folders_create');
     }
 
-    public function update(User $user): bool
+    public function update(User $user, ?Folder $folder = null): bool
     {
+        // If we are checking the ability in general (no folder instance)
+        if ($folder === null) {
+            return $user->membership->hasAbility('folders_update');
+        }
+
+        // Must be in one of the ensembles if they are specified
+        if ($folder->ensembles->isNotEmpty()) {
+            $userEnsembles = $user->membership->enrolments->pluck('ensemble_id');
+            if ($folder->ensembles->pluck('id')->intersect($userEnsembles)->isEmpty()) {
+                return false;
+            }
+        }
+
+        // If specific editors are specified, user must be one of them
+        if ($folder->editors->isNotEmpty()) {
+            return $folder->get_all_editors()->contains($user);
+        }
+
         return $user->membership->hasAbility('folders_update');
     }
 
-    public function delete(User $user): bool
+    public function delete(User $user, ?Folder $folder = null): bool
     {
-        return $user->membership->hasAbility('folders_delete');
+        // Use the same permission logic as update
+        return $this->update($user, $folder) && $user->membership->hasAbility('folders_delete');
     }
 
     public function restore(): bool

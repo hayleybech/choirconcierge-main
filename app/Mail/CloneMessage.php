@@ -5,6 +5,7 @@ namespace App\Mail;
 use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
+use Illuminate\Support\Str;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 
@@ -12,12 +13,23 @@ class CloneMessage
 {
     public static function forGroup(Mailable $message, UserGroup $group): void
     {
+        if($group->get_all_recipients()->count() === 0) {
+            MailLog::firstWhere('uid', $message->uid)->events()->create([
+                'status' => 'group-empty',
+                'user_group_id' => $group->id,
+                'context' => Str::limit($group->title, 64),
+            ]);
+
+            return;
+        }
+
         $group->get_all_recipients()
             ->each(fn ($user) => self::resendToUser(clone $message, $user, $group));
 
         MailLog::firstWhere('uid', $message->uid)->events()->create([
             'status' => 'clones-sent',
-            'context' => $group->title,
+            'user_group_id' => $group->id,
+            'context' => Str::limit($group->title, 64),
         ]);
     }
 
@@ -70,7 +82,7 @@ class CloneMessage
         } catch (\Throwable $exception) {
             MailLog::firstWhere('uid', $message->uid)->events()->create([
                 'status' => 'clone-failed',
-                'context' => $user->email,
+                'context' => Str::limit($user->email, 64),
             ]);
 
             throw $exception;

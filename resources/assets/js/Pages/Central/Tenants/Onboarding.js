@@ -3,9 +3,17 @@ import AppHead from "../../../components/AppHead";
 import useRoute from "../../../hooks/useRoute";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import {router} from "@inertiajs/react";
+import { router } from '@inertiajs/react';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from "../../../components/PageTopBar";
+import Icon from "../../../components/Icon";
 
-const Onboarding = ({ tenant }) => {
+const Onboarding = ({ tenant, setSidebarOpen }) => {
     const { route } = useRoute();
 
     const TIME_BETWEEN_CHECKS = 3000;
@@ -26,6 +34,25 @@ const Onboarding = ({ tenant }) => {
     return (
         <>
             <AppHead title={`Almost Ready! - ${tenant.name}`} />
+            <PageTopBar setSidebarOpen={setSidebarOpen}>
+                <PageTopNavigation breadcrumbs={[
+                    { name: 'Organisations', url: route('central.tenants.index') },
+                    { name: tenant.name, url: route('central.tenants.show', { tenant }) },
+                    { name: 'Onboarding', url: route('central.tenants.onboarding', { tenant }) },
+                ]} />
+            </PageTopBar>
+            <PageHeader>
+                <PageHeaderContent>
+                    <PageHeaderBreadcrumbs breadcrumbs={[
+                        { name: 'Organisations', url: route('central.tenants.index') },
+                        { name: tenant.name, url: route('central.tenants.show', { tenant }) },
+                        { name: 'Onboarding', url: route('central.tenants.onboarding', { tenant }) },
+                    ]} />
+                    <PageHeaderTitle>
+                        <Icon icon="building" type="solid" className="mr-2" /> Organisation Created
+                    </PageHeaderTitle>
+                </PageHeaderContent>
+            </PageHeader>
 
             <div className="bg-white grow flex items-center">
                 <div className="mx-auto max-w-3xl text-center">

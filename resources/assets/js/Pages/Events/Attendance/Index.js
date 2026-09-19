@@ -1,14 +1,31 @@
-import React, { useState } from 'react';
-import PageHeader from '../../../components/PageHeader/PageHeader';
+import React, { Fragment, useState } from 'react';
+
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
+import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
-import Dialog from '../../../components/Dialog';
 import { Link, usePage } from '@inertiajs/react';
-import QRCode from 'react-qr-code';
+import SelfCheckInDialog from '../../../components/Event/SelfCheckInDialog';
 import DateTag from '../../../components/DateTag';
-import Table, { TableCell } from '../../../components/Table';
+import Table, {
+	TableCell,
+	THead,
+	TBody,
+	TableHeading,
+	TableSelectAll,
+	TableCellSelect,
+	TItemRow,
+} from '../../../components/Table';
 import IndexContainer from '../../../components/IndexContainer';
 import AttendanceTableMobile from './AttendanceTableMobile';
 import Pagination from '../../../components/Pagination';
@@ -19,12 +36,24 @@ import FilterSortPane from '../../../components/FilterSortPane';
 import Sorts from '../../../components/Sorts';
 import AttendanceFilters from '../../../components/AttendanceFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
-import collect from 'collect.js';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import SingerStatus from '../../../SingerStatus';
-import SingerCategoryTag from '../../../components/SingerCategoryTag';
+import SingerStatusTag from '../../../components/SingerStatusTag';
 import { handleNameSort } from '../../../utils/sortHelpers';
+import useBulkEdit from '../../../hooks/useBulkEdit';
+import BulkEditBar from '../../../components/BulkEditBar';
+import Button from '../../../components/inputs/Button';
+import { Menu, Transition } from '@headlessui/react';
+import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
+import { router } from '@inertiajs/react';
+
+const sourceLabels = {
+	'kiosk': 'Kiosk',
+	'qr-code': 'QR Code',
+	'after-event': 'Auto',
+	'manual': 'Manual',
+};
 
 const Index = ({
 	event,
@@ -33,9 +62,10 @@ const Index = ({
 	totalEnsemblesCount,
 	voiceParts,
 	ensembles,
-	singerCategories,
+	singerStatuses,
 	counts,
 	individualCheckInUrl,
+	setSidebarOpen,
 }) => {
 	const [checkInDialogIsOpen, setCheckInDialogIsOpen] = useState(false);
 
@@ -58,34 +88,95 @@ const Index = ({
 		{ name: 'enrolments.voice_part_id', multiple: true },
 		{ name: 'enrolments.ensemble_id', multiple: true },
 		{ name: 'attendance.response', multiple: true },
-		{ name: 'category.id', multiple: true, defaultValue: singerCategories.find(c => c.name === 'Members')?.id ? [singerCategories.find(c => c.name === 'Members').id] : [] },
+		{
+			name: 'status.id',
+			multiple: true,
+			defaultValue: singerStatuses.find(c => c.name === 'Members')?.id
+				? [singerStatuses.find(c => c.name === 'Members').id]
+				: [],
+		},
 	];
 
 	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);
 
-	const headings = collect({
-		singer: (
-			<TableHeadingSort
-				form={sortFilterForm}
-				sort={['full-name', 'last-name-first']}
-				onClick={() => handleNameSort(sortFilterForm)}
-				indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
-			>
-				Name
-			</TableHeadingSort>
-		),
-		voice_part: 'Voice Part',
-		attendance: (
-			<TableHeadingSort form={sortFilterForm} sort="attendance-response">
-				Attendance
-			</TableHeadingSort>
-		),
-		updated: (
-			<TableHeadingSort form={sortFilterForm} sort="attendance-updated">
-				Updated
-			</TableHeadingSort>
-		),
-	});
+	const bulkEdit = useBulkEdit(allSingers, pageProps.can.create_attendance, false, 'Singer', true);
+	const pageActions = [
+		{
+			label: 'Launch Kiosk',
+			icon: 'calendar-check',
+			url: route('events.kiosk-check-ins.index', { event }),
+			can: 'create_attendance',
+		},
+		{ label: 'Get Check-In Link', icon: 'qrcode', onClick: () => setCheckInDialogIsOpen(true), can: 'create_attendance' },
+		filterAction,
+		bulkEdit.action,
+	].filter(action => (action?.can ? pageProps.can[action.can] : !!action));
+
+	const bulkUpdateAttendance = response => {
+		router.post(
+			route('events.attendances.bulkUpdate', { event }),
+			{
+				singer_ids: bulkEdit.selectedIds,
+				response,
+			},
+			{
+				onSuccess: () => bulkEdit.clearSelections(),
+			}
+		);
+	};
+
+	const bulkActions = (
+		<>
+			<Button size="xs" variant="clear-inverse" onClick={() => bulkUpdateAttendance('present')}>
+				<Icon icon="check" className="text-emerald-500" />
+				Present
+			</Button>
+			<Button size="xs" variant="clear-inverse" onClick={() => bulkUpdateAttendance('absent')}>
+				<Icon icon="times" className="text-red-500" />
+				Absent
+			</Button>
+			<Menu as="div" className="relative flex">
+				<Menu.Button className="flex items-center px-3 py-1.5 text-xs font-medium rounded-md hover:bg-gray-600 focus:outline-none transition ease-in-out duration-150">
+					More
+					<Icon icon="chevron-up" ml className="text-[10px]" />
+				</Menu.Button>
+				<Transition
+					as={Fragment}
+					enter="transition ease-out duration-100"
+					enterFrom="transform opacity-0 scale-95"
+					enterTo="transform opacity-100 scale-100"
+					leave="transition ease-in duration-75"
+					leaveFrom="transform opacity-100 scale-100"
+					leaveTo="transform opacity-0 scale-95"
+				>
+					<Menu.Items className="origin-bottom-right absolute right-0 bottom-full mb-4 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black/5 focus:outline-none">
+						<Menu.Item>
+							{({ active }) => (
+								<button
+									onClick={() => bulkUpdateAttendance('late')}
+									className={menuItemStyles('secondary', active, '', 'xs')}
+								>
+									<Icon icon="alarm-exclamation" mr className="text-amber-500" />
+									Late
+								</button>
+							)}
+						</Menu.Item>
+						<Menu.Item>
+							{({ active }) => (
+								<button
+									onClick={() => bulkUpdateAttendance('late_deemed_absent')}
+									className={menuItemStyles('secondary', active, '', 'xs')}
+								>
+									<Icon icon="times" mr className="text-red-500" />
+									Late (Deemed Absent)
+								</button>
+							)}
+						</Menu.Item>
+					</Menu.Items>
+				</Transition>
+			</Menu>
+		</>
+	);
 
 	const countsData = [
 		{ label: 'On Time', textColour: 'text-emerald-500', icon: 'check', count: counts.present },
@@ -94,69 +185,87 @@ const Index = ({
 		{ label: 'Not recorded', textColour: 'text-gray-500', icon: 'question', count: counts.unknown },
 	];
 
+	const breadcrumbs = [
+		{ name: 'Events', url: route('events.index') },
+		{ name: event.title, url: route('events.show', { event }) },
+		{ name: 'Attendance List', url: route('events.attendances.index', { event }) },
+	];
+
 	return (
 		<>
 			<AppHead title={`Attendance List - ${event.title}`} />
-			<PageHeader
-				title="Attendance List"
-				icon="calendar"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Events', url: route('events.index') },
-					{ name: event.title, url: route('events.show', { event }) },
-					{ name: 'Attendance List', url: route('events.attendances.index', { event }) },
-				]}
-				actions={[
-					{
-						label: 'Kiosk',
-						icon: 'calendar-check',
-						url: route('events.kiosk-check-ins.index', { event }),
-						can: 'create_attendance',
-					},
-					{
-						label: 'Individual Check-In',
-						icon: 'qrcode',
-						onClick: () => setCheckInDialogIsOpen(true),
-						can: 'create_attendance',
-					},
-					filterAction,
-				].filter(action => (action.can ? pageProps.can[action.can] : true))}
-				optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary'}
-				meta={
-					<div>
-						<p className="mb-2">Use this page to manually mark everyone's attendance. </p>
-						<p className="mb-2">
-							The kiosk page allows singers to mark themselves off from a shared device, while the
-							individual check-in page allows singers to use their own device by scanning a QR code. Both
-							check-in pages automatically mark singers as late after the call time, or absent 20 minutes
-							later.
-						</p>
-						<p className="mb-2">
-							If attendance was recorded during the event (either manually here or using the kiosk),
-							remaining singers will automatically be marked absent once the event ends.
-						</p>
-					</div>
-				}
-			/>
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+					<PageActionsMenu>
+						{pageActions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								variant={action.variant}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="calendar" type="solid" className="mr-2" />
+						Attendance List
+					</PageHeaderTitle>
+					<PageHeaderMeta>
+						<div>
+							<p className="mb-2">We offer three ways to track attendance: </p>
+							<ul className="list-disc list-inside ml-4 mb-4 [&>li]:mb-1">
+								<li>
+									<strong>Manual</strong> attendance tracking on this page
+								</li>
+								<li>
+									<strong>Kiosk</strong> check-in for shared device use
+								</li>
+								<li>
+									<strong>QR Code</strong> check-in for individual use
+								</li>
+							</ul>
+							<p className="mb-2">
+								Both device check-in pages automatically mark singers as late after the call time, or
+								absent 20 minutes later.
+							</p>
+							<p className="mb-2">
+								If attendance was partially recorded during the event (either manually here or using the
+								kiosk), remaining singers will automatically be marked absent once the event ends.
+							</p>
+							<p className="mb-2">The check-in pages also send an attendance report after each event.</p>
+						</div>
+					</PageHeaderMeta>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{pageActions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
 
-			<Dialog
-				title="Individual Check-In Link"
+			<SelfCheckInDialog
+				individualCheckInUrl={individualCheckInUrl}
 				isOpen={checkInDialogIsOpen}
 				setIsOpen={setCheckInDialogIsOpen}
-				icon={null}
-			>
-				<div className="w-full">
-					<p className="font-bold mb-2">Let singers check themselves in!</p>
-					<p className="mb-2">
-						They can scan this QR code while logged in to gain temporary access to the check-in page.
-					</p>
+			/>
 
-					<div className="mb-2 flex justify-center">
-						<QRCode value={individualCheckInUrl} />
-					</div>
-					<p className="break-all text-xs">{individualCheckInUrl}</p>
-				</div>
-			</Dialog>
+			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
 
 			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-4">
 				{countsData.map(({ label, textColour, icon, count }) => (
@@ -184,7 +293,7 @@ const Index = ({
 								voiceParts={voiceParts}
 								ensembles={ensembles}
 								form={sortFilterForm}
-								singerCategories={singerCategories}
+								singerStatuses={singerStatuses}
 							/>
 						}
 						closeFn={() => setShowFilters(false)}
@@ -196,74 +305,112 @@ const Index = ({
 						pagination={pagination}
 						showEnsemble={showEnsemble}
 						event={event}
+						bulkEdit={bulkEdit}
 					/>
 				}
 				tableDesktop={
-					<Table
-						headings={headings}
-						pagination={<Pagination details={pagination} />}
-						body={allSingers.map(singer => (
-							<tr key={singer.id}>
-								<TableCell>
-									<div className="flex items-center space-x-3">
-										<div className="shrink-0">
-											<img
-												className="h-8 w-8 rounded-md object-cover"
-												src={singer.user.avatar_url}
-												alt={singer.user.name}
-											/>
-										</div>
-										<div>
-											<SingerCategoryTag status={new SingerStatus(singer.category.slug)} />
-											<Link
-												href={route('singers.show', { singer })}
-												className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
-											>
-												{singer.user.name}
-											</Link>
-										</div>
-									</div>
-								</TableCell>
-								<TableCell>
-									<ul className="flex flex-col gap-1.5">
-										{singer.enrolments.map(enrolment => (
-											<li key={enrolment.id} className="flex gap-1 items-center">
-												{showEnsemble && (
-													<Badge colour="bg-purple-100 text-purple-800">
-														{enrolment.ensemble.name}
-													</Badge>
-												)}
-												{enrolment.voice_part && (
-													<VoicePartTag
-														title={enrolment.voice_part.title}
-														colour={enrolment.voice_part.colour}
-													/>
-												)}
-											</li>
-										))}
-									</ul>
-								</TableCell>
-								<TableCell>
-									<AttendanceRecord
-										attendance={singer.attendance}
-										singerId={singer.id}
-										event={event}
-									/>
-								</TableCell>
-								<TableCell>
-									{!!singer.attendance.updated_at && (
-										<DateTag
-											icon="pencil"
-											label="Updated"
-											date={singer.attendance.updated_at}
-											format="DATETIME_SHORT"
-											className="text-gray-400"
-										/>
-									)}
-								</TableCell>
+					<Table pagination={<Pagination details={pagination} />}>
+						<THead>
+							<tr>
+								<TableSelectAll bulkEdit={bulkEdit} totalItems={allSingers.length} />
+								<TableHeading>
+									<TableHeadingSort
+										form={sortFilterForm}
+										sort={['full-name', 'last-name-first']}
+										onClick={() => handleNameSort(sortFilterForm)}
+										indicator={sortFilterForm.data.sort === 'full-name' ? 'First' : 'Last'}
+									>
+										Name
+									</TableHeadingSort>
+								</TableHeading>
+								<TableHeading>Voice Part</TableHeading>
+								<TableHeading>
+									<TableHeadingSort form={sortFilterForm} sort="attendance-response">
+										Attendance
+									</TableHeadingSort>
+								</TableHeading>
+								<TableHeading>
+									<TableHeadingSort form={sortFilterForm} sort="attendance-updated">
+										Updated
+									</TableHeadingSort>
+								</TableHeading>
 							</tr>
-						))}
-					/>
+						</THead>
+						<TBody>
+							{allSingers.map(singer => (
+								<TItemRow key={singer.id} bulkEdit={bulkEdit} value={singer.id}>
+									<TableCellSelect bulkEdit={bulkEdit} value={singer.id} />
+									<TableCell>
+										<div className="flex items-center space-x-3">
+											<div className="shrink-0">
+												<img
+													className="h-8 w-8 rounded-md object-cover"
+													src={singer.user.avatar_url}
+													alt={singer.user.name}
+												/>
+											</div>
+											<div>
+												<SingerStatusTag status={new SingerStatus(singer.status.status)} />
+												<Link
+													href={route('singers.show', { singer })}
+													className="ml-1 text-sm font-medium text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:underline focus:underline"
+												>
+													{singer.user.name}
+												</Link>
+											</div>
+										</div>
+									</TableCell>
+									<TableCell>
+										<ul className="flex flex-col gap-1.5">
+											{singer.enrolments.map(enrolment => (
+												<li key={enrolment.id} className="flex gap-1 items-center">
+													{showEnsemble && (
+														<Badge colour="bg-purple-100 text-purple-800">
+															{enrolment.ensemble.name}
+														</Badge>
+													)}
+													{enrolment.voice_part && (
+														<VoicePartTag
+															title={enrolment.voice_part.title}
+															colour={enrolment.voice_part.colour}
+														/>
+													)}
+												</li>
+											))}
+										</ul>
+									</TableCell>
+									<TableCell>
+										<AttendanceRecord
+											attendance={singer.attendance}
+											singerId={singer.id}
+											event={event}
+										/>
+									</TableCell>
+									<TableCell>
+										{!!singer.attendance.updated_at && (
+											<div className="flex flex-col">
+												<DateTag
+													icon="pencil"
+													label="Updated"
+													date={singer.attendance.updated_at}
+													format="DATETIME_SHORT"
+													className="text-gray-400"
+												/>
+												{singer.attendance.source && (
+													<div className="text-[10px] uppercase tracking-wider text-gray-400 mt-0.5 flex items-center gap-1">
+														<Icon icon="info-circle" className="text-[9px]" />
+														Via{' '}
+														{sourceLabels[singer.attendance.source] ||
+															singer.attendance.source}
+													</div>
+												)}
+											</div>
+										)}
+									</TableCell>
+								</TItemRow>
+							))}
+						</TBody>
+					</Table>
 				}
 			/>
 		</>

@@ -1,6 +1,7 @@
 import React from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { PageHeader, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import AppHead from '../../components/AppHead';
 import useRoute from '../../hooks/useRoute';
 import Panel, { PanelTitle } from '../../components/Panel';
@@ -8,8 +9,6 @@ import Icon from '../../components/Icon';
 import BillingTag from '../Central/Tenants/BillingTag';
 import classNames from '../../classNames';
 import { DateTime } from 'luxon';
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '../../../../../tailwind.config';
 import ButtonLink from '../../components/inputs/ButtonLink';
 
 const formatDate = (date, format = 'DATE_MED') => DateTime.fromJSDate(new Date(date)).toLocaleString(DateTime[format]);
@@ -18,20 +17,24 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 	const { route } = useRoute();
 	const { plan, billing_status: billing } = tenant;
 
-	const tw = resolveConfig(tailwindConfig);
-
 	return (
 		<>
 			<AppHead title="Billing" />
-			<PageHeader
-				title="Billing"
-				icon="credit-card"
-				breadcrumbs={[
-					{ name: 'Dashboard', url: route('dash') },
-					{ name: 'Organisation Settings', url: route('organisation.edit') },
-					{ name: 'Billing', url: route('organisation.billing') },
-				]}
-			/>
+			<PageTopBar>
+				<PageTopNavigation
+					breadcrumbs={[
+						{ name: 'Dashboard', url: route('dash') },
+						{ name: 'Organisation Settings', url: route('organisation.edit') },
+						{ name: 'Billing', url: route('organisation.billing') },
+					]}
+				/>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderTitle>
+					<Icon icon="credit-card" type="solid" className="mr-2" />
+					Billing
+				</PageHeaderTitle>
+			</PageHeader>
 
 			<div className="py-6">
 				<div className="mx-auto px-4 sm:px-6 lg:px-16">

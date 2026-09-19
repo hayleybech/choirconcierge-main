@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AuthenticateWithTokenForWeb;
+use App\Http\Middleware\DetectWebView;
 use App\Http\Middleware\SetFeatureFlags;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Routing\Middleware\ValidateSignature;
@@ -21,6 +23,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
+        DetectWebView::class,
     ];
 
     /**
@@ -39,6 +42,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
             SetFeatureFlags::class,
+            AuthenticateWithTokenForWeb::class
         ],
 
         'api' => ['throttle:60,1', 'bindings'],

@@ -23,6 +23,7 @@ use Illuminate\Support\Str;
  * @property string $bcc Max email length according to intl standard
  * @property string $subject Max length is arbitrary
  * @property string $body Max length is arbitrary, but matches the max length for sending broadcasts
+ * @property int $size Size in bytes
  * @property boolean $has_attachments
  * @property Carbon $received_at The date the email arrived in the mailbox
  * @property Carbon $created_at
@@ -65,20 +66,21 @@ class MailLog extends Model
     public static function createFromMessage(Loggable $message) {
         $mailLog = self::create([
             'uid' => $message->getUid(),
-            'from' => collect($message->from)
+            'from' => Str::limit(collect($message->from)
                 ->map(fn($item) => $item['address'])
-                ->join(', '),
-            'to' => collect($message->to)
+                ->join(', '), 254),
+            'to' => Str::limit(collect($message->to)
                 ->map(fn($item) => $item['address'])
-                ->join(', '),
-            'cc' => collect($message->cc)
+                ->join(', '), 512),
+            'cc' => Str::limit(collect($message->cc)
                 ->map(fn($item) => $item['address'])
-                ->join(', '),
-            'bcc' => collect($message->bcc)
+                ->join(', '), 254),
+            'bcc' => Str::limit(collect($message->bcc)
                 ->map(fn($item) => $item['address'])
-                ->join(', '),
+                ->join(', '), 254),
             'subject' => Str::limit($message->subject, 128-3),
             'body' => $message->getContent(),
+            'size' => $message->getSize(),
             'has_attachments' => $message->getHasAttachments(),
             'received_at' => $message->getReceivedAt(),
         ]);

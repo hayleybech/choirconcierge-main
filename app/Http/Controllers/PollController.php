@@ -8,6 +8,7 @@ use App\Models\Poll;
 use App\Models\PollOption;
 use App\Models\Ensemble;
 use App\Notifications\PollCreated;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,7 +31,9 @@ class PollController extends Controller
         $query = Poll::query()
             ->ensembleRestricted()
             ->with(['options', 'ensembles'])
-            ->withCount('votes');
+            ->withCount(['votes' => function ($query) {
+                $query->select(DB::raw('count(distinct membership_id)'));
+            }]);
 
         /** @var LengthAwarePaginator $pagination */
         $pagination = QueryBuilder::for($query)
@@ -145,6 +148,62 @@ class PollController extends Controller
         $poll->ensembles()->sync($request->input('ensemble_ids', []));
 
         return redirect()->route('polls.show', [$poll])->with(['status' => 'Poll updated.']);
+    }
+
+    public function bulkUpdate(Request $request): RedirectResponse
+    {
+        $this->authorize('viewAny', Poll::class);
+        $this->authorize('update', Poll::class);
+
+        $data = $request->validate([
+            'poll_ids' => ['required', 'array'],
+            'poll_ids.*' => ['exists:polls,id'],
+            'is_closed' => ['nullable', 'sometimes', 'boolean'],
+            'close_at' => ['nullable', 'sometimes', 'date_format:Y-m-d H:i:s'],
+            'ensemble_ids' => ['nullable', 'sometimes', 'array'],
+            'ensemble_ids.*' => ['exists:ensembles,id'],
+        ]);
+
+        $polls = Poll::whereIn('id', $data['poll_ids'])->get();
+
+        foreach ($polls as $poll) {
+            $updateData = [];
+            if (! is_null($data['is_closed'] ?? null)) {
+                $updateData['is_closed'] = $data['is_closed'];
+            }
+            if (! is_null($data['close_at'] ?? null)) {
+                $updateData['close_at'] = $data['close_at'];
+            }
+
+            if (!empty($updateData)) {
+                $poll->update($updateData);
+            }
+
+            if ($request->has('ensemble_ids')) {
+                $poll->ensembles()->sync($data['ensemble_ids']);
+            }
+        }
+
+        return redirect()
+            ->route('polls.index')
+            ->with(['status' => count($data['poll_ids']) . ' polls updated.']);
+    }
+
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $this->authorize('viewAny', Poll::class);
+        $this->authorize('delete', Poll::class);
+
+        $data = $request->validate([
+            'poll_ids' => ['required', 'array'],
+            'poll_ids.*' => ['exists:polls,id'],
+        ]);
+
+        Poll::whereIn('id', $data['poll_ids'])->delete();
+
+        return redirect()
+            ->route('polls.index')
+            ->with(['status' => count($data['poll_ids']) . ' polls deleted.']);
     }
 
     public function destroy(Poll $poll): RedirectResponse

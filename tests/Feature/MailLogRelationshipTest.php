@@ -1,140 +1,132 @@
 <?php
 
-namespace Tests\Feature;
-
 use App\Models\MailLog;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Notifications\LogsToMailLog;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\Notification;
-use Tests\TestCase;
+use Illuminate\Notifications\Messages\MailMessage;
+use Carbon\Carbon;
 
-class MailLogRelationshipTest extends TestCase
-{
-    use RefreshDatabase;
+uses(RefreshDatabase::class);
 
-    public function test_mail_log_can_have_tenants_relationship()
-    {
-        $mailLog = MailLog::factory()->create();
-        $tenant = Tenant::factory()->create(['id' => 'test-tenant']);
+test('mail log can have tenants relationship', function () {
+    $mailLog = MailLog::factory()->create();
+    $tenant = Tenant::factory()->create(['id' => 'test-tenant']);
 
-        $mailLog->tenants()->attach($tenant);
+    $mailLog->tenants()->attach($tenant);
 
-        $this->assertCount(1, $mailLog->tenants);
-        $this->assertEquals('test-tenant', $mailLog->tenants->first()->id);
-    }
+    expect($mailLog->tenants)->toHaveCount(1);
+    expect($mailLog->tenants->first()->id)->toBe('test-tenant');
+});
 
-    public function test_notification_links_to_current_tenant()
-    {
-        $tenant = Tenant::factory()->create(['id' => 'notif-tenant']);
-        
-        // Mock current tenancy
-        config(['tenancy.tenant' => $tenant]);
-        app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $tenant);
-        
-        $notification = new class extends Notification {
-            use LogsToMailLog;
-            public function toMail($notifiable) {
-                return (new \Illuminate\Notifications\Messages\MailMessage)
-                    ->subject('Test Subject')
-                    ->line('Test body');
-            }
-        };
+test('notification links to current tenant', function () {
+    $tenant = Tenant::factory()->create(['id' => 'notif-tenant']);
 
-        $notification->log('target-123');
+    // Mock current tenancy
+    config(['tenancy.tenant' => $tenant]);
+    app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $tenant);
 
-        $mailLog = MailLog::where('uid', 'like', 'notification-%')->first();
-        $this->assertNotNull($mailLog);
-        $this->assertCount(1, $mailLog->tenants);
-        $this->assertEquals('notif-tenant', $mailLog->tenants->first()->id);
-    }
+    $notification = new class extends Notification {
+        use LogsToMailLog;
+        public function toMail($notifiable) {
+            return (new MailMessage)
+                ->subject('Test Subject')
+                ->line('Test body');
+        }
+    };
 
-    public function test_create_from_message_identifies_tenant_by_subdomain()
-    {
-        $tenant = Tenant::factory()->create(['id' => 'subdomain-tenant']);
-        $tenant->domains()->create(['domain' => 'tenant-sub', 'is_primary' => true]);
+    $notification->log('target-123');
 
-        $centralDomain = central_domain();
+    $mailLog = MailLog::where('uid', 'like', 'notification-%')->first();
+    expect($mailLog)->not->toBeNull();
+    expect($mailLog->tenants)->toHaveCount(1);
+    expect($mailLog->tenants->first()->id)->toBe('notif-tenant');
+});
 
-        $loggable = new class($centralDomain) implements \App\Mail\Loggable {
-            public $from = [['address' => 'sender@other.com']];
-            public $to;
-            public $cc = [];
-            public $bcc = [];
-            public $subject = 'Test Subdomain Message';
-            public function __construct(string $centralDomain) {
-                $this->to = [['address' => 'list@tenant-sub.' . $centralDomain]];
-            }
-            public function getUid(): string { return 'msg-456'; }
-            public function getHasAttachments(): bool { return false; }
-            public function getReceivedAt(): \Carbon\Carbon { return now(); }
-            public function getContent(): string { return 'Subdomain body content'; }
-        };
+test('create from message identifies tenant by subdomain', function () {
+    $tenant = Tenant::factory()->create(['id' => 'subdomain-tenant']);
+    $tenant->domains()->create(['domain' => 'tenant-sub', 'is_primary' => true]);
 
-        $mailLog = MailLog::createFromMessage($loggable);
+    $centralDomain = central_domain();
 
-        $this->assertCount(1, $mailLog->tenants);
-        $this->assertEquals('subdomain-tenant', $mailLog->tenants->first()->id);
-    }
+    $loggable = new class($centralDomain) implements \App\Mail\Loggable {
+        public $from = [['address' => 'sender@other.com']];
+        public $to;
+        public $cc = [];
+        public $bcc = [];
+        public $subject = 'Test Subdomain Message';
+        public function __construct(string $centralDomain) {
+            $this->to = [['address' => 'list@tenant-sub.' . $centralDomain]];
+        }
+        public function getUid(): string { return 'msg-456'; }
+        public function getHasAttachments(): bool { return false; }
+        public function getReceivedAt(): Carbon { return now(); }
+        public function getContent(): string { return 'Subdomain body content'; }
+        public function getSize(): int { return 1024; }
+    };
 
-    public function test_notification_links_to_notifiable_tenant_if_no_current_tenant()
-    {
-        $tenant = Tenant::factory()->create(['id' => 'notif-tenant-2']);
-        $user = User::factory()->create(['default_tenant_id' => $tenant->id]);
+    $mailLog = MailLog::createFromMessage($loggable);
 
-        // Ensure NO current tenancy
-        app()->forgetInstance(\Stancl\Tenancy\Contracts\Tenant::class);
-        config(['tenancy.tenant' => null]);
+    expect($mailLog->tenants)->toHaveCount(1);
+    expect($mailLog->tenants->first()->id)->toBe('subdomain-tenant');
+});
 
-        $notification = new class extends Notification {
-            use LogsToMailLog;
-            public function toMail($notifiable) {
-                return (new \Illuminate\Notifications\Messages\MailMessage)
-                    ->subject('Test Subject 2')
-                    ->line('Test body 2');
-            }
-        };
+test('notification links to notifiable tenant if no current tenant', function () {
+    $tenant = Tenant::factory()->create(['id' => 'notif-tenant-2']);
+    $user = User::factory()->create(['default_tenant_id' => $tenant->id]);
 
-        $notification->log('target-456', $user);
+    // Ensure NO current tenancy
+    app()->forgetInstance(\Stancl\Tenancy\Contracts\Tenant::class);
+    config(['tenancy.tenant' => null]);
 
-        $mailLog = MailLog::where('uid', 'like', 'notification-%')->latest()->first();
-        $this->assertNotNull($mailLog);
-        $this->assertCount(1, $mailLog->tenants);
-        $this->assertEquals('notif-tenant-2', $mailLog->tenants->first()->id);
-    }
+    $notification = new class extends Notification {
+        use LogsToMailLog;
+        public function toMail($notifiable) {
+            return (new MailMessage)
+                ->subject('Test Subject 2')
+                ->line('Test body 2');
+        }
+    };
 
-    public function test_command_populates_existing_logs_with_subdomains()
-    {
-        // 1. Setup tenant
-        $tenant = Tenant::factory()->create(['id' => 'sub-migrate-tenant']);
-        $tenant->domains()->create(['domain' => 'tenant-sub-mig', 'is_primary' => true]);
+    $notification->log('target-456', $user);
 
-        // 2. Create existing logs WITHOUT relationships
-        $log1 = MailLog::factory()->create([
-            'to' => 'list@tenant-sub-mig.choirconcierge.com',
-        ]);
-        $log2 = MailLog::factory()->create([
-            'cc' => 'member@tenant-sub-mig.choirconcierge.com',
-        ]);
-        $log3 = MailLog::factory()->create([
-            'to' => 'someone@otherdomain.com',
-        ]);
+    $mailLog = MailLog::where('uid', 'like', 'notification-%')->latest()->first();
+    expect($mailLog)->not->toBeNull();
+    expect($mailLog->tenants)->toHaveCount(1);
+    expect($mailLog->tenants->first()->id)->toBe('notif-tenant-2');
+});
 
-        $this->assertCount(0, $log1->tenants);
-        $this->assertCount(0, $log2->tenants);
-        $this->assertCount(0, $log3->tenants);
+test('command populates existing logs with subdomains', function () {
+    // 1. Setup tenant
+    $tenant = Tenant::factory()->create(['id' => 'sub-migrate-tenant']);
+    $tenant->domains()->create(['domain' => 'tenant-sub-mig', 'is_primary' => true]);
 
-        // 3. Run command logic
-        $this->artisan('mail-logs:populate-tenants')->assertSuccessful();
+    // 2. Create existing logs WITHOUT relationships
+    $log1 = MailLog::factory()->create([
+        'to' => 'list@tenant-sub-mig.choirconcierge.com',
+    ]);
+    $log2 = MailLog::factory()->create([
+        'cc' => 'member@tenant-sub-mig.choirconcierge.com',
+    ]);
+    $log3 = MailLog::factory()->create([
+        'to' => 'someone@otherdomain.com',
+    ]);
 
-        // 4. Verify
-        $this->assertCount(1, $log1->refresh()->tenants);
-        $this->assertEquals('sub-migrate-tenant', $log1->tenants->first()->id);
+    expect($log1->tenants)->toHaveCount(0);
+    expect($log2->tenants)->toHaveCount(0);
+    expect($log3->tenants)->toHaveCount(0);
 
-        $this->assertCount(1, $log2->refresh()->tenants);
-        $this->assertEquals('sub-migrate-tenant', $log2->tenants->first()->id);
+    // 3. Run command logic
+    $this->artisan('mail-logs:populate-tenants')->assertSuccessful();
 
-        $this->assertCount(0, $log3->refresh()->tenants);
-    }
-}
+    // 4. Verify
+    expect($log1->refresh()->tenants)->toHaveCount(1);
+    expect($log1->tenants->first()->id)->toBe('sub-migrate-tenant');
+
+    expect($log2->refresh()->tenants)->toHaveCount(1);
+    expect($log2->tenants->first()->id)->toBe('sub-migrate-tenant');
+
+    expect($log3->refresh()->tenants)->toHaveCount(0);
+});

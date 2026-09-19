@@ -8,7 +8,7 @@ use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\VoicePart;
-use App\Models\SingerCategory;
+use App\Enums\SingerStatus;
 use App\Traits\HasSingerSorts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -66,20 +66,16 @@ class AttendanceController extends Controller
                 ->orderBy('attendance_updated', $direction);
         });
 
-        $defaultCategoryId = SingerCategory::where('name', 'Members')->value('id');
-        $filter = request()->query('filter', []);
+        $defaultStatus = SingerStatus::MEMBERS->value;
 
         $query = Membership::forEvent($event)
             ->with([
                 'user',
                 'enrolments.voice_part',
                 'enrolments.ensemble',
-                'category',
+                'status',
                 'attendances' => fn($query) => $query->where('event_id', '=', $event->id),
-            ])
-            ->when($defaultCategoryId && !isset($filter['category.id']), function (Builder $query) use ($defaultCategoryId) {
-                $query->where('singer_category_id', $defaultCategoryId);
-            });
+            ]);
 
         $pagination = QueryBuilder::for($query)
             ->allowedFilters([
@@ -102,7 +98,11 @@ class AttendanceController extends Controller
                     $responses = (array) $value;
                     $query->whereHas('attendances', fn($query) => $query->where('event_id', $event->id)->whereIn('response', $responses));
                 }),
-                AllowedFilter::exact('category.id', 'singer_category_id'),
+                AllowedFilter::callback('status.id', function (Builder $query, $value) {
+                    $query->whereHas('status', fn($q) => $q
+                        ->whereIn('status', (array) $value)
+                    );
+                })->default([$defaultStatus]),
             ])
             ->allowedSorts([
                 ...$this->singerSorts(),
@@ -120,7 +120,7 @@ class AttendanceController extends Controller
             if ($event->ensembles->isNotEmpty()) {
                 $membership->setRelation('enrolments', $membership->enrolments->filter(function ($enrolment) use ($event) {
                     return $event->ensembles->contains($enrolment->ensemble_id);
-                }));
+                })->values());
             }
 
             return $membership;
@@ -134,7 +134,11 @@ class AttendanceController extends Controller
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
             'totalEnsemblesCount' => Ensemble::count(),
-            'singerCategories' => SingerCategory::all()->values(),
+            'singerStatuses' => array_map(fn($s) => [
+                'id' => $s->value,
+                'name' => $s->label(),
+                'slug' => $s->value,
+            ], SingerStatus::cases()),
             'counts' => [
                 'present' => $event->attendances()->where('response', 'present')->count(),
                 'late' => $event->attendances()->where('response', 'late')->count(),
@@ -171,6 +175,7 @@ class AttendanceController extends Controller
                 [
                     'response' => $request->input('response'),
                     'absent_reason' => $request->input('absent_reason'),
+                    'source' => 'manual',
                 ]
             );
 
@@ -191,6 +196,7 @@ class AttendanceController extends Controller
                 [
                     'response' => $response,
                     'absent_reason' => $absent_reason[$membership_id],
+                    'source' => 'manual',
                 ],
             );
         }
@@ -198,5 +204,32 @@ class AttendanceController extends Controller
         return redirect()
             ->route('events.show', ['event' => $event])
             ->with(['status' => 'Attendance recorded.']);
+    }
+    public function bulkUpdate(Event $event, Request $request): RedirectResponse
+    {
+        $this->authorize('create', Attendance::class);
+
+        $request->validate([
+            'singer_ids' => ['required', 'array'],
+            'singer_ids.*' => ['exists:memberships,id'],
+            'response' => ['required', 'in:unknown,absent,absent_apology,late,late_deemed_absent,present'],
+        ]);
+
+        $singerIds = $request->input('singer_ids');
+        $response = $request->input('response');
+
+        foreach ($singerIds as $singerId) {
+            $event->attendances()->updateOrCreate(
+                ['membership_id' => $singerId],
+                [
+                    'response' => $response,
+                    'source' => 'manual',
+                ]
+            );
+        }
+
+        return redirect()
+            ->route('events.attendances.index', ['event' => $event])
+            ->with(['status' => 'Attendance updated for ' . count($singerIds) . ' singers.']);
     }
 }

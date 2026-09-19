@@ -183,6 +183,9 @@ class DashController extends Controller
 
         return Poll::query()
             ->ensembleRestricted()
+            ->withCount(['votes' => function ($query) {
+                $query->select(DB::raw('count(distinct membership_id)'));
+            }])
             ->with(['options' => fn($q) => $q->withCount('votes')])
             ->where(function (Builder $query) {
                 $query->whereNull('close_at')

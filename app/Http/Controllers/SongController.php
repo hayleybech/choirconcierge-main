@@ -38,7 +38,7 @@ class SongController extends Controller
             ->get();
         $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
 
-        $includeNonAuditionSongs = auth()->user()?->isSuperAdmin || auth()->user()?->membership->category->name === 'Members';
+        $includeNonAuditionSongs = auth()->user()?->isSuperAdmin || auth()->user()?->membership->status->status === \App\Enums\SingerStatus::MEMBERS;
         $showForProspectsDefault = $includeNonAuditionSongs ? [false, true] : [true];
 
         $totalEnsemblesCount = Ensemble::count();
@@ -182,6 +182,64 @@ class SongController extends Controller
         return redirect()
             ->route('songs.index')
             ->with(['status' => 'Song deleted. ']);
+    }
+
+    public function bulkUpdate(Request $request): RedirectResponse
+    {
+        $this->authorize('update', Song::class);
+
+        $request->validate([
+            'song_ids' => 'required|array',
+            'song_ids.*' => 'exists:songs,id',
+            'status_id' => 'nullable|exists:song_statuses,id',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:song_categories,id',
+            'ensemble_ids' => 'nullable|array',
+            'ensemble_ids.*' => 'exists:ensembles,id',
+        ]);
+
+        $songIds = $request->input('song_ids');
+
+        if ($request->filled('status_id')) {
+            Song::whereIn('id', $songIds)->update(['status_id' => $request->status_id]);
+        }
+
+        if ($request->has('category_ids')) {
+            $categoryIds = $request->input('category_ids');
+            foreach ($songIds as $songId) {
+                // We can use the song ID directly without fetching the model.
+                (new Song(['id' => $songId]))->setRawAttributes(['id' => $songId], true)->categories()->sync($categoryIds);
+            }
+        }
+
+        if ($request->has('ensemble_ids')) {
+            $ensembleIds = $request->input('ensemble_ids');
+            foreach ($songIds as $songId) {
+                (new Song(['id' => $songId]))->setRawAttributes(['id' => $songId], true)->ensembles()->sync($ensembleIds);
+            }
+        }
+
+        return redirect()
+            ->route('songs.index')
+            ->with(['status' => count($songIds) . ' songs updated. ']);
+    }
+
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $this->authorize('delete', Song::class);
+
+        $request->validate([
+            'song_ids' => 'required|array',
+            'song_ids.*' => 'exists:songs,id',
+        ]);
+
+        $songIds = $request->input('song_ids');
+
+        Song::whereIn('id', $songIds)->delete();
+
+        return redirect()
+            ->route('songs.index')
+            ->with(['status' => count($songIds) . ' songs deleted. ']);
     }
 
     private function getSongs(bool $includePending, array $defaultStatuses, bool $includeNonAuditionSongs, array $showForProspectsDefault): LengthAwarePaginator

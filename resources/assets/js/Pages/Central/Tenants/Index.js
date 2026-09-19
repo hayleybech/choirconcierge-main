@@ -1,5 +1,15 @@
 import React from 'react'
-import PageHeader from "../../../components/PageHeader/PageHeader";
+
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from "../../../components/PageTopBar";
+import ActionMenuItem from "../../../components/ActionMenu/ActionMenuItem";
+import Icon from "../../../components/Icon";
+import Button from "../../../components/inputs/Button";
 import AppHead from "../../../components/AppHead";
 import IndexContainer from "../../../components/IndexContainer";
 import useRoute from "../../../hooks/useRoute";
@@ -12,10 +22,10 @@ import FilterSortPane from "../../../components/FilterSortPane";
 import Sorts from "../../../components/Sorts";
 import TenantFilters from "./TenantFilters";
 
-const Index = ({ tenants, pagination }) => {
+const Index = ({ tenants, pagination, setSidebarOpen }) => {
     const { route } = useRoute();
 
-    const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+    const [showFilters, setShowFilters, filterAction] = useFilterPane();
 
     const sorts = [
         { id: 'id', name: 'Organisation Name', default: true },
@@ -32,18 +42,33 @@ const Index = ({ tenants, pagination }) => {
     return (
         <>
             <AppHead title="Tenants" />
-            <PageHeader
-                title="Tenants"
-                icon="building"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('central.dash')},
-                    { name: 'Tenants', url: route('central.tenants.index')},
-                ]}
-                actions={[
-                    filterAction,
-                ]}
-                optionsVariant={hasNonDefaultFilters ? 'success-solid' : 'secondary' }
-            />
+            <PageTopBar setSidebarOpen={setSidebarOpen}>
+                <PageTopNavigation title="Tenants">
+                    {filterAction && (
+                        <PageActionsMenu>
+                            <ActionMenuItem {...filterAction}>
+                                <Icon icon={filterAction.icon} mr />
+                                {filterAction.label}
+                            </ActionMenuItem>
+                        </PageActionsMenu>
+                    )}
+                </PageTopNavigation>
+            </PageTopBar>
+            <PageHeader>
+                <PageHeaderContent>
+                    <PageHeaderTitle>
+                        <Icon icon="building" type="solid" className="mr-2" /> Tenants
+                    </PageHeaderTitle>
+                </PageHeaderContent>
+                <PageHeaderActions>
+                    {filterAction && (
+                        <Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+                            <Icon icon={filterAction.icon} mr />
+                            {filterAction.label}
+                        </Button>
+                    )}
+                </PageHeaderActions>
+            </PageHeader>
 
             <IndexContainer
                 showFilters={showFilters}

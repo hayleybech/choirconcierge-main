@@ -6,6 +6,7 @@ use Database\Seeders\Dummy\DummyAttendanceSeeder;
 use Database\Seeders\Dummy\DummyDocumentSeeder;
 use Database\Seeders\Dummy\DummyEventSeeder;
 use Database\Seeders\Dummy\DummyFolderSeeder;
+use Database\Seeders\Dummy\DummyMailLogSeeder;
 use Database\Seeders\Dummy\DummyNotificationTemplateSeeder;
 use Database\Seeders\Dummy\DummyPollSeeder;
 use Database\Seeders\Dummy\DummyRsvpSeeder;
@@ -60,5 +61,8 @@ class DummyDataSeeder extends Seeder
 
         $this->call(DummyRiserStacksSeeder::class);
         $this->command?->info('Dummy RiserStack data seeded!');
+
+        $this->call(DummyMailLogSeeder::class);
+        $this->command?->info('Dummy MailLog data seeded!');
     }
 }

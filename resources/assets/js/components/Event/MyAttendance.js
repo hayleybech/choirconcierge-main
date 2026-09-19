@@ -1,13 +1,11 @@
 import React from 'react';
 import AddToCalendarDropdown from "./AddToCalendarDropdown";
 import RsvpTag from "./RsvpTag";
-import CollapsePanel from "../CollapsePanel";
+import SimplePanel from "../SimplePanel";
 import RsvpDropdown from "./RsvpDropdown";
 
 const MyAttendance = ({ event, addToCalendarLinks }) => (
-    <CollapsePanel>
-        <h3 className="text-lg mt-3 mb-1">RSVP</h3>
-
+    <SimplePanel>
       {! event.in_future &&
         <p className="mb-2">
             <RsvpTag label={event.my_rsvp.label} icon={event.my_rsvp.icon} colour={event.my_rsvp.colour} />
@@ -33,7 +31,7 @@ const MyAttendance = ({ event, addToCalendarLinks }) => (
                 </p>
             </>
         }
-    </CollapsePanel>
+    </SimplePanel>
 );
 
 export default MyAttendance;

@@ -1,32 +1,47 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import EventForm from "./EventForm";
-import useRoute from "../../hooks/useRoute";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
+import AppHead from '../../components/AppHead';
+import EventForm from './EventForm';
+import useRoute from '../../hooks/useRoute';
 
-const Edit = ({ event, types, mode, ensembles }) => {
-    const { route } = useRoute();
+const Edit = ({ event, types, mode, ensembles, setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    return (
-        <>
-            <AppHead title={`Edit - ${event.title}`} />
-            <PageHeader
-                title="Edit Event"
-                icon="calendar-edit"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Events', url: route('events.index')},
-                    { name: event.title, url: route('events.show', {event})},
-                    { name: 'Edit', url: route('events.edit', {event})},
-                ]}
-            />
+	const breadcrumbs = [
+		{ name: 'Events', url: route('events.index') },
+		{ name: event.title, url: route('events.show', { event }) },
+		{ name: 'Edit Event', url: route('events.edit', { event }) },
+	];
 
-            <EventForm event={event} types={types} mode={mode} ensembles={ensembles} />
-        </>
-    );
-}
+	return (
+		<>
+			<AppHead title={`Edit - ${event.title}`} />
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="calendar-edit" type="solid" className="mr-2" />
+						Edit Event
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
-Edit.layout = page => <TenantLayout children={page} />
+			<EventForm event={event} types={types} mode={mode} ensembles={ensembles} />
+		</>
+	);
+};
+
+Edit.layout = page => <TenantLayout children={page} />;
 
 export default Edit;

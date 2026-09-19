@@ -4,17 +4,20 @@ namespace App\Http\Controllers;
 
 use App\CustomSorts\EventTypeSort;
 use App\Http\Requests\EventRequest;
+use App\Models\Attendance;
 use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Membership;
 use App\Notifications\EventCreated;
 use App\Notifications\EventUpdated;
+use App\Services\UpdateSingleEventStrategy;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -36,15 +39,13 @@ class EventController extends Controller
             : auth()->user()?->membership?->enrolments->count() ?? 0;
 
         $ensembles = Ensemble::query()
-            ->when(! (auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('events_update')), function (Builder $query) {
+            ->when(!(auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('events_update')), function (Builder $query) {
                 $query->whereIn('id', auth()->user()?->membership?->enrolments->pluck('ensemble_id') ?? []);
             })
             ->get();
 
-        $pagination = $this->getEvents();
         return Inertia::render('Events/Index', [
-            'events' => $pagination->getCollection()->append(['is_repeat_parent', 'my_rsvp']),
-            'pagination' => $pagination,
+            'events' => $this->getEvents(),
             'eventTypes' => EventType::all()->values(),
             'userEnsemblesCount' => $userEnsemblesCount,
             'ensembles' => $ensembles,
@@ -81,7 +82,7 @@ class EventController extends Controller
 
     public function show(Event $event): Response
     {
-        $event->load(['repeat_parent:id,call_time', 'my_attendance', 'activities' => fn ($query) => $query->orderBy('order'), 'activities.song'])
+        $event->load(['repeat_parent:id,call_time', 'my_attendance', 'activities' => fn($query) => $query->orderBy('order'), 'activities.song'])
             ->append(['in_future', 'is_repeat_parent', 'parent_in_past', 'my_rsvp']);
 
         $event->can = [
@@ -91,6 +92,7 @@ class EventController extends Controller
 
         return Inertia::render('Events/Show', [
             'event' => $event,
+            'individualCheckInUrl' => $this->getCheckInUrl($event),
             'rsvpCount' => [
                 'yes' => $event->singers_rsvp_response('yes')->count(),
                 'no' => $event->singers_rsvp_response('no')->count(),
@@ -119,6 +121,19 @@ class EventController extends Controller
         ]);
     }
 
+    private function getCheckInUrl(Event $event): string
+    {
+        if (! auth()->user()->can('create', Attendance::class)) {
+            return '';
+        }
+
+        if ($event->is_repeating) {
+            return URL::temporarySignedRoute('events.check-ins.index', $event->repeat_until, ['event' => $event->repeat_parent_id]);
+        }
+
+        return URL::temporarySignedRoute('events.check-ins.index', $event->end_date, ['event' => $event]);
+    }
+
     public function edit(Event $event, Request $request): Response
     {
         return Inertia::render('Events/Edit', [
@@ -143,7 +158,7 @@ class EventController extends Controller
             $event->ensembles()->sync($request->input('ensembles'));
         }
 
-        if($request->input('is_repeating')) {
+        if ($request->input('is_repeating') && !$event->isRepeatDirty()) {
             $event->createRepeats();
         }
 
@@ -195,13 +210,80 @@ class EventController extends Controller
             ->with(['status' => 'Event cloned. ']);
     }
 
+    public function bulkUpdate(Request $request): RedirectResponse
+    {
+        $this->authorize('update', Event::class);
+
+        $request->validate([
+            'event_ids' => 'required|array',
+            'event_ids.*' => 'exists:events,id',
+            'event_type_id' => 'nullable|exists:event_types,id',
+            'ensemble_ids' => 'nullable|array',
+            'ensemble_ids.*' => 'exists:ensembles,id',
+        ]);
+
+        $eventIds = $request->input('event_ids');
+
+        if ($request->filled('event_type_id')) {
+            $updateData = ['type_id' => $request->event_type_id];
+
+            $recurringEvents = Event::whereIn('id', $eventIds)
+                ->where(function (Builder $query) {
+                    $query->where('is_repeating', true);
+                })
+                ->with(['repeat_children'])
+                ->get();
+
+            $singleEventIds = array_diff($eventIds, $recurringEvents->pluck('id')->toArray());
+            if (!empty($singleEventIds)) {
+                Event::whereIn('id', $singleEventIds)->update($updateData);
+            }
+
+            if ($recurringEvents->isNotEmpty()) {
+                $strategy = new UpdateSingleEventStrategy();
+                foreach ($recurringEvents as $event) {
+                    $strategy->handle($event, $updateData);
+                }
+            }
+        }
+
+        if ($request->has('ensemble_ids')) {
+            $ensembleIds = $request->input('ensemble_ids');
+            foreach ($eventIds as $eventId) {
+                (new Event(['id' => $eventId]))->setRawAttributes(['id' => $eventId], true)->ensembles()->sync($ensembleIds);
+            }
+        }
+
+        return redirect()
+            ->route('events.index')
+            ->with(['status' => count($eventIds) . ' events updated. ']);
+    }
+
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $this->authorize('delete', Event::class);
+
+        $request->validate([
+            'event_ids' => 'required|array',
+            'event_ids.*' => 'exists:events,id',
+        ]);
+
+        $eventIds = $request->input('event_ids');
+
+        Event::whereIn('id', $eventIds)->delete();
+
+        return redirect()
+            ->route('events.index')
+            ->with(['status' => count($eventIds) . ' events deleted.']);
+    }
+
     private function getEvents(): LengthAwarePaginator
     {
         $userEnsembles = auth()->user()?->membership?->enrolments->pluck('ensemble_id');
         $canUpdate = auth()->user()?->membership?->hasAbility('events_update');
 
         return QueryBuilder::for(Event::class)
-            ->when(! $canUpdate && ! auth()->user()?->isSuperAdmin, function (Builder $query) use ($userEnsembles) {
+            ->when(!$canUpdate && !auth()->user()?->isSuperAdmin, function (Builder $query) use ($userEnsembles) {
                 $query->where(function (Builder $query) use ($userEnsembles) {
                     $query->whereDoesntHave('ensembles')
                         ->orWhereHas('ensembles', function (Builder $query) use ($userEnsembles) {
@@ -231,6 +313,7 @@ class EventController extends Controller
                 'created_at',
             ])
             ->defaultSort('start_date')
-            ->paginate(50)->appends(request()->query());
+            ->paginate(50)->appends(request()->query())
+            ->through(fn($event) => $event->append(['is_repeat_parent', 'my_rsvp']));
     }
 }

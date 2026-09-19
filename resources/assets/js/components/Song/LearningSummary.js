@@ -2,16 +2,13 @@ import React from 'react';
 import {Tab} from "@headlessui/react";
 import classNames from "../../classNames";
 import VoicePartTag from "../VoicePartTag";
-import ButtonLink from "../inputs/ButtonLink";
-import SectionTitle from "../SectionTitle";
 import Icon from "../Icon";
-import SectionHeader from "../SectionHeader";
 import LearningStatus from "../../LearningStatus";
 import LearningStatusTag from "./LearningStatusTag";
 
 const LearningSummary = ({ status_count, voice_parts_count, song }) => (
     <Tab.Group>
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 bg-gray-50">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Tab.List className="-mb-px flex">
                     {['By Status', 'By Voice Part'].map(label => (
@@ -28,7 +25,7 @@ const LearningSummary = ({ status_count, voice_parts_count, song }) => (
             </div>
         </div>
         <Tab.Panels>
-            <Tab.Panel className="py-6 px-4">
+            <Tab.Panel className="py-6 px-4 bg-gray-50">
                 <div className="flex">
                     {[
                         { status: new LearningStatus('performance-ready'), count: status_count.performance_ready },
@@ -43,7 +40,7 @@ const LearningSummary = ({ status_count, voice_parts_count, song }) => (
                     ))}
                 </div>
             </Tab.Panel>
-            <Tab.Panel className="py-6 px-4">
+            <Tab.Panel className="py-6 px-4 bg-gray-50">
                 <LearningStatusTag status={new LearningStatus('performance-ready')} />
                 <div className="flex flex-wrap mt-4 gap-y-6">
                     {voice_parts_count.performance_ready.map(voice_part => (

@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * Columns
  * @property int $id
  * @property string $response
+ * @property string $source
  * @property string $absent_reason
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -33,7 +34,7 @@ class Attendance extends Model
 {
     use HasFactory, TenantTimezoneDates;
 
-    protected $fillable = ['membership_id', 'response', 'absent_reason', 'event_id'];
+    protected $fillable = ['membership_id', 'response', 'source', 'absent_reason', 'event_id'];
 
     protected $appends = ['response_string', 'label', 'colour', 'icon'];
 

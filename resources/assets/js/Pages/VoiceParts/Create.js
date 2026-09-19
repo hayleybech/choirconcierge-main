@@ -1,32 +1,47 @@
-import React from 'react'
-import TenantLayout from "../../Layouts/TenantLayout";
-import PageHeader from "../../components/PageHeader/PageHeader";
-import AppHead from "../../components/AppHead";
-import VoicePartForm from "./VoicePartForm";
-import useRoute from "../../hooks/useRoute";
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderBreadcrumbs,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
+import Icon from '../../components/Icon';
+import AppHead from '../../components/AppHead';
+import VoicePartForm from './VoicePartForm';
+import useRoute from '../../hooks/useRoute';
 
-const Create = () => {
-    const { route } = useRoute();
+const Create = ({ setSidebarOpen }) => {
+	const { route } = useRoute();
 
-    return (
-        <>
-            <AppHead title="Create Voice Part" />
-            <PageHeader
-                title="Create Voice Part"
-                icon="fa-users-class"
-                breadcrumbs={[
-                    { name: 'Dashboard', url: route('dash')},
-                    { name: 'Singers', url: route('singers.index')},
-                    { name: 'Voice Parts', url: route('voice-parts.index')},
-                    { name: 'Create', url: route('voice-parts.create')},
-                ]}
-            />
+	const breadcrumbs = [
+		{ name: 'Singers', url: route('singers.index') },
+		{ name: 'Voice Parts', url: route('voice-parts.index') },
+		{ name: 'Create Voice Part', url: route('voice-parts.create') },
+	];
 
-            <VoicePartForm />
-        </>
-    );
-}
+	return (
+		<>
+			<AppHead title="Create Voice Part" />
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+			</PageTopBar>
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
+					<PageHeaderTitle>
+						<Icon icon="users-class" type="solid" className="mr-2" />
+						Create Voice Part
+					</PageHeaderTitle>
+				</PageHeaderContent>
+			</PageHeader>
 
-Create.layout = page => <TenantLayout children={page} />
+			<VoicePartForm />
+		</>
+	);
+};
+
+Create.layout = page => <TenantLayout children={page} />;
 
 export default Create;

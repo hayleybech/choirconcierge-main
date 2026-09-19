@@ -43,12 +43,12 @@ class UserGroupPolicy
         return $user->membership->hasAbility('mailing_lists_create');
     }
 
-    public function update(User $user, UserGroup $user_group): bool
+    public function update(User $user, ?UserGroup $user_group = null): bool
     {
         return $user->membership->hasAbility('mailing_lists_update');
     }
 
-    public function delete(User $user, UserGroup $user_group): bool
+    public function delete(User $user, ?UserGroup $user_group = null): bool
     {
         return $user->membership->hasAbility('mailing_lists_delete');
     }

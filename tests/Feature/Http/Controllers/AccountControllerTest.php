@@ -3,14 +3,17 @@ use App\Models\Membership;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\get;
-use function Pest\Laravel\post;
+use function Pest\Laravel\patch;
 
 /** @see \App\Http\Controllers\AccountController */
 
@@ -19,7 +22,7 @@ uses(RefreshDatabase::class, WithFaker::class);
 test('edit@ renders the template', function() {
     actingAs(User::factory()->has(Membership::factory())->create());
 
-    get(the_tenant_route('accounts.edit'))
+    get(the_tenant_route('account.edit'))
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('Account/Edit')
@@ -30,7 +33,7 @@ test('update@ saves the user details', function ($data) {
     $user = User::factory()->has(Membership::factory())->create();
     actingAs($user);
 
-    post(the_tenant_route('accounts.update'), $data)
+    patch(the_tenant_route('account.update'), $data)
         ->assertSessionHasNoErrors()
         ->assertRedirect(the_tenant_route('singers.show', $user->membership));
 
@@ -41,7 +44,7 @@ test('update@ saves the user password', function ($data) {
     $user = User::factory()->has(Membership::factory())->create();
     actingAs($user);
 
-    post(the_tenant_route('accounts.update'), $data)
+    patch(the_tenant_route('account.update'), $data)
         ->assertSessionHasNoErrors()
         ->assertRedirect(the_tenant_route('singers.show', $user->membership));
 
@@ -50,6 +53,33 @@ test('update@ saves the user password', function ($data) {
     $user->refresh();
     expect(Hash::check($data['password'], $user->password))->toBeTrue();
 })->with('profiles');
+
+test('update@ can upload an avatar using POST with method spoofing', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->has(Membership::factory())->create([
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'john@example.com',
+    ]);
+    actingAs($user);
+
+    $file = UploadedFile::fake()->image('avatar.jpg');
+
+    $response = $this->post(the_tenant_route('account.update'), [
+        '_method' => 'PUT',
+        'first_name' => 'John',
+        'last_name' => 'Doe',
+        'email' => 'john@example.com',
+        'avatar' => $file,
+    ]);
+
+    $response->assertSessionHasNoErrors();
+    $response->assertRedirect(the_tenant_route('singers.show', $user->membership));
+
+    $user->refresh();
+    expect($user->getMedia('avatar'))->not->toBeEmpty();
+});
 
 dataset('profiles', [
     function () {

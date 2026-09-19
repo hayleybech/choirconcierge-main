@@ -22,7 +22,7 @@ class OrganisationBroadcast extends Mailable implements Loggable
     /**
      * Create a new message instance.
      */
-    public function __construct(UserGroup $group, string $subject, string $body, User $fromUser, Collection $fileMeta, string $uid)
+    public function __construct(UserGroup $group, string $subject, string $body, User $fromUser, Collection $fileMeta, string $uid, int $size)
     {
         $this->to($group->email, $group->title);
         $this->subject($subject);
@@ -33,6 +33,7 @@ class OrganisationBroadcast extends Mailable implements Loggable
         $this->uid = $uid;
         $this->received_at = now();
         $this->has_attachments = $fileMeta->isNotEmpty();
+        $this->size = $size;
     }
 
     /**

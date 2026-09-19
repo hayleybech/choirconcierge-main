@@ -5,6 +5,7 @@ namespace App\Mail;
 use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
+use Illuminate\Support\Str;
 use Exception;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Collection;
@@ -70,7 +71,7 @@ class IncomingMessage extends Mailable implements Loggable
         if(!$email || !str_contains($email, '@')) {
             MailLog::firstWhere('uid', $this->uid)->events()->create([
                 'status' => 'malformed-recipient',
-                'context' => $email,
+                'context' => Str::limit($email, 64),
             ]);
             return null;
         }
@@ -82,7 +83,7 @@ class IncomingMessage extends Mailable implements Loggable
 
             MailLog::firstWhere('uid', $this->uid)->events()->create([
                 'status' => 'group-found',
-                'context' => $group->title,
+                'context' => Str::limit($group->title, 64),
                 'user_group_id' => $group->id,
             ]);
 
@@ -91,7 +92,7 @@ class IncomingMessage extends Mailable implements Loggable
         catch (Exception) {
             MailLog::firstWhere('uid', $this->uid)->events()->create([
                 'status' => 'group-not-found',
-                'context' => $email,
+                'context' => Str::limit($email, 64),
             ]);
 
             return null;
@@ -105,7 +106,7 @@ class IncomingMessage extends Mailable implements Loggable
 
             MailLog::firstWhere('uid', $this->uid)->events()->create([
                 'status' => 'rejected-sender',
-                'context' => $group->title,
+                'context' => Str::limit($group->title, 64),
             ]);
 
             return false;
@@ -116,7 +117,7 @@ class IncomingMessage extends Mailable implements Loggable
 
             MailLog::firstWhere('uid', $this->uid)->events()->create([
                 'status' => 'rejected-sender',
-                'context' => $group->title,
+                'context' => Str::limit($group->title, 64),
             ]);
 
             return false;

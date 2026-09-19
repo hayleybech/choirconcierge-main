@@ -5,7 +5,6 @@ namespace Database\Seeders\Dummy;
 use App\Models\Ensemble;
 use App\Models\Membership;
 use App\Models\RiserStack;
-use App\Models\SingerCategory;
 use Illuminate\Database\Seeder;
 
 class DummyRiserStacksSeeder extends Seeder
@@ -21,14 +20,12 @@ class DummyRiserStacksSeeder extends Seeder
             return;
         }
 
-        $active_id = SingerCategory::firstWhere('name', 'Members')->id;
-
         RiserStack::factory()
             ->count(5)
             ->create([
                 'tenant_id' => $ensembles->first()->tenant_id,
             ])
-            ->each(function (RiserStack $stack) use ($active_id, $ensembles) {
+            ->each(function (RiserStack $stack) use ($ensembles) {
                 $ensemble = $ensembles->random();
                 $stack->ensembles()->attach($ensemble->id);
 
