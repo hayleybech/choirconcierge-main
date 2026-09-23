@@ -9,7 +9,11 @@ const SectionHeader = ({ section, mobile = false }) => {
 	}
 
 	return (
-		<div className={`${mobile ? 'px-4' : 'px-8'} py-2 bg-gray-100 border-b border-gray-200 flex gap-2 justify-between`}>
+		<div
+			className={`${
+				mobile ? 'px-4' : 'px-8'
+			} py-2 bg-gray-100 border-b border-gray-200 flex gap-2 justify-between`}
+		>
 			<h3 className="font-semibold text-gray-700">{section.title}</h3>
 			{section.action}
 		</div>
@@ -29,7 +33,7 @@ const SectionLayout = ({ sections, layout }) => {
 						{visibleSections
 							.filter(section => section.column === (column.id ?? index))
 							.map(section => (
-								<div key={section.id}>
+								<div key={section.id} className={section.className}>
 									<SectionHeader section={section} />
 									{section.content}
 								</div>

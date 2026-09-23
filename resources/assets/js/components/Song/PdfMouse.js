@@ -27,7 +27,7 @@ const PdfMouse = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pit
 	}
 
 	return (
-		<div className="flex flex-col overflow-hidden h-full">
+		<div className="flex h-full min-h-0 flex-col overflow-hidden">
 			<PdfToolbar
 				isFullscreen={isFullscreen}
 				closeFullscreen={closeFullscreen}
@@ -39,19 +39,19 @@ const PdfMouse = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pit
 				setInstrument={setInstrument}
 			/>
 
-			<div className="grow-0 h-full overflow-hidden">
+			<div className="flex min-h-0 flex-1 overflow-hidden">
 				<div className="flex h-full w-full" style={{ padding: `${CONTAINER_PADDING}px` }} ref={containerRef}>
 					<Document
 						file={filename}
 						onLoadSuccess={onDocumentLoadSuccess}
-						className="w-full"
+						className="h-full min-h-0 w-full"
 						loading={
 							<div className="m-8 text-xl">
 								<LoadingSpinner />
 							</div>
 						}
 					>
-						<div className="w-full h-full overflow-scroll">
+						<div className="h-full w-full overflow-auto">
 							{allPageNumbers.map(pageNumber => (
 								<Page
 									key={pageNumber}
