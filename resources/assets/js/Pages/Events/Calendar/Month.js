@@ -17,7 +17,7 @@ import { usePage } from '@inertiajs/react';
 import Calendar from './../Calendar';
 import useRoute from '../../../hooks/useRoute';
 
-const Month = ({ days, month, setSidebarOpen }) => {
+const Month = ({ days, month, firstDayOfWeek, setSidebarOpen }) => {
 	const { can } = usePage().props;
 	const { route } = useRoute();
 	const actions = [
@@ -77,7 +77,7 @@ const Month = ({ days, month, setSidebarOpen }) => {
 				</PageHeaderActions>
 			</PageHeader>
 
-			<Calendar days={days} month={month} />
+			<Calendar days={days} month={month} firstDayOfWeek={firstDayOfWeek} />
 		</>
 	);
 };

@@ -20,6 +20,7 @@ class EventCalendarController extends Controller
 
         return Inertia::render('Events/Calendar/Month', [
             'days' => $this->getEventsForMonth($month),
+            'firstDayOfWeek' => auth()->user()->getFirstDayOfWeek(),
             'month' => $month,
         ]);
     }
@@ -52,11 +53,15 @@ class EventCalendarController extends Controller
 
     private function getDates(Carbon $startOfMonth): Collection
     {
-        $startOfDisplay = $startOfMonth->clone()->startOfMonth()->startOfWeek();
-        $endOfDisplay = $startOfMonth->clone()->endOfMonth()->endOfWeek();
+        $firstDayOfWeek = auth()->user()->getFirstDayOfWeek();
+        $startOfDisplay = $startOfMonth->clone()->startOfMonth()->startOfWeek($firstDayOfWeek);
+        $endOfDisplay = $startOfMonth->clone()->endOfMonth()->endOfWeek($firstDayOfWeek);
+        if ($firstDayOfWeek !== 0) {
+            $endOfDisplay->addWeek();
+        }
 
         $dates = collect([]);
-        for($date = $startOfDisplay->clone(); $date < $endOfDisplay; $date->addDay()) {
+        for ($date = $startOfDisplay->clone(); $date < $endOfDisplay; $date->addDay()) {
             $dates->push($date->clone());
         }
         return $dates;

@@ -9,7 +9,7 @@ import Badge from "../../components/Badge";
 import EventType from "../../EventType";
 import useRoute from "../../hooks/useRoute";
 
-const Calendar = ({ days, month }) => {
+const Calendar = ({ days, month, firstDayOfWeek }) => {
     const [selectedDay, setSelectedDay] = useState(days[0]);
 
     return (
@@ -25,7 +25,7 @@ const Calendar = ({ days, month }) => {
                 </div>
             </header>
             <div className="shadow ring-1 ring-black/5 lg:flex lg:flex-auto lg:flex-col">
-                <DayHeadings />
+                <DayHeadings firstDayOfWeek={firstDayOfWeek} />
                 <div className="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
                     <div className="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px">
                         {days.map((day) => (
@@ -257,38 +257,24 @@ const CalendarMenuMobile = () => {
     );
 }
 
-const DayHeadings = () => (
+const DayHeadings = ({ firstDayOfWeek }) => {
+    const headings = [
+        ['Sun', 'S', 'un'], ['Mon', 'M', 'on'], ['Tue', 'T', 'ue'], ['Wed', 'W', 'ed'],
+        ['Thu', 'T', 'hu'], ['Fri', 'F', 'ri'], ['Sat', 'S', 'at'],
+    ];
+    const orderedHeadings = [...headings.slice(firstDayOfWeek), ...headings.slice(0, firstDayOfWeek)];
+
+    return (
     <div className="grid grid-cols-7 gap-px border-b border-gray-300 bg-gray-200 text-center text-xs font-semibold leading-6 text-gray-700 lg:flex-none">
-        <div className="bg-white py-2">
-            <span className="sm:hidden">M<span className="sr-only">on</span></span>
-            <span className="hidden sm:inline">Mon</span>
-        </div>
-        <div className="bg-white py-2">
-            <span className="sm:hidden">T<span className="sr-only">ue</span></span>
-            <span className="hidden sm:inline">Tue</span>
-        </div>
-        <div className="bg-white py-2">
-            <span className="sm:hidden">W<span className="sr-only">ed</span></span>
-            <span className="hidden sm:inline">Wed</span>
-        </div>
-        <div className="bg-white py-2">
-            <span className="sm:hidden">T<span className="sr-only">hu</span></span>
-            <span className="hidden sm:inline">Thu</span>
-        </div>
-        <div className="bg-white py-2">
-            <span className="sm:hidden">F<span className="sr-only">ri</span></span>
-            <span className="hidden sm:inline">Fri</span>
-        </div>
-        <div className="bg-white py-2">
-            <span className="sm:hidden">S<span className="sr-only">at</span></span>
-            <span className="hidden sm:inline">Sat</span>
-        </div>
-        <div className="bg-white py-2">
-            <span className="sm:hidden">S<span className="sr-only">un</span></span>
-            <span className="hidden sm:inline">Sun</span>
-        </div>
+        {orderedHeadings.map(([full, short, remainder]) => (
+            <div className="bg-white py-2" key={full}>
+                <span className="sm:hidden">{short}<span className="sr-only">{remainder}</span></span>
+                <span className="hidden sm:inline">{full}</span>
+            </div>
+        ))}
     </div>
-);
+    );
+}
 
 const DayEntryDesktop = ({ day }) => {
     const { route } = useRoute();

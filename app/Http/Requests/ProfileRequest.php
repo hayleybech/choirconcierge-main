@@ -48,6 +48,8 @@ class ProfileRequest extends FormRequest
                 Rule::unique('users')
                     ->ignore(auth()->user()->id),
             ],
+            'prefers_metric' => ['nullable', 'boolean'],
+            'first_day_of_week' => ['nullable', 'integer', 'between:0,6'],
             'password' => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
             'avatar' => ['sometimes', 'nullable', 'file', 'mimetypes:image/jpeg,image/png', 'max:10240'],
             'dob' => ['nullable', 'date', 'before:today', Rule::date()->afterOrEqual(today()->subYears(120))],
