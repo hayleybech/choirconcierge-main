@@ -50,7 +50,7 @@ class ProfileRequest extends FormRequest
             ],
             'password' => ['sometimes', 'nullable', 'min:8', 'max:255', 'confirmed'],
             'avatar' => ['sometimes', 'nullable', 'file', 'mimetypes:image/jpeg,image/png', 'max:10240'],
-            'dob' => ['nullable', 'date', 'before:today'],
+            'dob' => ['nullable', 'date', 'before:today', Rule::date()->afterOrEqual(today()->subYears(120))],
             'phone' => ['max:255'],
             'ice_name' => ['max:255'],
             'ice_phone' => ['max:255'],
