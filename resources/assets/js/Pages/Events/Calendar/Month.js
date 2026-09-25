@@ -16,9 +16,11 @@ import AppHead from '../../../components/AppHead';
 import { usePage } from '@inertiajs/react';
 import Calendar from './../Calendar';
 import useRoute from '../../../hooks/useRoute';
+import CalendarSyncDialog from '../../../components/Event/CalendarSyncDialog';
 
-const Month = ({ days, month, firstDayOfWeek, setSidebarOpen }) => {
+const Month = ({ days, month, firstDayOfWeek, calendarSyncUrl, setSidebarOpen }) => {
 	const { can } = usePage().props;
+	const [showSyncModal, setShowSyncModal] = React.useState(false);
 	const { route } = useRoute();
 	const actions = [
 		{
@@ -35,6 +37,12 @@ const Month = ({ days, month, firstDayOfWeek, setSidebarOpen }) => {
 			can: can.list_attendances,
 		},
 		{ label: 'List View', icon: 'th-list', href: route('events.index'), can: can.list_events },
+		{
+			label: 'Sync to Calendar App',
+			icon: 'calendar-plus',
+			onClick: () => setShowSyncModal(true),
+			can: true,
+		},
 	].filter(action => action.can);
 
 	const breadcrumbs = [
@@ -46,15 +54,20 @@ const Month = ({ days, month, firstDayOfWeek, setSidebarOpen }) => {
 		<>
 			<AppHead title="Calendar - Month View" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					<PageActionsMenu>
-						{actions.map(action => (
-							<ActionMenuItem key={action.label} url={action.href} variant={action.variant}>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</ActionMenuItem>
-						))}
-					</PageActionsMenu>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				<PageActionsMenu>
+					{actions.map(action => (
+						<ActionMenuItem
+							key={action.label}
+							url={action.href}
+							onClick={action.onClick}
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</ActionMenuItem>
+					))}
+				</PageActionsMenu>
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -63,19 +76,24 @@ const Month = ({ days, month, firstDayOfWeek, setSidebarOpen }) => {
 						<Icon icon="calendar-alt" type="solid" className="mr-2" />
 						Calendar
 					</PageHeaderTitle>
-					<PageHeaderMeta>
-						<div>Calendar Sync URL: {route('events.feed')}</div>
-					</PageHeaderMeta>
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{actions.map(action => (
-						<Button key={action.label} href={action.href} size="sm" variant={action.variant}>
+						<Button
+							key={action.label}
+							href={action.href}
+							onClick={action.onClick}
+							size="sm"
+							variant={action.variant}
+						>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</Button>
 					))}
 				</PageHeaderActions>
 			</PageHeader>
+
+			<CalendarSyncDialog calendarSyncUrl={calendarSyncUrl} isOpen={showSyncModal} setIsOpen={setShowSyncModal} />
 
 			<Calendar days={days} month={month} firstDayOfWeek={firstDayOfWeek} />
 		</>

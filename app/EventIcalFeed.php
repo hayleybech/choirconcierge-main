@@ -4,6 +4,7 @@ namespace App;
 
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event;
+use Illuminate\Database\Eloquent\Collection;
 
 class EventIcalFeed
 {
@@ -13,13 +14,13 @@ class EventIcalFeed
 
     public Calendar $calendar;
 
-    public function __construct()
+    public function __construct(Collection $events, bool $legacy = false)
     {
         $this->name = 'Events for '.config('app.name');
         $this->description = '';
 
         $this->create();
-        $this->addEvents();
+        $this->addEvents($events, $legacy);
     }
 
     private function create(): void
@@ -30,12 +31,11 @@ class EventIcalFeed
             ->refreshInterval(5);
     }
 
-    private function addEvents(): void
+    private function addEvents(Collection $events, bool $legacy): void
     {
-        $events = Models\Event::all();
         foreach ($events as $event) {
-            $ical_event = Event::create($event->title)
-                ->description($event->description ?? '')
+            $ical_event = Event::create(($legacy ? '⚠ ' : '').$event->title)
+                ->description($legacy ? 'This version of the calendar sync will stop working December 2026. Please log in to Choir Concierge to get your new calendar sync URL. ' : ($event->description ?? ''))
                 ->createdAt($event->created_at ?? now())
                 ->startsAt($event->call_time)
                 ->endsAt($event->end_date)

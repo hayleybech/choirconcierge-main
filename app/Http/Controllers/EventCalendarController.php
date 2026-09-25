@@ -7,6 +7,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -22,6 +24,10 @@ class EventCalendarController extends Controller
             'days' => $this->getEventsForMonth($month),
             'firstDayOfWeek' => auth()->user()->getFirstDayOfWeek(),
             'month' => $month,
+            'calendarSyncUrl' => URL::signedRoute('events.feed', [
+                'tenant' => tenant()->id,
+                'user' => Crypt::encryptString((string) auth()->id()),
+            ]),
         ]);
     }
 

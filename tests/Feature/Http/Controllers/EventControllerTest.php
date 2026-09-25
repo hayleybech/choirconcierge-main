@@ -13,6 +13,8 @@ use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\URL;
 use Inertia\Testing\AssertableInertia;
 use Notification;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -78,6 +80,19 @@ class EventControllerTest extends TestCase
                 ->has('eventTypes')
                 ->has('userEnsemblesCount')
                 ->has('ensembles')
+                ->has('calendarSyncUrl')
+            );
+    }
+
+    public function test_calendar_view_includes_the_calendar_sync_url(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $this->get(the_tenant_route('events.calendar.month'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('Events/Calendar/Month')
+                ->has('calendarSyncUrl')
             );
     }
 
@@ -182,6 +197,74 @@ class EventControllerTest extends TestCase
                 ->has('events.data', 1)
                 ->where('events.data.0.title', 'In Ensemble')
             );
+    }
+
+    public function test_calendar_feed_is_signed_and_only_contains_the_users_ensembles_events(): void
+    {
+        $userEnsemble = Ensemble::factory()->create();
+        $otherEnsemble = Ensemble::factory()->create();
+        $user = $this->createUserWithRole('User');
+        $user->membership->enrolments()->create(['ensemble_id' => $userEnsemble->id]);
+
+        $includedEvent = Event::factory()->create(['title' => 'Included event']);
+        $includedEvent->ensembles()->attach($userEnsemble);
+        $excludedEvent = Event::factory()->create(['title' => 'Excluded event']);
+        $excludedEvent->ensembles()->attach($otherEnsemble);
+        Event::factory()->create(['title' => 'Unassigned event']);
+
+        $url = URL::signedRoute('events.feed', [
+            'tenant' => tenant('id'),
+            'user' => Crypt::encryptString((string) $user->id),
+        ]);
+
+        $this->get($url)
+            ->assertOk()
+            ->assertHeader('Content-Type', 'text/calendar; charset=utf-8')
+            ->assertSee('Included event')
+            ->assertDontSee('Excluded event')
+            ->assertDontSee('Unassigned event');
+    }
+
+    public function test_calendar_feed_contains_all_events_when_the_organisation_has_no_ensembles(): void
+    {
+        $user = $this->createUserWithRole('User');
+        Event::factory()->create(['title' => 'First event']);
+        Event::factory()->create(['title' => 'Second event']);
+
+        $url = URL::signedRoute('events.feed', [
+            'tenant' => tenant('id'),
+            'user' => Crypt::encryptString((string) $user->id),
+        ]);
+
+        $this->get($url)
+            ->assertOk()
+            ->assertSee('First event')
+            ->assertSee('Second event');
+    }
+
+    public function test_legacy_calendar_feed_warns_users_before_the_compatibility_deadline(): void
+    {
+        $event = Event::factory()->create([
+            'title' => 'Legacy event',
+            'description' => 'Original event description',
+        ]);
+
+        $this->get(the_tenant_route('events.feed'))
+            ->assertOk()
+            ->assertSee('Legacy event ⚠')
+            ->assertSee('This calendar URL is outdated. Update your subscription.')
+            ->assertDontSee('Original event description');
+    }
+
+    public function test_legacy_calendar_feed_expires_after_the_compatibility_deadline(): void
+    {
+        Carbon::setTestNow(Carbon::parse('2026-12-25 00:00:01'));
+
+        try {
+            $this->get(the_tenant_route('events.feed'))->assertForbidden();
+        } finally {
+            Carbon::setTestNow();
+        }
     }
 
     public function test_it_shows_the_oldest_rsvp_for_an_event(): void

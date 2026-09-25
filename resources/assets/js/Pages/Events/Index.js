@@ -26,21 +26,12 @@ import BulkEditEventsModal from './BulkEditEventsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
+import CalendarSyncDialog from '../../components/Event/CalendarSyncDialog';
 
-const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can, setSidebarOpen }) => {
+const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSyncUrl, can, setSidebarOpen }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const [showSyncModal, setShowSyncModal] = React.useState(false);
-	const [hasCopiedSyncUrl, setHasCopiedSyncUrl] = React.useState(false);
 	const { route } = useRoute();
-	const syncUrl = route('events.feed');
-
-	const closeSyncModal = isOpen => {
-		setShowSyncModal(isOpen);
-
-		if (!isOpen) {
-			setHasCopiedSyncUrl(false);
-		}
-	};
 
 	const bulkEdit = useBulkEdit(events.data, can.update_event, can.delete_event, 'Event');
 
@@ -141,29 +132,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can, setSide
 				</PageHeaderActions>
 			</PageHeader>
 
-			<Dialog
-				title="Sync to Calendar App"
-				isOpen={showSyncModal}
-				setIsOpen={closeSyncModal}
-				icon={null}
-			>
-				<p className="mb-3">Copy this URL into your calendar application to subscribe to the events calendar:</p>
-				<div className="flex gap-2 items-center">
-					<code className="block break-all rounded bg-gray-100 p-3 text-left text-xs text-gray-700 grow">
-						{syncUrl}
-					</code>
-					<Button
-						size="sm"
-						onClick={async () => {
-							await navigator.clipboard.writeText(syncUrl);
-							setHasCopiedSyncUrl(true);
-						}}
-					>
-						<Icon icon={hasCopiedSyncUrl ? 'check' : 'clipboard'} mr />
-						{hasCopiedSyncUrl ? 'Copied' : 'Copy'}
-					</Button>
-				</div>
-			</Dialog>
+			<CalendarSyncDialog calendarSyncUrl={calendarSyncUrl} isOpen={showSyncModal} setIsOpen={setShowSyncModal} />
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Events?`}

@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -49,6 +50,15 @@ class EventController extends Controller
             'eventTypes' => EventType::all()->values(),
             'userEnsemblesCount' => $userEnsemblesCount,
             'ensembles' => $ensembles,
+            'calendarSyncUrl' => $this->getCalendarSyncUrl(),
+        ]);
+    }
+
+    private function getCalendarSyncUrl(): string
+    {
+        return URL::signedRoute('events.feed', [
+            'tenant' => tenant()->id,
+            'user' => Crypt::encryptString((string) auth()->id()),
         ]);
     }
 

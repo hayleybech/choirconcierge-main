@@ -98,7 +98,8 @@ Route::middleware([
 ])->prefix('/{tenant}')->group(function () {
 
     // Public calendar feed
-    Route::get('/events-ical', [ICalController::class, 'index'])->name('events.feed');
+    Route::get('/events-ical', [ICalController::class, 'index'])
+        ->name('events.feed');
 
     Route::middleware([
         BlockMemberAccessWhenNoActiveSubscription::class,
