@@ -18,7 +18,7 @@ const MainNavigation = ({ navigation, closeSidebar, onOpenUserMenu }) => {
 							className={classNames(
 								item.active
 									? 'bg-purple-800 text-white'
-									: 'text-white text-opacity-80 hover:bg-white hover:bg-opacity-90 hover:text-brand-purple-dark',
+									: 'text-white/80 hover:bg-white/90 hover:text-brand-purple-dark',
 								'group flex items-center px-2 py-2 text-base uppercase font-bold rounded-md'
 							)}
 							onClick={closeSidebar}
@@ -34,8 +34,8 @@ const MainNavigation = ({ navigation, closeSidebar, onOpenUserMenu }) => {
 										href={route(child.route)}
 										className={classNames(
 											child.active
-												? 'font-semibold bg-black bg-opacity-25'
-												: 'text-opacity-90 font-light hover:bg-white hover:bg-opacity-90 hover:text-brand-purple-dark',
+											? 'font-semibold bg-black/25'
+											: 'text-white/90 font-light hover:bg-white/90 hover:text-brand-purple-dark',
 											'px-6 py-1.5 rounded-md text-base text-white'
 										)}
 										onClick={closeSidebar}
@@ -59,7 +59,7 @@ const MainNavigation = ({ navigation, closeSidebar, onOpenUserMenu }) => {
 						<img className="h-10 w-10 shrink-0 rounded-lg" src={user.avatar_url} alt={user.name} />
 						<span className="min-w-0">
 							<span className="block truncate text-sm font-semibold">{user.name}</span>
-							<span className="block truncate text-xs text-white text-opacity-75">{user.email}</span>
+							<span className="block truncate text-xs text-white/75">{user.email}</span>
 						</span>
 					</div>
 

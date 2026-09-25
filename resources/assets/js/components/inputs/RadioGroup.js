@@ -1,7 +1,7 @@
 import React from 'react';
-import { RadioGroup as BaseRadioGroup } from '@headlessui/react'
-import classNames from "../../classNames";
-import Icon from "../Icon";
+import { RadioGroup as BaseRadioGroup } from '@headlessui/react';
+import classNames from '../../classNames';
+import Icon from '../Icon';
 
 const RadioGroup = ({
 	label,
@@ -19,7 +19,7 @@ const RadioGroup = ({
 			className={classNames(
 				'bg-white rounded-md -space-y-px flex text-left',
 				vertical ? 'flex-col' : 'flex-col md:flex-row',
-				size === 'md' && 'mt-1',
+				size === 'md' && 'mt-1'
 			)}
 		>
 			{options.map((option, index) => (
@@ -37,7 +37,7 @@ const RadioGroup = ({
 							checked ? 'bg-purple-100 border-purple-300 z-10' : 'border-gray-300',
 							size === 'xs' && 'p-1.5',
 							size === 'sm' && 'p-2',
-							size === 'md' && 'p-4',
+							size === 'md' && 'p-4'
 						)
 					}
 				>
@@ -63,9 +63,9 @@ const RadioGroup = ({
 										option.textColour ?? '',
 										option.colour ?? '',
 										checked && !option.colour && 'text-purple-700',
-										!checked && (!option.colour && !option.textColour) && 'text-gray-900',
-										(disabled || option.disabled) && 'text-opacity-50',
-										size === 'xs' ? 'text-base' : 'text-lg',
+										!checked && !option.colour && !option.textColour && 'text-gray-900',
+										(disabled || option.disabled) && 'opacity-50',
+										size === 'xs' ? 'text-base' : 'text-lg'
 									)}
 								/>
 							)}
@@ -76,7 +76,7 @@ const RadioGroup = ({
 									contentVertical ? 'flex-col' : 'flex-row items-center justify-between',
 									size === 'xs' && 'ml-0',
 									size === 'sm' && 'ml-0',
-									size === 'md' && 'ml-3',
+									size === 'md' && 'ml-3'
 								)}
 							>
 								<BaseRadioGroup.Label
@@ -85,8 +85,8 @@ const RadioGroup = ({
 										'block font-medium',
 										checked ? 'text-purple-900' : 'text-gray-900',
 
-										(disabled || option.disabled) && 'text-opacity-50',
-										size === 'xs' ? 'text-xs' : 'text-sm',
+										(disabled || option.disabled) && 'opacity-50',
+										size === 'xs' ? 'text-xs' : 'text-sm'
 									)}
 								>
 									{option.name}
@@ -97,8 +97,8 @@ const RadioGroup = ({
 										className={classNames(
 											'block',
 											checked ? 'text-purple-700' : 'text-gray-500',
-											(disabled || option.disabled) && 'text-opacity-50',
-											size === 'xs' ? 'text-xs' : 'text-sm',
+											(disabled || option.disabled) && 'opacity-50',
+											size === 'xs' ? 'text-xs' : 'text-sm'
 										)}
 									>
 										{option.description}
