@@ -251,8 +251,8 @@ class EventControllerTest extends TestCase
 
         $this->get(the_tenant_route('events.feed'))
             ->assertOk()
-            ->assertSee('Legacy event ⚠')
-            ->assertSee('This calendar URL is outdated. Update your subscription.')
+            ->assertSee('⚠ Legacy event')
+            ->assertSee('This version of the calendar sync will stop working December')
             ->assertDontSee('Original event description');
     }
 
