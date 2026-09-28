@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Central;
 use App\Http\Middleware\EnsureUserIsSuperAdmin;
-use Laravel\Nightwatch\Http\Middleware\Sample;
+use App\Http\Middleware\SampleByAuthentication;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,5 +58,5 @@ Route::prefix('/app')->group(function () {
 });
 
 Route::fallback(fn () => abort(404))
-    ->middleware(Sample::rate(0.25));
+    ->middleware(SampleByAuthentication::rate(1.0, 0.01));
 
