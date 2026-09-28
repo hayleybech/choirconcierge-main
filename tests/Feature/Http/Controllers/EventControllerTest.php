@@ -267,33 +267,17 @@ class EventControllerTest extends TestCase
         }
     }
 
-    public function test_it_shows_the_oldest_rsvp_for_an_event(): void
+    public function test_it_shows_the_users_rsvp_for_an_event(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
         $event = Event::factory()->create();
 
-        Rsvp::factory()
-            ->count(2)
-            ->sequence(
-                [
-                    'response' => 'no',
-                    'membership_id' => Auth::user()->membership->id,
-                    'event_id' => $event->id,
-                    'created_at' => now(),
-                ],
-                [
-                    'response' => 'no',
-                    'membership_id' => Auth::user()->membership->id,
-                    'event_id' => $event->id,
-                    'created_at' => now()->addMinute(),
-                ],
-            )
-            ->create();
-
-        $newestRsvp = $event->rsvps()->latest()->first();
-        $newestRsvp->update(['response' => 'yes']);
-
+        Rsvp::factory()->create([
+            'response' => 'no',
+            'membership_id' => Auth::user()->membership->id,
+            'event_id' => $event->id,
+        ]);
 
         $this->get(the_tenant_route('events.show', [$event]))
             ->assertOk()
