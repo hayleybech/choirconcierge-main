@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Central;
 use App\Http\Middleware\EnsureUserIsSuperAdmin;
+use Laravel\Nightwatch\Http\Middleware\Sample;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,4 +56,7 @@ Route::prefix('/app')->group(function () {
         Route::get('changelog', Central\ChangelogController::class)->name('changelog');
 	});
 });
+
+Route::fallback(fn () => abort(404))
+    ->middleware(Sample::rate(0.25));
 
