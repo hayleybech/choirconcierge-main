@@ -17,7 +17,7 @@ class MembersExport implements FromQuery, WithMapping, WithHeadings
 	public function query()
 	{
 		return Membership::query()
-			->ensembleRestricted()
+			->forEnsembles()
 			->with([
 				'user',
 				'enrolments' => ['ensemble', 'voice_part'],

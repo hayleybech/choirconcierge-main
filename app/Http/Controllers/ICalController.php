@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\EventIcalFeed;
-use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
@@ -36,13 +34,8 @@ class ICalController extends Controller
             ->where('tenant_id', tenant()->id)
             ->firstOrFail();
 
-        $userEnsembleIds = $membership->enrolments->pluck('ensemble_id');
         $events = Event::query()
-            ->when(Ensemble::count() >= 2, function (Builder $query) use ($userEnsembleIds): void {
-                $query->whereHas('ensembles', function (Builder $query) use ($userEnsembleIds): void {
-                    $query->whereKey($userEnsembleIds);
-                });
-            })
+            ->forEnsembles($user)
             ->get();
 
         return $this->response($events);

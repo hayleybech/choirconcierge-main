@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
+use App\Models\Traits\HasEnsembles;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,7 +34,6 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * Relationships
  * @property SongStatus $status
  * @property Collection<SongCategory> $categories
- * @property Collection<Ensemble> $ensembles
  * @property Collection<SongAttachment> $attachments
  * @property Collection<Membership> $members
  *
@@ -43,7 +43,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Song extends Model
 {
-    use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
+    use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates, HasEnsembles;
 
     /**
      * The attributes that are mass assignable.
@@ -150,11 +150,6 @@ class Song extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(SongCategory::class, 'songs_song_categories', 'song_id', 'category_id');
-    }
-
-    public function ensembles(): BelongsToMany
-    {
-        return $this->belongsToMany(Ensemble::class, 'ensemble_song', 'song_id', 'ensemble_id');
     }
 
     public function attachments(): HasMany

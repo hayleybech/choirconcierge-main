@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
+use App\Models\Traits\HasEnsembles;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -56,7 +56,6 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property Attendance $my_attendance
  * @property Collection<Attendance> $attendances
  * @property Collection<EventActivity> $activities
- * @property Collection<Ensemble> $ensembles
  *
  * Relationships - Repeating Events
  * @property Event $repeat_parent
@@ -64,7 +63,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Event extends Model
 {
-    use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates;
+    use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates, HasEnsembles;
 
     /**
      * The attributes that are mass assignable.
@@ -189,11 +188,6 @@ class Event extends Model
     public function activities(): HasMany
     {
         return $this->hasMany(EventActivity::class);
-    }
-
-    public function ensembles(): BelongsToMany
-    {
-        return $this->belongsToMany(Ensemble::class, 'ensemble_event', 'event_id', 'ensemble_id');
     }
 
     public function repeat_parent(): BelongsTo
