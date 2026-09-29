@@ -38,7 +38,7 @@ class ICalController extends Controller
 
         $userEnsembleIds = $membership->enrolments->pluck('ensemble_id');
         $events = Event::query()
-            ->when(Ensemble::exists(), function (Builder $query) use ($userEnsembleIds): void {
+            ->when(Ensemble::count() >= 2, function (Builder $query) use ($userEnsembleIds): void {
                 $query->whereHas('ensembles', function (Builder $query) use ($userEnsembleIds): void {
                     $query->whereKey($userEnsembleIds);
                 });

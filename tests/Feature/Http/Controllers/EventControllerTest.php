@@ -225,8 +225,9 @@ class EventControllerTest extends TestCase
             ->assertDontSee('Unassigned event');
     }
 
-    public function test_calendar_feed_contains_all_events_when_the_organisation_has_no_ensembles(): void
+    public function test_calendar_feed_contains_all_events_when_the_organisation_has_one_ensemble(): void
     {
+        Ensemble::factory()->create();
         $user = $this->createUserWithRole('User');
         Event::factory()->create(['title' => 'First event']);
         Event::factory()->create(['title' => 'Second event']);
