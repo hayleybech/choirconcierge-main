@@ -41,10 +41,31 @@ describe('IndexContainer', () => {
 			);
 
 		expect(screen.queryByRole('dialog')).toBeNull();
-		const filterPane = screen.getByText('Filter controls').parentElement;
+		const filterPane = screen.getByText('Filter controls').parentElement.parentElement;
 
 		expect(filterPane).toBeTruthy();
 		expect(filterPane.className).toContain('lg:w-1/5');
+		expect(filterPane.className).toContain('transition-[width]');
+		expect(filterPane.firstElementChild.className).toContain('w-1/5');
+		expect(screen.getByText('Desktop table').parentElement.parentElement.className).toContain('lg:border-l');
+		expect(screen.getByText('Desktop table')).toBeTruthy();
+	});
+
+	it('keeps the desktop filter pane mounted while closed so its width can animate', () => {
+		mockUseMediaQuery.mockReturnValue(true);
+
+		render(
+			<IndexContainer
+				filterPane={<div>Filter controls</div>}
+				tableDesktop={<div>Desktop table</div>}
+			/>
+		);
+
+		const filterPane = screen.getByText('Filter controls').parentElement.parentElement;
+
+		expect(filterPane.className).toContain('lg:w-0');
+		expect(filterPane.className).toContain('overflow-hidden');
+		expect(filterPane.firstElementChild.className).toContain('w-1/5');
 		expect(screen.getByText('Desktop table')).toBeTruthy();
 	});
 

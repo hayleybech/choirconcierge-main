@@ -19,4 +19,12 @@ class NavigationTest extends TestCase
                 ->where('navigation.0.route', 'dash')
             );
     }
+
+    public function test_app_stylesheet_uses_the_versioned_mix_asset(): void
+    {
+        $this->actingAs($this->createUserWithRole('Admin'));
+
+        $this->get(the_tenant_route('dash'))
+            ->assertSee('href="'.e(mix('/css/app.css')).'"', false);
+    }
 }

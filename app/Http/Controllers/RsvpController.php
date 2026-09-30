@@ -155,7 +155,7 @@ class RsvpController extends Controller
             'pagination' => $pagination,
             'totalEnsemblesCount' => Ensemble::count(),
             'voiceParts' => VoicePart::all()->values(),
-            'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
+            'ensembles' => Ensemble::forUser()->get()->values(),
             'singerStatuses' => array_map(fn($s) => [
                 'id' => $s->value,
                 'name' => $s->label(),

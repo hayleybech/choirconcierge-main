@@ -68,6 +68,7 @@ class FolderEnsembleTest extends TestCase
     public function test_hides_folders_with_ensembles_from_users_not_in_those_ensembles()
     {
         $ensemble = Ensemble::factory()->create();
+        Ensemble::factory()->create();
         $folder = Folder::factory()->create();
         $folder->ensembles()->attach($ensemble);
         

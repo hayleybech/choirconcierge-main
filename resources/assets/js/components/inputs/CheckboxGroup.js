@@ -60,7 +60,7 @@ export const FancyCheckboxGroup = ({ name, options, value, updateFn, onChange, v
 								value={option.id}
 								checked={checked}
 								onChange={e => {
-									if(disabled) return;
+									if (disabled) return;
 
 									if (onChange) {
 										onChange(option.id);
@@ -76,16 +76,20 @@ export const FancyCheckboxGroup = ({ name, options, value, updateFn, onChange, v
 							/>
 						</div>
 						<div className="flex justify-between w-full items-center">
-							<div className={classNames(
-								'text-sm font-medium',
-								checked ? 'text-purple-900' : 'text-gray-900',
-								disabled && 'text-opacity-50'
-							)}>{option.name}</div>
+							<div
+								className={classNames(
+									'text-sm font-medium',
+									checked ? 'text-purple-900' : 'text-gray-900',
+									disabled && 'opacity-50'
+								)}
+							>
+								{option.name}
+							</div>
 							<div
 								className={classNames(
 									'text-xs',
 									checked ? 'text-purple-700' : 'text-gray-500',
-									disabled && 'text-opacity-50'
+									disabled && 'opacity-50'
 								)}
 							>
 								{option.description}

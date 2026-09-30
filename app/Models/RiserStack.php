@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\TenantTimezoneDates;
+use App\Models\Traits\HasEnsembles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -28,11 +29,10 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property Collection<Membership> $members
- * @property Collection<Ensemble> $ensembles
  */
 class RiserStack extends Model
 {
-    use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory;
+    use BelongsToTenant, SoftDeletes, TenantTimezoneDates, HasFactory, HasEnsembles;
 
     /**
      * The attributes that are mass assignable.
@@ -50,8 +50,4 @@ class RiserStack extends Model
             ->withPivot('row', 'column');
     }
 
-    public function ensembles(): BelongsToMany
-    {
-        return $this->belongsToMany(Ensemble::class, 'ensemble_riser_stack', 'riser_stack_id', 'ensemble_id');
-    }
 }

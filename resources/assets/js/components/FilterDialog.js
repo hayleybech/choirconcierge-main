@@ -13,7 +13,7 @@ const FilterDialog = ({ isOpen, setIsOpen, children }) => (
 				leaveFrom="opacity-100"
 				leaveTo="opacity-0"
 			>
-				<BaseDialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75" />
+				<BaseDialog.Overlay className="fixed inset-0 bg-gray-500/75" />
 			</Transition.Child>
 
 			<Transition.Child

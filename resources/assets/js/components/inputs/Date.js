@@ -1,4 +1,5 @@
 import React from 'react';
+import { usePage } from '@inertiajs/react';
 import classNames from '../../classNames';
 import DayPicker from "react-day-picker";
 import { Popover, Transition } from "@headlessui/react";
@@ -6,7 +7,11 @@ import 'react-day-picker/lib/style.css';
 import {DateTime} from "luxon";
 import Icon from "../Icon";
 
-const DateInput = ({ name, value, updateFn, hasErrors }) => (
+const DateInput = ({ name, value, updateFn, hasErrors }) => {
+	const { user } = usePage().props;
+	const firstDayOfWeek = user?.first_day_of_week ?? (['CA', 'IN', 'JP', 'US'].includes(user?.address_country) ? 0 : 1);
+
+	return (
 	<Popover as="div" className="mt-1 relative">
 		<Popover.Button as="div" className="relative rounded-md shadow-sm">
 			<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -36,6 +41,7 @@ const DateInput = ({ name, value, updateFn, hasErrors }) => (
 		>
 			<Popover.Panel className="absolute mt-2 bg-white overflow-hidden shadow-lg rounded-lg z-20 border border-gray-300">
 				<DayPicker
+					firstDayOfWeek={firstDayOfWeek}
 					selectedDays={value ? new Date(value) : undefined}
 					onDayClick={day => updateFn(day)}
 					modifiersStyles={{
@@ -47,6 +53,6 @@ const DateInput = ({ name, value, updateFn, hasErrors }) => (
 			</Popover.Panel>
 		</Transition>
 	</Popover>
-);
+)};
 
 export default DateInput;

@@ -44,6 +44,8 @@ use Laragear\TwoFactor\TwoFactorAuthentication;
  * @property string $last_name
  * @property string $pronouns
  * @property string $email
+ * @property bool|null $prefers_metric
+ * @property int|null $first_day_of_week
  * @property string $password
  * @property string $remember_token
  * @property Carbon $dob
@@ -93,6 +95,8 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
         'last_name',
         'pronouns',
         'email',
+        'prefers_metric',
+        'first_day_of_week',
         'password',
         'dob',
         'phone',
@@ -121,7 +125,7 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
 
     protected $with = ['media', 'membership.roles', 'membership.status'];
 
-    public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'last_login' => 'datetime', 'dob' => 'datetime'];
+    public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'last_login' => 'datetime', 'dob' => 'datetime', 'prefers_metric' => 'boolean'];
 
     protected $appends = ['name', 'avatar_url', 'profile_avatar_url', 'bha_type', 'age'];
 
@@ -227,6 +231,24 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
     public function getAgeAttribute(): ?int
     {
         return $this->dob?->age;
+    }
+
+    public function getFirstDayOfWeek(): int
+    {
+        if ($this->first_day_of_week !== null) {
+            return (int) $this->first_day_of_week;
+        }
+
+        return in_array($this->address_country, ['CA', 'IN', 'JP', 'US'], true) ? 0 : 1;
+    }
+
+    public function usesImperialMeasurements(): bool
+    {
+        if ($this->prefers_metric !== null) {
+            return ! $this->prefers_metric;
+        }
+
+        return in_array($this->address_country, ['LR', 'MM', 'US'], true);
     }
 
     public function bhaType(): Attribute

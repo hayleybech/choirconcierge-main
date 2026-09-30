@@ -43,7 +43,7 @@ class Ensemble extends Model
 
 	protected $appends = ['logo_url'];
     
-    public function scopeEnsembleRestricted(Builder $query): Builder
+    public function scopeForUser(Builder $query, ?string $ability = null): Builder
     {
         if (Ensemble::count() <= 1) {
             return $query;
@@ -53,7 +53,7 @@ class Ensemble extends Model
             return $query;
         }
 
-        if (auth()->user()->membership->hasAbility('singers_update')) {
+        if (auth()->user()->isSuperAdmin || ($ability && auth()->user()->membership->hasAbility($ability))) {
             return $query;
         }
 

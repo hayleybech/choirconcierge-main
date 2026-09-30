@@ -27,7 +27,6 @@ class FolderController extends Controller
     public function index(Request $request): Response
     {
         $user = auth()->user();
-        $userEnsembles = $user?->membership?->enrolments->pluck('ensemble_id');
 
         $folders = QueryBuilder::for(Folder::class)
             ->with([
@@ -36,14 +35,9 @@ class FolderController extends Controller
                 },
                 'ensembles',
             ])
-            ->when(! $user->membership->hasRole('Admin') && ! $user?->isSuperAdmin, function (Builder $query) use ($user, $userEnsembles) {
-                $query->where(function (Builder $query) use ($userEnsembles) {
-                    $query->whereDoesntHave('ensembles')
-                        ->orWhereHas('ensembles', function (Builder $query) use ($userEnsembles) {
-                            $query->whereIn('ensembles.id', $userEnsembles ?? []);
-                        });
-                })
-                ->where(function (Builder $query) use ($user) {
+            ->forEnsembles()
+            ->when(!$user->membership->hasRole('Admin') && !$user?->isSuperAdmin, function (Builder $query) use ($user) {
+                $query->where(function (Builder $query) use ($user) {
                     $query->whereDoesntHave('viewers')
                         ->orWhere(function (Builder $query) use ($user) {
                             $query->whereHas('viewer_users', fn($q) => $q->where('users.id', $user->id))
@@ -66,24 +60,20 @@ class FolderController extends Controller
                 ->allowedFilters([
                     AllowedFilter::partial('title'),
                 ])
-                ->whereHas('folder', function (Builder $query) use ($user, $userEnsembles) {
-                    $query->when(! $user->membership->hasRole('Admin') && ! $user?->isSuperAdmin, function (Builder $query) use ($user, $userEnsembles) {
-                        $query->where(function (Builder $query) use ($userEnsembles) {
-                            $query->whereDoesntHave('ensembles')
-                                ->orWhereHas('ensembles', function (Builder $query) use ($userEnsembles) {
-                                    $query->whereIn('ensembles.id', $userEnsembles ?? []);
-                                });
-                        })
-                        ->where(function (Builder $query) use ($user) {
-                            $query->whereDoesntHave('viewers')
-                                ->orWhere(function (Builder $query) use ($user) {
-                                    $query->whereHas('viewer_users', fn($q) => $q->where('users.id', $user->id))
-                                        ->orWhereHas('viewer_roles', fn($q) => $q->whereIn('roles.id', $user->membership->roles->pluck('id')))
-                                        ->orWhereHas('viewer_voice_parts', fn($q) => $q->whereIn('voice_parts.id', $user->membership->enrolments->pluck('voice_part_id')))
-                                        ->orWhereHas('viewer_singer_statuses', fn($q) => $q->where('viewer_id', $user->membership->status?->status->value));
-                                });
+                ->whereHas('folder', function (Builder $query) use ($user) {
+                    $query
+                        ->forEnsembles()
+                        ->when(!$user->membership->hasRole('Admin') && !$user?->isSuperAdmin, function (Builder $query) use ($user) {
+                            $query->where(function (Builder $query) use ($user) {
+                                $query->whereDoesntHave('viewers')
+                                    ->orWhere(function (Builder $query) use ($user) {
+                                        $query->whereHas('viewer_users', fn($q) => $q->where('users.id', $user->id))
+                                            ->orWhereHas('viewer_roles', fn($q) => $q->whereIn('roles.id', $user->membership->roles->pluck('id')))
+                                            ->orWhereHas('viewer_voice_parts', fn($q) => $q->whereIn('voice_parts.id', $user->membership->enrolments->pluck('voice_part_id')))
+                                            ->orWhereHas('viewer_singer_statuses', fn($q) => $q->where('viewer_id', $user->membership->status?->status->value));
+                                    });
+                            });
                         });
-                    });
                 })
                 ->get();
         }
@@ -93,17 +83,11 @@ class FolderController extends Controller
             ? $totalEnsemblesCount
             : $user?->membership?->enrolments->count() ?? 0;
 
-        $ensembles = Ensemble::query()
-            ->when(! ($user?->isSuperAdmin || $user->membership->hasRole('Admin')), function (Builder $query) {
-                $query->whereIn('id', auth()->user()?->membership?->enrolments->pluck('ensemble_id') ?? []);
-            })
-            ->get();
-
         return Inertia::render('Folders/Index', [
             'folders' => $folders->values(),
             'documents' => $documents->values(),
             'userEnsemblesCount' => $userEnsemblesCount,
-            'ensembles' => $ensembles,
+            'ensembles' => Ensemble::forUser()->get(),
             'filters' => $request->only(['filter', 'sort']),
         ]);
     }

@@ -4,10 +4,10 @@ namespace App\Models;
 
 use App\Models\Traits\SyncsPolymorphicRelationships;
 use App\Models\Traits\TenantTimezoneDates;
+use App\Models\Traits\HasEnsembles;
 use App\Enums\SingerStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -28,7 +28,6 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  *
  * Relationships
  * @property Collection<Document> $documents
- * @property Collection<Ensemble> $ensembles
  * @property Collection<Role> $viewer_roles
  * @property Collection<VoicePart> $viewer_voice_parts
  * @property Collection<User> $viewer_users
@@ -40,6 +39,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Folder extends Model
 {
+    use HasEnsembles;
+
     use BelongsToTenant, SoftDeletes, HasFactory, TenantTimezoneDates, SyncsPolymorphicRelationships;
 
     /**
@@ -163,11 +164,6 @@ class Folder extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
-    }
-
-    public function ensembles(): BelongsToMany
-    {
-        return $this->belongsToMany(Ensemble::class, 'ensemble_folder', 'folder_id', 'ensemble_id');
     }
 
     /**

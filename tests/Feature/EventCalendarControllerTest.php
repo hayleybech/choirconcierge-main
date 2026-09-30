@@ -45,3 +45,17 @@ it('returns all the events for the days in a month', function () {
             ->where('days.35.events.0.title', 'End of month')
         );
 });
+
+it('uses the users first day of week preference', function () {
+    $user = $this->createUserWithRole('User');
+    $user->update(['address_country' => 'AU', 'first_day_of_week' => 1]);
+    actingAs($user);
+
+    get(the_tenant_route('events.calendar.month').'?month=2022-01-01')
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('firstDayOfWeek', 1)
+            ->where('days.0.date', '2021-12-26T16:00:00.000000Z')
+            ->where('days.6.date', '2022-01-01T16:00:00.000000Z')
+        );
+});

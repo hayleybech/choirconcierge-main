@@ -15,6 +15,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Laravel\Nightwatch\Facades\Nightwatch;
 use Webklex\PHPIMAP\Message;
 
 /**
@@ -41,10 +42,17 @@ class ProcessGroupMailbox implements ShouldQueue
     public function handle(): void
     {
         $this->mailbox->getMessages()
+            ->whenEmpty(function() {
+                // This is the most important sample call in this file
+                // because the task runs so frequently that the mailbox is usually empty, wasting events.
+                Nightwatch::sample(rate: 0.001);
+            })
             ->reject(function(Message $message) {
                 if (!$this->isDuplicateEmail($message) && !MailLog::query()->where('uid', $message->getUid())->exists()) {
                     return false;
                 }
+
+                Nightwatch::sample(rate: 0.2);
 
                 $message->delete();
 
@@ -55,6 +63,8 @@ class ProcessGroupMailbox implements ShouldQueue
                 if ($message->getSize() < 5 * 1024 * 1024) {
                     return false;
                 }
+
+                Nightwatch::sample(rate: 0.5);
 
                 $fromAddress = $message->getFrom()->first()->mail;
 
@@ -80,7 +90,9 @@ class ProcessGroupMailbox implements ShouldQueue
 
                 return true;
             })
-            ->each(function (Message $message) {
+            ->each(function (Message $message){
+
+                Nightwatch::sample(rate: 0.1);
 
                 /** @var IncomingMessage $incomingMessage */
                 $incomingMessage = (new WebklexImapMessageMailableAdapter($message))->toMailable();

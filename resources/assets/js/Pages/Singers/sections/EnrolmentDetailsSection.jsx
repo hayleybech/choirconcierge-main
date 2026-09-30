@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import VoicePartTag from '../../../components/VoicePartTag';
+import VoicePartTag, { voicePartTextColourClasses } from '../../../components/VoicePartTag';
 import DateTag from '../../../components/DateTag';
 import Button from '../../../components/inputs/Button';
 import Icon from '../../../components/Icon';
@@ -159,7 +159,7 @@ const CreateEnrolmentDialog = ({ singer, isOpen, setIsOpen, voiceParts, ensemble
 				options={voiceParts.map(part => ({
 					id: part.id,
 					name: part.title,
-					colour: `text-${part.colour}-500`,
+					colour: voicePartTextColourClasses[part.colour] ?? voicePartTextColourClasses.gray,
 					icon: 'circle',
 				}))}
 				selected={selectedVoicePart}
@@ -195,7 +195,7 @@ const EditEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts 
 				options={voiceParts.map(part => ({
 					id: part.id,
 					name: part.title,
-					colour: `text-{part.colour}-500`,
+					colour: voicePartTextColourClasses[part.colour] ?? voicePartTextColourClasses.gray,
 					icon: 'circle',
 				}))}
 				selected={selectedVoicePart}

@@ -30,7 +30,7 @@ const Dialog = ({
 					leaveFrom="opacity-100"
 					leaveTo="opacity-0"
 				>
-					<BaseDialog.Overlay className="fixed z-10 inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+					<BaseDialog.Overlay className="fixed z-10 inset-0 bg-gray-500/75 transition-opacity" />
 				</Transition.Child>
 
 				{/* This element is to trick the browser into centering the modal contents. */}

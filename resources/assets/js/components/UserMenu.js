@@ -69,7 +69,7 @@ const UserMenu = ({mobile = false, onOpen, onBack, onClose, setShowImpersonateMo
     if (mobile && !onOpen) {
         return (
             <div className="flex h-full flex-col">
-                <div className="flex items-center gap-3 border-b border-white border-opacity-20 px-4 py-4 text-gray-700">
+                <div className="flex items-center gap-3 border-b border-white/20 px-4 py-4 text-gray-700">
                     <button type="button" onClick={onBack} className="flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-gray-700">
                         <span className="sr-only">Back to main menu</span>
                         <Icon icon="arrow-left" type="light" />
@@ -80,7 +80,7 @@ const UserMenu = ({mobile = false, onOpen, onBack, onClose, setShowImpersonateMo
                     <img className="h-10 w-10 rounded-lg" src={user.avatar_url} alt={user.name} />
                     <div className="min-w-0">
                         <p className="truncate font-semibold">{user.name}</p>
-                        <p className="truncate text-sm text-gray-600 text-opacity-75">{user.email}</p>
+                        <p className="truncate text-sm text-gray-600/75">{user.email}</p>
                     </div>
                 </div>
                 <div className="flex flex-col divide-y divide-gray-200 bg-white py-1">
@@ -95,14 +95,14 @@ const UserMenu = ({mobile = false, onOpen, onBack, onClose, setShowImpersonateMo
             <Menu.Button
                 onClick={onOpen}
                 className={classNames(
-                    'flex w-full items-center gap-3 rounded-md px-2 py-3 text-left text-white hover:bg-white hover:bg-opacity-90 hover:text-brand-purple-dark focus:outline-none focus:ring-2 focus:ring-white',
+                    'flex w-full items-center gap-3 rounded-md px-2 py-3 text-left text-white hover:bg-white/90 hover:text-brand-purple-dark focus:outline-none focus:ring-2 focus:ring-white',
                     impersonationActive ? 'border-2 border-red-500' : ''
                 )}
             >
                 <img className="h-10 w-10 shrink-0 rounded-lg" src={user.avatar_url} alt={user.name} />
                 <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold">{user.name}</span>
-                    <span className="block truncate text-xs text-current text-opacity-75">{user.email}</span>
+                    <span className="block truncate text-xs text-current/75">{user.email}</span>
                 </span>
                 <Icon icon="chevron-up" className="shrink-0" />
             </Menu.Button>

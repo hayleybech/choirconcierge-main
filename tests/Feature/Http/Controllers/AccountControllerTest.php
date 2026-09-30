@@ -54,6 +54,30 @@ test('update@ saves the user password', function ($data) {
     expect(Hash::check($data['password'], $user->password))->toBeTrue();
 })->with('profiles');
 
+test('update@ saves measurement and calendar preferences', function () {
+    $user = User::factory()->has(Membership::factory())->create();
+    actingAs($user);
+
+    patch(the_tenant_route('account.update'), [
+        'first_name' => $user->first_name,
+        'last_name' => $user->last_name,
+        'email' => $user->email,
+        'prefers_metric' => false,
+        'first_day_of_week' => 0,
+    ])->assertSessionHasNoErrors();
+
+    assertDatabaseHas('users', [
+        'id' => $user->id,
+        'prefers_metric' => false,
+        'first_day_of_week' => 0,
+    ]);
+});
+
+test('measurement system falls back to the users address country', function () {
+    expect(User::factory()->create(['address_country' => 'US'])->usesImperialMeasurements())->toBeTrue()
+        ->and(User::factory()->create(['address_country' => 'AU'])->usesImperialMeasurements())->toBeFalse();
+});
+
 test('update@ can upload an avatar using POST with method spoofing', function () {
     Storage::fake('public');
 
