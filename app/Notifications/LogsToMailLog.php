@@ -70,7 +70,7 @@ trait LogsToMailLog
         $mailLog = MailLog::create([
             'uid' => $uid,
             'from' => Str::limit("{$fromName} <{$fromAddress}>", 254),
-            'to' => 'Everyone',
+            'to' => $notifiable->email ?? ($notifiable->user->email ?? 'Everyone'),
             'subject' => Str::limit($mailMessage->subject, 125),
             'body' => $this->renderMailMessage($mailMessage),
             'has_attachments' => false, // System notifications currently don't have attachments

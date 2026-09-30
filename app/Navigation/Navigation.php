@@ -128,7 +128,7 @@ class Navigation
             [
                 'name' => 'Communications',
                 'route' => 'communications.index',
-                'can' => 'create_broadcast',
+                'can' => 'view_mail_logs',
                 'icon' => 'fa-mail-bulk',
                 'showAsActiveForRoutes' => ['communications.*', 'groups.*'],
                 'items' => [

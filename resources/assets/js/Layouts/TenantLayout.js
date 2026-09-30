@@ -300,11 +300,11 @@ export default function TenantLayout({ children }) {
 	const isMobileOrTablet = useMediaQuery({ query: '(max-width: 1279px)' });
 
 	const navFiltered = navigation
-		.filter(item => can[item.can])
+		.filter(item => !item.can || can[item.can])
 		.map(item => {
 			item.active = item.showAsActiveForRoutes.some(routeName => route().current(routeName));
 			item.items = item.items
-				.filter(subItem => can[subItem.can])
+				.filter(subItem => !subItem.can || can[subItem.can])
 				.map(subItem => {
 					subItem.active = subItem.showAsActiveForRoutes.some(routeName => route().current(routeName));
 					return subItem;

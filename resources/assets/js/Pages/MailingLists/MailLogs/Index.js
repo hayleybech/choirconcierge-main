@@ -15,6 +15,7 @@ import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 
 const Index = ({ logs, can, setSidebarOpen }) => {
 	const { route } = useRoute();
+	const showAdminDetails = can.create_broadcast || can.update_group;
 
 	// const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
@@ -47,10 +48,10 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 	].filter(action => (action?.can ? can[action.can] : !!action));
 
 	return (
-		<>
+        <>
 			<AppHead title="Tenants" />
 
-			<TrialAntiSpamNotice />
+			{showAdminDetails && <TrialAntiSpamNotice />}
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation title="Communications">
@@ -87,8 +88,8 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 				//         closeFn={() => setShowFilters(false)}
 				//     />
 				// }
-				tableMobile={<MailLogTableMobile logs={logs} />}
-				tableDesktop={<MailLogTableDesktop logs={logs} />}
+				tableMobile={<MailLogTableMobile logs={logs} showAdminDetails={showAdminDetails} />}
+				tableDesktop={<MailLogTableDesktop logs={logs} showAdminDetails={showAdminDetails} />}
 				emptyState={
 					logs.data.length === 0 && (
 						<EmptyState

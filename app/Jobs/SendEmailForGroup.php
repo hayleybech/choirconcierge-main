@@ -24,11 +24,13 @@ class SendEmailForGroup implements ShouldQueue
     {
         $this->message = $message;
 
-        $this->group = $group->withoutRelations();
+        $this->group = $group->withoutRelations()->load('tenant');
     }
 
-    public function handle()
+    public function handle(): void
     {
+        $this->group->loadMissing('tenant');
+
         CloneMessage::forGroup($this->message, $this->group);
     }
 }

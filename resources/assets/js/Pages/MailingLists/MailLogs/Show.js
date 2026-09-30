@@ -18,8 +18,9 @@ import TenantLayout from '../../../Layouts/TenantLayout';
 import MailStatusDetail from '../../../components/MailStatusDetail';
 import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 import SectionLayout from '../../../components/SectionLayout';
-const Show = ({ log, setSidebarOpen }) => {
+const Show = ({ log, can, setSidebarOpen }) => {
 	const { route } = useRoute();
+	const showAdminDetails = can.create_broadcast || can.update_group;
 
 	const mailType = log.uid.split('-')[0];
 
@@ -32,7 +33,7 @@ const Show = ({ log, setSidebarOpen }) => {
 		<>
 			<AppHead title={`${log.subject} - Mail Logs`} />
 
-			<TrialAntiSpamNotice />
+			{showAdminDetails && <TrialAntiSpamNotice />}
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
@@ -45,15 +46,27 @@ const Show = ({ log, setSidebarOpen }) => {
 						{log.subject}
 					</PageHeaderTitle>
 					<PageHeaderMeta>
-						<div>
+						{showAdminDetails && <div>
 							Opens:{' '}
 							<span className="ml-0.5 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
 								<Icon icon="eye" mr />
 								<span className="font-medium">{log.opens_count}</span>
 							</span>
-						</div>
+						</div>}
 						<div>From: {log.from}</div>
-						<div>To: {log.to}</div>
+						<div>
+							To:{' '}
+							{log.events?.find(event => event.user_group)?.user_group ? (
+								<a
+									href={route('groups.show', {
+										group: log.events.find(event => event.user_group).user_group,
+									})}
+									className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
+								>
+									{log.events.find(event => event.user_group).user_group.title}
+								</a>
+							) : log.to}
+						</div>
 						{log.cc && <div>Cc: {log.cc}</div>}
 						{log.bcc && <div>Bcc: {log.bcc}</div>}
 						<div className="flex items-center gap-4">
@@ -107,7 +120,7 @@ const Show = ({ log, setSidebarOpen }) => {
 						title: 'Activity',
 						content: <Activity log={log} />,
 					},
-				]}
+				].filter(section => showAdminDetails || section.id !== 'activity')}
 			/>
 		</>
 	);

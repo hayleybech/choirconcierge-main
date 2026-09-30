@@ -31,7 +31,7 @@ class BroadcastController extends Controller
 
     public function store(BroadcastRequest $request): RedirectResponse
     {
-        $group = UserGroup::find($request->input('list'));
+        $group = UserGroup::with('tenant')->find($request->input('list'));
 
         $this->authorize('createBroadcastFor', $group);
 
@@ -54,6 +54,7 @@ class BroadcastController extends Controller
         );
 
         $mailLog = MailLog::createFromMessage($organisationBroadcast);
+        $mailLog->update(['to' => $group->title]);
 
         $mailLog->events()->createMany([
             [

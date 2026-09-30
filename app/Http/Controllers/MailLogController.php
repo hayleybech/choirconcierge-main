@@ -17,29 +17,36 @@ class MailLogController extends Controller
 
     public function index(): Response
     {
+        $showAdminDetails = $this->showAdminDetails();
+
         return Inertia::render('MailingLists/MailLogs/Index', [
             'logs' => (
-                auth()->user()->isSuperAdmin() ||
-                auth()->user()?->membership?->hasRole('Admin')
+                $showAdminDetails
             )
                 ? self::queryLogsAdmin()
                     ->latest()
-                    ->with('latestEvent')
+                    ->with('latestEvent.user_group')
                     ->withCount('opens')
                     ->paginate(50)
-                : self::queryLogsAuthorisedForUser()
-                    ->latest()
-                    ->with('latestEvent')
-                    ->withCount('opens')
-                    ->paginate(50)
+                : self::queryLogsAuthorisedForUser()->with('latestEvent.user_group')->latest()->paginate(50),
         ]);
     }
 
     public function show(MailLog $mail_log): Response
     {
+        $showAdminDetails = $this->showAdminDetails();
+
         return Inertia::render('MailingLists/MailLogs/Show', [
-            'log' => $mail_log->load('events.user_group.tenant')->loadCount('opens'),
+            'log' => $showAdminDetails
+                ? $mail_log->load('events.user_group.tenant')->loadCount('opens')
+                : $mail_log->load('events.user_group'),
         ]);
+    }
+
+    private function showAdminDetails(): bool
+    {
+        return auth()->user()->can('createBroadcast', UserGroup::class)
+            || auth()->user()->can('update', [UserGroup::class, null]);
     }
 
     public static function queryLogsAdmin()
@@ -61,11 +68,16 @@ class MailLogController extends Controller
 
     public static function getGroupsForUser(): Collection
     {
-        return UserGroup::with('members.memberable', 'senders.sender')
+        return UserGroup::with([
+            'tenant',
+            'recipient_roles',
+            'recipient_ensembles',
+            'sender_roles',
+            'sender_ensembles',
+        ])
             ->get()
             ->filter(fn(UserGroup $group) => $group->get_all_recipients()->contains(auth()->user())
-                || $group->get_all_senders()->contains(auth()->user())
-            )
+                || $group->get_all_senders()->contains(auth()->user()))
             ->map(fn(UserGroup $group) => $group->id);
     }
 }

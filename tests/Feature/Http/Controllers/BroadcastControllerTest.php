@@ -1,10 +1,13 @@
 <?php
 
 use App\Jobs\SendEmailForGroup;
+use App\Mail\OrganisationBroadcast;
+use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use Inertia\Testing\AssertableInertia;
 
@@ -41,10 +44,35 @@ it('dispatches a job to send the email', function () {
 
     Queue::assertPushed(SendEmailForGroup::class, function (SendEmailForGroup $job) use ($user, $group) {
         return $job->group->is($group)
+            && $job->group->relationLoaded('tenant')
             && $job->message->subject === 'this is a test'
             && $job->message->body === 'test body'
             && $job->message->hasFrom($user);
     });
+});
+
+it('loads the group tenant before handling the queued email', function () {
+    Mail::fake();
+
+    $user = $this->actingAsRole('Admin');
+    $group = UserGroup::factory()->create();
+    $message = new OrganisationBroadcast(
+        $group->load('tenant'),
+        'this is a test',
+        'test body',
+        $user,
+        collect(),
+        'test-uid',
+        0,
+    );
+
+    $job = new SendEmailForGroup($message, $group->withoutRelations());
+    $job->group->unsetRelation('tenant');
+    MailLog::factory()->create(['uid' => 'test-uid']);
+
+    $job->handle();
+
+    expect($job->group->relationLoaded('tenant'))->toBeTrue();
 });
 
 it('stores attachments in temporary storage', function () {
