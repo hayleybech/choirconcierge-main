@@ -20,7 +20,7 @@ class FindSingerController extends Controller
         }
 
         $formatted_results = Membership::query()
-            ->ensembleRestricted()
+            ->forEnsembles()
             ->with(['roles', 'user'])
             ->whereHas('user', function (Builder $query) use ($term) {
                 $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%$term%'");

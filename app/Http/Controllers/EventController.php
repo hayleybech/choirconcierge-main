@@ -39,17 +39,11 @@ class EventController extends Controller
             ? $totalEnsemblesCount
             : auth()->user()?->membership?->enrolments->count() ?? 0;
 
-        $ensembles = Ensemble::query()
-            ->when(!(auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('events_update')), function (Builder $query) {
-                $query->whereIn('id', auth()->user()?->membership?->enrolments->pluck('ensemble_id') ?? []);
-            })
-            ->get();
-
         return Inertia::render('Events/Index', [
             'events' => $this->getEvents(),
             'eventTypes' => EventType::all()->values(),
             'userEnsemblesCount' => $userEnsemblesCount,
-            'ensembles' => $ensembles,
+            'ensembles' => Ensemble::forUser('events_update')->get(),
             'calendarSyncUrl' => $this->getCalendarSyncUrl(),
         ]);
     }
@@ -58,7 +52,7 @@ class EventController extends Controller
     {
         return URL::signedRoute('events.feed', [
             'tenant' => tenant()->id,
-            'user' => Crypt::encryptString((string) auth()->id()),
+            'user' => Crypt::encryptString((string)auth()->id()),
         ]);
     }
 
@@ -133,7 +127,7 @@ class EventController extends Controller
 
     private function getCheckInUrl(Event $event): string
     {
-        if (! auth()->user()->can('create', Attendance::class)) {
+        if (!auth()->user()->can('create', Attendance::class)) {
             return '';
         }
 
@@ -289,18 +283,8 @@ class EventController extends Controller
 
     private function getEvents(): LengthAwarePaginator
     {
-        $userEnsembles = auth()->user()?->membership?->enrolments->pluck('ensemble_id');
-        $canUpdate = auth()->user()?->membership?->hasAbility('events_update');
-
         return QueryBuilder::for(Event::class)
-            ->when(!$canUpdate && !auth()->user()?->isSuperAdmin, function (Builder $query) use ($userEnsembles) {
-                $query->where(function (Builder $query) use ($userEnsembles) {
-                    $query->whereDoesntHave('ensembles')
-                        ->orWhereHas('ensembles', function (Builder $query) use ($userEnsembles) {
-                            $query->whereIn('ensembles.id', $userEnsembles ?? []);
-                        });
-                });
-            })
+            ->forEnsembles()
             ->allowedFilters([
                 'title',
                 AllowedFilter::exact('type.id'),

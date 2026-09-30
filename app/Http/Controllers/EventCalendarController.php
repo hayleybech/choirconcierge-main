@@ -36,6 +36,7 @@ class EventCalendarController extends Controller
         $dates = $this->getDates($selectedMonth);
 
         $events = Event::query()
+            ->forEnsembles()
             ->whereDate('call_time', '>=', $dates->first()->clone()->utc())
             ->whereDate('call_time', '<', $dates->last()->clone()->addDays(2)->utc())
             ->withCount([

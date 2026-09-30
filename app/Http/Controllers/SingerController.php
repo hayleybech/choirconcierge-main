@@ -56,7 +56,7 @@ class SingerController extends Controller
             'defaultStatus' => $defaultStatus,
             'voiceParts' => VoicePart::all()->values(),
             'roles' => Role::all()->values(),
-            'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
+            'ensembles' => Ensemble::forUser('singers_update')->get()->values(),
         ]);
     }
 
@@ -302,7 +302,7 @@ class SingerController extends Controller
     private function getSingers(string $defaultStatus): LengthAwarePaginator
     {
         $query = Membership::query()
-            ->ensembleRestricted();
+            ->forEnsembles();
 
         return QueryBuilder::for($query)
             ->with(['tasks', 'status', 'user', 'enrolments' => ['voice_part', 'ensemble'],])

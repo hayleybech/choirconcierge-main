@@ -199,7 +199,7 @@ class EventControllerTest extends TestCase
             );
     }
 
-    public function test_calendar_feed_is_signed_and_only_contains_the_users_ensembles_events(): void
+    public function test_calendar_feed_is_signed_and_filters_assigned_events_to_the_users_ensembles(): void
     {
         $userEnsemble = Ensemble::factory()->create();
         $otherEnsemble = Ensemble::factory()->create();
@@ -222,7 +222,7 @@ class EventControllerTest extends TestCase
             ->assertHeader('Content-Type', 'text/calendar; charset=utf-8')
             ->assertSee('Included event')
             ->assertDontSee('Excluded event')
-            ->assertDontSee('Unassigned event');
+            ->assertSee('Unassigned event');
     }
 
     public function test_calendar_feed_contains_all_events_when_the_organisation_has_one_ensemble(): void
@@ -231,6 +231,8 @@ class EventControllerTest extends TestCase
         $user = $this->createUserWithRole('User');
         Event::factory()->create(['title' => 'First event']);
         Event::factory()->create(['title' => 'Second event']);
+        $assignedEvent = Event::factory()->create(['title' => 'Assigned event']);
+        $assignedEvent->ensembles()->attach(Ensemble::firstOrFail());
 
         $url = URL::signedRoute('events.feed', [
             'tenant' => tenant('id'),
@@ -240,7 +242,8 @@ class EventControllerTest extends TestCase
         $this->get($url)
             ->assertOk()
             ->assertSee('First event')
-            ->assertSee('Second event');
+            ->assertSee('Second event')
+            ->assertSee('Assigned event');
     }
 
     public function test_legacy_calendar_feed_warns_users_before_the_compatibility_deadline(): void

@@ -293,7 +293,7 @@ class Membership extends Model
         });
     }
 
-    public function scopeEnsembleRestricted(Builder $query): Builder
+    public function scopeForEnsembles(Builder $query): Builder
     {
         if (Ensemble::count() <= 1) {
             return $query;
