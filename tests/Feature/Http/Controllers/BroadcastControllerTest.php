@@ -5,9 +5,11 @@ use App\Mail\OrganisationBroadcast;
 use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
+use App\Notifications\BroadcastReceived;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Inertia\Testing\AssertableInertia;
 
@@ -49,6 +51,34 @@ it('dispatches a job to send the email', function () {
             && $job->message->body === 'test body'
             && $job->message->hasFrom($user);
     });
+});
+
+it('notifies every user recipient when the broadcast is sent', function () {
+    Mail::fake();
+    Notification::fake();
+
+    $sender = $this->actingAsRole('Music Team');
+    $recipient = User::factory()->create();
+    $outsideRecipient = User::factory()->create();
+    $group = createGroup($sender);
+    $group->recipient_users()->attach($recipient);
+
+    $this->post(the_tenant_route('communications.store'), [
+        'list' => $group->id,
+        'subject' => 'this is a test',
+        'body' => 'test body',
+    ])->assertRedirect(route('communications.index'));
+
+    Queue::assertPushed(SendEmailForGroup::class, function (SendEmailForGroup $job) {
+        $job->handle();
+
+        return true;
+    });
+
+    Notification::assertSentTo($recipient, BroadcastReceived::class, function (BroadcastReceived $notification) {
+        return $notification->toArray(new User)['subject'] === 'this is a test';
+    });
+    Notification::assertNotSentTo($outsideRecipient, BroadcastReceived::class);
 });
 
 it('loads the group tenant before handling the queued email', function () {

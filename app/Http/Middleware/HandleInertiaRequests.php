@@ -22,6 +22,7 @@ use App\Navigation\Navigation;
 use App\Navigation\UserNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -178,7 +179,7 @@ class HandleInertiaRequests extends Middleware
                 'id' => $notification->id,
                 'type' => $notification->data['type'] ?? class_basename($notification->type),
                 'subject' => $notification->data['subject'] ?? 'Notification',
-                'body' => $notification->data['body'] ?? '',
+                'body' => $this->formatNotificationBody($notification->data['body'] ?? ''),
                 'url' => $notification->data['url'] ?? null,
                 'read_url' => tenancy()->initialized ? route('notifications.read', ['tenant' => tenant('id'), 'notification' => $notification->id]) : null,
                 'toggle_url' => tenancy()->initialized ? route('notifications.update', ['tenant' => tenant('id'), 'notification' => $notification->id]) : null,
@@ -188,6 +189,19 @@ class HandleInertiaRequests extends Middleware
             'unread_count' => $unreadCount,
             'filter' => $filter === 'read' ? 'read' : 'unread',
         ];
+    }
+
+    private function formatNotificationBody(mixed $body): string
+    {
+        if (! is_string($body) || trim($body) === '') {
+            return '';
+        }
+
+        $body = preg_replace('/<br\s*\/?\s*>|<\/(?:p|div)>/i', "\n", $body) ?? $body;
+        $body = strip_tags($body);
+        $lines = preg_split('/\R+/', $body, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        return Str::limit(trim(implode(' ', array_slice($lines, 0, 2))), 140);
     }
 
     private function getUserChoirs()

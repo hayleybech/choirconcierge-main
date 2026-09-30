@@ -5,6 +5,7 @@ namespace App\Mail;
 use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
+use App\Notifications\BroadcastReceived;
 use Illuminate\Support\Str;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
@@ -78,6 +79,11 @@ class CloneMessage
             Mail::to($user)
                 ->send($message);
 
+            $user->notify(new BroadcastReceived(
+                $message->subject ?? '',
+                $message instanceof Loggable ? $message->getContent() : '',
+                $group,
+            ));
 
         } catch (\Throwable $exception) {
             MailLog::firstWhere('uid', $message->uid)->events()->create([

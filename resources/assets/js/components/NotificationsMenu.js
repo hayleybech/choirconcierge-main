@@ -41,7 +41,7 @@ const NotificationItems = ({ onClose }) => {
 						<span className="min-w-0">
 							<span className="block text-sm font-semibold text-gray-900 group-hover:cursor-pointer">{notification.subject}</span>
 							{notification.body && (
-								<span className="mt-1 block text-sm text-gray-600 group-hover:cursor-pointer">{notification.body}</span>
+								<span className="mt-1 line-clamp-2 block text-sm text-gray-600 group-hover:cursor-pointer">{notification.body}</span>
 							)}
 							<span className="mt-1 block text-xs text-gray-400 group-hover:cursor-pointer">
 								{new Date(notification.created_at).toLocaleString()}
