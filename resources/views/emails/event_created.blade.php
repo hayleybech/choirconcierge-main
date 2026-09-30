@@ -3,13 +3,18 @@
 # New event posted!
 ## {{ $event->title }}
 
-@if($message){{ $message }}@endif
-
 {{-- method 1: attach then reference--}}
 {{--  $mailable->attachFromStorage('logo.png')  --}}
 {{--<img src="cid:logo.png">--}}
 
 {{-- method 2: path to public folder--}}
+
+@if($message)
+Message:
+
+{{ $message }}
+
+@endif
 
 @if($event->start_date->isSameDay($event->end_date))
 <img src="{{ global_asset('/img/email/calendar-day.png') }}" alt="Date" height="16px"> **{{ $event->start_date->toDayDateTimeString() }} - {{ $event->end_date->format('h:i A') }}**

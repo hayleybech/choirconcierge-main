@@ -3,13 +3,18 @@
 # This event has been updated
 ## {{ $event->title }}
 
-@if($message){{ $message }}@endif
-
 {{-- method 1: attach then reference--}}
 {{--  $mailable->attachFromStorage('logo.png')  --}}
 {{--<img src="cid:logo.png">--}}
 
 {{-- method 2: path to public folder--}}
+
+@if($message)
+Message:
+
+{{ $message }}
+
+@endif
 
 @if($event->wasChanged(['start_date', 'end_date']))
 <h3 class="changed-heading">Date Changed</h3>

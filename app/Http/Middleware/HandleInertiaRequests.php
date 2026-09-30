@@ -161,6 +161,18 @@ class HandleInertiaRequests extends Middleware
             ->take(10)
             ->values();
 
+        $unreadCount = $user->notifications()
+            ->whereNull('read_at')
+            ->get()
+            ->filter(function ($notification) use ($tenantId): bool {
+                if ($tenantId === null) {
+                    return true;
+                }
+
+                return (string) ($notification->data['tenant_id'] ?? '') === $tenantId;
+            })
+            ->count();
+
         return [
             'items' => $notifications->map(fn ($notification): array => [
                 'id' => $notification->id,
@@ -173,7 +185,7 @@ class HandleInertiaRequests extends Middleware
                 'read_at' => $notification->read_at,
                 'created_at' => $notification->created_at,
             ])->all(),
-            'unread_count' => $user->notifications()->whereNull('read_at')->count(),
+            'unread_count' => $unreadCount,
             'filter' => $filter === 'read' ? 'read' : 'unread',
         ];
     }

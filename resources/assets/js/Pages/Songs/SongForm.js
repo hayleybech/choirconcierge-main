@@ -104,7 +104,7 @@ const SongForm = ({ categories, statuses, pitches, song, ensembles }) => {
 					</div>
 
 					<div className="sm:col-span-6">
-						<CheckboxWithLabel
+      <CheckboxWithLabel
 							label="Audition Song (Show for prospects)"
 							id="show_for_prospects"
 							name="show_for_prospects"
@@ -141,10 +141,10 @@ const SongForm = ({ categories, statuses, pitches, song, ensembles }) => {
 						onChange={e => setData('send_notification', e.target.checked)}
 						className="mr-8 mb-4"
 					/>
-					<div className="sm:col-span-6">
+					{data.send_notification && <div className="sm:col-span-6">
 						<Label label="Message (optional)" forInput="notification_message" />
 						<TextareaInput name="notification_message" value={data.notification_message} updateFn={value => setData('notification_message', value)} />
-					</div>
+					</div>}
 				</FormSection>
 
 				<FormFooter>
