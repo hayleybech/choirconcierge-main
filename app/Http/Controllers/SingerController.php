@@ -65,6 +65,11 @@ class SingerController extends Controller
         return Inertia::render('Singers/Create', [
             'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
+            'statuses' => array_map(fn($status) => [
+                'id' => $status->value,
+                'name' => $status->label(),
+                'slug' => $status->value,
+            ], SingerStatus::cases()),
         ]);
     }
 
@@ -77,6 +82,7 @@ class SingerController extends Controller
             ->only([
                 'user_id',
                 'onboarding_enabled',
+                'status',
                 'reason_for_joining',
                 'referrer',
                 'membership_details',
@@ -84,6 +90,8 @@ class SingerController extends Controller
                 'user_roles',
             ])
         );
+
+        $singer->statuses()->create(['status' => $request->validated('status')]);
         $singer->initOnboarding();
         $singer->save();
 
@@ -216,6 +224,7 @@ class SingerController extends Controller
 
         return Inertia::render('Singers/Edit', [
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
+            'statuses' => array_map(fn($status) => ['id' => $status->value, 'name' => $status->label(), 'slug' => $status->value], SingerStatus::cases()),
             'singer' => $singer,
         ]);
     }
@@ -240,11 +249,14 @@ class SingerController extends Controller
                 'reason_for_joining',
                 'referrer',
                 'membership_details',
+                'status',
                 'joined_at',
                 'onboarding_enabled',
                 'paid_until',
             ])
         );
+
+        $singer->statuses()->create(['status' => $request->validated('status')]);
 
         return redirect()
             ->route('singers.show', [$singer])

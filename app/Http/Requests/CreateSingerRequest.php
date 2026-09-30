@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\UserUniqueForOrganisation;
+use App\Enums\SingerStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -22,6 +23,7 @@ class CreateSingerRequest extends FormRequest
     {
         $this->merge([
             'onboarding_enabled' => ! $this->input('onboarding_disabled'),
+            'status' => $this->input('status', SingerStatus::PROSPECTS->value),
             'email' => str($this->email)->trim()->lower()->toString(),
         ]);
     }
@@ -60,8 +62,8 @@ class CreateSingerRequest extends FormRequest
             'reason_for_joining' => ['max:255'],
             'referrer' => ['max:255'],
             'membership_details' => ['max:255'],
-            'joined_at' => ['date', 'before_or_equal:today'],
             'onboarding_enabled' => ['boolean'],
+            'status' => ['required', Rule::enum(SingerStatus::class)],
             'user_roles' => ['array', 'exists:roles,id'],
         ]);
     }

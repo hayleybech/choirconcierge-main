@@ -124,9 +124,6 @@ class Membership extends Model
 
     public function initOnboarding(): void
     {
-        $status = $this->onboarding_enabled ? SingerStatus::PROSPECTS : SingerStatus::MEMBERS;
-        $this->statuses()->create(['status' => $status->value]);
-
         if (!$this->onboarding_enabled) {
             return;
         }

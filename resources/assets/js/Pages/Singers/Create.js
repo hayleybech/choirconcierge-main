@@ -20,14 +20,14 @@ import AppHead from '../../components/AppHead';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
 import GlobalUserSelect from '../../components/inputs/GlobalUserSelect';
-import DayInput from '../../components/inputs/Day';
-import { DateTime } from 'luxon';
 import FormWrapper from '../../components/FormWrapper';
 import useRoute from '../../hooks/useRoute';
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import Icon from '../../components/Icon';
+import RadioGroup from '../../components/inputs/RadioGroup';
+import SingerStatus from '../../SingerStatus';
 
-const Create = ({ voice_parts, roles, setSidebarOpen }) => {
+const Create = ({ voice_parts, roles, statuses, setSidebarOpen }) => {
 	const { route } = useRoute();
 
 	const { data, setData, post, processing, errors } = useForm({
@@ -44,9 +44,9 @@ const Create = ({ voice_parts, roles, setSidebarOpen }) => {
 		reason_for_joining: '',
 		referrer: '',
 		membership_details: '',
+		status: 'prospects',
 
 		onboarding_disabled: false,
-		joined_at: undefined,
 		user_roles: [],
 	});
 
@@ -88,7 +88,7 @@ const Create = ({ voice_parts, roles, setSidebarOpen }) => {
 		<>
 			<AppHead title="Add Singer" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 			</PageTopBar>
 
 			<PageHeader>
@@ -178,6 +178,21 @@ const Create = ({ voice_parts, roles, setSidebarOpen }) => {
 						{/*</div>*/}
 
 						<div className="sm:col-span-6">
+							<RadioGroup
+								label={<Label label="Member status" />}
+								options={statuses.map(status => ({
+									id: status.id,
+									name: status.name,
+									textColour: new SingerStatus(status.slug).textColour,
+									icon: new SingerStatus(status.slug).icon,
+								}))}
+								selected={data.status}
+								setSelected={value => setData('status', value)}
+							/>
+							{errors.status && <Error>{errors.status}</Error>}
+						</div>
+
+						<div className="sm:col-span-6">
 							<Label label="Why are you joining?" forInput="reason_for_joining" />
 							<TextInput
 								name="reason_for_joining"
@@ -212,40 +227,25 @@ const Create = ({ voice_parts, roles, setSidebarOpen }) => {
 
 						<div className="sm:col-span-6">
 							<DetailToggle
-								label="Is this an existing member?"
-								description="Onboarding will be disabled when adding an existing singer."
-								value={data.onboarding_disabled}
-								updateFn={value => setData('onboarding_disabled', value)}
+								label="Enable onboarding automations for this user"
+								description="Automatically create onboarding tasks for this singer."
+								value={!data.onboarding_disabled}
+								updateFn={value => setData('onboarding_disabled', !value)}
 							/>
 						</div>
 					</FormSection>
 
-					{data.onboarding_disabled && (
-						<FormSection title="Existing Member Details">
-							<div className="sm:col-span-6">
-								<Label label="Joined" forInput="joined_at" />
-								<DayInput
-									name="joined_at"
-									hasErrors={!!errors.joined_at}
-									value={data.joined_at}
-									updateFn={value => setData('joined_at', value)}
-									max={DateTime.now().toISODate()}
-								/>
-								{errors.joined_at && <Error>{errors.joined_at}</Error>}
-							</div>
-
-							<fieldset className="mt-6 sm:col-span-6">
-								<legend className="text-base font-medium text-gray-900">Roles</legend>
-								<CheckboxGroup
-									name={'user_roles'}
-									options={roles}
-									value={data.user_roles}
-									updateFn={value => setData('user_roles', value)}
-								/>
-								{errors.user_roles && <Error>{errors.user_roles}</Error>}
-							</fieldset>
-						</FormSection>
-					)}
+					<FormSection title="Roles" description="Assign roles to this singer.">
+						<fieldset className="sm:col-span-6">
+							<CheckboxGroup
+								name={'user_roles'}
+								options={roles}
+								value={data.user_roles}
+								updateFn={value => setData('user_roles', value)}
+							/>
+							{errors.user_roles && <Error>{errors.user_roles}</Error>}
+						</fieldset>
+					</FormSection>
 
 					<FormFooter>
 						<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
