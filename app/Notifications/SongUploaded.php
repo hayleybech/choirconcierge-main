@@ -33,7 +33,7 @@ class SongUploaded extends Notification
      */
     public function via($notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -62,7 +62,11 @@ class SongUploaded extends Notification
     public function toArray($notifiable): array
     {
         return [
-            //
+            'type' => 'song-uploaded',
+            'subject' => 'New Song: ' . $this->song->title,
+            'body' => $this->song->title,
+            'tenant_id' => tenant('id'),
+            'song_id' => $this->song->id,
         ];
     }
 }

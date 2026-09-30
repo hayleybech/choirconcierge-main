@@ -34,7 +34,7 @@ class EventCreated extends Notification
      */
     public function via($notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -77,7 +77,11 @@ class EventCreated extends Notification
     public function toArray($notifiable): array
     {
         return [
-            //
+            'type' => 'event-created',
+            'subject' => 'Event Created: ' . $this->event->title,
+            'body' => $this->event->title,
+            'tenant_id' => tenant('id'),
+            'event_id' => $this->event->id,
         ];
     }
 }

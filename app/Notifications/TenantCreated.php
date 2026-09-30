@@ -30,7 +30,7 @@ class TenantCreated extends Notification
      */
     public function via($notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -54,10 +54,14 @@ class TenantCreated extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray($notifiable): array
     {
         return [
-            //
+            'type' => 'tenant-created',
+            'subject' => 'New Client!',
+            'body' => 'A new organisation has been created for ' . $this->tenant->name . '.',
+            'tenant_id' => null,
+            'tenant_created_id' => $this->tenant->id,
         ];
     }
 }

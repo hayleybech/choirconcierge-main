@@ -34,7 +34,7 @@ class TaskCompleted extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return $notifiable->notify_channels;
     }
@@ -45,7 +45,7 @@ class TaskCompleted extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable)
+    public function toMail($notifiable): MailMessage
     {
         return (new MailMessage())
             ->from(tenant('mail_from_address'), tenant('mail_from_name'))
@@ -64,11 +64,13 @@ class TaskCompleted extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray($notifiable): array
     {
         return [
+            'type' => 'task-completed',
             'subject' => $this->subject,
             'body' => $this->body,
+            'tenant_id' => tenant('id'),
         ];
     }
 }

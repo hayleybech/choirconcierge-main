@@ -8,6 +8,7 @@ use App\Notifications\EventCreated;
 use App\Notifications\SongUpdated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use App\Models\MailLog;
@@ -104,5 +105,26 @@ class LogSentNotificationTest extends TestCase
         $this->assertDatabaseMissing('mail_logs', [
             'subject' => 'Test Subject',
         ]);
+    }
+
+    public function test_it_stores_database_notifications_for_users(): void
+    {
+        Mail::fake();
+
+        $user = $this->createUserWithRole('Events Team');
+        $event = Event::factory()->create();
+
+        $user->notify(new EventCreated($event));
+
+        $this->assertDatabaseHas('notifications', [
+            'type' => EventCreated::class,
+            'notifiable_type' => get_class($user),
+            'notifiable_id' => $user->getKey(),
+        ]);
+
+        $this->assertSame(
+            'Event Created: ' . $event->title,
+            $user->notifications()->latest()->first()->data['subject'],
+        );
     }
 }

@@ -34,7 +34,7 @@ class PollCreated extends Notification
      */
     public function via($notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -65,7 +65,11 @@ class PollCreated extends Notification
     public function toArray($notifiable): array
     {
         return [
-            //
+            'type' => 'poll-created',
+            'subject' => 'New Poll: ' . $this->poll->title,
+            'body' => $this->poll->title,
+            'tenant_id' => tenant('id'),
+            'poll_id' => $this->poll->id,
         ];
     }
 }

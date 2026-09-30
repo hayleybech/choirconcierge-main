@@ -56,6 +56,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         return array_merge(parent::share($request), [
+            'notifications' => fn () => $this->getNotifications(),
             'flash' => [
                 'message' => fn() => $request->session()->get('status'),
                 'success' => fn() => $request->session()->get('success', true),
@@ -129,6 +130,45 @@ class HandleInertiaRequests extends Middleware
             'navigation' => (new Navigation())->get(tenancy()->initialized ? tenant()->id : null),
             'userNavigation' => (new UserNavigation())->get(tenancy()->initialized ? tenant()->id : null),
         ]);
+    }
+
+    private function getNotifications(): array
+    {
+        $user = auth()->user();
+
+        if (! $user) {
+            return [
+                'items' => [],
+                'unread_count' => 0,
+            ];
+        }
+
+        $tenantId = tenancy()->initialized ? (string) tenant('id') : null;
+        $notifications = $user->notifications()
+            ->latest()
+            ->limit(50)
+            ->get()
+            ->filter(function ($notification) use ($tenantId): bool {
+                if ($tenantId === null) {
+                    return true;
+                }
+
+                return (string) ($notification->data['tenant_id'] ?? '') === $tenantId;
+            })
+            ->take(10)
+            ->values();
+
+        return [
+            'items' => $notifications->map(fn ($notification): array => [
+                'id' => $notification->id,
+                'type' => $notification->data['type'] ?? class_basename($notification->type),
+                'subject' => $notification->data['subject'] ?? 'Notification',
+                'body' => $notification->data['body'] ?? '',
+                'read_at' => $notification->read_at,
+                'created_at' => $notification->created_at,
+            ])->all(),
+            'unread_count' => $notifications->whereNull('read_at')->count(),
+        ];
     }
 
     private function getUserChoirs()
