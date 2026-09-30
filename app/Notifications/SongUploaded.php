@@ -14,15 +14,17 @@ class SongUploaded extends Notification
     use Queueable, LogsToMailLog;
 
     private Song $song;
+    private ?string $message;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Song $song)
+    public function __construct(Song $song, ?string $message = null)
     {
         $this->song = $song;
+        $this->message = $message;
     }
 
     /**
@@ -49,6 +51,7 @@ class SongUploaded extends Notification
             ->subject('New song: '.$this->song->title)
             ->markdown('emails.song_uploaded', [
                 'song' => $this->song,
+                'message' => $this->message,
                 'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->song->id, $notifiable)),
             ]);
     }
@@ -64,7 +67,8 @@ class SongUploaded extends Notification
         return [
             'type' => 'song-uploaded',
             'subject' => 'New Song: ' . $this->song->title,
-            'body' => $this->song->title,
+            'body' => $this->message,
+            'url' => the_tenant_route('songs.show', $this->song),
             'tenant_id' => tenant('id'),
             'song_id' => $this->song->id,
         ];

@@ -78,10 +78,10 @@ class SongController extends Controller
 
     public function store(SongRequest $request): RedirectResponse
     {
-        $song = Song::create($request->safe()->except('send_notification'));
+        $song = Song::create($request->safe()->except(['send_notification', 'notification_message']));
 
         if ($request->input('send_notification')) {
-            $notification = new SongUploaded($song);
+            $notification = new SongUploaded($song, $request->input('notification_message'));
             $recipients = Membership::active()->with('user')->get()->pluck('user');
             Notification::send($recipients, $notification);
             $notification->log($song->id, $recipients->first());
@@ -161,10 +161,10 @@ class SongController extends Controller
 
     public function update(SongRequest $request, Song $song): RedirectResponse
     {
-        $song->update($request->safe()->except('send_notification'));
+        $song->update($request->safe()->except(['send_notification', 'notification_message']));
 
         if ($request->input('send_notification')) {
-            $notification = new SongUpdated($song);
+            $notification = new SongUpdated($song, $request->input('notification_message'));
             $recipients = Membership::active()->with('user')->get()->pluck('user');
             Notification::send($recipients, $notification);
             $notification->log($song->id, $recipients->first());

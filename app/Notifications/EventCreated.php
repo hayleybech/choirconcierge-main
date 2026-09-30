@@ -15,15 +15,17 @@ class EventCreated extends Notification
     use Queueable, LogsToMailLog;
 
     private Event $event;
+    private ?string $message;
 
     /**
      * Create a new notification instance.
      *
      * @param Event $event
      */
-    public function __construct(Event $event)
+    public function __construct(Event $event, ?string $message = null)
     {
         $this->event = $event;
+        $this->message = $message;
     }
 
     /**
@@ -51,6 +53,7 @@ class EventCreated extends Notification
             ->with(['event' => $this->event])
             ->markdown('emails.event_created', [
                 'event' => $this->event,
+                'message' => $this->message,
                 'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->event->id, $notifiable)),
                 'view_url' => the_tenant_route('events.show', $this->event),
                 'going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
@@ -79,7 +82,8 @@ class EventCreated extends Notification
         return [
             'type' => 'event-created',
             'subject' => 'Event Created: ' . $this->event->title,
-            'body' => $this->event->title,
+            'body' => $this->message,
+            'url' => the_tenant_route('events.show', $this->event),
             'tenant_id' => tenant('id'),
             'event_id' => $this->event->id,
         ];

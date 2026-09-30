@@ -18,6 +18,7 @@ import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 import RichTextInput from "../../components/inputs/RichTextInput";
+import TextareaInput from "../../components/inputs/TextareaInput";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
 
@@ -35,6 +36,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
         description: event?.description ?? '',
         ensembles: event?.ensembles?.map(ensemble => ensemble.id) ?? [],
         send_notification: !event,
+        notification_message: '',
         is_repeating: event?.is_repeating ?? false,
         repeat_frequency_unit: event?.repeat_frequency_unit ?? null,
 
@@ -315,6 +317,10 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
                         onChange={e => setData('send_notification', e.target.checked)}
                         className="mr-8 mb-4"
                     />
+                    <div className="sm:col-span-6">
+                        <Label label="Message (optional)" forInput="notification_message" />
+                        <TextareaInput name="notification_message" value={data.notification_message} updateFn={value => setData('notification_message', value)} />
+                    </div>
                 </FormSection>
 
                 <FormFooter>

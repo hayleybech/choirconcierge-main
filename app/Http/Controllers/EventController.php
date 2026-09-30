@@ -62,14 +62,14 @@ class EventController extends Controller
 
     public function store(EventRequest $request): RedirectResponse
     {
-        $event = Event::create($request->safe()->except(['send_notification', 'ensembles']));
+        $event = Event::create($request->safe()->except(['send_notification', 'notification_message', 'ensembles']));
 
         if ($request->has('ensembles')) {
             $event->ensembles()->sync($request->input('ensembles'));
         }
 
         if ($request->input('send_notification')) {
-            $notification = new EventCreated($event);
+            $notification = new EventCreated($event, $request->input('notification_message'));
             $recipients = Membership::active()->with('user')->get()->pluck('user');
             Notification::send($recipients, $notification);
             $notification->log($event->id, $recipients->first());
@@ -150,7 +150,7 @@ class EventController extends Controller
             return back()->with(['status' => 'The server tried to edit a repeating event incorrectly.', 'success' => false]);
         }
 
-        $event->fill($request->safe()->except(['send_notification', 'ensembles']));
+        $event->fill($request->safe()->except(['send_notification', 'notification_message', 'ensembles']));
         $original = $event->getOriginal();
         $event->save();
 
@@ -163,7 +163,7 @@ class EventController extends Controller
         }
 
         if ($request->input('send_notification')) {
-            $notification = new EventUpdated($event, $original);
+            $notification = new EventUpdated($event, $original, $request->input('notification_message'));
             $recipients = Membership::active()->with('user')->get()->pluck('user');
             Notification::send($recipients, $notification);
             $notification->log($event->id, $recipients->first());

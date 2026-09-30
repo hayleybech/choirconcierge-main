@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import {Dialog, Popover, Transition} from '@headlessui/react';
-import {usePage} from '@inertiajs/react';
+import {router, usePage} from '@inertiajs/react';
 import Icon from './Icon';
 
 const NotificationItems = ({onClose}) => {
@@ -14,29 +14,52 @@ const NotificationItems = ({onClose}) => {
     return (
         <div className="divide-y divide-gray-100">
             {items.map(notification => (
-                <button
+                <div
                     key={notification.id}
                     type="button"
-                    onClick={onClose}
                     className={`block w-full px-4 py-3 text-left transition hover:bg-gray-50 ${notification.read_at ? 'bg-white' : 'bg-purple-50'}`}
                 >
-                    <div className="flex gap-3">
+                    <button type="button" onClick={() => {
+                        if (!notification.read_at && notification.url) {
+                            router.post(notification.read_url, {}, {onSuccess: onClose});
+                        } else if (notification.url) {
+                            router.visit(notification.url);
+                            onClose?.();
+                        }
+                    }} className="flex w-full gap-3 text-left">
                         <span className={`mt-1 h-2 w-2 shrink-0 rounded-full ${notification.read_at ? 'bg-gray-300' : 'bg-brand-purple'}`} />
                         <span className="min-w-0">
                             <span className="block text-sm font-semibold text-gray-900">{notification.subject}</span>
                             {notification.body && <span className="mt-1 block text-sm text-gray-600">{notification.body}</span>}
                             <span className="mt-1 block text-xs text-gray-400">{new Date(notification.created_at).toLocaleString()}</span>
                         </span>
+                    </button>
+                    <div className="mt-2 flex gap-2 pl-5 text-xs">
+                        <button type="button" onClick={() => router.patch(notification.toggle_url)} className="text-brand-purple hover:underline">
+                            Mark as {notification.read_at ? 'unread' : 'read'}
+                        </button>
                     </div>
-                </button>
+                </div>
             ))}
         </div>
     );
 };
 
-const NotificationsHeader = ({onClose}) => (
+const NotificationsHeader = ({onClose}) => {
+    const {notifications} = usePage().props;
+
+    return (
     <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-700">Notifications</h2>
+        <div className="flex items-center gap-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-700">Notifications</h2>
+            <div className="flex gap-1 text-xs">
+                {['unread', 'read'].map(filter => (
+                    <button key={filter} type="button" onClick={() => router.reload({data: {notification_filter: filter}, only: ['notifications']})} className={`rounded px-2 py-1 capitalize ${notifications?.filter === filter ? 'bg-brand-purple text-white' : 'text-gray-500 hover:bg-gray-100'}`}>
+                        {filter}
+                    </button>
+                ))}
+            </div>
+        </div>
         {onClose && (
             <button type="button" onClick={onClose} className="rounded-full p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
                 <span className="sr-only">Close notifications</span>
@@ -44,7 +67,8 @@ const NotificationsHeader = ({onClose}) => (
             </button>
         )}
     </div>
-);
+    );
+};
 
 const NotificationButton = React.forwardRef(({onClick, ...props}, ref) => {
     const {notifications} = usePage().props;

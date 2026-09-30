@@ -56,7 +56,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         return array_merge(parent::share($request), [
-            'notifications' => fn () => $this->getNotifications(),
+            'notifications' => fn () => $this->getNotifications($request),
             'flash' => [
                 'message' => fn() => $request->session()->get('status'),
                 'success' => fn() => $request->session()->get('success', true),
@@ -132,7 +132,7 @@ class HandleInertiaRequests extends Middleware
         ]);
     }
 
-    private function getNotifications(): array
+    private function getNotifications(Request $request): array
     {
         $user = auth()->user();
 
@@ -144,8 +144,11 @@ class HandleInertiaRequests extends Middleware
         }
 
         $tenantId = tenancy()->initialized ? (string) tenant('id') : null;
+        $filter = $request->string('notification_filter', 'unread')->toString();
         $notifications = $user->notifications()
             ->latest()
+            ->when($filter === 'read', fn ($query) => $query->whereNotNull('read_at'))
+            ->when($filter !== 'read', fn ($query) => $query->whereNull('read_at'))
             ->limit(50)
             ->get()
             ->filter(function ($notification) use ($tenantId): bool {
@@ -164,10 +167,14 @@ class HandleInertiaRequests extends Middleware
                 'type' => $notification->data['type'] ?? class_basename($notification->type),
                 'subject' => $notification->data['subject'] ?? 'Notification',
                 'body' => $notification->data['body'] ?? '',
+                'url' => $notification->data['url'] ?? null,
+                'read_url' => tenancy()->initialized ? route('notifications.read', ['tenant' => tenant('id'), 'notification' => $notification->id]) : null,
+                'toggle_url' => tenancy()->initialized ? route('notifications.update', ['tenant' => tenant('id'), 'notification' => $notification->id]) : null,
                 'read_at' => $notification->read_at,
                 'created_at' => $notification->created_at,
             ])->all(),
-            'unread_count' => $notifications->whereNull('read_at')->count(),
+            'unread_count' => $user->notifications()->whereNull('read_at')->count(),
+            'filter' => $filter === 'read' ? 'read' : 'unread',
         ];
     }
 

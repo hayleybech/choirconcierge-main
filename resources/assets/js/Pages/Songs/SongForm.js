@@ -15,6 +15,7 @@ import FormFooter from '../../components/FormFooter';
 import CheckboxWithLabel from '../../components/inputs/CheckboxWithLabel';
 import SongStatus from '../../SongStatus';
 import RichTextInput from '../../components/inputs/RichTextInput';
+import TextareaInput from '../../components/inputs/TextareaInput';
 import FormWrapper from '../../components/FormWrapper';
 import useRoute from '../../hooks/useRoute';
 
@@ -30,6 +31,7 @@ const SongForm = ({ categories, statuses, pitches, song, ensembles }) => {
 		pitch_blown: song?.pitch_blown ?? 0,
 		show_for_prospects: song?.show_for_prospects ?? false,
 		send_notification: !song,
+		notification_message: '',
 	});
 
 	function submit(e) {
@@ -139,6 +141,10 @@ const SongForm = ({ categories, statuses, pitches, song, ensembles }) => {
 						onChange={e => setData('send_notification', e.target.checked)}
 						className="mr-8 mb-4"
 					/>
+					<div className="sm:col-span-6">
+						<Label label="Message (optional)" forInput="notification_message" />
+						<TextareaInput name="notification_message" value={data.notification_message} updateFn={value => setData('notification_message', value)} />
+					</div>
 				</FormSection>
 
 				<FormFooter>

@@ -81,7 +81,7 @@ class PollController extends Controller
 
     public function store(PollRequest $request): RedirectResponse
     {
-        $poll = Poll::create($request->safe()->except(['options', 'send_notification', 'ensemble_ids']));
+        $poll = Poll::create($request->safe()->except(['options', 'send_notification', 'notification_message', 'ensemble_ids']));
 
         $options = collect($request->input('options', []))
             ->map(fn ($label) => ['label' => $label]);
@@ -98,7 +98,7 @@ class PollController extends Controller
                 });
             }
 
-            $notification = new PollCreated($poll);
+            $notification = new PollCreated($poll, $request->input('notification_message'));
             $recipients = $members->get()->pluck('user');
             Notification::send($recipients, $notification);
             $notification->log($poll->id, $recipients->first());

@@ -56,6 +56,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\VoicePartController;
 use App\Http\Controllers\PollController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Middleware\BlockMemberAccessWhenNoActiveSubscription;
 use App\Http\Middleware\EnsureUserIsMember;
 use App\Http\Middleware\NoRobots;
@@ -104,6 +105,10 @@ Route::middleware([
         BlockMemberAccessWhenNoActiveSubscription::class,
 
     ])->group(function() {
+        Route::middleware('auth')->group(function () {
+            Route::patch('/notifications/{notification}', [NotificationController::class, 'update'])->name('notifications.update');
+            Route::post('/notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
+        });
         // Tenant asset - path version as path tenancy isn't supported by the library
         Route::get('/tenancy/assets/{path?}', [TenantAssetsController::class, 'asset'])
             ->where('path', '(.*)')

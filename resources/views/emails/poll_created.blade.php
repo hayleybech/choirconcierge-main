@@ -3,6 +3,8 @@
 # New poll posted!
 ## {{ $poll->title }}
 
+@if($message){{ $message }}@endif
+
 A new poll has been created. Please take a moment to cast your vote.
 
  @if($poll->description)
