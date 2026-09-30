@@ -6,6 +6,7 @@ use App\Http\Requests\EnsembleRequest;
 use App\Models\Ensemble;
 use App\Models\Tenant;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class EnsembleController extends Controller
 {
@@ -33,6 +34,17 @@ class EnsembleController extends Controller
 		    $ensemble->updateLogo($request->file('logo'), $request->file('logo')->hashName());
 	    }
 
-	    return redirect()->back()->with(['status' => 'Ensemble saved.']);
+        return redirect()->back()->with(['status' => 'Ensemble saved.']);
+    }
+
+    public function destroy(Request $request, Tenant $organisation, Ensemble $ensemble): RedirectResponse
+    {
+        $request->validate([
+            'confirmation' => ['required', 'in:DELETE'],
+        ]);
+
+        $ensemble->delete();
+
+        return redirect()->back()->with(['status' => 'Ensemble deleted.']);
     }
 }

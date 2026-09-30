@@ -25,10 +25,16 @@ import useRoute from '../../hooks/useRoute';
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import Icon from '../../components/Icon';
 import RadioGroup from '../../components/inputs/RadioGroup';
+import Select from '../../components/inputs/Select';
 import SingerStatus from '../../SingerStatus';
+import VoicePartTag, { voicePartTextColourClasses } from '../../components/VoicePartTag';
+import Dialog from '../../components/Dialog';
 
-const Create = ({ voice_parts, roles, statuses, setSidebarOpen }) => {
+const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => {
 	const { route } = useRoute();
+	const [isEnrolmentDialogOpen, setIsEnrolmentDialogOpen] = React.useState(false);
+	const [selectedEnsemble, setSelectedEnsemble] = React.useState(ensembles[0]?.id ?? null);
+	const [selectedVoicePart, setSelectedVoicePart] = React.useState(null);
 
 	const { data, setData, post, processing, errors } = useForm({
 		create: true,
@@ -40,7 +46,9 @@ const Create = ({ voice_parts, roles, statuses, setSidebarOpen }) => {
 		password: '',
 		password_confirmation: '',
 
-		voice_part_id: 0,
+		voice_part_id: null,
+		ensemble_ids: [],
+		enrolments: [],
 		reason_for_joining: '',
 		referrer: '',
 		membership_details: '',
@@ -77,6 +85,22 @@ const Create = ({ voice_parts, roles, statuses, setSidebarOpen }) => {
 			user_id: value,
 			email: null,
 		});
+	}
+
+	function addEnrolment() {
+		if (!selectedEnsemble || data.enrolments.some(enrolment => enrolment.ensemble_id === selectedEnsemble)) return;
+		const enrolments = [...data.enrolments, { ensemble_id: selectedEnsemble, voice_part_id: selectedVoicePart }];
+		setData({ ...data, ensemble_ids: enrolments.map(enrolment => enrolment.ensemble_id), enrolments });
+		setIsEnrolmentDialogOpen(false);
+		setSelectedEnsemble(
+			ensembles.find(ensemble => !enrolments.some(enrolment => enrolment.ensemble_id === ensemble.id))?.id ?? null
+		);
+		setSelectedVoicePart(null);
+	}
+
+	function removeEnrolment(ensembleId) {
+		const enrolments = data.enrolments.filter(enrolment => enrolment.ensemble_id !== ensembleId);
+		setData({ ...data, ensemble_ids: enrolments.map(enrolment => enrolment.ensemble_id), enrolments });
 	}
 
 	const breadcrumbs = [
@@ -171,12 +195,6 @@ const Create = ({ voice_parts, roles, statuses, setSidebarOpen }) => {
 						title="Singer Details"
 						description="Start adding information about the singer's membership."
 					>
-						{/*<div className="sm:col-span-6">*/}
-						{/*    <Label label="Voice part" forInput="voice_part_id" />*/}
-						{/*    <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />*/}
-						{/*    {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}*/}
-						{/*</div>*/}
-
 						<div className="sm:col-span-6">
 							<RadioGroup
 								label={<Label label="Member status" />}
@@ -192,6 +210,88 @@ const Create = ({ voice_parts, roles, statuses, setSidebarOpen }) => {
 							{errors.status && <Error>{errors.status}</Error>}
 						</div>
 
+						{ensembles.length === 1 && (
+							<div className="sm:col-span-6">
+								<RadioGroup
+									label={<Label label="Voice part" />}
+									options={voice_parts.map(part => ({
+										id: part.id,
+ 									name: part.title,
+ 									textColour: voicePartTextColourClasses[part.colour] ?? voicePartTextColourClasses.gray,
+ 									icon: 'circle',
+									}))}
+									selected={data.voice_part_id}
+									setSelected={value => setData('voice_part_id', value)}
+								/>
+								{errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
+							</div>
+						)}
+
+						{ensembles.length > 1 && (
+							<div className="sm:col-span-6">
+								<Label label="Ensembles" />
+								<table className="w-full divide-y divide-gray-200 rounded-md border border-gray-200">
+									<thead className="bg-gray-50">
+										<tr>
+											<th className="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500">
+												Ensemble
+											</th>
+											<th className="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500">
+												Voice part
+											</th>
+											<th className="px-3 py-2">
+												<span className="sr-only">Delete</span>
+											</th>
+										</tr>
+									</thead>
+									<tbody className="divide-y divide-gray-200 bg-white">
+										{data.enrolments.map(enrolment => {
+											const ensemble = ensembles.find(item => item.id === enrolment.ensemble_id);
+											const voicePart = voice_parts.find(
+												item => item.id === enrolment.voice_part_id
+											);
+											return (
+												<tr key={enrolment.ensemble_id}>
+													<td className="px-3 py-3 text-sm text-gray-700">
+														{ensemble?.name}
+													</td>
+													<td className="px-3 py-3">
+														{voicePart && (
+															<VoicePartTag
+																title={voicePart.title}
+																colour={voicePart.colour}
+															/>
+														)}
+													</td>
+													<td className="px-3 py-3 text-right">
+														<Button
+															variant="danger-outline"
+															size="xs"
+															onClick={() => removeEnrolment(enrolment.ensemble_id)}
+														>
+															<Icon icon="trash" />
+														</Button>
+													</td>
+												</tr>
+											);
+										})}
+										<tr>
+											<td colSpan="3" className="bg-gray-50 px-3 py-2">
+												<Button
+													variant="primary"
+													size="sm"
+													type="button"
+													onClick={() => setIsEnrolmentDialogOpen(true)}
+												>
+													<Icon icon="plus" /> Add
+												</Button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								{errors.enrolments && <Error>{errors.enrolments}</Error>}
+							</div>
+						)}
 						<div className="sm:col-span-6">
 							<Label label="Why are you joining?" forInput="reason_for_joining" />
 							<TextInput
@@ -255,6 +355,41 @@ const Create = ({ voice_parts, roles, statuses, setSidebarOpen }) => {
 					</FormFooter>
 				</Form>
 			</FormWrapper>
+			<Dialog
+				title="Create Enrolment"
+				okLabel="Add"
+				okVariant="primary"
+				onOk={addEnrolment}
+				isOpen={isEnrolmentDialogOpen}
+				setIsOpen={setIsEnrolmentDialogOpen}
+			>
+				<p className="mb-2">Enrol the singer in an ensemble and assign a voice part.</p>
+				<div className="mb-2">
+					<Label label="Ensemble" forInput="ensemble_id" />
+					<Select
+						name="ensemble_id"
+						options={ensembles
+							.filter(
+								ensemble => !data.enrolments.some(enrolment => enrolment.ensemble_id === ensemble.id)
+							)
+							.map(ensemble => ({ key: ensemble.id, label: ensemble.name }))}
+						value={selectedEnsemble}
+						updateFn={value => setSelectedEnsemble(value)}
+					/>
+				</div>
+				<RadioGroup
+					label="Select a voice part"
+					options={voice_parts.map(part => ({
+						id: part.id,
+						name: part.title,
+						textColour: voicePartTextColourClasses[part.colour] ?? voicePartTextColourClasses.gray,
+						icon: 'circle',
+					}))}
+					selected={selectedVoicePart}
+					setSelected={setSelectedVoicePart}
+					vertical
+				/>
+			</Dialog>
 		</>
 	);
 };

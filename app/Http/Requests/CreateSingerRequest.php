@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\UserUniqueForOrganisation;
 use App\Enums\SingerStatus;
+use App\Models\Ensemble;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -65,6 +66,15 @@ class CreateSingerRequest extends FormRequest
             'onboarding_enabled' => ['boolean'],
             'status' => ['required', Rule::enum(SingerStatus::class)],
             'user_roles' => ['array', 'exists:roles,id'],
+            'voice_part_id' => ['nullable', 'numeric', 'exists:voice_parts,id'],
+            'ensemble_ids' => [
+                'array',
+                Rule::when(Ensemble::count() > 1, ['required', 'min:1']),
+            ],
+            'ensemble_ids.*' => ['numeric', 'exists:ensembles,id'],
+            'enrolments' => ['array'],
+            'enrolments.*.ensemble_id' => ['required', 'numeric', 'exists:ensembles,id'],
+            'enrolments.*.voice_part_id' => ['nullable', 'numeric', 'exists:voice_parts,id'],
         ]);
     }
 }

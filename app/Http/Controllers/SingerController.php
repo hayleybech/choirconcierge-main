@@ -64,6 +64,7 @@ class SingerController extends Controller
     {
         return Inertia::render('Singers/Create', [
             'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
+            'ensembles' => Ensemble::forUser('singers_update')->get()->values(),
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
             'statuses' => array_map(fn($status) => [
                 'id' => $status->value,
@@ -88,10 +89,14 @@ class SingerController extends Controller
                 'membership_details',
                 'joined_at',
                 'user_roles',
+                'voice_part_id',
             ])
         );
 
         $singer->statuses()->create(['status' => $request->validated('status')]);
+        if (Ensemble::count() > 1) {
+            $singer->enrolments()->createMany($request->validated('enrolments', []));
+        }
         $singer->initOnboarding();
         $singer->save();
 

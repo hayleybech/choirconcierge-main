@@ -90,13 +90,13 @@ class Membership extends Model
         $singer->roles()->sync($singer_roles);
         $singer->save();
 
-        $singer->addDefaultEnrolment();
+        $singer->addDefaultEnrolment($attributes['voice_part_id'] ?? null);
 
         return $singer;
     }
 
     // Add default enrolment (if only one ensemble)
-    public function addDefaultEnrolment(): void
+    public function addDefaultEnrolment(?int $voicePartId = null): void
     {
         if (Ensemble::count() !== 1) {
             return;
@@ -104,6 +104,7 @@ class Membership extends Model
 
         $this->enrolments()->create([
             'ensemble_id' => Ensemble::first()->id,
+            'voice_part_id' => $voicePartId,
         ]);
     }
 
@@ -251,7 +252,7 @@ class Membership extends Model
     public function scopeMemberversaries(Builder $query): Builder
     {
         return $query
-                ->selectRaw('
+            ->selectRaw('
                     DATE_ADD(
                         joined_at,
                         INTERVAL IF(
@@ -261,10 +262,10 @@ class Membership extends Model
                         ) YEAR
                     ) AS upcoming_memberversary
                 ')
-                ->havingBetween('upcoming_memberversary', [
-                    DB::raw('CURDATE()'),
-                    DB::raw('DATE_ADD(CURDATE(), INTERVAL 30 DAY)')
-                ]);
+            ->havingBetween('upcoming_memberversary', [
+                DB::raw('CURDATE()'),
+                DB::raw('DATE_ADD(CURDATE(), INTERVAL 30 DAY)')
+            ]);
     }
 
     public function scopeActive(Builder $query): Builder
@@ -296,7 +297,7 @@ class Membership extends Model
             return $query;
         }
 
-        if (! auth()->user()?->membership) {
+        if (!auth()->user()?->membership) {
             return $query;
         }
 

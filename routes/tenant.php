@@ -278,7 +278,7 @@ Route::middleware([
             Route::post('/organisation', [TenantController::class, 'update'])->name('organisation.update');
 
             // Sub-groups aka Ensembles aka Choirs
-            Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);
+            Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update', 'destroy']);
         });
     });
 });
