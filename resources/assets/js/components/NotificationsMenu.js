@@ -54,6 +54,7 @@ const NotificationItems = ({ onClose }) => {
 							onClick={() => router.patch(notification.toggle_url)}
 							className="text-purple-500 hover:underline hover:cursor-pointer"
 						>
+							<Icon icon={notification.read_at ? 'envelope' : 'envelope-open'} type="regular" mr />
 							Mark as {notification.read_at ? 'unread' : 'read'}
 						</button>
 					</div>
@@ -68,36 +69,37 @@ const NotificationsHeader = ({ onClose }) => {
 
 	return (
 		<div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
-			<div className="flex items-center gap-3">
-				<h2 className="text-sm font-semibold uppercase tracking-wide text-gray-700">Notifications</h2>
-				<div className="flex gap-1 text-xs">
-					{['unread', 'read'].map(filter => (
-						<Button
+			<h2 className="text-sm font-semibold uppercase tracking-wide text-gray-700">Notifications</h2>
+			<div className="flex gap-2 text-xs">
+				{['unread', 'read'].map(filter =>
+					notifications?.filter === filter ? (
+						<span key={filter} className="capitalize text-gray-700">
+							{filter}
+						</span>
+					) : (
+						<button
 							key={filter}
 							type="button"
 							onClick={() =>
 								router.reload({ data: { notification_filter: filter }, only: ['notifications'] })
 							}
-							className="rounded capitalize"
-							variant={notifications?.filter === filter ? 'primary' : 'secondary'}
-							size="xs"
+							className="text-purple-500 hover:underline hover:cursor-pointer"
 						>
-							{filter}
-						</Button>
-					))}
-				</div>
+							<Icon icon={filter === 'unread' ? 'envelope' : 'envelope-open'} type="regular" mr />
+							<span className="capitalize">{filter}</span>
+						</button>
+					)
+				)}
 			</div>
 			{onClose && (
-				<Button
+				<button
 					type="button"
 					onClick={onClose}
-					variant="clear"
-					size="xs"
-					className="rounded-full p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+					className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
 				>
 					<span className="sr-only">Close notifications</span>
 					<Icon icon="times" />
-				</Button>
+				</button>
 			)}
 		</div>
 	);
