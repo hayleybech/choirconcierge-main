@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
     <!-- Styles -->
-    <link href="{{ global_asset('/css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
     <link href="{{ global_asset('/vendor/fontawesome-pro/css/all.min.css') }}" rel="stylesheet">
 	<link rel="shortcut icon" href="{{ global_asset( '/img/vibrant/favicon.png' ) }}">
 
