@@ -145,21 +145,14 @@ class HandleInertiaRequests extends Middleware
         }
 
         $tenantId = tenancy()->initialized ? (string) tenant('id') : null;
-        $filter = $request->string('notification_filter', 'unread')->toString();
+        $filter = $request->string('notification_filter', 'all')->toString();
+        $filter = $filter === 'unread' ? 'unread' : 'all';
         $notifications = $user->notifications()
             ->latest()
-            ->when($filter === 'read', fn ($query) => $query->whereNotNull('read_at'))
-            ->when($filter !== 'read', fn ($query) => $query->whereNull('read_at'))
+            ->when($tenantId !== null, fn ($query) => $query->where('data->tenant_id', $tenantId))
+            ->when($filter === 'unread', fn ($query) => $query->whereNull('read_at'))
             ->limit(50)
             ->get()
-            ->filter(function ($notification) use ($tenantId): bool {
-                if ($tenantId === null) {
-                    return true;
-                }
-
-                return (string) ($notification->data['tenant_id'] ?? '') === $tenantId;
-            })
-            ->take(10)
             ->values();
 
         $unreadCount = $user->notifications()
@@ -187,7 +180,7 @@ class HandleInertiaRequests extends Middleware
                 'created_at' => $notification->created_at,
             ])->all(),
             'unread_count' => $unreadCount,
-            'filter' => $filter === 'read' ? 'read' : 'unread',
+            'filter' => $filter,
             'read_all_url' => tenancy()->initialized ? route('notifications.read-all', ['tenant' => tenant('id')]) : null,
         ];
     }

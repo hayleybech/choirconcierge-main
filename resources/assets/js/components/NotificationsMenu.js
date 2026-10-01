@@ -19,62 +19,62 @@ const NotificationItems = ({ onClose }) => {
 					key={notification.id}
 					className={`group relative ${notification.read_at ? 'bg-white' : 'bg-purple-50'}`}
 				>
-					<a
-						href={notification.url ?? '#'}
-						onClick={event => {
-							if (!notification.url) {
-								event.preventDefault();
-								return;
-							}
-
-							if (!notification.read_at) {
-								event.preventDefault();
-								router.post(
-									notification.read_url,
-									{},
-									{
-										onSuccess: () => {
-											onClose?.();
-											router.visit(notification.url);
-										},
-									}
-								);
-							} else {
-								onClose?.();
-							}
-						}}
-						className="relative z-0 block px-4 pb-10 pt-3 text-left transition hover:bg-gray-50"
-					>
-						<div className="flex w-full gap-3">
-							<span
-								className={`mt-1 h-2 w-2 shrink-0 rounded-full ${
-									notification.read_at ? 'bg-gray-300' : 'bg-purple-500'
-								}`}
-							/>
-							<span className="min-w-0">
-								<span className="block text-sm font-semibold text-gray-900 group-hover:cursor-pointer">
-									{notification.subject}
-								</span>
-								{notification.body && (
-									<span className="mt-1 line-clamp-2 block text-sm text-gray-600 group-hover:cursor-pointer">
-										{notification.body}
-									</span>
-								)}
-								<span className="mt-1 block text-xs text-gray-400 group-hover:cursor-pointer">
-									{new Date(notification.created_at).toLocaleString()}
-								</span>
-							</span>
-						</div>
-					</a>
-					<div className="absolute inset-x-0 bottom-0 z-10 flex gap-2 px-4 pb-3 pl-9 text-xs">
+					<div className="flex w-full">
 						<button
 							type="button"
+							aria-label={`Mark as ${notification.read_at ? 'unread' : 'read'}`}
+							title={`Mark as ${notification.read_at ? 'unread' : 'read'}`}
 							onClick={() => router.patch(notification.toggle_url)}
-							className="text-purple-500 hover:underline hover:cursor-pointer"
+							className={`flex pl-3 pr-3 shrink-0 items-center justify-center self-stretch py-3 text-xs transition hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 ${
+								notification.read_at
+									? 'text-gray-400 hover:text-gray-600 bg-gray-100 hover:bg-gray-200'
+									: 'text-purple-500 hover:text-purple-700 bg-purple-100 hover:bg-purple-200'
+							}`}
 						>
-							<Icon icon={notification.read_at ? 'envelope' : 'envelope-open'} type="regular" mr />
-							Mark as {notification.read_at ? 'unread' : 'read'}
+							<Icon icon={notification.read_at ? 'envelope' : 'envelope-open'} type="regular" />
 						</button>
+						<a
+							href={notification.url ?? '#'}
+							onClick={event => {
+								if (!notification.url) {
+									event.preventDefault();
+									return;
+								}
+
+								if (!notification.read_at) {
+									event.preventDefault();
+									router.post(
+										notification.read_url,
+										{},
+										{
+											onSuccess: () => {
+												onClose?.();
+												router.visit(notification.url);
+											},
+										}
+									);
+								} else {
+									onClose?.();
+								}
+							}}
+							className="block min-w-0 flex-1 px-4 py-3 text-left transition hover:bg-gray-50"
+						>
+							<div className="flex w-full">
+								<span className="min-w-0">
+									<span className="block text-sm font-semibold text-gray-900 group-hover:cursor-pointer">
+										{notification.subject}
+									</span>
+									{notification.body && (
+										<span className="mt-1 line-clamp-2 block text-sm text-gray-600 group-hover:cursor-pointer">
+											{notification.body}
+										</span>
+									)}
+									<span className="mt-1 block text-xs text-gray-400 group-hover:cursor-pointer">
+										{new Date(notification.created_at).toLocaleString()}
+									</span>
+								</span>
+							</div>
+						</a>
 					</div>
 				</div>
 			))}
@@ -113,7 +113,7 @@ const NotificationsHeader = ({ onClose }) => {
 				)}
 			</div>
 			<div className="flex gap-4 border-b border-gray-200 px-4 py-2 text-xs">
-				{['unread', 'read'].map(filter =>
+				{['all', 'unread'].map(filter =>
 					notifications?.filter === filter ? (
 						<span key={filter} className="capitalize text-gray-700">
 							{filter}
@@ -127,7 +127,7 @@ const NotificationsHeader = ({ onClose }) => {
 							}
 							className="text-purple-500 hover:underline hover:cursor-pointer"
 						>
-							<Icon icon={filter === 'unread' ? 'envelope' : 'envelope-open'} type="regular" mr />
+							<Icon icon={filter === 'unread' ? 'envelope' : 'inbox'} type="regular" mr />
 							<span className="capitalize">{filter}</span>
 						</button>
 					)
