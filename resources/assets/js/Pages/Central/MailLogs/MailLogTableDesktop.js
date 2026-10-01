@@ -6,22 +6,43 @@ import useRoute from "../../../hooks/useRoute";
 import Icon from '../../../components/Icon';
 import Pagination from '../../../components/Pagination';
 import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag';
+import TableHeadingSort from '../../../components/TableHeadingSort';
 
-const MailLogTableDesktop = ({ logs }) => {
+const MailLogTableDesktop = ({ logs, sortFilterForm }) => {
     const { route } = useRoute();
 
     return (
 		<Table pagination={<Pagination details={logs} />}>
 			<THead>
 				<tr>
-					<TableHeading>Subject</TableHeading>
-					<TableHeading>Tenant</TableHeading>
-					<TableHeading>From</TableHeading>
-					<TableHeading>To</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="subject">
+							Subject
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="tenant">
+							Tenant
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="from">
+							From
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="to">
+							To
+						</TableHeadingSort>
+					</TableHeading>
 					<TableHeading>Size</TableHeading>
 					<TableHeading>Opens</TableHeading>
 					<TableHeading>Status</TableHeading>
-					<TableHeading>Date Created</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="created_at">
+							Date Created
+						</TableHeadingSort>
+					</TableHeading>
 				</tr>
 			</THead>
 			<TBody>
@@ -52,8 +73,30 @@ const MailLogTableDesktop = ({ logs }) => {
 									<span className="text-gray-400 text-xs">—</span>
 								)}
 							</TableCell>
-							<TableCell>{log.from}</TableCell>
-							<TableCell>{log.to}</TableCell>
+							<TableCell>
+								{log.from_user ? (
+									<Link
+										href={route('central.users.show', { user: log.from_user })}
+										className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
+									>
+										{log.from}
+									</Link>
+								) : (
+									log.from
+								)}
+							</TableCell>
+							<TableCell>
+								{log.latest_event?.user_group ? (
+									<Link
+										href={route('central.tenants.show', { tenant: log.latest_event.user_group.tenant })}
+										className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
+									>
+										{log.latest_event.user_group.title}
+									</Link>
+								) : (
+									log.to
+								)}
+							</TableCell>
 							<TableCell className="whitespace-nowrap">
 								{log.size ? (
 									<span className="text-gray-500 text-xs">

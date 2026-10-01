@@ -1,11 +1,13 @@
 import React from 'react';
+import { Link } from '@inertiajs/react';
 import TableMobile, {TableMobileHeader, TableMobileLink} from "../../../components/TableMobile";
 import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import Pagination from '../../../components/Pagination';
 import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag';
+import Button from '../../../components/inputs/Button';
 
-const MailLogTableMobile = ({ logs }) => {
+const MailLogTableMobile = ({ logs, hasNonDefaultFilters, setShowFilters }) => {
     const { route } = useRoute();
     const bulkEdit = {
         isActiveMobile: false,
@@ -16,10 +18,20 @@ const MailLogTableMobile = ({ logs }) => {
 
     return (
         <div>
-            <TableMobileHeader bulkEdit={bulkEdit} />
+            <TableMobileHeader bulkEdit={bulkEdit}>
+                <Button
+                    variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
+                    size="xs"
+                    onClick={() => setShowFilters(prev => !prev)}
+                >
+                    <Icon icon="filter" mr />
+                    Filter/Sort
+                </Button>
+            </TableMobileHeader>
             <TableMobile pagination={<Pagination details={logs} />}>
             {logs.data.map((log) => {
 				const mailType = log.uid.split('-')[0];
+				const recipient = log.latest_event?.user_group;
 				return (
 					<li key={log.id} className="flex">
 						<TableMobileLink url={route('central.mail-logs.show', { mail_log: log })}>
@@ -29,6 +41,25 @@ const MailLogTableMobile = ({ logs }) => {
 										<div className="text-purple-600">
 											<Icon icon={mailTypeIcons[mailType] ?? 'question'} mr />
 											{log.subject}
+											{recipient && (
+												<span className="block text-xs text-gray-400">
+													To: {recipient.title}
+												</span>
+											)}
+											<span className="block text-xs text-gray-400">
+												From:{' '}
+												{log.from_user ? (
+													<Link
+														href={route('central.users.show', { user: log.from_user })}
+														className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
+														onClick={event => event.stopPropagation()}
+													>
+														{log.from}
+													</Link>
+												) : (
+													log.from
+												)}
+											</span>
 											{!!log.has_attachments && <Icon icon="paperclip" ml />}
 											{log.size > 0 && (
 												<span className="ml-2 text-xs text-gray-400">
