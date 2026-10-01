@@ -60,10 +60,10 @@ const RadioGroup = ({
 									mr
 									className={classNames(
 										'text-lg ml-3',
-										option.textColour ?? '',
-										option.colour ?? '',
-										checked && !option.colour && 'text-purple-700',
-										!checked && !option.colour && !option.textColour && 'text-gray-900',
+ 									option.textColour ?? '',
+ 									option.colour ?? '',
+ 									checked && !option.colour && !option.textColour && 'text-purple-700',
+ 									!checked && !option.colour && !option.textColour && 'text-gray-900',
 										(disabled || option.disabled) && 'opacity-50',
 										size === 'xs' ? 'text-base' : 'text-lg'
 									)}
