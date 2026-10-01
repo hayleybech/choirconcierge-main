@@ -15,13 +15,29 @@ const MailLogTableDesktop = ({ logs, showAdminDetails, sortFilterForm }) => {
 		<Table pagination={<Pagination details={logs} />}>
 			<THead>
 				<tr>
-					<TableHeading><TableHeadingSort form={sortFilterForm} sort="subject">Subject</TableHeadingSort></TableHeading>
-					<TableHeading><TableHeadingSort form={sortFilterForm} sort="from">From</TableHeadingSort></TableHeading>
-					<TableHeading><TableHeadingSort form={sortFilterForm} sort="to">To</TableHeadingSort></TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="subject">
+							Subject
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="from">
+							From
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="to">
+							To
+						</TableHeadingSort>
+					</TableHeading>
 					<TableHeading>Size</TableHeading>
 					{showAdminDetails && <TableHeading>Opens</TableHeading>}
 					{showAdminDetails && <TableHeading>Status</TableHeading>}
-					<TableHeading><TableHeadingSort form={sortFilterForm} sort="created_at">Date Created</TableHeadingSort></TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="created_at">
+							Date Created
+						</TableHeadingSort>
+					</TableHeading>
 				</tr>
 			</THead>
 			<TBody>
@@ -41,7 +57,22 @@ const MailLogTableDesktop = ({ logs, showAdminDetails, sortFilterForm }) => {
 									{!!log.has_attachments && <Icon icon="paperclip" ml />}
 								</Link>
 							</TableCell>
-							<TableCell>{log.from}</TableCell>
+							<TableCell>
+								{log.from_user ? (
+									<Link
+										href={
+											log.from_membership
+												? route('singers.show', { singer: log.from_membership })
+												: route('central.users.show', { user: log.from_user })
+										}
+										className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
+									>
+										{log.from}
+									</Link>
+								) : (
+									log.from
+								)}
+							</TableCell>
 							<TableCell>
 								{log.latest_event?.user_group ? (
 									<Link

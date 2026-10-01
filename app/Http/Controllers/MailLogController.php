@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MailLog;
+use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Arr;
@@ -36,15 +37,25 @@ class MailLogController extends Controller
             ->defaultSort('-created_at')
             ->allowedSorts(['subject', 'to', 'from', 'created_at']);
 
+        $logs = $query
+            ->with('latestEvent.user_group')
+            ->when($showAdminDetails, fn ($query) => $query->withCount('opens'))
+            ->paginate(50)
+            ->withQueryString();
+
+        $logs->getCollection()->transform(fn (MailLog $log): MailLog => $log->setAttribute(
+            'from_user',
+            $this->findUserFromSender($log->from),
+        )->setAttribute(
+            'from_membership',
+            tenancy()->initialized ? $log->from_user?->membership : null,
+        ));
+
         return Inertia::render('MailingLists/MailLogs/Index', [
             'mailingLists' => UserGroup::query()
                 ->orderBy('title')
                 ->get(),
-            'logs' => $query
-                ->with('latestEvent.user_group')
-                ->when($showAdminDetails, fn ($query) => $query->withCount('opens'))
-                ->paginate(50)
-                ->withQueryString(),
+            'logs' => $logs,
         ]);
     }
 
@@ -52,10 +63,14 @@ class MailLogController extends Controller
     {
         $showAdminDetails = $this->showAdminDetails();
 
-        return Inertia::render('MailingLists/MailLogs/Show', [
-            'log' => $showAdminDetails
+        $log = $showAdminDetails
                 ? $mail_log->load('events.user_group.tenant')->loadCount('opens')
-                : $mail_log->load('events.user_group'),
+                : $mail_log->load('events.user_group');
+        $log->setAttribute('from_user', $this->findUserFromSender($log->from));
+        $log->setAttribute('from_membership', tenancy()->initialized ? $log->from_user?->membership : null);
+
+        return Inertia::render('MailingLists/MailLogs/Show', [
+            'log' => $log,
         ]);
     }
 
@@ -63,6 +78,16 @@ class MailLogController extends Controller
     {
         return auth()->user()->can('createBroadcast', UserGroup::class)
             || auth()->user()->can('update', [UserGroup::class, null]);
+    }
+
+    private function findUserFromSender(string $sender): ?User
+    {
+        preg_match('/<([^>]+)>/', $sender, $matches);
+        $email = $matches[1] ?? trim($sender);
+
+        return User::query()
+            ->whereRaw('LOWER(email) = ?', [strtolower($email)])
+            ->first();
     }
 
     public static function queryLogsAdmin()

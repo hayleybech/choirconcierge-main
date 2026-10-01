@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@inertiajs/react';
 import TableMobile, { TableMobileHeader, TableMobileLink } from '../../../components/TableMobile';
 import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
@@ -45,6 +46,28 @@ const MailLogTableMobile = ({ logs, showAdminDetails, hasNonDefaultFilters, setS
 														To: {recipient.title}
 													</span>
 												)}
+												<span className="block text-xs text-gray-400">
+													From:{' '}
+													{log.from_user ? (
+														<Link
+															href={
+																log.from_membership
+																	? route('singers.show', {
+																			singer: log.from_membership,
+																	  })
+																	: route('central.users.show', {
+																			user: log.from_user,
+																	  })
+															}
+															className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
+															onClick={event => event.stopPropagation()}
+														>
+															{log.from}
+														</Link>
+													) : (
+														log.from
+													)}
+												</span>
 												{!!log.has_attachments && <Icon icon="paperclip" ml />}
 												{log.size > 0 && (
 													<span className="ml-2 text-xs text-gray-400">

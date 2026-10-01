@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@inertiajs/react';
 import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
@@ -53,7 +54,19 @@ const Show = ({ log, can, setSidebarOpen }) => {
 								<span className="font-medium">{log.opens_count}</span>
 							</span>
 						</div>}
-						<div>From: {log.from}</div>
+						<div>
+							From:{' '}
+								{log.from_user ? (
+									<Link
+										href={route(log.from_membership ? 'singers.show' : 'central.users.show', {
+											[log.from_membership ? 'singer' : 'user']: log.from_membership ?? log.from_user,
+										})}
+									className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
+								>
+									{log.from}
+								</Link>
+							) : log.from}
+						</div>
 						<div>
 							To:{' '}
 							{log.events?.find(event => event.user_group)?.user_group ? (
