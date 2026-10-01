@@ -25,7 +25,17 @@ const NotificationItems = ({ onClose }) => {
 							type="button"
 							aria-label={`Mark as ${notification.read_at ? 'unread' : 'read'}`}
 							title={`Mark as ${notification.read_at ? 'unread' : 'read'}`}
-							onClick={() => router.patch(route('notifications.update', notification.id))}
+							onClick={() =>
+								router.patch(
+									route('notifications.update', notification.id),
+									{},
+									{
+										only: ['notifications'],
+										preserveScroll: true,
+										preserveState: true,
+									}
+								)
+							}
 							className={`flex pl-3 pr-3 shrink-0 items-center justify-center self-stretch py-3 text-xs transition hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 ${
 								notification.read_at
 									? 'text-gray-400 hover:text-gray-600 bg-gray-100 hover:bg-gray-200'
@@ -48,6 +58,9 @@ const NotificationItems = ({ onClose }) => {
 										route('notifications.read', notification.id),
 										{},
 										{
+											only: ['notifications'],
+											preserveScroll: true,
+											preserveState: true,
 											onSuccess: () => {
 												onClose?.();
 												router.visit(notification.url);
@@ -102,7 +115,17 @@ const NotificationsHeader = ({ onClose }) => {
 					{notifications?.unread_count > 0 && (
 						<button
 							type="button"
-							onClick={() => router.post(route('notifications.read-all'))}
+							onClick={() =>
+								router.post(
+									route('notifications.read-all'),
+									{},
+									{
+										only: ['notifications'],
+										preserveScroll: true,
+										preserveState: true,
+									}
+								)
+							}
 							className="text-xs text-purple-500 hover:underline hover:cursor-pointer"
 						>
 							<Icon icon="envelope-open" type="regular" mr />
@@ -132,7 +155,12 @@ const NotificationsHeader = ({ onClose }) => {
 							key={filter}
 							type="button"
 							onClick={() =>
-								router.reload({ data: { notification_filter: filter }, only: ['notifications'] })
+								router.reload({
+									data: { notification_filter: filter },
+									only: ['notifications'],
+									preserveScroll: true,
+									preserveState: true,
+								})
 							}
 							className="text-purple-500 hover:underline hover:cursor-pointer"
 						>
