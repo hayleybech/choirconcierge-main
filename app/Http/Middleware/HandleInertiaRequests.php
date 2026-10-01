@@ -154,6 +154,15 @@ class HandleInertiaRequests extends Middleware
             ->limit(50)
             ->get()
             ->values();
+        $hasMultipleTenants = $user->memberships()
+            ->withoutTenancy()
+            ->distinct('tenant_id')
+            ->count('tenant_id') > 1;
+
+        $tenantNames = Tenant::query()
+            ->whereIn('id', $notifications->map(fn ($notification) => $notification->data['tenant_id'] ?? $notification->data['tenant_created_id'])->filter())
+            ->get()
+            ->mapWithKeys(fn (Tenant $tenant): array => [$tenant->id => $tenant->name]);
 
         $unreadCount = $user->notifications()
             ->whereNull('read_at')
@@ -171,6 +180,9 @@ class HandleInertiaRequests extends Middleware
             'items' => $notifications->map(fn ($notification): array => [
                 'id' => $notification->id,
                 'type' => $notification->data['type'] ?? class_basename($notification->type),
+                'tenant_name' => $hasMultipleTenants
+                    ? ($tenantNames[$notification->data['tenant_id'] ?? $notification->data['tenant_created_id'] ?? ''] ?? null)
+                    : null,
                 'subject' => $notification->data['subject'] ?? 'Notification',
                 'body' => $this->formatNotificationBody($notification->data['body'] ?? ''),
                 'url' => $notification->data['url'] ?? null,

@@ -62,6 +62,11 @@ const NotificationItems = ({ onClose }) => {
 						>
 							<div className="flex w-full">
 								<span className="min-w-0">
+									{notification.tenant_name && (
+										<span className="block text-xs font-medium text-purple-600 group-hover:cursor-pointer">
+											{notification.tenant_name}
+										</span>
+									)}
 									<span className="block text-sm font-semibold text-gray-900 group-hover:cursor-pointer">
 										{notification.subject}
 									</span>
