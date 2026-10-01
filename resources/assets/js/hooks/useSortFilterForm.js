@@ -8,7 +8,7 @@ const useSortFilterForm = (routeParams, filters, sorts, transforms = () => {}) =
 
     const { data, setData, get, transform } = useForm({
         sort: getSort(sorts.find(option => option.default)?.id),
-        sortDir: getSortDir(),
+        sortDir: getSortDir(sorts.find(option => option.default)?.defaultDirection),
         ...getFilters(filters),
     });
 
@@ -70,7 +70,7 @@ function getSort(defaultSort) {
         : defaultSort;
 }
 
-function getSortDir() {
+function getSortDir(defaultDirection = 'asc') {
     const params = new qs.parse(location.search);
-    return params.sort?.startsWith('-') ? 'desc' : 'asc';
+    return params.sort ? (params.sort.startsWith('-') ? 'desc' : 'asc') : defaultDirection;
 }

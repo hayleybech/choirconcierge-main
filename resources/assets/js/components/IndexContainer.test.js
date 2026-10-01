@@ -25,7 +25,7 @@ describe('IndexContainer', () => {
 		expect(screen.getByRole('dialog')).toBeTruthy();
 		expect(screen.getByText('Filter controls')).toBeTruthy();
 		expect(screen.getByText('Mobile table')).toBeTruthy();
-		expect(screen.getByRole('dialog').className).toContain('fixed inset-0');
+		expect(screen.getByRole('dialog').className).toContain('fixed inset-x-0 bottom-0 top-[47px]');
 		expect(screen.queryByText('Cancel')).toBeNull();
 	});
 

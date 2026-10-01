@@ -4,6 +4,7 @@ import axios from 'axios';
 import AsyncCreatableSelect from "react-select/async-creatable";
 import Icon from "../Icon";
 import useRoute from "../../hooks/useRoute";
+import reactSelectStyles from './reactSelectStyles';
 
 const GlobalUserSelect = ({ defaultValue, updateFn, multiple = false }) => {
     const { route } = useRoute();
@@ -25,6 +26,7 @@ const GlobalUserSelect = ({ defaultValue, updateFn, multiple = false }) => {
                 createOptionPosition="first"
                 isValidNewOption={(inputValue, value, options) => ! options.some((option) => option.email === inputValue)}
                 placeholder="Start typing..."
+                styles={reactSelectStyles}
             />
         </div>
     );
@@ -58,8 +60,8 @@ const MultiValueLabel = ({ data: { name, avatarUrl }, children, ...props }) => (
     </components.MultiValueLabel>
 );
 
-const Option = ({ data: { name, avatarUrl, email, label, value }, children, ...props}) => (
-    <components.Option {...props}>
+const Option = ({ data: { name, avatarUrl, email, label, value }, children, isSelected, ...props}) => (
+    <components.Option {...props} isSelected={isSelected}>
         <div className="flex items-center">
             {name
                 ? <img className="h-10 w-10 rounded-md inline-block" src={avatarUrl} alt={name}/>
@@ -70,8 +72,8 @@ const Option = ({ data: { name, avatarUrl, email, label, value }, children, ...p
                 )
             }
             <div className="ml-4 flex flex-col">
-                <span className="text-gray-700">{name ?? label}</span>
-                <span className="text-gray-500 text-sm">{email ?? value}</span>
+                <span className={isSelected ? 'text-white' : 'text-gray-700'}>{name ?? label}</span>
+                <span className={isSelected ? 'text-purple-100 text-sm' : 'text-gray-500 text-sm'}>{email ?? value}</span>
             </div>
         </div>
     </components.Option>

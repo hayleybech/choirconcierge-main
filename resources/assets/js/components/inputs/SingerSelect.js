@@ -4,6 +4,7 @@ import AsyncSelect from 'react-select/async';
 import axios from 'axios';
 import Badge from "../Badge";
 import useRoute from "../../hooks/useRoute";
+import reactSelectStyles from './reactSelectStyles';
 
 const SingerSelect = ({ defaultValue, updateFn, multiple = false }) => {
     const { route } = useRoute();
@@ -23,6 +24,7 @@ const SingerSelect = ({ defaultValue, updateFn, multiple = false }) => {
                 defaultValue={defaultValue}
                 onChange={option => multiple ? updateFn(option.map(item => item.value)) : updateFn(option.value)}
                 placeholder="Start typing..."
+                styles={reactSelectStyles}
             />
         </div>
     );
@@ -48,14 +50,14 @@ const MultiValueLabel = ({ data: { name, avatarUrl }, children, ...props }) => (
     </components.MultiValueLabel>
 );
 
-const Option = ({ data: { name, avatarUrl, email, roles }, children, ...props}) => (
-    <components.Option {...props}>
+const Option = ({ data: { name, avatarUrl, email, roles }, children, isSelected, ...props}) => (
+    <components.Option {...props} isSelected={isSelected}>
         <div className="flex items-center">
             <img className="h-10 w-10 rounded-md inline-block" src={avatarUrl} alt={name} />
             <div className="ml-4 flex flex-col">
                 <div className="flex flex-row items-center">
-                    <span className="text-gray-700">{name}</span>
-                    <span className="ml-2 text-gray-500 text-sm">({email})</span>
+                    <span className={isSelected ? 'text-white' : 'text-gray-700'}>{name}</span>
+                    <span className={`ml-2 ${isSelected ? 'text-purple-100' : 'text-gray-500'} text-sm`}>({email})</span>
                 </div>
                 {roles.length > 0 && (
                     <div className="space-x-1.5 space-y-1.5">

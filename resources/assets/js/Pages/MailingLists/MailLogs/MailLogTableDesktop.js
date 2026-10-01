@@ -6,21 +6,22 @@ import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag';
 import Pagination from '../../../components/Pagination';
+import TableHeadingSort from '../../../components/TableHeadingSort';
 
-const MailLogTableDesktop = ({ logs, showAdminDetails }) => {
+const MailLogTableDesktop = ({ logs, showAdminDetails, sortFilterForm }) => {
 	const { route } = useRoute();
 
 	return (
 		<Table pagination={<Pagination details={logs} />}>
 			<THead>
 				<tr>
-					<TableHeading>Subject</TableHeading>
-					<TableHeading>From</TableHeading>
-					<TableHeading>To</TableHeading>
+					<TableHeading><TableHeadingSort form={sortFilterForm} sort="subject">Subject</TableHeadingSort></TableHeading>
+					<TableHeading><TableHeadingSort form={sortFilterForm} sort="from">From</TableHeadingSort></TableHeading>
+					<TableHeading><TableHeadingSort form={sortFilterForm} sort="to">To</TableHeadingSort></TableHeading>
 					<TableHeading>Size</TableHeading>
 					{showAdminDetails && <TableHeading>Opens</TableHeading>}
 					{showAdminDetails && <TableHeading>Status</TableHeading>}
-					<TableHeading>Date Created</TableHeading>
+					<TableHeading><TableHeadingSort form={sortFilterForm} sort="created_at">Date Created</TableHeadingSort></TableHeading>
 				</tr>
 			</THead>
 			<TBody>

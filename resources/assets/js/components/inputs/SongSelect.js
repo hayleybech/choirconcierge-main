@@ -2,6 +2,7 @@ import React from 'react';
 import AsyncSelect from 'react-select/async';
 import axios from 'axios';
 import useRoute from "../../hooks/useRoute";
+import reactSelectStyles from './reactSelectStyles';
 
 const SongSelect = ({ defaultValue, updateFn, multiple = false }) => {
     const { route } = useRoute();
@@ -21,6 +22,7 @@ const SongSelect = ({ defaultValue, updateFn, multiple = false }) => {
                 onChange={option => multiple ? updateFn(option.map(item => item?.value)) : updateFn(option?.value)}
                 isClearable
                 placeholder="Start typing..."
+                styles={reactSelectStyles}
             />
         </div>
     );

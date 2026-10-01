@@ -1,6 +1,7 @@
 import Select from 'react-select';
 import React from 'react';
 import { countries } from 'countries-list';
+import reactSelectStyles from './reactSelectStyles';
 
 const countryOptions = Object.entries(countries).map(([code, country]) => ({
 	value: code,
@@ -14,6 +15,7 @@ const CountrySelect = ({ defaultValue, updateFn, ...rest }) => (
 		defaultValue={countryOptions.filter((country => country.value === defaultValue))}
 		onChange={option => updateFn(option.value)}
 		{...rest}
+		styles={reactSelectStyles}
 	/>
 );
 

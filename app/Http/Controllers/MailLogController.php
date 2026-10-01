@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\MailLog;
 use App\Models\UserGroup;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class MailLogController extends Controller
 {
@@ -18,17 +21,30 @@ class MailLogController extends Controller
     public function index(): Response
     {
         $showAdminDetails = $this->showAdminDetails();
+        $query = QueryBuilder::for($showAdminDetails ? self::queryLogsAdmin() : self::queryLogsAuthorisedForUser())
+            ->allowedFilters([
+                'subject',
+                AllowedFilter::callback('to', function ($query, $values): void {
+                    $query->where(function ($query) use ($values): void {
+                        foreach (Arr::wrap($values) as $value) {
+                            $query->orWhere('to', 'like', "%{$value}%");
+                        }
+                    });
+                }),
+                'from',
+            ])
+            ->defaultSort('-created_at')
+            ->allowedSorts(['subject', 'to', 'from', 'created_at']);
 
         return Inertia::render('MailingLists/MailLogs/Index', [
-            'logs' => (
-                $showAdminDetails
-            )
-                ? self::queryLogsAdmin()
-                    ->latest()
-                    ->with('latestEvent.user_group')
-                    ->withCount('opens')
-                    ->paginate(50)
-                : self::queryLogsAuthorisedForUser()->with('latestEvent.user_group')->latest()->paginate(50),
+            'mailingLists' => UserGroup::query()
+                ->orderBy('title')
+                ->get(),
+            'logs' => $query
+                ->with('latestEvent.user_group')
+                ->when($showAdminDetails, fn ($query) => $query->withCount('opens'))
+                ->paginate(50)
+                ->withQueryString(),
         ]);
     }
 

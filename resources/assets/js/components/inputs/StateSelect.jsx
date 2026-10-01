@@ -2,6 +2,7 @@ import Select from 'react-select';
 import React from 'react';
 
 import statesUsa from "states-us";
+import reactSelectStyles from './reactSelectStyles';
 
 const countryStateOptions = {
 	AU: [
@@ -45,6 +46,7 @@ const StateSelect = ({ country, defaultValue, updateFn, ...rest }) => {
 			onChange={option => updateFn(option.value)}
 			{...rest}
 			key={country}
+			styles={reactSelectStyles}
 		/>
 	);
 };

@@ -3,7 +3,7 @@ import { Dialog as BaseDialog, Transition } from '@headlessui/react';
 
 const FilterDialog = ({ isOpen, setIsOpen, children }) => (
 	<Transition.Root show={isOpen} as={Fragment}>
-		<BaseDialog as="div" className="fixed inset-0 z-20" onClose={setIsOpen}>
+		<BaseDialog as="div" className="fixed inset-x-0 bottom-0 top-[47px] z-20" onClose={setIsOpen}>
 			<Transition.Child
 				as={Fragment}
 				enter="ease-out duration-300"
@@ -13,7 +13,7 @@ const FilterDialog = ({ isOpen, setIsOpen, children }) => (
 				leaveFrom="opacity-100"
 				leaveTo="opacity-0"
 			>
-				<BaseDialog.Overlay className="fixed inset-0 bg-gray-500/75" />
+				<BaseDialog.Overlay className="fixed inset-x-0 bottom-0 top-[47px] bg-gray-500/75" />
 			</Transition.Child>
 
 			<Transition.Child
@@ -25,7 +25,7 @@ const FilterDialog = ({ isOpen, setIsOpen, children }) => (
 				leaveFrom="translate-x-0"
 				leaveTo="translate-x-full"
 			>
-				<div className="relative z-30 h-full min-h-screen w-full overflow-y-auto bg-white">
+				<div className="relative z-30 h-full w-full overflow-y-auto bg-white">
 					{children}
 				</div>
 			</Transition.Child>

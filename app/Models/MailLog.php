@@ -66,18 +66,10 @@ class MailLog extends Model
     public static function createFromMessage(Loggable $message) {
         $mailLog = self::create([
             'uid' => $message->getUid(),
-            'from' => Str::limit(collect($message->from)
-                ->map(fn($item) => $item['address'])
-                ->join(', '), 254),
-            'to' => Str::limit(collect($message->to)
-                ->map(fn($item) => $item['address'])
-                ->join(', '), 512),
-            'cc' => Str::limit(collect($message->cc)
-                ->map(fn($item) => $item['address'])
-                ->join(', '), 254),
-            'bcc' => Str::limit(collect($message->bcc)
-                ->map(fn($item) => $item['address'])
-                ->join(', '), 254),
+            'from' => Str::limit(self::formatRecipients($message->from), 254),
+            'to' => Str::limit(self::formatRecipients($message->to), 512),
+            'cc' => Str::limit(self::formatRecipients($message->cc), 254),
+            'bcc' => Str::limit(self::formatRecipients($message->bcc), 254),
             'subject' => Str::limit($message->subject, 128-3),
             'body' => $message->getContent(),
             'size' => $message->getSize(),
@@ -107,5 +99,17 @@ class MailLog extends Model
         }
 
         return $mailLog;
+    }
+
+    private static function formatRecipients(array $recipients): string
+    {
+        return collect($recipients)
+            ->map(function (array $recipient): string {
+                $address = $recipient['address'];
+                $name = $recipient['name'] ?? null;
+
+                return filled($name) ? $name.' <'.$address.'>' : $address;
+            })
+            ->join(', ');
     }
 }

@@ -164,6 +164,20 @@ it('logs the size of the broadcast', function () {
     ]);
 });
 
+it('keeps the mailing list name and address in the broadcast mail log', function () {
+    $user = $this->actingAsRole('Music Team');
+    $group = createGroup($user);
+
+    $this->post(the_tenant_route('communications.store'), [
+        'list' => $group->id,
+        'subject' => 'this is a test',
+        'body' => 'test body',
+    ])->assertRedirect(route('communications.index'));
+
+    expect(MailLog::firstWhere('subject', 'this is a test')->to)
+        ->toBe($group->title.' <'.$group->email.'>');
+});
+
 function createGroup(User $user): UserGroup
 {
     /** @var UserGroup $group */

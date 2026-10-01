@@ -4,8 +4,9 @@ import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import Pagination from '../../../components/Pagination';
 import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag';
+import Button from '../../../components/inputs/Button';
 
-const MailLogTableMobile = ({ logs, showAdminDetails }) => {
+const MailLogTableMobile = ({ logs, showAdminDetails, hasNonDefaultFilters, setShowFilters }) => {
 	const { route } = useRoute();
 	const bulkEdit = {
 		isActiveMobile: false,
@@ -16,7 +17,16 @@ const MailLogTableMobile = ({ logs, showAdminDetails }) => {
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit} />
+			<TableMobileHeader bulkEdit={bulkEdit}>
+				<Button
+					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
+					size="xs"
+					onClick={() => setShowFilters(prev => !prev)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={logs} />}>
 				{logs.data.map(log => {
 					const mailType = log.uid.split('-')[0];

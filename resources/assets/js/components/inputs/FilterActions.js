@@ -8,7 +8,7 @@ const FilterActions = ({ onSelectAll, onClear }) => {
 					<button
 						type="button"
 						onClick={onSelectAll}
-						className="text-xs text-purple-600 hover:text-purple-800 font-medium underline hover:no-underline"
+						className="text-xs text-purple-600 hover:text-purple-800 font-medium underline hover:no-underline cursor-pointer"
 					>
 						All
 					</button>
@@ -18,7 +18,7 @@ const FilterActions = ({ onSelectAll, onClear }) => {
 			<button
 				type="button"
 				onClick={onClear}
-				className="text-xs text-purple-600 hover:text-purple-800 font-medium underline hover:no-underline"
+				className="text-xs text-purple-600 hover:text-purple-800 font-medium underline hover:no-underline cursor-pointer"
 			>
 				Clear
 			</button>

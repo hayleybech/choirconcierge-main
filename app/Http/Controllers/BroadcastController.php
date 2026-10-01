@@ -54,7 +54,6 @@ class BroadcastController extends Controller
         );
 
         $mailLog = MailLog::createFromMessage($organisationBroadcast);
-        $mailLog->update(['to' => $group->title]);
 
         $mailLog->events()->createMany([
             [
