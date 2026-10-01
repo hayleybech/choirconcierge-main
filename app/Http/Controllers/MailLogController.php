@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class MailLogController extends Controller
@@ -35,7 +36,14 @@ class MailLogController extends Controller
                 'from',
             ])
             ->defaultSort('-created_at')
-            ->allowedSorts(['subject', 'to', 'from', 'created_at']);
+            ->allowedSorts([
+                'subject',
+                'to',
+                'from',
+                'size',
+                'created_at',
+                ...($showAdminDetails ? [AllowedSort::field('opens', 'opens_count')] : []),
+            ]);
 
         $logs = $query
             ->with('latestEvent.user_group')

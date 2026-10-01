@@ -27,6 +27,8 @@ const Index = ({ logs, tenants, setSidebarOpen }) => {
         { id: 'to', name: 'To' },
         { id: 'from', name: 'From' },
         { id: 'tenant', name: 'Tenant' },
+        { id: 'size', name: 'Size' },
+        { id: 'opens', name: 'Opens' },
         { id: 'created_at', name: 'Date Created', default: true, defaultDirection: 'desc' },
     ];
 

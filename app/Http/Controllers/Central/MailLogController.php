@@ -32,7 +32,9 @@ class MailLogController extends Controller
                 'subject',
                 'from',
                 'to',
+                'size',
                 'created_at',
+                AllowedSort::field('opens', 'opens_count'),
                 AllowedSort::callback('tenant', function (Builder $query, bool $descending): void {
                     $query->orderBy(
                         DB::table('mail_log_tenant')

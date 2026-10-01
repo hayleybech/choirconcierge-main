@@ -35,8 +35,16 @@ const MailLogTableDesktop = ({ logs, sortFilterForm }) => {
 							To
 						</TableHeadingSort>
 					</TableHeading>
-					<TableHeading>Size</TableHeading>
-					<TableHeading>Opens</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="size">
+							Size
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="opens">
+							Opens
+						</TableHeadingSort>
+					</TableHeading>
 					<TableHeading>Status</TableHeading>
 					<TableHeading>
 						<TableHeadingSort form={sortFilterForm} sort="created_at">

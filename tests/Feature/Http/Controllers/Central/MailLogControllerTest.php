@@ -52,6 +52,54 @@ it('filters and sorts central mail logs by tenant', function () {
         );
 });
 
+it('sorts central mail logs by size', function () {
+    $this->actingAs(getMailLogSuperAdmin());
+
+    $small = MailLog::factory()->create(['subject' => 'Small log', 'size' => 100]);
+    $large = MailLog::factory()->create(['subject' => 'Large log', 'size' => 10000]);
+
+    $this->get(route('central.mail-logs.index', [
+        'sort' => 'size',
+    ]))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('logs.data.0.id', $small->id)
+            ->where('logs.data.1.id', $large->id)
+        );
+
+    $this->get(route('central.mail-logs.index', [
+        'sort' => '-size',
+    ]))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('logs.data.0.id', $large->id)
+            ->where('logs.data.1.id', $small->id)
+        );
+});
+
+it('sorts central mail logs by opens', function () {
+    $this->actingAs(getMailLogSuperAdmin());
+
+    $fewOpens = MailLog::factory()->create(['subject' => 'Few opens']);
+    $fewOpens->events()->create(['status' => 'opened']);
+
+    $manyOpens = MailLog::factory()->create(['subject' => 'Many opens']);
+    $manyOpens->events()->createMany([
+        ['status' => 'opened'],
+        ['status' => 'opened'],
+        ['status' => 'opened'],
+    ]);
+
+    $this->get(route('central.mail-logs.index', [
+        'sort' => '-opens',
+    ]))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('logs.data.0.id', $manyOpens->id)
+            ->where('logs.data.1.id', $fewOpens->id)
+        );
+});
+
 it('passes the list of tenants for the filter options', function () {
     $this->actingAs(getMailLogSuperAdmin());
 

@@ -120,6 +120,67 @@ it('filters and sorts communications', function () {
         );
 });
 
+it('sorts communications by size', function () {
+    $user = $this->actingAsRole('User');
+    $group = UserGroup::factory()->create();
+    $group->recipient_users()->attach($user);
+
+    $small = MailLog::factory()->create(['subject' => 'Small log', 'size' => 100]);
+    $large = MailLog::factory()->create(['subject' => 'Large log', 'size' => 10000]);
+
+    foreach ([$small, $large] as $log) {
+        MailLogEvent::create([
+            'mail_log_id' => $log->id,
+            'user_group_id' => $group->id,
+            'status' => 'group-found',
+        ]);
+    }
+
+    $this->get(the_tenant_route('communications.index', [
+        'sort' => 'size',
+    ]))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('logs.data.0.id', $small->id)
+            ->where('logs.data.1.id', $large->id)
+        );
+});
+
+it('sorts communications by opens for admins', function () {
+    $user = $this->actingAsRole('Admin');
+    $group = UserGroup::factory()->create();
+    $group->recipient_users()->attach($user);
+
+    $fewOpens = MailLog::factory()->create(['subject' => 'Few opens']);
+    $fewOpens->tenants()->attach(tenant('id'));
+    $manyOpens = MailLog::factory()->create(['subject' => 'Many opens']);
+    $manyOpens->tenants()->attach(tenant('id'));
+
+    foreach ([$fewOpens, $manyOpens] as $log) {
+        MailLogEvent::create([
+            'mail_log_id' => $log->id,
+            'user_group_id' => $group->id,
+            'status' => 'group-found',
+        ]);
+    }
+
+    $fewOpens->events()->create(['status' => 'opened']);
+    $manyOpens->events()->createMany([
+        ['status' => 'opened'],
+        ['status' => 'opened'],
+        ['status' => 'opened'],
+    ]);
+
+    $this->get(the_tenant_route('communications.index', [
+        'sort' => '-opens',
+    ]))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('logs.data.0.id', $manyOpens->id)
+            ->where('logs.data.1.id', $fewOpens->id)
+        );
+});
+
 it('filters communications by mailing list address', function () {
     $user = $this->actingAsRole('User');
     $group = UserGroup::factory()->create();

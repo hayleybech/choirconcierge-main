@@ -26,6 +26,8 @@ const Index = ({ logs, mailingLists, can, setSidebarOpen }) => {
 		{ id: 'subject', name: 'Subject' },
 		{ id: 'to', name: 'To' },
 		{ id: 'from', name: 'From' },
+		{ id: 'size', name: 'Size' },
+		...(showAdminDetails ? [{ id: 'opens', name: 'Opens' }] : []),
 		{ id: 'created_at', name: 'Date Created', default: true, defaultDirection: 'desc' },
 	];
 	const filters = [
