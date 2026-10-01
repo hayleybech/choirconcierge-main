@@ -17,12 +17,10 @@ class TenantController extends Controller
     {
         $this->authorize('update', tenant());
 
-        $tenant = tenant()->loadMissing(['domains', 'billingUser']);
-        $tenant->load(['ensembles' => fn ($query) => $query->withCount('enrolments')]);
-        $tenant->append(['primary_domain', 'plan']);
-
         return Inertia::render('Tenants/Edit', [
-            'organisation' => $tenant,
+            'organisation' => tenant()->loadMissing(['domains', 'billingUser'])
+                ->load(['ensembles' => fn ($query) => $query->withCount('enrolments')])
+                ->append(['primary_domain', 'plan']),
             'centralDomain' => central_domain(),
             'timezones' => DateTimeZone::listIdentifiers(),
         ]);

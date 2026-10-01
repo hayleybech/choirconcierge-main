@@ -90,22 +90,7 @@ class Membership extends Model
         $singer->roles()->sync($singer_roles);
         $singer->save();
 
-        $singer->addDefaultEnrolment($attributes['voice_part_id'] ?? null);
-
         return $singer;
-    }
-
-    // Add default enrolment (if only one ensemble)
-    public function addDefaultEnrolment(?int $voicePartId = null): void
-    {
-        if (Ensemble::count() !== 1) {
-            return;
-        }
-
-        $this->enrolments()->create([
-            'ensemble_id' => Ensemble::first()->id,
-            'voice_part_id' => $voicePartId,
-        ]);
     }
 
     public function update(array $attributes = [], array $options = [])

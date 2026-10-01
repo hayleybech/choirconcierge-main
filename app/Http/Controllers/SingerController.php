@@ -89,14 +89,11 @@ class SingerController extends Controller
                 'membership_details',
                 'joined_at',
                 'user_roles',
-                'voice_part_id',
             ])
         );
 
         $singer->statuses()->create(['status' => $request->validated('status')]);
-        if (Ensemble::count() > 1) {
-            $singer->enrolments()->createMany($request->validated('enrolments', []));
-        }
+        $singer->enrolments()->createMany($request->enrolments());
         $singer->initOnboarding();
         $singer->save();
 

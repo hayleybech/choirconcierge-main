@@ -30,6 +30,34 @@ class CreateSingerRequest extends FormRequest
     }
 
     /**
+     * Default the enrolments to the single ensemble when none were submitted,
+     * now that the submitted data has passed validation.
+     */
+    public function passedValidation(): void
+    {
+        $enrolments = $this->validated('enrolments', []);
+
+        if (empty($enrolments) && Ensemble::count() === 1) {
+            $enrolments = [[
+                'ensemble_id' => Ensemble::first()->id,
+                'voice_part_id' => null,
+            ]];
+        }
+
+        $this->merge(['enrolments' => $enrolments]);
+    }
+
+    /**
+     * Get the enrolments that should be created for this singer.
+     *
+     * @return array<array{ensemble_id: int, voice_part_id: ?int}>
+     */
+    public function enrolments(): array
+    {
+        return $this->input('enrolments', []);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<array>
@@ -66,12 +94,6 @@ class CreateSingerRequest extends FormRequest
             'onboarding_enabled' => ['boolean'],
             'status' => ['required', Rule::enum(SingerStatus::class)],
             'user_roles' => ['array', 'exists:roles,id'],
-            'voice_part_id' => ['nullable', 'numeric', 'exists:voice_parts,id'],
-            'ensemble_ids' => [
-                'array',
-                Rule::when(Ensemble::count() > 1, ['required', 'min:1']),
-            ],
-            'ensemble_ids.*' => ['numeric', 'exists:ensembles,id'],
             'enrolments' => ['array'],
             'enrolments.*.ensemble_id' => ['required', 'numeric', 'exists:ensembles,id'],
             'enrolments.*.voice_part_id' => ['nullable', 'numeric', 'exists:voice_parts,id'],

@@ -33,8 +33,7 @@ import Dialog from '../../components/Dialog';
 const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [isEnrolmentDialogOpen, setIsEnrolmentDialogOpen] = React.useState(false);
-	const [selectedEnsemble, setSelectedEnsemble] = React.useState(ensembles[0]?.id ?? null);
-	const [selectedVoicePart, setSelectedVoicePart] = React.useState(null);
+	const [draftEnrolment, setDraftEnrolment] = React.useState({ ensemble_id: null, voice_part_id: null });
 
 	const { data, setData, post, processing, errors } = useForm({
 		create: true,
@@ -46,8 +45,6 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
 		password: '',
 		password_confirmation: '',
 
-		voice_part_id: null,
-		ensemble_ids: [],
 		enrolments: [],
 		reason_for_joining: '',
 		referrer: '',
@@ -87,20 +84,29 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
 		});
 	}
 
+	function setSingleVoicePart(voicePartId) {
+		const ensembleId = ensembles[0]?.id ?? null;
+		setData('enrolments', ensembleId ? [{ ensemble_id: ensembleId, voice_part_id: voicePartId }] : []);
+	}
+
+	function openEnrolmentDialog() {
+		setDraftEnrolment({ ensemble_id: null, voice_part_id: null });
+		setIsEnrolmentDialogOpen(true);
+	}
+
 	function addEnrolment() {
-		if (!selectedEnsemble || data.enrolments.some(enrolment => enrolment.ensemble_id === selectedEnsemble)) return;
-		const enrolments = [...data.enrolments, { ensemble_id: selectedEnsemble, voice_part_id: selectedVoicePart }];
-		setData({ ...data, ensemble_ids: enrolments.map(enrolment => enrolment.ensemble_id), enrolments });
+		if (
+			!draftEnrolment.ensemble_id ||
+			data.enrolments.some(enrolment => enrolment.ensemble_id === draftEnrolment.ensemble_id)
+		) {
+			return;
+		}
+		setData('enrolments', [...data.enrolments, draftEnrolment]);
 		setIsEnrolmentDialogOpen(false);
-		setSelectedEnsemble(
-			ensembles.find(ensemble => !enrolments.some(enrolment => enrolment.ensemble_id === ensemble.id))?.id ?? null
-		);
-		setSelectedVoicePart(null);
 	}
 
 	function removeEnrolment(ensembleId) {
-		const enrolments = data.enrolments.filter(enrolment => enrolment.ensemble_id !== ensembleId);
-		setData({ ...data, ensemble_ids: enrolments.map(enrolment => enrolment.ensemble_id), enrolments });
+		setData('enrolments', data.enrolments.filter(enrolment => enrolment.ensemble_id !== ensembleId));
 	}
 
 	const breadcrumbs = [
@@ -220,8 +226,8 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
  									textColour: voicePartTextColourClasses[part.colour] ?? voicePartTextColourClasses.gray,
  									icon: 'circle',
 									}))}
-									selected={data.voice_part_id}
-									setSelected={value => setData('voice_part_id', value)}
+									selected={data.enrolments[0]?.voice_part_id ?? null}
+									setSelected={setSingleVoicePart}
 								/>
 								{errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
 							</div>
@@ -281,7 +287,7 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
 													variant="primary"
 													size="sm"
 													type="button"
-													onClick={() => setIsEnrolmentDialogOpen(true)}
+													onClick={openEnrolmentDialog}
 												>
 													<Icon icon="plus" /> Add
 												</Button>
@@ -373,8 +379,8 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
 								ensemble => !data.enrolments.some(enrolment => enrolment.ensemble_id === ensemble.id)
 							)
 							.map(ensemble => ({ key: ensemble.id, label: ensemble.name }))}
-						value={selectedEnsemble}
-						updateFn={value => setSelectedEnsemble(value)}
+						value={draftEnrolment.ensemble_id}
+						updateFn={value => setDraftEnrolment({ ...draftEnrolment, ensemble_id: value })}
 					/>
 				</div>
 				<RadioGroup
@@ -385,8 +391,8 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
 						textColour: voicePartTextColourClasses[part.colour] ?? voicePartTextColourClasses.gray,
 						icon: 'circle',
 					}))}
-					selected={selectedVoicePart}
-					setSelected={setSelectedVoicePart}
+					selected={draftEnrolment.voice_part_id}
+					setSelected={value => setDraftEnrolment({ ...draftEnrolment, voice_part_id: value })}
 					vertical
 				/>
 			</Dialog>
