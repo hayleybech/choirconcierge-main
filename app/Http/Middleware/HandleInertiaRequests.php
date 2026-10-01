@@ -188,6 +188,7 @@ class HandleInertiaRequests extends Middleware
             ])->all(),
             'unread_count' => $unreadCount,
             'filter' => $filter === 'read' ? 'read' : 'unread',
+            'read_all_url' => tenancy()->initialized ? route('notifications.read-all', ['tenant' => tenant('id')]) : null,
         ];
     }
 

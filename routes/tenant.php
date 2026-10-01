@@ -109,6 +109,7 @@ Route::middleware([
         Route::middleware('auth')->group(function () {
             Route::patch('/notifications/{notification}', [NotificationController::class, 'update'])->name('notifications.update');
             Route::post('/notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
+            Route::post('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
         });
         // Tenant asset - path version as path tenancy isn't supported by the library
         Route::get('/tenancy/assets/{path?}', [TenantAssetsController::class, 'asset'])

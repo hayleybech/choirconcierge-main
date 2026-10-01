@@ -26,4 +26,21 @@ class NotificationController extends Controller
 
         return redirect($notification->data['url'] ?? route('dash'));
     }
+
+    public function readAll(): RedirectResponse
+    {
+        $tenantId = tenancy()->initialized ? (string) tenant('id') : null;
+
+        auth()->user()->notifications()
+            ->whereNull('read_at')
+            ->get()
+            ->filter(function (DatabaseNotification $notification) use ($tenantId): bool {
+                return $tenantId === null
+                    || (string) ($notification->data['tenant_id'] ?? '') === $tenantId;
+            })
+            ->each
+            ->markAsRead();
+
+        return back();
+    }
 }
