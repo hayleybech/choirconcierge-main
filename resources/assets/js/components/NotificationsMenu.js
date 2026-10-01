@@ -17,38 +17,56 @@ const NotificationItems = ({ onClose }) => {
 			{items.map(notification => (
 				<div
 					key={notification.id}
-					className={`group block w-full px-4 py-3 text-left transition hover:bg-gray-50 ${
-						notification.read_at ? 'bg-white' : 'bg-purple-50'
-					}`}
+					className={`group relative ${notification.read_at ? 'bg-white' : 'bg-purple-50'}`}
 				>
-					<button
-						type="button"
-						onClick={() => {
-							if (!notification.read_at && notification.url) {
-								router.post(notification.read_url, {}, { onSuccess: onClose });
-							} else if (notification.url) {
-								router.visit(notification.url);
+					<a
+						href={notification.url ?? '#'}
+						onClick={event => {
+							if (!notification.url) {
+								event.preventDefault();
+								return;
+							}
+
+							if (!notification.read_at) {
+								event.preventDefault();
+								router.post(
+									notification.read_url,
+									{},
+									{
+										onSuccess: () => {
+											onClose?.();
+											router.visit(notification.url);
+										},
+									}
+								);
+							} else {
 								onClose?.();
 							}
 						}}
-						className="flex w-full gap-3 text-left"
+						className="relative z-0 block px-4 pb-10 pt-3 text-left transition hover:bg-gray-50"
 					>
-						<span
-							className={`mt-1 h-2 w-2 shrink-0 rounded-full ${
-								notification.read_at ? 'bg-gray-300' : 'bg-purple-500'
-							}`}
-						/>
-						<span className="min-w-0">
-							<span className="block text-sm font-semibold text-gray-900 group-hover:cursor-pointer">{notification.subject}</span>
-							{notification.body && (
-								<span className="mt-1 line-clamp-2 block text-sm text-gray-600 group-hover:cursor-pointer">{notification.body}</span>
-							)}
-							<span className="mt-1 block text-xs text-gray-400 group-hover:cursor-pointer">
-								{new Date(notification.created_at).toLocaleString()}
+						<div className="flex w-full gap-3">
+							<span
+								className={`mt-1 h-2 w-2 shrink-0 rounded-full ${
+									notification.read_at ? 'bg-gray-300' : 'bg-purple-500'
+								}`}
+							/>
+							<span className="min-w-0">
+								<span className="block text-sm font-semibold text-gray-900 group-hover:cursor-pointer">
+									{notification.subject}
+								</span>
+								{notification.body && (
+									<span className="mt-1 line-clamp-2 block text-sm text-gray-600 group-hover:cursor-pointer">
+										{notification.body}
+									</span>
+								)}
+								<span className="mt-1 block text-xs text-gray-400 group-hover:cursor-pointer">
+									{new Date(notification.created_at).toLocaleString()}
+								</span>
 							</span>
-						</span>
-					</button>
-					<div className="mt-2 flex gap-2 pl-5 text-xs">
+						</div>
+					</a>
+					<div className="absolute inset-x-0 bottom-0 z-10 flex gap-2 px-4 pb-3 pl-9 text-xs">
 						<button
 							type="button"
 							onClick={() => router.patch(notification.toggle_url)}

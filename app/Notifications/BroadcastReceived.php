@@ -14,6 +14,7 @@ class BroadcastReceived extends Notification
         private readonly string $subject,
         private readonly string $body,
         private readonly UserGroup $group,
+        private readonly int $mailLogId,
     )
     {
     }
@@ -29,6 +30,10 @@ class BroadcastReceived extends Notification
             'type' => 'broadcast-received',
             'subject' => $this->subject,
             'body' => $this->body,
+            'url' => route('communications.show', [
+                'tenant' => $this->group->tenant_id,
+                'mail_log' => $this->mailLogId,
+            ]),
             'group_id' => $this->group->id,
             'group_title' => $this->group->title,
             'tenant_id' => $this->group->tenant_id,

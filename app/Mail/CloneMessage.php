@@ -36,6 +36,7 @@ class CloneMessage
 
     private static function resendToUser(Mailable $message, User $user, UserGroup $group): void
     {
+        $mailLog = MailLog::firstWhere('uid', $message->uid);
         $originalSender = $message->from[0];
 
         // Clear replyTo, then put the original sender as the reply-to
@@ -83,6 +84,7 @@ class CloneMessage
                 $message->subject ?? '',
                 $message instanceof Loggable ? $message->getContent() : '',
                 $group,
+                $mailLog->id,
             ));
 
         } catch (\Throwable $exception) {

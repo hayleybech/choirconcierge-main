@@ -75,8 +75,16 @@ it('notifies every user recipient when the broadcast is sent', function () {
         return true;
     });
 
-    Notification::assertSentTo($recipient, BroadcastReceived::class, function (BroadcastReceived $notification) {
-        return $notification->toArray(new User)['subject'] === 'this is a test';
+    Notification::assertSentTo($recipient, BroadcastReceived::class, function (BroadcastReceived $notification) use ($group) {
+        $data = $notification->toArray(new User);
+        $mailLogId = MailLog::where('subject', 'this is a test')->value('id');
+
+        return $data['subject'] === 'this is a test'
+            && ! array_key_exists('item_id', $data)
+            && $data['url'] === route('communications.show', [
+                'tenant' => $group->tenant_id,
+                'mail_log' => $mailLogId,
+            ]);
     });
     Notification::assertNotSentTo($outsideRecipient, BroadcastReceived::class);
 });
