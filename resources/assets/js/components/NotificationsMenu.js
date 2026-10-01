@@ -158,15 +158,19 @@ const NotificationButton = React.forwardRef(({ onClick, ...props }, ref) => {
 			{...props}
 			variant="clear-inverse"
 			size="xs"
-			className="relative flex w-full shrink-0 items-center justify-start gap-3 rounded-md px-2 py-2 text-left text-white hover:bg-white hover:text-brand-purple-dark hover:bg-opacity-10"
+			className="relative w-full shrink-0 rounded-md px-2 py-2 text-left text-white hover:bg-white hover:text-brand-purple-dark hover:bg-opacity-10"
 		>
-			<Icon icon="bell" type="regular" className="w-6" />
-			<span className="text-sm font-semibold">Notifications</span>
-			{unreadCount > 0 && (
-				<span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
-					{unreadCount > 99 ? '99+' : unreadCount}
-				</span>
-			)}
+			<div className="flex gap-x-4 justify-between items-center w-full">
+				<div className="flex items-center gap-x-4">
+					<Icon icon="bell" type="regular" className="text-base" />
+					<span className="text-base font-semibold uppercase">Notifications</span>
+				</div>
+				{unreadCount > 0 && (
+					<span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+						{unreadCount > 99 ? '99+' : unreadCount}
+					</span>
+				)}
+			</div>
 		</Button>
 	);
 });

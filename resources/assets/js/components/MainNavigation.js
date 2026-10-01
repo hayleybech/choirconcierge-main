@@ -12,7 +12,7 @@ const MainNavigation = ({ navigation, closeSidebar, onOpenUserMenu, onOpenNotifi
 	return (
 		<nav className="flex justify-between min-h-0 flex-1 flex-col">
 			<div>
-				<div className="px-4 mb-4">
+				<div className="px-4">
 					{onOpenNotifications ? <NotificationButton onClick={onOpenNotifications} /> : <NotificationsMenu />}
 				</div>
 				<div className="space-y-1 overflow-y-auto px-4">
