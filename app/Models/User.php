@@ -194,6 +194,11 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
         return $this->hasManyThrough(Enrolment::class, Membership::class);
     }
 
+    public function notifications(): MorphMany
+    {
+        return $this->morphMany(Notification::class, 'notifiable')->latest();
+    }
+
     public function defaultTenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class, 'default_tenant_id');

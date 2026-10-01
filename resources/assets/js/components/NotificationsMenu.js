@@ -25,7 +25,7 @@ const NotificationItems = ({ onClose }) => {
 							type="button"
 							aria-label={`Mark as ${notification.read_at ? 'unread' : 'read'}`}
 							title={`Mark as ${notification.read_at ? 'unread' : 'read'}`}
-							onClick={() => router.patch(notification.toggle_url)}
+							onClick={() => router.patch(route('notifications.update', notification.id))}
 							className={`flex pl-3 pr-3 shrink-0 items-center justify-center self-stretch py-3 text-xs transition hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 ${
 								notification.read_at
 									? 'text-gray-400 hover:text-gray-600 bg-gray-100 hover:bg-gray-200'
@@ -45,7 +45,7 @@ const NotificationItems = ({ onClose }) => {
 								if (!notification.read_at) {
 									event.preventDefault();
 									router.post(
-										notification.read_url,
+										route('notifications.read', notification.id),
 										{},
 										{
 											onSuccess: () => {
@@ -99,10 +99,10 @@ const NotificationsHeader = ({ onClose }) => {
 			<div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 gap-1">
 				<div className="flex items-center gap-2 grow justify-between">
 					<h2 className="text-sm font-semibold uppercase tracking-wide text-gray-700">Notifications</h2>
-					{notifications?.unread_count > 0 && notifications?.read_all_url && (
+					{notifications?.unread_count > 0 && (
 						<button
 							type="button"
-							onClick={() => router.post(notifications.read_all_url)}
+							onClick={() => router.post(route('notifications.read-all'))}
 							className="text-xs text-purple-500 hover:underline hover:cursor-pointer"
 						>
 							<Icon icon="envelope-open" type="regular" mr />

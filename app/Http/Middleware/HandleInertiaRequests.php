@@ -21,8 +21,8 @@ use App\Models\VoicePart;
 use App\Navigation\Navigation;
 use App\Navigation\UserNavigation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -56,8 +56,10 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
+        $userChoirs = $this->getUserChoirs();
+
         return array_merge(parent::share($request), [
-            'notifications' => fn () => $this->getNotifications($request),
+            'notifications' => fn () => $this->getNotifications($request, $userChoirs),
             'flash' => [
                 'message' => fn() => $request->session()->get('status'),
                 'success' => fn() => $request->session()->get('success', true),
@@ -126,17 +128,16 @@ class HandleInertiaRequests extends Middleware
             'tenant' => tenancy()?->tenant?->loadMissing('ensembles')->append('billing_status'), // billing status needed for global alerts
             'user' => auth()->user(),
             'impersonationActive' => session()->has('impersonation:active'),
-            'userChoirs' => $this->getUserChoirs(),
+            'userChoirs' => $userChoirs,
             'isWebView' => $request->attributes->get('isWebView'),
             'navigation' => (new Navigation())->get(tenancy()->initialized ? tenant()->id : null),
             'userNavigation' => (new UserNavigation())->get(tenancy()->initialized ? tenant()->id : null),
         ]);
     }
 
-    private function getNotifications(Request $request): array
+    private function getNotifications(Request $request, ?Collection $userChoirs): array
     {
         $user = auth()->user();
-
         if (! $user) {
             return [
                 'items' => [],
@@ -145,69 +146,22 @@ class HandleInertiaRequests extends Middleware
         }
 
         $tenantId = tenancy()->initialized ? (string) tenant('id') : null;
-        $filter = $request->string('notification_filter', 'all')->toString();
-        $filter = $filter === 'unread' ? 'unread' : 'all';
-        $notifications = $user->notifications()
-            ->latest()
-            ->when($tenantId !== null, fn ($query) => $query->where('data->tenant_id', $tenantId))
-            ->when($filter === 'unread', fn ($query) => $query->whereNull('read_at'))
-            ->limit(50)
-            ->get()
-            ->values();
-        $hasMultipleTenants = $user->memberships()
-            ->withoutTenancy()
-            ->distinct('tenant_id')
-            ->count('tenant_id') > 1;
-
-        $tenantNames = Tenant::query()
-            ->whereIn('id', $notifications->map(fn ($notification) => $notification->data['tenant_id'] ?? $notification->data['tenant_created_id'])->filter())
-            ->get()
-            ->mapWithKeys(fn (Tenant $tenant): array => [$tenant->id => $tenant->name]);
-
-        $unreadCount = $user->notifications()
-            ->whereNull('read_at')
-            ->get()
-            ->filter(function ($notification) use ($tenantId): bool {
-                if ($tenantId === null) {
-                    return true;
-                }
-
-                return (string) ($notification->data['tenant_id'] ?? '') === $tenantId;
-            })
-            ->count();
-
+        $filter = $request->string('notification_filter', 'all')->toString() === 'unread' ? 'unread' : 'all';
         return [
-            'items' => $notifications->map(fn ($notification): array => [
-                'id' => $notification->id,
-                'type' => $notification->data['type'] ?? class_basename($notification->type),
-                'tenant_name' => $hasMultipleTenants
-                    ? ($tenantNames[$notification->data['tenant_id'] ?? $notification->data['tenant_created_id'] ?? ''] ?? null)
-                    : null,
-                'subject' => $notification->data['subject'] ?? 'Notification',
-                'body' => $this->formatNotificationBody($notification->data['body'] ?? ''),
-                'url' => $notification->data['url'] ?? null,
-                'read_url' => tenancy()->initialized ? route('notifications.read', ['tenant' => tenant('id'), 'notification' => $notification->id]) : null,
-                'toggle_url' => tenancy()->initialized ? route('notifications.update', ['tenant' => tenant('id'), 'notification' => $notification->id]) : null,
-                'read_at' => $notification->read_at,
-                'created_at' => $notification->created_at,
-            ])->all(),
-            'unread_count' => $unreadCount,
+            'items' => $user->notifications()
+                ->with('tenant')
+                ->when($tenantId !== null, fn ($query) => $query->where('data->tenant_id', $tenantId))
+                ->when($filter === 'unread', fn ($query) => $query->whereNull('read_at'))
+                ->limit(50)
+                ->get()
+                ->each(fn ($notification) => $notification->showTenantName = $userChoirs?->count() > 1)
+                ->toArray(),
+            'unread_count' => $user->notifications()
+                ->whereNull('read_at')
+                ->when($tenantId !== null, fn ($query) => $query->where('data->tenant_id', $tenantId))
+                ->count(),
             'filter' => $filter,
-            'read_all_url' => tenancy()->initialized ? route('notifications.read-all', ['tenant' => tenant('id')]) : null,
         ];
-    }
-
-    private function formatNotificationBody(mixed $body): string
-    {
-        if (! is_string($body) || trim($body) === '') {
-            return '';
-        }
-
-        $body = preg_replace('/<br\s*\/?\s*>|<\/(?:p|div)>/i', "\n", $body) ?? $body;
-        $body = strip_tags($body);
-        $lines = preg_split('/\R+/', $body, -1, PREG_SPLIT_NO_EMPTY) ?: [];
-
-        return Str::limit(trim(implode(' ', array_slice($lines, 0, 2))), 140);
     }
 
     private function getUserChoirs()

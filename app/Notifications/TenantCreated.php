@@ -57,11 +57,9 @@ class TenantCreated extends Notification
     public function toArray($notifiable): array
     {
         return [
-            'type' => 'tenant-created',
             'subject' => 'New Client!',
             'body' => 'A new organisation has been created for ' . $this->tenant->name . '.',
-            'tenant_id' => null,
-            'tenant_created_id' => $this->tenant->id,
+            'tenant_id' => $this->tenant->id,
         ];
     }
 }
