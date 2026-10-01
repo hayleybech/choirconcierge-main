@@ -5,13 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Song;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UpdateMyLearningStatusController extends Controller
 {
     public function __invoke(Song $song, Request $request): RedirectResponse
     {
+        $allowedStatuses = ['not-started', 'assessment-ready'];
+
+        if (auth()->user()->can('update', $song)) {
+            $allowedStatuses[] = 'performance-ready';
+        }
+
         $request->validate([
-            'status' => ['in:not-started,assessment-ready'],
+            'status' => ['required', Rule::in($allowedStatuses)],
         ]);
 
         $song->createMissingLearningRecords();

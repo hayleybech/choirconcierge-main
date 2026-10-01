@@ -71,6 +71,7 @@ class LearningStatusControllerTest extends TestCase
 
         $this->post(the_tenant_route('songs.singers.bulk-update', [$song]), [
             'singer_ids' => $users->map(fn (User $user) => $user->membership->id)->all(),
+            'status' => 'performance-ready',
         ])->assertRedirect(the_tenant_route('songs.singers.index', $song));
 
         foreach ($users as $user) {

@@ -57,12 +57,13 @@ class LearningStatusController extends Controller
         $validated = $request->validate([
             'singer_ids' => ['required', 'array'],
             'singer_ids.*' => ['integer', 'exists:memberships,id'],
+            'status' => ['required', 'in:not-started,assessment-ready,performance-ready'],
         ]);
 
         $song->members()
             ->whereIn('memberships.id', $validated['singer_ids'])
             ->get()
-            ->each(fn (Membership $singer) => $song->members()->updateExistingPivot($singer->id, ['status' => 'performance-ready']));
+            ->each(fn (Membership $singer) => $song->members()->updateExistingPivot($singer->id, ['status' => $validated['status']]));
 
         return redirect()->route('songs.singers.index', $song);
     }

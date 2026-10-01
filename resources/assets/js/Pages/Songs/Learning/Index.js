@@ -18,6 +18,7 @@ import Icon from '../../../components/Icon';
 import LearningStatusTable from './LearningStatusTable';
 import LearningStatusTableMobile from './LearningStatusTableMobile';
 import IndexContainer from '../../../components/IndexContainer';
+import LearningStatus from '../../../LearningStatus';
 import { router } from '@inertiajs/react';
 
 const Index = ({ song, voiceParts, setSidebarOpen }) => {
@@ -26,10 +27,10 @@ const Index = ({ song, voiceParts, setSidebarOpen }) => {
 	const bulkEdit = useBulkEdit(singers, true, false, 'Singer', true);
 	const actions = [bulkEdit.action].filter(Boolean);
 
-	const markSelectedAsPerformanceReady = () => {
+	const markSelectedAs = (status) => {
 		router.post(
 			route('songs.singers.bulk-update', { song }),
-			{ singer_ids: bulkEdit.selectedIds },
+			{ singer_ids: bulkEdit.selectedIds, status },
 			{ preserveScroll: true, onSuccess: () => bulkEdit.clearSelections() }
 		);
 	};
@@ -87,12 +88,16 @@ const Index = ({ song, voiceParts, setSidebarOpen }) => {
 
 			<BulkEditBar
 				bulkEdit={bulkEdit}
-				actions={
-					<Button size="xs" variant="clear-inverse" onClick={markSelectedAsPerformanceReady}>
-						<Icon icon="check-double" className="text-emerald-500" />
-						Mark as Performance Ready
-					</Button>
-				}
+				actions={Object.keys(LearningStatus.statuses).map(slug => {
+					const status = new LearningStatus(slug);
+
+					return (
+						<Button key={slug} size="xs" variant="clear-inverse" onClick={() => markSelectedAs(slug)}>
+							<Icon icon={status.icon} className={status.textColour} />
+							{status.title}
+						</Button>
+					);
+				})}
 			/>
 
 			<IndexContainer
