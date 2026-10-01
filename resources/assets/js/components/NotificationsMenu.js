@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { Dialog, Popover, Transition } from '@headlessui/react';
 import { router, usePage } from '@inertiajs/react';
+import { DateTime } from 'luxon';
 import Button from './inputs/Button';
 import Icon from './Icon';
 
@@ -69,8 +70,11 @@ const NotificationItems = ({ onClose }) => {
 											{notification.body}
 										</span>
 									)}
-									<span className="mt-1 block text-xs text-gray-400 group-hover:cursor-pointer">
-										{new Date(notification.created_at).toLocaleString()}
+									<span
+										className="mt-1 block text-xs text-gray-400 group-hover:cursor-pointer"
+										title={new Date(notification.created_at).toLocaleString()}
+									>
+										{DateTime.fromJSDate(new Date(notification.created_at)).toRelative()}
 									</span>
 								</span>
 							</div>
