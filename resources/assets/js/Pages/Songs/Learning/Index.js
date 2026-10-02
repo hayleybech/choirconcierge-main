@@ -12,20 +12,63 @@ import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import useRoute from '../../../hooks/useRoute';
 import useBulkEdit from '../../../hooks/useBulkEdit';
+import useFilterPane from '../../../hooks/useFilterPane';
+import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import BulkEditBar from '../../../components/BulkEditBar';
 import Button from '../../../components/inputs/Button';
 import Icon from '../../../components/Icon';
 import LearningStatusTable from './LearningStatusTable';
 import LearningStatusTableMobile from './LearningStatusTableMobile';
+import LearningStatusSummary from './LearningStatusSummary';
 import IndexContainer from '../../../components/IndexContainer';
+import FilterSortPane from '../../../components/FilterSortPane';
+import Sorts from '../../../components/Sorts';
+import LearningStatusFilters from '../../../components/LearningStatusFilters';
 import LearningStatus from '../../../LearningStatus';
 import { router } from '@inertiajs/react';
 
-const Index = ({ song, voiceParts, setSidebarOpen }) => {
+const Index = ({
+	song,
+	allSingers,
+	pagination,
+	voiceParts,
+	ensembles,
+	totalEnsemblesCount,
+	singerStatuses,
+	counts,
+	setSidebarOpen,
+}) => {
 	const { route } = useRoute();
-	const singers = voiceParts.flatMap(voicePart => voicePart.members.map(singer => ({ ...singer, voicePart })));
-	const bulkEdit = useBulkEdit(singers, true, false, 'Singer', true);
-	const actions = [bulkEdit.action].filter(Boolean);
+
+	const [showFilters, setShowFilters, filterAction] = useFilterPane();
+
+	const showEnsemble = song.ensembles.length > 0 || totalEnsemblesCount > 1;
+
+	const sorts = [
+		{ id: 'full-name', name: 'First Name', default: true },
+		{ id: 'last-name-first', name: 'Last Name' },
+		{ id: 'learning-status', name: 'Learning Status' },
+		{ id: 'learning-updated', name: 'Updated' },
+	];
+
+	const filters = [
+		{ name: 'user.name', defaultValue: '' },
+		{ name: 'enrolments.voice_part_id', multiple: true },
+		{ name: 'enrolments.ensemble_id', multiple: true },
+		{ name: 'learning.status', multiple: true },
+		{
+			name: 'status.id',
+			multiple: true,
+			defaultValue: singerStatuses.find(c => c.name === 'Members')?.id
+				? [singerStatuses.find(c => c.name === 'Members').id]
+				: [],
+		},
+	];
+
+	const sortFilterForm = useSortFilterForm(['songs.singers.index', { song: song.id }], filters, sorts);
+
+	const bulkEdit = useBulkEdit(allSingers, true, false, 'Singer', true);
+	const actions = [filterAction, bulkEdit.action].filter(Boolean);
 
 	const markSelectedAs = (status) => {
 		router.post(
@@ -100,9 +143,44 @@ const Index = ({ song, voiceParts, setSidebarOpen }) => {
 				})}
 			/>
 
+			<LearningStatusSummary counts={counts} />
+
 			<IndexContainer
-				tableDesktop={<LearningStatusTable song={song} singers={singers} bulkEdit={bulkEdit} />}
-				tableMobile={<LearningStatusTableMobile song={song} singers={singers} bulkEdit={bulkEdit} />}
+				showFilters={showFilters}
+				filterPane={
+					<FilterSortPane
+						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+						filters={
+							<LearningStatusFilters
+								song={song}
+								voiceParts={voiceParts}
+								ensembles={ensembles}
+								form={sortFilterForm}
+								singerStatuses={singerStatuses}
+							/>
+						}
+						closeFn={() => setShowFilters(false)}
+					/>
+				}
+				tableDesktop={
+					<LearningStatusTable
+						song={song}
+						singers={allSingers}
+						pagination={pagination}
+						bulkEdit={bulkEdit}
+						showEnsemble={showEnsemble}
+						sortFilterForm={sortFilterForm}
+					/>
+				}
+				tableMobile={
+					<LearningStatusTableMobile
+						song={song}
+						singers={allSingers}
+						pagination={pagination}
+						bulkEdit={bulkEdit}
+						showEnsemble={showEnsemble}
+					/>
+				}
 			/>
 		</>
 	);

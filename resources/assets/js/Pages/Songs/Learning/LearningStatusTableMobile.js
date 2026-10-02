@@ -7,24 +7,26 @@ import TableMobile, {
 } from "../../../components/TableMobile";
 import DateTag from "../../../components/DateTag";
 import LearningStatus from "../../../LearningStatus";
-import LearningStatusSummary from "./LearningStatusSummary";
 import LearningStatusDropdown from "../../../components/Song/LearningStatusDropdown";
 import VoicePartTag from "../../../components/VoicePartTag";
+import Badge from "../../../components/Badge";
+import SingerStatus from "../../../SingerStatus";
+import SingerStatusTag from "../../../components/SingerStatusTag";
+import Pagination from "../../../components/Pagination";
 import useRoute from "../../../hooks/useRoute";
 
-const LearningStatusTableMobile = ({ song, singers, bulkEdit }) => {
+const LearningStatusTableMobile = ({ song, singers, pagination, bulkEdit, showEnsemble }) => {
 	const { route } = useRoute();
 
 	return (
 		<div>
-			<LearningStatusSummary singers={singers} />
 			<TableMobileHeader bulkEdit={bulkEdit} />
-			<TableMobile>
+			<TableMobile pagination={<Pagination details={pagination} />}>
 				{singers.map(singer => {
 					const status = new LearningStatus(singer.learning.status);
 
 					return (
-						<TableMobileListItem key={`${singer.id}-${singer.voicePart.id ?? 'none'}`} className="bg-white">
+						<TableMobileListItem key={singer.id} className="bg-white">
 							<TableMobileSelect bulkEdit={bulkEdit} value={singer.id} />
 							<TableMobileSelectableLink
 								bulkEdit={bulkEdit}
@@ -39,12 +41,28 @@ const LearningStatusTableMobile = ({ song, singers, bulkEdit }) => {
 												src={singer.user.avatar_url}
 												alt=""
 											/>
-											<span className="text-sm font-medium text-purple-600 truncate">
-												{singer.user.name}
-											</span>
+											<div className="min-w-0">
+												<SingerStatusTag status={new SingerStatus(singer.status.status)} />
+												<span className="ml-1 text-sm font-medium text-purple-600 truncate">
+													{singer.user.name}
+												</span>
+											</div>
 										</div>
-										<VoicePartTag title={singer.voicePart.title} colour={singer.voicePart.colour} />
 									</div>
+									<ul className="flex flex-wrap gap-1.5">
+										{singer.enrolments.map(enrolment => (
+											<li key={enrolment.id} className="flex gap-1 items-center">
+												{showEnsemble && (
+													<Badge colour="bg-purple-100 text-purple-800">
+														{enrolment.ensemble.name}
+													</Badge>
+												)}
+												{enrolment.voice_part && (
+													<VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />
+												)}
+											</li>
+										))}
+									</ul>
 									<div className="flex flex-wrap items-center justify-between gap-2 text-sm">
 										<LearningStatusDropdown
 											status={status.slug}
