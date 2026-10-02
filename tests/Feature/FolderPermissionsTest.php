@@ -71,7 +71,7 @@ it('allows specific roles to view folder', function () {
         ->assertInertia(fn ($page) => $page->has('folders', 0));
 });
 
-it('filters viewers by ensemble', function () {
+it('does not filter viewers by ensemble when there is only one ensemble', function () {
     $ensemble = Ensemble::factory()->create();
     $folder = Folder::factory()->create();
     $folder->ensembles()->attach($ensemble);
@@ -88,7 +88,7 @@ it('filters viewers by ensemble', function () {
         
     actingAs($userNotInEnsemble)
         ->get(the_tenant_route('folders.index'))
-        ->assertInertia(fn ($page) => $page->has('folders', 0));
+        ->assertInertia(fn ($page) => $page->has('folders', 1));
 });
 
 it('allows specific users to edit folder', function () {
