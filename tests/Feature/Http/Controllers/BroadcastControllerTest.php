@@ -33,6 +33,18 @@ it('has a send email page', function () {
         );
 });
 
+it('preselects the mailing list when provided', function () {
+    $user = $this->actingAsRole('Music Team');
+
+    $group = createGroup($user);
+
+    $this->get(the_tenant_route('communications.create', ['list' => $group->id]))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('MailingLists/Broadcasts/Create')
+            ->where('selectedList', $group->id)
+        );
+});
+
 it('dispatches a job to send the email', function () {
     $user = $this->actingAsRole('Music Team');
 

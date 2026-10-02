@@ -25,13 +25,18 @@ import FileInput from '../../../components/inputs/FileInput';
 import useRoute from '../../../hooks/useRoute';
 import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 
-const Create = ({ lists, setSidebarOpen }) => {
+const Create = ({ lists, selectedList, setSidebarOpen }) => {
 	const { route } = useRoute();
+	const listOptions = lists.map(({ title, id, ...list }) => ({
+		label: title,
+		value: id,
+		...list,
+	}));
 
 	const { data, setData, post, processing, errors, progress } = useForm({
 		subject: '',
 		body: '',
-		list: null,
+		list: selectedList,
 		attachments: [],
 	});
 
@@ -74,11 +79,8 @@ const Create = ({ lists, setSidebarOpen }) => {
 							<div className="sm:col-span-6">
 								<Label label="Mailing List" />
 								<MailingListSelect
-									options={lists.map(({ title, id, ...list }) => ({
-										label: title,
-										value: id,
-										...list,
-									}))}
+									options={listOptions}
+									defaultValue={listOptions.find(option => option.value === selectedList)}
 									updateFn={value => setData('list', value)}
 								/>
 								{errors.list && <Error>{errors.list}</Error>}
