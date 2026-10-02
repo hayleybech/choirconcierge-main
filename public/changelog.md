@@ -1,3 +1,28 @@
+# 2026-10-02
+## General Improvements
+### Calendar Sync Changes
+**NOTE: If you're using this feature, you'll need to take action or it will stop working.**
+
+Calendar sync URLs are now unique for each user. This makes it easier to control who sees what. Sharing these new URLs isn't recommended, and doing so means you might miss out on certain events.
+
+To get your new URL, go to the Events page and click the "Sync to Calendar App" button. Then follow your provider's instructions.
+### Improve the Create Singer page
+- Added the ability to assign a Member Status (eg Active, Prospect, etc.)
+- Added the ability to assign a Voice Part and Ensemble
+- Made the Onboarding toggle separate, to make it clearer what it does.
+
+### Other
+- Added Member Status field to the Edit Membership page. 
+- Added the ability to delete an Ensemble from your Organisation (you'll get a confirmation prompt before deleting)
+- Fixed some broken colours on some elements
+- Added sort and filter options to the Learning Status page (similar to RSVP and Attendance listings for an Event)
+- Added the ability for leaders to set a member's Learning Status to any value (previously only the singer could set some options)
+- Improved the controls for changing a singer's Learning Status
+- Improved the layout of the Changelog (this page you're reading) on mobile.
+- Fixed "body required" error when creating a Task Notification template in Onboarding.
+- Fixed sheet music not scrolling on desktops.
+- Fixed crash when choosing "No RSVP" filter on the RSVP page.
+---
 # 2026-09-18
 ## Sitewide Layout Improvements
 We've made substantial changes to some of the core aspects of the sites layout, with a specific focus on mobile. We also managed to fix a few minor annoyances along the way!

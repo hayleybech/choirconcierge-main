@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\SingerStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class EditSingerRequest extends FormRequest
 {
@@ -36,6 +38,7 @@ class EditSingerRequest extends FormRequest
             'joined_at' => ['date', 'before_or_equal:today'],
             'paid_until' => Gate::allows('update-fees') ? ['nullable', 'sometimes', 'date'] : ['exclude'],
             'onboarding_enabled' => ['boolean'],
+            'status' => ['required', Rule::enum(SingerStatus::class)],
             'user_roles' => auth()->user()->isSuperAdmin || auth()->user()?->membership->hasAbility('roles_create')
                 ? ['array', 'exists:roles,id']
                 : ['exclude'],

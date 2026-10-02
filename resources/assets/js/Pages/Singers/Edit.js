@@ -27,8 +27,10 @@ import ButtonGroup from '../../components/inputs/ButtonGroup';
 import FormWrapper from '../../components/FormWrapper';
 import useRoute from '../../hooks/useRoute';
 import WarningAlert from '../../components/WarningAlert';
+import RadioGroup from '../../components/inputs/RadioGroup';
+import SingerStatus from '../../SingerStatus';
 
-const Edit = ({ roles, singer, setSidebarOpen }) => {
+const Edit = ({ roles, statuses, singer, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const { can } = usePage().props;
 
@@ -37,6 +39,7 @@ const Edit = ({ roles, singer, setSidebarOpen }) => {
 		reason_for_joining: singer.reason_for_joining ?? '',
 		referrer: singer.referrer ?? '',
 		membership_details: singer.membership_details ?? '',
+		status: singer.status.status,
 
 		onboarding_enabled: singer.onboarding_enabled,
 		joined_at: singer.joined_at ? DateTime.fromISO(singer.joined_at) : null,
@@ -86,6 +89,20 @@ const Edit = ({ roles, singer, setSidebarOpen }) => {
 				<Form onSubmit={submit}>
 					{can['create_singer'] && (
 						<FormSection title="Membership Details" description="Essential membership info.">
+							<div className="sm:col-span-6">
+								<RadioGroup
+									label={<Label label="Member status" />}
+									options={statuses.map(status => ({
+										id: status.id,
+										name: status.name,
+										textColour: (new SingerStatus(status.slug)).textColour,
+										icon: (new SingerStatus(status.slug)).icon,
+									}))}
+									selected={data.status}
+									setSelected={value => setData('status', value)}
+								/>
+								{errors.status && <Error>{errors.status}</Error>}
+							</div>
 							<div className="sm:col-span-6">
 								<Label label="Why are you joining?" forInput="reason_for_joining" />
 								<TextInput

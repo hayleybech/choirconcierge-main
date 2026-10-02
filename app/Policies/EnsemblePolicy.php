@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\Ensemble;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EnsemblePolicy
@@ -36,4 +37,9 @@ class EnsemblePolicy
 	{
 		return false;
 	}
+
+    public function delete(User $user, Ensemble $ensemble): bool
+    {
+        return $user->membership?->hasRole('Admin') ?? false;
+    }
 }

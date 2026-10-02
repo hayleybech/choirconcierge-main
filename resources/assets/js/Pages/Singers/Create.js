@@ -20,15 +20,20 @@ import AppHead from '../../components/AppHead';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
 import GlobalUserSelect from '../../components/inputs/GlobalUserSelect';
-import DayInput from '../../components/inputs/Day';
-import { DateTime } from 'luxon';
 import FormWrapper from '../../components/FormWrapper';
 import useRoute from '../../hooks/useRoute';
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import Icon from '../../components/Icon';
+import RadioGroup from '../../components/inputs/RadioGroup';
+import Select from '../../components/inputs/Select';
+import SingerStatus from '../../SingerStatus';
+import VoicePartTag, { voicePartTextColourClasses } from '../../components/VoicePartTag';
+import Dialog from '../../components/Dialog';
 
-const Create = ({ voice_parts, roles, setSidebarOpen }) => {
+const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => {
 	const { route } = useRoute();
+	const [isEnrolmentDialogOpen, setIsEnrolmentDialogOpen] = React.useState(false);
+	const [draftEnrolment, setDraftEnrolment] = React.useState({ ensemble_id: null, voice_part_id: null });
 
 	const { data, setData, post, processing, errors } = useForm({
 		create: true,
@@ -40,13 +45,13 @@ const Create = ({ voice_parts, roles, setSidebarOpen }) => {
 		password: '',
 		password_confirmation: '',
 
-		voice_part_id: 0,
+		enrolments: [],
 		reason_for_joining: '',
 		referrer: '',
 		membership_details: '',
+		status: 'prospects',
 
 		onboarding_disabled: false,
-		joined_at: undefined,
 		user_roles: [],
 	});
 
@@ -79,6 +84,31 @@ const Create = ({ voice_parts, roles, setSidebarOpen }) => {
 		});
 	}
 
+	function setSingleVoicePart(voicePartId) {
+		const ensembleId = ensembles[0]?.id ?? null;
+		setData('enrolments', ensembleId ? [{ ensemble_id: ensembleId, voice_part_id: voicePartId }] : []);
+	}
+
+	function openEnrolmentDialog() {
+		setDraftEnrolment({ ensemble_id: null, voice_part_id: null });
+		setIsEnrolmentDialogOpen(true);
+	}
+
+	function addEnrolment() {
+		if (
+			!draftEnrolment.ensemble_id ||
+			data.enrolments.some(enrolment => enrolment.ensemble_id === draftEnrolment.ensemble_id)
+		) {
+			return;
+		}
+		setData('enrolments', [...data.enrolments, draftEnrolment]);
+		setIsEnrolmentDialogOpen(false);
+	}
+
+	function removeEnrolment(ensembleId) {
+		setData('enrolments', data.enrolments.filter(enrolment => enrolment.ensemble_id !== ensembleId));
+	}
+
 	const breadcrumbs = [
 		{ name: 'Singers', url: route('singers.index') },
 		{ name: 'Create Singer', url: route('singers.create') },
@@ -88,7 +118,7 @@ const Create = ({ voice_parts, roles, setSidebarOpen }) => {
 		<>
 			<AppHead title="Add Singer" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 			</PageTopBar>
 
 			<PageHeader>
@@ -171,12 +201,103 @@ const Create = ({ voice_parts, roles, setSidebarOpen }) => {
 						title="Singer Details"
 						description="Start adding information about the singer's membership."
 					>
-						{/*<div className="sm:col-span-6">*/}
-						{/*    <Label label="Voice part" forInput="voice_part_id" />*/}
-						{/*    <Select name="voice_part_id" options={voice_parts.map(part => ({ key: part.id, label: part.title}))} value={data.voice_part_id} updateFn={value => setData('voice_part_id', value)} />*/}
-						{/*    {errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}*/}
-						{/*</div>*/}
+						<div className="sm:col-span-6">
+							<RadioGroup
+								label={<Label label="Member status" />}
+								options={statuses.map(status => ({
+									id: status.id,
+									name: status.name,
+									textColour: new SingerStatus(status.slug).textColour,
+									icon: new SingerStatus(status.slug).icon,
+								}))}
+								selected={data.status}
+								setSelected={value => setData('status', value)}
+							/>
+							{errors.status && <Error>{errors.status}</Error>}
+						</div>
 
+						{ensembles.length === 1 && (
+							<div className="sm:col-span-6">
+								<RadioGroup
+									label={<Label label="Voice part" />}
+									options={voice_parts.map(part => ({
+										id: part.id,
+ 									name: part.title,
+ 									textColour: voicePartTextColourClasses[part.colour] ?? voicePartTextColourClasses.gray,
+ 									icon: 'circle',
+									}))}
+									selected={data.enrolments[0]?.voice_part_id ?? null}
+									setSelected={setSingleVoicePart}
+								/>
+								{errors.voice_part_id && <Error>{errors.voice_part_id}</Error>}
+							</div>
+						)}
+
+						{ensembles.length > 1 && (
+							<div className="sm:col-span-6">
+								<Label label="Ensembles" />
+								<table className="w-full divide-y divide-gray-200 rounded-md border border-gray-200">
+									<thead className="bg-gray-50">
+										<tr>
+											<th className="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500">
+												Ensemble
+											</th>
+											<th className="px-3 py-2 text-left text-xs font-medium uppercase text-gray-500">
+												Voice part
+											</th>
+											<th className="px-3 py-2">
+												<span className="sr-only">Delete</span>
+											</th>
+										</tr>
+									</thead>
+									<tbody className="divide-y divide-gray-200 bg-white">
+										{data.enrolments.map(enrolment => {
+											const ensemble = ensembles.find(item => item.id === enrolment.ensemble_id);
+											const voicePart = voice_parts.find(
+												item => item.id === enrolment.voice_part_id
+											);
+											return (
+												<tr key={enrolment.ensemble_id}>
+													<td className="px-3 py-3 text-sm text-gray-700">
+														{ensemble?.name}
+													</td>
+													<td className="px-3 py-3">
+														{voicePart && (
+															<VoicePartTag
+																title={voicePart.title}
+																colour={voicePart.colour}
+															/>
+														)}
+													</td>
+													<td className="px-3 py-3 text-right">
+														<Button
+															variant="danger-outline"
+															size="xs"
+															onClick={() => removeEnrolment(enrolment.ensemble_id)}
+														>
+															<Icon icon="trash" />
+														</Button>
+													</td>
+												</tr>
+											);
+										})}
+										<tr>
+											<td colSpan="3" className="bg-gray-50 px-3 py-2">
+												<Button
+													variant="primary"
+													size="sm"
+													type="button"
+													onClick={openEnrolmentDialog}
+												>
+													<Icon icon="plus" /> Add
+												</Button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								{errors.enrolments && <Error>{errors.enrolments}</Error>}
+							</div>
+						)}
 						<div className="sm:col-span-6">
 							<Label label="Why are you joining?" forInput="reason_for_joining" />
 							<TextInput
@@ -212,40 +333,25 @@ const Create = ({ voice_parts, roles, setSidebarOpen }) => {
 
 						<div className="sm:col-span-6">
 							<DetailToggle
-								label="Is this an existing member?"
-								description="Onboarding will be disabled when adding an existing singer."
-								value={data.onboarding_disabled}
-								updateFn={value => setData('onboarding_disabled', value)}
+								label="Enable onboarding automations for this user"
+								description="Automatically create onboarding tasks for this singer."
+								value={!data.onboarding_disabled}
+								updateFn={value => setData('onboarding_disabled', !value)}
 							/>
 						</div>
 					</FormSection>
 
-					{data.onboarding_disabled && (
-						<FormSection title="Existing Member Details">
-							<div className="sm:col-span-6">
-								<Label label="Joined" forInput="joined_at" />
-								<DayInput
-									name="joined_at"
-									hasErrors={!!errors.joined_at}
-									value={data.joined_at}
-									updateFn={value => setData('joined_at', value)}
-									max={DateTime.now().toISODate()}
-								/>
-								{errors.joined_at && <Error>{errors.joined_at}</Error>}
-							</div>
-
-							<fieldset className="mt-6 sm:col-span-6">
-								<legend className="text-base font-medium text-gray-900">Roles</legend>
-								<CheckboxGroup
-									name={'user_roles'}
-									options={roles}
-									value={data.user_roles}
-									updateFn={value => setData('user_roles', value)}
-								/>
-								{errors.user_roles && <Error>{errors.user_roles}</Error>}
-							</fieldset>
-						</FormSection>
-					)}
+					<FormSection title="Roles" description="Assign roles to this singer.">
+						<fieldset className="sm:col-span-6">
+							<CheckboxGroup
+								name={'user_roles'}
+								options={roles}
+								value={data.user_roles}
+								updateFn={value => setData('user_roles', value)}
+							/>
+							{errors.user_roles && <Error>{errors.user_roles}</Error>}
+						</fieldset>
+					</FormSection>
 
 					<FormFooter>
 						<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
@@ -255,6 +361,41 @@ const Create = ({ voice_parts, roles, setSidebarOpen }) => {
 					</FormFooter>
 				</Form>
 			</FormWrapper>
+			<Dialog
+				title="Create Enrolment"
+				okLabel="Add"
+				okVariant="primary"
+				onOk={addEnrolment}
+				isOpen={isEnrolmentDialogOpen}
+				setIsOpen={setIsEnrolmentDialogOpen}
+			>
+				<p className="mb-2">Enrol the singer in an ensemble and assign a voice part.</p>
+				<div className="mb-2">
+					<Label label="Ensemble" forInput="ensemble_id" />
+					<Select
+						name="ensemble_id"
+						options={ensembles
+							.filter(
+								ensemble => !data.enrolments.some(enrolment => enrolment.ensemble_id === ensemble.id)
+							)
+							.map(ensemble => ({ key: ensemble.id, label: ensemble.name }))}
+						value={draftEnrolment.ensemble_id}
+						updateFn={value => setDraftEnrolment({ ...draftEnrolment, ensemble_id: value })}
+					/>
+				</div>
+				<RadioGroup
+					label="Select a voice part"
+					options={voice_parts.map(part => ({
+						id: part.id,
+						name: part.title,
+						textColour: voicePartTextColourClasses[part.colour] ?? voicePartTextColourClasses.gray,
+						icon: 'circle',
+					}))}
+					selected={draftEnrolment.voice_part_id}
+					setSelected={value => setDraftEnrolment({ ...draftEnrolment, voice_part_id: value })}
+					vertical
+				/>
+			</Dialog>
 		</>
 	);
 };
