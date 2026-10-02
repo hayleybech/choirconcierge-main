@@ -54,6 +54,7 @@ test('shows polls with no ensembles to all singers', function () {
 
 test('hides polls with ensembles from singers not in those ensembles', function () {
     $ensemble = Ensemble::factory()->create();
+    Ensemble::factory()->create();
     $poll = Poll::factory()->create(['title' => 'Ensemble Poll']);
     $poll->ensembles()->attach($ensemble);
     
