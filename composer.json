@@ -44,7 +44,7 @@
     },
     "type": "project",
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.6",
+        "barryvdh/laravel-debugbar": "^4.0",
         "beyondcode/laravel-query-detector": "^2.2",
         "jasonmccreary/laravel-test-assertions": "^2.1",
         "laravel/boost": "^2.2",
