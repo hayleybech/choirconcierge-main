@@ -56,7 +56,7 @@ class SingerController extends Controller
             'defaultStatus' => $defaultStatus,
             'voiceParts' => VoicePart::all()->values(),
             'roles' => Role::all()->values(),
-            'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
+            'ensembles' => Ensemble::forUser('singers_update')->get()->values(),
         ]);
     }
 
@@ -64,7 +64,13 @@ class SingerController extends Controller
     {
         return Inertia::render('Singers/Create', [
             'voice_parts' => VoicePart::all()->prepend(VoicePart::getNullVoicePart())->values(),
+            'ensembles' => Ensemble::forUser('singers_update')->get()->values(),
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
+            'statuses' => array_map(fn($status) => [
+                'id' => $status->value,
+                'name' => $status->label(),
+                'slug' => $status->value,
+            ], SingerStatus::cases()),
         ]);
     }
 
@@ -77,6 +83,7 @@ class SingerController extends Controller
             ->only([
                 'user_id',
                 'onboarding_enabled',
+                'status',
                 'reason_for_joining',
                 'referrer',
                 'membership_details',
@@ -84,6 +91,9 @@ class SingerController extends Controller
                 'user_roles',
             ])
         );
+
+        $singer->statuses()->create(['status' => $request->validated('status')]);
+        $singer->enrolments()->createMany($request->enrolments());
         $singer->initOnboarding();
         $singer->save();
 
@@ -216,6 +226,7 @@ class SingerController extends Controller
 
         return Inertia::render('Singers/Edit', [
             'roles' => Role::where('name', '!=', 'User')->get()->values(),
+            'statuses' => array_map(fn($status) => ['id' => $status->value, 'name' => $status->label(), 'slug' => $status->value], SingerStatus::cases()),
             'singer' => $singer,
         ]);
     }
@@ -240,11 +251,14 @@ class SingerController extends Controller
                 'reason_for_joining',
                 'referrer',
                 'membership_details',
+                'status',
                 'joined_at',
                 'onboarding_enabled',
                 'paid_until',
             ])
         );
+
+        $singer->statuses()->create(['status' => $request->validated('status')]);
 
         return redirect()
             ->route('singers.show', [$singer])
@@ -302,7 +316,7 @@ class SingerController extends Controller
     private function getSingers(string $defaultStatus): LengthAwarePaginator
     {
         $query = Membership::query()
-            ->ensembleRestricted();
+            ->forEnsembles();
 
         return QueryBuilder::for($query)
             ->with(['tasks', 'status', 'user', 'enrolments' => ['voice_part', 'ensemble'],])

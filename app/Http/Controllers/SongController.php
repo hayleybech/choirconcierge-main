@@ -46,12 +46,6 @@ class SongController extends Controller
             ? $totalEnsemblesCount
             : auth()->user()?->membership?->enrolments->count() ?? 0;
 
-        $ensembles = Ensemble::query()
-            ->when(! (auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasAbility('songs_update')), function (Builder $query) {
-                $query->whereIn('id', auth()->user()?->membership?->enrolments->pluck('ensemble_id') ?? []);
-            })
-            ->get();
-
         return Inertia::render('Songs/Index', [
             'songs' => $this->getSongs($includePending, $defaultStatuses, $includeNonAuditionSongs, $showForProspectsDefault),
             'statuses' => SongStatus::query()
@@ -62,7 +56,9 @@ class SongController extends Controller
             'categories' => SongCategory::all()->values(),
             'showForProspectsDefault' => $showForProspectsDefault,
             'userEnsemblesCount' => $userEnsemblesCount,
-            'ensembles' => $ensembles,
+            'ensembles' => Ensemble::query()
+                ->forUser('songs_update')
+                ->get(),
         ]);
     }
 
@@ -244,18 +240,8 @@ class SongController extends Controller
 
     private function getSongs(bool $includePending, array $defaultStatuses, bool $includeNonAuditionSongs, array $showForProspectsDefault): LengthAwarePaginator
     {
-        $userEnsembles = auth()->user()?->membership?->enrolments->pluck('ensemble_id');
-        $canUpdate = auth()->user()?->membership?->hasAbility('songs_update');
-
         return QueryBuilder::for(Song::class)
-            ->when(! $canUpdate && ! auth()->user()?->isSuperAdmin, function (Builder $query) use ($userEnsembles) {
-                $query->where(function (Builder $query) use ($userEnsembles) {
-                    $query->whereDoesntHave('ensembles')
-                        ->orWhereHas('ensembles', function (Builder $query) use ($userEnsembles) {
-                            $query->whereIn('ensembles.id', $userEnsembles ?? []);
-                        });
-                });
-            })
+            ->forEnsembles()
             ->allowedFilters([
                 'title',
                 AllowedFilter::exact('status.id')

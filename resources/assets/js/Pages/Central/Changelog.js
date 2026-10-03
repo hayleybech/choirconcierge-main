@@ -21,7 +21,7 @@ const Changelog = ({ logs, setSidebarOpen }) => (
 			</PageHeaderContent>
 		</PageHeader>
 		<div className="py-6">
-			<div className="mx-auto px-4 sm:px-6 lg:px-16">
+			<div className="px-4 sm:px-6 lg:px-16 lg:max-w-[900px]">
 				<Panel>
 					<ul role="list" className="space-y-6">
 						{logs.map(({ date, heading, content }, index) => (
@@ -38,16 +38,18 @@ const Changelog = ({ logs, setSidebarOpen }) => (
 								<div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white">
 									<div className="h-1.5 w-1.5 rounded-full bg-purple-100 ring ring-purple-300" />
 								</div>
-								<div className="flex-auto">
-									<h2 className="font-bold text-gray-900 text-lg">{heading}</h2>
+								<div>
+									<div className="flex justify-between gap-x-2 items-center">
+										<h2 className="font-bold text-gray-900 text-lg">{heading}</h2>
+										<time dateTime={date} className="flex-none py-0.5 text-sm text-gray-500">
+											{date}
+										</time>
+									</div>
 									<div
 										dangerouslySetInnerHTML={{ __html: content }}
 										className="text-gray-500 text-sm [&>p]:mb-2 [&>ul]:ml-5 [&>ul]:list-disc [&_li]:mb-1 [&_h2]:font-bold [&_h2]:text-lg [&_h2]:mt-5 [&_h2]:text-gray-900 [&_h3]:text-gray-700 [&_h3]:mt-3 [&_h3]:font-bold"
 									/>
 								</div>
-								<time dateTime={date} className="flex-none py-0.5 text-sm text-gray-500">
-									{date}
-								</time>
 							</li>
 						))}
 					</ul>

@@ -64,6 +64,7 @@ class SingerControllerTest extends TestCase
                 ->component('Singers/Edit')
                 ->has('singer')
                 ->has('roles')
+                ->has('statuses')
             );
     }
 
@@ -273,6 +274,10 @@ class SingerControllerTest extends TestCase
             'joined_at',
             'onboarding_enabled',
         ]));
+        $this->assertDatabaseHas('membership_status', [
+            'membership_id' => $singer->id,
+            'status' => $data['status'],
+        ]);
         $response->assertRedirect(the_tenant_route('singers.show', [$singer]));
     }
 
@@ -360,6 +365,7 @@ class SingerControllerTest extends TestCase
                         'reason_for_joining' => $faker->sentence(),
                         'referrer' => $faker->sentence(),
                         'membership_details' => $faker->sentence(),
+                        'status' => SingerStatus::MEMBERS->value,
 
                         // User
                         'first_name' => $faker->firstName(),

@@ -29,7 +29,7 @@ class PollController extends Controller
     public function index(): Response
     {
         $query = Poll::query()
-            ->ensembleRestricted()
+            ->forEnsembles()
             ->with(['options', 'ensembles'])
             ->withCount(['votes' => function ($query) {
                 $query->select(DB::raw('count(distinct membership_id)'));
@@ -68,7 +68,7 @@ class PollController extends Controller
         return Inertia::render('Polls/Index', [
             'polls' => $pagination->getCollection(),
             'pagination' => $pagination,
-            'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
+            'ensembles' => Ensemble::forUser()->get()->values(),
         ]);
     }
 

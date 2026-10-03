@@ -26,9 +26,11 @@ import BulkEditEventsModal from './BulkEditEventsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
+import CalendarSyncDialog from '../../components/Event/CalendarSyncDialog';
 
-const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can, setSidebarOpen }) => {
+const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSyncUrl, can, setSidebarOpen }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showSyncModal, setShowSyncModal] = React.useState(false);
 	const { route } = useRoute();
 
 	const bulkEdit = useBulkEdit(events.data, can.update_event, can.delete_event, 'Event');
@@ -69,6 +71,11 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can, setSide
 			can: 'list_attendances',
 		},
 		{ label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
+		{
+			label: 'Sync to Calendar App',
+			icon: 'calendar-plus',
+			onClick: () => setShowSyncModal(true),
+		},
 		bulkEdit.action,
 		filterAction,
 	]
@@ -104,9 +111,6 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can, setSide
 					<PageHeaderTitle>
 						<Icon icon="calendar" type="solid" className="mr-2" /> Events
 					</PageHeaderTitle>
-					<PageHeaderMeta>
-						<div>Calendar Sync URL: {route('events.feed')}</div>
-					</PageHeaderMeta>
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{actions.map(action => (
@@ -127,6 +131,8 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, can, setSide
 					))}
 				</PageHeaderActions>
 			</PageHeader>
+
+			<CalendarSyncDialog calendarSyncUrl={calendarSyncUrl} isOpen={showSyncModal} setIsOpen={setShowSyncModal} />
 
 			<Dialog
 				title={`Delete ${bulkEdit.selectedIds.length} Events?`}

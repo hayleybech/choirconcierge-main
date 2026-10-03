@@ -41,7 +41,7 @@ class DashController extends Controller
     private function getMemberversaries()
     {
         return Membership::query()
-            ->ensembleRestricted()
+            ->forEnsembles()
             ->with('user')
             ->select('*')
             ->active()
@@ -87,7 +87,7 @@ class DashController extends Controller
     private function getEmptyDobs()
     {
         return Membership::query()
-            ->ensembleRestricted()
+            ->forEnsembles()
             ->with('user')
             ->emptyDobs()
             ->count();
@@ -96,7 +96,7 @@ class DashController extends Controller
     private function getBirthdays()
     {
         return User::query()
-            ->whereHas('memberships', fn($query) => $query->ensembleRestricted()->active())
+            ->whereHas('memberships', fn($query) => $query->forEnsembles()->active())
             ->select('*')
             ->birthdays()
             ->get()
@@ -182,7 +182,7 @@ class DashController extends Controller
         }
 
         return Poll::query()
-            ->ensembleRestricted()
+            ->forEnsembles()
             ->withCount(['votes' => function ($query) {
                 $query->select(DB::raw('count(distinct membership_id)'));
             }])

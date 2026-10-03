@@ -21,7 +21,7 @@ const RiserStackForm = ({ stack, voiceParts, singers, ensembles }) => {
     const { user } = usePage().props;
 
     const [showHeights, setShowHeights] = useState(false);
-    const [showImperial, setShowImperial] = useMetricImperialPreference();
+    const showImperial = useMetricImperialPreference();
 
     const { data, setData, post, put, processing, errors } = useForm({
         title: stack?.title ?? '',
@@ -127,16 +127,6 @@ const RiserStackForm = ({ stack, voiceParts, singers, ensembles }) => {
                           updateFn={value => setShowHeights(value)}
                         />
                     </div>
-                    <div className="sm:col-span-1">
-                        <DetailToggle
-                            label="Metric/Imperial"
-                            description={`Showing ${showImperial ? 'imperial' : 'metric'}`}
-                            value={showImperial}
-                            updateFn={setShowImperial}
-                            disabled={!showHeights}
-                        />
-                    </div>
-
                     {ensembles.length > 1 && (
                         <div className="sm:col-span-6">
                             <fieldset>

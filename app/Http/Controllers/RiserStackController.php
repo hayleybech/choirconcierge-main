@@ -28,38 +28,23 @@ class RiserStackController extends Controller
         $user = auth()->user();
         $canUpdateRiserStacks = $user?->isSuperAdmin || $user?->membership?->hasAbility('riser_stacks_update');
 
-        $ensembles = Ensemble::query()
-            ->when(! $canUpdateRiserStacks, function (Builder $query) use ($user) {
-                $query->whereIn('id', $user?->membership?->enrolments->pluck('ensemble_id') ?? []);
-            })
-            ->get();
-
         $userEnsemblesCount = $canUpdateRiserStacks ? Ensemble::count() : ($user?->membership?->enrolments->count() ?? 0);
 
         return Inertia::render('RiserStacks/Index', [
             'stacks' => $this->getStacks(),
-            'ensembles' => $ensembles,
+            'ensembles' => Ensemble::forUser()->get(),
             'userEnsemblesCount' => $userEnsemblesCount,
         ]);
     }
 
     private function getStacks(): LengthAwarePaginator
     {
-        $user = auth()->user();
-        $canUpdateRiserStacks = $user?->isSuperAdmin || $user?->membership?->hasAbility('riser_stacks_update');
-
         return QueryBuilder::for(RiserStack::class)
             ->with('ensembles')
             ->allowedFilters([
                 AllowedFilter::exact('ensembles.id'),
             ])
-            ->when(! $canUpdateRiserStacks, function (Builder $query) use ($user) {
-                $query->where(function (Builder $query) use ($user) {
-                    $query->whereHas('ensembles', function (Builder $query) use ($user) {
-                        $query->whereIn('ensembles.id', $user?->membership?->enrolments->pluck('ensemble_id') ?? []);
-                    })->orDoesntHave('ensembles');
-                });
-            })
+            ->forEnsembles()
             ->paginate(20)
             ->appends(request()->query());
     }
@@ -67,7 +52,7 @@ class RiserStackController extends Controller
     public function create(): Response
     {
         $singers = Membership::query()
-            ->ensembleRestricted()
+            ->forEnsembles()
             ->active()
             ->with(['user', 'enrolments'])
             ->get()
@@ -119,7 +104,7 @@ class RiserStackController extends Controller
 
         // Get singers who are not already on the riser stack.
         $singers = Membership::query()
-            ->ensembleRestricted()
+            ->forEnsembles()
             ->active()
             ->with(['user', 'enrolments'])
             ->whereDoesntHave('riser_stacks', static function ($query) use ($stack) {

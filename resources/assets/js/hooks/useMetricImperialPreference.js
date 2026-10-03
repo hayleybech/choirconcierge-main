@@ -1,13 +1,12 @@
-import { useCallback } from 'react';
-import useCookie from 'react-use-cookie';
+import { usePage } from '@inertiajs/react';
 
 const useMetricImperialPreference = () => {
-	const [_showImperial, _setShowImperial] = useCookie('show-imperial-measurements', 'no');
+	const { user } = usePage().props;
+	const showImperial = user?.prefers_metric !== null && user?.prefers_metric !== undefined
+		? !user.prefers_metric
+		: ['LR', 'MM', 'US'].includes(user?.address_country);
 
-	const showImperial = _showImperial === 'yes';
-	const setShowImperial = useCallback(val => _setShowImperial(val ? 'yes' : 'no'), []);
-
-	return [showImperial, setShowImperial];
+	return showImperial;
 };
 
 export default useMetricImperialPreference;

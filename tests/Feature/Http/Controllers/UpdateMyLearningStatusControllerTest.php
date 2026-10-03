@@ -66,4 +66,52 @@ class UpdateMyLearningStatusControllerTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertRedirect(the_tenant_route('songs.show', [$song]));
     }
+
+    public function test_a_singer_without_permission_cannot_mark_themselves_as_performance_ready(): void
+    {
+        $song = Song::factory()->create();
+        $user = User::factory()
+            ->has(Membership::factory())
+            ->create();
+        $user->membership->roles()->attach([Role::where('name', 'User')->value('id')]);
+
+        $this->actingAs($user);
+
+        $response = $this->post(the_tenant_route('songs.my-learning.update', $song), [
+            'status' => 'performance-ready',
+        ]);
+
+        $response->assertSessionHasErrors('status');
+
+        $this->assertDatabaseMissing('membership_song', [
+            'membership_id' => $user->membership->id,
+            'song_id' => $song->id,
+            'status' => 'performance-ready',
+        ]);
+    }
+
+    public function test_a_singer_with_permission_can_mark_themselves_as_performance_ready(): void
+    {
+        $song = Song::factory()->create();
+        $user = User::factory()
+            ->has(Membership::factory())
+            ->create();
+        $user->membership->roles()->attach([Role::where('name', 'Music Team')->value('id')]);
+
+        $this->actingAs($user);
+
+        $response = $this->post(the_tenant_route('songs.my-learning.update', $song), [
+            'status' => 'performance-ready',
+        ]);
+
+        $this->assertDatabaseHas('membership_song', [
+            'membership_id' => $user->membership->id,
+            'song_id' => $song->id,
+            'status' => 'performance-ready',
+        ]);
+
+        $response
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(the_tenant_route('songs.show', [$song]));
+    }
 }

@@ -132,7 +132,7 @@ class AttendanceController extends Controller
             'pagination' => $pagination,
             'individualCheckInUrl' => $this->getCheckInUrl($event),
             'voiceParts' => VoicePart::all()->values(),
-            'ensembles' => Ensemble::ensembleRestricted()->get()->values(),
+            'ensembles' => Ensemble::forUser()->get()->values(),
             'totalEnsemblesCount' => Ensemble::count(),
             'singerStatuses' => array_map(fn($s) => [
                 'id' => $s->value,

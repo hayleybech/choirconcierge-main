@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Rules\UserUniqueForOrganisation;
+use App\Enums\SingerStatus;
+use App\Models\Ensemble;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -22,8 +24,37 @@ class CreateSingerRequest extends FormRequest
     {
         $this->merge([
             'onboarding_enabled' => ! $this->input('onboarding_disabled'),
+            'status' => $this->input('status', SingerStatus::PROSPECTS->value),
             'email' => str($this->email)->trim()->lower()->toString(),
         ]);
+    }
+
+    /**
+     * Default the enrolments to the single ensemble when none were submitted,
+     * now that the submitted data has passed validation.
+     */
+    public function passedValidation(): void
+    {
+        $enrolments = $this->validated('enrolments', []);
+
+        if (empty($enrolments) && Ensemble::count() === 1) {
+            $enrolments = [[
+                'ensemble_id' => Ensemble::first()->id,
+                'voice_part_id' => null,
+            ]];
+        }
+
+        $this->merge(['enrolments' => $enrolments]);
+    }
+
+    /**
+     * Get the enrolments that should be created for this singer.
+     *
+     * @return array<array{ensemble_id: int, voice_part_id: ?int}>
+     */
+    public function enrolments(): array
+    {
+        return $this->input('enrolments', []);
     }
 
     /**
@@ -60,9 +91,12 @@ class CreateSingerRequest extends FormRequest
             'reason_for_joining' => ['max:255'],
             'referrer' => ['max:255'],
             'membership_details' => ['max:255'],
-            'joined_at' => ['date', 'before_or_equal:today'],
             'onboarding_enabled' => ['boolean'],
+            'status' => ['required', Rule::enum(SingerStatus::class)],
             'user_roles' => ['array', 'exists:roles,id'],
+            'enrolments' => ['array'],
+            'enrolments.*.ensemble_id' => ['required', 'numeric', 'exists:ensembles,id'],
+            'enrolments.*.voice_part_id' => ['nullable', 'numeric', 'exists:voice_parts,id'],
         ]);
     }
 }

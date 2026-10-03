@@ -4,11 +4,12 @@ import Label from "./inputs/Label";
 import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
 import FilterActions from "./inputs/FilterActions";
+import LearningStatus from "../LearningStatus";
 
-const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => (
+const LearningStatusFilters = ({ song, voiceParts, form, ensembles, singerStatuses }) => (
     <Filters
-        routeName="events.rsvps.index"
-        routeParams={{ event: event.id }}
+        routeName="songs.singers.index"
+        routeParams={{ song: song.id }}
         form={form}
         render={(data, setData) => (<>
             <div>
@@ -50,43 +51,39 @@ const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => 
 
             <fieldset>
                 <div className="flex items-center justify-between">
-                    <legend className="text-sm font-medium text-gray-700">RSVP Response</legend>
+                    <legend className="text-sm font-medium text-gray-700">Learning Status</legend>
                     <FilterActions
-                        onSelectAll={() => setData('rsvp.response', ['yes', 'no', 'unknown'])}
-                        onClear={() => setData('rsvp.response', [])}
+                        onSelectAll={() => setData('learning.status', Object.keys(LearningStatus.statuses))}
+                        onClear={() => setData('learning.status', [])}
                     />
                 </div>
                 <CheckboxGroup
-                    name="rsvp.response"
-                    options={[
-                        { id: 'yes', name: 'Going' },
-                        { id: 'no', name: 'Not going' },
-                        { id: 'unknown', name: 'No RSVP' },
-                    ]}
-                    value={data['rsvp.response']}
-                    updateFn={value => setData('rsvp.response', value)}
+                    name="learning.status"
+                    options={Object.keys(LearningStatus.statuses).map((slug) => ({ id: slug, name: new LearningStatus(slug).title }))}
+                    value={data['learning.status']}
+                    updateFn={value => setData('learning.status', value)}
                 />
             </fieldset>
 
-          {ensembles.length > 1 && (
-            <fieldset>
-              <div className="flex items-center justify-between">
-                <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
-                <FilterActions
-                    onSelectAll={() => setData('enrolments.ensemble_id', ensembles.map(ensemble => ensemble.id))}
-                    onClear={() => setData('enrolments.ensemble_id', [])}
-                />
-              </div>
-              <CheckboxGroup
-                name="enrolments.ensemble_id"
-                options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
-                value={data['enrolments.ensemble_id']}
-                updateFn={value => setData('enrolments.ensemble_id', value)}
-              />
-            </fieldset>
-          )}
+            {ensembles.length > 1 && (
+                <fieldset>
+                    <div className="flex items-center justify-between">
+                        <legend className="text-sm font-medium text-gray-700">Ensemble</legend>
+                        <FilterActions
+                            onSelectAll={() => setData('enrolments.ensemble_id', ensembles.map(ensemble => ensemble.id))}
+                            onClear={() => setData('enrolments.ensemble_id', [])}
+                        />
+                    </div>
+                    <CheckboxGroup
+                        name="enrolments.ensemble_id"
+                        options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
+                        value={data['enrolments.ensemble_id']}
+                        updateFn={value => setData('enrolments.ensemble_id', value)}
+                    />
+                </fieldset>
+            )}
         </>)}
     />
 );
 
-export default RsvpFilters;
+export default LearningStatusFilters;

@@ -182,6 +182,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
 
 const EnsemblesList = ({ organisation }) => {
 	const [editingEnsemble, setEditingEnsemble] = useState(null);
+	const [deletingEnsemble, setDeletingEnsemble] = useState(null);
 
 	return (
 		<FormWrapper>
@@ -198,12 +199,18 @@ const EnsemblesList = ({ organisation }) => {
 											className="max-h-10 w-auto shrink"
 										/>
 									)}
-									<div>{ensemble.name}</div>
-								</div>
-								<Button variant="primary" size="xs" onClick={() => setEditingEnsemble(ensemble)}>
-									<Icon icon="edit" />
-									Edit
-								</Button>
+ 								<div>{ensemble.name}</div>
+ 							</div>
+ 								<div className="flex gap-2">
+ 									<Button variant="primary" size="xs" onClick={() => setEditingEnsemble(ensemble)}>
+ 										<Icon icon="edit" />
+ 										Edit
+ 									</Button>
+ 									<Button variant="danger-solid" size="xs" onClick={() => setDeletingEnsemble(ensemble)}>
+ 										<Icon icon="trash" />
+ 										Delete
+ 									</Button>
+ 								</div>
 							</li>
 						))}
 					</ul>
@@ -215,6 +222,12 @@ const EnsemblesList = ({ organisation }) => {
 				setIsOpen={setEditingEnsemble}
 				organisation={organisation}
 				ensemble={editingEnsemble}
+			/>
+			<DeleteEnsembleDialog
+				isOpen={!!deletingEnsemble}
+				setIsOpen={setDeletingEnsemble}
+				organisation={organisation}
+				ensemble={deletingEnsemble}
 			/>
 		</FormWrapper>
 	);
@@ -240,6 +253,7 @@ const EditEnsembleDialog = ({ isOpen, setIsOpen, organisation, ensemble }) => {
 			onSuccess: () => setIsOpen(false),
 		});
 	}
+
 
 	return (
 		<Dialog
@@ -271,6 +285,52 @@ const EditEnsembleDialog = ({ isOpen, setIsOpen, organisation, ensemble }) => {
 							isSquare={false}
 							updateFn={value => setData('logo', value)}
 						/>
+					</div>
+				</div>
+			</Form>
+		</Dialog>
+	);
+};
+
+const DeleteEnsembleDialog = ({ isOpen, setIsOpen, organisation, ensemble }) => {
+	const { route } = useRoute();
+	const { data, setData, delete: deleteRequest, errors, processing } = useForm({ confirmation: '' });
+
+	useEffect(() => {
+		setData('confirmation', '');
+	}, [ensemble]);
+
+	function destroy(e) {
+		e.preventDefault();
+		deleteRequest(route('organisations.ensembles.destroy', { organisation, ensemble }), {
+			onSuccess: () => setIsOpen(null),
+		});
+	}
+
+	return (
+		<Dialog
+			title="Delete ensemble"
+			okLabel="Delete ensemble"
+			onOk={destroy}
+			okVariant="danger-solid"
+			isOpen={isOpen}
+			setIsOpen={setIsOpen}
+			processing={processing}
+		>
+			<Form onSubmit={destroy}>
+				<div className="flex flex-col gap-y-4">
+					<p>
+						This will permanently delete {ensemble?.name} and remove its {ensemble?.enrolments_count ?? 0}{' '}
+						members from the ensemble.
+					</p>
+					<div>
+						<Label label="Type DELETE to confirm" forInput="confirmation" />
+						<TextInput
+							name="confirmation"
+							value={data.confirmation}
+							updateFn={value => setData('confirmation', value)}
+						/>
+						{errors.confirmation && <Error>{errors.confirmation}</Error>}
 					</div>
 				</div>
 			</Form>

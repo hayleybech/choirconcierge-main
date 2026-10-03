@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Central;
 use App\Http\Middleware\EnsureUserIsSuperAdmin;
+use App\Http\Middleware\SampleByAuthentication;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,4 +56,7 @@ Route::prefix('/app')->group(function () {
         Route::get('changelog', Central\ChangelogController::class)->name('changelog');
 	});
 });
+
+Route::fallback(fn () => abort(404))
+    ->middleware(SampleByAuthentication::rate(1.0, 0.01));
 

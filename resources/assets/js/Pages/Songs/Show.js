@@ -194,106 +194,113 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 
 					<SectionLayout
 						layout={{
-							className: 'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 xl:grid-cols-4 lg:overflow-y-auto',
+							className:
+								'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 xl:flex-1 xl:min-h-0 xl:grid-cols-4 lg:overflow-y-auto',
 							columns: [
-								{ id: 'attachments', className: 'sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch' },
-								{ id: 'viewer', className: 'hidden xl:block sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 overflow-hidden' },
+								{
+									id: 'attachments',
+									className:
+										'sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch',
+								},
+								{
+									id: 'viewer',
+									className:
+										'hidden xl:flex sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 min-h-0 flex-col overflow-hidden',
+								},
 								{ id: 'details', className: 'sm:col-span-1 sm:order-2 xl:order-3' },
 							],
 						}}
 						sections={[
-								{
-									id: 'attachments',
-									column: 'attachments',
-									title: 'Attachments',
-									hideTitleOnDesktop: true,
-									show: true,
-									content: (
-										<>
-											<SongAttachmentList
-												attachmentTypes={attachment_types}
-												song={song}
-												currentPdf={currentPdf}
-												setCurrentPdf={showPdf}
-												player={player}
-											/>
-										</>
-									),
-								},
-								{
-									id: 'sheet-music',
-									column: 'viewer',
-									show: isDesktop && !isCompactDesktop && !player.showFullscreen,
-									showOnMobile: false,
-									content: !!currentPdf ? (
-										<Pdf
-											filename={currentPdf?.download_url}
-											isFullscreen={player.showFullscreen}
-											openFullscreen={openFullscreen}
-											closeFullscreen={closeFullscreen}
-											pitch={song.pitch.split('/')[0]}
-											instrument={instrument}
-											setInstrument={setInstrument}
+							{
+								id: 'attachments',
+								column: 'attachments',
+								title: 'Attachments',
+								hideTitleOnDesktop: true,
+								show: true,
+								content: (
+									<>
+										<SongAttachmentList
+											attachmentTypes={attachment_types}
+											song={song}
+											currentPdf={currentPdf}
+											setCurrentPdf={showPdf}
+											player={player}
 										/>
-									) : (
-										<EmptyState
-											title="No sheet music"
-											description={
-												<>
-													This prime location is reserved for displaying your sheet music.{' '}
-													<br />
-													It looks like you don't have any yet for this song.
-												</>
-											}
-											actionDescription={
-												song.can['update_song']
-													? 'To add some, use the "Add Attachment" form on the left.'
-													: null
-											}
-											icon="file-pdf"
-										/>
-									),
-								},
-								{
-									id: 'learning',
-									column: 'details',
-									title: 'Learning',
-									hideTitleOnDesktop: true,
-									show: true,
-									content: (
-										<>
-											<div className="py-2 px-4 bg-gray-100 border-b border-gray-200 flex items-center justify-between gap-2">
-												<h3 className="font-semibold text-gray-700">My Learning Status</h3>
-											</div>
+									</>
+								),
+							},
+							{
+								id: 'sheet-music',
+								column: 'viewer',
+								className: 'flex min-h-0 flex-1 flex-col',
+								show: isDesktop && !isCompactDesktop && !player.showFullscreen,
+								showOnMobile: false,
+								content: !!currentPdf ? (
+									<Pdf
+										filename={currentPdf?.download_url}
+										isFullscreen={player.showFullscreen}
+										openFullscreen={openFullscreen}
+										closeFullscreen={closeFullscreen}
+										pitch={song.pitch.split('/')[0]}
+										instrument={instrument}
+										setInstrument={setInstrument}
+									/>
+								) : (
+									<EmptyState
+										title="No sheet music"
+										description={
+											<>
+												This prime location is reserved for displaying your sheet music. <br />
+												It looks like you don't have any yet for this song.
+											</>
+										}
+										actionDescription={
+											song.can['update_song']
+												? 'To add some, use the "Add Attachment" form on the left.'
+												: null
+										}
+										icon="file-pdf"
+									/>
+								),
+							},
+							{
+								id: 'learning',
+								column: 'details',
+								title: 'Learning',
+								hideTitleOnDesktop: true,
+								show: true,
+								content: (
+									<>
+										<div className="py-2 px-4 bg-gray-100 border-b border-gray-200 flex items-center justify-between gap-2">
+											<h3 className="font-semibold text-gray-700">My Learning Status</h3>
+										</div>
 
-											<MyLearningStatus song={song} />
-											<hr className="border-gray-200" />
-											{song.can['update_song'] && (
-												<>
-													<div className="py-2 px-4 bg-gray-100 border-b border-gray-200 flex items-center justify-between gap-2">
-														<h3 className="font-semibold text-gray-700">
-															Learning Summary
-														</h3>
-														<EditLearningSummaryButton song={song} />
-													</div>
+										<MyLearningStatus song={song} />
+										<hr className="border-gray-200" />
+										{song.can['update_song'] && (
+											<>
+												<div className="py-2 px-4 bg-gray-100 border-b border-gray-200 flex items-center justify-between gap-2">
+													<h3 className="font-semibold text-gray-700">Learning Summary</h3>
+													<EditLearningSummaryButton song={song} />
+												</div>
 
-													<LearningSummary
-														status_count={status_count}
-														voice_parts_count={voice_parts_count}
-														song={song}
-													/>
-												</>
-											)}
-										</>
-									),
-								},
-								{
-									id: 'description',
-									column: 'details',
-									title: 'Description',
-									show: true,
-									content: <SongDescription description={song.description} />,
-								},
+												<LearningSummary
+													status_count={status_count}
+													voice_parts_count={voice_parts_count}
+													song={song}
+												/>
+											</>
+										)}
+									</>
+								),
+							},
+							{
+								id: 'description',
+								column: 'details',
+								title: 'Description',
+								show: true,
+								content: <SongDescription description={song.description} />,
+							},
 						]}
 					/>
 				</>

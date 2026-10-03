@@ -17,6 +17,9 @@ import MetricImperialInput from '../../components/inputs/MetricImperialInput';
 import CountrySelect from "../../components/inputs/CountrySelect";
 import StateSelect from "../../components/inputs/StateSelect";
 import Icon from '../../components/Icon';
+import Select from '../../components/inputs/Select';
+
+const regionFirstDayOfWeek = country => ['CA', 'IN', 'JP', 'US'].includes(country) ? 0 : 1;
 
 const AccountForm = ({ postUrl, cancelUrl }) => {
 	const { user } = usePage().props;
@@ -29,6 +32,8 @@ const AccountForm = ({ postUrl, cancelUrl }) => {
 		phone: user.phone ?? '',
 		password: '',
 		pronouns: user.pronouns ?? '',
+		prefers_metric: user.prefers_metric === null || user.prefers_metric === undefined ? '' : (user.prefers_metric ? 'metric' : 'imperial'),
+		first_day_of_week: user.first_day_of_week ?? '',
 
 		password_confirmation: '',
 		dob: user.dob ? DateTime.fromJSDate(new Date(user.dob)).toISODate() : '',
@@ -53,8 +58,9 @@ const AccountForm = ({ postUrl, cancelUrl }) => {
 	function submit(e) {
 		e.preventDefault();
 
-        transform(data => ({
+		transform(data => ({
             ...data,
+			prefers_metric: data.prefers_metric === '' ? null : data.prefers_metric === 'metric',
             _method: 'PUT',
         }));
 
@@ -252,6 +258,39 @@ const AccountForm = ({ postUrl, cancelUrl }) => {
 							hasErrors={!!errors['medical_conditions']}
 						/>
 						{errors.medical_conditions && <Error>{errors.medical_conditions}</Error>}
+					</div>
+				</FormSection>
+
+				<FormSection title="Preferences">
+					<div className="sm:col-span-2">
+						<Label label="Measurement system" forInput="prefers_metric" />
+						<Select
+							name="prefers_metric"
+							options={[
+								{ key: '', label: `Region default (${['LR', 'MM', 'US'].includes(user.address_country) ? 'Imperial' : 'Metric'})` },
+								{ key: 'metric', label: 'Metric' },
+								{ key: 'imperial', label: 'Imperial' },
+							]}
+							value={data.prefers_metric}
+							updateFn={value => setData('prefers_metric', value)}
+							hasErrors={!!errors.prefers_metric}
+						/>
+						{errors.prefers_metric && <Error>{errors.prefers_metric}</Error>}
+					</div>
+					<div className="sm:col-span-2">
+						<Label label="First day of week" forInput="first_day_of_week" />
+						<Select
+							name="first_day_of_week"
+							options={[
+								{ key: '', label: `Region default (${regionFirstDayOfWeek(user.address_country) === 0 ? 'Sunday' : 'Monday'})` },
+								{ key: '0', label: 'Sunday' },
+								{ key: '1', label: 'Monday' },
+							]}
+							value={data.first_day_of_week === null || data.first_day_of_week === '' ? '' : String(data.first_day_of_week)}
+							updateFn={value => setData('first_day_of_week', value === '' ? null : value)}
+							hasErrors={!!errors.first_day_of_week}
+						/>
+						{errors.first_day_of_week && <Error>{errors.first_day_of_week}</Error>}
 					</div>
 				</FormSection>
 

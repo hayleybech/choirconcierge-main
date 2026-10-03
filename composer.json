@@ -7,7 +7,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "ext-json": "*",
         "barryvdh/laravel-ide-helper": "^3.0",
         "doctrine/dbal": "^3.3",
@@ -44,15 +44,15 @@
     },
     "type": "project",
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.6",
+        "barryvdh/laravel-debugbar": "^4.0",
         "beyondcode/laravel-query-detector": "^2.2",
         "jasonmccreary/laravel-test-assertions": "^2.1",
         "laravel/boost": "^2.2",
         "laravel/sail": "^1.13",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^8.1",
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
         "spatie/laravel-ignition": "^2.0",
         "wnx/laravel-stats": "^2.8"
     },

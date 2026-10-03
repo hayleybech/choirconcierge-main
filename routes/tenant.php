@@ -99,7 +99,8 @@ Route::middleware([
 ])->prefix('/{tenant}')->group(function () {
 
     // Public calendar feed
-    Route::get('/events-ical', [ICalController::class, 'index'])->name('events.feed');
+    Route::get('/events-ical', [ICalController::class, 'index'])
+        ->name('events.feed');
 
     Route::middleware([
         BlockMemberAccessWhenNoActiveSubscription::class,
@@ -278,7 +279,7 @@ Route::middleware([
             Route::post('/organisation', [TenantController::class, 'update'])->name('organisation.update');
 
             // Sub-groups aka Ensembles aka Choirs
-            Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);
+            Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update', 'destroy']);
         });
         // Search APIs
         Route::prefix('find')->name('find.')->group(function () {

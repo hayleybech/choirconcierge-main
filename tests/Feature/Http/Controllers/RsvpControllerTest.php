@@ -85,32 +85,20 @@ class RsvpControllerTest extends TestCase
         ]);
     }
 
-    public function test_update_changes_the_oldest(): void
+    public function test_update_changes_the_existing_rsvp(): void
     {
         $this->actingAs(Membership::factory()->create()->user);
 
         $event = Event::factory()->create();
 
-        Rsvp::factory()
-            ->count(2)
-            ->sequence(
-                [
-                    'response' => 'no',
-                    'membership_id' => Auth::user()->membership->id,
-                    'event_id' => $event->id,
-                    'created_at' => now(),
-                ],
-                [
-                    'response' => 'no',
-                    'membership_id' => Auth::user()->membership->id,
-                    'event_id' => $event->id,
-                    'created_at' => now()->addMinute(),
-                ],
-            )
-            ->create();
+        $rsvp = Rsvp::factory()->create([
+            'response' => 'no',
+            'membership_id' => Auth::user()->membership->id,
+            'event_id' => $event->id,
+        ]);
         
         $response = $this->from(the_tenant_route('events.show', $event))->put(
-            the_tenant_route('events.rsvps.update', [$event, $event->rsvps->first()]),
+            the_tenant_route('events.rsvps.update', [$event, $rsvp]),
             [
                 'rsvp_response' => 'yes',
             ],
@@ -119,7 +107,7 @@ class RsvpControllerTest extends TestCase
         $response->assertSessionHasNoErrors();
         $response->assertRedirect(the_tenant_route('events.show', $event));
         $this->assertDatabaseHas('rsvps', [
-            'id' => $event->rsvps()->oldest()->first()->id,
+            'id' => $rsvp->id,
             'response' => 'yes',
             'event_id' => $event->id,
             'membership_id' => Auth::user()->membership->id,
