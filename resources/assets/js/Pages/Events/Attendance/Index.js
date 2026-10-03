@@ -156,7 +156,7 @@ const Index = ({
 									onClick={() => bulkUpdateAttendance('late')}
 									className={menuItemStyles('secondary', active, '', 'xs')}
 								>
-									<Icon icon="alarm-exclamation" mr className="text-amber-500" />
+									<Icon icon="alarm-snooze" mr className="text-amber-500" />
 									Late
 								</button>
 							)}
@@ -167,7 +167,7 @@ const Index = ({
 									onClick={() => bulkUpdateAttendance('late_deemed_absent')}
 									className={menuItemStyles('secondary', active, '', 'xs')}
 								>
-									<Icon icon="times" mr className="text-red-500" />
+									<Icon icon="alarm-exclamation" mr className="text-red-500" />
 									Late (Deemed Absent)
 								</button>
 							)}
@@ -180,7 +180,8 @@ const Index = ({
 
 	const countsData = [
 		{ label: 'On Time', textColour: 'text-emerald-500', icon: 'check', count: counts.present },
-		{ label: 'Late', textColour: 'text-amber-500', icon: 'alarm-exclamation', count: counts.late },
+		{ label: 'Late', textColour: 'text-amber-500', icon: 'alarm-snooze', count: counts.late },
+		{ label: 'Late (Deemed Absent)', textColour: 'text-red-500', icon: 'alarm-exclamation', count: counts.late_deemed_absent },
 		{ label: 'Absent', textColour: 'text-red-500', icon: 'times', count: counts.absent },
 		{ label: 'Not recorded', textColour: 'text-gray-500', icon: 'question', count: counts.unknown },
 	];
@@ -267,7 +268,7 @@ const Index = ({
 
 			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
 
-			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-4">
+			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-5">
 				{countsData.map(({ label, textColour, icon, count }) => (
 					<div
 						className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1 border-gray-100"

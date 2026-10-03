@@ -142,7 +142,8 @@ class AttendanceController extends Controller
             'counts' => [
                 'present' => $event->attendances()->where('response', 'present')->count(),
                 'late' => $event->attendances()->where('response', 'late')->count(),
-                'absent' => $event->attendances()->whereIn('response', ['absent', 'absent_apology', 'late_deemed_absent'])->count(),
+                'late_deemed_absent' => $event->attendances()->where('response', 'late_deemed_absent')->count(),
+                'absent' => $event->attendances()->whereIn('response', ['absent', 'absent_apology'])->count(),
                 'unknown' => $event->attendances()->where('response', 'unknown')->count(),
             ],
         ]);

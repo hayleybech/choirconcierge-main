@@ -44,13 +44,13 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 		{
 			id: 'late',
 			name: 'Late',
-			icon: 'alarm-exclamation',
+			icon: 'alarm-snooze',
 			colour: 'text-amber-500',
 		},
 		{
 			id: 'late_deemed_absent',
 			name: 'Late (Deemed Absent)',
-			icon: 'times',
+			icon: 'alarm-exclamation',
 			colour: 'text-red-500',
 		},
 		{

@@ -85,8 +85,8 @@ class Attendance extends Model
     {
         $icons = [
             'present' => 'check',
-            'late' => 'alarm-exclamation',
-            'late_deemed_absent' => 'times',
+            'late' => 'alarm-snooze',
+            'late_deemed_absent' => 'alarm-exclamation',
             'absent' => 'times',
             'absent_apology' => 'times',
             'unknown' => 'question',
