@@ -66,9 +66,7 @@ class AttendanceController extends Controller
                 ->orderBy('attendance_updated', $direction);
         });
 
-        $defaultStatus = SingerStatus::MEMBERS->value;
-
-        $query = Membership::forEvent($event)
+        $query = Membership::consideredForEvent($event)
             ->with([
                 'user',
                 'enrolments.voice_part',
@@ -102,7 +100,7 @@ class AttendanceController extends Controller
                     $query->whereHas('status', fn($q) => $q
                         ->whereIn('status', (array) $value)
                     );
-                })->default([$defaultStatus]),
+                }),
             ])
             ->allowedSorts([
                 ...$this->singerSorts(),
@@ -140,11 +138,12 @@ class AttendanceController extends Controller
                 'slug' => $s->value,
             ], SingerStatus::cases()),
             'counts' => [
-                'present' => $event->attendances()->where('response', 'present')->count(),
-                'late' => $event->attendances()->where('response', 'late')->count(),
-                'late_deemed_absent' => $event->attendances()->where('response', 'late_deemed_absent')->count(),
-                'absent' => $event->attendances()->whereIn('response', ['absent', 'absent_apology'])->count(),
-                'unknown' => $event->attendances()->where('response', 'unknown')->count(),
+                'present' => $event->singers_attendance('present')->count(),
+                'late' => $event->singers_attendance('late')->count(),
+                'late_deemed_absent' => $event->singers_attendance('late_deemed_absent')->count(),
+                'absent' => $event->singers_attendance('absent')->count()
+                    + $event->singers_attendance('absent_apology')->count(),
+                'unknown' => $event->singers_attendance_missing()->count(),
             ],
         ]);
     }

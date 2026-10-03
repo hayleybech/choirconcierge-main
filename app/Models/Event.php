@@ -247,6 +247,22 @@ class Event extends Model
         return Membership::forEvent($this)->active();
     }
 
+    /**
+     * Membership status history wasn't tracked before this event, so attendance can't be based on who was active.
+     */
+    public function isBeforeMembershipHistory(): bool
+    {
+        return $this->start_date->lt(tz_from_tenant_to_utc(MembershipStatus::HISTORY_TRACKED_FROM));
+    }
+
+    /**
+     * Memberships considered for attendance at this event.
+     */
+    public function considered_memberships(): Builder
+    {
+        return Membership::consideredForEvent($this);
+    }
+
     public function singers_rsvp_response(string $response): Builder
     {
         return $this->relevant_memberships()->whereHas('rsvps', function (Builder $query) use ($response) {
@@ -281,15 +297,15 @@ class Event extends Model
 
     public function singers_attendance(string $response): Builder
     {
-        return $this->relevant_memberships()->whereHas('attendances', function (Builder $query) use ($response) {
+        return $this->considered_memberships()->whereHas('attendances', function (Builder $query) use ($response) {
             $query->where('event_id', '=', $this->id)->where('response', '=', $response);
         });
     }
 
     public function singers_attendance_missing(): Builder
     {
-        return $this->relevant_memberships()->whereDoesntHave('attendances', function (Builder $query) {
-            $query->where('event_id', '=', $this->id);
+        return $this->considered_memberships()->whereDoesntHave('attendances', function (Builder $query) {
+            $query->where('event_id', '=', $this->id)->where('response', '!=', 'unknown');
         });
     }
 
@@ -298,12 +314,12 @@ class Event extends Model
         return VoicePart::withCount([
             'enrolments as singers_count' => function ($query) use ($response) {
                 $query->whereHas('membership', function (Builder $query) {
-                    $query->forEvent($this);
+                    $query->consideredForEvent($this);
                 });
             },
             'enrolments as singers_response_count' => function ($query) use ($response) {
                 $query->whereHas('membership', function (Builder $query) use ($response) {
-                    $query->forEvent($this)->whereHas('attendances', function (Builder $query) use ($response) {
+                    $query->consideredForEvent($this)->whereHas('attendances', function (Builder $query) use ($response) {
                         $query->where('event_id', '=', $this->id)
                             ->where('response', '=', $response);
                     });
@@ -419,7 +435,7 @@ class Event extends Model
     public function createMissingAttendanceRecords(): void
     {
         $this->attendances()->createMany(
-            $this->relevant_memberships()
+            $this->considered_memberships()
                 ->whereDoesntHave('attendances', fn ($query) => $query->where('attendances.event_id', $this->id))
                 ->pluck('id')
                 ->map(fn ($singerId) => ['membership_id' => $singerId, 'response' => 'unknown'])

@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Enums\SingerStatus;
 use App\Models\Role;
 use App\Models\Membership;
 use App\Models\Tenant;
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use JMac\Testing\Traits\AdditionalAssertions;
+use Illuminate\Support\Carbon;
 use Laravel\Paddle\Subscription;
 
 abstract class TestCase extends BaseTestCase
@@ -45,6 +47,25 @@ abstract class TestCase extends BaseTestCase
     protected function actingAsRole(string $roleName): User
     {
         return tap($this->createUserWithRole($roleName), fn ($user) => $this->actingAs($user));
+    }
+
+    /**
+     * @param array<array{SingerStatus, string}> $statuses Status history as [status, date] pairs.
+     */
+    protected function createMembershipWithStatusHistory(array $statuses): Membership
+    {
+        $membership = Membership::factory()->create();
+        $membership->statuses()->delete();
+
+        foreach ($statuses as [$status, $date]) {
+            $membership->statuses()->create([
+                'status' => $status->value,
+                'created_at' => Carbon::parse($date),
+                'updated_at' => Carbon::parse($date),
+            ]);
+        }
+
+        return $membership->refresh();
     }
 
     protected function createUserWithRole(string $roleName): User

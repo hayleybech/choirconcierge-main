@@ -141,20 +141,18 @@ class AttendanceControllerTest extends TestCase
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        $status1 = SingerStatus::MEMBERS->value;
-        $status2 = SingerStatus::PROSPECTS->value;
+        $event = Event::factory()->create(['start_date' => '2026-06-01 10:00:00']);
+        $this->createMembershipWithStatusHistory([[SingerStatus::MEMBERS, '2025-01-01']]);
+        $archived = $this->createMembershipWithStatusHistory([
+            [SingerStatus::MEMBERS, '2025-01-01'],
+            [SingerStatus::ARCHIVED_MEMBERS, '2026-07-01'],
+        ]);
 
-        $event = Event::factory()->create();
-        $singer1 = Membership::factory()->create();
-        $singer1->statuses()->create(['status' => $status1]);
-        $singer2 = Membership::factory()->create();
-        $singer2->statuses()->create(['status' => $status2]);
-
-        $this->get(the_tenant_route('events.attendances.index', ['event' => $event, 'filter[status.id]' => $status2]))
+        $this->get(the_tenant_route('events.attendances.index', ['event' => $event, 'filter[status.id]' => SingerStatus::ARCHIVED_MEMBERS->value]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('allSingers', 1)
-                ->where('allSingers.0.id', $singer2->id)
+                ->where('allSingers.0.id', $archived->id)
             );
     }
 
@@ -178,42 +176,67 @@ class AttendanceControllerTest extends TestCase
             );
     }
 
-    public function test_index_defaults_to_members_status(): void
+    public function test_index_lists_singers_who_were_active_members_at_the_time_of_the_event(): void
     {
         $this->actingAs($this->createUserWithRole('Events Team'));
 
-        $memberStatus = SingerStatus::MEMBERS->value;
-        $prospectStatus = SingerStatus::PROSPECTS->value;
+        $event = Event::factory()->create(['start_date' => '2026-06-01 10:00:00']);
 
-        $event = Event::factory()->create();
+        $member = $this->createMembershipWithStatusHistory([[SingerStatus::MEMBERS, '2025-01-01']]);
+        // No longer active, but was at the time (and the status filter has no default)
+        $archived = $this->createMembershipWithStatusHistory([
+            [SingerStatus::MEMBERS, '2025-01-01'],
+            [SingerStatus::ARCHIVED_MEMBERS, '2026-07-01'],
+        ]);
+        // Joined after the event
+        $newcomer = $this->createMembershipWithStatusHistory([
+            [SingerStatus::PROSPECTS, '2026-05-01'],
+            [SingerStatus::MEMBERS, '2026-07-01'],
+        ]);
+        $prospect = $this->createMembershipWithStatusHistory([[SingerStatus::PROSPECTS, '2026-05-01']]);
 
-        // Create a member
-        $member = Membership::factory()->create();
-        $member->statuses()->create(['status' => $memberStatus]);
-
-        // Create a prospect
-        $prospect = Membership::factory()->create();
-        $prospect->statuses()->create(['status' => $prospectStatus]);
+        $event->attendances()->create(['membership_id' => $member->id, 'response' => 'present']);
+        // Recorded while not active, so ignored
+        $event->attendances()->create(['membership_id' => $newcomer->id, 'response' => 'present']);
 
         $this->get(the_tenant_route('events.attendances.index', ['event' => $event]))
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('allSingers', function ($singers) use ($memberStatus, $member, $prospect) {
-                    $singerIds = collect($singers)->pluck('id');
-
-                    // Should contain the member
-                    if (!$singerIds->contains($member->id)) {
-                        return false;
-                    }
-
-                    // Should NOT contain the prospect
-                    if ($singerIds->contains($prospect->id)) {
-                        return false;
-                    }
-
-                    // All returned singers should have the member status
-                    return collect($singers)->every(fn($s) => $s['status']['status'] === $memberStatus);
-                })
+                ->where('allSingers', fn ($singers) => collect($singers)->pluck('id')->sort()->values()->all()
+                    === collect([$member->id, $archived->id])->sort()->values()->all())
+                ->where('counts.present', 1)
+                ->where('counts.unknown', 1)
             );
+
+        // Placeholder records are only created for singers who were active at the time
+        $this->assertDatabaseHas('attendances', ['event_id' => $event->id, 'membership_id' => $archived->id, 'response' => 'unknown']);
+        $this->assertDatabaseMissing('attendances', ['event_id' => $event->id, 'membership_id' => $prospect->id]);
+    }
+
+    public function test_index_lists_singers_with_recorded_attendance_for_events_before_status_history_was_tracked(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $event = Event::factory()->create(['start_date' => '2026-03-01 10:00:00']);
+
+        $attended = $this->createMembershipWithStatusHistory([[SingerStatus::ARCHIVED_MEMBERS, '2025-01-01']]);
+        $absent = $this->createMembershipWithStatusHistory([[SingerStatus::MEMBERS, '2025-01-01']]);
+        $notRecorded = $this->createMembershipWithStatusHistory([[SingerStatus::MEMBERS, '2025-01-01']]);
+        $untracked = $this->createMembershipWithStatusHistory([[SingerStatus::MEMBERS, '2025-01-01']]);
+
+        $event->attendances()->create(['membership_id' => $attended->id, 'response' => 'present']);
+        $event->attendances()->create(['membership_id' => $absent->id, 'response' => 'absent']);
+        $event->attendances()->create(['membership_id' => $notRecorded->id, 'response' => 'unknown']);
+
+        $this->get(the_tenant_route('events.attendances.index', ['event' => $event]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('allSingers', fn ($singers) => collect($singers)->pluck('id')->sort()->values()->all()
+                    === collect([$attended->id, $absent->id])->sort()->values()->all())
+                ->where('counts.present', 1)
+                ->where('counts.absent', 1)
+                ->where('counts.unknown', 0)
+            );
+
+        $this->assertDatabaseMissing('attendances', ['event_id' => $event->id, 'membership_id' => $untracked->id]);
     }
 
     public function test_update_all_redirects_to_event(): void

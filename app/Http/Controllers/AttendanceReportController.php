@@ -6,7 +6,6 @@ use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Membership;
-use App\Models\MembershipStatus;
 use App\Models\VoicePart;
 use Illuminate\Database\Eloquent\Collection;
 use Inertia\Inertia;
@@ -41,14 +40,6 @@ class AttendanceReportController extends Controller
 
         $singers = $this->getSingers($events);
 
-        $avg_singers_per_event = $events->count() > 0
-            ? round($events->sum('singersPresent') / $events->count(), 2)
-            : null;
-
-        $avg_events_per_singer = $singers->count() > 0
-            ? round($singers->sum('timesPresent') / $singers->count(), 2)
-            : null;
-
         return Inertia::render('Events/AttendanceReport', [
             'voiceParts' => $this->getVoiceParts($singers)->values(),
             'events' => $events->values(),
@@ -57,8 +48,12 @@ class AttendanceReportController extends Controller
             'defaultStartsAfter' => $defaultStartsAfter,
             'defaultStartsBefore' => $defaultStartsBefore,
             'numSingers' => $singers->count(),
-            'avgSingersPerEvent' => $avg_singers_per_event,
-            'avgEventsPerSinger' => $avg_events_per_singer,
+            'avgSingersPerEvent' => $events->count() > 0
+                ? round($events->sum('singersPresent') / $events->count(), 2)
+                : null,
+            'avgEventsPerSinger' => $singers->count() > 0
+                ? round($singers->sum('timesPresent') / $singers->count(), 2)
+                : null,
         ]);
     }
 
@@ -69,7 +64,7 @@ class AttendanceReportController extends Controller
             ->map(function ($part) use ($singers) {
                 $part->members = $singers
                     ->filter(fn($singer) => $singer->enrolments
-                        ->contains(fn ($enrolment) => $enrolment->voice_part_id === $part->id))
+                        ->contains(fn($enrolment) => $enrolment->voice_part_id === $part->id))
                     ->values();
 
                 return $part;
@@ -84,27 +79,23 @@ class AttendanceReportController extends Controller
      */
     private function getSingers(Collection $events): Collection
     {
-        $historyTrackedFrom = tz_from_tenant_to_utc(MembershipStatus::HISTORY_TRACKED_FROM);
-
         $memberships = Membership::with([
-                'user',
-                'enrolments',
-                'statuses',
-                'attendances' => fn ($query) => $query->whereIn('event_id', $events->pluck('id')),
-            ])
+            'user',
+            'enrolments',
+            'statuses',
+            'attendances' => fn($query) => $query->whereIn('event_id', $events->pluck('id')),
+        ])
             ->get();
 
-        $events->each(function (Event $event) use ($memberships, $historyTrackedFrom) {
-            $event->isBeforeHistory = $event->start_date->lt($historyTrackedFrom);
+        $events->each(function (Event $event) use ($memberships) {
+            $event->isBeforeHistory = $event->isBeforeMembershipHistory();
 
-            $considered = $memberships->filter(fn (Membership $singer) => $event->isBeforeHistory
-                ? $singer->attendances->contains('event_id', $event->id)
-                : $singer->wasActiveAt($event->start_date) && $this->isEnrolledForEvent($singer, $event));
+            $considered = $memberships->filter(fn(Membership $singer) => $singer->isConsideredForEvent($event));
 
             $event->consideredSingerIds = $considered->pluck('id')->values();
             $event->numSingers = $considered->count();
             $event->singersPresent = $considered
-                ->filter(fn (Membership $singer) => $singer->attendances
+                ->filter(fn(Membership $singer) => $singer->attendances
                     ->where('event_id', $event->id)
                     ->whereIn('response', self::PRESENT_RESPONSES)
                     ->isNotEmpty())
@@ -115,15 +106,15 @@ class AttendanceReportController extends Controller
         });
 
         return $memberships
-            ->filter(fn (Membership $singer) => $events->contains(
-                fn (Event $event) => $event->consideredSingerIds->contains($singer->id)
+            ->filter(fn(Membership $singer) => $events->contains(
+                fn(Event $event) => $event->consideredSingerIds->contains($singer->id)
             ))
             ->values()
             ->makeHidden('statuses')
             ->append('user_avatar_thumb_url')
             ->each(function (Membership $singer) use ($events) {
                 $consideredEventIds = $events
-                    ->filter(fn (Event $event) => $event->consideredSingerIds->contains($singer->id))
+                    ->filter(fn(Event $event) => $event->consideredSingerIds->contains($singer->id))
                     ->pluck('id');
 
                 $singer->numEvents = $consideredEventIds->count();
@@ -136,11 +127,5 @@ class AttendanceReportController extends Controller
                     ? floor($singer->timesPresent / $singer->numEvents * 100)
                     : null;
             });
-    }
-
-    private function isEnrolledForEvent(Membership $singer, Event $event): bool
-    {
-        return $event->ensembles->isEmpty()
-            || $singer->enrolments->whereIn('ensemble_id', $event->ensembles->pluck('id'))->isNotEmpty();
     }
 }

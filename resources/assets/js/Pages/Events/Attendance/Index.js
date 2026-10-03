@@ -88,13 +88,7 @@ const Index = ({
 		{ name: 'enrolments.voice_part_id', multiple: true },
 		{ name: 'enrolments.ensemble_id', multiple: true },
 		{ name: 'attendance.response', multiple: true },
-		{
-			name: 'status.id',
-			multiple: true,
-			defaultValue: singerStatuses.find(c => c.name === 'Members')?.id
-				? [singerStatuses.find(c => c.name === 'Members').id]
-				: [],
-		},
+		{ name: 'status.id', multiple: true },
 	];
 
 	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);

@@ -8,7 +8,6 @@ use App\Models\Enrolment;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Membership;
-use Illuminate\Support\Carbon;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -42,6 +41,8 @@ class AttendanceReportControllerTest extends TestCase
 
         $this->attend($longtime, $historicEvent, 'present');
         $this->attend($leaver, $historicEvent, 'absent');
+        // A "Not recorded" placeholder doesn't count as tracked attendance
+        $this->attend($untracked, $historicEvent, 'unknown');
         $this->attend($longtime, $eventA, 'present');
         $this->attend($leaver, $eventA, 'late');
         // Recorded while not active, so ignored
@@ -97,16 +98,7 @@ class AttendanceReportControllerTest extends TestCase
      */
     private function createSinger(array $statuses): Membership
     {
-        $singer = Membership::factory()->create();
-        $singer->statuses()->delete();
-
-        foreach ($statuses as [$status, $date]) {
-            $singer->statuses()->create([
-                'status' => $status->value,
-                'created_at' => Carbon::parse($date),
-                'updated_at' => Carbon::parse($date),
-            ]);
-        }
+        $singer = $this->createMembershipWithStatusHistory($statuses);
 
         Enrolment::factory()->create(['membership_id' => $singer->id, 'voice_part_id' => null]);
 
