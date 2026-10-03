@@ -218,29 +218,39 @@ const AttendanceReport = ({
 																</span>
 															</Link>
 														</th>
-														{events
-															.map(event => getAttendanceBySingerAndEvent(singer, event))
-															.map((attendance, key) => (
+														{events.map(event => {
+															const attendance = getAttendanceBySingerAndEvent(singer, event);
+
+															return (
 																<td
 																	className="border border-gray-300 text-center"
-																	key={key}
+																	key={event.id}
 																>
 																	{attendance ? (
 																		<AttendanceTag
 																			icon={attendance.icon}
 																			colour={attendance.colour}
 																		/>
+																	) : !event.isBeforeHistory &&
+																	  !event.consideredSingerIds.includes(singer.id) ? (
+																		<span
+																			className="text-xs text-gray-400"
+																			title="Not an active member at the time"
+																		>
+																			N/A
+																		</span>
 																	) : (
 																		<AttendanceTag icon="question" colour="gray" />
 																	)}
 																</td>
-															))}
+															);
+														})}
 														<td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-5">
 															<div className="text-sm md:text-base">
 																{singer.percentPresent}%
 															</div>
 															<div className="text-xs hidden md:block">
-																{singer.timesPresent}&nbsp;/&nbsp;{events.length}
+																{singer.timesPresent}&nbsp;/&nbsp;{singer.numEvents}
 															</div>
 														</td>
 													</tr>
@@ -258,9 +268,11 @@ const AttendanceReport = ({
 													className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-3"
 													key={event.id}
 												>
-													<div className="text-sm md:text-base">{event.percentPresent}%</div>
+													<div className="text-sm md:text-base">
+														{event.percentPresent !== null ? `${event.percentPresent}%` : 'N/A'}
+													</div>
 													<div className="text-xs hidden md:block">
-														{event.singersPresent} / {numSingers}
+														{event.singersPresent} / {event.numSingers}
 													</div>
 												</td>
 											))}

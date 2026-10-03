@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Membership;
+use App\Models\MembershipStatus;
 use App\Models\VoicePart;
 use Illuminate\Database\Eloquent\Collection;
 use Inertia\Inertia;
@@ -15,6 +16,8 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class AttendanceReportController extends Controller
 {
+    private const PRESENT_RESPONSES = ['present', 'late'];
+
     public function __invoke(): Response
     {
         $this->authorize('viewAny', Attendance::class);
@@ -38,20 +41,13 @@ class AttendanceReportController extends Controller
 
         $singers = $this->getSingers($events);
 
-        $events->each(function ($event) use ($singers) {
-            $event->singersPresent = $event->singers_attendance('present')->active()->get()->count()
-                + $event->singers_attendance('late')->active()->get()->count();
-            $event->percentPresent = $singers->count() > 0 ? floor($event->singersPresent / $singers->count() * 100) : null;
-        });
+        $avg_singers_per_event = $events->count() > 0
+            ? round($events->sum('singersPresent') / $events->count(), 2)
+            : null;
 
-        $avg_singers_per_event = round(
-            $events->count() > 0
-                ? $events->reduce(static function ($carry, $event) {
-                    return $carry + $event->singers_attendance('present')->count() + $event->singers_attendance('late')->count();
-                }, 0) / $events->count()
-                : null,
-            2,
-        );
+        $avg_events_per_singer = $singers->count() > 0
+            ? round($singers->sum('timesPresent') / $singers->count(), 2)
+            : null;
 
         return Inertia::render('Events/AttendanceReport', [
             'voiceParts' => $this->getVoiceParts($singers)->values(),
@@ -62,24 +58,8 @@ class AttendanceReportController extends Controller
             'defaultStartsBefore' => $defaultStartsBefore,
             'numSingers' => $singers->count(),
             'avgSingersPerEvent' => $avg_singers_per_event,
-            'avgEventsPerSinger' => $this->getAverageEventsPerSinger(),
+            'avgEventsPerSinger' => $avg_events_per_singer,
         ]);
-    }
-
-    private function getAverageEventsPerSinger(): float
-    {
-        return round(
-            Membership::active()
-                ->with(['attendances'])
-                ->get()
-                ->reduce(fn ($carry, $singer) =>
-                    $carry + $singer
-                        ->attendances()
-                        ->whereIn('response', ['present', 'late'])
-                        ->count()
-                , 0) / Membership::all()->count(),
-            2,
-        );
     }
 
     private function getVoiceParts($singers): \Illuminate\Support\Collection|Collection
@@ -96,19 +76,71 @@ class AttendanceReportController extends Controller
             });
     }
 
-    private function getSingers(Collection $events)
+    /**
+     * Determine which singers are considered for each event, then calculate totals for events and singers.
+     *
+     * Before membership status history was tracked, a singer is considered for an event if their attendance
+     * was recorded for it. Afterwards, a singer is considered if they were an active member at the time.
+     */
+    private function getSingers(Collection $events): Collection
     {
-        return Membership::with(['user', 'attendances', 'enrolments'])
-            ->active()
-            ->get()
+        $historyTrackedFrom = tz_from_tenant_to_utc(MembershipStatus::HISTORY_TRACKED_FROM);
+
+        $memberships = Membership::with([
+                'user',
+                'enrolments',
+                'statuses',
+                'attendances' => fn ($query) => $query->whereIn('event_id', $events->pluck('id')),
+            ])
+            ->get();
+
+        $events->each(function (Event $event) use ($memberships, $historyTrackedFrom) {
+            $event->isBeforeHistory = $event->start_date->lt($historyTrackedFrom);
+
+            $considered = $memberships->filter(fn (Membership $singer) => $event->isBeforeHistory
+                ? $singer->attendances->contains('event_id', $event->id)
+                : $singer->wasActiveAt($event->start_date) && $this->isEnrolledForEvent($singer, $event));
+
+            $event->consideredSingerIds = $considered->pluck('id')->values();
+            $event->numSingers = $considered->count();
+            $event->singersPresent = $considered
+                ->filter(fn (Membership $singer) => $singer->attendances
+                    ->where('event_id', $event->id)
+                    ->whereIn('response', self::PRESENT_RESPONSES)
+                    ->isNotEmpty())
+                ->count();
+            $event->percentPresent = $event->numSingers > 0
+                ? floor($event->singersPresent / $event->numSingers * 100)
+                : null;
+        });
+
+        return $memberships
+            ->filter(fn (Membership $singer) => $events->contains(
+                fn (Event $event) => $event->consideredSingerIds->contains($singer->id)
+            ))
+            ->values()
+            ->makeHidden('statuses')
             ->append('user_avatar_thumb_url')
-            ->each(function ($singer) use ($events) {
+            ->each(function (Membership $singer) use ($events) {
+                $consideredEventIds = $events
+                    ->filter(fn (Event $event) => $event->consideredSingerIds->contains($singer->id))
+                    ->pluck('id');
+
+                $singer->numEvents = $consideredEventIds->count();
                 $singer->timesPresent = $singer
-	                ->attendances
-	                ->whereIn('event_id', $events->pluck('id'))
-	                ->whereIn('response', ['present', 'late'])
-	                ->count();
-                $singer->percentPresent = $events->count() > 0 ? floor($singer->timesPresent / $events->count() * 100) : null;
+                    ->attendances
+                    ->whereIn('event_id', $consideredEventIds)
+                    ->whereIn('response', self::PRESENT_RESPONSES)
+                    ->count();
+                $singer->percentPresent = $singer->numEvents > 0
+                    ? floor($singer->timesPresent / $singer->numEvents * 100)
+                    : null;
             });
+    }
+
+    private function isEnrolledForEvent(Membership $singer, Event $event): bool
+    {
+        return $event->ensembles->isEmpty()
+            || $singer->enrolments->whereIn('ensemble_id', $event->ensembles->pluck('id'))->isNotEmpty();
     }
 }

@@ -142,6 +142,23 @@ class Membership extends Model
         return $this->hasMany(MembershipStatus::class);
     }
 
+    /**
+     * Get the status this membership had at the given moment, based on its status history.
+     */
+    public function statusAt(Carbon $date): ?SingerStatus
+    {
+        return $this->statuses
+            ->filter(fn (MembershipStatus $status) => $status->created_at->lte($date))
+            ->sortBy([['created_at', 'asc'], ['id', 'asc']])
+            ->last()
+            ?->status;
+    }
+
+    public function wasActiveAt(Carbon $date): bool
+    {
+        return $this->statusAt($date) === SingerStatus::MEMBERS;
+    }
+
     public function enrolments(): HasMany
     {
         return $this->hasMany(Enrolment::class);
