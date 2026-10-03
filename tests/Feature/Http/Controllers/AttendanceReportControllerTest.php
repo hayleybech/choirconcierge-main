@@ -8,6 +8,7 @@ use App\Models\Enrolment;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Membership;
+use App\Models\VoicePart;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -108,6 +109,43 @@ class AttendanceReportControllerTest extends TestCase
                 $this->assertEquals([2, 0, 0], $this->singerTotals($singers[$untracked->id]));
                 $this->assertEquals([1, 1, 100], $this->singerTotals($singers[$newcomer->id]));
                 $this->assertEquals([2, 1, 50], $this->singerTotals($singers[$leaver->id]));
+            });
+    }
+
+    public function test_it_filters_singers_and_event_totals_by_voice_part(): void
+    {
+        $this->actingAsRole('Admin');
+
+        $typeId = EventType::where('title', 'Rehearsal')->value('id');
+        $event = Event::factory()->create(['type_id' => $typeId, 'start_date' => '2026-08-01 10:00:00']);
+        $soprano = VoicePart::factory()->create(['title' => 'Soprano']);
+        $alto = VoicePart::factory()->create(['title' => 'Alto']);
+        $sopranoSinger = $this->createSinger([[SingerStatus::MEMBERS, '2025-01-01']]);
+        $altoSinger = $this->createSinger([[SingerStatus::MEMBERS, '2025-01-01']]);
+
+        Enrolment::where('membership_id', $sopranoSinger->id)->update(['voice_part_id' => $soprano->id]);
+        Enrolment::where('membership_id', $altoSinger->id)->update(['voice_part_id' => $alto->id]);
+        $this->attend($sopranoSinger, $event, 'present');
+        $this->attend($altoSinger, $event, 'absent');
+
+        $this->get(the_tenant_route('events.reports.attendance', [
+            'filter' => [
+                'type.id' => [$typeId],
+                'starts_after' => '2026-01-01',
+                'starts_before' => '2026-09-01',
+                'enrolments.voice_part_id' => [$soprano->id],
+            ],
+        ]))
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page) use ($event, $sopranoSinger, $altoSinger): void {
+                $props = $page->toArray()['props'];
+                $events = collect($props['events'])->keyBy('id');
+
+                $this->assertEquals([$sopranoSinger->id], collect($props['singers'])->pluck('id')->all());
+                $this->assertEquals([$sopranoSinger->id], $events[$event->id]['consideredSingerIds']);
+                $this->assertEquals(1, $events[$event->id]['numSingers']);
+                $this->assertEquals(1, $events[$event->id]['singersPresent']);
+                $this->assertArrayNotHasKey($altoSinger->id, collect($props['singers'])->keyBy('id'));
             });
     }
 

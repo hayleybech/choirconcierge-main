@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Membership;
+use App\Models\VoicePart;
 use Illuminate\Database\Eloquent\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -33,16 +34,20 @@ class AttendanceReportController extends Controller
                     ->default($defaultStartsAfter),
                 AllowedFilter::scope('starts_before')
                     ->default($defaultStartsBefore),
+                AllowedFilter::callback('enrolments.voice_part_id', fn ($query, $value) => $query),
             ])
             ->orderBy('start_date')
             ->get();
 
-        $singers = $this->sortSingers($this->getSingers($events));
+        $voicePartIds = request()->input('filter')['enrolments.voice_part_id'] ?? null;
+        $voicePartIds = $voicePartIds === null ? null : (array) $voicePartIds;
+        $singers = $this->sortSingers($this->getSingers($events, $voicePartIds));
 
         return Inertia::render('Events/AttendanceReport', [
             'singers' => $singers->values(),
             'events' => $events->values(),
             'eventTypes' => EventType::all()->values(),
+            'voiceParts' => VoicePart::all()->values(),
             'defaultEventType' => $defaultEventType,
             'defaultStartsAfter' => $defaultStartsAfter,
             'defaultStartsBefore' => $defaultStartsBefore,
@@ -103,7 +108,7 @@ class AttendanceReportController extends Controller
      * Before membership status history was tracked, a singer is considered for an event if their attendance
      * was recorded for it. Afterwards, a singer is considered if they were an active member at the time.
      */
-    private function getSingers(Collection $events): Collection
+    private function getSingers(Collection $events, ?array $voicePartIds = null): Collection
     {
         $memberships = Membership::with([
             'user',
@@ -111,6 +116,10 @@ class AttendanceReportController extends Controller
             'statuses',
             'attendances' => fn($query) => $query->whereIn('event_id', $events->pluck('id')),
         ])
+            ->when($voicePartIds !== null, fn ($query) => $query->whereHas(
+                'enrolments',
+                fn ($query) => $query->whereIn('voice_part_id', $voicePartIds),
+            ))
             ->get();
 
         $events->each(function (Event $event) use ($memberships) {

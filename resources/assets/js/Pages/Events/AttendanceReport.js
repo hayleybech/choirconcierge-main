@@ -30,6 +30,7 @@ import VoicePartTag from '../../components/VoicePartTag';
 const AttendanceReport = ({
 	events,
 	eventTypes,
+	voiceParts,
 	defaultEventType,
 	defaultStartsAfter,
 	defaultStartsBefore,
@@ -53,6 +54,7 @@ const AttendanceReport = ({
 		{ name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
 		{ name: 'starts_after', defaultValue: defaultStartsAfter },
 		{ name: 'starts_before', defaultValue: defaultStartsBefore },
+		{ name: 'enrolments.voice_part_id', multiple: true },
 	];
 
 	const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
@@ -127,7 +129,7 @@ const AttendanceReport = ({
 						<FilterSortPane
 							sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 							showSortsOnDesktop
-							filters={<AttendanceReportFilters eventTypes={eventTypes} form={sortFilterForm} />}
+							filters={<AttendanceReportFilters eventTypes={eventTypes} voiceParts={voiceParts} form={sortFilterForm} />}
 							closeFn={() => setShowFilters(false)}
 						/>
 					</div>
