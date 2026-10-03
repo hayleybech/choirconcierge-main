@@ -102,6 +102,11 @@ Route::middleware([
     Route::get('/events-ical', [ICalController::class, 'index'])
         ->name('events.feed');
 
+    // Mail log open tracking is a public email resource and must remain available
+    // even when a tenant does not have an active subscription.
+    Route::get('/mail-log/open/{mail_log_uid}/{email}', [MailLogOpenController::class, 'show'])
+        ->name('mail-logs.open');
+
     Route::middleware([
         BlockMemberAccessWhenNoActiveSubscription::class,
 
@@ -114,10 +119,6 @@ Route::middleware([
 
         /** Mailbox **/
         Route::get('/mailbox/process', [MailboxController::class, 'process']);
-
-        // Mail log open tracking
-        Route::get('/mail-log/open/{mail_log_uid}/{email}', [MailLogOpenController::class, 'show'])
-            ->name('mail-logs.open');
 
         // Event Email magic links (no login required)
         Route::get('/events/{event}/email-rsvp/{user}', RsvpFromNotificationController::class)
