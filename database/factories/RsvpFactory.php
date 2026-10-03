@@ -11,6 +11,7 @@ class RsvpFactory extends Factory
     {
         return [
             'response' => $this->faker->randomElement(['yes', 'no']),
+            'details' => null,
             'created_at' => now(),
             'updated_at' => now(),
         ];

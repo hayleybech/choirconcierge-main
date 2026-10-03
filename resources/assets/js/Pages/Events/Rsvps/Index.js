@@ -314,6 +314,11 @@ const Index = ({
 												label={singer.rsvp.label}
 												colour={singer.rsvp.colour}
 											/>
+											{singer.rsvp.details && (
+												<div className="mt-1 text-xs italic text-gray-500" title={singer.rsvp.details}>
+													{singer.rsvp.details}
+												</div>
+											)}
 										</TableCell>
 									)}
 									{visibleColumns.includes('updated') && (

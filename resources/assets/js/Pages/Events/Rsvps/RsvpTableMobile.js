@@ -79,7 +79,7 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble, visibleColumns, cu
 									<div className="div">
 										{visibleColumns.includes('rsvp') && (
 											<div className="scale-90 origin-right">
-												<RsvpTag
+ 											<RsvpTag
 													icon={singer.rsvp.icon}
 													label={singer.rsvp.label}
 													colour={singer.rsvp.colour}
@@ -91,10 +91,15 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble, visibleColumns, cu
 												icon="pencil"
 												date={singer.rsvp.updated_at}
 												format="DATE_SHORT"
-												className="text-gray-400 text-sm"
-												mr={false}
-											/>
-										)}
+														className="text-gray-400 text-sm"
+														mr={false}
+													/>
+												)}
+												{singer.rsvp.details && (
+													<div className="mt-1 text-xs italic text-gray-500 truncate" title={singer.rsvp.details}>
+														{singer.rsvp.details}
+													</div>
+												)}
 									</div>
 								</div>
 								{visibleColumns.includes('voice_part') && (
