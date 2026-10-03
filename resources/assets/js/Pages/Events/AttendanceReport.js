@@ -24,6 +24,8 @@ import Button from '../../components/inputs/Button';
 import Icon from '../../components/Icon';
 import { TableMobileHeader } from '../../components/TableMobile';
 import AttendanceChart from '../../components/Event/AttendanceChart';
+import Sorts from '../../components/Sorts';
+import VoicePartTag from '../../components/VoicePartTag';
 
 const AttendanceReport = ({
 	events,
@@ -31,7 +33,7 @@ const AttendanceReport = ({
 	defaultEventType,
 	defaultStartsAfter,
 	defaultStartsBefore,
-	voiceParts,
+	singers,
 	numSingers,
 	avgSingersPerEvent,
 	avgEventsPerSinger,
@@ -41,7 +43,12 @@ const AttendanceReport = ({
 	const [isChartCollapsed, setIsChartCollapsed] = React.useState(false);
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
-	const sorts = [];
+	const sorts = [
+		{ id: 'full-name', name: 'First Name', default: true },
+		{ id: 'last-name-first', name: 'Last Name' },
+		{ id: 'voice-part', name: 'Voice Part' },
+		{ id: 'attendance', name: 'Attendance Rate' },
+	];
 	const filters = [
 		{ name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
 		{ name: 'starts_after', defaultValue: defaultStartsAfter },
@@ -114,17 +121,19 @@ const AttendanceReport = ({
 
 			{events.length > 0 && numSingers > 0 && <AttendanceChart events={events} isCollapsed={isChartCollapsed} />}
 
-			<div className="flex flex-col overflow-auto lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300 h-full">
+			<div className="flex min-h-0 flex-1 flex-col overflow-auto divide-y divide-gray-300 lg:flex-row lg:divide-x lg:divide-y-0">
 				{showFilters && (
-					<div className="lg:w-1/5 xl:w-1/6 lg:z-10 h-full">
+					<div className="flex h-full shrink-0 flex-col lg:z-10 lg:w-1/5">
 						<FilterSortPane
+							sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+							showSortsOnDesktop
 							filters={<AttendanceReportFilters eventTypes={eventTypes} form={sortFilterForm} />}
 							closeFn={() => setShowFilters(false)}
 						/>
 					</div>
 				)}
 
-				<div className="flex flex-col grow lg:overflow-x-auto">
+				<div className="flex min-h-0 grow flex-col lg:overflow-x-auto">
 					<div className="lg:hidden">
 						<TableMobileHeader bulkEdit={bulkEdit}>
 							<Button
@@ -138,7 +147,7 @@ const AttendanceReport = ({
 						</TableMobileHeader>
 					</div>
 
-					<div>
+					<div className="flex-1">
 						{events.length === 0 && (
 							<EmptyState
 								icon="calendar"
@@ -147,7 +156,7 @@ const AttendanceReport = ({
 							/>
 						)}
 
-						<div className=" pb-8 pr-8">
+						<div className="h-full pb-8 pr-8">
 							{events.length > 0 && numSingers === 0 && (
 								<EmptyState
 									icon="users"
@@ -156,7 +165,7 @@ const AttendanceReport = ({
 								/>
 							)}
 							{events.length > 0 && numSingers > 0 && (
-								<table className="bg-white h-full">
+								<table className="h-full bg-white">
 									<thead className="h-full">
 										<tr className="h-full">
 											<th />
@@ -206,77 +215,72 @@ const AttendanceReport = ({
 										</tr>
 									</thead>
 									<tbody>
-										{voiceParts.map(voicePart => (
-											<React.Fragment key={voicePart.id}>
-												<tr>
-													<th
-														colSpan="100000"
-														className="text-left px-3 md:px-5 py-2 md:py-3 text-sm md:text-base bg-gray-100 border border-gray-300"
+										{singers.map(singer => (
+											<tr key={singer.id}>
+												<th className="text-left whitespace-nowrap border border-gray-300">
+													<Link
+														href={route('singers.show', { singer })}
+														className="flex flex-nowrap items-center px-3 md:px-5 py-2 md:py-3 gap-2 md:gap-3 hover:bg-purple-100 hover:text-purple-600 text-purple-800"
 													>
-														{voicePart.title}
-													</th>
-												</tr>
-												{voicePart.members.map(singer => (
-													<tr key={singer.id}>
-														<th className="text-left whitespace-nowrap border border-gray-300">
-															<Link
-																href={route('singers.show', { singer })}
-																className="flex flex-nowrap items-center px-3 md:px-5 py-2 md:py-3 gap-2 md:gap-3 hover:bg-purple-100 hover:text-purple-600 text-purple-800"
-															>
-																<div className="shrink-0 h-6 md:h-8 w-6 md:w-8">
-																	<img
-																		className="h-6 w-6 md:h-8 md: md:w-8 rounded-sm md:rounded-md"
-																		src={singer.user.avatar_url}
-																		alt={singer.user.name}
-																	/>
-																</div>
+														<div className="shrink-0 h-6 md:h-8 w-6 md:w-8">
+															<img
+																className="h-6 w-6 md:h-8 md: md:w-8 rounded-sm md:rounded-md"
+																src={singer.user.avatar_url}
+																alt={singer.user.name}
+															/>
+														</div>
 
-																<span className="text-sm md:text-base">
-																	{singer.user.name}
-																</span>
-															</Link>
-														</th>
-														{events.map(event => {
-															const attendance = getAttendanceBySingerAndEvent(
-																singer,
-																event
-															);
+														<div className="flex flex-col items-start gap-1">
+															<span className="text-sm md:text-base">
+																{singer.user.name}
+															</span>
+															{singer.enrolments[0]?.voice_part && (
+																<VoicePartTag
+																	title={singer.enrolments[0].voice_part.title}
+																	colour={singer.enrolments[0].voice_part.colour}
+																/>
+															)}
+														</div>
+													</Link>
+												</th>
+												{events.map(event => {
+													const attendance = getAttendanceBySingerAndEvent(singer, event);
 
-															return (
-																<td
-																	className="border border-gray-300 text-center"
-																	key={event.id}
+													return (
+														<td
+															className="border border-gray-300 text-center"
+															key={event.id}
+														>
+															{attendance ? (
+																<AttendanceTag
+																	icon={attendance.icon}
+																	colour={attendance.colour}
+																/>
+															) : !event.isBeforeHistory &&
+															  !event.consideredSingerIds.includes(singer.id) ? (
+																<span
+																	className="text-xs text-gray-400"
+																	title="Not an active member at the time"
 																>
-																	{attendance ? (
-																		<AttendanceTag
-																			icon={attendance.icon}
-																			colour={attendance.colour}
-																		/>
-																	) : !event.isBeforeHistory &&
-																	  !event.consideredSingerIds.includes(singer.id) ? (
-																		<span
-																			className="text-xs text-gray-400"
-																			title="Not an active member at the time"
-																		>
-																			N/A
-																		</span>
-																	) : (
-																		<AttendanceTag icon="circle" colour="gray" type="regular" />
-																	)}
-																</td>
-															);
-														})}
-														<td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-5">
-															<div className="text-sm md:text-base">
-																{singer.percentPresent}%
-															</div>
-															<div className="text-xs hidden md:block">
-																{singer.timesPresent}&nbsp;/&nbsp;{singer.numEvents}
-															</div>
+																	N/A
+																</span>
+															) : (
+																<AttendanceTag
+																	icon="circle"
+																	colour="gray"
+																	type="regular"
+																/>
+															)}
 														</td>
-													</tr>
-												))}
-											</React.Fragment>
+													);
+												})}
+												<td className="border border-gray-300 text-gray-500 bg-gray-100 text-center px-1 md:px-2 py-1 md:py-5">
+													<div className="text-sm md:text-base">{singer.percentPresent}%</div>
+													<div className="text-xs hidden md:block">
+														{singer.timesPresent}&nbsp;/&nbsp;{singer.numEvents}
+													</div>
+												</td>
+											</tr>
 										))}
 									</tbody>
 									<tfoot>

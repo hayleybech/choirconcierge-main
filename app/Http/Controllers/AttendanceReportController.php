@@ -6,7 +6,6 @@ use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Membership;
-use App\Models\VoicePart;
 use Illuminate\Database\Eloquent\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -38,10 +37,10 @@ class AttendanceReportController extends Controller
             ->orderBy('start_date')
             ->get();
 
-        $singers = $this->getSingers($events);
+        $singers = $this->sortSingers($this->getSingers($events));
 
         return Inertia::render('Events/AttendanceReport', [
-            'voiceParts' => $this->getVoiceParts($singers)->values(),
+            'singers' => $singers->values(),
             'events' => $events->values(),
             'eventTypes' => EventType::all()->values(),
             'defaultEventType' => $defaultEventType,
@@ -57,18 +56,45 @@ class AttendanceReportController extends Controller
         ]);
     }
 
-    private function getVoiceParts($singers): \Illuminate\Support\Collection|Collection
+    private function sortSingers(Collection $singers): Collection
     {
-        return VoicePart::all()
-            ->push(VoicePart::getNullVoicePart())
-            ->map(function ($part) use ($singers) {
-                $part->members = $singers
-                    ->filter(fn($singer) => $singer->enrolments
-                        ->contains(fn($enrolment) => $enrolment->voice_part_id === $part->id))
-                    ->values();
+        $sort = ltrim((string) request('sort', 'full-name'), '-');
+        $descending = str_starts_with((string) request('sort', 'full-name'), '-');
 
-                return $part;
-            });
+        $compare = function (mixed $first, mixed $second) use ($descending): int {
+            $result = is_numeric($first) && is_numeric($second)
+                ? $first <=> $second
+                : strnatcasecmp((string) $first, (string) $second);
+
+            return $descending ? -$result : $result;
+        };
+
+        $sorted = $singers->sortBy([
+            function (Membership $first, Membership $second) use ($sort, $compare): int {
+                $firstValue = match ($sort) {
+                    'last-name-first' => $first->user->last_name,
+                    'voice-part' => $first->enrolments->first()?->voice_part?->title,
+                    'attendance' => $first->percentPresent,
+                    default => $first->user->first_name,
+                };
+                $secondValue = match ($sort) {
+                    'last-name-first' => $second->user->last_name,
+                    'voice-part' => $second->enrolments->first()?->voice_part?->title,
+                    'attendance' => $second->percentPresent,
+                    default => $second->user->first_name,
+                };
+
+                return $compare($firstValue, $secondValue);
+            },
+            ...in_array($sort, ['voice-part', 'attendance'], true)
+                ? [fn (Membership $first, Membership $second): int => $compare(
+                    $first->user->first_name,
+                    $second->user->first_name,
+                )]
+                : [],
+        ]);
+
+        return $sorted->values();
     }
 
     /**
@@ -81,7 +107,7 @@ class AttendanceReportController extends Controller
     {
         $memberships = Membership::with([
             'user',
-            'enrolments',
+            'enrolments.voice_part',
             'statuses',
             'attendances' => fn($query) => $query->whereIn('event_id', $events->pluck('id')),
         ])

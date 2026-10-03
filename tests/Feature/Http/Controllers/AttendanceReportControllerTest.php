@@ -62,7 +62,7 @@ class AttendanceReportControllerTest extends TestCase
             ->assertInertia(function (AssertableInertia $page) use ($historicEvent, $eventA, $eventB, $longtime, $untracked, $newcomer, $leaver, $prospect) {
                 $props = $page->toArray()['props'];
                 $events = collect($props['events'])->keyBy('id');
-                $singers = collect($props['voiceParts'])->flatMap(fn ($part) => $part['members'])->keyBy('id');
+                $singers = collect($props['singers'])->keyBy('id');
 
                 $this->assertEquals(4, $props['numSingers']);
                 $this->assertEqualsCanonicalizing(
