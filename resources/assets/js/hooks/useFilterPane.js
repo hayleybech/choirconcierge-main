@@ -19,7 +19,7 @@ const useFilterPane = () => {
         label: <span>Filter<span className="inline md:hidden">/Sort</span></span>,
         icon: 'filter',
         onClick: () => setShowFilters(! showFilters),
-        variant: hasNonDefaultFilters ? 'success-solid' : 'secondary',
+        variant: hasNonDefaultFilters ? 'success-outline' : 'secondary',
     } : null;
 
     return [showFilters, setShowFilters, filterAction, hasNonDefaultFilters];
