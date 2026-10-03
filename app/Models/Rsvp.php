@@ -68,8 +68,8 @@ class Rsvp extends Model
         $colours = [
             'yes' => 'emerald',
             'maybe' => 'amber',
-            'unknown' => 'red',
-            'no' => 'gray',
+            'unknown' => 'gray',
+            'no' => 'red',
         ];
 
         return $colours[$this->response];
@@ -80,7 +80,7 @@ class Rsvp extends Model
         $icons = [
             'yes' => 'check',
             'maybe' => 'question',
-            'unknown' => 'question',
+            'unknown' => 'circle',
             'no' => 'times',
         ];
 

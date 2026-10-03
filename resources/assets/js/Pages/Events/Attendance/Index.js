@@ -177,7 +177,7 @@ const Index = ({
 		{ label: 'Late', textColour: 'text-amber-500', icon: 'alarm-snooze', count: counts.late },
 		{ label: 'Late (Deemed Absent)', textColour: 'text-red-500', icon: 'alarm-exclamation', count: counts.late_deemed_absent },
 		{ label: 'Absent', textColour: 'text-red-500', icon: 'times', count: counts.absent },
-		{ label: 'Not recorded', textColour: 'text-gray-500', icon: 'question', count: counts.unknown },
+		{ label: 'Not recorded', textColour: 'text-gray-500', icon: 'circle', count: counts.unknown },
 	];
 
 	const breadcrumbs = [
@@ -269,7 +269,7 @@ const Index = ({
 						key={label}
 					>
 						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
-							<Icon icon={icon} />
+							<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
 							{label}
 						</div>
 						<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>

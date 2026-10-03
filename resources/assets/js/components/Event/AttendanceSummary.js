@@ -30,10 +30,10 @@ const AttendanceSummary = ({ attendanceCount, voicePartsAttendanceCount }) => (
                         { label: 'Late', colour: 'amber-500', icon: 'alarm-snooze', count: attendanceCount.late },
                         { label: 'Late (Deemed Absent)', colour: 'red-500', icon: 'alarm-exclamation', count: attendanceCount.late_deemed_absent },
                         { label: 'Absent', colour: 'red-500', icon: 'times', count: attendanceCount.absent },
-                        { label: 'Not recorded', colour: 'gray-500', icon: 'question', count: attendanceCount.unknown },
+                        { label: 'Not recorded', colour: 'gray-500', icon: 'circle', count: attendanceCount.unknown },
                     ].map(({ label, colour, icon, count}) => (
                         <div className="grow w-1/2 text-center" key={label}>
-                            <Icon icon={icon} className={`text-${colour}`} />
+                            <Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} className={`text-${colour}`} />
                             <p className={`font-semibold text-${colour}`}>{label}</p>
                             {count}
                         </div>

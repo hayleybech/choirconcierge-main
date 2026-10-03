@@ -89,7 +89,7 @@ class Attendance extends Model
             'late_deemed_absent' => 'alarm-exclamation',
             'absent' => 'times',
             'absent_apology' => 'times',
-            'unknown' => 'question',
+            'unknown' => 'circle',
         ];
 
         return $icons[$this->response];

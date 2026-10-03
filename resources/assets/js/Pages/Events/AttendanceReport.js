@@ -261,7 +261,7 @@ const AttendanceReport = ({
 																			N/A
 																		</span>
 																	) : (
-																		<AttendanceTag icon="question" colour="gray" />
+																		<AttendanceTag icon="circle" colour="gray" type="regular" />
 																	)}
 																</td>
 															);

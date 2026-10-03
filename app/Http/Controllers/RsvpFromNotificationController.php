@@ -11,7 +11,7 @@ class RsvpFromNotificationController extends Controller
     public function __invoke(Request $request, Event $event, User $user)
     {
         $request->validate([
-            'response' => ['required', 'in:yes,no'],
+            'response' => ['required', 'in:yes,maybe,no'],
         ]);
 
         $event->rsvps()->updateOrCreate(

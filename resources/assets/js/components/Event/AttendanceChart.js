@@ -14,7 +14,7 @@ const attendanceDetails = {
 	present: { label: 'On Time', icon: 'check', colour: 'emerald' },
 	late: { label: 'Late', icon: 'alarm-snooze', colour: 'amber' },
 	absent: { label: 'Absent', icon: 'times', colour: 'red' },
-	unknown: { label: 'Not recorded', icon: 'question', colour: 'gray' },
+	unknown: { label: 'Not recorded', icon: 'circle', colour: 'gray', type: 'regular' },
 };
 
 const AttendanceLegend = ({ payload = [] }) => (
@@ -24,7 +24,7 @@ const AttendanceLegend = ({ payload = [] }) => (
 
 			return (
 				<span key={entry.dataKey} className={`text-${detail.colour}-500`}>
-					<Icon icon={detail.icon} size="text-xs" mr />
+					<Icon icon={detail.icon} type={detail.type} size="text-xs" mr />
 					<span className="text-gray-700">{detail.label}</span>
 				</span>
 			);
@@ -52,7 +52,7 @@ const AttendanceTooltip = ({ active, payload, label }) => {
 					return (
 						<div key={entry.dataKey} className="flex items-center justify-between gap-4 font-bold">
 							<span className={`text-${detail.colour}-500`}>
-								<Icon icon={detail.icon} size="text-xs" mr />
+        <Icon icon={detail.icon} type={detail.type} size="text-xs" mr />
 								<span className="text-gray-700">{detail.label}</span>
 							</span>
 							<span className="text-gray-800">{entry.value}</span>

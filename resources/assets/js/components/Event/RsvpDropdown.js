@@ -7,8 +7,9 @@ import { Link } from "@inertiajs/react";
 
 const items = [
     { label: 'Going', key: 'yes', icon: 'check', colour: 'text-emerald-500' },
-    { label: 'Not Going', key: 'no', icon: 'times', colour: 'text-gray-500' },
-    { label: 'No RSVP', key: 'unknown', icon: 'question', colour: 'text-red-500' },
+    { label: 'Maybe', key: 'maybe', icon: 'question', colour: 'text-amber-500' },
+    { label: 'Not Going', key: 'no', icon: 'times', colour: 'text-red-500' },
+    { label: 'No RSVP', key: 'unknown', icon: 'circle', colour: 'text-gray-500' },
 ];
 
 const getItemColour = (label) => items.find(item => item.label === label)?.colour ?? 'text-gray-500';
@@ -18,7 +19,7 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
   return items.length > 0 && (
     <Menu as="div" className="relative inline-block w-full sm:w-auto overflow-visible">
       <Menu.Button className={buttonStyles('secondary', size, '', 'relative z-0 w-full md:w-auto')}>
-        <Icon icon={event.my_rsvp.icon} className={getItemColour(event.my_rsvp.label)} />
+        <Icon icon={event.my_rsvp.icon} type={event.my_rsvp.icon === 'circle' ? 'regular' : 'solid'} className={getItemColour(event.my_rsvp.label)} />
         <span className={getItemColour(event.my_rsvp.label)}>{event.my_rsvp.label}</span>
         <Icon icon="chevron-down" className="text-gray-500" />
       </Menu.Button>
@@ -51,7 +52,7 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
                     active ? 'bg-gray-100' : '',
                   )}
                 >
-                  <Icon icon={icon} mr className={colour} />
+                  <Icon icon={icon} mr type={icon === 'circle' ? 'regular' : 'solid'} className={colour} />
                   {label}
                 </Link>
               )}

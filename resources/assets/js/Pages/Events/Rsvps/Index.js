@@ -94,9 +94,9 @@ const Index = ({
 
 	const countsData = [
 		{ label: 'Going', textColour: 'text-emerald-500', icon: 'check', count: counts.yes },
-		// { label: 'Maybe', textColour: 'text-amber-500', icon: 'question', count: counts.maybe },
-		{ label: 'No RSVP', textColour: 'text-red-500', icon: 'question', count: counts.unknown },
-		{ label: 'Not going', textColour: 'text-gray-500', icon: 'times', count: counts.no },
+		{ label: 'Maybe', textColour: 'text-amber-500', icon: 'question', count: counts.maybe },
+		{ label: 'No RSVP', textColour: 'text-gray-500', icon: 'circle', count: counts.unknown },
+		{ label: 'Not going', textColour: 'text-red-500', icon: 'times', count: counts.no },
 	];
 
 	const columnsMenu = (
@@ -158,14 +158,14 @@ const Index = ({
 				</PageHeaderActions>
 			</PageHeader>
 
-			<div className="bg-white border-b border-gray-200 grid grid-cols-3">
+			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-4">
 				{countsData.map(({ label, textColour, icon, count }) => (
 					<div
 						className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1"
 						key={label}
 					>
 						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
-							<Icon icon={icon} />
+       <Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
 							{label}
 						</div>
 						<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>

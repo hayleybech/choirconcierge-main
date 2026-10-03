@@ -53,7 +53,7 @@ class DummyRsvpSeeder extends Seeder
                 ->map(fn(Membership $member): array => [
                     'event_id' => $event->id,
                     'membership_id' => $member->id,
-                    'response' => $faker->randomElement(['yes', 'yes', 'yes', 'no']),
+                    'response' => $faker->randomElement(['yes', 'yes', 'yes', 'maybe', 'no']),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ])

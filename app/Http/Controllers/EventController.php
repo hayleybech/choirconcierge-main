@@ -99,6 +99,7 @@ class EventController extends Controller
             'individualCheckInUrl' => $this->getCheckInUrl($event),
             'rsvpCount' => [
                 'yes' => $event->singers_rsvp_response('yes')->count(),
+                'maybe' => $event->singers_rsvp_response('maybe')->count(),
                 'no' => $event->singers_rsvp_response('no')->count(),
                 'unknown' => $event->singers_rsvp_missing()->count(),
             ],
