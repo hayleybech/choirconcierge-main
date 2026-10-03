@@ -100,6 +100,24 @@ class AttendanceReportController extends Controller
                     ->whereIn('response', self::PRESENT_RESPONSES)
                     ->isNotEmpty())
                 ->count();
+            $attendanceSummary = [
+                'present' => 0,
+                'late' => 0,
+                'absent' => 0,
+                'unknown' => 0,
+            ];
+            $considered->each(function (Membership $singer) use ($event, &$attendanceSummary): void {
+                $response = $singer->attendances->firstWhere('event_id', $event->id)?->response;
+                $response = match ($response) {
+                    'present' => 'present',
+                    'late' => 'late',
+                    'absent', 'absent_apology', 'late_deemed_absent' => 'absent',
+                    default => 'unknown',
+                };
+
+                $attendanceSummary[$response]++;
+            });
+            $event->attendanceSummary = $attendanceSummary;
             $event->percentPresent = $event->numSingers > 0
                 ? floor($event->singersPresent / $event->numSingers * 100)
                 : null;

@@ -76,15 +76,33 @@ class AttendanceReportControllerTest extends TestCase
                 $this->assertEquals(1, $events[$historicEvent->id]['singersPresent']);
                 $this->assertEquals(2, $events[$historicEvent->id]['numSingers']);
                 $this->assertEquals(50, $events[$historicEvent->id]['percentPresent']);
+                $this->assertEquals([
+                    'present' => 1,
+                    'late' => 0,
+                    'absent' => 1,
+                    'unknown' => 0,
+                ], $events[$historicEvent->id]['attendanceSummary']);
 
                 $this->assertFalse($events[$eventA->id]['isBeforeHistory']);
                 $this->assertEqualsCanonicalizing([$longtime->id, $untracked->id, $leaver->id], $events[$eventA->id]['consideredSingerIds']);
                 $this->assertEquals(2, $events[$eventA->id]['singersPresent']);
                 $this->assertEquals(3, $events[$eventA->id]['numSingers']);
+                $this->assertEquals([
+                    'present' => 1,
+                    'late' => 1,
+                    'absent' => 0,
+                    'unknown' => 1,
+                ], $events[$eventA->id]['attendanceSummary']);
 
                 $this->assertEqualsCanonicalizing([$longtime->id, $untracked->id, $newcomer->id], $events[$eventB->id]['consideredSingerIds']);
                 $this->assertEquals(1, $events[$eventB->id]['singersPresent']);
                 $this->assertEquals(3, $events[$eventB->id]['numSingers']);
+                $this->assertEquals([
+                    'present' => 1,
+                    'late' => 0,
+                    'absent' => 1,
+                    'unknown' => 1,
+                ], $events[$eventB->id]['attendanceSummary']);
 
                 $this->assertEquals([3, 2, 66], $this->singerTotals($singers[$longtime->id]));
                 $this->assertEquals([2, 0, 0], $this->singerTotals($singers[$untracked->id]));

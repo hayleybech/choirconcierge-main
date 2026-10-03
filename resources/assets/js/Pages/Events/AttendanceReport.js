@@ -23,6 +23,7 @@ import { Link } from '@inertiajs/react';
 import Button from '../../components/inputs/Button';
 import Icon from '../../components/Icon';
 import { TableMobileHeader } from '../../components/TableMobile';
+import AttendanceChart from '../../components/Event/AttendanceChart';
 
 const AttendanceReport = ({
 	events,
@@ -37,6 +38,7 @@ const AttendanceReport = ({
 	setSidebarOpen,
 }) => {
 	const { route } = useRoute();
+	const [isChartCollapsed, setIsChartCollapsed] = React.useState(false);
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
 	const sorts = [];
@@ -64,15 +66,23 @@ const AttendanceReport = ({
 		<>
 			<AppHead title="Attendance Report" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					{filterAction && (
-						<PageActionsMenu>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				{(filterAction || (events.length > 0 && numSingers > 0)) && (
+					<PageActionsMenu>
+						{events.length > 0 && numSingers > 0 && (
+							<ActionMenuItem onClick={() => setIsChartCollapsed(prev => !prev)}>
+								<Icon icon="analytics" mr />
+								{isChartCollapsed ? 'Show chart' : 'Hide chart'}
+							</ActionMenuItem>
+						)}
+						{filterAction && (
 							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
 								<Icon icon="filter" mr />
 								Filter
 							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
+						)}
+					</PageActionsMenu>
+				)}
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -93,8 +103,16 @@ const AttendanceReport = ({
 							Filter
 						</Button>
 					)}
+					{events.length > 0 && numSingers > 0 && (
+						<Button onClick={() => setIsChartCollapsed(prev => !prev)} size="sm" variant="secondary">
+							<Icon icon="analytics" mr />
+							{isChartCollapsed ? 'Show chart' : 'Hide chart'}
+						</Button>
+					)}
 				</PageHeaderActions>
 			</PageHeader>
+
+			{events.length > 0 && numSingers > 0 && <AttendanceChart events={events} isCollapsed={isChartCollapsed} />}
 
 			<div className="flex flex-col overflow-auto lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-300 h-full">
 				{showFilters && (
@@ -219,7 +237,10 @@ const AttendanceReport = ({
 															</Link>
 														</th>
 														{events.map(event => {
-															const attendance = getAttendanceBySingerAndEvent(singer, event);
+															const attendance = getAttendanceBySingerAndEvent(
+																singer,
+																event
+															);
 
 															return (
 																<td
@@ -269,7 +290,9 @@ const AttendanceReport = ({
 													key={event.id}
 												>
 													<div className="text-sm md:text-base">
-														{event.percentPresent !== null ? `${event.percentPresent}%` : 'N/A'}
+														{event.percentPresent !== null
+															? `${event.percentPresent}%`
+															: 'N/A'}
 													</div>
 													<div className="text-xs hidden md:block">
 														{event.singersPresent} / {event.numSingers}
