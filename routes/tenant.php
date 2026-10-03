@@ -43,6 +43,7 @@ use App\Http\Controllers\SingerAttendanceController;
 use App\Http\Controllers\SingerController;
 use App\Http\Controllers\SongCategoryController;
 use App\Http\Controllers\TenantAssetsController;
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UpdateSingerFeeController;
 use App\Http\Controllers\SingerPlacementController;
@@ -101,6 +102,11 @@ Route::middleware([
     Route::get('/events-ical', [ICalController::class, 'index'])
         ->name('events.feed');
 
+    // Mail log open tracking is a public email resource and must remain available
+    // even when a tenant does not have an active subscription.
+    Route::get('/mail-log/open/{mail_log_uid}/{email}', [MailLogOpenController::class, 'show'])
+        ->name('mail-logs.open');
+
     Route::middleware([
         BlockMemberAccessWhenNoActiveSubscription::class,
 
@@ -113,10 +119,6 @@ Route::middleware([
 
         /** Mailbox **/
         Route::get('/mailbox/process', [MailboxController::class, 'process']);
-
-        // Mail log open tracking
-        Route::get('/mail-log/open/{mail_log_uid}/{email}', [MailLogOpenController::class, 'show'])
-            ->name('mail-logs.open');
 
         // Event Email magic links (no login required)
         Route::get('/events/{event}/email-rsvp/{user}', RsvpFromNotificationController::class)
@@ -280,5 +282,54 @@ Route::middleware([
             // Sub-groups aka Ensembles aka Choirs
             Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update', 'destroy']);
         });
+        // Search APIs
+        Route::prefix('find')->name('find.')->group(function () {
+            Route::get('/singers', FindSingerController::class)->name('singers');
+            Route::get('/songs/{keyword}', FindSongController::class)->name('songs');
+        });
+
+        // Global Search APIs
+        Route::prefix('find')->group(function () {
+            Route::get('/users', GlobalFindUserController::class)->name('global-find.users');
+        });
+
+        // Mailing Lists (User Groups) module
+        Route::prefix('groups')->name('groups.')->group(function () {
+            Route::resource('mail-logs', MailLogController::class)->only(['index', 'show'])->middleware(EnsureUserIsMember::class);
+        });
+        Route::get('/groups/broadcasts/create', [BroadcastController::class, 'create'])->name('groups.broadcasts.create');
+        Route::post('/groups/broadcasts', [BroadcastController::class, 'store'])->name('groups.broadcasts.store');
+        Route::resource('groups', UserGroupController::class);
+
+        // Tasks module
+        Route::resource('tasks', TaskController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+        Route::resource('tasks.notifications', TaskNotificationTemplateController::class)->except('index');
+
+        // Voice Parts module
+        Route::resource('voice-parts', VoicePartController::class)->except(['show']);
+
+        // Roles module
+        Route::resource('roles', RoleController::class);
+        Route::get('roles/{role}/clone', [RoleController::class, 'clone'])->name('roles.clone');
+
+        // Polls module
+        Route::resource('polls', PollController::class);
+        Route::post('polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
+        Route::put('polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');
+        Route::put('polls/{poll}/open', [PollController::class, 'open'])->name('polls.open');
+
+        // Organisation Settings
+        Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');
+        Route::post('/organisation', [TenantController::class, 'update'])->name('organisation.update');
+
+        // Billing portal
+        Route::get('/billing', [BillingController::class, 'index'])->name('organisation.billing');
+        Route::get('/billing/swap', [BillingController::class, 'swap'])->name('organisation.billing.swap');
+        Route::get('/billing/cancel', [BillingController::class, 'cancel'])->name('organisation.billing.cancel');
+        Route::get('/billing/pause', [BillingController::class, 'pause'])->name('organisation.billing.pause');
+        Route::get('/billing/unpause', [BillingController::class, 'unpause'])->name('organisation.billing.unpause');
+
+        // Sub-groups aka Ensembles aka Choirs
+        Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);
     });
 });

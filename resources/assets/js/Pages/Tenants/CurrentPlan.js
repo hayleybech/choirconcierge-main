@@ -12,7 +12,7 @@ const formatDate = (date, format = 'DATE_MED') => (
 const CurrentPlan = ({ plan, billing, tenantId }) => {
   const { route } = useRoute(false);
 
-  const billingLink = route('spark.portal', { type: 'tenant', id: tenantId });
+  const billingLink = route('organisation.billing');
 
   if (plan) {
 

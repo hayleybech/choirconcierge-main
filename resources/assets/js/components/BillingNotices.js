@@ -117,7 +117,7 @@ export default BillingNotices;
 const BillingLink = ({ tenantId }) => {
   const { route } = useRoute(false);
 
-  const billingLink = route('spark.portal', { type: 'tenant', id: tenantId });
+  const billingLink = route('organisation.billing');
   return (
     <ButtonLink variant="secondary" size="xs" href={billingLink} className="shrink-0">
       Go to Billing
