@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CriticalDataSeeder::class);
         $this->command->info('All critical data seeded!');
 
-        if (tenant('id') === 'demo') {
+        if (tenant('id') === 'demo' || tenant('id') === 'test') {
             $this->call(DummyDataSeeder::class);
             $this->command->info('All dummy data seeded!');
         }
