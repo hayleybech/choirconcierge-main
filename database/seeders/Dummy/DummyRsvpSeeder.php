@@ -25,20 +25,21 @@ class DummyRsvpSeeder extends Seeder
             return;
         }
 
+
         $faker = Faker::create();
 
         // For each event, create RSVP records for members who were/are active
         $events->each(function (Event $event) use ($members, $faker): void {
-            $eventDate = $event->start_date;
-
             // Only members who were active at the event date (or currently active for future events)
-            $activeMembers = $members->filter(function (Membership $member) use ($eventDate) {
-                $checkDate = $eventDate->isPast() ? $eventDate : now();
+            $activeMembers = $members->filter(function (Membership $member) use ($event) {
                 $statusAtDate = $member->statuses
-                    ->filter(fn($status) => $status->created_at->lte($checkDate))
+                    ->filter(fn($status) => $status->created_at->lte($event->start_date->isPast() ? $event->start_date : now()))
                     ->last();
 
-                return $statusAtDate !== null && ($statusAtDate->status === SingerStatus::MEMBERS || $statusAtDate->status === SingerStatus::MEMBERS->value);
+                return $statusAtDate !== null && (
+                        $statusAtDate->status === SingerStatus::MEMBERS ||
+                        $statusAtDate->status === SingerStatus::MEMBERS->value
+                    );
             });
 
             if ($activeMembers->isEmpty()) {

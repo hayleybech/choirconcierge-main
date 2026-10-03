@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\VoicePart;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
+use Faker\Generator;
 use Illuminate\Database\Seeder;
 
 class DummyUserSeeder extends Seeder
@@ -68,7 +69,7 @@ class DummyUserSeeder extends Seeder
      *   and continue progression after that date. NOTE: Dummy data is using April 24, 2024 temporarily.
      *
      * @param Membership $member
-     * @param \Faker\Generator $faker
+     * @param Generator $faker
      * @return void
      */
     public static function generateHistoricalMembershipProgression(Membership $member, $faker): void

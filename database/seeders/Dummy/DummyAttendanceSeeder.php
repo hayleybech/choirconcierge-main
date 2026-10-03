@@ -7,10 +7,12 @@ use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Membership;
 use Faker\Factory as Faker;
+use Faker\Generator;
 use Illuminate\Database\Seeder;
 
 class DummyAttendanceSeeder extends Seeder
 {
+
     /**
      * Run the database seeds.
      *
@@ -56,73 +58,64 @@ class DummyAttendanceSeeder extends Seeder
             $eventDate = $event->start_date;
 
             // Find singers who were active members at the exact time of this event
-            $activeMembers = $members->filter(function (Membership $member) use ($eventDate) {
+            return $members->filter(function (Membership $member) use ($eventDate) {
                 $statusBeforeEvent = $member->statuses
                     ->filter(fn($status) => $status->created_at->lte($eventDate))
                     ->last();
 
-                return $statusBeforeEvent !== null && ($statusBeforeEvent->status === SingerStatus::MEMBERS || $statusBeforeEvent->status === SingerStatus::MEMBERS->value);
-            });
-
-            return $activeMembers->map(function (Membership $member) use ($event, $eventDate, $superAttendees, $rareAttendees, $faker, $apologyReasons): array {
-                // Determine attendance response based on singer's persona
-                if ($superAttendees->has($member->id)) {
-                    // Super attendee: attends nearly every event (~96% present/late)
-                    $roll = mt_rand(1, 100);
-                    if ($roll <= 93) {
-                        $response = 'present';
-                        $reason = null;
-                    } elseif ($roll <= 98) {
-                        $response = 'late';
-                        $reason = null;
-                    } else {
-                        $response = 'absent_apology';
-                        $reason = $faker->randomElement($apologyReasons);
-                    }
-                } elseif ($rareAttendees->has($member->id)) {
-                    // Rare attendee: rarely attends (~15% present/late, mostly absent or apology)
-                    $roll = mt_rand(1, 100);
-                    if ($roll <= 10) {
-                        $response = 'present';
-                        $reason = null;
-                    } elseif ($roll <= 15) {
-                        $response = 'late';
-                        $reason = null;
-                    } elseif ($roll <= 65) {
-                        $response = 'absent_apology';
-                        $reason = $faker->randomElement($apologyReasons);
-                    } else {
-                        $response = 'absent';
-                        $reason = null;
-                    }
-                } else {
-                    // Regular attendee: typical attendance (~85% attendance rate)
-                    $roll = mt_rand(1, 100);
-                    if ($roll <= 76) {
-                        $response = 'present';
-                        $reason = null;
-                    } elseif ($roll <= 86) {
-                        $response = 'late';
-                        $reason = null;
-                    } elseif ($roll <= 96) {
-                        $response = 'absent_apology';
-                        $reason = $faker->randomElement($apologyReasons);
-                    } else {
-                        $response = 'absent';
-                        $reason = null;
-                    }
-                }
-
+                return $statusBeforeEvent !== null && (
+                        $statusBeforeEvent->status === SingerStatus::MEMBERS ||
+                        $statusBeforeEvent->status === SingerStatus::MEMBERS->value
+                    );
+            })->map(function (Membership $member) use ($event, $eventDate, $superAttendees, $rareAttendees, $faker, $apologyReasons): array {
                 return [
                     'event_id' => $event->id,
                     'membership_id' => $member->id,
-                    'response' => $response,
+                    ...$this->attendanceResponse(
+                        $superAttendees->has($member->id)
+                            ? 'super'
+                            : ($rareAttendees->has($member->id) ? 'rare' : 'regular'),
+                        $faker,
+                        $apologyReasons,
+                    ),
                     'source' => $faker->randomElement(['kiosk', 'manual', 'app', null]),
-                    'absent_reason' => $reason,
                     'created_at' => $eventDate,
                     'updated_at' => $eventDate,
                 ];
             })->all();
         })->all());
+    }
+
+    private function attendanceResponse(string $persona, Generator $faker, array $apologyReasons): array
+    {
+        $outcomes = match ($persona) {
+            'super' => [
+                93 => ['response' => 'present', 'absent_reason' => null],
+                98 => ['response' => 'late', 'absent_reason' => null],
+                100 => ['response' => 'absent_apology', 'absent_reason' => $faker->randomElement($apologyReasons)],
+            ],
+            'rare' => [
+                10 => ['response' => 'present', 'absent_reason' => null],
+                15 => ['response' => 'late', 'absent_reason' => null],
+                65 => ['response' => 'absent_apology', 'absent_reason' => $faker->randomElement($apologyReasons)],
+                100 => ['response' => 'absent', 'absent_reason' => null],
+            ],
+            default => [
+                76 => ['response' => 'present', 'absent_reason' => null],
+                86 => ['response' => 'late', 'absent_reason' => null],
+                96 => ['response' => 'absent_apology', 'absent_reason' => $faker->randomElement($apologyReasons)],
+                100 => ['response' => 'absent', 'absent_reason' => null],
+            ],
+        };
+
+        $roll = mt_rand(1, 100);
+
+        foreach ($outcomes as $maximum => $outcome) {
+            if ($roll <= $maximum) {
+                return $outcome;
+            }
+        }
+
+        return $outcomes[array_key_last($outcomes)];
     }
 }
