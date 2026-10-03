@@ -2,9 +2,11 @@
 
 namespace Database\Seeders\Dummy;
 
+use App\Enums\SingerStatus;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\Rsvp;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class DummyRsvpSeeder extends Seeder
@@ -17,23 +19,44 @@ class DummyRsvpSeeder extends Seeder
     public function run(): void
     {
         $events = Event::all();
-        $members = Membership::all();
+        $members = Membership::with(['statuses' => fn($q) => $q->orderBy('created_at', 'asc')])->get();
 
         if ($events->isEmpty() || $members->isEmpty()) {
             return;
         }
 
-        // For each event, create RSVP records for some members
-        $events->each(function (Event $event) use ($members) {
-            // Take a random subset of members (e.g., 60-90%)
-            $toRsvp = $members->random(rand(floor($members->count() * 0.6), floor($members->count() * 0.9)));
+        $faker = Faker::create();
 
-            $toRsvp->each(function (Membership $member) use ($event) {
-                Rsvp::factory()->create([
+        // For each event, create RSVP records for members who were/are active
+        $events->each(function (Event $event) use ($members, $faker): void {
+            $eventDate = $event->start_date;
+
+            // Only members who were active at the event date (or currently active for future events)
+            $activeMembers = $members->filter(function (Membership $member) use ($eventDate) {
+                $checkDate = $eventDate->isPast() ? $eventDate : now();
+                $statusAtDate = $member->statuses
+                    ->filter(fn($status) => $status->created_at->lte($checkDate))
+                    ->last();
+
+                return $statusAtDate !== null && ($statusAtDate->status === SingerStatus::MEMBERS || $statusAtDate->status === SingerStatus::MEMBERS->value);
+            });
+
+            if ($activeMembers->isEmpty()) {
+                return;
+            }
+
+            // Take a random subset of active members (e.g., 60-90%)
+            $minCount = (int)max(1, floor($activeMembers->count() * 0.6));
+            $maxCount = (int)max($minCount, floor($activeMembers->count() * 0.9));
+            $activeMembers->random(rand($minCount, $maxCount))
+                ->map(fn(Membership $member): array => [
                     'event_id' => $event->id,
                     'membership_id' => $member->id,
-                ]);
-            });
+                    'response' => $faker->randomElement(['yes', 'yes', 'yes', 'no']),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ])
+                ->pipe(fn($rsvps) => Rsvp::insert($rsvps->all()));
         });
     }
 }
