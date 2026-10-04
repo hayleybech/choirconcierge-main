@@ -77,8 +77,8 @@ export const TableCellSelect = ({ bulkEdit, value }) => {
 };
 
 const Table = ({ children, pagination }) => (
-	<div className="-my-2 overflow-x-auto">
-		<div className="py-2 align-middle inline-block min-w-full">
+	<div className="h-full min-h-0 overflow-auto">
+		<div className="align-middle inline-block min-w-full">
 			<div className="shadow overflow-hidden border-b border-gray-200">
 				<table className="min-w-full divide-y divide-gray-200">{children}</table>
 				{pagination}

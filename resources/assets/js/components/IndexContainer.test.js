@@ -25,7 +25,9 @@ describe('IndexContainer', () => {
 		expect(screen.getByRole('dialog')).toBeTruthy();
 		expect(screen.getByText('Filter controls')).toBeTruthy();
 		expect(screen.getByText('Mobile table')).toBeTruthy();
-		expect(screen.getByRole('dialog').className).toContain('fixed inset-0');
+		expect(screen.getByRole('dialog').className).toContain('fixed inset-x-0 top-[47px] bottom-0');
+		expect(screen.getByText('Mobile table').parentElement.parentElement.className).toContain('flex-1');
+		expect(screen.getByText('Mobile table').parentElement.className).toContain('overflow-hidden');
 		expect(screen.queryByText('Cancel')).toBeNull();
 	});
 
@@ -48,6 +50,8 @@ describe('IndexContainer', () => {
 		expect(filterPane.className).toContain('transition-[width]');
 		expect(filterPane.firstElementChild.className).toContain('w-1/5');
 		expect(screen.getByText('Desktop table').parentElement.parentElement.className).toContain('lg:border-l');
+		expect(screen.getByText('Desktop table').parentElement.parentElement.parentElement.className).toContain('flex-1');
+		expect(screen.getByText('Desktop table').parentElement.className).toContain('overflow-hidden');
 		expect(screen.getByText('Desktop table')).toBeTruthy();
 	});
 
