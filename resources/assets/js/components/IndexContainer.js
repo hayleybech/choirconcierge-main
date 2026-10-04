@@ -18,12 +18,12 @@ const IndexContainer = ({ tableDesktop, tableMobile, emptyState, filterPane, sho
 				<div
 					className={classNames(
 						'flex-none overflow-hidden transition-[width] duration-300 ease-out',
-						showFilters ? 'lg:w-1/5 xl:w-1/6' : 'lg:w-0 xl:w-0'
+						showFilters ? 'lg:w-1/5' : 'lg:w-0 xl:w-0'
 					)}
 				>
 					<div
 						className={classNames(
-							'absolute top-0 left-0 h-full w-1/5 xl:w-1/6 lg:z-10 transition-transform duration-300 ease-out',
+							'absolute top-0 left-0 h-full w-1/5 lg:z-10 transition-transform duration-300 ease-out',
 							showFilters ? 'translate-x-0' : '-translate-x-full'
 						)}
 					>

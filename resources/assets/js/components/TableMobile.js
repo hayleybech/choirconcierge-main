@@ -103,8 +103,10 @@ export const TableMobileHeader = ({ bulkEdit, children }) => (
 );
 
 const TableMobile = ({ children, pagination }) => (
-	<div className="h-full min-h-0 overflow-y-auto">
-		<ul className="divide-y divide-gray-200">{children}</ul>
+	<div className="flex h-full min-h-0 flex-col">
+		<div className="min-h-0 flex-1 overflow-y-auto">
+			<ul className="divide-y divide-gray-200">{children}</ul>
+		</div>
 		{pagination}
 	</div>
 );

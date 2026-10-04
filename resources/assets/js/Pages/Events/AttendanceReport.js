@@ -26,6 +26,8 @@ import { TableMobileHeader } from '../../components/TableMobile';
 import AttendanceChart from '../../components/Event/AttendanceChart';
 import Sorts from '../../components/Sorts';
 import VoicePartTag from '../../components/VoicePartTag';
+import FilterDialog from '../../components/FilterDialog';
+import { useMediaQuery } from 'react-responsive';
 
 const AttendanceReport = ({
 	events,
@@ -43,6 +45,7 @@ const AttendanceReport = ({
 	const { route } = useRoute();
 	const [isChartCollapsed, setIsChartCollapsed] = React.useState(false);
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
 	const sorts = [
 		{ id: 'full-name', name: 'First Name', default: true },
@@ -58,6 +61,14 @@ const AttendanceReport = ({
 	];
 
 	const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
+	const filterPane = (
+		<FilterSortPane
+			sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+			showSortsOnDesktop
+			filters={<AttendanceReportFilters eventTypes={eventTypes} voiceParts={voiceParts} form={sortFilterForm} />}
+			closeFn={() => setShowFilters(false)}
+		/>
+	);
 
 	const bulkEdit = {
 		isActiveMobile: false,
@@ -123,16 +134,15 @@ const AttendanceReport = ({
 
 			{events.length > 0 && numSingers > 0 && <AttendanceChart events={events} isCollapsed={isChartCollapsed} />}
 
+			{!isDesktop && (
+				<FilterDialog isOpen={showFilters} setIsOpen={setShowFilters}>
+					{filterPane}
+				</FilterDialog>
+			)}
+
 			<div className="flex min-h-0 flex-1 flex-col overflow-auto divide-y divide-gray-300 lg:flex-row lg:divide-x lg:divide-y-0">
-				{showFilters && (
-					<div className="flex h-full shrink-0 flex-col lg:z-10 lg:w-1/5">
-						<FilterSortPane
-							sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-							showSortsOnDesktop
-							filters={<AttendanceReportFilters eventTypes={eventTypes} voiceParts={voiceParts} form={sortFilterForm} />}
-							closeFn={() => setShowFilters(false)}
-						/>
-					</div>
+				{isDesktop && showFilters && (
+					<div className="flex h-full shrink-0 flex-col lg:z-10 lg:w-1/5">{filterPane}</div>
 				)}
 
 				<div className="flex min-h-0 grow flex-col lg:overflow-x-auto">
