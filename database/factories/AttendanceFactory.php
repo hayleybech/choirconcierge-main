@@ -15,7 +15,7 @@ class AttendanceFactory extends Factory
     public function definition()
     {
         return [
-            'response' => $this->faker->randomElement(['present', 'late', 'absent', 'late_deemed_absent', 'absent_apology']),
+            'response' => $this->faker->randomElement(['present', 'late', 'absent', 'late_deemed_absent']),
             'absent_reason' => $this->faker->optional(0.3)->sentence(),
             'created_at' => now(),
             'updated_at' => now(),

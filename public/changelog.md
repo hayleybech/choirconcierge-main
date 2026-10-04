@@ -1,3 +1,23 @@
+# 2026-10-04
+## Attendance Improvements
+### Consider historical membership data for attendance reporting
+We added membership history tracking in April, in anticipation of adding this feature. Now that we had several months of data, we've used it to make significant improvements to the accurate of attendance reports.
+
+Each event on the report now shows attendance only for members who were Active at the time of the event. The totals for each event counts only those singers, *even if other singers are visible on the report*. Singers are included in the report if they were Active for *some* of the events in the given range. The attendance rate shown for each singer only counts those events they were Active for.
+
+Similar changes have been made to the Attendance Summary and Attendance List on each Event. By default, the Attendance List will show all singers who were Active at the time of the event. You still have the option of using Filters to instead list a specific Member Status. 
+
+Events prior to April 24, 2026 will use a simplified algorithm that only considers singers whose attendance was clearly recorded (whereas the new algorithm can include singers who were Active at the time but for some reason nobody recorded whether they were Present or not).
+### Attendance Chart
+The Attendance Report now includes a chart showing attendance rates over time. You can even use the heights of the bars as a way of seeing your Membership over time. 
+### Better reporting for "Late (Deemed Absent)".
+- Counted separately from "Absent" in many cases now.
+## Added a "Maybe" option for RSVPs
+We left this off intentionally, in the misguided belief that we could encourage people to simply commit to a "Yes" or "No". But life isn't that simple, and it can be useful to know *why* someone can't yet commit, in case you're able to help them.
+## Added sorting options to Attendance Reports
+You can now sort Attendance Reports by Name, Attendance Rate, Voice Part. The Voice Part grouping has been removed, as the filters are more flexible.
+
+---
 # 2026-10-02
 ## General Improvements
 ### Calendar Sync Changes

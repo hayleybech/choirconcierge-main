@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\Enrolment;
 use App\Models\Ensemble;
 use App\Models\Event;
@@ -246,7 +247,7 @@ class AttendanceControllerTest extends TestCase
         $event = Event::factory()->create();
         $singer = Membership::factory()->create();
 
-        $attendance_response = $this->faker->randomElement(['present', 'absent', 'absent_apology']);
+        $attendance_response = $this->faker->randomElement(['present', 'absent']);
         $absent_reason = $this->faker->optional(0.3)->sentence();
         $response = $this->post(the_tenant_route('events.attendances.updateAll', [$event]), [
             'attendance_response' => [
@@ -261,7 +262,7 @@ class AttendanceControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('events.show', ['event' => $event]));
         $this->assertDatabaseHas('attendances', [
             'response' => $attendance_response,
-            'absent_reason' => $absent_reason,
+            'absent_reason' => $attendance_response === 'absent' ? $absent_reason : null,
             'event_id' => $event->id,
             'membership_id' => $singer->id,
             'source' => 'manual',
@@ -286,10 +287,88 @@ class AttendanceControllerTest extends TestCase
         $response->assertRedirect(the_tenant_route('events.attendances.index', ['event' => $event]));
         $this->assertDatabaseHas('attendances', [
             'response' => $attendance_response,
-            'absent_reason' => $absent_reason,
+            'absent_reason' => null,
             'event_id' => $event->id,
             'membership_id' => $singer->id,
             'source' => 'manual',
+        ]);
+    }
+
+    public function test_update_clears_absent_reason_when_response_is_not_absent(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+        $event = Event::factory()->create();
+        $singer = Membership::factory()->create();
+
+        Attendance::factory()->create([
+            'event_id' => $event->id,
+            'membership_id' => $singer->id,
+            'response' => 'absent',
+            'absent_reason' => 'Travel',
+        ]);
+
+        $this->put(the_tenant_route('events.attendances.update', [$event, $singer]), [
+            'response' => 'present',
+            'absent_reason' => 'Travel',
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('attendances', [
+            'event_id' => $event->id,
+            'membership_id' => $singer->id,
+            'response' => 'present',
+            'absent_reason' => null,
+        ]);
+    }
+
+    public function test_bulk_update_clears_absent_reasons(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+        $event = Event::factory()->create();
+        $singer = Membership::factory()->create();
+
+        Attendance::factory()->create([
+            'event_id' => $event->id,
+            'membership_id' => $singer->id,
+            'response' => 'absent',
+            'absent_reason' => 'Travel',
+        ]);
+
+        $this->post(the_tenant_route('events.attendances.bulkUpdate', [$event]), [
+            'singer_ids' => [$singer->id],
+            'response' => 'present',
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('attendances', [
+            'event_id' => $event->id,
+            'membership_id' => $singer->id,
+            'response' => 'present',
+            'absent_reason' => null,
+        ]);
+    }
+
+    public function test_update_all_clears_absent_reasons(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+        $event = Event::factory()->create();
+        $singer = Membership::factory()->create();
+
+        Attendance::factory()->create([
+            'event_id' => $event->id,
+            'membership_id' => $singer->id,
+            'response' => 'absent',
+            'absent_reason' => 'Travel',
+        ]);
+
+        $this->post(the_tenant_route('events.attendances.updateAll', [$event]), [
+            'attendance_response' => [$singer->id => 'present'],
+            'absent_reason' => [$singer->id => 'Travel'],
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('attendances', [
+            'event_id' => $event->id,
+            'membership_id' => $singer->id,
+            'response' => 'present',
+            'absent_reason' => null,
         ]);
     }
 }

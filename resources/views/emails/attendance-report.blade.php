@@ -15,7 +15,7 @@ The following attendance has been recorded for **{{ $event->title }}**:
             <img src="{{ global_asset('/img/email/clock-solid-amber.png') }}" alt="Late" height="16px" style="vertical-align: middle;"> <span style="color: #d97706; font-weight: bold;">Late</span>: {{ $event->singers_attendance('late')->count() }}
         </td>
         <td>
-            <img src="{{ global_asset('/img/email/times.png') }}" alt="Absent" height="16px" style="vertical-align: middle;"> <span style="color: #dc2626; font-weight: bold;">Absent</span>: {{ $event->singers_attendance('absent')->count() + $event->singers_attendance('absent_apology')->count() }}
+            <img src="{{ global_asset('/img/email/times.png') }}" alt="Absent" height="16px" style="vertical-align: middle;"> <span style="color: #dc2626; font-weight: bold;">Absent</span>: {{ $event->singers_attendance('absent')->count() }}
         </td>
     </tr>
     @if($event->singers_attendance('late_deemed_absent')->count() > 0)

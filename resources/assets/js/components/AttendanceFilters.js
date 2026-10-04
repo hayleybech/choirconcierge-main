@@ -52,7 +52,7 @@ const AttendanceFilters = ({ event, voiceParts, form, ensembles, singerStatuses 
                 <div className="flex items-center justify-between">
                     <legend className="text-sm font-medium text-gray-700">Attendance Response</legend>
                     <FilterActions
-                        onSelectAll={() => setData('attendance.response', ['present', 'late', 'unknown', 'late_deemed_absent', 'absent', 'absent_apology'])}
+						onSelectAll={() => setData('attendance.response', ['present', 'late', 'unknown', 'late_deemed_absent', 'absent'])}
                         onClear={() => setData('attendance.response', [])}
                     />
                 </div>
@@ -63,8 +63,7 @@ const AttendanceFilters = ({ event, voiceParts, form, ensembles, singerStatuses 
                         { id: 'late', name: 'Late' },
                         { id: 'unknown', name: 'Not recorded' },
                         { id: 'late_deemed_absent', name: 'Late (Deemed Absent)' },
-                        { id: 'absent', name: 'Absent' },
-                        { id: 'absent_apology', name: 'Absent (With Apology)' },
+                  						{ id: 'absent', name: 'Absent' },
                     ]}
                     value={data['attendance.response']}
                     updateFn={value => setData('attendance.response', value)}

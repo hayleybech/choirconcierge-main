@@ -53,7 +53,7 @@ class AttendanceReportTest extends TestCase
         Attendance::factory()->create([
             'event_id' => $event->id,
             'membership_id' => $singer2->id,
-            'response' => 'absent_apology',
+            'response' => 'absent',
             'absent_reason' => 'Work',
         ]);
 

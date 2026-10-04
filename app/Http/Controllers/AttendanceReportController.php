@@ -146,7 +146,7 @@ class AttendanceReportController extends Controller
                 $response = match ($response) {
                     'present' => 'present',
                     'late' => 'late',
-                    'absent', 'absent_apology', 'late_deemed_absent' => 'absent',
+                    'absent', 'late_deemed_absent' => 'absent',
                     default => 'unknown',
                 };
 

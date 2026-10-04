@@ -42,8 +42,7 @@ const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event, bulkE
 									<div
 										className={`flex flex-col gap-1 ${
 											(!!singer.attendance.absent_reason &&
-												(singer.attendance.response === 'absent' ||
-													singer.attendance.response === 'absent_apology')) ||
+   									 singer.attendance.response === 'absent') ||
 											editingSingerId === singer.id
 												? 'pb-16'
 												: 'pb-10'

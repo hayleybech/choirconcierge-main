@@ -12,7 +12,7 @@ import classNames from '../../classNames';
 const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 	const [isEditing, setIsEditing] = useState(false);
 
-	const reasonIsAllowed = attendance.response === 'absent' || attendance.response === 'absent_apology';
+	const reasonIsAllowed = attendance.response === 'absent';
 
 	const toggleIsEditing = (value) => {
 		setIsEditing(value);
@@ -31,7 +31,7 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 
 	transform(data => ({
 		...data,
-		response: data.response === 'absent' && (!!data.absent_reason || attendance.absent_reason) ? 'absent_apology' : data.response,
+		response: data.response,
 	}));
 
 	const options = [
@@ -77,7 +77,7 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 		);
 	};
 
-	const currentOption = options.find(o => o.id === (data.response === 'absent_apology' ? 'absent' : data.response));
+	const currentOption = options.find(o => o.id === data.response);
 
 	return (
 		<div className="sm:min-w-[200px] 'shrink-0">

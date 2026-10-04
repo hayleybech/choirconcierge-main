@@ -46,10 +46,9 @@ class AttendanceController extends Controller
                     WHEN attendance_response = 'late' THEN 2
                     WHEN attendance_response = 'late_deemed_absent' THEN 3
                     WHEN attendance_response = 'absent' THEN 4
-                    WHEN attendance_response = 'absent_apology' THEN 5
-                    WHEN attendance_response = 'unknown' THEN 6
-                    WHEN attendance_response IS NULL THEN 6
-                    ELSE 7
+                    WHEN attendance_response = 'unknown' THEN 5
+                    WHEN attendance_response IS NULL THEN 5
+                    ELSE 6
                 END $direction");
         });
         $updatedSort = AllowedSort::callback('attendance-updated', function (Builder $query, bool $descending) use ($event) {
@@ -141,8 +140,12 @@ class AttendanceController extends Controller
                 'present' => $event->singers_attendance('present')->count(),
                 'late' => $event->singers_attendance('late')->count(),
                 'late_deemed_absent' => $event->singers_attendance('late_deemed_absent')->count(),
-                'absent' => $event->singers_attendance('absent')->count()
-                    + $event->singers_attendance('absent_apology')->count(),
+                'absent' => $event->singers_attendance('absent')->count(),
+                'absent_reason' => $event->singers_attendance('absent')
+                    ->whereHas('attendances', fn ($query) => $query
+                        ->where('event_id', $event->id)
+                        ->whereNotNull('absent_reason'))
+                    ->count(),
                 'unknown' => $event->singers_attendance_missing()->count(),
             ],
         ]);
@@ -166,7 +169,7 @@ class AttendanceController extends Controller
         $this->authorize('create', Attendance::class);
 
         $request->validate([
-            'response' => ['in:unknown,absent,absent_apology,late,late_deemed_absent,present'],
+            'response' => ['in:unknown,absent,late,late_deemed_absent,present'],
         ]);
 
         $event->attendances()
@@ -174,7 +177,9 @@ class AttendanceController extends Controller
                 ['membership_id' => $singer->id],
                 [
                     'response' => $request->input('response'),
-                    'absent_reason' => $request->input('absent_reason'),
+                    'absent_reason' => $request->input('response') === 'absent'
+                        ? $request->input('absent_reason')
+                        : null,
                     'source' => 'manual',
                 ]
             );
@@ -195,7 +200,9 @@ class AttendanceController extends Controller
                 ['membership_id' => $membership_id],
                 [
                     'response' => $response,
-                    'absent_reason' => $absent_reason[$membership_id],
+                    'absent_reason' => $response === 'absent'
+                        ? $absent_reason[$membership_id]
+                        : null,
                     'source' => 'manual',
                 ],
             );
@@ -212,7 +219,7 @@ class AttendanceController extends Controller
         $request->validate([
             'singer_ids' => ['required', 'array'],
             'singer_ids.*' => ['exists:memberships,id'],
-            'response' => ['required', 'in:unknown,absent,absent_apology,late,late_deemed_absent,present'],
+            'response' => ['required', 'in:unknown,absent,late,late_deemed_absent,present'],
         ]);
 
         $singerIds = $request->input('singer_ids');
@@ -223,6 +230,7 @@ class AttendanceController extends Controller
                 ['membership_id' => $singerId],
                 [
                     'response' => $response,
+                    'absent_reason' => null,
                     'source' => 'manual',
                 ]
             );
