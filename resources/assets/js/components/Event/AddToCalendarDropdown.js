@@ -12,8 +12,8 @@ const AddToCalendarDropdown = ({ urls, size = 'sm' }) => {
     ].filter(item => !!item.url);
 
     return items.length > 0 && (
-        <Menu as="div" className="relative overflow-visible flex justify-stretch md:justify-start">
-            <Menu.Button className={buttonStyles('secondary', size, false, 'grow md:grow-0')}>
+        <Menu as="div" className="relative overflow-visible flex justify-stretch md:justify-start shrink-0">
+            <Menu.Button className={buttonStyles('secondary', size, false, 'grow')}>
                 <Icon icon="calendar-plus" />
                 Add To Calendar
                 <Icon icon="chevron-down" />

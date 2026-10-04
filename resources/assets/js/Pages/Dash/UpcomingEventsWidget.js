@@ -81,7 +81,7 @@ const UpcomingEventsWidget = ({ events, eventCategories }) => {
 									</div>
 								)}
 
-								<TableMobileLink url={route('events.show', { event })}>
+								<TableMobileLink url={route('events.show', { event })} padding="pl-4 md:pl-0">
 									<div className="flex-1 flex flex-col mr-2 sm:mr-4">
 										<div className="flex items-center justify-between gap-1">
 											<div className="text-sm font-medium text-purple-800">{event.title}</div>
@@ -111,7 +111,7 @@ const UpcomingEventsWidget = ({ events, eventCategories }) => {
 								</TableMobileLink>
 
 								{!isToday(event) && (
-									<div className="-mt-2 mb-4 self-stretch md:self-start px-4 sm:px-6">
+									<div className="-mt-2 mb-4 self-stretch md:self-start px-4 sm:px-6 w-full">
 										<RsvpDropdown event={event} size="xs" />
 									</div>
 								)}
