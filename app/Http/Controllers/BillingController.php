@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Membership;
 use App\Models\Tenant;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -59,11 +60,6 @@ class BillingController extends Controller
             'id' => $plan['yearly_id'],
             'eligible' => ($eligibilityReason = $this->planEligibility($tenant, $plan)) === null,
             'eligibilityReason' => $eligibilityReason,
-            'payLink' => tenant()->subscribed('default')
-                ? null
-                : tenant()->newSubscription('default', $plan['yearly_id'])
-                    ->returnTo(route('organisation.billing', ['tenant' => tenant()]))
-                    ->create(),
         ]);
 
         return Inertia::render('Tenants/Billing', [
@@ -71,6 +67,59 @@ class BillingController extends Controller
             'tenant' => $tenant->load('subscriptions')->append(['plan', 'billing_status']),
             'termsUrl' => config('spark.terms_url'),
         ]);
+    }
+
+    public function subscribe(Request $request): JsonResponse
+    {
+        $tenant = tenant();
+        $this->authorizeBilling($request, $tenant);
+
+        $validated = $request->validate([
+            'plan' => ['required', 'integer'],
+        ]);
+        $planId = (int) $validated['plan'];
+        $plan = collect(config('spark.billables.tenant.plans'))->firstWhere('yearly_id', $planId);
+
+        if (! $plan) {
+            throw ValidationException::withMessages([
+                'plan' => 'The selected plan is invalid.',
+            ]);
+        }
+
+        if (($eligibilityReason = $this->planEligibility($tenant, $plan)) !== null) {
+            throw ValidationException::withMessages([
+                'plan' => $eligibilityReason,
+            ]);
+        }
+
+        if ($tenant->subscribed('default')) {
+            throw ValidationException::withMessages([
+                'plan' => 'You are already subscribed to a plan.',
+            ]);
+        }
+
+        $link = $tenant->newSubscription('default', $planId)
+            ->returnTo(route('organisation.billing', ['tenant' => $tenant]))
+            ->create();
+
+        return response()->json(['link' => $link]);
+    }
+
+    public function pendingCheckout(Request $request): JsonResponse
+    {
+        $tenant = tenant();
+        $this->authorizeBilling($request, $tenant);
+
+        $validated = $request->validate([
+            'checkout_id' => ['required', 'string', 'max:255'],
+        ]);
+
+        session()->put('billing.pending_checkout', [
+            'tenant_id' => $tenant->id,
+            'checkout_id' => $validated['checkout_id'],
+        ]);
+
+        return response()->json(['acknowledged' => true, 'pending' => true]);
     }
 
     public function swap(Request $request): RedirectResponse

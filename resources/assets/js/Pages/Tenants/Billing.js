@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import TenantLayout from '../../Layouts/TenantLayout';
 import { PageHeader, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
@@ -16,6 +17,49 @@ const formatDate = (date, format = 'DATE_MED') => DateTime.fromJSDate(new Date(d
 const Billing = ({ plans, tenant, termsUrl }) => {
 	const { route } = useRoute();
 	const { plan, billing_status: billing } = tenant;
+	const [subscribeProcessing, setSubscribeProcessing] = useState(null);
+	const [subscribeError, setSubscribeError] = useState(null);
+	const [checkoutPending, setCheckoutPending] = useState(false);
+
+	const clearCheckoutUrl = () => {
+		window.history.pushState({}, document.title, window.location.pathname);
+	};
+
+	const subscribe = async (event, planId) => {
+		event.preventDefault();
+
+		if (subscribeProcessing !== null) {
+			return;
+		}
+
+		setSubscribeProcessing(planId);
+		setSubscribeError(null);
+
+		try {
+			const response = await axios.post(route('organisation.billing.subscribe'), { plan: planId });
+
+			if (!window.Paddle?.Checkout?.open) {
+				throw new Error('Paddle checkout is unavailable.');
+			}
+
+			window.Paddle.Checkout.open({
+				override: response.data.link,
+				disableLogout: true,
+				successCallback: async checkoutResponse => {
+					setCheckoutPending(true);
+					clearCheckoutUrl();
+					await axios.post(route('organisation.billing.pending-checkout'), {
+						checkout_id: checkoutResponse.checkout.id,
+					});
+				},
+				closeCallback: clearCheckoutUrl,
+			});
+		} catch (error) {
+			setSubscribeError(error.response?.data?.message || error.message);
+		} finally {
+			setSubscribeProcessing(null);
+		}
+	};
 
 	return (
 		<>
@@ -45,16 +89,20 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 								<PanelTitle>Current Subscription</PanelTitle>
 								<div className="flex items-center gap-4">
 									<div className="flex gap-2 leading-[1]">
-										{!billing.hasGratis && !billing.onTrial && !billing.paused && !billing.onPausedGracePeriod && !billing.onGracePeriod && (
-											<ButtonLink
-												href={route('organisation.billing.pause')}
-												variant="secondary"
-												size="xs"
-											>
-												<Icon icon="pause" size="xs" />
-												Pause
-											</ButtonLink>
-										)}
+										{!billing.hasGratis &&
+											!billing.onTrial &&
+											!billing.paused &&
+											!billing.onPausedGracePeriod &&
+											!billing.onGracePeriod && (
+												<ButtonLink
+													href={route('organisation.billing.pause')}
+													variant="secondary"
+													size="xs"
+												>
+													<Icon icon="pause" size="xs" />
+													Pause
+												</ButtonLink>
+											)}
 										{(billing.paused || billing.onPausedGracePeriod) && (
 											<>
 												<ButtonLink
@@ -208,7 +256,9 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 													{/*>*/}
 													{/*	{plan ? 'Swap Plan' : 'Subscribe'}*/}
 													{/*</button>*/}
-													<p className="mt-2 text-xs text-red-600 text-center">{p.eligibilityReason}</p>
+													<p className="mt-2 text-xs text-red-600 text-center">
+														{p.eligibilityReason}
+													</p>
 												</div>
 											) : (
 												<>
@@ -217,27 +267,44 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 															Can't swap during trial
 														</div>
 													) : (
-														<a
-															href={
-																plan
-																	? route('organisation.billing.swap', { plan: p.id })
-																	: '#!'
-															}
-															className={classNames(
-																'!w-full !justify-center !inline-flex !items-center !gap-x-1.5 !border !focus:outline-none !focus:ring-2 !focus:ring-offset-2 !border-transparent !py-2 !px-4 !text-md !rounded-md !box-border',
-																'!focus:ring-purple-500 !bg-purple-600 !text-white hover:bg-purple-700 hover:from-purple-700 hover:to-purple-700 hover:bg-gradient-to-b !bg-gradient-to-b !from-purple-500 !to-purple-500',
-																!plan && 'paddle_button'
+														<>
+															<a
+																href={
+																	plan
+																		? route('organisation.billing.swap', {
+																				plan: p.id,
+																		  })
+																		: '#!'
+																}
+																className={classNames(
+																	'!w-full !justify-center !inline-flex !items-center !gap-x-1.5 !border !focus:outline-none !focus:ring-2 !focus:ring-offset-2 !border-transparent !py-2 !px-4 !text-md !rounded-md !box-border',
+																	'!focus:ring-purple-500 !bg-purple-600 !text-white hover:bg-purple-700 hover:from-purple-700 hover:to-purple-700 hover:bg-gradient-to-b !bg-gradient-to-b !from-purple-500 !to-purple-500'
+																)}
+																onClick={
+																	!plan ? event => subscribe(event, p.id) : undefined
+																}
+																	aria-disabled={!plan && subscribeProcessing !== null}
+																style={{
+																	textShadow: 'none',
+																	fontFamily: 'Lato, Arial, Helvetica, sans-serif',
+																	fontSize: '14px',
+																	fontWeight: 'normal',
+																}}
+															>
+																	{!!plan
+																	? 'Swap Plan'
+																	: checkoutPending
+																	? 'Pending confirmation'
+																	: subscribeProcessing === p.id
+																	? 'Loading...'
+																	: 'Subscribe'}
+															</a>
+															{!plan && subscribeError && (
+																<p className="mt-2 text-xs text-red-600 text-center">
+																	{subscribeError}
+																</p>
 															)}
-															style={{
-																textShadow: 'none',
-																fontFamily: 'Lato, Arial, Helvetica, sans-serif',
-																fontSize: '14px',
-																fontWeight: 'normal',
-															}}
-															data-override={p.payLink}
-														>
-															{!!plan ? 'Swap Plan' : 'Subscribe'}
-														</a>
+														</>
 													)}
 												</>
 											)}

@@ -107,6 +107,10 @@ Route::middleware([
     Route::get('/mail-log/open/{mail_log_uid}/{email}', [MailLogOpenController::class, 'show'])
         ->name('mail-logs.open');
 
+    Route::post('/billing/pending-checkout', [BillingController::class, 'pendingCheckout'])
+        ->name('organisation.billing.pending-checkout')
+        ->middleware(['auth', EnsureUserIsMember::class]);
+
     Route::middleware([
         BlockMemberAccessWhenNoActiveSubscription::class,
 
@@ -324,6 +328,7 @@ Route::middleware([
 
         // Billing portal
         Route::get('/billing', [BillingController::class, 'index'])->name('organisation.billing');
+        Route::post('/billing/subscribe', [BillingController::class, 'subscribe'])->name('organisation.billing.subscribe');
         Route::get('/billing/swap', [BillingController::class, 'swap'])->name('organisation.billing.swap');
         Route::get('/billing/cancel', [BillingController::class, 'cancel'])->name('organisation.billing.cancel');
         Route::get('/billing/pause', [BillingController::class, 'pause'])->name('organisation.billing.pause');

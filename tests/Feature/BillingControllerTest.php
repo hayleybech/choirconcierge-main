@@ -78,6 +78,59 @@ it('blocks demo tenant from billing page', function () {
     });
 });
 
+it('acknowledges a pending checkout for an authorized billing user', function () {
+    $user = User::factory()->create();
+    $tenant = Tenant::factory()->create([
+        'timezone' => 'UTC',
+        'billing_user_id' => $user->id,
+    ]);
+    Membership::factory()->create(['tenant_id' => $tenant->id, 'user_id' => $user->id]);
+
+    $tenant->run(function () use ($user, $tenant) {
+        $this->actingAs($user)
+            ->postJson(route('organisation.billing.pending-checkout', ['tenant' => $tenant->id]), [
+                'checkout_id' => 'checkout_123',
+            ])
+            ->assertOk()
+            ->assertJson(['acknowledged' => true, 'pending' => true]);
+
+        expect(session('billing.pending_checkout'))->toMatchArray([
+            'tenant_id' => $tenant->id,
+            'checkout_id' => 'checkout_123',
+        ]);
+    });
+});
+
+it('rejects malformed pending checkout requests', function () {
+    $user = User::factory()->create();
+    $tenant = Tenant::factory()->create([
+        'timezone' => 'UTC',
+        'billing_user_id' => $user->id,
+    ]);
+    Membership::factory()->create(['tenant_id' => $tenant->id, 'user_id' => $user->id]);
+
+    $tenant->run(function () use ($user, $tenant) {
+        $this->actingAs($user)
+            ->postJson(route('organisation.billing.pending-checkout', ['tenant' => $tenant->id]), [])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['checkout_id']);
+    });
+});
+
+it('blocks unauthorized pending checkout requests', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    Membership::factory()->create(['tenant_id' => $tenant->id, 'user_id' => $user->id]);
+
+    $tenant->run(function () use ($user, $tenant) {
+        $this->actingAs($user)
+            ->postJson(route('organisation.billing.pending-checkout', ['tenant' => $tenant->id]), [
+                'checkout_id' => 'checkout_123',
+            ])
+            ->assertForbidden();
+    });
+});
+
 it('allows accounts team to access billing page', function () {
     $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
     $user = User::factory()->create();
@@ -119,6 +172,110 @@ it('allows billing user to access billing page', function () {
 
         $this->get(route('organisation.billing', ['tenant' => $tenant->id]))
             ->assertOk();
+    });
+});
+
+it('creates a checkout link for an eligible plan', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    $membership = Membership::factory()->create(['tenant_id' => $tenant->id, 'user_id' => $user->id]);
+    $membership->roles()->attach(Role::firstOrCreate(['name' => 'Admin']));
+    $planId = 54321;
+
+    $tenant->run(function () use ($user, $tenant, $planId) {
+        config(['spark.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => []]]]);
+
+        $builder = mock(SubscriptionBuilder::class);
+        $builder->shouldReceive('returnTo')->with(route('organisation.billing', ['tenant' => $tenant]))->andReturnSelf();
+        $builder->shouldReceive('create')->once()->andReturn('https://checkout.example.test/link');
+        $mockTenant = mock(Tenant::class . '[subscribed,newSubscription]');
+        $mockTenant->setRawAttributes($tenant->getAttributes());
+        $mockTenant->exists = true;
+        $mockTenant->shouldReceive('subscribed')->with('default')->andReturn(false);
+        $mockTenant->shouldReceive('newSubscription')->with('default', $planId)->andReturn($builder);
+        app()->instance(Tenant::class, $mockTenant);
+        app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
+
+        $this->actingAs($user)
+            ->postJson(route('organisation.billing.subscribe', ['tenant' => $tenant->id]), ['plan' => $planId])
+            ->assertOk()
+            ->assertJson(['link' => 'https://checkout.example.test/link']);
+    });
+});
+
+it('rejects an unknown subscription plan', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    $membership = Membership::factory()->create(['tenant_id' => $tenant->id, 'user_id' => $user->id]);
+    $membership->roles()->attach(Role::firstOrCreate(['name' => 'Admin']));
+
+    $tenant->run(function () use ($user, $tenant) {
+        config(['spark.billables.tenant.plans' => []]);
+
+        $this->actingAs($user)
+            ->postJson(route('organisation.billing.subscribe', ['tenant' => $tenant->id]), ['plan' => 54321])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['plan']);
+    });
+});
+
+it('blocks unauthorized users from subscribing', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    Membership::factory()->create(['tenant_id' => $tenant->id, 'user_id' => $user->id]);
+
+    $tenant->run(function () use ($user, $tenant) {
+        $this->actingAs($user)
+            ->postJson(route('organisation.billing.subscribe', ['tenant' => $tenant->id]), ['plan' => 54321])
+            ->assertStatus(402);
+    });
+});
+
+it('rejects an ineligible subscription plan', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    $membership = Membership::factory()->create(['tenant_id' => $tenant->id, 'user_id' => $user->id]);
+    $membership->roles()->attach(Role::firstOrCreate(['name' => 'Admin']));
+    $planId = 54321;
+
+    $tenant->run(function () use ($user, $tenant, $planId) {
+        config(['spark.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => ['activeUserQuota' => 5]]]]);
+        $mockTenant = mock(Tenant::class . '[getAttribute]');
+        $mockTenant->setRawAttributes($tenant->getAttributes());
+        $mockTenant->exists = true;
+        $mockTenant->shouldReceive('getAttribute')->with('billing_status')->andReturn(['activeUserQuota' => ['activeUserCount' => 10]]);
+        $mockTenant->shouldReceive('getAttribute')->with('id')->andReturn($tenant->id);
+        $mockTenant->shouldReceive('getAttribute')->with('billingUser')->andReturn($tenant->billingUser);
+        app()->instance(Tenant::class, $mockTenant);
+        app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
+
+        $this->actingAs($user)
+            ->postJson(route('organisation.billing.subscribe', ['tenant' => $tenant->id]), ['plan' => $planId])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['plan']);
+    });
+});
+
+it('rejects a duplicate initial subscription', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    $membership = Membership::factory()->create(['tenant_id' => $tenant->id, 'user_id' => $user->id]);
+    $membership->roles()->attach(Role::firstOrCreate(['name' => 'Admin']));
+    $planId = 54321;
+
+    $tenant->run(function () use ($user, $tenant, $planId) {
+        config(['spark.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => []]]]);
+        $mockTenant = mock(Tenant::class . '[subscribed]');
+        $mockTenant->setRawAttributes($tenant->getAttributes());
+        $mockTenant->exists = true;
+        $mockTenant->shouldReceive('subscribed')->with('default')->andReturn(true);
+        app()->instance(Tenant::class, $mockTenant);
+        app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
+
+        $this->actingAs($user)
+            ->postJson(route('organisation.billing.subscribe', ['tenant' => $tenant->id]), ['plan' => $planId])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['plan']);
     });
 });
 
