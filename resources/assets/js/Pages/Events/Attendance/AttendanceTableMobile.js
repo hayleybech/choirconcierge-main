@@ -13,14 +13,25 @@ import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
 import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
+import Icon from '../../../components/Icon';
+import Button from '../../../components/inputs/Button';
 
-const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event, bulkEdit }) => {
+const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
 	const { route } = useRoute();
 	const [editingSingerId, setEditingSingerId] = useState(null);
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit} />
+			<TableMobileHeader bulkEdit={bulkEdit}>
+				<Button
+					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
+					size="xs"
+					onClick={() => setShowFilters(prev => !prev)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{singers.map(singer => (
 					<TableMobileListItem key={singer.id}>

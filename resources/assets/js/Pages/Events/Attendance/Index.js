@@ -320,6 +320,8 @@ const Index = ({
 						showEnsemble={showEnsemble}
 						event={event}
 						bulkEdit={bulkEdit}
+						hasNonDefaultFilters={hasNonDefaultFilters}
+						setShowFilters={setShowFilters}
 					/>
 				}
 				tableDesktop={

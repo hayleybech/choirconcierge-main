@@ -8,7 +8,7 @@ const FilterSortPane = ({ sorts, filters, closeFn, showSortsOnDesktop = false })
 
 	return (
 		<div className="flex h-full flex-col">
-			<div className="bg-white pt-2 pr-2 -mb-2 flex justify-end items-center">
+			<div className="pt-2 pr-2 flex justify-end items-center absolute right-0">
 				<Button onClick={closeFn} variant="clear" size="xs">
 					<Icon icon="times" />
 				</Button>
