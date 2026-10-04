@@ -25,7 +25,7 @@ it('renders the billing page', function () {
     $tenant->run(function () use ($user, $tenant) {
         $this->actingAs($user);
 
-        config(['spark.billables.tenant.plans' => []]);
+        config(['cashier.billables.tenant.plans' => []]);
 
         $this->get(route('organisation.billing', ['tenant' => $tenant->id]))
             ->assertOk()
@@ -144,7 +144,7 @@ it('allows accounts team to access billing page', function () {
     $tenant->run(function () use ($user, $tenant) {
         $this->actingAs($user);
 
-        config(['spark.billables.tenant.plans' => []]);
+        config(['cashier.billables.tenant.plans' => []]);
         config(['features.billing' => false]);
 
         $this->get(route('organisation.billing', ['tenant' => $tenant->id]))
@@ -167,7 +167,7 @@ it('allows billing user to access billing page', function () {
     $tenant->run(function () use ($user, $tenant) {
         $this->actingAs($user);
 
-        config(['spark.billables.tenant.plans' => []]);
+        config(['cashier.billables.tenant.plans' => []]);
         config(['features.billing' => false]);
 
         $this->get(route('organisation.billing', ['tenant' => $tenant->id]))
@@ -183,7 +183,7 @@ it('creates a checkout link for an eligible plan', function () {
     $planId = 54321;
 
     $tenant->run(function () use ($user, $tenant, $planId) {
-        config(['spark.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => []]]]);
+        config(['cashier.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => []]]]);
 
         $builder = mock(SubscriptionBuilder::class);
         $builder->shouldReceive('returnTo')->with(route('organisation.billing', ['tenant' => $tenant]))->andReturnSelf();
@@ -210,7 +210,7 @@ it('rejects an unknown subscription plan', function () {
     $membership->roles()->attach(Role::firstOrCreate(['name' => 'Admin']));
 
     $tenant->run(function () use ($user, $tenant) {
-        config(['spark.billables.tenant.plans' => []]);
+        config(['cashier.billables.tenant.plans' => []]);
 
         $this->actingAs($user)
             ->postJson(route('organisation.billing.subscribe', ['tenant' => $tenant->id]), ['plan' => 54321])
@@ -239,7 +239,7 @@ it('rejects an ineligible subscription plan', function () {
     $planId = 54321;
 
     $tenant->run(function () use ($user, $tenant, $planId) {
-        config(['spark.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => ['activeUserQuota' => 5]]]]);
+        config(['cashier.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => ['activeUserQuota' => 5]]]]);
         $mockTenant = mock(Tenant::class . '[getAttribute]');
         $mockTenant->setRawAttributes($tenant->getAttributes());
         $mockTenant->exists = true;
@@ -264,7 +264,7 @@ it('rejects a duplicate initial subscription', function () {
     $planId = 54321;
 
     $tenant->run(function () use ($user, $tenant, $planId) {
-        config(['spark.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => []]]]);
+        config(['cashier.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => []]]]);
         $mockTenant = mock(Tenant::class . '[subscribed]');
         $mockTenant->setRawAttributes($tenant->getAttributes());
         $mockTenant->exists = true;
@@ -293,7 +293,7 @@ it('fails plan eligibility check if too many active users', function () {
 
     // Mock active user count to be higher than plan quota
     $tenant->run(function () use ($user, $tenant, $planId) {
-        config(['spark.billables.tenant.plans' => [
+        config(['cashier.billables.tenant.plans' => [
             [
                 'yearly_id' => $planId,
                 'options' => ['activeUserQuota' => 5]

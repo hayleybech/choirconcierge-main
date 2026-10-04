@@ -52,7 +52,7 @@ class BillingController extends Controller
         $this->authorizeBilling($request, tenant());
         $tenant = tenant();
 
-        $plans = collect(config('spark.billables.tenant.plans'))->map(fn($plan) => [
+        $plans = collect(config('cashier.billables.tenant.plans'))->map(fn($plan) => [
             'name' => $plan['name'],
             'description' => $plan['short_description'],
             'features' => $plan['features'],
@@ -78,7 +78,7 @@ class BillingController extends Controller
             'plan' => ['required', 'integer'],
         ]);
         $planId = (int) $validated['plan'];
-        $plan = collect(config('spark.billables.tenant.plans'))->firstWhere('yearly_id', $planId);
+        $plan = collect(config('cashier.billables.tenant.plans'))->firstWhere('yearly_id', $planId);
 
         if (! $plan) {
             throw ValidationException::withMessages([
@@ -129,7 +129,7 @@ class BillingController extends Controller
         $planId = (int) $request->input('plan');
         $tenant = tenant();
 
-        $plan = collect(config('spark.billables.tenant.plans'))->firstWhere('yearly_id', $planId);
+        $plan = collect(config('cashier.billables.tenant.plans'))->firstWhere('yearly_id', $planId);
 
         if ($plan && ($eligibilityReason = $this->planEligibility($tenant, $plan)) !== null) {
             throw ValidationException::withMessages([

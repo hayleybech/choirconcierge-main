@@ -129,7 +129,7 @@ class Tenant extends BaseTenant
                 return null;
             }
 
-            $plans = config('spark.billables.tenant.plans');
+            $plans = config('cashier.billables.tenant.plans');
 
             foreach ($plans as $planConfig) {
                 if (($planConfig['monthly_id'] ?? null) === $planId || ($planConfig['yearly_id'] ?? null) === $planId) {

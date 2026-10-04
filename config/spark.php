@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Tenant;
-
 return [
 
     /*
@@ -92,67 +90,4 @@ return [
     |
     */
 
-    'billables' => [
-
-        'tenant' => [
-            'model' => Tenant::class,
-
-            'trial_days' => 30,
-
-            'default_interval' => 'yearly',
-
-            'plans' => [
-                [
-                    'name' => 'Small Choir',
-                    'short_description' => 'Up to 25 users.',
-                    'yearly_id' => env('SPARK_PLAN_SMALL_YEARLY', 62775),
-                    'features' => [
-                        'Up to 25 users',
-                        'Unmetered storage',
-                        '20% off first year with coupon code FIRSTYR',
-                    ],
-                    'archived' => false,
-                    'options' => [
-                        'activeUserQuota' => 25,
-                        'activeUserQuotaBuffer' => 5,
-                        'activeUserGracePeriodDays' => 30,
-                    ]
-                ],
-                [
-                    'name' => 'Medium Choir',
-                    'short_description' => 'Up to 50 users.',
-                    'yearly_id' => env('SPARK_PLAN_MEDIUM_YEARLY', 62838),
-                    'features' => [
-                        'Up to 50 users',
-                        'Unmetered storage',
-                        '20% off first year with coupon code FIRSTYR',
-                    ],
-                    'archived' => false,
-                    'options' => [
-                        'activeUserQuota' => 50,
-                        'activeUserQuotaBuffer' => 5,
-                        'activeUserGracePeriodDays' => 30,
-                    ]
-                ],
-                [
-                    'name' => 'Large Choir',
-                    'short_description' => '51+ users.',
-                    'yearly_id' => env('SPARK_PLAN_LARGE_YEARLY', 62839),
-                    'features' => [
-                        'Unlimited users',
-                        'Unmetered storage',
-                        '20% off first year with coupon code FIRSTYR',
-                    ],
-                    'archived' => false,
-                    'options' => [
-                        'activeUserQuota' => null,
-                        'activeUserQuotaBuffer' => null,
-                        'activeUserGracePeriodDays' => null,
-                    ]
-                ],
-            ],
-
-        ],
-
-    ],
 ];
