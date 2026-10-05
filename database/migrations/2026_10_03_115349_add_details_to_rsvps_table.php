@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('rsvps', function (Blueprint $table): void {
-            $table->text('details')->nullable()->after('response');
+            $table->string('details', 50)->nullable()->after('response');
         });
     }
 

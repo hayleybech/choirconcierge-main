@@ -168,17 +168,18 @@ class AttendanceController extends Controller
     {
         $this->authorize('create', Attendance::class);
 
-        $request->validate([
-            'response' => ['in:unknown,absent,late,late_deemed_absent,present'],
+        $validated = $request->validate([
+            'response' => ['required', 'in:unknown,absent,late,late_deemed_absent,present'],
+            'absent_reason' => ['nullable', 'string', 'max:50'],
         ]);
 
         $event->attendances()
             ->updateOrCreate(
                 ['membership_id' => $singer->id],
                 [
-                    'response' => $request->input('response'),
-                    'absent_reason' => $request->input('response') === 'absent'
-                        ? $request->input('absent_reason')
+                    'response' => $validated['response'],
+                    'absent_reason' => $validated['response'] === 'absent'
+                        ? ($validated['absent_reason'] ?? null)
                         : null,
                     'source' => 'manual',
                 ]
@@ -193,15 +194,22 @@ class AttendanceController extends Controller
     {
         $this->authorize('create', Attendance::class);
 
-        $absent_reason = $request->input('absent_reason');
-        $responses = $request->input('attendance_response');
+        $validated = $request->validate([
+            'attendance_response' => ['required', 'array'],
+            'attendance_response.*' => ['required', 'in:unknown,absent,late,late_deemed_absent,present'],
+            'absent_reason' => ['nullable', 'array'],
+            'absent_reason.*' => ['nullable', 'string', 'max:50'],
+        ]);
+
+        $absentReason = $validated['absent_reason'] ?? [];
+        $responses = $validated['attendance_response'];
         foreach ($responses as $membership_id => $response) {
             $event->attendances()->updateOrCreate(
                 ['membership_id' => $membership_id],
                 [
                     'response' => $response,
                     'absent_reason' => $response === 'absent'
-                        ? $absent_reason[$membership_id]
+                        ? ($absentReason[$membership_id] ?? null)
                         : null,
                     'source' => 'manual',
                 ],
@@ -216,14 +224,14 @@ class AttendanceController extends Controller
     {
         $this->authorize('create', Attendance::class);
 
-        $request->validate([
+        $validated = $request->validate([
             'singer_ids' => ['required', 'array'],
             'singer_ids.*' => ['exists:memberships,id'],
             'response' => ['required', 'in:unknown,absent,late,late_deemed_absent,present'],
         ]);
 
-        $singerIds = $request->input('singer_ids');
-        $response = $request->input('response');
+        $singerIds = $validated['singer_ids'];
+        $response = $validated['response'];
 
         foreach ($singerIds as $singerId) {
             $event->attendances()->updateOrCreate(

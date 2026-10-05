@@ -102,9 +102,9 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
                 }
                 </div>
                 {key === detailsResponse && canHaveDetails && !isEditingDetails && (
-                  <div className={classNames('flex items-center gap-1 px-3 py-1', isSavedResponse(key) ? 'bg-purple-500 text-white' : '')}>
+                  <div className={classNames('flex items-center gap-1 pl-3 pr-1 py-1', isSavedResponse(key) ? 'bg-purple-500 text-white' : '')}>
                     {event.my_rsvp.details && (
-                      <span className={classNames('max-w-[140px] truncate text-[11px] italic', isSavedResponse(key) ? 'text-white' : 'text-gray-500')} title={event.my_rsvp.details}>
+                      <span className={classNames('truncate text-[11px] italic', isSavedResponse(key) ? 'text-white' : 'text-gray-500')} title={event.my_rsvp.details}>
                         {event.my_rsvp.details}
                       </span>
                     )}
@@ -127,6 +127,8 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
                       placeholder={key === 'maybe' ? 'Details' : 'Reason'}
                       size="xs"
                       className="!py-1"
+	                  maxLength={50}
+					  wrapperClasses="grow"
                       autoFocus
                       onKeyDown={e => {
                         if (e.key === 'Enter') saveDetails(close);

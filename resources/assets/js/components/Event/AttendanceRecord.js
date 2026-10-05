@@ -181,6 +181,7 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 									updateFn={value => setData('absent_reason', value)}
 									placeholder="Reason for absence"
 									size="xs"
+									maxLength={50}
 									autoFocus
 									onKeyDown={e => {
 										if (e.key === 'Enter') {

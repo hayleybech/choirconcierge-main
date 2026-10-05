@@ -173,9 +173,9 @@ class RsvpController extends Controller
 
     public function store(Request $request, Event $event): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'rsvp_response' => 'required|in:yes,maybe,no',
-            'details' => 'nullable|string|max:1000',
+            'details' => 'nullable|string|max:50',
         ]);
 
         if ($event->ensembles->isNotEmpty() && !$event->relevant_memberships()->where('memberships.id', Auth::user()->membership->id)->exists()) {
@@ -185,9 +185,9 @@ class RsvpController extends Controller
         $event->rsvps()->updateOrCreate(
             ['membership_id' => Auth::user()->membership->id],
             [
-                'response' => $request->input('rsvp_response'),
-                'details' => in_array($request->input('rsvp_response'), ['maybe', 'no'], true)
-                    ? $request->input('details')
+                'response' => $validated['rsvp_response'],
+                'details' => in_array($validated['rsvp_response'], ['maybe', 'no'], true)
+                    ? ($validated['details'] ?? null)
                     : null,
             ]
         );
@@ -197,9 +197,9 @@ class RsvpController extends Controller
 
     public function update(Request $request, Event $event, Rsvp $rsvp): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'rsvp_response' => 'required|in:yes,maybe,no',
-            'details' => 'nullable|string|max:1000',
+            'details' => 'nullable|string|max:50',
         ]);
 
         if ($event->ensembles->isNotEmpty() && !$event->relevant_memberships()->where('memberships.id', Auth::user()->membership->id)->exists()) {
@@ -209,9 +209,9 @@ class RsvpController extends Controller
         $event->rsvps()->updateOrCreate(
             ['membership_id' => Auth::user()->membership->id],
             [
-                'response' => $request->input('rsvp_response'),
-                'details' => in_array($request->input('rsvp_response'), ['maybe', 'no'], true)
-                    ? $request->input('details')
+                'response' => $validated['rsvp_response'],
+                'details' => in_array($validated['rsvp_response'], ['maybe', 'no'], true)
+                    ? ($validated['details'] ?? null)
                     : null,
             ]
         );
