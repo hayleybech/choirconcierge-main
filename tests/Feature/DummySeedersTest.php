@@ -28,6 +28,7 @@ it('seeds dummy singers with progression and correct pre-April 24 tracking', fun
     $allowedStatuses = [
         SingerStatus::PROSPECTS,
         SingerStatus::MEMBERS,
+        SingerStatus::INACTIVE_MEMBERS,
         SingerStatus::ARCHIVED_PROSPECTS,
         SingerStatus::ARCHIVED_MEMBERS,
     ];
@@ -64,6 +65,20 @@ it('seeds dummy singers with progression and correct pre-April 24 tracking', fun
             // Archived members must have been members (or prospect before cutoff if pre-cutoff single record was member)
             expect($member->joined_at)->not->toBeNull();
         }
+    }
+
+    $histories = $members->map(fn (Membership $member) => $member->statuses->sortBy('created_at')->pluck('status')->all());
+
+    expect($histories->flatten())->toContain(SingerStatus::INACTIVE_MEMBERS);
+
+    foreach ($histories as $statuses) {
+        if (! in_array(SingerStatus::INACTIVE_MEMBERS, $statuses, true)) {
+            continue;
+        }
+
+        expect($statuses)->toContain(SingerStatus::MEMBERS);
+        expect(array_search(SingerStatus::INACTIVE_MEMBERS, $statuses, true))
+            ->toBeGreaterThan(array_search(SingerStatus::MEMBERS, $statuses, true));
     }
 });
 

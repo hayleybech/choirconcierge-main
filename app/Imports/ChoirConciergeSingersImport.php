@@ -102,7 +102,7 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow, WithVali
         $member->roles()->syncWithoutDetaching($roles_to_add);
 
         // Add SingerStatus
-        if (in_array('Archived Members', $roles_list, true)) {
+        if (in_array(SingerStatus::ARCHIVED_MEMBERS->label(), $roles_list, true)) {
             $status = $this->archivedStatus;
         } else {
             $status = $this->activeStatus;

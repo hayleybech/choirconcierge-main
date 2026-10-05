@@ -63,7 +63,9 @@ class DummyUserSeeder extends Seeder
      * Rules:
      * - Progression starts as prospects.
      * - Small percentage progress to archived-prospects and stay there.
-     * - Remainder progress to active members; a portion of those eventually become archived-members.
+     * - Remainder progress to active members; a portion of those eventually become inactive or archived-members.
+     * - A portion of active members become inactive; some return to active membership and others become former
+     *   members.
      * - Each singer starts at a random time and progresses after a random period.
      * - Prior to April 24, 2026 historical membership data was not tracked: insert one record prior to April 24,
      *   and continue progression after that date. NOTE: Dummy data is using April 24, 2024 temporarily.
@@ -72,10 +74,13 @@ class DummyUserSeeder extends Seeder
      * @param Generator $faker
      * @return void
      */
-    public static function generateHistoricalMembershipProgression(Membership $member, $faker): void
+    public static function generateHistoricalMembershipProgression(Membership $member, Generator $faker): void
     {
         $distributions = [
             'prospectToArchived' => 20,
+            'activeToInactive' => 30,
+            'inactiveToActive' => 50,
+            'inactiveToFormer' => 25,
             'activeToArchived' => 40,
         ];
 
@@ -118,8 +123,25 @@ class DummyUserSeeder extends Seeder
                 'date' => $memberDate,
             ];
 
-            // Some members eventually become archived members
-            if ($faker->boolean($distributions['activeToArchived'])) {
+            if ($faker->boolean($distributions['activeToInactive'])) {
+                $inactiveDate = $memberDate->copy()->addDays(mt_rand(90, 180));
+                $plannedTransitions[] = [
+                    'status' => SingerStatus::INACTIVE_MEMBERS,
+                    'date' => $inactiveDate,
+                ];
+
+                if ($faker->boolean($distributions['inactiveToActive'])) {
+                    $plannedTransitions[] = [
+                        'status' => SingerStatus::MEMBERS,
+                        'date' => $inactiveDate->copy()->addDays(mt_rand(30, 120)),
+                    ];
+                } elseif ($faker->boolean($distributions['inactiveToFormer'])) {
+                    $plannedTransitions[] = [
+                        'status' => SingerStatus::ARCHIVED_MEMBERS,
+                        'date' => $inactiveDate->copy()->addDays(mt_rand(30, 120)),
+                    ];
+                }
+            } elseif ($faker->boolean($distributions['activeToArchived'])) {
                 $archivedMemberDate = $memberDate->copy()->addDays(mt_rand(90, 730));
                 $plannedTransitions[] = [
                     'status' => SingerStatus::ARCHIVED_MEMBERS,
@@ -162,11 +184,11 @@ class DummyUserSeeder extends Seeder
         }
 
         // Insert membership status records in chronological order
-        $member->statuses()->createMany(collect($finalStatuses)->map(fn (array $statusData): array => [
-                'status' => $statusData['status']->value,
-                'created_at' => $statusData['date'],
-                'updated_at' => $statusData['date'],
-            ])->all());
+        $member->statuses()->createMany(collect($finalStatuses)->map(fn(array $statusData): array => [
+            'status' => $statusData['status']->value,
+            'created_at' => $statusData['date'],
+            'updated_at' => $statusData['date'],
+        ])->all());
 
         $firstStatusDate = $finalStatuses[0]['date'];
         $lastStatus = end($finalStatuses);

@@ -1,5 +1,5 @@
-# 2026-10-04
-## Attendance Improvements
+# 2026-10-05
+## Attendance & Membership Improvements
 ### Consider historical membership data for attendance reporting
 We added membership history tracking in April, in anticipation of adding this feature. Now that we had several months of data, we've used it to make significant improvements to the accuracy of attendance reports:
 - Each event on the report now shows attendance only for members who were Active at the time of the event.
@@ -18,6 +18,8 @@ Counted separately from "Absent" in many cases now.
 We left this off intentionally, in the misguided belief that we could encourage people to simply commit to a "Yes" or "No". But life isn't that simple, and it can be useful to know *why* someone can't yet commit, in case you're able to help them.
 ### Added sorting options to Attendance Reports
 You can now sort Attendance Reports by Name, Attendance Rate, Voice Part. The Voice Part grouping has been removed, as the filters are more flexible.
+### Added Inactive Members
+You now have a way of tracking financial members who aren't currently singing. We've also renamed "Archived Members" to "Former Members" to ensure there's no confusion between the two.  
 
 ---
 # 2026-10-02

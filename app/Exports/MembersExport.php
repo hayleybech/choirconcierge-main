@@ -69,7 +69,7 @@ class MembersExport implements FromQuery, WithMapping, WithHeadings
 				->join(', '),
 
 			// Status
-			$membership->status->name,
+			$membership->status->status->label(),
 
 			// Membership
 			$membership->onboarding_enabled ? 'Yes' : 'No',
