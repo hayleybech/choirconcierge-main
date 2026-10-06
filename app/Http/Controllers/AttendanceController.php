@@ -76,11 +76,21 @@ class AttendanceController extends Controller
 
         $pagination = QueryBuilder::for($query)
             ->allowedFilters([
-                AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query
-                    ->whereHas('user', fn(Builder $query) => $query
-                        ->whereRaw('CONCAT(first_name, ?, last_name) LIKE LOWER(?)', [' ', "%$value%"])
-                        ->orWhereRaw('email LIKE LOWER(?)', ["%$value%"])
-                    )),
+                AllowedFilter::callback('user.name', function (Builder $query, $value) {
+                    $terms = preg_split('/\s+/', trim((string) $value), -1, PREG_SPLIT_NO_EMPTY);
+
+                    $query->whereHas('user', function (Builder $query) use ($terms) {
+                        foreach ($terms as $term) {
+                            $query->where(function (Builder $query) use ($term) {
+                                $like = "%{$term}%";
+
+                                $query->where('first_name', 'LIKE', $like)
+                                    ->orWhere('last_name', 'LIKE', $like)
+                                    ->orWhere('email', 'LIKE', $like);
+                            });
+                        }
+                    });
+                }),
                 AllowedFilter::callback('enrolments.voice_part_id', fn(Builder $query, $value) => $query
                     ->whereHas('enrolments', fn(Builder $query) => $query
                         ->whereIn('voice_part_id', (array) $value)

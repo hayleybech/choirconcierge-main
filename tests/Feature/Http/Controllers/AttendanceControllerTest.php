@@ -52,6 +52,12 @@ class AttendanceControllerTest extends TestCase
                 ->has('allSingers', 1)
                 ->where('allSingers.0.user.name', 'John Doe')
             );
+
+        $this->get(the_tenant_route('events.attendances.index', ['event' => $event, 'filter[user.name]' => 'John Doe']))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('allSingers', 1)
+                ->where('allSingers.0.user.name', 'John Doe')
+            );
     }
 
     public function test_index_can_filter_by_attendance_response(): void
@@ -248,7 +254,7 @@ class AttendanceControllerTest extends TestCase
         $singer = Membership::factory()->create();
 
         $attendance_response = $this->faker->randomElement(['present', 'absent']);
-        $absent_reason = $this->faker->optional(0.3)->sentence();
+        $absent_reason = 'Travel';
         $response = $this->post(the_tenant_route('events.attendances.updateAll', [$event]), [
             'attendance_response' => [
                 $singer->id => $attendance_response,
@@ -277,7 +283,7 @@ class AttendanceControllerTest extends TestCase
         $singer = Membership::factory()->create();
 
         $attendance_response = 'present';
-        $absent_reason = $this->faker->sentence();
+        $absent_reason = 'Travel';
         $response = $this->put(the_tenant_route('events.attendances.update', ['event' => $event, 'singer' => $singer]), [
             'response' => $attendance_response,
             'absent_reason' => $absent_reason,

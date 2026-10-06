@@ -150,6 +150,22 @@ class DummyUserSeeder extends Seeder
             }
         }
 
+        // Membership history is tracked from the cutoff onwards. If a singer
+        // became a member before then, move that transition and its successors
+        // forward while preserving the progression intervals.
+        $memberTransitionIndex = collect($plannedTransitions)
+            ->search(fn (array $transition): bool => $transition['status'] === SingerStatus::MEMBERS);
+
+        if ($memberTransitionIndex !== false && $plannedTransitions[$memberTransitionIndex]['date']->lt($historyCutoff)) {
+            $shift = $historyCutoff->copy()->addSecond()->diffInSeconds($plannedTransitions[$memberTransitionIndex]['date']);
+
+            foreach (array_keys($plannedTransitions) as $index) {
+                if ($index >= $memberTransitionIndex) {
+                    $plannedTransitions[$index]['date']->addSeconds($shift);
+                }
+            }
+        }
+
         // Only keep transitions that have occurred on or before now()
         $validTransitions = array_values(array_filter($plannedTransitions, fn($t) => $t['date']->lte($now)));
 
@@ -181,6 +197,29 @@ class DummyUserSeeder extends Seeder
         } else {
             // All transitions occurred on or after April 24, 2026
             $finalStatuses = $postCutoffTransitions;
+        }
+
+        $inactiveIndex = collect($finalStatuses)
+            ->search(fn (array $transition): bool => $transition['status'] === SingerStatus::INACTIVE_MEMBERS);
+        $memberIndex = collect($finalStatuses)
+            ->search(fn (array $transition): bool => $transition['status'] === SingerStatus::MEMBERS);
+
+        if ($inactiveIndex !== false && ($memberIndex === false || $memberIndex > $inactiveIndex)) {
+            $inactiveDate = $finalStatuses[$inactiveIndex]['date'];
+            $memberDate = $inactiveDate->lt($historyCutoff)
+                ? $historyCutoff->copy()->addSecond()
+                : $inactiveDate->copy()->subSecond();
+
+            if ($inactiveDate->lt($historyCutoff)) {
+                $finalStatuses[$inactiveIndex]['date'] = $historyCutoff->copy()->addSeconds(2);
+                $inactiveDate = $finalStatuses[$inactiveIndex]['date'];
+                $memberDate = $historyCutoff->copy()->addSecond();
+            }
+
+            array_splice($finalStatuses, $inactiveIndex, 0, [[
+                'status' => SingerStatus::MEMBERS,
+                'date' => $memberDate,
+            ]]);
         }
 
         // Insert membership status records in chronological order

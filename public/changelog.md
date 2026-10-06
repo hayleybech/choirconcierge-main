@@ -19,7 +19,10 @@ We left this off intentionally, in the misguided belief that we could encourage 
 ### Added sorting options to Attendance Reports
 You can now sort Attendance Reports by Name, Attendance Rate, Voice Part. The Voice Part grouping has been removed, as the filters are more flexible.
 ### Added Inactive Members
-You now have a way of tracking financial members who aren't currently singing. We've also renamed "Archived Members" to "Former Members" to ensure there's no confusion between the two.  
+You now have a way of tracking financial members who aren't currently singing. We've also renamed "Archived Members" to "Former Members" to ensure there's no confusion between the two.
+### Other
+- Added a tabbed interface to the Account Settings page (renamed from Edit Profile).
+- Moved the Two-Factor Authentication details directly onto the Account Settings page for quicker access. 
 
 ---
 # 2026-10-02
