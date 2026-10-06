@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
 	PageHeader,
@@ -27,6 +27,7 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const { tenant } = usePage().props;
 	const accountRoute = tenant ? 'account' : 'central.account';
+	const [showRecoveryCodes, setShowRecoveryCodes] = useState(false);
 
 	const { data, setData, post, processing, errors, reset } = useForm({
 		code: '',
@@ -133,26 +134,34 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 									one of the recovery codes below to log in.
 								</p>
 
-								<div className="grid grid-cols-2 gap-2 mb-4 p-4 bg-gray-50 rounded border border-gray-200 font-mono text-sm">
-									{recovery_codes.map(({ code, used_at }, index) => (
-										<div key={index} className="flex gap-1">
-											<pre className={classNames(!!used_at && 'line-through')}>{code}</pre>
-											{used_at && (
-												<DateTag
-													date={used_at}
-													format="DATETIME_SHORT"
-													className="text-gray-400 text-xs"
-													label="Used at"
-												/>
-											)}
-										</div>
-									))}
-								</div>
+								{showRecoveryCodes && (
+									<div className="grid grid-cols-2 gap-2 mb-4 p-4 bg-gray-50 rounded border border-gray-200 font-mono text-sm">
+										{recovery_codes.map(({ code, used_at }, index) => (
+											<div key={index} className="flex gap-1">
+												<pre className={classNames(!!used_at && 'line-through')}>{code}</pre>
+												{used_at && (
+													<DateTag
+														date={used_at}
+														format="DATETIME_SHORT"
+														className="text-gray-400 text-xs"
+														label="Used at"
+													/>
+												)}
+											</div>
+										))}
+									</div>
+								)}
 
 								<div className="flex space-x-3">
-									<Button variant="danger-solid" onClick={regenerateRecoveryCodes}>
-										Regenerate Recovery Codes
-									</Button>
+									{showRecoveryCodes ? (
+										<Button variant="danger-solid" onClick={regenerateRecoveryCodes}>
+											Regenerate Recovery Codes
+										</Button>
+									) : (
+										<Button variant="primary" onClick={() => setShowRecoveryCodes(true)}>
+											Show Recovery Codes
+										</Button>
+									)}
 									<Button variant="danger-outline" onClick={disableTwoFactor}>
 										Disable Two-Factor Authentication
 									</Button>

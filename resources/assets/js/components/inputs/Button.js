@@ -3,7 +3,7 @@ import buttonStyles from './buttonStyles';
 import ButtonLink from './ButtonLink';
 
 const Button = React.forwardRef(
-	({ variant = 'secondary', size = 'md', href, method, className, children, disabled, ...otherProps }, ref) =>
+	({ variant = 'secondary', size = 'md', type = 'button', href, method, className, children, disabled, ...otherProps }, ref) =>
 		href ? (
 			<ButtonLink
 				href={href}
@@ -23,6 +23,7 @@ const Button = React.forwardRef(
 				className={buttonStyles(variant, size, disabled, className)}
 				disabled={disabled}
 				ref={ref}
+				type={type}
 				{...otherProps}
 			>
 				{children}

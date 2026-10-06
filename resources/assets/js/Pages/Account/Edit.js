@@ -13,7 +13,7 @@ import AccountForm from './AccountForm';
 import { usePage } from '@inertiajs/react';
 import useRoute from '../../hooks/useRoute';
 
-const Edit = ({ setSidebarOpen }) => {
+const Edit = ({ setSidebarOpen, two_factor_enabled, recovery_codes }) => {
 	const { user: authUser } = usePage().props;
 	const { route } = useRoute();
 
@@ -43,6 +43,8 @@ const Edit = ({ setSidebarOpen }) => {
 				postUrl={route('account.update')}
 				cancelUrl={route('singers.show', { singer: authUser.membership })}
 				twoFactorUrl={route('account.two-factor.show')}
+				twoFactorEnabled={two_factor_enabled}
+				recoveryCodes={recovery_codes}
 			/>
 		</>
 	);

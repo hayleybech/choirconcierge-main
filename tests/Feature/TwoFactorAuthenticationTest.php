@@ -63,6 +63,18 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->assertFalse($user->fresh()->hasTwoFactorEnabled());
     }
 
+    public function test_user_is_redirected_to_account_settings_when_two_factor_authentication_is_enabled()
+    {
+        $user = User::factory()->create();
+        $user->createTwoFactorAuth();
+        $user->refresh();
+        $user->confirmTwoFactorAuth($user->twoFactorAuth->makeCode());
+
+        $response = $this->actingAs($user)->get(route('central.account.two-factor.show'));
+
+        $response->assertRedirect(route('central.account.edit'));
+    }
+
     public function test_user_is_redirected_to_2fa_challenge_after_login_if_enabled()
     {
         $user = User::factory()->create([

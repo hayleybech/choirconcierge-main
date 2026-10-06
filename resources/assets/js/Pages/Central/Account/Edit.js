@@ -12,7 +12,7 @@ import CentralLayout from "../../../Layouts/CentralLayout";
 import useRoute from "../../../hooks/useRoute";
 import AccountForm from "../../Account/AccountForm";
 
-const Edit = ({ setSidebarOpen }) => {
+const Edit = ({ setSidebarOpen, two_factor_enabled, recovery_codes }) => {
     const { route } = useRoute();
 
     const breadcrumbs = [
@@ -35,7 +35,7 @@ const Edit = ({ setSidebarOpen }) => {
                 </PageHeaderContent>
             </PageHeader>
 
-            <AccountForm postUrl={route('central.account.update')} cancelUrl={route('central.dash')} twoFactorUrl={route('central.account.two-factor.show')} />
+            <AccountForm postUrl={route('central.account.update')} cancelUrl={route('central.dash')} twoFactorUrl={route('central.account.two-factor.show')} twoFactorEnabled={two_factor_enabled} recoveryCodes={recovery_codes} />
         </>
     );
 }

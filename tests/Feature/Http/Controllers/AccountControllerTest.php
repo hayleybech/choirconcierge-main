@@ -29,6 +29,20 @@ test('edit@ renders the template', function() {
             ->has('user'));
 });
 
+it('provides two-factor settings to the account page', function () {
+    $user = User::factory()->has(Membership::factory())->create();
+    $user->createTwoFactorAuth();
+    $user->refresh();
+    $user->confirmTwoFactorAuth($user->twoFactorAuth->makeCode());
+
+    actingAs($user)
+        ->get(the_tenant_route('account.edit'))
+        ->assertInertia(fn ($page) => $page
+            ->where('two_factor_enabled', true)
+            ->has('recovery_codes')
+        );
+});
+
 test('two-factor settings use the tenant account route', function () {
     $user = User::factory()->has(Membership::factory())->create();
     actingAs($user);

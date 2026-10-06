@@ -13,7 +13,12 @@ class AccountController extends Controller
 {
     public function edit(): View|Response
     {
-        return Inertia::render('Central/Account/Edit');
+        $user = auth()->user();
+
+        return Inertia::render('Central/Account/Edit', [
+            'two_factor_enabled' => $user->hasTwoFactorEnabled(),
+            'recovery_codes' => $user->hasTwoFactorEnabled() ? $user->getRecoveryCodes() : [],
+        ]);
     }
 
     public function update(ProfileRequest $request): RedirectResponse

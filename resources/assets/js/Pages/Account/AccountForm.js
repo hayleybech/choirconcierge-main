@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage, router } from '@inertiajs/react';
 import FormSection from '../../components/FormSection';
 import Label from '../../components/inputs/Label';
 import TextInput from '../../components/inputs/TextInput';
@@ -18,12 +18,28 @@ import CountrySelect from '../../components/inputs/CountrySelect';
 import StateSelect from '../../components/inputs/StateSelect';
 import Icon from '../../components/Icon';
 import Select from '../../components/inputs/Select';
+import classNames from '../../classNames';
+import DateTag from '../../components/DateTag';
 
 const regionFirstDayOfWeek = country => (['CA', 'IN', 'JP', 'US'].includes(country) ? 0 : 1);
 
-const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl }) => {
-	const { user } = usePage().props;
+const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recoveryCodes }) => {
+	const { user, tenant } = usePage().props;
 	const [activeTab, setActiveTab] = useState('profile');
+	const [showRecoveryCodes, setShowRecoveryCodes] = useState(false);
+	const accountRoute = tenant ? 'account' : 'central.account';
+
+	const disableTwoFactor = () => {
+		if (confirm('Are you sure you want to disable two-factor authentication?')) {
+			router.delete(route(`${accountRoute}.two-factor.destroy`), { preserveScroll: true });
+		}
+	};
+
+	const regenerateRecoveryCodes = () => {
+		if (confirm('Are you sure you want to regenerate recovery codes? Your old codes will no longer work.')) {
+			router.post(route(`${accountRoute}.two-factor.regenerate`), {}, { preserveScroll: true });
+		}
+	};
 
 	const { data, setData, post, processing, errors, transform } = useForm({
 		first_name: user.first_name,
@@ -426,10 +442,58 @@ const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl }) => {
 						</FormSection>
 						<FormSection title="Two-Factor Authentication">
 							<div className="sm:col-span-6">
-								<ButtonLink href={twoFactorUrl} variant="secondary" size="sm">
-									<Icon icon="shield-alt" mr />
-									Two-Factor Authentication
-								</ButtonLink>
+								{!twoFactorEnabled ? (
+									<ButtonLink href={twoFactorUrl} variant="secondary" size="sm">
+										<Icon icon="shield-alt" mr />
+										Enable Two-Factor Authentication
+									</ButtonLink>
+								) : (
+									<>
+										<p className="text-sm text-gray-600 mb-4">
+											You have enabled two-factor authentication. Your account is more secure.
+										</p>
+										{showRecoveryCodes && (
+											<>
+												<p className="text-sm text-gray-600 mb-4">
+													If you lose your phone, you can use one of the recovery codes below
+													to log in.
+												</p>
+												<div className="grid grid-cols-2 gap-2 mb-4 p-4 bg-gray-50 rounded border border-gray-200 font-mono text-sm">
+													{recoveryCodes.map(({ code, used_at }, index) => (
+														<div key={index} className="flex gap-1">
+															<pre className={classNames(!!used_at && 'line-through')}>
+																{code}
+															</pre>
+															{used_at && (
+																<DateTag
+																	date={used_at}
+																	format="DATETIME_SHORT"
+																	className="text-gray-400 text-xs"
+																	label="Used at"
+																/>
+															)}
+														</div>
+													))}
+												</div>
+											</>
+										)}
+										<div className="flex space-x-3">
+											{!showRecoveryCodes && (
+												<Button variant="primary" onClick={() => setShowRecoveryCodes(true)}>
+													Show Recovery Codes
+												</Button>
+											)}
+											{showRecoveryCodes && (
+												<Button variant="danger-solid" onClick={regenerateRecoveryCodes}>
+													Regenerate Recovery Codes
+												</Button>
+											)}
+											<Button variant="danger-outline" onClick={disableTwoFactor}>
+												Disable Two-Factor Authentication
+											</Button>
+										</div>
+									</>
+								)}
 							</div>
 						</FormSection>
 					</>

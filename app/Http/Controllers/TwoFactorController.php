@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 
 class TwoFactorController extends Controller
@@ -13,10 +13,14 @@ class TwoFactorController extends Controller
     /**
      * Show the Two-Factor Authentication settings.
      */
-    public function show(Request $request): Response
+    public function show(Request $request): Response|RedirectResponse
     {
         $user = $request->user();
         $enabled = $user->hasTwoFactorEnabled();
+
+        if ($enabled) {
+            return redirect()->route($request->routeIs('central.*') ? 'central.account.edit' : 'account.edit');
+        }
         
         $data = [
             'enabled' => $enabled,
@@ -30,8 +34,6 @@ class TwoFactorController extends Controller
             $data['qr_code'] = $secret->toQr();
             $data['uri'] = $secret->toUri();
             $data['string'] = $secret->toString();
-        } else {
-            $data['recovery_codes'] = $user->getRecoveryCodes();
         }
 
         return Inertia::render('Account/TwoFactor', $data);
