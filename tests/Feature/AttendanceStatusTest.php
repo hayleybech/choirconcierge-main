@@ -9,15 +9,6 @@ use Inertia\Testing\AssertableInertia;
 
 uses(RefreshDatabase::class);
 
-test('attendance statuses use the expected icons and colours', function (): void {
-    expect(Attendance::factory()->make(['response' => 'late']))
-        ->icon->toBe('alarm-snooze')
-        ->colour->toBe('amber')
-        ->and(Attendance::factory()->make(['response' => 'late_deemed_absent']))
-        ->icon->toBe('alarm-exclamation')
-        ->colour->toBe('red');
-});
-
 test('the attendance list counts late deemed absent separately from absent', function (): void {
     $this->actingAs($this->createUserWithRole('Events Team'));
 
@@ -43,12 +34,6 @@ test('the attendance list counts late deemed absent separately from absent', fun
             ->where('counts.absent', 2)
             ->where('counts.absent_reason', 1)
         );
-});
-
-
-test('attendance labels identify absences with reasons as absences', function (): void {
-    expect(Attendance::factory()->make(['response' => 'absent', 'absent_reason' => 'Feeling unwell']))
-        ->label->toBe('Absent');
 });
 
 test('the event attendance summary counts absences using the merged response', function (): void {

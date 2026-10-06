@@ -11,16 +11,16 @@ The following attendance has been recorded for **{{ $event->title }}**:
         <td style="padding-right: 15px; padding-bottom: 15px;">
             <img src="{{ global_asset('/img/email/check.png') }}" alt="Present" height="16px" style="vertical-align: middle;"> <span style="color: #047857; font-weight: bold;">Present</span>: {{ $event->singers_attendance('present')->count() + $event->singers_attendance('late')->count() }}
         </td>
-        <td style="padding-right: 15px;">
-            <img src="{{ global_asset('/img/email/clock-solid-amber.png') }}" alt="Late" height="16px" style="vertical-align: middle;"> <span style="color: #d97706; font-weight: bold;">Late</span>: {{ $event->singers_attendance('late')->count() }}
+        <td style="padding-right: 15px; padding-bottom: 15px;">
+            <img src="{{ global_asset('/img/email/alarm-snooze.png') }}" alt="Late" height="16px" style="vertical-align: middle;"> <span style="color: #d97706; font-weight: bold;">Late</span>: {{ $event->singers_attendance('late')->count() }}
         </td>
-        <td>
+        <td style="padding-bottom: 15px;">
             <img src="{{ global_asset('/img/email/times.png') }}" alt="Absent" height="16px" style="vertical-align: middle;"> <span style="color: #dc2626; font-weight: bold;">Absent</span>: {{ $event->singers_attendance('absent')->count() }}
         </td>
     </tr>
     @if($event->singers_attendance('late_deemed_absent')->count() > 0)
     <tr>
-        <td colspan="3" style="text-align:center; padding-bottom: 15px;"><img src="{{ global_asset('/img/email/times.png') }}" alt="Absent" height="16px" style="vertical-align: middle;"> <span style="color: #dc2626; font-weight: bold;">Late (Deemed Absent)</span>: {{ $event->singers_attendance('late_deemed_absent')->count() }}</td>
+        <td colspan="3" style="text-align:center; padding-bottom: 15px;"><img src="{{ global_asset('/img/email/alarm-exclamation.png') }}" alt="Absent" height="16px" style="vertical-align: middle;"> <span style="color: #dc2626; font-weight: bold;">Late (Deemed Absent)</span>: {{ $event->singers_attendance('late_deemed_absent')->count() }}</td>
     </tr>
         @endif
 </table>

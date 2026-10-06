@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import Button from '../inputs/Button';
 import Icon from '../Icon';
 import TextInput from '../inputs/TextInput';
@@ -6,13 +6,11 @@ import { Menu, Transition } from '@headlessui/react';
 import menuItemStyles from '../ActionMenu/menuItemStyles';
 import buttonStyles from '../inputs/buttonStyles';
 import useRoute from '../../hooks/useRoute';
-import { usePage, useForm, router } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import classNames from '../../classNames';
 
 const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 	const [isEditing, setIsEditing] = useState(false);
-
-	const reasonIsAllowed = attendance.response === 'absent';
 
 	const toggleIsEditing = (value) => {
 		setIsEditing(value);
@@ -148,14 +146,14 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 						</Transition>
 					</Menu>
 
-					{!isEditing && !attendance.absent_reason && reasonIsAllowed && (
+					{!isEditing && !attendance.absent_reason && attendance.response === 'absent' && (
 						<Button variant="secondary" size="xs" onClick={e => toggleIsEditing(true)}>
 							<Icon icon="plus" mr /> Add Reason
 						</Button>
 					)}
 				</div>
 
-				{reasonIsAllowed && (
+				{attendance.response === 'absent' && (
 					<div className="flex gap-1.5 items-center">
 						{attendance.absent_reason && !isEditing && (
 							<div

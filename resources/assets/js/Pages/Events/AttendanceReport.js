@@ -51,7 +51,7 @@ const AttendanceReport = ({
 		{ id: 'full-name', name: 'First Name', default: true },
 		{ id: 'last-name-first', name: 'Last Name' },
 		{ id: 'voice-part', name: 'Voice Part' },
-		{ id: 'attendance', name: 'Attendance Rate' },
+		{ id: 'attendance', name: 'Events Present' },
 	];
 	const filters = [
 		{ name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
@@ -263,24 +263,20 @@ const AttendanceReport = ({
 															className="border border-gray-300 text-center"
 															key={event.id}
 														>
-                                                            {!event.isBeforeHistory &&
-                                                            !event.consideredSingerIds.includes(singer.id) ? (
-                                                                <span
-                                                                    className="text-xs text-gray-400"
-                                                                    title="Not an active member at the time"
-                                                                >
-                                                                    N/A
-                                                                </span>
-                                                            ) : attendance ? (
-                                                                <AttendanceTag
-                                                                    icon={attendance.icon}
-                                                                    colour={attendance.colour}
-                                                                />
-                                                            ) : (
+															{!event.isBeforeHistory &&
+															!event.consideredSingerIds.includes(singer.id) ? (
+																<span
+																	className="text-xs text-gray-400"
+																	title="Not an active member at the time"
+																>
+																	N/A
+																</span>
+															) : (
 																<AttendanceTag
-																	icon="circle"
-																	colour="gray"
-																	type="regular"
+																	status={
+																		attendance ? attendance.response : 'unknown'
+																	}
+																	hideLabel
 																/>
 															)}
 														</td>

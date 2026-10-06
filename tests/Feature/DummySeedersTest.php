@@ -106,6 +106,10 @@ it('only generates attendance records for singers who were active members at eve
     }
 });
 
+it('includes late deemed absent attendance records', function () {
+    expect(Attendance::query()->where('response', 'late_deemed_absent')->exists())->toBeTrue();
+});
+
 it('includes attendance outliers such as nearly-always and rarely attending singers', function () {
     $members = Membership::with('attendances', 'statuses')->get();
 

@@ -261,6 +261,17 @@ img {
     border-top: 1px solid #047857;
 }
 
+.button-amber,
+.button-warning {
+    background-color: #ffffff;
+    color: #fe9a00;
+    padding: 7px 17px;
+    border-bottom: 1px solid #fe9a00;
+    border-left: 1px solid #fe9a00;
+    border-right: 1px solid #fe9a00;
+    border-top: 1px solid #fe9a00;
+}
+
 .button-red,
 .button-error {
     background-color: #ffffff;

@@ -108,7 +108,10 @@ const RsvpTableMobile = ({
 													colour={singer.rsvp.colour}
 												/>
 												{singer.rsvp.details && (
-															<div className="relative" ref={openReasonId === singer.id ? reasonRef : null}>
+													<div
+														className="relative"
+														ref={openReasonId === singer.id ? reasonRef : null}
+													>
 														<button
 															type="button"
 															aria-label="Show RSVP reason"
