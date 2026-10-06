@@ -5,9 +5,12 @@ import DocumentForm from "./DocumentForm";
 import Button from "../../components/inputs/Button";
 import EmptyState from "../../components/EmptyState";
 import {DocumentRowMobile, FolderRowMobile} from "./FolderTableRows";
+import RenameDocumentDialog from "./RenameDocumentDialog";
 
 const FolderTableMobile = ({ folders, documents, isFiltered, setShowFilters, setDeletingFolder, setDeletingDocument, permissions, userEnsemblesCount }) => {
     const [openFolder, setOpenFolder] = useState(0);
+    const [renameDocumentIsOpen, setRenameDocumentIsOpen] = useState(false);
+    const [renamingDocument, setRenamingDocument] = useState({ folder: folders[0], document: folders[0]?.documents?.[0] });
 
     const showEnsemblesColumn = userEnsemblesCount > 1;
 
@@ -40,7 +43,10 @@ const FolderTableMobile = ({ folders, documents, isFiltered, setShowFilters, set
                         <DocumentRowMobile
                             key={`doc-${document.id}`}
                             document={document}
+                            folder={{id: document.folder_id}}
                             permissions={permissions}
+                            setRenamingDocument={setRenamingDocument}
+                            setRenameDocumentIsOpen={setRenameDocumentIsOpen}
                             setDeletingDocument={setDeletingDocument}
                         />
                     ))}
@@ -65,7 +71,10 @@ const FolderTableMobile = ({ folders, documents, isFiltered, setShowFilters, set
                                 <DocumentRowMobile
                                     key={document.id}
                                     document={document}
+                                    folder={folder}
                                     permissions={permissions}
+                                    setRenamingDocument={setRenamingDocument}
+                                    setRenameDocumentIsOpen={setRenameDocumentIsOpen}
                                     setDeletingDocument={setDeletingDocument}
                                     isInsideFolder
                                 />
@@ -90,6 +99,7 @@ const FolderTableMobile = ({ folders, documents, isFiltered, setShowFilters, set
                 </React.Fragment>
             ))}
             </TableMobile>
+            <RenameDocumentDialog folder={renamingDocument.folder} document={renamingDocument.document} isOpen={renameDocumentIsOpen} setIsOpen={setRenameDocumentIsOpen} />
         </div>
     );
 }
