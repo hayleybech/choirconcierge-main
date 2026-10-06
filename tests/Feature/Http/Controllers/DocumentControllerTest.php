@@ -93,16 +93,17 @@ class DocumentControllerTest extends TestCase
         $folder = Folder::factory()
             ->hasDocuments()
             ->create();
+        $newTitle = 'new-name.'.pathinfo($folder->documents->first()->title, PATHINFO_EXTENSION);
 
         $this->from(the_tenant_route('folders.index'))
             ->put(the_tenant_route('folders.documents.update', [$folder, $folder->documents->first()]), [
-                'title' => 'new-name.txt',
+                'title' => $newTitle,
             ])
             ->assertSessionHasNoErrors()
             ->assertRedirect(the_tenant_route('folders.index'));
 
         $this->assertDatabaseHas(Document::class, [
-            'title' => 'new-name.txt',
+            'title' => $newTitle,
         ]);
     }
 }

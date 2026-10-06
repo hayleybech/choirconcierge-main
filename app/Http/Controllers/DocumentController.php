@@ -41,7 +41,17 @@ class DocumentController extends Controller
 
     public function update(Folder $folder, Document $document, Request $request): RedirectResponse
     {
-        $document->update($request->validate(['title' => 'required|max:127']));
+        $document->update($request->validate([
+            'title' => [
+                'required',
+                'max:127',
+                function (string $attribute, string $value, \Closure $fail) use ($document): void {
+                    if (strtolower(pathinfo($value, PATHINFO_EXTENSION)) !== strtolower(pathinfo($document->title, PATHINFO_EXTENSION))) {
+                        $fail('The file extension cannot be changed.');
+                    }
+                },
+            ],
+        ]));
 
         return redirect()->back()->with(['status' => 'Document renamed.']);
     }
