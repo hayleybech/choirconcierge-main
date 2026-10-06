@@ -263,20 +263,20 @@ const AttendanceReport = ({
 															className="border border-gray-300 text-center"
 															key={event.id}
 														>
-															{attendance ? (
-																<AttendanceTag
-																	icon={attendance.icon}
-																	colour={attendance.colour}
-																/>
-															) : !event.isBeforeHistory &&
-															  !event.consideredSingerIds.includes(singer.id) ? (
-																<span
-																	className="text-xs text-gray-400"
-																	title="Not an active member at the time"
-																>
-																	N/A
-																</span>
-															) : (
+                                                            {!event.isBeforeHistory &&
+                                                            !event.consideredSingerIds.includes(singer.id) ? (
+                                                                <span
+                                                                    className="text-xs text-gray-400"
+                                                                    title="Not an active member at the time"
+                                                                >
+                                                                    N/A
+                                                                </span>
+                                                            ) : attendance ? (
+                                                                <AttendanceTag
+                                                                    icon={attendance.icon}
+                                                                    colour={attendance.colour}
+                                                                />
+                                                            ) : (
 																<AttendanceTag
 																	icon="circle"
 																	colour="gray"

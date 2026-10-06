@@ -23,6 +23,13 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
   const [details, setDetails] = useState(event.my_rsvp.details || '');
   const [isEditingDetails, setIsEditingDetails] = useState(Boolean(initialDetailsResponse));
 
+  const cancelDetails = (closePopover) => {
+    setResponseWithDetails(null);
+    setDetails(event.my_rsvp.details || '');
+    setIsEditingDetails(false);
+    closePopover?.();
+  };
+
   const saveResponse = (response, responseDetails = null, closeDetails = true, closePopover = null) => {
     router.visit(event.my_rsvp.id
       ? route('events.rsvps.update', {tenant: event.tenant_id, event, rsvp: event.my_rsvp})
@@ -125,6 +132,7 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
                       value={details}
                       updateFn={setDetails}
                       placeholder={key === 'maybe' ? 'Details' : 'Reason'}
+                      aria-label={key === 'maybe' ? 'RSVP details' : 'Reason for not going'}
                       size="xs"
                       className="!py-1"
 	                  maxLength={50}
@@ -132,11 +140,11 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
                       autoFocus
                       onKeyDown={e => {
                         if (e.key === 'Enter') saveDetails(close);
-                        if (e.key === 'Escape') setIsEditingDetails(false);
+                        if (e.key === 'Escape') cancelDetails(close);
                       }}
                     />
                     <Button size="xs" onClick={() => saveDetails(close)} type="button"><Icon icon="check" /></Button>
-                    <Button variant="secondary" size="xs" onClick={() => saveResponse(responseWithDetails, null, true, close)} type="button"><Icon icon="times" /></Button>
+                    <Button variant="secondary" size="xs" onClick={() => cancelDetails(close)} type="button"><Icon icon="times" /></Button>
                   </div>
                 )}
               </div>

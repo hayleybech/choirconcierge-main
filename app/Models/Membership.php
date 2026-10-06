@@ -148,8 +148,14 @@ class Membership extends Model
     public function statusAt(Carbon $date): ?SingerStatus
     {
         return $this->statuses
-            ->filter(fn (MembershipStatus $status) => $status->created_at->lte($date))
-            ->sortBy([['created_at', 'asc'], ['id', 'asc']])
+            ->filter(fn (MembershipStatus $status) => Carbon::parse(
+                $status->getRawOriginal('created_at'),
+                'UTC',
+            )->lte($date->copy()->utc()))
+            ->sortBy(fn (MembershipStatus $status) => [
+                $status->getRawOriginal('created_at'),
+                $status->getKey(),
+            ])
             ->last()
             ?->status;
     }

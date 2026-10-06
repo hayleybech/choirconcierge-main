@@ -37,6 +37,7 @@ class ImportSingerTemplateController extends Controller
             'paid_until',
             'voice_part',
             'roles',
+            'member_status',
         ];
 
         $csv = implode(',', $headers) . "\r\n"; // header row only

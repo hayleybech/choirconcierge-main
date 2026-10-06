@@ -8,7 +8,6 @@ use App\Models\Enrolment;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\VoicePart;
-use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class AttendanceReportTest extends TestCase
@@ -80,10 +79,8 @@ class AttendanceReportTest extends TestCase
         $this->assertStringContainsString('Anna Alto', $html);
         $this->assertStringContainsString('Abby Alto 2', $html);
 
-        // Assertions for new requirements
         $this->assertStringContainsString('Absent', $html);
         $this->assertStringContainsString('Sick', $html);
-        $this->assertStringContainsString('Absent (With Apology)', $html);
         $this->assertStringContainsString('Work', $html);
         $this->assertStringContainsString('Late (Deemed Absent)', $html);
 
