@@ -19,13 +19,13 @@ const Edit = ({ setSidebarOpen }) => {
 
 	const breadcrumbs = [
 		{ name: 'Singers', url: route('singers.index') },
-		{ name: authUser.name, url: route('singers.show', { singer: authUser }) },
-		{ name: 'Edit Profile', url: route('account.edit') },
+		{ name: authUser.name, url: route('singers.show', { singer: authUser.membership }) },
+		{ name: 'Account Settings', url: route('account.edit') },
 	];
 
 	return (
 		<>
-			<AppHead title="Edit Profile" />
+			<AppHead title="Account Settings" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 			</PageTopBar>
@@ -34,7 +34,7 @@ const Edit = ({ setSidebarOpen }) => {
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
 						<Icon icon="user-edit" type="solid" className="mr-2" />
-						Edit Profile
+						Account Settings
 					</PageHeaderTitle>
 				</PageHeaderContent>
 			</PageHeader>
@@ -42,6 +42,7 @@ const Edit = ({ setSidebarOpen }) => {
 			<AccountForm
 				postUrl={route('account.update')}
 				cancelUrl={route('singers.show', { singer: authUser.membership })}
+				twoFactorUrl={route('account.two-factor.show')}
 			/>
 		</>
 	);

@@ -38,12 +38,15 @@ class ProfileRequest extends FormRequest
      */
     public function rules(): array
     {
+        $tab = $this->input('tab', 'profile');
+
         return [
-            'first_name' => ['required', 'max:127'],
-            'last_name' => ['required', 'max:127'],
+            'tab' => ['nullable', 'string', Rule::in(['profile', 'security', 'language'])],
+            'first_name' => [$tab === 'profile' ? 'required' : 'sometimes', 'max:127'],
+            'last_name' => [$tab === 'profile' ? 'required' : 'sometimes', 'max:127'],
             'pronouns' => ['max:127'],
             'email' => [
-                'required',
+                $tab === 'profile' ? 'required' : 'sometimes',
                 'email',
                 Rule::unique('users')
                     ->ignore(auth()->user()->id),

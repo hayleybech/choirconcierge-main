@@ -29,13 +29,24 @@ test('edit@ renders the template', function() {
             ->has('user'));
 });
 
+test('two-factor settings use the tenant account route', function () {
+    $user = User::factory()->has(Membership::factory())->create();
+    actingAs($user);
+
+    get(the_tenant_route('account.two-factor.show'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Account/TwoFactor')
+            ->where('enabled', false));
+});
+
 test('update@ saves the user details', function ($data) {
     $user = User::factory()->has(Membership::factory())->create();
     actingAs($user);
 
     patch(the_tenant_route('account.update'), $data)
         ->assertSessionHasNoErrors()
-        ->assertRedirect(the_tenant_route('singers.show', $user->membership));
+        ->assertRedirect(the_tenant_route('account.edit'));
 
     assertDatabaseHas('users', Arr::except($data, ['password_confirmation', 'password']));
 })->with('profiles');
@@ -46,7 +57,7 @@ test('update@ saves the user password', function ($data) {
 
     patch(the_tenant_route('account.update'), $data)
         ->assertSessionHasNoErrors()
-        ->assertRedirect(the_tenant_route('singers.show', $user->membership));
+        ->assertRedirect(the_tenant_route('account.edit'));
 
     assertDatabaseHas('users', Arr::except($data, ['password_confirmation', 'password']));
 
@@ -71,6 +82,50 @@ test('update@ saves measurement and calendar preferences', function () {
         'prefers_metric' => false,
         'first_day_of_week' => 0,
     ]);
+});
+
+test('update@ saves security settings without requiring profile fields', function () {
+    $user = User::factory()->has(Membership::factory())->create();
+    actingAs($user);
+
+    patch(the_tenant_route('account.update'), [
+        'tab' => 'security',
+        'password' => 'new-password',
+        'password_confirmation' => 'new-password',
+    ])->assertSessionHasNoErrors();
+
+    $user->refresh();
+    expect(Hash::check('new-password', $user->password))->toBeTrue();
+});
+
+test('update@ saves language settings without changing profile fields', function () {
+    $user = User::factory()->has(Membership::factory())->create(['prefers_metric' => false]);
+    actingAs($user);
+
+    patch(the_tenant_route('account.update'), [
+        'tab' => 'language',
+        'prefers_metric' => true,
+        'first_day_of_week' => 0,
+    ])->assertSessionHasNoErrors();
+
+    assertDatabaseHas('users', [
+        'id' => $user->id,
+        'prefers_metric' => true,
+        'first_day_of_week' => 0,
+    ]);
+});
+
+test('central account update redirects back to account settings', function () {
+    $user = User::factory()->create();
+    actingAs($user);
+
+    patch(route('central.account.update'), [
+        'tab' => 'language',
+        'prefers_metric' => true,
+        'first_day_of_week' => 0,
+    ])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('central.account.edit'));
 });
 
 test('measurement system falls back to the users address country', function () {
@@ -99,7 +154,7 @@ test('update@ can upload an avatar using POST with method spoofing', function ()
     ]);
 
     $response->assertSessionHasNoErrors();
-    $response->assertRedirect(the_tenant_route('singers.show', $user->membership));
+    $response->assertRedirect(the_tenant_route('account.edit'));
 
     $user->refresh();
     expect($user->getMedia('avatar'))->not->toBeEmpty();

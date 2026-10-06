@@ -55,7 +55,7 @@ const Show = ({
 
 	const filteredActions = [
 		{
-			label: 'Edit Profile',
+			label: 'Account Settings',
 			icon: 'user-edit',
 			url: route('account.edit'),
 			can: singer.user.id === authUser.id,

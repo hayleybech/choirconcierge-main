@@ -21,7 +21,7 @@ class AccountController extends Controller
         auth()->user()->update($request->validated());
 
         return redirect()
-            ->route('central.dash', auth()->user()->membership)
+            ->route('central.account.edit')
             ->with(['status' => 'Account Settings updated.']);
     }
 }

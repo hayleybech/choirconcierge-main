@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceReportController;
 use App\Http\Controllers\CompleteSingerTaskController;
@@ -134,6 +135,10 @@ Route::middleware([
 
             // Account Settings
             Route::singleton('account', AccountController::class)->only(['edit', 'update']);
+            Route::name('account.')->prefix('account')->group(function () {
+                Route::post('/two-factor/regenerate', [TwoFactorController::class, 'regenerate'])->name('two-factor.regenerate');
+                Route::singleton('two-factor', TwoFactorController::class)->creatable()->only(['show', 'store', 'destroy']);
+            });
 
             // Singers module
             Route::get('singers/export', ExportMemberController::class)->name('singers.export');

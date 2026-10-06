@@ -17,12 +17,12 @@ const Edit = ({ setSidebarOpen }) => {
 
     const breadcrumbs = [
         { name: 'Dashboard', url: route('central.dash') },
-        { name: 'Edit Profile', url: route('central.account.edit') },
+        { name: 'Account Settings', url: route('central.account.edit') },
     ];
 
     return (
         <>
-            <AppHead title="Edit Profile" />
+            <AppHead title="Account Settings" />
             <PageTopBar setSidebarOpen={setSidebarOpen}>
                 <PageTopNavigation breadcrumbs={breadcrumbs} />
             </PageTopBar>
@@ -30,12 +30,12 @@ const Edit = ({ setSidebarOpen }) => {
                 <PageHeaderContent>
                     <PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
                     <PageHeaderTitle>
-                        <Icon icon="user-edit" type="solid" className="mr-2" /> Edit Profile
+                        <Icon icon="user-edit" type="solid" className="mr-2" /> Account Settings
                     </PageHeaderTitle>
                 </PageHeaderContent>
             </PageHeader>
 
-            <AccountForm postUrl={route('central.account.update')} cancelUrl={route('central.dash')} />
+            <AccountForm postUrl={route('central.account.update')} cancelUrl={route('central.dash')} twoFactorUrl={route('central.account.two-factor.show')} />
         </>
     );
 }

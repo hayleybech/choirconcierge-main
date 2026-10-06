@@ -9,7 +9,7 @@ import {
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
-import { useForm, router } from '@inertiajs/react';
+import { useForm, router, usePage } from '@inertiajs/react';
 import useRoute from '../../hooks/useRoute';
 import FormWrapper from '../../components/FormWrapper';
 import FormSection from '../../components/FormSection';
@@ -19,11 +19,14 @@ import Button from '../../components/inputs/Button';
 import Error from '../../components/inputs/Error';
 import Help from '../../components/inputs/Help';
 import CentralLayout from '../../Layouts/CentralLayout';
+import TenantLayout from '../../Layouts/TenantLayout';
 import classNames from '../../classNames';
 import DateTag from '../../components/DateTag';
 
 const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 	const { route } = useRoute();
+	const { tenant } = usePage().props;
+	const accountRoute = tenant ? 'account' : 'central.account';
 
 	const { data, setData, post, processing, errors, reset } = useForm({
 		code: '',
@@ -31,7 +34,7 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 
 	const enableTwoFactor = e => {
 		e.preventDefault();
-		post(route('central.account.two-factor.store'), {
+		post(route(`${accountRoute}.two-factor.store`), {
 			preserveScroll: true,
 			onSuccess: () => reset('code'),
 		});
@@ -39,7 +42,7 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 
 	const disableTwoFactor = () => {
 		if (confirm('Are you sure you want to disable two-factor authentication?')) {
-			router.delete(route('central.account.two-factor.destroy'), {
+			router.delete(route(`${accountRoute}.two-factor.destroy`), {
 				preserveScroll: true,
 			});
 		}
@@ -48,7 +51,7 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 	const regenerateRecoveryCodes = () => {
 		if (confirm('Are you sure you want to regenerate recovery codes? Your old codes will no longer work.')) {
 			router.post(
-				route('central.account.two-factor.regenerate'),
+				route(`${accountRoute}.two-factor.regenerate`),
 				{},
 				{
 					preserveScroll: true,
@@ -58,8 +61,8 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 	};
 
 	const breadcrumbs = [
-		{ name: 'Edit Profile', url: route('central.account.edit') },
-		{ name: 'Two-Factor Authentication', url: route('central.account.two-factor.show') },
+		{ name: 'Account Settings', url: route(`${accountRoute}.edit`) },
+		{ name: 'Two-Factor Authentication', url: route(`${accountRoute}.two-factor.show`) },
 	];
 
 	return (
@@ -163,6 +166,12 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 	);
 };
 
-TwoFactor.layout = page => <CentralLayout children={page} />;
+const TwoFactorLayout = ({ children }) => {
+	const { tenant } = usePage().props;
+
+	return tenant ? <TenantLayout children={children} /> : <CentralLayout children={children} />;
+};
+
+TwoFactor.layout = page => <TwoFactorLayout children={page} />;
 
 export default TwoFactor;

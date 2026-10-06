@@ -36,9 +36,15 @@ class UserNavigation
                 'icon' => 'user',
             ] : null,
             [
-                'name' => 'Edit Profile',
+                'name' => 'Account Settings',
                 'route' => 'account.edit',
                 'icon' => 'user-edit',
+            ],
+            [
+                'name' => 'Organisation Settings',
+                'route' => 'organisation.edit',
+                'icon' => 'cogs',
+                'hide' => !$canUpdateTenant || $forApi,
             ],
             [
                 'name' => 'Impersonate User',
@@ -51,12 +57,6 @@ class UserNavigation
                 'route' => 'impersonation.stop',
                 'icon' => 'user-lock',
                 'hide' => $canImpersonate || !$impersonationActive || $forApi,
-            ],
-            [
-                'name' => 'Organisation Settings',
-                'route' => 'organisation.edit',
-                'icon' => 'cogs',
-                'hide' => !$canUpdateTenant || $forApi,
             ],
             [
                 'name' => 'Changelog',
@@ -84,7 +84,7 @@ class UserNavigation
     {
         return [
             [
-                'name' => 'Edit Profile',
+                'name' => 'Account Settings',
                 'route' => 'central.account.edit',
                 'icon' => 'user-edit',
             ],

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, usePage } from '@inertiajs/react';
 import FormSection from '../../components/FormSection';
 import Label from '../../components/inputs/Label';
@@ -14,15 +14,16 @@ import DayInput from '../../components/inputs/Day';
 import { DateTime } from 'luxon';
 import FormWrapper from '../../components/FormWrapper';
 import MetricImperialInput from '../../components/inputs/MetricImperialInput';
-import CountrySelect from "../../components/inputs/CountrySelect";
-import StateSelect from "../../components/inputs/StateSelect";
+import CountrySelect from '../../components/inputs/CountrySelect';
+import StateSelect from '../../components/inputs/StateSelect';
 import Icon from '../../components/Icon';
 import Select from '../../components/inputs/Select';
 
-const regionFirstDayOfWeek = country => ['CA', 'IN', 'JP', 'US'].includes(country) ? 0 : 1;
+const regionFirstDayOfWeek = country => (['CA', 'IN', 'JP', 'US'].includes(country) ? 0 : 1);
 
-const AccountForm = ({ postUrl, cancelUrl }) => {
+const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl }) => {
 	const { user } = usePage().props;
+	const [activeTab, setActiveTab] = useState('profile');
 
 	const { data, setData, post, processing, errors, transform } = useForm({
 		first_name: user.first_name,
@@ -32,7 +33,12 @@ const AccountForm = ({ postUrl, cancelUrl }) => {
 		phone: user.phone ?? '',
 		password: '',
 		pronouns: user.pronouns ?? '',
-		prefers_metric: user.prefers_metric === null || user.prefers_metric === undefined ? '' : (user.prefers_metric ? 'metric' : 'imperial'),
+		prefers_metric:
+			user.prefers_metric === null || user.prefers_metric === undefined
+				? ''
+				: user.prefers_metric
+				? 'metric'
+				: 'imperial',
 		first_day_of_week: user.first_day_of_week ?? '',
 
 		password_confirmation: '',
@@ -58,352 +64,425 @@ const AccountForm = ({ postUrl, cancelUrl }) => {
 	function submit(e) {
 		e.preventDefault();
 
+		const tabFields = {
+			profile: [
+				'first_name',
+				'last_name',
+				'avatar',
+				'email',
+				'phone',
+				'pronouns',
+				'dob',
+				'height',
+				'profession',
+				'skills',
+				'dietary_requirements',
+				'medical_conditions',
+				'bha_id',
+				'ice_name',
+				'ice_phone',
+				'address_street_1',
+				'address_street_2',
+				'address_suburb',
+				'address_state',
+				'address_country',
+				'address_postcode',
+			],
+			security: ['password', 'password_confirmation'],
+			language: ['prefers_metric', 'first_day_of_week'],
+		};
 		transform(data => ({
-            ...data,
-			prefers_metric: data.prefers_metric === '' ? null : data.prefers_metric === 'metric',
-            _method: 'PUT',
-        }));
+			...Object.fromEntries(tabFields[activeTab].map(field => [field, data[field]])),
+			tab: activeTab,
+			...(activeTab === 'language'
+				? {
+						prefers_metric: data.prefers_metric === '' ? null : data.prefers_metric === 'metric',
+				  }
+				: {}),
+			_method: 'PUT',
+		}));
 
 		post(postUrl, {
-            forceFormData: true,
-        });
+			forceFormData: true,
+		});
 	}
 
 	return (
 		<FormWrapper>
+			<nav className="mb-6 flex w-full border-b border-gray-200" aria-label="Account settings tabs">
+				{[
+					['profile', 'Profile'],
+					['security', 'Security'],
+					['language', 'Language & Region'],
+				].map(([tab, label]) => (
+					<button
+						key={tab}
+						type="button"
+						className={`flex-1 cursor-pointer border-b-2 px-3 py-3 text-sm font-medium ${
+							activeTab === tab
+								? 'border-purple-600 text-purple-600'
+								: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+						}`}
+						onClick={() => setActiveTab(tab)}
+						aria-selected={activeTab === tab}
+					>
+						{label}
+					</button>
+				))}
+			</nav>
 			<Form onSubmit={submit}>
-				<FormSection title="User Details">
-					<div className="sm:col-span-6">
-						<Label label="Profile Picture" forInput="avatar" />
-						<AvatarUpload
-							name="avatar"
-							currentImage={data.avatar ? URL.createObjectURL(data.avatar) : user.avatar_url}
-							updateFn={value => setData('avatar', value)}
-						/>
-					</div>
-
-					<div className="sm:col-span-2">
-						<Label label="First Name" forInput="first_name" />
-						<TextInput
-							name="first_name"
-							value={data.first_name}
-							updateFn={value => setData('first_name', value)}
-							hasErrors={!!errors['first_name']}
-							autoComplete="given-name"
-						/>
-						{errors.first_name && <Error>{errors.first_name}</Error>}
-					</div>
-					<div className="sm:col-span-2">
-						<Label label="Last Name" forInput="last_name" />
-						<TextInput
-							name="last_name"
-							value={data.last_name}
-							updateFn={value => setData('last_name', value)}
-							hasErrors={!!errors['last_name']}
-							autoComplete="family-name"
-						/>
-						{errors.last_name && <Error>{errors.last_name}</Error>}
-					</div>
-					<div className="sm:col-span-2">
-						<Label label="Pronouns" forInput="pronouns" />
-						<TextInput
-							name="pronouns"
-							value={data.pronouns}
-							placeholder="she/they/he"
-							updateFn={value => setData('pronouns', value)}
-							hasErrors={!!errors['pronouns']}
-						/>
-						{errors.pronouns && <Error>{errors.pronouns}</Error>}
-					</div>
-
-					<div className="sm:col-span-3">
-						<Label label="Email Address" forInput="email" />
-						<TextInput
-							type="email"
-							name="email"
-							value={data.email}
-							updateFn={value => setData('email', value)}
-							hasErrors={!!errors['email']}
-							autoComplete="email"
-						/>
-						{errors.email && <Error>{errors.email}</Error>}
-					</div>
-					<div className="sm:col-span-3">
-						<Label label="Phone" forInput="phone" />
-						<TextInput
-							type="tel"
-							name="phone"
-							value={data.phone}
-							updateFn={value => setData('phone', value)}
-							hasErrors={!!errors['phone']}
-							autoComplete="tel"
-						/>
-						{errors.phone && <Error>{errors.phone}</Error>}
-					</div>
-
-					<div className="sm:col-span-3">
-						<Label label="Change Password" forInput="password" />
-						<TextInput
-							type="password"
-							name="password"
-							value={data.password}
-							updateFn={value => setData('password', value)}
-							hasErrors={!!errors['password']}
-							autoComplete="new-password"
-						/>
-						{errors.password && <Error>{errors.password}</Error>}
-					</div>
-					<div className="sm:col-span-3">
-						<Label label="Confirm New Password" forInput="password_confirmation" />
-						<TextInput
-							type="password"
-							name="password_confirmation"
-							value={data.password_confirmation}
-							updateFn={value => setData('password_confirmation', value)}
-							hasErrors={!!errors['password_confirmation']}
-							autoComplete="new-password"
-						/>
-						{errors.password_confirmation && <Error>{errors.password_confirmation}</Error>}
-					</div>
-
-					<div className="sm:col-span-6 border-t border-gray-200 mt-6 pt-6">
-						<h3 className="text-lg font-medium text-gray-900">Security</h3>
-						<p className="mt-1 text-sm text-gray-600">
-							Manage your account security settings.
-						</p>
-						<div className="mt-4">
-							<ButtonLink href={route('central.account.two-factor.show')} variant="secondary" size="sm">
-								<Icon icon="shield-alt" mr />
-								Two-Factor Authentication
-							</ButtonLink>
-						</div>
-					</div>
-				</FormSection>
-
-				<FormSection title="Profile Details">
-					<div className="sm:col-span-3 lg:col-span-2">
-						<Label label="Date of Birth" forInput="dob" />
-						<DayInput
-							name="dob"
-							hasErrors={!!errors.dob}
-							value={data.dob}
-							updateFn={value => setData('dob', value)}
-							max={DateTime.now().toISODate()}
-							autoComplete="bday"
-						/>
-						{errors.dob && <Error>{errors.dob}</Error>}
-					</div>
-
-					<div className="sm:col-span-3 lg:col-span-2">
-						<Label label="Height" forInput="height" />
-						<MetricImperialInput
-							name="height"
-							value={data.height}
-							updateFn={value => setData('height', value)}
-							hasErrors={!!errors['height']}
-						/>
-						<Help>Knowing the singer's height is useful for riser stacks.</Help>
-						{errors.height && <Error>{errors.height}</Error>}
-					</div>
-					<div className="sm:col-span-3 lg:col-span-2">
-						<Label label="Association Membership ID" forInput="bha_id" />
-						<TextInput
-							name="bha_id"
-							value={data.bha_id}
-							updateFn={value => setData('bha_id', value)}
-							hasErrors={!!errors['bha_id']}
-						/>
-						<Help>e.g. Barbershop Harmony Society</Help>
-						{errors.bha_id && <Error>{errors.bha_id}</Error>}
-					</div>
-
-					<div className="sm:col-span-3">
-						<Label label="What is your profession?" forInput="profession" />
-						<TextInput
-							name="profession"
-							value={data.profession}
-							updateFn={value => setData('profession', value)}
-							hasErrors={!!errors['profession']}
-						/>
-						{errors.profession && <Error>{errors.profession}</Error>}
-					</div>
-					<div className="sm:col-span-3">
-						<Label label="What non-musical skills do you have?" forInput="skills" />
-						<TextInput
-							name="skills"
-							value={data.skills}
-							updateFn={value => setData('skills', value)}
-							hasErrors={!!errors['skills']}
-						/>
-						{errors.skills && <Error>{errors.skills}</Error>}
-					</div>
-
-					<div className="sm:col-span-3">
-						<Label label="Dietary Requirements" forInput="dietary_requirements" />
-						<TextInput
-							name="dietary_requirements"
-							value={data.dietary_requirements}
-							updateFn={value => setData('dietary_requirements', value)}
-							hasErrors={!!errors['dietary_requirements']}
-						/>
-						{errors.dietary_requirements && <Error>{errors.dietary_requirements}</Error>}
-					</div>
-
-					<div className="sm:col-span-3">
-						<Label label="Medical Conditions" forInput="medical_conditions" />
-						<TextInput
-							name="medical_conditions"
-							value={data.medical_conditions}
-							updateFn={value => setData('medical_conditions', value)}
-							hasErrors={!!errors['medical_conditions']}
-						/>
-						{errors.medical_conditions && <Error>{errors.medical_conditions}</Error>}
-					</div>
-				</FormSection>
-
-				<FormSection title="Preferences">
-					<div className="sm:col-span-2">
-						<Label label="Measurement system" forInput="prefers_metric" />
-						<Select
-							name="prefers_metric"
-							options={[
-								{ key: '', label: `Region default (${['LR', 'MM', 'US'].includes(user.address_country) ? 'Imperial' : 'Metric'})` },
-								{ key: 'metric', label: 'Metric' },
-								{ key: 'imperial', label: 'Imperial' },
-							]}
-							value={data.prefers_metric}
-							updateFn={value => setData('prefers_metric', value)}
-							hasErrors={!!errors.prefers_metric}
-						/>
-						{errors.prefers_metric && <Error>{errors.prefers_metric}</Error>}
-					</div>
-					<div className="sm:col-span-2">
-						<Label label="First day of week" forInput="first_day_of_week" />
-						<Select
-							name="first_day_of_week"
-							options={[
-								{ key: '', label: `Region default (${regionFirstDayOfWeek(user.address_country) === 0 ? 'Sunday' : 'Monday'})` },
-								{ key: '0', label: 'Sunday' },
-								{ key: '1', label: 'Monday' },
-							]}
-							value={data.first_day_of_week === null || data.first_day_of_week === '' ? '' : String(data.first_day_of_week)}
-							updateFn={value => setData('first_day_of_week', value === '' ? null : value)}
-							hasErrors={!!errors.first_day_of_week}
-						/>
-						{errors.first_day_of_week && <Error>{errors.first_day_of_week}</Error>}
-					</div>
-				</FormSection>
-
-				<FormSection title="Emergency Contact">
-					<div className="sm:col-span-3">
-						<Label label="Emergency Contact Name" forInput="ice_name" />
-						<TextInput
-							name="ice_name"
-							value={data.ice_name}
-							updateFn={value => setData('ice_name', value)}
-							hasErrors={!!errors['ice_name']}
-						/>
-						{errors.ice_name && <Error>{errors.ice_name}</Error>}
-					</div>
-					<div className="sm:col-span-3">
-						<Label label="Emergency Contact Phone" forInput="ice_phone" />
-						<TextInput
-							type="tel"
-							name="ice_phone"
-							value={data.ice_phone}
-							updateFn={value => setData('ice_phone', value)}
-							hasErrors={!!errors['ice_phone']}
-						/>
-						{errors.ice_phone && <Error>{errors.ice_phone}</Error>}
-					</div>
-				</FormSection>
-
-				<FormSection title="Address">
-					<div className="sm:col-span-6">
-						<Label label="Street Address 1" forInput="address_street_1" />
-						<TextInput
-							name="address_street_1"
-							value={data.address_street_1}
-							updateFn={value => setData('address_street_1', value)}
-							hasErrors={!!errors['address_street_1']}
-							autoComplete="address-line1"
-						/>
-						{errors.address_street_1 && <Error>{errors.address_street_1}</Error>}
-					</div>
-					<div className="sm:col-span-6">
-						<Label label="Street Address 2" forInput="address_street_2" />
-						<TextInput
-							type="tel"
-							name="address_street_2"
-							value={data.address_street_2}
-							updateFn={value => setData('address_street_2', value)}
-							hasErrors={!!errors['address_street_2']}
-							autoComplete="address-line2"
-						/>
-						{errors.address_street_2 && <Error>{errors.address_street_2}</Error>}
-					</div>
-
-					<div className="sm:col-span-2">
-						<Label label="Suburb / City" forInput="address_suburb" />
-						<TextInput
-							name="address_suburb"
-							value={data.address_suburb}
-							updateFn={value => setData('address_suburb', value)}
-							hasErrors={!!errors['address_suburb']}
-							autoComplete="address-level2"
-						/>
-						{errors.address_suburb && <Error>{errors.address_suburb}</Error>}
-					</div>
-					<div className="sm:col-span-2">
-						<Label label="Country" forInput="address_country" />
-						<div className="mt-1">
-							<CountrySelect
-								name="address_country"
-								defaultValue={data.address_country}
-								updateFn={value => setData({ ...data, address_country: value, address_state: '' })}
-								hasErrors={!!errors['address_country']}
-								autoComplete="country"
-							/>
-						</div>
-						{errors.address_country && <Error>{errors.address_country}</Error>}
-					</div>
-					<div className="sm:col-span-1">
-						<Label label="State / Region" forInput="address_state" />
-						{['AU', 'CA', 'US'].includes(data.address_country) ? (
-							<div className="mt-1">
-								<StateSelect
-									country={data.address_country}
-									name="address_state"
-									defaultValue={data.address_state}
-									updateFn={value => setData('address_state', value)}
-									hasErrors={!!errors['address_state']}
-									autoComplete="address-level1"
+				{activeTab === 'profile' && (
+					<>
+						<FormSection title="User Details">
+							<div className="sm:col-span-6">
+								<Label label="Profile Picture" forInput="avatar" />
+								<AvatarUpload
+									name="avatar"
+									currentImage={data.avatar ? URL.createObjectURL(data.avatar) : user.avatar_url}
+									updateFn={value => setData('avatar', value)}
 								/>
 							</div>
-						) : (
-							<TextInput
-								name="address_state"
-								value={data.address_state}
-								updateFn={value => setData('address_state', value)}
-								hasErrors={!!errors['address_state']}
-								autoComplete="address-level1"
-								disabled={!data.address_country}
+
+							<div className="sm:col-span-2">
+								<Label label="First Name" forInput="first_name" />
+								<TextInput
+									name="first_name"
+									value={data.first_name}
+									updateFn={value => setData('first_name', value)}
+									hasErrors={!!errors['first_name']}
+									autoComplete="given-name"
+								/>
+								{errors.first_name && <Error>{errors.first_name}</Error>}
+							</div>
+							<div className="sm:col-span-2">
+								<Label label="Last Name" forInput="last_name" />
+								<TextInput
+									name="last_name"
+									value={data.last_name}
+									updateFn={value => setData('last_name', value)}
+									hasErrors={!!errors['last_name']}
+									autoComplete="family-name"
+								/>
+								{errors.last_name && <Error>{errors.last_name}</Error>}
+							</div>
+							<div className="sm:col-span-2">
+								<Label label="Pronouns" forInput="pronouns" />
+								<TextInput
+									name="pronouns"
+									value={data.pronouns}
+									placeholder="she/they/he"
+									updateFn={value => setData('pronouns', value)}
+									hasErrors={!!errors['pronouns']}
+								/>
+								{errors.pronouns && <Error>{errors.pronouns}</Error>}
+							</div>
+
+							<div className="sm:col-span-3">
+								<Label label="Email Address" forInput="email" />
+								<TextInput
+									type="email"
+									name="email"
+									value={data.email}
+									updateFn={value => setData('email', value)}
+									hasErrors={!!errors['email']}
+									autoComplete="email"
+								/>
+								{errors.email && <Error>{errors.email}</Error>}
+							</div>
+							<div className="sm:col-span-3">
+								<Label label="Phone" forInput="phone" />
+								<TextInput
+									type="tel"
+									name="phone"
+									value={data.phone}
+									updateFn={value => setData('phone', value)}
+									hasErrors={!!errors['phone']}
+									autoComplete="tel"
+								/>
+								{errors.phone && <Error>{errors.phone}</Error>}
+							</div>
+						</FormSection>
+						<FormSection title="Profile Details">
+							<div className="sm:col-span-3 lg:col-span-2">
+								<Label label="Date of Birth" forInput="dob" />
+								<DayInput
+									name="dob"
+									hasErrors={!!errors.dob}
+									value={data.dob}
+									updateFn={value => setData('dob', value)}
+									max={DateTime.now().toISODate()}
+									autoComplete="bday"
+								/>
+								{errors.dob && <Error>{errors.dob}</Error>}
+							</div>
+
+							<div className="sm:col-span-3 lg:col-span-2">
+								<Label label="Height" forInput="height" />
+								<MetricImperialInput
+									name="height"
+									value={data.height}
+									updateFn={value => setData('height', value)}
+									hasErrors={!!errors['height']}
+								/>
+								<Help>Knowing the singer's height is useful for riser stacks.</Help>
+								{errors.height && <Error>{errors.height}</Error>}
+							</div>
+							<div className="sm:col-span-3 lg:col-span-2">
+								<Label label="Association Membership ID" forInput="bha_id" />
+								<TextInput
+									name="bha_id"
+									value={data.bha_id}
+									updateFn={value => setData('bha_id', value)}
+									hasErrors={!!errors['bha_id']}
+								/>
+								<Help>e.g. Barbershop Harmony Society</Help>
+								{errors.bha_id && <Error>{errors.bha_id}</Error>}
+							</div>
+
+							<div className="sm:col-span-3">
+								<Label label="What is your profession?" forInput="profession" />
+								<TextInput
+									name="profession"
+									value={data.profession}
+									updateFn={value => setData('profession', value)}
+									hasErrors={!!errors['profession']}
+								/>
+								{errors.profession && <Error>{errors.profession}</Error>}
+							</div>
+							<div className="sm:col-span-3">
+								<Label label="What non-musical skills do you have?" forInput="skills" />
+								<TextInput
+									name="skills"
+									value={data.skills}
+									updateFn={value => setData('skills', value)}
+									hasErrors={!!errors['skills']}
+								/>
+								{errors.skills && <Error>{errors.skills}</Error>}
+							</div>
+
+							<div className="sm:col-span-3">
+								<Label label="Dietary Requirements" forInput="dietary_requirements" />
+								<TextInput
+									name="dietary_requirements"
+									value={data.dietary_requirements}
+									updateFn={value => setData('dietary_requirements', value)}
+									hasErrors={!!errors['dietary_requirements']}
+								/>
+								{errors.dietary_requirements && <Error>{errors.dietary_requirements}</Error>}
+							</div>
+
+							<div className="sm:col-span-3">
+								<Label label="Medical Conditions" forInput="medical_conditions" />
+								<TextInput
+									name="medical_conditions"
+									value={data.medical_conditions}
+									updateFn={value => setData('medical_conditions', value)}
+									hasErrors={!!errors['medical_conditions']}
+								/>
+								{errors.medical_conditions && <Error>{errors.medical_conditions}</Error>}
+							</div>
+						</FormSection>
+						<FormSection title="Emergency Contact">
+							<div className="sm:col-span-3">
+								<Label label="Emergency Contact Name" forInput="ice_name" />
+								<TextInput
+									name="ice_name"
+									value={data.ice_name}
+									updateFn={value => setData('ice_name', value)}
+									hasErrors={!!errors['ice_name']}
+								/>
+								{errors.ice_name && <Error>{errors.ice_name}</Error>}
+							</div>
+							<div className="sm:col-span-3">
+								<Label label="Emergency Contact Phone" forInput="ice_phone" />
+								<TextInput
+									type="tel"
+									name="ice_phone"
+									value={data.ice_phone}
+									updateFn={value => setData('ice_phone', value)}
+									hasErrors={!!errors['ice_phone']}
+								/>
+								{errors.ice_phone && <Error>{errors.ice_phone}</Error>}
+							</div>
+						</FormSection>
+						<FormSection title="Address">
+							<div className="sm:col-span-6">
+								<Label label="Street Address 1" forInput="address_street_1" />
+								<TextInput
+									name="address_street_1"
+									value={data.address_street_1}
+									updateFn={value => setData('address_street_1', value)}
+									hasErrors={!!errors['address_street_1']}
+									autoComplete="address-line1"
+								/>
+								{errors.address_street_1 && <Error>{errors.address_street_1}</Error>}
+							</div>
+							<div className="sm:col-span-6">
+								<Label label="Street Address 2" forInput="address_street_2" />
+								<TextInput
+									type="tel"
+									name="address_street_2"
+									value={data.address_street_2}
+									updateFn={value => setData('address_street_2', value)}
+									hasErrors={!!errors['address_street_2']}
+									autoComplete="address-line2"
+								/>
+								{errors.address_street_2 && <Error>{errors.address_street_2}</Error>}
+							</div>
+
+							<div className="sm:col-span-2">
+								<Label label="Suburb / City" forInput="address_suburb" />
+								<TextInput
+									name="address_suburb"
+									value={data.address_suburb}
+									updateFn={value => setData('address_suburb', value)}
+									hasErrors={!!errors['address_suburb']}
+									autoComplete="address-level2"
+								/>
+								{errors.address_suburb && <Error>{errors.address_suburb}</Error>}
+							</div>
+							<div className="sm:col-span-2">
+								<Label label="Country" forInput="address_country" />
+								<div className="mt-1">
+									<CountrySelect
+										name="address_country"
+										defaultValue={data.address_country}
+										updateFn={value =>
+											setData({ ...data, address_country: value, address_state: '' })
+										}
+										hasErrors={!!errors['address_country']}
+										autoComplete="country"
+									/>
+								</div>
+								{errors.address_country && <Error>{errors.address_country}</Error>}
+							</div>
+							<div className="sm:col-span-1">
+								<Label label="State / Region" forInput="address_state" />
+								{['AU', 'CA', 'US'].includes(data.address_country) ? (
+									<div className="mt-1">
+										<StateSelect
+											country={data.address_country}
+											name="address_state"
+											defaultValue={data.address_state}
+											updateFn={value => setData('address_state', value)}
+											hasErrors={!!errors['address_state']}
+											autoComplete="address-level1"
+										/>
+									</div>
+								) : (
+									<TextInput
+										name="address_state"
+										value={data.address_state}
+										updateFn={value => setData('address_state', value)}
+										hasErrors={!!errors['address_state']}
+										autoComplete="address-level1"
+										disabled={!data.address_country}
+									/>
+								)}
+								{errors.address_state && <Error>{errors.address_state}</Error>}
+							</div>
+							<div className="sm:col-span-1">
+								<Label label="Postal Code / Zip Code" forInput="address_postcode" />
+								<TextInput
+									name="address_postcode"
+									value={data.address_postcode}
+									updateFn={value => setData('address_postcode', value)}
+									hasErrors={!!errors['address_postcode']}
+									autoComplete="postal-code"
+								/>
+								{errors.address_postcode && <Error>{errors.address_postcode}</Error>}
+							</div>
+						</FormSection>
+					</>
+				)}
+
+				{activeTab === 'security' && (
+					<>
+						<FormSection title="Password">
+							<div className="sm:col-span-3">
+								<Label label="Change Password" forInput="password" />
+								<TextInput
+									type="password"
+									name="password"
+									value={data.password}
+									updateFn={value => setData('password', value)}
+									hasErrors={!!errors.password}
+									autoComplete="new-password"
+								/>
+								{errors.password && <Error>{errors.password}</Error>}
+							</div>
+							<div className="sm:col-span-3">
+								<Label label="Confirm New Password" forInput="password_confirmation" />
+								<TextInput
+									type="password"
+									name="password_confirmation"
+									value={data.password_confirmation}
+									updateFn={value => setData('password_confirmation', value)}
+									hasErrors={!!errors.password_confirmation}
+									autoComplete="new-password"
+								/>
+								{errors.password_confirmation && <Error>{errors.password_confirmation}</Error>}
+							</div>
+						</FormSection>
+						<FormSection title="Two-Factor Authentication">
+							<div className="sm:col-span-6">
+								<ButtonLink href={twoFactorUrl} variant="secondary" size="sm">
+									<Icon icon="shield-alt" mr />
+									Two-Factor Authentication
+								</ButtonLink>
+							</div>
+						</FormSection>
+					</>
+				)}
+
+				{activeTab === 'language' && (
+					<FormSection title="Language & Region">
+						<div className="sm:col-span-3">
+							<Label label="Measurement system" forInput="prefers_metric" />
+							<Select
+								name="prefers_metric"
+								options={[
+									{
+										key: '',
+										label: `Region default (${
+											['LR', 'MM', 'US'].includes(user.address_country) ? 'Imperial' : 'Metric'
+										})`,
+									},
+									{ key: 'metric', label: 'Metric' },
+									{ key: 'imperial', label: 'Imperial' },
+								]}
+								value={data.prefers_metric}
+								updateFn={value => setData('prefers_metric', value)}
+								hasErrors={!!errors.prefers_metric}
 							/>
-						)}
-						{errors.address_state && <Error>{errors.address_state}</Error>}
-					</div>
-					<div className="sm:col-span-1">
-						<Label label="Postal Code / Zip Code" forInput="address_postcode" />
-						<TextInput
-							name="address_postcode"
-							value={data.address_postcode}
-							updateFn={value => setData('address_postcode', value)}
-							hasErrors={!!errors['address_postcode']}
-							autoComplete="postal-code"
-						/>
-						{errors.address_postcode && <Error>{errors.address_postcode}</Error>}
-					</div>
-				</FormSection>
+							{errors.prefers_metric && <Error>{errors.prefers_metric}</Error>}
+						</div>
+						<div className="sm:col-span-3">
+							<Label label="First day of week" forInput="first_day_of_week" />
+							<Select
+								name="first_day_of_week"
+								options={[
+									{
+										key: '',
+										label: `Region default (${
+											regionFirstDayOfWeek(user.address_country) === 0 ? 'Sunday' : 'Monday'
+										})`,
+									},
+									{ key: '0', label: 'Sunday' },
+									{ key: '1', label: 'Monday' },
+								]}
+								value={
+									data.first_day_of_week === null || data.first_day_of_week === ''
+										? ''
+										: String(data.first_day_of_week)
+								}
+								updateFn={value => setData('first_day_of_week', value === '' ? null : value)}
+								hasErrors={!!errors.first_day_of_week}
+							/>
+							{errors.first_day_of_week && <Error>{errors.first_day_of_week}</Error>}
+						</div>
+					</FormSection>
+				)}
 
 				<FormFooter>
 					<ButtonLink href={cancelUrl}>Cancel</ButtonLink>

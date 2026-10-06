@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Form = ({ onSubmit, children }) => (
-	<form className="space-y-8 divide-y divide-gray-200" onSubmit={onSubmit}>
+	<form className="space-y-8" onSubmit={onSubmit}>
 		{children}
 	</form>
 );
