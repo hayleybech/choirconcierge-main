@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import Icon from './Icon';
-import Button from './inputs/Button';
 import SectionSubtitle from './SectionSubtitle';
 import useRoute from '../hooks/useRoute';
+import ButtonLink from './inputs/ButtonLink';
 
 const Filters = ({ routeName, routeParams, form: { submit, data, setData }, render }) => {
 	const { route } = useRoute();
@@ -19,19 +18,13 @@ const Filters = ({ routeName, routeParams, form: { submit, data, setData }, rend
 
 	return (
 		<form onSubmit={submit}>
-			<SectionSubtitle className="flex justify-between items-center">
-				Filter{' '}
-				<a
-					className="text-xs text-purple-600 hover:text-purple-800 font-medium underline hover:no-underline"
-					href={route(routeName, routeParams)}
-				>
-					Clear All
-				</a>
-			</SectionSubtitle>
+			<SectionSubtitle>Filter </SectionSubtitle>
 
-			<div className="flex flex-col items-stretch space-y-4 mb-4">
-				{render(data, setData)}
-			</div>
+			<ButtonLink variant="secondary" size="xs" href={route(routeName, routeParams)} className="flex! w-full mb-2">
+				Clear All
+			</ButtonLink>
+
+			<div className="flex flex-col items-stretch space-y-4 mb-4">{render(data, setData)}</div>
 		</form>
 	);
 };

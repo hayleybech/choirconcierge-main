@@ -46,10 +46,9 @@ class AttendanceController extends Controller
                     WHEN attendance_response = 'late' THEN 2
                     WHEN attendance_response = 'late_deemed_absent' THEN 3
                     WHEN attendance_response = 'absent' THEN 4
-                    WHEN attendance_response = 'absent_apology' THEN 5
-                    WHEN attendance_response = 'unknown' THEN 6
-                    WHEN attendance_response IS NULL THEN 6
-                    ELSE 7
+                    WHEN attendance_response = 'unknown' THEN 5
+                    WHEN attendance_response IS NULL THEN 5
+                    ELSE 6
                 END $direction");
         });
         $updatedSort = AllowedSort::callback('attendance-updated', function (Builder $query, bool $descending) use ($event) {
@@ -66,9 +65,7 @@ class AttendanceController extends Controller
                 ->orderBy('attendance_updated', $direction);
         });
 
-        $defaultStatus = SingerStatus::MEMBERS->value;
-
-        $query = Membership::forEvent($event)
+        $query = Membership::consideredForEvent($event)
             ->with([
                 'user',
                 'enrolments.voice_part',
@@ -102,7 +99,7 @@ class AttendanceController extends Controller
                     $query->whereHas('status', fn($q) => $q
                         ->whereIn('status', (array) $value)
                     );
-                })->default([$defaultStatus]),
+                }),
             ])
             ->allowedSorts([
                 ...$this->singerSorts(),
@@ -140,11 +137,16 @@ class AttendanceController extends Controller
                 'slug' => $s->value,
             ], SingerStatus::cases()),
             'counts' => [
-                'present' => $event->attendances()->where('response', 'present')->count(),
-                'late' => $event->attendances()->where('response', 'late')->count(),
-                'late_deemed_absent' => $event->attendances()->where('response', 'late_deemed_absent')->count(),
-                'absent' => $event->attendances()->whereIn('response', ['absent', 'absent_apology'])->count(),
-                'unknown' => $event->attendances()->where('response', 'unknown')->count(),
+                'present' => $event->singers_attendance('present')->count(),
+                'late' => $event->singers_attendance('late')->count(),
+                'late_deemed_absent' => $event->singers_attendance('late_deemed_absent')->count(),
+                'absent' => $event->singers_attendance('absent')->count(),
+                'absent_reason' => $event->singers_attendance('absent')
+                    ->whereHas('attendances', fn ($query) => $query
+                        ->where('event_id', $event->id)
+                        ->whereNotNull('absent_reason'))
+                    ->count(),
+                'unknown' => $event->singers_attendance_missing()->count(),
             ],
         ]);
     }
@@ -166,16 +168,19 @@ class AttendanceController extends Controller
     {
         $this->authorize('create', Attendance::class);
 
-        $request->validate([
-            'response' => ['in:unknown,absent,absent_apology,late,late_deemed_absent,present'],
+        $validated = $request->validate([
+            'response' => ['required', 'in:unknown,absent,late,late_deemed_absent,present'],
+            'absent_reason' => ['nullable', 'string', 'max:50'],
         ]);
 
         $event->attendances()
             ->updateOrCreate(
                 ['membership_id' => $singer->id],
                 [
-                    'response' => $request->input('response'),
-                    'absent_reason' => $request->input('absent_reason'),
+                    'response' => $validated['response'],
+                    'absent_reason' => $validated['response'] === 'absent'
+                        ? ($validated['absent_reason'] ?? null)
+                        : null,
                     'source' => 'manual',
                 ]
             );
@@ -189,14 +194,23 @@ class AttendanceController extends Controller
     {
         $this->authorize('create', Attendance::class);
 
-        $absent_reason = $request->input('absent_reason');
-        $responses = $request->input('attendance_response');
+        $validated = $request->validate([
+            'attendance_response' => ['required', 'array'],
+            'attendance_response.*' => ['required', 'in:unknown,absent,late,late_deemed_absent,present'],
+            'absent_reason' => ['nullable', 'array'],
+            'absent_reason.*' => ['nullable', 'string', 'max:50'],
+        ]);
+
+        $absentReason = $validated['absent_reason'] ?? [];
+        $responses = $validated['attendance_response'];
         foreach ($responses as $membership_id => $response) {
             $event->attendances()->updateOrCreate(
                 ['membership_id' => $membership_id],
                 [
                     'response' => $response,
-                    'absent_reason' => $absent_reason[$membership_id],
+                    'absent_reason' => $response === 'absent'
+                        ? ($absentReason[$membership_id] ?? null)
+                        : null,
                     'source' => 'manual',
                 ],
             );
@@ -210,20 +224,21 @@ class AttendanceController extends Controller
     {
         $this->authorize('create', Attendance::class);
 
-        $request->validate([
+        $validated = $request->validate([
             'singer_ids' => ['required', 'array'],
             'singer_ids.*' => ['exists:memberships,id'],
-            'response' => ['required', 'in:unknown,absent,absent_apology,late,late_deemed_absent,present'],
+            'response' => ['required', 'in:unknown,absent,late,late_deemed_absent,present'],
         ]);
 
-        $singerIds = $request->input('singer_ids');
-        $response = $request->input('response');
+        $singerIds = $validated['singer_ids'];
+        $response = $validated['response'];
 
         foreach ($singerIds as $singerId) {
             $event->attendances()->updateOrCreate(
                 ['membership_id' => $singerId],
                 [
                     'response' => $response,
+                    'absent_reason' => null,
                     'source' => 'manual',
                 ]
             );

@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * Columns
  * @property int $id
  * @property string $response
+ * @property string|null $details
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property int $event_id
@@ -32,7 +33,7 @@ class Rsvp extends Model
 {
     use TenantTimezoneDates, HasFactory;
 
-    protected $fillable = ['membership_id', 'response', 'event_id'];
+    protected $fillable = ['membership_id', 'response', 'details', 'event_id'];
 
     protected $appends = ['label', 'colour', 'icon'];
 
@@ -68,8 +69,8 @@ class Rsvp extends Model
         $colours = [
             'yes' => 'emerald',
             'maybe' => 'amber',
-            'unknown' => 'red',
-            'no' => 'gray',
+            'unknown' => 'gray',
+            'no' => 'red',
         ];
 
         return $colours[$this->response];
@@ -80,7 +81,7 @@ class Rsvp extends Model
         $icons = [
             'yes' => 'check',
             'maybe' => 'question',
-            'unknown' => 'question',
+            'unknown' => 'circle',
             'no' => 'times',
         ];
 

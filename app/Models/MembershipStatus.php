@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MembershipStatus extends Model
 {
+    /**
+     * Membership status history was not tracked before this date (in the tenant's timezone).
+     */
+    public const HISTORY_TRACKED_FROM = '2026-04-24';
+
     protected $guarded = [];
 
     protected $table = 'membership_status';

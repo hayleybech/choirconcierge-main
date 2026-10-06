@@ -1,3 +1,27 @@
+# 2026-10-05
+## Attendance & Membership Improvements
+### Consider historical membership data for attendance reporting
+We added membership history tracking in April, in anticipation of adding this feature. Now that we had several months of data, we've used it to make significant improvements to the accuracy of attendance reports:
+- Each event on the report now shows attendance only for members who were Active at the time of the event.
+- The total for each event counts only those singers, *even if other singers are visible on the report*.
+- Singers are included in the report if they were Active for *some* of the events in the given range.
+- The attendance rate shown for each singer only counts those events they were Active for.
+- Similar changes have been made to the Attendance Summary and Attendance List on each Event.
+- By default, the Attendance List will show all singers who were Active at the time of the event. 
+- Events prior to April 24, 2026 will use a simplified algorithm that only considers singers whose attendance was clearly recorded (so if a singer was Active but you forgot to record their attendance for some reason, they won't appear at all).
+
+### Attendance Chart
+The Attendance Report now includes a chart showing attendance rates over time. You can even use the heights of the bars as a way of seeing your Membership over time. 
+### Better reporting for "Late (Deemed Absent)".
+Counted separately from "Absent" in many cases now. 
+### Added a "Maybe" option for RSVPs
+We left this off intentionally, in the misguided belief that we could encourage people to simply commit to a "Yes" or "No". But life isn't that simple, and it can be useful to know *why* someone can't yet commit, in case you're able to help them.
+### Added sorting options to Attendance Reports
+You can now sort Attendance Reports by Name, Attendance Rate, Voice Part. The Voice Part grouping has been removed, as the filters are more flexible.
+### Added Inactive Members
+You now have a way of tracking financial members who aren't currently singing. We've also renamed "Archived Members" to "Former Members" to ensure there's no confusion between the two.  
+
+---
 # 2026-10-02
 ## General Improvements
 ### Calendar Sync Changes

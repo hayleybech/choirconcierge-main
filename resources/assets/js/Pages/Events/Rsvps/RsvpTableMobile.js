@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import TableMobile, { TableMobileHeader, TableMobileListItem } from '../../../components/TableMobile';
 import Pagination from '../../../components/Pagination';
@@ -13,9 +13,32 @@ import DateTag from '../../../components/DateTag';
 import Button from '../../../components/inputs/Button';
 import SingerStatusTag from '../../../components/SingerStatusTag';
 
-const RsvpTableMobile = ({ singers, pagination, showEnsemble, visibleColumns, customFields, columnsMenu, hasNonDefaultFilters, setShowFilters }) => {
+const RsvpTableMobile = ({
+	singers,
+	pagination,
+	showEnsemble,
+	visibleColumns,
+	customFields,
+	columnsMenu,
+	hasNonDefaultFilters,
+	setShowFilters,
+}) => {
 	const { route } = useRoute();
 	const [expandedSingers, setExpandedSingers] = useState([]);
+	const [openReasonId, setOpenReasonId] = useState(null);
+	const reasonRef = useRef(null);
+
+	useEffect(() => {
+		const handleClickOutside = event => {
+			if (reasonRef.current && !reasonRef.current.contains(event.target)) {
+				setOpenReasonId(null);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+
+		return () => document.removeEventListener('mousedown', handleClickOutside);
+	}, []);
 
 	const toggleExpanded = (id, e) => {
 		e.preventDefault();
@@ -78,12 +101,39 @@ const RsvpTableMobile = ({ singers, pagination, showEnsemble, visibleColumns, cu
 									</div>
 									<div className="div">
 										{visibleColumns.includes('rsvp') && (
-											<div className="scale-90 origin-right">
+											<div className="flex gap-x-0.5 items-center">
 												<RsvpTag
 													icon={singer.rsvp.icon}
 													label={singer.rsvp.label}
 													colour={singer.rsvp.colour}
 												/>
+												{singer.rsvp.details && (
+													<div
+														className="relative"
+														ref={openReasonId === singer.id ? reasonRef : null}
+													>
+														<button
+															type="button"
+															aria-label="Show RSVP reason"
+															aria-expanded={openReasonId === singer.id}
+															onClick={e => {
+																e.preventDefault();
+																e.stopPropagation();
+																setOpenReasonId(
+																	openReasonId === singer.id ? null : singer.id
+																);
+															}}
+															className="h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500"
+														>
+															<Icon icon="comment-dots" />
+														</button>
+														{openReasonId === singer.id && (
+															<div className="absolute right-0 top-5 z-10 w-48 rounded bg-gray-800 px-2 py-1.5 text-left text-[11px] font-normal leading-tight text-white shadow-lg">
+																{singer.rsvp.details}
+															</div>
+														)}
+													</div>
+												)}
 											</div>
 										)}
 										{visibleColumns.includes('updated') && !!singer.rsvp.updated_at && (

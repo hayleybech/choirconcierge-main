@@ -52,7 +52,7 @@ const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => 
                 <div className="flex items-center justify-between">
                     <legend className="text-sm font-medium text-gray-700">RSVP Response</legend>
                     <FilterActions
-                        onSelectAll={() => setData('rsvp.response', ['yes', 'no', 'unknown'])}
+                        onSelectAll={() => setData('rsvp.response', ['yes', 'maybe', 'no', 'unknown'])}
                         onClear={() => setData('rsvp.response', [])}
                     />
                 </div>
@@ -60,6 +60,7 @@ const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => 
                     name="rsvp.response"
                     options={[
                         { id: 'yes', name: 'Going' },
+                        { id: 'maybe', name: 'Maybe' },
                         { id: 'no', name: 'Not going' },
                         { id: 'unknown', name: 'No RSVP' },
                     ]}

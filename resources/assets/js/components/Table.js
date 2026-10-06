@@ -40,7 +40,7 @@ export const TItemRow = ({ bulkEdit, value, children }) => {
 	return <tr {...props}>{children}</tr>;
 };
 
-export const THead = ({ children }) => <thead className="bg-gray-50">{children}</thead>;
+export const THead = ({ children }) => <thead className="sticky top-0 z-10 bg-gray-50 shadow-[0_1px_0_0_#e5e7eb]">{children}</thead>;
 
 export const TBody = ({ children }) => <tbody className="bg-white divide-y divide-gray-200">{children}</tbody>;
 
@@ -77,13 +77,15 @@ export const TableCellSelect = ({ bulkEdit, value }) => {
 };
 
 const Table = ({ children, pagination }) => (
-	<div className="-my-2 overflow-x-auto">
-		<div className="py-2 align-middle inline-block min-w-full">
-			<div className="shadow overflow-hidden border-b border-gray-200">
-				<table className="min-w-full divide-y divide-gray-200">{children}</table>
-				{pagination}
+	<div className="flex h-full min-h-0 flex-col">
+		<div className="min-h-0 flex-1 overflow-auto">
+			<div className="align-middle inline-block min-w-full">
+				<div className="shadow border-b border-gray-200">
+					<table className="min-w-full divide-y divide-gray-200">{children}</table>
+				</div>
 			</div>
 		</div>
+		{pagination}
 	</div>
 );
 

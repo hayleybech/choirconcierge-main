@@ -3,18 +3,18 @@ import Button from './inputs/Button';
 import Icon from './Icon';
 import { useMediaQuery } from 'react-responsive';
 
-const FilterSortPane = ({ sorts, filters, closeFn }) => {
+const FilterSortPane = ({ sorts, filters, closeFn, showSortsOnDesktop = false }) => {
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
 	return (
-		<div>
-			<div className="bg-white pt-2 pr-2 -mb-2 flex justify-end items-center">
+		<div className="flex h-full min-h-0 flex-col relative overflow-y-auto">
+			<div className="pt-2 pr-2 flex justify-end items-center absolute right-0">
 				<Button onClick={closeFn} variant="clear" size="xs">
 					<Icon icon="times" />
 				</Button>
 			</div>
-			<div className="bg-white p-4 border-b border-gray-300 h-full">
-				{isDesktop || sorts}
+			<div className="flex-1 border-b border-gray-300 bg-white p-4">
+				{(!isDesktop || showSortsOnDesktop) && sorts}
 				{filters}
 			</div>
 		</div>

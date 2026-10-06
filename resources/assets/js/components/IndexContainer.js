@@ -13,17 +13,17 @@ const IndexContainer = ({ tableDesktop, tableMobile, emptyState, filterPane, sho
 	}, [showFilters]);
 
 	return (
-		<div className="relative flex flex-col lg:flex-row divide-y lg:divide-y-0 divide-gray-300">
+		<div className="relative flex min-h-0 flex-1 flex-col divide-y divide-gray-300 lg:flex-row lg:divide-y-0">
 			{isDesktop ? (
 				<div
 					className={classNames(
 						'flex-none overflow-hidden transition-[width] duration-300 ease-out',
-						showFilters ? 'lg:w-1/5 xl:w-1/6' : 'lg:w-0 xl:w-0'
+						showFilters ? 'lg:w-1/5' : 'lg:w-0 xl:w-0'
 					)}
 				>
 					<div
 						className={classNames(
-							'absolute top-0 left-0 h-full w-1/5 xl:w-1/6 lg:z-10 transition-transform duration-300 ease-out',
+							'absolute top-0 left-0 h-full w-1/5 lg:z-10 transition-transform duration-300 ease-out',
 							showFilters ? 'translate-x-0' : '-translate-x-full'
 						)}
 					>
@@ -35,13 +35,13 @@ const IndexContainer = ({ tableDesktop, tableMobile, emptyState, filterPane, sho
 					{filterPane}
 				</FilterDialog>
 			)}
-			<div className="grow lg:overflow-x-auto lg:border-l lg:border-gray-300">
+			<div className="flex min-h-0 min-w-0 flex-1 flex-col lg:overflow-x-auto lg:border-l lg:border-gray-300">
 				{emptyState ? (
 					emptyState
 				) : isDesktop ? (
-					<div className="flex-col overflow-y-hidden">{tableDesktop}</div>
+					<div className="min-h-0 flex-1 overflow-hidden">{tableDesktop}</div>
 				) : (
-					<div className="bg-white shadow block">{tableMobile}</div>
+					<div className="min-h-0 flex-1 overflow-hidden bg-white shadow block">{tableMobile}</div>
 				)}
 			</div>
 		</div>

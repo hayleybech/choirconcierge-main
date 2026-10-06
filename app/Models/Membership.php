@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -142,6 +141,29 @@ class Membership extends Model
         return $this->hasMany(MembershipStatus::class);
     }
 
+    /**
+     * Get the status this membership had at the given moment, based on its status history.
+     */
+    public function statusAt(Carbon $date): ?SingerStatus
+    {
+        return $this->statuses
+            ->filter(fn (MembershipStatus $status) => Carbon::parse(
+                $status->getRawOriginal('created_at'),
+                'UTC',
+            )->lte($date->copy()->utc()))
+            ->sortBy(fn (MembershipStatus $status) => [
+                $status->getRawOriginal('created_at'),
+                $status->getKey(),
+            ])
+            ->last()
+            ?->status;
+    }
+
+    public function wasActiveAt(Carbon $date): bool
+    {
+        return $this->statusAt($date) === SingerStatus::MEMBERS;
+    }
+
     public function enrolments(): HasMany
     {
         return $this->hasMany(Enrolment::class);
@@ -260,6 +282,31 @@ class Membership extends Model
         });
     }
 
+    /**
+     * Memberships whose status at the given moment was "Members", based on their status history.
+     */
+    public function scopeActiveAt(Builder $query, Carbon $date): Builder
+    {
+        $date = $date->copy()->utc();
+
+        return $query->whereHas('statuses', function (Builder $query) use ($date) {
+            $query->where('status', '=', SingerStatus::MEMBERS->value)
+                ->where('created_at', '<=', $date)
+                ->whereNotExists(fn (\Illuminate\Database\Query\Builder $query) => $query
+                    ->from('membership_status as later')
+                    ->whereColumn('later.membership_id', 'membership_status.membership_id')
+                    ->where('later.created_at', '<=', $date)
+                    ->where(fn (\Illuminate\Database\Query\Builder $query) => $query
+                        ->whereColumn('later.created_at', '>', 'membership_status.created_at')
+                        ->orWhere(fn (\Illuminate\Database\Query\Builder $query) => $query
+                            ->whereColumn('later.created_at', '=', 'membership_status.created_at')
+                            ->whereColumn('later.id', '>', 'membership_status.id')
+                        )
+                    )
+                );
+        });
+    }
+
     public function scopeForEvent(Builder $query, Event $event): Builder
     {
         return $query->when($event->ensembles->isNotEmpty(), function (Builder $query) use ($event) {
@@ -267,6 +314,41 @@ class Membership extends Model
                 $query->whereIn('ensemble_id', $event->ensembles->pluck('id'));
             });
         });
+    }
+
+    /**
+     * Memberships considered for attendance at the given event.
+     *
+     * Before membership status history was tracked, that's anyone whose attendance was recorded for the event.
+     * Afterwards, it's anyone who was an active member (of the event's ensembles) at the time.
+     */
+    public function scopeConsideredForEvent(Builder $query, Event $event): Builder
+    {
+        if ($event->isBeforeMembershipHistory()) {
+            return $query->whereHas('attendances', fn (Builder $query) => $query
+                ->where('event_id', '=', $event->id)
+                ->where('response', '!=', 'unknown')
+            );
+        }
+
+        return $query->forEvent($event)->activeAt($event->start_date);
+    }
+
+    /**
+     * Same as the consideredForEvent scope, but using loaded statuses, enrolments and attendances.
+     */
+    public function isConsideredForEvent(Event $event): bool
+    {
+        if ($event->isBeforeMembershipHistory()) {
+            return $this->attendances
+                ->where('event_id', $event->id)
+                ->where('response', '!=', 'unknown')
+                ->isNotEmpty();
+        }
+
+        return $this->wasActiveAt($event->start_date)
+            && ($event->ensembles->isEmpty()
+                || $this->enrolments->whereIn('ensemble_id', $event->ensembles->pluck('id'))->isNotEmpty());
     }
 
     public function scopeRole(Builder $query, string $roleName): Builder

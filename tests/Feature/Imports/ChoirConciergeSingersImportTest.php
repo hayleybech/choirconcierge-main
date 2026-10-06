@@ -1,16 +1,16 @@
 <?php
 
 use App\Imports\ChoirConciergeSingersImport;
+use App\Enums\SingerStatus;
 use App\Models\Ensemble;
 use App\Models\Enrolment;
-use App\Enums\SingerStatus;
 use App\Models\User;
 use App\Models\VoicePart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
-
 
 beforeEach(function () {
     // Seed standard voice parts
@@ -26,15 +26,15 @@ beforeEach(function () {
 
 it('imports singers with multiple ensembles and voice parts', function () {
     $csvContent = "email,first_name,last_name,voice_part,bha_id\n" .
-                  "test@example.com,John,Doe,\"Ensemble 1 - Alto;Ensemble 2 - Soprano\",12345";
-    
+        "test@example.com,John,Doe,\"Ensemble 1 - Alto;Ensemble 2 - Soprano\",12345";
+
     $file = UploadedFile::fake()->createWithContent('import.csv', $csvContent);
 
     Excel::import(new ChoirConciergeSingersImport, $file);
 
     $user = User::where('email', 'test@example.com')->first();
     expect($user)->not->toBeNull();
-    
+
     $membership = $user->membership;
     expect($membership)->not->toBeNull();
 
@@ -42,27 +42,55 @@ it('imports singers with multiple ensembles and voice parts', function () {
     expect($enrolments)->toHaveCount(2);
 
     $enrolment1 = $enrolments->where('ensemble.name', 'Ensemble 1')->first();
-    expect($enrolment1)->not->toBeNull();
-    expect($enrolment1->voice_part->title)->toBe('Alto');
+    expect($enrolment1)->not->toBeNull()
+        ->and($enrolment1->voice_part->title)->toBe('Alto');
 
     $enrolment2 = $enrolments->where('ensemble.name', 'Ensemble 2')->first();
-    expect($enrolment2)->not->toBeNull();
-    expect($enrolment2->voice_part->title)->toBe('Soprano');
+    expect($enrolment2)->not->toBeNull()
+        ->and($enrolment2->voice_part->title)->toBe('Soprano');
 });
 
 it('falls back to default ensemble if only voice part is provided', function () {
     $csvContent = "email,first_name,last_name,voice_part,bha_id\n" .
-                  "test2@example.com,Jane,Doe,Tenor,67890";
-    
+        "test2@example.com,Jane,Doe,Tenor,67890";
+
     $file = UploadedFile::fake()->createWithContent('import.csv', $csvContent);
 
     Excel::import(new ChoirConciergeSingersImport, $file);
 
     $user = User::where('email', 'test2@example.com')->first();
     $enrolments = $user->membership->enrolments()->with(['ensemble', 'voice_part'])->get();
-    
-    expect($enrolments)->toHaveCount(1);
-    expect($enrolments->first()->voice_part->title)->toBe('Tenor');
+
     // It should pick the first ensemble by default
-    expect($enrolments->first()->ensemble->name)->toBe('Ensemble 1');
+    expect($enrolments)->toHaveCount(1)
+        ->and($enrolments->first()->voice_part->title)->toBe('Tenor')
+        ->and($enrolments->first()->ensemble->name)->toBe('Ensemble 1');
 });
+
+it('validates all current singer status labels in the member status column', function (SingerStatus $status): void {
+    $validator = Validator::make(
+        [
+            'email' => 'singer@example.com',
+            'first_name' => 'Test',
+            'last_name' => 'Singer',
+            'member_status' => $status->label(),
+        ],
+        (new ChoirConciergeSingersImport)->rules(),
+    );
+
+    expect($validator->passes())->toBeTrue();
+})->with(SingerStatus::cases());
+
+it('imports member status', function (): void {
+    $csvContent = "email,first_name,last_name,member_status\n" .
+        "status@example.com,Status,Singer,Former Members";
+
+    $file = UploadedFile::fake()->createWithContent('import.csv', $csvContent);
+
+    Excel::import(new ChoirConciergeSingersImport, $file);
+
+    $user = User::where('email', 'status@example.com')->first();
+
+    expect($user->membership->status->status)->toBe(SingerStatus::ARCHIVED_MEMBERS);
+});
+

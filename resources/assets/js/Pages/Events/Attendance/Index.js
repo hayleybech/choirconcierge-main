@@ -88,13 +88,7 @@ const Index = ({
 		{ name: 'enrolments.voice_part_id', multiple: true },
 		{ name: 'enrolments.ensemble_id', multiple: true },
 		{ name: 'attendance.response', multiple: true },
-		{
-			name: 'status.id',
-			multiple: true,
-			defaultValue: singerStatuses.find(c => c.name === 'Members')?.id
-				? [singerStatuses.find(c => c.name === 'Members').id]
-				: [],
-		},
+		{ name: 'status.id', multiple: true },
 	];
 
 	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);
@@ -107,7 +101,12 @@ const Index = ({
 			url: route('events.kiosk-check-ins.index', { event }),
 			can: 'create_attendance',
 		},
-		{ label: 'Get Check-In Link', icon: 'qrcode', onClick: () => setCheckInDialogIsOpen(true), can: 'create_attendance' },
+		{
+			label: 'Get Check-In Link',
+			icon: 'qrcode',
+			onClick: () => setCheckInDialogIsOpen(true),
+			can: 'create_attendance',
+		},
 		filterAction,
 		bulkEdit.action,
 	].filter(action => (action?.can ? pageProps.can[action.can] : !!action));
@@ -181,9 +180,25 @@ const Index = ({
 	const countsData = [
 		{ label: 'On Time', textColour: 'text-emerald-500', icon: 'check', count: counts.present },
 		{ label: 'Late', textColour: 'text-amber-500', icon: 'alarm-snooze', count: counts.late },
-		{ label: 'Late (Deemed Absent)', textColour: 'text-red-500', icon: 'alarm-exclamation', count: counts.late_deemed_absent },
-		{ label: 'Absent', textColour: 'text-red-500', icon: 'times', count: counts.absent },
-		{ label: 'Not recorded', textColour: 'text-gray-500', icon: 'question', count: counts.unknown },
+		{
+			label: 'Late (Deemed Absent)',
+			textColour: 'text-red-500',
+			icon: 'alarm-exclamation',
+			count: counts.late_deemed_absent,
+		},
+		{
+			label: 'Absent',
+			textColour: 'text-red-500',
+			icon: 'times',
+			count: counts.absent,
+			extraText: (
+				<p className="text-gray-500 text-xs leading-[1] text-left">
+					incl.<br />
+					{counts.absent_reason} apologies.
+				</p>
+			),
+		},
+		{ label: 'Not recorded', textColour: 'text-gray-500', icon: 'circle', count: counts.unknown },
 	];
 
 	const breadcrumbs = [
@@ -196,20 +211,15 @@ const Index = ({
 		<>
 			<AppHead title={`Attendance List - ${event.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					<PageActionsMenu>
-						{pageActions.map((action, key) => (
-							<ActionMenuItem
-								key={key}
-								url={action.url}
-								onClick={action.onClick}
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</ActionMenuItem>
-						))}
-					</PageActionsMenu>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				<PageActionsMenu>
+					{pageActions.map((action, key) => (
+						<ActionMenuItem key={key} url={action.url} onClick={action.onClick} variant={action.variant}>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</ActionMenuItem>
+					))}
+				</PageActionsMenu>
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -269,16 +279,19 @@ const Index = ({
 			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
 
 			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-5">
-				{countsData.map(({ label, textColour, icon, count }) => (
+				{countsData.map(({ label, textColour, icon, count, extraText }) => (
 					<div
 						className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1 border-gray-100"
 						key={label}
 					>
 						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
-							<Icon icon={icon} />
+							<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
 							{label}
 						</div>
-						<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
+						<div className="flex gap-2 items-center">
+							<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
+							{extraText}
+						</div>
 					</div>
 				))}
 			</div>
@@ -307,6 +320,8 @@ const Index = ({
 						showEnsemble={showEnsemble}
 						event={event}
 						bulkEdit={bulkEdit}
+						hasNonDefaultFilters={hasNonDefaultFilters}
+						setShowFilters={setShowFilters}
 					/>
 				}
 				tableDesktop={

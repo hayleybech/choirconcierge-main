@@ -147,7 +147,7 @@ const Show = ({
 								))}
 							</div>
 						)}
-						<div className="gap-1.5 grid sm:inline-flex grid-cols-2">
+						<div className="gap-1.5 inline-flex items-start">
 							{DateTime.fromISO(event.call_time) > DateTime.now() && (
 								<RsvpDropdown event={event} size="sm" />
 							)}

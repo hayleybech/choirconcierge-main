@@ -6,8 +6,13 @@ const useFilterPane = () => {
     const [showFilters, setShowFiltersState] = useState(() => isDesktop && (localStorage.getItem('showFilters') === 'true' ?? isDesktop));
 
     const setShowFilters = (value) => {
-        setShowFiltersState(value);
-        localStorage.setItem('showFilters', value);
+        setShowFiltersState(previousValue => {
+            const nextValue = typeof value === 'function' ? value(previousValue) : value;
+
+            localStorage.setItem('showFilters', String(nextValue));
+
+            return nextValue;
+        });
     };
 
     const hasNonDefaultFilters = Array.from(new URLSearchParams(location.search).keys())
@@ -19,7 +24,7 @@ const useFilterPane = () => {
         label: <span>Filter<span className="inline md:hidden">/Sort</span></span>,
         icon: 'filter',
         onClick: () => setShowFilters(! showFilters),
-        variant: hasNonDefaultFilters ? 'success-solid' : 'secondary',
+        variant: hasNonDefaultFilters ? 'success-outline' : 'secondary',
     } : null;
 
     return [showFilters, setShowFilters, filterAction, hasNonDefaultFilters];

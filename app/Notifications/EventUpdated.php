@@ -80,6 +80,12 @@ class EventUpdated extends Notification
                     'user' => $notifiable->id,
                     'response' => 'yes'
                 ]),
+                'maybe_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
+                    'tenant' => tenant('id'),
+                    'event' => $this->event,
+                    'user' => $notifiable->id,
+                    'response' => 'maybe'
+                ]),
                 'not_going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
                     'tenant' => tenant('id'),
                     'event' => $this->event,

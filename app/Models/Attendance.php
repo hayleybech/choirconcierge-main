@@ -36,7 +36,7 @@ class Attendance extends Model
 
     protected $fillable = ['membership_id', 'response', 'source', 'absent_reason', 'event_id'];
 
-    protected $appends = ['response_string', 'label', 'colour', 'icon'];
+    protected $appends = ['label', 'colour', 'icon'];
 
     public function member(): BelongsTo
     {
@@ -48,11 +48,6 @@ class Attendance extends Model
         return $this->belongsTo(Event::class);
     }
 
-    public function getResponseStringAttribute()
-    {
-        return $this->response === 'absent_apology' ? 'Absent (With Apology)' : ucfirst($this->response);
-    }
-
     public function getLabelAttribute(): string
     {
         $labels = [
@@ -60,7 +55,6 @@ class Attendance extends Model
             'late' => 'Late',
             'late_deemed_absent' => 'Late (Deemed Absent)',
             'absent' => 'Absent',
-            'absent_apology' => 'Absent (With Apology)',
             'unknown' => 'Not recorded',
         ];
 
@@ -74,7 +68,6 @@ class Attendance extends Model
             'late' => 'amber',
             'late_deemed_absent' => 'red',
             'absent' => 'red',
-            'absent_apology' => 'red',
             'unknown' => 'gray',
         ];
 
@@ -88,8 +81,7 @@ class Attendance extends Model
             'late' => 'alarm-snooze',
             'late_deemed_absent' => 'alarm-exclamation',
             'absent' => 'times',
-            'absent_apology' => 'times',
-            'unknown' => 'question',
+            'unknown' => 'circle',
         ];
 
         return $icons[$this->response];

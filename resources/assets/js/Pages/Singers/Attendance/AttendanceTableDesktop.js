@@ -42,11 +42,7 @@ const AttendanceTableDesktop = ({ attendances, pagination }) => {
 							<DateTag date={attendance.event.start_date} />
 						</TableCell>
 						<TableCell>
-							<AttendanceTag
-								icon={attendance.icon}
-								colour={attendance.colour}
-								label={attendance.label}
-							/>
+							<AttendanceTag status={attendance.response} />
 						</TableCell>
 					</TItemRow>
 				))}

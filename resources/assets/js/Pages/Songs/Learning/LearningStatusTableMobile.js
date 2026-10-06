@@ -14,13 +14,24 @@ import SingerStatus from "../../../SingerStatus";
 import SingerStatusTag from "../../../components/SingerStatusTag";
 import Pagination from "../../../components/Pagination";
 import useRoute from "../../../hooks/useRoute";
+import Icon from "../../../components/Icon";
+import Button from "../../../components/inputs/Button";
 
-const LearningStatusTableMobile = ({ song, singers, pagination, bulkEdit, showEnsemble }) => {
+const LearningStatusTableMobile = ({ song, singers, pagination, bulkEdit, showEnsemble, hasNonDefaultFilters, setShowFilters }) => {
 	const { route } = useRoute();
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit} />
+			<TableMobileHeader bulkEdit={bulkEdit}>
+				<Button
+					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
+					size="xs"
+					onClick={() => setShowFilters(prev => !prev)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{singers.map(singer => {
 					const status = new LearningStatus(singer.learning.status);

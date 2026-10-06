@@ -24,7 +24,9 @@
 @endif
 
 <x-mail::table>
- <x-mail::button-inline :url="$view_url">View Event</x-mail::button-inline>  <x-mail::button-inline :url="$going_url" color="success"><img src="{{ global_asset('/img/email/check.png') }}" alt="Going" height="16px"> Going</x-mail::button-inline>  <x-mail::button-inline :url="$not_going_url" color="error"><img src="{{ global_asset('/img/email/times.png') }}" alt="Not Going" height="16px"> Not Going</x-mail::button-inline>
+ <x-mail::button-inline :url="$view_url">View Event</x-mail::button-inline>
+
+ <x-mail::button-inline :url="$going_url" color="success"><img src="{{ global_asset('/img/email/check.png') }}" alt="Going" height="16px"> Going</x-mail::button-inline>  <x-mail::button-inline :url="$maybe_url" color="warning">Maybe</x-mail::button-inline>  <x-mail::button-inline :url="$not_going_url" color="error"><img src="{{ global_asset('/img/email/times.png') }}" alt="Not Going" height="16px"> Not Going</x-mail::button-inline>
 </x-mail::table>
 
 ### Description

@@ -99,6 +99,7 @@ class EventController extends Controller
             'individualCheckInUrl' => $this->getCheckInUrl($event),
             'rsvpCount' => [
                 'yes' => $event->singers_rsvp_response('yes')->count(),
+                'maybe' => $event->singers_rsvp_response('maybe')->count(),
                 'no' => $event->singers_rsvp_response('no')->count(),
                 'unknown' => $event->singers_rsvp_missing()->count(),
             ],
@@ -109,9 +110,12 @@ class EventController extends Controller
                 'present' => $event->singers_attendance('present')->count(),
                 'late' => $event->singers_attendance('late')->count(),
                 'late_deemed_absent' => $event->singers_attendance('late_deemed_absent')->count(),
-                'absent' => $event->singers_attendance('absent')->count()
-                    + $event->singers_attendance('absent_apology')->count(),
-                'absent_apology' => $event->singers_attendance('absent_apology')->count(),
+                'absent' => $event->singers_attendance('absent')->count(),
+                'absent_reason' => $event->singers_attendance('absent')
+                    ->whereHas('attendances', fn ($query) => $query
+                        ->where('event_id', $event->id)
+                        ->whereNotNull('absent_reason'))
+                    ->count(),
                 'unknown' => $event->singers_attendance_missing()->count(),
             ],
             'voicePartsAttendanceCount' => [

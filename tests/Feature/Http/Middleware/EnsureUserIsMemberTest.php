@@ -10,12 +10,10 @@ use function Pest\Laravel\get;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
-test('archived users cannot view site', function(string $status) {
-    $statusValue = SingerStatus::fromName($status)->value;
-
+test('former members and archived prospects cannot view site', function (SingerStatus $status) {
     $user = User::factory()->create();
     $membership = Membership::factory()->for($user)->create();
-    $membership->statuses()->create(['status' => $statusValue]);
+    $membership->statuses()->create(['status' => $status]);
     $membership->save();
 
     actingAs($user);
@@ -23,6 +21,6 @@ test('archived users cannot view site', function(string $status) {
     get(the_tenant_route('dash'))
         ->assertForbidden();
 })->with([
-    'Archived Members',
-    'Archived Prospects',
+    SingerStatus::ARCHIVED_MEMBERS,
+    SingerStatus::ARCHIVED_PROSPECTS,
 ]);

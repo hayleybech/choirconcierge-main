@@ -92,18 +92,21 @@ class DummyAttendanceSeeder extends Seeder
             'super' => [
                 93 => ['response' => 'present', 'absent_reason' => null],
                 98 => ['response' => 'late', 'absent_reason' => null],
-                100 => ['response' => 'absent_apology', 'absent_reason' => $faker->randomElement($apologyReasons)],
+                99 => ['response' => 'late_deemed_absent', 'absent_reason' => null],
+                100 => ['response' => 'absent', 'absent_reason' => $faker->randomElement($apologyReasons)],
             ],
             'rare' => [
                 10 => ['response' => 'present', 'absent_reason' => null],
                 15 => ['response' => 'late', 'absent_reason' => null],
-                65 => ['response' => 'absent_apology', 'absent_reason' => $faker->randomElement($apologyReasons)],
+                17 => ['response' => 'late_deemed_absent', 'absent_reason' => null],
+                65 => ['response' => 'absent', 'absent_reason' => $faker->randomElement($apologyReasons)],
                 100 => ['response' => 'absent', 'absent_reason' => null],
             ],
             default => [
                 76 => ['response' => 'present', 'absent_reason' => null],
                 86 => ['response' => 'late', 'absent_reason' => null],
-                96 => ['response' => 'absent_apology', 'absent_reason' => $faker->randomElement($apologyReasons)],
+                88 => ['response' => 'late_deemed_absent', 'absent_reason' => null],
+                96 => ['response' => 'absent', 'absent_reason' => $faker->randomElement($apologyReasons)],
                 100 => ['response' => 'absent', 'absent_reason' => null],
             ],
         };

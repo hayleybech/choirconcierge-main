@@ -4,7 +4,7 @@ import Filters from "../../components/Filters";
 import DateInput from "../../components/inputs/Date";
 import FilterActions from "../../components/inputs/FilterActions";
 
-const AttendanceReportFilters = ({ eventTypes, form }) => (
+const AttendanceReportFilters = ({ eventTypes, voiceParts, form }) => (
     <Filters
         routeName="events.reports.attendance"
         form={form}
@@ -22,6 +22,22 @@ const AttendanceReportFilters = ({ eventTypes, form }) => (
                     options={eventTypes.map((type) => ({ id: type.id, name: type.title }))}
                     value={data['type.id']}
                     updateFn={value => setData('type.id', value)}
+                />
+            </fieldset>
+
+            <fieldset>
+                <div className="flex items-center justify-between">
+                    <legend className="text-sm font-medium text-gray-700">Voice Part</legend>
+                    <FilterActions
+                        onSelectAll={() => setData('enrolments.voice_part_id', voiceParts.map(part => part.id))}
+                        onClear={() => setData('enrolments.voice_part_id', [])}
+                    />
+                </div>
+                <CheckboxGroup
+                    name="enrolments.voice_part_id"
+                    options={voiceParts.map(part => ({ id: part.id, name: part.title }))}
+                    value={data['enrolments.voice_part_id']}
+                    updateFn={value => setData('enrolments.voice_part_id', value)}
                 />
             </fieldset>
 

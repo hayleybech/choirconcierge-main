@@ -15,6 +15,8 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class AttendanceReportController extends Controller
 {
+    private const PRESENT_RESPONSES = ['present', 'late'];
+
     public function __invoke(): Response
     {
         $this->authorize('viewAny', Attendance::class);
@@ -32,83 +34,151 @@ class AttendanceReportController extends Controller
                     ->default($defaultStartsAfter),
                 AllowedFilter::scope('starts_before')
                     ->default($defaultStartsBefore),
+                AllowedFilter::callback('enrolments.voice_part_id', fn ($query, $value) => $query),
             ])
             ->orderBy('start_date')
             ->get();
 
-        $singers = $this->getSingers($events);
-
-        $events->each(function ($event) use ($singers) {
-            $event->singersPresent = $event->singers_attendance('present')->active()->get()->count()
-                + $event->singers_attendance('late')->active()->get()->count();
-            $event->percentPresent = $singers->count() > 0 ? floor($event->singersPresent / $singers->count() * 100) : null;
-        });
-
-        $avg_singers_per_event = round(
-            $events->count() > 0
-                ? $events->reduce(static function ($carry, $event) {
-                    return $carry + $event->singers_attendance('present')->count() + $event->singers_attendance('late')->count();
-                }, 0) / $events->count()
-                : null,
-            2,
-        );
+        $voicePartIds = request()->input('filter')['enrolments.voice_part_id'] ?? null;
+        $voicePartIds = $voicePartIds === null ? null : (array) $voicePartIds;
+        $singers = $this->sortSingers($this->getSingers($events, $voicePartIds));
 
         return Inertia::render('Events/AttendanceReport', [
-            'voiceParts' => $this->getVoiceParts($singers)->values(),
+            'singers' => $singers->values(),
             'events' => $events->values(),
             'eventTypes' => EventType::all()->values(),
+            'voiceParts' => VoicePart::all()->values(),
             'defaultEventType' => $defaultEventType,
             'defaultStartsAfter' => $defaultStartsAfter,
             'defaultStartsBefore' => $defaultStartsBefore,
             'numSingers' => $singers->count(),
-            'avgSingersPerEvent' => $avg_singers_per_event,
-            'avgEventsPerSinger' => $this->getAverageEventsPerSinger(),
+            'avgSingersPerEvent' => $events->count() > 0
+                ? round($events->sum('singersPresent') / $events->count(), 2)
+                : null,
+            'avgEventsPerSinger' => $singers->count() > 0
+                ? round($singers->sum('timesPresent') / $singers->count(), 2)
+                : null,
         ]);
     }
 
-    private function getAverageEventsPerSinger(): float
+    private function sortSingers(Collection $singers): Collection
     {
-        return round(
-            Membership::active()
-                ->with(['attendances'])
-                ->get()
-                ->reduce(fn ($carry, $singer) =>
-                    $carry + $singer
-                        ->attendances()
-                        ->whereIn('response', ['present', 'late'])
-                        ->count()
-                , 0) / Membership::all()->count(),
-            2,
-        );
+        $sort = ltrim((string) request('sort', 'full-name'), '-');
+        $descending = str_starts_with((string) request('sort', 'full-name'), '-');
+
+        $compare = function (mixed $first, mixed $second) use ($descending): int {
+            $result = is_numeric($first) && is_numeric($second)
+                ? $first <=> $second
+                : strnatcasecmp((string) $first, (string) $second);
+
+            return $descending ? -$result : $result;
+        };
+
+        $sorted = $singers->sortBy([
+            function (Membership $first, Membership $second) use ($sort, $compare): int {
+                $firstValue = match ($sort) {
+                    'last-name-first' => $first->user->last_name,
+                    'voice-part' => $first->enrolments->first()?->voice_part?->title,
+                    'attendance' => $first->percentPresent,
+                    default => $first->user->first_name,
+                };
+                $secondValue = match ($sort) {
+                    'last-name-first' => $second->user->last_name,
+                    'voice-part' => $second->enrolments->first()?->voice_part?->title,
+                    'attendance' => $second->percentPresent,
+                    default => $second->user->first_name,
+                };
+
+                return $compare($firstValue, $secondValue);
+            },
+            ...in_array($sort, ['voice-part', 'attendance'], true)
+                ? [fn (Membership $first, Membership $second): int => $compare(
+                    $first->user->first_name,
+                    $second->user->first_name,
+                )]
+                : [],
+        ]);
+
+        return $sorted->values();
     }
 
-    private function getVoiceParts($singers): \Illuminate\Support\Collection|Collection
+    /**
+     * Determine which singers are considered for each event, then calculate totals for events and singers.
+     *
+     * Before membership status history was tracked, a singer is considered for an event if their attendance
+     * was recorded for it. Afterwards, a singer is considered if they were an active member at the time.
+     */
+    private function getSingers(Collection $events, ?array $voicePartIds = null): Collection
     {
-        return VoicePart::all()
-            ->push(VoicePart::getNullVoicePart())
-            ->map(function ($part) use ($singers) {
-                $part->members = $singers
-                    ->filter(fn($singer) => $singer->enrolments
-                        ->contains(fn ($enrolment) => $enrolment->voice_part_id === $part->id))
-                    ->values();
+        $memberships = Membership::with([
+            'user',
+            'enrolments.voice_part',
+            'statuses',
+            'attendances' => fn($query) => $query->whereIn('event_id', $events->pluck('id')),
+        ])
+            ->when($voicePartIds !== null, fn ($query) => $query->whereHas(
+                'enrolments',
+                fn ($query) => $query->whereIn('voice_part_id', $voicePartIds),
+            ))
+            ->get();
 
-                return $part;
+        $events->each(function (Event $event) use ($memberships) {
+            $event->isBeforeHistory = $event->isBeforeMembershipHistory();
+
+            $considered = $memberships->filter(fn(Membership $singer) => $singer->isConsideredForEvent($event));
+
+            $event->consideredSingerIds = $considered->pluck('id')->values();
+            $event->numSingers = $considered->count();
+            $event->singersPresent = $considered
+                ->filter(fn(Membership $singer) => $singer->attendances
+                    ->where('event_id', $event->id)
+                    ->whereIn('response', self::PRESENT_RESPONSES)
+                    ->isNotEmpty())
+                ->count();
+            $attendanceSummary = [
+                'present' => 0,
+                'late' => 0,
+                'absent' => 0,
+                'unknown' => 0,
+            ];
+            $considered->each(function (Membership $singer) use ($event, &$attendanceSummary): void {
+                $response = $singer->attendances->firstWhere('event_id', $event->id)?->response;
+                $response = match ($response) {
+                    'present' => 'present',
+                    'late' => 'late',
+                    'absent', 'late_deemed_absent' => 'absent',
+                    default => 'unknown',
+                };
+
+                $attendanceSummary[$response]++;
             });
-    }
+            $event->attendanceSummary = $attendanceSummary;
+            $event->percentPresent = $event->numSingers > 0
+                ? floor($event->singersPresent / $event->numSingers * 100)
+                : null;
+        });
 
-    private function getSingers(Collection $events)
-    {
-        return Membership::with(['user', 'attendances', 'enrolments'])
-            ->active()
-            ->get()
+        return $memberships
+            ->filter(fn(Membership $singer) => $events->contains(
+                fn(Event $event) => $event->consideredSingerIds->contains($singer->id)
+            ))
+            ->values()
+            ->makeHidden('statuses')
             ->append('user_avatar_thumb_url')
-            ->each(function ($singer) use ($events) {
+            ->each(function (Membership $singer) use ($events) {
+                $consideredEventIds = $events
+                    ->filter(fn(Event $event) => $event->consideredSingerIds->contains($singer->id))
+                    ->pluck('id');
+
+                $singer->numEvents = $consideredEventIds->count();
                 $singer->timesPresent = $singer
-	                ->attendances
-	                ->whereIn('event_id', $events->pluck('id'))
-	                ->whereIn('response', ['present', 'late'])
-	                ->count();
-                $singer->percentPresent = $events->count() > 0 ? floor($singer->timesPresent / $events->count() * 100) : null;
+                    ->attendances
+                    ->whereIn('event_id', $consideredEventIds)
+                    ->whereIn('response', self::PRESENT_RESPONSES)
+                    ->count();
+                $singer->percentPresent = $singer->numEvents > 0
+                    ? floor($singer->timesPresent / $singer->numEvents * 100)
+                    : null;
             });
     }
 }

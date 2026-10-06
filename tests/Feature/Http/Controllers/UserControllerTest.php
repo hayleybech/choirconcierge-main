@@ -71,7 +71,8 @@ class UserControllerTest extends TestCase
         $response->assertOk();
         $response->assertJson([
             ['text' => 'Members'],
-            ['text' => 'Archived Members'],
+            ['text' => 'Inactive Members'],
+            ['text' => 'Former Members'],
         ]);
     }
 

@@ -19,16 +19,12 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow, WithVali
 {
     private SingerStatus $activeStatus;
 
-    private SingerStatus $archivedStatus;
-
     /** @var Collection<Role> */
     private Collection $roles;
 
     public function __construct()
     {
         $this->activeStatus = SingerStatus::MEMBERS;
-        $this->archivedStatus = SingerStatus::ARCHIVED_MEMBERS;
-
         $this->roles = Role::all();
     }
 
@@ -60,14 +56,14 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow, WithVali
                 'address_postcode' => $rowArr['address_postcode'] ?? '',
                 'profession' => $rowArr['profession'] ?? '',
                 'skills' => $rowArr['skills'] ?? '',
-                'height' =>  isset($rowArr['height']) ? $this->make_valid_height($rowArr['height'] ?? null) : null,
+                'height' => isset($rowArr['height']) ? $this->make_valid_height($rowArr['height'] ?? null) : null,
                 'bha_id' => $rowArr['bha_id'] ?? null,
                 'dietary_requirements' => $rowArr['dietary_requirements'] ?? '',
                 'medical_conditions' => $rowArr['medical_conditions'] ?? '',
             ]
         );
 
-        if(! $user) {
+        if (!$user) {
             return;
         }
 
@@ -102,12 +98,7 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow, WithVali
         $member->roles()->syncWithoutDetaching($roles_to_add);
 
         // Add SingerStatus
-        if (in_array('Archived Members', $roles_list, true)) {
-            $status = $this->archivedStatus;
-        } else {
-            $status = $this->activeStatus;
-        }
-        $member->statuses()->create(['status' => $status->value]);
+        $member->statuses()->create(['status' => SingerStatus::fromName($rowArr['member_status'] ?? '') ?? $this->activeStatus->value]);
 
         $member->save();
     }
@@ -179,7 +170,7 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow, WithVali
      */
     private function make_valid_height(?string $height_raw): float
     {
-        $height_float = (float) preg_replace('/[^0-9.]/', '', $height_raw);
+        $height_float = (float)preg_replace('/[^0-9.]/', '', $height_raw);
 
         if ($height_float > 10_000) {
             return 0;
@@ -194,6 +185,30 @@ class ChoirConciergeSingersImport implements OnEachRow, WithHeadingRow, WithVali
             'email' => 'required|email',
             'first_name' => 'required|max:127',
             'last_name' => 'required|max:127',
+            'roles' => [
+                'nullable',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    $allowedValues = $this->roles
+                        ->pluck('name')
+                        ->all();
+
+                    $unexpectedValues = collect(explode(',', (string)$value))
+                        ->map(fn(string $role): string => trim($role))
+                        ->diff($allowedValues);
+
+                    if ($unexpectedValues->isNotEmpty()) {
+                        $fail("The role \"{$value}\" field was not found.");
+                    }
+                },
+            ],
+            'member_status' => [
+                'nullable',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if (SingerStatus::fromName(trim((string)$value)) === null) {
+                        $fail("The Member Status \"{$value}\" was not found.");
+                    }
+                },
+            ],
         ];
     }
 }

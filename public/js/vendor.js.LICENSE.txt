@@ -53,6 +53,8 @@ PERFORMANCE OF THIS SOFTWARE.
 
 /*! css-mediaquery */
 
+/*! decimal.js-light v2.5.1 https://github.com/MikeMcl/decimal.js-light/LICENCE */
+
 /*! hyphenate-style-name */
 
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
@@ -146,6 +148,16 @@ PERFORMANCE OF THIS SOFTWARE.
 /*!**************************************************************************************!*\
   !*** external {"commonjs":"react","commonjs2":"react","amd":"react","root":"React"} ***!
   \**************************************************************************************/
+
+/**
+ * @license React
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 /**
  * @licstart The following is the entire license notice for the

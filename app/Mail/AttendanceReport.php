@@ -40,10 +40,10 @@ class AttendanceReport extends Mailable
      */
     public function content(): Content
     {
-        $absent_singers = $this->event->relevant_memberships()
+        $absent_singers = $this->event->considered_memberships()
             ->whereHas('attendances', function (Builder $query) {
                 $query->where('event_id', $this->event->id)
-                    ->whereIn('response', ['absent', 'absent_apology', 'late_deemed_absent']);
+                    ->whereIn('response', ['absent', 'late_deemed_absent']);
             })
             ->with(['user', 'enrolments.voice_part', 'enrolments.ensemble', 'attendances' => function ($query) {
                 $query->where('event_id', $this->event->id);

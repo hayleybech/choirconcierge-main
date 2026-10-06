@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Enums\SingerStatus;
 use App\Models\Ensemble;
 use App\Models\Event;
 use App\Models\EventType;
@@ -288,6 +289,55 @@ class EventControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Events/Show')
                 ->where('event.my_rsvp.response',  'no')
+            );
+    }
+
+    public function test_show_attendance_counts_only_singers_who_were_active_members_at_the_time(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $event = Event::factory()->create(['start_date' => '2026-06-01 10:00:00']);
+
+        $present = $this->createMembershipWithStatusHistory([[SingerStatus::MEMBERS, '2025-01-01']]);
+        // No longer active, but was at the time
+        $this->createMembershipWithStatusHistory([
+            [SingerStatus::MEMBERS, '2025-01-01'],
+            [SingerStatus::ARCHIVED_MEMBERS, '2026-07-01'],
+        ]);
+        // Joined after the event
+        $newcomer = $this->createMembershipWithStatusHistory([
+            [SingerStatus::PROSPECTS, '2026-05-01'],
+            [SingerStatus::MEMBERS, '2026-07-01'],
+        ]);
+
+        $event->attendances()->create(['membership_id' => $present->id, 'response' => 'present']);
+        $event->attendances()->create(['membership_id' => $newcomer->id, 'response' => 'absent']);
+
+        $this->get(the_tenant_route('events.show', [$event]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('attendanceCount.present', 1)
+                ->where('attendanceCount.absent', 0)
+                ->where('attendanceCount.unknown', 1)
+            );
+    }
+
+    public function test_show_attendance_counts_only_recorded_attendance_before_status_history_was_tracked(): void
+    {
+        $this->actingAs($this->createUserWithRole('Events Team'));
+
+        $event = Event::factory()->create(['start_date' => '2026-03-01 10:00:00']);
+
+        $archived = $this->createMembershipWithStatusHistory([[SingerStatus::ARCHIVED_MEMBERS, '2025-01-01']]);
+        $notRecorded = $this->createMembershipWithStatusHistory([[SingerStatus::MEMBERS, '2025-01-01']]);
+        $this->createMembershipWithStatusHistory([[SingerStatus::MEMBERS, '2025-01-01']]);
+
+        $event->attendances()->create(['membership_id' => $archived->id, 'response' => 'present']);
+        $event->attendances()->create(['membership_id' => $notRecorded->id, 'response' => 'unknown']);
+
+        $this->get(the_tenant_route('events.show', [$event]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('attendanceCount.present', 1)
+                ->where('attendanceCount.unknown', 0)
             );
     }
 

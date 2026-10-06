@@ -40,7 +40,7 @@ const Index = ({
 }) => {
 	const { route } = useRoute();
 
-	const [showFilters, setShowFilters, filterAction] = useFilterPane();
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
 	const showEnsemble = song.ensembles.length > 0 || totalEnsemblesCount > 1;
 
@@ -179,6 +179,8 @@ const Index = ({
 						pagination={pagination}
 						bulkEdit={bulkEdit}
 						showEnsemble={showEnsemble}
+						hasNonDefaultFilters={hasNonDefaultFilters}
+						setShowFilters={setShowFilters}
 					/>
 				}
 			/>
