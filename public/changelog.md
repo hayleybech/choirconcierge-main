@@ -1,4 +1,4 @@
-# 2026-10-05
+# 2026-10-07
 ## Attendance & Membership Improvements
 ### Consider historical membership data for attendance reporting
 We added membership history tracking in April, in anticipation of adding this feature. Now that we had several months of data, we've used it to make significant improvements to the accuracy of attendance reports:

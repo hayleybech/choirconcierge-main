@@ -46,7 +46,10 @@ class DocumentController extends Controller
                 'required',
                 'max:127',
                 function (string $attribute, string $value, \Closure $fail) use ($document): void {
-                    if (strtolower(pathinfo($value, PATHINFO_EXTENSION)) !== strtolower(pathinfo($document->title, PATHINFO_EXTENSION))) {
+                    $extension = pathinfo($value, PATHINFO_EXTENSION);
+                    $originalExtension = pathinfo($document->title, PATHINFO_EXTENSION);
+
+                    if ($extension !== '' && strtolower($extension) !== strtolower($originalExtension)) {
                         $fail('The file extension cannot be changed.');
                     }
                 },
