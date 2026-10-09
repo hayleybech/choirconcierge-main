@@ -63,6 +63,7 @@ use App\Http\Middleware\NoRobots;
 use App\Http\Middleware\RedirectTenantFromDomainToFolder;
 use App\Http\Middleware\SetTenantRouteParam;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
 
@@ -132,6 +133,7 @@ Route::middleware([
             // Dashboard
             Route::get('/', [DashController::class, 'index'])->name('dash');
             Route::put('/widgets/upcoming/events', CustomiseUpcomingEventsWidgetController::class)->name('widgets.upcoming-events');
+            Route::get('buttons', fn () => Inertia::render('Buttons/Index'))->name('buttons.index');
 
             // Account Settings
             Route::singleton('account', AccountController::class)->only(['edit', 'update']);

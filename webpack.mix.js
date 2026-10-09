@@ -21,6 +21,8 @@ mix.js('resources/assets/js/app.js', 'public/js/app.js')
 const path = require('path');
 mix.alias({
 	ziggy: path.resolve('vendor/tightenco/ziggy/dist'),
+	'@inertiajs/react': path.resolve('node_modules/@inertiajs/react/dist/index.esm.js'),
+	'@inertiajs/core': path.resolve('node_modules/@inertiajs/core/dist/index.esm.js'),
 });
 
 mix.version();

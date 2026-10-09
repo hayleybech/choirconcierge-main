@@ -52,6 +52,7 @@
         "@tiptap/react": "^2.26.1",
         "@tiptap/starter-kit": "^2.26.1",
         "@types/snapsvg": "^0.5.8",
+        "class-variance-authority": "^0.7.1",
         "collect.js": "^4.36.1",
         "countries-list": "^3.2.0",
         "detect-it": "^4.0.1",
