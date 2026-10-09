@@ -5,7 +5,7 @@ import buttonStyles from './buttonStylesV2';
 
 type ButtonLinkV2Props = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
 	href: string;
-	color?: 'primary' | 'secondary' | 'danger' | 'warning' | 'success';
+	intent?: 'primary' | 'secondary' | 'danger' | 'warning' | 'success';
 	weight?: 'solid' | 'outline' | 'clear';
 	size?: 'lg' | 'md' | 'sm';
 	theme?: 'light' | 'dark';
@@ -14,8 +14,8 @@ type ButtonLinkV2Props = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
 	disabled?: boolean;
 };
 
-const ButtonLinkV2 = React.forwardRef(({href, color = 'secondary', weight = 'solid', size = 'md', theme = 'light', className, children, disabled, onClick, external = false, ...otherProps}: ButtonLinkV2Props, ref: React.Ref<HTMLAnchorElement>) => {
-	const props = {href, onClick, className: buttonStyles(color, weight, size, theme, disabled, className), ref, ...otherProps};
+const ButtonLinkV2 = React.forwardRef(({href, intent = 'secondary', weight = 'solid', size = 'md', theme = 'light', className, children, disabled, onClick, external = false, ...otherProps}: ButtonLinkV2Props, ref: React.Ref<HTMLAnchorElement>) => {
+	const props = {href, onClick, className: buttonStyles(intent, weight, size, theme, disabled, className), ref, ...otherProps};
 
 	return external ? <a {...props}>{children}</a> : <Link {...(props as React.ComponentProps<typeof Link>)}>{children}</Link>;
 });

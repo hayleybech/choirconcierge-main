@@ -114,7 +114,7 @@ const Index = ({ setSidebarOpen }) => (
 										</h3>
 										<div className="flex justify-between flex-wrap items-center gap-3">
 											{v2Colors.map(color => (
-												<div key={color} className="flex flex-col gap-3">
+												<div key={color} className="flex flex-col items-center gap-3">
 													{v2Sizes.map(size => (
 														<ButtonV2
 															key={`${color}-${size}`}
