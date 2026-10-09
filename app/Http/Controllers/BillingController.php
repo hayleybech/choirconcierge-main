@@ -124,14 +124,21 @@ class BillingController extends Controller
 
     public function swap(Request $request): RedirectResponse
     {
-        $this->authorizeBilling($request, tenant());
-
-        $planId = (int) $request->input('plan');
         $tenant = tenant();
+        $this->authorizeBilling($request, $tenant);
+
+        $validated = $request->validate([
+            'plan' => ['required', 'integer'],
+        ]);
+        $planId = (int) $validated['plan'];
 
         $plan = collect(config('cashier.billables.tenant.plans'))->firstWhere('yearly_id', $planId);
 
-        if ($plan && ($eligibilityReason = $this->planEligibility($tenant, $plan)) !== null) {
+        if (! $plan) {
+            return redirect()->back()->withErrors(['plan' => 'The selected plan is invalid.']);
+        }
+
+        if (($eligibilityReason = $this->planEligibility($tenant, $plan)) !== null) {
             throw ValidationException::withMessages([
                 'plan' => $eligibilityReason,
             ]);
@@ -142,7 +149,7 @@ class BillingController extends Controller
         }
 
         if($tenant->onTrial()) {
-            return redirect()->back()->withErrors(['plan' => 'You must cannot switch plans during your free trial period.']);
+            return redirect()->back()->withErrors(['plan' => 'You cannot switch plans during your free trial period.']);
         }
 
         try {
@@ -154,10 +161,15 @@ class BillingController extends Controller
     }
     public function cancel(Request $request): RedirectResponse
     {
-        $this->authorizeBilling($request, tenant());
+        $tenant = tenant();
+        $this->authorizeBilling($request, $tenant);
+
+        if (! $tenant->subscribed('default')) {
+            return redirect()->back()->withErrors(['subscription' => 'You must be subscribed to a plan to cancel it.']);
+        }
 
         try {
-            tenant()->subscription('default')->cancel();
+            $tenant->subscription('default')->cancel();
             return redirect()->back()->with('status', 'Subscription cancelled successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['subscription' => 'Failed to cancel subscription. Please try again later.']);
@@ -166,10 +178,15 @@ class BillingController extends Controller
 
     public function pause(Request $request): RedirectResponse
     {
-        $this->authorizeBilling($request, tenant());
+        $tenant = tenant();
+        $this->authorizeBilling($request, $tenant);
+
+        if (! $tenant->subscribed('default')) {
+            return redirect()->back()->withErrors(['subscription' => 'You must be subscribed to a plan to pause it.']);
+        }
 
         try {
-            tenant()->subscription('default')->pause();
+            $tenant->subscription('default')->pause();
             return redirect()->back()->with('status', 'Subscription paused successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['subscription' => 'Failed to pause subscription. Please try again later.']);
@@ -178,10 +195,15 @@ class BillingController extends Controller
 
     public function unpause(Request $request): RedirectResponse
     {
-        $this->authorizeBilling($request, tenant());
+        $tenant = tenant();
+        $this->authorizeBilling($request, $tenant);
+
+        if (! $tenant->subscribed('default')) {
+            return redirect()->back()->withErrors(['subscription' => 'You must be subscribed to a plan to unpause it.']);
+        }
 
         try {
-            tenant()->subscription('default')->unpause();
+            $tenant->subscription('default')->unpause();
             return redirect()->back()->with('status', 'Subscription unpaused successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['subscription' => 'Failed to unpause subscription. Please try again later.']);

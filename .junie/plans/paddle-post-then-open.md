@@ -128,3 +128,11 @@ Completed Paddle checkouts are handed back to Laravel as pending checkout record
 - Wire `successCallback` in `Billing.js` to submit `response.checkout.id`, update pending UI state, and clear URL state.
 - Wire `closeCallback` to clear stale checkout URL state without recording success.
 - Add Pest coverage for valid, unauthorized, malformed, and repeat pending-checkout requests.
+
+### ✓ Step 4: Harden subscription mutation actions
+Ensure swap, pause, unpause, and cancel use safe mutation methods and reject invalid or unavailable subscription operations consistently.
+
+- Change billing mutation routes from `GET` to `POST`.
+- Validate swap plans against configured plans and preserve eligibility checks.
+- Handle missing subscriptions before pause, unpause, cancel, and swap calls.
+- Correct the trial swap error message and add focused Pest coverage for these branches.

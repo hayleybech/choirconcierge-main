@@ -314,7 +314,7 @@ it('fails plan eligibility check if too many active users', function () {
         app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
 
         $this->actingAs($user)
-            ->get(route('organisation.billing.swap', ['tenant' => $tenant->id, 'plan' => $planId]))
+            ->post(route('organisation.billing.swap', ['tenant' => $tenant->id, 'plan' => $planId]))
             ->assertSessionHasErrors(['plan' => 'This plan supports up to 5 active users, but your organisation has 10.']);
     });
 });
@@ -332,6 +332,8 @@ it('swaps the plan if already subscribed', function () {
     $planId = 54321;
 
     $tenant->run(function () use ($user, $tenant, $planId) {
+        config(['cashier.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => []]]]);
+
         $subscription = mock(Subscription::class);
         $subscription->shouldReceive('swap')->with($planId)->once()->andReturnSelf();
         $subscription->shouldReceive('onTrial')->andReturn(false);
@@ -347,7 +349,7 @@ it('swaps the plan if already subscribed', function () {
         app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
 
         $this->actingAs($user)
-            ->get(route('organisation.billing.swap', ['tenant' => $tenant->id, 'plan' => $planId]))
+            ->post(route('organisation.billing.swap', ['tenant' => $tenant->id, 'plan' => $planId]))
             ->assertRedirect()
             ->assertSessionHas('status', 'Subscription swapped successfully!');
     });
@@ -367,16 +369,17 @@ it('pauses the subscription', function () {
         $subscription = mock(Subscription::class);
         $subscription->shouldReceive('pause')->once()->andReturnSelf();
 
-        $mockTenant = mock(Tenant::class . '[subscription]');
+        $mockTenant = mock(Tenant::class . '[subscribed,subscription]');
         $mockTenant->setRawAttributes($tenant->getAttributes());
         $mockTenant->exists = true;
+        $mockTenant->shouldReceive('subscribed')->with('default')->andReturn(true);
         $mockTenant->shouldReceive('subscription')->with('default')->andReturn($subscription);
 
         app()->instance(Tenant::class, $mockTenant);
         app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
 
         $this->actingAs($user)
-            ->get(route('organisation.billing.pause', ['tenant' => $tenant->id]))
+            ->post(route('organisation.billing.pause', ['tenant' => $tenant->id]))
             ->assertRedirect()
             ->assertSessionHas('status', 'Subscription paused successfully.');
     });
@@ -396,16 +399,17 @@ it('unpauses the subscription', function () {
         $subscription = mock(Subscription::class);
         $subscription->shouldReceive('unpause')->once()->andReturnSelf();
 
-        $mockTenant = mock(Tenant::class . '[subscription]');
+        $mockTenant = mock(Tenant::class . '[subscribed,subscription]');
         $mockTenant->setRawAttributes($tenant->getAttributes());
         $mockTenant->exists = true;
+        $mockTenant->shouldReceive('subscribed')->with('default')->andReturn(true);
         $mockTenant->shouldReceive('subscription')->with('default')->andReturn($subscription);
 
         app()->instance(Tenant::class, $mockTenant);
         app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
 
         $this->actingAs($user)
-            ->get(route('organisation.billing.unpause', ['tenant' => $tenant->id]))
+            ->post(route('organisation.billing.unpause', ['tenant' => $tenant->id]))
             ->assertRedirect()
             ->assertSessionHas('status', 'Subscription unpaused successfully.');
     });
@@ -425,16 +429,17 @@ it('cancels the subscription', function () {
         $subscription = mock(Subscription::class);
         $subscription->shouldReceive('cancel')->once()->andReturnSelf();
 
-        $mockTenant = mock(Tenant::class . '[subscription]');
+        $mockTenant = mock(Tenant::class . '[subscribed,subscription]');
         $mockTenant->setRawAttributes($tenant->getAttributes());
         $mockTenant->exists = true;
+        $mockTenant->shouldReceive('subscribed')->with('default')->andReturn(true);
         $mockTenant->shouldReceive('subscription')->with('default')->andReturn($subscription);
 
         app()->instance(Tenant::class, $mockTenant);
         app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
 
         $this->actingAs($user)
-            ->get(route('organisation.billing.cancel', ['tenant' => $tenant->id]))
+            ->post(route('organisation.billing.cancel', ['tenant' => $tenant->id]))
             ->assertRedirect()
             ->assertSessionHas('status', 'Subscription cancelled successfully.');
     });

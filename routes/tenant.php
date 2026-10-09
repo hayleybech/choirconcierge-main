@@ -329,10 +329,10 @@ Route::middleware([
         // Billing portal
         Route::get('/billing', [BillingController::class, 'index'])->name('organisation.billing');
         Route::post('/billing/subscribe', [BillingController::class, 'subscribe'])->name('organisation.billing.subscribe');
-        Route::get('/billing/swap', [BillingController::class, 'swap'])->name('organisation.billing.swap');
-        Route::get('/billing/cancel', [BillingController::class, 'cancel'])->name('organisation.billing.cancel');
-        Route::get('/billing/pause', [BillingController::class, 'pause'])->name('organisation.billing.pause');
-        Route::get('/billing/unpause', [BillingController::class, 'unpause'])->name('organisation.billing.unpause');
+        Route::post('/billing/swap', [BillingController::class, 'swap'])->name('organisation.billing.swap');
+        Route::post('/billing/cancel', [BillingController::class, 'cancel'])->name('organisation.billing.cancel');
+        Route::post('/billing/pause', [BillingController::class, 'pause'])->name('organisation.billing.pause');
+        Route::post('/billing/unpause', [BillingController::class, 'unpause'])->name('organisation.billing.unpause');
 
         // Sub-groups aka Ensembles aka Choirs
         Route::resource('organisations.ensembles', EnsembleController::class)->only(['store', 'update']);
