@@ -27,7 +27,7 @@ class CreateTestTenant extends Command
     public function handle()
     {
         $this->info('Inserting test tenant...');
-        $test = Tenant::create('test', 'Test Music Club Pty Ltd', 'Australia/Perth', ['has_gratis' => true]);
+        $test = Tenant::create('test', 'Test Music Club Pty Ltd', 'Australia/Perth', ['has_gratis' => false]);
 
         $this->info('Creating domain...');
         $test->domains()->create(['domain' => 'test']);

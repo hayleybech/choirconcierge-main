@@ -50,6 +50,13 @@ const Show = ({ tenant, setSidebarOpen }) => {
 			url: route('central.tenants.track-demo', { tenant }),
 			variant: 'secondary',
 		},
+		can.list_tenants && {
+			label: tenant.has_gratis ? 'Remove Gratis' : 'Add Gratis',
+			icon: tenant.has_gratis ? 'minus' : 'plus',
+			url: route('central.tenants.gratis.toggle', { tenant }),
+			method: 'post',
+			variant: 'secondary',
+		},
 		tenant.billing_status.hasExpiredTrial && {
 			label: 'Reset Trial',
 			icon: 'undo',
@@ -100,7 +107,7 @@ const Show = ({ tenant, setSidebarOpen }) => {
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{actions.map(action => (
-						<Button key={action.label} href={action.url} size="sm" variant={action.variant}>
+						<Button key={action.label} href={action.url} method={action.method} size="sm" variant={action.variant}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</Button>
