@@ -86,6 +86,15 @@ class TenantController extends Controller
         ]);
     }
 
+    public function toggleGratis(Tenant $tenant): RedirectResponse
+    {
+        $this->authorize('viewAny', Tenant::class);
+
+        $tenant->update(['has_gratis' => ! $tenant->has_gratis]);
+
+        return redirect()->back()->with(['status' => $tenant->has_gratis ? 'Gratis added.' : 'Gratis removed.']);
+    }
+
 	private function getTenants() {
 		return QueryBuilder::for(Tenant::class)
 			->allowedFilters([
