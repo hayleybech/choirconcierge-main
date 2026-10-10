@@ -6,8 +6,8 @@ import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import FormFooter from "../../components/FormFooter";
-import ButtonLink from "../../components/inputs/ButtonLink";
-import Button from "../../components/inputs/Button";
+import ButtonLink from "../../components/inputs/ButtonLinkV2";
+import Button from "../../components/inputs/ButtonV2";
 import Select from "../../components/inputs/Select";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
@@ -50,7 +50,7 @@ const TaskForm = ({ roles }) => {
 
                 <FormFooter>
                     <ButtonLink href={route('tasks.index')}>Cancel</ButtonLink>
-                    <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
+                    <Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
         </FormWrapper>

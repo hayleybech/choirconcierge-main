@@ -9,7 +9,7 @@ import {
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import MailingListTableDesktop from './MailingListTableDesktop';
@@ -27,12 +27,20 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 
 	const bulkEdit = useBulkEdit(lists.data, false, can.delete_group, 'List');
 	const actions = [
-		{ label: 'Add New', icon: 'plus', url: route('groups.create'), variant: 'primary', can: 'create_group' },
+		{
+			label: 'Add New',
+			icon: 'plus',
+			url: route('groups.create'),
+			intent: 'primary',
+			weight: 'solid',
+			can: 'create_group',
+		},
 		{
 			label: 'Send Broadcast',
 			icon: 'inbox-out',
 			url: route('communications.create'),
-			variant: 'secondary',
+			intent: 'secondary',
+			weight: 'solid',
 			can: 'create_broadcast',
 		},
 		bulkEdit.action,
@@ -57,7 +65,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 								key={action.label}
 								url={action.url}
 								onClick={action.onClick}
-								variant={action.variant}
+								intent={action.intent}
 							>
 								<Icon icon={action.icon} mr />
 								{action.label}
@@ -81,8 +89,10 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}
@@ -96,7 +106,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 				isOpen={bulkEdit.showDeleteModal}
 				setIsOpen={bulkEdit.setShowDeleteModal}
 				okLabel="Delete"
-				okVariant="danger-solid"
+				okColour="danger"
 				okMethod="post"
 				data={{ group_ids: bulkEdit.selectedIds }}
 				okUrl={route('groups.bulk-destroy')}

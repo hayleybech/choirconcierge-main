@@ -7,8 +7,8 @@ import TextInput from "../../../components/inputs/TextInput";
 import Error from "../../../components/inputs/Error";
 import Help from "../../../components/inputs/Help";
 import FormFooter from "../../../components/FormFooter";
-import ButtonLink from "../../../components/inputs/ButtonLink";
-import Button from "../../../components/inputs/Button";
+import ButtonLink from "../../../components/inputs/ButtonLinkV2";
+import Button from "../../../components/inputs/ButtonV2";
 import SnippetTag from "../../../components/SnippetTag";
 import RichTextInput from "../../../components/inputs/RichTextInput";
 import FormWrapper from "../../../components/FormWrapper";
@@ -93,7 +93,7 @@ const TaskNotificationForm = ({ task, notification }) => {
                     >
                         Cancel
                     </ButtonLink>
-                    <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
+                    <Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
         </FormWrapper>

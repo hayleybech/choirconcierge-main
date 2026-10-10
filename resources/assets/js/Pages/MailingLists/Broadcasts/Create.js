@@ -15,8 +15,8 @@ import { useForm } from '@inertiajs/react';
 import Form from '../../../components/Form';
 import FormSection from '../../../components/FormSection';
 import RichTextInput from '../../../components/inputs/RichTextInput';
-import ButtonLink from '../../../components/inputs/ButtonLink';
-import Button from '../../../components/inputs/Button';
+import ButtonLink from '../../../components/inputs/ButtonLinkV2';
+import Button from '../../../components/inputs/ButtonV2';
 import FormFooter from '../../../components/FormFooter';
 import MailingListSelect from '../../../components/inputs/MailingListSelect';
 import Icon from '../../../components/Icon';
@@ -131,7 +131,7 @@ const Create = ({ lists, setSidebarOpen }) => {
 
 						<FormFooter>
 							<ButtonLink href={route('groups.index')}>Cancel</ButtonLink>
-							<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+ 						<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 								<Icon icon="paper-plane" mr /> Send
 							</Button>
 						</FormFooter>

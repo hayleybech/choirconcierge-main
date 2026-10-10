@@ -1,10 +1,9 @@
 import { Popover, Transition } from '@headlessui/react';
 import React, { Fragment, useState } from 'react';
 import { router } from '@inertiajs/react';
-import buttonStyles from '../inputs/buttonStyles';
+import ButtonV2 from '../inputs/ButtonV2';
 import classNames from '../../classNames';
 import Icon from '../Icon';
-import Button from '../inputs/Button';
 import TextInput from '../inputs/TextInput';
 
 const items = [
@@ -74,7 +73,13 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
 			<Popover as="div" className="relative inline-block w-full overflow-visible">
 				{({ close }) => (
 					<>
-						<Popover.Button className={buttonStyles('secondary', size, false, 'relative z-0 flex! w-full')}>
+						<Popover.Button
+							as={ButtonV2}
+							intent="secondary"
+							weight="outline"
+							size={size}
+							className="relative z-0 flex! w-full"
+						>
 							<Icon
 								icon={event.my_rsvp.icon}
 								type={event.my_rsvp.icon === 'circle' ? 'regular' : 'solid'}
@@ -118,8 +123,12 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
 												onClick={() => handleResponseClick(key, close)}
 												className={classNames(
 													'block flex-1 w-full text-left px-3 py-2 text-sm transition-colors focus:outline-none',
-													key === event.my_rsvp.response ? 'bg-purple-500 text-white' : colour,
-													isResponseDisabled(key) ? '' : 'cursor-pointer hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-200'
+													key === event.my_rsvp.response
+														? 'bg-purple-500 text-white'
+														: colour,
+													isResponseDisabled(key)
+														? ''
+														: 'cursor-pointer hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-200'
 												)}
 											>
 												<Icon
@@ -142,7 +151,9 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
 													<span
 														className={classNames(
 															'truncate text-[11px] italic',
-															key === event.my_rsvp.response ? 'text-white' : 'text-gray-500'
+															key === event.my_rsvp.response
+																? 'text-white'
+																: 'text-gray-500'
 														)}
 														title={event.my_rsvp.details}
 													>
@@ -196,17 +207,18 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
 														if (e.key === 'Escape') cancelDetails(close);
 													}}
 												/>
-												<Button size="xs" onClick={() => saveDetails(close)} type="button">
+												<ButtonV2 size="sm" onClick={() => saveDetails(close)} type="button">
 													<Icon icon="check" />
-												</Button>
-												<Button
-													variant="secondary"
-													size="xs"
+												</ButtonV2>
+												<ButtonV2
+													intent="secondary"
+													weight="outline"
+													size="sm"
 													onClick={() => cancelDetails(close)}
 													type="button"
 												>
 													<Icon icon="times" />
-												</Button>
+												</ButtonV2>
 											</div>
 										)}
 									</div>

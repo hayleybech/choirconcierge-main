@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Panel, { PanelTitle } from '../../components/Panel';
 import { useForm } from '@inertiajs/react';
 import useRoute from '../../hooks/useRoute';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import RadioGroup from '../../components/inputs/RadioGroup';
 import { FancyCheckboxGroup } from '../../components/inputs/CheckboxGroup';
 import Icon from '../../components/Icon';
@@ -101,7 +101,7 @@ const PollItem = ({ poll }) => {
 				</div>
 
 				<div className="flex justify-end">
-					<Button type="submit" variant="primary" size="xs" disabled={isClosed || processing}>
+					<Button type="submit" intent="primary" weight="solid" size="sm" disabled={isClosed || processing}>
 						{poll.my_vote_option_ids?.length > 0 ? 'Update Vote' : 'Submit Vote'}
 					</Button>
 				</div>
@@ -126,7 +126,7 @@ const PollsWidget = ({ polls }) => {
 						Active Polls <span className="text-xs text-gray-500 font-normal">(Latest 2)</span>
 					</PanelTitle>
 
-					<Button href={route('polls.index')} variant="secondary" size="xs">
+					<Button href={route('polls.index')} intent="secondary" weight="solid" size="sm">
 						<Icon icon="list" style={{ lineHeight: '1rem' }} />
 						<span className="hidden sm:inline">View All</span>
 					</Button>

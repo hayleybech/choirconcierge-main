@@ -3,7 +3,7 @@ import { TableCell } from '../../components/Table';
 import FolderIcon from '../../components/FolderIcon';
 import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Badge from '../../components/Badge';
 import useRoute from '../../hooks/useRoute';
 
@@ -34,8 +34,9 @@ export const DocumentRowDesktop = ({
 				<div className="flex items-center gap-2">
 					{permissions['update_document'] && (
 						<Button
-							variant="secondary"
-							size="xs"
+							intent="secondary"
+							weight="solid"
+							size="sm"
 							className="ml-2"
 							onClick={e => {
 								e.preventDefault();
@@ -53,8 +54,9 @@ export const DocumentRowDesktop = ({
 								e.preventDefault();
 								setDeletingDocument(document);
 							}}
-							variant="danger-outline"
-							size="xs"
+							intent="danger"
+							weight="outline"
+							size="sm"
 						>
 							<Icon icon="times" /> Delete
 						</Button>
@@ -106,7 +108,7 @@ export const FolderRowDesktop = ({
 			<TableCell>
 				<div className="flex items-center gap-2">
 					{permissions['update_folder'] && (
-						<Button href={route('folders.edit', { folder })} variant="secondary" size="xs" className="ml-2">
+						<Button href={route('folders.edit', { folder })} intent="secondary" weight="solid" size="sm" className="ml-2">
 							<Icon icon="edit" />
 							Edit
 						</Button>
@@ -117,8 +119,9 @@ export const FolderRowDesktop = ({
 								e.preventDefault();
 								setDeletingFolder(folder);
 							}}
-							variant="danger-outline"
-							size="xs"
+							intent="danger"
+							weight="outline"
+							size="sm"
 						>
 							<Icon icon="times" /> Delete
 						</Button>
@@ -166,8 +169,9 @@ export const DocumentRowMobile = ({
 											setRenamingDocument({ folder, document });
 											setRenameDocumentIsOpen(true);
 										}}
-										variant="secondary"
-										size="sm"
+										intent="secondary"
+										weight="solid"
+										size="md"
 									>
 										<Icon icon="edit" />
 									</Button>
@@ -179,8 +183,9 @@ export const DocumentRowMobile = ({
 											e.stopPropagation();
 											setDeletingDocument(document);
 										}}
-										variant="danger-outline"
-										size="sm"
+										intent="danger"
+										weight="outline"
+										size="md"
 									>
 										<Icon icon="trash" />
 									</Button>
@@ -223,7 +228,7 @@ export const FolderRowMobile = ({
 
 							<div className="flex gap-2">
 								{permissions['update_folder'] && (
-									<Button href={route('folders.edit', { folder })} variant="secondary" size="sm">
+  					<Button href={route('folders.edit', { folder })} intent="secondary" weight="solid" size="md">
 										<Icon icon="edit" />
 									</Button>
 								)}
@@ -234,8 +239,9 @@ export const FolderRowMobile = ({
 											e.stopPropagation();
 											setDeletingFolder(folder);
 										}}
-										variant="danger-outline"
-										size="sm"
+ 						intent="danger"
+ 						weight="outline"
+ 						size="md"
 									>
 										<Icon icon="trash" />
 									</Button>

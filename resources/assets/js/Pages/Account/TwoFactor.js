@@ -15,7 +15,7 @@ import FormWrapper from '../../components/FormWrapper';
 import FormSection from '../../components/FormSection';
 import Label from '../../components/inputs/Label';
 import TextInput from '../../components/inputs/TextInput';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Error from '../../components/inputs/Error';
 import Help from '../../components/inputs/Help';
 import CentralLayout from '../../Layouts/CentralLayout';
@@ -114,7 +114,7 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 									<Help>Enter the 6-digit code from your authenticator app to confirm.</Help>
 								</div>
 
-								<Button variant="primary" type="submit" disabled={processing}>
+								<Button intent="primary" weight="solid" type="submit" disabled={processing}>
 									Confirm and Enable
 								</Button>
 							</div>
@@ -154,15 +154,19 @@ const TwoFactor = ({ enabled, qr_code, recovery_codes, setSidebarOpen }) => {
 
 								<div className="flex space-x-3">
 									{showRecoveryCodes ? (
-										<Button variant="danger-solid" onClick={regenerateRecoveryCodes}>
+										<Button intent="danger" weight="solid" onClick={regenerateRecoveryCodes}>
 											Regenerate Recovery Codes
 										</Button>
 									) : (
-										<Button variant="primary" onClick={() => setShowRecoveryCodes(true)}>
+										<Button
+											intent="primary"
+											weight="solid"
+											onClick={() => setShowRecoveryCodes(true)}
+										>
 											Show Recovery Codes
 										</Button>
 									)}
-									<Button variant="danger-outline" onClick={disableTwoFactor}>
+									<Button intent="danger" weight="outline" onClick={disableTwoFactor}>
 										Disable Two-Factor Authentication
 									</Button>
 								</div>

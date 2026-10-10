@@ -22,7 +22,7 @@ import { usePhoneBreadcrumb } from '../../lib/reactNative';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination, setSidebarOpen }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -56,7 +56,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 			label: 'Add New',
 			icon: 'user-plus',
 			url: route('singers.create'),
-			variant: 'primary',
+			intent: 'primary',
+			weight: 'solid',
 			can: 'create_singer',
 		},
 		{
@@ -97,7 +98,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 								url={action.url}
 								onClick={action.onClick}
 								download={action.download}
-								variant={action.variant}
+								intent={action.intent}
 								method={action.method}
 								disabled={action.disabled}
 							>
@@ -120,8 +121,10 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 								<Button
 									href={action.url}
 									onClick={action.onClick}
-									size="sm"
-									variant={action.variant}
+									size="md"
+									intent={action.intent}
+									weight={action.weight}
+									className={action.className}
 									external={action.download}
 									download={action.download}
 									method={action.method}
@@ -143,7 +146,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 				isOpen={bulkEdit.showDeleteModal}
 				setIsOpen={bulkEdit.setShowDeleteModal}
 				okLabel="Delete"
-				okVariant="danger-solid"
+				okColour="danger"
 				okMethod="post"
 				data={{ singer_ids: bulkEdit.selectedIds }}
 				okUrl={route('singers.bulk-destroy')}

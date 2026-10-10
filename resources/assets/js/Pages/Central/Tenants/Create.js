@@ -22,8 +22,8 @@ import SubdomainInput from "../../../components/inputs/SubdomainInput";
 import Help from "../../../components/inputs/Help";
 import TimezoneSelect from "../../../components/inputs/TimezoneSelect";
 import FormFooter from "../../../components/FormFooter";
-import ButtonLink from "../../../components/inputs/ButtonLink";
-import Button from "../../../components/inputs/Button";
+import ButtonLink from "../../../components/inputs/ButtonLinkV2";
+import Button from "../../../components/inputs/ButtonV2";
 import FormWrapper from "../../../components/FormWrapper";
 
 const Create = ({ centralDomain, timezones, setSidebarOpen }) => {
@@ -136,7 +136,7 @@ const Create = ({ centralDomain, timezones, setSidebarOpen }) => {
 
                     <FormFooter>
                         <ButtonLink href={route('central.tenants.index')}>Cancel</ButtonLink>
-                        <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Create</Button>
+                        <Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>Create</Button>
                     </FormFooter>
 
                 </Form>

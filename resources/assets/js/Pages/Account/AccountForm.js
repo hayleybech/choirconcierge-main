@@ -4,8 +4,8 @@ import FormSection from '../../components/FormSection';
 import Label from '../../components/inputs/Label';
 import TextInput from '../../components/inputs/TextInput';
 import Error from '../../components/inputs/Error';
-import ButtonLink from '../../components/inputs/ButtonLink';
-import Button from '../../components/inputs/Button';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
+import Button from '../../components/inputs/ButtonV2';
 import AvatarUpload from '../../components/AvatarUpload';
 import Help from '../../components/inputs/Help';
 import Form from '../../components/Form';
@@ -443,7 +443,7 @@ const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recov
 						<FormSection title="Two-Factor Authentication">
 							<div className="sm:col-span-6">
 								{!twoFactorEnabled ? (
-									<ButtonLink href={twoFactorUrl} variant="secondary" size="sm">
+									<ButtonLink href={twoFactorUrl} intent="secondary" weight="solid" size="md">
 										<Icon icon="shield-alt" mr />
 										Enable Two-Factor Authentication
 									</ButtonLink>
@@ -479,16 +479,24 @@ const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recov
 										)}
 										<div className="flex space-x-3">
 											{!showRecoveryCodes && (
-												<Button variant="primary" onClick={() => setShowRecoveryCodes(true)}>
+												<Button
+													intent="primary"
+													weight="solid"
+													onClick={() => setShowRecoveryCodes(true)}
+												>
 													Show Recovery Codes
 												</Button>
 											)}
 											{showRecoveryCodes && (
-												<Button variant="danger-solid" onClick={regenerateRecoveryCodes}>
+												<Button
+													intent="danger"
+													weight="solid"
+													onClick={regenerateRecoveryCodes}
+												>
 													Regenerate Recovery Codes
 												</Button>
 											)}
-											<Button variant="danger-outline" onClick={disableTwoFactor}>
+											<Button intent="danger" weight="outline" onClick={disableTwoFactor}>
 												Disable Two-Factor Authentication
 											</Button>
 										</div>
@@ -550,7 +558,7 @@ const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recov
 
 				<FormFooter>
 					<ButtonLink href={cancelUrl}>Cancel</ButtonLink>
-					<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+					<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 						Save
 					</Button>
 				</FormFooter>

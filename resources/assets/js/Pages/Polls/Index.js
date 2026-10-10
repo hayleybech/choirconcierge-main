@@ -41,7 +41,7 @@ import useBulkEdit from '../../hooks/useBulkEdit';
 import BulkEditBar from '../../components/BulkEditBar';
 import BulkEditPollsModal from './BulkEditPollsModal';
 import Dialog from '../../components/Dialog';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 
 const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -66,7 +66,9 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 
 	const bulkEdit = useBulkEdit(polls, can.update_poll, can.delete_poll, 'Poll');
 
-	const actions = [{ label: 'Add New', url: route('polls.create'), icon: 'plus', variant: 'primary' }];
+	const actions = [
+		{ label: 'Add New', url: route('polls.create'), icon: 'plus', intent: 'primary', weight: 'solid' },
+	];
 
 	if (bulkEdit.action) {
 		actions.push(bulkEdit.action);
@@ -83,12 +85,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 				<PageTopNavigation title="Polls">
 					<PageActionsMenu>
 						{actions.map((action, key) => (
-							<ActionMenuItem
-								key={key}
-								url={action.url}
-								onClick={action.onClick}
-								variant={action.variant}
-							>
+							<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -108,8 +105,10 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}
@@ -123,7 +122,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 				isOpen={bulkEdit.showDeleteModal}
 				setIsOpen={bulkEdit.setShowDeleteModal}
 				okLabel="Delete"
-				okVariant="danger-solid"
+				okColour="danger"
 				okMethod="post"
 				data={{ poll_ids: bulkEdit.selectedIds }}
 				okUrl={route('polls.bulk-destroy')}
@@ -151,8 +150,9 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 					<div>
 						<TableMobileHeader bulkEdit={bulkEdit}>
 							<Button
-								variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-								size="xs"
+								size="sm"
+								intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+								weight="clear"
 								onClick={() => setShowFilters(prev => !prev)}
 							>
 								<Icon icon="filter" mr />

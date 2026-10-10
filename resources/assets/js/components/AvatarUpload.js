@@ -1,5 +1,5 @@
 import React from 'react';
-import buttonStyles from "./inputs/buttonStyles";
+import buttonStylesV2 from "./inputs/buttonStylesV2";
 import classNames from "../classNames";
 
 const AvatarUpload = ({ name, currentImage, isSquare = true, updateFn }) => (
@@ -15,7 +15,7 @@ const AvatarUpload = ({ name, currentImage, isSquare = true, updateFn }) => (
                 )
             }
         </span>
-        <label htmlFor={name} className={buttonStyles('secondary', 'sm', false, 'ml-4')}>
+        <label htmlFor={name} className={buttonStylesV2('secondary', 'outline', 'md', 'light', false, 'ml-4')}>
             Change
         </label>
         <input type="file" id={name} name={name} className="hidden" onChange={e => updateFn(e.target.files[0])} />

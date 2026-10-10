@@ -10,7 +10,7 @@ import {
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../../components/Icon';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import AppHead from '../../../components/AppHead';
 import useRoute from '../../../hooks/useRoute';
 import useFilterPane from '../../../hooks/useFilterPane';
@@ -45,15 +45,15 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 		<>
 			<AppHead title={`Attendance - ${singer.user.name}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					{filterAction && (
-						<PageActionsMenu>
-							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
-								<Icon icon="filter" mr />
-								Filter
-							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				{filterAction && (
+					<PageActionsMenu>
+						<ActionMenuItem onClick={filterAction.onClick} intent={filterAction.intent}>
+							<Icon icon="filter" mr />
+							Filter
+						</ActionMenuItem>
+					</PageActionsMenu>
+				)}
 			</PageTopBar>
 
 			<PageHeader>
@@ -66,7 +66,13 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{filterAction && (
-						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+						<Button
+							onClick={filterAction.onClick}
+							size="md"
+							intent={filterAction.intent}
+							weight="outline"
+							className={filterAction.intent === 'success' ? 'bg-white' : undefined}
+						>
 							<Icon icon="filter" mr />
 							Filter
 						</Button>

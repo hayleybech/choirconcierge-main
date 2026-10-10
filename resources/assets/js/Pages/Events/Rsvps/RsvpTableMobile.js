@@ -10,7 +10,7 @@ import { Link } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import SingerStatusTag from '../../../components/SingerStatusTag';
 
 const RsvpTableMobile = ({
@@ -57,8 +57,9 @@ const RsvpTableMobile = ({
 			<TableMobileHeader bulkEdit={bulkEdit}>
 				{columnsMenu}
 				<Button
-					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-					size="xs"
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
 					onClick={() => setShowFilters(prev => !prev)}
 				>
 					<Icon icon="filter" mr />

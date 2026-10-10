@@ -4,7 +4,7 @@ import TableMobile, { TableMobileLink, TableMobileListItem } from '../../../comp
 import DateTag from '../../../components/DateTag';
 import { DateTime } from 'luxon';
 import GoogleMap from '../../../components/GoogleMap';
-import ButtonLink from '../../../components/inputs/ButtonLink';
+import ButtonLink from '../../../components/inputs/ButtonLinkV2';
 import Icon from '../../../components/Icon';
 import { usePage } from '@inertiajs/react';
 import useRoute from '../../../hooks/useRoute';
@@ -27,8 +27,9 @@ const CentralUpcomingEventsWidget = ({ events }) => {
 									{can['create_attendance'] && (
 										<ButtonLink
 											href={route('events.attendances.index', { tenant: event.tenant_id, event })}
-											variant="primary"
-											size="xs"
+											intent="primary"
+											weight="solid"
+											size="sm"
 											className="mt-2"
 										>
 											<Icon icon="edit" />
@@ -74,7 +75,7 @@ const CentralUpcomingEventsWidget = ({ events }) => {
 
 							{!isToday(event) && (
 								<div className="-mt-2 mb-4 self-stretch md:self-start px-4 sm:px-6 w-full">
-									<RsvpDropdown event={event} size="xs" />
+									<RsvpDropdown event={event} size="md" />
 								</div>
 							)}
 						</TableMobileListItem>

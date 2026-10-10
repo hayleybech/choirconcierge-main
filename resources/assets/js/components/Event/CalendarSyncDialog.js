@@ -1,6 +1,6 @@
 import React from 'react';
 import Dialog from '../Dialog';
-import Button from '../inputs/Button';
+import ButtonV2 from '../inputs/ButtonV2';
 import Icon from '../Icon';
 
 const CalendarSyncDialog = ({ calendarSyncUrl, isOpen, setIsOpen }) => {
@@ -22,8 +22,8 @@ const CalendarSyncDialog = ({ calendarSyncUrl, isOpen, setIsOpen }) => {
 				<code className="block break-all rounded bg-gray-100 p-3 text-left text-xs text-gray-700 grow">
 					{calendarSyncUrl}
 				</code>
-				<Button
-					size="sm"
+				<ButtonV2
+					size="md"
 					onClick={async () => {
 						await navigator.clipboard.writeText(calendarSyncUrl);
 						setHasCopiedSyncUrl(true);
@@ -31,7 +31,7 @@ const CalendarSyncDialog = ({ calendarSyncUrl, isOpen, setIsOpen }) => {
 				>
 					<Icon icon={hasCopiedSyncUrl ? 'check' : 'clipboard'} mr />
 					{hasCopiedSyncUrl ? 'Copied' : 'Copy'}
-				</Button>
+				</ButtonV2>
 			</div>
 		</Dialog>
 	);

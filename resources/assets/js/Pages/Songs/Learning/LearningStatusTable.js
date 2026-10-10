@@ -96,6 +96,7 @@ const LearningStatusTable = ({ song, singers, pagination, bulkEdit, showEnsemble
 									status={status.slug}
 									href={route('songs.singers.update', { song, singer })}
 									method="put"
+									size="sm"
 									compact
 								/>
 							</TableCell>

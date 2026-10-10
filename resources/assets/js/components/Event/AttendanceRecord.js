@@ -1,10 +1,9 @@
 import React, { Fragment, useState } from 'react';
-import Button from '../inputs/Button';
+import ButtonV2 from '../inputs/ButtonV2';
 import Icon from '../Icon';
 import TextInput from '../inputs/TextInput';
 import { Menu, Transition } from '@headlessui/react';
 import menuItemStyles from '../ActionMenu/menuItemStyles';
-import buttonStyles from '../inputs/buttonStyles';
 import useRoute from '../../hooks/useRoute';
 import { router, useForm, usePage } from '@inertiajs/react';
 import classNames from '../../classNames';
@@ -82,7 +81,7 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 			<div className="flex flex-col gap-y-1.5">
 				<div className="flex items-center gap-2">
 					<Menu as="div" className="relative inline-block text-left">
-						<Menu.Button className={buttonStyles('secondary', 'xs')}>
+						<Menu.Button as={ButtonV2} intent="secondary" weight="outline" size="sm">
 							{currentOption ? (
 								<>
 									<Icon icon={currentOption.icon} className={currentOption.colour} mr />
@@ -147,9 +146,9 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 					</Menu>
 
 					{!isEditing && !attendance.absent_reason && attendance.response === 'absent' && (
-						<Button variant="secondary" size="xs" onClick={e => toggleIsEditing(true)}>
+						<ButtonV2 intent="secondary" weight="outline" size="sm" onClick={e => toggleIsEditing(true)}>
 							<Icon icon="plus" mr /> Add Reason
-						</Button>
+						</ButtonV2>
 					)}
 				</div>
 
@@ -165,9 +164,9 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 						)}
 
 						{!isEditing && !!attendance.absent_reason && (
-							<Button variant="secondary" size="xs" onClick={e => toggleIsEditing(true)}>
+							<ButtonV2 intent="secondary" weight="outline" size="sm" onClick={e => toggleIsEditing(true)}>
 								<Icon icon="pencil" mr /> Edit
-							</Button>
+							</ButtonV2>
 						)}
 
 						{isEditing && (
@@ -191,17 +190,18 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 									}}
 								/>
 								<div className="flex gap-1">
-									<Button size="xs" onClick={e => handleSubmit()} type="button" loading={processing}>
+									<ButtonV2 size="sm" onClick={e => handleSubmit()} type="button" loading={processing}>
 										<Icon icon="check" />
-									</Button>
-									<Button
-										variant="secondary"
-										size="xs"
+									</ButtonV2>
+									<ButtonV2
+										intent="secondary"
+										weight="outline"
+										size="sm"
 										onClick={e => toggleIsEditing(false)}
 										disabled={processing}
 									>
 										<Icon icon="times" />
-									</Button>
+									</ButtonV2>
 								</div>
 							</>
 						)}

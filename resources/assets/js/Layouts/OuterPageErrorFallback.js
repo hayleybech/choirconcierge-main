@@ -1,7 +1,7 @@
 import React from "react";
 import useRoute from "../hooks/useRoute";
 import Icon from "../components/Icon";
-import Button from "../components/inputs/Button";
+import Button from "../components/inputs/ButtonV2";
 import {usePage} from "@inertiajs/react";
 import StyledLink from "../components/StyledLink";
 
@@ -18,11 +18,11 @@ export const OuterPageErrorFallback = ({ error, resetErrorBoundary }) => {
 					that occurred. </p>
 				<p className="mt-6 text-base leading-7">Try refreshing the page, or come back to this page later. If the issue happens again, please contact us.</p>
 				<div className="mt-10 flex items-center justify-center gap-x-6">
-					<Button href={tenant ? route('dash') : route('central.dash')} variant="primary">
+					<Button href={tenant ? route('dash') : route('central.dash')} intent="primary" weight="solid">
 						Go to dashboard
 						<Icon icon="long-arrow-right" />
 					</Button>
-					<Button href="mailto:hello@choirconcierge.com" target="_blank" external variant="secondary">
+					<Button href="mailto:hello@choirconcierge.com" target="_blank" external intent="secondary" weight="solid">
 						<Icon icon="envelope" />
 						Email Us
 					</Button>

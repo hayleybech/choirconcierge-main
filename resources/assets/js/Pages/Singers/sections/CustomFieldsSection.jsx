@@ -1,6 +1,6 @@
 import Icon from '../../../components/Icon';
 import React, { useState } from 'react';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import TextInput from '../../../components/inputs/TextInput';
 import useRoute from '../../../hooks/useRoute';
 import { useForm, usePage } from '@inertiajs/react';
@@ -30,8 +30,9 @@ const CustomFieldsSection = ({ singer, customFields }) => {
 					<tr className="bg-gray-50 hover:bg-purple-100 cursor-pointer" onClick={() => setShowCreateDialog(true)}>
 						<td colSpan={3} className="p-0">
 							<Button
-								variant="clear"
-								size="sm"
+								size="md"
+								intent="secondary"
+								weight="clear"
 								className="w-full justify-start px-6 py-5 text-purple-600"
 							>
 									<Icon icon="plus" />
@@ -98,7 +99,7 @@ const CustomFieldItem = ({ id, label, entry, singer }) => {
 								wrapperClasses="mt-0"
 							/>
 						</div>
-						<Button variant="primary" size="xs" onClick={e => submit(e)}>
+						<Button intent="primary" weight="solid" size="sm" onClick={e => submit(e)}>
 							<Icon icon="save" />
 							<div className="hidden md:inline">Save</div>
 						</Button>
@@ -127,18 +128,18 @@ const CustomFieldItem = ({ id, label, entry, singer }) => {
 
 					<div className="flex items-center justify-end gap-2">
 						{isEditing ? (
-							<Button variant="secondary" size="xs" onClick={() => setIsEditing(false)}>
+							<Button intent="secondary" weight="solid" size="sm" onClick={() => setIsEditing(false)}>
 								<Icon icon="times" />
 								<div className="hidden md:inline">Cancel</div>
 							</Button>
 						) : (
-							<Button variant="primary" size="xs" onClick={() => setIsEditing(true)}>
+							<Button intent="primary" weight="solid" size="sm" onClick={() => setIsEditing(true)}>
 								<Icon icon="edit" />
 								<div className="hidden md:inline">Edit</div>
 							</Button>
 						)}
 
-						<Button variant="danger-outline" size="xs" onClick={() => setDeleteDialogIsOpen(true)}>
+						<Button intent="danger" weight="outline" size="sm" onClick={() => setDeleteDialogIsOpen(true)}>
 							<Icon icon="trash" />
 							<div className="hidden md:inline">Delete</div>
 						</Button>
@@ -182,7 +183,7 @@ const CreateCustomFieldDialog = ({ isOpen, setIsOpen }) => {
 			title="Create Custom Field"
 			okLabel="Create"
 			onOk={submit}
-			okVariant="primary"
+			okColour="primary"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 		>

@@ -10,7 +10,7 @@ import {
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
 import SectionHeader from '../../../components/SectionHeader';
@@ -35,7 +35,8 @@ const Show = ({ task, notification, setSidebarOpen }) => {
 			label: 'Delete',
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
-			variant: 'danger-outline',
+			intent: 'danger',
+			weight: 'outline',
 			can: task.can.delete_task,
 		},
 	].filter(action => action.can);
@@ -53,20 +54,20 @@ const Show = ({ task, notification, setSidebarOpen }) => {
 		<>
 			<AppHead title={`${notification.subject} - Task Notifications for "${task.name}"`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					<PageActionsMenu>
-						{actions.map(action => (
-							<ActionMenuItem
-								key={action.label}
-								url={action.url}
-								onClick={action.onClick}
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</ActionMenuItem>
-						))}
-					</PageActionsMenu>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				<PageActionsMenu>
+					{actions.map(action => (
+						<ActionMenuItem
+							key={action.label}
+							url={action.url}
+							onClick={action.onClick}
+							intent={action.intent}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</ActionMenuItem>
+					))}
+				</PageActionsMenu>
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -88,8 +89,10 @@ const Show = ({ task, notification, setSidebarOpen }) => {
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}

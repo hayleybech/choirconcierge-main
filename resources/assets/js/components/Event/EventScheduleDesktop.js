@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Table, { TableCell, THead, TBody, TableHeading } from '../Table';
-import Button from '../inputs/Button';
+import ButtonV2 from '../inputs/ButtonV2';
 import Icon from '../Icon';
 import DeleteDialog from '../DeleteDialog';
 import { Link } from '@inertiajs/react';
@@ -43,47 +43,51 @@ const EventScheduleDesktop = ({ event, onAddActivity }) => {
 							<TableCell>{activity.duration} min</TableCell>
 							{event.can.update_event && (
 								<TableCell>
-									<Button
-										variant="clear"
-										size="sm"
+									<ButtonV2
+										intent="secondary"
+										weight="clear"
+										size="md"
 										href={route('events.activities.move', { event, activity })}
 										method="post"
 										data={{ direction: 'up' }}
 										className={index > 0 ? '' : 'invisible'}
 									>
 										<Icon icon="arrow-up" />
-									</Button>
-									<Button
-										variant="clear"
-										size="sm"
+									</ButtonV2>
+									<ButtonV2
+										intent="secondary"
+										weight="clear"
+										size="md"
 										href={route('events.activities.move', { event, activity })}
 										method="post"
 										data={{ direction: 'down' }}
 										className={index < event.activities.length - 1 ? '' : 'invisible'}
 									>
 										<Icon icon="arrow-down" />
-									</Button>
+									</ButtonV2>
 
-									<Button
-										variant="clear"
-										size="sm"
+									<ButtonV2
+										intent="secondary"
+										weight="clear"
+										size="md"
 										onClick={() => {
 											setEditingActivity(activity);
 											setEditDialogIsOpen(true);
 										}}
 									>
 										<Icon icon="edit" />
-									</Button>
-									<Button
-										variant="danger-clear"
-										size="sm"
+									</ButtonV2>
+									<ButtonV2
+										intent="danger"
+										weight="clear"
+										size="md"
 										onClick={() => {
 											setDeletingActivityId(activity.id);
 											setDeleteDialogIsOpen(true);
 										}}
 									>
 										<Icon icon="trash" />
-									</Button>
+									</ButtonV2>
 								</TableCell>
 							)}
 						</tr>

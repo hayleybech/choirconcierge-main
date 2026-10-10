@@ -20,7 +20,7 @@ import AttendanceReportFilters from './AttendanceReportFilters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import { Link } from '@inertiajs/react';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import { TableMobileHeader } from '../../components/TableMobile';
 import AttendanceChart from '../../components/Event/AttendanceChart';
@@ -96,7 +96,7 @@ const AttendanceReport = ({
 							</ActionMenuItem>
 						)}
 						{filterAction && (
-							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
+							<ActionMenuItem onClick={filterAction.onClick} intent={filterAction.intent}>
 								<Icon icon="filter" mr />
 								Filter
 							</ActionMenuItem>
@@ -118,13 +118,24 @@ const AttendanceReport = ({
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{filterAction && (
-						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+						<Button
+							onClick={filterAction.onClick}
+							size="md"
+							intent={filterAction.intent}
+							weight="outline"
+							className={filterAction.intent === 'success' ? 'bg-white' : undefined}
+						>
 							<Icon icon="filter" mr />
 							Filter
 						</Button>
 					)}
 					{events.length > 0 && numSingers > 0 && (
-						<Button onClick={() => setIsChartCollapsed(prev => !prev)} size="sm" variant="secondary">
+						<Button
+							onClick={() => setIsChartCollapsed(prev => !prev)}
+							size="md"
+							intent="secondary"
+							weight="solid"
+						>
 							<Icon icon="analytics" mr />
 							{isChartCollapsed ? 'Show chart' : 'Hide chart'}
 						</Button>
@@ -149,8 +160,9 @@ const AttendanceReport = ({
 					<div className="lg:hidden">
 						<TableMobileHeader bulkEdit={bulkEdit}>
 							<Button
-								variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-								size="xs"
+								size="sm"
+								intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+								weight="clear"
 								onClick={() => setShowFilters(prev => !prev)}
 							>
 								<Icon icon="filter" mr />

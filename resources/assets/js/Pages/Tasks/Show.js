@@ -14,7 +14,7 @@ import AppHead from '../../components/AppHead';
 import Icon from '../../components/Icon';
 import SectionTitle from '../../components/SectionTitle';
 import { Link } from '@inertiajs/react';
-import ButtonLink from '../../components/inputs/ButtonLink';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import DateTag from '../../components/DateTag';
 import SectionHeader from '../../components/SectionHeader';
 import DeleteDialog from '../../components/DeleteDialog';
@@ -35,15 +35,15 @@ const Show = ({ task, setSidebarOpen }) => {
 		<>
 			<AppHead title={`${task.name} - Tasks`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					<PageActionsMenu>
-						{task.can.delete_task && (
-							<ActionMenuItem onClick={() => setDeleteDialogIsOpen(true)} variant="danger-outline">
-								<Icon icon="trash" mr />
-								Delete
-							</ActionMenuItem>
-						)}
-					</PageActionsMenu>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				<PageActionsMenu>
+					{task.can.delete_task && (
+						<ActionMenuItem onClick={() => setDeleteDialogIsOpen(true)} intent="danger">
+							<Icon icon="trash" mr />
+							Delete
+						</ActionMenuItem>
+					)}
+				</PageActionsMenu>
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -64,7 +64,12 @@ const Show = ({ task, setSidebarOpen }) => {
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{task.can.delete_task && (
-						<ButtonLink onClick={() => setDeleteDialogIsOpen(true)} variant="danger-outline" size="sm">
+						<ButtonLink
+							onClick={() => setDeleteDialogIsOpen(true)}
+							intent="danger"
+							weight="outline"
+							size="md"
+						>
 							<Icon icon="trash" mr />
 							Delete
 						</ButtonLink>
@@ -86,7 +91,12 @@ const Show = ({ task, setSidebarOpen }) => {
 				<SectionHeader>
 					<SectionTitle>Notifications</SectionTitle>
 
-					<ButtonLink variant="primary" size="sm" href={route('tasks.notifications.create', { task })}>
+					<ButtonLink
+						intent="primary"
+						weight="solid"
+						size="md"
+						href={route('tasks.notifications.create', { task })}
+					>
 						<Icon icon="edit" mr />
 						Add Notification
 					</ButtonLink>

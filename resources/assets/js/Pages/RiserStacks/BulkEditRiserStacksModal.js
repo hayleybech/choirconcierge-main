@@ -35,7 +35,7 @@ const BulkEditRiserStacksModal = ({ isOpen, setIsOpen, selectedStackIds, ensembl
 			onOk={handleOk}
 			processing={processing}
 			icon="pencil"
-			okVariant="primary"
+			okColour="primary"
 		>
 			<div className="space-y-6 text-left">
 				<div className="sm:col-span-6">

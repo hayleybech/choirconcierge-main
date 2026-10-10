@@ -13,7 +13,7 @@ import DateTag from '../../components/DateTag';
 import EventType from '../../EventType';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 
 const EventTableMobile = ({ events, userEnsemblesCount, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
 	const { route } = useRoute();
@@ -22,8 +22,9 @@ const EventTableMobile = ({ events, userEnsemblesCount, bulkEdit, hasNonDefaultF
 		<div>
 			<TableMobileHeader bulkEdit={bulkEdit}>
 				<Button
-					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-					size="xs"
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
 					onClick={() => setShowFilters(prev => !prev)}
 				>
 					<Icon icon="filter" mr />

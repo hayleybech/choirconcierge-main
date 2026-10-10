@@ -43,7 +43,7 @@ import SingerStatusTag from '../../../components/SingerStatusTag';
 import { handleNameSort } from '../../../utils/sortHelpers';
 import useBulkEdit from '../../../hooks/useBulkEdit';
 import BulkEditBar from '../../../components/BulkEditBar';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import { Menu, Transition } from '@headlessui/react';
 import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
 import { router } from '@inertiajs/react';
@@ -126,16 +126,33 @@ const Index = ({
 
 	const bulkActions = (
 		<>
-			<Button size="xs" variant="clear-inverse" onClick={() => bulkUpdateAttendance('present')}>
+			<Button
+				intent="secondary"
+				weight="clear"
+				theme="dark"
+				size="sm"
+				onClick={() => bulkUpdateAttendance('present')}
+			>
 				<Icon icon="check" className="text-emerald-500" />
 				Present
 			</Button>
-			<Button size="xs" variant="clear-inverse" onClick={() => bulkUpdateAttendance('absent')}>
+			<Button
+				intent="secondary"
+				weight="clear"
+				theme="dark"
+				size="sm"
+				onClick={() => bulkUpdateAttendance('absent')}
+			>
 				<Icon icon="times" className="text-red-500" />
 				Absent
 			</Button>
 			<Menu as="div" className="relative flex">
-				<Menu.Button className="flex items-center px-3 py-1.5 text-xs font-medium rounded-md hover:bg-gray-600 focus:outline-none transition ease-in-out duration-150">
+				<Menu.Button
+					as={Button}
+					theme="dark"
+					weight="clear"
+					className="flex items-center px-3 py-1.5 text-xs font-medium rounded-md hover:bg-gray-600 focus:outline-none transition ease-in-out duration-150 cursor-pointer"
+				>
 					More
 					<Icon icon="chevron-up" ml className="text-[10px]" />
 				</Menu.Button>
@@ -193,7 +210,8 @@ const Index = ({
 			count: counts.absent,
 			extraText: (
 				<p className="text-gray-500 text-xs leading-[1] text-left">
-					incl.<br />
+					incl.
+					<br />
 					{counts.absent_reason} apologies.
 				</p>
 			),
@@ -214,7 +232,7 @@ const Index = ({
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 				<PageActionsMenu>
 					{pageActions.map((action, key) => (
-						<ActionMenuItem key={key} url={action.url} onClick={action.onClick} variant={action.variant}>
+						<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</ActionMenuItem>
@@ -260,8 +278,10 @@ const Index = ({
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}

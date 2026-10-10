@@ -3,7 +3,7 @@ import Panel, { PanelTitle } from '../../../components/Panel';
 import TableMobile, { TableMobileItem } from '../../../components/TableMobile';
 import { usePage } from '@inertiajs/react';
 import useRoute from '../../../hooks/useRoute';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import Icon from '../../../components/Icon';
 
 const ChoirsListWidget = () => {
@@ -13,7 +13,7 @@ const ChoirsListWidget = () => {
 	return (
 		<Panel header={<div className="flex justify-between items-center">
 			<PanelTitle>Your Choirs</PanelTitle>
-			<Button href={route('central.tenants.create')} variant="secondary" size="xs"><Icon icon="plus" />Setup New Choir</Button>
+			<Button href={route('central.tenants.create')} intent="secondary" weight="solid" size="sm"><Icon icon="plus" />Setup New Choir</Button>
 		</div>} noPadding>
 			{choirs.length > 0 ? (
 				<TableMobile>
@@ -33,9 +33,10 @@ const ChoirsListWidget = () => {
 								{choirs.length > 1 && (
 									<>
 										{user.default_tenant_id !== choir.id ? (
-											<Button
-												variant="secondary"
-												size="xs"
+    							<Button
+    								intent="secondary"
+    								weight="solid"
+    								size="sm"
 												href={route('central.default-dash.update', { default_dash: choir.id })}
 												method="put"
 												className="mr-2 shrink-0"
@@ -45,9 +46,10 @@ const ChoirsListWidget = () => {
 										) : (
 											<div className="shrink-0">
 												<span className="text-gray-600 text-sm mr-2">Default Choir</span>
-												<Button
-													variant="danger-outline"
-													size="xs"
+    								<Button
+    									intent="danger"
+    									weight="outline"
+    									size="sm"
 													href={route('central.default-dash.destroy', {
 														default_dash: choir.id,
 													})}

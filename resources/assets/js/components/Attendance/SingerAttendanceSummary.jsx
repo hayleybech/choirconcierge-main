@@ -1,6 +1,6 @@
 import Badge from '../Badge';
 import Icon from '../Icon';
-import ButtonLink from '../inputs/ButtonLink';
+import ButtonLinkV2 from '../inputs/ButtonLinkV2';
 import React from 'react';
 import { usePage } from '@inertiajs/react';
 
@@ -11,15 +11,16 @@ export const SingerAttendanceSummary = ({ attendanceSummary }) => {
 		<div>
 			<div className="flex gap-2 justify-between items-center mb-0.5">
 				<p className="text-sm text-gray-500">Recent Rehearsal Attendance (Last 8)</p>
-				<ButtonLink
-					variant="secondary"
-					size="xs"
+				<ButtonLinkV2
+					intent="secondary"
+					weight="outline"
+					size="sm"
 					href={route('singers.attendance', { singer: authUser.membership, tenant: tenant })}
 					className="shrink-0"
 				>
 					<Icon icon="list" style={{ lineHeight: '1rem' }} />
 					<span className="hidden sm:inline">View All</span>
-				</ButtonLink>
+				</ButtonLinkV2>
 			</div>
 			<div className="flex items-center gap-3">
 				<div className="text-xl font-bold text-gray-900">{attendanceSummary.percentage}%</div>

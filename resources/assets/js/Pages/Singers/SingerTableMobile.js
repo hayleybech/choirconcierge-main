@@ -11,7 +11,7 @@ import Icon from '../../components/Icon';
 import SingerStatus from '../../SingerStatus';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 
 const SingerTableMobile = ({ singers, pagination, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
 	const { route } = useRoute();
@@ -20,8 +20,9 @@ const SingerTableMobile = ({ singers, pagination, bulkEdit, hasNonDefaultFilters
 		<div>
 			<TableMobileHeader bulkEdit={bulkEdit}>
 				<Button
-					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-					size="xs"
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
 					onClick={() => setShowFilters(prev => !prev)}
 				>
 					<Icon icon="filter" mr />

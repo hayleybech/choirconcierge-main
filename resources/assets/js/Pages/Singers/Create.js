@@ -7,8 +7,8 @@ import DetailToggle from '../../components/inputs/DetailToggle';
 import Error from '../../components/inputs/Error';
 import Help from '../../components/inputs/Help';
 import FormSection from '../../components/FormSection';
-import Button from '../../components/inputs/Button';
-import ButtonLink from '../../components/inputs/ButtonLink';
+import Button from '../../components/inputs/ButtonV2';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import CheckboxGroup from '../../components/inputs/CheckboxGroup';
 import {
 	PageHeader,
@@ -270,9 +270,10 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
 														)}
 													</td>
 													<td className="px-3 py-3 text-right">
-														<Button
-															variant="danger-outline"
-															size="xs"
+     									<Button
+										intent="danger"
+										weight="outline"
+										size="sm"
 															onClick={() => removeEnrolment(enrolment.ensemble_id)}
 														>
 															<Icon icon="trash" />
@@ -283,9 +284,10 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
 										})}
 										<tr>
 											<td colSpan="3" className="bg-gray-50 px-3 py-2">
-												<Button
-													variant="primary"
-													size="sm"
+    								<Button
+									intent="primary"
+									weight="solid"
+									size="md"
 													type="button"
 													onClick={openEnrolmentDialog}
 												>
@@ -355,7 +357,7 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
 
 					<FormFooter>
 						<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
-						<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+						<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 							Save
 						</Button>
 					</FormFooter>
@@ -364,7 +366,7 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
 			<Dialog
 				title="Create Enrolment"
 				okLabel="Add"
-				okVariant="primary"
+				okColour="primary"
 				onOk={addEnrolment}
 				isOpen={isEnrolmentDialogOpen}
 				setIsOpen={setIsEnrolmentDialogOpen}

@@ -1,7 +1,7 @@
 import React from 'react'
 import AppHead from "../components/AppHead";
 import Icon from "../components/Icon";
-import Button from "../components/inputs/Button";
+import Button from "../components/inputs/ButtonV2";
 import useRoute from "../hooks/useRoute";
 import {usePage} from "@inertiajs/react";
 import StyledLink from "../components/StyledLink";
@@ -131,11 +131,11 @@ const NavButtons = ({ goToTenant = true }) => {
 
     return (
         <div className="flex gap-x-4 items-center justify-center">
-            <Button href={tenant && goToTenant ? route('dash') : route('central.dash')} variant="primary">
+            <Button href={tenant && goToTenant ? route('dash') : route('central.dash')} intent="primary" weight="solid">
                 Go to dashboard
                 <Icon icon="long-arrow-right" />
             </Button>
-            <Button href="mailto:hello@choirconcierge.com" target="_blank" external variant="secondary">
+            <Button href="mailto:hello@choirconcierge.com" target="_blank" external intent="secondary" weight="solid">
                 <Icon icon="envelope" />
                 Email Us
             </Button>

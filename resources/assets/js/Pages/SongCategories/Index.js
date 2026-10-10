@@ -9,7 +9,7 @@ import {
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import SongCategoryTableDesktop from './SongCategoryTableDesktop';
@@ -35,7 +35,8 @@ const Index = ({ categories, setSidebarOpen }) => {
 			label: 'Add New',
 			icon: 'plus',
 			onClick: () => setCreatingCategory(true),
-			variant: 'primary',
+			intent: 'primary',
+			weight: 'solid',
 			can: can.create_song,
 		},
 	].filter(action => action.can);
@@ -49,17 +50,17 @@ const Index = ({ categories, setSidebarOpen }) => {
 		<>
 			<AppHead title="Song Categories" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					{actions.length > 0 && (
-						<PageActionsMenu>
-							{actions.map(action => (
-								<ActionMenuItem key={action.label} onClick={action.onClick} variant={action.variant}>
-									<Icon icon={action.icon} mr />
-									{action.label}
-								</ActionMenuItem>
-							))}
-						</PageActionsMenu>
-					)}
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				{actions.length > 0 && (
+					<PageActionsMenu>
+						{actions.map(action => (
+							<ActionMenuItem key={action.label} onClick={action.onClick} intent={action.intent}>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				)}
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -71,7 +72,14 @@ const Index = ({ categories, setSidebarOpen }) => {
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{actions.map(action => (
-						<Button key={action.label} onClick={action.onClick} size="sm" variant={action.variant}>
+						<Button
+							key={action.label}
+							onClick={action.onClick}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
+						>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</Button>
@@ -142,7 +150,7 @@ const EditCategoryDialog = ({ isOpen, setIsOpen, category }) => {
 			title="Edit Song Category"
 			okLabel="Save"
 			onOk={submit}
-			okVariant="primary"
+			okColour="primary"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 		>
@@ -184,7 +192,7 @@ const CreateCategoryDialog = ({ isOpen, setIsOpen }) => {
 			title="Create Song Category"
 			okLabel="Save"
 			onOk={submit}
-			okVariant="primary"
+			okColour="primary"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 		>

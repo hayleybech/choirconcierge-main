@@ -7,8 +7,8 @@ import Error from "../../components/inputs/Error";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import RadioGroup from "../../components/inputs/RadioGroup";
 import Help from "../../components/inputs/Help";
-import ButtonLink from "../../components/inputs/ButtonLink";
-import Button from "../../components/inputs/Button";
+import ButtonLink from "../../components/inputs/ButtonLinkV2";
+import Button from "../../components/inputs/ButtonV2";
 import LocationInput from "../../components/inputs/LocationInput";
 import DateInput from "../../components/inputs/Date";
 import TimeInput from "../../components/inputs/Time";
@@ -319,7 +319,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
 
                 <FormFooter>
                     <ButtonLink href={event ? route('events.show', {event}) : route('events.index')}>Cancel</ButtonLink>
-                    <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
+                    <Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
         </FormWrapper>

@@ -4,13 +4,12 @@ import {
 	PageHeader,
 	PageHeaderActions,
 	PageHeaderContent,
-	PageHeaderMeta,
 	PageHeaderTitle,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import EventTableDesktop from './EventTableDesktop';
 import EventTableMobile from './EventTableMobile';
@@ -60,7 +59,8 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 			label: 'Add New',
 			icon: 'calendar-plus',
 			url: route('events.create'),
-			variant: 'primary',
+			intent: 'primary',
+			weight: 'solid',
 			can: 'create_event',
 		},
 		{ label: 'Event Types', icon: 'tags', url: route('event-types.index'), can: 'list_events' },
@@ -94,7 +94,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 								url={action.url}
 								onClick={action.onClick}
 								download={action.download}
-								variant={action.variant}
+								intent={action.intent}
 								method={action.method}
 								disabled={action.disabled}
 							>
@@ -118,8 +118,10 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 							external={action.download}
 							download={action.download}
 							method={action.method}
@@ -139,7 +141,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 				isOpen={bulkEdit.showDeleteModal}
 				setIsOpen={bulkEdit.setShowDeleteModal}
 				okLabel="Delete"
-				okVariant="danger-solid"
+				okColour="danger"
 				okMethod="post"
 				data={{ event_ids: bulkEdit.selectedIds }}
 				okUrl={route('events.bulk-destroy')}

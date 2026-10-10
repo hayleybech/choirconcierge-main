@@ -40,7 +40,7 @@ const BulkEditSongsModal = ({ isOpen, setIsOpen, selectedSongIds, statuses, cate
 			onOk={handleOk}
 			processing={processing}
 			icon="pencil"
-			okVariant="primary"
+			okColour="primary"
 		>
 			<div className="space-y-6 text-left">
 

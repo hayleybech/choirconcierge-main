@@ -25,8 +25,8 @@ import { PlayerContext } from '../../contexts/player-context';
 import SongStatus from '../../SongStatus';
 import Icon from '../../components/Icon';
 import Prose from '../../components/Prose';
-import ButtonLink from '../../components/inputs/ButtonLink';
-import Button from '../../components/inputs/Button';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
+import Button from '../../components/inputs/ButtonV2';
 import SimplePanel from '../../components/SimplePanel';
 import SectionLayout from '../../components/SectionLayout';
 import EmptyState from '../../components/EmptyState';
@@ -51,7 +51,8 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 			label: 'Delete',
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
-			variant: 'danger-outline',
+			intent: 'danger',
+			weight: 'outline',
 			can: song.can.delete_song,
 		},
 	].filter(action => action.can);
@@ -117,7 +118,7 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 									key={key}
 									url={action.url}
 									onClick={action.onClick}
-									variant={action.variant}
+									intent={action.intent}
 								>
 									<Icon icon={action.icon} mr />
 									{action.label}
@@ -130,7 +131,7 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 							<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 							<PageHeaderTitle>{song.title}</PageHeaderTitle>
 							<PageHeaderMeta>
-								<PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="sm" />
+								<PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="md" />
 								<SongStatusTag status={new SongStatus(song.status.slug)} withLabel />
 								{song.categories.length > 0 && (
 									<div className="space-x-1.5 flex items-center">
@@ -173,8 +174,10 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 									key={key}
 									href={action.url}
 									onClick={action.onClick}
-									size="sm"
-									variant={action.variant}
+									size="md"
+									intent={action.intent}
+									weight={action.weight}
+									className={action.className}
 								>
 									<Icon icon={action.icon} mr />
 									{action.label}
@@ -323,7 +326,7 @@ const EditLearningSummaryButton = ({ song }) => {
 	const { route } = useRoute();
 
 	return (
-		<ButtonLink variant="primary" size="xs" href={route('songs.singers.index', { song })}>
+		<ButtonLink intent="primary" weight="solid" size="sm" href={route('songs.singers.index', { song })}>
 			<Icon icon="edit" />
 			Edit
 		</ButtonLink>

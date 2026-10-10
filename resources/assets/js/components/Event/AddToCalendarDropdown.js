@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import {Menu, Transition} from "@headlessui/react";
-import buttonStyles from "../inputs/buttonStyles";
+import ButtonV2 from "../inputs/ButtonV2";
 import Icon from "../Icon";
 import classNames from "../../classNames";
 
@@ -13,7 +13,7 @@ const AddToCalendarDropdown = ({ urls, size = 'sm' }) => {
 
     return items.length > 0 && (
         <Menu as="div" className="relative overflow-visible flex justify-stretch md:justify-start shrink-0">
-            <Menu.Button className={buttonStyles('secondary', size, false, 'grow')}>
+            <Menu.Button as={ButtonV2} intent="secondary" weight="outline" size={size} className="grow">
                 <Icon icon="calendar-plus" />
                 Add To Calendar
                 <Icon icon="chevron-down" />

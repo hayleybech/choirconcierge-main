@@ -2,7 +2,7 @@ import React from 'react';
 import { PageHeader, PageHeaderActions, PageHeaderTitle } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import Icon from '../../../components/Icon';
 import AppHead from '../../../components/AppHead';
 import IndexContainer from '../../../components/IndexContainer';
@@ -34,14 +34,16 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 			label: 'Send Broadcast',
 			icon: 'inbox-out',
 			url: route('communications.create'),
-			variant: 'primary',
+			intent: 'primary',
+			weight: 'solid',
 			can: 'create_broadcast',
 		},
 		{
 			label: 'Mailing lists',
 			icon: 'at',
 			url: route('groups.index'),
-			variant: 'secondary',
+			intent: 'secondary',
+			weight: 'solid',
 			can: 'list_groups',
 		},
 	].filter(action => (action?.can ? can[action.can] : !!action));
@@ -56,7 +58,7 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 				<PageTopNavigation title="Communications">
 					<PageActionsMenu>
 						{actions.map((action, key) => (
-							<ActionMenuItem key={key} url={action.url} variant={action.variant}>
+							<ActionMenuItem key={key} url={action.url} intent={action.intent}>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -70,7 +72,14 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 				</PageHeaderTitle>
 				<PageHeaderActions>
 					{actions.map(action => (
-						<Button key={action.label} href={action.url} size="sm" variant={action.variant}>
+						<Button
+							key={action.label}
+							href={action.url}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
+						>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</Button>

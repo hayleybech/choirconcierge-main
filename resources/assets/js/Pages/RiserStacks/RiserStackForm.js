@@ -4,8 +4,8 @@ import FormSection from "../../components/FormSection";
 import Label from "../../components/inputs/Label";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
-import ButtonLink from "../../components/inputs/ButtonLink";
-import Button from "../../components/inputs/Button";
+import ButtonLink from "../../components/inputs/ButtonLinkV2";
+import Button from "../../components/inputs/ButtonV2";
 import RiserStackEditor from "../../components/RiserStack/RiserStackEditor";
 import DetailToggle from "../../components/inputs/DetailToggle";
 import RiserStackHoldingArea from "../../components/RiserStack/RiserStackHoldingArea";
@@ -178,10 +178,12 @@ const RiserStackForm = ({ stack, voiceParts, singers, ensembles }) => {
                 </div>
             </div>
 
-            <FormFooter>
-                <ButtonLink href={stack ? route('stacks.show', {stack}) : route('stacks.index')}>Cancel</ButtonLink>
-                <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
-            </FormFooter>
+			<div className="px-3 pb-3">
+				<FormFooter>
+					<ButtonLink href={stack ? route('stacks.show', {stack}) : route('stacks.index')}>Cancel</ButtonLink>
+					<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>Save</Button>
+				</FormFooter>
+			</div>
         </Form>
     );
 }

@@ -4,8 +4,8 @@ import FormSection from '../../components/FormSection';
 import Label from '../../components/inputs/Label';
 import TextInput from '../../components/inputs/TextInput';
 import Error from '../../components/inputs/Error';
-import ButtonLink from '../../components/inputs/ButtonLink';
-import Button from '../../components/inputs/Button';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
+import Button from '../../components/inputs/ButtonV2';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
 import CheckboxWithLabel from '../../components/inputs/CheckboxWithLabel';
@@ -119,7 +119,7 @@ const RoleForm = ({ role }) => {
 
 				<FormFooter>
 					<ButtonLink href={role ? route('roles.show', { role }) : route('roles.index')}>Cancel</ButtonLink>
-					<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+					<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 						Save
 					</Button>
 				</FormFooter>

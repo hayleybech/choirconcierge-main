@@ -4,7 +4,7 @@ import EventScheduleDesktop from './EventScheduleDesktop';
 import EventScheduleMobile from './EventScheduleMobile';
 import EmptyState from '../EmptyState';
 import ScheduleItemForm from '../ScheduleItemForm';
-import Button from '../inputs/Button';
+import ButtonV2 from '../inputs/ButtonV2';
 import Icon from '../Icon';
 
 const EventSchedule = ({ event }) => {
@@ -39,15 +39,16 @@ const EventSchedule = ({ event }) => {
 			{event.can.update_event && event.activities.length === 0 && (
 				<ul role="list" className="relative z-0 divide-y divide-gray-200">
 					<li className="bg-white hover:bg-purple-100">
-						<Button
-							variant="clear"
-							size="sm"
+						<ButtonV2
+							intent="secondary"
+							weight="clear"
+							size="md"
 							className="w-full justify-start px-6 py-5 text-purple-600"
 							onClick={openAddActivityDialog}
 						>
 							<Icon icon="plus" />
 							Add activity
-						</Button>
+						</ButtonV2>
 					</li>
 				</ul>
 			)}
