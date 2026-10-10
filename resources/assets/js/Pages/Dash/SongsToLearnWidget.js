@@ -4,7 +4,7 @@ import TableMobile, { TableMobileItem } from '../../components/TableMobile';
 import LearningStatusTag from '../../components/Song/LearningStatusTag';
 import LearningStatus from '../../LearningStatus';
 import useRoute from '../../hooks/useRoute';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 
 const SongsToLearnWidget = ({ songs }) => {
@@ -15,7 +15,7 @@ const SongsToLearnWidget = ({ songs }) => {
 			header={
 				<div className="flex justify-between items-center">
 					<PanelTitle>Songs to Learn</PanelTitle>
-					<Button href={route('songs.index')} variant="secondary" size="xs">
+					<Button href={route('songs.index')} intent="secondary" weight="solid" size="sm">
 						<Icon icon="list" style={{ lineHeight: '1rem' }} />
 						<span className="hidden sm:inline">View All</span>
 					</Button>

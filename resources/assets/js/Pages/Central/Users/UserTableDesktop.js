@@ -5,7 +5,7 @@ import Icon from '../../../components/Icon';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import useRoute from '../../../hooks/useRoute';
 import Pagination from '../../../components/Pagination';
-import ButtonLink from "../../../components/inputs/ButtonLink";
+import ButtonLink from "../../../components/inputs/ButtonLinkV2";
 
 const UserTableDesktop = ({ users, sortFilterForm, pagination }) => {
 	const { can } = usePage().props;
@@ -65,7 +65,7 @@ const UserTableDesktop = ({ users, sortFilterForm, pagination }) => {
 											>
 												{membership.tenant.name}
 											</Link>
-											<ButtonLink href={route('dash', {tenant: membership.tenant.id})} size="xs">
+											<ButtonLink href={route('dash', {tenant: membership.tenant.id})} size="sm">
 												<Icon icon="sign-in-alt" /> Open
 											</ButtonLink>
 										</li>

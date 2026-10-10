@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react';
-import Button from "./Button";
+import ButtonV2 from "./ButtonV2";
 import classNames from "../../classNames";
 
 const FileInput = ({ name, value, updateFn, hasErrors, multiple, vertical = false, otherProps }) => {
@@ -22,15 +22,16 @@ const FileInput = ({ name, value, updateFn, hasErrors, multiple, vertical = fals
                     {filename || 'No file selected.'}
                 </div>
 
-                <Button
+                <ButtonV2
                     type="button"
-                    size="sm"
+                    size="md"
                     onClick={() => inputRef.current.click()}
                     className="grow"
-                    variant={hasErrors ? 'danger-outline' : 'secondary'}
+                    intent={hasErrors ? 'danger' : 'secondary'}
+                    weight="outline"
                 >
                     Browse...
-                </Button>
+                </ButtonV2>
             </div>
 
             <input

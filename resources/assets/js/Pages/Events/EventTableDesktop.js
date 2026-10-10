@@ -97,7 +97,7 @@ const EventTableDesktop = ({ events, sortFilterForm, userEnsemblesCount, bulkEdi
 									)}
 								</div>
 								{DateTime.fromJSDate(new Date(event.call_time)) > DateTime.now() && (
-									<RsvpDropdown event={event} size="xs" />
+									<RsvpDropdown event={event} size="sm" />
 								)}
 							</div>
 						</TableCell>

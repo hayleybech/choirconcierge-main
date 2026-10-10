@@ -7,8 +7,8 @@ import Label from '../../components/inputs/Label';
 import TextInput from '../../components/inputs/TextInput';
 import Error from '../../components/inputs/Error';
 import FormSection from '../../components/FormSection';
-import Button from '../../components/inputs/Button';
-import ButtonLink from '../../components/inputs/ButtonLink';
+import Button from '../../components/inputs/ButtonV2';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import AppHead from '../../components/AppHead';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
@@ -129,7 +129,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
 				</FormSection>
 				<FormFooter>
 					<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
-					<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+					<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 						Save
 					</Button>
 				</FormFooter>
@@ -169,7 +169,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
 
 						<FormFooter>
 							<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
-							<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+							<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 								Save
 							</Button>
 						</FormFooter>
@@ -202,11 +202,11 @@ const EnsemblesList = ({ organisation }) => {
  								<div>{ensemble.name}</div>
  							</div>
  								<div className="flex gap-2">
- 									<Button variant="primary" size="xs" onClick={() => setEditingEnsemble(ensemble)}>
+     					<Button intent="primary" weight="solid" size="sm" onClick={() => setEditingEnsemble(ensemble)}>
  										<Icon icon="edit" />
  										Edit
  									</Button>
- 									<Button variant="danger-solid" size="xs" onClick={() => setDeletingEnsemble(ensemble)}>
+     					<Button intent="danger" weight="solid" size="sm" onClick={() => setDeletingEnsemble(ensemble)}>
  										<Icon icon="trash" />
  										Delete
  									</Button>
@@ -260,7 +260,7 @@ const EditEnsembleDialog = ({ isOpen, setIsOpen, organisation, ensemble }) => {
 			title="Edit ensemble"
 			okLabel="Save"
 			onOk={submit}
-			okVariant="primary"
+			okColour="primary"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 		>
@@ -312,7 +312,7 @@ const DeleteEnsembleDialog = ({ isOpen, setIsOpen, organisation, ensemble }) => 
 			title="Delete ensemble"
 			okLabel="Delete ensemble"
 			onOk={destroy}
-			okVariant="danger-solid"
+			okColour="danger"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 			processing={processing}
@@ -376,10 +376,10 @@ const AddEnsembleForm = ({ organisation }) => {
 				</FormSection>
 
 				<FormFooter>
-					<Button variant="secondary" onClick={reset}>
+ 				<Button intent="secondary" weight="solid" onClick={reset}>
 						Cancel
 					</Button>
-					<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+ 				<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 						Save
 					</Button>
 				</FormFooter>

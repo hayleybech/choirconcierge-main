@@ -14,9 +14,17 @@ import useRoute from '../../../hooks/useRoute';
 import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
 import Icon from '../../../components/Icon';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 
-const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
+const AttendanceTableMobile = ({
+	singers,
+	pagination,
+	showEnsemble,
+	event,
+	bulkEdit,
+	hasNonDefaultFilters,
+	setShowFilters,
+}) => {
 	const { route } = useRoute();
 	const [editingSingerId, setEditingSingerId] = useState(null);
 
@@ -24,8 +32,9 @@ const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event, bulkE
 		<div>
 			<TableMobileHeader bulkEdit={bulkEdit}>
 				<Button
-					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-					size="xs"
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
 					onClick={() => setShowFilters(prev => !prev)}
 				>
 					<Icon icon="filter" mr />
@@ -53,7 +62,7 @@ const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event, bulkE
 									<div
 										className={`flex flex-col gap-1 ${
 											(!!singer.attendance.absent_reason &&
-   									 singer.attendance.response === 'absent') ||
+												singer.attendance.response === 'absent') ||
 											editingSingerId === singer.id
 												? 'pb-16'
 												: 'pb-10'

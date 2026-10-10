@@ -9,7 +9,7 @@ import {
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import FolderTableDesktop from './FolderTableDesktop';
 import FolderTableMobile from './FolderTableMobile';
@@ -44,7 +44,8 @@ const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSide
 			label: 'Add Folder',
 			icon: 'folder-plus',
 			url: route('folders.create'),
-			variant: 'primary',
+			intent: 'primary',
+			weight: 'solid',
 			can: 'create_folder',
 		},
 		filterAction,
@@ -57,12 +58,7 @@ const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSide
 				<PageTopNavigation title="Documents">
 					<PageActionsMenu>
 						{actions.map((action, key) => (
-							<ActionMenuItem
-								key={key}
-								url={action.url}
-								onClick={action.onClick}
-								variant={action.variant}
-							>
+							<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -82,8 +78,10 @@ const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSide
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}

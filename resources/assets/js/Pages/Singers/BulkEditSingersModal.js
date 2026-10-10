@@ -36,7 +36,7 @@ const BulkEditSingersModal = ({ isOpen, setIsOpen, selectedSingerIds, statuses, 
 			onOk={handleOk}
 			processing={processing}
 			icon="pencil"
-			okVariant="primary"
+			okColour="primary"
 		>
 			<div className="space-y-6 text-left">
 				<div className="sm:col-span-6">

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Button from "../inputs/Button";
+import ButtonV2 from "../inputs/ButtonV2";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 import {Link} from "@inertiajs/react";
@@ -32,13 +32,14 @@ const EventScheduleMobile = ({ event, onAddActivity }) => {
                                 </div>
 
                                 {event.can.update_event && (
-                                    <Button
-                                        variant="danger-clear"
+                                    <ButtonV2
+                                        intent="danger"
+                                        weight="clear"
                                         onClick={() => {setDeletingActivityId(activity.id);
                                         setDeleteDialogIsOpen(true)}}
                                     >
                                         <Icon icon="trash" />
-                                    </Button>
+                                    </ButtonV2>
                                 )}
 
                             </div>
@@ -47,15 +48,16 @@ const EventScheduleMobile = ({ event, onAddActivity }) => {
                 ))}
                 {event.can.update_event && (
                     <li className="bg-white hover:bg-purple-100">
-                        <Button
-                            variant="clear"
-                            size="sm"
+                        <ButtonV2
+                            intent="secondary"
+                            weight="clear"
+                            size="md"
                             className="w-full justify-start px-6 py-5 text-purple-600"
                             onClick={onAddActivity}
                         >
                             <Icon icon="plus" />
                             Add activity
-                        </Button>
+                        </ButtonV2>
                     </li>
                 )}
                 <li className="bg-gray-50 font-bold">

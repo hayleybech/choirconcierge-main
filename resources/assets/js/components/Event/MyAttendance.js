@@ -18,7 +18,7 @@ const MyAttendance = ({ event, addToCalendarLinks }) => (
           </div>
 
           <div className="mt-6 self-stretch md:self-start">
-            <AddToCalendarDropdown urls={addToCalendarLinks} size="xs" />
+            <AddToCalendarDropdown urls={addToCalendarLinks} size="sm" />
           </div>
         </>)}
 

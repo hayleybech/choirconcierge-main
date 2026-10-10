@@ -14,8 +14,8 @@ import TextInput from '../../components/inputs/TextInput';
 import DetailToggle from '../../components/inputs/DetailToggle';
 import Error from '../../components/inputs/Error';
 import FormSection from '../../components/FormSection';
-import Button from '../../components/inputs/Button';
-import ButtonLink from '../../components/inputs/ButtonLink';
+import Button from '../../components/inputs/ButtonV2';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import CheckboxGroup from '../../components/inputs/CheckboxGroup';
 import AppHead from '../../components/AppHead';
 import Form from '../../components/Form';
@@ -222,7 +222,7 @@ const Edit = ({ roles, statuses, singer, setSidebarOpen }) => {
 
 					<FormFooter>
 						<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
-						<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+						<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 							Save
 						</Button>
 					</FormFooter>

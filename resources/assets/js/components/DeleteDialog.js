@@ -6,7 +6,7 @@ const DeleteDialog = ({ title, url, isOpen, setIsOpen, children }) => (
 		title={title}
 		okLabel="Delete"
 		okUrl={url}
-		okVariant="danger-solid"
+		okColour="danger"
 		okMethod="delete"
 		isOpen={isOpen}
 		setIsOpen={setIsOpen}

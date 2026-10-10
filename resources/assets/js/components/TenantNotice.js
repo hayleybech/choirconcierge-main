@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "../classNames";
 import Icon from "./Icon";
-import Button from "./inputs/Button";
+import ButtonV2 from "./inputs/ButtonV2";
 import useCookie from "react-use-cookie";
 
 const TenantNotice = ({ variant, children, cookieId = 'default' }) => {
@@ -21,9 +21,9 @@ const TenantNotice = ({ variant, children, cookieId = 'default' }) => {
       <div className="grow flex flex-col md:flex-row gap-x-6 gap-y-2 items-center justify-center">
         {children}
       </div>
-      <Button variant="clear" size="xs" onClick={() => setShowNotices('no')}>
+      <ButtonV2 intent="secondary" weight="clear" size="sm" onClick={() => setShowNotices('no')}>
         <Icon icon="times" className="text-white" />
-      </Button>
+      </ButtonV2>
     </div>
   );
 }

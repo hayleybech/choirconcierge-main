@@ -3,7 +3,7 @@ import TableMobile, { TableMobileHeader, TableMobileListItem, TableMobileLink } 
 import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import Pagination from '../../../components/Pagination';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import Badge from '../../../components/Badge';
 import EventType from '../../../EventType';
 import AttendanceTag from '../../../components/Event/AttendanceTag';
@@ -16,8 +16,9 @@ const AttendanceTableMobile = ({ attendances, pagination, hasNonDefaultFilters, 
 		<div>
 			<TableMobileHeader bulkEdit={{ isAllowed: false, isActiveMobile: false, noun: 'Attendance Record' }}>
 				<Button
-					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-					size="xs"
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
 					onClick={() => setShowFilters(prev => !prev)}
 				>
 					<Icon icon="filter" mr />

@@ -32,7 +32,7 @@ const ScheduleItemForm = ({ event, isOpen, setIsOpen }) => {
 			title="Add Activity"
 			okLabel="Save"
 			onOk={submit}
-			okVariant="primary"
+			okColour="primary"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 			processing={processing}

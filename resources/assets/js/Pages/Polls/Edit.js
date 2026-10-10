@@ -11,7 +11,7 @@ import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import useRoute from '../../hooks/useRoute';
 import { useForm } from '@inertiajs/react';
 import TextInput from '../../components/inputs/TextInput';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import FormWrapper from '../../components/FormWrapper';
 import Form from '../../components/Form';
 import FormSection from '../../components/FormSection';
@@ -198,10 +198,11 @@ const Edit = ({ poll, ensembles = [], setSidebarOpen }) => {
 											placeholder={`Option ${idx + 1}`}
 											hasErrors={!!errors[`options.${idx}`]}
 										/>
-										<Button
-											type="button"
-											variant="danger-outline"
-											size="sm"
+    						<Button
+    							type="button"
+    							intent="danger"
+    							weight="outline"
+    							size="md"
 											onClick={() => removeOption(idx)}
 											disabled={data.options.length <= 1}
 										>
@@ -210,7 +211,7 @@ const Edit = ({ poll, ensembles = [], setSidebarOpen }) => {
 										</Button>
 									</div>
 								))}
-								<Button type="button" variant="secondary" size="sm" onClick={addOption}>
+								<Button type="button" intent="secondary" weight="solid" size="md" onClick={addOption}>
 									<Icon icon="plus" mr />
 									Add Option
 								</Button>
@@ -220,7 +221,7 @@ const Edit = ({ poll, ensembles = [], setSidebarOpen }) => {
 					</FormSection>
 
 					<FormFooter>
-						<Button type="submit" variant="primary" disabled={processing}>
+						<Button type="submit" intent="primary" weight="solid" disabled={processing}>
 							Save
 						</Button>
 					</FormFooter>

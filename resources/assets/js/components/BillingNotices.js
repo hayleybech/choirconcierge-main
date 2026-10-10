@@ -2,7 +2,7 @@ import TenantNotice from "./TenantNotice";
 import { DateTime } from "luxon";
 import Icon from "./Icon";
 import useRoute from "../hooks/useRoute";
-import ButtonLink from "./inputs/ButtonLink";
+import ButtonLinkV2 from "./inputs/ButtonLinkV2";
 
 const formatDate = (date, format = 'DATE_MED') => (
   DateTime.fromJSDate(new Date(date)).toLocaleString(DateTime[format])
@@ -119,9 +119,9 @@ const BillingLink = ({ tenantId }) => {
 
   const billingLink = route('spark.portal', { type: 'tenant', id: tenantId });
   return (
-    <ButtonLink variant="secondary" size="xs" href={billingLink} className="shrink-0">
+    <ButtonLinkV2 intent="secondary" weight="outline" size="sm" href={billingLink} className="shrink-0">
       Go to Billing
       <Icon icon="chevron-right" />
-    </ButtonLink>
+    </ButtonLinkV2>
   );
 };

@@ -10,7 +10,7 @@ import {
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import VoicePartForm from './VoicePartForm';
 import useRoute from '../../hooks/useRoute';
@@ -32,15 +32,15 @@ const Edit = ({ voice_part: voicePart, setSidebarOpen }) => {
 		<>
 			<AppHead title={`Edit - ${voicePart.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					{voicePart.can.delete_voice_part && (
-						<PageActionsMenu>
-							<ActionMenuItem onClick={() => setDeleteDialogIsOpen(true)} variant="danger-outline">
-								<Icon icon="trash" mr />
-								Delete
-							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				{voicePart.can.delete_voice_part && (
+					<PageActionsMenu>
+						<ActionMenuItem onClick={() => setDeleteDialogIsOpen(true)} intent="danger">
+							<Icon icon="trash" mr />
+							Delete
+						</ActionMenuItem>
+					</PageActionsMenu>
+				)}
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -54,7 +54,7 @@ const Edit = ({ voice_part: voicePart, setSidebarOpen }) => {
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{voicePart.can.delete_voice_part && (
-						<Button onClick={() => setDeleteDialogIsOpen(true)} size="sm" variant="danger-outline">
+						<Button onClick={() => setDeleteDialogIsOpen(true)} size="md" intent="danger" weight="outline">
 							<Icon icon="trash" mr />
 							Delete
 						</Button>

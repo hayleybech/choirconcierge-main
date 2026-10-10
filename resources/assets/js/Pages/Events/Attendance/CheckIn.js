@@ -2,7 +2,7 @@ import React from 'react';
 import AppHead from "../../../components/AppHead";
 import { useForm, usePage } from '@inertiajs/react';
 import Form from '../../../components/Form';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import ToastFlash from '../../../components/ToastFlash';
 import Icon from '../../../components/Icon';
 import {DateTime} from "luxon";
@@ -79,7 +79,7 @@ const CheckIn = ({ event, storeUrlSigned }) => {
                                 </div>
                             </div>
 
-                            <Button variant="primary" type="submit" size="sm" className="space-x-2 w-full" disabled={processing || !eventIsToday || wasSuccessful}>
+                            <Button intent="primary" weight="solid" type="submit" size="md" className="space-x-2 w-full" disabled={processing || !eventIsToday || wasSuccessful}>
                                 <Icon icon="check" />
                                 I'm Here
                             </Button>

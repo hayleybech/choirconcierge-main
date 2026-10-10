@@ -8,8 +8,8 @@ import CheckboxGroup from '../../components/inputs/CheckboxGroup';
 import RadioGroup from '../../components/inputs/RadioGroup';
 import Help from '../../components/inputs/Help';
 import Select from '../../components/inputs/Select';
-import ButtonLink from '../../components/inputs/ButtonLink';
-import Button from '../../components/inputs/Button';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
+import Button from '../../components/inputs/ButtonV2';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
 import CheckboxWithLabel from '../../components/inputs/CheckboxWithLabel';
@@ -143,7 +143,7 @@ const SongForm = ({ categories, statuses, pitches, song, ensembles }) => {
 
 				<FormFooter>
 					<ButtonLink href={song ? route('songs.show', { song }) : route('songs.index')}>Cancel</ButtonLink>
-					<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+					<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 						Save
 					</Button>
 				</FormFooter>

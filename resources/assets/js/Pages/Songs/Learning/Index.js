@@ -15,7 +15,7 @@ import useBulkEdit from '../../../hooks/useBulkEdit';
 import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import BulkEditBar from '../../../components/BulkEditBar';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import Icon from '../../../components/Icon';
 import LearningStatusTable from './LearningStatusTable';
 import LearningStatusTableMobile from './LearningStatusTableMobile';
@@ -70,7 +70,7 @@ const Index = ({
 	const bulkEdit = useBulkEdit(allSingers, true, false, 'Singer', true);
 	const actions = [filterAction, bulkEdit.action].filter(Boolean);
 
-	const markSelectedAs = (status) => {
+	const markSelectedAs = status => {
 		router.post(
 			route('songs.singers.bulk-update', { song }),
 			{ singer_ids: bulkEdit.selectedIds, status },
@@ -88,22 +88,17 @@ const Index = ({
 		<>
 			<AppHead title={`Learning Status List - ${song.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					{actions.length > 0 && (
-						<PageActionsMenu>
-							{actions.map((action, key) => (
-								<ActionMenuItem
-									key={key}
-									url={action.url}
-									onClick={action.onClick}
-									variant={action.variant}
-								>
-									<Icon icon={action.icon} mr />
-									{action.label}
-								</ActionMenuItem>
-							))}
-						</PageActionsMenu>
-					)}
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				{actions.length > 0 && (
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				)}
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -119,8 +114,10 @@ const Index = ({
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}
@@ -135,7 +132,14 @@ const Index = ({
 					const status = new LearningStatus(slug);
 
 					return (
-						<Button key={slug} size="xs" variant="clear-inverse" onClick={() => markSelectedAs(slug)}>
+						<Button
+							key={slug}
+							size="sm"
+							intent="secondary"
+							weight="clear"
+							theme="dark"
+							onClick={() => markSelectedAs(slug)}
+						>
 							<Icon icon={status.icon} className={status.textColour} />
 							{status.title}
 						</Button>

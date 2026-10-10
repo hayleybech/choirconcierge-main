@@ -2,7 +2,7 @@ import Label from '../inputs/Label';
 import React, { useContext } from 'react';
 import { PlayerContext } from '../../contexts/player-context';
 import Icon from '../Icon';
-import Button from '../inputs/Button';
+import ButtonV2 from '../inputs/ButtonV2';
 
 import clamp from 'lodash/clamp';
 
@@ -30,13 +30,14 @@ export const PitchControl = () => {
 		<>
 			<Label>Pitch: {getLabelForPitch(pitch)}</Label>
 			<div className="flex gap-2">
-				<Button
-					variant="secondary"
-					size="xs"
+				<ButtonV2
+					intent="secondary"
+					weight="outline"
+					size="sm"
 					onClick={() => setPitch(clamp(pitch - STEP, MIN_PITCH, MAX_PITCH))}
 				>
 					<Icon icon="minus" />
-				</Button>
+				</ButtonV2>
 				<div className="flex-grow">
 					<input
 						type="range"
@@ -55,13 +56,14 @@ export const PitchControl = () => {
 						))}
 					</datalist>
 				</div>
-				<Button
-					variant="secondary"
-					size="xs"
+				<ButtonV2
+					intent="secondary"
+					weight="outline"
+					size="sm"
 					onClick={() => setPitch(clamp(pitch + STEP, MIN_PITCH, MAX_PITCH))}
 				>
 					<Icon icon="plus" />
-				</Button>
+				</ButtonV2>
 			</div>
 		</>
 	);

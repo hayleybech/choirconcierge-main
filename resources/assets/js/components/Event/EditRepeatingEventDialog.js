@@ -62,7 +62,7 @@ const EditRepeatingEventDialog = ({ isOpen, setIsOpen, event }) => {
             title="Edit Repeating Event"
             okLabel="Start"
             okUrl={route('events.recurring.edit', {event, mode: selectedMode})}
-            okVariant="primary"
+            okColour="primary"
             okMethod="get"
             isOpen={isOpen}
             setIsOpen={setIsOpen}

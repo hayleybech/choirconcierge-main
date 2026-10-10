@@ -5,7 +5,7 @@ import { Progress } from '../components/Progress';
 import React from 'react';
 import { Range } from '../components/Range';
 import useRoute from '../../../hooks/useRoute';
-import ButtonLink from '../../../components/inputs/ButtonLink';
+import ButtonLink from '../../../components/inputs/ButtonLinkV2';
 
 export const VoicePlacementSection = ({ singer }) =>
 	singer.placement ? (
@@ -51,7 +51,7 @@ const VoicePlacementEmptyState = ({ singer }) => {
 				Get this singer started on their journey by creating their Voice Placement.
 			</p>
 			<div className="mt-6">
-				<ButtonLink href={route('singers.placements.create', { singer })} variant="primary">
+				<ButtonLink href={route('singers.placements.create', { singer })} intent="primary" weight="solid">
 					<Icon icon="plus" />
 					Create Placement
 				</ButtonLink>

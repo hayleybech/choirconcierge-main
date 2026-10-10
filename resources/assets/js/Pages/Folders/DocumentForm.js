@@ -3,7 +3,7 @@ import {useForm} from "@inertiajs/react";
 import Form from "../../components/Form";
 import Label from "../../components/inputs/Label";
 import Error from "../../components/inputs/Error";
-import Button from "../../components/inputs/Button";
+import Button from "../../components/inputs/ButtonV2";
 import FileInput from "../../components/inputs/FileInput";
 import Icon from "../../components/Icon";
 import useRoute from "../../hooks/useRoute";
@@ -36,7 +36,7 @@ const DocumentForm = ({ folder }) => {
                 </div>
 
                 <div className="sm:col-span-1">
-                    <Button variant="primary" type="submit" className="block w-full" disabled={processing} size="sm">
+                    <Button intent="primary" weight="solid" type="submit" className="block w-full" disabled={processing} size="md">
                         <Icon icon="file-plus" />
                         Upload
                     </Button>

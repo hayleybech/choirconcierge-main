@@ -15,7 +15,7 @@ import Icon from '../../components/Icon';
 import SingerStatus from '../../SingerStatus';
 import FeeStatus from '../../components/FeeStatus';
 import Dialog from '../../components/Dialog';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import { DateTime } from 'luxon';
 import Form from '../../components/Form';
 import Label from '../../components/inputs/Label';
@@ -29,6 +29,7 @@ import Pagination from '../../components/Pagination';
 import RadioGroup from '../../components/inputs/RadioGroup';
 import Badge from '../../components/Badge';
 import { handleNameSort } from '../../utils/sortHelpers';
+import ButtonV2 from '../../components/inputs/ButtonV2';
 
 const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bulkEdit }) => {
 	const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
@@ -142,16 +143,17 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bu
 										</div>
 									)}
 
-									<Button
-										variant="secondary"
-										size="xs"
+									<ButtonV2
+										intent="secondary"
+										weight="outline"
+										size="sm"
 										onClick={() => {
 											setRenewingSinger(singer);
 											setFeeDialogIsOpen(true);
 										}}
 									>
 										Renew Fees
-									</Button>
+									</ButtonV2>
 								</TableCell>
 							)}
 						</TItemRow>
@@ -215,7 +217,7 @@ const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
 			title="Mark fees as paid"
 			okLabel="Save"
 			onOk={submit}
-			okVariant="primary"
+			okColour="primary"
 			okMethod="delete"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}

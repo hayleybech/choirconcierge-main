@@ -41,7 +41,12 @@ describe('Button', () => {
 		render(<ButtonV2 intent="secondary" weight="outline" theme="dark">Test</ButtonV2>);
 
 		expect(screen.getByRole('button')).toHaveClass('text-gray-100');
-		expect(screen.getByRole('button')).not.toHaveClass('text-gray-700');
+	});
+
+	it('uses a white background for light theme secondary outline buttons', () => {
+		render(<ButtonV2 intent="secondary" weight="outline" theme="light">Test</ButtonV2>);
+
+		expect(screen.getByRole('button')).toHaveClass('bg-white');
 	});
 
 	it('uses darker same-color hover styles for light clear buttons', () => {
@@ -64,7 +69,8 @@ describe('Button', () => {
 	it('uses darker light secondary solid styling', () => {
 		render(<ButtonV2 intent="secondary" weight="solid" theme="light">Test</ButtonV2>);
 
-		expect(screen.getByRole('button')).toHaveClass('bg-gray-400', 'hover:bg-gray-500');
+		expect(screen.getByRole('button')).toHaveClass('bg-transparent', 'border-gray-300', 'text-gray-700', 'hover:bg-gray-100');
+		expect(screen.getByRole('button')).not.toHaveClass('bg-gray-400', 'hover:bg-gray-500');
 	});
 
 	it('uses lighter text hover styles without a background for dark clear buttons', () => {

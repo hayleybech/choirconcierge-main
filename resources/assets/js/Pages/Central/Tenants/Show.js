@@ -10,7 +10,7 @@ import {
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import Icon from '../../../components/Icon';
 import classNames from '../../../classNames';
 import AppHead from '../../../components/AppHead';
@@ -43,18 +43,20 @@ const Show = ({ tenant, setSidebarOpen }) => {
 		{ name: tenant.name, url: route('central.tenants.show', { tenant }) },
 	];
 	const actions = [
-		tenant.setup_done && { label: 'Open', icon: 'sign-in-alt', url: route('dash', { tenant }), variant: 'primary' },
+		tenant.setup_done && { label: 'Open', icon: 'sign-in-alt', url: route('dash', { tenant }), intent: 'primary', weight: 'solid' },
 		!tenant.had_demo && can.list_tenants && {
 			label: 'Demo done',
 			icon: 'check',
 			url: route('central.tenants.track-demo', { tenant }),
-			variant: 'secondary',
+			intent: 'secondary',
+			weight: 'outline',
 		},
 		tenant.billing_status.hasExpiredTrial && {
 			label: 'Reset Trial',
 			icon: 'undo',
 			url: route('central.tenants.trial.update', { tenant }),
-			variant: 'secondary',
+			intent: 'secondary',
+			weight: 'outline',
 		},
 	].filter(action => !!action);
 
@@ -100,7 +102,7 @@ const Show = ({ tenant, setSidebarOpen }) => {
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{actions.map(action => (
-						<Button key={action.label} href={action.url} size="sm" variant={action.variant}>
+						<Button key={action.label} href={action.url} size="md" intent={action.intent} weight={action.weight} className={action.className}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</Button>

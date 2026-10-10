@@ -10,7 +10,7 @@ import {
 } from '../../components/PageHeader/PageHeader';
 import VoicePartTag from '../../components/VoicePartTag';
 import SingerStatusTag from '../../components/SingerStatusTag';
-import ButtonLink from '../../components/inputs/ButtonLink';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import Dialog from '../../components/Dialog';
 import RadioGroup from '../../components/inputs/RadioGroup';
 import { usePage } from '@inertiajs/react';
@@ -31,7 +31,7 @@ import CustomFieldsSection from './sections/CustomFieldsSection';
 import SingerAttendanceSummary from '../../components/Attendance/SingerAttendanceSummary';
 import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 import { usePhoneBreadcrumb } from '../../lib/reactNative';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 
@@ -59,14 +59,16 @@ const Show = ({
 			icon: 'user-edit',
 			url: route('account.edit'),
 			can: singer.user.id === authUser.id,
-			variant: 'primary',
+			intent: 'primary',
+			weight: 'solid',
 		},
 		{
 			label: 'Edit Membership',
 			icon: 'edit',
 			url: route('singers.edit', { singer }),
 			can: 'update_singer',
-			variant: 'primary',
+			intent: 'primary',
+			weight: 'solid',
 		},
 		{
 			label: 'Move',
@@ -78,7 +80,8 @@ const Show = ({
 			label: 'Delete',
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
-			variant: 'danger-outline',
+			intent: 'danger',
+			weight: 'outline',
 			can: 'delete_singer',
 		},
 	]
@@ -104,7 +107,7 @@ const Show = ({
 							url={action.url}
 							onClick={action.onClick}
 							download={action.download}
-							variant={action.variant}
+							intent={action.intent}
 							method={action.method}
 							disabled={action.disabled}
 						>
@@ -156,8 +159,10 @@ const Show = ({
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 							external={action.download}
 							download={action.download}
 							method={action.method}
@@ -281,8 +286,9 @@ const EditSingerPlacementButton = ({ singer }) => {
 
 	return (
 		<ButtonLink
-			variant="primary"
-			size="xs"
+			intent="primary"
+			weight="solid"
+			size="sm"
 			href={route('singers.placements.edit', { singer: singer.id, placement: singer.placement.id })}
 		>
 			<Icon icon="edit" />
@@ -301,7 +307,7 @@ const MoveSingerDialog = ({ isOpen, setIsOpen, singer, statuses }) => {
 			title="Move Singer"
 			okLabel="Move"
 			okUrl={route('singers.statuses.update', { singer })}
-			okVariant="primary"
+			okColour="primary"
 			okMethod="get"
 			data={{ move_status: selectedStatus.id }}
 			isOpen={isOpen}

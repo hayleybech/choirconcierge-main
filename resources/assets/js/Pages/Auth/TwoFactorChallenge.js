@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/react';
 import AppHead from '../../components/AppHead';
 import Label from '../../components/inputs/Label';
 import TextInput from '../../components/inputs/TextInput';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Error from '../../components/inputs/Error';
 
 const TwoFactorChallenge = () => {
@@ -95,7 +95,7 @@ const TwoFactorChallenge = () => {
 							{recovery ? 'Use an authentication code' : 'Use a recovery code'}
 						</button>
 
-						<Button variant="primary" type="submit" size="sm" disabled={processing}>
+						<Button intent="primary" weight="solid" type="submit" size="md" disabled={processing}>
 							Log in
 						</Button>
 					</div>

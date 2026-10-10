@@ -31,7 +31,7 @@ import { Link } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
 import { handleNameSort } from '../../../utils/sortHelpers';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import CheckboxInput from '../../../components/inputs/CheckboxInput';
 import classNames from '../../../classNames';
 import { useMediaQuery } from 'react-responsive';
@@ -101,8 +101,9 @@ const Index = ({
 
 	const columnsMenu = (
 		<ColumnsMenu
-			size={isDesktop ? 'sm' : 'xs'}
-			variant={isDesktop ? 'secondary' : 'clear-v2'}
+			size={isDesktop ? 'md' : 'sm'}
+			intent="secondary"
+			weight={isDesktop ? 'solid' : 'clear'}
 			visibleColumns={visibleColumns}
 			setVisibleColumns={setVisibleColumns}
 			defaultColumns={defaultColumns}
@@ -129,15 +130,15 @@ const Index = ({
 		<>
 			<AppHead title={`RSVP List - ${event.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					{filterAction && (
-						<PageActionsMenu>
-							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
-								<Icon icon="filter" mr />
-								Filter
-							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				{filterAction && (
+					<PageActionsMenu>
+						<ActionMenuItem onClick={filterAction.onClick} intent={filterAction.intent}>
+							<Icon icon="filter" mr />
+							Filter
+						</ActionMenuItem>
+					</PageActionsMenu>
+				)}
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -149,7 +150,7 @@ const Index = ({
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{filterAction && (
-						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+						<Button onClick={filterAction.onClick} size="md" intent={filterAction.intent} weight="outline">
 							<Icon icon="filter" mr />
 							Filter
 						</Button>
@@ -165,7 +166,7 @@ const Index = ({
 						key={label}
 					>
 						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
-       <Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
+							<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
 							{label}
 						</div>
 						<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
@@ -315,7 +316,10 @@ const Index = ({
 												colour={singer.rsvp.colour}
 											/>
 											{singer.rsvp.details && (
-												<div className="mt-1 text-xs italic text-gray-500" title={singer.rsvp.details}>
+												<div
+													className="mt-1 text-xs italic text-gray-500"
+													title={singer.rsvp.details}
+												>
 													{singer.rsvp.details}
 												</div>
 											)}
@@ -394,8 +398,10 @@ Index.layout = page => <TenantLayout children={page} />;
 export default Index;
 
 const ColumnsMenu = ({
-	size = 'sm',
-	variant = 'secondary',
+	size = 'lg',
+	intent = 'secondary',
+	weight = 'solid',
+	className,
 	visibleColumns,
 	setVisibleColumns,
 	defaultColumns,
@@ -403,8 +409,8 @@ const ColumnsMenu = ({
 	fields,
 	customFields,
 }) => (
-	<Menu as="div" className="relative inline-block text-left ml-3">
-		<Menu.Button as={Button} variant={variant} size={size}>
+	<Menu as="div" className="relative inline-block text-left">
+		<Menu.Button as={Button} intent={intent} weight={weight} className={className} size={size}>
 			<Icon icon="columns" mr />
 			Columns
 		</Menu.Button>

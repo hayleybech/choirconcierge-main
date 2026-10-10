@@ -51,7 +51,7 @@ const ImportSingersDialog = ({ isOpen, setIsOpen }) => {
 			title="Import singers"
 			okLabel={previewData ? 'Confirm Import' : 'Preview'}
 			onOk={previewData ? submit : getPreview}
-			okVariant="primary"
+			okColour="primary"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 			processing={processing}

@@ -6,21 +6,22 @@ import TableMobile, {
 	TableMobileSelect,
 	TableMobileSelectableLink,
 } from '../../components/TableMobile';
-import useRoute from "../../hooks/useRoute";
+import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import Badge from '../../components/Badge';
 import Icon from '../../components/Icon';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 
 const RiserStackTableMobile = ({ stacks, userEnsemblesCount, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
-    const { route } = useRoute();
+	const { route } = useRoute();
 
-    return (
+	return (
 		<div>
 			<TableMobileHeader bulkEdit={bulkEdit}>
 				<Button
-					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-					size="xs"
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
 					onClick={() => setShowFilters(prev => !prev)}
 				>
 					<Icon icon="filter" mr />
@@ -49,7 +50,11 @@ const RiserStackTableMobile = ({ stacks, userEnsemblesCount, bulkEdit, hasNonDef
 								{userEnsemblesCount > 1 && stack.ensembles.length > 0 && (
 									<div className="mt-2 flex gap-1 flex-wrap">
 										{stack.ensembles.map(ensemble => (
-											<Badge key={ensemble.name} colour="bg-purple-100 text-purple-800 truncate" display="">
+											<Badge
+												key={ensemble.name}
+												colour="bg-purple-100 text-purple-800 truncate"
+												display=""
+											>
 												{ensemble.name}
 											</Badge>
 										))}
@@ -62,6 +67,6 @@ const RiserStackTableMobile = ({ stacks, userEnsemblesCount, bulkEdit, hasNonDef
 			</TableMobile>
 		</div>
 	);
-}
+};
 
 export default RiserStackTableMobile;

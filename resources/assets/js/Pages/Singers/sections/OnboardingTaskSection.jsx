@@ -1,7 +1,7 @@
 import useRoute from '../../../hooks/useRoute';
 import SimplePanel from '../../../components/SimplePanel';
 import Icon from '../../../components/Icon';
-import ButtonLink from '../../../components/inputs/ButtonLink';
+import ButtonLink from '../../../components/inputs/ButtonLinkV2';
 import React from 'react';
 
 export const OnboardingTaskSection = ({ singer }) => {
@@ -47,7 +47,7 @@ export const OnboardingTaskSection = ({ singer }) => {
 											{task.can['complete'] && (
 												<ButtonLink
 													href={route(task.route, { singer: singer.id, task: task.id })}
-													size="xs"
+													size="sm"
 													className="ml-3"
 												>
 													Complete

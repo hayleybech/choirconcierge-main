@@ -5,7 +5,7 @@ import SingerSelect from '../../../components/inputs/SingerSelect';
 import Label from '../../../components/inputs/Label';
 import { useForm, usePage } from '@inertiajs/react';
 import Form from '../../../components/Form';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import ToastFlash from '../../../components/ToastFlash';
 import Icon from '../../../components/Icon';
 import Error from '../../../components/inputs/Error';
@@ -73,9 +73,10 @@ const CheckInKiosk = ({ event, individualCheckInUrl }) => {
 							</div>
 
 							<Button
-								variant="primary"
+								intent="primary"
+								weight="solid"
 								type="submit"
-								size="sm"
+								size="md"
 								className="space-x-2 w-full"
 								disabled={processing}
 							>

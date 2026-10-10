@@ -1,7 +1,7 @@
 import React from 'react';
 import { Fragment } from 'react';
 import { Dialog as BaseDialog, Transition } from '@headlessui/react';
-import Button from './inputs/Button';
+import ButtonV2 from './inputs/ButtonV2';
 import Icon from './Icon';
 
 const Dialog = ({
@@ -10,7 +10,7 @@ const Dialog = ({
 	okLabel,
 	okUrl,
 	onOk,
-	okVariant,
+	okColour = 'primary',
 	okMethod,
 	data,
 	isOpen,
@@ -48,14 +48,14 @@ const Dialog = ({
 				>
 					<div className="relative z-30 inline-block w-full max-w-xl align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:align-middle sm:p-6">
 						<div className="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
-							<button
-								type="button"
-								className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+							<ButtonV2
+								weight="clear"
+								size="sm"
 								onClick={() => setIsOpen(false)}
 							>
 								<span className="sr-only">Close</span>
 								<Icon icon="times" type="light" className="text-xl" />
-							</button>
+							</ButtonV2>
 						</div>
 						<div className="sm:flex sm:items-start sm:gap-4">
 							{icon && (
@@ -76,9 +76,10 @@ const Dialog = ({
 						</div>
 						<div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
 							{okLabel && (
-								<Button
-									variant={okVariant}
-									size="sm"
+								<ButtonV2
+									intent={okColour}
+									weight="solid"
+									size="md"
 									href={okUrl}
 									onClick={e => (!!onOk ? onOk(e) : setIsOpen(false))}
 									method={okMethod}
@@ -88,16 +89,16 @@ const Dialog = ({
 									disabled={processing}
 								>
 									{okLabel}
-								</Button>
+								</ButtonV2>
 							)}
-							<Button
-								size="sm"
+							<ButtonV2
+								size="md"
 								onClick={() => setIsOpen(false)}
 								disabled={processing}
 								className="w-full mt-3 sm:mt-0"
 							>
 								Cancel
-							</Button>
+							</ButtonV2>
 						</div>
 					</div>
 				</Transition.Child>

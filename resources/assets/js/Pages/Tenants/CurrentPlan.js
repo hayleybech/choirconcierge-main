@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import React from "react";
-import ButtonLink from "../../components/inputs/ButtonLink";
+import ButtonLink from "../../components/inputs/ButtonLinkV2";
 import useRoute from "../../hooks/useRoute";
 import classNames from "../../classNames";
 import BillingTag from "../Central/Tenants/BillingTag";
@@ -43,7 +43,7 @@ const CurrentPlan = ({ plan, billing, tenantId }) => {
             {billing.activeUserQuota.activeUserCount} / {billing.activeUserQuota.quota}
           </div>
         </div>
-        <ButtonLink href={billingLink} variant="primary" size="xs" className="shrink-0">Change Plan</ButtonLink>
+        <ButtonLink href={billingLink} intent="primary" weight="solid" size="sm" className="shrink-0">Change Plan</ButtonLink>
       </div>
     )
   }
@@ -57,7 +57,7 @@ const CurrentPlan = ({ plan, billing, tenantId }) => {
             You're currently on a 30-day trial. Your trial ends {formatDate(billing.trialEndsAt)}.
           </div>
         </div>
-        <ButtonLink href={billingLink} variant="primary" size="xs" className="shrink-0">Select Plan</ButtonLink>
+        <ButtonLink href={billingLink} intent="primary" weight="solid" size="sm" className="shrink-0">Select Plan</ButtonLink>
       </div>
     );
   }
@@ -71,7 +71,7 @@ const CurrentPlan = ({ plan, billing, tenantId }) => {
                       We couldn't find billing details for your organisation.
                   </div>
               </div>
-              <ButtonLink href={billingLink} variant="primary" size="xs" className="shrink-0">Select Plan</ButtonLink>
+              <ButtonLink href={billingLink} intent="primary" weight="solid" size="sm" className="shrink-0">Select Plan</ButtonLink>
           </div>
       )
   }

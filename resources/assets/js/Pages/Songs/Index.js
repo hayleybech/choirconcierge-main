@@ -11,7 +11,7 @@ import {
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import SongFilters from '../../components/Song/SongFilters';
@@ -61,7 +61,14 @@ const Index = ({
 	const sortFilterForm = useSortFilterForm('songs.index', filters, sorts);
 
 	const actions = [
-		{ label: 'Add New', icon: 'plus', url: route('songs.create'), variant: 'primary', can: 'create_song' },
+		{
+			label: 'Add New',
+			icon: 'plus',
+			url: route('songs.create'),
+			intent: 'primary',
+			weight: 'solid',
+			can: 'create_song',
+		},
 		{ label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
 		bulkEdit.action,
 		filterAction,
@@ -76,12 +83,7 @@ const Index = ({
 				<PageTopNavigation title="Songs">
 					<PageActionsMenu>
 						{actions.map((action, key) => (
-							<ActionMenuItem
-								key={key}
-								url={action.url}
-								onClick={action.onClick}
-								variant={action.variant}
-							>
+							<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -102,8 +104,10 @@ const Index = ({
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}
@@ -117,7 +121,7 @@ const Index = ({
 				isOpen={bulkEdit.showDeleteModal}
 				setIsOpen={bulkEdit.setShowDeleteModal}
 				okLabel="Delete"
-				okVariant="danger-solid"
+				okColour="danger"
 				okMethod="post"
 				data={{ song_ids: bulkEdit.selectedIds }}
 				okUrl={route('songs.bulk-destroy')}

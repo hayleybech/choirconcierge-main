@@ -24,7 +24,7 @@ const variantGroups = [
 ];
 
 const sizes = ['md', 'sm', 'xs'];
-const v2Colors = ['primary', 'secondary', 'danger', 'warning', 'success'];
+const v2Intents = ['primary', 'secondary', 'danger', 'warning', 'success'];
 const v2Weights = ['solid', 'outline', 'clear'];
 const v2Sizes = ['lg', 'md', 'sm'];
 const v2Themes = ['light', 'dark'];
@@ -113,19 +113,19 @@ const Index = ({ setSidebarOpen }) => (
 											{weight}
 										</h3>
 										<div className="flex justify-between flex-wrap items-center gap-3">
-											{v2Colors.map(color => (
-												<div key={color} className="flex flex-col items-center gap-3">
+											{v2Intents.map(intent => (
+												<div key={intent} className="flex flex-col items-center gap-3">
 													{v2Sizes.map(size => (
 														<ButtonV2
-															key={`${color}-${size}`}
-															color={color}
+															key={`${intent}-${size}`}
+															intent={intent}
 															weight={weight}
 															size={size}
 															theme={theme}
 															type="button"
 														>
 															<Icon icon="plus" />
-															{color} {size}
+																{intent} {size}
 														</ButtonV2>
 													))}
 												</div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import TableMobile, { TableMobileHeader, TableMobileListItem } from '../../components/TableMobile';
 import Icon from '../../components/Icon';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import { Link, usePage } from '@inertiajs/react';
 import useRoute from '../../hooks/useRoute';
 
@@ -35,13 +35,13 @@ const EventTypeTableMobile = ({ categories, showEditCategory, showDeleteCategory
 						</div>
 						<div className="flex gap-2 justify-end">
 							{can.create_event && (
-								<Button variant="primary" size="xs" onClick={() => showEditCategory(category)}>
+								<Button intent="primary" weight="solid" size="sm" onClick={() => showEditCategory(category)}>
 									<Icon icon="edit" />
 									Edit
 								</Button>
 							)}
 							{can.create_event && (
-								<Button variant="danger-outline" size="xs" onClick={() => showDeleteCategory(category)}>
+								<Button intent="danger" weight="outline" size="sm" onClick={() => showDeleteCategory(category)}>
 									<Icon icon="trash" />
 									Delete
 								</Button>

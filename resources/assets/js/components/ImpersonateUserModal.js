@@ -14,7 +14,7 @@ const ImpersonateUserModal = ({ isOpen, setIsOpen }) => {
             title="Choose a user to impersonate"
             okLabel="Start"
             okUrl={selectedSinger ? route('users.impersonate', {user: selectedSinger}) : '#'}
-            okVariant="primary"
+            okColour="primary"
             okMethod="get"
             isOpen={isOpen}
             setIsOpen={setIsOpen}
