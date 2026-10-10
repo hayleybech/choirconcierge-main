@@ -148,10 +148,6 @@ class BillingController extends Controller
             return redirect()->back()->withErrors(['plan' => 'You must be subscribed to a plan to swap plans.']);
         }
 
-        if($tenant->onTrial()) {
-            return redirect()->back()->withErrors(['plan' => 'You cannot switch plans during your free trial period.']);
-        }
-
         try {
             $tenant->subscription('default')->swap($planId);
             return redirect()->back()->with('status', 'Subscription swapped successfully!');

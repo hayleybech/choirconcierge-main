@@ -256,19 +256,13 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 													{/*>*/}
 													{/*	{plan ? 'Swap Plan' : 'Subscribe'}*/}
 													{/*</button>*/}
-													<p className="mt-2 text-xs text-red-600 text-center">
-														{p.eligibilityReason}
-													</p>
-												</div>
-											) : (
-												<>
-													{billing.onTrial ? (
-														<div className="text-sm text-gray-700 font-bold px-4 text-center">
-															Can't swap during trial
+															<p className="mt-2 text-xs text-red-600 text-center">
+																{p.eligibilityReason}
+															</p>
 														</div>
 													) : (
-														<>
-															<a
+																			<>
+																			<a
 																href={
 																	plan
 																		? route('organisation.billing.swap', {
@@ -302,12 +296,10 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 															{!plan && subscribeError && (
 																<p className="mt-2 text-xs text-red-600 text-center">
 																	{subscribeError}
-																</p>
-															)}
-														</>
-													)}
-												</>
-											)}
+																		</p>
+																	)}
+																	</>
+																	)}
 										</div>
 									</div>
 								);

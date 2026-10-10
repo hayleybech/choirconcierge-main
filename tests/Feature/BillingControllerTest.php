@@ -355,6 +355,39 @@ it('swaps the plan if already subscribed', function () {
     });
 });
 
+it('swaps the plan during a trial', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    $membership = Membership::factory()->create([
+        'tenant_id' => $tenant->id,
+        'user_id' => $user->id,
+    ]);
+    $membership->roles()->attach(Role::firstOrCreate(['name' => 'Admin']));
+    $planId = 54321;
+
+    $tenant->run(function () use ($user, $tenant, $planId) {
+        config(['cashier.billables.tenant.plans' => [['yearly_id' => $planId, 'options' => []]]]);
+
+        $subscription = mock(Subscription::class);
+        $subscription->shouldReceive('swap')->with($planId)->once()->andReturnSelf();
+
+        $mockTenant = mock(Tenant::class . '[subscribed,subscription,onTrial]');
+        $mockTenant->setRawAttributes($tenant->getAttributes());
+        $mockTenant->exists = true;
+        $mockTenant->shouldReceive('subscribed')->with('default')->andReturn(true);
+        $mockTenant->shouldReceive('subscription')->with('default')->andReturn($subscription);
+        $mockTenant->shouldReceive('onTrial')->andReturn(true);
+
+        app()->instance(Tenant::class, $mockTenant);
+        app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
+
+        $this->actingAs($user)
+            ->post(route('organisation.billing.swap', ['tenant' => $tenant->id, 'plan' => $planId]))
+            ->assertRedirect()
+            ->assertSessionHas('status', 'Subscription swapped successfully!');
+    });
+});
+
 it('pauses the subscription', function () {
     $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
     $user = User::factory()->create();
