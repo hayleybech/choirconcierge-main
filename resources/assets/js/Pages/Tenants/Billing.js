@@ -88,53 +88,56 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 							<div className="flex justify-between items-center">
 								<PanelTitle>Current Subscription</PanelTitle>
 								<div className="flex items-center gap-4">
-									<div className="flex gap-2 leading-[1]">
-										{!billing.hasGratis &&
-											!billing.onTrial &&
-											!billing.paused &&
-											!billing.onPausedGracePeriod &&
-											!billing.onGracePeriod && (
-												<ButtonLink
-													href={route('organisation.billing.pause')}
-													variant="secondary"
-													size="xs"
-												>
-													<Icon icon="pause" size="xs" />
-													Pause
-												</ButtonLink>
-											)}
-										{(billing.paused || billing.onPausedGracePeriod || (billing.onTrial && plan && !billing.hasGratis)) && (
-											<>
-												{(billing.paused || billing.onPausedGracePeriod) && (
-													<ButtonLink
-														href={route('organisation.billing.unpause')}
-														variant="primary"
-														size="xs"
-													>
-														<Icon icon="play" size="xs" />
-														Unpause
-													</ButtonLink>
-												)}
-												<ButtonLink
-													href={route('organisation.billing.cancel')}
-													variant="danger-outline"
-													size="xs"
-													onClick={e => {
-														if (
-															!confirm(
-																'Are you sure you want to cancel your subscription?'
-															)
-														) {
-															e.preventDefault();
-														}
-													}}
-												>
-													<Icon icon="times" size="xs" />
-													Cancel
-												</ButtonLink>
-											</>
+ 								<div className="flex gap-2 leading-[1]">
+									{!billing.hasGratis &&
+										!billing.onTrial &&
+										!billing.paused &&
+										!billing.onPausedGracePeriod &&
+										!billing.onGracePeriod && (
+											<ButtonLink
+												href={route('organisation.billing.pause')}
+												method="post"
+												variant="secondary"
+												size="xs"
+											>
+												<Icon icon="pause" size="xs" />
+												Pause
+											</ButtonLink>
 										)}
-									</div>
+									{(billing.paused || billing.onPausedGracePeriod || (billing.onTrial && plan && !billing.hasGratis)) && (
+										<>
+										{(billing.paused || billing.onPausedGracePeriod) && (
+											<ButtonLink
+												href={route('organisation.billing.unpause')}
+												method="post"
+												variant="primary"
+												size="xs"
+											>
+												<Icon icon="play" size="xs" />
+												Unpause
+											</ButtonLink>
+										)}
+										<ButtonLink
+											href={route('organisation.billing.cancel')}
+											method="post"
+											variant="danger-outline"
+												size="xs"
+												onClick={e => {
+												if (
+													!confirm(
+														'Are you sure you want to cancel your subscription?'
+													)
+												) {
+													e.preventDefault();
+												}
+											}}
+										>
+											<Icon icon="times" size="xs" />
+											Cancel
+										</ButtonLink>
+									</>
+								)}
+								</div>
 									<BillingTag billing={billing} />
 								</div>
 							</div>
@@ -258,43 +261,36 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 													{/*>*/}
 													{/*	{plan ? 'Swap Plan' : 'Subscribe'}*/}
 													{/*</button>*/}
-															<p className="mt-2 text-xs text-red-600 text-center">
+										<p className="mt-2 text-xs text-red-600 text-center">
 																{p.eligibilityReason}
 															</p>
-														</div>
+													</div>
 													) : (
-																			<>
-																			<a
-																href={
-																	plan
-																		? route('organisation.billing.swap', {
-																				plan: p.id,
-																		  })
-																		: '#!'
-																}
-																className={classNames(
-																	'!w-full !justify-center !inline-flex !items-center !gap-x-1.5 !border !focus:outline-none !focus:ring-2 !focus:ring-offset-2 !border-transparent !py-2 !px-4 !text-md !rounded-md !box-border',
-																	'!focus:ring-purple-500 !bg-purple-600 !text-white hover:bg-purple-700 hover:from-purple-700 hover:to-purple-700 hover:bg-gradient-to-b !bg-gradient-to-b !from-purple-500 !to-purple-500'
-																)}
-																onClick={
-																	!plan ? event => subscribe(event, p.id) : undefined
-																}
-																	aria-disabled={!plan && subscribeProcessing !== null}
-																style={{
-																	textShadow: 'none',
-																	fontFamily: 'Lato, Arial, Helvetica, sans-serif',
-																	fontSize: '14px',
-																	fontWeight: 'normal',
-																}}
-															>
-																	{!!plan
-																	? 'Swap Plan'
-																	: checkoutPending
-																	? 'Pending confirmation'
-																	: subscribeProcessing === p.id
-																	? 'Loading...'
-																	: 'Subscribe'}
-															</a>
+													<>
+														<ButtonLink
+													href={plan ? route('organisation.billing.swap') : '#!'}
+													method={plan ? 'post' : 'get'}
+													data={plan ? { plan: p.id } : undefined}
+															className="!w-full !justify-center !inline-flex !items-center !gap-x-1.5 !border !focus:outline-none !focus:ring-2 !focus:ring-offset-2 !border-transparent !py-2 !px-4 !text-md !rounded-md !box-border !focus:ring-purple-500 !bg-purple-600 !text-white hover:bg-purple-700 hover:from-purple-700 hover:to-purple-700 hover:bg-gradient-to-b !bg-gradient-to-b !from-purple-500 !to-purple-500"
+															onClick={
+																!plan ? event => subscribe(event, p.id) : undefined
+															}
+													aria-disabled={!plan && subscribeProcessing !== null}
+															style={{
+																textShadow: 'none',
+																fontFamily: 'Lato, Arial, Helvetica, sans-serif',
+																fontSize: '14px',
+																fontWeight: 'normal',
+															}}
+														>
+															{!!plan
+																? 'Swap Plan'
+																: checkoutPending
+																? 'Pending confirmation'
+																: subscribeProcessing === p.id
+																? 'Loading...'
+																: 'Subscribe'}
+												</ButtonLink>
 															{!plan && subscribeError && (
 																<p className="mt-2 text-xs text-red-600 text-center">
 																	{subscribeError}
