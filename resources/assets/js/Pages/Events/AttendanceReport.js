@@ -198,7 +198,9 @@ const AttendanceReport = ({
 				</PageHeaderActions>
 			</PageHeader>
 
-			{events.length > 0 && numSingers > 0 && <AttendanceChart events={events} isCollapsed={isChartCollapsed} />}
+			{events.length > 0 && numSingers > 0 && (
+				<AttendanceChart events={events} isCollapsed={isChartCollapsed} onClose={() => setIsChartCollapsed(true)} />
+			)}
 
 			{!isDesktop && (
 				<FilterDialog isOpen={showFilters} setIsOpen={setShowFilters}>
