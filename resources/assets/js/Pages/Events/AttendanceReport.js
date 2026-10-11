@@ -207,28 +207,25 @@ const AttendanceReport = ({
 					{filterPane}
 				</FilterDialog>
 			)}
+			<TableMobileHeader bulkEdit={bulkEdit} className="lg:hidden">
+				<Button
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
+					onClick={() => setShowFilters(prev => !prev)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
 
-			<div className="flex min-h-0 flex-1 flex-col overflow-auto divide-y divide-gray-300 lg:flex-row lg:divide-x lg:divide-y-0">
+			<div className="flex min-w-0 flex-none flex-col divide-y divide-gray-300 lg:min-h-0 lg:flex-1 lg:overflow-auto lg:flex-row lg:divide-x lg:divide-y-0">
 				{isDesktop && showFilters && (
 					<div className="flex h-full shrink-0 flex-col lg:z-10 lg:w-1/5">{filterPane}</div>
 				)}
 
-				<div className="flex min-h-0 grow flex-col lg:overflow-x-auto">
-					<div className="lg:hidden">
-						<TableMobileHeader bulkEdit={bulkEdit}>
-							<Button
-								size="sm"
-								intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-								weight="clear"
-								onClick={() => setShowFilters(prev => !prev)}
-							>
-								<Icon icon="filter" mr />
-								Filter/Sort
-							</Button>
-						</TableMobileHeader>
-					</div>
-
-					<div className="flex-1">
+				<div className="flex min-w-0 flex-none flex-col lg:min-h-0 lg:flex-1 lg:overflow-x-auto">
+					<div className="min-w-0 flex-1">
 						{events.length === 0 && (
 							<EmptyState
 								icon="calendar"
@@ -237,7 +234,7 @@ const AttendanceReport = ({
 							/>
 						)}
 
-						<div className="h-full pb-8 pr-8">
+						<div className="w-full min-w-0 overflow-x-auto pb-8">
 							{events.length > 0 && numSingers === 0 && (
 								<EmptyState
 									icon="users"

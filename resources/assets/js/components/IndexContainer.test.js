@@ -28,6 +28,15 @@ describe('IndexContainer', () => {
 		expect(screen.queryByText('Cancel')).toBeNull();
 	});
 
+	it('lets mobile table content grow with the page so it can scroll', () => {
+		render(<IndexContainer tableMobile={<div>Mobile table</div>} />);
+
+		const mobileTableContainer = screen.getByText('Mobile table').parentElement;
+
+		expect(mobileTableContainer.className).not.toContain('overflow-hidden');
+		expect(mobileTableContainer.className).toContain('flex-none');
+	});
+
 	it('keeps filters in the sidebar on desktop', () => {
 		mockUseMediaQuery.mockReturnValue(true);
 
