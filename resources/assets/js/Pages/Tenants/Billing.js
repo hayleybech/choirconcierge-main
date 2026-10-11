@@ -103,16 +103,18 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 													Pause
 												</ButtonLink>
 											)}
-										{(billing.paused || billing.onPausedGracePeriod) && (
+										{(billing.paused || billing.onPausedGracePeriod || (billing.onTrial && plan && !billing.hasGratis)) && (
 											<>
-												<ButtonLink
-													href={route('organisation.billing.unpause')}
-													variant="primary"
-													size="xs"
-												>
-													<Icon icon="play" size="xs" />
-													Unpause
-												</ButtonLink>
+												{(billing.paused || billing.onPausedGracePeriod) && (
+													<ButtonLink
+														href={route('organisation.billing.unpause')}
+														variant="primary"
+														size="xs"
+													>
+														<Icon icon="play" size="xs" />
+														Unpause
+													</ButtonLink>
+												)}
 												<ButtonLink
 													href={route('organisation.billing.cancel')}
 													variant="danger-outline"

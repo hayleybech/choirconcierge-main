@@ -160,12 +160,14 @@ class BillingController extends Controller
         $tenant = tenant();
         $this->authorizeBilling($request, $tenant);
 
-        if (! $tenant->subscribed('default')) {
+        $subscription = $tenant->subscription('default');
+
+        if (! $subscription || (! $tenant->subscribed('default') && ! $subscription->onTrial())) {
             return redirect()->back()->withErrors(['subscription' => 'You must be subscribed to a plan to cancel it.']);
         }
 
         try {
-            $tenant->subscription('default')->cancel();
+            $subscription->cancel();
             return redirect()->back()->with('status', 'Subscription cancelled successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['subscription' => 'Failed to cancel subscription. Please try again later.']);

@@ -477,3 +477,33 @@ it('cancels the subscription', function () {
             ->assertSessionHas('status', 'Subscription cancelled successfully.');
     });
 });
+
+it('cancels a subscription while it is on trial', function () {
+    $tenant = Tenant::factory()->create(['timezone' => 'UTC']);
+    $user = User::factory()->create();
+    $membership = Membership::factory()->create([
+        'tenant_id' => $tenant->id,
+        'user_id' => $user->id,
+    ]);
+    $membership->roles()->attach(Role::firstOrCreate(['name' => 'Admin']));
+
+    $tenant->run(function () use ($user, $tenant) {
+        $subscription = mock(Subscription::class);
+        $subscription->shouldReceive('onTrial')->once()->andReturn(true);
+        $subscription->shouldReceive('cancel')->once()->andReturnSelf();
+
+        $mockTenant = mock(Tenant::class . '[subscribed,subscription]');
+        $mockTenant->setRawAttributes($tenant->getAttributes());
+        $mockTenant->exists = true;
+        $mockTenant->shouldReceive('subscribed')->with('default')->andReturn(false);
+        $mockTenant->shouldReceive('subscription')->with('default')->andReturn($subscription);
+
+        app()->instance(Tenant::class, $mockTenant);
+        app()->instance(\Stancl\Tenancy\Contracts\Tenant::class, $mockTenant);
+
+        $this->actingAs($user)
+            ->post(route('organisation.billing.cancel', ['tenant' => $tenant->id]))
+            ->assertRedirect()
+            ->assertSessionHas('status', 'Subscription cancelled successfully.');
+    });
+});

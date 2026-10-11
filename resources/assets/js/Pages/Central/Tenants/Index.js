@@ -12,7 +12,6 @@ import Icon from "../../../components/Icon";
 import Button from "../../../components/inputs/Button";
 import AppHead from "../../../components/AppHead";
 import IndexContainer from "../../../components/IndexContainer";
-import useRoute from "../../../hooks/useRoute";
 import TenantTableDesktop from "./TenantTableDesktop";
 import CentralLayout from "../../../Layouts/CentralLayout";
 import TenantTableMobile from "./TenantTableMobile";
@@ -23,7 +22,6 @@ import Sorts from "../../../components/Sorts";
 import TenantFilters from "./TenantFilters";
 
 const Index = ({ tenants, pagination, setSidebarOpen }) => {
-    const { route } = useRoute();
 
     const [showFilters, setShowFilters, filterAction] = useFilterPane();
 
