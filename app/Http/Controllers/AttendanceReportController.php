@@ -139,6 +139,7 @@ class AttendanceReportController extends Controller
                 'present' => 0,
                 'late' => 0,
                 'absent' => 0,
+                'late_deemed_absent' => 0,
                 'unknown' => 0,
             ];
             $considered->each(function (Membership $singer) use ($event, &$attendanceSummary): void {
@@ -146,7 +147,8 @@ class AttendanceReportController extends Controller
                 $response = match ($response) {
                     'present' => 'present',
                     'late' => 'late',
-                    'absent', 'late_deemed_absent' => 'absent',
+                    'absent' => 'absent',
+                    'late_deemed_absent' => 'late_deemed_absent',
                     default => 'unknown',
                 };
 

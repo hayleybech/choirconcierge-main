@@ -3,34 +3,49 @@ import { DateTime } from 'luxon';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import Icon from '../Icon';
 import Button from '../inputs/ButtonV2';
+import classNames from '../../classNames';
 
 const attendanceColours = {
-	present: '#10b981',
-	late: '#f59e0b',
-	absent: '#ef4444',
-	unknown: '#6b7280',
+	present: 'var(--color-emerald-500)',
+	late: 'var(--color-yellow-500)',
+	late_deemed_absent: 'var(--color-orange-500)',
+	absent: 'var(--color-red-500)',
+	unknown: 'var(--color-gray-500)',
 };
 
 const attendanceDetails = {
-	present: { label: 'On Time', icon: 'check', colour: 'emerald' },
-	late: { label: 'Late', icon: 'alarm-snooze', colour: 'amber' },
-	absent: { label: 'Absent', icon: 'times', colour: 'red' },
-	unknown: { label: 'Not recorded', icon: 'circle', colour: 'gray', type: 'regular' },
+	present: { label: 'On Time', icon: 'check', colour: 'text-emerald-500' },
+	late: { label: 'Late', icon: 'alarm-snooze', colour: 'text-yellow-500' },
+	late_deemed_absent: { label: 'Late (Deemed Absent)', icon: 'alarm-exclamation', colour: 'text-orange-500' },
+	absent: { label: 'Absent', icon: 'times', colour: 'text-red-500' },
+	unknown: { label: 'Not recorded', icon: 'circle', colour: 'text-gray-500', type: 'regular' },
 };
 
 const AttendanceLegend = ({ payload = [] }) => (
-	<div className="flex flex-wrap justify-center gap-x-4 gap-y-1 pt-2 text-xs font-bold text-gray-700">
-		{payload.map(entry => {
-			const detail = attendanceDetails[entry.dataKey];
+	<>
+		<div className="flex flex-wrap justify-center gap-x-4 gap-y-1 pt-2 text-xs font-bold text-gray-700">
+			{payload.map(entry => {
+				const detail = attendanceDetails[entry.dataKey];
 
-			return (
-				<span key={entry.dataKey} className={`text-${detail.colour}-500`}>
-					<Icon icon={detail.icon} type={detail.type} size="text-xs" mr />
-					<span className="text-gray-700">{detail.label}</span>
+				return (
+					<span key={entry.dataKey} className={detail.colour}>
+						<Icon icon={detail.icon} type={detail.type} size="text-xs" mr />
+						<span className="text-gray-700">{detail.label}</span>
+					</span>
+				);
+			})}
+		</div>
+		<div className="flex flex-wrap justify-center pt-2 text-xs font-bold text-gray-700">
+			{payload.map(entry => {
+				const detail = attendanceDetails[entry.dataKey];
+
+				return (
+					<span key={entry.dataKey} className={classNames('size-8', detail.bg)}>
 				</span>
-			);
-		})}
-	</div>
+				);
+			})}
+		</div>
+	</>
 );
 
 const AttendanceTooltip = ({ active, payload, label }) => {
@@ -52,8 +67,8 @@ const AttendanceTooltip = ({ active, payload, label }) => {
 
 					return (
 						<div key={entry.dataKey} className="flex items-center justify-between gap-4 font-bold">
-							<span className={`text-${detail.colour}-500`}>
-        <Icon icon={detail.icon} type={detail.type} size="text-xs" mr />
+							<span className={detail.colour}>
+								<Icon icon={detail.icon} type={detail.type} size="text-xs" mr />
 								<span className="text-gray-700">{detail.label}</span>
 							</span>
 							<span className="text-gray-800">{entry.value}</span>
@@ -78,40 +93,46 @@ const AttendanceChart = ({ events, isCollapsed, onClose }) => {
 	return (
 		<div className="relative border border-gray-300 bg-white">
 			<div className="flex justify-end px-2 pt-2">
-				<Button onClick={onClose} intent="secondary" weight="clear" size="sm" aria-label="Close attendance chart">
+				<Button
+					onClick={onClose}
+					intent="secondary"
+					weight="clear"
+					size="sm"
+					aria-label="Close attendance chart"
+				>
 					<Icon icon="times" mr />
 				</Button>
 			</div>
 			<div className="h-56 w-full px-4 py-2">
 				<ResponsiveContainer width="100%" height="100%">
-						<BarChart data={chartData} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
-							<CartesianGrid strokeDasharray="3 3" />
-							<XAxis
-								dataKey="start_date"
-								tickFormatter={date => DateTime.fromISO(date).toFormat('MM-dd')}
-								tick={{ fontSize: '12px' }}
-
-							/>
-							<YAxis allowDecimals={false} tick={{ fontSize: '12px' }} />
-							<Tooltip content={<AttendanceTooltip />} />
-							<Legend content={<AttendanceLegend />} />
-							<Bar
-								dataKey="present"
-								name="On Time"
-								stackId="attendance"
-								fill={attendanceColours.present}
-							/>
-							<Bar dataKey="late" name="Late" stackId="attendance" fill={attendanceColours.late} />
-							<Bar dataKey="absent" name="Absent" stackId="attendance" fill={attendanceColours.absent} />
-							<Bar
-								dataKey="unknown"
-								name="Not recorded"
-								stackId="attendance"
-								fill={attendanceColours.unknown}
-							/>
-						</BarChart>
-					</ResponsiveContainer>
-				</div>
+					<BarChart data={chartData} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
+						<CartesianGrid strokeDasharray="3 3" />
+						<XAxis
+							dataKey="start_date"
+							tickFormatter={date => DateTime.fromISO(date).toFormat('MM-dd')}
+							tick={{ fontSize: '12px' }}
+						/>
+						<YAxis allowDecimals={false} tick={{ fontSize: '12px' }} />
+						<Tooltip content={<AttendanceTooltip />} />
+						<Legend content={<AttendanceLegend />} />
+						<Bar dataKey="present" name="On Time" stackId="attendance" fill={attendanceColours.present} />
+						<Bar dataKey="late" name="Late" stackId="attendance" fill={attendanceColours.late} />
+						<Bar
+							dataKey="late_deemed_absent"
+							name="Late (Deemed Absent)"
+							stackId="attendance"
+							fill={attendanceColours.late_deemed_absent}
+						/>
+						<Bar dataKey="absent" name="Absent" stackId="attendance" fill={attendanceColours.absent} />
+						<Bar
+							dataKey="unknown"
+							name="Not recorded"
+							stackId="attendance"
+							fill={attendanceColours.unknown}
+						/>
+					</BarChart>
+				</ResponsiveContainer>
+			</div>
 		</div>
 	);
 };

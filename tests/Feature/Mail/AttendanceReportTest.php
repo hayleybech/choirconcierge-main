@@ -83,6 +83,7 @@ class AttendanceReportTest extends TestCase
         $this->assertStringContainsString('Sick', $html);
         $this->assertStringContainsString('Work', $html);
         $this->assertStringContainsString('Late (Deemed Absent)', $html);
+        $this->assertStringContainsString('Late (Deemed Absent)</span>: 1', $html);
 
         // Verify order: Alto before Soprano (alphabetical)
         $sopranoPos = strpos($html, 'Soprano');
