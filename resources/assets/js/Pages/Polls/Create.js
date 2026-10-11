@@ -19,7 +19,7 @@ import FormSection from '../../components/FormSection';
 import Label from '../../components/inputs/Label';
 import CheckboxWithLabel from '../../components/inputs/CheckboxWithLabel';
 import Icon from '../../components/Icon';
-import DateCalendarInput from '../../components/inputs/Date';
+import DateCalendarInput from '../../components/inputs/DateCalendarInput';
 import TimeInput from '../../components/inputs/Time';
 import { DateTime } from 'luxon';
 import Help from '../../components/inputs/Help';

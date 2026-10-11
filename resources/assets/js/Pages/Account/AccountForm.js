@@ -10,7 +10,7 @@ import AvatarUpload from '../../components/AvatarUpload';
 import Help from '../../components/inputs/Help';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
-import DateTextInput from '../../components/inputs/Day';
+import DateTextInput from '../../components/inputs/DateTextInput';
 import { DateTime } from 'luxon';
 import FormWrapper from '../../components/FormWrapper';
 import MetricImperialInput from '../../components/inputs/MetricImperialInput';

@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from '../../classNames';
-import 'react-day-picker/dist/style.css';
+import 'react-day-picker/style.css';
 
 const DateTextInput = ({ name, value, updateFn, hasErrors, min, max }) => (
     <div className="mt-1 relative">

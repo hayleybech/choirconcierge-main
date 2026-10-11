@@ -21,7 +21,7 @@ import AppHead from '../../components/AppHead';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
 import { DateTime } from 'luxon';
-import DateTextInput from '../../components/inputs/Day';
+import DateTextInput from '../../components/inputs/DateTextInput';
 import Help from '../../components/inputs/Help';
 import ButtonGroup from '../../components/inputs/ButtonGroup';
 import FormWrapper from '../../components/FormWrapper';

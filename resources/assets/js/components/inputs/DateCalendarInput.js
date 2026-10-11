@@ -3,13 +3,18 @@ import { usePage } from '@inertiajs/react';
 import classNames from '../../classNames';
 import { DayPicker } from "react-day-picker";
 import { Popover, Transition } from "@headlessui/react";
-import 'react-day-picker/dist/style.css';
+import 'react-day-picker/style.css';
 import {DateTime} from "luxon";
 import Icon from "../Icon";
 
 const DateCalendarInput = ({ name, value, updateFn, hasErrors }) => {
 	const { user } = usePage().props;
 	const firstDayOfWeek = user?.first_day_of_week ?? (['CA', 'IN', 'JP', 'US'].includes(user?.address_country) ? 0 : 1);
+	const selectedDate = value
+		? value instanceof Date
+			? value
+			: DateTime.fromISO(value).toJSDate()
+		: undefined;
 
 	return (
 	<Popover as="div" className="mt-1 relative">
@@ -21,7 +26,7 @@ const DateCalendarInput = ({ name, value, updateFn, hasErrors }) => {
 				id={name}
 				name={name}
 				type="text"
-				value={value ? DateTime.fromJSDate(new Date(value)).toLocaleString(DateTime.DATE_MED) : ''}
+				value={selectedDate ? DateTime.fromJSDate(selectedDate).toLocaleString(DateTime.DATE_MED) : ''}
 				className={classNames(
 					'' + 'focus:outline-none block w-full sm:text-sm rounded-md pl-10',
 					hasErrors
@@ -39,15 +44,24 @@ const DateCalendarInput = ({ name, value, updateFn, hasErrors }) => {
 			leaveFrom="scale-100 opacity-100"
 			leaveTo="scale-95 opacity-0"
 		>
-			<Popover.Panel className="absolute mt-2 bg-white overflow-hidden shadow-lg rounded-lg z-20 border border-gray-300">
+			<Popover.Panel className="absolute mt-2 bg-white overflow-hidden shadow-lg rounded-lg z-20 border border-gray-300 px-3 py-2">
 				<DayPicker
+					mode="single"
 					weekStartsOn={firstDayOfWeek}
-					selected={value ? new Date(value) : undefined}
+					selected={selectedDate}
 					onDayClick={day => updateFn(day)}
-					modifiersStyles={{
-						selected: {
-							backgroundColor: 'rgb(147 51 234 / 0.8)',
-						},
+					captionLayout="dropdown"
+					navLayout="around"
+					style={{
+						'--rdp-accent-color': '#9333ea',
+						'--rdp-accent-background-color': '#f3e8ff',
+					}}
+					classNames={{
+						day: 'hover:bg-purple-100! hover:rounded-full ',
+						selected: 'bg-purple-600/80! rounded-full text-white hover:bg-purple-700!',
+						dropdown: 'absolute inset-0 opacity-0 cursor-pointer',
+						dropdown_root: 'relative rounded-sm',
+						caption_label: 'flex items-center gap-0.5 text-base',
 					}}
 				/>
 			</Popover.Panel>

@@ -19,7 +19,7 @@ import Button from '../../components/inputs/ButtonV2';
 import { DateTime } from 'luxon';
 import Form from '../../components/Form';
 import Label from '../../components/inputs/Label';
-import DateTextInput from '../../components/inputs/Day';
+import DateTextInput from '../../components/inputs/DateTextInput';
 import Error from '../../components/inputs/Error';
 import Help from '../../components/inputs/Help';
 import DateTag from '../../components/DateTag';

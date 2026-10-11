@@ -10,7 +10,7 @@ import Help from "../../components/inputs/Help";
 import ButtonLink from "../../components/inputs/ButtonLinkV2";
 import Button from "../../components/inputs/ButtonV2";
 import LocationInput from "../../components/inputs/LocationInput";
-import DateCalendarInput from "../../components/inputs/Date";
+import DateCalendarInput from "../../components/inputs/DateCalendarInput";
 import TimeInput from "../../components/inputs/Time";
 import DetailToggle from "../../components/inputs/DetailToggle";
 import {DateTime} from "luxon";

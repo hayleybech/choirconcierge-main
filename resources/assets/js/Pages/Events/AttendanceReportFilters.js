@@ -1,7 +1,7 @@
 import React from 'react';
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import Filters from "../../components/Filters";
-import DateCalendarInput from "../../components/inputs/Date";
+import DateCalendarInput from "../../components/inputs/DateCalendarInput";
 import FilterActions from "../../components/inputs/FilterActions";
 
 const AttendanceReportFilters = ({ eventTypes, voiceParts, form }) => (

@@ -8,7 +8,7 @@ import CheckboxGroup from '../../components/inputs/CheckboxGroup';
 
 import TimeInput from '../../components/inputs/Time';
 import { DateTime } from 'luxon';
-import DateCalendarInput from '../../components/inputs/Date';
+import DateCalendarInput from '../../components/inputs/DateCalendarInput';
 import Help from '../../components/inputs/Help';
 import RadioGroup from '../../components/inputs/RadioGroup';
 
