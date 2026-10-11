@@ -1027,6 +1027,11 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
+"@date-fns/tz@^1.4.1":
+  version "1.5.0"
+  resolved "https://registry.npmjs.org/@date-fns/tz/-/tz-1.5.0.tgz"
+  integrity sha512-lwYN/vDPeNRULcepoE/LO2Pgx+7/RV+S9ARfbc9lr2DtGkOD7pAiruHvbR1RX3Qyf6ja47EWJDMsNK5vK08DJg==
+
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"
   resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz"
@@ -2411,7 +2416,7 @@
   resolved "https://registry.npmjs.org/@types/react-transition-group/-/react-transition-group-4.4.12.tgz"
   integrity sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==
 
-"@types/react@*", "@types/react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "@types/react@^17.0.0":
+"@types/react@*", "@types/react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "@types/react@^17.0.0", "@types/react@>=16.8.0":
   version "17.0.93"
   resolved "https://registry.npmjs.org/@types/react/-/react-17.0.93.tgz"
   integrity sha512-KM4Ty/ZTLZupiYxZVAlP+InNJS3De6uBMdq0ePa6/04+eG9Y7ftnWfst1xTLQ5rwAhgHwQ4momt/O4KepdGBTw==
@@ -4149,10 +4154,10 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-date-fns@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.npmjs.org/date-fns/-/date-fns-3.6.0.tgz"
-  integrity sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==
+date-fns@^4.1.0:
+  version "4.4.0"
+  resolved "https://registry.npmjs.org/date-fns/-/date-fns-4.4.0.tgz"
+  integrity sha512-+1UMbeh68lH1SegH83CGWwpb6OHHbpSgr3+s5Eww5M4CAgswBpoWS0AjTOfEJ33HiYKz1hdj/KTFprzXHmq/6w==
 
 debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.4.3, debug@4:
   version "4.4.3"
@@ -8097,12 +8102,13 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-day-picker@9.0.0:
-  version "9.0.0"
-  resolved "https://registry.npmjs.org/react-day-picker/-/react-day-picker-9.0.0.tgz"
-  integrity sha512-e1PeOl6AOTHm31YOEZ0Q6jTxSJjFfcpiVdlEPkxeyxfXA9OmV6d7j0jmZyaHeEb/mdZXaMnPluYTdadt/pWB3Q==
+react-day-picker@10.0.2:
+  version "10.0.2"
+  resolved "https://registry.npmjs.org/react-day-picker/-/react-day-picker-10.0.2.tgz"
+  integrity sha512-QetiKtZWE9Uaw/pM/SYNv6WPYOTRnSJ2puL0GgwkmUFMIwiY0dtjH1W4B7DOVXVNQM0ZOClGpH/heOfBSzWeiA==
   dependencies:
-    date-fns "^3.6.0"
+    "@date-fns/tz" "^1.4.1"
+    date-fns "^4.1.0"
 
 react-dom@*, "react-dom@^16 || ^17 || ^18", "react-dom@^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^16.3.0 || ^17.0.0 || ^18.0.0", "react-dom@^16.8.0 || ^17.0.0", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^17.0.0 || ^18.0.0 || ^19.0.0", react-dom@^17.0.2, react-dom@<18.0.0, "react-dom@>= 16.8.0", react-dom@>=16.6.0:
   version "17.0.2"

@@ -111,6 +111,8 @@ const BulkEditPollsModal = ({ isOpen, setIsOpen, selectedPollIds, ensembles, onS
 					<DateCalendarInput
 						name="close_at"
 						value={data.close_at}
+						startMonth={new Date(new Date().getFullYear(), 0)}
+						endMonth={new Date(new Date().getFullYear() + 5, 11)}
 						updateFn={setCloseAtDate}
 						hasErrors={!!errors.close_at}
 					/>

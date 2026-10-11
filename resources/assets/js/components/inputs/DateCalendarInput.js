@@ -7,7 +7,7 @@ import 'react-day-picker/style.css';
 import {DateTime} from "luxon";
 import Icon from "../Icon";
 
-const DateCalendarInput = ({ name, value, updateFn, hasErrors }) => {
+const DateCalendarInput = ({ name, value, updateFn, hasErrors, startMonth, endMonth }) => {
 	const { user } = usePage().props;
 	const firstDayOfWeek = user?.first_day_of_week ?? (['CA', 'IN', 'JP', 'US'].includes(user?.address_country) ? 0 : 1);
 	const selectedDate = value
@@ -48,6 +48,8 @@ const DateCalendarInput = ({ name, value, updateFn, hasErrors }) => {
 				<DayPicker
 					mode="single"
 					weekStartsOn={firstDayOfWeek}
+					startMonth={startMonth}
+					endMonth={endMonth}
 					selected={selectedDate}
 					onDayClick={day => updateFn(day)}
 					captionLayout="dropdown"
@@ -57,11 +59,12 @@ const DateCalendarInput = ({ name, value, updateFn, hasErrors }) => {
 						'--rdp-accent-background-color': '#f3e8ff',
 					}}
 					classNames={{
-						day: 'hover:bg-purple-100! hover:rounded-full ',
-						selected: 'bg-purple-600/80! rounded-full text-white hover:bg-purple-700!',
+						day: 'hover:bg-purple-100! hover:rounded-full text-gray-700',
+						today: 'font-bold text-purple-600',
+						selected: 'bg-purple-600/80! rounded-full text-white! hover:bg-purple-700!',
 						dropdown: 'absolute inset-0 opacity-0 cursor-pointer',
 						dropdown_root: 'relative rounded-sm',
-						caption_label: 'flex items-center gap-0.5 text-base',
+						caption_label: 'flex items-center gap-0.5 text-base text-gray-700',
 					}}
 				/>
 			</Popover.Panel>

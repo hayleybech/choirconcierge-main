@@ -43,24 +43,3 @@ body,
 .react-pdf__Page__canvas {
     margin: 0 auto;
 }
-
-/* React-Day-Picker */
-.DayPicker-Day {
-    height: 40px;
-    width: 40px;
-}
-
-.rdp-day_button:hover:not(:disabled) {
-    background-color: #f3e8ff !important;
-    border-radius: 9999px;
-}
-
-.rdp-selected .rdp-day_button {
-    background-color: rgb(147 51 234 / 80%) !important;
-    border-radius: 9999px;
-    color: white;
-}
-
-.rdp-selected .rdp-day_button:hover:not(:disabled) {
-    background-color: #7e22ce !important;
-}

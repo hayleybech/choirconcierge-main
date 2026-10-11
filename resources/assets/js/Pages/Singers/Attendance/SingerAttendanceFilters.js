@@ -31,6 +31,8 @@ const SingerAttendanceFilters = ({ eventTypes, form, singer }) => (
                 <DateCalendarInput
                   name="starts_after"
                   value={data['starts_after']}
+                  startMonth={new Date(new Date().getFullYear(), 0)}
+                  endMonth={new Date(new Date().getFullYear() + 5, 11)}
                   updateFn={value => setData('starts_after', value)}
                 />
             </fieldset>
@@ -40,6 +42,8 @@ const SingerAttendanceFilters = ({ eventTypes, form, singer }) => (
             <DateCalendarInput
               name="starts_before"
               value={data['starts_before']}
+              startMonth={new Date(new Date().getFullYear(), 0)}
+              endMonth={new Date(new Date().getFullYear() + 5, 11)}
               updateFn={value => setData('starts_before', value)}
             />
           </fieldset>

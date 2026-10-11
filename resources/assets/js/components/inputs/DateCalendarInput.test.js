@@ -17,8 +17,14 @@ jest.mock('@headlessui/react', () => {
 });
 
 jest.mock('react-day-picker', () => ({
-	DayPicker: ({ mode, selected }) => (
-		<div data-testid="day-picker" data-mode={mode} data-selected={selected?.toISOString()} />
+	DayPicker: ({ mode, selected, startMonth, endMonth }) => (
+		<div
+			data-testid="day-picker"
+			data-mode={mode}
+			data-selected={selected?.toISOString()}
+			data-start-month={startMonth?.toISOString()}
+			data-end-month={endMonth?.toISOString()}
+		/>
 	),
 }));
 
@@ -28,10 +34,20 @@ describe('DateCalendarInput', () => {
 	it('passes the date-only value as the selected local calendar day in single mode', () => {
 		const expectedDate = new Date(2025, 0, 15);
 
-		render(<DateCalendarInput name="date" value="2025-01-15" updateFn={jest.fn()} />);
+		render(
+			<DateCalendarInput
+				name="date"
+				value="2025-01-15"
+				startMonth={new Date(new Date().getFullYear(), 0)}
+				endMonth={new Date(new Date().getFullYear() + 5, 11)}
+				updateFn={jest.fn()}
+			/>
+		);
 
 		const dayPicker = screen.getByTestId('day-picker');
 		expect(dayPicker.getAttribute('data-mode')).toBe('single');
 		expect(dayPicker.getAttribute('data-selected')).toBe(expectedDate.toISOString());
+		expect(dayPicker.getAttribute('data-start-month')).toBe(new Date(new Date().getFullYear(), 0).toISOString());
+		expect(dayPicker.getAttribute('data-end-month')).toBe(new Date(new Date().getFullYear() + 5, 11).toISOString());
 	});
 });

@@ -222,6 +222,8 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
                         <DateCalendarInput
                             name="start_date"
                             value={data.start_date}
+                            startMonth={new Date(new Date().getFullYear(), 0)}
+                            endMonth={new Date(new Date().getFullYear() + 5, 11)}
                             updateFn={setStartDate}
                             hasErrors={ !! errors.start_date }
                         />
@@ -253,6 +255,8 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
                         <DateCalendarInput
                             name="end_date"
                             value={data.end_date}
+                            startMonth={new Date(new Date().getFullYear(), 0)}
+                            endMonth={new Date(new Date().getFullYear() + 5, 11)}
                             updateFn={setEndDate}
                             hasErrors={ !! errors.end_date }
                         />
@@ -297,6 +301,8 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
                             <DateCalendarInput
                                 name="repeat_until"
                                 value={data.repeat_until}
+                                startMonth={new Date(new Date().getFullYear(), 0)}
+                                endMonth={new Date(new Date().getFullYear() + 5, 11)}
                                 updateFn={setRepeatUntil}
                                 hasErrors={ !! errors.repeat_until }
                             />

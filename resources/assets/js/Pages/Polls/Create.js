@@ -150,6 +150,8 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 							<DateCalendarInput
 								name="close_at"
 								value={data.close_at}
+								startMonth={new Date(new Date().getFullYear(), 0)}
+								endMonth={new Date(new Date().getFullYear() + 1, 11)}
 								updateFn={setCloseAtDate}
 								hasErrors={!!errors.close_at}
 							/>
