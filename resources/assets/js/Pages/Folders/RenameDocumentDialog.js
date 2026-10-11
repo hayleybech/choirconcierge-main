@@ -35,7 +35,7 @@ const splitFilename = (filename) => [
 
 const FilenameInput = ({ name, value, extension, hasErrors, updateFn }) => <div className="mt-1 flex">
     <TextInput name={name} value={value} updateFn={updateFn} hasErrors={hasErrors} className="rounded-r-none" />
-    <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm mt-1 shadow-sm">{extension}</span>
+    <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm mt-1">{extension}</span>
 </div>;
 
 export default RenameDocumentDialog;

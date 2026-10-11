@@ -31,7 +31,7 @@ const RichTextInput = ({ value, updateFn, max = 5000 }) => {
 
     let charsUsed = editor?.getHTML()?.length ?? 0;
     return (
-        <div className="shadow-sm rounded-md border border-gray-300 ring-1 ring-transparent focus-within:ring-purple-500 focus-within:border-purple-500">
+        <div className="rounded-md border border-gray-300 ring-1 ring-transparent focus-within:ring-purple-500 focus-within:border-purple-500">
             <RichTextMenu editor={editor} />
             <EditorContent editor={editor} className="" />
 
