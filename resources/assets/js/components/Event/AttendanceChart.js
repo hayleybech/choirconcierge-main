@@ -2,6 +2,7 @@ import React from 'react';
 import { DateTime } from 'luxon';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import Icon from '../Icon';
+import Button from '../inputs/ButtonV2';
 
 const attendanceColours = {
 	present: '#10b981',
@@ -64,7 +65,7 @@ const AttendanceTooltip = ({ active, payload, label }) => {
 	);
 };
 
-const AttendanceChart = ({ events, isCollapsed }) => {
+const AttendanceChart = ({ events, isCollapsed, onClose }) => {
 	const chartData = events.map(event => ({
 		...event,
 		...event.attendanceSummary,
@@ -75,7 +76,12 @@ const AttendanceChart = ({ events, isCollapsed }) => {
 	}
 
 	return (
-		<div className="bg-white border border-gray-300">
+		<div className="relative border border-gray-300 bg-white">
+			<div className="flex justify-end px-2 pt-2">
+				<Button onClick={onClose} intent="secondary" weight="clear" size="sm" aria-label="Close attendance chart">
+					<Icon icon="times" mr />
+				</Button>
+			</div>
 			<div className="h-56 w-full px-4 py-2">
 				<ResponsiveContainer width="100%" height="100%">
 						<BarChart data={chartData} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>

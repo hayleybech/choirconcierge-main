@@ -19,7 +19,7 @@ import FormFooter from '../../components/FormFooter';
 import Label from '../../components/inputs/Label';
 import CheckboxWithLabel from '../../components/inputs/CheckboxWithLabel';
 import Icon from '../../components/Icon';
-import DateInput from '../../components/inputs/Date';
+import DateCalendarInput from '../../components/inputs/DateCalendarInput';
 import TimeInput from '../../components/inputs/Time';
 import { DateTime } from 'luxon';
 import Help from '../../components/inputs/Help';
@@ -148,9 +148,11 @@ const Edit = ({ poll, ensembles = [], setSidebarOpen }) => {
 
 						<div className="sm:col-span-4 relative z-20">
 							<Label forInput="close_at">Deadline (optional)</Label>
-							<DateInput
+							<DateCalendarInput
 								name="close_at"
 								value={data.close_at}
+								startMonth={new Date(new Date().getFullYear(), 0)}
+								endMonth={new Date(new Date().getFullYear() + 1, 11)}
 								updateFn={setCloseAtDate}
 								hasErrors={!!errors.close_at}
 							/>

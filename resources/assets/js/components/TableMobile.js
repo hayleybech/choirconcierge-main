@@ -79,8 +79,8 @@ export const TableMobileSelect = ({ bulkEdit, value }) => {
 		</div>
 	);
 };
-export const TableMobileHeader = ({ bulkEdit, children }) => (
-	<div className="px-4 py-1 border-b border-gray-200 flex gap-1 items-center justify-between bg-gray-50 relative">
+export const TableMobileHeader = ({ bulkEdit, children, className = '' }) => (
+	<div className={`sticky top-[47px] z-20 px-4 py-1 border-b border-gray-200 flex gap-1 items-center justify-between bg-gray-50 ${className}`}>
 		<div className="flex items-center">
 			{bulkEdit.isActiveMobile && (
 				<div className="pr-2 absolute left-4 flex">
@@ -103,10 +103,8 @@ export const TableMobileHeader = ({ bulkEdit, children }) => (
 );
 
 const TableMobile = ({ children, pagination }) => (
-	<div className="flex h-full max-h-screen min-h-0 flex-col">
-		<div className="min-h-0 flex-1 overflow-y-auto">
-			<ul className="divide-y divide-gray-200">{children}</ul>
-		</div>
+	<div>
+		<ul className="divide-y divide-gray-200">{children}</ul>
 		{pagination}
 	</div>
 );
