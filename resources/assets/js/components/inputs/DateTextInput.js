@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from '../../classNames';
-import 'react-day-picker/lib/style.css';
+import 'react-day-picker/dist/style.css';
 
-const DayInput = ({ name, value, updateFn, hasErrors, min, max }) => (
+const DateTextInput = ({ name, value, updateFn, hasErrors, min, max }) => (
     <div className="mt-1 relative">
         <input
             id={name}
@@ -22,4 +22,4 @@ const DayInput = ({ name, value, updateFn, hasErrors, min, max }) => (
     </div>
 );
 
-export default DayInput;
+export default DateTextInput;

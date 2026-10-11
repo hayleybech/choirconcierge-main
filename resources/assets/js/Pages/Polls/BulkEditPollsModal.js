@@ -8,7 +8,7 @@ import CheckboxGroup from '../../components/inputs/CheckboxGroup';
 
 import TimeInput from '../../components/inputs/Time';
 import { DateTime } from 'luxon';
-import DateInput from '../../components/inputs/Date';
+import DateCalendarInput from '../../components/inputs/Date';
 import Help from '../../components/inputs/Help';
 import RadioGroup from '../../components/inputs/RadioGroup';
 
@@ -108,7 +108,7 @@ const BulkEditPollsModal = ({ isOpen, setIsOpen, selectedPollIds, ensembles, onS
 				{/* Deadline */}
 				<div className="sm:col-span-4 relative z-20">
 					<Label forInput="close_at">Deadline (optional)</Label>
-					<DateInput
+					<DateCalendarInput
 						name="close_at"
 						value={data.close_at}
 						updateFn={setCloseAtDate}

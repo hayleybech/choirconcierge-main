@@ -21,7 +21,7 @@ import AppHead from '../../components/AppHead';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
 import { DateTime } from 'luxon';
-import DayInput from '../../components/inputs/Day';
+import DateTextInput from '../../components/inputs/Day';
 import Help from '../../components/inputs/Help';
 import ButtonGroup from '../../components/inputs/ButtonGroup';
 import FormWrapper from '../../components/FormWrapper';
@@ -147,7 +147,7 @@ const Edit = ({ roles, statuses, singer, setSidebarOpen }) => {
 
 							<div className="sm:col-span-6">
 								<Label label="Joined" forInput="joined_at" />
-								<DayInput
+								<DateTextInput
 									name="joined_at"
 									hasErrors={!!errors.joined_at}
 									value={data.joined_at?.toISODate() ?? ''}
@@ -193,7 +193,7 @@ const Edit = ({ roles, statuses, singer, setSidebarOpen }) => {
 							</div>
 							<div className="sm:col-span-6">
 								<Label label="Membership expires" forInput="paid_until" />
-								<DayInput
+								<DateTextInput
 									name="paid_until"
 									hasErrors={!!errors.paid_until}
 									value={data.paid_until?.toISODate() ?? ''}

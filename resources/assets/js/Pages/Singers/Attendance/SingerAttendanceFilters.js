@@ -1,7 +1,7 @@
 import React from 'react';
 import CheckboxGroup from "../../../components/inputs/CheckboxGroup";
 import Filters from "../../../components/Filters";
-import DateInput from "../../../components/inputs/Date";
+import DateCalendarInput from "../../../components/inputs/Date";
 import FilterActions from "../../../components/inputs/FilterActions";
 
 const SingerAttendanceFilters = ({ eventTypes, form, singer }) => (
@@ -28,7 +28,7 @@ const SingerAttendanceFilters = ({ eventTypes, form, singer }) => (
 
             <fieldset className="relative z-[2]">
                 <legend className="text-sm font-medium text-gray-700">Events After</legend>
-                <DateInput
+                <DateCalendarInput
                   name="starts_after"
                   value={data['starts_after']}
                   updateFn={value => setData('starts_after', value)}
@@ -37,7 +37,7 @@ const SingerAttendanceFilters = ({ eventTypes, form, singer }) => (
 
           <fieldset className="relative z-[1]">
             <legend className="text-sm font-medium text-gray-700">Events Before</legend>
-            <DateInput
+            <DateCalendarInput
               name="starts_before"
               value={data['starts_before']}
               updateFn={value => setData('starts_before', value)}

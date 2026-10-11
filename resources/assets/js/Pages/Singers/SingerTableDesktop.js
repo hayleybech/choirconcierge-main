@@ -19,7 +19,7 @@ import Button from '../../components/inputs/ButtonV2';
 import { DateTime } from 'luxon';
 import Form from '../../components/Form';
 import Label from '../../components/inputs/Label';
-import DayInput from '../../components/inputs/Day';
+import DateTextInput from '../../components/inputs/Day';
 import Error from '../../components/inputs/Error';
 import Help from '../../components/inputs/Help';
 import DateTag from '../../components/DateTag';
@@ -242,7 +242,7 @@ const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
 					<hr className="mt-6 mb-4" />
 
 					<Label label="Membership expires" forInput="paid_until" />
-					<DayInput
+					<DateTextInput
 						name="paid_until"
 						hasErrors={!!errors.paid_until}
 						value={data.paid_until?.toISODate() ?? ''}

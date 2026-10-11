@@ -10,7 +10,7 @@ import Help from "../../components/inputs/Help";
 import ButtonLink from "../../components/inputs/ButtonLinkV2";
 import Button from "../../components/inputs/ButtonV2";
 import LocationInput from "../../components/inputs/LocationInput";
-import DateInput from "../../components/inputs/Date";
+import DateCalendarInput from "../../components/inputs/Date";
 import TimeInput from "../../components/inputs/Time";
 import DetailToggle from "../../components/inputs/DetailToggle";
 import {DateTime} from "luxon";
@@ -219,7 +219,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
 
                     <div className="sm:col-span-4 relative z-20">
                         <Label label="Start Date" forInput="start_date" />
-                        <DateInput
+                        <DateCalendarInput
                             name="start_date"
                             value={data.start_date}
                             updateFn={setStartDate}
@@ -250,7 +250,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
 
                     <div className="sm:col-span-4 relative z-10">
                         <Label label="End Date" forInput="end_date" />
-                        <DateInput
+                        <DateCalendarInput
                             name="end_date"
                             value={data.end_date}
                             updateFn={setEndDate}
@@ -294,7 +294,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
 
                         <div className="sm:col-span-6">
                             <Label label="Repeat Until" forInput="repeat_until" />
-                            <DateInput
+                            <DateCalendarInput
                                 name="repeat_until"
                                 value={data.repeat_until}
                                 updateFn={setRepeatUntil}
