@@ -28,6 +28,7 @@ import Sorts from '../../components/Sorts';
 import VoicePartTag from '../../components/VoicePartTag';
 import FilterDialog from '../../components/FilterDialog';
 import { useMediaQuery } from 'react-responsive';
+import DateRangeCalendarInput from '../../components/inputs/DateRangeCalendarInput';
 
 const AttendanceReport = ({
 	events,
@@ -53,6 +54,15 @@ const AttendanceReport = ({
 		{ id: 'voice-part', name: 'Voice Part' },
 		{ id: 'attendance', name: 'Events Present' },
 	];
+	const today = DateTime.now().startOf('day');
+	const dateRangePresets = [
+		{ label: 'Last 30 days', start: today.minus({ days: 29 }) },
+		{ label: 'Last 90 days', start: today.minus({ days: 89 }) },
+		{ label: 'Last 365 days', start: today.minus({ days: 364 }) },
+		{ label: 'Last month', start: today.minus({ months: 1 }).startOf('month'), end: today.minus({ months: 1 }).endOf('month') },
+		{ label: 'Last quarter', start: today.startOf('quarter').minus({ quarters: 1 }), end: today.startOf('quarter').minus({ days: 1 }) },
+		{ label: 'Last year', start: today.minus({ years: 1 }).startOf('year'), end: today.minus({ years: 1 }).endOf('year') },
+	];
 	const filters = [
 		{ name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
 		{ name: 'starts_after', defaultValue: defaultStartsAfter },
@@ -61,6 +71,19 @@ const AttendanceReport = ({
 	];
 
 	const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
+	const previousDateRange = React.useRef({
+		startsAfter: sortFilterForm.data['starts_after'],
+		startsBefore: sortFilterForm.data['starts_before'],
+	});
+	React.useEffect(() => {
+		const startsAfter = sortFilterForm.data['starts_after'];
+		const startsBefore = sortFilterForm.data['starts_before'];
+
+		if (previousDateRange.current.startsAfter !== startsAfter || previousDateRange.current.startsBefore !== startsBefore) {
+			previousDateRange.current = { startsAfter, startsBefore };
+			sortFilterForm.submit();
+		}
+	}, [sortFilterForm.data['starts_after'], sortFilterForm.data['starts_before']]);
 	const filterPane = (
 		<FilterSortPane
 			sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
@@ -115,6 +138,38 @@ const AttendanceReport = ({
 						<div>Avg. singers per event: {avgSingersPerEvent}</div>
 						<div>Avg. events per singer: {avgEventsPerSinger}</div>
 					</PageHeaderMeta>
+					<div className="mt-3 w-full max-w-xs">
+						<DateRangeCalendarInput
+							startDate={sortFilterForm.data['starts_after']}
+							endDate={sortFilterForm.data['starts_before']}
+							startMonth={new Date(2017, 0)}
+							endMonth={new Date(new Date().getFullYear() + 5, 11)}
+							updateFn={range => {
+								sortFilterForm.setData('starts_after', range?.from ? DateTime.fromJSDate(range.from).toISODate() : '');
+								sortFilterForm.setData('starts_before', range?.to ? DateTime.fromJSDate(range.to).toISODate() : '');
+							}}
+						>
+							{setDraftRange => (
+								<div className="mb-2 grid grid-cols-2">
+									{[dateRangePresets.slice(0, 3), dateRangePresets.slice(3)].map((column, columnIndex) => (
+										<div key={columnIndex} className={`flex flex-col gap-1 ${columnIndex === 1 ? 'border-l border-gray-200 pl-2' : 'pr-2'}`}>
+											{column.map(({ label, start, end }) => (
+												<Button
+													key={label}
+													intent="secondary"
+													weight="clear"
+													size="sm"
+													onClick={() => setDraftRange({ from: start.toJSDate(), to: (end ?? today).toJSDate() })}
+												>
+													{label}
+												</Button>
+											))}
+										</div>
+									))}
+								</div>
+							)}
+						</DateRangeCalendarInput>
+					</div>
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{filterAction && (

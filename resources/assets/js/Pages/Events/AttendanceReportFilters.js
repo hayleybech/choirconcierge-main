@@ -1,7 +1,6 @@
 import React from 'react';
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import Filters from "../../components/Filters";
-import DateCalendarInput from "../../components/inputs/DateCalendarInput";
 import FilterActions from "../../components/inputs/FilterActions";
 
 const AttendanceReportFilters = ({ eventTypes, voiceParts, form }) => (
@@ -41,27 +40,6 @@ const AttendanceReportFilters = ({ eventTypes, voiceParts, form }) => (
                 />
             </fieldset>
 
-            <fieldset className="relative z-[2]">
-                <legend className="text-sm font-medium text-gray-700">Events After</legend>
-                <DateCalendarInput
-                  name="starts_after"
-                  value={data['starts_after']}
-                  startMonth={new Date(2017, 0)}
-                  endMonth={new Date(new Date().getFullYear() + 1, 11)}
-                  updateFn={value => setData('starts_after', value)}
-                />
-            </fieldset>
-
-          <fieldset className="relative z-[1]">
-            <legend className="text-sm font-medium text-gray-700">Events Before</legend>
-            <DateCalendarInput
-              name="starts_before"
-              value={data['starts_before']}
-              startMonth={new Date(new Date().getFullYear(), 0)}
-              endMonth={new Date(new Date().getFullYear() + 5, 11)}
-              updateFn={value => setData('starts_before', value)}
-            />
-          </fieldset>
         </>)}
     />
 );
