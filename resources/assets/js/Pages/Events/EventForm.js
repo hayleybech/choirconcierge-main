@@ -20,6 +20,7 @@ import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 import RichTextInput from "../../components/inputs/RichTextInput";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
+import { dateTimeFromISO, setTime } from "../../utils/eventDateTime";
 
 const EventForm = ({ event, types, mode, ensembles = [] }) => {
     const { route } = useRoute();
@@ -38,8 +39,8 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
         is_repeating: event?.is_repeating ?? false,
         repeat_frequency_unit: event?.repeat_frequency_unit ?? null,
 
-        start_date: event?.start_date ? DateTime.fromISO(event.start_date) : DateTime.now(),
-        end_date: event?.end_date ? DateTime.fromISO(event.end_date) : DateTime.now(),
+        start_date: dateTimeFromISO(event?.start_date),
+        end_date: dateTimeFromISO(event?.end_date),
         call_time: event?.call_time ? DateTime.fromISO(event.call_time) : DateTime.now(),
         repeat_until: event?.repeat_until ? DateTime.fromISO(event.repeat_until) : DateTime.now(),
     });
@@ -91,7 +92,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
         });
     }
     function setStartTime(value) {
-        setData('start_date', setTime(DateTime.fromISO(value), data.start_date) );
+        setData('start_date', setTime(DateTime.fromISO(value), data.start_date));
     }
     function setEndDate(value) {
         setData('end_date', constrainEndDate(setDay(DateTime.fromJSDate(value), data.end_date)));
@@ -138,12 +139,6 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
 
             hour: target.hour,
             minute: target.minute,
-        })
-    }
-    function setTime(source, target) {
-        return target.set({
-            hour: source.hour,
-            minute: source.minute,
         })
     }
 
