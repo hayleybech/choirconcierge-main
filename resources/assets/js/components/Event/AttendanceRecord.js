@@ -36,19 +36,19 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 			id: 'present',
 			name: 'Present',
 			icon: 'check',
-			colour: 'text-green-600',
+			colour: 'text-emerald-500',
 		},
 		{
 			id: 'late',
 			name: 'Late',
 			icon: 'alarm-snooze',
-			colour: 'text-amber-500',
+			colour: 'text-yellow-500',
 		},
 		{
 			id: 'late_deemed_absent',
 			name: 'Late (Deemed Absent)',
 			icon: 'alarm-exclamation',
-			colour: 'text-red-500',
+			colour: 'text-orange-500',
 		},
 		{
 			id: 'absent',

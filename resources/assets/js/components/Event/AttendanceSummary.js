@@ -32,10 +32,10 @@ const AttendanceSummary = ({ attendanceCount, voicePartsAttendanceCount }) => (
 				<div className="flex flex-wrap space-y-3">
 					{[
 						{ label: 'On Time', colour: 'emerald-500', icon: 'check', count: attendanceCount.present },
-						{ label: 'Late', colour: 'amber-500', icon: 'alarm-snooze', count: attendanceCount.late },
+						{ label: 'Late', colour: 'yellow-500', icon: 'alarm-snooze', count: attendanceCount.late },
 						{
 							label: 'Late (Deemed Absent)',
-							colour: 'red-500',
+							colour: 'orange-500',
 							icon: 'alarm-exclamation',
 							count: attendanceCount.late_deemed_absent,
 						},

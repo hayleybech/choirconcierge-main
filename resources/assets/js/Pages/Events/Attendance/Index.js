@@ -172,7 +172,7 @@ const Index = ({
 									onClick={() => bulkUpdateAttendance('late')}
 									className={menuItemStyles('secondary', active, '', 'xs')}
 								>
-									<Icon icon="alarm-snooze" mr className="text-amber-500" />
+									<Icon icon="alarm-snooze" mr className="text-yellow-500" />
 									Late
 								</button>
 							)}
@@ -183,7 +183,7 @@ const Index = ({
 									onClick={() => bulkUpdateAttendance('late_deemed_absent')}
 									className={menuItemStyles('secondary', active, '', 'xs')}
 								>
-									<Icon icon="alarm-exclamation" mr className="text-red-500" />
+									<Icon icon="alarm-exclamation" mr className="text-orange-500" />
 									Late (Deemed Absent)
 								</button>
 							)}
@@ -196,10 +196,10 @@ const Index = ({
 
 	const countsData = [
 		{ label: 'On Time', textColour: 'text-emerald-500', icon: 'check', count: counts.present },
-		{ label: 'Late', textColour: 'text-amber-500', icon: 'alarm-snooze', count: counts.late },
+		{ label: 'Late', textColour: 'text-yellow-500', icon: 'alarm-snooze', count: counts.late },
 		{
 			label: 'Late (Deemed Absent)',
-			textColour: 'text-red-500',
+			textColour: 'text-orange-500',
 			icon: 'alarm-exclamation',
 			count: counts.late_deemed_absent,
 		},
