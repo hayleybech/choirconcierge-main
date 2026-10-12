@@ -288,6 +288,10 @@ class EventController extends Controller
 
     private function getEvents(): LengthAwarePaginator
     {
+        $user = auth()->user();
+        $user?->loadMissing('membership.status');
+        $membership = $user?->membership;
+
         return QueryBuilder::for(Event::class)
             ->forEnsembles()
             ->allowedFilters([
@@ -296,7 +300,10 @@ class EventController extends Controller
                 AllowedFilter::scope('date')->default(['upcoming']),
                 AllowedFilter::exact('ensembles.id'),
             ])
-            ->with(['repeat_parent:id,call_time'])
+            ->with([
+                'repeat_parent:id,call_time',
+                'rsvps' => fn ($query) => $query->where('membership_id', $membership?->id ?? 0),
+            ])
             ->withCount([
                 'rsvps as going_count' => function ($query) {
                     $query->where('response', '=', 'yes');
