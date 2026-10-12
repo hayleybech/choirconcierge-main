@@ -1,9 +1,20 @@
+import React from 'react';
 import classNames from '../../../classNames';
 
 const BillingTag = ({ billing }) => {
 	// Active - Gratis
 	if (billing.hasGratis) {
 		return <Badge variant="success">Active (Gratis)</Badge>;
+	}
+
+	// Cancelled - Grace Period
+	if (billing.onGracePeriod) {
+		return <Badge variant="warning">Cancelling</Badge>;
+	}
+
+	// Cancelled - Ended
+	if (billing.ended) {
+		return <Badge variant="danger">Cancelled</Badge>;
 	}
 
 	// On Trial
@@ -19,16 +30,6 @@ const BillingTag = ({ billing }) => {
 	// Past Due
 	if (billing.pastDue) {
 		return <Badge variant="danger">Overdue</Badge>;
-	}
-
-	// Cancelled - Grace Period
-	if (billing.onGracePeriod) {
-		return <Badge variant="warning">Cancelling</Badge>;
-	}
-
-	// Cancelled - Ended
-	if (billing.ended) {
-		return <Badge variant="danger">Cancelled</Badge>;
 	}
 
 	// Paused - Grace Period

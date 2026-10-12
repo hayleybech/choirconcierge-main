@@ -104,41 +104,43 @@ const Billing = ({ plans, tenant, termsUrl }) => {
 													Pause
 												</Button>
 											)}
-										{(billing.paused ||
-											billing.onPausedGracePeriod ||
-											(billing.onTrial && plan && !billing.hasGratis)) && (
-											<>
-												{(billing.paused || billing.onPausedGracePeriod) && (
+										{!billing.onGracePeriod &&
+											!billing.ended &&
+											(billing.paused ||
+												billing.onPausedGracePeriod ||
+												(billing.onTrial && plan && !billing.hasGratis)) && (
+												<>
+													{(billing.paused || billing.onPausedGracePeriod) && (
+														<Button
+															href={route('organisation.billing.unpause')}
+															method="post"
+															variant="primary"
+															size="xs"
+														>
+															<Icon icon="play" size="xs" />
+															Unpause
+														</Button>
+													)}
 													<Button
-														href={route('organisation.billing.unpause')}
+														href={route('organisation.billing.cancel')}
 														method="post"
-														variant="primary"
+														variant="danger-outline"
 														size="xs"
+														onClick={e => {
+															if (
+																!confirm(
+																	'Are you sure you want to cancel your subscription?'
+																)
+															) {
+																e.preventDefault();
+															}
+														}}
 													>
-														<Icon icon="play" size="xs" />
-														Unpause
+														<Icon icon="times" size="xs" />
+														Cancel
 													</Button>
-												)}
-												<Button
-													href={route('organisation.billing.cancel')}
-													method="post"
-													variant="danger-outline"
-													size="xs"
-													onClick={e => {
-														if (
-															!confirm(
-																'Are you sure you want to cancel your subscription?'
-															)
-														) {
-															e.preventDefault();
-														}
-													}}
-												>
-													<Icon icon="times" size="xs" />
-													Cancel
-												</Button>
-											</>
-										)}
+												</>
+											)}
 									</div>
 									<BillingTag billing={billing} />
 								</div>
