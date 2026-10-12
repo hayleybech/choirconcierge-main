@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import ButtonV2 from './inputs/ButtonV2';
-import { start } from 'tone';
+import { loaded, start } from 'tone';
 import Icon from './Icon';
 
 const PitchButton = ({
@@ -18,7 +18,7 @@ const PitchButton = ({
 	const pitch = (note.length > 1 ? note.slice(0, 2) : note) + octave.toString();
 	const releaseHandlerRef = useRef(null);
 
-	function play(e) {
+	async function play(e) {
 		e.stopPropagation();
 		e.preventDefault();
 
@@ -36,7 +36,12 @@ const PitchButton = ({
 		releaseHandlerRef.current = handleRelease;
 		document.addEventListener('mouseup', handleRelease);
 		document.addEventListener('touchend', handleRelease);
-		start();
+		await start();
+		await loaded();
+		if (releaseHandlerRef.current !== handleRelease) {
+			return;
+		}
+
 		instrument.instrument.triggerAttack(pitch);
 	}
 

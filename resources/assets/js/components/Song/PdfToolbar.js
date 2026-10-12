@@ -6,6 +6,7 @@ import PitchScale from '../PitchScale';
 import {Menu, Transition} from '@headlessui/react';
 import {DateTime} from "luxon";
 import {useKonami} from "react-konami-code";
+import {loaded, start} from 'tone';
 
 const PdfToolbar = ({ isFullscreen, closeFullscreen, openFullscreen, zoomIn, zoomOut, pitch, instrument, setInstrument }) => {
 	const [showPitchBar, setShowPitchBar] = useState(false);
@@ -51,7 +52,10 @@ export default PdfToolbar;
 
 const InstrumentMenu = (props) => {
 	const [showSecrets, setShowSecrets] = useState(false);
-	const unlockAll = useCallback(() => {
+	const unlockAll = useCallback(async () => {
+		await start();
+		await loaded();
+
 		props.instrument.instrument.triggerAttackRelease('C4', 0.5);
 		props.instrument.instrument.triggerAttackRelease('E4', 0.5);
 		props.instrument.instrument.triggerAttackRelease('G4', 0.5);
