@@ -31,9 +31,8 @@ class DashController extends Controller
             ->whereIn('tenant_id', $this->getUserChoirs()->map(fn($choir) => $choir->id))
             ->whereBetween('call_time', [today(), today()->addMonth()])
             ->orderBy('call_time')
-            ->with('tenant.domains')
-            ->get()
-            ->append(['my_rsvp']);
+            ->with(['tenant.domains', 'my_rsvp'])
+            ->get();
     }
 
     private function getSongs()

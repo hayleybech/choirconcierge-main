@@ -61,8 +61,8 @@ class DashController extends Controller
             ->whereBetween('call_time', [today(), today()->addMonth()])
             ->whereIn('type_id', tenant('widgets_upcoming_events_categories') ?? EventType::all()->pluck('id'))
             ->orderBy('call_time')
-            ->get()
-            ->append(['my_rsvp']);
+            ->with('my_rsvp')
+            ->get();
     }
 
     private function getEventCategories(): \Illuminate\Support\Collection

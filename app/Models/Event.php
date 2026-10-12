@@ -180,6 +180,18 @@ class Event extends Model
         return $this->hasMany(Rsvp::class);
     }
 
+    public function my_rsvp(): HasOne
+    {
+        return $this->hasOne(Rsvp::class)
+            ->whereHas('member', fn ($query) => $query
+                ->where('user_id', auth()->id())
+                ->whereIn('tenant_id', fn ($tenantQuery) => $tenantQuery
+                    ->select('tenant_id')
+                    ->from('events')
+                    ->whereColumn('events.id', 'rsvps.event_id')))
+            ->withDefault(['response' => 'unknown']);
+    }
+
     public function attendances(): HasMany
     {
         return $this->hasMany(Attendance::class);
@@ -404,22 +416,6 @@ class Event extends Model
         return $this->_add_to_calendar_link;
     }
 
-    public function getMyRsvpAttribute(): Rsvp|Model
-    {
-        if (! auth()->check()) {
-            return Rsvp::Null();
-        }
-
-        if ($this->relationLoaded('rsvps')) {
-            return $this->rsvps->first() ?? Rsvp::Null();
-        }
-
-        $membership = auth()->user()->memberships()->firstWhere('tenant_id', '=', $this->tenant_id);
-
-        return $membership
-            ? $this->rsvps()->where('membership_id', '=', $membership->id)->first() ?? Rsvp::Null()
-            : Rsvp::Null();
-    }
 
     /**
      * Checks if any of the repeat data has changed - including call/start time

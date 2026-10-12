@@ -86,8 +86,8 @@ class EventController extends Controller
 
     public function show(Event $event): Response
     {
-        $event->load(['repeat_parent:id,call_time', 'my_attendance', 'activities' => fn($query) => $query->orderBy('order'), 'activities.song'])
-            ->append(['in_future', 'is_repeat_parent', 'parent_in_past', 'my_rsvp']);
+        $event->load(['repeat_parent:id,call_time', 'my_attendance', 'my_rsvp', 'activities' => fn($query) => $query->orderBy('order'), 'activities.song'])
+            ->append(['in_future', 'is_repeat_parent', 'parent_in_past']);
 
         $event->can = [
             'update_event' => auth()->user()?->can('update', $event),
@@ -288,10 +288,6 @@ class EventController extends Controller
 
     private function getEvents(): LengthAwarePaginator
     {
-        $user = auth()->user();
-        $user?->loadMissing('membership.status');
-        $membership = $user?->membership;
-
         return QueryBuilder::for(Event::class)
             ->forEnsembles()
             ->allowedFilters([
@@ -302,7 +298,7 @@ class EventController extends Controller
             ])
             ->with([
                 'repeat_parent:id,call_time',
-                'rsvps' => fn ($query) => $query->where('membership_id', $membership?->id ?? 0),
+                'my_rsvp',
             ])
             ->withCount([
                 'rsvps as going_count' => function ($query) {
@@ -320,6 +316,6 @@ class EventController extends Controller
             ])
             ->defaultSort('start_date')
             ->paginate(50)->appends(request()->query())
-            ->through(fn($event) => $event->append(['is_repeat_parent', 'my_rsvp']));
+            ->through(fn($event) => $event->append(['is_repeat_parent']));
     }
 }
