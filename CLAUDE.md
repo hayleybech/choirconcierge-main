@@ -38,7 +38,7 @@ npm run prettier  # format JS/TS
 **Choir Concierge** is a multi-tenant SaaS platform for choir management: member rosters, song libraries, event RSVP/attendance, document storage, riser-stack editing, mailing lists (inbound + outbound), onboarding checklists, and polls.
 
 ### Stack
-- **PHP 8.2 / Laravel 11** — but using the **Laravel 10 file structure** (no `bootstrap/app.php`). Middleware is in `app/Http/Kernel.php`, schedule in `app/Console/Kernel.php`, exceptions in `app/Exceptions/Handler.php`.
+- **PHP 8.3 / Laravel 11** — but using the **Laravel 10 file structure** (no `bootstrap/app.php`). Middleware is in `app/Http/Kernel.php`, schedule in `app/Console/Kernel.php`, exceptions in `app/Exceptions/Handler.php`.
 - **Frontend**: Inertia.js v1 + React 17 + Tailwind CSS v3, bundled with **Laravel Mix** (webpack), not Vite. Pages live in `resources/assets/js/Pages/`.
 - **Database**: MySQL, single shared database for all tenants (no per-tenant DBs).
 - **Queue**: database driver; background jobs implement `ShouldQueue`.

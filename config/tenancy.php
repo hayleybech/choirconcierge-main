@@ -20,7 +20,7 @@ return [
         str_replace(
             ['http://', 'https://'],
             '',
-            env('TENANCY_CENTRAL_DOMAIN', 'choirconcierge.com')
+            env('APP_URL', 'choirconcierge.com')
         ),
     ],
 
