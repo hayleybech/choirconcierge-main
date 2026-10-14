@@ -97,7 +97,7 @@ Do:
 
 Don't:
 - Don't forget to run `php artisan vendor:publish --provider="Spatie\MediaLibrary\MediaLibraryServiceProvider" --tag="medialibrary-migrations"` before migrating.
-- Don't use `env()` for disk configuration; use `config()` or set it in `config/media-library.php`.
+- Don't use `env()` for disk configuration; use `config()` or set it in `../../config/media-library.php`.
 - Don't call `addMedia()` without calling `toMediaCollection()` — the media won't be saved.
 - Don't reference conversion names that aren't registered in `registerMediaConversions()`.
 

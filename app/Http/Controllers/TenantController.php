@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TenantSettingsRequest;
 use App\Models\Tenant;
 use DateTimeZone;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 use Stancl\Tenancy\Database\Models\Domain;
@@ -26,40 +25,28 @@ class TenantController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(TenantSettingsRequest $request): RedirectResponse
     {
-        $this->authorize('update', tenant());
+        $validated = $request->validated();
+
+        if ($validated['tab'] === 'billing') {
+            tenant()->update(['billing_user_id' => $validated['billing_user']]);
+
+            return redirect()->back()->with(['status' => 'Organisation settings saved.']);
+        }
 
         tenant()->loadMissing('domains');
 
-        $request->validate([
-            'name' => ['required', 'max:127'],
-            'logo' => ['sometimes', 'nullable', 'file', 'mimetypes:image/png,image/jpeg', 'max:10240'],
-            'primary_domain' => [
-                'required',
-                'max:127',
-                'alpha_dash',
-                Rule::unique('domains', 'domain', '')
-                    ->where(fn(Builder $query) => $query->whereNot('tenant_id', tenant()->id))
-            ],
-            'timezone' => ['required', Rule::in(DateTimeZone::listIdentifiers())],
-            'billing_user_membership' => ['exists:memberships,id'],
-        ]);
-
         tenant()->update([
-            ...$request->only([
-                'name',
-                'timezone',
-            ]), ...[
-                'billing_user_id' => $request->input('billing_user') ?? null,
-            ],
+            'name' => $validated['name'],
+            'timezone' => $validated['timezone'],
         ]);
 
         if ($request->hasFile('logo')) {
             tenant()->updateLogo($request->file('logo'), $request->file('logo')->hashName());
         }
 
-        $this->updatePrimaryDomain(tenant(), $request->input('primary_domain'));
+        $this->updatePrimaryDomain(tenant(), $validated['primary_domain']);
 
         return redirect()->back()->with(['status' => 'Organisation settings saved.']);
     }

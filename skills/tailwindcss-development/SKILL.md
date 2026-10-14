@@ -30,7 +30,7 @@ Use `search-docs` for detailed Tailwind CSS v3 patterns and documentation.
 ## Tailwind CSS v3 Specifics
 
 - Always use Tailwind CSS v3 and verify you're using only classes it supports.
-- Configuration is done in the `tailwind.config.js` file.
+- Configuration is done in the `../../tailwind.config.js` file.
 - Import using `@tailwind` directives:
 
 <!-- v3 Import Syntax -->
