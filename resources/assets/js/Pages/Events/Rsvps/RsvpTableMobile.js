@@ -1,8 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import TableMobile, { TableMobileHeader, TableMobileListItem } from '../../../components/TableMobile';
+import TableMobile, {
+	TableMobileHeader,
+	TableMobileListItem,
+	TableMobileSelect,
+} from '../../../components/TableMobile';
 import Pagination from '../../../components/Pagination';
 import RsvpTag from '../../../components/Event/RsvpTag';
+import RsvpRecord from '../../../components/Event/RsvpRecord';
 import Badge from '../../../components/Badge';
 import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
@@ -20,6 +25,9 @@ const RsvpTableMobile = ({
 	visibleColumns,
 	customFields,
 	columnsMenu,
+	event,
+	bulkEdit,
+	canEditRsvps,
 	hasNonDefaultFilters,
 	setShowFilters,
 }) => {
@@ -45,13 +53,6 @@ const RsvpTableMobile = ({
 		setExpandedSingers(prev => (prev.includes(id) ? prev.filter(sId => sId !== id) : [...prev, id]));
 	};
 
-	const bulkEdit = {
-		isActiveMobile: false,
-		noun: 'Singer',
-		selectedIds: [],
-		totalItems: singers.length,
-	};
-
 	return (
 		<div>
 			<TableMobileHeader bulkEdit={bulkEdit}>
@@ -68,8 +69,13 @@ const RsvpTableMobile = ({
 			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{singers.map(singer => (
-					<TableMobileListItem key={singer.id} url={route('singers.show', { singer: singer.id })}>
-						<div className="flex items-center px-4 py-4 sm:px-6 gap-4">
+					<TableMobileListItem key={singer.id}>
+						<TableMobileSelect bulkEdit={bulkEdit} value={singer.id} />
+						<div
+							className={`flex items-center pr-4 py-4 sm:pr-6 gap-4 transition-[padding] ease-out ${
+								bulkEdit.isActiveMobile ? 'pl-11' : 'pl-4 sm:pl-6'
+							}`}
+						>
 							<div className="shrink-0">
 								<img
 									className="h-8 w-8 rounded-md object-cover"
@@ -100,14 +106,18 @@ const RsvpTableMobile = ({
 											)}
 										</div>
 									</div>
-									<div className="div">
-										{visibleColumns.includes('rsvp') && (
-											<div className="flex gap-x-0.5 items-center">
-												<RsvpTag
-													icon={singer.rsvp.icon}
-													label={singer.rsvp.label}
-													colour={singer.rsvp.colour}
-												/>
+    					<div className="div">
+    						{visibleColumns.includes('rsvp') && (
+    							<div className="flex flex-wrap gap-x-0.5 items-center justify-end">
+    								{canEditRsvps ? (
+    									<RsvpRecord rsvp={singer.rsvp} singerId={singer.id} event={event} />
+    								) : (
+    									<RsvpTag
+    										icon={singer.rsvp.icon}
+    										label={singer.rsvp.label}
+    										colour={singer.rsvp.colour}
+    									/>
+    								)}
 												{singer.rsvp.details && (
 													<div
 														className="relative"

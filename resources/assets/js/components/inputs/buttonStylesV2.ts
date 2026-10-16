@@ -6,7 +6,7 @@ type ButtonSize = 'lg' | 'md' | 'sm';
 type ButtonTheme = 'light' | 'dark';
 
 const buttonStylesV2 = cva(
-	'inline-flex justify-center items-center gap-x-1.5 border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 group hover:cursor-pointer',
+	'inline-flex justify-center items-center gap-x-1.5 border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 group cursor-pointer transition ease-in-out duration-150 ',
 	{
 		variants: {
 			intent: { primary: '', secondary: '', danger: '', warning: '', success: '' },

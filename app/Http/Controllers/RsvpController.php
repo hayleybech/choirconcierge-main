@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkUpdateRsvpRequest;
+use App\Http\Requests\UpdateSingerRsvpRequest;
 use App\Models\CustomField;
 use App\Models\Enrolment;
 use App\Models\Ensemble;
@@ -31,9 +33,9 @@ class RsvpController extends Controller
         $this->authorizeResource(Rsvp::class);
     }
 
-	public function index(Event $event): Response
-	{
-		$this->authorize('viewAny', Rsvp::class);
+    public function index(Event $event): Response
+    {
+        $this->authorize('viewAny', Rsvp::class);
 
         $rsvpSort = AllowedSort::callback('rsvp-response', function (Builder $query, bool $descending) use ($event) {
             $direction = $descending ? 'DESC' : 'ASC';
@@ -102,20 +104,20 @@ class RsvpController extends Controller
                     )),
                 AllowedFilter::callback('enrolments.voice_part_id', fn(Builder $query, $value) => $query
                     ->whereHas('enrolments', fn(Builder $query) => $query
-                        ->whereIn('voice_part_id', (array) $value)
+                        ->whereIn('voice_part_id', (array)$value)
                     )
                 ),
                 AllowedFilter::callback('enrolments.ensemble_id', fn(Builder $query, $value) => $query
                     ->whereHas('enrolments', fn(Builder $query) => $query
-                        ->whereIn('ensemble_id', (array) $value)
+                        ->whereIn('ensemble_id', (array)$value)
                     )
                 ),
                 AllowedFilter::callback('rsvp.response', function (Builder $query, $value) use ($event) {
-                    $responses = (array) $value;
+                    $responses = (array)$value;
                     $query->where(function (Builder $query) use ($responses, $event) {
                         if (in_array('unknown', $responses)) {
                             $query->whereDoesntHave('rsvps', fn($query) => $query->where('event_id', $event->id))
-                                  ->orWhereHas('rsvps', fn($query) => $query->where('event_id', $event->id)->whereIn('response', $responses));
+                                ->orWhereHas('rsvps', fn($query) => $query->where('event_id', $event->id)->whereIn('response', $responses));
                         } else {
                             $query->whereHas('rsvps', fn($query) => $query->where('event_id', $event->id)->whereIn('response', $responses));
                         }
@@ -123,7 +125,7 @@ class RsvpController extends Controller
                 }),
                 AllowedFilter::callback('status.id', function (Builder $query, $value) {
                     $query->whereHas('status', fn($q) => $q
-                        ->whereIn('status', (array) $value)
+                        ->whereIn('status', (array)$value)
                     );
                 })->default([$defaultStatus]),
             ])
@@ -153,6 +155,7 @@ class RsvpController extends Controller
             'event' => $event->load('ensembles'),
             'allSingers' => $singers,
             'pagination' => $pagination,
+            'canEditRsvps' => auth()->user()->can('viewAny', Rsvp::class),
             'totalEnsemblesCount' => Ensemble::count(),
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::forUser()->get()->values(),
@@ -168,8 +171,54 @@ class RsvpController extends Controller
                 'no' => $event->singers_rsvp_response('no')->count(),
                 'unknown' => $event->singers_rsvp_missing()->count(),
             ],
-		]);
-	}
+        ]);
+    }
+
+    public function updateSinger(Event $event, Membership $singer, UpdateSingerRsvpRequest $request): RedirectResponse
+    {
+        abort_unless($event->relevant_memberships()->whereKey($singer->id)->exists(), 404);
+
+        $this->saveSingerRsvp($event, $singer->id, $request->validated()['response']);
+
+        return redirect()
+            ->route('events.rsvps.index', ['event' => $event])
+            ->with(['status' => 'RSVP recorded.']);
+    }
+
+    public function bulkUpdate(Event $event, BulkUpdateRsvpRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        $singerIds = collect($validated['singer_ids'])
+            ->map(fn (int|string $singerId): int => (int) $singerId);
+
+        Rsvp::query()->upsert(
+            $singerIds->map(fn (int $singerId): array => [
+                'event_id' => $event->id,
+                'membership_id' => $singerId,
+                'response' => $validated['response'],
+                'details' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ])->all(),
+            ['event_id', 'membership_id'],
+            ['response', 'details', 'updated_at'],
+        );
+
+        return redirect()
+            ->route('events.rsvps.index', ['event' => $event])
+            ->with(['status' => 'RSVPs recorded.']);
+    }
+
+    private function saveSingerRsvp(Event $event, int $singerId, string $response): void
+    {
+        $event->rsvps()->updateOrCreate(
+            ['membership_id' => $singerId],
+            [
+                'response' => $response,
+                'details' => null,
+            ],
+        );
+    }
 
     public function store(Request $request, Event $event): RedirectResponse
     {

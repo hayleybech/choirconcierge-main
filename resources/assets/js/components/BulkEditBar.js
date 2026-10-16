@@ -18,7 +18,7 @@ const BulkEditBar = ({ bulkEdit, actions }) => {
 			leaveFrom="translate-y-0 opacity-100"
 			leaveTo="translate-y-20 opacity-0"
 		>
-			<div className="px-2 py-2 border-b border-gray-200 flex gap-0.5 bg-gray-700 text-white fixed z-50 bottom-4 lg:bottom-8 left-1/2 transform -translate-x-1/2 rounded-xl shadow-xl">
+			<div className="w-max px-2 py-2 border-b border-gray-200 flex gap-0.5 bg-gray-700 text-white fixed z-50 bottom-4 lg:bottom-8 left-1/2 transform -translate-x-1/2 rounded-xl shadow-xl">
 				<ButtonV2
 					intent="secondary"
 					weight="clear"

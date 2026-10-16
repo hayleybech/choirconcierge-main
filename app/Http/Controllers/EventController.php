@@ -202,7 +202,7 @@ class EventController extends Controller
             ->fill([
                 'title' => 'Copy of ' . $event->title,
                 'created_at' => now(),
-                'update_at' => now(),
+                'updated_at' => now(),
 
                 'is_repeating' => false,
                 'repeat_parent_id' => null,

@@ -151,10 +151,11 @@ const Index = ({
 					as={Button}
 					theme="dark"
 					weight="clear"
-					className="flex items-center px-3 py-1.5 text-xs font-medium rounded-md hover:bg-gray-600 focus:outline-none transition ease-in-out duration-150 cursor-pointer"
+					size="sm"
+					className="flex items-center !gap-x-0 font-medium hover:bg-gray-600 focus:outline-none transition ease-in-out duration-150 cursor-pointer"
 				>
 					More
-					<Icon icon="chevron-up" ml className="text-[10px]" />
+					<Icon icon="chevron-up" className="ml-1 text-[10px]" />
 				</Menu.Button>
 				<Transition
 					as={Fragment}

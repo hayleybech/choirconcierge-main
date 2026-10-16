@@ -181,6 +181,8 @@ Route::middleware([
             Route::resource('events', EventController::class);
             Route::get('events/{event}/clone', [EventController::class, 'clone'])->name('events.clone');
             Route::resource('events.rsvps', RsvpController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::put('events/{event}/rsvps/{singer}/status', [RsvpController::class, 'updateSinger'])->name('events.rsvps.updateSinger');
+            Route::post('events/{event}/rsvps/bulk', [RsvpController::class, 'bulkUpdate'])->name('events.rsvps.bulkUpdate');
             Route::resource('events.attendances', AttendanceController::class)->only(['index']);
             Route::resource('events.activities', EventActivityController::class)->only(['store', 'update', 'destroy']);
             Route::post('events/{event}/activities/{activity}/move', MoveActivityController::class)->name('events.activities.move');
