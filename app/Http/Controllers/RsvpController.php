@@ -155,7 +155,7 @@ class RsvpController extends Controller
             'event' => $event->load('ensembles'),
             'allSingers' => $singers,
             'pagination' => $pagination,
-            'canEditRsvps' => auth()->user()->can('viewAny', Rsvp::class),
+            'canEditRsvps' => auth()->user()->can('viewAny', Rsvp::class) && ! $event->in_past,
             'totalEnsemblesCount' => Ensemble::count(),
             'voiceParts' => VoicePart::all()->values(),
             'ensembles' => Ensemble::forUser()->get()->values(),

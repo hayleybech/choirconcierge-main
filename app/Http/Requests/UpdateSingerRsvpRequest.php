@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Event;
 use App\Models\Rsvp;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -9,7 +10,11 @@ class UpdateSingerRsvpRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('viewAny', Rsvp::class) ?? false;
+        $event = $this->route('event');
+
+        return $event instanceof Event
+            && ($this->user()?->can('viewAny', Rsvp::class) ?? false)
+            && ! $event->in_past;
     }
 
     public function rules(): array

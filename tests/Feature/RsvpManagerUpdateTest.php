@@ -37,6 +37,46 @@ it('allows rsvp managers to update a singer response', function () {
         ->and($rsvp->fresh()->details)->toBeNull();
 });
 
+it('does not allow rsvp managers to update individual responses for past events', function () {
+    $event = Event::factory()->create(['call_time' => now()->subDay()]);
+    $singer = Membership::factory()->create();
+    $rsvp = Rsvp::factory()->create([
+        'event_id' => $event->id,
+        'membership_id' => $singer->id,
+        'response' => 'maybe',
+    ]);
+
+    $this->put(the_tenant_route('events.rsvps.updateSinger', [$event, $singer]), [
+        'response' => 'yes',
+    ])->assertForbidden();
+
+    expect($rsvp->fresh()->response)->toBe('maybe');
+});
+
+it('does not allow rsvp managers to bulk update responses for past events', function () {
+    $event = Event::factory()->create(['call_time' => now()->subDay()]);
+    $singer = Membership::factory()->create();
+    $rsvp = Rsvp::factory()->create([
+        'event_id' => $event->id,
+        'membership_id' => $singer->id,
+        'response' => 'maybe',
+    ]);
+
+    $this->post(the_tenant_route('events.rsvps.bulkUpdate', [$event]), [
+        'singer_ids' => [$singer->id],
+        'response' => 'yes',
+    ])->assertForbidden();
+
+    expect($rsvp->fresh()->response)->toBe('maybe');
+});
+
+it('does not expose rsvp editing for past events', function () {
+    $event = Event::factory()->create(['call_time' => now()->subDay()]);
+
+    $this->get(the_tenant_route('events.rsvps.index', [$event]))
+        ->assertInertia(fn ($page) => $page->where('canEditRsvps', false));
+});
+
 it('rejects requests to clear a singers response', function () {
     $event = Event::factory()->create();
     $singer = Membership::factory()->create();
