@@ -1,5 +1,6 @@
-# 2026-??-??
+# 2026-10-17
 ## Further Attendance Reporting Tweaks and More!
+- Added edit and bulk edit to RSVPs via the RSVP list
 - Improved date range selection on Attendance Report page.
 - Improved date picker design, including easier month and year selection.
 - Added "Late (Deemed Absent)" to the chart on the Attendance Report page, as well as the report emails. 
