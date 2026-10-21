@@ -1,6 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { Settings } from 'luxon';
 import DateRangeCalendarInput from './DateRangeCalendarInput';
+
+const originalLocale = Settings.defaultLocale;
 
 jest.mock('@inertiajs/react', () => ({
 	usePage: () => ({ props: { user: {} } }),
@@ -27,6 +30,14 @@ jest.mock('react-day-picker', () => ({
 jest.mock('react-day-picker/style.css', () => ({}), { virtual: true });
 
 describe('DateRangeCalendarInput', () => {
+	beforeAll(() => {
+		Settings.defaultLocale = 'en-GB';
+	});
+
+	afterAll(() => {
+		Settings.defaultLocale = originalLocale;
+	});
+
 	it('renders one range calendar, displays the selected date bounds, and renders children', () => {
 		render(
 			<DateRangeCalendarInput
