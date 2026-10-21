@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Collection;
 use Webklex\PHPIMAP\Attachment;
 use Webklex\PHPIMAP\Message;
 
@@ -24,17 +25,15 @@ class WebklexImapMessageMailableAdapter implements MailableInterface
         $mailable->size = (int) $this->message->getSize();
 
         $mailable->to(
-            collect($this->message->getTo()?->all() ?? [])->map(fn ($to) => ['email' => $to->mail, 'name' => $to->personal ?? '']),
+            $this->formatRecipients($this->message->getTo()?->all() ?? []),
         );
 
         $mailable->cc(
-            collect($this->message->getCc()?->all() ?? [])->map(fn ($cc) => ['email' => $cc->mail, 'name' => $cc->personal ?? '']),
+            $this->formatRecipients($this->message->getCc()?->all() ?? []),
         );
 
         $mailable->from(
-            collect($this->message->getFrom()->all())->map(
-                fn ($from) => ['email' => $from->mail, 'name' => $from->personal ?? ''],
-            ),
+            $this->formatRecipients($this->message->getFrom()?->all() ?? []),
         );
 
         $mailable->subject($this->message->getSubject()->first());
@@ -49,5 +48,27 @@ class WebklexImapMessageMailableAdapter implements MailableInterface
         );
 
         return $mailable;
+    }
+
+    /**
+     * @param array<int, mixed> $recipients
+     * @return Collection<int, array{email: string, name: string}>
+     */
+    private function formatRecipients(array $recipients): Collection
+    {
+        return collect($recipients)->map(function (mixed $recipient): array {
+            if (is_string($recipient)) {
+                return ['email' => $recipient, 'name' => ''];
+            }
+
+            if (is_object($recipient)) {
+                return [
+                    'email' => (string) ($recipient->mail ?? ''),
+                    'name' => (string) ($recipient->personal ?? ''),
+                ];
+            }
+
+            return ['email' => '', 'name' => ''];
+        });
     }
 }

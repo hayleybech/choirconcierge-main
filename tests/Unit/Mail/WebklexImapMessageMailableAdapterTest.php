@@ -133,40 +133,49 @@ class WebklexImapMessageMailableAdapterTest extends TestCase
             'single to' => [
                 'recipient_type' => 'to',
                 'count' => 1,
-                'recipients' => [(object) ['personal' => 'Name To', 'mail' => 'to@example.com']],
+                'recipients' => [new Address((object) [
+                    'personal' => 'Name To',
+                    'mail' => 'to@example.com',
+                ])],
             ],
             'multiple to' => [
                 'recipient_type' => 'to',
                 'count' => 2,
                 'recipients' => [
-                    (object) ['personal' => 'Name To 1', 'mail' => 'to_1@example.com'],
-                    (object) ['personal' => 'Name To 2', 'mail' => 'to_2@example.com'],
+                    new Address((object) ['personal' => 'Name To 1', 'mail' => 'to_1@example.com']),
+                    new Address((object) ['personal' => 'Name To 2', 'mail' => 'to_2@example.com']),
                 ],
             ],
             'single cc' => [
                 'recipient_type' => 'cc',
                 'count' => 1,
-                'recipients' => [(object) ['personal' => 'Name Cc', 'mail' => 'cc@example.com']],
+                'recipients' => [new Address((object) [
+                    'personal' => 'Name Cc',
+                    'mail' => 'cc@example.com',
+                ])],
             ],
             'multiple cc' => [
                 'recipient_type' => 'cc',
                 'count' => 2,
                 'recipients' => [
-                    (object) ['personal' => 'Name Cc 1', 'mail' => 'cc_1@example.com'],
-                    (object) ['personal' => 'Name Cc 2', 'mail' => 'cc_2@example.com'],
+                    new Address((object) ['personal' => 'Name Cc 1', 'mail' => 'cc_1@example.com']),
+                    new Address((object) ['personal' => 'Name Cc 2', 'mail' => 'cc_2@example.com']),
                 ],
             ],
             'single from' => [
                 'recipient_type' => 'from',
                 'count' => 1,
-                'recipients' => [(object) ['personal' => 'Name From', 'mail' => 'from@example.com']],
+                'recipients' => [new Address((object) [
+                    'personal' => 'Name From',
+                    'mail' => 'from@example.com',
+                ])],
             ],
             'multiple from' => [
                 'recipient_type' => 'from',
                 'count' => 2,
                 'recipients' => [
-                    (object) ['personal' => 'Name From 1', 'mail' => 'from_1@example.com'],
-                    (object) ['personal' => 'Name From 2', 'mail' => 'from_2@example.com'],
+                    new Address((object) ['personal' => 'Name From 1', 'mail' => 'from_1@example.com']),
+                    new Address((object) ['personal' => 'Name From 2', 'mail' => 'from_2@example.com']),
                 ],
             ],
         ];
