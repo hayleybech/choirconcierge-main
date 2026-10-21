@@ -18,6 +18,7 @@ class AccountController extends Controller
         return Inertia::render('Central/Account/Edit', [
             'two_factor_enabled' => $user->hasTwoFactorEnabled(),
             'recovery_codes' => $user->hasTwoFactorEnabled() ? $user->getRecoveryCodes() : [],
+            'email_preferences' => $user->emailPreferences(),
         ]);
     }
 

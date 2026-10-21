@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
-
-const initialPreferences = {
-	communications: { email: true, push: false },
-	events: { email: true, push: false },
-	documents: { email: true, push: false },
-	songs: { email: true, push: false },
-	system: { email: true, push: false },
-	product: { email: true, push: false },
-	promotions: { email: false, push: false },
-	community: { email: false, push: false },
-};
+import React from 'react';
+import { useForm } from '@inertiajs/react';
+import useRoute from '../../hooks/useRoute';
+import Button from '../../components/inputs/Button';
+import Error from '../../components/inputs/Error';
+import FormFooter from '../../components/FormFooter';
 
 const notificationGroups = [
 	{
@@ -20,7 +14,7 @@ const notificationGroups = [
 				key: 'communications',
 				title: 'Communications',
 				description: 'Important messages from your organisation.',
-				mandatory: 'Email is required',
+				mandatory: 'Email is required and cannot be turned off.',
 			},
 			{
 				key: 'songs',
@@ -47,7 +41,7 @@ const notificationGroups = [
 				key: 'system',
 				title: 'System & Security',
 				description: 'Critical downtime, terms of service changes, and account security alerts.',
-				mandatory: 'Email is required',
+				mandatory: 'Email is required and cannot be turned off.',
 			},
 			{ key: 'product', title: 'Product Updates', description: 'New features, major updates, and UI changes.' },
 			{
@@ -64,28 +58,31 @@ const notificationGroups = [
 	},
 ];
 
-const NotificationSettings = () => {
-	const [preferences, setPreferences] = useState(initialPreferences);
+const NotificationSettings = ({ preferences, accountRoute }) => {
+	const { route } = useRoute();
+	const { data, setData, put, processing, errors } = useForm({ email_preferences: preferences });
 
-	const toggle = (key, channel) => {
-		setPreferences(current => {
-			if (key === 'system' && channel === 'email') {
-				return current;
-			}
+	const toggle = key => {
+		setData(current => ({
+			...current,
+			email_preferences: {
+				...current.email_preferences,
+				[key]: !current.email_preferences[key],
+			},
+		}));
+	};
 
-			return {
-				...current,
-				[key]: { ...current[key], [channel]: !current[key][channel] },
-			};
-		});
+	const submit = event => {
+		event.preventDefault();
+		put(route(`${accountRoute}.notifications.update`), { preserveScroll: true });
 	};
 
 	return (
-		<div className="space-y-8">
+		<form className="space-y-8" onSubmit={submit}>
 			<div>
 				<h2 className="text-lg font-medium leading-6 text-gray-900">Notification Preferences</h2>
 				<p className="mt-1 text-sm text-gray-500">
-					Choose which notifications you would like to receive and where.
+					Choose which email notifications you would like to receive. These settings apply across all your organisations.
 				</p>
 			</div>
 
@@ -98,15 +95,14 @@ const NotificationSettings = () => {
 						<p className="mt-1 text-sm text-gray-500">{group.description}</p>
 					</div>
 					<div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-						<div className="hidden border-b border-gray-200 bg-gray-50 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500 sm:grid sm:grid-cols-[1fr_5rem_5rem] sm:gap-4">
+						<div className="hidden border-b border-gray-200 bg-gray-50 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-500 sm:grid sm:grid-cols-[1fr_5rem] sm:gap-4">
 							<div>Notification</div>
 							<div className="text-center">Email</div>
-							<div className="text-center">Push</div>
 						</div>
 						{group.items.map(item => (
 							<div
 								key={item.key}
-								className="grid grid-cols-1 gap-4 border-b border-gray-200 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_5rem_5rem] sm:items-center sm:gap-4"
+								className="grid grid-cols-1 gap-4 border-b border-gray-200 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_5rem] sm:items-center sm:gap-4"
 							>
 								<div>
 									<p className="font-medium text-gray-900">{item.title}</p>
@@ -115,34 +111,33 @@ const NotificationSettings = () => {
 										<p className="mt-1 text-xs font-medium text-purple-600">{item.mandatory}</p>
 									)}
 								</div>
-								{['email', 'push'].map(channel => {
-									const mandatory = item.key === 'system' && channel === 'email';
-									const disabled =
-										mandatory || (item.key === 'communications' && channel === 'email');
-
-									return (
-										<label
-											key={channel}
-											className="flex items-center justify-between text-sm text-gray-600 sm:justify-center"
-											title={mandatory ? 'This notification is mandatory' : undefined}
-										>
-											<span className="sm:hidden">{channel === 'email' ? 'Email' : 'Push'}</span>
-											<input
-												type="checkbox"
-												checked={preferences[item.key][channel]}
-												onChange={() => toggle(item.key, channel)}
-												disabled={disabled}
-												className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 disabled:cursor-not-allowed disabled:opacity-60"
-											/>
-										</label>
-									);
-								})}
+								<label
+									className="flex items-center justify-between text-sm text-gray-600 sm:justify-center"
+									title={item.mandatory ? 'This notification is mandatory' : undefined}
+								>
+									<span className="sm:hidden">Email</span>
+									<input
+										type="checkbox"
+										checked={data.email_preferences[item.key]}
+										onChange={() => toggle(item.key)}
+										disabled={!!item.mandatory}
+										className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 disabled:cursor-not-allowed disabled:opacity-60"
+									/>
+								</label>
 							</div>
 						))}
 					</div>
+					{errors[`email_preferences.${group.items[0].key}`] && (
+						<Error>{errors[`email_preferences.${group.items[0].key}`]}</Error>
+					)}
 				</section>
 			))}
-		</div>
+			<FormFooter>
+				<Button variant="primary" type="submit" disabled={processing}>
+					{processing ? 'Saving...' : 'Save'}
+				</Button>
+			</FormFooter>
+		</form>
 	);
 };
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\CustomFieldEntryController;
 use App\Http\Controllers\CustomiseUpcomingEventsWidgetController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EmailPreferenceController;
 use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\EnsembleController;
 use App\Http\Controllers\EventActivityController;
@@ -136,6 +137,7 @@ Route::middleware([
             // Account Settings
             Route::singleton('account', AccountController::class)->only(['edit', 'update']);
             Route::name('account.')->prefix('account')->group(function () {
+                Route::put('/notifications', [EmailPreferenceController::class, 'update'])->name('notifications.update');
                 Route::post('/two-factor/regenerate', [TwoFactorController::class, 'regenerate'])->name('two-factor.regenerate');
                 Route::singleton('two-factor', TwoFactorController::class)->creatable()->only(['show', 'store', 'destroy']);
             });

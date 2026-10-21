@@ -2,7 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Enums\EmailCategory;
 use App\Models\Event;
+use App\Models\User;
+use App\Services\EmailPreferenceLinks;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -34,7 +37,9 @@ class EventCreated extends Notification
      */
     public function via($notifiable): array
     {
-        return ['mail'];
+        return $notifiable instanceof User && $notifiable->hasEmailPreference(EmailCategory::EVENTS)
+            ? ['mail']
+            : [];
     }
 
     /**
@@ -52,6 +57,9 @@ class EventCreated extends Notification
             ->markdown('emails.event_created', [
                 'event' => $this->event,
                 'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->event->id, $notifiable)),
+                'emailPreferenceLinks' => $notifiable instanceof User
+                    ? app(EmailPreferenceLinks::class)->make($notifiable, EmailCategory::EVENTS)
+                    : null,
                 'view_url' => the_tenant_route('events.show', $this->event),
                 'going_url' => URL::temporarySignedRoute('events.rsvp-from-email', now()->addWeeks(2), [
                     'tenant' => tenant('id'),

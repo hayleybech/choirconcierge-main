@@ -117,6 +117,7 @@ class HandleInertiaRequests extends Middleware
                 'manage_finances' => Gate::allows('update-fees'),
                 'update_tenant' => auth()->user()?->can('update', [Tenant::class, null]),
                 'list_tenants' => auth()->user()?->isSuperAdmin,
+                'manage_product_announcements' => auth()->user()?->isSuperAdmin,
 
                 'view_member_history' => auth()->user()?->isSuperAdmin,
             ],

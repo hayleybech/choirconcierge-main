@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\EmailCategory;
 use App\Mail\AttendanceReport;
 use App\Models\Event;
 use App\Models\Membership;
@@ -54,7 +55,11 @@ class SendAttendanceReports implements ShouldQueue
         Membership::with('user')->whereHas('roles', function ($query) {
             $query->whereJsonContains('abilities', 'attendances_view');
         })->get()->each(function ($member) use ($event) {
-            Mail::to($member->user->email)->send(new AttendanceReport($event));
+            if (! $member->user?->hasEmailPreference(EmailCategory::EVENTS)) {
+                return;
+            }
+
+            Mail::to($member->user->email)->send(new AttendanceReport($event, $member->user));
         });
     }
 }

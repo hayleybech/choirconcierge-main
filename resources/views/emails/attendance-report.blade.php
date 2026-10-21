@@ -56,4 +56,8 @@ View Full Report
 </x-mail::button>
 
 <small>This email is triggered automatically for QR Code and Kiosk events. It is sent to members with the "View Attendance" permission.</small>
+
+@if($emailPreferenceLinks ?? false)
+@include('emails.partials.email-preference-footer')
+@endif
 </x-mail::message>

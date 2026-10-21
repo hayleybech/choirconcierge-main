@@ -64,4 +64,8 @@
 
 Regards, <br />
 {{ config('app.name') }}
+
+@if($emailPreferenceLinks ?? false)
+@include('emails.partials.email-preference-footer')
+@endif
 </x-mail::message>

@@ -12,4 +12,8 @@ View Song
 {{ $tracking_pixel ?? '' }}
 
 Enjoy!
+
+@if($emailPreferenceLinks ?? false)
+@include('emails.partials.email-preference-footer')
+@endif
 @endcomponent

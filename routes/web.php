@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Central;
+use App\Http\Controllers\EmailPreferenceController;
 use App\Http\Middleware\EnsureUserIsSuperAdmin;
 use App\Http\Middleware\SampleByAuthentication;
 
@@ -26,6 +27,10 @@ Route::prefix('/app')->group(function () {
 
     Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
 
+    Route::get('/email-preferences/unsubscribe/{user}/{category}', [EmailPreferenceController::class, 'unsubscribe'])
+        ->name('email-preferences.unsubscribe')
+        ->middleware('signed');
+
 	// Switch organisation
 	Route::get('/switch-choir/{newTenant}', [Central\SwitchTenantController::class, 'start'])->name('tenants.switch.start');
 
@@ -33,6 +38,11 @@ Route::prefix('/app')->group(function () {
 		Route::get('/', [Central\DashController::class, 'index'])->name('dash');
         Route::resource('default-dash', Central\DefaultDashController::class)->only(['index', 'update', 'destroy']);
         Route::resource('mail-logs', Central\MailLogController::class)->only(['index', 'show'])->middleware([EnsureUserIsSuperAdmin::class]);
+
+        Route::middleware([EnsureUserIsSuperAdmin::class])->group(function () {
+            Route::get('announcements/create', [Central\ProductAnnouncementController::class, 'create'])->name('announcements.create');
+            Route::post('announcements', [Central\ProductAnnouncementController::class, 'store'])->name('announcements.store');
+        });
 
         // Tenants
         Route::resource('tenants', Central\TenantController::class)->only(['index', 'show', 'create', 'store']);
@@ -44,10 +54,11 @@ Route::prefix('/app')->group(function () {
         Route::resource('users', Central\UserController::class)->only(['index', 'show']);
 
 		// Account Settings
-		Route::singleton('account', Central\AccountController::class)->only(['edit', 'update']);
+  Route::singleton('account', Central\AccountController::class)->only(['edit', 'update']);
 
         // Two-Factor Authentication
         Route::name('account.')->prefix('account')->group(function () {
+            Route::put('/notifications', [EmailPreferenceController::class, 'update'])->name('notifications.update');
             Route::post('/two-factor/regenerate', [App\Http\Controllers\TwoFactorController::class, 'regenerate'])->name('two-factor.regenerate');
             Route::singleton('two-factor', App\Http\Controllers\TwoFactorController::class)->creatable()->only(['show', 'store', 'destroy']);
         });

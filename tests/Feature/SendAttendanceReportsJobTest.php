@@ -110,3 +110,31 @@ it('sends reports for qr-code source', function () {
     // 3. Assert
     Mail::assertSent(AttendanceReport::class);
 });
+
+it('does not send attendance reports when the events email preference is disabled', function () {
+    Mail::fake();
+
+    $role = Role::factory()->create(['abilities' => ['attendances_view']]);
+    $manager = Membership::factory()->create();
+    $manager->roles()->attach($role);
+    $manager->user->updateEmailPreferences(['events' => false]);
+    $manager->refresh();
+    expect($manager->user->hasEmailPreference(\App\Enums\EmailCategory::EVENTS))->toBeFalse();
+
+    $event = Event::factory()->create([
+        'start_date' => tz_from_utc_to_tenant(now()->subHours(2))->toDateTimeString(),
+        'end_date' => tz_from_utc_to_tenant(now()->subMinutes(45))->toDateTimeString(),
+    ]);
+
+    Attendance::factory()->create([
+        'event_id' => $event->id,
+        'membership_id' => Membership::factory()->create()->id,
+        'response' => 'present',
+        'source' => 'qr-code',
+    ]);
+
+    tenancy()->end();
+    (new SendAttendanceReports())->handle();
+
+    Mail::assertNotSent(AttendanceReport::class, fn ($mail) => $mail->hasTo($manager->user->email));
+});
