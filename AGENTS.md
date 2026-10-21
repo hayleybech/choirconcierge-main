@@ -286,3 +286,104 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Always activate the `medialibrary-development` skill when working with media uploads, conversions, collections, responsive images, or any code that uses the `HasMedia` interface or `InteractsWithMedia` trait.
 
 </laravel-boost-guidelines>
+
+## Project-Specific Guidance
+
+This section contains repository-specific information maintained alongside the generated Laravel Boost guidelines above. When package versions or paths differ, the dependency manifests and actual project structure are the source of truth.
+
+### Controller and Collection Practices
+
+- When reading request values in a controller, use validated data rather than raw input.
+- If resolving an N+1 issue would require a larger refactor, ask before proceeding.
+- Prefer Laravel collections over PHP array functions.
+
+### Commands
+
+#### PHP / Laravel
+
+```sh
+php artisan test --compact
+php artisan test --compact --filter=SingerControllerTest
+vendor/bin/phpstan analyse
+php artisan app:create-test-tenant
+php artisan queue:work
+```
+
+`php artisan schedule:test` is an interactive command; use it only when an interactive run is explicitly intended.
+
+#### Frontend (Laravel Mix, not Vite)
+
+```sh
+npm run dev
+npm run watch
+npm run prod
+npm test
+npm run prettier
+```
+
+There is no `npm run build` script. For tests, create a `choirconcierge_test` database and configure `.env.testing` to use it. `phpunit.xml` configures the test queue, cache, mail, Telescope, and stop-on-failure behavior.
+
+### Project Architecture
+
+Choir Concierge is a multi-tenant SaaS platform for choir management, including member rosters, song libraries, event RSVP and attendance, document storage, riser-stack editing, mailing lists, onboarding checklists, and polls.
+
+- **Runtime and frontend:** Composer requires PHP `>=8.4`; the application uses Laravel 11 with the Laravel 10 file structure. The frontend uses Inertia.js v1, React 17, and Tailwind CSS 4, bundled with Laravel Mix. Inertia pages are under `resources/assets/js/Pages/`.
+- **Database and queues:** MySQL is shared across tenants; tenants do not have separate databases. The queue driver is `database`, and background jobs implement `ShouldQueue`.
+- **Billing:** Laravel Spark with Paddle (`laravel/spark-paddle`); `Tenant` is billable.
+- **Tenancy:** `stancl/tenancy` v3 uses single-database mode. `DatabaseTenancyBootstrapper` is intentionally disabled; Cache, Filesystem, and Queue bootstrappers are active. Tenants are identified by human-readable slugs in paths (`choirconcierge.com/{tenant}/...`); subdomain requests redirect to that format. Models use `BelongsToTenant` for automatic scoping. `TenantCreated` starts a chained pipeline: `SendWelcomeEmailSeries`, `SendTenantCreatedNotification`, `SeedForTenant`, then `CreateAdminMembershipForTenant`.
+
+#### Routes
+
+| File | Domain |
+|---|---|
+| `routes/web.php` | Central routes: login, 2FA, super-admin dashboard, and tenant management |
+| `routes/tenant.php` | Choir features behind `InitializeTenancyByPath` middleware |
+| `routes/api.php` | Sanctum-authenticated API |
+| `routes/channels.php` | Broadcasting channels |
+
+#### Domain Models
+
+| Model | Role |
+|---|---|
+| `Tenant` | Choir organisation; billable |
+| `Ensemble` | Sub-group within a tenant |
+| `User` | Shared across tenants; TOTP 2FA via `laragear/two-factor` |
+| `Membership` | User-to-tenant join; holds roles and `SingerStatus` |
+| `Enrolment` | Membership-to-ensemble join |
+| `Role` | Tenant-scoped role with JSON `abilities` |
+| `Song` | Song library; `LearningStatus` tracked per member |
+| `Event` | Rehearsal or performance with RSVP, attendance, and recurrence |
+| `UserGroup` | Mailing list with sender/recipient role and ensemble filters |
+| `MailLog` | Sent/received email tracking, including an open-tracking pixel via signed URL |
+| `RiserStack` | SVG-based visual riser arrangement using SnapSVG on the frontend |
+| `Task` | Onboarding task assigned to members |
+| `Poll` | Internal voting with an open/close lifecycle |
+| `CustomField` | Tenant-defined extra fields on memberships |
+
+### Authorization and Inertia Data
+
+- Laravel policies are in `app/Policies/` and `app/Models/Policies/`.
+- `Membership::hasAbility(string)` checks the role's JSON abilities.
+- The super-admin is identified by a single email in `User::isSuperAdmin()`.
+- `HandleInertiaRequests::share()` supplies a `can` map of permission gates to every Inertia page.
+- Shared Inertia data includes `can`, `tenant`, `user`, `navigation`, `flash`, `googleApiKey`, `impersonationActive`, and `userChoirs`.
+
+### Mail and Scheduled Jobs
+
+- Outbound mail uses Mailgun through `mailgun/mailgun-php` and `symfony/mailgun-mailer`; mailing lists are managed through the Mailgun API.
+- Inbound mail uses `webklex/laravel-imap` to poll a group mailbox every minute with the scheduled `ProcessGroupMailbox` job.
+- Notifications that create mail log entries use the `LogsToMailLog` trait.
+- Other key scheduled jobs include `MarkAbsencesAfterEvents` and `SendAttendanceReports` hourly, plus daily backups and Telescope pruning.
+
+### Testing Conventions
+
+- Tests use Pest. Prefer feature tests; each test class creates a fresh `phpunit` tenant.
+- `actingAsRole('Admin')` creates a user with that role in the test tenant.
+- Use factories and their existing states when creating test models.
+
+### Billing Plans and Timezone Helpers
+
+- Paddle has three yearly plans: Small (up to 25 users), Medium (up to 50 users), and Large (unlimited). The `has_gratis` flag in the tenant's `data` JSON column bypasses billing checks.
+- Use `tz_from_tenant_to_utc()` and `tz_from_utc_to_tenant()` in `app/helpers.php` for timezone conversion; do not use raw Carbon shifts.
+- Apply `TenantTimezoneDates` to models with date columns that need tenant-aware display.
+- `spatie/laravel-query-builder` powers filterable and sortable index endpoints; custom sorts are in `app/Http/Sorts/`.

@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "laravel-boost": {
-      "command": "C:\\Users\\User\\.config\\herd\\bin\\php82\\php.exe",
+      "command": "C:\\Users\\User\\.config\\herd\\bin\\php84\\php.exe",
       "args": [
         "C:\\Users\\User\\Herd\\choirconcierge\\artisan",
         "boost:mcp"
@@ -17,7 +17,7 @@
       }
     },
     "nightwatch": {
-      "command": "npx",
+      "command": "C:\\Users\\User\\.config\\herd\\bin\\nvm\\v20.20.0\\npx",
       "args": [
         "-y",
         "mcp-remote",

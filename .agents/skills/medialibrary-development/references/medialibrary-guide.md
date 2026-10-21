@@ -449,7 +449,7 @@ Event::listen(ConversionHasBeenCompletedEvent::class, function ($event) {
 
 ## Configuration
 
-Key `../../../config/media-library.php` options:
+Key `../../../../config/media-library.php` options:
 
 ```php
 return [

@@ -29,7 +29,7 @@ All tests must be written using Pest. Use `php artisan make:test --pest {name}`.
 
 ### Test Organization
 
-- Tests live in the `../../tests/Feature` and `tests/Unit` directories.
+- Tests live in the `../../../tests/Feature` and `../../../tests/Unit` directories.
 - Do NOT remove tests without approval - these are core application code.
 - Test happy paths, failure paths, and edge cases.
 
