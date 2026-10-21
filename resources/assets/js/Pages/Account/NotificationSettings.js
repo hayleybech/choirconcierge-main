@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 
 const initialPreferences = {
 	communications: { email: true, push: false },
-	documents: { email: true, push: false },
 	events: { email: true, push: false },
+	documents: { email: true, push: false },
+	songs: { email: true, push: false },
 	system: { email: true, push: false },
 	product: { email: true, push: false },
 	promotions: { email: false, push: false },
@@ -19,17 +20,22 @@ const notificationGroups = [
 				key: 'communications',
 				title: 'Communications',
 				description: 'Important messages from your organisation.',
-				mandatory: 'Email or Push is required',
+				mandatory: 'Email is required',
 			},
 			{
-				key: 'documents',
-				title: 'Document Created/Updated',
-				description: 'When an organisation document is created or updated.',
+				key: 'songs',
+				title: 'Song Created/Updated',
+				description: 'When an organisation song is created or updated.',
 			},
 			{
 				key: 'events',
 				title: 'Event Created/Updated',
 				description: 'When an organisation event is created or updated.',
+			},
+			{
+				key: 'documents',
+				title: 'Document Created/Updated',
+				description: 'When an organisation document is created or updated.',
 			},
 		],
 	},
@@ -64,10 +70,6 @@ const NotificationSettings = () => {
 	const toggle = (key, channel) => {
 		setPreferences(current => {
 			if (key === 'system' && channel === 'email') {
-				return current;
-			}
-
-			if (key === 'communications' && current[key].email && current[key].push && channel) {
 				return current;
 			}
 
@@ -116,10 +118,7 @@ const NotificationSettings = () => {
 								{['email', 'push'].map(channel => {
 									const mandatory = item.key === 'system' && channel === 'email';
 									const disabled =
-										mandatory ||
-										(item.key === 'communications' &&
-											channel === 'email' &&
-											!preferences.communications.push);
+										mandatory || (item.key === 'communications' && channel === 'email');
 
 									return (
 										<label
