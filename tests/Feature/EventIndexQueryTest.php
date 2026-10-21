@@ -7,6 +7,10 @@ test('events index loads the current membership and its rsvps without per-event 
     $user = $this->createUserWithRole('Events Team');
     Event::factory()->create();
 
+    $firstRequestUser = $user->fresh();
+    $secondRequestUser = $user->fresh();
+    $membershipTable = DB::connection()->getTablePrefix() . 'memberships';
+
     $queryGroups = [[], []];
     $group = 0;
     DB::listen(function ($query) use (&$queryGroups, &$group) {
@@ -15,7 +19,7 @@ test('events index loads the current membership and its rsvps without per-event 
         }
     });
 
-    $this->actingAs($user)
+    $this->actingAs($firstRequestUser)
         ->get(the_tenant_route('events.index'))
         ->assertOk();
 
@@ -23,13 +27,13 @@ test('events index loads the current membership and its rsvps without per-event 
     Event::factory()->count(2)->create();
     $group = 1;
 
-    $this->actingAs($user->fresh())
+    $this->actingAs($secondRequestUser)
         ->get(the_tenant_route('events.index'))
         ->assertOk();
 
     $queryCounts = collect($queryGroups)->map(fn ($queries) => [
-        'memberships' => collect($queries)->filter(fn ($query) => str_contains($query, 'memberships')
-            && ! str_contains($query, 'membership_status'))->count(),
+        'memberships' => collect($queries)->filter(fn ($query) => str_contains($query, "from `{$membershipTable}`")
+            && str_contains($query, 'user_id'))->count(),
         'rsvps' => collect($queries)->filter(fn ($query) => str_contains($query, 'rsvps'))->count(),
     ]);
 
