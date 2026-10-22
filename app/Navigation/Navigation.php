@@ -62,7 +62,7 @@ class Navigation
                         'showAsActiveForRoutes' => ['central.mail-logs.*'],
                     ],
                     [
-                        'name' => 'Product Announcements',
+                        'name' => 'Announcements',
                         'route' => 'central.announcements.create',
                         'icon' => 'bullhorn',
                         'can' => 'manage_product_announcements',

@@ -51,7 +51,7 @@ test('central communications navigation contains mail logs and product announcem
 
     expect($communications)->not->toBeNull()
         ->and(collect($communications['items'])->pluck('name')->all())
-        ->toBe(['Mail Logs', 'Product Announcements']);
+        ->toBe(['Mail Logs', 'Announcements']);
 });
 
 test('non-super-admins cannot open the announcement composer', function () {
@@ -199,6 +199,7 @@ test('optional announcements use the product sender and include preference links
             && $mail->from[0]['name'] === 'Choir Concierge'
             && $mail->replyTo[0]['address'] === 'hayley@choirconcierge.com'
             && str_contains($rendered, 'emails for Choir Concierge.')
+            && str_contains($rendered, 'you are subscribed to')
             && str_contains($rendered, 'Manage your email preferences')
             && str_contains($rendered, 'Unsubscribe from Product Updates');
     });
@@ -220,6 +221,7 @@ test('mandatory product announcement emails include category context without an 
     ))->render();
 
     expect($rendered)
-        ->toContain('emails for Choir Concierge.')
+        ->toContain('emails for Choir Concierge are mandatory.')
+        ->not->toContain('subscribed to System & Security')
         ->not->toContain('Unsubscribe from System & Security');
 });

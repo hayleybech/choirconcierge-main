@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\URL;
 class EmailPreferenceLinks
 {
     /**
-     * @return array{manage: string, category: string, context: string, unsubscribe?: string}
+     * @return array{manage: string, category: string, context: string, mandatory: bool, unsubscribe?: string}
      */
     public function make(User $user, EmailCategory $category): array
     {
@@ -17,6 +17,7 @@ class EmailPreferenceLinks
             'manage' => route('central.account.edit', ['tab' => 'notifications']),
             'category' => $category->label(),
             'context' => $category->preferenceContext(),
+            'mandatory' => $category->isMandatory(),
         ];
 
         if (! $category->isMandatory()) {
