@@ -38,7 +38,7 @@ describe('NotificationSettings attendance reporting preference', () => {
 			/>,
 		);
 
-		expect(screen.queryByText('Attendance Reporting')).not.toBeInTheDocument();
+		expect(screen.queryByText('Attendance Reports')).not.toBeInTheDocument();
 	});
 
 	it('shows the setting to users with attendance report permission', () => {
@@ -50,7 +50,7 @@ describe('NotificationSettings attendance reporting preference', () => {
 			/>,
 		);
 
-		expect(screen.getByText('Attendance Reporting')).toBeInTheDocument();
+		expect(screen.getByText('Attendance Reports')).toBeInTheDocument();
 	});
 
 	it('shows poll notifications above attendance reporting', () => {
@@ -62,11 +62,11 @@ describe('NotificationSettings attendance reporting preference', () => {
 			/>,
 		);
 
-		const categoryTitles = screen.getAllByText(/Poll Created\/Updated|Attendance Reporting/);
+		const categoryTitles = screen.getAllByText(/Polls|Attendance Reports/);
 
 		expect(categoryTitles.map(title => title.textContent)).toEqual([
-			'Poll Created/Updated',
-			'Attendance Reporting',
+			'Polls',
+			'Attendance Reports',
 		]);
 	});
 });

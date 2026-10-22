@@ -173,7 +173,7 @@ it('uses the attendance reporting category in attendance report emails', functio
     $rendered = (new AttendanceReport($event, $recipient))->render();
 
     expect($rendered)
-        ->toContain('Attendance Reporting')
+        ->toContain('Attendance Reports')
         ->toContain('emails for your choir.')
-        ->toContain('Unsubscribe from Attendance Reporting');
+        ->toContain('Unsubscribe from Attendance Reports');
 });

@@ -220,7 +220,8 @@ const Edit = ({ poll, ensembles = [], setSidebarOpen }) => {
 					</FormSection>
 
 					<FormFooter>
-						<Button type="submit" variant="primary" disabled={processing}>
+						<Button href={route('polls.index')}>Cancel</Button>
+						<Button type="submit" variant="primary" className="ml-3" disabled={processing}>
 							Save
 						</Button>
 					</FormFooter>

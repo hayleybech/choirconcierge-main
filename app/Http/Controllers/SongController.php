@@ -10,6 +10,7 @@ use App\Models\Song;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
 use App\Models\VoicePart;
+use App\Notifications\SongPublished;
 use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -76,7 +77,7 @@ class SongController extends Controller
     {
         $song = Song::create($request->safe()->except('send_notification'));
 
-        if ($request->input('send_notification')) {
+        if ($request->input('send_notification') && $song->status->title !== 'Pending') {
             $notification = new SongUploaded($song);
             $recipients = Membership::active()->with('user')->get()->pluck('user');
             Notification::send($recipients, $notification);
@@ -157,10 +158,20 @@ class SongController extends Controller
 
     public function update(SongRequest $request, Song $song): RedirectResponse
     {
+        $previousStatus = $song->status->title;
+        $updatedStatus = SongStatus::findOrFail($request->input('status'));
+
         $song->update($request->safe()->except('send_notification'));
 
-        if ($request->input('send_notification')) {
+        $notification = null;
+
+        if ($previousStatus === 'Pending' && in_array($updatedStatus->title, ['Learning', 'Active'], true)) {
+            $notification = new SongPublished($song);
+        } elseif ($request->input('send_notification') && $updatedStatus->title !== 'Pending') {
             $notification = new SongUpdated($song);
+        }
+
+        if ($notification !== null) {
             $recipients = Membership::active()->with('user')->get()->pluck('user');
             Notification::send($recipients, $notification);
             $notification->log($song->id, $recipients->first());

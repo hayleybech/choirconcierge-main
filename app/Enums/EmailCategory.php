@@ -19,11 +19,11 @@ enum EmailCategory: string
     {
         return match ($this) {
             self::COMMUNICATIONS => 'Communications',
-            self::SONGS => 'Song Created/Updated',
-            self::EVENTS => 'Event Created/Updated',
-            self::DOCUMENTS => 'Document Created/Updated',
-            self::POLLS => 'Poll Created/Updated',
-            self::ATTENDANCE_REPORTS => 'Attendance Reporting',
+            self::SONGS => 'Songs',
+            self::EVENTS => 'Events',
+            self::DOCUMENTS => 'Documents',
+            self::POLLS => 'Polls',
+            self::ATTENDANCE_REPORTS => 'Attendance Reports',
             self::SYSTEM_SECURITY => 'System & Security',
             self::PRODUCT_UPDATES => 'Product Updates',
             self::PROMOTIONS_OFFERS => 'Promotions & Offers',

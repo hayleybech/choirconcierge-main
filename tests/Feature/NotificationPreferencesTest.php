@@ -168,8 +168,8 @@ test('poll notification emails include the category preference footer', function
     $poll = Poll::factory()->create();
     $rendered = (new PollCreated($poll))->toMail($user)->render();
 
-    expect(str_contains($rendered, 'Poll Created/Updated'))->toBeTrue()
-        ->and(str_contains($rendered, 'Unsubscribe from Poll Created/Updated'))->toBeTrue();
+    expect(str_contains($rendered, 'Polls'))->toBeTrue()
+        ->and(str_contains($rendered, 'Unsubscribe from Polls'))->toBeTrue();
 });
 
 test('choir email preference footers identify the choir context', function (): void {
@@ -177,7 +177,7 @@ test('choir email preference footers identify the choir context', function (): v
     $emailPreferenceLinks = app(EmailPreferenceLinks::class)->make($user, EmailCategory::SONGS);
     $footer = view('emails.partials.email-preference-footer', compact('emailPreferenceLinks'))->render();
 
-    expect($footer)->toContain('Song Created/Updated')
+    expect($footer)->toContain('Songs')
         ->toContain('emails for your choir.')
         ->toContain('font-size: 11px');
 });
@@ -188,7 +188,7 @@ test('attendance report preference footer identifies its choir category', functi
     $footer = view('emails.partials.email-preference-footer', compact('emailPreferenceLinks'))->render();
 
     expect($footer)
-        ->toContain('Attendance Reporting')
+        ->toContain('Attendance Reports')
         ->toContain('emails for your choir.')
-        ->toContain('Unsubscribe from Attendance Reporting');
+        ->toContain('Unsubscribe from Attendance Reports');
 });
