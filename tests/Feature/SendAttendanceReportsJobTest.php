@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Enums\EmailCategory;
 use App\Jobs\SendAttendanceReports;
 use App\Mail\AttendanceReport;
 use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Membership;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
 it('sends attendance reports for events with kiosk or qr-code sources', function () {
@@ -111,15 +113,15 @@ it('sends reports for qr-code source', function () {
     Mail::assertSent(AttendanceReport::class);
 });
 
-it('does not send attendance reports when the events email preference is disabled', function () {
+it('does not send attendance reports when the attendance reporting preference is disabled', function () {
     Mail::fake();
 
     $role = Role::factory()->create(['abilities' => ['attendances_view']]);
     $manager = Membership::factory()->create();
     $manager->roles()->attach($role);
-    $manager->user->updateEmailPreferences(['events' => false]);
+    $manager->user->updateEmailPreferences(['attendance_reports' => false]);
     $manager->refresh();
-    expect($manager->user->hasEmailPreference(\App\Enums\EmailCategory::EVENTS))->toBeFalse();
+    expect($manager->user->hasEmailPreference(EmailCategory::ATTENDANCE_REPORTS))->toBeFalse();
 
     $event = Event::factory()->create([
         'start_date' => tz_from_utc_to_tenant(now()->subHours(2))->toDateTimeString(),
@@ -137,4 +139,41 @@ it('does not send attendance reports when the events email preference is disable
     (new SendAttendanceReports())->handle();
 
     Mail::assertNotSent(AttendanceReport::class, fn ($mail) => $mail->hasTo($manager->user->email));
+});
+
+it('does not use the events preference to filter attendance reports', function () {
+    Mail::fake();
+
+    $role = Role::factory()->create(['abilities' => ['attendances_view']]);
+    $manager = Membership::factory()->create();
+    $manager->roles()->attach($role);
+    $manager->user->updateEmailPreferences(['events' => false, 'attendance_reports' => true]);
+
+    $event = Event::factory()->create([
+        'start_date' => tz_from_utc_to_tenant(now()->subHours(2))->toDateTimeString(),
+        'end_date' => tz_from_utc_to_tenant(now()->subMinutes(45))->toDateTimeString(),
+    ]);
+    Attendance::factory()->create([
+        'event_id' => $event->id,
+        'membership_id' => Membership::factory()->create()->id,
+        'response' => 'present',
+        'source' => 'qr-code',
+    ]);
+
+    tenancy()->end();
+    (new SendAttendanceReports())->handle();
+
+    Mail::assertSent(AttendanceReport::class, fn ($mail) => $mail->hasTo($manager->user->email));
+});
+
+it('uses the attendance reporting category in attendance report emails', function () {
+    $event = Event::factory()->create();
+    $recipient = User::factory()->create();
+
+    $rendered = (new AttendanceReport($event, $recipient))->render();
+
+    expect($rendered)
+        ->toContain('Attendance Reporting')
+        ->toContain('emails for your choir.')
+        ->toContain('Unsubscribe from Attendance Reporting');
 });

@@ -55,7 +55,7 @@ class SendAttendanceReports implements ShouldQueue
         Membership::with('user')->whereHas('roles', function ($query) {
             $query->whereJsonContains('abilities', 'attendances_view');
         })->get()->each(function ($member) use ($event) {
-            if (! $member->user?->hasEmailPreference(EmailCategory::EVENTS)) {
+            if (! $member->user?->hasEmailPreference(EmailCategory::ATTENDANCE_REPORTS)) {
                 return;
             }
 

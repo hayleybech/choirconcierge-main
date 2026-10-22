@@ -3,6 +3,7 @@
 use App\Enums\EmailCategory;
 use App\Models\Membership;
 use App\Models\Event;
+use App\Models\Role;
 use App\Models\Song;
 use App\Models\User;
 use App\Notifications\EventCreated;
@@ -26,11 +27,28 @@ test('account settings render the account email preference defaults', function (
                 'songs' => true,
                 'events' => true,
                 'documents' => true,
+                'attendance_reports' => true,
                 'system' => true,
                 'product' => true,
                 'promotions' => false,
                 'community' => false,
-            ]));
+            ])
+            ->where('can_receive_attendance_reports', false));
+});
+
+test('attendance reporting preferences are shown only to users who can view attendance', function (): void {
+    $user = User::factory()->create();
+    $membership = Membership::factory()->for($user)->create();
+    $membership->roles()->attach(Role::factory()->create([
+        'abilities' => ['attendances_view'],
+    ]));
+    $this->actingAs($user);
+
+    $this->get(the_tenant_route('account.edit'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('can_receive_attendance_reports', true)
+            ->where('email_preferences.attendance_reports', true));
 });
 
 test('users can save account-wide email preferences', function () {
@@ -41,12 +59,46 @@ test('users can save account-wide email preferences', function () {
     $preferences['events'] = false;
     $preferences['product'] = false;
     $preferences['promotions'] = true;
+    unset($preferences['attendance_reports']);
 
     $this->put(the_tenant_route('account.notifications.update'), [
         'email_preferences' => $preferences,
     ])->assertSessionHasNoErrors();
 
-    expect($user->fresh()->emailPreferences())->toBe($preferences);
+    expect($user->fresh()->emailPreferences())
+        ->toMatchArray($preferences)
+        ->toHaveKey('attendance_reports', true);
+});
+
+test('eligible users can save the attendance reporting preference', function (): void {
+    $user = User::factory()->create();
+    $membership = Membership::factory()->for($user)->create();
+    $membership->roles()->attach(Role::factory()->create([
+        'abilities' => ['attendances_view'],
+    ]));
+    $this->actingAs($user);
+    $preferences = EmailCategory::defaults();
+    $preferences['attendance_reports'] = false;
+
+    $this->put(the_tenant_route('account.notifications.update'), [
+        'email_preferences' => $preferences,
+    ])->assertSessionHasNoErrors();
+
+    expect($user->fresh()->emailPreferences()['attendance_reports'])->toBeFalse();
+});
+
+test('users without attendance report permission cannot change that hidden preference', function (): void {
+    $user = User::factory()->create();
+    expect($user->canReceiveAttendanceReports())->toBeFalse();
+    $this->actingAs($user);
+    $preferences = EmailCategory::defaults();
+    $preferences['attendance_reports'] = false;
+
+    $this->put(the_tenant_route('account.notifications.update'), [
+        'email_preferences' => $preferences,
+    ])->assertSessionHasNoErrors();
+
+    expect($user->fresh()->emailPreferences()['attendance_reports'])->toBeTrue();
 });
 
 test('mandatory email categories cannot be disabled', function () {
@@ -55,6 +107,7 @@ test('mandatory email categories cannot be disabled', function () {
     $preferences = EmailCategory::defaults();
     $preferences['communications'] = false;
     $preferences['system'] = false;
+    unset($preferences['attendance_reports']);
 
     $this->put(the_tenant_route('account.notifications.update'), [
         'email_preferences' => $preferences,
@@ -102,5 +155,17 @@ test('choir email preference footers identify the choir context', function (): v
     $footer = view('emails.partials.email-preference-footer', compact('emailPreferenceLinks'))->render();
 
     expect($footer)->toContain('Song Created/Updated')
-        ->toContain('emails for your choir.');
+        ->toContain('emails for your choir.')
+        ->toContain('font-size: 11px');
+});
+
+test('attendance report preference footer identifies its choir category', function (): void {
+    $user = User::factory()->create();
+    $emailPreferenceLinks = app(EmailPreferenceLinks::class)->make($user, EmailCategory::ATTENDANCE_REPORTS);
+    $footer = view('emails.partials.email-preference-footer', compact('emailPreferenceLinks'))->render();
+
+    expect($footer)
+        ->toContain('Attendance Reporting')
+        ->toContain('emails for your choir.')
+        ->toContain('Unsubscribe from Attendance Reporting');
 });

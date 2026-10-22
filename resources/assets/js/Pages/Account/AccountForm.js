@@ -25,7 +25,7 @@ import NotificationSettings from './NotificationSettings';
 const regionFirstDayOfWeek = country => (['CA', 'IN', 'JP', 'US'].includes(country) ? 0 : 1);
 
 const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recoveryCodes }) => {
-	const { user, tenant, email_preferences } = usePage().props;
+	const { user, tenant, email_preferences, can_receive_attendance_reports } = usePage().props;
 	const [activeTab, setActiveTab] = useState(() =>
 		new URLSearchParams(window.location.search).get('tab') === 'notifications' ? 'notifications' : 'profile'
 	);
@@ -151,7 +151,11 @@ const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recov
 				))}
 			</nav>
 			{activeTab === 'notifications' ? (
-				<NotificationSettings preferences={email_preferences} accountRoute={accountRoute} />
+				<NotificationSettings
+					preferences={email_preferences}
+					accountRoute={accountRoute}
+					canReceiveAttendanceReports={can_receive_attendance_reports}
+				/>
 			) : (
 				<Form onSubmit={submit}>
 					{activeTab === 'profile' && (

@@ -107,8 +107,8 @@ class AttendanceReport extends Mailable
             return $voiceParts->sortKeys(SORT_NATURAL | SORT_FLAG_CASE);
         });
 
-        $emailPreferenceLinks = $this->recipient !== null && $this->recipient->hasEmailPreference(EmailCategory::EVENTS)
-            ? app(EmailPreferenceLinks::class)->make($this->recipient, EmailCategory::EVENTS)
+        $emailPreferenceLinks = $this->recipient !== null
+            ? app(EmailPreferenceLinks::class)->make($this->recipient, EmailCategory::ATTENDANCE_REPORTS)
             : null;
 
         return new Content(

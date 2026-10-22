@@ -19,6 +19,7 @@ class AccountController extends Controller
             'two_factor_enabled' => $user->hasTwoFactorEnabled(),
             'recovery_codes' => $user->hasTwoFactorEnabled() ? $user->getRecoveryCodes() : [],
             'email_preferences' => $user->emailPreferences(),
+            'can_receive_attendance_reports' => $user->canReceiveAttendanceReports(),
         ]);
     }
 

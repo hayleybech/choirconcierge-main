@@ -23,15 +23,20 @@ class UpdateEmailPreferencesRequest extends FormRequest
     public function rules(): array
     {
         $categories = EmailCategory::cases();
+        $canReceiveAttendanceReports = $this->user()->canReceiveAttendanceReports();
         $keys = collect($categories)->map(fn (EmailCategory $category) => $category->value)->join(',');
         $rules = [
             'email_preferences' => ['required', 'array:' . $keys],
         ];
 
         foreach ($categories as $category) {
-            $rules['email_preferences.' . $category->value] = $category->isMandatory()
-                ? ['required', 'accepted']
-                : ['required', 'boolean'];
+            if ($category === EmailCategory::ATTENDANCE_REPORTS && ! $canReceiveAttendanceReports) {
+                $rules['email_preferences.' . $category->value] = ['sometimes', 'boolean'];
+            } else {
+                $rules['email_preferences.' . $category->value] = $category->isMandatory()
+                    ? ['required', 'accepted']
+                    : ['required', 'boolean'];
+            }
         }
 
         return $rules;

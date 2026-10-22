@@ -125,7 +125,7 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
     protected $hidden = ['password', 'remember_token'];
 
     protected $attributes = [
-        'email_preferences' => '{"communications":true,"songs":true,"events":true,"documents":true,"system":true,"product":true,"promotions":false,"community":false}',
+        'email_preferences' => '{"communications":true,"songs":true,"events":true,"documents":true,"attendance_reports":true,"system":true,"product":true,"promotions":false,"community":false}',
     ];
 
     protected $with = ['media', 'membership.roles', 'membership.status'];
@@ -171,7 +171,7 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
     }
 
     /**
-     * @return array{communications: bool, songs: bool, events: bool, documents: bool, system: bool, product: bool, promotions: bool, community: bool}
+     * @return array{communications: bool, songs: bool, events: bool, documents: bool, attendance_reports: bool, system: bool, product: bool, promotions: bool, community: bool}
      */
     public function emailPreferences(): array
     {
@@ -194,12 +194,23 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
         return $this->emailPreferences()[$category->value];
     }
 
+    public function canReceiveAttendanceReports(): bool
+    {
+        return Membership::query()
+            ->withoutTenancy()
+            ->where('user_id', $this->getKey())
+            ->whereHas('roles', function (Builder $query): void {
+                $query->withoutTenancy()->whereJsonContains('abilities', 'attendances_view');
+            })
+            ->exists();
+    }
+
     /**
      * @param array<string, bool> $preferences
      */
     public function updateEmailPreferences(array $preferences): void
     {
-        $normalizedPreferences = EmailCategory::defaults();
+        $normalizedPreferences = $this->emailPreferences();
 
         foreach (EmailCategory::cases() as $category) {
             $normalizedPreferences[$category->value] = $category->isMandatory()

@@ -31,6 +31,12 @@ const notificationGroups = [
 				title: 'Document Created/Updated',
 				description: 'When an organisation document is created or updated.',
 			},
+			{
+				key: 'attendance_reports',
+				title: 'Attendance Reporting',
+				description: 'When an attendance report is generated for an event you can view.',
+				requiresAttendanceReportPermission: true,
+			},
 		],
 	},
 	{
@@ -58,9 +64,15 @@ const notificationGroups = [
 	},
 ];
 
-const NotificationSettings = ({ preferences, accountRoute }) => {
+const NotificationSettings = ({ preferences, accountRoute, canReceiveAttendanceReports }) => {
 	const { route } = useRoute();
-	const { data, setData, put, processing, errors } = useForm({ email_preferences: preferences });
+	const visiblePreferences = { ...preferences };
+
+	if (!canReceiveAttendanceReports) {
+		delete visiblePreferences.attendance_reports;
+	}
+
+	const { data, setData, put, processing, errors } = useForm({ email_preferences: visiblePreferences });
 
 	const toggle = key => {
 		setData(current => ({
@@ -99,7 +111,9 @@ const NotificationSettings = ({ preferences, accountRoute }) => {
 							<div>Notification</div>
 							<div className="text-center">Email</div>
 						</div>
-						{group.items.map(item => (
+						{group.items
+							.filter(item => !item.requiresAttendanceReportPermission || canReceiveAttendanceReports)
+							.map(item => (
 							<div
 								key={item.key}
 								className="grid grid-cols-1 gap-4 border-b border-gray-200 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_5rem] sm:items-center sm:gap-4"

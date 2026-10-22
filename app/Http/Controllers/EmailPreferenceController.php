@@ -11,7 +11,14 @@ class EmailPreferenceController extends Controller
 {
     public function update(UpdateEmailPreferencesRequest $request): RedirectResponse
     {
-        $request->user()->updateEmailPreferences($request->validated('email_preferences'));
+        $user = $request->user();
+        $preferences = $request->validated('email_preferences');
+
+        if (! $user->canReceiveAttendanceReports()) {
+            unset($preferences[EmailCategory::ATTENDANCE_REPORTS->value]);
+        }
+
+        $user->updateEmailPreferences($preferences);
 
         return redirect()
             ->back()
