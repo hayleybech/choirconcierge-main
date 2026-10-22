@@ -20,6 +20,7 @@ const preferences = {
 	songs: true,
 	events: true,
 	documents: true,
+	polls: true,
 	attendance_reports: true,
 	system: true,
 	product: true,
@@ -50,5 +51,22 @@ describe('NotificationSettings attendance reporting preference', () => {
 		);
 
 		expect(screen.getByText('Attendance Reporting')).toBeInTheDocument();
+	});
+
+	it('shows poll notifications above attendance reporting', () => {
+		render(
+			<NotificationSettings
+				preferences={preferences}
+				accountRoute="account"
+				canReceiveAttendanceReports
+			/>,
+		);
+
+		const categoryTitles = screen.getAllByText(/Poll Created\/Updated|Attendance Reporting/);
+
+		expect(categoryTitles.map(title => title.textContent)).toEqual([
+			'Poll Created/Updated',
+			'Attendance Reporting',
+		]);
 	});
 });

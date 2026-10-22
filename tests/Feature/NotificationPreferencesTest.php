@@ -3,10 +3,12 @@
 use App\Enums\EmailCategory;
 use App\Models\Membership;
 use App\Models\Event;
+use App\Models\Poll;
 use App\Models\Role;
 use App\Models\Song;
 use App\Models\User;
 use App\Notifications\EventCreated;
+use App\Notifications\PollCreated;
 use App\Notifications\SongUploaded;
 use App\Services\EmailPreferenceLinks;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,6 +29,7 @@ test('account settings render the account email preference defaults', function (
                 'songs' => true,
                 'events' => true,
                 'documents' => true,
+                'polls' => true,
                 'attendance_reports' => true,
                 'system' => true,
                 'product' => true,
@@ -147,6 +150,26 @@ test('song emails respect the saved preference while event emails remain enabled
 
     expect((new SongUploaded(new Song()))->via($user))->toBe([])
         ->and((new EventCreated(new Event()))->via($user))->toBe(['mail']);
+});
+
+test('poll emails respect the saved preference', function () {
+    $user = User::factory()->create();
+    $notification = new PollCreated(Poll::factory()->create());
+
+    expect($notification->via($user))->toBe(['mail']);
+
+    $user->updateEmailPreferences(['polls' => false]);
+
+    expect($notification->via($user))->toBe([]);
+});
+
+test('poll notification emails include the category preference footer', function () {
+    $user = User::factory()->create();
+    $poll = Poll::factory()->create();
+    $rendered = (new PollCreated($poll))->toMail($user)->render();
+
+    expect(str_contains($rendered, 'Poll Created/Updated'))->toBeTrue()
+        ->and(str_contains($rendered, 'Unsubscribe from Poll Created/Updated'))->toBeTrue();
 });
 
 test('choir email preference footers identify the choir context', function (): void {

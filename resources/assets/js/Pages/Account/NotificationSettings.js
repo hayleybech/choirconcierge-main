@@ -32,6 +32,11 @@ const notificationGroups = [
 				description: 'When an organisation document is created or updated.',
 			},
 			{
+				key: 'polls',
+				title: 'Poll Created/Updated',
+				description: 'When a poll is created or updated.',
+			},
+			{
 				key: 'attendance_reports',
 				title: 'Attendance Reporting',
 				description: 'When an attendance report is generated for an event you can view.',

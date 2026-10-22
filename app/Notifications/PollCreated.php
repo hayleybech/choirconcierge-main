@@ -2,7 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Enums\EmailCategory;
 use App\Models\Poll;
+use App\Models\User;
+use App\Services\EmailPreferenceLinks;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -34,7 +37,9 @@ class PollCreated extends Notification
      */
     public function via($notifiable): array
     {
-        return ['mail'];
+        return $notifiable instanceof User && $notifiable->hasEmailPreference(EmailCategory::POLLS)
+            ? ['mail']
+            : [];
     }
 
     /**
@@ -53,6 +58,9 @@ class PollCreated extends Notification
                 'poll' => $this->poll,
                 'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->poll->id, $notifiable)),
                 'view_url' => the_tenant_route('polls.show', $this->poll),
+                'emailPreferenceLinks' => $notifiable instanceof User
+                    ? app(EmailPreferenceLinks::class)->make($notifiable, EmailCategory::POLLS)
+                    : null,
             ]);
     }
 

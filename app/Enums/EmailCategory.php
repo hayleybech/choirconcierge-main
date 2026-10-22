@@ -8,6 +8,7 @@ enum EmailCategory: string
     case SONGS = 'songs';
     case EVENTS = 'events';
     case DOCUMENTS = 'documents';
+    case POLLS = 'polls';
     case ATTENDANCE_REPORTS = 'attendance_reports';
     case SYSTEM_SECURITY = 'system';
     case PRODUCT_UPDATES = 'product';
@@ -21,6 +22,7 @@ enum EmailCategory: string
             self::SONGS => 'Song Created/Updated',
             self::EVENTS => 'Event Created/Updated',
             self::DOCUMENTS => 'Document Created/Updated',
+            self::POLLS => 'Poll Created/Updated',
             self::ATTENDANCE_REPORTS => 'Attendance Reporting',
             self::SYSTEM_SECURITY => 'System & Security',
             self::PRODUCT_UPDATES => 'Product Updates',
@@ -63,7 +65,7 @@ enum EmailCategory: string
     }
 
     /**
-     * @return array{communications: bool, songs: bool, events: bool, documents: bool, attendance_reports: bool, system: bool, product: bool, promotions: bool, community: bool}
+     * @return array{communications: bool, songs: bool, events: bool, documents: bool, polls: bool, attendance_reports: bool, system: bool, product: bool, promotions: bool, community: bool}
      */
     public static function defaults(): array
     {

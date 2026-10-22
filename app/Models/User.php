@@ -125,7 +125,7 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
     protected $hidden = ['password', 'remember_token'];
 
     protected $attributes = [
-        'email_preferences' => '{"communications":true,"songs":true,"events":true,"documents":true,"attendance_reports":true,"system":true,"product":true,"promotions":false,"community":false}',
+        'email_preferences' => '{"communications":true,"songs":true,"events":true,"documents":true,"polls":true,"attendance_reports":true,"system":true,"product":true,"promotions":false,"community":false}',
     ];
 
     protected $with = ['media', 'membership.roles', 'membership.status'];

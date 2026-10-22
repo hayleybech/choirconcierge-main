@@ -48,7 +48,7 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 
 	return (
 		<>
-			<AppHead title="Tenants" />
+			<AppHead title="Communications" />
 
 			<TrialAntiSpamNotice />
 
