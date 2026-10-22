@@ -10,6 +10,7 @@ use App\Models\Membership;
 use App\Models\MailLog;
 use App\Models\Role;
 use App\Models\User;
+use App\Navigation\Navigation;
 use App\Services\ProductAnnouncementRecipients;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -36,7 +37,21 @@ test('super-admins can open the central announcement composer', function () {
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('Central/Announcements/Create')
             ->has('audiences', 6)
-            ->has('categories', 8));
+            ->where('categories', [
+                ['key' => 'system', 'label' => 'System & Security'],
+                ['key' => 'product', 'label' => 'Product Updates'],
+                ['key' => 'promotions', 'label' => 'Promotions & Offers'],
+                ['key' => 'community', 'label' => 'Community & Content'],
+            ]));
+});
+
+test('central communications navigation contains mail logs and product announcements', function () {
+    $communications = collect(app(Navigation::class)->get())
+        ->firstWhere('name', 'Communications');
+
+    expect($communications)->not->toBeNull()
+        ->and(collect($communications['items'])->pluck('name')->all())
+        ->toBe(['Mail Logs', 'Product Announcements']);
 });
 
 test('non-super-admins cannot open the announcement composer', function () {
@@ -81,6 +96,21 @@ test('sending an announcement queues delivery and writes to the central mail log
     ]);
     Storage::disk('temp')->assertExists('broadcasts/' . $attachment->hashName());
     expect($recipient->exists)->toBeTrue();
+});
+
+test('choir-focused categories cannot be used for product announcements', function () {
+    $superAdmin = User::firstWhere('email', 'hayleybech@gmail.com')
+        ?? User::factory()->create(['email' => 'hayleybech@gmail.com']);
+    $this->actingAs($superAdmin);
+
+    $this->post(route('central.announcements.store'), [
+        'audience' => ProductAnnouncementAudience::ALL_USERS->value,
+        'category' => EmailCategory::SONGS->value,
+        'subject' => 'A product update',
+        'body' => '<p>New features are available.</p>',
+    ])->assertSessionHasErrors('category');
+
+    Queue::assertNotPushed(QueueProductAnnouncement::class);
 });
 
 test('queued announcement fan-out filters optional preferences and deduplicates accounts', function () {
@@ -168,6 +198,7 @@ test('optional announcements use the product sender and include preference links
         return $mail->from[0]['address'] === 'hayley@choirconcierge.com'
             && $mail->from[0]['name'] === 'Choir Concierge'
             && $mail->replyTo[0]['address'] === 'hayley@choirconcierge.com'
+            && str_contains($rendered, 'emails for Choir Concierge.')
             && str_contains($rendered, 'Manage your email preferences')
             && str_contains($rendered, 'Unsubscribe from Product Updates');
     });
@@ -176,4 +207,19 @@ test('optional announcements use the product sender and include preference links
         'mail_log_id' => $mailLog->id,
         'status' => 'announcement-sent',
     ]);
+});
+
+test('mandatory product announcement emails include category context without an unsubscribe link', function () {
+    $recipient = User::factory()->create();
+    $rendered = (new ProductAnnouncement(
+        $recipient,
+        'Security notice',
+        '<p>Important security information.</p>',
+        EmailCategory::SYSTEM_SECURITY,
+        [],
+    ))->render();
+
+    expect($rendered)
+        ->toContain('emails for Choir Concierge.')
+        ->not->toContain('Unsubscribe from System & Security');
 });

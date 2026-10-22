@@ -48,20 +48,27 @@ class Navigation
                 'items' => []
             ],
             [
-                'name' => 'Mail Logs',
+                'name' => 'Communications',
                 'route' => 'central.mail-logs.index',
-                'icon' => 'history',
+                'icon' => 'fa-mail-bulk',
                 'can' => 'list_tenants',
-                'showAsActiveForRoutes' => ['central.mail-logs.*'],
-                'items' => []
-            ],
-            [
-                'name' => 'Product Announcements',
-                'route' => 'central.announcements.create',
-                'icon' => 'bullhorn',
-                'can' => 'manage_product_announcements',
-                'showAsActiveForRoutes' => ['central.announcements.*'],
-                'items' => []
+                'showAsActiveForRoutes' => ['central.mail-logs.*', 'central.announcements.*'],
+                'items' => [
+                    [
+                        'name' => 'Mail Logs',
+                        'route' => 'central.mail-logs.index',
+                        'icon' => 'history',
+                        'can' => 'list_tenants',
+                        'showAsActiveForRoutes' => ['central.mail-logs.*'],
+                    ],
+                    [
+                        'name' => 'Product Announcements',
+                        'route' => 'central.announcements.create',
+                        'icon' => 'bullhorn',
+                        'can' => 'manage_product_announcements',
+                        'showAsActiveForRoutes' => ['central.announcements.*'],
+                    ],
+                ],
             ],
         ];
     }

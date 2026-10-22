@@ -26,7 +26,7 @@ class ProductAnnouncementRequest extends FormRequest
     {
         return [
             'audience' => ['required', 'string', Rule::in(collect(ProductAnnouncementAudience::cases())->map(fn (ProductAnnouncementAudience $audience) => $audience->value)->all())],
-            'category' => ['required', 'string', Rule::in(collect(EmailCategory::cases())->map(fn (EmailCategory $category) => $category->value)->all())],
+            'category' => ['required', 'string', Rule::in(collect(EmailCategory::productCategories())->map(fn (EmailCategory $category) => $category->value)->all())],
             'subject' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string', 'max:5000'],
             'attachments' => ['sometimes', 'array'],

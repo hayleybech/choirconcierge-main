@@ -7,6 +7,7 @@ use App\Models\Song;
 use App\Models\User;
 use App\Notifications\EventCreated;
 use App\Notifications\SongUploaded;
+use App\Services\EmailPreferenceLinks;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\URL;
 use Inertia\Testing\AssertableInertia;
@@ -93,4 +94,13 @@ test('song emails respect the saved preference while event emails remain enabled
 
     expect((new SongUploaded(new Song()))->via($user))->toBe([])
         ->and((new EventCreated(new Event()))->via($user))->toBe(['mail']);
+});
+
+test('choir email preference footers identify the choir context', function () {
+    $user = User::factory()->create();
+    $emailPreferenceLinks = app(EmailPreferenceLinks::class)->make($user, EmailCategory::SONGS);
+    $footer = view('emails.partials.email-preference-footer', compact('emailPreferenceLinks'))->render();
+
+    expect($footer)->toContain('Song Created/Updated')
+        ->toContain('emails for your choir.');
 });

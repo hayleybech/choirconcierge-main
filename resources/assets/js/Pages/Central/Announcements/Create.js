@@ -40,6 +40,7 @@ const Create = ({ audiences, categories, setSidebarOpen }) => {
 
 	const breadcrumbs = [
 		{ name: 'Dashboard', url: route('central.dash') },
+		{ name: 'Communications', url: route('central.mail-logs.index') },
 		{ name: 'Product Announcements', url: route('central.announcements.create') },
 	];
 

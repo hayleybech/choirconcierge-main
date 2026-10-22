@@ -35,9 +35,7 @@ class ProductAnnouncement extends Mailable
             $this->attachFromStorageDisk('temp', 'broadcasts/' . $file['hashName'], $file['originalName']);
         }
 
-        $emailPreferenceLinks = $this->category->isMandatory()
-            ? null
-            : app(EmailPreferenceLinks::class)->make($this->recipient, $this->category);
+        $emailPreferenceLinks = app(EmailPreferenceLinks::class)->make($this->recipient, $this->category);
 
         return $this->markdown('emails.product-announcement', [
             'body' => $this->body,

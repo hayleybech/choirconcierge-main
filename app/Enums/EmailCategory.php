@@ -27,6 +27,27 @@ enum EmailCategory: string
         };
     }
 
+    public function preferenceContext(): string
+    {
+        return match ($this) {
+            self::COMMUNICATIONS, self::SONGS, self::EVENTS, self::DOCUMENTS => 'your choir',
+            self::SYSTEM_SECURITY, self::PRODUCT_UPDATES, self::PROMOTIONS_OFFERS, self::COMMUNITY_CONTENT => 'Choir Concierge',
+        };
+    }
+
+    /**
+     * @return list<self>
+     */
+    public static function productCategories(): array
+    {
+        return [
+            self::SYSTEM_SECURITY,
+            self::PRODUCT_UPDATES,
+            self::PROMOTIONS_OFFERS,
+            self::COMMUNITY_CONTENT,
+        ];
+    }
+
     public function isMandatory(): bool
     {
         return in_array($this, [self::COMMUNICATIONS, self::SYSTEM_SECURITY], true);

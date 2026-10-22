@@ -25,7 +25,7 @@ class ProductAnnouncementController extends Controller
                 'key' => $audience->value,
                 'label' => $audience->label(),
             ]),
-            'categories' => collect(EmailCategory::cases())->map(fn (EmailCategory $category) => [
+            'categories' => collect(EmailCategory::productCategories())->map(fn (EmailCategory $category) => [
                 'key' => $category->value,
                 'label' => $category->label(),
             ]),
