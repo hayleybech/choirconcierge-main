@@ -35,6 +35,10 @@ class CloneMessage
 
     private static function resendToUser(Mailable $message, User $user, UserGroup $group): void
     {
+        if ($message instanceof OrganisationBroadcast) {
+            $message->forRecipient($user);
+        }
+
         $originalSender = $message->from[0];
 
         // Clear replyTo, then put the original sender as the reply-to

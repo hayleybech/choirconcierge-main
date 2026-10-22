@@ -74,7 +74,7 @@ test('sending an announcement queues delivery and writes to the central mail log
         'subject' => 'A product update',
         'body' => '<p>New features are available.</p>',
         'attachments' => [$attachment],
-    ])->assertRedirect(route('central.announcements.create'))
+    ])->assertRedirect(route('central.mail-logs.index'))
         ->assertSessionHas('status', 'Email queued for 2 recipients.');
 
     Queue::assertPushed(QueueProductAnnouncement::class, fn (QueueProductAnnouncement $job) =>
@@ -92,7 +92,7 @@ test('sending an announcement queues delivery and writes to the central mail log
     $mailLog = MailLog::where('subject', 'A product update')->latest('id')->firstOrFail();
     $this->assertDatabaseHas('mail_log_events', [
         'mail_log_id' => $mailLog->id,
-        'status' => 'deliveries-queued',
+        'status' => 'pending',
     ]);
     Storage::disk('temp')->assertExists('broadcasts/' . $attachment->hashName());
     expect($recipient->exists)->toBeTrue();

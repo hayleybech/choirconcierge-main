@@ -1,10 +1,13 @@
 <?php
 
 use App\Jobs\SendEmailForGroup;
+use App\Mail\OrganisationBroadcast;
+use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use Inertia\Testing\AssertableInertia;
 
@@ -45,6 +48,51 @@ it('dispatches a job to send the email', function () {
             && $job->message->body === 'test body'
             && $job->message->hasFrom($user);
     });
+});
+
+it('includes the mandatory email preference footer in broadcast emails', function () {
+    $sender = $this->actingAsRole('Music Team');
+    $group = createGroup($sender);
+    $recipient = User::factory()->create();
+    $message = new OrganisationBroadcast($group, 'A broadcast', '<p>Message body</p>', $sender, collect(), 'broadcast-test', 20);
+    $message->forRecipient($recipient);
+
+    $rendered = $message->render();
+
+    expect($rendered)
+        ->toContain('Communications')
+        ->toContain('emails for your choir are mandatory.')
+        ->toContain('Manage your email preferences')
+        ->not->toContain('Unsubscribe from Communications');
+});
+
+it('renders the preference footer when the group delivery job sends a broadcast', function () {
+    Mail::fake();
+
+    $sender = $this->actingAsRole('Music Team');
+    $group = createGroup($sender);
+    $recipient = User::factory()->create();
+    $group->recipient_users()->attach($recipient);
+    $message = new OrganisationBroadcast($group, 'A broadcast', '<p>Message body</p>', $sender, collect(), 'broadcast-job-test', 20);
+
+    MailLog::createFromMessage($message);
+    (new SendEmailForGroup($message, $group))->handle();
+
+    Mail::assertSent(OrganisationBroadcast::class, function (OrganisationBroadcast $sentMessage) use ($recipient) {
+        $rendered = $sentMessage->render();
+
+        return $sentMessage->recipient?->is($recipient)
+            && str_contains($rendered, 'emails for your choir are mandatory.')
+            && str_contains($rendered, 'Manage your email preferences');
+    });
+});
+
+it('requires a recipient before rendering broadcast emails', function () {
+    $sender = $this->actingAsRole('Music Team');
+    $group = createGroup($sender);
+    $message = new OrganisationBroadcast($group, 'A broadcast', '<p>Message body</p>', $sender, collect(), 'broadcast-test', 20);
+
+    expect(fn () => $message->render())->toThrow(LogicException::class);
 });
 
 it('stores attachments in temporary storage', function () {

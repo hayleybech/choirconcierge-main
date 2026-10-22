@@ -70,7 +70,7 @@ class ProductAnnouncementController extends Controller
         ]);
 
         $mailLog->events()->create([
-            'status' => 'deliveries-queued',
+            'status' => 'pending',
             'context' => $recipientCount . ' recipients · ' . $category->label(),
         ]);
 
@@ -84,7 +84,7 @@ class ProductAnnouncementController extends Controller
         );
 
         return redirect()
-            ->route('central.announcements.create')
+            ->route('central.mail-logs.index')
             ->with(['status' => 'Email queued for ' . $recipientCount . ' recipients.']);
     }
 }

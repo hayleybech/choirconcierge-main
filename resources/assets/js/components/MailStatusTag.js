@@ -6,6 +6,7 @@ export const mailTypeIcons = {
 	broadcast: 'satellite-dish',
 	inbound: 'envelope',
 	notification: 'bell',
+	'product': 'bullhorn',
 };
 
 export const mailIconColours = {
@@ -19,6 +20,9 @@ export const mailIconColours = {
 	'clone-failed': 'bg-red-500',
 	'clones-sent': 'bg-emerald-500',
 	'notification-sent': 'bg-emerald-500',
+	'audience-empty': 'bg-amber-500',
+	'announcement-skipped': 'bg-amber-500',
+	'announcement-sent': 'bg-emerald-500',
 	'opened': 'bg-blue-500',
 	'send-failed': 'bg-red-500',
 };
@@ -34,6 +38,9 @@ export const mailIcons = {
 	'clone-failed': 'exclamation-triangle',
 	'clones-sent': 'inbox-out',
 	'notification-sent': 'inbox-out',
+	'audience-empty': 'users-slash',
+	'announcement-skipped': 'exclamation-circle',
+	'announcement-sent': 'inbox-out',
 	'opened': 'envelope-open-text',
 	'send-failed': 'exclamation-circle',
 }
@@ -49,6 +56,9 @@ export const mailLabels = {
 	'clone-failed': 'Failed to send to user',
 	'clones-sent': 'Sent',
 	'notification-sent': 'Notification sent',
+	'audience-empty': 'No recipients',
+	'announcement-skipped': 'Announcement skipped',
+	'announcement-sent': 'Announcement sent',
 	'opened': 'Opened',
 	'send-failed': 'Send failed',
 }
