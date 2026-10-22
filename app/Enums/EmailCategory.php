@@ -29,10 +29,12 @@ enum EmailCategory: string
 
     public function preferenceContext(): string
     {
-        return match ($this) {
-            self::COMMUNICATIONS, self::SONGS, self::EVENTS, self::DOCUMENTS => 'your choir',
-            self::SYSTEM_SECURITY, self::PRODUCT_UPDATES, self::PROMOTIONS_OFFERS, self::COMMUNITY_CONTENT => 'Choir Concierge',
-        };
+        return $this->isProductCategory() ? 'Choir Concierge' : 'your choir';
+    }
+
+    public function isProductCategory(): bool
+    {
+        return in_array($this, self::productCategories(), true);
     }
 
     /**

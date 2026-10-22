@@ -96,7 +96,7 @@ test('song emails respect the saved preference while event emails remain enabled
         ->and((new EventCreated(new Event()))->via($user))->toBe(['mail']);
 });
 
-test('choir email preference footers identify the choir context', function () {
+test('choir email preference footers identify the choir context', function (): void {
     $user = User::factory()->create();
     $emailPreferenceLinks = app(EmailPreferenceLinks::class)->make($user, EmailCategory::SONGS);
     $footer = view('emails.partials.email-preference-footer', compact('emailPreferenceLinks'))->render();

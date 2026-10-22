@@ -45,7 +45,7 @@ test('super-admins can open the central announcement composer', function () {
             ]));
 });
 
-test('central communications navigation contains mail logs and product announcements', function () {
+test('central communications navigation contains mail logs and product announcements', function (): void {
     $communications = collect(app(Navigation::class)->get())
         ->firstWhere('name', 'Communications');
 
@@ -98,7 +98,7 @@ test('sending an announcement queues delivery and writes to the central mail log
     expect($recipient->exists)->toBeTrue();
 });
 
-test('choir-focused categories cannot be used for product announcements', function () {
+test('choir-focused categories cannot be used for product announcements', function (): void {
     $superAdmin = User::firstWhere('email', 'hayleybech@gmail.com')
         ?? User::factory()->create(['email' => 'hayleybech@gmail.com']);
     $this->actingAs($superAdmin);
@@ -209,7 +209,7 @@ test('optional announcements use the product sender and include preference links
     ]);
 });
 
-test('mandatory product announcement emails include category context without an unsubscribe link', function () {
+test('mandatory product announcement emails include category context without an unsubscribe link', function (): void {
     $recipient = User::factory()->create();
     $rendered = (new ProductAnnouncement(
         $recipient,
