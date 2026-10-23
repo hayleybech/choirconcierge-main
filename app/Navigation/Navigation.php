@@ -85,6 +85,23 @@ class Navigation
                 'items' => []
             ],
             [
+                'name' => 'Inbox',
+                'route' => 'communications.index',
+                'can' => 'view_mail_logs',
+                'icon' => 'fa-mail-bulk',
+                'showAsActiveForRoutes' => ['communications.*', 'groups.*'],
+                'items' => [
+                    ['name' => 'Send Broadcast', 'route' => 'communications.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['communications.create']],
+                    [
+                        'name' => 'Mailing Lists',
+                        'route' => 'groups.index',
+                        'icon' => 'fa-at',
+                        'can' => 'list_groups',
+                        'showAsActiveForRoutes' => ['groups.*'],
+                    ]
+                ]
+            ],
+            [
                 'name' => 'Singers',
                 'route' => 'singers.index',
                 'icon' => 'fa-users',
@@ -138,23 +155,6 @@ class Navigation
                 'showAsActiveForRoutes' => ['stacks.*'],
                 'items' => [
                     ['name' => 'Add New', 'route' => 'stacks.create', 'icon' => 'fa-plus-square', 'can' => 'create_stack', 'showAsActiveForRoutes' => ['stacks.create']],
-                ]
-            ],
-            [
-                'name' => 'Communications',
-                'route' => 'communications.index',
-                'can' => 'view_mail_logs',
-                'icon' => 'fa-mail-bulk',
-                'showAsActiveForRoutes' => ['communications.*', 'groups.*'],
-                'items' => [
-                    ['name' => 'Send Broadcast', 'route' => 'communications.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['communications.create']],
-                    [
-                        'name' => 'Mailing Lists',
-                        'route' => 'groups.index',
-                        'icon' => 'fa-at',
-                        'can' => 'list_groups',
-                        'showAsActiveForRoutes' => ['groups.*'],
-                    ]
                 ]
             ],
             [

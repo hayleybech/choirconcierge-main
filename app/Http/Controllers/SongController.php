@@ -77,8 +77,8 @@ class SongController extends Controller
     {
         $song = Song::create($request->safe()->except(['send_notification', 'notification_message']));
 
-        if ($request->input('send_notification') && $song->status->title !== 'Pending') {
-            $notification = new SongUploaded($song, $request->input('notification_message'));
+        if ($song->status->title !== 'Pending') {
+            $notification = new SongUploaded($song);
             $recipients = Membership::active()->with('user')->get()->pluck('user');
             Notification::send($recipients, $notification);
             $notification->log($song->id, $recipients->first());

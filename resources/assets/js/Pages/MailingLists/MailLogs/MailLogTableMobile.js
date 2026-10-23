@@ -32,9 +32,10 @@ const MailLogTableMobile = ({ logs, showAdminDetails, hasNonDefaultFilters, setS
 			<TableMobile pagination={<Pagination details={logs} />}>
 				{logs.data.map(log => {
 					const mailType = log.uid.split('-')[0];
+					const showLogAdminDetails = showAdminDetails && mailType !== 'product';
 					const recipient = log.latest_event?.user_group;
 					return (
-						<li key={log.id} className="flex">
+						<li key={log.id} className={`flex ${log.is_read ? 'bg-gray-50' : 'font-bold'}`}>
 							<TableMobileLink url={route('communications.show', { mail_log: log })}>
 								<div className="block hover:bg-gray-50 flex-grow min-w-0 text-gray-500">
 									<div className="flex items-center pr-2">
@@ -77,14 +78,14 @@ const MailLogTableMobile = ({ logs, showAdminDetails, hasNonDefaultFilters, setS
 															: `${(log.size / (1024 * 1024)).toFixed(1)} MB`}
 													</span>
 												)}
-												{showAdminDetails && log.opens_count > 0 && (
+												{showLogAdminDetails && log.opens_count > 0 && (
 													<span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
 														<Icon icon="eye" mr />
 														{log.opens_count}
 													</span>
 												)}
 											</div>
-											{showAdminDetails && (
+										{showLogAdminDetails && (
 												<MailStatusTag event={log.latest_event} showLabel={false} />
 											)}
 										</div>

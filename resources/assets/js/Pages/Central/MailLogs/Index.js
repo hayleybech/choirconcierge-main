@@ -22,7 +22,7 @@ import FilterSortPane from '../../../components/FilterSortPane';
 import Sorts from '../../../components/Sorts';
 import MailLogFilters from './MailLogFilters';
 
-const Index = ({ logs, tenants, setSidebarOpen }) => {
+const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const sorts = [
@@ -39,6 +39,7 @@ const Index = ({ logs, tenants, setSidebarOpen }) => {
 		{ name: 'to', defaultValue: '' },
 		{ name: 'from', defaultValue: '' },
 		{ name: 'tenant', defaultValue: '' },
+		{ name: 'type', multiple: true, defaultValue: defaultMailTypes },
 	];
 	const sortFilterForm = useSortFilterForm('central.mail-logs.index', filters, sorts);
 
@@ -83,7 +84,7 @@ const Index = ({ logs, tenants, setSidebarOpen }) => {
 				filterPane={
 					<FilterSortPane
 						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-						filters={<MailLogFilters form={sortFilterForm} tenants={tenants} />}
+						filters={<MailLogFilters form={sortFilterForm} tenants={tenants} mailTypes={mailTypes} />}
 						closeFn={() => setShowFilters(false)}
 					/>
 				}

@@ -4,8 +4,9 @@ import TextInput from '../../../components/inputs/TextInput';
 import Filters from '../../../components/Filters';
 import TenantSelect from '../../../components/inputs/TenantSelect';
 import FilterActions from '../../../components/inputs/FilterActions';
+import CheckboxGroup from '../../../components/inputs/CheckboxGroup';
 
-const MailLogFilters = ({ form, tenants }) => (
+const MailLogFilters = ({ form, tenants, mailTypes }) => (
 	<Filters
 		routeName="central.mail-logs.index"
 		form={form}
@@ -21,6 +22,21 @@ const MailLogFilters = ({ form, tenants }) => (
 						<TextInput name={name} value={data[name]} updateFn={value => setData(name, value)} />
 					</div>
 				))}
+				<fieldset>
+					<div className="flex items-center justify-between">
+						<legend className="text-sm font-medium text-gray-700">Mail type</legend>
+						<FilterActions
+							onSelectAll={() => setData('type', mailTypes.map(type => type.id))}
+							onClear={() => setData('type', [])}
+						/>
+					</div>
+					<CheckboxGroup
+						name="type"
+						options={mailTypes}
+						value={data.type}
+						updateFn={value => setData('type', value)}
+					/>
+				</fieldset>
 				<div>
 					<div className="flex items-center justify-between">
 						<Label label="Tenant" forInput="tenant" />

@@ -7,6 +7,7 @@ use App\Models\MailLog;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -19,6 +20,17 @@ class MailLogController extends Controller
     {
         $logs = QueryBuilder::for(MailLog::class)
             ->allowedFilters([
+                AllowedFilter::callback('type', fn (Builder $query, mixed $values) => MailLog::applyTypeFilter(
+                    $query,
+                    Arr::wrap($values),
+                ))->default(MailLog::DEFAULT_TYPES),
+                AllowedFilter::callback('read', function (Builder $query, mixed $value): void {
+                    if ($value === 'read') {
+                        $query->whereHas('opens');
+                    } elseif ($value === 'unread') {
+                        $query->whereDoesntHave('opens');
+                    }
+                }),
                 'subject',
                 'from',
                 'to',
@@ -55,9 +67,16 @@ class MailLogController extends Controller
         $logs->getCollection()->transform(fn (MailLog $log): MailLog => $log->setAttribute(
             'from_user',
             $this->findUserFromSender($log->from),
+        )->setAttribute(
+            'is_read',
+            $log->opens_count > 0,
         ));
 
         return Inertia::render('Central/MailLogs/Index', [
+            'mailTypes' => collect(MailLog::TYPE_LABELS)
+                ->map(fn (string $name, string $id): array => ['id' => $id, 'name' => $name])
+                ->values(),
+            'defaultMailTypes' => MailLog::DEFAULT_TYPES,
             'tenants' => Tenant::query()->orderBy('id')->get(),
             'logs' => $logs,
         ]);

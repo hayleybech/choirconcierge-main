@@ -17,6 +17,8 @@ class NavigationTest extends TestCase
                 ->has('navigation')
                 ->where('navigation.0.name', 'Dashboard')
                 ->where('navigation.0.route', 'dash')
+                ->where('navigation.1.name', 'Inbox')
+                ->where('navigation.1.route', 'communications.index')
             );
     }
 

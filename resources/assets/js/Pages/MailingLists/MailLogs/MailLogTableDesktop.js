@@ -53,8 +53,9 @@ const MailLogTableDesktop = ({ logs, showAdminDetails, sortFilterForm }) => {
 			<TBody>
 				{logs.data.map(log => {
 					const mailType = log.uid.split('-')[0];
+					const showLogAdminDetails = showAdminDetails && mailType !== 'product';
 					return (
-						<tr key={log.id}>
+						<tr key={log.id} className={log.is_read ? 'bg-gray-50' : 'font-bold'}>
 							<TableCell>
 								<Link
 									href={route('communications.show', { mail_log: log })}
@@ -108,7 +109,7 @@ const MailLogTableDesktop = ({ logs, showAdminDetails, sortFilterForm }) => {
 							</TableCell>
 							{showAdminDetails && (
 								<TableCell>
-									{log.opens_count > 0 ? (
+									{showLogAdminDetails && log.opens_count > 0 ? (
 										<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
 											<Icon icon="eye" mr />
 											{log.opens_count}
@@ -120,7 +121,7 @@ const MailLogTableDesktop = ({ logs, showAdminDetails, sortFilterForm }) => {
 							)}
 							{showAdminDetails && (
 								<TableCell>
-									<MailStatusTag event={log.latest_event} />
+									{showLogAdminDetails && <MailStatusTag event={log.latest_event} />}
 								</TableCell>
 							)}
 							<TableCell>

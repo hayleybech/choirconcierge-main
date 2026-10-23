@@ -39,7 +39,17 @@ jest.mock('../../components/Form', () => ({ children, onSubmit }) =>
 jest.mock('../../components/FormSection', () => ({ children }) => require('react').createElement('div', null, children));
 jest.mock('../../components/inputs/TextInput', () => () => null);
 jest.mock('../../components/inputs/Label', () => () => null);
-jest.mock('../../components/inputs/CheckboxWithLabel', () => () => null);
+jest.mock('../../components/inputs/CheckboxWithLabel', () => {
+	const React = require('react');
+
+	return ({ label, id, checked, onChange }) =>
+		React.createElement(
+			'label',
+			{ htmlFor: id },
+			label,
+			React.createElement('input', { id, type: 'checkbox', checked: !!checked, onChange }),
+		);
+});
 jest.mock('../../components/inputs/DateCalendarInput', () => () => null);
 jest.mock('../../components/inputs/Time', () => () => null);
 jest.mock('../../components/inputs/Help', () => () => null);
@@ -90,5 +100,12 @@ describe('Poll forms', () => {
 		render(form);
 
 		expect(screen.getByRole('link', { name: 'Cancel' }).getAttribute('href')).toBe('/polls/index');
+	});
+
+	it('does not expose notification controls on poll creation', () => {
+		render(<Create ensembles={[]} />);
+
+		expect(screen.queryByRole('checkbox', { name: 'Send notification to singers?' })).toBeNull();
+		expect(screen.queryByText('Message (optional)')).toBeNull();
 	});
 });

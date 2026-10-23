@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Mail\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -33,7 +34,40 @@ class MailLog extends Model
 {
     use HasFactory;
 
+    public const TYPE_LABELS = [
+        'broadcast' => 'Broadcast',
+        'inbound' => 'Inbound',
+        'notification' => 'Notification',
+        'product' => 'Product Announcement',
+    ];
+
+    public const DEFAULT_TYPES = ['broadcast', 'inbound', 'product'];
+
     protected $guarded = [];
+
+    public function isProductAnnouncement(): bool
+    {
+        return str_starts_with($this->uid, 'product-announcement-');
+    }
+
+    /**
+     * @param array<int, string> $types
+     */
+    public static function applyTypeFilter(Builder $query, array $types): Builder
+    {
+        $types = array_values(array_intersect($types, array_keys(self::TYPE_LABELS)));
+
+        if ($types === []) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->where(function (Builder $query) use ($types): void {
+            foreach ($types as $type) {
+                $prefix = $type === 'product' ? 'product-announcement' : $type;
+                $query->orWhere('uid', 'like', $prefix . '-%');
+            }
+        });
+    }
 
     public function events(): HasMany
     {

@@ -18,6 +18,7 @@ use App\Models\Task;
 use App\Models\Tenant;
 use App\Models\UserGroup;
 use App\Models\VoicePart;
+use App\Http\Controllers\MailLogController;
 use App\Navigation\Navigation;
 use App\Navigation\UserNavigation;
 use Illuminate\Http\Request;
@@ -124,6 +125,9 @@ class HandleInertiaRequests extends Middleware
             'googleApiKey' => config('services.google.key'),
             'tenant' => tenancy()?->tenant?->loadMissing('ensembles')->append('billing_status'), // billing status needed for global alerts
             'user' => auth()->user(),
+            'unreadCommunicationsCount' => fn () => tenancy()->initialized
+                ? MailLogController::unreadCommunicationsCount()
+                : null,
             'impersonationActive' => session()->has('impersonation:active'),
             'userChoirs' => $this->getUserChoirs(),
             'isWebView' => $request->attributes->get('isWebView'),

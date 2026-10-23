@@ -360,7 +360,6 @@ class EventControllerTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('events', $saved_data);
-        Notification::assertNothingSent();
 
         $event = Event::firstWhere('title', $saved_data['title']);
         $response->assertRedirect(the_tenant_route('events.show', [$event]));
@@ -373,14 +372,16 @@ class EventControllerTest extends TestCase
         $this->actingAs($this->createUserWithRole('Events Team'));
 
         ['request' => $request_data, 'saved' => $saved_data] = $getData();
-        $request_data['send_notification'] = true;
+        $request_data['notification_message'] = 'This created-event note should be ignored.';
         $response = $this->post(the_tenant_route('events.store'), $request_data);
 
         $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('events', ['title' => $saved_data['title']]);
 
-        Notification::assertSentTo(auth()->user(), EventCreated::class);
+        Notification::assertSentTo(auth()->user(), EventCreated::class, fn (EventCreated $notification): bool =>
+            !str_contains($notification->toMail(auth()->user())->render(), 'This created-event note should be ignored.')
+        );
     }
 
     /**

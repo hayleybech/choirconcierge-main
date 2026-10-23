@@ -21,9 +21,8 @@ import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 import SectionLayout from '../../../components/SectionLayout';
 const Show = ({ log, can, setSidebarOpen }) => {
 	const { route } = useRoute();
-	const showAdminDetails = can.create_broadcast || can.update_group;
-
 	const mailType = log.uid.split('-')[0];
+	const showAdminDetails = (can.create_broadcast || can.update_group) && mailType !== 'product';
 
 	const breadcrumbs = [
 		{ name: 'Communications', url: route('communications.index') },

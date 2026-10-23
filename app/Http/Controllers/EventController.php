@@ -72,12 +72,10 @@ class EventController extends Controller
             $event->ensembles()->sync($request->input('ensembles'));
         }
 
-        if ($request->input('send_notification')) {
-            $notification = new EventCreated($event, $request->input('notification_message'));
-            $recipients = Membership::active()->with('user')->get()->pluck('user');
-            Notification::send($recipients, $notification);
-            $notification->log($event->id, $recipients->first());
-        }
+        $notification = new EventCreated($event);
+        $recipients = Membership::active()->with('user')->get()->pluck('user');
+        Notification::send($recipients, $notification);
+        $notification->log($event->id, $recipients->first());
 
         return redirect()
             ->route('events.show', [$event])

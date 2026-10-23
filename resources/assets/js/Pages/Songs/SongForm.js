@@ -30,8 +30,7 @@ const SongForm = ({ categories, statuses, pitches, song, ensembles }) => {
 		status: song?.status.id ?? null,
 		pitch_blown: song?.pitch_blown ?? 0,
 		show_for_prospects: song?.show_for_prospects ?? false,
-		send_notification: !song,
-		notification_message: '',
+        ...(song ? { send_notification: false, notification_message: '' } : {}),
 	});
 
 	function submit(e) {
@@ -131,27 +130,29 @@ const SongForm = ({ categories, statuses, pitches, song, ensembles }) => {
 					</div>
 				</FormSection>
 
-				<FormSection title="Notifications">
-					<CheckboxWithLabel
-						label={`Send ${song ? '"Song Updated"' : '"New Song"'} notification to singers?`}
-						id="send_notification"
-						name="send_notification"
-						value={true}
-						checked={data.send_notification}
-						onChange={e => setData('send_notification', e.target.checked)}
-						className="mr-8 mb-4"
-					/>
-					{data.send_notification && (
-						<div className="sm:col-span-6">
-							<Label label="Message (optional)" forInput="notification_message" />
-							<TextareaInput
-								name="notification_message"
-								value={data.notification_message}
-								updateFn={value => setData('notification_message', value)}
-							/>
-						</div>
-					)}
-				</FormSection>
+                {song && (
+                    <FormSection title="Notifications">
+                        <CheckboxWithLabel
+                            label={'Send "Song Updated" notification to singers?'}
+                            id="send_notification"
+                            name="send_notification"
+                            value={true}
+                            checked={data.send_notification}
+                            onChange={e => setData('send_notification', e.target.checked)}
+                            className="mr-8 mb-4"
+                        />
+                        {data.send_notification && (
+                            <div className="sm:col-span-6">
+                                <Label label="Message (optional)" forInput="notification_message" />
+                                <TextareaInput
+                                    name="notification_message"
+                                    value={data.notification_message}
+                                    updateFn={value => setData('notification_message', value)}
+                                />
+                            </div>
+                        )}
+                    </FormSection>
+                )}
 
 				<FormFooter>
 					<ButtonLink href={song ? route('songs.show', { song }) : route('songs.index')}>Cancel</ButtonLink>

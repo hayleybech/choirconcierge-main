@@ -18,7 +18,7 @@ import FilterSortPane from '../../../components/FilterSortPane';
 import Sorts from '../../../components/Sorts';
 import MailLogFilters from './MailLogFilters';
 
-const Index = ({ logs, mailingLists, can, setSidebarOpen }) => {
+const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const showAdminDetails = can.create_broadcast || can.update_group;
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -34,6 +34,8 @@ const Index = ({ logs, mailingLists, can, setSidebarOpen }) => {
 		{ name: 'subject', defaultValue: '' },
 		{ name: 'to', defaultValue: '' },
 		{ name: 'from', defaultValue: '' },
+		{ name: 'type', multiple: true, defaultValue: defaultMailTypes },
+		{ name: 'read', defaultValue: '' },
 	];
 	const sortFilterForm = useSortFilterForm('communications.index', filters, sorts);
 
@@ -107,7 +109,7 @@ const Index = ({ logs, mailingLists, can, setSidebarOpen }) => {
 				filterPane={
 					<FilterSortPane
 						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-						filters={<MailLogFilters form={sortFilterForm} mailingLists={mailingLists} />}
+						filters={<MailLogFilters form={sortFilterForm} mailingLists={mailingLists} mailTypes={mailTypes} />}
 						closeFn={() => setShowFilters(false)}
 					/>
 				}

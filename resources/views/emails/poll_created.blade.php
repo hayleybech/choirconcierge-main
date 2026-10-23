@@ -5,13 +5,6 @@
 
 A new poll has been created. Please take a moment to cast your vote.
 
-@if($message)
-Message:
-
-{{ $message }}
-
-@endif
-
  @if($poll->description)
  ### Description
   {{ new \Illuminate\Support\HtmlString($poll->description) }}
