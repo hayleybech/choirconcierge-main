@@ -154,6 +154,8 @@ class UserGroup extends Model
 
     public function get_all_recipients(): \Illuminate\Support\Collection
     {
+        $this->loadMissing('tenant', 'recipient_roles', 'recipient_ensembles');
+
         tenancy()->initialize($this->tenant);
 
         $recipients = $this->recipient_users()->get()
@@ -216,6 +218,8 @@ class UserGroup extends Model
 
     public function getEmailAttribute(): string
     {
+        $this->loadMissing('tenant');
+
         return $this->slug.'@'.$this->tenant->host;
     }
 
@@ -233,6 +237,8 @@ class UserGroup extends Model
      */
     public function get_all_senders(): \Illuminate\Support\Collection
     {
+        $this->loadMissing('tenant', 'sender_roles', 'sender_ensembles');
+
         tenancy()->initialize($this->tenant);
 
         $senders = $this->sender_users()->get()

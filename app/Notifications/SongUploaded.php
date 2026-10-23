@@ -18,14 +18,17 @@ class SongUploaded extends Notification
 
     private Song $song;
 
+    private ?string $message;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Song $song)
+    public function __construct(Song $song, ?string $message = null)
     {
         $this->song = $song;
+        $this->message = $message;
     }
 
     /**
@@ -54,6 +57,7 @@ class SongUploaded extends Notification
             ->subject('New song: '.$this->song->title)
             ->markdown('emails.song_uploaded', [
                 'song' => $this->song,
+                'message' => $this->message,
                 'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->song->id, $notifiable)),
                 'emailPreferenceLinks' => $notifiable instanceof User
                     ? app(EmailPreferenceLinks::class)->make($notifiable, EmailCategory::SONGS)

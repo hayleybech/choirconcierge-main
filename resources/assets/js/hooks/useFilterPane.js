@@ -1,33 +1,38 @@
-import React, {useState} from 'react';
-import {useMediaQuery} from "react-responsive";
+import React, { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 const useFilterPane = () => {
-    const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
-    const [showFilters, setShowFiltersState] = useState(() => isDesktop && (localStorage.getItem('showFilters') === 'true' ?? isDesktop));
+	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
+	const [showFilters, setShowFiltersState] = useState(
+		() => isDesktop && (localStorage.getItem('showFilters') === 'true' ?? isDesktop)
+	);
 
-    const setShowFilters = (value) => {
-        setShowFiltersState(previousValue => {
-            const nextValue = typeof value === 'function' ? value(previousValue) : value;
+	const setShowFilters = value => {
+		setShowFiltersState(previousValue => {
+			const nextValue = typeof value === 'function' ? value(previousValue) : value;
 
-            localStorage.setItem('showFilters', String(nextValue));
+			localStorage.setItem('showFilters', String(nextValue));
 
-            return nextValue;
-        });
-    };
+			return nextValue;
+		});
+	};
 
-    const hasNonDefaultFilters = Array.from(new URLSearchParams(location.search).keys())
-        .some((key) =>
-            key.includes('filter') || key.includes('sort')
-        );
+	const hasNonDefaultFilters = Array.from(new URLSearchParams(location.search).keys()).some(
+		key => key.includes('filter') || key.includes('sort')
+	);
 
-    let filterAction = isDesktop ? {
-        label: <span>Filter<span className="inline md:hidden">/Sort</span></span>,
-        icon: 'filter',
-        onClick: () => setShowFilters(! showFilters),
-        variant: hasNonDefaultFilters ? 'success-outline' : 'secondary',
-    } : null;
+	let filterAction = {
+		label: (
+			<span>
+				Filter<span className="inline md:hidden">/Sort</span>
+			</span>
+		),
+		icon: 'filter',
+		onClick: () => setShowFilters(!showFilters),
+		variant: hasNonDefaultFilters ? 'success-outline' : 'secondary',
+	};
 
-    return [showFilters, setShowFilters, filterAction, hasNonDefaultFilters];
+	return [showFilters, setShowFilters, filterAction, hasNonDefaultFilters];
 };
 
 export default useFilterPane;

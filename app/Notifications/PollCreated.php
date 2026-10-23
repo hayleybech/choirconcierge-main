@@ -19,14 +19,17 @@ class PollCreated extends Notification
 
     private Poll $poll;
 
+    private ?string $message;
+
     /**
      * Create a new notification instance.
      *
      * @param Poll $poll
      */
-    public function __construct(Poll $poll)
+    public function __construct(Poll $poll, ?string $message = null)
     {
         $this->poll = $poll;
+        $this->message = $message;
     }
 
     /**
@@ -56,6 +59,7 @@ class PollCreated extends Notification
             ->with(['poll' => $this->poll])
             ->markdown('emails.poll_created', [
                 'poll' => $this->poll,
+                'message' => $this->message,
                 'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->poll->id, $notifiable)),
                 'view_url' => the_tenant_route('polls.show', $this->poll),
                 'emailPreferenceLinks' => $notifiable instanceof User

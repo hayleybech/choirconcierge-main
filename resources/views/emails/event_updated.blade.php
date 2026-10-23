@@ -3,6 +3,13 @@
 # This event has been updated
 ## {{ $event->title }}
 
+@if($message)
+Message:
+
+{{ $message }}
+
+@endif
+
 {{-- method 1: attach then reference--}}
 {{--  $mailable->attachFromStorage('logo.png')  --}}
 {{--<img src="cid:logo.png">--}}

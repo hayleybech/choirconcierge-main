@@ -1,26 +1,53 @@
 import React from 'react';
-import Table, {TableCell, THead, TBody, TableHeading} from "../../../components/Table";
-import DateTag from "../../../components/DateTag";
-import {Link} from "@inertiajs/react";
-import useRoute from "../../../hooks/useRoute";
+import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
+import DateTag from '../../../components/DateTag';
+import { Link } from '@inertiajs/react';
+import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag';
 import Pagination from '../../../components/Pagination';
+import TableHeadingSort from '../../../components/TableHeadingSort';
 
-const MailLogTableDesktop = ({ logs }) => {
-    const { route } = useRoute();
+const MailLogTableDesktop = ({ logs, showAdminDetails, sortFilterForm }) => {
+	const { route } = useRoute();
 
-    return (
+	return (
 		<Table pagination={<Pagination details={logs} />}>
 			<THead>
 				<tr>
-					<TableHeading>Subject</TableHeading>
-					<TableHeading>From</TableHeading>
-					<TableHeading>To</TableHeading>
-					<TableHeading>Size</TableHeading>
-					<TableHeading>Opens</TableHeading>
-					<TableHeading>Status</TableHeading>
-					<TableHeading>Date Created</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="subject">
+							Subject
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="from">
+							From
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="to">
+							To
+						</TableHeadingSort>
+					</TableHeading>
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="size">
+							Size
+						</TableHeadingSort>
+					</TableHeading>
+					{showAdminDetails && (
+						<TableHeading>
+							<TableHeadingSort form={sortFilterForm} sort="opens">
+								Opens
+							</TableHeadingSort>
+						</TableHeading>
+					)}
+					{showAdminDetails && <TableHeading>Status</TableHeading>}
+					<TableHeading>
+						<TableHeadingSort form={sortFilterForm} sort="created_at">
+							Date Created
+						</TableHeadingSort>
+					</TableHeading>
 				</tr>
 			</THead>
 			<TBody>
@@ -40,8 +67,34 @@ const MailLogTableDesktop = ({ logs }) => {
 									{!!log.has_attachments && <Icon icon="paperclip" ml />}
 								</Link>
 							</TableCell>
-							<TableCell>{log.from}</TableCell>
-							<TableCell>{log.to}</TableCell>
+							<TableCell>
+								{log.from_user ? (
+									<Link
+										href={
+											log.from_membership
+												? route('singers.show', { singer: log.from_membership })
+												: route('central.users.show', { user: log.from_user })
+										}
+										className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
+									>
+										{log.from}
+									</Link>
+								) : (
+									log.from
+								)}
+							</TableCell>
+							<TableCell>
+								{log.latest_event?.user_group ? (
+									<Link
+										href={route('groups.show', { group: log.latest_event.user_group })}
+										className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
+									>
+										{log.latest_event.user_group.title}
+									</Link>
+								) : (
+									log.to
+								)}
+							</TableCell>
 							<TableCell className="whitespace-nowrap">
 								{log.size ? (
 									<span className="text-gray-500 text-xs">
@@ -53,19 +106,23 @@ const MailLogTableDesktop = ({ logs }) => {
 									<span className="text-gray-400 text-xs">—</span>
 								)}
 							</TableCell>
-							<TableCell>
-								{log.opens_count > 0 ? (
-									<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-										<Icon icon="eye" mr />
-										{log.opens_count}
-									</span>
-								) : (
-									<span className="text-gray-400 text-xs">—</span>
-								)}
-							</TableCell>
-							<TableCell>
-								<MailStatusTag event={log.latest_event} />
-							</TableCell>
+							{showAdminDetails && (
+								<TableCell>
+									{log.opens_count > 0 ? (
+										<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+											<Icon icon="eye" mr />
+											{log.opens_count}
+										</span>
+									) : (
+										<span className="text-gray-400 text-xs">—</span>
+									)}
+								</TableCell>
+							)}
+							{showAdminDetails && (
+								<TableCell>
+									<MailStatusTag event={log.latest_event} />
+								</TableCell>
+							)}
 							<TableCell>
 								<DateTag icon="pencil" date={log.created_at} />
 							</TableCell>
@@ -75,6 +132,6 @@ const MailLogTableDesktop = ({ logs }) => {
 			</TBody>
 		</Table>
 	);
-}
+};
 
 export default MailLogTableDesktop;

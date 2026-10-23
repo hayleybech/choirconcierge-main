@@ -31,6 +31,17 @@ it('has a send email page', function () {
         );
 });
 
+it('preselects the mailing list when provided', function () {
+    $user = $this->actingAsRole('Music Team');
+    $group = createGroup($user);
+
+    $this->get(the_tenant_route('communications.create', ['list' => $group->id]))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('MailingLists/Broadcasts/Create')
+            ->where('selectedList', $group->id)
+        );
+});
+
 it('dispatches a job to send the email', function () {
     $user = $this->actingAsRole('Music Team');
 
@@ -44,6 +55,7 @@ it('dispatches a job to send the email', function () {
 
     Queue::assertPushed(SendEmailForGroup::class, function (SendEmailForGroup $job) use ($user, $group) {
         return $job->group->is($group)
+            && $job->group->relationLoaded('tenant')
             && $job->message->subject === 'this is a test'
             && $job->message->body === 'test body'
             && $job->message->hasFrom($user);
@@ -144,6 +156,20 @@ it('logs the size of the broadcast', function () {
         'subject' => 'this is a test',
         'size' => $expectedSize,
     ]);
+});
+
+it('keeps the mailing list name and address in the broadcast mail log', function () {
+    $user = $this->actingAsRole('Music Team');
+    $group = createGroup($user);
+
+    $this->post(the_tenant_route('communications.store'), [
+        'list' => $group->id,
+        'subject' => 'this is a test',
+        'body' => 'test body',
+    ])->assertRedirect(route('communications.index'));
+
+    expect(MailLog::firstWhere('subject', 'this is a test')->to)
+        ->toBe($group->title.' <'.$group->email.'>');
 });
 
 function createGroup(User $user): UserGroup

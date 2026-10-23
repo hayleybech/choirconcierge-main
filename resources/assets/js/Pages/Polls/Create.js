@@ -25,6 +25,7 @@ import { DateTime } from 'luxon';
 import Help from '../../components/inputs/Help';
 import CheckboxGroup from '../../components/inputs/CheckboxGroup';
 import RichTextInput from '../../components/inputs/RichTextInput';
+import TextareaInput from '../../components/inputs/TextareaInput';
 
 const Create = ({ ensembles = [], setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -35,6 +36,7 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 		close_at: null,
 		options: ['', ''],
 		send_notification: true,
+		notification_message: '',
 		ensemble_ids: [],
 	});
 
@@ -227,6 +229,16 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 								checked={!!data.send_notification}
 								onChange={e => setData('send_notification', e.target.checked)}
 							/>
+							{data.send_notification && (
+								<div className="mt-4">
+									<Label label="Message (optional)" forInput="notification_message" />
+									<TextareaInput
+										name="notification_message"
+										value={data.notification_message}
+										updateFn={value => setData('notification_message', value)}
+									/>
+								</div>
+							)}
 						</div>
 					</FormSection>
 

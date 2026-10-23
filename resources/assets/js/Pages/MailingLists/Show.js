@@ -24,6 +24,12 @@ const Show = ({ list, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const actions = [
+		{
+			label: 'Send Broadcast',
+			icon: 'paper-plane',
+			url: route('communications.create', { list: list.id }),
+			can: 'create_broadcast',
+		},
 		{ label: 'Edit', icon: 'edit', url: route('groups.edit', { group: list }), can: 'update_group' },
 		{
 			label: 'Delete',
@@ -53,20 +59,20 @@ const Show = ({ list, setSidebarOpen }) => {
 			<TrialAntiSpamNotice />
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					<PageActionsMenu>
-						{actions.map(action => (
-							<ActionMenuItem
-								key={action.label}
-								url={action.url}
-								onClick={action.onClick}
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</ActionMenuItem>
-						))}
-					</PageActionsMenu>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				<PageActionsMenu>
+					{actions.map(action => (
+						<ActionMenuItem
+							key={action.label}
+							url={action.url}
+							onClick={action.onClick}
+							variant={action.variant}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</ActionMenuItem>
+					))}
+				</PageActionsMenu>
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -118,146 +124,147 @@ const Show = ({ list, setSidebarOpen }) => {
 			<SectionLayout
 				layout={{
 					className: 'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0',
-					columns: [{ id: 'recipients', className: 'sm:col-span-1' }, { id: 'senders', className: 'sm:col-span-1' }],
+					columns: [
+						{ id: 'recipients', className: 'sm:col-span-1' },
+						{ id: 'senders', className: 'sm:col-span-1' },
+					],
 				}}
 				sections={[
-						{
-							id: 'recipients',
-							column: 'recipients',
-							title: 'Recipients',
-							content: (
-								<div className="h-full overflow-y-auto relative">
-									{list.recipient_ensembles?.length > 0 && (
-										<div className="bg-purple-100 px-6 py-3 border-y border-purple-300">
-											<h4 className="text-xs font-semibold text-purple-700 uppercase tracking-wider mb-1">
-												Ensemble Filter
-											</h4>
-											<div className="flex flex-wrap gap-2">
-												{list.recipient_ensembles.map(ensemble => (
-													<span
-														key={ensemble.id}
-														className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-200 text-purple-800 border border-purple-400"
-													>
-														{ensemble.name}
-													</span>
-												))}
-											</div>
-											<p className="mt-2 text-xs text-purple-600 italic">
-												Only singers in these ensembles who also match the criteria below are
-												included.
-											</p>
+					{
+						id: 'recipients',
+						column: 'recipients',
+						title: 'Recipients',
+						content: (
+							<div className="h-full overflow-y-auto relative">
+								{list.recipient_ensembles?.length > 0 && (
+									<div className="bg-purple-100 px-6 py-3 border-y border-purple-300">
+										<h4 className="text-xs font-semibold text-purple-700 uppercase tracking-wider mb-1">
+											Ensemble Filter
+										</h4>
+										<div className="flex flex-wrap gap-2">
+											{list.recipient_ensembles.map(ensemble => (
+												<span
+													key={ensemble.id}
+													className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-200 text-purple-800 border border-purple-400"
+												>
+													{ensemble.name}
+												</span>
+											))}
 										</div>
-									)}
-									{list.members?.filter(m => m.memberable_type !== 'App\\Models\\Ensemble')?.length >
-									0 ? (
-										<ul role="list" className="relative z-0 divide-y divide-gray-200">
-											{list.members
-												?.filter(m => m.memberable_type !== 'App\\Models\\Ensemble')
-												?.map(member => (
-													<li key={member.id}>
-														<div className="relative px-6 py-5 flex items-center space-x-3">
-															<div className="flex items-center justify-between px-4">
-																<span className="text-sm font-medium truncate">
-																	{`${getTypeName(member.memberable_type)}: `}
-																	{member?.memberable?.name ??
-																		member?.memberable?.title ??
-																		member.memberable_id}
-																</span>
-															</div>
+										<p className="mt-2 text-xs text-purple-600 italic">
+											Only singers in these ensembles who also match the criteria below are
+											included.
+										</p>
+									</div>
+								)}
+								{list.members?.filter(m => m.memberable_type !== 'App\\Models\\Ensemble')?.length >
+								0 ? (
+									<ul role="list" className="relative z-0 divide-y divide-gray-200">
+										{list.members
+											?.filter(m => m.memberable_type !== 'App\\Models\\Ensemble')
+											?.map(member => (
+												<li key={member.id}>
+													<div className="relative px-6 py-5 flex items-center space-x-3">
+														<div className="flex items-center justify-between px-4">
+															<span className="text-sm font-medium truncate">
+																{`${getTypeName(member.memberable_type)}: `}
+																{member?.memberable?.name ??
+																	member?.memberable?.title ??
+																	member.memberable_id}
+															</span>
 														</div>
-													</li>
-												))}
-										</ul>
-									) : (
-										<EmptyState
-											title="No recipients"
-											description="This mailing list has no base recipients selected, so it won't be able to do very much. "
-											actionDescription={
-												list.can['update_group']
-													? 'To add recipients, edit this list, then assign a singer or an entire role, status or voice part.'
-													: 'Ask your admin to finish setting up this list.'
-											}
-											icon="inbox-in"
-											href={
-												list.can['update_group'] ? route('groups.edit', { group: list }) : null
-											}
-											actionLabel="Edit Mailing List"
-											actionIcon="edit"
-										/>
-									)}
-								</div>
-							),
-						},
+													</div>
+												</li>
+											))}
+									</ul>
+								) : (
+									<EmptyState
+										title="No recipients"
+										description="This mailing list has no base recipients selected, so it won't be able to do very much. "
+										actionDescription={
+											list.can['update_group']
+												? 'To add recipients, edit this list, then assign a singer or an entire role, status or voice part.'
+												: 'Ask your admin to finish setting up this list.'
+										}
+										icon="inbox-in"
+										href={list.can['update_group'] ? route('groups.edit', { group: list }) : null}
+										actionLabel="Edit Mailing List"
+										actionIcon="edit"
+									/>
+								)}
+							</div>
+						),
+					},
 					...(list.list_type === 'distribution'
 						? [
 								{
-										id: 'senders',
-										column: 'senders',
-										title: 'Senders',
-										content: (
-											<div className="h-full overflow-y-auto relative">
-												{list.sender_ensembles?.length > 0 && (
-													<div className="bg-purple-100 px-6 py-3 border-y border-purple-300">
-														<h4 className="text-xs font-semibold text-purple-700 uppercase tracking-wider mb-1">
-															Ensemble Filter
-														</h4>
-														<div className="flex flex-wrap gap-2">
-															{list.sender_ensembles.map(ensemble => (
-																<span
-																	key={ensemble.id}
-																	className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-200 text-purple-800 border border-purple-400"
-																>
-																	{ensemble.name}
-																</span>
-															))}
-														</div>
-														<p className="mt-2 text-xs text-purple-600 italic">
-															Only people in these ensembles who also match the criteria
-															below are permitted to send.
-														</p>
+									id: 'senders',
+									column: 'senders',
+									title: 'Senders',
+									content: (
+										<div className="h-full overflow-y-auto relative">
+											{list.sender_ensembles?.length > 0 && (
+												<div className="bg-purple-100 px-6 py-3 border-y border-purple-300">
+													<h4 className="text-xs font-semibold text-purple-700 uppercase tracking-wider mb-1">
+														Ensemble Filter
+													</h4>
+													<div className="flex flex-wrap gap-2">
+														{list.sender_ensembles.map(ensemble => (
+															<span
+																key={ensemble.id}
+																className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-200 text-purple-800 border border-purple-400"
+															>
+																{ensemble.name}
+															</span>
+														))}
 													</div>
-												)}
-												{list.senders?.filter(s => s.sender_type !== 'App\\Models\\Ensemble')
-													?.length > 0 ? (
-													<ul role="list" className="relative z-0 divide-y divide-gray-200">
-														{list.senders
-															.filter(s => s.sender_type !== 'App\\Models\\Ensemble')
-															.map(sender => (
-																<li key={sender.id}>
-																	<div className="relative px-6 py-5 flex items-center space-x-3">
-																		<div className="flex items-center justify-between px-4">
-																			<span className="text-sm font-medium truncate">
-																				{`${getTypeName(sender.sender_type)}: `}
-																				{sender?.sender?.name ??
-																					sender?.sender?.title ??
-																					sender.sender_id}
-																			</span>
-																		</div>
+													<p className="mt-2 text-xs text-purple-600 italic">
+														Only people in these ensembles who also match the criteria below
+														are permitted to send.
+													</p>
+												</div>
+											)}
+											{list.senders?.filter(s => s.sender_type !== 'App\\Models\\Ensemble')
+												?.length > 0 ? (
+												<ul role="list" className="relative z-0 divide-y divide-gray-200">
+													{list.senders
+														.filter(s => s.sender_type !== 'App\\Models\\Ensemble')
+														.map(sender => (
+															<li key={sender.id}>
+																<div className="relative px-6 py-5 flex items-center space-x-3">
+																	<div className="flex items-center justify-between px-4">
+																		<span className="text-sm font-medium truncate">
+																			{`${getTypeName(sender.sender_type)}: `}
+																			{sender?.sender?.name ??
+																				sender?.sender?.title ??
+																				sender.sender_id}
+																		</span>
 																	</div>
-																</li>
-															))}
-													</ul>
-												) : (
-													<EmptyState
-														title="No senders"
-														description="This type of mailing list needs permitted senders to be assigned (a Chat type list just assumes the recipients are the senders). "
-														actionDescription={
-															list.can['update_group']
-																? 'To add senders, edit this list, then assign a singer or an entire role, status or voice part.'
-																: 'Ask your admin to finish setting up this list.'
-														}
-														icon="inbox-out"
-														href={
-															list.can['update_group']
-																? route('groups.edit', { group: list })
-																: null
-														}
-														actionLabel="Edit Mailing List"
-														actionIcon="edit"
-													/>
-												)}
-											</div>
-										),
+																</div>
+															</li>
+														))}
+												</ul>
+											) : (
+												<EmptyState
+													title="No senders"
+													description="This type of mailing list needs permitted senders to be assigned (a Chat type list just assumes the recipients are the senders). "
+													actionDescription={
+														list.can['update_group']
+															? 'To add senders, edit this list, then assign a singer or an entire role, status or voice part.'
+															: 'Ask your admin to finish setting up this list.'
+													}
+													icon="inbox-out"
+													href={
+														list.can['update_group']
+															? route('groups.edit', { group: list })
+															: null
+													}
+													actionLabel="Edit Mailing List"
+													actionIcon="edit"
+												/>
+											)}
+										</div>
+									),
 								},
 						  ]
 						: []),

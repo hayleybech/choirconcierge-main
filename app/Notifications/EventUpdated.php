@@ -23,13 +23,16 @@ class EventUpdated extends Notification
 
     private array $original;
 
+    private ?string $message;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct(Event $event, array $original)
+    public function __construct(Event $event, array $original, ?string $message = null)
     {
         $this->event = $event;
         $this->original = $original;
+        $this->message = $message;
     }
 
     /**
@@ -75,6 +78,7 @@ class EventUpdated extends Notification
             ->with(['event' => $this->event])
             ->markdown('emails.event_updated', [
                 'event' => $this->event,
+                'message' => $this->message,
                 'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->event->id, $notifiable)),
                 'emailPreferenceLinks' => $notifiable instanceof User
                     ? app(EmailPreferenceLinks::class)->make($notifiable, EmailCategory::EVENTS)
