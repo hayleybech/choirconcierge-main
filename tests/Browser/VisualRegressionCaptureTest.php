@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\Support\VisualRegression\ScreenshotCatalog;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
@@ -18,9 +19,32 @@ test('captures every catalog case at every viewport without JavaScript errors', 
 
     config(['app.debug' => false]);
     Carbon::setTestNow('2026-10-23 12:00:00');
+    $authenticatedUser = null;
 
     try {
         foreach ($catalog->cases() as $case) {
+            if ($case['persona'] === 'authenticated-user' && $authenticatedUser === null) {
+                $authenticatedUser = User::factory()->create([
+                    'first_name' => 'Visual',
+                    'last_name' => 'Regression',
+                    'email' => 'visual-regression@example.test',
+                    'dob' => '1990-01-15',
+                    'phone' => '555-0100',
+                    'ice_name' => 'Emergency Contact',
+                    'ice_phone' => '555-0101',
+                    'address_street_1' => '1 Test Street',
+                    'address_street_2' => 'Suite 2',
+                    'address_suburb' => 'Testville',
+                    'address_state' => 'WA',
+                    'address_postcode' => '6000',
+                    'profession' => 'Synthetic Test Profile',
+                    'skills' => 'Choir singing',
+                    'height' => 170,
+                    'bha_id' => '1234',
+                ]);
+                $this->actingAs($authenticatedUser);
+            }
+
             foreach ($catalog->viewports() as $viewport) {
                 File::ensureDirectoryExists($latestDirectory.DIRECTORY_SEPARATOR.$case['id']);
                 File::ensureDirectoryExists($baselineDirectory.DIRECTORY_SEPARATOR.$case['id']);

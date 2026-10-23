@@ -10,7 +10,7 @@
         "production": "mix --production",
         "prettier": "prettier",
         "test": "jest",
-        "test:visual": "node --test scripts/visual-regression-runner.test.js scripts/visual-regression-audit.test.js",
+        "test:visual": "node --test scripts/visual-regression-runner.test.js scripts/visual-regression-audit.test.js scripts/visual-regression-gallery.test.js",
         "icon": "node scripts/render-fontawesome-icon.js"
     },
     "devDependencies": {

@@ -59,9 +59,45 @@ test('an authenticated user can see catalog metadata in the local screenshot gal
     $this->actingAs(User::factory()->create())
         ->get(route('local.visual-regression.index'))
         ->assertOk()
-        ->assertSee('Choir Gallery')
+        ->assertSee('<h1>CGAL Screenshot Gallery</h1>', false)
         ->assertSee('auth-login')
         ->assertSee('1440 × 900');
+});
+
+test('the gallery shows a three-column grid with one selectable baseline or latest capture', function () {
+    $baselineDirectory = storage_path('framework/testing/visual-gallery-baselines');
+    $latestDirectory = storage_path('framework/testing/visual-gallery-latest');
+    $caseDirectory = 'auth-login';
+
+    config([
+        'visual-regression.baseline_directory' => $baselineDirectory,
+        'visual-regression.latest_directory' => $latestDirectory,
+    ]);
+
+    File::ensureDirectoryExists($baselineDirectory.DIRECTORY_SEPARATOR.$caseDirectory);
+    File::ensureDirectoryExists($latestDirectory.DIRECTORY_SEPARATOR.$caseDirectory);
+    File::put($baselineDirectory.DIRECTORY_SEPARATOR.$caseDirectory.DIRECTORY_SEPARATOR.'desktop.png', 'baseline');
+    File::put($latestDirectory.DIRECTORY_SEPARATOR.$caseDirectory.DIRECTORY_SEPARATOR.'desktop.png', 'latest');
+
+    try {
+        $response = $this->actingAs(User::factory()->create())
+            ->get(route('local.visual-regression.index'))
+            ->assertOk()
+            ->assertSee('data-view="grid"', false)
+            ->assertSee('data-gallery-view', false)
+            ->assertSee('data-grid-variant-select', false)
+            ->assertSee('data-comparison-captures', false)
+            ->assertSee('repeat(3, minmax(0, 1fr))', false)
+            ->assertSee('data-grid-variant="baseline"', false)
+            ->assertSee('data-grid-variant="latest"', false)
+            ->assertSee(route('local.visual-regression.image', [$caseDirectory, 'desktop', 'baseline']), false)
+            ->assertSee(route('local.visual-regression.image', [$caseDirectory, 'desktop', 'latest']), false);
+
+        expect($response->getContent())->toMatch('/data-grid-variant="baseline"\s+hidden/');
+    } finally {
+        File::deleteDirectory($baselineDirectory);
+        File::deleteDirectory($latestDirectory);
+    }
 });
 
 test('the gallery only serves images declared in the catalog', function () {

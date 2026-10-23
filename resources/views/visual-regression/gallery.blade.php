@@ -16,17 +16,30 @@
         .case { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #d1d5db; border-radius: .5rem; background: white; }
         .case h2 { margin: 0 0 .5rem; font-size: 1.125rem; }
         .metadata { margin: 0 0 1rem; color: #4b5563; font-size: .875rem; }
+        .gallery[data-view="grid"] { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+        .gallery[data-view="grid"] .case { min-width: 0; margin: 0; }
+        .gallery[data-view="grid"] .metadata { display: none; }
+        .gallery[data-view="grid"] .case h2 { font-size: 1rem; overflow-wrap: anywhere; }
+        .grid-captures figure { overflow: hidden; border: 1px solid #d1d5db; background: #f9fafb; }
+        .grid-captures img { width: 100%; height: 24rem; object-fit: contain; object-position: top; }
         .images { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 1rem; }
         figure { margin: 0; }
         figcaption { margin-bottom: .5rem; font-weight: 700; }
         img { display: block; max-width: 100%; border: 1px solid #d1d5db; }
         .missing { padding: 2rem; color: #6b7280; background: #f9fafb; }
         [hidden] { display: none !important; }
+        @media (max-width: 960px) {
+            .gallery[data-view="grid"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 620px) {
+            .gallery[data-view="grid"] { grid-template-columns: minmax(0, 1fr); }
+            main { padding: 1rem; }
+        }
     </style>
 </head>
 <body>
 <header>
-    <h1>CGAL — Choir Gallery</h1>
+    <h1>CGAL Screenshot Gallery</h1>
     <p>Local visual-regression captures and approved references</p>
 </header>
 <main>
@@ -51,9 +64,23 @@
                 @endforeach
             </select>
         </label>
+        <label>
+            View
+            <select data-gallery-view>
+                <option value="grid" selected>Grid</option>
+                <option value="compare">Compare</option>
+            </select>
+        </label>
+        <label>
+            Grid image
+            <select data-grid-variant-select>
+                <option value="latest" selected>Latest capture</option>
+                <option value="baseline">Approved baseline</option>
+            </select>
+        </label>
     </form>
 
-    <section aria-label="Screenshot cases">
+    <section class="gallery" data-gallery data-view="grid" aria-label="Screenshot cases">
         @forelse ($entries as $entry)
             <article class="case" data-screenshot
                      data-module="{{ $entry['module'] }}"
@@ -68,7 +95,19 @@
                 <p class="metadata">
                     {{ $entry['id'] }} · {{ $entry['route'] }} · {{ $entry['viewport']['width'] }} × {{ $entry['viewport']['height'] }} · {{ $entry['persona'] }} · {{ $entry['comparison'] }}
                 </p>
-                <div class="images">
+                <div class="grid-captures" data-grid-captures>
+                    @foreach (['baseline' => 'Approved baseline', 'latest' => 'Latest capture'] as $variant => $label)
+                        <figure data-grid-variant="{{ $variant }}" @if ($variant !== 'latest') hidden @endif>
+                            @if ($entry['images'][$variant])
+                                <img src="{{ route('local.visual-regression.image', [$entry['id'], $entry['viewport']['id'], $variant]) }}"
+                                     alt="{{ $label }} for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
+                            @else
+                                <p class="missing">No {{ strtolower($label) }} captured.</p>
+                            @endif
+                        </figure>
+                    @endforeach
+                </div>
+                <div class="images comparison-images" data-comparison-captures hidden>
                     @foreach (['baseline' => 'Approved baseline', 'latest' => 'Latest capture', 'diff' => 'Diff'] as $variant => $label)
                         <figure>
                             <figcaption>{{ $label }}</figcaption>
@@ -90,6 +129,9 @@
 <script>
     const filters = Array.from(document.querySelectorAll('[data-filter]'));
     const cards = Array.from(document.querySelectorAll('[data-screenshot]'));
+    const gallery = document.querySelector('[data-gallery]');
+    const galleryView = document.querySelector('[data-gallery-view]');
+    const gridVariantSelect = document.querySelector('[data-grid-variant-select]');
 
     function applyFilters() {
         cards.forEach(card => {
@@ -97,7 +139,25 @@
         });
     }
 
+    function applyGalleryView() {
+        gallery.dataset.view = galleryView.value;
+
+        document.querySelectorAll('[data-grid-captures]').forEach(captures => {
+            captures.hidden = galleryView.value !== 'grid';
+        });
+
+        document.querySelectorAll('[data-comparison-captures]').forEach(captures => {
+            captures.hidden = galleryView.value !== 'compare';
+        });
+
+        document.querySelectorAll('[data-grid-variant]').forEach(variant => {
+            variant.hidden = variant.dataset.gridVariant !== gridVariantSelect.value;
+        });
+    }
+
     filters.forEach(filter => filter.addEventListener('change', applyFilters));
+    galleryView.addEventListener('change', applyGalleryView);
+    gridVariantSelect.addEventListener('change', applyGalleryView);
 </script>
 </body>
 </html>

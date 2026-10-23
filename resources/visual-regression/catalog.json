@@ -120,6 +120,54 @@
 			"component": "Error",
 			"browser": "chromium",
 			"assert_text": "500 error"
+		},
+		{
+			"id": "central-account-edit",
+			"module": "central",
+			"page_type": "edit",
+			"state": "normal",
+			"route": "central.account.edit",
+			"parameters": {},
+			"persona": "authenticated-user",
+			"component": "Central/Account/Edit",
+			"browser": "chromium",
+			"assert_text": "Account Settings"
+		},
+		{
+			"id": "central-dashboard",
+			"module": "central",
+			"page_type": "show",
+			"state": "normal",
+			"route": "central.dash",
+			"parameters": {},
+			"persona": "authenticated-user",
+			"component": "Central/Dash/Show",
+			"browser": "chromium",
+			"assert_text": "Central Dashboard"
+		},
+		{
+			"id": "central-changelog",
+			"module": "central",
+			"page_type": "index",
+			"state": "normal",
+			"route": "central.changelog",
+			"parameters": {},
+			"persona": "authenticated-user",
+			"component": "Central/Changelog",
+			"browser": "chromium",
+			"assert_text": "Changelog"
+		},
+		{
+			"id": "central-tenant-create",
+			"module": "central",
+			"page_type": "create",
+			"state": "normal",
+			"route": "central.tenants.create",
+			"parameters": {},
+			"persona": "authenticated-user",
+			"component": "Central/Tenants/Create",
+			"browser": "chromium",
+			"assert_text": "Create Organisation"
 		}
 	]
 }
