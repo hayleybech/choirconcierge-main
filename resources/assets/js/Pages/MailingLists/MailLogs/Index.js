@@ -61,12 +61,12 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSideba
 
 	return (
 		<>
-			<AppHead title="Communications" />
+			<AppHead title="Inbox" />
 
 			{showAdminDetails && <TrialAntiSpamNotice />}
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation title="Communications">
+				<PageTopNavigation title="Inbox">
 					<PageActionsMenu>
 						{actions.map((action, key) => (
 																		<ActionMenuItem
@@ -84,7 +84,7 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSideba
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderTitle>
-					<Icon icon="mail-bulk" type="solid" className="mr-2" /> Communications
+					<Icon icon="mail-bulk" type="solid" className="mr-2" /> Inbox
 				</PageHeaderTitle>
 				<PageHeaderActions>
 					{actions.map(action => (

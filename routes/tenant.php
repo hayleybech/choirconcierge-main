@@ -260,9 +260,16 @@ Route::middleware([
             });
             Route::get('/communications/create', [BroadcastController::class, 'create'])->name('communications.create');
             Route::post('/communications', [BroadcastController::class, 'store'])->name('communications.store');
-            Route::resource('communications', MailLogController::class)->only(['index', 'show'])->middleware(EnsureUserIsMember::class)->parameters([
-                'communications' => 'mail_log',
-            ]);
+            Route::resource('inbox', MailLogController::class)
+                ->only(['index', 'show'])
+                ->names([
+                    'index' => 'communications.index',
+                    'show' => 'communications.show',
+                ])
+                ->middleware(EnsureUserIsMember::class)
+                ->parameters([
+                    'inbox' => 'mail_log',
+                ]);
             Route::resource('groups', UserGroupController::class);
 
             // Tasks module

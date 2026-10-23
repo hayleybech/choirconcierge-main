@@ -8,6 +8,20 @@ use Inertia\Testing\AssertableInertia;
 
 uses(RefreshDatabase::class);
 
+it('uses inbox paths for tenant communications', function () {
+    $this->actingAsRole('Admin');
+    $log = MailLog::factory()->create();
+    $log->tenants()->attach(tenant('id'));
+
+    $indexPath = parse_url(the_tenant_route('communications.index'), PHP_URL_PATH);
+    $showPath = parse_url(the_tenant_route('communications.show', ['mail_log' => $log]), PHP_URL_PATH);
+
+    $this->assertStringEndsWith('/inbox', $indexPath);
+    $this->assertStringEndsWith('/inbox/' . $log->id, $showPath);
+    $this->get(the_tenant_route('communications.index'))->assertOk();
+    $this->get(the_tenant_route('communications.show', ['mail_log' => $log]))->assertOk();
+});
+
 it('filters and sorts tenant communications logs', function () {
     $this->actingAsRole('Admin');
 
