@@ -1,4 +1,5 @@
 @component('mail::layout')
+@if($includeLetterhead ?? true)
 {{-- Header --}}
 @slot('header')
 @if(tenant())
@@ -15,6 +16,7 @@
 @endcomponent
 @endif
 @endslot
+@endif
 
 {{-- Body --}}
 {{ $slot }}

@@ -25,7 +25,7 @@ const Show = ({ list, setSidebarOpen }) => {
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const actions = [
 		{
-			label: 'Send Broadcast',
+			label: 'Compose',
 			icon: 'paper-plane',
 			url: route('communications.create', { list: list.id }),
 			can: 'create_broadcast',

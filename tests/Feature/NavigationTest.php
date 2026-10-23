@@ -19,6 +19,7 @@ class NavigationTest extends TestCase
                 ->where('navigation.0.route', 'dash')
                 ->where('navigation.1.name', 'Inbox')
                 ->where('navigation.1.route', 'communications.index')
+                ->where('navigation.1.items.0.name', 'Compose')
             );
     }
 

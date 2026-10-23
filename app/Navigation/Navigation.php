@@ -91,7 +91,7 @@ class Navigation
                 'icon' => 'fa-mail-bulk',
                 'showAsActiveForRoutes' => ['communications.*', 'groups.*'],
                 'items' => [
-                    ['name' => 'Send Broadcast', 'route' => 'communications.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['communications.create']],
+                    ['name' => 'Compose', 'route' => 'communications.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['communications.create']],
                     [
                         'name' => 'Mailing Lists',
                         'route' => 'groups.index',

@@ -31,6 +31,7 @@ class BroadcastRequest extends FormRequest
             'list' => ['required', 'exists:user_groups,id'],
             'subject' => ['required', 'max:255'],
             'body' => ['required', 'max:5000'],
+            'include_letterhead' => ['sometimes', 'boolean'],
             'attachments.*' => ['sometimes', 'file', 'max:' . self::MAX_FILE_SIZE_MB * 1024],
         ];
     }

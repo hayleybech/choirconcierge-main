@@ -19,6 +19,7 @@ import ButtonLink from '../../../components/inputs/ButtonLinkV2';
 import Button from '../../../components/inputs/ButtonV2';
 import FormFooter from '../../../components/FormFooter';
 import MailingListSelect from '../../../components/inputs/MailingListSelect';
+import CheckboxWithLabel from '../../../components/inputs/CheckboxWithLabel';
 import Icon from '../../../components/Icon';
 import ErrorAlert from '../../../components/ErrorAlert';
 import FileInput from '../../../components/inputs/FileInput';
@@ -38,6 +39,7 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 		body: '',
 		list: selectedList,
 		attachments: [],
+		include_letterhead: true,
 	});
 
 	function submit(e) {
@@ -47,12 +49,12 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 
 	const breadcrumbs = [
 		{ name: 'Communications', url: route('communications.index') },
-		{ name: 'Send Email Broadcast', url: route('communications.create') },
+		{ name: 'Compose Message', url: route('communications.create') },
 	];
 
 	return (
 		<>
-			<AppHead title="Send Email" />
+			<AppHead title="Compose Message" />
 
 			<TrialAntiSpamNotice />
 
@@ -64,7 +66,7 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
 						<Icon icon="inbox-out" type="solid" className="mr-2" />
-						Send Email Broadcast
+						Compose Message
 					</PageHeaderTitle>
 				</PageHeaderContent>
 			</PageHeader>
@@ -73,8 +75,8 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 				{lists.length > 0 ? (
 					<Form onSubmit={submit}>
 						<FormSection
-							title="Compose email with letterhead"
-							description="Choose a mailing list, then start writing! "
+							title="Compose a message"
+							description="Choose a mailing list, write your message, and optionally include your choir's letterhead."
 						>
 							<div className="sm:col-span-6">
 								<Label label="Mailing List" />
@@ -108,6 +110,16 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 							</div>
 
 							<div className="sm:col-span-6">
+								<CheckboxWithLabel
+									label="Include choir letterhead"
+									id="include_letterhead"
+									name="include_letterhead"
+									checked={data.include_letterhead}
+									onChange={event => setData('include_letterhead', event.target.checked)}
+								/>
+							</div>
+
+							<div className="sm:col-span-6">
 								<Label label="Attachments" forInput="attachments" />
 								<FileInput
 									name="attachments"
@@ -133,7 +145,7 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 
 						<FormFooter>
 							<ButtonLink href={route('groups.index')}>Cancel</ButtonLink>
- 						<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
+							<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 								<Icon icon="paper-plane" mr /> Send
 							</Button>
 						</FormFooter>

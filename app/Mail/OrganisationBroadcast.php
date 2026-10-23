@@ -20,6 +20,8 @@ class OrganisationBroadcast extends Mailable implements Loggable
 
     public Collection $fileMeta;
 
+    public bool $includeLetterhead;
+
     public ?User $recipient = null;
 
     private User $fromUser;
@@ -27,13 +29,22 @@ class OrganisationBroadcast extends Mailable implements Loggable
     /**
      * Create a new message instance.
      */
-    public function __construct(UserGroup $group, string $subject, string $body, User $fromUser, Collection $fileMeta, string $uid, int $size)
-    {
+    public function __construct(
+        UserGroup $group,
+        string $subject,
+        string $body,
+        User $fromUser,
+        Collection $fileMeta,
+        string $uid,
+        int $size,
+        bool $includeLetterhead = true,
+    ) {
         $this->to($group->email, $group->title);
         $this->subject($subject);
         $this->from($fromUser->email, $fromUser->name);
         $this->body = $body;
         $this->fileMeta = $fileMeta;
+        $this->includeLetterhead = $includeLetterhead;
 
         $this->uid = $uid;
         $this->received_at = now();
@@ -57,6 +68,7 @@ class OrganisationBroadcast extends Mailable implements Loggable
         return $this->markdown('emails.broadcast', [
             'body' => $this->body,
             'emailPreferenceLinks' => $emailPreferenceLinks,
+            'includeLetterhead' => $this->includeLetterhead,
         ]);
     }
 

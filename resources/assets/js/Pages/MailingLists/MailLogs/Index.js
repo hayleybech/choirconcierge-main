@@ -41,7 +41,7 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSideba
 
 	const actions = [
 		{
-			label: 'Send Broadcast',
+			label: 'Compose',
 			icon: 'inbox-out',
 			url: route('communications.create'),
 			intent: 'primary',

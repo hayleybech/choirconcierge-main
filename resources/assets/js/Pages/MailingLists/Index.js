@@ -36,7 +36,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 			can: 'create_group',
 		},
 		{
-			label: 'Send Broadcast',
+			label: 'Compose',
 			icon: 'inbox-out',
 			url: route('communications.create'),
 			intent: 'secondary',
