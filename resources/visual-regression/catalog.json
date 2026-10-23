@@ -1,0 +1,125 @@
+{
+	"schema_version": 1,
+	"browser": "chromium",
+	"viewports": [
+		{
+			"id": "desktop",
+			"label": "Desktop",
+			"width": 1440,
+			"height": 900
+		},
+		{
+			"id": "tablet",
+			"label": "Tablet",
+			"width": 768,
+			"height": 1024
+		},
+		{
+			"id": "mobile",
+			"label": "Mobile",
+			"width": 390,
+			"height": 844
+		}
+	],
+	"cases": [
+		{
+			"id": "auth-login",
+			"module": "auth",
+			"page_type": "login",
+			"state": "normal",
+			"route": "login",
+			"parameters": {},
+			"persona": "guest",
+			"component": "Auth/Login",
+			"browser": "chromium",
+			"assert_text": "Sign in to your account"
+		},
+		{
+			"id": "auth-register",
+			"module": "auth",
+			"page_type": "register",
+			"state": "normal",
+			"route": "register",
+			"parameters": {},
+			"persona": "guest",
+			"component": "Auth/Register",
+			"browser": "chromium",
+			"assert_text": "Create an account"
+		},
+		{
+			"id": "auth-forgot-password",
+			"module": "auth",
+			"page_type": "forgot-password",
+			"state": "normal",
+			"route": "password.request",
+			"parameters": {},
+			"persona": "guest",
+			"component": "Auth/ForgotPassword",
+			"browser": "chromium",
+			"assert_text": "Reset your password"
+		},
+		{
+			"id": "auth-reset-password",
+			"module": "auth",
+			"page_type": "reset-password",
+			"state": "normal",
+			"route": "password.reset",
+			"parameters": {
+				"token": "visual-regression-token",
+				"email": "visual-regression@example.test"
+			},
+			"persona": "guest",
+			"component": "Auth/ResetPassword",
+			"browser": "chromium",
+			"assert_text": "Set your password"
+		},
+		{
+			"id": "auth-two-factor-challenge",
+			"module": "auth",
+			"page_type": "two-factor-challenge",
+			"state": "normal",
+			"route": "local.visual-regression.two-factor-preview",
+			"parameters": {},
+			"persona": "guest-challenge",
+			"component": "Auth/TwoFactorChallenge",
+			"browser": "chromium",
+			"assert_text": "Two-Factor Authentication"
+		},
+		{
+			"id": "error-403",
+			"module": "errors",
+			"page_type": "error",
+			"state": "403",
+			"route": "local.visual-regression.error-preview",
+			"parameters": { "status": 403 },
+			"persona": "guest",
+			"component": "Error",
+			"browser": "chromium",
+			"assert_text": "403 error"
+		},
+		{
+			"id": "error-404",
+			"module": "errors",
+			"page_type": "error",
+			"state": "404",
+			"route": "local.visual-regression.error-preview",
+			"parameters": { "status": 404 },
+			"persona": "guest",
+			"component": "Error",
+			"browser": "chromium",
+			"assert_text": "404 error"
+		},
+		{
+			"id": "error-500",
+			"module": "errors",
+			"page_type": "error",
+			"state": "500",
+			"route": "local.visual-regression.error-preview",
+			"parameters": { "status": 500 },
+			"persona": "guest",
+			"component": "Error",
+			"browser": "chromium",
+			"assert_text": "500 error"
+		}
+	]
+}

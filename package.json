@@ -10,6 +10,7 @@
         "production": "mix --production",
         "prettier": "prettier",
         "test": "jest",
+        "test:visual": "node --test scripts/visual-regression-runner.test.js scripts/visual-regression-audit.test.js",
         "icon": "node scripts/render-fontawesome-icon.js"
     },
     "devDependencies": {
@@ -30,6 +31,7 @@
         "jest": "^27.0.6",
         "laravel-mix": "^6.0.43",
         "lodash": "^4.17.21",
+        "playwright": "^1.64.1",
         "popper.js": "^1.16.1",
         "postcss": "^8.5.6",
         "prettier": "^1.19.1",

@@ -45,3 +45,7 @@ public/js/vendor.js
 public/51103eacf3bef7f35f0812db4ea611f7.js
 
 .phpunit.cache/
+
+/tests/Browser/Screenshots/*
+!/tests/Browser/Screenshots/Baselines/
+!/tests/Browser/Screenshots/Baselines/**
