@@ -85,7 +85,7 @@ test('sending an announcement queues delivery and writes to the central mail log
     );
     $this->assertDatabaseHas('mail_logs', [
         'from' => 'Choir Concierge <hayley@choirconcierge.com>',
-        'to' => 'All users (2 recipients)',
+        'to' => 'All users',
         'subject' => 'A product update',
         'has_attachments' => true,
     ]);
@@ -93,6 +93,7 @@ test('sending an announcement queues delivery and writes to the central mail log
     $this->assertDatabaseHas('mail_log_events', [
         'mail_log_id' => $mailLog->id,
         'status' => 'pending',
+        'context' => '2 recipients · Product Updates',
     ]);
     Storage::disk('temp')->assertExists('broadcasts/' . $attachment->hashName());
     expect($recipient->exists)->toBeTrue();

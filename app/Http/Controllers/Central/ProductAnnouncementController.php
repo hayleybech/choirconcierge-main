@@ -61,7 +61,7 @@ class ProductAnnouncementController extends Controller
         $mailLog = MailLog::create([
             'uid' => 'product-announcement-' . Str::uuid(),
             'from' => 'Choir Concierge <hayley@choirconcierge.com>',
-            'to' => $audience->label() . ' (' . $recipientCount . ' recipients)',
+            'to' => $audience->label(),
             'subject' => Str::limit($data['subject'], 125),
             'body' => $data['body'],
             'size' => collect($fileMeta)->sum('size') + strlen($data['body']),
