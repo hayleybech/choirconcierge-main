@@ -56,12 +56,12 @@ class Tenant extends BaseTenant
     protected static function booted(): void
     {
         static::deleted(function (Tenant $tenant) {
-            if(! $tenant->logo) {
+            if (!$tenant->logo) {
                 return;
             }
 
             Storage::disk('public')
-                ->delete('choir-logos/'.$tenant->logo);
+                ->delete('choir-logos/' . $tenant->logo);
         });
     }
 
@@ -70,13 +70,14 @@ class Tenant extends BaseTenant
         string $name,
         string $timezone,
         array  $attributes = []
-    ): self|Model {
+    ): self|Model
+    {
         return static::query()->create(array_merge($attributes, compact('id', 'name', 'timezone')));
     }
 
     public static function findByDomain(string $domain): ?self
     {
-        return self::whereHas('domains', static function (Builder $query) use ($domain) {
+        return self::with('domains')->whereHas('domains', static function (Builder $query) use ($domain) {
             $query->where('domain', '=', $domain);
         })->first();
     }
@@ -85,17 +86,17 @@ class Tenant extends BaseTenant
     {
         $timezone = is_string($this->timezone) ? CarbonTimeZone::create($this->timezone) : $this->timezone;
 
-        return $timezone->toRegionName().' '.$timezone->toOffsetName();
+        return $timezone->toRegionName() . ' ' . $timezone->toOffsetName();
     }
 
     public function getMailFromNameAttribute(): string
     {
-        return $this->name.' via Choir Concierge';
+        return $this->name . ' via Choir Concierge';
     }
 
     public function getMailFromAddressAttribute(): string
     {
-        return 'hello@'.$this->host;
+        return 'hello@' . $this->host;
     }
 
     public function getPrimaryDomainAttribute(): ?string
@@ -109,13 +110,12 @@ class Tenant extends BaseTenant
 
     public function getHostAttribute(): string
     {
-        return $this->primary_domain.'.'.central_domain() ?? '';
+        return $this->primary_domain . '.' . central_domain() ?? '';
     }
 
     public function logoUrl(): Attribute
     {
-        return Attribute::get(fn () =>
-            $this->logo ? Storage::disk()->url('choir-logos/'.$this->logo) : ''
+        return Attribute::get(fn() => $this->logo ? Storage::disk()->url('choir-logos/' . $this->logo) : ''
         );
     }
 
@@ -129,10 +129,10 @@ class Tenant extends BaseTenant
         $this->loadMissing(['subscriptions', 'customer']);
         $activeUserQuotaStatus = $this->getActiveUserQuotaStatus();
 
-        return Attribute::get(fn () => [
+        return Attribute::get(fn() => [
             'valid' => $this->onTrial()
                 || $this->has_gratis
-                || ($this->subscription()?->valid() && ! $activeUserQuotaStatus['quotaExceeded']),
+                || ($this->subscription()?->valid() && !$activeUserQuotaStatus['quotaExceeded']),
             'onTrial' => $this->onTrial(),
             'trialEndsAt' => $this->onTrial() ? $this->trialEndsAt() : null,
             'hasExpiredTrial' => $this->hasExpiredTrial(),
@@ -141,7 +141,7 @@ class Tenant extends BaseTenant
             'onPausedGracePeriod' => $this->subscription()?->onPausedGracePeriod() ?? false,
             'paused' => $this->subscription()?->paused() ?? false,
             'pastDue' => $this->subscription()?->pastDue() ?? false,
-			'hasGratis' => $this->has_gratis,
+            'hasGratis' => $this->has_gratis,
 
             'activeUserQuota' => $activeUserQuotaStatus,
         ]);
@@ -151,62 +151,65 @@ class Tenant extends BaseTenant
     {
         // valid subscription (active plan, paused grace period, or grace period), on trial or gratis
         return $query
-            ->whereHas('subscriptions', function($query) {
+            ->whereHas('subscriptions', function ($query) {
                 $query->active()
-                    ->orWhere(function($query) {
+                    ->orWhere(function ($query) {
                         $query->onTrial();
                     });
             })
-            ->orWhereHas('customer', function($query) {
+            ->orWhereHas('customer', function ($query) {
                 $query->whereNotNull('trial_ends_at')
                     ->where('trial_ends_at', '>', \Carbon\Carbon::now());
             })
-            ->orWhere(function($query) {
+            ->orWhere(function ($query) {
                 // @TODO make has_gratis a regular column
                 $query->where('data->has_gratis', true);
             });
     }
+
     public function scopeInactive($query)
     {
         return $query
-            ->whereDoesntHave('subscriptions', function($query) {
+            ->whereDoesntHave('subscriptions', function ($query) {
                 $query->active()
-                    ->orWhere(function($query) {
+                    ->orWhere(function ($query) {
                         $query->onTrial();
                     });
             })
-            ->whereDoesntHave('customer', function($query) {
+            ->whereDoesntHave('customer', function ($query) {
                 $query->whereNotNull('trial_ends_at')
                     ->where('trial_ends_at', '>', \Carbon\Carbon::now());
             })
             ->whereNot('data->has_gratis', true);
     }
+
     public function scopeSubscribed($query)
     {
-        return $query->whereHas('subscriptions', function($query) {
+        return $query->whereHas('subscriptions', function ($query) {
             $query->active();
         });
     }
+
     public function scopeEnded($query)
     {
-        return $query->whereHas('subscriptions', function($query) {
+        return $query->whereHas('subscriptions', function ($query) {
             $query->ended();
         });
     }
 
 
-
     public function scopeTrial($query)
     {
         return $query
-            ->whereHas('subscriptions', function($query) {
+            ->whereHas('subscriptions', function ($query) {
                 $query->onTrial();
             })
-            ->orWhereHas('customer', function($query) {
+            ->orWhereHas('customer', function ($query) {
                 $query->whereNotNull('trial_ends_at')
                     ->where('trial_ends_at', '>', \Carbon\Carbon::now());
             });
     }
+
     public function scopeGratis($query)
     {
         // @TODO make has_gratis a regular column
@@ -214,13 +217,13 @@ class Tenant extends BaseTenant
     }
 
 
-	public function setupDone(): Attribute
-	{
-		return Attribute::get(fn() => Membership::query()
-			->where('tenant_id', $this->id)
-			->where('user_id', $this->created_by)
-			->exists());
-	}
+    public function setupDone(): Attribute
+    {
+        return Attribute::get(fn() => Membership::query()
+            ->where('tenant_id', $this->id)
+            ->where('user_id', $this->created_by)
+            ->exists());
+    }
 
     public function getActiveUserQuotaStatus(): array
     {
@@ -256,10 +259,10 @@ class Tenant extends BaseTenant
         ];
     }
 
-	/**
-	 * @throws Exception
-	 */
-	public function updateLogo(UploadedFile|string $logo, string $hash_name)
+    /**
+     * @throws Exception
+     */
+    public function updateLogo(UploadedFile|string $logo, string $hash_name)
     {
         if (!Storage::disk()->exists('choir-logos')) {
             Storage::disk()->makeDirectory('choir-logos');
@@ -273,19 +276,23 @@ class Tenant extends BaseTenant
         $this->update(['logo' => $hash_name]);
     }
 
-	public function ensembles(): HasMany {
-		return $this->hasMany(Ensemble::class);
-	}
+    public function ensembles(): HasMany
+    {
+        return $this->hasMany(Ensemble::class);
+    }
 
-    public function members(): HasMany {
+    public function members(): HasMany
+    {
         return $this->hasMany(Membership::class);
     }
 
-    public function customFields(): HasMany {
+    public function customFields(): HasMany
+    {
         return $this->hasMany(CustomField::class);
     }
 
-    public function billingUser(): BelongsTo {
+    public function billingUser(): BelongsTo
+    {
         return $this->belongsTo(User::class, 'billing_user_id');
     }
 

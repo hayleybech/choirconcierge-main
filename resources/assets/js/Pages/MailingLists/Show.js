@@ -10,7 +10,7 @@ import {
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';
@@ -35,7 +35,8 @@ const Show = ({ list, setSidebarOpen }) => {
 			label: 'Delete',
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
-			variant: 'danger-outline',
+			intent: 'danger',
+			weight: 'outline',
 			can: 'delete_group',
 		},
 	].filter(action => list.can[action.can]);
@@ -66,7 +67,7 @@ const Show = ({ list, setSidebarOpen }) => {
 							key={action.label}
 							url={action.url}
 							onClick={action.onClick}
-							variant={action.variant}
+												intent={action.intent}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}
@@ -102,8 +103,10 @@ const Show = ({ list, setSidebarOpen }) => {
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}

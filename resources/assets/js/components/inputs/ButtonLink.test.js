@@ -1,12 +1,12 @@
 import React from 'react';
-import {screen, render} from "@testing-library/react";
+import { screen, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import ButtonLink from "./ButtonLink";
+import ButtonLink from './ButtonLinkV2';
 
 describe('ButtonLink', () => {
-    it('renders a link', () => {
-        render(<ButtonLink href="/test">Test</ButtonLink>);
+	it('renders a link', () => {
+		render(<ButtonLink href="/test">Test</ButtonLink>);
 
-        expect(screen.getByRole('link')).toBeVisible();
-    });
+		expect(screen.getByRole('link')).toBeVisible();
+	});
 });

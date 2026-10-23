@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Transition } from '@headlessui/react';
-import Button from './inputs/Button';
+import ButtonV2 from './inputs/ButtonV2';
 import Icon from './Icon';
 import { plural } from '../util';
 
@@ -18,49 +18,55 @@ const BulkEditBar = ({ bulkEdit, actions }) => {
 			leaveFrom="translate-y-0 opacity-100"
 			leaveTo="translate-y-20 opacity-0"
 		>
-			<div className="px-2 py-2 border-b border-gray-200 flex gap-0.5 bg-gray-700 text-white fixed z-50 bottom-4 lg:bottom-8 left-1/2 transform -translate-x-1/2 rounded-xl shadow-xl">
-			<Button
-				size="xs"
-				variant="clear-inverse"
-				onClick={() => {
-					bulkEdit.clearSelections();
-					bulkEdit.setIsForcedMobile(false);
-				}}
-				className="gap-1"
-			>
-				<Icon icon="times" />
-				{bulkEdit.selectedIds.length}&nbsp;{plural(bulkEdit.noun, bulkEdit.selectedIds.length)}
-			</Button>
-			{bulkEdit.selectedIds.length > 0 && (
-				<>
-					{actions}
-					{bulkEdit.canUpdate && !bulkEdit.hideEdit && (
-						<Button
-							size="xs"
-							variant="clear-inverse"
-							onClick={() => bulkEdit.setShowEditModal(true)}
-							disabled={bulkEdit.selectedIds.length === 0}
-							className="gap-1"
-						>
-							<Icon icon="pencil" />
-							Edit
-						</Button>
-					)}
-					{bulkEdit.canDelete && (
-						<Button
-							size="xs"
-							variant="clear-inverse"
-							onClick={() => bulkEdit.setShowDeleteModal(true)}
-							disabled={bulkEdit.selectedIds.length === 0}
-							className="gap-1"
-						>
-							<Icon icon="trash" />
-							Delete
-						</Button>
-					)}
-				</>
-			)}
-		</div>
+			<div className="w-max px-2 py-2 border-b border-gray-200 flex gap-0.5 bg-gray-700 text-white fixed z-50 bottom-4 lg:bottom-8 left-1/2 transform -translate-x-1/2 rounded-xl shadow-xl">
+				<ButtonV2
+					intent="secondary"
+					weight="clear"
+					theme="dark"
+					size="sm"
+					onClick={() => {
+						bulkEdit.clearSelections();
+						bulkEdit.setIsForcedMobile(false);
+					}}
+					className="gap-1 hover:bg-gray-600 hover:!text-gray-100"
+				>
+					<Icon icon="times" />
+					{bulkEdit.selectedIds.length}&nbsp;{plural(bulkEdit.noun, bulkEdit.selectedIds.length)}
+				</ButtonV2>
+				{bulkEdit.selectedIds.length > 0 && (
+					<>
+						{actions}
+						{bulkEdit.canUpdate && !bulkEdit.hideEdit && (
+							<ButtonV2
+								intent="secondary"
+								weight="clear"
+								theme="dark"
+								size="sm"
+								onClick={() => bulkEdit.setShowEditModal(true)}
+								disabled={bulkEdit.selectedIds.length === 0}
+								className="gap-1 hover:bg-gray-600 hover:!text-gray-100"
+							>
+								<Icon icon="pencil" />
+								Edit
+							</ButtonV2>
+						)}
+						{bulkEdit.canDelete && (
+							<ButtonV2
+								intent="danger"
+								weight="clear"
+								theme="dark"
+								size="sm"
+								onClick={() => bulkEdit.setShowDeleteModal(true)}
+								disabled={bulkEdit.selectedIds.length === 0}
+								className="gap-1 hover:bg-gray-600 hover:!text-gray-100"
+							>
+								<Icon icon="trash" />
+								<span className="text-gray-100">Delete</span>
+							</ButtonV2>
+						)}
+					</>
+				)}
+			</div>
 		</Transition>
 	);
 };

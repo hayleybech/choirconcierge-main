@@ -36,7 +36,7 @@ const Show = ({ events, songs, tenantStats, setSidebarOpen }) => (
 							<TenantStatsWidget {...tenantStats} />
 						</div>
 					)}
-					<div className="sm:col-span-2 lx:col-span-1">
+					<div className="sm:col-span-2 xl:col-span-1">
 						<ChoirsListWidget />
 					</div>
 

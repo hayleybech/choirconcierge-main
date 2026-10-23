@@ -13,7 +13,15 @@ import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import Icon from '../../../components/Icon';
 import RsvpTag from '../../../components/Event/RsvpTag';
-import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
+import Table, {
+	TableCell,
+	THead,
+	TBody,
+	TableHeading,
+	TableSelectAll,
+	TableCellSelect,
+	TItemRow,
+} from '../../../components/Table';
 import useRoute from '../../../hooks/useRoute';
 import DateTag from '../../../components/DateTag';
 import VoicePartTag from '../../../components/VoicePartTag';
@@ -27,14 +35,18 @@ import FilterSortPane from '../../../components/FilterSortPane';
 import Sorts from '../../../components/Sorts';
 import RsvpFilters from '../../../components/RsvpFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
 import { handleNameSort } from '../../../utils/sortHelpers';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import CheckboxInput from '../../../components/inputs/CheckboxInput';
 import classNames from '../../../classNames';
 import { useMediaQuery } from 'react-responsive';
+import useBulkEdit from '../../../hooks/useBulkEdit';
+import BulkEditBar from '../../../components/BulkEditBar';
+import RsvpRecord from '../../../components/Event/RsvpRecord';
+import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
 
 const Index = ({
 	event,
@@ -46,9 +58,11 @@ const Index = ({
 	singerStatuses,
 	counts,
 	customFields,
+	canEditRsvps,
 	setSidebarOpen,
 }) => {
 	const { route } = useRoute();
+	const bulkEdit = useBulkEdit(allSingers, canEditRsvps, false, 'Singer', true);
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
@@ -92,6 +106,80 @@ const Index = ({
 
 	const sortFilterForm = useSortFilterForm(['events.rsvps.index', { event: event.id }], filters, sorts);
 
+	const bulkUpdateRsvp = response => {
+		router.post(
+			route('events.rsvps.bulkUpdate', { event }),
+			{
+				singer_ids: bulkEdit.selectedIds,
+				response,
+			},
+			{
+				onSuccess: () => bulkEdit.clearSelections(),
+			}
+		);
+	};
+
+	const bulkActions = (
+		<>
+			<Button
+				intent="secondary"
+				weight="clear"
+				theme="dark"
+				size="sm"
+				onClick={() => bulkUpdateRsvp('yes')}
+			>
+				<Icon icon="check" className="text-emerald-500" />
+				Going
+			</Button>
+			<Button
+				intent="secondary"
+				weight="clear"
+				theme="dark"
+				size="sm"
+				onClick={() => bulkUpdateRsvp('no')}
+				className="shrink-0"
+			>
+				<Icon icon="times" className="text-red-500" />
+				Not Going
+			</Button>
+			<Menu as="div" className="relative flex">
+				<Menu.Button
+					as={Button}
+					theme="dark"
+					weight="clear"
+					size="sm"
+					className="flex items-center !gap-x-0 font-medium focus:outline-none "
+				>
+					More
+					<Icon icon="chevron-up" className="ml-1 text-[10px]" />
+				</Menu.Button>
+				<Transition
+					as={Fragment}
+					enter="transition ease-out duration-100"
+					enterFrom="transform opacity-0 scale-95"
+					enterTo="transform opacity-100 scale-100"
+					leave="transition ease-in duration-75"
+					leaveFrom="transform opacity-100 scale-100"
+					leaveTo="transform opacity-0 scale-95"
+				>
+					<Menu.Items className="origin-bottom-right absolute right-0 bottom-full mb-4 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black/5 focus:outline-none">
+						<Menu.Item>
+							{({ active }) => (
+								<button
+									onClick={() => bulkUpdateRsvp('maybe')}
+									className={menuItemStyles('secondary', active, '', 'xs')}
+								>
+									<Icon icon="question" mr className="text-amber-500" />
+									Maybe
+								</button>
+							)}
+						</Menu.Item>
+					</Menu.Items>
+				</Transition>
+			</Menu>
+		</>
+	);
+
 	const countsData = [
 		{ label: 'Going', textColour: 'text-emerald-500', icon: 'check', count: counts.yes },
 		{ label: 'Maybe', textColour: 'text-amber-500', icon: 'question', count: counts.maybe },
@@ -101,8 +189,9 @@ const Index = ({
 
 	const columnsMenu = (
 		<ColumnsMenu
-			size={isDesktop ? 'sm' : 'xs'}
-			variant={isDesktop ? 'secondary' : 'clear-v2'}
+			size={isDesktop ? 'md' : 'sm'}
+			intent="secondary"
+			weight={isDesktop ? 'solid' : 'clear'}
 			visibleColumns={visibleColumns}
 			setVisibleColumns={setVisibleColumns}
 			defaultColumns={defaultColumns}
@@ -129,15 +218,23 @@ const Index = ({
 		<>
 			<AppHead title={`RSVP List - ${event.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					{filterAction && (
-						<PageActionsMenu>
-							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				{(filterAction || bulkEdit.action) && (
+					<PageActionsMenu>
+						{filterAction && (
+							<ActionMenuItem onClick={filterAction.onClick} intent={filterAction.intent}>
 								<Icon icon="filter" mr />
 								Filter
 							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
+						)}
+						{bulkEdit.action && (
+							<ActionMenuItem onClick={bulkEdit.action.onClick}>
+								<Icon icon={bulkEdit.action.icon} mr />
+								{bulkEdit.action.label}
+							</ActionMenuItem>
+						)}
+					</PageActionsMenu>
+				)}
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -148,8 +245,14 @@ const Index = ({
 					</PageHeaderTitle>
 				</PageHeaderContent>
 				<PageHeaderActions>
+					{bulkEdit.action && (
+						<Button onClick={bulkEdit.action.onClick} size="md" intent="secondary" weight="outline">
+							<Icon icon={bulkEdit.action.icon} mr />
+							{bulkEdit.action.label}
+						</Button>
+					)}
 					{filterAction && (
-						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+						<Button onClick={filterAction.onClick} size="md" intent={filterAction.intent} weight="outline">
 							<Icon icon="filter" mr />
 							Filter
 						</Button>
@@ -158,6 +261,8 @@ const Index = ({
 				</PageHeaderActions>
 			</PageHeader>
 
+			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
+
 			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-4">
 				{countsData.map(({ label, textColour, icon, count }) => (
 					<div
@@ -165,7 +270,7 @@ const Index = ({
 						key={label}
 					>
 						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
-       <Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
+							<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
 							{label}
 						</div>
 						<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
@@ -198,6 +303,9 @@ const Index = ({
 						visibleColumns={visibleColumns}
 						customFields={customFields}
 						columnsMenu={columnsMenu}
+						event={event}
+						bulkEdit={bulkEdit}
+						canEditRsvps={canEditRsvps}
 						hasNonDefaultFilters={hasNonDefaultFilters}
 						setShowFilters={setShowFilters}
 					/>
@@ -206,6 +314,7 @@ const Index = ({
 					<Table pagination={<Pagination details={pagination} />}>
 						<THead>
 							<tr>
+								<TableSelectAll bulkEdit={bulkEdit} totalItems={allSingers.length} />
 								{visibleColumns.includes('singer') && (
 									<TableHeading>
 										<TableHeadingSort
@@ -249,7 +358,8 @@ const Index = ({
 						</THead>
 						<TBody>
 							{allSingers.map(singer => (
-								<tr key={singer.id}>
+								<TItemRow key={singer.id} bulkEdit={bulkEdit} value={singer.id}>
+									<TableCellSelect bulkEdit={bulkEdit} value={singer.id} />
 									{visibleColumns.includes('singer') && (
 										<TableCell>
 											<div className="flex items-center space-x-3">
@@ -309,13 +419,20 @@ const Index = ({
 									)}
 									{visibleColumns.includes('rsvp') && (
 										<TableCell>
-											<RsvpTag
-												icon={singer.rsvp.icon}
-												label={singer.rsvp.label}
-												colour={singer.rsvp.colour}
-											/>
+											{canEditRsvps ? (
+												<RsvpRecord rsvp={singer.rsvp} singerId={singer.id} event={event} />
+											) : (
+												<RsvpTag
+													icon={singer.rsvp.icon}
+													label={singer.rsvp.label}
+													colour={singer.rsvp.colour}
+												/>
+											)}
 											{singer.rsvp.details && (
-												<div className="mt-1 text-xs italic text-gray-500" title={singer.rsvp.details}>
+												<div
+													className="mt-1 text-xs italic text-gray-500"
+													title={singer.rsvp.details}
+												>
 													{singer.rsvp.details}
 												</div>
 											)}
@@ -379,7 +496,7 @@ const Index = ({
 												</TableCell>
 											);
 										})}
-								</tr>
+								</TItemRow>
 							))}
 						</TBody>
 					</Table>
@@ -394,8 +511,10 @@ Index.layout = page => <TenantLayout children={page} />;
 export default Index;
 
 const ColumnsMenu = ({
-	size = 'sm',
-	variant = 'secondary',
+	size = 'lg',
+	intent = 'secondary',
+	weight = 'solid',
+	className,
 	visibleColumns,
 	setVisibleColumns,
 	defaultColumns,
@@ -403,8 +522,8 @@ const ColumnsMenu = ({
 	fields,
 	customFields,
 }) => (
-	<Menu as="div" className="relative inline-block text-left ml-3">
-		<Menu.Button as={Button} variant={variant} size={size}>
+	<Menu as="div" className="relative inline-block text-left">
+		<Menu.Button as={Button} intent={intent} weight={weight} className={className} size={size}>
 			<Icon icon="columns" mr />
 			Columns
 		</Menu.Button>

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { PlayerContext } from '../../contexts/player-context';
 import Label from '../inputs/Label';
-import Button from '../inputs/Button';
+import ButtonV2 from '../inputs/ButtonV2';
 import Icon from '../Icon';
 
 import clamp from 'lodash/clamp';
@@ -24,9 +24,9 @@ export const TempoControl = () => {
 		<>
 			<Label>Tempo: {rate}%</Label>
 			<div className="flex gap-2">
-				<Button variant="secondary" size="xs" onClick={() => setRate(clamp(rate - STEP, MIN_RATE, MAX_RATE))}>
+				<ButtonV2 intent="secondary" weight="outline" size="sm" onClick={() => setRate(clamp(rate - STEP, MIN_RATE, MAX_RATE))}>
 					<Icon icon="minus" />
-				</Button>
+				</ButtonV2>
 				<div className="flex-grow">
 					<input
 						type="range"
@@ -45,9 +45,9 @@ export const TempoControl = () => {
 						))}
 					</datalist>
 				</div>
-				<Button variant="secondary" size="xs" onClick={() => setRate(clamp(rate + STEP, MIN_RATE, MAX_RATE))}>
+				<ButtonV2 intent="secondary" weight="outline" size="sm" onClick={() => setRate(clamp(rate + STEP, MIN_RATE, MAX_RATE))}>
 					<Icon icon="plus" />
-				</Button>
+				</ButtonV2>
 			</div>
 		</>
 	);

@@ -15,8 +15,8 @@ import Error from '../../../components/inputs/Error';
 import Form from '../../../components/Form';
 import FormSection from '../../../components/FormSection';
 import RichTextInput from '../../../components/inputs/RichTextInput';
-import ButtonLink from '../../../components/inputs/ButtonLink';
-import Button from '../../../components/inputs/Button';
+import ButtonLink from '../../../components/inputs/ButtonLinkV2';
+import Button from '../../../components/inputs/ButtonV2';
 import FormFooter from '../../../components/FormFooter';
 import Icon from '../../../components/Icon';
 import FileInput from '../../../components/inputs/FileInput';
@@ -138,7 +138,7 @@ const Create = ({ audiences, categories, setSidebarOpen }) => {
 
 					<FormFooter>
 						<ButtonLink href={route('central.dash')}>Cancel</ButtonLink>
-						<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
+						<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 							<Icon icon="paper-plane" mr />
 							{processing ? 'Queuing...' : 'Send'}
 						</Button>

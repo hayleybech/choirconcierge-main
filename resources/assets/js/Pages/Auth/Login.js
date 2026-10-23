@@ -2,7 +2,7 @@ import React from 'react'
 import AppHead from "../../components/AppHead";
 import {Link, useForm, usePage} from "@inertiajs/react";
 import Label from "../../components/inputs/Label";
-import Button from "../../components/inputs/Button";
+import Button from "../../components/inputs/ButtonV2";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
@@ -86,9 +86,10 @@ const Login = ({ tenant, toastErrors, flash, isWebView }) => {
 
 							<div>
 								<Button
-									variant="primary"
+									intent="primary"
+									weight="solid"
 									type="submit"
-									size="sm"
+									size="md"
 									className="w-full"
 									disabled={processing}
 								>

@@ -3,8 +3,8 @@ import Icon from '../Icon';
 
 const attendanceStatuses = {
 	present: { label: 'On Time', colour: 'emerald', icon: 'check', type: 'solid' },
-	late: { label: 'Late', colour: 'amber', icon: 'alarm-snooze', type: 'solid' },
-	late_deemed_absent: { label: 'Late (Deemed Absent)', colour: 'red', icon: 'alarm-exclamation', type: 'solid' },
+	late: { label: 'Late', colour: 'yellow', icon: 'alarm-snooze', type: 'solid' },
+	late_deemed_absent: { label: 'Late (Deemed Absent)', colour: 'orange', icon: 'alarm-exclamation', type: 'solid' },
 	absent: { label: 'Absent', colour: 'red', icon: 'times', type: 'solid' },
 	unknown: { label: 'Not recorded', colour: 'gray', icon: 'circle', type: 'regular' },
 };

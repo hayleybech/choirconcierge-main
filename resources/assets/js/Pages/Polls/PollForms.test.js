@@ -40,7 +40,7 @@ jest.mock('../../components/FormSection', () => ({ children }) => require('react
 jest.mock('../../components/inputs/TextInput', () => () => null);
 jest.mock('../../components/inputs/Label', () => () => null);
 jest.mock('../../components/inputs/CheckboxWithLabel', () => () => null);
-jest.mock('../../components/inputs/Date', () => () => null);
+jest.mock('../../components/inputs/DateCalendarInput', () => () => null);
 jest.mock('../../components/inputs/Time', () => () => null);
 jest.mock('../../components/inputs/Help', () => () => null);
 jest.mock('../../components/inputs/CheckboxGroup', () => () => null);

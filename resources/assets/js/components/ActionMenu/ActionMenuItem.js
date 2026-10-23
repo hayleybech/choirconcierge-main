@@ -3,46 +3,46 @@ import { Link } from '@inertiajs/react';
 import menuItemStyles from './menuItemStyles';
 import { Menu } from '@headlessui/react';
 
-const ActionMenuItem = ({ url, onClick, download, variant, children, method, disabled }) => {
-    return (
-        <Menu.Item>
-            {({ active }) => {
-                if (url) {
-                    if (download) {
-                        return (
-                            <a
-                                href={disabled ? undefined: url}
-                                className={menuItemStyles(variant, active, disabled)}
-                                download={download}
-                            >
-                                {children}
-                            </a>
-                        );
-                    } else {
-                        return (
+const ActionMenuItem = ({ url, onClick, download, intent, children, method, disabled }) => {
+	return (
+		<Menu.Item>
+			{({ active }) => {
+				if (url) {
+					if (download) {
+						return (
+							<a
+								href={disabled ? undefined : url}
+								className={menuItemStyles(intent, active, disabled)}
+								download={download}
+							>
+								{children}
+							</a>
+						);
+					} else {
+						return (
 							<Link
 								href={disabled ? undefined : url}
-								className={menuItemStyles(variant, active, disabled)}
+								className={menuItemStyles(intent, active, disabled)}
 								method={method}
 								as={method ? 'button' : 'a'}
 							>
 								{children}
 							</Link>
 						);
-                    }
-                } else {
-                    return (
-                        <button
-                            onClick={disabled ? undefined : onClick}
-                            className={menuItemStyles(variant, active, disabled)}
-                        >
-                            {children}
-                        </button>
-                    );
-                }
-            }}
-        </Menu.Item>
-    );
+					}
+				} else {
+					return (
+						<button
+							onClick={disabled ? undefined : onClick}
+							className={menuItemStyles(intent, active, disabled)}
+						>
+							{children}
+						</button>
+					);
+				}
+			}}
+		</Menu.Item>
+	);
 };
 
 export default ActionMenuItem;

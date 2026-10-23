@@ -35,7 +35,7 @@ const SongAttachmentForm = ({ song, isOpen, setIsOpen }) => {
 			title="Add Attachment"
 			okLabel="Save"
 			onOk={submit}
-			okVariant="primary"
+			okColour="primary"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 			processing={processing}

@@ -6,7 +6,9 @@
     "noImplicitReturns": true,
     "strictNullChecks": true,
     "strict": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "jsx": "react",
+    "esModuleInterop": true
   },
   "include": [
     "resources/assets/js/**/*"

@@ -8,7 +8,7 @@ import {
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import TaskTableDesktop from './TaskTableDesktop';
@@ -29,7 +29,7 @@ const Index = ({ tasks, setSidebarOpen }) => {
 				<PageTopNavigation title="Onboarding">
 					<PageActionsMenu>
 						{can.create_task && (
-							<ActionMenuItem url={route('tasks.create')} variant="primary">
+							<ActionMenuItem url={route('tasks.create')} intent="primary">
 								<Icon icon="plus" mr />
 								Add New
 							</ActionMenuItem>
@@ -45,7 +45,7 @@ const Index = ({ tasks, setSidebarOpen }) => {
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{can.create_task && (
-						<Button href={route('tasks.create')} size="sm" variant="primary">
+						<Button href={route('tasks.create')} size="md" intent="primary" weight="solid">
 							<Icon icon="plus" mr />
 							Add New
 						</Button>

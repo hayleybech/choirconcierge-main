@@ -16,6 +16,7 @@ const MyLearningStatus = ({ song }) => {
               allowedStatuses={allowedStatuses}
               href={route('songs.my-learning.update', { song })}
               method="post"
+			  size="md"
             />
         </SimplePanel>
     );

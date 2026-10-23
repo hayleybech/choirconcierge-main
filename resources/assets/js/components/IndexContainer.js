@@ -41,7 +41,7 @@ const IndexContainer = ({ tableDesktop, tableMobile, emptyState, filterPane, sho
 				) : isDesktop ? (
 					<div className="min-h-0 flex-1 overflow-hidden">{tableDesktop}</div>
 				) : (
-					<div className="min-h-0 flex-1 overflow-hidden bg-white shadow block">{tableMobile}</div>
+					<div className="flex-none bg-white shadow block">{tableMobile}</div>
 				)}
 			</div>
 		</div>

@@ -21,16 +21,19 @@ const useFilterPane = () => {
 		key => key.includes('filter') || key.includes('sort')
 	);
 
-	let filterAction = {
-		label: (
-			<span>
-				Filter<span className="inline md:hidden">/Sort</span>
-			</span>
-		),
-		icon: 'filter',
-		onClick: () => setShowFilters(!showFilters),
-		variant: hasNonDefaultFilters ? 'success-outline' : 'secondary',
-	};
+	let filterAction = isDesktop
+		? {
+				label: (
+					<span>
+						Filter<span className="inline md:hidden">/Sort</span>
+					</span>
+				),
+				icon: 'filter',
+				onClick: () => setShowFilters(!showFilters),
+				intent: hasNonDefaultFilters ? 'success' : 'secondary',
+				weight: 'outline',
+		  }
+		: null;
 
 	return [showFilters, setShowFilters, filterAction, hasNonDefaultFilters];
 };

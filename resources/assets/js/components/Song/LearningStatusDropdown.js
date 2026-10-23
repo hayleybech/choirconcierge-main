@@ -1,5 +1,5 @@
 import { Menu, Transition } from '@headlessui/react';
-import buttonStyles from '../inputs/buttonStyles';
+import ButtonV2 from '../inputs/ButtonV2';
 import Icon from '../Icon';
 import React, { Fragment } from 'react';
 import classNames from '../../classNames';
@@ -23,12 +23,11 @@ const LearningStatusDropdown = ({
 				className={classNames('relative inline-block overflow-visible', compact ? 'grow' : 'w-full sm:w-auto')}
 			>
 				<Menu.Button
-					className={buttonStyles(
-						'secondary',
-						compact ? 'xs' : size,
-						false,
-						compact ? 'relative z-0 w-full md:w-auto' : 'relative z-0 w-full md:w-auto'
-					)}
+					as={ButtonV2}
+					intent="secondary"
+					weight="outline"
+					size={size}
+					className="relative z-0 w-full md:w-auto"
 				>
 					<Icon icon={current.icon} className={current.textColour} />
 					<span className={current.textColour}>{compact ? current.shortTitle : current.title}</span>

@@ -43,7 +43,7 @@ const BulkEditEventsModal = ({ isOpen, setIsOpen, selectedEvents, eventTypes, en
 			onOk={handleOk}
 			processing={processing}
 			icon="pencil"
-			okVariant="primary"
+			okColour="primary"
 		>
 			<div className="space-y-6 text-left">
 				{hasRecurringEvents && (

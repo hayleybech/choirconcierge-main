@@ -8,6 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Webklex\PHPIMAP\Message;
 
 class ClearDuplicateEmails implements ShouldQueue
@@ -32,10 +34,47 @@ class ClearDuplicateEmails implements ShouldQueue
 
     private function messageHasMatchingCcAndTo(Message $message): bool
     {
-        return collect($message->getCc()?->all())
-            ->map(fn (Object $recipientCc) => $recipientCc->mail)
-            ->intersect(collect($message->getTo()->all())
-                ->map(fn (Object $recipientTo) => $recipientTo->mail))
+        return $this->recipientEmails($message, 'cc', $message->getCc()?->all() ?? [])
+            ->intersect($this->recipientEmails($message, 'to', $message->getTo()?->all() ?? []))
             ->isNotEmpty();
+    }
+
+    /**
+     * @param array<int, mixed> $recipients
+     * @return Collection<int, string>
+     */
+    private function recipientEmails(Message $message, string $field, array $recipients): Collection
+    {
+        return collect($recipients)
+            ->map(fn (mixed $recipient) => $this->recipientEmail($recipient))
+            ->reject(function (string $email, int|string $index) use ($message, $field): bool {
+                if ($email === '') {
+                    Log::warning('Inbound message recipient has no usable email address.', [
+                        'uid' => $message->getUid(),
+                        'field' => $field,
+                        'recipient_index' => $index,
+                    ]);
+
+                    return true;
+                }
+
+                return false;
+            })
+            ->values();
+    }
+
+    private function recipientEmail(mixed $recipient): string
+    {
+        if (is_string($recipient)) {
+            return trim($recipient);
+        }
+
+        if (is_object($recipient)) {
+            $email = $recipient->mail ?? null;
+
+            return is_string($email) ? trim($email) : '';
+        }
+
+        return '';
     }
 }

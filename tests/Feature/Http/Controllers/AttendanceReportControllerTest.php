@@ -48,7 +48,7 @@ class AttendanceReportControllerTest extends TestCase
         $this->attend($leaver, $eventA, 'late');
         // Recorded while not active, so ignored
         $this->attend($newcomer, $eventA, 'present');
-        $this->attend($longtime, $eventB, 'absent');
+        $this->attend($longtime, $eventB, 'late_deemed_absent');
         $this->attend($newcomer, $eventB, 'present');
         $this->attend($prospect, $eventB, 'present');
 
@@ -81,6 +81,7 @@ class AttendanceReportControllerTest extends TestCase
                     'present' => 1,
                     'late' => 0,
                     'absent' => 1,
+                    'late_deemed_absent' => 0,
                     'unknown' => 0,
                 ], $events[$historicEvent->id]['attendanceSummary']);
 
@@ -92,6 +93,7 @@ class AttendanceReportControllerTest extends TestCase
                     'present' => 1,
                     'late' => 1,
                     'absent' => 0,
+                    'late_deemed_absent' => 0,
                     'unknown' => 1,
                 ], $events[$eventA->id]['attendanceSummary']);
 
@@ -101,7 +103,8 @@ class AttendanceReportControllerTest extends TestCase
                 $this->assertEquals([
                     'present' => 1,
                     'late' => 0,
-                    'absent' => 1,
+                    'absent' => 0,
+                    'late_deemed_absent' => 1,
                     'unknown' => 1,
                 ], $events[$eventB->id]['attendanceSummary']);
 

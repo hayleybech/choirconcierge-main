@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect } from 'react';
 
-import Button from '../inputs/Button';
+import ButtonV2 from '../inputs/ButtonV2';
 import { PlayerContext } from '../../contexts/player-context';
 import { AudioTimeLabel } from './AudioTimeLabel';
 import { AudioSeekBar } from './AudioSeekBar';
@@ -34,9 +34,9 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 	return (
 		<div className="relative z-10 shrink-0 h-auto sm:h-12 bg-white border-t border-gray-300 flex flex-col sm:flex-row items-center justify-between py-2 px-2 sm:pl-6">
 			<div className="flex flex-row items-start w-full min-w-0">
-				<Button variant="clear" size="xs" disabled className="invisible sm:hidden shrink-0">
+				<ButtonV2 intent="secondary" weight="clear" size="sm" disabled className="invisible sm:hidden shrink-0">
 					<Icon icon="times" />
-				</Button>
+				</ButtonV2>
 
 				<div className="flex flex-col sm:flex-row items-center text-center sm:text-left mb-2 sm:mb-0 sm:mr-8 min-w-0 grow">
 					<Link
@@ -48,15 +48,15 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 					<span className="text-gray-600 text-xs truncate w-full">{fileName}</span>
 				</div>
 
-				<Button variant="clear" size="xs" onClick={close} className="sm:hidden shrink-0">
+				<ButtonV2 intent="secondary" weight="clear" size="sm" onClick={close} className="sm:hidden shrink-0">
 					<Icon icon="times" />
-				</Button>
+				</ButtonV2>
 			</div>
 			<div className="flex items-center space-x-1 grow w-full sm:w-auto">
 				{player.loading && <LoadingSpinner />}
-				<Button variant="clear" size="xs" onClick={player.togglePlayPause} disabled={player.loading}>
+				<ButtonV2 intent="secondary" weight="clear" size="sm" onClick={player.togglePlayPause} disabled={player.loading}>
 					{player.playing ? <Icon icon="pause" size="text-lg" /> : <Icon icon="play" size="text-lg" />}
-				</Button>
+				</ButtonV2>
 				<JumpBackButton />
 				<div className="flex items-center space-x-1.5 grow">
 					<AudioTimeLabel show="elapsed" position={position} />
@@ -65,9 +65,9 @@ const GlobalTrackPlayer = ({ songTitle, songId, fileName, close }) => {
 				</div>
 				<AudioToolsButton />
 
-				<Button variant="clear" size="xs" onClick={close} className="max-sm:hidden sm:inline-flex -mr-2">
+				<ButtonV2 intent="secondary" weight="clear" size="sm" onClick={close} className="max-sm:hidden sm:inline-flex -mr-2">
 					<Icon icon="times" />
-				</Button>
+				</ButtonV2>
 			</div>
 		</div>
 	);

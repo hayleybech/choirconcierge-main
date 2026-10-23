@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from "./Icon";
-import Button from "./inputs/Button";
+import ButtonV2 from "./inputs/ButtonV2";
 
 const EmptyState = ({ title, description, actionDescription, icon, href, actionLabel, actionIcon }) => (
     <div className="text-center px-5 py-10 md:py-16">
@@ -13,10 +13,10 @@ const EmptyState = ({ title, description, actionDescription, icon, href, actionL
 
         {href && (
             <div className="mt-6">
-                <Button href={href} variant="primary">
+                <ButtonV2 href={href} intent="primary" weight="solid">
                     <Icon icon={actionIcon} aria-hidden="true" />
                     {actionLabel}
-                </Button>
+                </ButtonV2>
             </div>
         )}
     </div>

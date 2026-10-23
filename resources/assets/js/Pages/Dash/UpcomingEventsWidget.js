@@ -4,11 +4,11 @@ import TableMobile, { TableMobileLink, TableMobileListItem } from '../../compone
 import DateTag from '../../components/DateTag';
 import { DateTime } from 'luxon';
 import GoogleMap from '../../components/GoogleMap';
-import ButtonLink from '../../components/inputs/ButtonLink';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import Icon from '../../components/Icon';
 import { usePage } from '@inertiajs/react';
 import useRoute from '../../hooks/useRoute';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import RsvpDropdown from '../../components/Event/RsvpDropdown';
 import Dialog from '../../components/Dialog';
 import Label from '../../components/inputs/Label';
@@ -36,7 +36,12 @@ const UpcomingEventsWidget = ({ events, eventCategories }) => {
 					<div className="flex gap-1 items-center">
 						{can['create_event'] && (
 							<>
-								<Button variant="secondary" size="xs" onClick={() => setDialogIsOpen(true)}>
+								<Button
+									intent="secondary"
+									weight="solid"
+									size="sm"
+									onClick={() => setDialogIsOpen(true)}
+								>
 									<Icon icon="filter" style={{ lineHeight: '1rem' }} />
 									<span className="hidden lg:inline">Filter</span>
 								</Button>
@@ -49,7 +54,7 @@ const UpcomingEventsWidget = ({ events, eventCategories }) => {
 								/>
 							</>
 						)}
-						<ButtonLink href={urlViewAll} variant="secondary" size="xs">
+						<ButtonLink href={urlViewAll} intent="secondary" weight="solid" size="sm">
 							<Icon icon="list" style={{ lineHeight: '1rem' }} />
 							<span className="hidden sm:inline">View All</span>
 						</ButtonLink>
@@ -70,8 +75,9 @@ const UpcomingEventsWidget = ({ events, eventCategories }) => {
 										{can['create_attendance'] && (
 											<ButtonLink
 												href={route('events.attendances.index', { event })}
-												variant="primary"
-												size="xs"
+												intent="primary"
+												weight="solid"
+												size="sm"
 												className="mt-2"
 											>
 												<Icon icon="edit" />
@@ -112,7 +118,7 @@ const UpcomingEventsWidget = ({ events, eventCategories }) => {
 
 								{!isToday(event) && (
 									<div className="-mt-2 mb-4 self-stretch md:self-start px-4 sm:px-6 w-full">
-										<RsvpDropdown event={event} size="xs" />
+										<RsvpDropdown event={event} size="sm" />
 									</div>
 								)}
 							</TableMobileListItem>
@@ -142,7 +148,7 @@ const CustomiseEventsWidgetDialog = ({ isOpen, setIsOpen, allCategories, initial
 			title="Filter Events Widget"
 			okLabel="Save"
 			okUrl={route('widgets.upcoming-events')}
-			okVariant="primary"
+			okColour="primary"
 			okMethod="put"
 			data={{
 				event_categories: selectedEventCategories,

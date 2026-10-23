@@ -19,7 +19,7 @@ const TextInput = ({
 			name={name}
 			id={name}
 			className={classNames(
-				'' + 'shadow-sm focus:outline-none block w-full rounded-md text-gray-900',
+				'' + 'focus:outline-none block w-full rounded-md text-gray-900',
 				hasErrors && 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500',
 				disabled && 'bg-gray-200 text-gray-700 border-gray-300',
 				!hasErrors && !disabled && 'border-gray-300 focus:ring-purple-500 focus:border-purple-500',

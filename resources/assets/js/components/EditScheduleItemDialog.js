@@ -37,7 +37,7 @@ const EditScheduleItemDialog = ({ isOpen, setIsOpen, event, activity }) => {
         <Dialog
             title="Edit Schedule Item"
             okLabel="Save"
-            okVariant="primary"
+            okColour="primary"
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             onOk={submit}

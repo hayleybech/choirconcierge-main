@@ -23,6 +23,9 @@
                 "mcp-remote",
                 "https://nightwatch.laravel.com/mcp"
             ]
+        },
+        "phpstorm": {
+            "url": "http://127.0.0.1:64442/stream"
         }
     }
 }

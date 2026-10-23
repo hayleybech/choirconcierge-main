@@ -12,7 +12,7 @@ import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import { useInstrument } from '../../hooks/useInstrument';
 import Badge from '../../components/Badge';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 
 const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
@@ -24,8 +24,9 @@ const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit, hasNonDefaultFil
 		<div>
 			<TableMobileHeader bulkEdit={bulkEdit}>
 				<Button
-					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-					size="xs"
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
 					onClick={() => setShowFilters(prev => !prev)}
 				>
 					<Icon icon="filter" mr />
@@ -47,7 +48,7 @@ const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit, hasNonDefaultFil
 										<PitchButton
 											instrument={instrument}
 											note={song.pitch.split('/')[0]}
-											size="xs"
+											size="sm"
 											disabled={bulkEdit.isActiveMobile}
 										/>
 									</div>

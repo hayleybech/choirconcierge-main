@@ -10,7 +10,7 @@ import {
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import DateTag from '../../components/DateTag';
 import Badge from '../../components/Badge';
@@ -23,7 +23,7 @@ import Icon from '../../components/Icon';
 import EditRepeatingEventDialog from '../../components/Event/EditRepeatingEventDialog';
 import DeleteDialog from '../../components/DeleteDialog';
 import Prose from '../../components/Prose';
-import ButtonLink from '../../components/inputs/ButtonLink';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import SimplePanel from '../../components/SimplePanel';
 import SectionLayout from '../../components/SectionLayout';
 import EventType from '../../EventType';
@@ -64,7 +64,8 @@ const Show = ({
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
 
-			variant: 'danger-outline',
+			intent: 'danger',
+			weight: 'outline',
 			can: 'delete_event',
 		},
 		{
@@ -73,7 +74,12 @@ const Show = ({
 			url: route('events.kiosk-check-ins.index', { event }),
 			can: 'create_attendance',
 		},
-		{ label: 'Show QR Code', icon: 'qrcode', onClick: () => setCheckInDialogIsOpen(true), can: 'create_attendance' },
+		{
+			label: 'Show QR Code',
+			icon: 'qrcode',
+			onClick: () => setCheckInDialogIsOpen(true),
+			can: 'create_attendance',
+		},
 	].filter(action => event.can[action.can] || pageProps.can[action.can]);
 
 	const breadcrumbs = [
@@ -92,7 +98,7 @@ const Show = ({
 								key={action.label}
 								url={action.url}
 								onClick={action.onClick}
-								variant={action.variant}
+								intent={action.intent}
 							>
 								<Icon icon={action.icon} mr />
 								{action.label}
@@ -149,9 +155,9 @@ const Show = ({
 						)}
 						<div className="gap-1.5 inline-flex items-start">
 							{DateTime.fromISO(event.call_time) > DateTime.now() && (
-								<RsvpDropdown event={event} size="sm" />
+								<RsvpDropdown event={event} size="md" />
 							)}
-							<AddToCalendarDropdown urls={addToCalendarLinks} size="sm" />
+							<AddToCalendarDropdown urls={addToCalendarLinks} size="md" />
 						</div>
 					</PageHeaderMeta>
 				</PageHeaderContent>
@@ -161,8 +167,10 @@ const Show = ({
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}
@@ -190,73 +198,80 @@ const Show = ({
 
 			<SectionLayout
 				layout={{
-					className: 'grid-cols-1 h-full divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 md:grid-cols-3 xl:grid-cols-4',
+					className:
+						'grid-cols-1 h-full divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 md:grid-cols-3 xl:grid-cols-4',
 					columns: [
 						{ id: 'main', className: 'sm:col-span-1 md:col-span-2 xl:col-span-3 divide-y divide-gray-300' },
 						{ id: 'aside', className: 'sm:col-span-1 divide-y divide-gray-300' },
 					],
 				}}
 				sections={[
-						{
-							id: 'summary',
-							column: 'main',
-							title: 'Summary',
-							show: true,
-							content: <EventSummary event={event} timezone={pageProps.tenant.timezone_label} />,
-						},
-						{
-							id: 'location',
-							column: 'main',
-							title: 'Location',
-							show: true,
-							content: <EventLocation event={event} />,
-						},
-						{ id: 'schedule', column: 'main', title: 'Schedule', show: true, content: <EventSchedule event={event} /> },
-						{
-							id: 'attendance',
-							column: 'aside',
-							title: 'Attendance',
-							hideTitleOnDesktop: true,
-							show: true,
-							content: (
-								<>
-									<div className="py-2 px-4 bg-gray-100 border-b border-gray-200">
-										<h3 className="font-semibold text-gray-700">My Attendance</h3>
-									</div>
-									<MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />
-									{pageProps.can['list_attendances'] && (
-										<>
-											<hr className="border-gray-200" />
-											<div className="py-2 px-4 bg-gray-100 border-b border-gray-200 flex items-center justify-between gap-2">
-												<h3 className="font-semibold text-gray-700">RSVPs</h3>
-												<ViewRsvpsButton event={event} />
-											</div>
+					{
+						id: 'summary',
+						column: 'main',
+						title: 'Summary',
+						show: true,
+						content: <EventSummary event={event} timezone={pageProps.tenant.timezone_label} />,
+					},
+					{
+						id: 'location',
+						column: 'main',
+						title: 'Location',
+						show: true,
+						content: <EventLocation event={event} />,
+					},
+					{
+						id: 'schedule',
+						column: 'main',
+						title: 'Schedule',
+						show: true,
+						content: <EventSchedule event={event} />,
+					},
+					{
+						id: 'attendance',
+						column: 'aside',
+						title: 'Attendance',
+						hideTitleOnDesktop: true,
+						show: true,
+						content: (
+							<>
+								<div className="py-2 px-4 bg-gray-100 border-b border-gray-200">
+									<h3 className="font-semibold text-gray-700">My Attendance</h3>
+								</div>
+								<MyAttendance event={event} addToCalendarLinks={addToCalendarLinks} />
+								{pageProps.can['list_attendances'] && (
+									<>
+										<hr className="border-gray-200" />
+										<div className="py-2 px-4 bg-gray-100 border-b border-gray-200 flex items-center justify-between gap-2">
+											<h3 className="font-semibold text-gray-700">RSVPs</h3>
+											<ViewRsvpsButton event={event} />
+										</div>
 
-											<RsvpSummary
-												event={event}
-												rsvpCount={rsvpCount}
-												voicePartsRsvpCount={voicePartsRsvpCount}
-											/>
-										</>
-									)}
-									{pageProps.can['create_attendance'] && (
-										<>
-											<hr className="border-gray-200" />
-											<div className="py-2 px-4 bg-gray-100 border-b border-gray-200 flex items-center justify-between gap-2">
-												<h3 className="font-semibold text-gray-700">Attendance</h3>
-												<EditAttendanceButton event={event} />
-											</div>
+										<RsvpSummary
+											event={event}
+											rsvpCount={rsvpCount}
+											voicePartsRsvpCount={voicePartsRsvpCount}
+										/>
+									</>
+								)}
+								{pageProps.can['create_attendance'] && (
+									<>
+										<hr className="border-gray-200" />
+										<div className="py-2 px-4 bg-gray-100 border-b border-gray-200 flex items-center justify-between gap-2">
+											<h3 className="font-semibold text-gray-700">Attendance</h3>
+											<EditAttendanceButton event={event} />
+										</div>
 
-											<AttendanceSummary
-												event={event}
-												attendanceCount={attendanceCount}
-												voicePartsAttendanceCount={voicePartsAttendanceCount}
-											/>
-										</>
-									)}
-								</>
-							),
-						},
+										<AttendanceSummary
+											event={event}
+											attendanceCount={attendanceCount}
+											voicePartsAttendanceCount={voicePartsAttendanceCount}
+										/>
+									</>
+								)}
+							</>
+						),
+					},
 				]}
 			/>
 		</>
@@ -328,7 +343,7 @@ const ViewRsvpsButton = ({ event }) => {
 	const { route } = useRoute();
 
 	return (
-		<ButtonLink variant="primary" size="xs" href={route('events.rsvps.index', { event })}>
+		<ButtonLink intent="primary" weight="solid" size="sm" href={route('events.rsvps.index', { event })}>
 			<Icon icon="clipboard-list" />
 			View All
 		</ButtonLink>
@@ -339,7 +354,7 @@ const EditAttendanceButton = ({ event }) => {
 	const { route } = useRoute();
 
 	return (
-		<ButtonLink variant="primary" size="xs" href={route('events.attendances.index', { event })}>
+		<ButtonLink intent="primary" weight="solid" size="sm" href={route('events.attendances.index', { event })}>
 			<Icon icon="edit" />
 			Edit
 		</ButtonLink>

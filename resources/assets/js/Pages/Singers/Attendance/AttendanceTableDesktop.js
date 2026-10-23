@@ -1,6 +1,5 @@
 import React from 'react';
 import Table, { TableCell, THead, TBody, TableHeading, TItemRow } from '../../../components/Table';
-import { DateTime } from 'luxon';
 import Badge from "../../../components/Badge";
 import EventType from "../../../EventType";
 import AttendanceTag from "../../../components/Event/AttendanceTag";

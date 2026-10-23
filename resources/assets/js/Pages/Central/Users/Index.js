@@ -9,7 +9,7 @@ import {
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../../components/Icon';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import AppHead from '../../../components/AppHead';
 import IndexContainer from '../../../components/IndexContainer';
 import useRoute from '../../../hooks/useRoute';
@@ -60,7 +60,13 @@ const Index = ({ users, pagination, setSidebarOpen }) => {
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{filterAction && (
-						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+						<Button
+							onClick={filterAction.onClick}
+							size="md"
+							intent={filterAction.intent}
+							weight="outline"
+							className={filterAction.intent === 'success' ? 'bg-white' : undefined}
+						>
 							<Icon icon={filterAction.icon} mr />
 							{filterAction.label}
 						</Button>

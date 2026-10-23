@@ -4,7 +4,7 @@ import FormSection from "../../../components/FormSection";
 import Label from "../../../components/inputs/Label";
 import TextInput from "../../../components/inputs/TextInput";
 import RangeInput from "../../../components/inputs/RangeInput";
-import Button from "../../../components/inputs/Button";
+import Button from "../../../components/inputs/ButtonV2";
 import Error from "../../../components/inputs/Error";
 import Icon from "../../../components/Icon";
 import FormFooter from "../../../components/FormFooter";
@@ -128,7 +128,7 @@ const PlacementForm = ({ singer, placement }) => {
 
                 <FormFooter>
                     <Button href={route('singers.show', {singer})}>Cancel</Button>
-                    <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
+                    <Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
         </FormWrapper>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from '@inertiajs/react';
 import useRoute from '../../hooks/useRoute';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Error from '../../components/inputs/Error';
 import FormFooter from '../../components/FormFooter';
 
@@ -152,7 +152,7 @@ const NotificationSettings = ({ preferences, accountRoute, canReceiveAttendanceR
 				</section>
 			))}
 			<FormFooter>
-				<Button variant="primary" type="submit" disabled={processing}>
+				<Button intent="primary" weight="solid" type="submit" disabled={processing}>
 					{processing ? 'Saving...' : 'Save'}
 				</Button>
 			</FormFooter>

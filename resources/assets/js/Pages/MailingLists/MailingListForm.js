@@ -6,8 +6,8 @@ import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import CheckboxGroup from "../../components/inputs/CheckboxGroup";
 import RadioGroup from "../../components/inputs/RadioGroup";
-import ButtonLink from "../../components/inputs/ButtonLink";
-import Button from "../../components/inputs/Button";
+import ButtonLink from "../../components/inputs/ButtonLinkV2";
+import Button from "../../components/inputs/ButtonV2";
 import EmailSlugInput from "../../components/inputs/EmailSlugInput";
 import SingerSelect from "../../components/inputs/SingerSelect";
 import FormFooter from "../../components/FormFooter";
@@ -275,7 +275,7 @@ const MailingListForm = ({ list, roles = [], voiceParts = [], singerStatuses = [
                     <ButtonLink href={list ? route('groups.show', {group: list}) : route('groups.index')}>
                         Cancel
                     </ButtonLink>
-                    <Button variant="primary" type="submit" className="ml-3" disabled={processing}>Save</Button>
+                    <Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>Save</Button>
                 </FormFooter>
             </Form>
         </FormWrapper>

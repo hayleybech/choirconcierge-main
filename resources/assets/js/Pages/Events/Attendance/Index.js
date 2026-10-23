@@ -43,7 +43,7 @@ import SingerStatusTag from '../../../components/SingerStatusTag';
 import { handleNameSort } from '../../../utils/sortHelpers';
 import useBulkEdit from '../../../hooks/useBulkEdit';
 import BulkEditBar from '../../../components/BulkEditBar';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import { Menu, Transition } from '@headlessui/react';
 import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
 import { router } from '@inertiajs/react';
@@ -126,18 +126,36 @@ const Index = ({
 
 	const bulkActions = (
 		<>
-			<Button size="xs" variant="clear-inverse" onClick={() => bulkUpdateAttendance('present')}>
+			<Button
+				intent="secondary"
+				weight="clear"
+				theme="dark"
+				size="sm"
+				onClick={() => bulkUpdateAttendance('present')}
+			>
 				<Icon icon="check" className="text-emerald-500" />
 				Present
 			</Button>
-			<Button size="xs" variant="clear-inverse" onClick={() => bulkUpdateAttendance('absent')}>
+			<Button
+				intent="secondary"
+				weight="clear"
+				theme="dark"
+				size="sm"
+				onClick={() => bulkUpdateAttendance('absent')}
+			>
 				<Icon icon="times" className="text-red-500" />
 				Absent
 			</Button>
 			<Menu as="div" className="relative flex">
-				<Menu.Button className="flex items-center px-3 py-1.5 text-xs font-medium rounded-md hover:bg-gray-600 focus:outline-none transition ease-in-out duration-150">
+				<Menu.Button
+					as={Button}
+					theme="dark"
+					weight="clear"
+					size="sm"
+					className="flex items-center !gap-x-0 font-medium hover:bg-gray-600 focus:outline-none transition ease-in-out duration-150 cursor-pointer"
+				>
 					More
-					<Icon icon="chevron-up" ml className="text-[10px]" />
+					<Icon icon="chevron-up" className="ml-1 text-[10px]" />
 				</Menu.Button>
 				<Transition
 					as={Fragment}
@@ -155,7 +173,7 @@ const Index = ({
 									onClick={() => bulkUpdateAttendance('late')}
 									className={menuItemStyles('secondary', active, '', 'xs')}
 								>
-									<Icon icon="alarm-snooze" mr className="text-amber-500" />
+									<Icon icon="alarm-snooze" mr className="text-yellow-500" />
 									Late
 								</button>
 							)}
@@ -166,7 +184,7 @@ const Index = ({
 									onClick={() => bulkUpdateAttendance('late_deemed_absent')}
 									className={menuItemStyles('secondary', active, '', 'xs')}
 								>
-									<Icon icon="alarm-exclamation" mr className="text-red-500" />
+									<Icon icon="alarm-exclamation" mr className="text-orange-500" />
 									Late (Deemed Absent)
 								</button>
 							)}
@@ -179,10 +197,10 @@ const Index = ({
 
 	const countsData = [
 		{ label: 'On Time', textColour: 'text-emerald-500', icon: 'check', count: counts.present },
-		{ label: 'Late', textColour: 'text-amber-500', icon: 'alarm-snooze', count: counts.late },
+		{ label: 'Late', textColour: 'text-yellow-500', icon: 'alarm-snooze', count: counts.late },
 		{
 			label: 'Late (Deemed Absent)',
-			textColour: 'text-red-500',
+			textColour: 'text-orange-500',
 			icon: 'alarm-exclamation',
 			count: counts.late_deemed_absent,
 		},
@@ -193,7 +211,8 @@ const Index = ({
 			count: counts.absent,
 			extraText: (
 				<p className="text-gray-500 text-xs leading-[1] text-left">
-					incl.<br />
+					incl.
+					<br />
 					{counts.absent_reason} apologies.
 				</p>
 			),
@@ -214,7 +233,7 @@ const Index = ({
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 				<PageActionsMenu>
 					{pageActions.map((action, key) => (
-						<ActionMenuItem key={key} url={action.url} onClick={action.onClick} variant={action.variant}>
+						<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</ActionMenuItem>
@@ -260,8 +279,10 @@ const Index = ({
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}

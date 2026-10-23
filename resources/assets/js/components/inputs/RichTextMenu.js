@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import Button from './Button';
+import ButtonV2 from './ButtonV2';
 import Icon from '../Icon';
 import {Popover} from '@headlessui/react';
 import TextInput from './TextInput';
@@ -11,7 +11,7 @@ const RichTextMenu = ({editor}) => {
     }
 
     return (
-        <div className="p-2 flex gap-x-3">
+        <div className="p-2 flex gap-x-3 bg-gray-50 rounded-tl-sm rounded-tr-sm">
             <PopoverOnMobile label={<Icon icon="heading"/>}>
                 <MenuButton
                     title="Heading Level 1"
@@ -209,17 +209,18 @@ const RichTextMenu = ({editor}) => {
 export default RichTextMenu;
 
 const MenuButton = React.forwardRef(({onClick, isActive, title, children}, ref) => (
-    <Button
-        variant="clear"
+    <ButtonV2
+        intent="secondary"
+        weight="clear"
         onClick={onClick}
         type="button"
-        size="sm"
+        size="md"
         className={isActive ? 'text-purple-500' : ''}
         title={title}
         ref={ref}
     >
         {children}
-    </Button>
+    </ButtonV2>
 ));
 
 const LinkPopover = props => {
@@ -257,12 +258,12 @@ const LinkPopover = props => {
                     value={url}
                     updateFn={value => setUrl(value)}
                 />
-                <Button variant="primary" size="xs" type="button" onClick={() => props.onSave(url)}>
+                <ButtonV2 intent="primary" weight="solid" size="sm" type="button" onClick={() => props.onSave(url)}>
                     <Icon icon="check"/>
-                </Button>
-                <Button variant="secondary" size="xs" type="button" onClick={() => props.onRemove()}>
+                </ButtonV2>
+                <ButtonV2 intent="secondary" weight="outline" size="sm" type="button" onClick={() => props.onRemove()}>
                     <Icon icon="trash"/>
-                </Button>
+                </ButtonV2>
             </Popover.Panel>
         </Popover>
     );

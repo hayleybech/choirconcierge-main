@@ -4,28 +4,37 @@ import TableMobile, {
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
-} from "../../../components/TableMobile";
-import DateTag from "../../../components/DateTag";
-import LearningStatus from "../../../LearningStatus";
-import LearningStatusDropdown from "../../../components/Song/LearningStatusDropdown";
-import VoicePartTag from "../../../components/VoicePartTag";
-import Badge from "../../../components/Badge";
-import SingerStatus from "../../../SingerStatus";
-import SingerStatusTag from "../../../components/SingerStatusTag";
-import Pagination from "../../../components/Pagination";
-import useRoute from "../../../hooks/useRoute";
-import Icon from "../../../components/Icon";
-import Button from "../../../components/inputs/Button";
+} from '../../../components/TableMobile';
+import DateTag from '../../../components/DateTag';
+import LearningStatus from '../../../LearningStatus';
+import LearningStatusDropdown from '../../../components/Song/LearningStatusDropdown';
+import VoicePartTag from '../../../components/VoicePartTag';
+import Badge from '../../../components/Badge';
+import SingerStatus from '../../../SingerStatus';
+import SingerStatusTag from '../../../components/SingerStatusTag';
+import Pagination from '../../../components/Pagination';
+import useRoute from '../../../hooks/useRoute';
+import Icon from '../../../components/Icon';
+import Button from '../../../components/inputs/ButtonV2';
 
-const LearningStatusTableMobile = ({ song, singers, pagination, bulkEdit, showEnsemble, hasNonDefaultFilters, setShowFilters }) => {
+const LearningStatusTableMobile = ({
+	song,
+	singers,
+	pagination,
+	bulkEdit,
+	showEnsemble,
+	hasNonDefaultFilters,
+	setShowFilters,
+}) => {
 	const { route } = useRoute();
 
 	return (
 		<div>
 			<TableMobileHeader bulkEdit={bulkEdit}>
 				<Button
-					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-					size="xs"
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
 					onClick={() => setShowFilters(prev => !prev)}
 				>
 					<Icon icon="filter" mr />
@@ -69,7 +78,10 @@ const LearningStatusTableMobile = ({ song, singers, pagination, bulkEdit, showEn
 													</Badge>
 												)}
 												{enrolment.voice_part && (
-													<VoicePartTag title={enrolment.voice_part.title} colour={enrolment.voice_part.colour} />
+													<VoicePartTag
+														title={enrolment.voice_part.title}
+														colour={enrolment.voice_part.colour}
+													/>
 												)}
 											</li>
 										))}
@@ -79,6 +91,7 @@ const LearningStatusTableMobile = ({ song, singers, pagination, bulkEdit, showEn
 											status={status.slug}
 											href={route('songs.singers.update', { song, singer })}
 											method="put"
+											size="sm"
 											compact
 										/>
 										{singer.learning.updated_at && (

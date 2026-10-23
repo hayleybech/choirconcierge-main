@@ -11,7 +11,7 @@ import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import useRoute from '../../hooks/useRoute';
 import { useForm } from '@inertiajs/react';
 import TextInput from '../../components/inputs/TextInput';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import FormWrapper from '../../components/FormWrapper';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
@@ -19,7 +19,7 @@ import FormSection from '../../components/FormSection';
 import Label from '../../components/inputs/Label';
 import CheckboxWithLabel from '../../components/inputs/CheckboxWithLabel';
 import Icon from '../../components/Icon';
-import DateInput from '../../components/inputs/Date';
+import DateCalendarInput from '../../components/inputs/DateCalendarInput';
 import TimeInput from '../../components/inputs/Time';
 import { DateTime } from 'luxon';
 import Help from '../../components/inputs/Help';
@@ -149,9 +149,11 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 
 						<div className="sm:col-span-4 relative z-20">
 							<Label forInput="close_at">Deadline (optional)</Label>
-							<DateInput
+							<DateCalendarInput
 								name="close_at"
 								value={data.close_at}
+								startMonth={new Date(new Date().getFullYear(), 0)}
+								endMonth={new Date(new Date().getFullYear() + 1, 11)}
 								updateFn={setCloseAtDate}
 								hasErrors={!!errors.close_at}
 							/>
@@ -199,10 +201,11 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 											placeholder={`Option ${idx + 1}`}
 											hasErrors={!!errors[`options.${idx}`]}
 										/>
-										<Button
-											type="button"
-											variant="danger-outline"
-											size="sm"
+    						<Button
+    							type="button"
+    							intent="danger"
+    							weight="outline"
+    							size="md"
 											onClick={() => removeOption(idx)}
 											disabled={data.options.length <= 1}
 										>
@@ -211,7 +214,7 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 										</Button>
 									</div>
 								))}
-								<Button type="button" variant="secondary" size="sm" onClick={addOption}>
+								<Button type="button" intent="secondary" weight="solid" size="md" onClick={addOption}>
 									<Icon icon="plus" mr />
 									Add Option
 								</Button>
@@ -244,7 +247,13 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 
 					<FormFooter>
 						<Button href={route('polls.index')}>Cancel</Button>
-						<Button type="submit" variant="primary" className="ml-3" disabled={processing}>
+						<Button
+							type="submit"
+							intent="primary"
+							weight="solid"
+							className="ml-3"
+							disabled={processing}
+						>
 							Create
 						</Button>
 					</FormFooter>

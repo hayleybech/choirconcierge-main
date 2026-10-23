@@ -43,9 +43,3 @@ body,
 .react-pdf__Page__canvas {
     margin: 0 auto;
 }
-
-/* React-Day-Picker */
-.DayPicker-Day {
-    height: 40px;
-    width: 40px;
-}

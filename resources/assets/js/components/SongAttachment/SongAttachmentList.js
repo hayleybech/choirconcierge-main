@@ -1,4 +1,4 @@
-import Button from "../inputs/Button";
+import ButtonV2 from "../inputs/ButtonV2";
 import React, {useState} from "react";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
@@ -53,7 +53,7 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
                         </div>
                         <ul role="list" className="relative z-0 divide-y divide-gray-200">
                             {Object.values(attachmentTypes[typeSlug]).map(attachment => (
-                                <li key={attachment.id} className="bg-white hover:bg-purple-100">
+                                <li key={attachment.id} className="bg-white hover:bg-purple-50">
                                     <div className="flex items-center space-x-1 pr-6">
                                         <a href={isVideo(attachment) ? attachment.filepath : '#'} target={isVideo(attachment) ? '_blank' : '_self'} onClick={() => openAttachment(attachment)} className="flex-1 min-w-0 flex py-5 px-6 gap-x-3 items-center group">
                                             <div className="shrink-0">
@@ -69,32 +69,34 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
                                             </div>
                                         </a>
                                         { song.can['update_song'] &&
-                                            <Button
-                                                variant="clear"
-                                                size="sm"
+                                            <ButtonV2
+                                                intent="secondary"
+                                                weight="clear"
+                                                size="md"
                                                 onClick={() => setAttachmentToRename(attachment)}
                                             >
                                                 <Icon icon="edit" />
-                                            </Button>
+                                            </ButtonV2>
                                         }
                                         { song.can['update_song'] &&
-                                            <Button
-                                                variant="danger-clear"
-                                                size="sm"
+                                            <ButtonV2
+                                                intent="danger"
+                                                weight="clear"
+                                                size="md"
                                                 onClick={() => {setDeletingAttachmentId(attachment.id);
                                                 setDeleteDialogIsOpen(true)}}
                                             >
                                                 <Icon icon="trash" />
-                                            </Button>
+                                            </ButtonV2>
                                         }
                                         {isVideo(attachment) ? (
-                                            <Button href={attachment.filepath} target="_blank" external variant="clear" size="sm" className="text-purple-500">
+                                            <ButtonV2 href={attachment.filepath} target="_blank" external intent="primary" weight="clear" size="md">
                                                 <Icon icon="external-link" />
-                                            </Button>
+                                            </ButtonV2>
                                         ) : (
-                                            <Button href={attachment.download_url} download={attachment.filepath} target="_blank" external variant="clear" size="sm" className="text-purple-500">
+                                            <ButtonV2 href={attachment.download_url} download={attachment.filepath} target="_blank" external intent="primary" weight="clear" size="md">
                                                 <Icon icon="download" />
-                                            </Button>
+                                            </ButtonV2>
                                         )}
                                     </div>
                                 </li>
@@ -113,16 +115,17 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
 
                 {song.can['update_song'] && (
                     <ul role="list" className="relative z-0 divide-y divide-gray-200">
-                        <li className="bg-white hover:bg-purple-100">
-                            <Button
-                                variant="clear"
-                                size="sm"
-                                className="w-full justify-start px-6 py-5 text-purple-600"
+                        <li className="bg-white">
+                            <ButtonV2
+                                intent="primary"
+                                weight="clear"
+                                size="md"
+                                className="w-full justify-start px-6 py-5 hover:bg-purple-50"
                                 onClick={() => setAddAttachmentDialogIsOpen(true)}
                             >
                                 <Icon icon="plus" />
                                 Add attachment
-                            </Button>
+                            </ButtonV2>
                         </li>
                     </ul>
                 )}
@@ -183,7 +186,7 @@ const RenameAttachmentDialog = ({ song, attachment, setAttachment }) => {
             title={isYoutube ? "Edit YouTube Link" : "Rename file"}
             okLabel={isYoutube ? "Update" : "Rename"}
             onOk={submit}
-            okVariant="primary"
+            okColour="primary"
             isOpen={!!attachment}
             setIsOpen={() => setAttachment(null)}
         >
@@ -226,7 +229,7 @@ const RenameAttachmentDialog = ({ song, attachment, setAttachment }) => {
 };
 
 const FilenameInput = ({ name, value, extension, hasErrors, updateFn, otherProps }) => (
-    <div className="mt-1 flex rounded-md shadow-sm">
+    <div className="mt-1 flex rounded-md">
         <input
             type="text"
             name={name}

@@ -7,8 +7,8 @@ import Label from '../../components/inputs/Label';
 import TextInput from '../../components/inputs/TextInput';
 import Error from '../../components/inputs/Error';
 import FormSection from '../../components/FormSection';
-import Button from '../../components/inputs/Button';
-import ButtonLink from '../../components/inputs/ButtonLink';
+import Button from '../../components/inputs/ButtonV2';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import AppHead from '../../components/AppHead';
 import Form from '../../components/Form';
 import FormFooter from '../../components/FormFooter';
@@ -24,7 +24,12 @@ import SingerSelect from '../../components/inputs/SingerSelect';
 import CurrentPlan from './CurrentPlan';
 
 const Edit = ({ organisation, centralDomain, timezones, setSidebarOpen }) => {
-	const { route } = useRoute();
+	const [activeTab, setActiveTab] = useState('organisation');
+	const tabs = [
+		['organisation', 'Organisation'],
+		['billing', 'Billing'],
+		['ensembles', 'Ensembles'],
+	];
 
 	return (
 		<>
@@ -39,9 +44,58 @@ const Edit = ({ organisation, centralDomain, timezones, setSidebarOpen }) => {
 				</PageHeaderTitle>
 			</PageHeader>
 
-			<EditForm organisation={organisation} centralDomain={centralDomain} timezones={timezones} />
-			<EnsemblesList organisation={organisation} />
-			<AddEnsembleForm organisation={organisation} />
+			<FormWrapper>
+				<nav
+					className="mb-6 flex w-full border-b border-gray-200"
+					aria-label="Organisation settings tabs"
+					role="tablist"
+				>
+					{tabs.map(([tab, label]) => (
+						<button
+							key={tab}
+							type="button"
+							role="tab"
+							id={`organisation-settings-tab-${tab}`}
+							aria-controls={`organisation-settings-panel-${tab}`}
+							className={`flex-1 cursor-pointer border-b-2 px-3 py-3 text-sm font-medium ${
+								activeTab === tab
+									? 'border-purple-600 text-purple-600'
+									: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+							}`}
+							onClick={() => setActiveTab(tab)}
+							aria-selected={activeTab === tab}
+						>
+							{label}
+						</button>
+					))}
+				</nav>
+
+				<div
+					role="tabpanel"
+					id="organisation-settings-panel-organisation"
+					aria-labelledby="organisation-settings-tab-organisation"
+					hidden={activeTab !== 'organisation'}
+				>
+					<EditForm organisation={organisation} centralDomain={centralDomain} timezones={timezones} />
+				</div>
+				<div
+					role="tabpanel"
+					id="organisation-settings-panel-billing"
+					aria-labelledby="organisation-settings-tab-billing"
+					hidden={activeTab !== 'billing'}
+				>
+					<BillingForm organisation={organisation} />
+				</div>
+				<div
+					role="tabpanel"
+					id="organisation-settings-panel-ensembles"
+					aria-labelledby="organisation-settings-tab-ensembles"
+					hidden={activeTab !== 'ensembles'}
+				>
+					<EnsemblesList organisation={organisation} />
+					<AddEnsembleForm organisation={organisation} />
+				</div>
+			</FormWrapper>
 		</>
 	);
 };
@@ -54,10 +108,92 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
 	const { route } = useRoute();
 
 	const { data, setData, post, processing, errors } = useForm({
+		tab: 'organisation',
 		name: organisation.name,
 		logo: null,
 		primary_domain: organisation.primary_domain,
 		timezone: organisation.timezone,
+	});
+
+	function submit(e) {
+		e.preventDefault();
+		post(route('organisation.update'), { forceFormData: true });
+	}
+
+	return (
+		<Form onSubmit={submit}>
+			<FormSection title="Basic Details">
+				<div className="sm:col-span-6">
+					<Label label="Organisation Name" forInput="name" />
+					<TextInput
+						name="name"
+						value={data.name}
+						updateFn={value => setData('name', value)}
+						hasErrors={!!errors['name']}
+					/>
+					{errors.name && <Error>{errors.name}</Error>}
+				</div>
+
+				<div className="sm:col-span-6">
+					<Label label="Organisation Logo" forInput="logo" />
+					<AvatarUpload
+						name="logo"
+						currentImage={data.logo ? URL.createObjectURL(data.logo) : organisation.logo_url}
+						isSquare={false}
+						updateFn={value => setData('logo', value)}
+					/>
+				</div>
+
+				<div className="sm:col-span-3">
+					<Label label="Primary Subdomain" forInput="primary_domain" />
+					<SubdomainInput
+						name="primary_domain"
+						value={data.primary_domain}
+						host={centralDomain}
+						updateFn={value => setData('primary_domain', value)}
+						hasErrors={!!errors['primary_domain']}
+					/>
+					{errors.primary_domain && <Error>{errors.primary_domain}</Error>}
+				</div>
+				<div className="sm:col-span-3">
+					<Help>
+						<span className="font-bold">All subdomains</span>
+						<br />
+						These hang around and redirect to your primary one, so people don't get lost:
+						<ul className="list-disc list-inside">
+							{organisation.domains.map(({ domain }) => (
+								<li key={domain}>
+									{domain}.{centralDomain}
+								</li>
+							))}
+						</ul>
+					</Help>
+				</div>
+
+				<div className="sm:col-span-6">
+					<Label label="Timezone" forInput="timezone" />
+					<TimezoneSelect
+						defaultValue={data.timezone}
+						options={timezones.map(label => ({ label, value: label }))}
+						updateFn={value => setData('timezone', value)}
+					/>
+					{errors.timezone && <Error>{errors.timezone}</Error>}
+				</div>
+			</FormSection>
+			<FormFooter>
+				<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
+				<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
+					Save
+				</Button>
+			</FormFooter>
+		</Form>
+	);
+};
+
+const BillingForm = ({ organisation }) => {
+	const { route } = useRoute();
+	const { data, setData, post, processing, errors } = useForm({
+		tab: 'billing',
 		billing_user: organisation.billing_user?.id ?? null,
 	});
 
@@ -66,117 +202,50 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
 		post(route('organisation.update'));
 	}
 
-	return (
-		<FormWrapper>
-			<Form onSubmit={submit}>
-				<FormSection title="Basic Details">
-					<div className="sm:col-span-6">
-						<Label label="Organisation Name" forInput="name" />
-						<TextInput
-							name="name"
-							value={data.name}
-							updateFn={value => setData('name', value)}
-							hasErrors={!!errors['name']}
-						/>
-						{errors.name && <Error>{errors.name}</Error>}
-					</div>
+	return process.env.MIX_FEATURE_BILLING ? (
+		<Form onSubmit={submit}>
+			<FormSection title="Billing Details">
+				<div className="sm:col-span-6">
+					<Label label="Billing Contact" forInput="billing_user" />
+					<SingerSelect
+						defaultValue={
+							organisation.billing_user
+								? {
+										value: organisation.billing_user.id,
+										label: organisation.billing_user.name,
+										name: organisation.billing_user.name,
+										avatarUrl: organisation.billing_user.avatar_url,
+										email: organisation.billing_user.email,
+										roles: organisation.billing_user.membership.roles,
+								  }
+								: null
+						}
+						updateFn={value => setData('billing_user', value)}
+					/>
+					{errors.billing_user && <Error>{errors.billing_user}</Error>}
+				</div>
 
-					<div className="sm:col-span-6">
-						<Label label="Organisation Logo" forInput="logo" />
-						<AvatarUpload
-							name="logo"
-							currentImage={data.logo ? URL.createObjectURL(data.logo) : organisation.logo_url}
-							isSquare={false}
-							updateFn={value => setData('logo', value)}
-						/>
-					</div>
+				<div className="sm:col-span-6">
+					<Label label="Current Plan" />
+					<CurrentPlan
+						plan={organisation.plan}
+						billing={organisation.billing_status}
+						tenantId={organisation.id}
+					/>
+				</div>
+			</FormSection>
 
-					<div className="sm:col-span-3">
-						<Label label="Primary Subdomain" forInput="primary_domain" />
-						<SubdomainInput
-							name="primary_domain"
-							value={data.primary_domain}
-							host={centralDomain}
-							updateFn={value => setData('primary_domain', value)}
-							hasErrors={!!errors['primary_domain']}
-						/>
-						{errors.primary_domain && <Error>{errors.primary_domain}</Error>}
-					</div>
-					<div className="sm:col-span-3">
-						<Help>
-							<span className="font-bold">All subdomains</span>
-							<br />
-							These hang around and redirect to your primary one, so people don't get lost:
-							<ul className="list-disc list-inside">
-								{organisation.domains.map(({ domain }) => (
-									<li key={domain}>
-										{domain}.{centralDomain}
-									</li>
-								))}
-							</ul>
-						</Help>
-					</div>
-
-					<div className="sm:col-span-6">
-						<Label label="Timezone" forInput="timezone" />
-						<TimezoneSelect
-							defaultValue={data.timezone}
-							options={timezones.map(label => ({ label, value: label }))}
-							updateFn={value => setData('timezone', value)}
-						/>
-						{errors.timezone && <Error>{errors.timezone}</Error>}
-					</div>
-				</FormSection>
-				<FormFooter>
-					<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
-					<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
-						Save
-					</Button>
-				</FormFooter>
-
-				{process.env.MIX_FEATURE_BILLING && (
-					<>
-						<FormSection title="Billing Details">
-							<div className="sm:col-span-6">
-								<Label label="Billing Contact" forInput="billing_user" />
-								<SingerSelect
-									defaultValue={
-										organisation.billing_user
-											? {
-													value: organisation.billing_user.id,
-													label: organisation.billing_user.name,
-													name: organisation.billing_user.name,
-													avatarUrl: organisation.billing_user.avatar_url,
-													email: organisation.billing_user.email,
-													roles: organisation.billing_user.membership.roles,
-											  }
-											: null
-									}
-									updateFn={value => setData('billing_user', value)}
-								/>
-								{errors.billing_user && <Error>{errors.billing_user}</Error>}
-							</div>
-
-							<div className="sm:col-span-6">
-								<Label label="Current Plan" />
-								<CurrentPlan
-									plan={organisation.plan}
-									billing={organisation.billing_status}
-									tenantId={organisation.id}
-								/>
-							</div>
-						</FormSection>
-
-						<FormFooter>
-							<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
-							<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
-								Save
-							</Button>
-						</FormFooter>
-					</>
-				)}
-			</Form>
-		</FormWrapper>
+			<FormFooter>
+				<ButtonLink href={route('singers.index')}>Cancel</ButtonLink>
+				<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
+					Save
+				</Button>
+			</FormFooter>
+		</Form>
+	) : (
+		<FormSection title="Billing Details">
+			<div className="sm:col-span-6">Billing is not enabled for this organisation.</div>
+		</FormSection>
 	);
 };
 
@@ -185,7 +254,7 @@ const EnsemblesList = ({ organisation }) => {
 	const [deletingEnsemble, setDeletingEnsemble] = useState(null);
 
 	return (
-		<FormWrapper>
+		<>
 			<FormSection title="Ensembles">
 				{organisation.ensembles.length > 0 && (
 					<ul className="sm:col-span-6 divide-y divide-gray-200">
@@ -199,18 +268,28 @@ const EnsemblesList = ({ organisation }) => {
 											className="max-h-10 w-auto shrink"
 										/>
 									)}
- 								<div>{ensemble.name}</div>
- 							</div>
- 								<div className="flex gap-2">
- 									<Button variant="primary" size="xs" onClick={() => setEditingEnsemble(ensemble)}>
- 										<Icon icon="edit" />
- 										Edit
- 									</Button>
- 									<Button variant="danger-solid" size="xs" onClick={() => setDeletingEnsemble(ensemble)}>
- 										<Icon icon="trash" />
- 										Delete
- 									</Button>
- 								</div>
+									<div>{ensemble.name}</div>
+								</div>
+								<div className="flex gap-2">
+									<Button
+										intent="primary"
+										weight="solid"
+										size="sm"
+										onClick={() => setEditingEnsemble(ensemble)}
+									>
+										<Icon icon="edit" />
+										Edit
+									</Button>
+									<Button
+										intent="danger"
+										weight="solid"
+										size="sm"
+										onClick={() => setDeletingEnsemble(ensemble)}
+									>
+										<Icon icon="trash" />
+										Delete
+									</Button>
+								</div>
 							</li>
 						))}
 					</ul>
@@ -229,7 +308,7 @@ const EnsemblesList = ({ organisation }) => {
 				organisation={organisation}
 				ensemble={deletingEnsemble}
 			/>
-		</FormWrapper>
+		</>
 	);
 };
 
@@ -244,23 +323,22 @@ const EditEnsembleDialog = ({ isOpen, setIsOpen, organisation, ensemble }) => {
 
 	useEffect(() => {
 		setData('name', ensemble?.name ?? '');
-	}, [ensemble]);
+	}, [ensemble, setData]);
 
 	function submit(e) {
 		e.preventDefault();
 
 		post(route('organisations.ensembles.update', { organisation, ensemble }), {
-			onSuccess: () => setIsOpen(false),
+			onSuccess: () => setIsOpen(null),
 		});
 	}
-
 
 	return (
 		<Dialog
 			title="Edit ensemble"
 			okLabel="Save"
 			onOk={submit}
-			okVariant="primary"
+			okColour="primary"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 		>
@@ -294,11 +372,13 @@ const EditEnsembleDialog = ({ isOpen, setIsOpen, organisation, ensemble }) => {
 
 const DeleteEnsembleDialog = ({ isOpen, setIsOpen, organisation, ensemble }) => {
 	const { route } = useRoute();
-	const { data, setData, delete: deleteRequest, errors, processing } = useForm({ confirmation: '' });
+	const { data, setData, delete: deleteRequest, errors, processing } = useForm({
+		confirmation: '',
+	});
 
 	useEffect(() => {
 		setData('confirmation', '');
-	}, [ensemble]);
+	}, [ensemble, setData]);
 
 	function destroy(e) {
 		e.preventDefault();
@@ -312,7 +392,7 @@ const DeleteEnsembleDialog = ({ isOpen, setIsOpen, organisation, ensemble }) => 
 			title="Delete ensemble"
 			okLabel="Delete ensemble"
 			onOk={destroy}
-			okVariant="danger-solid"
+			okColour="danger"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 			processing={processing}
@@ -339,6 +419,7 @@ const DeleteEnsembleDialog = ({ isOpen, setIsOpen, organisation, ensemble }) => 
 };
 
 const AddEnsembleForm = ({ organisation }) => {
+	const { route } = useRoute();
 	const { data, setData, post, processing, errors, reset } = useForm({
 		name: '',
 		logo: null,
@@ -350,40 +431,38 @@ const AddEnsembleForm = ({ organisation }) => {
 	}
 
 	return (
-		<FormWrapper>
-			<Form onSubmit={submit}>
-				<FormSection title="Add Ensemble">
-					<div className="sm:col-span-6">
-						<Label label="Ensemble Name" forInput="name" />
-						<TextInput
-							name="name"
-							value={data.name}
-							updateFn={value => setData('name', value)}
-							hasErrors={!!errors['name']}
-						/>
-						{errors.name && <Error>{errors.name}</Error>}
-					</div>
+		<Form onSubmit={submit}>
+			<FormSection title="Add Ensemble">
+				<div className="sm:col-span-6">
+					<Label label="Ensemble Name" forInput="name" />
+					<TextInput
+						name="name"
+						value={data.name}
+						updateFn={value => setData('name', value)}
+						hasErrors={!!errors['name']}
+					/>
+					{errors.name && <Error>{errors.name}</Error>}
+				</div>
 
-					<div className="sm:col-span-6">
-						<Label label="Ensemble Logo" forInput="ensemble_logo" />
-						<AvatarUpload
-							name="ensemble_logo"
-							currentImage={data.logo ? URL.createObjectURL(data.logo) : null}
-							isSquare={false}
-							updateFn={value => setData('logo', value)}
-						/>
-					</div>
-				</FormSection>
+				<div className="sm:col-span-6">
+					<Label label="Ensemble Logo" forInput="ensemble_logo" />
+					<AvatarUpload
+						name="ensemble_logo"
+						currentImage={data.logo ? URL.createObjectURL(data.logo) : null}
+						isSquare={false}
+						updateFn={value => setData('logo', value)}
+					/>
+				</div>
+			</FormSection>
 
-				<FormFooter>
-					<Button variant="secondary" onClick={reset}>
-						Cancel
-					</Button>
-					<Button variant="primary" type="submit" className="ml-3" disabled={processing}>
-						Save
-					</Button>
-				</FormFooter>
-			</Form>
-		</FormWrapper>
+			<FormFooter>
+				<Button intent="secondary" weight="solid" onClick={() => reset()}>
+					Cancel
+				</Button>
+				<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
+					Save
+				</Button>
+			</FormFooter>
+		</Form>
 	);
 };

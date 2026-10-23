@@ -10,7 +10,7 @@ import {
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import Icon from '../../../components/Icon';
 import AppHead from '../../../components/AppHead';
 import { usePage } from '@inertiajs/react';
@@ -27,7 +27,8 @@ const Month = ({ days, month, firstDayOfWeek, calendarSyncUrl, setSidebarOpen })
 			label: 'Add New',
 			icon: 'calendar-plus',
 			href: route('events.create'),
-			variant: 'primary',
+			intent: 'primary',
+			weight: 'solid',
 			can: can.create_event,
 		},
 		{
@@ -61,7 +62,7 @@ const Month = ({ days, month, firstDayOfWeek, calendarSyncUrl, setSidebarOpen })
 							key={action.label}
 							url={action.href}
 							onClick={action.onClick}
-							variant={action.variant}
+							intent={action.intent}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}
@@ -83,8 +84,10 @@ const Month = ({ days, month, firstDayOfWeek, calendarSyncUrl, setSidebarOpen })
 							key={action.label}
 							href={action.href}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}

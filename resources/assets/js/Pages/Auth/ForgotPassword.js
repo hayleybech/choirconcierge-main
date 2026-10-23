@@ -2,7 +2,7 @@ import React from 'react'
 import AppHead from "../../components/AppHead";
 import {Link, useForm, usePage} from "@inertiajs/react";
 import Label from "../../components/inputs/Label";
-import Button from "../../components/inputs/Button";
+import Button from "../../components/inputs/ButtonV2";
 import TextInput from "../../components/inputs/TextInput";
 import Error from "../../components/inputs/Error";
 import Icon from "../../components/Icon";
@@ -55,7 +55,7 @@ const ForgotPassword = ({  }) => {
                             </div>
 
                             <div>
-                                <Button variant="primary" type="submit" size="sm" className="w-full" disabled={processing}>Send password reset link</Button>
+                                <Button intent="primary" weight="solid" type="submit" size="md" className="w-full" disabled={processing}>Send password reset link</Button>
                             </div>
 
                             <div className="text-sm">

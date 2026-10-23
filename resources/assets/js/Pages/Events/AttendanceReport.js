@@ -20,7 +20,7 @@ import AttendanceReportFilters from './AttendanceReportFilters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import { Link } from '@inertiajs/react';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import { TableMobileHeader } from '../../components/TableMobile';
 import AttendanceChart from '../../components/Event/AttendanceChart';
@@ -28,6 +28,7 @@ import Sorts from '../../components/Sorts';
 import VoicePartTag from '../../components/VoicePartTag';
 import FilterDialog from '../../components/FilterDialog';
 import { useMediaQuery } from 'react-responsive';
+import DateRangeCalendarInput from '../../components/inputs/DateRangeCalendarInput';
 
 const AttendanceReport = ({
 	events,
@@ -53,6 +54,15 @@ const AttendanceReport = ({
 		{ id: 'voice-part', name: 'Voice Part' },
 		{ id: 'attendance', name: 'Events Present' },
 	];
+	const today = DateTime.now().startOf('day');
+	const dateRangePresets = [
+		{ label: 'Last 30 days', start: today.minus({ days: 29 }) },
+		{ label: 'Last 90 days', start: today.minus({ days: 89 }) },
+		{ label: 'Last 365 days', start: today.minus({ days: 364 }) },
+		{ label: 'Last month', start: today.minus({ months: 1 }).startOf('month'), end: today.minus({ months: 1 }).endOf('month') },
+		{ label: 'Last quarter', start: today.startOf('quarter').minus({ quarters: 1 }), end: today.startOf('quarter').minus({ days: 1 }) },
+		{ label: 'Last year', start: today.minus({ years: 1 }).startOf('year'), end: today.minus({ years: 1 }).endOf('year') },
+	];
 	const filters = [
 		{ name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
 		{ name: 'starts_after', defaultValue: defaultStartsAfter },
@@ -61,6 +71,19 @@ const AttendanceReport = ({
 	];
 
 	const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
+	const previousDateRange = React.useRef({
+		startsAfter: sortFilterForm.data['starts_after'],
+		startsBefore: sortFilterForm.data['starts_before'],
+	});
+	React.useEffect(() => {
+		const startsAfter = sortFilterForm.data['starts_after'];
+		const startsBefore = sortFilterForm.data['starts_before'];
+
+		if (previousDateRange.current.startsAfter !== startsAfter || previousDateRange.current.startsBefore !== startsBefore) {
+			previousDateRange.current = { startsAfter, startsBefore };
+			sortFilterForm.submit();
+		}
+	}, [sortFilterForm.data['starts_after'], sortFilterForm.data['starts_before']]);
 	const filterPane = (
 		<FilterSortPane
 			sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
@@ -96,7 +119,7 @@ const AttendanceReport = ({
 							</ActionMenuItem>
 						)}
 						{filterAction && (
-							<ActionMenuItem onClick={filterAction.onClick} variant={filterAction.variant}>
+							<ActionMenuItem onClick={filterAction.onClick} intent={filterAction.intent}>
 								<Icon icon="filter" mr />
 								Filter
 							</ActionMenuItem>
@@ -115,16 +138,59 @@ const AttendanceReport = ({
 						<div>Avg. singers per event: {avgSingersPerEvent}</div>
 						<div>Avg. events per singer: {avgEventsPerSinger}</div>
 					</PageHeaderMeta>
+					<div className="mt-3 w-full max-w-xs">
+						<DateRangeCalendarInput
+							startDate={sortFilterForm.data['starts_after']}
+							endDate={sortFilterForm.data['starts_before']}
+							startMonth={new Date(2017, 0)}
+							endMonth={new Date(new Date().getFullYear() + 5, 11)}
+							updateFn={range => {
+								sortFilterForm.setData('starts_after', range?.from ? DateTime.fromJSDate(range.from).toISODate() : '');
+								sortFilterForm.setData('starts_before', range?.to ? DateTime.fromJSDate(range.to).toISODate() : '');
+							}}
+						>
+							{setDraftRange => (
+								<div className="mb-2 grid grid-cols-2">
+									{[dateRangePresets.slice(0, 3), dateRangePresets.slice(3)].map((column, columnIndex) => (
+										<div key={columnIndex} className={`flex flex-col gap-1 ${columnIndex === 1 ? 'border-l border-gray-200 pl-2' : 'pr-2'}`}>
+											{column.map(({ label, start, end }) => (
+												<Button
+													key={label}
+													intent="secondary"
+													weight="clear"
+													size="sm"
+													onClick={() => setDraftRange({ from: start.toJSDate(), to: (end ?? today).toJSDate() })}
+												>
+													{label}
+												</Button>
+											))}
+										</div>
+									))}
+								</div>
+							)}
+						</DateRangeCalendarInput>
+					</div>
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{filterAction && (
-						<Button onClick={filterAction.onClick} size="sm" variant={filterAction.variant}>
+						<Button
+							onClick={filterAction.onClick}
+							size="md"
+							intent={filterAction.intent}
+							weight="outline"
+							className={filterAction.intent === 'success' ? 'bg-white' : undefined}
+						>
 							<Icon icon="filter" mr />
 							Filter
 						</Button>
 					)}
 					{events.length > 0 && numSingers > 0 && (
-						<Button onClick={() => setIsChartCollapsed(prev => !prev)} size="sm" variant="secondary">
+						<Button
+							onClick={() => setIsChartCollapsed(prev => !prev)}
+							size="md"
+							intent="secondary"
+							weight="solid"
+						>
 							<Icon icon="analytics" mr />
 							{isChartCollapsed ? 'Show chart' : 'Hide chart'}
 						</Button>
@@ -132,34 +198,34 @@ const AttendanceReport = ({
 				</PageHeaderActions>
 			</PageHeader>
 
-			{events.length > 0 && numSingers > 0 && <AttendanceChart events={events} isCollapsed={isChartCollapsed} />}
+			{events.length > 0 && numSingers > 0 && (
+				<AttendanceChart events={events} isCollapsed={isChartCollapsed} onClose={() => setIsChartCollapsed(true)} />
+			)}
 
 			{!isDesktop && (
 				<FilterDialog isOpen={showFilters} setIsOpen={setShowFilters}>
 					{filterPane}
 				</FilterDialog>
 			)}
+			<TableMobileHeader bulkEdit={bulkEdit} className="lg:hidden">
+				<Button
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
+					onClick={() => setShowFilters(prev => !prev)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
 
-			<div className="flex min-h-0 flex-1 flex-col overflow-auto divide-y divide-gray-300 lg:flex-row lg:divide-x lg:divide-y-0">
+			<div className="flex min-w-0 flex-none flex-col divide-y divide-gray-300 lg:min-h-0 lg:flex-1 lg:overflow-auto lg:flex-row lg:divide-x lg:divide-y-0">
 				{isDesktop && showFilters && (
 					<div className="flex h-full shrink-0 flex-col lg:z-10 lg:w-1/5">{filterPane}</div>
 				)}
 
-				<div className="flex min-h-0 grow flex-col lg:overflow-x-auto">
-					<div className="lg:hidden">
-						<TableMobileHeader bulkEdit={bulkEdit}>
-							<Button
-								variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-								size="xs"
-								onClick={() => setShowFilters(prev => !prev)}
-							>
-								<Icon icon="filter" mr />
-								Filter/Sort
-							</Button>
-						</TableMobileHeader>
-					</div>
-
-					<div className="flex-1">
+				<div className="flex min-w-0 flex-none flex-col lg:min-h-0 lg:flex-1 lg:overflow-x-auto">
+					<div className="min-w-0 flex-1">
 						{events.length === 0 && (
 							<EmptyState
 								icon="calendar"
@@ -168,7 +234,7 @@ const AttendanceReport = ({
 							/>
 						)}
 
-						<div className="h-full pb-8 pr-8">
+						<div className="w-full min-w-0 overflow-x-auto pb-8">
 							{events.length > 0 && numSingers === 0 && (
 								<EmptyState
 									icon="users"

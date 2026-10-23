@@ -2,6 +2,9 @@
 
 use App\Models\Tenant;
 use App\Models\User;
+use App\Models\Event;
+use App\Models\Membership;
+use App\Models\Rsvp;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia;
@@ -24,7 +27,40 @@ test('index does not show stats for non super admin', function () {
     $this->get(route('central.dash'))
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Central/Dash/Show')
+            ->has('events')
+            ->has('songs')
+            ->has('tenantStats')
             ->where('tenantStats', null)
+        );
+});
+
+test('central dashboard events include the signed-in users rsvp', function () {
+    $tenant = Tenant::factory()->create(['id' => 'rsvp-tenant', 'timezone' => 'Australia/Perth']);
+    $user = User::factory()->create(['email' => 'central-rsvp@example.com']);
+    $membership = Membership::factory()->create([
+        'tenant_id' => $tenant->id,
+        'user_id' => $user->id,
+    ]);
+    $event = Event::factory()->create([
+        'tenant_id' => $tenant->id,
+        'call_time' => now()->addWeek(),
+    ]);
+    Rsvp::factory()->create([
+        'event_id' => $event->id,
+        'membership_id' => $membership->id,
+        'response' => 'maybe',
+    ]);
+    $this->actingAs($user);
+
+    $this->get(route('central.dash'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Central/Dash/Show')
+            ->has('events', 1)
+            ->where('events.0.my_rsvp.response', 'maybe')
+            ->has('songs')
+            ->has('tenantStats')
         );
 });
 

@@ -9,7 +9,7 @@ import {
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import Icon from '../../components/Icon';
 import { modelsAndAbilities } from './modelsAndAbilities';
@@ -42,7 +42,8 @@ const Show = ({ role, setSidebarOpen }) => {
 			label: 'Delete',
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
-			variant: 'danger-outline',
+			intent: 'danger',
+			weight: 'outline',
 			can: !['User', 'Admin'].includes(role.name) && (role.can.delete_role || page.props.can.delete_role),
 		},
 	].filter(action => action.can);
@@ -57,20 +58,20 @@ const Show = ({ role, setSidebarOpen }) => {
 		<>
 			<AppHead title={`${role.name} - Roles`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					<PageActionsMenu>
-						{actions.map(action => (
-							<ActionMenuItem
-								key={action.label}
-								url={action.url}
-								onClick={action.onClick}
-								variant={action.variant}
-							>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</ActionMenuItem>
-						))}
-					</PageActionsMenu>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				<PageActionsMenu>
+					{actions.map(action => (
+						<ActionMenuItem
+							key={action.label}
+							url={action.url}
+							onClick={action.onClick}
+							intent={action.intent}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</ActionMenuItem>
+					))}
+				</PageActionsMenu>
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -86,8 +87,10 @@ const Show = ({ role, setSidebarOpen }) => {
 							key={action.label}
 							href={action.url}
 							onClick={action.onClick}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}

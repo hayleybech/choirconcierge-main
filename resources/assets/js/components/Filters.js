@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import SectionSubtitle from './SectionSubtitle';
 import useRoute from '../hooks/useRoute';
-import ButtonLink from './inputs/ButtonLink';
+import ButtonLinkV2 from './inputs/ButtonLinkV2';
 
 const Filters = ({ routeName, routeParams, form: { submit, data, setData }, render }) => {
 	const { route } = useRoute();
@@ -20,9 +20,9 @@ const Filters = ({ routeName, routeParams, form: { submit, data, setData }, rend
 		<form onSubmit={submit}>
 			<SectionSubtitle>Filter </SectionSubtitle>
 
-			<ButtonLink variant="secondary" size="xs" href={route(routeName, routeParams)} className="flex! w-full mb-2">
+			<ButtonLinkV2 intent="secondary" weight="outline" size="sm" href={route(routeName, routeParams)} className="flex! w-full mb-2">
 				Clear All
-			</ButtonLink>
+			</ButtonLinkV2>
 
 			<div className="flex flex-col items-stretch space-y-4 mb-4">{render(data, setData)}</div>
 		</form>

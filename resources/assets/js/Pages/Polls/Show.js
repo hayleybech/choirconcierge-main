@@ -13,7 +13,7 @@ import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import useRoute from '../../hooks/useRoute';
 import { useForm } from '@inertiajs/react';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import FormWrapper from '../../components/FormWrapper';
 import Form from '../../components/Form';
 import FormSection from '../../components/FormSection';
@@ -33,20 +33,28 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 	});
 	const isClosed = poll.is_closed;
 	const actions = [
-		{ label: 'Edit', url: route('polls.edit', { poll: poll.id }), icon: 'pencil', variant: 'secondary' },
+		{
+			label: 'Edit',
+			url: route('polls.edit', { poll: poll.id }),
+			icon: 'pencil',
+			intent: 'secondary',
+			weight: 'solid',
+		},
 		!isClosed && {
 			label: 'Close Poll',
 			url: route('polls.close', { poll: poll.id }),
 			method: 'put',
 			icon: 'lock',
-			variant: 'secondary',
+			intent: 'secondary',
+			weight: 'solid',
 		},
 		isClosed && {
 			label: 'Re-open Poll',
 			url: route('polls.open', { poll: poll.id }),
 			method: 'put',
 			icon: 'lock-open',
-			variant: 'secondary',
+			intent: 'secondary',
+			weight: 'solid',
 		},
 	].filter(Boolean);
 
@@ -75,15 +83,15 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 		<>
 			<AppHead title={poll.title} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					<PageActionsMenu>
-						{actions.map((action, key) => (
-							<ActionMenuItem key={key} url={action.url} method={action.method} variant={action.variant}>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</ActionMenuItem>
-						))}
-					</PageActionsMenu>
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				<PageActionsMenu>
+					{actions.map((action, key) => (
+						<ActionMenuItem key={key} url={action.url} method={action.method} intent={action.intent}>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</ActionMenuItem>
+					))}
+				</PageActionsMenu>
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -141,8 +149,10 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 							key={action.label}
 							href={action.url}
 							method={action.method}
-							size="sm"
-							variant={action.variant}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}
@@ -194,7 +204,7 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 					</FormSection>
 
 					<FormFooter className="flex justify-end">
-						<Button type="submit" variant="primary" disabled={isClosed || processing}>
+						<Button type="submit" intent="primary" weight="solid" disabled={isClosed || processing}>
 							{my_vote_option_ids.length > 0 ? 'Update Vote' : 'Submit Vote'}
 						</Button>
 					</FormFooter>

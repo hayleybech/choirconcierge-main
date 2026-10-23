@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -66,14 +67,20 @@ class ProcessGroupMailbox implements ShouldQueue
 
                 Nightwatch::sample(rate: 0.5);
 
-                $fromAddress = $message->getFrom()->first()->mail;
+                $fromAddress = $this->recipientEmail($message->getFrom()?->first());
 
                 Mail::to($fromAddress)->send(new MessageTooLargeMessage());
 
                 MailLog::create([
                     'uid' => $message->getUid(),
                     'from' => Str::limit($fromAddress, 254),
-                    'to' => Str::limit(collect($message->getTo())->map(fn($to) => $to->mail)->join(', '), 512),
+                    'to' => Str::limit(
+                        collect($message->getTo()?->all() ?? [])
+                            ->map(fn (mixed $recipient) => $this->recipientEmail($recipient))
+                            ->reject(fn (string $email) => $email === '')
+                            ->join(', '),
+                        512,
+                    ),
                     'subject' => Str::limit($message->getSubject()->first(), 125),
                     'body' => 'Message rejected: size too large ('.$message->getSize().' bytes)',
                     'size' => $message->getSize(),
@@ -128,13 +135,51 @@ class ProcessGroupMailbox implements ShouldQueue
 
     private function isDuplicateEmail(Message $message): bool
     {
-        return collect($message->getCc()?->all())
-            ->map(fn(object $recipientCc) => $recipientCc->mail)
+        return $this->recipientEmails($message, 'cc', $message->getCc()?->all() ?? [])
             ->intersect(
-                collect([...$message->getTo()->all(), ...$message->getFrom()->all()])
-                    ->map(fn(object $recipientToOrFrom) => $recipientToOrFrom->mail)
+                $this->recipientEmails($message, 'to', $message->getTo()?->all() ?? [])
+                    ->merge($this->recipientEmails($message, 'from', $message->getFrom()?->all() ?? []))
             )
             ->isNotEmpty();
+    }
+
+    /**
+     * @param array<int, mixed> $recipients
+     * @return Collection<int, string>
+     */
+    private function recipientEmails(Message $message, string $field, array $recipients): Collection
+    {
+        return collect($recipients)
+            ->map(fn (mixed $recipient) => $this->recipientEmail($recipient))
+            ->reject(function (string $email, int|string $index) use ($message, $field): bool {
+                if ($email === '') {
+                    Log::warning('Inbound message recipient has no usable email address.', [
+                        'uid' => $message->getUid(),
+                        'field' => $field,
+                        'recipient_index' => $index,
+                    ]);
+
+                    return true;
+                }
+
+                return false;
+            })
+            ->values();
+    }
+
+    private function recipientEmail(mixed $recipient): string
+    {
+        if (is_string($recipient)) {
+            return trim($recipient);
+        }
+
+        if (is_object($recipient)) {
+            $email = $recipient->mail ?? null;
+
+            return is_string($email) ? trim($email) : '';
+        }
+
+        return '';
     }
 }
 

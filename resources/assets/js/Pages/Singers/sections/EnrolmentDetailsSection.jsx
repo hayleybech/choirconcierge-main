@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import VoicePartTag, { voicePartTextColourClasses } from '../../../components/VoicePartTag';
 import DateTag from '../../../components/DateTag';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import Dialog from '../../../components/Dialog';
@@ -50,8 +50,9 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 								{/* @todo add a more specific ability check */}
 								{singer.can['update_singer'] && (
 									<Button
-										variant="primary"
-										size="xs"
+										intent="primary"
+										weight="solid"
+										size="sm"
 										onClick={() => setEditingEnrolment(enrolment.id)}
 									>
 										<Icon icon="edit" />
@@ -62,8 +63,9 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 								{/* @todo add a more specific ability check */}
 								{singer.can['update_singer'] && (
 									<Button
-										variant="danger-outline"
-										size="xs"
+										intent="danger"
+										weight="outline"
+										size="sm"
 										onClick={() => setDeletingEnrolment(enrolment.id)}
 									>
 										<Icon icon="trash" />
@@ -77,8 +79,9 @@ export const EnrolmentDetailsSection = ({ singer, voiceParts, ensembles }) => {
 					{singer.can['update_singer'] && ensembles.length > 0 && (
 						<li className="bg-gray-50 hover:bg-purple-100">
 							<Button
-								variant="clear"
-								size="sm"
+								intent="secondary"
+								weight="clear"
+								size="md"
 								className="w-full justify-start px-6 py-5 text-purple-600"
 								onClick={() => setCreatingEnrolment(true)}
 							>
@@ -133,7 +136,7 @@ const CreateEnrolmentDialog = ({ singer, isOpen, setIsOpen, voiceParts, ensemble
 			title="Create Enrolment"
 			okLabel="Save"
 			okUrl={route('singers.enrolments.store', { singer })}
-			okVariant="primary"
+			okColour="primary"
 			okMethod="post"
 			data={{
 				voice_part_id: selectedVoicePart,
@@ -180,7 +183,7 @@ const EditEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen, voiceParts 
 			title="Edit Enrolment"
 			okLabel="Save"
 			okUrl={enrolment ? route('singers.enrolments.update', { singer, enrolment }) : '#'}
-			okVariant="primary"
+			okColour="primary"
 			okMethod="put"
 			data={{ voice_part_id: selectedVoicePart }}
 			isOpen={isOpen}
@@ -214,7 +217,7 @@ const DeleteEnrolmentDialog = ({ singer, enrolment, isOpen, setIsOpen }) => {
 			title="Delete Enrolment"
 			okLabel="Remove"
 			okUrl={enrolment ? route('singers.enrolments.destroy', { singer, enrolment }) : '#'}
-			okVariant="danger-solid"
+			okColour="danger"
 			okMethod="delete"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}

@@ -2,7 +2,7 @@ import React from 'react';
 import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
 import DateTag from '../../../components/DateTag';
 import { Link } from '@inertiajs/react';
-import ButtonLink from '../../../components/inputs/ButtonLink';
+import ButtonLink from '../../../components/inputs/ButtonLinkV2';
 import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import BillingTag from './BillingTag';
@@ -59,7 +59,7 @@ const TenantTableDesktop = ({ tenants, sortFilterForm, pagination }) => {
 							<DateTag icon="pencil" date={tenant.created_at} />
 						</TableCell>
 						<TableCell>
-							<ButtonLink href={route('dash', { tenant })} variant="primary" size="xs">
+							<ButtonLink href={route('dash', { tenant })} intent="primary" weight="solid" size="sm">
 								<Icon icon="sign-in-alt" />
 								Open
 							</ButtonLink>

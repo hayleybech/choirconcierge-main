@@ -5,7 +5,7 @@ import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import Pagination from '../../../components/Pagination';
 import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag';
-import Button from '../../../components/inputs/Button';
+import Button from '../../../components/inputs/ButtonV2';
 
 const MailLogTableMobile = ({ logs, hasNonDefaultFilters, setShowFilters }) => {
 	const { route } = useRoute();
@@ -20,8 +20,9 @@ const MailLogTableMobile = ({ logs, hasNonDefaultFilters, setShowFilters }) => {
 		<div>
 			<TableMobileHeader bulkEdit={bulkEdit}>
 				<Button
-					variant={hasNonDefaultFilters ? 'success-outline' : 'clear-v2'}
-					size="xs"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight={hasNonDefaultFilters ? 'outline' : 'clear'}
+					size="sm"
 					onClick={() => setShowFilters(previous => !previous)}
 				>
 					<Icon icon="filter" mr />

@@ -196,6 +196,7 @@ class EventControllerTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('events.data', 1)
+                ->has('events.data.0.my_rsvp')
                 ->where('events.data.0.title', 'In Ensemble')
             );
     }
@@ -288,7 +289,14 @@ class EventControllerTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Events/Show')
+                ->has('event.my_rsvp')
                 ->where('event.my_rsvp.response',  'no')
+                ->has('individualCheckInUrl')
+                ->has('rsvpCount.yes')
+                ->has('voicePartsRsvpCount.yes')
+                ->has('attendanceCount.present')
+                ->has('voicePartsAttendanceCount.present')
+                ->has('addToCalendarLinks.google')
             );
     }
 

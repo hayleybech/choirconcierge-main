@@ -9,7 +9,7 @@ import {
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import EventTypeTableDesktop from './EventTypeTableDesktop';
@@ -40,15 +40,15 @@ const Index = ({ categories, setSidebarOpen }) => {
 		<>
 			<AppHead title="Event Types" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					{can.create_event && (
-						<PageActionsMenu>
-							<ActionMenuItem onClick={() => setCreatingCategory(true)} variant="primary">
-								<Icon icon="plus" mr />
-								Add New
-							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				{can.create_event && (
+					<PageActionsMenu>
+						<ActionMenuItem onClick={() => setCreatingCategory(true)} intent="primary">
+							<Icon icon="plus" mr />
+							Add New
+						</ActionMenuItem>
+					</PageActionsMenu>
+				)}
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -60,7 +60,7 @@ const Index = ({ categories, setSidebarOpen }) => {
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{can.create_event && (
-						<Button onClick={() => setCreatingCategory(true)} size="sm" variant="primary">
+						<Button onClick={() => setCreatingCategory(true)} size="md" intent="primary" weight="solid">
 							<Icon icon="plus" mr />
 							Add New
 						</Button>
@@ -131,7 +131,7 @@ const EditCategoryDialog = ({ isOpen, setIsOpen, category }) => {
 			title="Edit Event Type"
 			okLabel="Save"
 			onOk={submit}
-			okVariant="primary"
+			okColour="primary"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 		>
@@ -173,7 +173,7 @@ const CreateCategoryDialog = ({ isOpen, setIsOpen }) => {
 			title="Create Event Type"
 			okLabel="Save"
 			onOk={submit}
-			okVariant="primary"
+			okColour="primary"
 			isOpen={isOpen}
 			setIsOpen={setIsOpen}
 		>

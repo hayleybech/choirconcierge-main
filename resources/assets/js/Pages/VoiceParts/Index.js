@@ -10,7 +10,7 @@ import {
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import VoicePartTableDesktop from './VoicePartTableDesktop';
 import VoicePartTableMobile from './VoicePartTableMobile';
@@ -30,15 +30,15 @@ const Index = ({ parts, setSidebarOpen }) => {
 		<>
 			<AppHead title="Voice Parts" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					{can.create_voice_part && (
-						<PageActionsMenu>
-							<ActionMenuItem url={route('voice-parts.create')} variant="primary">
-								<Icon icon="plus" mr />
-								Add New
-							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				{can.create_voice_part && (
+					<PageActionsMenu>
+						<ActionMenuItem url={route('voice-parts.create')} intent="primary">
+							<Icon icon="plus" mr />
+							Add New
+						</ActionMenuItem>
+					</PageActionsMenu>
+				)}
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -50,7 +50,7 @@ const Index = ({ parts, setSidebarOpen }) => {
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{can.create_voice_part && (
-						<Button href={route('voice-parts.create')} size="sm" variant="primary">
+						<Button href={route('voice-parts.create')} size="md" intent="primary" weight="solid">
 							<Icon icon="plus" mr />
 							Add New
 						</Button>

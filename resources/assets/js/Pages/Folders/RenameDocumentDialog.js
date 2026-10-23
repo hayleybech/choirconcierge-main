@@ -19,7 +19,7 @@ const RenameDocumentDialog = ({ isOpen, setIsOpen, folder, document }) => {
         put(route('folders.documents.update', {folder, document}), {onSuccess: () => setIsOpen(false)});
     }
 
-    return <Dialog title="Rename document" okLabel="Rename" onOk={submit} okVariant="primary" isOpen={isOpen} setIsOpen={setIsOpen}>
+    return <Dialog title="Rename document" okLabel="Rename" onOk={submit} okColour="primary" isOpen={isOpen} setIsOpen={setIsOpen}>
         <Form onSubmit={submit}>
             <Label label="New name" forInput="title" />
             <FilenameInput name="title" value={data.title.replace(extension, '')} extension={extension} updateFn={value => setData('title', value + extension)} hasErrors={ !! errors.title } />
@@ -35,7 +35,7 @@ const splitFilename = (filename) => [
 
 const FilenameInput = ({ name, value, extension, hasErrors, updateFn }) => <div className="mt-1 flex">
     <TextInput name={name} value={value} updateFn={updateFn} hasErrors={hasErrors} className="rounded-r-none" />
-    <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm mt-1 shadow-sm">{extension}</span>
+    <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm mt-1">{extension}</span>
 </div>;
 
 export default RenameDocumentDialog;

@@ -1,45 +1,46 @@
-import Button from '../inputs/Button';
+import ButtonV2 from '../inputs/ButtonV2';
 import Icon from '../Icon';
 import PitchButton from '../PitchButton';
 import React, {Fragment, useCallback, useState} from 'react';
 import PitchScale from '../PitchScale';
 import {Menu, Transition} from '@headlessui/react';
-import buttonStyles from '../inputs/buttonStyles';
 import {DateTime} from "luxon";
 import {useKonami} from "react-konami-code";
+import {loaded, start} from 'tone';
 
 const PdfToolbar = ({ isFullscreen, closeFullscreen, openFullscreen, zoomIn, zoomOut, pitch, instrument, setInstrument }) => {
 	const [showPitchBar, setShowPitchBar] = useState(false);
 
 	return (
 		<>
-			<div className="flex flex-wrap p-1.5 gap-x-1.5 md:gap-x-2.5 border-b border-gray-300">
+			<div className="flex flex-wrap p-1.5 gap-x-1.5 md:gap-x-2.5 border-b border-gray-300 bg-gray-50">
 				<div className="flex gap-x-1">
-					<Button onClick={() => zoomIn()} size="sm" className="h-7">
+					<ButtonV2 onClick={() => zoomIn()} weight="clear" size="md" className="h-7">
 						<Icon icon="search-plus" />
-					</Button>
-					<Button onClick={() => zoomOut()} size="sm" className="h-7">
+					</ButtonV2>
+					<ButtonV2 onClick={() => zoomOut()} weight="clear" size="md" className="h-7">
 						<Icon icon="search-minus" />
-					</Button>
+					</ButtonV2>
 				</div>
 
 				<div className="flex gap-x-1">
 					<PitchButton instrument={instrument} note={pitch} size="sm" className="h-7" />
-					<Button onClick={() => setShowPitchBar(value => !value)} size="sm" className="h-7">
+					<ButtonV2 onClick={() => setShowPitchBar(value => !value)} weight="clear" size="md" className="h-7">
 						<Icon icon="piano-keyboard" />
-					</Button>
+					</ButtonV2>
 
 					<InstrumentMenu instrument={instrument} setInstrument={setInstrument} />
 				</div>
 
-				<Button
-					variant="clear"
+				<ButtonV2
+					intent="secondary"
+					weight="clear"
 					onClick={isFullscreen ? closeFullscreen : openFullscreen}
-					size="sm"
+					size="md"
 					className="h-7 ml-auto"
 				>
 					<Icon icon={isFullscreen ? 'times' : 'expand'} />
-				</Button>
+				</ButtonV2>
 			</div>
 
 			{showPitchBar && <PitchScale instrument={instrument} />}
@@ -51,7 +52,10 @@ export default PdfToolbar;
 
 const InstrumentMenu = (props) => {
 	const [showSecrets, setShowSecrets] = useState(false);
-	const unlockAll = useCallback(() => {
+	const unlockAll = useCallback(async () => {
+		await start();
+		await loaded();
+
 		props.instrument.instrument.triggerAttackRelease('C4', 0.5);
 		props.instrument.instrument.triggerAttackRelease('E4', 0.5);
 		props.instrument.instrument.triggerAttackRelease('G4', 0.5);
@@ -100,7 +104,7 @@ const InstrumentMenu = (props) => {
 
 const SimpleMenu = props => (
 	<Menu as="div" className="relative inline-block">
-		<Menu.Button className={buttonStyles('secondary', 'sm', false, 'h-7 text-sm')}>
+		<Menu.Button as={ButtonV2} intent="secondary" weight="clear" size="md" className="h-7 text-sm">
 			<div className="flex items-center gap-x-1">
 				{props.label}
 				<Icon icon="chevron-down" size="text-xs" />

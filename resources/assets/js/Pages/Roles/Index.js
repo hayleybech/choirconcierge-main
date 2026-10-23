@@ -10,7 +10,7 @@ import {
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
-import Button from '../../components/inputs/Button';
+import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import RoleTableDesktop from './RoleTableDesktop';
 import RoleTableMobile from './RoleTableMobile';
@@ -30,15 +30,15 @@ const Index = ({ roles, setSidebarOpen }) => {
 		<>
 			<AppHead title="Roles" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-					<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-					{can.create_role && (
-						<PageActionsMenu>
-							<ActionMenuItem url={route('roles.create')} variant="primary">
-								<Icon icon="plus" mr />
-								Add New
-							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
+				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
+				{can.create_role && (
+					<PageActionsMenu>
+						<ActionMenuItem url={route('roles.create')} intent="primary">
+							<Icon icon="plus" mr />
+							Add New
+						</ActionMenuItem>
+					</PageActionsMenu>
+				)}
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderContent>
@@ -49,7 +49,7 @@ const Index = ({ roles, setSidebarOpen }) => {
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{can.create_role && (
-						<Button href={route('roles.create')} size="sm" variant="primary">
+						<Button href={route('roles.create')} size="md" intent="primary" weight="solid">
 							<Icon icon="plus" mr />
 							Add New
 						</Button>
