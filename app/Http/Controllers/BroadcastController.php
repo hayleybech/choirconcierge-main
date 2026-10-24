@@ -52,7 +52,6 @@ class BroadcastController extends Controller
             $fileMeta,
             'broadcast-' . Str::uuid(),
             (int) $fileMeta->sum('size') + strlen($request->input('body')),
-            $request->boolean('include_letterhead', true),
         );
 
         $mailLog = MailLog::createFromMessage($organisationBroadcast);

@@ -59,7 +59,6 @@ it('dispatches a job to send the email', function () {
             && $job->message->subject === 'this is a test'
             && $job->message->body === 'test body'
             && $job->message instanceof OrganisationBroadcast
-            && $job->message->includeLetterhead
             && $job->message->hasFrom($user);
     });
 });
@@ -79,36 +78,7 @@ it('includes the mandatory email preference footer in broadcast emails', functio
         ->toContain('emails for your choir are mandatory.')
         ->toContain('Manage your email preferences')
         ->not->toContain('Unsubscribe from Communications');
-});
-
-it('omits the choir letterhead when disabled', function () {
-    $sender = $this->actingAsRole('Music Team');
-    $group = createGroup($sender);
-    $recipient = User::factory()->create();
-    $message = new OrganisationBroadcast($group, 'A broadcast', '<p>Message body</p>', $sender, collect(), 'broadcast-no-letterhead', 20, false);
-    $message->forRecipient($recipient);
-
-    $rendered = $message->render();
-
-    expect($rendered)->not->toContain('class="header"');
-    expect($rendered)->toContain('Manage your email preferences');
-});
-
-it('uses the letterhead option submitted on the compose form', function () {
-    $user = $this->actingAsRole('Music Team');
-    $group = createGroup($user);
-
-    $this->post(the_tenant_route('communications.store'), [
-        'list' => $group->id,
-        'subject' => 'this is a test',
-        'body' => 'test body',
-        'include_letterhead' => false,
-    ])->assertRedirect(route('communications.index'));
-
-    Queue::assertPushed(SendEmailForGroup::class, fn (SendEmailForGroup $job) =>
-        $job->message instanceof OrganisationBroadcast
-            && ! $job->message->includeLetterhead
-    );
+    $message->assertSeeInText('Message body');
 });
 
 it('renders the preference footer when the group delivery job sends a broadcast', function () {

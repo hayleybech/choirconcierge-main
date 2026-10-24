@@ -19,7 +19,6 @@ import ButtonLink from '../../../components/inputs/ButtonLinkV2';
 import Button from '../../../components/inputs/ButtonV2';
 import FormFooter from '../../../components/FormFooter';
 import MailingListSelect from '../../../components/inputs/MailingListSelect';
-import CheckboxWithLabel from '../../../components/inputs/CheckboxWithLabel';
 import Icon from '../../../components/Icon';
 import ErrorAlert from '../../../components/ErrorAlert';
 import FileInput from '../../../components/inputs/FileInput';
@@ -39,7 +38,6 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 		body: '',
 		list: selectedList,
 		attachments: [],
-		include_letterhead: true,
 	});
 
 	function submit(e) {
@@ -74,10 +72,10 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 			<div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:w-full">
 				{lists.length > 0 ? (
 					<Form onSubmit={submit}>
-						<FormSection
-							title="Compose a message"
-							description="Choose a mailing list, write your message, and optionally include your choir's letterhead."
-						>
+    		<FormSection
+    			title="Compose a message"
+    			description="Choose a mailing list and write your message. Your choir's letterhead is included automatically."
+    		>
 							<div className="sm:col-span-6">
 								<Label label="Mailing List" />
 								<MailingListSelect
@@ -109,17 +107,7 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 								{errors.body && <Error>{errors.body}</Error>}
 							</div>
 
-							<div className="sm:col-span-6">
-								<CheckboxWithLabel
-									label="Include choir letterhead"
-									id="include_letterhead"
-									name="include_letterhead"
-									checked={data.include_letterhead}
-									onChange={event => setData('include_letterhead', event.target.checked)}
-								/>
-							</div>
-
-							<div className="sm:col-span-6">
+ 						<div className="sm:col-span-6">
 								<Label label="Attachments" forInput="attachments" />
 								<FileInput
 									name="attachments"

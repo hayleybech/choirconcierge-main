@@ -127,7 +127,7 @@ const NotificationSettings = ({ preferences, accountRoute, canReceiveAttendanceR
 									<p className="font-medium text-gray-900">{item.title}</p>
 									<p className="mt-1 text-sm text-gray-500">{item.description}</p>
 									{item.mandatory && (
-										<p className="mt-1 text-xs font-medium text-purple-600">{item.mandatory}</p>
+										<p className="mt-1 text-xs font-bold text-gray-700">{item.mandatory}</p>
 									)}
 								</div>
 								<label
