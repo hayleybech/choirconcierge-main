@@ -32,7 +32,7 @@ test('super-admins can open the central announcement composer', function () {
         ?? User::factory()->create(['email' => 'hayleybech@gmail.com']);
     $this->actingAs($user);
 
-    $this->get('/app/announcements/create')
+    $this->get(route('central.announcements.create'))
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('Central/Announcements/Create')
@@ -57,7 +57,7 @@ test('central communications navigation contains mail logs and product announcem
 test('non-super-admins cannot open the announcement composer', function () {
     $this->actingAs(User::factory()->create(['email' => 'not-admin@example.com']));
 
-    $this->get('/app/announcements/create')->assertRedirect();
+    $this->get(route('central.announcements.create'))->assertRedirect();
 });
 
 test('sending an announcement queues delivery and writes to the central mail log', function () {
