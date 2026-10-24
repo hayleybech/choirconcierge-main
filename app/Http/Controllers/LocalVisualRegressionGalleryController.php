@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MailLog;
 use App\Support\VisualRegression\ScreenshotCatalog;
 use JsonException;
 use Illuminate\Http\Response;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use Laragear\TwoFactor\Models\TwoFactorAuthentication;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class LocalVisualRegressionGalleryController extends Controller
@@ -126,6 +128,41 @@ class LocalVisualRegressionGalleryController extends Controller
         $this->ensureLocalEnvironment();
 
         return Inertia::render('Central/Changelog', ['logs' => collect()]);
+    }
+
+    public function twoFactorSetupPreview(): InertiaResponse
+    {
+        $this->ensureLocalEnvironment();
+
+        $twoFactorAuth = (new TwoFactorAuthentication())->forceFill([
+            'shared_secret' => 'JBSWY3DPEHPK3PXP',
+            'label' => 'Choir Concierge:visual-regression@example.test',
+            'digits' => 6,
+            'seconds' => 30,
+            'window' => 0,
+            'algorithm' => 'sha1',
+        ]);
+
+        return Inertia::render('Account/TwoFactor', [
+            'enabled' => false,
+            'qr_code' => $twoFactorAuth->toQr(),
+            'uri' => $twoFactorAuth->toUri(),
+            'string' => $twoFactorAuth->toString(),
+        ]);
+    }
+
+    public function centralMailLogsEmptyPreview(): InertiaResponse
+    {
+        $this->ensureLocalEnvironment();
+
+        return Inertia::render('Central/MailLogs/Index', [
+            'logs' => MailLog::query()
+                ->whereRaw('1 = 0')
+                ->with(['latestEvent', 'tenants'])
+                ->withCount('opens')
+                ->latest()
+                ->paginate(50),
+        ]);
     }
 
     /**

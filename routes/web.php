@@ -67,6 +67,10 @@ Route::prefix('/app')->group(function () {
 
             Route::middleware('auth')->group(function () {
                 Route::get('/', [LocalVisualRegressionGalleryController::class, 'index'])->name('index');
+                Route::get('/two-factor-setup-preview', [LocalVisualRegressionGalleryController::class, 'twoFactorSetupPreview'])
+                    ->name('two-factor-setup-preview');
+                Route::get('/central-mail-logs-empty-preview', [LocalVisualRegressionGalleryController::class, 'centralMailLogsEmptyPreview'])
+                    ->name('central-mail-logs-empty-preview');
                 Route::get('/changelog-empty-preview', [LocalVisualRegressionGalleryController::class, 'changelogEmptyPreview'])
                     ->name('changelog-empty-preview');
                 Route::get('/{case}/{viewport}/{variant}', [LocalVisualRegressionGalleryController::class, 'image'])
@@ -83,4 +87,3 @@ Route::prefix('/app')->group(function () {
 
 Route::fallback(fn () => abort(404))
     ->middleware(SampleByAuthentication::rate(1.0, 0.01));
-

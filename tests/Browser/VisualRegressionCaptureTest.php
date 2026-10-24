@@ -1,10 +1,15 @@
 <?php
 
 use App\Models\Membership;
+use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Folder;
+use App\Models\MailLog;
+use App\Models\MailLogEvent;
+use App\Models\NotificationTemplate;
 use App\Models\Poll;
+use App\Models\Placement;
 use App\Models\RiserStack;
 use App\Models\Song;
 use App\Models\SongAttachment;
@@ -14,12 +19,14 @@ use App\Models\Role;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\UserGroup;
+use App\Models\VoicePart;
 use App\Support\VisualRegression\ScreenshotCatalog;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Tests\Browser\VisualRegressionTestCase;
 
 uses(VisualRegressionTestCase::class)->group('visual');
@@ -45,16 +52,59 @@ test('captures every catalog case at every viewport without JavaScript errors', 
     $authenticatedUser = null;
     $tenantSuperAdmin = null;
     $visualRegressionTenant = null;
+    $visualRegressionEventId = null;
+    $visualRegressionTodayEventId = null;
+    $visualRegressionMembershipId = null;
     $visualRegressionAdminRoleId = null;
+    $visualRegressionMailLogId = null;
+    $visualRegressionMailingListId = null;
+    $visualRegressionNotificationId = null;
+    $visualRegressionPlacementId = null;
     $visualRegressionFolderId = null;
     $visualRegressionRiserStackId = null;
+    $visualRegressionVoicePartId = null;
     $tenantAdminSetUp = false;
+    $browserOrigin = null;
     $screenshotStyle = json_encode(
         '<style>' . VISUAL_REGRESSION_SCREENSHOT_STABILIZATION_CSS . '</style>',
         JSON_THROW_ON_ERROR,
     );
+    $googlePlacesMock = <<<'JS'
+window.google = {
+    maps: {
+        places: {
+            AutocompleteSessionToken: class {},
+            AutocompleteService: class {
+                getPlacePredictions(request, callback) {
+                    callback([], 'ZERO_RESULTS');
+                }
+            },
+            PlacesService: class {
+                getDetails(request, callback) {
+                    callback(null, 'ZERO_RESULTS');
+                }
+            },
+            PlacesServiceStatus: {
+                OK: 'OK',
+                ZERO_RESULTS: 'ZERO_RESULTS',
+            },
+        },
+    },
+};
+JS;
+    $cases = collect($catalog->cases());
+    $caseIdFilter = getenv('VISUAL_REGRESSION_CASE_ID');
+
+    if (is_string($caseIdFilter) && $caseIdFilter !== '') {
+        $cases = $cases->where('id', $caseIdFilter)->values();
+
+        if ($cases->isEmpty()) {
+            throw new \InvalidArgumentException('Unknown visual-regression case ID: ' . $caseIdFilter);
+        }
+    }
+
     try {
-        foreach ($catalog->cases() as $case) {
+        foreach ($cases as $case) {
             if (in_array($case['persona'], ['authenticated-user', 'tenant-admin', 'tenant-empty-admin', 'tenant-super-admin'], true)) {
                 if ($authenticatedUser === null) {
                     $authenticatedUser = User::factory()->create([
@@ -108,14 +158,18 @@ test('captures every catalog case at every viewport without JavaScript errors', 
                     $membership = Membership::factory()->create([
                         'user_id' => $authenticatedUser->id,
                         'joined_at' => '2000-01-01 00:00:00',
+                        'reason_for_joining' => 'Synthetic visual-regression membership.',
+                        'referrer' => 'Visual regression fixture',
+                        'membership_details' => 'Created only for deterministic browser captures.',
                     ]);
+                    $visualRegressionMembershipId = $membership->id;
 
                     $membership->roles()->attach($role->id);
                     $authenticatedUser->unsetRelation('membership');
                     expect($membership->tenant_id)->toBe($visualRegressionTenant->id);
 
                     $eventType = EventType::create(['title' => 'Rehearsal']);
-                    Event::factory()->create([
+                    $event = Event::factory()->create([
                         'id' => 1,
                         'title' => 'Autumn Rehearsal',
                         'type_id' => $eventType->id,
@@ -124,6 +178,32 @@ test('captures every catalog case at every viewport without JavaScript errors', 
                         'end_date' => Carbon::parse('2027-01-05 20:00:00'),
                         'location_name' => 'Community Hall',
                         'location_address' => '1 Test Street',
+                    ]);
+                    $visualRegressionEventId = $event->id;
+
+                    $checkInEvent = Event::factory()->create([
+                        'title' => 'Open Rehearsal',
+                        'type_id' => $eventType->id,
+                        'call_time' => now()->subHour(),
+                        'start_date' => now()->subMinutes(30),
+                        'end_date' => now()->addHour(),
+                    ]);
+                    $visualRegressionTodayEventId = $checkInEvent->id;
+
+                    $performanceType = EventType::create(['title' => 'Performance']);
+                    $performanceStart = now()->subMonths(2)->setTime(18, 0);
+                    $performance = Event::factory()->create([
+                        'title' => 'Winter Concert',
+                        'type_id' => $performanceType->id,
+                        'call_time' => $performanceStart->copy()->subHour(),
+                        'start_date' => $performanceStart,
+                        'end_date' => $performanceStart->copy()->addHours(2),
+                    ]);
+                    Attendance::factory()->create([
+                        'membership_id' => $membership->id,
+                        'event_id' => $performance->id,
+                        'response' => 'present',
+                        'source' => 'qr-code',
                     ]);
 
                     $now = now();
@@ -156,11 +236,66 @@ test('captures every catalog case at every viewport without JavaScript errors', 
 
                     $folder = Folder::factory()->create(['title' => 'Visual Regression Documents']);
                     $visualRegressionFolderId = $folder->id;
-                    UserGroup::factory()->create([
+                    $mailingList = UserGroup::factory()->create([
                         'title' => 'Visual Regression Mailing List',
                         'slug' => 'visual-regression-mailing-list',
                         'tenant_id' => tenant('id'),
+                        'list_type' => 'distribution',
                     ]);
+                    $visualRegressionMailingListId = $mailingList->id;
+
+                    $mailLog = MailLog::factory()->create([
+                        'uid' => 'broadcast-visual-regression',
+                        'from' => 'choir@example.test',
+                        'to' => 'member@example.test',
+                        'cc' => null,
+                        'bcc' => null,
+                        'subject' => 'Visual Regression Broadcast',
+                        'body' => 'A deterministic broadcast for screenshot coverage.',
+                        'size' => 512,
+                        'has_attachments' => false,
+                        'received_at' => now()->subMinutes(10),
+                        'created_at' => now()->subMinutes(10),
+                        'updated_at' => now()->subMinutes(10),
+                    ]);
+                    $mailLog->tenants()->attach($visualRegressionTenant->id);
+                    $visualRegressionMailLogId = $mailLog->id;
+                    MailLogEvent::create([
+                        'mail_log_id' => $mailLog->id,
+                        'user_group_id' => $mailingList->id,
+                        'status' => 'clones-sent',
+                        'context' => null,
+                        'created_at' => now()->subMinutes(9),
+                        'updated_at' => now()->subMinutes(9),
+                    ]);
+
+                    $voicePart = VoicePart::factory()->create([
+                        'title' => 'Visual Regression Voice Part',
+                        'colour' => '#336699',
+                    ]);
+                    $visualRegressionVoicePartId = $voicePart->id;
+
+                    $placement = Placement::factory()->create([
+                        'membership_id' => $membership->id,
+                        'experience' => 'Synthetic choir experience',
+                        'instruments' => 'Piano',
+                        'skill_pitch' => 3,
+                        'skill_harmony' => 3,
+                        'skill_performance' => 3,
+                        'skill_sightreading' => 3,
+                        'voice_tone' => 3,
+                    ]);
+                    $visualRegressionPlacementId = $placement->id;
+
+                    $notification = NotificationTemplate::factory()->create([
+                        'task_id' => 1,
+                        'subject' => 'Visual Regression Task Notification',
+                        'recipients' => 'role:' . $role->id,
+                        'body' => 'A deterministic task notification body.',
+                        'delay' => '1 day',
+                    ]);
+                    $visualRegressionNotificationId = $notification->id;
+
                     $riserStack = RiserStack::factory()->create(['title' => 'Visual Regression Stack']);
                     $visualRegressionRiserStackId = $riserStack->id;
 
@@ -257,6 +392,19 @@ test('captures every catalog case at every viewport without JavaScript errors', 
                 $this->actingAs($tenantSuperAdmin);
             }
 
+            if (isset($case['parameters']['tenant'])) {
+                if (tenancy()->initialized) {
+                    tenancy()->end();
+                }
+
+                if (tenancy()->find($case['parameters']['tenant']) === null) {
+                    throw new \RuntimeException(
+                        'Visual screenshot case [' . $case['id'] . '] references an unknown tenant: '
+                        . $case['parameters']['tenant'],
+                    );
+                }
+            }
+
             foreach ($catalog->viewports() as $viewport) {
                 File::ensureDirectoryExists($latestDirectory . DIRECTORY_SEPARATOR . $case['id']);
                 File::ensureDirectoryExists($baselineDirectory . DIRECTORY_SEPARATOR . $case['id']);
@@ -281,14 +429,100 @@ test('captures every catalog case at every viewport without JavaScript errors', 
                     $case['parameters']['role'] = $visualRegressionAdminRoleId;
                 }
 
-                $page = visit(route($case['route'], $case['parameters'], false))->resize(
-                    $viewport['width'],
-                    $viewport['height'],
-                );
+                if ($case['state'] !== 'empty'
+                    && in_array($case['component'], ['Events/Show', 'Events/Edit', 'Events/Rsvps/Index', 'Events/Attendance/Index'], true)) {
+                    $case['parameters']['event'] = $visualRegressionEventId;
+                }
 
-                expect($page->script("JSON.parse(document.querySelector('#app').dataset.page).component"))->toBe(
-                    $case['component'],
-                );
+                if (in_array($case['component'], ['Events/Attendance/CheckIn', 'Events/Attendance/CheckInKiosk'], true)) {
+                    $case['parameters']['event'] = $visualRegressionTodayEventId;
+                }
+
+                if (in_array($case['component'], [
+                    'Singers/Attendance/Index',
+                    'Singers/Edit',
+                    'Singers/Placements/Create',
+                    'Singers/Placements/Edit',
+                    'Singers/Show',
+                ], true)) {
+                    $case['parameters']['singer'] = $visualRegressionMembershipId;
+                }
+
+                if ($case['component'] === 'Singers/Placements/Edit') {
+                    $case['parameters']['placement'] = $visualRegressionPlacementId;
+                }
+
+                if (in_array($case['component'], ['Central/MailLogs/Show', 'MailingLists/MailLogs/Show'], true)) {
+                    $case['parameters']['mail_log'] = $visualRegressionMailLogId;
+                }
+
+                if (in_array($case['component'], ['MailingLists/Edit', 'MailingLists/Show'], true)) {
+                    $case['parameters']['group'] = $visualRegressionMailingListId;
+                }
+
+                if (in_array($case['component'], ['Tasks/Notifications/Edit', 'Tasks/Notifications/Show'], true)) {
+                    $case['parameters']['notification'] = $visualRegressionNotificationId;
+                }
+
+                if ($case['component'] === 'VoiceParts/Edit') {
+                    $case['parameters']['voice_part'] = $visualRegressionVoicePartId;
+                }
+
+                $pageUrl = route($case['route'], $case['parameters'], false);
+
+                if ($case['component'] === 'Events/Attendance/CheckIn') {
+                    if ($browserOrigin === null) {
+                        $bootstrapPage = visit(route('login', [], false));
+                        $browserOrigin = $bootstrapPage->script('window.location.origin');
+                    }
+
+                    if (! is_string($browserOrigin) || $browserOrigin === '') {
+                        throw new \RuntimeException('Unable to determine the browser server origin for the signed check-in capture.');
+                    }
+
+                    $originalRootUrl = URL::to('/');
+
+                    try {
+                        URL::forceRootUrl($browserOrigin);
+                        $pageUrl = URL::temporarySignedRoute(
+                            $case['route'],
+                            now()->addMinutes(5),
+                            $case['parameters'],
+                        );
+                    } finally {
+                        URL::forceRootUrl($originalRootUrl);
+                    }
+                }
+
+                if (in_array($case['component'], ['Events/Create', 'Events/Edit'], true)) {
+                    $page = visit(route('login', [], false));
+                    $browserOrigin ??= $page->script('window.location.origin');
+                    $page->page()->context()->addInitScript($googlePlacesMock);
+                    $page->page()->goto(rtrim($browserOrigin, '/') . $pageUrl);
+                } elseif ($case['component'] === 'Singers/Placements/Edit') {
+                    $page = visit(route('login', [], false));
+                    $browserOrigin ??= $page->script('window.location.origin');
+                    $page->page()->goto(rtrim($browserOrigin, '/') . $pageUrl);
+                } else {
+                    $page = visit($pageUrl);
+                    $browserOrigin ??= $page->script('window.location.origin');
+                }
+
+                $page->resize($viewport['width'], $viewport['height']);
+
+                $pageData = $page->script("JSON.parse(document.querySelector('#app').dataset.page)");
+                $actualComponent = $pageData['component'] ?? null;
+
+                if ($actualComponent !== $case['component']) {
+                    throw new \RuntimeException(sprintf(
+                        'Visual capture [%s] at [%s] expected Inertia component [%s], got [%s] with HTTP status [%s].',
+                        $case['id'],
+                        $pageUrl,
+                        $case['component'],
+                        $actualComponent ?? 'missing',
+                        $pageData['props']['status'] ?? 'unknown',
+                    ));
+                }
 
                 $page->wait(0.25)->assertNoJavaScriptErrors();
                 $page->assertSee($case['assert_text']);
