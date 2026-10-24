@@ -147,6 +147,15 @@ test('the local screenshot gallery is unavailable outside local and testing envi
         ->assertNotFound();
 });
 
+test('the gallery defaults to desktop normal captures and exposes the filtered screenshot count', function () {
+    $this->actingAs(User::factory()->create())
+        ->get(route('local.visual-regression.index'))
+        ->assertOk()
+        ->assertSee('<option value="normal" selected>normal</option>', false)
+        ->assertSee('<option value="Desktop" selected>Desktop</option>', false)
+        ->assertSee('data-screenshot-count', false);
+});
+
 test('the gallery reports an uncaptured baseline as not found', function () {
     $this->actingAs(User::factory()->create())
         ->get(route('local.visual-regression.image', [

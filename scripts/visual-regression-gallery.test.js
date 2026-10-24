@@ -48,13 +48,22 @@ test('switches between one grid capture variant and the comparison view', () => 
 	thumbnail.alt = 'Latest capture for Auth/Login at Desktop';
 	const zoomTrigger = createElement();
 	zoomTrigger['img'] = thumbnail;
-	const filter = createElement({ filter: 'module' });
-	const card = createElement({ module: 'auth' });
+	const moduleFilter = createElement({ filter: 'module' });
+	const stateFilter = createElement({ filter: 'state' });
+	stateFilter.value = 'normal';
+	const viewportFilter = createElement({ filter: 'viewport' });
+	viewportFilter.value = 'Desktop';
+	const cards = [
+		createElement({ module: 'auth', state: 'normal', viewport: 'Desktop' }),
+		createElement({ module: 'songs', state: 'empty', viewport: 'Desktop' }),
+	];
+	const screenshotCount = createElement();
 	const selectors = {
 		'[data-gallery]': gallery,
 		'[data-gallery-view]': galleryView,
 		'[data-grid-variant-select]': gridVariantSelect,
 		'[data-image-zoom]': imageZoomDialog,
+		'[data-screenshot-count]': screenshotCount,
 	};
 	const document = {
 		querySelector(selector) {
@@ -62,8 +71,8 @@ test('switches between one grid capture variant and the comparison view', () => 
 		},
 		querySelectorAll(selector) {
 			return {
-				'[data-filter]': [filter],
-				'[data-screenshot]': [card],
+				'[data-filter]': [moduleFilter, stateFilter, viewportFilter],
+				'[data-screenshot]': cards,
 				'[data-grid-captures]': [gridCaptures],
 				'[data-comparison-captures]': [comparisonCaptures],
 				'[data-grid-variant]': [baseline, latest],
@@ -77,6 +86,7 @@ test('switches between one grid capture variant and the comparison view', () => 
 
 	assert.ok(script, 'the gallery should contain its client-side controls');
 	vm.runInNewContext(script[1], { document });
+	assert.equal(screenshotCount.textContent, 'Showing 1 of 2 screenshots');
 
 	gridVariantSelect.value = 'baseline';
 	gridVariantSelect.listeners.change();
@@ -99,7 +109,13 @@ test('switches between one grid capture variant and the comparison view', () => 
 	assert.equal(gridCaptures.hidden, true);
 	assert.equal(comparisonCaptures.hidden, false);
 
-	filter.value = 'songs';
-	filter.listeners.change();
-	assert.equal(card.hidden, true);
+	moduleFilter.value = 'songs';
+	moduleFilter.listeners.change();
+	assert.equal(cards[1].hidden, true);
+	assert.equal(screenshotCount.textContent, 'Showing 0 of 2 screenshots');
+
+	stateFilter.value = '';
+	stateFilter.listeners.change();
+	assert.equal(cards[1].hidden, false);
+	assert.equal(screenshotCount.textContent, 'Showing 1 of 2 screenshots');
 });

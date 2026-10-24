@@ -339,6 +339,30 @@
 			"assert_text": "Create Song"
 		},
 		{
+			"id": "tenant-songs-edit",
+			"module": "songs",
+			"page_type": "edit",
+			"state": "normal",
+			"route": "songs.edit",
+			"parameters": { "tenant": "visual-regression", "song": 1 },
+			"persona": "tenant-admin",
+			"component": "Songs/Edit",
+			"browser": "chromium",
+			"assert_text": "Edit Song"
+		},
+		{
+			"id": "tenant-songs-learning-index",
+			"module": "songs",
+			"page_type": "roster",
+			"state": "normal",
+			"route": "songs.singers.index",
+			"parameters": { "tenant": "visual-regression", "song": 1 },
+			"persona": "tenant-admin",
+			"component": "Songs/Learning/Index",
+			"browser": "chromium",
+			"assert_text": "Learning Status List"
+		},
+		{
 			"id": "tenant-song-categories-index",
 			"module": "songs",
 			"page_type": "index",
@@ -493,6 +517,18 @@
 			"component": "Roles/Create",
 			"browser": "chromium",
 			"assert_text": "Create Role"
+		},
+		{
+			"id": "tenant-roles-show",
+			"module": "roles",
+			"page_type": "show",
+			"state": "normal",
+			"route": "roles.show",
+			"parameters": { "tenant": "visual-regression", "role": 1 },
+			"persona": "tenant-admin",
+			"component": "Roles/Show",
+			"browser": "chromium",
+			"assert_text": "Admin"
 		},
 		{
 			"id": "tenant-voice-parts-create",

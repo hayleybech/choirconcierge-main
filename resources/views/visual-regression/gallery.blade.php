@@ -38,6 +38,11 @@
             margin-bottom: 1.5rem;
         }
 
+        .screenshot-count {
+            margin: 0 0 1rem;
+            color: #4b5563;
+        }
+
         label {
             display: grid;
             gap: .35rem;
@@ -215,13 +220,13 @@
                         @foreach ($filterGroups[$field] as $group => $groupValues)
                             <optgroup label="{{ $group }}">
                                 @foreach ($groupValues as $value)
-                                    <option value="{{ $value }}">{{ $value }}</option>
+                                    <option value="{{ $value }}" @selected($field === 'state' && $value === 'normal')>{{ $value }}</option>
                                 @endforeach
                             </optgroup>
                         @endforeach
                     @else
                         @foreach ($values as $value)
-                            <option value="{{ $value }}">{{ $value }}</option>
+                            <option value="{{ $value }}" @selected($field === 'state' && $value === 'normal')>{{ $value }}</option>
                         @endforeach
                     @endif
                 </select>
@@ -232,7 +237,7 @@
             <select data-filter="viewport">
                 <option value="">All</option>
                 @foreach ($entries->pluck('viewport.label')->unique() as $label)
-                    <option value="{{ $label }}">{{ $label }}</option>
+                    <option value="{{ $label }}" @selected($label === 'Desktop')>{{ $label }}</option>
                 @endforeach
             </select>
         </label>
@@ -251,6 +256,8 @@
             </select>
         </label>
     </form>
+
+    <p class="screenshot-count" data-screenshot-count role="status" aria-live="polite"></p>
 
     <section class="gallery" data-gallery data-view="grid" aria-label="Screenshot cases">
         @forelse ($entries as $entry)
@@ -316,6 +323,7 @@
 	const filters = Array.from(document.querySelectorAll('[data-filter]'));
 	const cards = Array.from(document.querySelectorAll('[data-screenshot]'));
 	const gallery = document.querySelector('[data-gallery]');
+	const screenshotCount = document.querySelector('[data-screenshot-count]');
 	const galleryView = document.querySelector('[data-gallery-view]');
 	const gridVariantSelect = document.querySelector('[data-grid-variant-select]');
 	const imageZoomDialog = document.querySelector('[data-image-zoom]');
@@ -323,9 +331,16 @@
 	const zoomCaption = imageZoomDialog.querySelector('[data-zoom-caption]');
 
 	function applyFilters() {
+		let visibleCount = 0;
+
 		cards.forEach(card => {
 			card.hidden = filters.some(filter => filter.value && card.dataset[filter.dataset.filter] !== filter.value);
+			if (!card.hidden) {
+				visibleCount++;
+			}
 		});
+
+		screenshotCount.textContent = `Showing ${visibleCount} of ${cards.length} screenshots`;
 	}
 
 	function applyGalleryView() {
@@ -347,6 +362,7 @@
 	filters.forEach(filter => filter.addEventListener('change', applyFilters));
 	galleryView.addEventListener('change', applyGalleryView);
 	gridVariantSelect.addEventListener('change', applyGalleryView);
+	applyFilters();
 
 	document.querySelectorAll('[data-zoom-trigger]').forEach(trigger => {
 		trigger.addEventListener('click', () => {

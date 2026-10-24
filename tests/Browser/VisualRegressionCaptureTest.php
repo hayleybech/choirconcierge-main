@@ -24,6 +24,8 @@ use Tests\Browser\VisualRegressionTestCase;
 
 uses(VisualRegressionTestCase::class)->group('visual');
 
+const VISUAL_REGRESSION_SCREENSHOT_STABILIZATION_CSS = '*:not(.fa):not(.fas):not(.far):not(.fal):not(.fad):not(.fab){animation:none!important;transition:none!important;font-family:Arial,sans-serif!important;}';
+
 test('captures every catalog case at every viewport without JavaScript errors', function () {
     $catalog = app(ScreenshotCatalog::class);
     $latestDirectory = config('visual-regression.latest_directory');
@@ -40,7 +42,12 @@ test('captures every catalog case at every viewport without JavaScript errors', 
     $authenticatedUser = null;
     $tenantSuperAdmin = null;
     $visualRegressionTenant = null;
+    $visualRegressionAdminRoleId = null;
     $tenantAdminSetUp = false;
+    $screenshotStyle = json_encode(
+        '<style>' . VISUAL_REGRESSION_SCREENSHOT_STABILIZATION_CSS . '</style>',
+        JSON_THROW_ON_ERROR,
+    );
 
     try {
         foreach ($catalog->cases() as $case) {
@@ -92,6 +99,7 @@ test('captures every catalog case at every viewport without JavaScript errors', 
                         'name' => 'Admin',
                         'abilities' => Role::ALL_ABILITIES,
                     ]);
+                    $visualRegressionAdminRoleId = $role->id;
 
                     $membership = Membership::factory()->create([
                         'user_id' => $authenticatedUser->id,
@@ -247,6 +255,10 @@ test('captures every catalog case at every viewport without JavaScript errors', 
                 File::ensureDirectoryExists($latestDirectory . DIRECTORY_SEPARATOR . $case['id']);
                 File::ensureDirectoryExists($baselineDirectory . DIRECTORY_SEPARATOR . $case['id']);
 
+                if ($case['component'] === 'Roles/Show') {
+                    $case['parameters']['role'] = $visualRegressionAdminRoleId;
+                }
+
                 $page = visit(route($case['route'], $case['parameters'], false))->resize(
                     $viewport['width'],
                     $viewport['height'],
@@ -281,7 +293,7 @@ test('captures every catalog case at every viewport without JavaScript errors', 
                 }
 
                 $page->script(
-                    "document.head.insertAdjacentHTML('beforeend', '<style>*{animation:none!important;transition:none!important;font-family:Arial,sans-serif!important;}</style>')",
+                    "(async () => { await document.fonts.ready; document.head.insertAdjacentHTML('beforeend', {$screenshotStyle}); })()",
                 );
                 $page->screenshot(true, 'Latest/' . $case['id'] . '/' . $viewport['id'] . '.png');
             }
@@ -304,4 +316,36 @@ test('captures every catalog case at every viewport without JavaScript errors', 
             Carbon::setTestNow();
         }
     }
+});
+
+test('screenshot stabilization preserves loaded icon fonts', function () {
+    $page = visit(route('login', [], false));
+    $fontDiagnostics = $page->script(<<<'JS'
+(async () => {
+    const icon = document.createElement('i');
+    icon.className = 'fas fa-user';
+    icon.id = 'visual-regression-icon-font-test';
+    document.body.append(icon);
+    const loadedFaces = await document.fonts.load('900 16px "Font Awesome 5 Pro"');
+    await document.fonts.ready;
+
+    return {
+        fontLoaded: loadedFaces.some(face => face.status === 'loaded'),
+        fontFamilyBefore: getComputedStyle(icon).fontFamily,
+    };
+})()
+JS);
+    $screenshotStyle = json_encode(
+        '<style>' . VISUAL_REGRESSION_SCREENSHOT_STABILIZATION_CSS . '</style>',
+        JSON_THROW_ON_ERROR,
+    );
+    $page->script("document.head.insertAdjacentHTML('beforeend', {$screenshotStyle})");
+    $fontFamilyAfter = $page->script(
+        "getComputedStyle(document.querySelector('#visual-regression-icon-font-test')).fontFamily",
+    );
+    $page->script("document.querySelector('#visual-regression-icon-font-test').remove()");
+
+    expect($fontDiagnostics['fontLoaded'])->toBeTrue()
+        ->and($fontDiagnostics['fontFamilyBefore'])->toContain('Font Awesome 5 Pro')
+        ->and($fontFamilyAfter)->toContain('Font Awesome 5 Pro');
 });
