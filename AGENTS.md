@@ -267,7 +267,7 @@ npm test
 npm run prettier
 ```
 
-There is no `npm run build` script. For tests, create a `choirconcierge_test` database and configure `.env.testing` to use it. `phpunit.xml` configures the test queue, cache, mail, Telescope, and stop-on-failure behavior.
+There is no `npm run build` script.
 
 ### Project Architecture
 

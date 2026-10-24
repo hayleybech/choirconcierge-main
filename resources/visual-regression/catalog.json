@@ -373,6 +373,18 @@
 			"persona": "tenant-admin",
 			"component": "Songs/Show",
 			"browser": "chromium",
+			"assert_text": "Northern Lights"
+		},
+		{
+			"id": "tenant-songs-show-pdf-viewer",
+			"module": "songs",
+			"page_type": "show",
+			"state": "pdf-viewer",
+			"route": "songs.show",
+			"parameters": { "tenant": "visual-regression", "song": 1 },
+			"persona": "tenant-admin",
+			"component": "Songs/Show",
+			"browser": "chromium",
 			"assert_text": "Northern Lights",
 			"pdf_viewer": true
 		},

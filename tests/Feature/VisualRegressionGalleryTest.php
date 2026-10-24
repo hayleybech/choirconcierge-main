@@ -16,6 +16,21 @@ test('the screenshot catalog exposes the normal authentication screenshot case',
         ->and($case['persona'])->toBe('guest');
 });
 
+test('the song show and PDF viewer are separate screenshot cases', function () {
+    $catalog = app(ScreenshotCatalog::class);
+    $songShow = $catalog->find('tenant-songs-show');
+    $songShowPdfViewer = $catalog->find('tenant-songs-show-pdf-viewer');
+
+    expect($songShow)
+        ->toBeArray()
+        ->and($songShow['pdf_viewer'] ?? false)->toBeFalse()
+        ->and($songShowPdfViewer)
+        ->toBeArray()
+        ->and($songShowPdfViewer['component'])->toBe('Songs/Show')
+        ->and($songShowPdfViewer['state'])->toBe('pdf-viewer')
+        ->and($songShowPdfViewer['pdf_viewer'])->toBeTrue();
+});
+
 test('the screenshot catalog includes at least forty cases', function () {
     expect(count(app(ScreenshotCatalog::class)->cases()))->toBeGreaterThanOrEqual(40);
 });

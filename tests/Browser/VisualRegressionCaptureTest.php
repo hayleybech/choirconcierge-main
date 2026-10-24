@@ -527,6 +527,12 @@ JS;
                 $page->wait(0.25)->assertNoJavaScriptErrors();
                 $page->assertSee($case['assert_text']);
 
+                if ($case['component'] === 'Songs/Show'
+                    && $case['state'] === 'normal'
+                    && in_array($viewport['id'], ['tablet', 'mobile'], true)) {
+                    $page->assertSee('Attachments');
+                }
+
                 if (! empty($case['empty_props'])) {
                     $emptyProps = json_encode($case['empty_props'], JSON_THROW_ON_ERROR);
                     $emptyItemCounts = $page->script(
