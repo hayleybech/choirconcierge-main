@@ -26,9 +26,11 @@ const regionFirstDayOfWeek = country => (['CA', 'IN', 'JP', 'US'].includes(count
 
 const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recoveryCodes }) => {
 	const { user, tenant, email_preferences, can_receive_attendance_reports } = usePage().props;
-	const [activeTab, setActiveTab] = useState(() =>
-		new URLSearchParams(window.location.search).get('tab') === 'notifications' ? 'notifications' : 'profile'
-	);
+	const [activeTab, setActiveTab] = useState(() => {
+		const tab = new URLSearchParams(window.location.search).get('tab');
+
+		return ['profile', 'security', 'language', 'notifications'].includes(tab) ? tab : 'profile';
+	});
 	const [showRecoveryCodes, setShowRecoveryCodes] = useState(false);
 	const accountRoute = tenant ? 'account' : 'central.account';
 

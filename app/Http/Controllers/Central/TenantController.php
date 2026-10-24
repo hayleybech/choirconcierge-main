@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateTenantRequest;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Services\TenantStats;
 use DateTimeZone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -21,7 +22,7 @@ use Stancl\Tenancy\Database\Models\Domain;
 
 class TenantController extends Controller
 {
-    public function index(): Response
+    public function index(TenantStats $tenantStats): Response
     {
         $this->authorize('viewAny', Tenant::class);
 
@@ -32,6 +33,7 @@ class TenantController extends Controller
                 ->getCollection()
 	            ->append(['billing_status']),
             'pagination' => $pagination,
+            'tenantStats' => $tenantStats->get(),
         ]);
     }
 

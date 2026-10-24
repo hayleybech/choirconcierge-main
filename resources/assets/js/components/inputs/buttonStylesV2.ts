@@ -2,7 +2,7 @@ import {cva} from 'class-variance-authority';
 
 type ButtonIntent = 'primary' | 'secondary' | 'danger' | 'warning' | 'success';
 type ButtonWeight = 'solid' | 'outline' | 'clear';
-type ButtonSize = 'lg' | 'md' | 'sm';
+type ButtonSize = 'lg' | 'md' | 'sm' | 'xs';
 type ButtonTheme = 'light' | 'dark';
 
 const buttonStylesV2 = cva(
@@ -19,6 +19,7 @@ const buttonStylesV2 = cva(
 				lg: 'py-2 px-4 text-md rounded-md',
 				md: 'py-1.5 px-3 text-sm rounded',
 				sm: 'py-1 px-1.5 text-xs rounded',
+				xs: 'py-0.5 px-1 text-xs rounded',
 			},
 			theme: { light: '', dark: '' },
 		},

@@ -27,7 +27,7 @@ class AccountController extends Controller
         auth()->user()->update($request->validated());
 
         return redirect()
-            ->route('account.edit')
+            ->route('account.edit', ['tab' => $request->validated('tab')])
             ->with(['status' => 'Account Settings updated.']);
     }
 }

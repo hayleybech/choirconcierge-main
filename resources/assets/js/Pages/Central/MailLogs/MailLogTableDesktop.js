@@ -58,7 +58,7 @@ const MailLogTableDesktop = ({ logs, sortFilterForm }) => {
 					const mailType = log.uid.split('-')[0];
 					return (
 						<tr key={log.id}>
-							<TableCell>
+							<TableCell compact>
 								<Link
 									href={route('central.mail-logs.show', { mail_log: log })}
 									className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
@@ -70,7 +70,7 @@ const MailLogTableDesktop = ({ logs, sortFilterForm }) => {
 									{!!log.has_attachments && <Icon icon="paperclip" ml />}
 								</Link>
 							</TableCell>
-							<TableCell>
+							<TableCell compact>
 								{log.tenants.length > 0 ? (
 									log.tenants.map(tenant => (
 										<div key={tenant.id} className="text-xs">
@@ -81,7 +81,7 @@ const MailLogTableDesktop = ({ logs, sortFilterForm }) => {
 									<span className="text-gray-400 text-xs">—</span>
 								)}
 							</TableCell>
-							<TableCell>
+							<TableCell compact>
 								{log.from_user ? (
 									<Link
 										href={route('central.users.show', { user: log.from_user })}
@@ -93,7 +93,7 @@ const MailLogTableDesktop = ({ logs, sortFilterForm }) => {
 									log.from
 								)}
 							</TableCell>
-							<TableCell>
+							<TableCell compact>
 								{log.latest_event?.user_group ? (
 									<Link
 										href={route('central.tenants.show', {
@@ -107,7 +107,7 @@ const MailLogTableDesktop = ({ logs, sortFilterForm }) => {
 									log.to
 								)}
 							</TableCell>
-							<TableCell className="whitespace-nowrap">
+							<TableCell compact className="whitespace-nowrap">
 								{log.size ? (
 									<span className="text-gray-500 text-xs">
 										{log.size < 1024 * 1024
@@ -118,7 +118,7 @@ const MailLogTableDesktop = ({ logs, sortFilterForm }) => {
 									<span className="text-gray-400 text-xs">—</span>
 								)}
 							</TableCell>
-							<TableCell>
+							<TableCell compact>
 								{log.opens_count > 0 ? (
 									<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
 										<Icon icon="eye" mr />
@@ -128,10 +128,10 @@ const MailLogTableDesktop = ({ logs, sortFilterForm }) => {
 									<span className="text-gray-400 text-xs">—</span>
 								)}
 							</TableCell>
-							<TableCell>
+							<TableCell compact>
 								<MailStatusTag event={log.latest_event} />
 							</TableCell>
-							<TableCell>
+							<TableCell compact>
 								<DateTag icon="pencil" date={log.created_at} />
 							</TableCell>
 						</tr>

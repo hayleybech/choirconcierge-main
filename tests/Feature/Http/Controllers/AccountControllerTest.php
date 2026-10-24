@@ -106,7 +106,9 @@ test('update@ saves security settings without requiring profile fields', functio
         'tab' => 'security',
         'password' => 'new-password',
         'password_confirmation' => 'new-password',
-    ])->assertSessionHasNoErrors();
+    ])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(the_tenant_route('account.edit', ['tab' => 'security']));
 
     $user->refresh();
     expect(Hash::check('new-password', $user->password))->toBeTrue();
@@ -120,7 +122,9 @@ test('update@ saves language settings without changing profile fields', function
         'tab' => 'language',
         'prefers_metric' => true,
         'first_day_of_week' => 0,
-    ])->assertSessionHasNoErrors();
+    ])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(the_tenant_route('account.edit', ['tab' => 'language']));
 
     assertDatabaseHas('users', [
         'id' => $user->id,
@@ -139,7 +143,7 @@ test('central account update redirects back to account settings', function () {
         'first_day_of_week' => 0,
     ])
         ->assertSessionHasNoErrors()
-        ->assertRedirect(route('central.account.edit'));
+        ->assertRedirect(route('central.account.edit', ['tab' => 'language']));
 });
 
 test('measurement system falls back to the users address country', function () {
