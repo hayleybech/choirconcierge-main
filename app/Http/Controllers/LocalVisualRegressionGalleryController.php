@@ -24,12 +24,12 @@ class LocalVisualRegressionGalleryController extends Controller
 
         $comparisonStatuses = $this->comparisonStatuses();
         $entries = collect($this->catalog->cases())
-            ->flatMap(fn (array $case): Collection => collect($this->catalog->viewports())
-                ->map(fn (array $viewport): array => [
+            ->flatMap(fn(array $case): Collection => collect($this->catalog->viewports())
+                ->map(fn(array $viewport): array => [
                     ...$case,
                     'browser' => $case['browser'] ?? 'chromium',
                     'viewport' => $viewport,
-                    'comparison' => $comparisonStatuses[$case['id'].'::'.$viewport['id']]
+                    'comparison' => $comparisonStatuses[$case['id'] . '::' . $viewport['id']]
                         ?? ($this->imageExists($case['id'], $viewport['id'], 'latest') ? 'captured' : 'not_run'),
                     'images' => [
                         'baseline' => $this->imageExists($case['id'], $viewport['id'], 'baseline'),
@@ -42,6 +42,7 @@ class LocalVisualRegressionGalleryController extends Controller
         return view('visual-regression.gallery', [
             'entries' => $entries,
             'filters' => $this->filters($entries),
+            'filterGroups' => $this->filterGroups($entries),
         ]);
     }
 
@@ -84,16 +85,40 @@ class LocalVisualRegressionGalleryController extends Controller
     }
 
     /**
-     * @param  Collection<int, array<string, mixed>>  $entries
+     * @param Collection<int, array<string, mixed>> $entries
      * @return array<string, list<string>>
      */
     private function filters(Collection $entries): array
     {
         return collect(['module', 'page_type', 'state', 'persona', 'browser', 'route', 'comparison'])
-            ->mapWithKeys(fn (string $field): array => [
+            ->mapWithKeys(fn(string $field): array => [
                 $field => $entries->pluck($field)->filter()->unique()->sort()->values()->all(),
             ])
             ->all();
+    }
+
+    /**
+     * @param Collection<int, array<string, mixed>> $entries
+     * @return array<string, array<string, list<string>>>
+     */
+    private function filterGroups(Collection $entries): array
+    {
+        $pageTypes = $entries->pluck('page_type')->filter()->unique()->sort()->groupBy(
+            fn(string $pageType): string => in_array($pageType, ['index', 'create', 'show', 'edit'], true)
+                ? 'crud'
+                : 'other',
+        );
+
+        $routes = $entries->groupBy(fn(array $entry): string => match (true) {
+            $entry['module'] === 'central' => 'central',
+            in_array($entry['module'], ['auth', 'errors'], true) => 'other',
+            default => 'tenant',
+        })->map(fn(Collection $group): Collection => $group->pluck('route')->unique()->sort()->values());
+
+        return [
+            'page_type' => $pageTypes->map(fn(Collection $group): array => $group->values()->all())->all(),
+            'route' => $routes->all(),
+        ];
     }
 
     /**
@@ -101,9 +126,9 @@ class LocalVisualRegressionGalleryController extends Controller
      */
     private function comparisonStatuses(): array
     {
-        $summaryPath = config('visual-regression.latest_directory').DIRECTORY_SEPARATOR.'summary.json';
+        $summaryPath = config('visual-regression.latest_directory') . DIRECTORY_SEPARATOR . 'summary.json';
 
-        if (! File::isFile($summaryPath)) {
+        if (!File::isFile($summaryPath)) {
             return [];
         }
 
@@ -113,17 +138,17 @@ class LocalVisualRegressionGalleryController extends Controller
             return [];
         }
 
-        if (! is_array($summary) || ! is_array($summary['results'] ?? null)) {
+        if (!is_array($summary) || !is_array($summary['results'] ?? null)) {
             return [];
         }
 
         return collect($summary['results'])
-            ->filter(fn (mixed $result): bool => is_array($result)
+            ->filter(fn(mixed $result): bool => is_array($result)
                 && is_string($result['case_id'] ?? null)
                 && is_string($result['viewport'] ?? null)
                 && is_string($result['status'] ?? null))
-            ->mapWithKeys(fn (array $result): array => [
-                $result['case_id'].'::'.$result['viewport'] => $result['status'],
+            ->mapWithKeys(fn(array $result): array => [
+                $result['case_id'] . '::' . $result['viewport'] => $result['status'],
             ])
             ->all();
     }
@@ -142,7 +167,7 @@ class LocalVisualRegressionGalleryController extends Controller
             default => '',
         };
 
-        return $directory.DIRECTORY_SEPARATOR.$case.DIRECTORY_SEPARATOR.$viewport.'.png';
+        return $directory . DIRECTORY_SEPARATOR . $case . DIRECTORY_SEPARATOR . $viewport . '.png';
     }
 
     private function ensureLocalEnvironment(): void

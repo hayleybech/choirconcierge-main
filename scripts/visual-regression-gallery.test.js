@@ -10,8 +10,20 @@ function createElement(dataset = {}, hidden = false) {
 		hidden,
 		listeners: {},
 		value: '',
+		open: false,
+		src: '',
+		alt: '',
 		addEventListener(event, listener) {
 			this.listeners[event] = listener;
+		},
+		querySelector(selector) {
+			return this[selector];
+		},
+		showModal() {
+			this.open = true;
+		},
+		close() {
+			this.open = false;
 		},
 	};
 }
@@ -26,12 +38,23 @@ test('switches between one grid capture variant and the comparison view', () => 
 	const latest = createElement({ gridVariant: 'latest' });
 	const gridCaptures = createElement({}, false);
 	const comparisonCaptures = createElement({}, true);
+	const imageZoomDialog = createElement();
+	const zoomImage = createElement();
+	const zoomCaption = createElement();
+	imageZoomDialog['[data-zoom-image]'] = zoomImage;
+	imageZoomDialog['[data-zoom-caption]'] = zoomCaption;
+	const thumbnail = createElement();
+	thumbnail.src = '/screenshots/auth-login/desktop/latest';
+	thumbnail.alt = 'Latest capture for Auth/Login at Desktop';
+	const zoomTrigger = createElement();
+	zoomTrigger['img'] = thumbnail;
 	const filter = createElement({ filter: 'module' });
 	const card = createElement({ module: 'auth' });
 	const selectors = {
 		'[data-gallery]': gallery,
 		'[data-gallery-view]': galleryView,
 		'[data-grid-variant-select]': gridVariantSelect,
+		'[data-image-zoom]': imageZoomDialog,
 	};
 	const document = {
 		querySelector(selector) {
@@ -44,6 +67,7 @@ test('switches between one grid capture variant and the comparison view', () => 
 				'[data-grid-captures]': [gridCaptures],
 				'[data-comparison-captures]': [comparisonCaptures],
 				'[data-grid-variant]': [baseline, latest],
+				'[data-zoom-trigger]': [zoomTrigger],
 			}[selector];
 		},
 	};
@@ -60,6 +84,14 @@ test('switches between one grid capture variant and the comparison view', () => 
 	assert.equal(latest.hidden, true);
 	assert.equal(gridCaptures.hidden, false);
 	assert.equal(comparisonCaptures.hidden, true);
+
+	zoomTrigger.listeners.click();
+	assert.equal(imageZoomDialog.open, true);
+	assert.equal(zoomImage.src, thumbnail.src);
+	assert.equal(zoomImage.alt, thumbnail.alt);
+	assert.equal(zoomCaption.textContent, thumbnail.alt);
+	imageZoomDialog.listeners.click({ target: imageZoomDialog });
+	assert.equal(imageZoomDialog.open, false);
 
 	galleryView.value = 'compare';
 	galleryView.listeners.change();
